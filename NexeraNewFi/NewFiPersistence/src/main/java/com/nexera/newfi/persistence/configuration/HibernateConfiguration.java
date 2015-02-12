@@ -1,11 +1,10 @@
-package com.nexeracommon.newfi.configuration;
+package com.nexera.newfi.persistence.configuration;
 
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +15,12 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.nexeracommon.newfi.model.UserModel;
+import com.nexera.newfi.common.model.UserModel;
 
 @Configuration
-@ComponentScan("com.nexeracommon.newfi.dao")
+@ComponentScan("com.nexera.newfi.persistence.dao")
 @PropertySource("classpath:core-application.properties")
 @EnableTransactionManagement
 public class HibernateConfiguration {

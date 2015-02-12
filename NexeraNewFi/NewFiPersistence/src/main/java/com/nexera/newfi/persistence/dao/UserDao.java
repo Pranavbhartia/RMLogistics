@@ -1,6 +1,6 @@
-package com.nexeracommon.newfi.dao;
+package com.nexera.newfi.persistence.dao;
 
-import com.nexeracommon.newfi.model.UserModel;
+import com.nexera.newfi.common.model.UserModel;
 
 public interface UserDao {
 	

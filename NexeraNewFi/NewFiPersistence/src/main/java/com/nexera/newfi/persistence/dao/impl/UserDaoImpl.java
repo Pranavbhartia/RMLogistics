@@ -1,4 +1,4 @@
-package com.nexeracommon.newfi.dao.impl;
+package com.nexera.newfi.persistence.dao.impl;
 
 import javax.transaction.Transactional;
 
@@ -9,8 +9,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexeracommon.newfi.dao.UserDao;
-import com.nexeracommon.newfi.model.UserModel;
+import com.nexera.newfi.common.model.UserModel;
+import com.nexera.newfi.persistence.dao.UserDao;
 
 @Component
 @Transactional
