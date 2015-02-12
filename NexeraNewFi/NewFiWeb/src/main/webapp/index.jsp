@@ -43,7 +43,7 @@
 			
 				<button class="btn btn-lg btn-primary btn-block" >Sign
 					in</button>
-			<a href="newIndex.do" >Redirect to Nexera</a>
+			<a href="customerPage.do" >Redirect to Nexera</a>
 		</form>
 
 	</div>
