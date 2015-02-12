@@ -1,0 +1,223 @@
+/* ============== SMARTPHONES ==============*/
+@media (max-width: 767px) {
+	.left-panel{
+		display: none;
+	}
+	.right-panel{
+		margin-left: 0;
+	}
+	.center-panel{
+		margin-left: 48px;
+	}
+	.lp-t2-txt{
+		display: none;
+	}
+	.lp-t2-wrapper,
+	.lp-t2-item,
+	.lp-t2-img{
+		width: 50px;
+	}
+	.lp-t2-item{
+		height: 50px;
+	}
+	.arrow-right{
+		bottom: 29px;
+		left: 50px;
+	}
+	.loan-summary-lp{
+		border-bottom: 1px #E9E9E9 solid;
+	}
+	.loan-summary-lp,
+	.loan-summary-rp{
+		margin-bottom: 10px;
+		width: 100%;
+		padding:0 10px;
+	}
+	.closing-cost-cont-wrapper-top, 
+	.closing-cost-cont-wrapper-bottom{
+		margin-left: 0;
+	}
+	.closing-cost-desc{
+		width: 65%;
+	}
+	.closing-cost-detail {
+		margin-left: 5%;
+		width: 30%;
+	}
+	.rate-program-container-col1,
+	.rate-program-container-col3{
+		display: none;
+	}
+	.rate-program-container-col2{
+		width: 90%;
+		margin: 0 5%;
+	}
+	.cp-rate-btn, 
+	.cp-est-cost-btn{
+		font-size: 16px;
+	}
+	.cp-rate-header-text{
+		margin-bottom: 5px;
+	}
+	.cp-est-header-text{
+		padding: 0 10px;
+	}
+	.cp-rate-header-text,
+	.cp-est-header-text{
+		font-size: 13px;
+		height: 41px;
+	}
+	.rate-slider{
+		margin-bottom: 15px;
+	}
+	.logout-btn-txt{
+		display: none;
+	}
+	.left-panel{
+		height: 2000px;
+		background-color: #fff;
+		z-index: 99999;
+	}
+}
+
+
+/* ============== ANTHING ABOVE SMARTPHONES ==============*/
+@media (min-width: 768px) {
+    .mobile-slider-container,
+	.small-screen-menu-icon{
+		display: none;
+	}
+	.left-panel{
+		display: block !important;
+	}
+}
+
+
+/* ============== ONLY TABLETS ==============*/
+@media (min-width: 768px) and (max-width: 991px) {
+	.home-container,
+	.header-container{
+		width: 100%;
+	}
+	.loan-summary-lp,
+	.loan-summary-rp{
+		padding: 0 10px;
+	}
+	.closing-cost-cont-wrapper-top, 
+	.closing-cost-cont-wrapper-bottom{
+		margin-left: 15px;
+	}
+	
+	.rate-program-container-col1,
+	.rate-program-container-col2,
+	.rate-program-container-col3{
+		margin-left:10px; 	
+	}
+	.rate-program-container-col1{
+		width: 16%;
+	}
+	.rate-program-container-col2{
+		width: 50%;
+	}
+	.rate-program-container-col3{
+		width: 22%;
+	}
+	.loan-summary-lp,
+	.loan-summary-rp{
+		padding: 0 10px;
+	}
+	.cp-rate-btn, 
+	.cp-est-cost-btn{
+		font-size: 16px;
+		line-height: 35px;
+	}
+	.cp-est-header-text{
+		padding: 0;
+		font-size: 13px;
+	}
+	.cp-rate-header-text{
+		font-size: 13px;
+		height: 36px;
+		margin-bottom: 5px;
+	}
+	.rate-slider{
+		margin-bottom: 20px;
+	}
+}
+
+
+/* ============== MEDIUM SIZED SCREENS ==============*/
+@media (min-width: 992px) and (max-width: 1199px) {
+	.home-container,
+	.header-container{
+		width: 100%;
+	}
+	.rate-program-container-col1{
+		width: 16%;
+	}
+	.rate-program-container-col2{
+		width: 50%;
+	}
+	.rate-program-container-col3{
+		width: 19%;
+	}
+	.loan-summary-lp,
+	.loan-summary-rp{
+		padding: 0 10px;
+	}
+}
+
+
+/* ============== LARGE SIZED SCREENS ==============*/
+@media (min-width: 1200px) {
+    .center-panel{
+    	width: 840px !important;
+	}
+}
+
+
+
+@media (max-width: 475px) {
+	.loan-summary-header-col2{
+		display: none;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.content-header-err {
+    font-size: 16px;
+    color: #E82828;
+    padding: 0 15px;
+}
