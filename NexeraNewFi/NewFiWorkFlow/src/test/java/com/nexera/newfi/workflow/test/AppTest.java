@@ -1,4 +1,4 @@
-package org.NexeraWorkFlow;
+package com.nexera.newfi.workflow.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

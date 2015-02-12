@@ -1,4 +1,4 @@
-package com.nexera.newfi.restcontroller;
+package com.nexera.newfi.web.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexeracommon.newfi.model.UserModel;
-import com.nexeracore.newfi.service.UserService;
+import com.nexera.newfi.common.model.UserModel;
+import com.nexera.newfi.core.service.UserService;
 
 @RestController
 @RequestMapping(value="newfi/user")

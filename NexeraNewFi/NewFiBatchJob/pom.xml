@@ -6,7 +6,7 @@
   <groupId>com.nexera.newfi</groupId>
   <artifactId>newfi-batchjob</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>NexeraBatchJob</name>
+  <name>NewFiBatchJob</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

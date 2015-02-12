@@ -1,10 +1,10 @@
-package com.nexeracore.newfi.configuration;
+package com.nexera.newfi.core.configuration;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan("com.nexeracore.newfi.service")
+@ComponentScan("com.nexera.newfi.core.service")
 public class CoreConfiguration {
 
 	static{

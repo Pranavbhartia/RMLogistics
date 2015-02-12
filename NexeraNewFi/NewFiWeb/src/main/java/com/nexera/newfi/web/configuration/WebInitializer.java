@@ -1,4 +1,4 @@
-package com.nexera.newfi.configuration;
+package com.nexera.newfi.web.configuration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -9,8 +9,8 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import com.nexeracommon.newfi.configuration.HibernateConfiguration;
-import com.nexeracore.newfi.configuration.CoreConfiguration;
+import com.nexera.newfi.core.configuration.CoreConfiguration;
+import com.nexera.newfi.persistence.configuration.HibernateConfiguration;
 
 public class WebInitializer implements WebApplicationInitializer {
 

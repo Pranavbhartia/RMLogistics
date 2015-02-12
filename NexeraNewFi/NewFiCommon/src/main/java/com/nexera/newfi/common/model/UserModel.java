@@ -1,4 +1,4 @@
-package com.nexeracommon.newfi.model;
+package com.nexera.newfi.common.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

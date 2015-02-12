@@ -25,6 +25,7 @@
   <artifactId>newfi-parent</artifactId>
   <modules>
   	<module>../NewFiCommon</module>
+  	<module>../NewFiPersistence</module>
   	<module>../NewFiCore</module>
   	<module>../NewFiBatchJob</module>
   	<module>../NewFiWorkFlow</module>

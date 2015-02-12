@@ -6,7 +6,7 @@
   <groupId>com.nexera.newfi</groupId>
   <artifactId>newfi-common</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>NexeraCommon</name>
+  <name>NewFiCommon</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,38 +24,13 @@
     </dependency>
     
     <!-- Spring  dependencies -->
-    <dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-context</artifactId>
-    	<version>${spring-version}</version>
-    </dependency>
     
-    <dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-aop</artifactId>
-    	<version>${spring-version}</version>
-    </dependency>
        
-    <dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-core</artifactId>
-    	<version>${spring-version}</version>
-    </dependency>
     
-    <dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-orm</artifactId>
-		<version>${spring-version}</version>
-	</dependency>
     <!-- Spring  dependencies ends -->
     
     
     <!-- mysql Connector -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>${mysql-connector-version}</version>
-	</dependency>
  
 	<!-- Hibernate framework -->
 	<dependency>

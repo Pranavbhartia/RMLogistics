@@ -1,4 +1,4 @@
-package org.NexeraBatchJob;
+package com.nexera.newfi.batchjob.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

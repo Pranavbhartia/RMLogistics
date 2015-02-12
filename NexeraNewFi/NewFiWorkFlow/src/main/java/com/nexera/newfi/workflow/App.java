@@ -1,4 +1,4 @@
-package org.NexeraWorkFlow;
+package com.nexera.newfi.workflow;
 
 /**
  * Hello world!

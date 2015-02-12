@@ -1,11 +1,11 @@
-package com.nexeracore.newfi.service.impl;
+package com.nexera.newfi.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexeracommon.newfi.dao.UserDao;
-import com.nexeracommon.newfi.model.UserModel;
-import com.nexeracore.newfi.service.UserService;
+import com.nexera.newfi.common.model.UserModel;
+import com.nexera.newfi.core.service.UserService;
+import com.nexera.newfi.persistence.dao.UserDao;
 
 @Component
 public class UserServiceImpl implements UserService {

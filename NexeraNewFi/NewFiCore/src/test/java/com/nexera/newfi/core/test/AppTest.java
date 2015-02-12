@@ -1,4 +1,4 @@
-package org.NexeraCore;
+package com.nexera.newfi.core.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package org.NexeraBatchJob;
+package com.nexera.newfi.batchjob;
 
 /**
  * Hello world!

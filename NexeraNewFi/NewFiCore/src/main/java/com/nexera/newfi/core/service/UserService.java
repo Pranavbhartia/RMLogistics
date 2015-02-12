@@ -1,6 +1,6 @@
-package com.nexeracore.newfi.service;
+package com.nexera.newfi.core.service;
 
-import com.nexeracommon.newfi.model.UserModel;
+import com.nexera.newfi.common.model.UserModel;
 
 public interface UserService {
 

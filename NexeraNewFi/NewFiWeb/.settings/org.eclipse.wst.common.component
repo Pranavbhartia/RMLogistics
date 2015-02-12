@@ -10,7 +10,10 @@
         <dependent-module archiveName="newfi-common-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/newfi-common/newfi-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="newfi-persistence-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/newfi-persistence/newfi-persistence">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/NewFiWeb/target/classes"/>
-        <property name="context-root" value="NexeraWeb"/>
+        <property name="context-root" value="NewFiWeb"/>
     </wb-module>
 </project-modules>
