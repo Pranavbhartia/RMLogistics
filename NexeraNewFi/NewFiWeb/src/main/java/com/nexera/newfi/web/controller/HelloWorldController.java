@@ -20,4 +20,11 @@ public class HelloWorldController {
 			mav.addObject("myName", userService.getName());
 			return mav;
 		}
+	 @RequestMapping(value="cutomerPage.do")
+	 public ModelAndView showCustomerPage(){
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("customerViewTemplate");
+			mav.addObject("myName", userService.getName());
+			return mav;
+		}
 }
