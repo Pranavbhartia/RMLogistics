@@ -19,7 +19,13 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
-   <flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
+	<catch-exception-strategy name="Catch_Exception_Strategy">
+		<component doc:name="Java">
+			<spring-object bean="exceptionProcessor" />
+		</component>
+	</catch-exception-strategy>
+
+	<flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
 		<http:inbound-endpoint address="http://localhost:8181/authCall"
 			exchange-pattern="request-response" doc:name="HTTP">
 		</http:inbound-endpoint>
@@ -53,12 +59,6 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="newFiTicketProcessor" />
 		</component>
-        <catch-exception-strategy doc:name="Catch Exception Strategy">
-         <component doc:name="Java">
-        <spring-object bean="exceptionProcessor" />
-        </component>
-        </catch-exception-strategy>
-
-
+        <exception-strategy ref="Catch_Exception_Strategy" doc:name="Reference Exception Strategy"/>
 	</flow>
 </mule>

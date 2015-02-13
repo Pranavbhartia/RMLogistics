@@ -8,6 +8,8 @@
 
 	<bean id="newFiTicketProcessor" class="com.newfi.nexera.process.NewFiTicketProcessor">
 	</bean>
+	<bean id="newFiResponseProcessor" class="com.newfi.nexera.process.NewFiResponseProcessor">
+	</bean>
 	<bean id="restInterceptor" class="com.newfi.nexera.rest.RestInterceptor">
 	</bean>
 	<bean id="exceptionProcessor" class="com.newfi.nexera.process.ExceptionProcessor">

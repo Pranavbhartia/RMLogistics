@@ -97,7 +97,6 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="newFiResponseProcessor" />
 		</component>
-
-
+        <exception-strategy ref="Catch_Exception_Strategy" doc:name="Reference Exception Strategy"/>
 	</flow>
 </mule>
