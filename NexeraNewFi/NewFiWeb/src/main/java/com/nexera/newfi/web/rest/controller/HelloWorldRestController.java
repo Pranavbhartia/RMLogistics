@@ -12,7 +12,7 @@ import com.nexera.newfi.common.model.UserModel;
 import com.nexera.newfi.core.service.UserService;
 
 @RestController
-@RequestMapping(value="newfi/user")
+@RequestMapping(value="/user")
 public class HelloWorldRestController {
 
 	@Autowired

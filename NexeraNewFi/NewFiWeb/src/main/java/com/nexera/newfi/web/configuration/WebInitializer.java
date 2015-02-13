@@ -14,23 +14,38 @@ import com.nexera.newfi.persistence.configuration.HibernateConfiguration;
 
 public class WebInitializer implements WebApplicationInitializer {
 
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		
-		AnnotationConfigWebApplicationContext context  = new AnnotationConfigWebApplicationContext();
+	public void onStartup(ServletContext servletContext)
+			throws ServletException {
+
+
+		// MVC config
+		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
 		context.register(Config.class);
 		context.register(WebAppConfig.class);
-		context.register(RestConfig.class);
 		context.register(CoreConfiguration.class);
 		context.register(HibernateConfiguration.class);
-		
+
 		servletContext.addListener(new ContextLoaderListener(context));
 		servletContext.setInitParameter("defaultHtmlEscape", "true");
-		
-		Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(context));
-		servlet.addMapping("/");
+
+		Dynamic servlet = servletContext.addServlet("dispatcher",
+				new DispatcherServlet(context));
+		servlet.addMapping("*.do");
 		servlet.setLoadOnStartup(1);
 		
-		
+		// Rest Config
+
+		// Rest Controllers
+		AnnotationConfigWebApplicationContext restContext = new AnnotationConfigWebApplicationContext();
+		restContext.register(RestConfig.class);
+		restContext.setServletContext(servletContext);
+
+		Dynamic restServlet = servletContext.addServlet("restServlet",
+				new DispatcherServlet(restContext));
+		restServlet.addMapping("/rest/*");
+		restServlet.setLoadOnStartup(1);
+
+
 	}
 
 }
