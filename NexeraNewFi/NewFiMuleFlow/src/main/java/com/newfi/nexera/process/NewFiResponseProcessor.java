@@ -8,17 +8,15 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
-import com.newfi.nexera.manager.NewFiManager;
-
 
 /**
  * @author Utsav
  *
  */
-public class NewFiTicketProcessor implements Callable
+public class NewFiResponseProcessor implements Callable
 {
 
-    private static final Logger LOG = Logger.getLogger( NewFiTicketProcessor.class );
+    private static final Logger LOG = Logger.getLogger( NewFiResponseProcessor.class );
 
 
     /* (non-Javadoc)
@@ -27,10 +25,9 @@ public class NewFiTicketProcessor implements Callable
     @Override
     public Object onCall( MuleEventContext eventContext ) throws Exception
     {
-        LOG.debug( "Inside method onCall " );
+        LOG.debug( "Inside method onCall" );
         MuleMessage message = eventContext.getMessage();
-        String recievedTicket = message.getPayloadAsString();
-        NewFiManager.userTicket = recievedTicket;
+        String payload = message.getPayloadAsString();
         return message;
     }
 

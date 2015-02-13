@@ -8,17 +8,18 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
-import com.newfi.nexera.manager.NewFiManager;
+import com.google.gson.Gson;
+import com.newfi.nexera.vo.ResponseVO;
 
 
 /**
  * @author Utsav
  *
  */
-public class NewFiTicketProcessor implements Callable
+public class ExceptionProcessor implements Callable
 {
 
-    private static final Logger LOG = Logger.getLogger( NewFiTicketProcessor.class );
+    private static final Logger LOG = Logger.getLogger( NewFiResponseProcessor.class );
 
 
     /* (non-Javadoc)
@@ -27,11 +28,15 @@ public class NewFiTicketProcessor implements Callable
     @Override
     public Object onCall( MuleEventContext eventContext ) throws Exception
     {
+        Gson gson = new Gson();
         LOG.debug( "Inside method onCall " );
         MuleMessage message = eventContext.getMessage();
-        String recievedTicket = message.getPayloadAsString();
-        NewFiManager.userTicket = recievedTicket;
-        return message;
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setErrorCode( "500" );
+        responseVO.setErrorDescription( message.getExceptionPayload().getMessage() );
+        responseVO.setStatus( "1" );
+        String jsonString = gson.toJson( responseVO );
+        return jsonString;
     }
 
 }
