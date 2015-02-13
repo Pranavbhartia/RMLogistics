@@ -89,6 +89,7 @@ public class LqbAuth {
 		System.out.println("Invoking rest...");
 
 		LqbAuth.invokeRest("http://graph.facebook.com/balaji.mx");
+		//LqbAuth.invokeRestSpring("http://graph.facebook.com/infosys");
 		LqbAuth.invokeRestSpring("http://graph.facebook.com/balaji.mx");
 		LqbAuth.invokeRestSpringParseObj("http://graph.facebook.com/balaji.mx");
 
