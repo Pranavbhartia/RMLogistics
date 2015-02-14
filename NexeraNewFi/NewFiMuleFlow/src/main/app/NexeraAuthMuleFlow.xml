@@ -30,7 +30,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 			exchange-pattern="request-response" doc:name="HTTP">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
-			<spring-object bean="restInterceptor" />
+			<spring-object bean="authenticationRestInterceptor" />
 		</component>
 		<choice doc:name="Choice">
 			<when expression="#[message.outboundProperties.'opName'=='GetUserAuthTicket']">

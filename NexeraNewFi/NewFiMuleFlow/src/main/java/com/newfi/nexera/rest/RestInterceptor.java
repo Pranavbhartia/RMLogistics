@@ -13,6 +13,7 @@ import com.newfi.nexera.bean.RestParameters;
 import com.newfi.nexera.constants.NewFiConstants;
 import com.newfi.nexera.constants.WebServiceOperations;
 import com.newfi.nexera.manager.NewFiManager;
+import com.nexera.util.Utils;
 
 
 /**
@@ -38,6 +39,10 @@ public class RestInterceptor implements Callable
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
         message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        if ( NewFiManager.userTicket == null ) {
+            LOG.debug( "Getting the user ticket based on the username and password " );
+            NewFiManager.userTicket = Utils.getUserTicket( "APITEST", "LQB2014" );
+        }
         String[] inputParameters = getAllParameters( restParameters );
         message.setPayload( inputParameters );
         return message;

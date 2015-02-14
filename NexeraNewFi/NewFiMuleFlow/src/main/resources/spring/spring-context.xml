@@ -14,6 +14,8 @@
 	</bean>
 	<bean id="exceptionProcessor" class="com.newfi.nexera.process.ExceptionProcessor">
 	</bean>
+	<bean id="authenticationRestInterceptor" class="com.newfi.nexera.rest.AuthenticationRestInterceptor">
+	</bean>
 
 
 </beans>

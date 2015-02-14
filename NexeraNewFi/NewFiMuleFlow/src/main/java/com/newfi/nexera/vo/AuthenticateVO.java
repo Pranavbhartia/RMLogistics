@@ -9,6 +9,8 @@ package com.newfi.nexera.vo;
  */
 public class AuthenticateVO
 {
+    private String opName;
+
     private String userName;
 
     private String passWord;
@@ -67,5 +69,23 @@ public class AuthenticateVO
     public void setCustomerCode( String customerCode )
     {
         this.customerCode = customerCode;
+    }
+
+
+    /**
+     * @return the opName
+     */
+    public String getOpName()
+    {
+        return opName;
+    }
+
+
+    /**
+     * @param opName the opName to set
+     */
+    public void setOpName( String opName )
+    {
+        this.opName = opName;
     }
 }
