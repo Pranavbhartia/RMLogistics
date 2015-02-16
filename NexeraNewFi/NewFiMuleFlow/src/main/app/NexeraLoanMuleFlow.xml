@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https"
+	xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+	xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/stdio http://www.mulesoft.org/schema/mule/stdio/current/mule-stdio.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd">
+	<cxf:configuration name="CXF_LOAN_Configuration"
+		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
+		doc:name="CXF Configuration" />
+	<spring:beans>
+		<spring:import resource="classpath:spring/spring-context.xml" />
+	</spring:beans>
+	<flow name="NexeraLoanMuleFlowFlow" doc:name="NexeraLoanMuleFlowFlow">
+		<http:inbound-endpoint address="http://localhost:8282/loanCall"
+			exchange-pattern="request-response" doc:name="HTTP">
+		</http:inbound-endpoint>
+		<component doc:name="Java">
+			<spring-object bean="restInterceptor" />
+		</component>
+
+		<choice doc:name="Choice">
+			<when expression="#[message.outboundProperties.'opName'=='RunQuickPricer']">
+				<cxf:jaxws-client operation="RunQuickPricer"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='Create']">
+				<cxf:jaxws-client operation="Create"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='CreateLead']">
+				<cxf:jaxws-client operation="CreateLead"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='Save']">
+				<cxf:jaxws-client operation="Save"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='LockLoanProgram']">
+				<cxf:jaxws-client operation="LockLoanProgram"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='Load']">
+				<cxf:jaxws-client operation="Load"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when expression="#[message.outboundProperties.'opName'=='UploadPDFDocument']">
+				<cxf:jaxws-client operation="UploadPDFDocument"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" />
+			</when>
+
+		</choice>
+		<object-to-string-transformer doc:name="Object to String" />
+		<component doc:name="Java">
+			<spring-object bean="newFiResponseProcessor" />
+		</component>
+        <exception-strategy ref="Catch_Exception_Strategy" doc:name="Reference Exception Strategy"/>
+	</flow>
+</mule>

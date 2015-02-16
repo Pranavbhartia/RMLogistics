@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https"
+	xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+	xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/stdio http://www.mulesoft.org/schema/mule/stdio/current/mule-stdio.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd">
+	<cxf:configuration name="CXF_AUTH_Configuration"
+		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
+		doc:name="CXF Configuration" />
+		  <http:connector name="HttpConnector" enableCookies="true" keepAlive="true"/>
+	<spring:beans>
+		<spring:import resource="classpath:spring/spring-context.xml" />
+	</spring:beans>
+	<catch-exception-strategy name="Catch_Exception_Strategy">
+		<component doc:name="Java">
+			<spring-object bean="exceptionProcessor" />
+		</component>
+	</catch-exception-strategy>
+
+	<flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
+		<http:inbound-endpoint address="http://localhost:8181/authCall"
+			exchange-pattern="request-response" doc:name="HTTP">
+		</http:inbound-endpoint>
+		<component doc:name="Java">
+			<spring-object bean="authenticationRestInterceptor" />
+		</component>
+		<choice doc:name="Choice">
+			<when expression="#[message.outboundProperties.'opName'=='GetUserAuthTicket']">
+				<cxf:jaxws-client operation="GetUserAuthTicket"
+					clientClass="com.lendersoffice.los.webservices.AuthService" port="AuthServiceSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST"
+					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
+					doc:name="HTTP" />
+			</when>
+			<when
+				expression="#[message.outboundProperties.'opName'=='GetPmlUserAuthTicket']">
+				<cxf:jaxws-client operation="GetPmlUserAuthTicket"
+					clientClass="com.lendersoffice.los.webservices.AuthService" port="AuthServiceSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST"
+					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
+					doc:name="HTTP" />
+			</when>
+		</choice>
+		<object-to-string-transformer doc:name="Object to String" />
+		<component doc:name="Java">
+			<spring-object bean="newFiTicketProcessor" />
+		</component>
+        <exception-strategy ref="Catch_Exception_Strategy" doc:name="Reference Exception Strategy"/>
+	</flow>
+</mule>
