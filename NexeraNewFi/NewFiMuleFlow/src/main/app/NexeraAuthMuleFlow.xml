@@ -16,6 +16,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_AUTH_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
+		  <http:connector name="HttpConnector" enableCookies="true" keepAlive="true"/>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
