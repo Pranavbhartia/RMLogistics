@@ -17,7 +17,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.nexera.newfi.common.model.UserModel;
+import com.nexera.newfi.common.model.User;
 
 @Configuration
 @ComponentScan("com.nexera.newfi.persistence.dao")
@@ -73,7 +73,7 @@ public class HibernateConfiguration {
 
 		LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
 		bean.setAnnotatedClasses(new Class[] { 	
-				UserModel.class
+				User.class
 				});
 		bean.setHibernateProperties(props);
 		bean.setDataSource(this.getDataSource());

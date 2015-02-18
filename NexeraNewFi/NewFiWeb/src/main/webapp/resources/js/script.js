@@ -1,10 +1,240 @@
+function changeSecondaryLeftPanel(step){
+	$('.lp-t2-item').removeClass('t2-active');
+	$('.lp-t2-item .arrow-right').remove();
+	$('#lp-step'+step).addClass('t2-active');
+	var rightArrow = $('<div>').attr({
+		"class" : "arrow-right"
+	});
+	$('#lp-step'+step).append(rightArrow);
+	$('#center-panel-cont').html('');
+}
+
+/*
+* Functions for complete profile module
+*/
+
+function paintProfileCompleteStep1() {
+	changeSecondaryLeftPanel(2);
+	var topHeader = getCompletYourApplicationHeader();
+	var formContainer =  getAboutMeDetailsWrapper();
+	$('#center-panel-cont').append(topHeader).append(formContainer);
+}
+
+
+function paintProfileCompleteStep2() {
+	// on click of next button the data is getting stored in the data base
+	var userPriPhone = $('#userPriPhone').val();
+	alert(userPriPhone);
+	// make a ajax call to update the table 
+	
+	changeSecondaryLeftPanel(2);
+	var topHeader = getCompletYourApplicationHeader();
+	var formContainer =  getLoanDetailsWrapper();
+	$('#center-panel-cont').append(topHeader).append(formContainer);
+}
+
+
+function getCompletYourApplicationHeader() {
+	var parent = $('<div>').attr({
+		"class" : "complete-application-wrapper"
+	}); 
+	var header = $('<div>').attr({
+		"class" : "complete-application-header"
+	}).html("Complete Your Application");
+	return parent.append(header);
+}
+
+function getAboutMeDetailsWrapper(){
+	var parent = $('<div>').attr({
+		"class" : "about-me-details-wrapper"
+	});
+	
+	var header = getAboutMeDetailsHeader();
+	var container = getAboutMeDetailsContainer();
+	
+	var nextButton = $('<div>').attr({
+		"class" : "submit-btn",
+		"onclick" : "paintProfileCompleteStep2()"
+	}).html("Next");
+	
+	
+	return parent.append(header).append(container).append(nextButton);
+}
+
+function getAboutMeDetailsHeader() {
+	var header = $('<div>').attr({
+		"class" : "application-form-header clearfix"
+	});
+	var headerCol1 = $('<div>').attr({
+		"class" : "application-form-header-col1 float-left"
+	}).html("About Me");
+	var headerCol2 = $('<div>').attr({
+		"class" : "application-form-header-col2 float-right"
+	});
+	var col2Container = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	var col2LeftCol = $('<div>').attr({
+		"class" : "form-progress float-left"
+	});
+	var progressSpan = $('<span>').attr({
+		"class" : "progress-span-text"
+	}).html("4/10");
+	col2LeftCol.html(progressSpan).append(" Completed");
+	var col2RightCol = $('<div>').attr({
+		"class" : "edit-form float-right"
+	}).html("Edit");
+	col2Container.append(col2LeftCol).append(col2RightCol);
+	headerCol2.append(col2Container);
+	return header.append(headerCol1).append(headerCol2);
+}
+
+function getAboutMeDetailsContainer() {
+	var container = $('<div>').attr({
+		"class" : "application-form-container clearfix"
+	});
+	var conRow1 = getEditableFormRow("Phone 1", false);
+	var conRow2 = getEditableFormRow("Phone 2", false);
+	var conRow3 = getEditableFormRow("Email", true);
+	conRow3.find('.form-detail-edit').find('input').addClass();
+	var conRow4 = getEditableFormRow("DOB", true);
+	
+	container.append(conRow1).append(conRow2).append(conRow3).append(conRow4);
+	
+	var conRow5 = getNonEditableFormRow("First Name", $('#userFname').val());
+	var conRow6 = getNonEditableFormRow("Last Name", $('#userlname').val());
+	var conRow7 = getNonEditableFormRow("Street Address", $('#userStreetAddress').val());
+	var conRow8 = getNonEditableFormRow("City", $('#userCity').val());
+	var conRow9 = getNonEditableFormRow("State", $('#userState').val());
+	var conRow10 = getNonEditableFormRow("Zip", $('#userZipcode').val());
+	
+	return container.append(conRow5).append(conRow6).append(conRow7).append(conRow8).append(conRow9).append(conRow10);
+}
+
+function getLoanDetailsWrapper(){
+	var parent = $('<div>').attr({
+		"class" : "about-me-details-wrapper"
+	});
+	
+	var header = getLoanDetailsHeader();
+	var container = getLoanDetailsContainer();
+	var saveApplicationButton = $('<div>').attr({
+		"class" : "submit-btn save-app-btn",
+		"onclick" : "paintFixYourRatePage()"
+	}).html("Save Application");
+	return parent.append(header).append(container).append(saveApplicationButton);
+}
+
+function getLoanDetailsHeader() {
+	var header = $('<div>').attr({
+		"class" : "application-form-header clearfix"
+	});
+	var headerCol1 = $('<div>').attr({
+		"class" : "application-form-header-col1 float-left"
+	}).html("My Loan Goals");
+	var headerCol2 = $('<div>').attr({
+		"class" : "application-form-header-col2 float-right"
+	});
+	var col2Container = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	var col2LeftCol = $('<div>').attr({
+		"class" : "form-progress float-left"
+	});
+	var progressSpan = $('<span>').attr({
+		"class" : "progress-span-text"
+	}).html("8/17");
+	col2LeftCol.html(progressSpan).append(" Completed");
+	var col2RightCol = $('<div>').attr({
+		"class" : "edit-form float-right"
+	}).html("Edit");
+	col2Container.append(col2LeftCol).append(col2RightCol);
+	headerCol2.append(col2Container);
+	return header.append(headerCol1).append(headerCol2);
+}
+
+function getLoanDetailsContainer() {
+	var container = $('<div>').attr({
+		"class" : "application-form-container clearfix"
+	});
+	var row1 = getEditableFormRow("Prop Address", true);
+	var row2 = getEditableFormRow("Prop City", true);
+	var row3 = getEditableFormRow("Prop State", true);
+	var row4 = getEditableFormRow("Prop Zip", true);
+	var row5 = getEditableFormRow("Bor Middle Name", true);
+	var row6 = getEditableFormRow("Bor Middle Name", true);
+	var row7 = getEditableFormRow("SSN", false);
+	
+	container.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6).append(row7);
+	
+	var estCreditNo = $('<div>').attr({
+		"class" : "est-credit-row"
+	}).html("Estimate the Credit No.");
+	container.append(estCreditNo);
+	
+	var row8 = getNonEditableFormRow("Prop Country", "Greenwood");
+	var row9 = getNonEditableFormRow("Prop Use", "Primary Residence");
+	var row10 = getNonEditableFormRow("Down Payment", "$ 3.50");
+	var row11 = getNonEditableFormRow("Max Monthly Payment", "$ 400.00");
+	var row12 = getNonEditableFormRow("Lien Amount", "$ 0.00");
+	var row13 = getNonEditableFormRow("Cashout", "$ 0.00");
+	var row14 = getNonEditableFormRow("Value/Price", "$ 150,000.00");
+	var row15 = getNonEditableFormRow("Loan Amount", "$ 144,750.00");
+	var row16 = getNonEditableFormRow("Self-Empl", "NO");
+	
+	return container.append(row8).append(row9).append(row10).append(row11).append(row12).append(row13).append(row14).append(row15).append(row16);
+}
+
+function getEditableFormRow(desc, isCompulsory) {
+	var row = $('<div>').attr({
+		"class" : "form-detail-edit-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "form-detail-row-desc float-left"
+	}).html(desc);
+	if(isCompulsory){
+		rowCol1.addClass("form-field-compulsory");
+		rowCol1.append('<span class="compulsory-span"> *</span>');
+	}
+	var rowCol2 = $('<div>').attr({
+		"class" : "form-detail-edit float-left"
+	});
+	var editRow = $('<input>').attr({
+		"class" : "form-detail-input",
+		"id":"userPriPhone"
+	});
+	rowCol2.append(editRow);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+function getNonEditableFormRow(desc,value) {
+	var row = $('<div>').attr({
+		"class" : "form-detail-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "form-detail-row-name float-left"
+	}).html(desc);
+	var rowCol2 = $('<div>').attr({
+		"class" : "form-detail-row-value float-left"
+	});
+	var editRow = $('<input>').attr({
+		"class" : "form-detail-input-disabled"
+	}).prop("disabled","true").val(value);
+	
+	rowCol2.append(editRow);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+
+/*
+* Functions for fix your rate module
+*/
 function paintFixYourRatePage() {
+	changeSecondaryLeftPanel(3);
 	var rateProgramWrapper = getRateProgramContainer();
 	var loanSummaryWrapper = getLoanSummaryWrapper();
 	var closingCostWrapper = getClosingCostSummaryContainer();
-	$('#center-panel-cont').html('');
-	$('#center-panel-cont').append(rateProgramWrapper).append(
-			loanSummaryWrapper).append(closingCostWrapper);
+	$('#center-panel-cont').append(rateProgramWrapper).append(loanSummaryWrapper).append(closingCostWrapper);
 }
 
 function getRateProgramContainer() {
@@ -46,8 +276,7 @@ function getRateProgramContainer() {
 	}).html("$ 8,185.75");
 	rpCol3.append(col3Txt).append(col3btn);
 	var mobileScreenCont = getSliderContainerForMobileScreen();
-	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(
-			mobileScreenCont);
+	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(mobileScreenCont);
 	parentWrapper.append(rpHeader).append(rpContainer);
 	return parentWrapper;
 }
@@ -69,6 +298,11 @@ function getRateSlider() {
 	var rsIcon = $('<div>').attr({
 		"id" : "rate-slider",
 		"class" : "rate-slider-icon"
+	}).slider({
+		orientation : "horizontal",
+		range : "min",
+		max : 100,
+		value : 40
 	});
 	rateSlider.append(rateSliderTextCon).append(rsIcon);
 	return rateSlider;
@@ -95,6 +329,11 @@ function getTenureSlider() {
 	var tsIcon = $('<div>').attr({
 		"id" : "tenure-slider",
 		"class" : "tenure-slider-icon"
+	}).slider({
+		orientation : "horizontal",
+		range : "min",
+		max : 30,
+		value : 10
 	});
 	tenureSilder.append(tenureSliderTextCon).append(tsIcon);
 	return tenureSilder;
@@ -124,7 +363,7 @@ function getSliderContainerForMobileScreen() {
 		"class" : "cp-est-cost-btn"
 	}).html("$ 8,185.75");
 	col2.append(col2Txt).append(col2btn);
-	mobileSliderCont.append(col1).append(col2);
+	return mobileSliderCont.append(col1).append(col2);
 }
 
 function getLoanSummaryWrapper() {
@@ -424,4 +663,115 @@ function getClosingCostHeadingCont(text) {
 		"class" : "closing-cost-cont-heading"
 	}).html(text);
 	return heading;
+}
+
+
+/*
+* Functions for upload items module
+*/
+
+function paintUploadNeededItemsPage() {
+	changeSecondaryLeftPanel(4);
+ 	var header = $('<div>').attr({
+ 		"class" : "upload-item-header uppercase"
+ 	}).html("Upload needed items");
+ 	var container = $('<div>').attr({
+ 		"class" : "upload-item-container"
+ 	});
+ 	var fileDragDropCon = getFileDragAndDropContainer();
+ 	var documentContainer = getDocumentContainer();
+ 	var neededItemsWrapper = getNeedItemsWrapper();
+ 	container.append(fileDragDropCon).append(documentContainer).append(neededItemsWrapper);
+ 	$('#center-panel-cont').append(header).append(container);
+}
+
+function getFileDragAndDropContainer() {
+	var container = $('<div>').attr({
+		"class" : "file-drag-drop-container"
+	});
+	return container;
+}
+
+function getDocumentContainer(){
+	var container = $('<div>').attr({
+		"class" : "document-container clearfix"
+	});
+	var col1 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
+	var col2 = getDocumentUploadColumn("Payroll stubs for the past 30 days (showing YTD earings)");
+	var col3 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
+	var col4 = getDocumentUploadColumn("Payroll stubs for the past 30 days (showing YTD earings)");
+	return container.append(col1).append(col2).append(col3).append(col4);
+}
+
+function getDocumentUploadColumn(description) {
+	var column = $('<div>').attr({
+		"class" : "document-cont-col float-left"
+	});
+	var docImg = $('<div>').attr({
+		"class" : "doc-img"
+	});
+	var docDesc = $('<div>').attr({
+		"class" : "doc-desc"
+	}).html(description);
+	var docAssign = $('<div>').attr({
+		"class" : "doc-assign"
+	}).html("Assign Document");
+	return column.append(docImg).append(docDesc).append(docAssign);
+}
+
+function getNeedItemsWrapper(){
+	var wrapper = $('<div>').attr({
+		"class" : "needed-items-wrapper"
+	});
+	var header = $('<div>').attr({
+		"class" : "needed-items-header uppercase"
+	}).html("needed items");
+	var container = $('<div>').attr({
+		"class" : "needed-items-container clearfix"
+	});
+	var leftContainer = $('<div>').attr({
+		"class" : "needed-items-lc float-left"
+	});
+	var incomeDocCont = $('<div>').attr({
+		"class" : "needed-doc-container"
+	});
+	var incDocHeading = $('<div>').attr({
+		"class" : "needed-doc-heading"
+	}).html("Income Documents");
+	incomeDocCont.append(incDocHeading);
+	var incDocRow1 = getNeededDocRow("Salaried-W-2 forms for the most recent 2 years");
+	var incDocRow2 = getNeededDocRow("Payroll stubs for the past 30 days (showing YTD earnings)");
+	incomeDocCont.append(incDocRow1).append(incDocRow2);
+	var propDocContainer = $('<div>').attr({
+		"class" : "needed-doc-container"
+	});
+	var propDocHeading = $('<div>').attr({
+		"class" : "needed-doc-heading"
+	}).html("Property Documents");
+	propDocContainer.append(propDocHeading);
+	var propDocRow1 = getNeededDocRow("Refinance - Copy of property tax bill");
+	var propDocRow2 = getNeededDocRow("Refinance - Copy of homeowner's hazard insurance policy");
+	propDocContainer.append(propDocRow1).append(propDocRow2);
+	leftContainer.append(incomeDocCont).append(propDocContainer);
+	var rightContainer = $('<div>').attr({
+		"class" : "needed-items-rc float-right"
+	});
+	container.append(leftContainer).append(rightContainer);
+	return wrapper.append(header).append(container);
+}
+
+function getNeededDocRow(desc){
+	var row = $('<div>').attr({
+		"class" : "needed-item-row clearfix"
+	});
+	var leftImage = $('<div>').attr({
+		"class" : "list-item-icn float-left"
+	});
+	var rowDesc = $('<div>').attr({
+		"class" : "needed-item-desc float-left"
+	}).html(desc);
+	var rightImage = $('<div>').attr({
+		"class" : "doc-uploaded-icn float-left"
+	});
+	return row.append(leftImage).append(rowDesc).append(rightImage);
 }
