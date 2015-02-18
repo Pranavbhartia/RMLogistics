@@ -22,7 +22,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraLoanMuleFlowFlow" doc:name="NexeraLoanMuleFlowFlow">
 		<http:inbound-endpoint address="http://localhost:8282/loanCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="60000">
+			responseTimeout="120000">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
@@ -36,7 +36,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Create']">
 				<cxf:jaxws-client operation="Create"
@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='CreateLead']">
 				<cxf:jaxws-client operation="CreateLead"
@@ -54,7 +54,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Save']">
 				<cxf:jaxws-client operation="Save"
@@ -63,7 +63,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='LockLoanProgram']">
 				<cxf:jaxws-client operation="LockLoanProgram"
@@ -72,7 +72,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Load']">
 				<cxf:jaxws-client operation="Load"
@@ -81,7 +81,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='UploadPDFDocument']">
 				<cxf:jaxws-client operation="UploadPDFDocument"
@@ -90,7 +90,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="60000" />
+					doc:name="HTTP" responseTimeout="120000" />
 			</when>
 
 		</choice>

@@ -3,6 +3,9 @@
  */
 package com.newfi.nexera.process;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.log4j.Logger;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -37,8 +40,23 @@ public class NewFiResponseProcessor implements Callable
         responseVO.setStatus( "0" );
         responseVO.setResponseMessage( payload );
         String jsonString = gson.toJson( responseVO );
+        jsonString = removeUTFCharacters( jsonString );
         message.setPayload( jsonString );
         return message;
+    }
+
+
+    public static String removeUTFCharacters( String data )
+    {
+        Pattern p = Pattern.compile( "\\\\u(\\p{XDigit}{4})" );
+        Matcher m = p.matcher( data );
+        StringBuffer buf = new StringBuffer( data.length() );
+        while ( m.find() ) {
+            String ch = String.valueOf( (char) Integer.parseInt( m.group( 1 ), 16 ) );
+            m.appendReplacement( buf, Matcher.quoteReplacement( ch ) );
+        }
+        m.appendTail( buf );
+        return buf.toString();
     }
 
 }
