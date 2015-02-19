@@ -1,0 +1,10 @@
+com\nexera\web\security\AjaxAwareLoginUrlAuthenticationEntryPoint.class
+com\nexera\web\controller\TeaserRateController.class
+com\nexera\web\security\UserLogoutHandler.class
+com\nexera\web\security\UserLoginHandler.class
+com\nexera\web\controller\TemplateComtroller.class
+com\nexera\web\constants\JspLookup.class
+com\nexera\web\security\UserRepositoryService.class
+com\nexera\web\controller\CustomController.class
+com\nexera\web\controller\DefaultController.class
+com\nexera\web\security\UserAuthProvider.class
