@@ -194,3 +194,82 @@ var newFiTeaserStart = {
 		}
 	} ]
 };
+
+var newFiTeaserMyCurrentMortgage = {
+
+	"questions" : [
+			{
+				"q" : "What is your age?",
+				"qType" : "InputTextBoxCurrency",
+				"dataName" : "cash-out-input",
+				"placeHolder" : "Cash out Amount"
+			},
+			{
+				"q" : "What is your age?",
+				"qType" : "InputTextBoxCurrency",
+				"dataName" : "cash-out-input",
+				"placeHolder" : "Cash out Amount"
+			},
+			{
+				"q" : "Does the payment entered above include property taxes and/or homeowners insurance?",
+				"qType" : "SingleSelectRadioButton",
+				"dataName" : "tni",
+				"required" : true,
+				"a" : [
+						{
+							"option" : "Yes",
+							"value" : "true",
+							"onSelect" : {
+								"addQuestions" : [
+										{
+											"q" : "How much are your annual property taxes??",
+											"qType" : "InputTextBoxCurrency",
+											"dataName" : "taxes",
+											"placeHolder" : "Tax Amount"
+										},
+										{
+											"q" : "How much is your annual homeowners insurance?",
+											"qType" : "InputTextBoxCurrency",
+											"dataName" : "insurance",
+											"placeHolder" : "Insurance Amount"
+										} ]
+							}
+						}, {
+							"option" : "No",
+							"value" : "false"
+						} ],
+				"onSelectEvent" : function() {
+					console.log("On select SingleSelectRadioButton");
+				}
+			}, {
+				"q" : "What is your current mortgage balance?",
+				"qType" : "InputTextBoxCurrency",
+				"dataName" : "mortgage-balance",
+				"placeHolder" : "Balance Amount"
+			}, {
+				"q" : "Approximately what is your home worth today?",
+				"qType" : "InputTextBoxCurrency",
+				"dataName" : "home-value",
+				"placeHolder" : "Home Worth"
+			}, {
+				"q" : "What is the ZIP code of your home??",
+				"qType" : "InputTextBoxNumber",
+				"dataName" : "home-zipcode",
+				"placeHolder" : "Zip Code"
+			} ]
+};
+
+var newFiTeaserHomeAddress = {
+
+	"questions" : [ { // Question 1 - Sngle input string
+		"q" : "What's your name?",
+		"qType" : "inputTextBoxString",
+		"dataName" : "name",
+		"placeHolder" : "Name",
+		"dataValidation" : "length",
+		"validationLength" : 'min5',
+		"onSelectEvent" : function() {
+			console.log("On select inputTextBoxString");
+		}
+	} ]
+};

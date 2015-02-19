@@ -309,6 +309,42 @@
 				}
 
 			},
+			"InputTextBoxCurrency" : {
+
+				"render" : function(question, questWrapper) {
+
+					if (questWrapper == null)
+						return;
+
+					var quest = $('<div>').attr({
+						class : "questionString"
+					});
+					quest.html(question.q);
+
+					var currSymbol = $('<span>').attr({
+						class : "dollar-input"
+					});
+					currSymbol.text('$');
+					var questOptions = $('<input>').attr({
+						"class" : "questionInputTextbox",
+						"type" : "tel",
+						"name" : question.dataName,
+						"id" : question.dataName + '-currency',
+						"placeholder" : question.placeHolder,
+					});
+
+					questWrapper.append(quest).append(currSymbol).append(
+							questOptions);
+					// onselect
+					if (question.onSelectEvent) {
+						questOptions.click(function() {
+							question.onSelectEvent();
+						});
+					}
+
+				}
+
+			},
 			"InputTextBoxEmailId" : {
 
 				"render" : function(question, questWrapper) {
@@ -488,7 +524,7 @@
 											+ " option:selected").attr('id')
 							questWrapper.parent().find(
 									'[displayWhenSelected=' + selected + ']')
-									.show();
+									.slideToggle();
 						});
 					}
 
@@ -564,7 +600,7 @@
 											+ "]:checked").attr("id");
 							questWrapper.parent().find(
 									'[displayWhenSelected=' + selected + ']')
-									.show();
+									.slideToggle();
 						});
 					}
 
