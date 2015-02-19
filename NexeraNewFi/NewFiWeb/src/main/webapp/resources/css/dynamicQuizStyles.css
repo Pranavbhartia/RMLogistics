@@ -1,0 +1,12 @@
+.questWrapper {
+	padding: 10px;
+}
+
+.questionInputTextbox{
+	padding-left: 10px
+}
+
+.questionInputTextboxWrapper{
+	float:left;
+	padding-right: 10px
+}
