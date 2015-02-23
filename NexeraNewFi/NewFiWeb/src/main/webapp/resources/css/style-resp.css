@@ -1,5 +1,9 @@
 /* ============== SMARTPHONES ==============*/
 @media (max-width: 767px) {
+	.home-container{
+		padding-right: 5px;
+		overflow: hidden;
+	}
 	.left-panel{
 		display: none;
 	}
@@ -8,6 +12,7 @@
 	}
 	.center-panel{
 		margin-left: 48px;
+		padding-left: 10px;
 	}
 	.lp-t2-txt{
 		display: none;
@@ -180,6 +185,44 @@
 @media (max-width: 475px) {
 	.loan-summary-header-col2{
 		display: none;
+	}
+	.form-detail-row-desc{
+		width: 100%;
+		text-align : left;
+		padding-left: 10px;
+	}
+	.form-detail-row-value,
+	.form-detail-row-name{
+		width:50%
+	}
+	.form-detail-row-name{
+		padding-right: 10px;
+	}
+	.save-app-btn{
+		width : 150px;
+	}
+	.form-detail-edit,
+	.form-detail-input{
+		width: 100%;
+	}
+	.edit-form{
+		padding: 0 5px;
+	}
+	.application-form-header{
+		padding-left: 5px;
+	}
+	.application-form-header-col1,
+	.form-progress,
+	.progress-span-text,
+	.edit-form{
+		font-size: 10px;
+	}
+	.est-credit-row{
+		padding-left: 0;
+		text-align: center;
+	}
+	.form-detail-edit-row{
+		padding: 0;
 	}
 }
 

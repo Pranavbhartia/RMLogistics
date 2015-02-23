@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+ <%@ page isELIgnored ="false" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -15,16 +18,26 @@
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="cutomerViewMainBody.jsp"></jsp:include>
 		<jsp:include page="footer.jsp"></jsp:include>
+		
+		
+		<input type="hidden" name="userFname" id="userFname" value="${user.fname}"/>
+		<input type="hidden" name="userlname" id="userlname" value="${user.lname}"/>
+		<input type="hidden" name="userStreetAddress" id="userStreetAddress" value="${user.streetAddress}"/>
+		<input type="hidden" name="userCity" id="userCity" value="${user.city}"/>
+		<input type="hidden" name="userState" id="userState" value="${user.state}"/>
+		<input type="hidden" name="userZipcode" id="userZipcode" value="${user.zipcode}"/>
+		
 		<script>
 				
 			$(document).ready(function(){
 				//Display customer rate page
-				paintFixYourRatePage();
-				adjustCenterPanelWidth();
+				paintProfileCompleteStep1();
+				//paintUploadNeededItemsPage();
+				//adjustCenterPanelWidth();
 				$(window).resize(function(){
 					adjustCenterPanelWidth();
 				});
-				$('#rate-slider').slider({
+				/* $('#rate-slider').slider({
 					orientation : "horizontal",
 					range : "min",
 					max : 100,
@@ -35,7 +48,7 @@
 					range : "min",
 					max : 30,
 					value : 10
-				});
+				}); */
 				function adjustCenterPanelWidth(){
 					if(window.innerWidth <= 1200 && window.innerWidth >= 768){
 						var leftPanelWidth = $('.left-panel').width();
@@ -45,7 +58,7 @@
 					}
 					else if(window.innerWidth < 768){
 						var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-						var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 35;
+						var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 20;
 						$('.center-panel').width(centerPanelWidth);
 					}
 				}

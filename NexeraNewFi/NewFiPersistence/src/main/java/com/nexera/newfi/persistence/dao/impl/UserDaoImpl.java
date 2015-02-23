@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.newfi.common.model.User;
 import com.nexera.newfi.common.model.UserModel;
 import com.nexera.newfi.persistence.dao.UserDao;
 
@@ -31,6 +32,13 @@ public class UserDaoImpl implements UserDao {
 		Criteria criteria = session.createCriteria(UserModel.class);
 		criteria.add(Restrictions.eq("Id", userId));
 		return (UserModel) criteria.uniqueResult();
+	}
+
+	public User addUser(User user) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		session.save(user);
+		return user;
 	}
 
 }
