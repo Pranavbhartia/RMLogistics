@@ -29,12 +29,12 @@ public class AjaxAwareLoginUrlAuthenticationEntryPoint extends LoginUrlAuthentic
 	public void commence(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException authException)
 			throws IOException, ServletException {
 
-		if (requestMatcher.matches(request)) {
+		/*if (requestMatcher.matches(request)) {
 			LOG.info("Redirecting to login.do");
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 		}
-		else {
+		else {*/
 			super.commence(request, response, authException);
-		}
+		/*}*/
 	}
 }

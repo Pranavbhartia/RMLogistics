@@ -585,3 +585,12 @@ a, a:hover, a:visited{
 	background-color: #3f86c3 !important;
 	background: url("../images/menu.png") no-repeat center;
 }
+
+#dropzoneForm{
+	border: 2px dashed #0087F7;
+	border-radius: 5px;
+	background: #F7F7F7;
+	cursor: pointer;
+	width:auto;
+	height: 200px;
+}

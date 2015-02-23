@@ -31,7 +31,7 @@ public class TemplateComtroller {
 			mav.setViewName("customerViewMessageDashboard");
 			//mav.addObject("myName", userService.getName());
 			return mav;
-		}
+	 }
 	 
 	 @RequestMapping(value="agentPage.do")
 	 public ModelAndView showAgentPage(){
@@ -39,7 +39,7 @@ public class TemplateComtroller {
 			mav.setViewName("agentViewTemplate");
 			//mav.addObject("myName", userService.getName());
 			return mav;
-		}
+	}
 	 
 	 @RequestMapping(value="agentDashboard.do")
 	 public ModelAndView agentDashboard(){
@@ -47,5 +47,13 @@ public class TemplateComtroller {
 			mav.setViewName("agentViewDashboard");
 			//mav.addObject("myName", userService.getName());
 			return mav;
-		}
+	 }
+	 
+	 @RequestMapping(value = "customerUploadRequiredFiles.do")
+	 public ModelAndView customerUploadRequiredFiles(){
+		 ModelAndView mav = new ModelAndView();
+		 mav.setViewName(JspLookup.CUSTOMER_UPLOAD_DOCUMENT);
+		 return mav;
+	 }
+	 
 }
