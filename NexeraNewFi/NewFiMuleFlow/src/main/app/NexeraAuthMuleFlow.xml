@@ -16,8 +16,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_AUTH_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
-		  <http:connector name="HttpConnector" enableCookies="true" keepAlive="true" clientSoTimeout="120000" cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0" receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000" socketSoLinger="0" validateConnections="true">
-        <reconnect/>
+		  <http:connector name="HttpConnector" enableCookies="true"  clientSoTimeout="120000" cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0" receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000" socketSoLinger="0" validateConnections="true">
     </http:connector>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
