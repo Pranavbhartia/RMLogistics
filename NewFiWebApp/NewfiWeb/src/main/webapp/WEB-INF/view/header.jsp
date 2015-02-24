@@ -10,3 +10,4 @@
 		</div>
 	</div>
 </div>
+<div class="small-screen-menu-icon lp-t2-item"></div>

@@ -1,13 +1,19 @@
 /* ============== SMARTPHONES ==============*/
 @media (max-width: 767px) {
+	.home-container{
+		padding-right: 5px;
+		overflow: hidden;
+	}
 	.left-panel{
 		display: none;
+		border-right: 1px solid #dcdcdc;
 	}
 	.right-panel{
 		margin-left: 0;
 	}
 	.center-panel{
 		margin-left: 48px;
+		padding-left: 10px;
 	}
 	.lp-t2-txt{
 		display: none;
@@ -17,6 +23,11 @@
 	.lp-t2-img{
 		width: 50px;
 	}
+	
+	.lp-t2-wrapper{
+		top:100px;
+	}
+	
 	.lp-t2-item{
 		height: 50px;
 	}
@@ -78,6 +89,108 @@
 		background-color: #fff;
 		z-index: 99999;
 	}
+	.asset-doc-cont,
+	.unassign-doc-cont{
+		width: 100%;
+		padding : 0;
+	}
+	
+	.asset-doc-row{
+		padding-left: 20px;
+		background-position: 0 5px;
+	}
+	
+	.needed-items-rc{
+		display: none;
+	}
+	.document-cont-col{
+		width: 50%;
+		padding: 0;
+	}
+	.file-upload-text-cont1{
+		display: none;
+	}
+	.list-item-icn{
+		width: 20px;
+	}
+	.needed-item-desc{
+		padding: 5px 5px;
+	}
+	.needed-items-lc{
+		width: 100%;
+	}
+	.file-upload-text-cont2{
+		line-height: 15px;
+		font-size:12px;
+	}
+	.form-detail-input{
+		width: 200px;
+	}
+	.form-detail-input-sm{
+		width: 100px;
+	}
+	.form-detail-input-lg{
+		width: 225px;
+	}
+	.right-panel-messageDashboard{
+		width:95% !important;
+		margin-left: 0;
+	}
+	.message-wrapper{
+		margin-left: 0;
+	}
+	.message-cont-textinput{
+		width: 99%;
+		margin-left: 2px;
+	}
+	.conversation-header{
+		margin-left: 0;
+	}
+	.conversation-container,
+	.conversation-container-child{
+		padding: 10px;
+	}
+	.rp-agent-dashboard{
+		width: 100% !important;
+		margin-left:0;
+	}
+	.container-row{
+		margin-right: 0;
+	}
+	.agent-customer-list-header{
+		margin-left: 10px;
+	}
+	.customer-list-contianer {
+		padding-left: 10px;
+	}
+	
+	.leads-container-tc1{
+		width: 40%;
+	}
+	
+	.leads-container-tc2{
+		width: 25%;
+	}
+	
+	.leads-container-tc5{
+		width: 20%;
+	}
+	
+	.leads-container-tc7{
+		width: 15%;
+	}
+	
+	.leads-container-tc3,
+	.leads-container-tc4,
+	.leads-container-tc6{
+		display: none;
+	}
+	
+	.cust-detail-lw,
+	.cust-detail-rw{
+		width: 100%;
+		padding: 0;
+	}
 }
 
 
@@ -89,6 +202,9 @@
 	}
 	.left-panel{
 		display: block !important;
+	}
+	.file-upload-text-mobile{
+		display: none;
 	}
 }
 
@@ -143,6 +259,37 @@
 	.rate-slider{
 		margin-bottom: 20px;
 	}
+	.needed-items-rc{	
+		display: none;
+	}
+	.doc-desc{
+		height: 80px;
+		padding: 5px 0;
+	}
+	.form-detail-input-lg{
+		width: 240px;
+	}
+	.agent-customer-list-header{
+		margin-left: 10px;
+	}
+	.customer-list-contianer{
+		padding-left: 10px;
+	}
+	.leads-container-tc6{
+		display:none;
+	}
+	.leads-container-tc1{
+		width: 35%;
+	}
+	.leads-container-tc2,.leads-container-tc3,.leads-container-tc4{
+		width: 15%;
+	}
+	.leads-container-tc7,.leads-container-tc5{
+		width: 10%;
+	}
+	.cus-name{
+		padding-left: 10px;
+	}
 }
 
 
@@ -165,6 +312,30 @@
 	.loan-summary-rp{
 		padding: 0 10px;
 	}
+	.leads-container-tc1{
+		width : 25%
+	}
+	.leads-container-tc2{
+		width : 15%
+	}
+	.leads-container-tc3{
+		width : 15%
+	}
+	.leads-container-tc4{
+		width : 15%
+	}
+	.leads-container-tc5{
+		width : 10%
+	}
+	.leads-container-tc6{
+		width : 12%
+	}
+	.leads-container-tc7{
+		width : 8%
+	}
+	.cus-name {
+		padding-left: 10px;
+	}
 }
 
 
@@ -173,6 +344,12 @@
     .center-panel{
     	width: 840px !important;
 	}
+	.right-panel-messageDashboard{
+		width:939px !important;
+	}
+	.rp-agent-dashboard{
+		width:939px !important;
+	}
 }
 
 
@@ -180,6 +357,102 @@
 @media (max-width: 475px) {
 	.loan-summary-header-col2{
 		display: none;
+	}
+	.form-detail-row-desc{
+		width: 100%;
+		text-align : left;
+		padding-left: 10px;
+	}
+	.form-detail-row-value,
+	.form-detail-row-name{
+		width:50%
+	}
+	.form-detail-row-name{
+		padding-right: 10px;
+	}
+	.save-app-btn{
+		width : 150px;
+	}
+	.form-detail-edit,
+	.form-detail-input{
+		width: 100%;
+	}
+	.edit-form{
+		padding: 0 5px;
+	}
+	.application-form-header{
+		padding-left: 5px;
+	}
+	.application-form-header-col1,
+	.form-progress,
+	.progress-span-text,
+	.edit-form{
+		font-size: 10px;
+	}
+	.est-credit-row{
+		padding-left: 0;
+		text-align: center;
+	}
+	.form-detail-edit-row{
+		padding: 0;
+	}
+	.doc-desc{
+		height: 80px;
+		padding: 5px 5px;
+	}
+	.uploaded-items-container{
+		padding-left: 0;
+	}
+	.needed-items-container {
+		margin: 0;
+	}
+	.alert-btn{
+		margin-right: 5px;
+	}
+	.dt-picker-text{
+		display: none;
+	}
+	.date-picker-cont{
+		width: 50%;
+		padding-left: 0;
+		padding-right: 5px;
+		
+	}
+	.time-picker-cont{
+		width: 50%;
+		padding-left: 5px;
+	}
+	.cust-detail-container{
+		padding: 10px;
+	}
+	.agent-customer-list-header{
+		padding-left: 10px;
+	}
+	.filter-text{
+		display: none;
+	}
+	.leads-container-row{
+		padding: 15px 5px;
+	}
+	.onl-status-icn{
+		width: 10px;
+		height: 10px;
+	}
+	.cus-name{
+		padding-left: 10px;
+	}
+	.cus-img-icn{
+		width: 25px;
+		height: 35px;
+		background-size:25px auto;
+	}
+	.filer-dropdown{
+		width:70px;
+		margin-left: 5px;
+		padding-left: 10px;
+	}
+	.search-input{
+		width: 70px;
 	}
 }
 

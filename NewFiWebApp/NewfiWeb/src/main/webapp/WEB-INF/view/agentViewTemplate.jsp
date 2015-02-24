@@ -22,12 +22,9 @@
 		<script>
 				
 			$(document).ready(function(){
-				changeLeftPanel(2);
-				adjustCenterPanelWidth();
-				adjustRightPanelOnResize();
+				paintAgentDashboard();
 				$(window).resize(function(){
-					adjustCenterPanelWidth();
-					adjustRightPanelOnResize();
+					adjustAgentDashboardOnResize();
 				});
 				$(document).on('click','.small-screen-menu-icon',function(e){
 					e.stopImmediatePropagation();
