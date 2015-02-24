@@ -21,7 +21,7 @@
 		<jstl.version>1.2</jstl.version>
 		<servlet.version>2.5</servlet.version>
 
-		<dev.deployment.path>E:\Nexera\apache-tomcat-7.0.56\webapps</dev.deployment.path> 
+		<dev.deployment.path>D:\apache-tomcat-7.0.59-windows-x64\apache-tomcat-7.0.59\webapps</dev.deployment.path> 
 
 
 		<!-- Spring -->
@@ -60,11 +60,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		
-		
-
-		
-
+	
 		<!-- Test Artifacts -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -145,10 +141,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 
-				<!-- <configuration>
-
+				<configuration>
 					<outputDirectory>${dev.deployment.path}</outputDirectory>
-				</configuration> -->
+				</configuration> 
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

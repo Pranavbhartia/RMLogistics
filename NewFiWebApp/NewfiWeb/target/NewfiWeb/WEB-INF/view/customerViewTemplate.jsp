@@ -7,49 +7,29 @@
 		<title>Nexera</title>
 		<link href="resources/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/jquery-ui.css" rel="stylesheet">
+		<link href="resources/css/dropzone.css" rel="stylesheet">
+		<link href="resources/css/style-resp.css" rel="stylesheet">
 	    <link href="resources/css/styles.css" rel="stylesheet">
 	    <link href="resources/css/style-resp.css" rel="stylesheet">
 	</head>
 	
 	<body>
 		<jsp:include page="header.jsp"></jsp:include>
-		<jsp:include page="cutomerViewMainBody.jsp"></jsp:include>
+		<div id="main-body-wrapper">
+			<!-- Include main body in this container -->
+		</div>
 		<jsp:include page="footer.jsp"></jsp:include>
 		<script>
 				
 			$(document).ready(function(){
-				//Display customer rate page
-				paintFixYourRatePage();
+				changeLeftPanel(2);
 				adjustCenterPanelWidth();
+				adjustRightPanelOnResize();
 				$(window).resize(function(){
 					adjustCenterPanelWidth();
+					adjustRightPanelOnResize();
 				});
-				$('#rate-slider').slider({
-					orientation : "horizontal",
-					range : "min",
-					max : 100,
-					value : 40
-				});
-				$('#tenure-slider').slider({
-					orientation : "horizontal",
-					range : "min",
-					max : 30,
-					value : 10
-				});
-				function adjustCenterPanelWidth(){
-					if(window.innerWidth <= 1200 && window.innerWidth >= 768){
-						var leftPanelWidth = $('.left-panel').width();
-						var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-						var centerPanelWidth = $(window).width() - (leftPanelWidth + leftPanelTab2Width) - 35;
-						$('.center-panel').width(centerPanelWidth);
-					}
-					else if(window.innerWidth < 768){
-						var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-						var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 35;
-						$('.center-panel').width(centerPanelWidth);
-					}
-				}
-				$('.small-screen-menu-icon').click(function(e){
+				$(document).on('click','.small-screen-menu-icon',function(e){
 					e.stopImmediatePropagation();
 					$('.left-panel').toggle();
 				});

@@ -47,7 +47,15 @@ public class TemplateComtroller {
 			mav.setViewName("agentViewDashboard");
 			//mav.addObject("myName", userService.getName());
 			return mav;
-	 }
+		}
+	 
+	 @RequestMapping(value="agentLoanPage.do")
+	 public ModelAndView agentMainBody(){
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("agentViewMainBody");
+			//mav.addObject("myName", userService.getName());
+			return mav;
+		}
 	 
 	 @RequestMapping(value = "customerUploadRequiredFiles.do")
 	 public ModelAndView customerUploadRequiredFiles(){
