@@ -19,7 +19,7 @@ public class EmailTemplate implements Serializable {
 	private String from;
 	private Date modifiedDate;
 	private String name;
-	private User user;
+	private User modifiedBy;
 	private List<UserEmail> userEmails;
 
 	public EmailTemplate() {
@@ -80,12 +80,12 @@ public class EmailTemplate implements Serializable {
 	// bi-directional many-to-one association to User
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modified_by")
-	public User getUser() {
-		return this.user;
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	// bi-directional many-to-one association to UserEmail
@@ -96,20 +96,6 @@ public class EmailTemplate implements Serializable {
 
 	public void setUserEmails(List<UserEmail> userEmails) {
 		this.userEmails = userEmails;
-	}
-
-	public UserEmail addUseremail(UserEmail userEmail) {
-		getUserEmails().add(userEmail);
-		userEmail.setEmailtemplate(this);
-
-		return userEmail;
-	}
-
-	public UserEmail removeUseremail(UserEmail userEmail) {
-		getUserEmails().remove(userEmail);
-		userEmail.setEmailtemplate(null);
-
-		return userEmail;
 	}
 
 }
