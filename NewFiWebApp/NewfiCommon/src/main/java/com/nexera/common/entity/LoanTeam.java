@@ -4,49 +4,45 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the loanteam database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanTeam.findAll", query="SELECT l FROM LoanTeam l")
+@NamedQuery(name = "LoanTeam.findAll", query = "SELECT l FROM LoanTeam l")
 public class LoanTeam implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
-	private byte active;
+	private Integer id;
+	private Boolean active;
 	private Date assignedOn;
 	private String permissionType;
-	private Loan loanBean;
-	private User user1;
-	private User user2;
+	private Loan loan;
+	private User assignedBy;
+	private User user;
 
 	public LoanTeam() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
-	public byte getActive() {
+	public Boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="assigned_on")
+	@Column(name = "assigned_on")
 	public Date getAssignedOn() {
 		return this.assignedOn;
 	}
@@ -55,8 +51,7 @@ public class LoanTeam implements Serializable {
 		this.assignedOn = assignedOn;
 	}
 
-
-	@Column(name="permission_type")
+	@Column(name = "permission_type")
 	public String getPermissionType() {
 		return this.permissionType;
 	}
@@ -65,40 +60,37 @@ public class LoanTeam implements Serializable {
 		this.permissionType = permissionType;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="assigned_by")
-	public User getUser1() {
-		return this.user1;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user")
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user")
-	public User getUser2() {
-		return this.user2;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "assigned_by")
+	public User getAssignedBy() {
+		return assignedBy;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setAssignedBy(User assignedBy) {
+		this.assignedBy = assignedBy;
 	}
 
 }

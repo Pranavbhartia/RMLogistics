@@ -13,11 +13,11 @@ import java.util.List;
 @NamedQuery(name="UiComponent.findAll", query="SELECT u FROM UiComponent u")
 public class UiComponent implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String componentDescription;
-	private UiComponent uicomponent;
-	private List<UiComponent> uicomponents;
-	private List<UiComponentPermission> uicomponentpermissions;
+	private UiComponent uiComponent;
+	private List<UiComponent> listUiComponents;
+	private List<UiComponentPermission> uiComponentPermissions;
 
 	public UiComponent() {
 	}
@@ -25,11 +25,11 @@ public class UiComponent implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -47,35 +47,35 @@ public class UiComponent implements Serializable {
 	//bi-directional many-to-one association to UiComponent
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_component")
-	public UiComponent getUicomponent() {
-		return this.uicomponent;
+	public UiComponent getUiComponent() {
+		return this.uiComponent;
 	}
 
-	public void setUicomponent(UiComponent uicomponent) {
-		this.uicomponent = uicomponent;
+	public void setUiComponent(UiComponent uiComponent) {
+		this.uiComponent = uiComponent;
 	}
 
 
 	//bi-directional many-to-one association to UiComponent
 	@OneToMany(mappedBy="uicomponent")
-	public List<UiComponent> getUicomponents() {
-		return this.uicomponents;
+	public List<UiComponent> getListUiComponents() {
+		return this.listUiComponents;
 	}
 
-	public void setUicomponents(List<UiComponent> uicomponents) {
-		this.uicomponents = uicomponents;
+	public void setListUiComponents(List<UiComponent> listUiComponents) {
+		this.listUiComponents = listUiComponents;
 	}
 
 	public UiComponent addUicomponent(UiComponent uicomponent) {
-		getUicomponents().add(uicomponent);
-		uicomponent.setUicomponent(this);
+		getListUiComponents().add(uicomponent);
+		uicomponent.setUiComponent(this);
 
 		return uicomponent;
 	}
 
 	public UiComponent removeUicomponent(UiComponent uicomponent) {
-		getUicomponents().remove(uicomponent);
-		uicomponent.setUicomponent(null);
+		getListUiComponents().remove(uicomponent);
+		uicomponent.setUiComponent(null);
 
 		return uicomponent;
 	}
@@ -83,24 +83,24 @@ public class UiComponent implements Serializable {
 
 	//bi-directional many-to-one association to UiComponentPermission
 	@OneToMany(mappedBy="uicomponent")
-	public List<UiComponentPermission> getUicomponentpermissions() {
-		return this.uicomponentpermissions;
+	public List<UiComponentPermission> getUiComponentPermissions() {
+		return this.uiComponentPermissions;
 	}
 
-	public void setUicomponentpermissions(List<UiComponentPermission> uicomponentpermissions) {
-		this.uicomponentpermissions = uicomponentpermissions;
+	public void setUiComponentPermissions(List<UiComponentPermission> uiComponentPermissions) {
+		this.uiComponentPermissions = uiComponentPermissions;
 	}
 
 	public UiComponentPermission addUicomponentpermission(UiComponentPermission uicomponentpermission) {
-		getUicomponentpermissions().add(uicomponentpermission);
-		uicomponentpermission.setUicomponent(this);
+		getUiComponentPermissions().add(uicomponentpermission);
+		uicomponentpermission.setUiComponent(this);
 
 		return uicomponentpermission;
 	}
 
 	public UiComponentPermission removeUicomponentpermission(UiComponentPermission uicomponentpermission) {
-		getUicomponentpermissions().remove(uicomponentpermission);
-		uicomponentpermission.setUicomponent(null);
+		getUiComponentPermissions().remove(uicomponentpermission);
+		uicomponentpermission.setUiComponent(null);
 
 		return uicomponentpermission;
 	}

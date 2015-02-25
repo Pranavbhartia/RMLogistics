@@ -13,15 +13,15 @@ import java.util.Date;
 @NamedQuery(name="UserEmail.findAll", query="SELECT u FROM UserEmail u")
 public class UserEmail implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Date createdDate;
 	private String priority;
-	private byte status;
+	private Boolean status;
 	private String to;
 	private byte[] tokenMap;
-	private User user1;
-	private User user2;
-	private EmailTemplate emailtemplate;
+	private User createdBy;
+	private User user;
+	private EmailTemplate emailTemplate;
 
 	public UserEmail() {
 	}
@@ -29,11 +29,11 @@ public class UserEmail implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -58,11 +58,11 @@ public class UserEmail implements Serializable {
 	}
 
 
-	public byte getStatus() {
+	public Boolean getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(byte status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -87,39 +87,44 @@ public class UserEmail implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_by")
-	public User getUser1() {
-		return this.user1;
-	}
-
-	public void setUser1(User user1) {
-		this.user1 = user1;
-	}
+	
+	
 
 
 	//bi-directional many-to-one association to User
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user")
-	public User getUser2() {
-		return this.user2;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setUser2(User user) {
+		this.user = user;
 	}
 
 
 	//bi-directional many-to-one association to EmailTemplate
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="email_template")
-	public EmailTemplate getEmailtemplate() {
-		return this.emailtemplate;
+	public EmailTemplate getEmailTemplate() {
+		return this.emailTemplate;
 	}
 
-	public void setEmailtemplate(EmailTemplate emailtemplate) {
-		this.emailtemplate = emailtemplate;
+	public void setEmailTemplate(EmailTemplate emailTemplate) {
+		this.emailTemplate = emailTemplate;
+	}
+
+
+	//bi-directional many-to-one association to User
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="created_by")
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 
 }

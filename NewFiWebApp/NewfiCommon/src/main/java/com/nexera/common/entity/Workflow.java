@@ -15,17 +15,17 @@ import java.util.List;
 public class Workflow implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private byte active;
+	private Boolean active;
 	private Date createdTime;
-	private int currentExecutingItem;
+	private WorkflowItem currentExecutingItem;
 	private Date executionCompleteTime;
 	private Date lastUpdatedTime;
 	private byte[] meta;
 	private String status;
 	private String summary;
-	private WorkflowMaster workflowmaster;
+	private WorkflowMaster workflowMaster;
 	private User user;
-	private List<WorkflowItem> workflowitems;
+	private List<WorkflowItem> workflowItems;
 
 	public Workflow() {
 	}
@@ -42,11 +42,11 @@ public class Workflow implements Serializable {
 	}
 
 
-	public byte getActive() {
+	public Boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
@@ -63,11 +63,11 @@ public class Workflow implements Serializable {
 
 
 	@Column(name="current_executing_item")
-	public int getCurrentExecutingItem() {
+	public WorkflowItem getCurrentExecutingItem() {
 		return this.currentExecutingItem;
 	}
 
-	public void setCurrentExecutingItem(int currentExecutingItem) {
+	public void setCurrentExecutingItem(WorkflowItem currentExecutingItem) {
 		this.currentExecutingItem = currentExecutingItem;
 	}
 
@@ -126,11 +126,11 @@ public class Workflow implements Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="workflow")
 	public WorkflowMaster getWorkflowmaster() {
-		return this.workflowmaster;
+		return this.workflowMaster;
 	}
 
 	public void setWorkflowmaster(WorkflowMaster workflowmaster) {
-		this.workflowmaster = workflowmaster;
+		this.workflowMaster = workflowmaster;
 	}
 
 
@@ -148,24 +148,24 @@ public class Workflow implements Serializable {
 
 	//bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy="workflow")
-	public List<WorkflowItem> getWorkflowitems() {
-		return this.workflowitems;
+	public List<WorkflowItem> getWorkflowItems() {
+		return this.workflowItems;
 	}
 
-	public void setWorkflowitems(List<WorkflowItem> workflowitems) {
-		this.workflowitems = workflowitems;
+	public void setWorkflowItems(List<WorkflowItem> workflowitems) {
+		this.workflowItems = workflowitems;
 	}
 
-	public WorkflowItem addWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().add(workflowitem);
-		workflowitem.setWorkflow(this);
+	public WorkflowItem addWorkflowItem(WorkflowItem workflowitem) {
+		getWorkflowItems().add(workflowitem);
+		workflowitem.setParentWorkflow(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().remove(workflowitem);
-		workflowitem.setWorkflow(null);
+	public WorkflowItem removeWorkflowItem(WorkflowItem workflowitem) {
+		getWorkflowItems().remove(workflowitem);
+		workflowitem.setParentWorkflow(null);
 
 		return workflowitem;
 	}

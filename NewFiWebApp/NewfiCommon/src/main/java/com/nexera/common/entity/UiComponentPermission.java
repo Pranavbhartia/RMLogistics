@@ -3,85 +3,78 @@ package com.nexera.common.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the uicomponentpermission database table.
  * 
  */
 @Entity
-@NamedQuery(name="UiComponentPermission.findAll", query="SELECT u FROM UiComponentPermission u")
+@NamedQuery(name = "UiComponentPermission.findAll", query = "SELECT u FROM UiComponentPermission u")
 public class UiComponentPermission implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
-	private byte delete;
-	private byte read;
-	private byte write;
-	private UiComponent uicomponent;
-	private UserRole userrole;
+	private Integer id;
+	private Boolean delete;
+	private Boolean read;
+	private Boolean write;
+	private UiComponent uiComponent;
+	private UserRole userRole;
 
 	public UiComponentPermission() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
-	public byte getDelete() {
+	public Boolean getDelete() {
 		return this.delete;
 	}
 
-	public void setDelete(byte delete) {
+	public void setDelete(Boolean delete) {
 		this.delete = delete;
 	}
 
-
-	public byte getRead() {
+	public Boolean getRead() {
 		return this.read;
 	}
 
-	public void setRead(byte read) {
+	public void setRead(Boolean read) {
 		this.read = read;
 	}
 
-
-	public byte getWrite() {
+	public Boolean getWrite() {
 		return this.write;
 	}
 
-	public void setWrite(byte write) {
+	public void setWrite(Boolean write) {
 		this.write = write;
 	}
 
-
-	//bi-directional many-to-one association to UiComponent
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="app_ui_component")
-	public UiComponent getUicomponent() {
-		return this.uicomponent;
+	// bi-directional many-to-one association to UiComponent
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "app_ui_component")
+	public UiComponent getUiComponent() {
+		return this.uiComponent;
 	}
 
-	public void setUicomponent(UiComponent uicomponent) {
-		this.uicomponent = uicomponent;
+	public void setUiComponent(UiComponent uiComponent) {
+		this.uiComponent = uiComponent;
 	}
 
-
-	//bi-directional many-to-one association to UserRole
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user_role")
-	public UserRole getUserrole() {
-		return this.userrole;
+	// bi-directional many-to-one association to UserRole
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_role")
+	public UserRole getUserRole() {
+		return userRole;
 	}
 
-	public void setUserrole(UserRole userrole) {
-		this.userrole = userrole;
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
 	}
 
 }

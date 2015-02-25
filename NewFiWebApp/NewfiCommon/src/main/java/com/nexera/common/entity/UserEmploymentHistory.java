@@ -4,39 +4,36 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the useremploymenthistory database table.
  * 
  */
 @Entity
-@NamedQuery(name="UserEmploymentHistory.findAll", query="SELECT u FROM UserEmploymentHistory u")
+@NamedQuery(name = "UserEmploymentHistory.findAll", query = "SELECT u FROM UserEmploymentHistory u")
 public class UserEmploymentHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String comments;
 	private String companyName;
 	private Date endDate;
 	private String role;
-	private double salaryBeforeTax;
+	private Double salaryBeforeTax;
 	private Date startDate;
-	private LoanAppForm loanappform;
-	private User userBean;
+	private LoanAppForm loanAppForm;
+	private User user;
 
 	public UserEmploymentHistory() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	public String getComments() {
 		return this.comments;
@@ -46,8 +43,7 @@ public class UserEmploymentHistory implements Serializable {
 		this.comments = comments;
 	}
 
-
-	@Column(name="company_name")
+	@Column(name = "company_name")
 	public String getCompanyName() {
 		return this.companyName;
 	}
@@ -56,9 +52,8 @@ public class UserEmploymentHistory implements Serializable {
 		this.companyName = companyName;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="end_date")
+	@Column(name = "end_date")
 	public Date getEndDate() {
 		return this.endDate;
 	}
@@ -66,7 +61,6 @@ public class UserEmploymentHistory implements Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
 
 	public String getRole() {
 		return this.role;
@@ -76,19 +70,17 @@ public class UserEmploymentHistory implements Serializable {
 		this.role = role;
 	}
 
-
-	@Column(name="salary_before_tax")
-	public double getSalaryBeforeTax() {
+	@Column(name = "salary_before_tax")
+	public Double getSalaryBeforeTax() {
 		return this.salaryBeforeTax;
 	}
 
-	public void setSalaryBeforeTax(double salaryBeforeTax) {
+	public void setSalaryBeforeTax(Double salaryBeforeTax) {
 		this.salaryBeforeTax = salaryBeforeTax;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="start_date")
+	@Column(name = "start_date")
 	public Date getStartDate() {
 		return this.startDate;
 	}
@@ -97,28 +89,26 @@ public class UserEmploymentHistory implements Serializable {
 		this.startDate = startDate;
 	}
 
-
-	//bi-directional many-to-one association to LoanAppForm
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan_app_form")
-	public LoanAppForm getLoanappform() {
-		return this.loanappform;
+	// bi-directional many-to-one association to LoanAppForm
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_app_form")
+	public LoanAppForm getLoanAppForm() {
+		return this.loanAppForm;
 	}
 
-	public void setLoanappform(LoanAppForm loanappform) {
-		this.loanappform = loanappform;
+	public void setLoanAppForm(LoanAppForm loanAppForm) {
+		this.loanAppForm = loanAppForm;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user")
-	public User getUserBean() {
-		return this.userBean;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user")
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserBean(User userBean) {
-		this.userBean = userBean;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

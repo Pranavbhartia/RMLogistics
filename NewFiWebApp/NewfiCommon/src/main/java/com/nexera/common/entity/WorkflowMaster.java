@@ -1,47 +1,53 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the workflowmaster database table.
  * 
  */
 @Entity
-@NamedQuery(name="WorkflowMaster.findAll", query="SELECT w FROM WorkflowMaster w")
+@NamedQuery(name = "WorkflowMaster.findAll", query = "SELECT w FROM WorkflowMaster w")
 public class WorkflowMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Date createdDate;
 	private String description;
 	private Date modifiedDate;
 	private String name;
 	private String workflowType;
-	private List<Workflow> workflows;
-	private User user1;
-	private User user2;
-	private WorkflowItemMaster workflowitemmaster;
+	private User createdBy;
+	private User modifiedBy;
+	private WorkflowItemMaster startWithWorkflow;
 
 	public WorkflowMaster() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date")
+	@Column(name = "created_date")
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -49,7 +55,6 @@ public class WorkflowMaster implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
 
 	public String getDescription() {
 		return this.description;
@@ -59,9 +64,8 @@ public class WorkflowMaster implements Serializable {
 		this.description = description;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -69,7 +73,6 @@ public class WorkflowMaster implements Serializable {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-
 
 	public String getName() {
 		return this.name;
@@ -79,8 +82,7 @@ public class WorkflowMaster implements Serializable {
 		this.name = name;
 	}
 
-
-	@Column(name="workflow_type")
+	@Column(name = "workflow_type")
 	public String getWorkflowType() {
 		return this.workflowType;
 	}
@@ -88,66 +90,39 @@ public class WorkflowMaster implements Serializable {
 	public void setWorkflowType(String workflowType) {
 		this.workflowType = workflowType;
 	}
+	
 
-
-	//bi-directional many-to-one association to Workflow
-	@OneToMany(mappedBy="workflowmaster")
-	public List<Workflow> getWorkflows() {
-		return this.workflows;
+	// bi-directional many-to-one association to WorkflowItemMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "start_with")
+	public WorkflowItemMaster getStartWithWorkflow() {
+		return startWithWorkflow;
 	}
 
-	public void setWorkflows(List<Workflow> workflows) {
-		this.workflows = workflows;
+	public void setStartWithWorkflow(WorkflowItemMaster startWithWorkflow) {
+		this.startWithWorkflow = startWithWorkflow;
 	}
 
-	public Workflow addWorkflow(Workflow workflow) {
-		getWorkflows().add(workflow);
-		workflow.setWorkflowmaster(this);
-
-		return workflow;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by")
+	public User getCreatedBy() {
+		return createdBy;
 	}
 
-	public Workflow removeWorkflow(Workflow workflow) {
-		getWorkflows().remove(workflow);
-		workflow.setWorkflowmaster(null);
-
-		return workflow;
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_by")
-	public User getUser1() {
-		return this.user1;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_by")
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
-	}
-
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="modified_by")
-	public User getUser2() {
-		return this.user2;
-	}
-
-	public void setUser2(User user2) {
-		this.user2 = user2;
-	}
-
-
-	//bi-directional many-to-one association to WorkflowItemMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="start_with")
-	public WorkflowItemMaster getWorkflowitemmaster() {
-		return this.workflowitemmaster;
-	}
-
-	public void setWorkflowitemmaster(WorkflowItemMaster workflowitemmaster) {
-		this.workflowitemmaster = workflowitemmaster;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 }

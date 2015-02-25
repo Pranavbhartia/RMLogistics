@@ -5,13 +5,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the loanstatusmaster database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanStatusMaster.findAll", query="SELECT l FROM LoanStatusMaster l")
+@NamedQuery(name = "LoanStatusMaster.findAll", query = "SELECT l FROM LoanStatusMaster l")
 public class LoanStatusMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -19,14 +18,13 @@ public class LoanStatusMaster implements Serializable {
 	private String loanStatusCd;
 	private Date modifiedDate;
 	private List<Loan> loans;
-	private User user;
+	private User modifiedBy;
 
 	public LoanStatusMaster() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -34,7 +32,6 @@ public class LoanStatusMaster implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getDescription() {
 		return this.description;
@@ -44,8 +41,7 @@ public class LoanStatusMaster implements Serializable {
 		this.description = description;
 	}
 
-
-	@Column(name="loan_status_cd")
+	@Column(name = "loan_status_cd")
 	public String getLoanStatusCd() {
 		return this.loanStatusCd;
 	}
@@ -54,9 +50,8 @@ public class LoanStatusMaster implements Serializable {
 		this.loanStatusCd = loanStatusCd;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -65,9 +60,8 @@ public class LoanStatusMaster implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@OneToMany(mappedBy="loanstatusmaster")
+	// bi-directional many-to-one association to Loan
+	@OneToMany(mappedBy = "loanstatusmaster")
 	public List<Loan> getLoans() {
 		return this.loans;
 	}
@@ -90,16 +84,15 @@ public class LoanStatusMaster implements Serializable {
 		return loan;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="modified_by")
-	public User getUser() {
-		return this.user;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_by")
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 }

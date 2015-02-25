@@ -15,12 +15,12 @@ import java.util.List;
 public class UserRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private int modifiedBy;
+	private User modifiedBy;
 	private Date modifiedDate;
 	private String roleCd;
 	private String roleDescription;
-	private byte visibleOnLoanTeam;
-	private List<UiComponentPermission> uicomponentpermissions;
+	private Boolean visibleOnLoanTeam;
+	private List<UiComponentPermission> uiComponentPermissions;
 	private List<User> users;
 
 	public UserRole() {
@@ -39,11 +39,11 @@ public class UserRole implements Serializable {
 
 
 	@Column(name="modified_by")
-	public int getModifiedBy() {
+	public User getModifiedBy() {
 		return this.modifiedBy;
 	}
 
-	public void setModifiedBy(int modifiedBy) {
+	public void setModifiedBy(User modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -80,35 +80,35 @@ public class UserRole implements Serializable {
 
 
 	@Column(name="visible_on_loan_team")
-	public byte getVisibleOnLoanTeam() {
+	public Boolean getVisibleOnLoanTeam() {
 		return this.visibleOnLoanTeam;
 	}
 
-	public void setVisibleOnLoanTeam(byte visibleOnLoanTeam) {
+	public void setVisibleOnLoanTeam(Boolean visibleOnLoanTeam) {
 		this.visibleOnLoanTeam = visibleOnLoanTeam;
 	}
 
 
 	//bi-directional many-to-one association to UiComponentPermission
 	@OneToMany(mappedBy="userrole")
-	public List<UiComponentPermission> getUicomponentpermissions() {
-		return this.uicomponentpermissions;
+	public List<UiComponentPermission> getUiComponentPermissions() {
+		return this.uiComponentPermissions;
 	}
 
-	public void setUicomponentpermissions(List<UiComponentPermission> uicomponentpermissions) {
-		this.uicomponentpermissions = uicomponentpermissions;
+	public void setUiComponentPermissions(List<UiComponentPermission> uicomponentpermissions) {
+		this.uiComponentPermissions = uicomponentpermissions;
 	}
 
-	public UiComponentPermission addUicomponentpermission(UiComponentPermission uicomponentpermission) {
-		getUicomponentpermissions().add(uicomponentpermission);
-		uicomponentpermission.setUserrole(this);
+	public UiComponentPermission addUiComponentPermission(UiComponentPermission uicomponentpermission) {
+		getUiComponentPermissions().add(uicomponentpermission);
+		uicomponentpermission.setUserRole(this);
 
 		return uicomponentpermission;
 	}
 
-	public UiComponentPermission removeUicomponentpermission(UiComponentPermission uicomponentpermission) {
-		getUicomponentpermissions().remove(uicomponentpermission);
-		uicomponentpermission.setUserrole(null);
+	public UiComponentPermission removeUiComponentPermission(UiComponentPermission uicomponentpermission) {
+		getUiComponentPermissions().remove(uicomponentpermission);
+		uicomponentpermission.setUserRole(null);
 
 		return uicomponentpermission;
 	}

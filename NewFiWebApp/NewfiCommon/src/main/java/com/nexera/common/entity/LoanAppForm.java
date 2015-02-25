@@ -209,7 +209,7 @@ public class LoanAppForm implements Serializable {
 	public UserEmploymentHistory addUserEmploymentHistory(
 			UserEmploymentHistory userEmploymentHistory) {
 		getUserEmploymentHistories().add(userEmploymentHistory);
-		userEmploymentHistory.setLoanappform(this);
+		userEmploymentHistory.setLoanAppForm(this);
 
 		return userEmploymentHistory;
 	}
@@ -217,7 +217,7 @@ public class LoanAppForm implements Serializable {
 	public UserEmploymentHistory removeUserEmploymentHistory(
 			UserEmploymentHistory userEmploymentHistory) {
 		getUserEmploymentHistories().remove(userEmploymentHistory);
-		userEmploymentHistory.setLoanappform(null);
+		userEmploymentHistory.setLoanAppForm(null);
 
 		return userEmploymentHistory;
 	}
