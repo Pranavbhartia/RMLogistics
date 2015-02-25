@@ -22,20 +22,11 @@
 		<script>
 				
 			$(document).ready(function(){
+				isAgentTypeDashboard=true;
 				paintAgentDashboard();
 				$(window).resize(function(){
 					adjustAgentDashboardOnResize();
-				});
-				$(document).on('click','.small-screen-menu-icon',function(e){
-					e.stopImmediatePropagation();
-					$('.left-panel').toggle();
-				});
-				$(document).click(function(){
-					if($(window).width() <= 768){
-						if($('.left-panel').css("display") == "block"){
-							$('.left-panel').toggle();
-						}
-					}
+					adjustCenterPanelWidth();
 				});
 			});
 		</script>

@@ -438,7 +438,7 @@ function getLoanSummaryWrapper() {
 	});
 	var header = getLoanSummaryHeader();
 	var container = getLoanSummaryContainer();
-	var bottomText = getHeaderText("Quoted Rates are not guarteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual will beon your Good Faith Estimate after Loan Amount and Income are Verified.");
+	var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
 	parentWrapper.append(header).append(container).append(bottomText);
 	return parentWrapper;
 }
@@ -883,10 +883,15 @@ function getNeededDocRow(desc){
 	var rowDesc = $('<div>').attr({
 		"class" : "needed-item-desc float-left"
 	}).html(desc);
-	var rightImage = $('<div>').attr({
+	var docUploadImage = $('<div>').attr({
 		"class" : "doc-uploaded-icn float-left"
 	});
-	return row.append(leftImage).append(rowDesc).append(rightImage);
+	row.append(leftImage).append(rowDesc).append(docUploadImage);
+	var docRemoveImage = $('<div>').attr({
+		"class" : "doc-remove-icn float-left"
+	});
+	row.append(docRemoveImage);
+	return row;
 }
 
 function getUploadedItemsWrapper() {

@@ -25,7 +25,7 @@
 	}
 	
 	.lp-t2-wrapper{
-		top:100px;
+		top:50px;
 	}
 	
 	.lp-t2-item{
@@ -191,6 +191,35 @@
 		width: 100%;
 		padding: 0;
 	}
+	
+	.initial-list-doc-wrapper{
+		width: 100%;
+	}
+	
+	.add-needs-input-edit{
+		width: 90%;
+	}
+	
+	.cus-prof-pic{
+		margin-left: 30px;
+	}
+	
+	.cus-prof-detail-lc,.cus-prof-detail-rc{
+		width: 255px;
+		margin:0 auto;
+		float: none;
+	}
+	
+	.cus-detail-rc-title{
+		width: 100px;
+	}
+	
+	.cus-detail-rc-value{
+		width: 135px;
+	}
+	.cus-prof-pic-txt{
+		margin-left: 20px;
+	}
 }
 
 
@@ -289,6 +318,23 @@
 	}
 	.cus-name{
 		padding-left: 10px;
+	}
+	.cus-detail-rc-title{
+		width: 45%;
+		padding-right: 5px;
+	}
+	.cus-detail-rc-value {
+		width: 55%;
+		padding-left: 5px;
+	}
+	.cus-prof-pic-txt{
+		width: 100px;
+	}
+	.cus-prof-detail-rc{
+		width: 230px;
+	}
+	.add-needs-input-edit{
+		width: 90%;
 	}
 }
 
@@ -453,6 +499,15 @@
 	}
 	.search-input{
 		width: 70px;
+	}
+	.add-needs-input-row{
+		width: 100%;
+	}
+	.add-needs-input-edit{
+		width: 100%;
+	}
+	.initial-list-doc-wrapper,.add-needs-wrapper,.need-list-save-btn-wrapper{
+		padding-left: 10px;
 	}
 }
 

@@ -64,4 +64,12 @@ public class TemplateComtroller {
 		 return mav;
 	 }
 	 
+	 
+	 @RequestMapping(value = "video.do")
+	 public ModelAndView showVideoPage(){
+		 ModelAndView mav = new ModelAndView();
+		 mav.setViewName("videoTest");
+		 return mav;
+	 }
+
 }

@@ -1,7 +1,7 @@
 /*
 *Contains JavaScript functions for agent dashboard pages
 */
-
+var isAgentTypeDashboard;
 
 function adjustAgentDashboardOnResize() {
 	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
@@ -269,8 +269,6 @@ function appendCustomers(elementId,customers){
 		
 		var row = $('<div>').attr({
 			"class" : "leads-container-tr leads-container-row clearfix"
-		}).bind('click',{"customer":customer},function(event){
-			appendCustomerDetailContianer(this,event.data.customer);
 		});
 		
 		if(i%2==0){
@@ -324,6 +322,9 @@ function appendCustomers(elementId,customers){
 		
 		var col7 = $('<div>').attr({
 			"class" : "leads-container-tc7 alert-col float-left"
+		}).bind('click',{"customer":customer},function(event){
+			event.stopImmediatePropagation();
+			appendCustomerDetailContianer($(this).parent(),event.data.customer);
 		});
 		
 		if(parseInt(customer.alert_count) > 0){
@@ -669,17 +670,18 @@ function paintMyLoansView(){
 	ajaxRequest("./agentLoanPage.do", "GET", "HTML", {}, paintMyLoansViewCallBack);
 }
 
+function paintMyLoansViewCallBack(data){
+	$('#main-body-wrapper').html(data);
+	changeAgentSecondaryLeftPanel('lp-step1');
+	adjustCenterPanelWidth();
+	
+}
+
 function paintAgentLoanPage(){
 	appendCustomerDetailHeader();
 	appendCustomerLoanDetails();
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper();
-}
-
-function paintMyLoansViewCallBack(data){
-	$('#main-body-wrapper').html(data);
-	changeAgentSecondaryLeftPanel('lp-step1');
-	
 }
 
 //function called when secondary left panel is changed in agent view loan progress pages
@@ -694,9 +696,19 @@ function changeAgentSecondaryLeftPanel(elementId){
 	$('#center-panel-cont').html('');
 	
 	//Check the id and paint the corresponding right panel
-	if(elementId == "lp-step2"){
+	if(elementId == "lp-step1"){
+	}
+	else if(elementId == "lp-step2"){
 		paintAgentLoanPage();
 	}
+	else if(elementId == "lp-step3"){
+	}
+	else if(elementId == "lp-step4"){
+		paintAgentNeedsListPage();
+	}
+	else if(elementId == "lp-step5"){
+	}
+	
 
 }
 
@@ -918,4 +930,396 @@ function getTeamListTableHeader(){
 	}).html("Email");
 	
 	return tableHeaderRow.append(thCol1).append(thCol2).append(thCol3);
+}
+
+
+/*
+ * Functions for agent view needs list page
+ */
+
+
+
+var docData = {
+		"income" : [
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Salaried-W-2 form",
+		            	"desc" : "Salaried-W-2 form"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Other income",
+		            	"desc" : "Other income"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Interest/Dividend",
+		            	"desc" : "Interest/Dividend"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Alimony/Child Support",
+		            	"desc" : "Alimony/Child Support"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Alimony/Child Support",
+		            	"desc" : "Alimony/Child Support"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Rental Income",
+		            	"desc" : "Rental Income"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Social security or disability income",
+		            	"desc" : "Social security or disability income"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Award letter",
+		            	"desc" : "Award letter"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "YTD P/L statement",
+		            	"desc" : "YTD P/L statement"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Federal Tax returns",
+		            	"desc" : "Federal Tax returns"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Payroll Stubs",
+		            	"desc" : "Payroll Stubs"
+		            }
+		            ],
+        "property" : [
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Condos and PDU's",
+		            	"desc" : "Condos and PDU's"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Purchase contract from home",
+		            	"desc" : "Purchase contract from home"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Home Owner's insurance",
+		            	"desc" : "Home Owner's insurance"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Property tax bill",
+		            	"desc" : "Property tax bill"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Home Owner's hazard insurance policy",
+		            	"desc" : "Home Owner's hazard insurance policy"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Cancelled check rents",
+		            	"desc" : "Cancelled check rents"
+		            }
+		            ],
+        "asset" : [
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Cancelled statement from close of home",
+		            	"desc" : "Cancelled statement from close of home"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Purchase agreement",
+		            	"desc" : "Purchase agreement"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Letter from provider of home",
+		            	"desc" : "Letter from provider of home"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Retirement fund or stock portfolio",
+		            	"desc" : "Retirement fund or stock portfolio"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Bank statement",
+		            	"desc" : "Bank statement"
+		            }
+		            ],
+	    "other" : [
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Cancelled statement from close of home",
+		            	"desc" : "Cancelled statement from close of home"
+		            },
+		            {
+		            	"isChecked" : "true",
+		            	"title" : "Purchase agreement",
+		            	"desc" : ""
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Letter from provider of home",
+		            	"desc" : "Letter from provider of home"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Retirement fund or stock portfolio",
+		            	"desc" : "Retirement fund or stock portfolio"
+		            },
+		            {
+		            	"isChecked" : "false",
+		            	"title" : "Bank statement",
+		            	"desc" : "Bank statement"
+		            }
+		            ]
+};
+
+function paintAgentNeedsListPage(){
+	appendDocumentToolTip();
+	appendCustomerDetailHeader();
+	appendInitialNeedsListWrapper();
+	paintUploadNeededItemsPage();
+}
+
+function appendInitialNeedsListWrapper(){
+	var wrapper = $('<div>').attr({
+		"id" : "initial-needs-wrapper",
+		"class" : "initial-needs-wrapper"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "initial-needs-header"
+	}).html("initial need list");
+	
+	var container = $('<div>').attr({
+		"class" : "initial-needs-container clearfix"
+	});
+	
+	var incomeDocContainer = getNeedsListDocumentContainer("income",docData.income).addClass('float-left');
+	
+	var propertyDocContainer = getNeedsListDocumentContainer("property",docData.property).addClass('float-right');
+	
+	var assetDocContainer = getNeedsListDocumentContainer("asset",docData.asset).addClass('float-right');
+	
+	var otherDocContainer = getNeedsListDocumentContainer("other",docData.other).addClass('float-left');
+	
+	container.append(incomeDocContainer).append(propertyDocContainer).append(assetDocContainer).append(otherDocContainer);
+	
+	wrapper.append(header).append(container);
+	$('#center-panel-cont').append(wrapper);
+	
+	appendAddNeedsContainer();
+	
+	//append save button
+	var savebtnWrapper = $('<div>').attr({
+		"class" : "need-list-save-btn-wrapper"
+	});
+	
+	var savebtn = $('<div>').attr({
+		"class" : "need-list-save-btn"
+	}).html("Save Needs");
+	
+	savebtnWrapper.append(savebtn);
+	
+	$('#center-panel-cont').append(savebtnWrapper);
+}
+
+
+function getNeedsListDocumentContainer(docType,documents){
+	var docWrapper = $('<div>').attr({
+		"class" : "initial-list-doc-wrapper",
+		"data-doc-type" : docType
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "initial-list-doc-header"
+	}).html(docType + " Documents"); 
+	
+	var container = $('<div>').attr({
+		"class" : "initial-list-doc-container"
+	});
+	
+	for(var i=0; i<documents.length; i++){
+		var row = getNeededDocumentRow(documents[i]);
+		container.append(row);
+	}
+	
+	return docWrapper.append(header).append(container);
+}
+
+function getNeededDocumentRow(document){
+	var row = $('<div>').attr({
+		"class" : "initial-list-doc-row clearfix"
+	});
+	
+	var checkBox = $('<div>').attr({
+		"class" : "doc-checkbox float-left"
+	});
+	if(document.isChecked == "true"){
+		checkBox.addClass('doc-checked');
+	}else{
+		checkBox.addClass('doc-unchecked');
+	}
+	
+	var docTitle = $('<div>').attr({
+		"class" : "doc-title float-left"
+	}).html(document.title);
+	
+	docTitle.bind('mouseenter',{"desc" : document.desc},function(event){
+		var leftOffset = $(this).offset().left;
+		var topOffset = $(this).offset().top;
+		var desc = event.data.desc;
+		showDocumentToolTip(desc, topOffset, leftOffset);
+	});
+	
+	docTitle.bind('mouseleave',function(event){
+		hideDocumentToolTip();
+	});
+	
+	return row.append(checkBox).append(docTitle);
+}
+
+
+//Click event for document checkbox
+$(document).on('click','.doc-checkbox',function(){
+	if($(this).hasClass('doc-checked')){
+		$(this).removeClass('doc-checked');
+		$(this).addClass('doc-unchecked');
+	}else{
+		$(this).removeClass('doc-unchecked');
+		$(this).addClass('doc-checked');
+	}
+});
+
+
+var docTypes = ["income","property","asset","other"];
+
+function appendAddNeedsContainer(){
+	var wrapper = $('<div>').attr({
+		"class" : "add-needs-wrapper"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "initial-list-doc-header"
+	}).html("Add New Needs");
+	
+	var container = $('<div>').attr({
+		"class" : "add-needs-container"
+	}); 
+	
+	var row1 = $('<div>').attr({
+		"class" : "add-needs-input-row clearfix float-left"
+	});
+	var row1Label = $('<div>').attr({
+		"class" : "add-needs-input-label float-left"
+	}).html("Document Type"); 
+	var row1Select = $('<select>').attr({
+		"id" : "need_doc_type",
+		"class" : "add-needs-input-edit float-left capitalize"
+	});
+	
+	//Append options
+	for(var i=0; i<docTypes.length;i++){
+		var option = $('<option>').attr({
+			"class" : "add-needs-input-edit"
+		}).html(docTypes[i]);
+		row1Select.append(option);
+	}
+	
+	row1.append(row1Label).append(row1Select);
+	
+	var row2 = $('<div>').attr({
+		"class" : "add-needs-input-row clearfix float-left"
+	});
+	var row2Label = $('<div>').attr({
+		"class" : "add-needs-input-label float-left"
+	}).html("Document Title");
+	var row2Input = $('<input>').attr({
+		"id" : "need_doc_title",
+		"class" : "add-needs-input-edit float-left"
+	});
+	
+	row2.append(row2Label).append(row2Input);
+	
+	var row3 = $('<div>').attr({
+		"class" : "add-needs-input-row add-needs-input-last-row  clearfix"
+	});
+	var row3Label = $('<div>').attr({
+		"class" : "add-needs-input-label float-left"
+	}).html("Document Desc");
+	var row3Input = $('<input>').attr({
+		"id" : "need_doc_desc",
+		"class" : "add-needs-input-edit float-left"
+	});
+	
+	row3.append(row3Label).append(row3Input);
+	container.append(row1).append(row2).append(row3);
+	
+	var addNeedsBtn = $('<div>').attr({
+		"class" : "add-needs-btn"
+	}).html("Add Needs"); 
+	
+	container.append(addNeedsBtn);
+	
+	wrapper.append(header).append(container);
+	$('#initial-needs-wrapper').append(wrapper);
+}
+
+
+//Click event for add needs button
+$(document).on('click','.add-needs-btn',function(){
+	var docType = $('#need_doc_type :selected').text();
+	var docTitle = $('#need_doc_title').val();
+	var docDesc = $('#need_doc_desc').val();
+	
+	if(docTitle == "") return;
+	if(docDesc === "") return;
+	
+	var document = {
+		"isChecked" : "true",
+		"title" : docTitle,
+		"desc" : docDesc
+	};
+	var newNeedRow = getNeededDocumentRow(document);
+	
+	$('.initial-list-doc-wrapper[data-doc-type="'+docType+'"]').find('.initial-list-doc-container').append(newNeedRow);
+	clearAddNeedForm();
+});
+
+function clearAddNeedForm(){
+	$('#need_doc_title').val('');
+	$('#need_doc_desc').val('');	
+}
+
+
+function appendDocumentToolTip(){
+	var toolTipContainer = $('<div>').attr({
+		"id" : "doc-tool-tip",
+		"class" : "tool-tip-container hide"
+	});
+	$('#center-panel-cont').append(toolTipContainer);
+}
+
+function showDocumentToolTip(desc,topOffset,leftOffset){
+	$('#doc-tool-tip').html(desc);
+	$('#doc-tool-tip').css({
+		"left" : leftOffset + 20,
+		"top" : topOffset
+	});
+	$('#doc-tool-tip').show();
+}
+
+function hideDocumentToolTip(){
+	$('#doc-tool-tip').hide();
 }

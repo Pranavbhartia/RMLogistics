@@ -29,17 +29,6 @@
 					adjustCenterPanelWidth();
 					adjustRightPanelOnResize();
 				});
-				$(document).on('click','.small-screen-menu-icon',function(e){
-					e.stopImmediatePropagation();
-					$('.left-panel').toggle();
-				});
-				$(document).click(function(){
-					if($(window).width() <= 768){
-						if($('.left-panel').css("display") == "block"){
-							$('.left-panel').toggle();
-						}
-					}
-				});
 			});
 		</script>
 	</body>
