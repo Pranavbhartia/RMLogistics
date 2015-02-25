@@ -18,8 +18,8 @@ public class LoanMilestoneMaster implements Serializable {
 	private String milestoneValidator;
 	private String name;
 	private List<Loan> loans;
-	private List<LoanMilestone> loanmilestones;
-	private LoanTypeMaster loantypemaster;
+	private List<LoanMilestone> loanMilestones;
+	private LoanTypeMaster loanTypeMaster;
 
 	public LoanMilestoneMaster() {
 	}
@@ -76,14 +76,14 @@ public class LoanMilestoneMaster implements Serializable {
 
 	public Loan addLoan(Loan loan) {
 		getLoans().add(loan);
-		loan.setLoanmilestonemaster(this);
+		loan.setCurrentLoanMilestone(this);
 
 		return loan;
 	}
 
 	public Loan removeLoan(Loan loan) {
 		getLoans().remove(loan);
-		loan.setLoanmilestonemaster(null);
+		loan.setCurrentLoanMilestone(null);
 
 		return loan;
 	}
@@ -91,24 +91,24 @@ public class LoanMilestoneMaster implements Serializable {
 
 	//bi-directional many-to-one association to LoanMilestone
 	@OneToMany(mappedBy="loanmilestonemaster")
-	public List<LoanMilestone> getLoanmilestones() {
-		return this.loanmilestones;
+	public List<LoanMilestone> getLoanMilestones() {
+		return this.loanMilestones;
 	}
 
-	public void setLoanmilestones(List<LoanMilestone> loanmilestones) {
-		this.loanmilestones = loanmilestones;
+	public void setLoanMilestones(List<LoanMilestone> loanMilestones) {
+		this.loanMilestones = loanMilestones;
 	}
 
 	public LoanMilestone addLoanmilestone(LoanMilestone loanmilestone) {
-		getLoanmilestones().add(loanmilestone);
-		loanmilestone.setLoanmilestonemaster(this);
+		getLoanMilestones().add(loanmilestone);
+		loanmilestone.setLoanMilestoneMaster(this);
 
 		return loanmilestone;
 	}
 
 	public LoanMilestone removeLoanmilestone(LoanMilestone loanmilestone) {
-		getLoanmilestones().remove(loanmilestone);
-		loanmilestone.setLoanmilestonemaster(null);
+		getLoanMilestones().remove(loanmilestone);
+		loanmilestone.setLoanMilestoneMaster(null);
 
 		return loanmilestone;
 	}
@@ -117,12 +117,14 @@ public class LoanMilestoneMaster implements Serializable {
 	//bi-directional many-to-one association to LoanTypeMaster
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="loan_type")
-	public LoanTypeMaster getLoantypemaster() {
-		return this.loantypemaster;
+	public LoanTypeMaster getLoanTypeMaster() {
+		return loanTypeMaster;
 	}
 
-	public void setLoantypemaster(LoanTypeMaster loantypemaster) {
-		this.loantypemaster = loantypemaster;
+
+	public void setLoanTypeMaster(LoanTypeMaster loanTypeMaster) {
+		this.loanTypeMaster = loanTypeMaster;
 	}
+
 
 }

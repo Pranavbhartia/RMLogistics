@@ -220,14 +220,14 @@ public class Loan implements Serializable {
 
 	public LoanDetail addLoandetail(LoanDetail loanDetail) {
 		getLoanDetails().add(loanDetail);
-		loanDetail.setLoanBean(this);
+		loanDetail.setLoan(this);
 
 		return loanDetail;
 	}
 
 	public LoanDetail removeLoandetail(LoanDetail loanDetail) {
 		getLoanDetails().remove(loanDetail);
-		loanDetail.setLoanBean(null);
+		loanDetail.setLoan(null);
 
 		return loanDetail;
 	}
@@ -244,14 +244,14 @@ public class Loan implements Serializable {
 
 	public LoanMilestone addLoanmilestone(LoanMilestone loanMilestone) {
 		getLoanMilestones().add(loanMilestone);
-		loanMilestone.setLoanBean(this);
+		loanMilestone.setLoan(this);
 
 		return loanMilestone;
 	}
 
 	public LoanMilestone removeLoanmilestone(LoanMilestone loanMilestone) {
 		getLoanMilestones().remove(loanMilestone);
-		loanMilestone.setLoanBean(null);
+		loanMilestone.setLoan(null);
 
 		return loanMilestone;
 	}
@@ -293,7 +293,7 @@ public class Loan implements Serializable {
 	public LoanNotification addLoanNotification(
 			LoanNotification loanNotification) {
 		getLoanNotifications().add(loanNotification);
-		loanNotification.setLoanBean(this);
+		loanNotification.setLoan(this);
 
 		return loanNotification;
 	}
@@ -301,7 +301,7 @@ public class Loan implements Serializable {
 	public LoanNotification removeLoanNotification(
 			LoanNotification loanNotification) {
 		getLoanNotifications().remove(loanNotification);
-		loanNotification.setLoanBean(null);
+		loanNotification.setLoan(null);
 
 		return loanNotification;
 	}
@@ -318,14 +318,14 @@ public class Loan implements Serializable {
 
 	public LoanRate addLoanrate(LoanRate loanRate) {
 		getLoanRates().add(loanRate);
-		loanRate.setLoanBean(this);
+		loanRate.setLoan(this);
 
 		return loanRate;
 	}
 
 	public LoanRate removeLoanrate(LoanRate loanRate) {
 		getLoanRates().remove(loanRate);
-		loanRate.setLoanBean(null);
+		loanRate.setLoan(null);
 
 		return loanRate;
 	}
@@ -342,14 +342,14 @@ public class Loan implements Serializable {
 
 	public LoanSetting addLoanSetting(LoanSetting loanSetting) {
 		getLoanSettings().add(loanSetting);
-		loanSetting.setLoanBean(this);
+		loanSetting.setLoan(this);
 
 		return loanSetting;
 	}
 
 	public LoanSetting removeLoanSetting(LoanSetting loanSetting) {
 		getLoanSettings().remove(loanSetting);
-		loanSetting.setLoanBean(null);
+		loanSetting.setLoan(null);
 
 		return loanSetting;
 	}
@@ -366,14 +366,14 @@ public class Loan implements Serializable {
 
 	public LoanTeam addLoanTeam(LoanTeam loanTeam) {
 		getLoanTeams().add(loanTeam);
-		loanTeam.setLoanBean(this);
+		loanTeam.setLoan(this);
 
 		return loanTeam;
 	}
 
 	public LoanTeam removeLoanTeam(LoanTeam loanTeam) {
 		getLoanTeams().remove(loanTeam);
-		loanTeam.setLoanBean(null);
+		loanTeam.setLoan(null);
 
 		return loanTeam;
 	}

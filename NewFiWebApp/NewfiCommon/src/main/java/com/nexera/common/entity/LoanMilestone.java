@@ -4,13 +4,12 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the loanmilestone database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanMilestone.findAll", query="SELECT l FROM LoanMilestone l")
+@NamedQuery(name = "LoanMilestone.findAll", query = "SELECT l FROM LoanMilestone l")
 public class LoanMilestone implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -19,15 +18,14 @@ public class LoanMilestone implements Serializable {
 	private Date endDate;
 	private Date startDate;
 	private String status;
-	private LoanMilestoneMaster loanmilestonemaster;
-	private Loan loanBean;
+	private LoanMilestoneMaster loanMilestoneMaster;
+	private Loan loan;
 
 	public LoanMilestone() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -35,7 +33,6 @@ public class LoanMilestone implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	@Lob
 	public byte[] getComments() {
@@ -46,9 +43,8 @@ public class LoanMilestone implements Serializable {
 		this.comments = comments;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date")
+	@Column(name = "created_date")
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -57,9 +53,8 @@ public class LoanMilestone implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="end_date")
+	@Column(name = "end_date")
 	public Date getEndDate() {
 		return this.endDate;
 	}
@@ -68,9 +63,8 @@ public class LoanMilestone implements Serializable {
 		this.endDate = endDate;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="start_date")
+	@Column(name = "start_date")
 	public Date getStartDate() {
 		return this.startDate;
 	}
@@ -78,7 +72,6 @@ public class LoanMilestone implements Serializable {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-
 
 	public String getStatus() {
 		return this.status;
@@ -88,28 +81,26 @@ public class LoanMilestone implements Serializable {
 		this.status = status;
 	}
 
-
-	//bi-directional many-to-one association to LoanMilestoneMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="milestone")
-	public LoanMilestoneMaster getLoanmilestonemaster() {
-		return this.loanmilestonemaster;
+	// bi-directional many-to-one association to LoanMilestoneMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "milestone")
+	public LoanMilestoneMaster getLoanMilestoneMaster() {
+		return loanMilestoneMaster;
 	}
 
-	public void setLoanmilestonemaster(LoanMilestoneMaster loanmilestonemaster) {
-		this.loanmilestonemaster = loanmilestonemaster;
+	public void setLoanMilestoneMaster(LoanMilestoneMaster loanMilestoneMaster) {
+		this.loanMilestoneMaster = loanMilestoneMaster;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
 }

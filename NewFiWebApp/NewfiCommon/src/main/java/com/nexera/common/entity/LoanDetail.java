@@ -3,29 +3,27 @@ package com.nexera.common.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the loandetails database table.
  * 
  */
 @Entity
-@Table(name="loandetails")
-@NamedQuery(name="LoanDetail.findAll", query="SELECT l FROM LoanDetail l")
+@Table(name = "loandetails")
+@NamedQuery(name = "LoanDetail.findAll", query = "SELECT l FROM LoanDetail l")
 public class LoanDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private double downPayment;
-	private double emi;
-	private double loanAmount;
-	private double rate;
-	private Loan loanBean;
+	private Double downPayment;
+	private Double emi;
+	private Double loanAmount;
+	private Double rate;
+	private Loan loan;
 
 	public LoanDetail() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -34,54 +32,49 @@ public class LoanDetail implements Serializable {
 		this.id = id;
 	}
 
-
-	@Column(name="down_payment")
-	public double getDownPayment() {
+	@Column(name = "down_payment")
+	public Double getDownPayment() {
 		return this.downPayment;
 	}
 
-	public void setDownPayment(double downPayment) {
+	public void setDownPayment(Double downPayment) {
 		this.downPayment = downPayment;
 	}
 
-
-	public double getEmi() {
+	public Double getEmi() {
 		return this.emi;
 	}
 
-	public void setEmi(double emi) {
+	public void setEmi(Double emi) {
 		this.emi = emi;
 	}
 
-
-	@Column(name="loan_amount")
-	public double getLoanAmount() {
+	@Column(name = "loan_amount")
+	public Double getLoanAmount() {
 		return this.loanAmount;
 	}
 
-	public void setLoanAmount(double loanAmount) {
+	public void setLoanAmount(Double loanAmount) {
 		this.loanAmount = loanAmount;
 	}
 
-
-	public double getRate() {
+	public Double getRate() {
 		return this.rate;
 	}
 
-	public void setRate(double rate) {
+	public void setRate(Double rate) {
 		this.rate = rate;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
 }

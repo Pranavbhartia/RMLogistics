@@ -4,34 +4,32 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the loannotification database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanNotification.findAll", query="SELECT l FROM LoanNotification l")
+@NamedQuery(name = "LoanNotification.findAll", query = "SELECT l FROM LoanNotification l")
 public class LoanNotification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private byte[] content;
 	private Date createdDate;
-	private byte dismissable;
+	private Boolean dismissable;
 	private String notificationType;
 	private String priority;
-	private byte read;
+	private Boolean read;
 	private Date remindOn;
 	private String title;
-	private User user1;
-	private Loan loanBean;
-	private User user2;
+	private User createdBy;
+	private Loan loan;
+	private User createdFor;
 
 	public LoanNotification() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -39,7 +37,6 @@ public class LoanNotification implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	@Lob
 	public byte[] getContent() {
@@ -50,9 +47,8 @@ public class LoanNotification implements Serializable {
 		this.content = content;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date")
+	@Column(name = "created_date")
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -61,17 +57,15 @@ public class LoanNotification implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-
-	public byte getDismissable() {
+	public Boolean getDismissable() {
 		return this.dismissable;
 	}
 
-	public void setDismissable(byte dismissable) {
+	public void setDismissable(Boolean dismissable) {
 		this.dismissable = dismissable;
 	}
 
-
-	@Column(name="notification_type")
+	@Column(name = "notification_type")
 	public String getNotificationType() {
 		return this.notificationType;
 	}
@@ -79,7 +73,6 @@ public class LoanNotification implements Serializable {
 	public void setNotificationType(String notificationType) {
 		this.notificationType = notificationType;
 	}
-
 
 	public String getPriority() {
 		return this.priority;
@@ -89,18 +82,16 @@ public class LoanNotification implements Serializable {
 		this.priority = priority;
 	}
 
-
-	public byte getRead() {
+	public Boolean getRead() {
 		return this.read;
 	}
 
-	public void setRead(byte read) {
+	public void setRead(Boolean read) {
 		this.read = read;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="remind_on")
+	@Column(name = "remind_on")
 	public Date getRemindOn() {
 		return this.remindOn;
 	}
@@ -108,7 +99,6 @@ public class LoanNotification implements Serializable {
 	public void setRemindOn(Date remindOn) {
 		this.remindOn = remindOn;
 	}
-
 
 	public String getTitle() {
 		return this.title;
@@ -118,40 +108,37 @@ public class LoanNotification implements Serializable {
 		this.title = title;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_by")
-	public User getUser1() {
-		return this.user1;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by")
+	public User getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_for")
-	public User getUser2() {
-		return this.user2;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_for")
+	public User getCreatedFor() {
+		return createdFor;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setCreatedFor(User createdFor) {
+		this.createdFor = createdFor;
 	}
 
 }
