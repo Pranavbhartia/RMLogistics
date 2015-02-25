@@ -5,13 +5,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the needslistmaster database table.
  * 
  */
 @Entity
-@NamedQuery(name="NeedsListMaster.findAll", query="SELECT n FROM NeedsListMaster n")
+@NamedQuery(name = "NeedsListMaster.findAll", query = "SELECT n FROM NeedsListMaster n")
 public class NeedsListMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -19,15 +18,14 @@ public class NeedsListMaster implements Serializable {
 	private String label;
 	private Date modifiedDate;
 	private String needCategory;
-	private List<LoanNeedsList> loanneedslists;
-	private User user;
+	private List<LoanNeedsList> loanNeedsList;
+	private User modifiedBy;
 
 	public NeedsListMaster() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -35,7 +33,6 @@ public class NeedsListMaster implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getDescription() {
 		return this.description;
@@ -45,7 +42,6 @@ public class NeedsListMaster implements Serializable {
 		this.description = description;
 	}
 
-
 	public String getLabel() {
 		return this.label;
 	}
@@ -54,9 +50,8 @@ public class NeedsListMaster implements Serializable {
 		this.label = label;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -65,8 +60,7 @@ public class NeedsListMaster implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-
-	@Column(name="need_category")
+	@Column(name = "need_category")
 	public String getNeedCategory() {
 		return this.needCategory;
 	}
@@ -75,41 +69,39 @@ public class NeedsListMaster implements Serializable {
 		this.needCategory = needCategory;
 	}
 
-
-	//bi-directional many-to-one association to LoanNeedsList
-	@OneToMany(mappedBy="needslistmaster")
-	public List<LoanNeedsList> getLoanneedslists() {
-		return this.loanneedslists;
+	// bi-directional many-to-one association to LoanNeedsList
+	@OneToMany(mappedBy = "needslistmaster")
+	public List<LoanNeedsList> getLoanNeedsList() {
+		return this.loanNeedsList;
 	}
 
-	public void setLoanneedslists(List<LoanNeedsList> loanneedslists) {
-		this.loanneedslists = loanneedslists;
+	public void setLoanNeedsList(List<LoanNeedsList> loanNeedsList) {
+		this.loanNeedsList = loanNeedsList;
 	}
 
-	public LoanNeedsList addLoanneedslist(LoanNeedsList loanneedslist) {
-		getLoanneedslists().add(loanneedslist);
-		loanneedslist.setNeedslistmaster(this);
+	public LoanNeedsList addLoanNeedsList(LoanNeedsList loanneedslist) {
+		getLoanNeedsList().add(loanneedslist);
+		loanneedslist.setNeedsListMaster(this);
 
 		return loanneedslist;
 	}
 
-	public LoanNeedsList removeLoanneedslist(LoanNeedsList loanneedslist) {
-		getLoanneedslists().remove(loanneedslist);
-		loanneedslist.setNeedslistmaster(null);
+	public LoanNeedsList removeLoanNeedsList(LoanNeedsList loanneedslist) {
+		getLoanNeedsList().remove(loanneedslist);
+		loanneedslist.setNeedsListMaster(null);
 
 		return loanneedslist;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="modified_by")
-	public User getUser() {
-		return this.user;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_by")
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 }

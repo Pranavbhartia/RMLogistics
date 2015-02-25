@@ -4,32 +4,30 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the loanapplicationfee database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanApplicationFee.findAll", query="SELECT l FROM LoanApplicationFee l")
+@NamedQuery(name = "LoanApplicationFee.findAll", query = "SELECT l FROM LoanApplicationFee l")
 public class LoanApplicationFee implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String comments;
-	private double fee;
+	private Double fee;
 	private Date modifiedDate;
 	private Date paymentDate;
 	private String paymentType;
 	private String transactionId;
 	private String transactionMetadata;
-	private Loan loanBean;
-	private User user;
+	private Loan loan;
+	private User modifiedBy;
 
 	public LoanApplicationFee() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -37,7 +35,6 @@ public class LoanApplicationFee implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getComments() {
 		return this.comments;
@@ -47,18 +44,16 @@ public class LoanApplicationFee implements Serializable {
 		this.comments = comments;
 	}
 
-
-	public double getFee() {
+	public Double getFee() {
 		return this.fee;
 	}
 
-	public void setFee(double fee) {
+	public void setFee(Double fee) {
 		this.fee = fee;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -67,9 +62,8 @@ public class LoanApplicationFee implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="payment_date")
+	@Column(name = "payment_date")
 	public Date getPaymentDate() {
 		return this.paymentDate;
 	}
@@ -78,8 +72,7 @@ public class LoanApplicationFee implements Serializable {
 		this.paymentDate = paymentDate;
 	}
 
-
-	@Column(name="payment_type")
+	@Column(name = "payment_type")
 	public String getPaymentType() {
 		return this.paymentType;
 	}
@@ -88,8 +81,7 @@ public class LoanApplicationFee implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-
-	@Column(name="transaction_id")
+	@Column(name = "transaction_id")
 	public String getTransactionId() {
 		return this.transactionId;
 	}
@@ -98,8 +90,7 @@ public class LoanApplicationFee implements Serializable {
 		this.transactionId = transactionId;
 	}
 
-
-	@Column(name="transaction_metadata")
+	@Column(name = "transaction_metadata")
 	public String getTransactionMetadata() {
 		return this.transactionMetadata;
 	}
@@ -108,28 +99,26 @@ public class LoanApplicationFee implements Serializable {
 		this.transactionMetadata = transactionMetadata;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="modified_user")
-	public User getUser() {
-		return this.user;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_user")
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 }

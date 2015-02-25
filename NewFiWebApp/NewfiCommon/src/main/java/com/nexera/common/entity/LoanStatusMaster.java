@@ -78,14 +78,14 @@ public class LoanStatusMaster implements Serializable {
 
 	public Loan addLoan(Loan loan) {
 		getLoans().add(loan);
-		loan.setLoanstatusmaster(this);
+		loan.setLoanStatus(this);
 
 		return loan;
 	}
 
 	public Loan removeLoan(Loan loan) {
 		getLoans().remove(loan);
-		loan.setLoanstatusmaster(null);
+		loan.setLoanStatus(null);
 
 		return loan;
 	}

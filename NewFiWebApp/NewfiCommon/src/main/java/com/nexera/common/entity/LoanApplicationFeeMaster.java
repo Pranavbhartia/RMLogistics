@@ -4,29 +4,27 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the loanapplicationfeemaster database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanApplicationFeeMaster.findAll", query="SELECT l FROM LoanApplicationFeeMaster l")
+@NamedQuery(name = "LoanApplicationFeeMaster.findAll", query = "SELECT l FROM LoanApplicationFeeMaster l")
 public class LoanApplicationFeeMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String comments;
-	private double fee;
+	private Double fee;
 	private Date modifiedDate;
-	private LoanTypeMaster loantypemaster;
-	private User user;
-	private PropertyTypeMaster propertytypemaster;
+	private LoanTypeMaster loanTypeMaster;
+	private User modifiedBy;
+	private PropertyTypeMaster propertyTypeMaster;
 
 	public LoanApplicationFeeMaster() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -34,7 +32,6 @@ public class LoanApplicationFeeMaster implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public String getComments() {
 		return this.comments;
@@ -44,18 +41,16 @@ public class LoanApplicationFeeMaster implements Serializable {
 		this.comments = comments;
 	}
 
-
-	public double getFee() {
+	public Double getFee() {
 		return this.fee;
 	}
 
-	public void setFee(double fee) {
+	public void setFee(Double fee) {
 		this.fee = fee;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -64,40 +59,37 @@ public class LoanApplicationFeeMaster implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-
-	//bi-directional many-to-one association to LoanTypeMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan_type")
-	public LoanTypeMaster getLoantypemaster() {
-		return this.loantypemaster;
+	// bi-directional many-to-one association to LoanTypeMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_type")
+	public LoanTypeMaster getLoanTypeMaster() {
+		return loanTypeMaster;
 	}
 
-	public void setLoantypemaster(LoanTypeMaster loantypemaster) {
-		this.loantypemaster = loantypemaster;
+	public void setLoanTypeMaster(LoanTypeMaster loanTypeMaster) {
+		this.loanTypeMaster = loanTypeMaster;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="modified_user")
-	public User getUser() {
-		return this.user;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_user")
+	public User getModifiedBy() {
+		return modifiedBy;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setModifiedBy(User modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
-
-	//bi-directional many-to-one association to PropertyTypeMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="property_type")
-	public PropertyTypeMaster getPropertytypemaster() {
-		return this.propertytypemaster;
+	// bi-directional many-to-one association to PropertyTypeMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "property_type")
+	public PropertyTypeMaster getPropertyTypeMaster() {
+		return propertyTypeMaster;
 	}
 
-	public void setPropertytypemaster(PropertyTypeMaster propertytypemaster) {
-		this.propertytypemaster = propertytypemaster;
+	public void setPropertyTypeMaster(PropertyTypeMaster propertyTypeMaster) {
+		this.propertyTypeMaster = propertyTypeMaster;
 	}
 
 }

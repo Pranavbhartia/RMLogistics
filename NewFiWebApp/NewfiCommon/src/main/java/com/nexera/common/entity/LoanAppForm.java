@@ -4,13 +4,12 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the loanappform database table.
  * 
  */
 @Entity
-@NamedQuery(name="LoanAppForm.findAll", query="SELECT l FROM LoanAppForm l")
+@NamedQuery(name = "LoanAppForm.findAll", query = "SELECT l FROM LoanAppForm l")
 public class LoanAppForm implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -26,18 +25,17 @@ public class LoanAppForm implements Serializable {
 	private Boolean secondMortgage;
 	private Boolean selfEmployed;
 	private Boolean ssIncomeOrDisability;
-	private User userBean;
-	private PropertyTypeMaster propertytypemaster;
-	private LoanTypeMaster loantypemaster;
-	private Loan loanBean;
+	private User user;
+	private PropertyTypeMaster propertyTypeMaster;
+	private LoanTypeMaster loanTypeMaster;
+	private Loan loan;
 	private List<UserEmploymentHistory> userEmploymentHistories;
 
 	public LoanAppForm() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -45,7 +43,6 @@ public class LoanAppForm implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public Boolean getEmployed() {
 		return this.employed;
@@ -55,8 +52,7 @@ public class LoanAppForm implements Serializable {
 		this.employed = employed;
 	}
 
-
-	@Column(name="hoa_dues")
+	@Column(name = "hoa_dues")
 	public Boolean getHoaDues() {
 		return this.hoaDues;
 	}
@@ -65,8 +61,7 @@ public class LoanAppForm implements Serializable {
 		this.hoaDues = hoaDues;
 	}
 
-
-	@Column(name="home_recently_sold")
+	@Column(name = "home_recently_sold")
 	public Boolean getHomeRecentlySold() {
 		return this.homeRecentlySold;
 	}
@@ -75,8 +70,7 @@ public class LoanAppForm implements Serializable {
 		this.homeRecentlySold = homeRecentlySold;
 	}
 
-
-	@Column(name="home_to_sell")
+	@Column(name = "home_to_sell")
 	public Boolean getHomeToSell() {
 		return this.homeToSell;
 	}
@@ -85,8 +79,7 @@ public class LoanAppForm implements Serializable {
 		this.homeToSell = homeToSell;
 	}
 
-
-	@Column(name="marital_status")
+	@Column(name = "marital_status")
 	public Boolean getMaritalStatus() {
 		return this.maritalStatus;
 	}
@@ -95,8 +88,7 @@ public class LoanAppForm implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-
-	@Column(name="owns_other_property")
+	@Column(name = "owns_other_property")
 	public Boolean getOwnsOtherProperty() {
 		return this.ownsOtherProperty;
 	}
@@ -105,8 +97,7 @@ public class LoanAppForm implements Serializable {
 		this.ownsOtherProperty = ownsOtherProperty;
 	}
 
-
-	@Column(name="pension_or_retirement")
+	@Column(name = "pension_or_retirement")
 	public Boolean getPensionOrRetirement() {
 		return this.pensionOrRetirement;
 	}
@@ -115,8 +106,7 @@ public class LoanAppForm implements Serializable {
 		this.pensionOrRetirement = pensionOrRetirement;
 	}
 
-
-	@Column(name="receive_alimony_child_support")
+	@Column(name = "receive_alimony_child_support")
 	public Boolean getReceiveAlimonyChildSupport() {
 		return this.receiveAlimonyChildSupport;
 	}
@@ -125,8 +115,7 @@ public class LoanAppForm implements Serializable {
 		this.receiveAlimonyChildSupport = receiveAlimonyChildSupport;
 	}
 
-
-	@Column(name="rented_other_property")
+	@Column(name = "rented_other_property")
 	public Boolean getRentedOtherProperty() {
 		return this.rentedOtherProperty;
 	}
@@ -135,8 +124,7 @@ public class LoanAppForm implements Serializable {
 		this.rentedOtherProperty = rentedOtherProperty;
 	}
 
-
-	@Column(name="second_mortgage")
+	@Column(name = "second_mortgage")
 	public Boolean getSecondMortgage() {
 		return this.secondMortgage;
 	}
@@ -145,8 +133,7 @@ public class LoanAppForm implements Serializable {
 		this.secondMortgage = secondMortgage;
 	}
 
-
-	@Column(name="self_employed")
+	@Column(name = "self_employed")
 	public Boolean getSelfEmployed() {
 		return this.selfEmployed;
 	}
@@ -155,8 +142,7 @@ public class LoanAppForm implements Serializable {
 		this.selfEmployed = selfEmployed;
 	}
 
-
-	@Column(name="ss_income_or_disability")
+	@Column(name = "ss_income_or_disability")
 	public Boolean getSsIncomeOrDisability() {
 		return this.ssIncomeOrDisability;
 	}
@@ -165,77 +151,75 @@ public class LoanAppForm implements Serializable {
 		this.ssIncomeOrDisability = ssIncomeOrDisability;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user")
-	public User getUserBean() {
-		return this.userBean;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user")
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserBean(User userBean) {
-		this.userBean = userBean;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-
-	//bi-directional many-to-one association to PropertyTypeMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="property_type")
-	public PropertyTypeMaster getPropertytypemaster() {
-		return this.propertytypemaster;
+	// bi-directional many-to-one association to PropertyTypeMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "property_type")
+	public PropertyTypeMaster getPropertyTypeMaster() {
+		return propertyTypeMaster;
 	}
 
-	public void setPropertytypemaster(PropertyTypeMaster propertytypemaster) {
-		this.propertytypemaster = propertytypemaster;
+	public void setPropertyTypeMaster(PropertyTypeMaster propertyTypeMaster) {
+		this.propertyTypeMaster = propertyTypeMaster;
 	}
 
-
-	//bi-directional many-to-one association to LoanTypeMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan_type")
-	public LoanTypeMaster getLoantypemaster() {
-		return this.loantypemaster;
+	// bi-directional many-to-one association to LoanTypeMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_type")
+	public LoanTypeMaster getLoanTypeMaster() {
+		return loanTypeMaster;
 	}
 
-	public void setLoantypemaster(LoanTypeMaster loantypemaster) {
-		this.loantypemaster = loantypemaster;
+	public void setLoanTypeMaster(LoanTypeMaster loanTypeMaster) {
+		this.loanTypeMaster = loanTypeMaster;
 	}
 
-
-	//bi-directional many-to-one association to Loan
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan")
-	public Loan getLoanBean() {
-		return this.loanBean;
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
 	}
 
-	public void setLoanBean(Loan loanBean) {
-		this.loanBean = loanBean;
+	public void setLoan(Loan loan) {
+		this.loan = loan;
 	}
 
-
-	//bi-directional many-to-one association to UserEmploymentHistory
-	@OneToMany(mappedBy="loanappform")
-	public List<UserEmploymentHistory> getUseremploymenthistories() {
+	// bi-directional many-to-one association to UserEmploymentHistory
+	@OneToMany(mappedBy = "loanappform")
+	public List<UserEmploymentHistory> getUserEmploymentHistories() {
 		return this.userEmploymentHistories;
 	}
 
-	public void setUseremploymenthistories(List<UserEmploymentHistory> useremploymenthistories) {
-		this.userEmploymentHistories = useremploymenthistories;
+	public void setUserEmploymentHistories(
+			List<UserEmploymentHistory> userEmploymentHistories) {
+		this.userEmploymentHistories = userEmploymentHistories;
 	}
 
-	public UserEmploymentHistory addUseremploymenthistory(UserEmploymentHistory useremploymenthistory) {
-		getUseremploymenthistories().add(useremploymenthistory);
-		useremploymenthistory.setLoanappform(this);
+	public UserEmploymentHistory addUserEmploymentHistory(
+			UserEmploymentHistory userEmploymentHistory) {
+		getUserEmploymentHistories().add(userEmploymentHistory);
+		userEmploymentHistory.setLoanappform(this);
 
-		return useremploymenthistory;
+		return userEmploymentHistory;
 	}
 
-	public UserEmploymentHistory removeUseremploymenthistory(UserEmploymentHistory useremploymenthistory) {
-		getUseremploymenthistories().remove(useremploymenthistory);
-		useremploymenthistory.setLoanappform(null);
+	public UserEmploymentHistory removeUserEmploymentHistory(
+			UserEmploymentHistory userEmploymentHistory) {
+		getUserEmploymentHistories().remove(userEmploymentHistory);
+		userEmploymentHistory.setLoanappform(null);
 
-		return useremploymenthistory;
+		return userEmploymentHistory;
 	}
 
 }

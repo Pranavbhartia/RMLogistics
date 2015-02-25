@@ -24,7 +24,7 @@ public class Loan implements Serializable {
 	private LoanTypeMaster loanType;
 	private LoanStatusMaster loanStatus;
 	private PropertyTypeMaster propertyType;
-	private LoanMilestoneMaster loanMilestone;
+	private LoanMilestoneMaster currentLoanMilestone;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFee> loanApplicationFees;
 	private List<LoanDetail> loanDetails;
@@ -149,12 +149,12 @@ public class Loan implements Serializable {
 	// bi-directional many-to-one association to LoanMilestoneMaster
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "current_milestone")
-	public List<LoanMilestone> getLoanCurrentMilestone() {
-		return loanMilestones;
+	public LoanMilestoneMaster getCurrentLoanMilestone() {
+		return currentLoanMilestone;
 	}
 
-	public void setLoanCurrentMilestone(List<LoanMilestone> loanMilestones) {
-		this.loanMilestones = loanMilestones;
+	public void setCurrentLoanMilestone(LoanMilestoneMaster currentLoanMilestone) {
+		this.currentLoanMilestone = currentLoanMilestone;
 	}
 
 	// bi-directional many-to-one association to LoanAppForm
@@ -163,20 +163,20 @@ public class Loan implements Serializable {
 		return this.loanAppForms;
 	}
 
-	public void setLoanappforms(List<LoanAppForm> loanappforms) {
-		this.loanAppForms = loanappforms;
+	public void setLoanappforms(List<LoanAppForm> loanAppForms) {
+		this.loanAppForms = loanAppForms;
 	}
 
 	public LoanAppForm addLoanappform(LoanAppForm loanAppForm) {
 		getLoanAppForms().add(loanAppForm);
-		loanAppForm.setLoanBean(this);
+		loanAppForm.setLoan(this);
 
 		return loanAppForm;
 	}
 
 	public LoanAppForm removeLoanappform(LoanAppForm loanappform) {
 		getLoanAppForms().remove(loanappform);
-		loanappform.setLoanBean(null);
+		loanappform.setLoan(null);
 
 		return loanappform;
 	}
@@ -195,15 +195,15 @@ public class Loan implements Serializable {
 	public LoanApplicationFee addLoanApplicationFee(
 			LoanApplicationFee loanApplicationFee) {
 		getLoanApplicationFees().add(loanApplicationFee);
-		loanApplicationFee.setLoanBean(this);
+		loanApplicationFee.setLoan(this);
 
 		return loanApplicationFee;
 	}
 
-	public LoanApplicationFee removeLoanapplicationfee(
+	public LoanApplicationFee removeLoanApplicationfee(
 			LoanApplicationFee loanApplicationFee) {
 		getLoanApplicationFees().remove(loanApplicationFee);
-		loanApplicationFee.setLoanBean(null);
+		loanApplicationFee.setLoan(null);
 
 		return loanApplicationFee;
 	}
@@ -268,14 +268,14 @@ public class Loan implements Serializable {
 
 	public LoanNeedsList addLoanNeedsList(LoanNeedsList loanNeedsList) {
 		getLoanNeedsLists().add(loanNeedsList);
-		loanNeedsList.setLoanBean(this);
+		loanNeedsList.setLoan(this);
 
 		return loanNeedsList;
 	}
 
 	public LoanNeedsList removeLoanNeedsList(LoanNeedsList loanNeedsList) {
 		getLoanNeedsLists().remove(loanNeedsList);
-		loanNeedsList.setLoanBean(null);
+		loanNeedsList.setLoan(null);
 
 		return loanNeedsList;
 	}

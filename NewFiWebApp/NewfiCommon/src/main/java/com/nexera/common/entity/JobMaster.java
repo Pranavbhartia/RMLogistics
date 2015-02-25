@@ -121,14 +121,14 @@ public class JobMaster implements Serializable {
 
 	public Job addJob(Job job) {
 		getJobs().add(job);
-		job.setJobmaster(this);
+		job.setJobMaster(this);
 
 		return job;
 	}
 
 	public Job removeJob(Job job) {
 		getJobs().remove(job);
-		job.setJobmaster(null);
+		job.setJobMaster(null);
 
 		return job;
 	}
