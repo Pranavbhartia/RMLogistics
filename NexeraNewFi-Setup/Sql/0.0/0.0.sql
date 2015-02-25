@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `newfi_schema`.`User` (
   `email_id` VARCHAR(45) NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(500) NULL,
-  `active` TINYINT NULL DEFAULT 1,
+  `status` TINYINT NULL DEFAULT 1,
   `user_role` INT NULL,
   `phone_number` VARCHAR(45) NULL,
   `photo_image_url` VARCHAR(500) NULL,
