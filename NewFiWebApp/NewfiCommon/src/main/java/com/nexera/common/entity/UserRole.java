@@ -126,14 +126,14 @@ public class UserRole implements Serializable {
 
 	public User addUser(User user) {
 		getUsers().add(user);
-		user.setUserrole(this);
+		user.setUserRole(this);
 
 		return user;
 	}
 
 	public User removeUser(User user) {
 		getUsers().remove(user);
-		user.setUserrole(null);
+		user.setUserRole(null);
 
 		return user;
 	}
