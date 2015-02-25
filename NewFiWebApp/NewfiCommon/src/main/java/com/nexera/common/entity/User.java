@@ -1,15 +1,24 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -29,7 +38,7 @@ public class User implements Serializable, UserDetails {
 	private String phoneNumber;
 	private String photoImageUrl;
 	private String username;
-	private List<AppSetting> appsettings;
+	/*
 	private List<Auditlog> auditlogs;
 	private List<CustomerDetail> customerdetails;
 	private List<EmailTemplate> emailtemplates;
@@ -61,7 +70,7 @@ public class User implements Serializable, UserDetails {
 	private List<WorkflowItemMaster> workflowitemmasters2;
 	private List<WorkflowMaster> workflowmasters1;
 	private List<WorkflowMaster> workflowmasters2;
-
+*/
 	@Transient
 	private boolean accountNonExpired = true;
 	@Transient
@@ -161,7 +170,7 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-
+/*
 	//bi-directional many-to-one association to AppSetting
 	@OneToMany(mappedBy="user")
 	public List<AppSetting> getAppsettings() {
@@ -947,12 +956,12 @@ public class User implements Serializable, UserDetails {
 
 		return workflowmasters2;
 	}
-	
+	*/
 	//Spring security related methods
 
-	public User(String email, String password, String firstName, String lastName) {
+	public User(String emailId, String password, String firstName, String lastName) {
 		super();
-		this.email = email;
+		this.emailId = emailId;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
