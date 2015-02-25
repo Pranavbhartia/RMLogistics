@@ -64,7 +64,7 @@ public class LoanTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Loan
-	@OneToMany(mappedBy = "loantypemaster")
+	@OneToMany(mappedBy = "loanType")
 	public List<Loan> getLoans() {
 		return this.loans;
 	}
@@ -88,7 +88,7 @@ public class LoanTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanAppForm
-	@OneToMany(mappedBy = "loantypemaster")
+	@OneToMany(mappedBy = "loanTypeMaster")
 	public List<LoanAppForm> getLoanappforms() {
 		return this.loanappforms;
 	}
@@ -112,7 +112,7 @@ public class LoanTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanApplicationFeeMaster
-	@OneToMany(mappedBy = "loantypemaster")
+	@OneToMany(mappedBy = "loanTypeMaster")
 	public List<LoanApplicationFeeMaster> getLoanapplicationfeemasters() {
 		return this.loanApplicationFeeMasters;
 	}
@@ -139,7 +139,7 @@ public class LoanTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanMilestoneMaster
-	@OneToMany(mappedBy = "loantypemaster")
+	@OneToMany(mappedBy = "loanTypeMaster")
 	public List<LoanMilestoneMaster> getLoanmilestonemasters() {
 		return this.loanmilestonemasters;
 	}

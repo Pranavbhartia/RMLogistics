@@ -63,7 +63,7 @@ public class PropertyTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Loan
-	@OneToMany(mappedBy = "propertytypemaster")
+	@OneToMany(mappedBy = "propertyType")
 	public List<Loan> getLoans() {
 		return this.loans;
 	}
@@ -87,7 +87,7 @@ public class PropertyTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanAppForm
-	@OneToMany(mappedBy = "propertytypemaster")
+	@OneToMany(mappedBy = "propertyTypeMaster")
 	public List<LoanAppForm> getLoanappforms() {
 		return this.loanAppForms;
 	}
@@ -111,7 +111,7 @@ public class PropertyTypeMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanApplicationFeeMaster
-	@OneToMany(mappedBy = "propertytypemaster")
+	@OneToMany(mappedBy = "propertyTypeMaster")
 	public List<LoanApplicationFeeMaster> getLoanApplicationFeeMasters() {
 		return this.loanApplicationFeeMasters;
 	}

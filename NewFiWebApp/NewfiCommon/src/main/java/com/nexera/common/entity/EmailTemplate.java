@@ -89,7 +89,7 @@ public class EmailTemplate implements Serializable {
 	}
 
 	// bi-directional many-to-one association to UserEmail
-	@OneToMany(mappedBy = "emailtemplate")
+	@OneToMany(mappedBy = "emailTemplate")
 	public List<UserEmail> getUserEmails() {
 		return this.userEmails;
 	}

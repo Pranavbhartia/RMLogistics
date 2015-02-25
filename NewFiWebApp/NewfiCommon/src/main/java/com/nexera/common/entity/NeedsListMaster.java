@@ -70,7 +70,7 @@ public class NeedsListMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanNeedsList
-	@OneToMany(mappedBy = "needslistmaster")
+	@OneToMany(mappedBy = "needsListMaster")
 	public List<LoanNeedsList> getLoanNeedsList() {
 		return this.loanNeedsList;
 	}

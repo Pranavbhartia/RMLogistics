@@ -32,7 +32,7 @@ public class UserDaoImpl extends GenericDaoImpl implements UserDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(User.class);
-			criteria.add(Restrictions.eq("email", userName));
+			criteria.add(Restrictions.eq("emailId", userName));
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
 				throw new NoRecordsFetchedException(
@@ -52,7 +52,7 @@ public class UserDaoImpl extends GenericDaoImpl implements UserDao {
 	public User findByUserId(Integer userId) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("Id", userId));
+		criteria.add(Restrictions.eq("id", userId));
 		return (User) criteria.uniqueResult();
 	}
 

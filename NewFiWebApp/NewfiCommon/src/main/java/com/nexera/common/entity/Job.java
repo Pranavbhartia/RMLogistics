@@ -52,6 +52,7 @@ public class Job implements Serializable {
 	}
 
 	@Lob
+	@Column(name="result")
 	public byte[] getResult() {
 		return this.result;
 	}

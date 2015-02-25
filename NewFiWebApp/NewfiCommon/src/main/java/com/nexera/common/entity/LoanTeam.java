@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 /**
@@ -33,6 +37,8 @@ public class LoanTeam implements Serializable {
 		this.id = id;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getActive() {
 		return this.active;
 	}

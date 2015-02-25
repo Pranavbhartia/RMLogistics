@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 /**
@@ -37,7 +41,8 @@ public class LoanNeedsList implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getActive() {
 		return this.active;
 	}
@@ -53,7 +58,8 @@ public class LoanNeedsList implements Serializable {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getDeleted() {
 		return this.deleted;
 	}
@@ -80,6 +86,8 @@ public class LoanNeedsList implements Serializable {
 		this.fileUrl = fileUrl;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getMandatory() {
 		return this.mandatory;
 	}
@@ -88,7 +96,8 @@ public class LoanNeedsList implements Serializable {
 		this.mandatory = mandatory;
 	}
 
-	@Column(name = "system_action")
+	@Column(name = "system_action",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSystemAction() {
 		return this.systemAction;
 	}

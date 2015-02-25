@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 /**
@@ -57,6 +61,8 @@ public class LoanNotification implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getDismissable() {
 		return this.dismissable;
 	}
@@ -82,6 +88,8 @@ public class LoanNotification implements Serializable {
 		this.priority = priority;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRead() {
 		return this.read;
 	}

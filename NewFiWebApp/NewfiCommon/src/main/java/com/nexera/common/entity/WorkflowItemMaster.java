@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
 /**
  * The persistent class for the workflowitemmaster database table.
  * 
@@ -73,7 +75,8 @@ public class WorkflowItemMaster implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "is_last_task")
+	@Column(name = "is_last_task",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsLastTask() {
 		return this.isLastTask;
 	}
@@ -137,7 +140,7 @@ public class WorkflowItemMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to WorkflowItem
-	@OneToMany(mappedBy = "workflowitemmaster")
+	@OneToMany(mappedBy = "workflowItemMaster")
 	public List<WorkflowItem> getWorkflowitems() {
 		return this.workflowItems;
 	}
@@ -161,7 +164,7 @@ public class WorkflowItemMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to WorkflowItemMaster
-	@OneToMany(mappedBy = "on_success")
+	@OneToMany(mappedBy = "onSuccess")
 	public List<WorkflowItemMaster> getListOnSuccess() {
 		return this.listOnSuccess;
 	}

@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +46,8 @@ public class Workflow implements Serializable {
 	}
 
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getActive() {
 		return this.active;
 	}
@@ -62,7 +68,8 @@ public class Workflow implements Serializable {
 	}
 
 
-	@Column(name="current_executing_item")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="current_executing_item")
 	public WorkflowItem getCurrentExecutingItem() {
 		return this.currentExecutingItem;
 	}
@@ -147,7 +154,7 @@ public class Workflow implements Serializable {
 
 
 	//bi-directional many-to-one association to WorkflowItem
-	@OneToMany(mappedBy="workflow")
+	@OneToMany(mappedBy="parentWorkflow")
 	public List<WorkflowItem> getWorkflowItems() {
 		return this.workflowItems;
 	}

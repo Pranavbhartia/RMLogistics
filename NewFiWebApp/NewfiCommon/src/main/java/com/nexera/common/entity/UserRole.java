@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +42,8 @@ public class UserRole implements Serializable {
 	}
 
 
-	@Column(name="modified_by")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_by")
 	public User getModifiedBy() {
 		return this.modifiedBy;
 	}
@@ -79,7 +84,8 @@ public class UserRole implements Serializable {
 	}
 
 
-	@Column(name="visible_on_loan_team")
+	@Column(name="visible_on_loan_team",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getVisibleOnLoanTeam() {
 		return this.visibleOnLoanTeam;
 	}
@@ -90,7 +96,7 @@ public class UserRole implements Serializable {
 
 
 	//bi-directional many-to-one association to UiComponentPermission
-	@OneToMany(mappedBy="userrole")
+	@OneToMany(mappedBy="userRole")
 	public List<UiComponentPermission> getUiComponentPermissions() {
 		return this.uiComponentPermissions;
 	}
@@ -115,7 +121,7 @@ public class UserRole implements Serializable {
 
 
 	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="userrole")
+	@OneToMany(mappedBy="userRole")
 	public List<User> getUsers() {
 		return this.users;
 	}

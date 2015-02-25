@@ -1,7 +1,10 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
 
 
 /**
@@ -33,7 +36,8 @@ public class InternalUserDetail implements Serializable {
 	}
 
 
-	@Column(name="active_internal")
+	@Column(name="active_internal",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getActiveInternal() {
 		return this.activeInternal;
 	}

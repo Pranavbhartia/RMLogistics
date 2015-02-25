@@ -57,7 +57,7 @@ public class UiComponent implements Serializable {
 
 
 	//bi-directional many-to-one association to UiComponent
-	@OneToMany(mappedBy="uicomponent")
+	@OneToMany(mappedBy="uiComponent")
 	public List<UiComponent> getListUiComponents() {
 		return this.listUiComponents;
 	}
@@ -82,7 +82,7 @@ public class UiComponent implements Serializable {
 
 
 	//bi-directional many-to-one association to UiComponentPermission
-	@OneToMany(mappedBy="uicomponent")
+	@OneToMany(mappedBy="uiComponent")
 	public List<UiComponentPermission> getUiComponentPermissions() {
 		return this.uiComponentPermissions;
 	}

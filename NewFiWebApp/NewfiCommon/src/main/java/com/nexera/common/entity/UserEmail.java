@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 
@@ -58,6 +62,8 @@ public class UserEmail implements Serializable {
 	}
 
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getStatus() {
 		return this.status;
 	}
@@ -98,7 +104,7 @@ public class UserEmail implements Serializable {
 		return this.user;
 	}
 
-	public void setUser2(User user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 

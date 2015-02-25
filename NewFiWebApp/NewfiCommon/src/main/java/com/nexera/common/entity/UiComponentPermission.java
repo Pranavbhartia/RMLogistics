@@ -1,7 +1,10 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
 
 /**
  * The persistent class for the uicomponentpermission database table.
@@ -31,6 +34,8 @@ public class UiComponentPermission implements Serializable {
 		this.id = id;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getDelete() {
 		return this.delete;
 	}
@@ -39,6 +44,8 @@ public class UiComponentPermission implements Serializable {
 		this.delete = delete;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRead() {
 		return this.read;
 	}
@@ -47,6 +54,8 @@ public class UiComponentPermission implements Serializable {
 		this.read = read;
 	}
 
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getWrite() {
 		return this.write;
 	}

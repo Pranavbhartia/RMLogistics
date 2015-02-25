@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +61,8 @@ public class Loan implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
+	@Column(name="deleted" ,columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getDeleted() {
 		return this.deleted;
 	}
@@ -163,18 +168,18 @@ public class Loan implements Serializable {
 		return this.loanAppForms;
 	}
 
-	public void setLoanappforms(List<LoanAppForm> loanAppForms) {
+	public void setLoanAppForms(List<LoanAppForm> loanAppForms) {
 		this.loanAppForms = loanAppForms;
 	}
 
-	public LoanAppForm addLoanappform(LoanAppForm loanAppForm) {
+	public LoanAppForm addLoanAppForm(LoanAppForm loanAppForm) {
 		getLoanAppForms().add(loanAppForm);
 		loanAppForm.setLoan(this);
 
 		return loanAppForm;
 	}
 
-	public LoanAppForm removeLoanappform(LoanAppForm loanappform) {
+	public LoanAppForm removeLoanAppForm(LoanAppForm loanappform) {
 		getLoanAppForms().remove(loanappform);
 		loanappform.setLoan(null);
 
@@ -187,7 +192,7 @@ public class Loan implements Serializable {
 		return this.loanApplicationFees;
 	}
 
-	public void setLoanapplicationfees(
+	public void setLoanApplicationFees(
 			List<LoanApplicationFee> loanApplicationFees) {
 		this.loanApplicationFees = loanApplicationFees;
 	}
@@ -356,23 +361,23 @@ public class Loan implements Serializable {
 
 	// bi-directional many-to-one association to LoanTeam
 	@OneToMany(mappedBy = "loan")
-	public List<LoanTeam> getLoanTeams() {
+	public List<LoanTeam> getLoanTeam() {
 		return this.loanTeam;
 	}
 
-	public void setLoanTeams(List<LoanTeam> loanTeam) {
+	public void setLoanTeam(List<LoanTeam> loanTeam) {
 		this.loanTeam = loanTeam;
 	}
 
 	public LoanTeam addLoanTeam(LoanTeam loanTeam) {
-		getLoanTeams().add(loanTeam);
+		getLoanTeam().add(loanTeam);
 		loanTeam.setLoan(this);
 
 		return loanTeam;
 	}
 
 	public LoanTeam removeLoanTeam(LoanTeam loanTeam) {
-		getLoanTeams().remove(loanTeam);
+		getLoanTeam().remove(loanTeam);
 		loanTeam.setLoan(null);
 
 		return loanTeam;

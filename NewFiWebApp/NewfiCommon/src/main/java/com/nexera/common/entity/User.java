@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,15 +49,10 @@ public class User implements Serializable, UserDetails {
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
 
-	@Transient
 	private boolean accountNonExpired = true;
-	@Transient
 	private boolean accountNonLocked = true;
-	@Transient
 	private boolean credentialsNonExpired = true;
-	@Transient
 	private boolean enabled = true;
-	@Transient
 	private GrantedAuthority[] authorities;
 
 	@Id
@@ -69,7 +65,8 @@ public class User implements Serializable, UserDetails {
 		this.id = id;
 	}
 
-	@Column(name = "status")
+	@Column(name = "status",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getStatus() {
 		return status;
 	}
@@ -229,7 +226,7 @@ public class User implements Serializable, UserDetails {
 	public User() {
 		super();
 	}
-
+	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
@@ -238,6 +235,7 @@ public class User implements Serializable, UserDetails {
 		this.accountNonExpired = accountNonExpired;
 	}
 
+	@Transient
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
@@ -246,6 +244,7 @@ public class User implements Serializable, UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
@@ -254,6 +253,7 @@ public class User implements Serializable, UserDetails {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 
+	@Transient
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -262,6 +262,7 @@ public class User implements Serializable, UserDetails {
 		this.enabled = enabled;
 	}
 
+	@Transient
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return null;

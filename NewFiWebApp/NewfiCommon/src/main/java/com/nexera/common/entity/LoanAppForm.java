@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.List;
 
 /**
@@ -43,7 +47,9 @@ public class LoanAppForm implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getEmployed() {
 		return this.employed;
 	}
@@ -52,7 +58,8 @@ public class LoanAppForm implements Serializable {
 		this.employed = employed;
 	}
 
-	@Column(name = "hoa_dues")
+	@Column(name = "hoa_dues",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHoaDues() {
 		return this.hoaDues;
 	}
@@ -61,7 +68,8 @@ public class LoanAppForm implements Serializable {
 		this.hoaDues = hoaDues;
 	}
 
-	@Column(name = "home_recently_sold")
+	@Column(name = "home_recently_sold",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHomeRecentlySold() {
 		return this.homeRecentlySold;
 	}
@@ -70,7 +78,8 @@ public class LoanAppForm implements Serializable {
 		this.homeRecentlySold = homeRecentlySold;
 	}
 
-	@Column(name = "home_to_sell")
+	@Column(name = "home_to_sell",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHomeToSell() {
 		return this.homeToSell;
 	}
@@ -79,7 +88,8 @@ public class LoanAppForm implements Serializable {
 		this.homeToSell = homeToSell;
 	}
 
-	@Column(name = "marital_status")
+	@Column(name = "marital_status",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getMaritalStatus() {
 		return this.maritalStatus;
 	}
@@ -88,7 +98,8 @@ public class LoanAppForm implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	@Column(name = "owns_other_property")
+	@Column(name = "owns_other_property",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getOwnsOtherProperty() {
 		return this.ownsOtherProperty;
 	}
@@ -97,7 +108,8 @@ public class LoanAppForm implements Serializable {
 		this.ownsOtherProperty = ownsOtherProperty;
 	}
 
-	@Column(name = "pension_or_retirement")
+	@Column(name = "pension_or_retirement",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getPensionOrRetirement() {
 		return this.pensionOrRetirement;
 	}
@@ -106,7 +118,8 @@ public class LoanAppForm implements Serializable {
 		this.pensionOrRetirement = pensionOrRetirement;
 	}
 
-	@Column(name = "receive_alimony_child_support")
+	@Column(name = "receive_alimony_child_support",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getReceiveAlimonyChildSupport() {
 		return this.receiveAlimonyChildSupport;
 	}
@@ -115,7 +128,8 @@ public class LoanAppForm implements Serializable {
 		this.receiveAlimonyChildSupport = receiveAlimonyChildSupport;
 	}
 
-	@Column(name = "rented_other_property")
+	@Column(name = "rented_other_property",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRentedOtherProperty() {
 		return this.rentedOtherProperty;
 	}
@@ -124,7 +138,8 @@ public class LoanAppForm implements Serializable {
 		this.rentedOtherProperty = rentedOtherProperty;
 	}
 
-	@Column(name = "second_mortgage")
+	@Column(name = "second_mortgage",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSecondMortgage() {
 		return this.secondMortgage;
 	}
@@ -133,7 +148,8 @@ public class LoanAppForm implements Serializable {
 		this.secondMortgage = secondMortgage;
 	}
 
-	@Column(name = "self_employed")
+	@Column(name = "self_employed",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSelfEmployed() {
 		return this.selfEmployed;
 	}
@@ -142,7 +158,8 @@ public class LoanAppForm implements Serializable {
 		this.selfEmployed = selfEmployed;
 	}
 
-	@Column(name = "ss_income_or_disability")
+	@Column(name = "ss_income_or_disability",columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSsIncomeOrDisability() {
 		return this.ssIncomeOrDisability;
 	}
@@ -196,7 +213,7 @@ public class LoanAppForm implements Serializable {
 	}
 
 	// bi-directional many-to-one association to UserEmploymentHistory
-	@OneToMany(mappedBy = "loanappform")
+	@OneToMany(mappedBy = "loanAppForm")
 	public List<UserEmploymentHistory> getUserEmploymentHistories() {
 		return this.userEmploymentHistories;
 	}

@@ -65,7 +65,7 @@ public class LoanMilestoneMaster implements Serializable {
 
 
 	//bi-directional many-to-one association to Loan
-	@OneToMany(mappedBy="loanmilestonemaster")
+	@OneToMany(mappedBy="currentLoanMilestone")
 	public List<Loan> getLoans() {
 		return this.loans;
 	}
@@ -90,7 +90,7 @@ public class LoanMilestoneMaster implements Serializable {
 
 
 	//bi-directional many-to-one association to LoanMilestone
-	@OneToMany(mappedBy="loanmilestonemaster")
+	@OneToMany(mappedBy="loanMilestoneMaster")
 	public List<LoanMilestone> getLoanMilestones() {
 		return this.loanMilestones;
 	}

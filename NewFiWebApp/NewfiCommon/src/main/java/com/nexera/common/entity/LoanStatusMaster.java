@@ -61,7 +61,7 @@ public class LoanStatusMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Loan
-	@OneToMany(mappedBy = "loanstatusmaster")
+	@OneToMany(mappedBy = "loanStatus")
 	public List<Loan> getLoans() {
 		return this.loans;
 	}
