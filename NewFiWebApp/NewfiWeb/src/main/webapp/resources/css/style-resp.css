@@ -336,6 +336,18 @@
 	.add-needs-input-edit{
 		width: 90%;
 	}
+	.prof-form-input{
+		width: 180px;
+		margin-right: 10px;
+	}
+	
+	.prof-form-input-sm{
+		width: 125px;
+	}
+	
+	.prof-form-input-lg{
+		width: 300px;
+	}
 }
 
 
