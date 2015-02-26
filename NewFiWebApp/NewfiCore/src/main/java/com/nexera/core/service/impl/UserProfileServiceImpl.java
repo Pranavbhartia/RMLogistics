@@ -8,6 +8,7 @@ import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -24,23 +25,36 @@ public class UserProfileServiceImpl implements UserProfileService {
 		
 		User user = userProfileDao.findByUserId(userid);
 		
-		CustomerDetail customerDetails =  user.getCustomerDetail();
+		
 		
 		UserVO userVO = new UserVO();
+		
 		userVO.setId(user.getId());
 		userVO.setFirstName(user.getFirstName());
 		userVO.setLastName(user.getLastName());
 		userVO.setEmailId(user.getEmailId());
-		userVO.setUsername(user.getUsername());
+		/*userVO.setUsername(user.getUsername());
 		userVO.setPassword(user.getPassword());
 		userVO.setStatus(user.getStatus());
 		
-		UserRoleVO userRole = new UserRoleVO();
-		userRole.setId(user.getUserRole().getId());
-		userVO.setUserRole(userRole);
+		*/
+		userVO.setPhoneNumber(user.getPhoneNumber());
+		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 		
-		userVO.setPhoneNumber(user.getPhoneNumber());
-		userVO.setPhoneNumber(user.getPhoneNumber());
+		CustomerDetail customerDetail =  user.getCustomerDetail();
+		
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth());
+		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
+		customerDetailVO.setId(customerDetail.getId());
+		
+		
+		userVO.setCustomerDetail(customerDetailVO);
 		
 		return userVO;
 	}
