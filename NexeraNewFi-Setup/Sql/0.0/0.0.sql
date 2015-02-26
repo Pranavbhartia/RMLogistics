@@ -273,7 +273,7 @@ CREATE TABLE `loanappform` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `loan` int(11) DEFAULT NULL,
-  `marital_status` tinyint(4) DEFAULT NULL,
+  `marital_status` varchar(25) DEFAULT NULL,
   `second_mortgage` tinyint(4) DEFAULT NULL,
   `pay_sec_mortgage` tinyint(4) DEFAULT NULL,
   `home_to_sell` tinyint(4) DEFAULT NULL,
