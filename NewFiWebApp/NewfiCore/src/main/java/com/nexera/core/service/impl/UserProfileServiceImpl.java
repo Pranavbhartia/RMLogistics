@@ -24,7 +24,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		
 		User user = userProfileDao.findByUserId(userid);
 		
-		CustomerDetail customerDetails = (CustomerDetail) user.getCustomerDetails();
+		CustomerDetail customerDetails =  user.getCustomerDetail();
 		
 		UserVO userVO = new UserVO();
 		userVO.setId(user.getId());
