@@ -12,17 +12,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.DisplayMessageConstants;
-import com.nexera.common.dao.UserDao;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
+
 @Component
 @Transactional
-public class UserDaoImpl extends GenericDaoImpl implements UserDao {
+public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(UserDaoImpl.class);
+			.getLogger(UserProfileDaoImpl.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
