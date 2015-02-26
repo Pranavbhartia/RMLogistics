@@ -1173,10 +1173,11 @@ function getNeededDocumentRow(document){
 	}
 	
 	var docTitle = $('<div>').attr({
-		"class" : "doc-title float-left"
+		"class" : "doc-title float-left",
+		"title" : document.desc
 	}).html(document.title);
 	
-	docTitle.bind('mouseenter',{"desc" : document.desc},function(event){
+	/*docTitle.bind('mouseenter',{"desc" : document.desc},function(event){
 		var leftOffset = $(this).offset().left;
 		var topOffset = $(this).offset().top;
 		var desc = event.data.desc;
@@ -1185,7 +1186,7 @@ function getNeededDocumentRow(document){
 	
 	docTitle.bind('mouseleave',function(event){
 		hideDocumentToolTip();
-	});
+	});*/
 	
 	return row.append(checkBox).append(docTitle);
 }

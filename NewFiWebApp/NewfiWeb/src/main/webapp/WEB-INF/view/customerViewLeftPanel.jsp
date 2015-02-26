@@ -1,6 +1,6 @@
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
-		<div class="lp-pic-wrapper lp-item clearfix">
+		<div id="lp-customer-profile" class="lp-pic-wrapper lp-item clearfix" onclick="showCustomerProfilePage();">
 			<div class="lp-pic float-left"></div>
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1">Jane Doe</div>
