@@ -1,6 +1,7 @@
 <div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">
+			<div class="small-screen-menu-icon float-left"></div>
 			<div class="header-logo float-left"></div>
 			<div class="header-btns-wrapper float-right clearfix">
 				<div class="float-left btn-alarm hdr-btn-item"></div>
