@@ -21,7 +21,7 @@ public class LoanAppForm implements Serializable {
 	private Boolean hoaDues;
 	private Boolean homeRecentlySold;
 	private Boolean homeToSell;
-	private Boolean maritalStatus;
+	private String maritalStatus;
 	private Boolean ownsOtherProperty;
 	private Boolean pensionOrRetirement;
 	private Boolean receiveAlimonyChildSupport;
@@ -88,13 +88,12 @@ public class LoanAppForm implements Serializable {
 		this.homeToSell = homeToSell;
 	}
 
-	@Column(name = "marital_status",columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getMaritalStatus() {
+	@Column(name = "marital_status")
+	public String getMaritalStatus() {
 		return this.maritalStatus;
 	}
 
-	public void setMaritalStatus(Boolean maritalStatus) {
+	public void setMaritalStatus(String maritalStatus) {
 		this.maritalStatus = maritalStatus;
 	}
 

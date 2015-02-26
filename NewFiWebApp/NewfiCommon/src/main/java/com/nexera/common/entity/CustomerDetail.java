@@ -21,7 +21,6 @@ public class CustomerDetail implements Serializable {
 	private Integer profileCompletionStatus;
 	private String secEmailId;
 	private String secPhoneNumber;
-	private User user;
 
 	public CustomerDetail() {
 	}
@@ -100,15 +99,5 @@ public class CustomerDetail implements Serializable {
 		this.secPhoneNumber = secPhoneNumber;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user")
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 }

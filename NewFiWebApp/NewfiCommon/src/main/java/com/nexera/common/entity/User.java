@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
@@ -40,9 +41,9 @@ public class User implements Serializable, UserDetails {
 	private String username;
 	private UserRole userRole;
 
-	private List<CustomerDetail> customerDetails;
-	private List<InternalUserDetail> internalUserDetails;
-	private List<RealtorDetail> realtorDetails;
+	private CustomerDetail customerDetail;
+	private InternalUserDetail internalUserDetail;
+	private RealtorDetail realtorDetail;
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanNotification> loanNotifications;
@@ -65,7 +66,7 @@ public class User implements Serializable, UserDetails {
 		this.id = id;
 	}
 
-	@Column(name = "status",columnDefinition = "TINYINT")
+	@Column(name = "status", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getStatus() {
 		return status;
@@ -135,36 +136,38 @@ public class User implements Serializable, UserDetails {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
-	public List<CustomerDetail> getCustomerDetails() {
-		return customerDetails;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_detail")
+	public CustomerDetail getCustomerDetail() {
+		return customerDetail;
 	}
 
-	public void setCustomerDetails(List<CustomerDetail> customerDetails) {
-		this.customerDetails = customerDetails;
+	public void setCustomerDetail(CustomerDetail customerDetail) {
+		this.customerDetail = customerDetail;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
-	public List<InternalUserDetail> getInternalUserDetails() {
-		return internalUserDetails;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "internal_user_detail")
+	public InternalUserDetail getInternalUserDetail() {
+		return internalUserDetail;
 	}
 
-	public void setInternalUserDetails(
-			List<InternalUserDetail> internalUserDetails) {
-		this.internalUserDetails = internalUserDetails;
+	public void setInternalUserDetail(InternalUserDetail internalUserDetail) {
+		this.internalUserDetail = internalUserDetail;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
-	public List<RealtorDetail> getRealtorDetails() {
-		return realtorDetails;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "realtor_detail")
+	public RealtorDetail getRealtorDetail() {
+		return realtorDetail;
 	}
 
-	public void setRealtorDetails(List<RealtorDetail> realtorDetails) {
-		this.realtorDetails = realtorDetails;
+	public void setRealtorDetail(RealtorDetail realtorDetail) {
+		this.realtorDetail = realtorDetail;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	public List<Loan> getLoans() {
 		return loans;
 	}
@@ -173,7 +176,7 @@ public class User implements Serializable, UserDetails {
 		this.loans = loans;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	public List<LoanAppForm> getLoanAppForms() {
 		return loanAppForms;
 	}
@@ -182,7 +185,7 @@ public class User implements Serializable, UserDetails {
 		this.loanAppForms = loanAppForms;
 	}
 
-	@OneToMany(mappedBy="createdFor",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "createdFor", fetch = FetchType.LAZY)
 	public List<LoanNotification> getLoanNotifications() {
 		return loanNotifications;
 	}
@@ -191,7 +194,7 @@ public class User implements Serializable, UserDetails {
 		this.loanNotifications = loanNotifications;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	public List<LoanTeam> getLoanTeams() {
 		return loanTeams;
 	}
@@ -200,7 +203,7 @@ public class User implements Serializable, UserDetails {
 		this.loanTeams = loanTeams;
 	}
 
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	public List<UserEmail> getUserEmails() {
 		return userEmails;
 	}
@@ -226,6 +229,7 @@ public class User implements Serializable, UserDetails {
 	public User() {
 		super();
 	}
+
 	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;

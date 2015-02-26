@@ -18,7 +18,6 @@ public class InternalUserDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private Boolean activeInternal;
-	private User user;
 	private User manager;
 
 	public InternalUserDetail() {
@@ -47,16 +46,6 @@ public class InternalUserDetail implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user")
-	public User getUser() {
-		return this.user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 
 	//bi-directional many-to-one association to User
