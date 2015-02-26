@@ -25,7 +25,7 @@ public class UserRepositoryService implements UserDetailsService {
 		try {
 			LOG.info("auth service : " + authenticationService);
 			user = authenticationService.getUserWithLoginName(username);
-			LOG.info("user : " + user.getEmail());
+			LOG.info("user : " + user.getEmailId());
 		}
 		catch (NoRecordsFetchedException e) {
 			throw new UsernameNotFoundException("User not found in the system");

@@ -43,7 +43,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			
 
 			LOG.debug("Checking if user is not in inactive mode");
-			if (user.getStatus() == CommonConstants.STATUS_INACTIVE) {
+			if (!user.getStatus()) {
 				throw new InvalidInputException("User not active in login", DisplayMessageConstants.USER_INACTIVE);
 			}
 
@@ -52,7 +52,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 				List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 				Authentication auth = new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
-				LOG.info("Authentication provided for user : " + user.getEmail());
+				LOG.info("Authentication provided for user : " + user.getEmailId());
 				return auth;
 			}
 		}
