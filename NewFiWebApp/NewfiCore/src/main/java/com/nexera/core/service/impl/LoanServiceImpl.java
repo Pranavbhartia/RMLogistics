@@ -57,15 +57,21 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	public List<UserVO> retreiveLoanTeam(LoanVO loan) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
+
+		List<User> team = loanDao.retreiveLoanTeam(LoanServiceImpl
+				.parseLoanModel(loanVO));
+
+		return LoanServiceImpl.buildUserVOList(team);
 	}
 
 	@Override
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
-		// TODO Auto-generated method stub
-		return null;
+
+		User manager = LoanServiceImpl.parseUserModel(loanManager);
+
+		return LoanServiceImpl.buildLoanVOList(loanDao
+				.retreiveLoansAsManager(manager));
 	}
 
 	public static Loan parseLoanModel(LoanVO loanVO) {
@@ -184,6 +190,19 @@ public class LoanServiceImpl implements LoanService {
 
 		return role;
 
+	}
+
+	public static List<UserVO> buildUserVOList(List<User> userList) {
+
+		if (userList == null)
+			return null;
+
+		List<UserVO> voList = new ArrayList<UserVO>();
+		for (User user : userList) {
+			voList.add(LoanServiceImpl.buildUserVO(user));
+		}
+
+		return voList;
 	}
 
 }

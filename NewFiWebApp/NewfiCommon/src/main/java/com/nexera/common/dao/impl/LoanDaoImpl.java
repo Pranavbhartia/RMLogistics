@@ -2,13 +2,11 @@ package com.nexera.common.dao.impl;
 
 import java.util.List;
 
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 
 
@@ -35,13 +33,13 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public List<LoanTeam> retreiveLoanTeam(Loan loan) {
+	public List<User> retreiveLoanTeam(Loan loan) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<LoanTeam> retreiveLoansAsManager(User loanManager) {
+	public List<Loan> retreiveLoansAsManager(User loanManager) {
 		// TODO Auto-generated method stub
 		return null;
 	}
