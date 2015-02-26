@@ -20,7 +20,7 @@
 			<jsp:include page="customerViewSecondaryLeftPanel.jsp"></jsp:include>
 			<div id="center-panel-cont" class="center-panel float-left">
 					<div id="fileUpload" class="dropFileUpload">
-						<form action="newfi/file-upload"
+						<form action="documentUpload.do"
     						  class="dropzone" method="post" class="my-awesome-dropzone" enctype="multipart/form-data"
      								 id="dropzoneForm">
      					 </form>

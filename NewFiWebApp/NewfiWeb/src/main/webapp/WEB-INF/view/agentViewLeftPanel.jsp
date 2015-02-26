@@ -1,0 +1,66 @@
+<div class="left-panel-wrapper float-left">
+	<div class="left-panel">
+		<div class="lp-pic-wrapper lp-item-agent clearfix">
+			<div class="lp-pic float-left"></div>
+			<div class="lp-pic-txt float-left">
+				<div class="lp-txt1">Elen Adarna</div>
+				<div class="lp-txt2">Title Agent</div>
+				<div class="lp-txt3">+1 (888) 555-1987</div>
+			</div>
+		</div>
+		<div class="lp-item-agent clearfix">
+			<div class="lp-item-header">work on your loan</div>
+			<div class="lp-item-body lp-agent-item1">
+				<div class="lp-item-body-row lp-item-body-top-row">
+					<span id="lp-new-prospects">23</span>
+					<span> New Prospects</span>
+				</div>
+				<div class="lp-item-body-row">
+					<span id="lp-total-leads">65</span>
+					<span> Total leads</span>
+				</div>
+			</div>
+		</div>
+		<div class="lp-item-agent clearfix" onclick="paintMyLoansView();">
+			<div class="lp-item-header">my loans</div>
+			<div class="lp-item-body lp-agent-item2">
+				<div class="lp-item-body-row lp-item-body-top-row">
+					<span id="lp-new-loans">10</span>
+					<span> New loans</span>
+				</div>
+				<div class="lp-item-body-row">
+					<span id="lp-in-progress">50</span>
+					<span> Inprogress</span>
+				</div>
+			</div>
+		</div>
+		<div class="lp-item-agent clearfix">
+			<div class="lp-item-header">my archives</div>
+			<div class="lp-item-body lp-agent-item3">
+				<div class="lp-item-body-row lp-item-body-top-row">
+					<span id="lp-closed">20</span>
+					<span> Closed</span>
+				</div>
+				<div class="lp-item-body-row">
+					<span id="lp-withdrawn">8</span>
+					<span> Withdrawn</span>
+				</div>
+				<div class="lp-item-body-row">
+					<span id="lp-declined">6</span>
+					<span> Declined</span>
+				</div>
+			</div>
+		</div>
+		<div class="lp-alert-wrapper lp-item clearfix">
+			<div class="lp-alert-header">important alerts</div>
+			<div class="lp-alert-item-container clearfix">
+				<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
+				<div class="lp-alert-close-btn float-right"></div>
+			</div>
+			<div class="lp-alert-item-container clearfix">
+				<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
+				<div class="lp-alert-close-btn float-right"></div>
+			</div>
+		</div>
+	</div>
+</div>
