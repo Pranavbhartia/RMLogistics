@@ -6,7 +6,7 @@
 function adjustRightPanelOnResize() {
 	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
 		var leftPanelWidth = $('.left-panel').width();
-		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 35;
+		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
 		$('.right-panel-messageDashboard').width(centerPanelWidth);
 	}
 }
@@ -22,7 +22,7 @@ function paintGettingToKnowMessageDashboard(){
 	var conversationHistoryWrapper = getConversationHistoryWrapper();
 	$('#conv-main-container').append(msgDashboardWrapper).append(conversationHistoryWrapper);
 	$('#conv-container').html('');
-	var baseUrl = location.origin + "/NewFiWeb/resources/images/";
+	var baseUrl = "resources/images/";
 	var conversations = [
 	                     {
 	                    	 "name" : "Jane Doe",
@@ -138,6 +138,7 @@ function paintGettingToKnowMessageDashboard(){
  	                     }
 	                     ];
 	paintConversations(conversations);
+	adjustRightPanelOnResize();
 }
 
 function getMessageDashboardWrapper() {
