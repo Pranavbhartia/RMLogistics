@@ -15,7 +15,6 @@ public class RealtorDetail implements Serializable {
 	private Integer id;
 	private String licenceInfo;
 	private String profileUrl;
-	private User user;
 
 	public RealtorDetail() {
 	}
@@ -48,15 +47,5 @@ public class RealtorDetail implements Serializable {
 		this.profileUrl = profileUrl;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user")
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 }

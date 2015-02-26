@@ -80,7 +80,6 @@ DROP TABLE IF EXISTS `customerdetails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customerdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user` int(11) NOT NULL,
   `address_city` varchar(100) DEFAULT NULL,
   `address_state` varchar(100) DEFAULT NULL,
   `address_zip_code` varchar(10) DEFAULT NULL,
@@ -88,9 +87,7 @@ CREATE TABLE `customerdetails` (
   `sec_email_id` varchar(100) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `profile_completion_status` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_custUsrDetails_idx` (`user`),
-  CONSTRAINT `fk_custUsrDetails` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -142,14 +139,11 @@ DROP TABLE IF EXISTS `internaluserdetails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `internaluserdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user` int(11) NOT NULL,
   `manager` int(11) DEFAULT NULL,
   `active_internal` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `fk_custDetailsMappedToUsr_idx` (`user`),
   KEY `fk_internalUserManager_idx` (`manager`),
-  CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_intrnlUsrDetailsMappedToUsr` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -834,12 +828,9 @@ DROP TABLE IF EXISTS `realtordetails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `realtordetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user` int(11) NOT NULL,
   `profile_url` varchar(500) DEFAULT NULL,
   `licence_info` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_realtorUsrDetails_idx` (`user`),
-  CONSTRAINT `fk_realtorUsrDetails` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -927,8 +918,17 @@ CREATE TABLE `user` (
   `user_role` int(11) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
   `photo_image_url` varchar(500) DEFAULT NULL,
+  `customer_detail` int(11) DEFAULT NULL,
+  `realtor_detail` int(11) DEFAULT NULL,
+  `internal_user_detail` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_userMapedToRole_idx` (`user_role`),
+  KEY `fk_userMappedToCustDetail_idx` (`customer_detail`),
+  KEY `fk_userMappedToInternalUsrDetail_idx` (`internal_user_detail`),
+  KEY `fk_userMappedToRealtorDetail_idx` (`realtor_detail`),
+  CONSTRAINT `fk_userMappedToCustDetail` FOREIGN KEY (`customer_detail`) REFERENCES `customerdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userMappedToInternalUsrDetail` FOREIGN KEY (`internal_user_detail`) REFERENCES `internaluserdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userMappedToRealtorDetail` FOREIGN KEY (`realtor_detail`) REFERENCES `realtordetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_userMapedToRole` FOREIGN KEY (`user_role`) REFERENCES `userrole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -939,7 +939,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1202,4 +1202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-25 17:27:09
+-- Dump completed on 2015-02-26 11:45:39
