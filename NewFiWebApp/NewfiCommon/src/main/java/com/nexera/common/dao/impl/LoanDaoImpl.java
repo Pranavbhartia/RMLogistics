@@ -23,13 +23,13 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public boolean addToLoanTeam(User user) {
+	public boolean addToLoanTeam(Loan loan,User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean removeFromLoanTeam(User user) {
+	public boolean removeFromLoanTeam(Loan loan,User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
