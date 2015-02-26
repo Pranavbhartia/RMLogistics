@@ -275,6 +275,7 @@ CREATE TABLE `loanappform` (
   `loan` int(11) DEFAULT NULL,
   `marital_status` tinyint(4) DEFAULT NULL,
   `second_mortgage` tinyint(4) DEFAULT NULL,
+  `pay_sec_mortgage` tinyint(4) DEFAULT NULL,
   `home_to_sell` tinyint(4) DEFAULT NULL,
   `owns_other_property` tinyint(4) DEFAULT NULL,
   `rented_other_property` tinyint(4) DEFAULT NULL,
@@ -1202,4 +1203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-26 11:45:39
+-- Dump completed on 2015-02-26 12:07:48

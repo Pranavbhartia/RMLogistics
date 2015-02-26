@@ -27,6 +27,7 @@ public class LoanAppForm implements Serializable {
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
+	private Boolean paySecondMortgage;
 	private Boolean selfEmployed;
 	private Boolean ssIncomeOrDisability;
 	private User user;
@@ -47,7 +48,7 @@ public class LoanAppForm implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	@Column(columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getEmployed() {
@@ -58,7 +59,7 @@ public class LoanAppForm implements Serializable {
 		this.employed = employed;
 	}
 
-	@Column(name = "hoa_dues",columnDefinition = "TINYINT")
+	@Column(name = "hoa_dues", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHoaDues() {
 		return this.hoaDues;
@@ -68,7 +69,7 @@ public class LoanAppForm implements Serializable {
 		this.hoaDues = hoaDues;
 	}
 
-	@Column(name = "home_recently_sold",columnDefinition = "TINYINT")
+	@Column(name = "home_recently_sold", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHomeRecentlySold() {
 		return this.homeRecentlySold;
@@ -78,7 +79,7 @@ public class LoanAppForm implements Serializable {
 		this.homeRecentlySold = homeRecentlySold;
 	}
 
-	@Column(name = "home_to_sell",columnDefinition = "TINYINT")
+	@Column(name = "home_to_sell", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHomeToSell() {
 		return this.homeToSell;
@@ -97,7 +98,7 @@ public class LoanAppForm implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	@Column(name = "owns_other_property",columnDefinition = "TINYINT")
+	@Column(name = "owns_other_property", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getOwnsOtherProperty() {
 		return this.ownsOtherProperty;
@@ -107,7 +108,7 @@ public class LoanAppForm implements Serializable {
 		this.ownsOtherProperty = ownsOtherProperty;
 	}
 
-	@Column(name = "pension_or_retirement",columnDefinition = "TINYINT")
+	@Column(name = "pension_or_retirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getPensionOrRetirement() {
 		return this.pensionOrRetirement;
@@ -117,7 +118,7 @@ public class LoanAppForm implements Serializable {
 		this.pensionOrRetirement = pensionOrRetirement;
 	}
 
-	@Column(name = "receive_alimony_child_support",columnDefinition = "TINYINT")
+	@Column(name = "receive_alimony_child_support", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getReceiveAlimonyChildSupport() {
 		return this.receiveAlimonyChildSupport;
@@ -127,7 +128,7 @@ public class LoanAppForm implements Serializable {
 		this.receiveAlimonyChildSupport = receiveAlimonyChildSupport;
 	}
 
-	@Column(name = "rented_other_property",columnDefinition = "TINYINT")
+	@Column(name = "rented_other_property", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRentedOtherProperty() {
 		return this.rentedOtherProperty;
@@ -137,7 +138,7 @@ public class LoanAppForm implements Serializable {
 		this.rentedOtherProperty = rentedOtherProperty;
 	}
 
-	@Column(name = "second_mortgage",columnDefinition = "TINYINT")
+	@Column(name = "second_mortgage", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSecondMortgage() {
 		return this.secondMortgage;
@@ -147,7 +148,17 @@ public class LoanAppForm implements Serializable {
 		this.secondMortgage = secondMortgage;
 	}
 
-	@Column(name = "self_employed",columnDefinition = "TINYINT")
+	@Column(name = "pay_sec_mortgage", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getPaySecondMortgage() {
+		return paySecondMortgage;
+	}
+
+	public void setPaySecondMortgage(Boolean paySecondMortgage) {
+		this.paySecondMortgage = paySecondMortgage;
+	}
+
+	@Column(name = "self_employed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSelfEmployed() {
 		return this.selfEmployed;
@@ -157,7 +168,7 @@ public class LoanAppForm implements Serializable {
 		this.selfEmployed = selfEmployed;
 	}
 
-	@Column(name = "ss_income_or_disability",columnDefinition = "TINYINT")
+	@Column(name = "ss_income_or_disability", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSsIncomeOrDisability() {
 		return this.ssIncomeOrDisability;
