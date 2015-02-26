@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,16 @@ public class LoanServiceImpl implements LoanService {
 	@Autowired
 	private LoanDao loanDao;
 
+	private User getUserObject() {
+		final Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			return (User) principal;
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public List<LoanVO> getLoansOfUser(UserVO user) {
 
@@ -45,7 +56,9 @@ public class LoanServiceImpl implements LoanService {
 		Loan loanModel = LoanServiceImpl.parseLoanModel(loan);
 		User userModel = LoanServiceImpl.parseUserModel(user);
 
-		return loanDao.addToLoanTeam(loanModel, userModel);
+		// TODO CHange the added by appropriately, move the get user obj in
+		// correct service
+		return loanDao.addToLoanTeam(loanModel, userModel, getUserObject());
 	}
 
 	@Override
