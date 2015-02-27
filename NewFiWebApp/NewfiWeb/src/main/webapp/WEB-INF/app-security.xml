@@ -12,7 +12,7 @@
 		<intercept-url pattern="/" access="permitAll" />
 
 
-		<intercept-url pattern="/*.do" access="isAuthenticated()" />
+		<intercept-url pattern="/*.do" access="permitAll" />
 
 		<form-login login-page="/" authentication-failure-url="/?s=autherror"
 			authentication-success-handler-ref="userLoginHandler" />
