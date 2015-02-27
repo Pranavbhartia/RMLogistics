@@ -64,13 +64,10 @@ public class NeedsListServiceImpl implements NeedsListService{
 					result.add(needVo);
 				}
 			}else{
-				System.out.println("Get Loan App Form ");
 				LoanAppForm loanAppForm=loanDao.getLoanAppForm(loanId);
-				System.out.println("Got Loan App Form ");
 				if(loanAppForm==null){
 					throw new Exception("Loan Details Not found");
 				}
-				System.out.println("Get master needs List"+loanAppForm.getId());
 				LinkedHashMap<String, ManagerNeedVo> needsList=getMasterNeedsListDirectory();
 				if(needsList.size()<36){
 					throw new Exception("Insufficient Data");
@@ -178,7 +175,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 				needsList.get("22").setIsChecked(true);
 				needsList.get("28").setIsChecked(true);
 				needsList.get("33").setIsChecked(true);
-				System.out.println("Completed Operation");
+				
 				result=new ArrayList<ManagerNeedVo>(needsList.values());
 				// TODO code to Apply Rules comes here
 				
@@ -196,7 +193,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 		//		}
 				
 			}
-			System.out.println(result.size()+"--1");
+			
 			
 //			Collections.sort(result,new Comparator<ManagerNeedVo>() {
 //				 @Override
@@ -209,7 +206,6 @@ public class NeedsListServiceImpl implements NeedsListService{
 //				    }
 //			});
 			
-			System.out.println(result.size()+"----2");
 			return result;
 		
 		} catch (NoRecordsFetchedException e) {
@@ -220,7 +216,6 @@ public class NeedsListServiceImpl implements NeedsListService{
 	}
 	
 	public int saveLoanNeeds(int loanId,List<Integer> needsList){
-		System.out.println("1");
 		LinkedHashMap<String, LoanNeedsList> existingNeeds=new LinkedHashMap<String,LoanNeedsList>();
 		List<LoanNeedsList> ExistingNeedsList = null;
 		try {
@@ -229,11 +224,9 @@ public class NeedsListServiceImpl implements NeedsListService{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("2");
 		for(LoanNeedsList need:ExistingNeedsList){
 			existingNeeds.put(need.getNeedsListMaster().getId()+"", need);
 		}
-		System.out.println("3");
 		List<LoanNeedsList> needs=new ArrayList<LoanNeedsList>();
 		try{
 		for(Integer needId:needsList){
@@ -253,14 +246,13 @@ public class NeedsListServiceImpl implements NeedsListService{
 			need.setMandatory(true);
 			need.setSystemAction(true);
 			
-			System.out.println("3--"+needId.intValue());
 			if(existingNeeds.containsKey(needId.intValue()+"")){
 				existingNeeds.remove(needId.intValue()+"");
 			}else{
 				try{
 				needsDao.save(need);
 				}catch(DatabaseException e){
-					System.out.println("3--error"+e);
+					
 				}
 			}
 		}

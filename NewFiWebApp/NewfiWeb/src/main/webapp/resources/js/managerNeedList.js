@@ -8,11 +8,11 @@ function getLoanNeedsManagerContext(loanId){
 			var data={};
 			data.loanId=1;
 			var ob=this;
-			ajaxRequest("http://localhost:8080/NewfiWeb/rest/getloanneeds","GET","json",data,function(response){
-				if(response.Error){
+			ajaxRequest("http://localhost:8080/NewfiWeb/rest/loanneeds/get","GET","json",data,function(response){
+				if(response.error){
 
 				}else{
-					ob.needsList=response.Result;
+					ob.needsList=response.resultObject;
 					if(callback){
 						callback(ob);
 					}
@@ -78,11 +78,11 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			data.needs=JSON.stringify(this.selectedNeeds)
 			var ob=this;
-			ajaxRequest("http://localhost:8080/NewfiWeb/rest/saveloanneeds","POST","json",data,function(response){
-				if(response.Error){
-
+			ajaxRequest("http://localhost:8080/NewfiWeb/rest/loanneeds/save","POST","json",data,function(response){
+				if(response.error){
+					alert(response.error.message);
 				}else{
-					
+					alert("Save Successful")
 					if(callback){
 						callback(ob);
 					}
