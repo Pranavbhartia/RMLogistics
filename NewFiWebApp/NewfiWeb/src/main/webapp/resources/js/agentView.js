@@ -193,17 +193,23 @@ function paintAgentDashboard(){
 		"class" : "rp-agent-dashboard float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
-	paintAgentDashboardRightPanel();
+	getDashboardRightPanel();
 	adjustAgentDashboardOnResize();
 }
 
 function paintAgentDashboardCallBack(data){
 	$('#main-body-wrapper').html(data);
-	paintAgentDashboardRightPanel();
+	
 	adjustAgentDashboardOnResize();
 }
 
-function paintAgentDashboardRightPanel(){
+function getDashboardRightPanel(){
+	var userID = 1;
+	ajaxRequest("rest/loan/retrieveDashboard/"+userID, "GET", "json", {}, paintAgentDashboardRightPanel);
+}
+
+function paintAgentDashboardRightPanel(customerData){
+	console.log(customerData);
 	var header = $('<div>').attr({
 		"class" : "agent-customer-list-header clearfix"
 	});
@@ -253,7 +259,7 @@ function paintAgentDashboardRightPanel(){
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
-	appendCustomers("leads-container",custData.customers);
+	appendCustomers("leads-container",customerData.customers);
 }
 
 function appendAgentDashboardContainer(){

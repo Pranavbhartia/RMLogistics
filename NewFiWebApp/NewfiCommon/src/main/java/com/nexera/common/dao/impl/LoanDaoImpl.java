@@ -11,7 +11,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
@@ -19,9 +18,8 @@ import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
- 
+
 @Component
-@Transactional
 public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
@@ -36,15 +34,27 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
 	public boolean addToLoanTeam(Loan loan, User user, User addedBy) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanTeam.class);
+		criteria.add(Restrictions.eq("user", user));
+		criteria.add(Restrictions.eq("loan", loan));
+		LoanTeam loanTeam = (LoanTeam) criteria.uniqueResult();
+		if (loanTeam != null) {
+			loanTeam.setActive(true);
+			loanTeam.setAssignedBy(addedBy);
+			loanTeam.setAssignedOn(new Date());
+			this.update(loanTeam);
+			return true;
+		}
 
-		LoanTeam loanTeam = new LoanTeam();
-		loanTeam.setUser(user);
-		loanTeam.setAssignedBy(addedBy);
-		loanTeam.setLoan(loan);
-		loanTeam.setActive(true);
-		loanTeam.setAssignedOn(new Date());
+		LoanTeam loanTeamNew = new LoanTeam();
+		loanTeamNew.setUser(user);
+		loanTeamNew.setAssignedBy(addedBy);
+		loanTeamNew.setLoan(loan);
+		loanTeamNew.setActive(true);
+		loanTeamNew.setAssignedOn(new Date());
 
-		Integer id = (Integer) this.save(loanTeam);
+		Integer id = (Integer) this.save(loanTeamNew);
 
 		if (id != null)
 			return true;
@@ -135,10 +145,33 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
-		// TODO Auto-generated method stub
 		
-		
-		
-		return null;
+	    try{
+	        List<Loan> loanListForUser = new ArrayList<Loan>();
+	        Session session = sessionFactory.getCurrentSession();
+	        Criteria criteria = session.createCriteria(Loan.class);
+	        List<Loan> allLoansList = criteria.list();
+	        
+	        if(allLoansList != null){
+	            for(Loan loan : allLoansList){
+	                List<LoanTeam> loanTeamList = loan.getLoanTeam();
+	                if(loanTeamList != null){
+	                    for(LoanTeam loanTeam : loanTeamList){
+	                        //check if any loanTeam has the same user then add loan in list
+	                        if(loanTeam.getUser().getId() == parseUserModel.getId())
+	                            loanListForUser.add( loan );
+	                    }
+	                }
+	            } 
+	        }
+	        
+	        return loanListForUser;
+	    } catch (HibernateException hibernateException) {
+
+            throw new DatabaseException(
+                    "Exception caught in retrieveLoanForDashboard() ",
+                    hibernateException);
+        }
+	   
 	}
 }

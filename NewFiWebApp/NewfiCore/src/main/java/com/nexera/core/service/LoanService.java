@@ -20,6 +20,6 @@ public interface LoanService {
 
 	List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
 	
-	List<LoanDashboardVO> retrieveDashboard(UserVO user);
+	LoanDashboardVO retrieveDashboard(UserVO user);
 
 }
