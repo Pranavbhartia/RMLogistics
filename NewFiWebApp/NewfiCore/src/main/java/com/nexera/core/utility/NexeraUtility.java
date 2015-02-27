@@ -1,6 +1,8 @@
 package com.nexera.core.utility;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 public class NexeraUtility {
 
@@ -73,4 +76,39 @@ public class NexeraUtility {
 		return rootPath + File.separator + "tmpFiles";
 	}
 	
+	
+	public static String uploadFileToLocal(MultipartFile file){
+		 String filePath = null;
+		if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+ 
+                // Creating the directory to store file
+              
+                File dir = new File(NexeraUtility.tomcatDirectoryPath());
+                if (!dir.exists())
+                    dir.mkdirs();
+ 
+                filePath = dir.getAbsolutePath()
+                        + File.separator + file.getOriginalFilename();
+                // Create the file on server
+                File serverFile = new File(filePath);
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+                stream.close();
+ 
+                LOGGER.info("Server File Location="
+                        + serverFile.getAbsolutePath());
+ 
+               
+            } catch (Exception e) {
+            	LOGGER.info("Exception in uploading file in local "+e.getMessage());
+                return null;
+            }
+        } else {
+        	 return null;
+        }
+		return filePath;
+	}
 }
