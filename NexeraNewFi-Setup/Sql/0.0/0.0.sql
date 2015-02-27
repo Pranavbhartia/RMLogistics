@@ -1,7 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1082,13 +1081,13 @@ LOCK TABLES `workflowexec` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `workflowitem`
+-- Table structure for table `workflowitemexec`
 --
 
-DROP TABLE IF EXISTS `workflowitem`;
+DROP TABLE IF EXISTS `workflowitemexec`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `workflowitem` (
+CREATE TABLE `workflowitemexec` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `workflow_item_master` int(11) NOT NULL,
   `parent_workflow` int(11) NOT NULL,
@@ -1109,12 +1108,12 @@ CREATE TABLE `workflowitem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `workflowitem`
+-- Dumping data for table `workflowitemexec`
 --
 
-LOCK TABLES `workflowitem` WRITE;
-/*!40000 ALTER TABLE `workflowitem` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowitem` ENABLE KEYS */;
+LOCK TABLES `workflowitemexec` WRITE;
+/*!40000 ALTER TABLE `workflowitemexec` DISABLE KEYS */;
+/*!40000 ALTER TABLE `workflowitemexec` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1235,4 +1234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-26 19:40:30
+-- Dump completed on 2015-02-27 12:32:35

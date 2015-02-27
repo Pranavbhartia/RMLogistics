@@ -37,7 +37,7 @@ public class WorkflowItemMaster implements Serializable {
 	private Integer startDelay;
 	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
-	private List<WorkflowItem> workflowItems;
+	private List<WorkflowItemExec> workflowItems;
 	private User createdBy;
 	private User modifiedBy;
 	private WorkflowItemMaster onSuccess;
@@ -142,22 +142,22 @@ public class WorkflowItemMaster implements Serializable {
 
 	// bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy = "workflowItemMaster")
-	public List<WorkflowItem> getWorkflowItems() {
+	public List<WorkflowItemExec> getWorkflowItems() {
 		return this.workflowItems;
 	}
 
-	public void setWorkflowitems(List<WorkflowItem> workflowItems) {
+	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
 		this.workflowItems = workflowItems;
 	}
 
-	public WorkflowItem addWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec addWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().add(workflowitem);
 		workflowitem.setWorkflowItemMaster(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec removeWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().remove(workflowitem);
 		workflowitem.setWorkflowItemMaster(null);
 
