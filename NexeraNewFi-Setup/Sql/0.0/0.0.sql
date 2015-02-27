@@ -1,6 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -273,7 +274,7 @@ CREATE TABLE `loanappform` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `loan` int(11) DEFAULT NULL,
-  `marital_status` varchar(25) DEFAULT NULL,
+  `marital_status` varchar(100) DEFAULT NULL,
   `second_mortgage` tinyint(4) DEFAULT NULL,
   `pay_sec_mortgage` tinyint(4) DEFAULT NULL,
   `home_to_sell` tinyint(4) DEFAULT NULL,
@@ -927,10 +928,10 @@ CREATE TABLE `user` (
   KEY `fk_userMappedToCustDetail_idx` (`customer_detail`),
   KEY `fk_userMappedToInternalUsrDetail_idx` (`internal_user_detail`),
   KEY `fk_userMappedToRealtorDetail_idx` (`realtor_detail`),
+  CONSTRAINT `FK_userMapedToRole` FOREIGN KEY (`user_role`) REFERENCES `userrole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToCustDetail` FOREIGN KEY (`customer_detail`) REFERENCES `customerdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToInternalUsrDetail` FOREIGN KEY (`internal_user_detail`) REFERENCES `internaluserdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_userMappedToRealtorDetail` FOREIGN KEY (`realtor_detail`) REFERENCES `realtordetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_userMapedToRole` FOREIGN KEY (`user_role`) REFERENCES `userrole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_userMappedToRealtorDetail` FOREIGN KEY (`realtor_detail`) REFERENCES `realtordetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1024,6 +1025,7 @@ DROP TABLE IF EXISTS `userrole`;
 CREATE TABLE `userrole` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_cd` varchar(45) DEFAULT NULL,
+  `label` varchar(100) DEFAULT NULL,
   `role_description` varchar(500) DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
@@ -1044,15 +1046,15 @@ LOCK TABLES `userrole` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `workflow`
+-- Table structure for table `workflowexec`
 --
 
-DROP TABLE IF EXISTS `workflow`;
+DROP TABLE IF EXISTS `workflowexec`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `workflow` (
+CREATE TABLE `workflowexec` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `workflow` int(11) DEFAULT NULL,
+  `workflow_master` int(11) DEFAULT NULL,
   `status` varchar(550) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
@@ -1063,20 +1065,20 @@ CREATE TABLE `workflow` (
   `summary` varchar(100) DEFAULT NULL,
   `active` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_workflowExMappedToWf_idx` (`workflow`),
+  KEY `fk_workflowExMappedToWf_idx` (`workflow_master`),
   KEY `fk_wfExCreatedBy_idx` (`created_by`),
-  CONSTRAINT `fk_wfExCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfExCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `workflow`
+-- Dumping data for table `workflowexec`
 --
 
-LOCK TABLES `workflow` WRITE;
-/*!40000 ALTER TABLE `workflow` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflow` ENABLE KEYS */;
+LOCK TABLES `workflowexec` WRITE;
+/*!40000 ALTER TABLE `workflowexec` DISABLE KEYS */;
+/*!40000 ALTER TABLE `workflowexec` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1088,7 +1090,7 @@ DROP TABLE IF EXISTS `workflowitem`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `workflowitem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `workflow_item` int(11) NOT NULL,
+  `workflow_item_master` int(11) NOT NULL,
   `parent_workflow` int(11) NOT NULL,
   `creation_date` datetime DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
@@ -1099,10 +1101,10 @@ CREATE TABLE `workflowitem` (
   `params` longblob,
   `result` longblob,
   PRIMARY KEY (`id`),
-  KEY `fk_wfitemExMappedToItem_idx` (`workflow_item`),
+  KEY `fk_wfitemExMappedToItem_idx` (`workflow_item_master`),
   KEY `fk_wfItemExMappedToParent_idx` (`parent_workflow`),
-  CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_wfItemExMappedToParent` FOREIGN KEY (`parent_workflow`) REFERENCES `workflow` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfItemExMappedToParent` FOREIGN KEY (`parent_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1126,7 +1128,7 @@ CREATE TABLE `workflowitemmaster` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `workflow_item_type` varchar(45) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
-  `task_name` varchar(500) NOT NULL,
+  `workflow_task` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
@@ -1137,12 +1139,17 @@ CREATE TABLE `workflowitemmaster` (
   `start_delay` int(11) DEFAULT NULL,
   `is_last_task` tinyint(4) NOT NULL DEFAULT '0',
   `priority` tinyint(4) DEFAULT NULL,
+  `parent_workflow_item_master` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_wfItemCreatedBy_idx` (`created_by`),
   KEY `fk_wfItemModifiedBy_idx` (`modified_by`),
   KEY `fk_wfItemOnSuccess_idx` (`on_success`),
   KEY `fk_wfItemOnFailure_idx` (`on_failure`),
+  KEY `fk_wfItemLinkedToParentItem_idx` (`parent_workflow_item_master`),
+  KEY `fk_wfItemMasterLinkedToTask_idx` (`workflow_task`),
+  CONSTRAINT `fk_wfItemMasterLinkedToTask` FOREIGN KEY (`workflow_task`) REFERENCES `workflowtaskconfigmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfItemLinkedToParentItem` FOREIGN KEY (`parent_workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemModifiedBy` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnFailure` FOREIGN KEY (`on_failure`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnSuccess` FOREIGN KEY (`on_success`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -1193,6 +1200,31 @@ LOCK TABLES `workflowmaster` WRITE;
 /*!40000 ALTER TABLE `workflowmaster` DISABLE KEYS */;
 /*!40000 ALTER TABLE `workflowmaster` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `workflowtaskconfigmaster`
+--
+
+DROP TABLE IF EXISTS `workflowtaskconfigmaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `workflowtaskconfigmaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class` varchar(200) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `params` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `workflowtaskconfigmaster`
+--
+
+LOCK TABLES `workflowtaskconfigmaster` WRITE;
+/*!40000 ALTER TABLE `workflowtaskconfigmaster` DISABLE KEYS */;
+/*!40000 ALTER TABLE `workflowtaskconfigmaster` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1203,4 +1235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-26 12:07:48
+-- Dump completed on 2015-02-26 19:40:30

@@ -35,7 +35,7 @@ public class WorkflowItemMaster implements Serializable {
 	private Date modifiedDate;
 	private byte priority;
 	private Integer startDelay;
-	private String taskName;
+	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
 	private List<WorkflowItem> workflowItems;
 	private User createdBy;
@@ -75,7 +75,7 @@ public class WorkflowItemMaster implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "is_last_task",columnDefinition = "TINYINT")
+	@Column(name = "is_last_task", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsLastTask() {
 		return this.isLastTask;
@@ -121,13 +121,14 @@ public class WorkflowItemMaster implements Serializable {
 		this.startDelay = startDelay;
 	}
 
-	@Column(name = "task_name")
-	public String getTaskName() {
-		return this.taskName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_task")
+	public WorkflowTaskConfigMaster getTask() {
+		return task;
 	}
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
+	public void setTask(WorkflowTaskConfigMaster task) {
+		this.task = task;
 	}
 
 	@Column(name = "workflow_item_type")
@@ -141,7 +142,7 @@ public class WorkflowItemMaster implements Serializable {
 
 	// bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy = "workflowItemMaster")
-	public List<WorkflowItem> getWorkflowitems() {
+	public List<WorkflowItem> getWorkflowItems() {
 		return this.workflowItems;
 	}
 
@@ -149,15 +150,15 @@ public class WorkflowItemMaster implements Serializable {
 		this.workflowItems = workflowItems;
 	}
 
-	public WorkflowItem addWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().add(workflowitem);
+	public WorkflowItem addWorkflowItem(WorkflowItem workflowitem) {
+		getWorkflowItems().add(workflowitem);
 		workflowitem.setWorkflowItemMaster(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().remove(workflowitem);
+	public WorkflowItem removeWorkflowItem(WorkflowItem workflowitem) {
+		getWorkflowItems().remove(workflowitem);
 		workflowitem.setWorkflowItemMaster(null);
 
 		return workflowitem;
@@ -199,7 +200,6 @@ public class WorkflowItemMaster implements Serializable {
 	public void setOnFailure(WorkflowItemMaster onFailure) {
 		this.onFailure = onFailure;
 	}
-
 
 	// bi-directional many-to-one association to User
 	@ManyToOne(fetch = FetchType.LAZY)
