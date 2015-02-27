@@ -32,7 +32,7 @@ public class Loan implements Serializable {
 	private LoanMilestoneMaster currentLoanMilestone;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFee> loanApplicationFees;
-	private List<LoanDetail> loanDetails;
+	private LoanDetail loanDetail;
 	private List<LoanMilestone> loanMilestones;
 	private List<LoanNeedsList> loanNeedsLists;
 	private List<LoanNotification> loanNotifications;
@@ -214,28 +214,14 @@ public class Loan implements Serializable {
 		return loanApplicationFee;
 	}
 
-	// bi-directional many-to-one association to LoanDetail
-	@OneToMany(mappedBy = "loan")
-	public List<LoanDetail> getLoanDetails() {
-		return this.loanDetails;
-	}
-
-	public void setLoanDetails(List<LoanDetail> loanDetails) {
-		this.loanDetails = loanDetails;
-	}
-
-	public LoanDetail addLoandetail(LoanDetail loanDetail) {
-		getLoanDetails().add(loanDetail);
-		loanDetail.setLoan(this);
-
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="loan_detail")
+	public LoanDetail getLoanDetail() {
 		return loanDetail;
 	}
 
-	public LoanDetail removeLoandetail(LoanDetail loanDetail) {
-		getLoanDetails().remove(loanDetail);
-		loanDetail.setLoan(null);
-
-		return loanDetail;
+	public void setLoanDetail(LoanDetail loanDetail) {
+		this.loanDetail = loanDetail;
 	}
 
 	// bi-directional many-to-one association to LoanMilestone

@@ -151,4 +151,19 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		return null;
 	}
+
+	@Override
+	public Loan getLoanWithDetails(Integer loanID) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		criteria.add(Restrictions.eq("id", loanID));
+		Loan loan = (Loan) criteria.uniqueResult();
+
+		if (loan != null) {
+			Hibernate.initialize(loan.getLoanDetail());
+			Hibernate.initialize(loan.getLoanRates());
+		}
+
+		return loan;
+	}
 }
