@@ -26,7 +26,7 @@ public class LoanVO implements Serializable {
 	private List<LoanNotificationVO> loanNotifications;
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
-	private List<LoanTeamVO> loanTeam;
+	private List<UserVO> loanTeam;
 	public int getId() {
 		return id;
 	}
@@ -148,10 +148,10 @@ public class LoanVO implements Serializable {
 	public void setLoanSettings(List<LoanSettingVO> loanSettings) {
 		this.loanSettings = loanSettings;
 	}
-	public List<LoanTeamVO> getLoanTeam() {
+	public List<UserVO> getLoanTeam() {
 		return loanTeam;
 	}
-	public void setLoanTeam(List<LoanTeamVO> loanTeam) {
+	public void setLoanTeam(List<UserVO> loanTeam) {
 		this.loanTeam = loanTeam;
 	}
 
