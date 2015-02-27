@@ -13,6 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name = "loanneedslist")
 @NamedQuery(name = "LoanNeedsList.findAll", query = "SELECT l FROM LoanNeedsList l")
 public class LoanNeedsList implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,10 +25,8 @@ public class LoanNeedsList implements Serializable {
 	private String fileUrl;
 	private Boolean mandatory;
 	private Boolean systemAction;
-	private Date uploadedDate;
 	private Loan loan;
 	private NeedsListMaster needsListMaster;
-	private User uploadedBy;
 
 	public LoanNeedsList() {
 	}
@@ -106,16 +105,6 @@ public class LoanNeedsList implements Serializable {
 		this.systemAction = systemAction;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "uploaded_date")
-	public Date getUploadedDate() {
-		return this.uploadedDate;
-	}
-
-	public void setUploadedDate(Date uploadedDate) {
-		this.uploadedDate = uploadedDate;
-	}
-
 	// bi-directional many-to-one association to Loan
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "loan")
@@ -136,17 +125,6 @@ public class LoanNeedsList implements Serializable {
 
 	public void setNeedsListMaster(NeedsListMaster needsListMaster) {
 		this.needsListMaster = needsListMaster;
-	}
-
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uploaded_by")
-	public User getUploadedBy() {
-		return uploadedBy;
-	}
-
-	public void setUploadedBy(User uploadedBy) {
-		this.uploadedBy = uploadedBy;
 	}
 
 }

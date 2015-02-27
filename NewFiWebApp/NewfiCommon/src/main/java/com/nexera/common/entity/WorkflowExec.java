@@ -15,13 +15,14 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Workflow.findAll", query="SELECT w FROM Workflow w")
-public class Workflow implements Serializable {
+@Table(name="workflowexec")
+@NamedQuery(name="WorkflowExec.findAll", query="SELECT w FROM WorkflowExec w")
+public class WorkflowExec implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private Boolean active;
 	private Date createdTime;
-	private WorkflowItem currentExecutingItem;
+	private WorkflowItemExec currentExecutingItem;
 	private Date executionCompleteTime;
 	private Date lastUpdatedTime;
 	private byte[] meta;
@@ -29,9 +30,9 @@ public class Workflow implements Serializable {
 	private String summary;
 	private WorkflowMaster workflowMaster;
 	private User user;
-	private List<WorkflowItem> workflowItems;
+	private List<WorkflowItemExec> workflowItems;
 
-	public Workflow() {
+	public WorkflowExec() {
 	}
 
 
@@ -70,11 +71,11 @@ public class Workflow implements Serializable {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="current_executing_item")
-	public WorkflowItem getCurrentExecutingItem() {
+	public WorkflowItemExec getCurrentExecutingItem() {
 		return this.currentExecutingItem;
 	}
 
-	public void setCurrentExecutingItem(WorkflowItem currentExecutingItem) {
+	public void setCurrentExecutingItem(WorkflowItemExec currentExecutingItem) {
 		this.currentExecutingItem = currentExecutingItem;
 	}
 
@@ -131,12 +132,12 @@ public class Workflow implements Serializable {
 
 	//bi-directional many-to-one association to WorkflowMaster
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="workflow")
-	public WorkflowMaster getWorkflowmaster() {
+	@JoinColumn(name="workflow_master")
+	public WorkflowMaster getWorkflowMaster() {
 		return this.workflowMaster;
 	}
 
-	public void setWorkflowmaster(WorkflowMaster workflowmaster) {
+	public void setWorkflowMaster(WorkflowMaster workflowmaster) {
 		this.workflowMaster = workflowmaster;
 	}
 
@@ -155,22 +156,22 @@ public class Workflow implements Serializable {
 
 	//bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy="parentWorkflow")
-	public List<WorkflowItem> getWorkflowItems() {
+	public List<WorkflowItemExec> getWorkflowItems() {
 		return this.workflowItems;
 	}
 
-	public void setWorkflowItems(List<WorkflowItem> workflowitems) {
+	public void setWorkflowItems(List<WorkflowItemExec> workflowitems) {
 		this.workflowItems = workflowitems;
 	}
 
-	public WorkflowItem addWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec addWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().add(workflowitem);
 		workflowitem.setParentWorkflow(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec removeWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().remove(workflowitem);
 		workflowitem.setParentWorkflow(null);
 

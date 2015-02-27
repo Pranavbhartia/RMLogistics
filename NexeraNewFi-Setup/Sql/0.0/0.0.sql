@@ -1,7 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -547,8 +546,6 @@ CREATE TABLE `loanneedslist` (
   `file_id` varchar(500) DEFAULT NULL,
   `file_url` varchar(1000) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
-  `uploaded_date` datetime DEFAULT NULL,
-  `uploaded_by` int(11) NOT NULL,
   `deleted` tinyint(4) DEFAULT '0',
   `system_action` tinyint(4) DEFAULT NULL,
   `mandatory` tinyint(4) DEFAULT '0',
@@ -556,8 +553,6 @@ CREATE TABLE `loanneedslist` (
   PRIMARY KEY (`id`),
   KEY `fk_User_Attachment_Loan_File1_idx` (`loan`),
   KEY `fk_User_Attachment_Attachment_Type1_idx` (`need_type`),
-  KEY `fk_userAttachment_uploadedBy_idx` (`uploaded_by`),
-  CONSTRAINT `fk_userAttachment_uploadedBy` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_User_Attachment_Attachment_Type1` FOREIGN KEY (`need_type`) REFERENCES `needslistmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_User_Attachment_Loan_File1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -781,7 +776,7 @@ CREATE TABLE `needslistmaster` (
   PRIMARY KEY (`id`),
   KEY `FK_attachmentTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_attachmentTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -790,6 +785,7 @@ CREATE TABLE `needslistmaster` (
 
 LOCK TABLES `needslistmaster` WRITE;
 /*!40000 ALTER TABLE `needslistmaster` DISABLE KEYS */;
+INSERT INTO `needslistmaster` VALUES (1,'Credit/Liabilities','Divorce Decree/Settlement Agreement','Do you pay or receive child support and/or alimony?  If so, a copy of your divorce decree/separation agreement and settlement agreement is needed. Please provide all pages.',NULL,NULL),(2,'Credit/Liabilities','Contact Information:  Landlord/Property Management Company','We\'ve noticed that you are currently renting a home. Please complete the Contact Information Form provided, so that we may contact the landlord/property management company to obtain an independent verification of rent.',NULL,NULL),(3,'Credit/Liabilities','Divorce Decree/Separation Agreement/Settlement Agreement','A copy of your divorce decree/separation agreement and settlement agreement is needed since you provide child support and/or alimony. Please provide all pages.',NULL,NULL),(4,'Credit/Liabilities','12 Months Cancelled Checks for Child Support/Alimony Paid','Copies of the most recent 12 months cancelled checks for child support and/or alimony payments are needed.',NULL,NULL),(5,'Property','Earnest Money Deposit: Copy of Check/Wire Transfer and Escrow Receipt','**BORROWER FYI ONLY** A copy of the earnest money deposit documentation received in escrow will be obtained by NewFi\'s processing staff.',NULL,NULL),(6,'Property','Mortgage Statement(s)','A copy of your most recent mortgage statement(s) is needed. This is required for all properties that are currently financed. Please provide all pages.',NULL,NULL),(7,'Property','2nd Mortgage/Equity Line Statement(s)','A copy of your most recent 2nd mortgage/Home Equity Line of Credit statement is needed.  This is required for all properties that currently have a 2nd mortgage lien against them. Please provide all pages.',NULL,NULL),(8,'Property','12 Months Cancelled Checks for Rent Payments','Copies of the most recent 12 months cancelled checks for your rent payments are needed, or',NULL,NULL),(9,'Property','Homeowner\'s Insurance','A copy of your current homeowner\'s insurance declarations page is needed. It should reflect your insurance coverage and premium amounts. This is needed for all residential properties that you own.',NULL,NULL),(10,'Property','Purchase Contract for Home Currently Being Sold','A copy of the purchase contract for your home that is currently being sold is needed.  Please provide all pages.',NULL,NULL),(11,'Property','Homeowner\'s Insurance Quote','Homeowner\'s insurance quote for new property being purchased.  Must have sufficient coverage **more detail here**',NULL,NULL),(12,'Property','Additional Properties','If you own additional properties, please provide any Mortgage Statements, Property Taxes and Insurance Homeowner’s Insurance for each.',NULL,NULL),(13,'Property','Note/Loan Agreement for 2nd Mortgage/Equity Line','A copy of the Note (sometime called Loan Agreement) for the 2nd mortgage you are planning on keeping open is needed. Please provide all pages.',NULL,NULL),(14,'Property','Purchase Contract Including Addendums and Counter-offers','**BORROWER FYI ONLY** The fully executed purchase contract, including all addendums and counter offers, will be obtained by NewFi\'s processing staff.',NULL,NULL),(15,'Property','Settlement Statement (HUD-1) for Property Recently Sold','A copy of the final Settlement Statement (also known as a HUD-1) for any home recently sold is needed.  Please provide for any home sold during the current year or previous tax year.',NULL,NULL),(16,'Property','Proof of HOA Dues','Please provide proof of your current HOA dues for any property owned that has HOA dues attached.  This is usually in affect on PUDs (Planned Unit Developments) or Condos.',NULL,NULL),(17,'Income/Assets','Paychecks for Most Recent 30 Days','Copies of your paychecks for the most recent 30 day pay period are needed.',NULL,NULL),(18,'Income/Assets','W2s for Previous 2 Years','Copies of your W2s for the previous 2 years are needed.',NULL,NULL),(19,'Income/Assets','Social Security Award Letter','We see that you receive Social Security income. Please provide a copy of your most recent Social Security Award Letter.',NULL,NULL),(20,'Income/Assets','1099, 1099-s, 1099-Rs for Previous 2 years','We see that you receive self employment income (either as a contractor, or from Social Security, Disability, Interest Payments or Retirement income). Please provide copies of all 1099 forms for the previous 2 years.',NULL,NULL),(21,'Income/Assets','Evidence of recent receipt of 1099, 1099-s, 1099-Rs Income.','To verify that you are still receiving the self employment income reported (either as a contractor, or from Social Security, Disability, Interest Payments or Retirement income), please provide cancelled checks or bank record of receipt of income for the past 12 months.',NULL,NULL),(22,'Income/Assets','Federal Tax Returns for Previous 2 Years','Copies of your Federal Tax Returns (1040s) for previous 2 years are needed. Please include all schedules.',NULL,NULL),(23,'Income/Assets','Tax Return Extension and Cancelled Check for Extension Payment','We see that you filed an extension on your most recent Federal Tax Returns. Please provide a copy of the Extension and a copy of the cancelled check for any payment due.',NULL,NULL),(24,'Income/Assets','Federal Corporation, Partnership and/or K-1s for all partnerships for the Previous 2 Years.','Copies of any Federal Partnership Tax Returns (1065s), Federal Corporate Tax Returns (1120s or 1120S) and K-1s for the previous 2 years. Please include all schedules.',NULL,NULL),(25,'Income/Assets','Year-to-date Profit & Loss for Business','Please provide a signed, year-to-date profit & loss (P&L) for your business.',NULL,NULL),(26,'Income/Assets','Year-to-date Balance Sheet for Business','Please provide a signed, year-to-date balance sheet for your business.',NULL,NULL),(27,'Income/Assets','Copies of Notes Held','If any note income is received, please provide a copy of the note. Please include all pages.',NULL,NULL),(28,'Income/Assets','2 Months Statements for Bank Accounts','Copies of most recent 2 months bank statements for all bank accounts are needed.  Please provide all pages.',NULL,NULL),(29,'Income/Assets','Quarterly Statement for Retirement/Investment Accounts','Copies of most recent quarterly statements for all retirement and investments accounts are needed. Please provide all pages.',NULL,NULL),(30,'Income/Assets','Copy of Trust','Copy of trust that accounts are held in. This is needed to verify that you have full access to all funds held in the trust. Please provide all pages.',NULL,NULL),(31,'Income/Assets','Large Deposits: Source and Documentation','We see that there are some large deposits in your bank account(s) that don\'t appear to be related to your salary.  Please complete the Large Deposit Worksheet we\'ve provided so that we may adequately source the specified deposits.  In addition, please provide copies of the cancelled checks related to these deposits.',NULL,NULL),(32,'Income/Assets','Rental/Lease Agreements','A copy of the rental/lease agreements on all 1-4 unit properties for which you are receiving rental income is needed. Please provide all pages.',NULL,NULL),(33,'Other','Driver\'s License or Passport','A copy of your current driver\'s license or passport is needed.',NULL,NULL),(34,'Other','Gift Letter from Donor','We see that a portion of your down payment is being provided as a gift. A gift letter from each donor is needed. Please have the donor(s) complete the provided gift letter form.',NULL,NULL),(35,'Other','Current Business License','Please provide a copy of the current business license for your business.',NULL,NULL),(36,'Other','Copy of Relocation Agreement','Please provide a copy of your relocation agreement.',NULL,NULL);
 /*!40000 ALTER TABLE `needslistmaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -900,6 +896,38 @@ CREATE TABLE `uicomponentpermission` (
 LOCK TABLES `uicomponentpermission` WRITE;
 /*!40000 ALTER TABLE `uicomponentpermission` DISABLE KEYS */;
 /*!40000 ALTER TABLE `uicomponentpermission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `uploadedfileslist`
+--
+
+DROP TABLE IF EXISTS `uploadedfileslist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `uploadedfileslist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `s3path` varchar(255) DEFAULT NULL,
+  `uploaded_by` int(11) DEFAULT NULL,
+  `is_assigned` tinyint(4) DEFAULT NULL,
+  `uploaded_date` datetime DEFAULT NULL,
+  `is_activate` tinyint(4) DEFAULT NULL,
+  `loan` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
+  KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
+  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `uploadedfileslist`
+--
+
+LOCK TABLES `uploadedfileslist` WRITE;
+/*!40000 ALTER TABLE `uploadedfileslist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `uploadedfileslist` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1082,13 +1110,13 @@ LOCK TABLES `workflowexec` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `workflowitem`
+-- Table structure for table `workflowitemexec`
 --
 
-DROP TABLE IF EXISTS `workflowitem`;
+DROP TABLE IF EXISTS `workflowitemexec`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `workflowitem` (
+CREATE TABLE `workflowitemexec` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `workflow_item_master` int(11) NOT NULL,
   `parent_workflow` int(11) NOT NULL,
@@ -1109,12 +1137,12 @@ CREATE TABLE `workflowitem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `workflowitem`
+-- Dumping data for table `workflowitemexec`
 --
 
-LOCK TABLES `workflowitem` WRITE;
-/*!40000 ALTER TABLE `workflowitem` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowitem` ENABLE KEYS */;
+LOCK TABLES `workflowitemexec` WRITE;
+/*!40000 ALTER TABLE `workflowitemexec` DISABLE KEYS */;
+/*!40000 ALTER TABLE `workflowitemexec` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1235,4 +1263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-26 19:40:30
+-- Dump completed on 2015-02-27 13:20:02

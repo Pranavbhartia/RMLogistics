@@ -32,6 +32,51 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
+
+			//Assign values to primary navigation
+			var divArray = $('.left-panel >div');
+			for ( var div in divArray) {
+				var id = $(div).attr('id');
+				switch (id) {
+				case "lp-customer-profile":
+					$.data(div, "enum", {
+						pnName : PNEnum.PROFILE
+
+					});
+					break;
+				case "lp-talk-wrapper":
+					$.data(div, "enum", {
+						pnName : PNEnum.TEAM
+
+					});
+					break;
+				case "lp-loan-wrapper":
+					$.data(div, "enum", {
+						pnName : PNEnum.LOAN
+
+					});
+					break;
+				default:
+					break;
+				}
+			}
+
+			//Bind primary navigation
+			globalBinder();
+			onpopstate = function(event) {
+	            console.log('history modified');
+	            if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1){
+	                historyCallback= true;
+	               
+	                refreshSupport=true;
+	            }
+	            retrieveState();
+	        };
+			if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1 ){
+	            historyCallback= true;
+	            refreshSupport=true;
+	            retrieveState();
+	        }
 		});
 	</script>
 </body>
