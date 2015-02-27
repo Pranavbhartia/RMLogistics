@@ -10,11 +10,11 @@ public interface LoanDao extends GenericDao {
 
 	List<Loan> getLoansOfUser(User user);
 
-	boolean addToLoanTeam(User user);
+	boolean addToLoanTeam(Loan loan,User user,User addedBy);
 
-	boolean removeFromLoanTeam(User user);
+	boolean removeFromLoanTeam(Loan loan,User user);
 
-	List<LoanTeam> retreiveLoanTeam(Loan loan);
+	List<User> retreiveLoanTeam(Loan loan);
 
-	List<LoanTeam> retreiveLoansAsManager(User loanManager);
+	List<Loan> retreiveLoansAsManager(User loanManager);
 }
