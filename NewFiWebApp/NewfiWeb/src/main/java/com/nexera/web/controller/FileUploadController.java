@@ -51,11 +51,11 @@ public class FileUploadController {
 			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete" );
 			//NexeraUtility.convertPDFToJPEG(serverFile);
 			UploadedFilesList uploadedFilesList = new UploadedFilesList();
-			uploadedFilesList.setIsactivate(false);
+			uploadedFilesList.setIsActivate(false);
 			uploadedFilesList.setIsAssigned(false);
 			uploadedFilesList.setS3path(s3Path);
-			uploadedFilesList.setUser( getUserObject());
-			uploadedFilesList.setAddedOn(new Date());
+			uploadedFilesList.setUploadedBy( getUserObject());
+			uploadedFilesList.setUploadedDate(new Date());
 			
 			Integer fileId = uploadedFilesListService.saveUploadedFile(uploadedFilesList);
 		
