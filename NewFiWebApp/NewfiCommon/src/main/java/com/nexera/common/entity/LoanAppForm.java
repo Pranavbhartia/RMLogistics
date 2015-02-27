@@ -13,6 +13,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="loanappform")
 @NamedQuery(name = "LoanAppForm.findAll", query = "SELECT l FROM LoanAppForm l")
 public class LoanAppForm implements Serializable {
 	private static final long serialVersionUID = 1L;

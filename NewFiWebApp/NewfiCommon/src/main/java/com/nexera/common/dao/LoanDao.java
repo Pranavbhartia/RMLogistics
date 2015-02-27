@@ -3,7 +3,7 @@ package com.nexera.common.dao;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
 
 public interface LoanDao extends GenericDao {
@@ -17,4 +17,6 @@ public interface LoanDao extends GenericDao {
 	List<User> retreiveLoanTeam(Loan loan);
 
 	List<Loan> retreiveLoansAsManager(User loanManager);
+	
+    public LoanAppForm getLoanAppForm(Integer loanId);
 }

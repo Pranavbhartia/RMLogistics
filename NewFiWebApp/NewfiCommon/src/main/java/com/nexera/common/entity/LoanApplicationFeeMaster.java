@@ -9,6 +9,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="loanapplicationfeemaster")
 @NamedQuery(name = "LoanApplicationFeeMaster.findAll", query = "SELECT l FROM LoanApplicationFeeMaster l")
 public class LoanApplicationFeeMaster implements Serializable {
 	private static final long serialVersionUID = 1L;

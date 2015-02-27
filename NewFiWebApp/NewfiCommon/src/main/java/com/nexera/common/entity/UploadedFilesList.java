@@ -1,0 +1,101 @@
+package com.nexera.common.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
+import java.util.Date;
+
+/**
+ * The persistent class for the uploadedfileslist database table.
+ * 
+ */
+@Entity
+@Table(name = "uploadedfileslist")
+@NamedQuery(name = "UploadedFilesList.findAll", query = "SELECT l FROM UploadedFilesList l")
+public class UploadedFilesList implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private int id;
+	private Boolean isAssigned;
+	private Boolean isActivate;
+	private String s3path;
+	private Loan loan;
+	private User uploadedBy;
+	private Date uploadedDate;
+
+	public UploadedFilesList() {
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Column(name = "is_assigned", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsAssigned() {
+		return isAssigned;
+	}
+
+	public void setIsAssigned(Boolean isAssigned) {
+		this.isAssigned = isAssigned;
+	}
+
+	@Column(name = "is_activate", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsActivate() {
+		return isActivate;
+	}
+
+	public void setIsActivate(Boolean isActivate) {
+		this.isActivate = isActivate;
+	}
+
+	public String getS3path() {
+		return s3path;
+	}
+
+	public void setS3path(String s3path) {
+		this.s3path = s3path;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "uploaded_date")
+	public Date getUploadedDate() {
+		return this.uploadedDate;
+	}
+
+	public void setUploadedDate(Date uploadedDate) {
+		this.uploadedDate = uploadedDate;
+	}
+
+	// bi-directional many-to-one association to Loan
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan")
+	public Loan getLoan() {
+		return loan;
+	}
+
+	public void setLoan(Loan loan) {
+		this.loan = loan;
+	}
+
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uploaded_by")
+	public User getUploadedBy() {
+		return uploadedBy;
+	}
+
+	public void setUploadedBy(User uploadedBy) {
+		this.uploadedBy = uploadedBy;
+	}
+
+}

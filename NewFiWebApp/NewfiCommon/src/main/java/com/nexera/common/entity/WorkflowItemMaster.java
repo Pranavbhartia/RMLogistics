@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,6 +25,7 @@ import org.hibernate.annotations.Type;
  * 
  */
 @Entity
+@Table(name = "workflowitemmaster")
 @NamedQuery(name = "WorkflowItemMaster.findAll", query = "SELECT w FROM WorkflowItemMaster w")
 public class WorkflowItemMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -37,7 +39,7 @@ public class WorkflowItemMaster implements Serializable {
 	private Integer startDelay;
 	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
-	private List<WorkflowItem> workflowItems;
+	private List<WorkflowItemExec> workflowItems;
 	private User createdBy;
 	private User modifiedBy;
 	private WorkflowItemMaster onSuccess;
@@ -142,22 +144,24 @@ public class WorkflowItemMaster implements Serializable {
 
 	// bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy = "workflowItemMaster")
-	public List<WorkflowItem> getWorkflowItems() {
+	public List<WorkflowItemExec> getWorkflowItems() {
 		return this.workflowItems;
 	}
 
-	public void setWorkflowItems(List<WorkflowItem> workflowItems) {
+
+	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
+
 		this.workflowItems = workflowItems;
 	}
 
-	public WorkflowItem addWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec addWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().add(workflowitem);
 		workflowitem.setWorkflowItemMaster(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowItem(WorkflowItem workflowitem) {
+	public WorkflowItemExec removeWorkflowItem(WorkflowItemExec workflowitem) {
 		getWorkflowItems().remove(workflowitem);
 		workflowitem.setWorkflowItemMaster(null);
 

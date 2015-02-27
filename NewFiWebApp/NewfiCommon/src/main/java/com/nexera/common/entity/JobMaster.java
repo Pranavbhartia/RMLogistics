@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,6 +25,7 @@ import org.hibernate.annotations.Type;
  * 
  */
 @Entity
+@Table(name="jobmaster")
 @NamedQuery(name = "JobMaster.findAll", query = "SELECT j FROM JobMaster j")
 public class JobMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
