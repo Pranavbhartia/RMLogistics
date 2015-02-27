@@ -878,6 +878,9 @@ function appendCustomerLoanDetails(){
 	appendLoanDetailsRow("Credit", "TU-646/EQ-686/EX-685",true);
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
+	
+	//append cust info popup
+	appendCustomerEditProfilePopUp();
 }
 
 
@@ -941,6 +944,7 @@ function appendAddTeamMemberWrapper(){
 	}).html("User Name");
 	
 	var userNameSel  =  $('<div>').attr({
+		"id" : "add-member-sel",
 		"class" : "add-member-sel float-right"
 	});
 	
@@ -950,6 +954,10 @@ function appendAddTeamMemberWrapper(){
 	
 	wrapper.append(header).append(container);
 	$('#center-panel-cont').append(wrapper);
+	
+	
+	//function to append create user popup
+	appendCreateUserPopup();
 }
 
 
@@ -1078,31 +1086,34 @@ function getTeamListTableRow(user){
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4).append(trCol5);
 }
 
-$(document).on('click','#ld-customer .loan-detail-link',function(){
-	appendCustomerEditProfilePopUp();
+$(document).on('click','#ld-customer .loan-detail-link',function(event){
+	event.stopImmediatePropagation();
+	if($('#cus-prof-popup').css("display") == "block"){
+		hideCustomerEditProfilePopUp();
+	}else{
+		showCustomerEditProfilePopUp();
+	}
 });
 
+$(document).on('click','#cus-prof-popup',function(event){
+	event.stopImmediatePropagation();
+});
+
+$(document).click(function(){
+	if($('#cus-prof-popup').css("display") == "block"){
+		hideCustomerEditProfilePopUp();
+	}
+});
 
 function appendCustomerEditProfilePopUp(){
-	
-	var offset = $('#ld-customer .loan-detail-link').offset();
-	
-	var left = offset.left;
-	var top = offset.top;
-	
-	$('#cus-prof-popup').remove();
-	
 	var popUpWrapper = $('<div>').attr({
 		"id" : "cus-prof-popup",
-		"class" : "pop-up-wrapper cus-prof-popup"
-	}).css({
-		"left" : left + 50,
-		"top" : top - 50
+		"class" : "pop-up-wrapper cus-prof-popup hide"
 	});
 	
 	var header = $('<div>').attr({
 		"class" : "pop-up-header"
-	}).html("User Profile");
+	}).html("User Profile - 654321");
 	
 	var container = $('<div>').attr({
 		"id" : "cus-prof-container",
@@ -1118,6 +1129,7 @@ function appendCustomerEditProfilePopUp(){
 	appendCustomerProfEditRow("Last Name","Smith");
 	
 	//Upload photo row
+	appendCustomerProfUploadPhotoRow();
 	
 	appendCustomerProfEditRow("Street Address","30650 W Ball rd Lot 203");
 	appendCustomerProfEditRow("City","Sedalia");
@@ -1125,7 +1137,32 @@ function appendCustomerEditProfilePopUp(){
 	appendCustomerProfEditRow("Zip","65301");
 	appendCustomerProfEditRow("Email","zipsmith25@gmail.com");
 	appendCustomerProfEditRow("DOB","04/01/1984");
+	
+	//append save button
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-cust-save-btn"
+	}).html("save");
+	
+	$('#cus-prof-container').append(saveBtn);
+
 }
+
+function showCustomerEditProfilePopUp(){
+	var offset = $('#ld-customer .loan-detail-link').offset();
+	
+	var left = offset.left;
+	var top = offset.top;
+	$('#cus-prof-popup').css({
+		"left" : left + 50,
+		"top" : top - 50
+	});
+	$('#cus-prof-popup').show();
+}
+
+function hideCustomerEditProfilePopUp(){
+	$('#cus-prof-popup').hide();
+}
+
 
 
 function appendCustomerProfEditRow(labelTxt,value){
@@ -1145,21 +1182,237 @@ function appendCustomerProfEditRow(labelTxt,value){
 	$('#cus-prof-container').append(row);
 }
 
+function appendCustomerProfUploadPhotoRow(){
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	
+	var label = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("Upload Photo");
+	
+	var uploadPhotoCont = $('<div>').attr({
+		"class" : "cust-prof-upload-cont float-left clearfix"
+	}); 
+	
+	var uploadIcn = $('<div>').attr({
+		"class" : "cust-prof-upload-icn float-left"
+	});
+	
+	var uploadPhotoRc = $('<div>').attr({
+		"class" : "cust-prof-upload-rc float-left"
+	}); 
+	
+	var uploadPhotoFileName = $('<div>').attr({
+		"class" : "cust-prof-upload-filename"
+	}).html("Jane-Profile.png");  
+	
+	var uploadBtn = $('<div>').attr({
+		"class" : "cust-prof-upload-btn"
+	}).html("Upload");
+	
+	
+	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn);
+	uploadPhotoCont.append(uploadIcn).append(uploadPhotoRc);
+	row.append(label).append(uploadPhotoCont);
+	$('#cus-prof-container').append(row);
+}
 
 
 
+//Function to append create user popup
+function appendCreateUserPopup(){
+	var popUpWrapper = $('<div>').attr({
+		"id" : "create-user-popup",
+		"class" : "pop-up-wrapper create-user-popup hide"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "pop-up-header"
+	}).html("Create User");
+	
+	var container = $('<div>').attr({
+		"id" : "create-user-container",
+		"class" : "pop-up-container clearfix"
+	});
+	popUpWrapper.append(header).append(container);
+	$('#add-member-sel').append(popUpWrapper);
+	
+	
+	appendCreateUserPopupFirstName();
+	appendCreateUserPopupLastName();
+	appendCreateUserPopupStreetAddr();
+	appendCreateUserPopupCity();
+	appendCreateUserPopupState();
+	appendCreateUserPopupZip();
+	appendCreateUserPopupEmail();
+	appendCreateUserPopupDOB();
+	
+	//save button
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-cust-save-btn"
+	}).html("save");
+	
+	$('#create-user-popup').append(saveBtn);
+}
+
+
+$(document).on('click','#add-member-sel',function(event){
+	event.stopImmediatePropagation();
+	if($('#create-user-popup').css("display") == "block"){
+		hideCreateUserPopup();
+	}else{
+		showCreateUserPopup();
+	}
+});
+
+$(document).on('click','#create-user-popup',function(event){
+	event.stopImmediatePropagation();
+});
+
+$(document).click(function(){
+	if($('#create-user-popup').css("display") == "block"){
+		hideCreateUserPopup();
+	}
+});
+
+
+function showCreateUserPopup(){
+	var left = $('#center-panel-cont').offset().left;
+	var top = $('#add-member-sel').offset().top;
+	$('#create-user-popup').css({
+		"left" : left + 20,
+		"top" : top + 50
+	});
+	$('#create-user-popup').show();
+}
+
+function hideCreateUserPopup(){
+	$('#create-user-popup').hide();
+}
 
 
 
+function appendCreateUserPopupFirstName(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("First Name");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input"
+	}).val("Zach");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
 
 
+function appendCreateUserPopupLastName(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("Last Name");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input"
+	}).val("Smith");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+
+function appendCreateUserPopupStreetAddr(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont create-user-popup-addr clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label  float-left"
+	}).html("Street Address");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input create-user-popup-input-lg"
+	}).val("30650 W Ball rd Lot 203");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+function appendCreateUserPopupCity(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont create-user-popup-city clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("City");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input create-user-popup-input-sm"
+	}).val("Sedalia");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+function appendCreateUserPopupState(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont create-user-popup-state clearfix float-left" 
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("State");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input create-user-popup-input-vsm"
+	}).val("MO");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+
+function appendCreateUserPopupZip(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont create-user-popup-zip clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("Zip");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input create-user-popup-input-sm"
+	}).val("65301");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+
+function appendCreateUserPopupEmail(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("Email");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input"
+	}).val("zismith25@gmail.com");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
+
+function appendCreateUserPopupDOB(){
+	var row = $('<div>').attr({
+		"class" : "create-user-popup-cont clearfix float-left"
+	});
+	var label = $('<div>').attr({
+		"class" : "create-user-popup-label float-left"
+	}).html("DOB");
+	var inputBox = $('<input>').attr({
+		"class" : "create-user-popup-input"
+	}).val("04/01/1984");
+	row.append(label).append(inputBox);
+	$('#create-user-container').append(row);
+}
 
 
 /*
  * Functions for agent view needs list page
  */
-
-
 
 var docData = {
 		"income" : [
