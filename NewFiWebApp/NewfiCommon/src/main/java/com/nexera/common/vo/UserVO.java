@@ -169,4 +169,20 @@ public class UserVO implements Serializable {
 		this.userEmails = userEmails;
 	}
 
+	@Override
+	public String toString() {
+		return "UserVO [id=" + id + ", status=" + status + ", emailId="
+				+ emailId + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", password=" + password + ", phoneNumber="
+				+ phoneNumber + ", photoImageUrl=" + photoImageUrl
+				+ ", username=" + username + ", userRole=" + userRole
+				+ ", customerDetail=" + customerDetail
+				+ ", internalUserDetail=" + internalUserDetail
+				+ ", realtorDetail=" + realtorDetail + ", loans=" + loans
+				+ ", loanAppForms=" + loanAppForms + ", loanNotifications="
+				+ loanNotifications + ", loanTeams=" + loanTeams
+				+ ", userEmails=" + userEmails + "]";
+	}
+
+	
 }

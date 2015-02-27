@@ -49,6 +49,8 @@ function appendCustPersonalInfoWrapper(user){
 }
 
 function getCustPersonalInfoContainer(user){
+	
+	
 	var container = $('<div>').attr({
 		"class" : "cust-personal-info-container"
 	});
@@ -83,12 +85,12 @@ function getCustPersonalInfoContainer(user){
 	var phone1Row = getPhone1Row(user);
 	container.append(phone1Row);
 
-	var phone2Row = getPhone1Row(user);
+	var phone2Row = getPhone2Row(user);
 	container.append(phone2Row);
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
-		"onclick":"updateUserDetails()"
+		"onclick" :"updateUserDetails()"
 	}).html("Save");
 	container.append(saveBtn);
 	return container;
@@ -120,8 +122,20 @@ function getCustomerNameFormRow(user) {
 		"id":"lastNameId"
 	});
 	
+	var id = $('<input>').attr({
+		"type" : "hidden",
+		"value":user.id,
+		"id":"userid"
+	});
 	
-	rowCol2.append(firstName).append(lastName);
+	var customerDetailsId = $('<input>').attr({
+		"type" : "hidden",
+		"value":user.customerDetail.id,
+		"id":"customerDetailsId"
+	});
+	
+	
+	rowCol2.append(firstName).append(lastName).append(id).append(customerDetailsId);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -139,12 +153,25 @@ function getCustomerUploadPhotoRow() {
 	var uploadPicPlaceholder = $('<div>').attr({
 		"class" : "prof-pic-upload-placeholder float-left"
 	});
+	var inputHiddenFile = $('<input>').attr({
+		"type" : "file",
+		"id":"uploadImageId"
+		 
+	});
+	
+	var uploadImage = $('<div>').attr({
+		"class" : "uploadImage"
+		 
+	}).hide();
+	
+	uploadImage.append(inputHiddenFile);
+	uploadPicPlaceholder.append(uploadImage);
 	
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"
 	});
 	
-	var uploadPicCont = $('<div>').attr({
+	/*var uploadPicCont = $('<div>').attr({
 		"class" : "prof-pic-upload-cont prof-form-input float-left clearfix"
 	});
 	
@@ -157,11 +184,14 @@ function getCustomerUploadPhotoRow() {
 	});
 	
 	uploadPicCont.append(uploadPicInput).append(uploadIcn);
-	
+	*/
 	var uploadBtn = $('<div>').attr({
-		"class" : "prof-btn upload-btn float-left"
-	}).html("upload");
-	uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
+		"class" : "prof-btn upload-btn float-left",
+		"type":"file"
+		
+	}).click(uploadeImage).html("upload");
+	//uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
+	uploadBottomContianer.append(uploadBtn);
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 	
 	return row.append(rowCol1).append(rowCol2);
@@ -169,6 +199,7 @@ function getCustomerUploadPhotoRow() {
 
 
 function getDOBRow(user) {
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -181,7 +212,7 @@ function getDOBRow(user) {
 	var dobInput = $('<input>').attr({
 		"class" : "prof-form-input date-picker",
 		"placeholder" : "MM/DD/YYYY",
-		"value":user.customerDetail.dateOfBirth,
+		"value":$.datepicker.formatDate('mm/dd/yy',new Date(user.customerDetail.dateOfBirth)),
 		"id":"dateOfBirthId"
 	}).datepicker({
 		orientation: "top auto",
@@ -355,6 +386,26 @@ function updateUserDetails(){
 	
 	var userProfileJson = new Object();
 	
+	/*
+	var customerDetails = {
+			
+			'addressCity' :  $("#cityId").val(),
+			'addressState' : $("#stateId").val(),
+			'addressZipCode' : $("#zipcodeId").val(),
+			'dateOfBirth': $("#dateOfBirthId").val(),
+			'secEmailId' : $("#secEmailId").val(),
+			'secPhoneNumber': $("#secPhoneNumberId").val()
+	};
+	
+	var userProfileJson = {
+			'firstName' :  $("#firstNameId").val(),
+			'lastName' : $("#lastNameId").val(),
+			'phoneNumber' : $("#priPhoneNumberId").val(),
+			'customerDetail':customerDetails
+			};
+*/
+	
+	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
 	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
@@ -362,18 +413,38 @@ function updateUserDetails(){
 	
 	var customerDetails = new Object();
 	
-	customerDetails.addressCity   =  $("#secPhoneNumberId").val();
+	customerDetails.id   =  $("#customerDetailsId").val();
+	customerDetails.addressCity   =  $("#cityId").val();
 	customerDetails.addressState  =  $("#stateId").val();
 	customerDetails.addressZipCode =  $("#zipcodeId").val();
-	customerDetails.dateOfBirth = $("#dateOfBirthId").val();
+	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
 	
 	userProfileJson.customerDetail = customerDetails;
 	
 	
-	alert(userProfileJson);
-	ajaxRequest("rest/userprofile/updateprofile", "POST", "json", userProfileJson, {});
+	$.ajax({
+		url : "rest/userprofile/updateprofile",
+		type:"POST",
+		data:JSON.stringify(userProfileJson),
+		dataType :"json",
+		contentType:"application/json; charset=utf-8",
+		success : function(data){
+			
+		},
+		error:function(error){
+			
+		}
+	});
 	
 	
+	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json",userProfileJson, {});
+	
+	
+}
+
+function uploadeImage(){
+	
+	$("#uploadImageId").click();
 }

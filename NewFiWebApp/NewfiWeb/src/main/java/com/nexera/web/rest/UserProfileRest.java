@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
 
@@ -60,21 +61,23 @@ public class UserProfileRest {
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.POST)
 	public @ResponseBody String updateprofile(@RequestBody String updateUserInfo) {
 
-		
-		System.out.println(updateUserInfo);
-		
 		Gson gson = new Gson();
-		UserVO userVO;
+		UserVO userVO = null;
+		CustomerDetailVO customerDetailVO = null;
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
-			System.out.println("------------------"+userVO.getCustomerDetail().getAddressState());
+			
+			Integer num = userProfileService.updateUser(userVO);
+			Integer num1 = userProfileService.updateCustomerDetails(userVO);
+			
 		} catch (Exception e) {
 			System.out.println("-----e---"+e.getMessage());
 			e.printStackTrace();
 		}
 		
 
-		return "Hello";
+		return "Saved";
 	}
+	
 
 }
