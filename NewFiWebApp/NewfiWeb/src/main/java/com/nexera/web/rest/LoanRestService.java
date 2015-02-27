@@ -29,8 +29,7 @@ public class LoanRestService {
 		user.setId(userID);
 		List<LoanVO> loansList = loanService.getLoansOfUser(user);
 
-		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(loansList);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loansList);
 
 		return new Gson().toJson(responseVO);
 	}
@@ -39,6 +38,10 @@ public class LoanRestService {
 	public @ResponseBody String getLoanByID(@PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
+		}
+
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
 
 		return new Gson().toJson(responseVO);
