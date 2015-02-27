@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
@@ -27,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * 
  */
 @Entity
+@Table(name = "user")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
