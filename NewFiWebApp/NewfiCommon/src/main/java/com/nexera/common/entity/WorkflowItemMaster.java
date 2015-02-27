@@ -148,7 +148,9 @@ public class WorkflowItemMaster implements Serializable {
 		return this.workflowItems;
 	}
 
+
 	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
+
 		this.workflowItems = workflowItems;
 	}
 

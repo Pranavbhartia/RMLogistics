@@ -3,18 +3,20 @@
 */
 
 function showCustomerProfilePage(){
-	ajaxRequest("./customerProfile.do", "GET", "HTML", {}, showCustomerProfilePageCallBack);
-}
-
-function showCustomerProfilePageCallBack(data){
-	$('#main-body-wrapper').html(data);
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
 	$('#lp-customer-profile').addClass('lp-item-active');
 	var rightArrow = $('<div>').attr({
 		"class" : "lp-right-arrow lp-prof-arrow"
 	});
 	$('#lp-customer-profile').append(rightArrow);
+	var profileMainContainer = $('<div>').attr({
+		"id" : "profile-main-container",
+		"class" : "right-panel-messageDashboard float-left"
+	});
+	$('#right-panel').append(profileMainContainer);
 	paintCutomerProfileContainer();
-	
 	adjustRightPanelOnResize();
 }
 
@@ -71,7 +73,7 @@ function getCustPersonalInfoContainer(){
 	var phone1Row = getPhone1Row();
 	container.append(phone1Row);
 
-	var phone2Row = getPhone1Row();
+	var phone2Row = getPhone2Row();
 	container.append(phone2Row);
 	
 	var saveBtn = $('<div>').attr({

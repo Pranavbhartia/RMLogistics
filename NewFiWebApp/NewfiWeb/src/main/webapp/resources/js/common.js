@@ -21,6 +21,11 @@ function formatPhoneNumberToUsFormat(text){
     return text;
 }
 
+function convertStringToId(str){
+	str = str.trim().toLowerCase();
+	str = str.split(' ').join('-');
+	return str;
+}
 
 $(document).on('click','.small-screen-menu-icon',function(e){
 	e.stopImmediatePropagation();
@@ -35,7 +40,7 @@ $(document).click(function(){
 	if($(window).width() <= 768){
 		if($('.left-panel').css("display") == "block"){
 			$('.left-panel').toggle('slide','left');
-			$(this).removeClass('small-screen-menu-icon-clicked');
+			$('.small-screen-menu-icon').removeClass('small-screen-menu-icon-clicked');
 		}
 	}
 });

@@ -15,9 +15,12 @@
 	
 	<body>
 		<jsp:include page="header.jsp"></jsp:include>
-		<div id="main-body-wrapper">
-			<!-- Include main body in this container -->
+		<div class="home-container container">
+		<div class="container-row row clearfix">
+			<jsp:include page="agentViewLeftPanel.jsp"></jsp:include>
+			<div id="right-panel"></div>
 		</div>
+	</div>
 		<jsp:include page="footer.jsp"></jsp:include>
 		<script>
 				
