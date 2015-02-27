@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.DatabaseException;
 
 @Component
 @Transactional
@@ -109,5 +112,24 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 
 		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public LoanAppForm getLoanAppForm(Integer loanId) {
+		// TODO Auto-generated method stub
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanAppForm.class);
+			Loan loan = new Loan();
+			loan.setId(loanId);
+			criteria.add(Restrictions.eq("loan", loan));
+			LoanAppForm appForm = (LoanAppForm) criteria.uniqueResult();
+			return appForm;
+		} catch (HibernateException hibernateException) {
+
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
 	}
 }

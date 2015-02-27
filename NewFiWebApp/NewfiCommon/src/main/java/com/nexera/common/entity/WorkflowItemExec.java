@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="workflowitemexec")
-@NamedQuery(name = "WorkflowItem.findAll", query = "SELECT w FROM WorkflowItem w")
+@NamedQuery(name = "WorkflowItemExec.findAll", query = "SELECT w FROM WorkflowItemExec w")
 public class WorkflowItemExec implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
@@ -121,7 +121,7 @@ public class WorkflowItemExec implements Serializable {
 
 	// bi-directional many-to-one association to WorkflowItemMaster
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "workflow_item")
+	@JoinColumn(name = "workflow_item_master")
 	public WorkflowItemMaster getWorkflowItemMaster() {
 		return this.workflowItemMaster;
 	}

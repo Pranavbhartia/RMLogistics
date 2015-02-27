@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,6 +21,7 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
+@Table(name = "workflowmaster")
 @NamedQuery(name = "WorkflowMaster.findAll", query = "SELECT w FROM WorkflowMaster w")
 public class WorkflowMaster implements Serializable {
 	private static final long serialVersionUID = 1L;

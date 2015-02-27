@@ -13,6 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name = "loannotification")
 @NamedQuery(name = "LoanNotification.findAll", query = "SELECT l FROM LoanNotification l")
 public class LoanNotification implements Serializable {
 	private static final long serialVersionUID = 1L;
