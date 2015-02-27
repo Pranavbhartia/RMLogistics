@@ -145,33 +145,34 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
-		
-	    try{
-	        List<Loan> loanListForUser = new ArrayList<Loan>();
-	        Session session = sessionFactory.getCurrentSession();
-	        Criteria criteria = session.createCriteria(Loan.class);
-	        List<Loan> allLoansList = criteria.list();
-	        
-	        if(allLoansList != null){
-	            for(Loan loan : allLoansList){
-	                List<LoanTeam> loanTeamList = loan.getLoanTeam();
-	                if(loanTeamList != null){
-	                    for(LoanTeam loanTeam : loanTeamList){
-	                        //check if any loanTeam has the same user then add loan in list
-	                        if(loanTeam.getUser().getId() == parseUserModel.getId())
-	                            loanListForUser.add( loan );
-	                    }
-	                }
-	            } 
-	        }
-	        
-	        return loanListForUser;
-	    } catch (HibernateException hibernateException) {
 
-            throw new DatabaseException(
-                    "Exception caught in retrieveLoanForDashboard() ",
-                    hibernateException);
-        }
-	   
+		try {
+			List<Loan> loanListForUser = new ArrayList<Loan>();
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Loan.class);
+			List<Loan> allLoansList = criteria.list();
+
+			if (allLoansList != null) {
+				for (Loan loan : allLoansList) {
+					List<LoanTeam> loanTeamList = loan.getLoanTeam();
+					if (loanTeamList != null) {
+						for (LoanTeam loanTeam : loanTeamList) {
+							// check if any loanTeam has the same user then add
+							// loan in list
+							if (loanTeam.getUser().getId() == parseUserModel
+									.getId())
+								loanListForUser.add(loan);
+						}
+					}
+				}
+			}
+
+			return loanListForUser;
+		} catch (HibernateException hibernateException) {
+
+			throw new DatabaseException(
+					"Exception caught in retrieveLoanForDashboard() ",
+					hibernateException);
+		}
 	}
 }
