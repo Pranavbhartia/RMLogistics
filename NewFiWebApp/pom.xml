@@ -11,6 +11,7 @@
   	<module>NewfiWeb</module>
   	<module>NewfiCore</module>
   	<module>NewfiCommon</module>
+	<module>WorkflowEngine</module>
   	
   </modules>
   

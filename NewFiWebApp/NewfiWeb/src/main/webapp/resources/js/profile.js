@@ -17,13 +17,20 @@ function userProfileData(data){
 
 function showCustomerProfilePageCallBack(data){
 	$('#main-body-wrapper').html(data);
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
 	$('#lp-customer-profile').addClass('lp-item-active');
 	var rightArrow = $('<div>').attr({
 		"class" : "lp-right-arrow lp-prof-arrow"
 	});
 	$('#lp-customer-profile').append(rightArrow);
+	var profileMainContainer = $('<div>').attr({
+		"id" : "profile-main-container",
+		"class" : "right-panel-messageDashboard float-left"
+	});
+	$('#right-panel').append(profileMainContainer);
 	paintCutomerProfileContainer();
-	
 	adjustRightPanelOnResize();
 }
 
@@ -85,7 +92,11 @@ function getCustPersonalInfoContainer(user){
 	var phone1Row = getPhone1Row(user);
 	container.append(phone1Row);
 
+<<<<<<< HEAD
 	var phone2Row = getPhone2Row(user);
+=======
+	var phone2Row = getPhone2Row();
+>>>>>>> upstream/master
 	container.append(phone2Row);
 	
 	var saveBtn = $('<div>').attr({

@@ -8,3 +8,5 @@
 <script src="resources/js/messageDashboard.js"></script>
 <script src="resources/js/agentView.js"></script>
 <script src="resources/js/profile.js"></script>
+<script src="resources/js/newfiModel.js"></script>
+<script src="resources/js/managerNeedList.js"></script>

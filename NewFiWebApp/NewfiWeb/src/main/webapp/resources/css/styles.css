@@ -1677,11 +1677,16 @@ a, a:hover, a:visited{
 	padding-left: 20px;
 }
 
+.loan-detail-link{
+	color : #428bca;
+	cursor: pointer;
+}
+
 .add-team-mem-header{
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 20px;
-	padding-left: 30px;
+	padding-left: 20px;
 	background-color: #f5f9fc;
 	font-size: 14px;
 	font-family: 'opensanssemibold';
@@ -1728,9 +1733,110 @@ a, a:hover, a:visited{
 
 
 .newfi-team-header {
-	height: 35px;
+	height: 40px;
+	padding-left:10px;
 	font-size: 14px;
 	line-height: 35px;
+}
+
+.newfi-team-container{
+	padding-left: 5px;
+}
+
+.newfi-team-list-th{
+	height: 40px;
+	line-height: 40px;
+	padding-left: 5px;
+}
+
+.newfi-team-list-th-col1,
+.newfi-team-list-th-col2,
+.newfi-team-list-th-col3{
+	font-family: 'opensanssemibold';
+}
+
+.newfi-team-list-tr {
+	height: 40px;
+	padding-left: 5px;
+	line-height: 40px;
+	border-bottom: 1px #dcdcdc dashed;
+}
+
+.newfi-team-list-tr-col1{
+	width : 25%;
+}
+
+.newfi-team-list-tr-col2{
+	width : 25%;
+}
+
+.newfi-team-list-tr-col3{
+	width : 30%;
+}
+
+.newfi-team-list-tr-col4{
+	width : 10%;
+	height: 40px;
+}
+
+.newfi-team-list-tr-col5{
+	width : 10%;
+	height: 40px;
+}
+
+.user-del-icn{
+	width: 23px;
+	height: 23px;
+	margin:0 auto;
+	margin-top: 9px;
+	background: url(../images/user_del.png) no-repeat center;
+	cursor: pointer;
+}
+
+
+.pop-up-wrapper{
+	position: absolute;
+	width: 450px;
+	color:#606060;
+	border: 1px #dcdcdc solid;
+	border-radius:3px;
+	background: #fff;
+	z-index: 99999;
+}
+
+.cus-prof-popup{
+	border-top: 4px #428bca solid;
+}
+
+.pop-up-header{
+	height:40px;
+	margin:10px 0;
+	line-height: 40px;
+	text-align: center;
+	font-family: 'opensanssemibold';
+	font-size:14px;
+}
+
+.cust-prof-edit-row {
+	height: 40px;
+	line-height: 40px;
+	margin: 10px 0;
+}
+
+.cust-prof-edit-label {
+	width: 150px;
+	padding-right: 30px;
+	text-align: right;
+}
+
+.cust-prof-edit-input {
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	border: 1px #dcdcdc solid;
+	border-radius: 3px;
+	background-color: #FAFAFA;
 }
 
 /*Styles for customer register page */

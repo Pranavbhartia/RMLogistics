@@ -74,10 +74,8 @@ public class TemplateComtroller {
 	 
 	 @RequestMapping(value = "customerProfile.do")
 	 public ModelAndView showCustomerProfilePage(){
-	 ModelAndView mav = new ModelAndView();
-	 mav.setViewName("customerProfile");
-	 return mav;
+		 ModelAndView mav = new ModelAndView();
+		 mav.setViewName("customerProfile");
+		 return mav;
 	 }
-
-
 }

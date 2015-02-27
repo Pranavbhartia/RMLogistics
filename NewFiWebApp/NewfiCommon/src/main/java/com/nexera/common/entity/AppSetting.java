@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="appsetting")
 @NamedQuery(name = "AppSetting.findAll", query = "SELECT a FROM AppSetting a")
 public class AppSetting implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -15,8 +15,6 @@
 		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
 
-		
-
 		<!-- Hibernate / JPA -->
 		<hibernate.version>4.2.1.Final</hibernate.version>
 
@@ -36,9 +34,13 @@
 
 	<dependencies>
 		
+		<!-- Spring MVC -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
 		
-		
-
 		<!-- Test Artifacts -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -187,10 +189,6 @@
 			<artifactId>pdfbox</artifactId>
 			<version>1.8.8</version>
 		</dependency>
-		
-		
-		
-		
 		
 		<!-- Dependency of NewfiCore -->
 		<dependency>

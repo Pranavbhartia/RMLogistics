@@ -11,6 +11,7 @@ import org.hibernate.annotations.Type;
  * 
  */
 @Entity
+@Table(name = "uicomponentpermission")
 @NamedQuery(name = "UiComponentPermission.findAll", query = "SELECT u FROM UiComponentPermission u")
 public class UiComponentPermission implements Serializable {
 	private static final long serialVersionUID = 1L;
