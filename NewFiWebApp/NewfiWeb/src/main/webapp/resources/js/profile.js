@@ -92,11 +92,7 @@ function getCustPersonalInfoContainer(user){
 	var phone1Row = getPhone1Row(user);
 	container.append(phone1Row);
 
-<<<<<<< HEAD
 	var phone2Row = getPhone2Row(user);
-=======
-	var phone2Row = getPhone2Row();
->>>>>>> upstream/master
 	container.append(phone2Row);
 	
 	var saveBtn = $('<div>').attr({
@@ -449,9 +445,7 @@ function updateUserDetails(){
 		}
 	});
 	
-	
 	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json",userProfileJson, {});
-	
 	
 }
 

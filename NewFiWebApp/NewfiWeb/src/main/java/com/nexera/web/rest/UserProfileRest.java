@@ -1,6 +1,5 @@
 package com.nexera.web.rest;
 
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.UserVO;

@@ -1,8 +1,6 @@
 package com.nexera.common.dao.impl;
 
 
-import java.util.Date;
-
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -21,8 +19,6 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
-import com.nexera.common.vo.CustomerDetailVO;
-import com.nexera.common.vo.UserVO;
 
 
 @Component
