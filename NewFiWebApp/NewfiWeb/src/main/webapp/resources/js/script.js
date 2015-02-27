@@ -45,41 +45,7 @@ function getCustomerSecondaryLeftNavStep(step, text) {
 		"onclick" : "changeSecondaryLeftPanel(" + step + ");"
 	});
 
-	switch (step) {
-	case 1:
-		$.data(container, "enum", {
-			snName : SNEnum.GETTINGTOKNOWNEWFI,
-
-		});
-		break;
-	case 2:
-		$.data(container, "enum", {
-			snName : SNEnum.COMPLETEAPPLICATION,
-
-		});
-		break;
-	case 3:
-		$.data(container, "enum", {
-			snName : SNEnum.LOCKRATE,
-
-		});
-		break;
-	case 4:
-		$.data(container, "enum", {
-			snName : SNEnum.UPLOAD,
-
-		});
-		break;
-	case 5:
-		$.data(container, "enum", {
-			snName : SNEnum.LOANPROGRESS,
-
-		});
-		break;
-
-	default:
-		break;
-	}
+	
 
 	var img = $('<div>').attr({
 		"class" : "lp-t2-img lp-t2-img" + step
