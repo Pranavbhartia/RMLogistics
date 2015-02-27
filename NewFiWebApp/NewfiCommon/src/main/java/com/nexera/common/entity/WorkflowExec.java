@@ -9,14 +9,13 @@ import org.hibernate.annotations.Type;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the workflow database table.
  * 
  */
 @Entity
-@Table(name="workflowexec")
-@NamedQuery(name="WorkflowExec.findAll", query="SELECT w FROM WorkflowExec w")
+@Table(name = "workflowexec")
+@NamedQuery(name = "WorkflowExec.findAll", query = "SELECT w FROM WorkflowExec w")
 public class WorkflowExec implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -29,15 +28,14 @@ public class WorkflowExec implements Serializable {
 	private String status;
 	private String summary;
 	private WorkflowMaster workflowMaster;
-	private User user;
+	private Integer createdByID;
 	private List<WorkflowItemExec> workflowItems;
 
 	public WorkflowExec() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -45,7 +43,6 @@ public class WorkflowExec implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	@Column(columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -57,9 +54,8 @@ public class WorkflowExec implements Serializable {
 		this.active = active;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_time")
+	@Column(name = "created_time")
 	public Date getCreatedTime() {
 		return this.createdTime;
 	}
@@ -68,9 +64,8 @@ public class WorkflowExec implements Serializable {
 		this.createdTime = createdTime;
 	}
 
-
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="current_executing_item")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "current_executing_item")
 	public WorkflowItemExec getCurrentExecutingItem() {
 		return this.currentExecutingItem;
 	}
@@ -79,9 +74,8 @@ public class WorkflowExec implements Serializable {
 		this.currentExecutingItem = currentExecutingItem;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="execution_complete_time")
+	@Column(name = "execution_complete_time")
 	public Date getExecutionCompleteTime() {
 		return this.executionCompleteTime;
 	}
@@ -90,9 +84,8 @@ public class WorkflowExec implements Serializable {
 		this.executionCompleteTime = executionCompleteTime;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="last_updated_time")
+	@Column(name = "last_updated_time")
 	public Date getLastUpdatedTime() {
 		return this.lastUpdatedTime;
 	}
@@ -100,7 +93,6 @@ public class WorkflowExec implements Serializable {
 	public void setLastUpdatedTime(Date lastUpdatedTime) {
 		this.lastUpdatedTime = lastUpdatedTime;
 	}
-
 
 	@Lob
 	public byte[] getMeta() {
@@ -111,7 +103,6 @@ public class WorkflowExec implements Serializable {
 		this.meta = meta;
 	}
 
-
 	public String getStatus() {
 		return this.status;
 	}
@@ -119,7 +110,6 @@ public class WorkflowExec implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
 
 	public String getSummary() {
 		return this.summary;
@@ -129,10 +119,9 @@ public class WorkflowExec implements Serializable {
 		this.summary = summary;
 	}
 
-
-	//bi-directional many-to-one association to WorkflowMaster
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="workflow_master")
+	// bi-directional many-to-one association to WorkflowMaster
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_master")
 	public WorkflowMaster getWorkflowMaster() {
 		return this.workflowMaster;
 	}
@@ -141,21 +130,17 @@ public class WorkflowExec implements Serializable {
 		this.workflowMaster = workflowmaster;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_by")
-	public User getUser() {
-		return this.user;
+	@Column(name = "created_by")
+	public Integer getCreatedByID() {
+		return createdByID;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setCreatedByID(Integer createdByID) {
+		this.createdByID = createdByID;
 	}
 
-
-	//bi-directional many-to-one association to WorkflowItem
-	@OneToMany(mappedBy="parentWorkflow")
+	// bi-directional many-to-one association to WorkflowItem
+	@OneToMany(mappedBy = "parentWorkflow")
 	public List<WorkflowItemExec> getWorkflowItems() {
 		return this.workflowItems;
 	}
