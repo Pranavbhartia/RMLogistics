@@ -19,4 +19,6 @@ public interface LoanDao extends GenericDao {
 	List<Loan> retreiveLoansAsManager(User loanManager);
 	
     public LoanAppForm getLoanAppForm(Integer loanId);
+
+	List<Loan> retrieveLoanForDashboard(User parseUserModel);
 }

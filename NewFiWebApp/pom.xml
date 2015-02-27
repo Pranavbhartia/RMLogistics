@@ -8,9 +8,11 @@
   <modules>
   	<module>NewfiMuleFlow</module>
   	<module>NewfiWorkFlow</module>
-  	<module>NewfiWeb</module>
-  	<module>NewfiCore</module>
   	<module>NewfiCommon</module>
+  	<module>NewfiCore</module>
+  	<module>NewfiWeb</module>
+  	
+  	
 	<module>WorkflowEngine</module>
   	
   </modules>

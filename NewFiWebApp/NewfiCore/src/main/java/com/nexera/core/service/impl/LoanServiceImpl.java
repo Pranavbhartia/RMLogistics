@@ -13,6 +13,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserRoleVO;
@@ -20,7 +21,6 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 
 @Component
-@Transactional
 public class LoanServiceImpl implements LoanService {
 
 	@Autowired
@@ -37,6 +37,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<LoanVO> getLoansOfUser(UserVO user) {
 
 		List<Loan> list = loanDao.getLoansOfUser(LoanServiceImpl
@@ -45,12 +46,14 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public LoanVO getLoanByID(Integer loanID) {
 		return LoanServiceImpl.buildLoanVO((Loan) loanDao.load(Loan.class,
 				loanID));
 	}
 
 	@Override
+	@Transactional()
 	public boolean addToLoanTeam(LoanVO loan, UserVO user) {
 
 		Loan loanModel = LoanServiceImpl.parseLoanModel(loan);
@@ -62,6 +65,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional()
 	public boolean removeFromLoanTeam(LoanVO loan, UserVO user) {
 
 		Loan loanModel = LoanServiceImpl.parseLoanModel(loan);
@@ -70,6 +74,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
 
 		List<User> team = loanDao.retreiveLoanTeam(LoanServiceImpl
@@ -79,6 +84,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
 
 		User manager = LoanServiceImpl.parseUserModel(loanManager);
@@ -216,6 +222,23 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		return voList;
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<LoanDashboardVO> retrieveDashboard(UserVO userVO) {
+		/*
+		 * Get all loans this user has access to.
+		 */
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl.parseUserModel(userVO));
+		
+		/*
+		 * For each loan the logged in user has access to, retrieve the loan list
+		 */
+		/*
+		 * Create the dashboardVO object for all the loans
+		 */
+		return null;
 	}
 
 }

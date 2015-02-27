@@ -19,7 +19,7 @@ import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
-
+ 
 @Component
 @Transactional
 public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
@@ -131,5 +131,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					"Exception caught in fetchUsersBySimilarEmailId() ",
 					hibernateException);
 		}
+	}
+
+	@Override
+	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		return null;
 	}
 }
