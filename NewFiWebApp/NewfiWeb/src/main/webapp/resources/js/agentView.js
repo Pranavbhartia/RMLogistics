@@ -21,6 +21,40 @@ function adjustCustomerNameWidth(){
 	$('.cus-name').outerWidth(cusNameWidth);
 }
 
+function getAgentSecondaryLeftNav(){
+	var leftTab2Wrapper = $('<div>').attr({
+		"class" : "lp-t2-wrapper"
+	});
+	
+	var step1 = getAgentSecondaryLeftNavStep(1, "application progress");
+	var step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
+	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />your rate");
+	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
+	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
+	
+	return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
+}
+
+function getAgentSecondaryLeftNavStep(step, text){
+	var container = $('<div>').attr({
+		"id" : "lp-step"+step,
+		"class" : "lp-t2-item lp-t2-agent-item"
+	});
+	
+	var img = $('<div>').attr({
+		"class" : "lp-t2-img lp-t2-img"+step
+	});
+	
+	var txt = $('<div>').attr({
+		"class" : "lp-t2-txt"
+	}).html(text);
+	
+	return container.append(img).append(txt);
+}
+
+
+
+
 var imageBaseUrl = "resources/images/";
 
 var custData = {
@@ -152,7 +186,15 @@ var custData = {
 	};
 
 function paintAgentDashboard(){
-	ajaxRequest("./agentDashboard.do", "GET", "HTML", {}, paintAgentDashboardCallBack);
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	var agentDashboardMainContainer = $('<div>').attr({
+		"id" : "agent-dashboard-container",
+		"class" : "rp-agent-dashboard float-left"
+	});
+	$('#right-panel').append(agentDashboardMainContainer);
+	paintAgentDashboardRightPanel();
+	adjustAgentDashboardOnResize();
 }
 
 function paintAgentDashboardCallBack(data){
@@ -667,7 +709,20 @@ $(document).on('click','.lp-t2-agent-item',function(){
 });
 
 function paintMyLoansView(){
-	ajaxRequest("./agentLoanPage.do", "GET", "HTML", {}, paintMyLoansViewCallBack);
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
+	$('#lp-talk-wrapper').addClass('lp-item-active');
+	var rightPanelCont = $('<div>').attr({
+		"class" : "right-panel float-left"
+	});
+	var secondaryNav = getAgentSecondaryLeftNav();
+	var agentCenetrPanel = $('<div>').attr({
+		"id" : "center-panel-cont",
+		"class" : "center-panel float-left"
+	});
+	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
+	$('#right-panel').append(rightPanelCont);
 }
 
 function paintMyLoansViewCallBack(data){
@@ -814,21 +869,22 @@ function appendCustomerLoanDetails(){
 	
 	//Append loan detail rows
 	appendLoanDetailsRow("File Email", "654321@loan.newfi.com");
-	appendLoanDetailsRow("Single Sign On", "6872604");
-	appendLoanDetailsRow("Customer", "Edit");
+	appendLoanDetailsRow("Single Sign On", "6872604",true);
+	appendLoanDetailsRow("Customer", "Edit",true);
 	appendLoanDetailsRow("Loan Amount", "$ 100,000.00");
 	appendLoanDetailsRow("Lock Rate Details", "4.75 %");
 	appendLoanDetailsRow("Lock Expiration Date", "02/21/2015");
 	appendLoanDetailsRow("Loan Progress", "Setup");
-	appendLoanDetailsRow("Credit", "TU-646/EQ-686/EX-685");
+	appendLoanDetailsRow("Credit", "TU-646/EQ-686/EX-685",true);
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
 }
 
 
 //Function to append loan details row
-function appendLoanDetailsRow(label,value){
+function appendLoanDetailsRow(label,value,isLink){
 	var row = $('<div>').attr({
+		"id" : "ld-" + convertStringToId(label),
 		"class" : "av-loan-details-row clearfix"
 	});
 	
@@ -838,6 +894,11 @@ function appendLoanDetailsRow(label,value){
 	var rightCol = $('<div>').attr({
 		"class" : "av-loan-details-row-rc float-left"
 	}).html(value);
+	
+	if(isLink){
+		rightCol.addClass('loan-detail-link');
+	}
+	
 	row.append(leftCol).append(rightCol);
 	
 	$('#av-loan-details-container').append(row);
@@ -892,6 +953,52 @@ function appendAddTeamMemberWrapper(){
 }
 
 
+var users = [{
+    "firstName": "Jessica",
+    "lastName": "Cockrell",
+    "emailId": "Jessica@domain.com",
+    "userRole": {
+        "visibleOnLoanTeam": true,
+        "label":"Loan Manager"
+    }
+},
+{
+    "firstName": "Regina",
+    "lastName": "Fleming",
+    "emailId": "Regina@domain.com",
+    "userRole": {
+        "visibleOnLoanTeam": true,
+        "label":"Processor"
+    }
+},
+{
+    "firstName": "Scott",
+    "lastName": "Harris",
+    "emailId": "Scott.Harris@domain.com",
+    "userRole": {
+        "visibleOnLoanTeam": true,
+        "label":"Loan Agent"
+    }
+},
+{
+    "firstName": "Brenda",
+    "lastName": "Allen",
+    "emailId": "Brenda@domain.com",
+    "userRole": {
+        "visibleOnLoanTeam": true,
+        "label":"Sales Manager"
+    }
+},
+{
+    "firstName": "Annalisa",
+    "lastName": "Detrick",
+    "emailId": "Annalisa.Detrick@domain.com",
+    "userRole": {
+        "visibleOnLoanTeam": true,
+        "label":"Setup"
+    }
+}];
+
 function appendNewfiTeamWrapper(){
 	var wrapper = $('<div>').attr({
 		"class" : "newfi-team-wrapper"
@@ -908,6 +1015,11 @@ function appendNewfiTeamWrapper(){
 	var tableHeader = getTeamListTableHeader();
 	container.append(tableHeader);
 	
+	for(var i=0; i<users.length ;i++){
+		var tableRow = getTeamListTableRow(users[i]);
+		container.append(tableRow);
+	}
+	
 	wrapper.append(header).append(container);
 	$('#center-panel-cont').append(wrapper);
 }
@@ -918,19 +1030,129 @@ function getTeamListTableHeader(){
 	});
 	
 	var thCol1 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col1 float-left"
+		"class" : "newfi-team-list-th-col1 newfi-team-list-tr-col1 float-left"
 	}).html("User Name");
 	
 	var thCol2 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col2 float-left"
+		"class" : "newfi-team-list-th-col2 newfi-team-list-tr-col2 float-left"
 	}).html("User Type");
 	
 	var thCol3 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col3 float-left"
+		"class" : "newfi-team-list-th-col3 newfi-team-list-tr-col3 float-left"
 	}).html("Email");
 	
 	return tableHeaderRow.append(thCol1).append(thCol2).append(thCol3);
 }
+
+
+function getTeamListTableRow(user){
+	var tableRow = $('<div>').attr({
+		"class" : "newfi-team-list-tr clearfix"
+	});
+	
+	var trCol1 = $('<div>').attr({
+		"class" : "newfi-team-list-tr-col1 float-left"
+	}).html(user.firstName + " " + user.lastName);
+	
+	var trCol2 = $('<div>').attr({
+		"class" : "newfi-team-list-tr-col2 float-left"
+	}).html(user.userRole.label);
+	
+	var trCol3 = $('<div>').attr({
+		"class" : "newfi-team-list-tr-col3 float-left"
+	}).html(user.emailId);
+	
+	var trCol4 = $('<div>').attr({
+		"class" : "newfi-team-list-tr-col4 float-left"
+	});
+	
+	var trCol5 = $('<div>').attr({
+		"class" : "newfi-team-list-tr-col5 float-left"
+	});
+	
+	var userDelIcn = $('<div>').attr({
+		"class" : "user-del-icn"
+	});
+	
+	trCol5.append(userDelIcn);
+	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4).append(trCol5);
+}
+
+$(document).on('click','#ld-customer .loan-detail-link',function(){
+	appendCustomerEditProfilePopUp();
+});
+
+
+function appendCustomerEditProfilePopUp(){
+	
+	var offset = $('#ld-customer .loan-detail-link').offset();
+	
+	var left = offset.left;
+	var top = offset.top;
+	
+	$('#cus-prof-popup').remove();
+	
+	var popUpWrapper = $('<div>').attr({
+		"id" : "cus-prof-popup",
+		"class" : "pop-up-wrapper cus-prof-popup"
+	}).css({
+		"left" : left + 50,
+		"top" : top - 50
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "pop-up-header"
+	}).html("User Profile");
+	
+	var container = $('<div>').attr({
+		"id" : "cus-prof-container",
+		"class" : "pop-up-container"
+	});
+	
+	popUpWrapper.append(header).append(container);
+	
+	$('#ld-customer .loan-detail-link').append(popUpWrapper);
+	
+	
+	appendCustomerProfEditRow("First Name","Zach");
+	appendCustomerProfEditRow("Last Name","Smith");
+	
+	//Upload photo row
+	
+	appendCustomerProfEditRow("Street Address","30650 W Ball rd Lot 203");
+	appendCustomerProfEditRow("City","Sedalia");
+	appendCustomerProfEditRow("State","MO");
+	appendCustomerProfEditRow("Zip","65301");
+	appendCustomerProfEditRow("Email","zipsmith25@gmail.com");
+	appendCustomerProfEditRow("DOB","04/01/1984");
+}
+
+
+function appendCustomerProfEditRow(labelTxt,value){
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	
+	var label = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html(labelTxt);
+	
+	var inputTag = $('<input>').attr({
+		"class" : "cust-prof-edit-input float-left"
+	}).val(value);
+	
+	row.append(label).append(inputTag);
+	$('#cus-prof-container').append(row);
+}
+
+
+
+
+
+
+
+
+
 
 
 /*

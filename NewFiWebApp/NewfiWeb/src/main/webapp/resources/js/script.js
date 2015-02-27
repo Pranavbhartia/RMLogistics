@@ -23,34 +23,75 @@ function adjustCenterPanelWidth(){
 	}
 }
 
-function showMessageDashboard(){
-	//window.location = "./customerPage.do";
-	
-	$.ajax({
-		url : "./messageDashboard.do",
-		dataType : "HTML",
-		success : function(data){
-			$('#main-body-wrapper').html(data);
-			$('#lp-talk-wrapper').addClass('lp-item-active');
-			paintGettingToKnowMessageDashboard();
-			adjustCenterPanelWidth();
-		}
+function getCustomerSecondaryLeftNav(){
+	var leftTab2Wrapper = $('<div>').attr({
+		"class" : "lp-t2-wrapper"
 	});
+	
+	var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
+	var step2 = getCustomerSecondaryLeftNavStep(2, "complete your application");
+	var step3 = getCustomerSecondaryLeftNavStep(3, "lock<br />your rate");
+	var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
+	var step5 = getCustomerSecondaryLeftNavStep(5, "loan<br />progress");
+	
+	return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
+}
+
+function getCustomerSecondaryLeftNavStep(step, text){
+	var container = $('<div>').attr({
+		"id" : "lp-step"+step,
+		"class" : "lp-t2-item",
+		"onclick" : "changeSecondaryLeftPanel("+step+");"
+	});
+	
+	var img = $('<div>').attr({
+		"class" : "lp-t2-img lp-t2-img"+step
+	});
+	
+	var txt = $('<div>').attr({
+		"class" : "lp-t2-txt"
+	}).html(text);
+	
+	return container.append(img).append(txt);
+}
+
+
+
+
+function showMessageDashboard(){
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
+	$('#lp-talk-wrapper').addClass('lp-item-active');
+	var convMainContainer = $('<div>').attr({
+		"id" : "conv-main-container",
+		"class" : "right-panel-messageDashboard float-left"
+	});
+	$('#right-panel').append(convMainContainer);
+	paintGettingToKnowMessageDashboard();
+	adjustCenterPanelWidth();
 }
 
 function showCustomerLoanPage(){
-	//window.location = "./customerPage.do";
-	
-	$.ajax({
-		url : "./customerLoanPage.do",
-		dataType : "HTML",
-		success : function(data){
-			$('#main-body-wrapper').html(data);
-			$('#lp-loan-wrapper').addClass('lp-item-active');
-			changeSecondaryLeftPanel(2);
-			adjustCenterPanelWidth();
-		}
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
+	$('#lp-loan-wrapper').addClass('lp-item-active');
+	var loanDetailsMainContainer = $('<div>').attr({
+		"class" : "right-panel float-left"
 	});
+	
+	var secondaryLeftNav = getCustomerSecondaryLeftNav();
+	var centerPanel = $('<div>').attr({
+		"id" : "center-panel-cont",
+		"class" : "center-panel float-left"
+	});
+	
+	loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
+	
+	$('#right-panel').append(loanDetailsMainContainer);
+	changeSecondaryLeftPanel(2);
+	adjustCenterPanelWidth();
 }
 
 function changeSecondaryLeftPanel(secondary){
