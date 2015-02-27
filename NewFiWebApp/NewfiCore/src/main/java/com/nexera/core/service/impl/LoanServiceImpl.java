@@ -192,6 +192,7 @@ public class LoanServiceImpl implements LoanService {
 
 		roleVO.setId(role.getId());
 		roleVO.setRoleCd(role.getRoleCd());
+		roleVO.setLabel(role.getLabel());
 		roleVO.setRoleDescription(role.getRoleDescription());
 
 		return roleVO;
@@ -207,6 +208,7 @@ public class LoanServiceImpl implements LoanService {
 
 		role.setId(roleVO.getId());
 		role.setRoleCd(roleVO.getRoleCd());
+		role.setLabel(roleVO.getLabel());
 		role.setRoleDescription(roleVO.getRoleDescription());
 
 		return role;

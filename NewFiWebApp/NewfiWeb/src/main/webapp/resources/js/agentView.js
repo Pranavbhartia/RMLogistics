@@ -732,13 +732,15 @@ function paintMyLoansViewCallBack(data){
 	
 }
 
-function paintAgentLoanPage(){
+function paintAgentLoanPage(data){
+	
+	console.log("paintAgentLoanPage : "+JSON.stringify(data));
+	var loanDetails=data.resultObject;
 	appendCustomerDetailHeader();
-	appendCustomerLoanDetails();
+	appendCustomerLoanDetails(loanDetails);
 	appendAddTeamMemberWrapper();
-	appendNewfiTeamWrapper();
+	appendNewfiTeamWrapper(loanDetails.loanTeam);
 }
-
 //function called when secondary left panel is changed in agent view loan progress pages
 function changeAgentSecondaryLeftPanel(elementId){
 	$('.lp-t2-item').removeClass('t2-active');
@@ -754,7 +756,8 @@ function changeAgentSecondaryLeftPanel(elementId){
 	if(elementId == "lp-step1"){
 	}
 	else if(elementId == "lp-step2"){
-		paintAgentLoanPage();
+		//TODO-pass the right id
+		getLoanDetails(1);
 	}
 	else if(elementId == "lp-step3"){
 	}
@@ -1007,7 +1010,7 @@ var users = [{
     }
 }];
 
-function appendNewfiTeamWrapper(){
+function appendNewfiTeamWrapper(team){
 	var wrapper = $('<div>').attr({
 		"class" : "newfi-team-wrapper"
 	});
@@ -1023,8 +1026,8 @@ function appendNewfiTeamWrapper(){
 	var tableHeader = getTeamListTableHeader();
 	container.append(tableHeader);
 	
-	for(var i=0; i<users.length ;i++){
-		var tableRow = getTeamListTableRow(users[i]);
+	for(var i=0; i<team.length ;i++){
+		var tableRow = getTeamListTableRow(team[i]);
 		container.append(tableRow);
 	}
 	
@@ -1799,3 +1802,9 @@ function showDocumentToolTip(desc,topOffset,leftOffset){
 function hideDocumentToolTip(){
 	$('#doc-tool-tip').hide();
 }
+
+
+//TODO - fetches loan details for a loan id
+function getLoanDetails(loanID){
+	ajaxRequest("rest/loan/get/"+loanID, "GET", "json", {}, paintAgentLoanPage);
+	}
