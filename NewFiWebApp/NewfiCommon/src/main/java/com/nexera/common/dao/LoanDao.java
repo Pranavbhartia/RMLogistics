@@ -8,6 +8,8 @@ import com.nexera.common.entity.User;
 
 public interface LoanDao extends GenericDao {
 
+	Loan getLoanWithDetails(Integer loanID);
+	
 	List<Loan> getLoansOfUser(User user);
 
 	boolean addToLoanTeam(Loan loan,User user,User addedBy);

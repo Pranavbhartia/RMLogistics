@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.impl.LoanDaoImpl;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanDetailVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserRoleVO;
@@ -39,7 +41,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<LoanVO> getLoansOfUser(UserVO user) {
 
 		List<Loan> list = loanDao.getLoansOfUser(LoanServiceImpl
@@ -48,10 +50,10 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public LoanVO getLoanByID(Integer loanID) {
-		return LoanServiceImpl.buildLoanVO((Loan) loanDao.load(Loan.class,
-				loanID));
+		return LoanServiceImpl.buildLoanVO((Loan) loanDao
+				.getLoanWithDetails(loanID));
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
 
 		List<User> team = loanDao.retreiveLoanTeam(LoanServiceImpl
@@ -86,7 +88,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
 
 		User manager = LoanServiceImpl.parseUserModel(loanManager);
@@ -126,6 +128,13 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setLqbFileId(loan.getLqbFileId());
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setName(loan.getName());
+		if (loan.getLoanStatus() != null)
+			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
+		loanVo.setUser(LoanServiceImpl.buildUserVO(loan.getUser()));
+
+		
+		loanVo.setLoanDetail(LoanServiceImpl.buildLoanDetailVO(loan
+				.getLoanDetail()));
 
 		return loanVo;
 
@@ -166,6 +175,9 @@ public class LoanServiceImpl implements LoanService {
 		userVO.setId(user.getId());
 		userVO.setFirstName(user.getFirstName());
 		userVO.setLastName(user.getLastName());
+		userVO.setEmailId(user.getEmailId());
+		userVO.setPhoneNumber(user.getPhoneNumber());
+		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 		userVO.setUserRole(LoanServiceImpl.buildUserRoleVO(user.getUserRole()));
 
 		return userVO;
@@ -192,6 +204,7 @@ public class LoanServiceImpl implements LoanService {
 
 		roleVO.setId(role.getId());
 		roleVO.setRoleCd(role.getRoleCd());
+		roleVO.setLabel(role.getLabel());
 		roleVO.setRoleDescription(role.getRoleDescription());
 
 		return roleVO;
@@ -207,9 +220,24 @@ public class LoanServiceImpl implements LoanService {
 
 		role.setId(roleVO.getId());
 		role.setRoleCd(roleVO.getRoleCd());
+		role.setLabel(roleVO.getLabel());
 		role.setRoleDescription(roleVO.getRoleDescription());
 
 		return role;
+
+	}
+
+	public static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
+		if (detail == null)
+			return null;
+
+		LoanDetailVO detailVO = new LoanDetailVO();
+		detailVO.setId(detail.getId());
+		detailVO.setDownPayment(detail.getDownPayment());
+		detailVO.setLoanAmount(detail.getLoanAmount());
+		detailVO.setRate(detail.getRate());
+
+		return detailVO;
 
 	}
 

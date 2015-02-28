@@ -3,6 +3,20 @@
 */
 
 function showCustomerProfilePage(){
+	ajaxRequest("customerProfile.do", "GET", "HTML", {}, showCustomerProfilePageCallBack);
+}
+
+function getUserProfileData(){
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+}
+
+function userProfileData(data){
+
+	showCustomerProfilePageCallBack(data);
+}
+
+function showCustomerProfilePageCallBack(data){
+	$('#main-body-wrapper').html(data);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -22,11 +36,11 @@ function showCustomerProfilePage(){
 
 function paintCutomerProfileContainer() {
 	$('#profile-main-container').html('');
-	appendCustPersonalInfoWrapper();
-	
+	 getUserProfileData();
 }
 
-function appendCustPersonalInfoWrapper(){
+function appendCustPersonalInfoWrapper(user){
+	
 	var wrapper = $('<div>').attr({
 		"class" : "cust-personal-info-wrapper"
 	});
@@ -35,56 +49,62 @@ function appendCustPersonalInfoWrapper(){
 		"class" : "cust-personal-info-header"
 	}).html("Personal Information");
 	
-	var container = getCustPersonalInfoContainer();
+	var container = getCustPersonalInfoContainer(user);
 	
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
 }
 
-function getCustPersonalInfoContainer(){
+function getCustPersonalInfoContainer(user){
+	
+	
 	var container = $('<div>').attr({
 		"class" : "cust-personal-info-container"
 	});
 	
-	var nameRow = getCustomerNameFormRow();
+	var nameRow = getCustomerNameFormRow(user);
 	container.append(nameRow);
 	
-	var uploadRow = getCustomerUploadPhotoRow();
+	var uploadRow = getCustomerUploadPhotoRow(user);
 	container.append(uploadRow);
 	
-	var DOBRow = getDOBRow();
+	var DOBRow = getDOBRow(user);
 	container.append(DOBRow);
 	
-	var emailRow = getEmailRow();
-	container.append(emailRow);
+	var priEmailRow = getPriEmailRow(user);
+	container.append(priEmailRow);
 	
-	var streetAddrRow = getStreetAddrRow();
-	container.append(streetAddrRow);
+	var secEmailRow = getSecEmailRow(user);
+	container.append(secEmailRow);
 	
-	var cityRow = getCityRow();
+	/*var streetAddrRow = getStreetAddrRow(user);
+	container.append(streetAddrRow);*/
+	
+	var cityRow = getCityRow(user);
 	container.append(cityRow);
 	
-	var stateRow = getStateRow();
+	var stateRow = getStateRow(user);
 	container.append(stateRow);
 	
-	var zipRow = getZipRow();
+	var zipRow = getZipRow(user);
 	container.append(zipRow);
 	
-	var phone1Row = getPhone1Row();
+	var phone1Row = getPhone1Row(user);
 	container.append(phone1Row);
 
-	var phone2Row = getPhone2Row();
+	var phone2Row = getPhone2Row(user);
 	container.append(phone2Row);
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn"
+		"class" : "prof-btn prof-save-btn",
+		"onclick" :"updateUserDetails()"
 	}).html("Save");
 	container.append(saveBtn);
 	return container;
 }
 
 
-function getCustomerNameFormRow() {
+function getCustomerNameFormRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -96,14 +116,33 @@ function getCustomerNameFormRow() {
 	});
 	var firstName = $('<input>').attr({
 		"class" : "prof-form-input",
-		"placeholder" : "First Name"
+		"placeholder" : "First Name",
+		"value":user.firstName,
+		"id":"firstNameId"
 	});
+	
 	
 	var lastName = $('<input>').attr({
 		"class" : "prof-form-input",
-		"placeholder" : "Last Name"
+		"placeholder" : "Last Name",
+		"value":user.lastName,
+		"id":"lastNameId"
 	});
-	rowCol2.append(firstName).append(lastName);
+	
+	var id = $('<input>').attr({
+		"type" : "hidden",
+		"value":user.id,
+		"id":"userid"
+	});
+	
+	var customerDetailsId = $('<input>').attr({
+		"type" : "hidden",
+		"value":user.customerDetail.id,
+		"id":"customerDetailsId"
+	});
+	
+	
+	rowCol2.append(firstName).append(lastName).append(id).append(customerDetailsId);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -121,12 +160,25 @@ function getCustomerUploadPhotoRow() {
 	var uploadPicPlaceholder = $('<div>').attr({
 		"class" : "prof-pic-upload-placeholder float-left"
 	});
+	var inputHiddenFile = $('<input>').attr({
+		"type" : "file",
+		"id":"uploadImageId"
+		 
+	});
+	
+	var uploadImage = $('<div>').attr({
+		"class" : "uploadImage"
+		 
+	}).hide();
+	
+	uploadImage.append(inputHiddenFile);
+	uploadPicPlaceholder.append(uploadImage);
 	
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"
 	});
 	
-	var uploadPicCont = $('<div>').attr({
+	/*var uploadPicCont = $('<div>').attr({
 		"class" : "prof-pic-upload-cont prof-form-input float-left clearfix"
 	});
 	
@@ -139,18 +191,22 @@ function getCustomerUploadPhotoRow() {
 	});
 	
 	uploadPicCont.append(uploadPicInput).append(uploadIcn);
-	
+	*/
 	var uploadBtn = $('<div>').attr({
-		"class" : "prof-btn upload-btn float-left"
-	}).html("upload");
-	uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
+		"class" : "prof-btn upload-btn float-left",
+		"type":"file"
+		
+	}).click(uploadeImage).html("upload");
+	//uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
+	uploadBottomContianer.append(uploadBtn);
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 	
 	return row.append(rowCol1).append(rowCol2);
 }
 
 
-function getDOBRow() {
+function getDOBRow(user) {
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -162,7 +218,9 @@ function getDOBRow() {
 	});
 	var dobInput = $('<input>').attr({
 		"class" : "prof-form-input date-picker",
-		"placeholder" : "MM/DD/YYYY"
+		"placeholder" : "MM/DD/YYYY",
+		"value":$.datepicker.formatDate('mm/dd/yy',new Date(user.customerDetail.dateOfBirth)),
+		"id":"dateOfBirthId"
 	}).datepicker({
 		orientation: "top auto",
 		autoclose: true
@@ -172,26 +230,50 @@ function getDOBRow() {
 }
 
 
-function getEmailRow() {
+function getPriEmailRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Email");
+	}).html("Primery Email");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
 	
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg"
+		"class" : "prof-form-input prof-form-input-lg",
+		"value":user.emailId,
+		"id":"priEmailId"
 	});
 	rowCol2.append(emailInput);
 	return row.append(rowCol1).append(rowCol2);
 }
 
 
-function getStreetAddrRow() {
+function getSecEmailRow(user) {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Secondry Email");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	
+	var emailInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-lg",
+		"value":user.customerDetail.secEmailId,
+		"id":"secEmailId"
+	});
+	rowCol2.append(emailInput);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+
+
+/*function getStreetAddrRow() {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -202,13 +284,14 @@ function getStreetAddrRow() {
 		"class" : "prof-form-rc float-left"
 	});
 	var steetAddrInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg"
+		"class" : "prof-form-input prof-form-input-lg",
+		"value":user.customerDetail.secEmailId
 	});
 	rowCol2.append(steetAddrInput);
 	return row.append(rowCol1).append(rowCol2);
-}
+}*/
 
-function getCityRow() {
+function getCityRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -219,13 +302,15 @@ function getCityRow() {
 		"class" : "prof-form-rc float-left"
 	});
 	var cityInput = $('<input>').attr({
-		"class" : "prof-form-input"
+		"class" : "prof-form-input",
+		"value":user.customerDetail.city,
+		"id":"cityId"
 	});
 	rowCol2.append(cityInput);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function getStateRow() {
+function getStateRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -236,14 +321,16 @@ function getStateRow() {
 		"class" : "prof-form-rc float-left"
 	});
 	var stateInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-sm"
+		"class" : "prof-form-input prof-form-input-sm",
+		"value":user.customerDetail.addressState,
+		"id":"stateId"
 	});
 	rowCol2.append(stateInput);
 	return row.append(rowCol1).append(rowCol2);
 }
 
 
-function getZipRow() {
+function getZipRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -254,14 +341,16 @@ function getZipRow() {
 		"class" : "prof-form-rc float-left"
 	});
 	var zipInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-sm"
+		"class" : "prof-form-input prof-form-input-sm",
+		"value":user.customerDetail.addressZipCode,
+		"id":"zipcodeId"
 	});
 	rowCol2.append(zipInput);
 	return row.append(rowCol1).append(rowCol2);
 }
 
 
-function getPhone1Row() {
+function getPhone1Row(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -272,14 +361,16 @@ function getPhone1Row() {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone1Input = $('<input>').attr({
-		"class" : "prof-form-input"
+		"class" : "prof-form-input",
+		"value":user.phoneNumber,
+		"id":"priPhoneNumberId"
 	});
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
 }
 
 
-function getPhone2Row() {
+function getPhone2Row(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -290,8 +381,75 @@ function getPhone2Row() {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone2Input = $('<input>').attr({
-		"class" : "prof-form-input"
+		"class" : "prof-form-input",
+		"value":user.customerDetail.secPhoneNumber,
+		"id":"secPhoneNumberId"
 	});
 	rowCol2.append(phone2Input);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+function updateUserDetails(){
+	
+	var userProfileJson = new Object();
+	
+	/*
+	var customerDetails = {
+			
+			'addressCity' :  $("#cityId").val(),
+			'addressState' : $("#stateId").val(),
+			'addressZipCode' : $("#zipcodeId").val(),
+			'dateOfBirth': $("#dateOfBirthId").val(),
+			'secEmailId' : $("#secEmailId").val(),
+			'secPhoneNumber': $("#secPhoneNumberId").val()
+	};
+	
+	var userProfileJson = {
+			'firstName' :  $("#firstNameId").val(),
+			'lastName' : $("#lastNameId").val(),
+			'phoneNumber' : $("#priPhoneNumberId").val(),
+			'customerDetail':customerDetails
+			};
+*/
+	
+	userProfileJson.id = $("#userid").val();
+	userProfileJson.firstName = $("#firstNameId").val();
+	userProfileJson.lastName = $("#lastNameId").val();
+	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	userProfileJson.emailId  = $("#priEmailId").val(); 
+	
+	var customerDetails = new Object();
+	
+	customerDetails.id   =  $("#customerDetailsId").val();
+	customerDetails.addressCity   =  $("#cityId").val();
+	customerDetails.addressState  =  $("#stateId").val();
+	customerDetails.addressZipCode =  $("#zipcodeId").val();
+	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
+	customerDetails.secEmailId = $("#secEmailId").val();
+	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	
+	userProfileJson.customerDetail = customerDetails;
+	
+	
+	$.ajax({
+		url : "rest/userprofile/updateprofile",
+		type:"POST",
+		data:JSON.stringify(userProfileJson),
+		dataType :"json",
+		contentType:"application/json; charset=utf-8",
+		success : function(data){
+			
+		},
+		error:function(error){
+			
+		}
+	});
+	
+	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json",userProfileJson, {});
+	
+}
+
+function uploadeImage(){
+	
+	$("#uploadImageId").click();
 }

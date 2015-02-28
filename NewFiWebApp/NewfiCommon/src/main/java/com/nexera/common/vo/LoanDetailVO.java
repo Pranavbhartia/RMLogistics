@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class LoanDetailVO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Double downPayment;
 	private Double emi;
 	private Double loanAmount;
 	private Double rate;
 	private LoanVO loan;
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public Double getDownPayment() {

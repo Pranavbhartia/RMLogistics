@@ -35,7 +35,7 @@ public class LoanRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/getLoanByID/{loanID}")
+	@RequestMapping(value = "/get/{loanID}")
 	public @ResponseBody String getLoanByID(@PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
