@@ -33,7 +33,9 @@
 	<jsp:include page="footer.jsp"></jsp:include>
 	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
+	var newfi = ${newfi};
 		$(document).ready(function() {
+			initialize(newfi);
 			changeLeftPanel(2);
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();

@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
-import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -33,6 +31,7 @@ public class TemplateController extends DefaultController {
 
 	@Autowired
 	LoanService loanService;
+
 	
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl; 
@@ -41,14 +40,18 @@ public class TemplateController extends DefaultController {
 	private UserProfileService userProfileService;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TemplateController.class);
-	
+
+
+
 	@RequestMapping(value = "home.do")
 	public ModelAndView showCustomerPage(HttpServletRequest req, Model model) {
 
 		ModelAndView mav = new ModelAndView ();
+
 		try {
 			
 			User user = loadDefaultValues(model, req);
+
 
 			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				UserVO userVO = userProfileService.findUser(user.getId());
@@ -60,6 +63,10 @@ public class TemplateController extends DefaultController {
 
 		} catch (IOException e) {
 			mav.setViewName(JspLookup.ERROR);
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: Handle exception scenario
+
 			e.printStackTrace();
 		}
 		return mav;

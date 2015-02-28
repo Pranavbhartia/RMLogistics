@@ -48,7 +48,7 @@ public class LoanServiceTest {
     public void testGetLoansProgressForUser() {
 	    UserVO user = new UserVO();
 	    user.setId(1);
-	    LoansProgressStatusVO loansProgressStatusVO = loanService.getLoansProgressForUser(user); 
+	    LoansProgressStatusVO loansProgressStatusVO = loanService.getLoansProgressForUser(1); 
         System.out.println(loansProgressStatusVO.getInProgress());
         System.out.println(loansProgressStatusVO.getClosed());
         System.out.println(loansProgressStatusVO.getDeclined());

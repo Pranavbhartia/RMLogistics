@@ -25,7 +25,7 @@ public interface LoanService {
 	LoanDashboardVO retrieveDashboard(UserVO user);
 	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
 
-    LoansProgressStatusVO getLoansProgressForUser( UserVO userVO );
+    LoansProgressStatusVO getLoansProgressForUser( Integer i );
 
 
 }

@@ -279,7 +279,8 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
-
+		loanCustomerVO.setLoanID(loan.getId());
+		loanCustomerVO.setUserID(user.getId());
 		// TODO get these hard coded data from entity
 		loanCustomerVO.setProcessor("Johny Tester");
 		loanCustomerVO.setPurpose("Purchase TBD");
@@ -321,9 +322,9 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     @Transactional(readOnly=true)
-    public LoansProgressStatusVO getLoansProgressForUser(UserVO userVO){
+    public LoansProgressStatusVO getLoansProgressForUser(Integer userId){
             
-        List<Loan> loanList = loanDao.getLoansForUser(LoanServiceImpl.parseUserModel( userVO ));
+        List<Loan> loanList = loanDao.retrieveLoanForDashboard(new User(userId));
         LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl.getLoansProgressStatusVoFromLoanList(loanList);
         
         return loansProgressStatusVO;

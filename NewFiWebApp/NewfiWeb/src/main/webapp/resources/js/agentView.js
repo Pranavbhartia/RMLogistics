@@ -194,7 +194,7 @@ function paintAgentDashboardCallBack(data) {
 }
 
 function getDashboardRightPanel() {
-	var userID = 1;
+	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboard/" + userID, "GET", "json", {},
 			paintAgentDashboardRightPanel);
 }
@@ -333,9 +333,19 @@ function appendCustomers(elementId, customers) {
 		});
 
 		var cusName = $('<div>').attr({
-			"class" : "cus-name float-left"
+			"class" : "cus-name float-left",
+			"loanid":customer.loanID,
+			"userid":customer.userID
 		}).html(customer.name);
 
+		//loan details page to be displayed on click of the customer name
+		cusName.click(function(){
+			console.log("Customer clicked");
+			var userID=$(this).attr('userid');
+			var loanID=$(this).attr('loanid');
+			getLoanDetails(loanID);
+		});
+		
 		col1.append(onlineStatus).append(profImage).append(cusName);
 
 		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
