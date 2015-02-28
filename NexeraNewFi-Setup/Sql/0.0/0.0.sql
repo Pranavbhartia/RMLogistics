@@ -1,7 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -240,12 +239,15 @@ CREATE TABLE `loan` (
   `loan_email_id` varchar(100) DEFAULT NULL,
   `lqb_file_id` int(11) DEFAULT NULL,
   `current_milestone` int(11) DEFAULT NULL,
+  `loan_detail` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_loanMappedToUser_idx` (`user`),
   KEY `FK_loanMappedToType_idx` (`loan_type`),
   KEY `FK_loanMappedToStatus_idx` (`loan_status`),
   KEY `fk_Loan_PropertyType1_idx` (`property_type`),
   KEY `fk_loanMappedToMilestoneCurr_idx` (`current_milestone`),
+  KEY `fk_loanMappedToLoanDetail_idx` (`loan_detail`),
+  CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToStatus` FOREIGN KEY (`loan_status`) REFERENCES `loanstatusmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -260,7 +262,7 @@ CREATE TABLE `loan` (
 
 LOCK TABLES `loan` WRITE;
 /*!40000 ALTER TABLE `loan` DISABLE KEYS */;
-INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL);
+INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -453,14 +455,11 @@ DROP TABLE IF EXISTS `loandetails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `loandetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `loan` int(11) DEFAULT NULL,
   `loan_amount` double DEFAULT NULL,
   `rate` double DEFAULT NULL,
   `down_payment` double DEFAULT NULL,
   `emi` double DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_loanDetailsLinkedToLoan_idx` (`loan`),
-  CONSTRAINT `fk_loanDetailsLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -778,7 +777,7 @@ CREATE TABLE `needslistmaster` (
   `description` varchar(500) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
-  `is_custom` tinyint(4) DEFAULT NULL,
+  `is_custom` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_attachmentTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_attachmentTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -1102,8 +1101,7 @@ CREATE TABLE `workflowexec` (
   PRIMARY KEY (`id`),
   KEY `fk_workflowExMappedToWf_idx` (`workflow_master`),
   KEY `fk_wfExCreatedBy_idx` (`created_by`),
-  CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_wfExCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1131,10 +1129,8 @@ CREATE TABLE `workflowitemexec` (
   `status` tinyint(4) DEFAULT NULL,
   `success` tinyint(4) DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
-  `completion_time` int(11) DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
-  `params` longblob,
-  `result` longblob,
   PRIMARY KEY (`id`),
   KEY `fk_wfitemExMappedToItem_idx` (`workflow_item_master`),
   KEY `fk_wfItemExMappedToParent_idx` (`parent_workflow`),
@@ -1265,4 +1261,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-27 17:57:48
+-- Dump completed on 2015-02-27 19:00:53
