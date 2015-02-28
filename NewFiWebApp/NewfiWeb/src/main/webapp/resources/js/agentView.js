@@ -752,6 +752,7 @@ function paintMyLoansView() {
 	});
 	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
 	$('#right-panel').append(rightPanelCont);
+	
 }
 
 function paintMyLoansViewCallBack(data) {
