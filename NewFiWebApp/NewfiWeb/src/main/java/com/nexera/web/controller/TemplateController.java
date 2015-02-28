@@ -4,26 +4,31 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
+import com.nexera.core.service.LoanService;
 import com.nexera.web.constants.JspLookup;
 
 @Controller
 public class TemplateController extends DefaultController {
 
+	@Autowired
+	LoanService loanService;
+	
 	@RequestMapping(value = "home.do")
 	public String showCustomerPage(HttpServletRequest req, Model model) {
 
+		
 		try {
 
 			User user = loadDefaultValues(model, req);
 
-			if (user.getUserRole().getRoleCd().equals(UserRolesEum.CUSTOMER)) {
+			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				return JspLookup.CUSTOMER_VIEW;
 			}else{
 				return JspLookup.AGENT_VIEW;

@@ -1,6 +1,3 @@
-/*
- * Functions for customer profile page
- */
 
 function showCustomerProfilePage() {
 	 $('.lp-right-arrow').remove();
@@ -27,6 +24,34 @@ function getUserProfileData() {
 			appendCustPersonalInfoWrapper);
 }
 
+function showCustomerProfilePage(){
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
+	$('#lp-customer-profile').addClass('lp-item-active');
+	var rightArrow = $('<div>').attr({
+		"class" : "lp-right-arrow lp-prof-arrow"
+	});
+	$('#lp-customer-profile').append(rightArrow);
+	var profileMainContainer = $('<div>').attr({
+		"id" : "profile-main-container",
+		"class" : "right-panel-messageDashboard float-left"
+	});
+	$('#right-panel').append(profileMainContainer);
+	paintCutomerProfileContainer();
+	adjustRightPanelOnResize();
+}
+
+
+
+function getUserProfileData(){
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+}
+
+function userProfileData(data){
+
+	showCustomerProfilePageCallBack(data);
+}
 
 function paintCutomerProfileContainer() {
 	$('#profile-main-container').html('');
