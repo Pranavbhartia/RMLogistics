@@ -321,9 +321,9 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     @Transactional(readOnly=true)
-    public LoansProgressStatusVO getLoansProgressForUser(UserVO userVO){
+    public LoansProgressStatusVO getLoansProgressForUser(Integer userId){
             
-        List<Loan> loanList = loanDao.getLoansForUser(LoanServiceImpl.parseUserModel( userVO ));
+        List<Loan> loanList = loanDao.retrieveLoanForDashboard(new User(userId));
         LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl.getLoansProgressStatusVoFromLoanList(loanList);
         
         return loansProgressStatusVO;

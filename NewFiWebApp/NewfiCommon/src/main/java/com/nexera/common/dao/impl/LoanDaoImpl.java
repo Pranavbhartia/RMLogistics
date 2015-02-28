@@ -218,11 +218,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
      * 
      */ 
     @Override
-    public List<Loan> getLoansForUser( User user ){
+    public List<Loan> getLoansForUser( Integer userID ){
         
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(Loan.class);
-        criteria.add(Restrictions.eq("user.id", user.getId()));
+        criteria.add(Restrictions.eq("user.id", userID));
         List<Loan> loanList = criteria.list();
         return loanList;
     }
