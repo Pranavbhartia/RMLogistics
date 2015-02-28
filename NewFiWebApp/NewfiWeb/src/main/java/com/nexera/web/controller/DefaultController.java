@@ -102,7 +102,7 @@ public class DefaultController implements InitializingBean {
 					.getResourceAsStream("messages_" + suffix + ".properties"));
 			languageMap.put(suffix, new HashMap<String, String>(
 					(Map) properties));
-		} catch (IOException ioe) {
+		} catch (NullPointerException ioe) {
 			LOG.warn("locale file not found, defaulting the user", suffix);
 
 		}
