@@ -3,20 +3,6 @@
 */
 
 function showCustomerProfilePage(){
-	ajaxRequest("customerProfile.do", "GET", "HTML", {}, showCustomerProfilePageCallBack);
-}
-
-function getUserProfileData(){
-	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
-}
-
-function userProfileData(data){
-
-	showCustomerProfilePageCallBack(data);
-}
-
-function showCustomerProfilePageCallBack(data){
-	$('#main-body-wrapper').html(data);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -32,6 +18,16 @@ function showCustomerProfilePageCallBack(data){
 	$('#right-panel').append(profileMainContainer);
 	paintCutomerProfileContainer();
 	adjustRightPanelOnResize();
+}
+
+
+function getUserProfileData(){
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+}
+
+function userProfileData(data){
+
+	showCustomerProfilePageCallBack(data);
 }
 
 function paintCutomerProfileContainer() {

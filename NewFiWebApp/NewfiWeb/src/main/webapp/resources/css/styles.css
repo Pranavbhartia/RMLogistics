@@ -126,6 +126,10 @@ a, a:hover, a:visited{
 	text-transform: uppercase;
 }
 
+.logout-btn-txt>a{
+	color:#fff;
+}
+
 .home-container {
     margin-top: 50px;
 }
@@ -1211,6 +1215,7 @@ a, a:hover, a:visited{
 
 .rp-agent-dashboard{
 	width: 939px;
+	min-height:800px;
 	margin-left: 212px;
 	padding-bottom: 50px;
 	padding-top: 15px;
@@ -1726,14 +1731,40 @@ a, a:hover, a:visited{
 	font-family: 'opensanssemibold';
 }
 
+.add-member-sel-search {
+	width: 235px;
+	height: 40px;
+	border: 1px solid #dcdcdc;
+	border-radius:3px;
+	background-color: #FAFAFA;
+	font-family: 'opensanssemibold';
+}
+
+.add-member-input{
+	width: 215px;
+	padding-left:20px;
+	height: 40px;
+	border: none;
+	background : transparent;
+}
+
+.add-member-down-arrow{
+	width:18px;
+	height:40px;
+	background: url(../images/arrow_down.png) no-repeat center;
+	cursor: pointer;
+}
+
 .add-member-dropdown-cont{
 	position: absolute;
 	width: 235px;
+	max-height: 200px;
 	background-color: #fdfdfd;
 	border: 1px #dcdcdc solid;
 	border-top: none;
 	border-radius: 0 0 3px 3px;
 	padding: 5px 0;
+	overflow-y: auto;
 }
 
 .add-member-dropdown-row {
