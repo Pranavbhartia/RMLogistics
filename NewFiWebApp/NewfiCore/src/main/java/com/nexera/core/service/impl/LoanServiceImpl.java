@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.impl.LoanDaoImpl;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -226,19 +228,63 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<LoanDashboardVO> retrieveDashboard(UserVO userVO) {
-		/*
-		 * Get all loans this user has access to.
-		 */
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl.parseUserModel(userVO));
+	public LoanDashboardVO retrieveDashboard(UserVO userVO) {
 		
-		/*
-		 * For each loan the logged in user has access to, retrieve the loan list
-		 */
-		/*
-		 * Create the dashboardVO object for all the loans
-		 */
-		return null;
+		//Get all loans this user has access to.	 
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl.parseUserModel(userVO));
+		LoanDashboardVO loanDashboardVO = LoanServiceImpl.buildLoanDashboardVoFromLoanList(loanList);
+		
+		
+		return loanDashboardVO;
 	}
+	
+	/**
+	 * it returns dashboardVO from list of loans
+	 * @param loanList
+	 * @return
+	 */
+	public static LoanDashboardVO buildLoanDashboardVoFromLoanList(List<Loan> loanList) {
 
+	    LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
+	    List<LoanCustomerVO> loanCustomerVoList = new ArrayList<LoanCustomerVO>();
+	  
+	    if(loanList != null){
+	        for(Loan loan : loanList){
+	            LoanCustomerVO loanCustomerVO = LoanServiceImpl.buildLoanCustomerVoFromUser(loan);
+	            loanCustomerVoList.add( loanCustomerVO );
+	        }
+	    }
+	    
+	    loanDashboardVO.setCustomers( loanCustomerVoList );
+	    //set no of loans as num_found
+	    loanDashboardVO.setNum_found( loanList.size() );
+	    
+	    return loanDashboardVO;
+    }
+	
+	
+	/**
+	 * return loanCustomerVo from loan
+	 * @param loan
+	 * @return
+	 */
+	public static LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
+	    
+
+	    User user = loan.getUser();
+	    LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
+	    
+	    loanCustomerVO.setTime( loan.getCreatedDate().toString() );
+	    loanCustomerVO.setName( user.getFirstName() +  " " + user.getLastName() );
+        loanCustomerVO.setProf_image( user.getPhotoImageUrl() );
+        loanCustomerVO.setPhone_no( user.getPhoneNumber() );
+        
+        //TODO get these hard coded data from entity
+        loanCustomerVO.setProcessor( "Johny Tester" );
+        loanCustomerVO.setPurpose( "Purchase TBD" );
+        loanCustomerVO.setAlert_count( "3" );
+        loanCustomerVO.setCredit_score( "732" );
+	    
+        return loanCustomerVO;
+	}
 }
