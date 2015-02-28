@@ -3,9 +3,9 @@
 		<div class="lp-pic-wrapper lp-item-agent clearfix">
 			<div class="lp-pic float-left"></div>
 			<div class="lp-pic-txt float-left">
-				<div class="lp-txt1">${userVO.displayName}</div>
-				<div class="lp-txt2">${userVO.userRole.roleDescription }</div>
-				<div class="lp-txt3">${userVO.phoneNumber }</div>
+				<div class="lp-txt1">anoop</div>
+				<div class="lp-txt2">1222</div>
+				<div class="lp-txt3">32434</div>
 			</div>
 		</div>
 		<div class="lp-item-agent clearfix">
@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-item-agent clearfix" onclick="paintMyLoansView();">
+		<div class="lp-item-agent clearfix" onclick="paintAgentDashboard();">
 			<div class="lp-item-header">my loans</div>
 			<div class="lp-item-body lp-agent-item2">
 				<div class="lp-item-body-row lp-item-body-top-row">
