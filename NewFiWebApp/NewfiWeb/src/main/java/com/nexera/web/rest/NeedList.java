@@ -2,10 +2,13 @@ package com.nexera.web.rest;
 
 import java.util.List;
 
+import javax.ws.rs.PathParam;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.core.service.NeedsListService;
 
 @RestController
+@RequestMapping(value="/loanneeds/")
 public class NeedList {
 
 	@Autowired
@@ -30,8 +34,9 @@ public class NeedList {
 			.getLogger(NeedList.class);
 	
 
-	@RequestMapping(value = "/loanneeds/get" , method=RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getLoanNeeds(@RequestParam(required=true) int loanId) {
+	@RequestMapping(value = "{loanId}" , method=RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getLoanNeeds(@PathVariable int loanId) {
+		System.out.println(loanId+"-----------------------");
 		CommonResponseVO response=new CommonResponseVO();
 		try {
 			List<ManagerNeedVo> loanNeeds=needsListService.getLoansNeedsList(loanId);
@@ -50,7 +55,7 @@ public class NeedList {
 		return response; 
 	}
 
-	@RequestMapping(value = "/loanneeds/save" , method=RequestMethod.POST)
+	@RequestMapping(value = "{loanId}" , method=RequestMethod.POST)
 	public @ResponseBody CommonResponseVO saveLoanNeeds(@RequestParam(required=true) int loanId,String needs) {
 		CommonResponseVO response=new CommonResponseVO();
 		try {
@@ -81,7 +86,7 @@ public class NeedList {
 		}
 		return response; 
 	}
-	@RequestMapping(value = "/loanneeds/custom/list" , method=RequestMethod.GET)
+	@RequestMapping(value = "custom" , method=RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCustomNeedsList() {
 		CommonResponseVO response=new CommonResponseVO();
 		try {
@@ -98,7 +103,7 @@ public class NeedList {
 		}
 		return response; 
 	}
-	@RequestMapping(value = "/loanneeds/custom/save" , method=RequestMethod.POST)
+	@RequestMapping(value = "custom" , method=RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
 		CommonResponseVO response=new CommonResponseVO();
 		try {

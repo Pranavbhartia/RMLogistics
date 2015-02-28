@@ -10,7 +10,7 @@ function getLoanNeedsManagerContext(loanId){
 			var ob=this;
 			var data={};
 			ob.customList={};
-			ajaxRequest("rest/loanneeds/custom/list","GET","json",data,function(response){
+			ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
 				if(response.error){
 
 				}else{
@@ -98,10 +98,12 @@ function getLoanNeedsManagerContext(loanId){
 				data.description=desc;
 				var exist;
 				var categoryList=ob.customList[f_category];
-				for(var i=0;i<categoryList.length;i++){
-					if(categoryList[i].title==label){
-						exist=categoryList[i];
-						break;
+				if(categoryList){
+					for(var i=0;i<categoryList.length;i++){
+						if(categoryList[i].title==label){
+							exist=categoryList[i];
+							break;
+						}
 					}
 				}
 
@@ -121,7 +123,7 @@ function getLoanNeedsManagerContext(loanId){
 							alert("Need already exist");
 						}
 				}else{
-					ajaxRequest("rest/loanneeds/custom/save","POST","json",data,function(response){
+					ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
 
 						}else{
@@ -152,7 +154,7 @@ function getLoanNeedsManagerContext(loanId){
 			var data={};
 			data.loanId=this.loanId;
 			var ob=this;
-			ajaxRequest("rest/loanneeds/get","GET","json",data,function(response){
+			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
 				if(response.error){
 
 				}else{
@@ -224,7 +226,7 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			data.needs=JSON.stringify(this.selectedNeeds)
 			var ob=this;
-			ajaxRequest("rest/loanneeds/save","POST","json",data,function(response){
+			ajaxRequest("rest/loanneeds/"+this.loanId,"POST","json",data,function(response){
 				if(response.error){
 					alert(response.error.message);
 				}else{
@@ -251,7 +253,8 @@ function paintAgentNeedsListPage(){
 	var loanNeedContext=getLoanNeedsManagerContext(1);//Insert Proper Loan Id here
 	loanNeedContext.init(function(){
 		appendDocumentToolTip();
-		appendCustomerDetailHeader();
+		var loandetails={"id":1,"createdDate":"Dec 12, 2015 12:00:00 AM","deleted":false,"modifiedDate":"Dec 12, 2015 12:00:00 AM","name":"Sample loan","status":"IN_PROGRESS","user":{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},"loanTeam":[{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},{"id":2,"emailId":"test2@gmail.com","firstName":"Loan","lastName":"Manager","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}},{"id":3,"emailId":"test3@gmail.com","firstName":"Loan","lastName":"Manager2","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}}]};
+		appendCustomerDetailHeader(loandetails);
 		appendInitialNeedsListWrapper();
 		paintUploadNeededItemsPage();
 	})

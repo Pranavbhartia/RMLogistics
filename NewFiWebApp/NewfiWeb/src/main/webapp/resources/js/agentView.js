@@ -967,8 +967,9 @@ function appendAddTeamMemberWrapper() {
 	}).html("User Type");
 
 	var userTypeSel = $('<div>').attr({
+		"id" : "add-memeber-user-type",
 		"class" : "add-member-sel float-right"
-	}).html("Realtor");
+	});
 
 	userTypeCont.append(userTypeSel);
 
@@ -978,9 +979,26 @@ function appendAddTeamMemberWrapper() {
 
 	var userNameSel = $('<div>').attr({
 		"id" : "add-member-sel",
-		"class" : "add-member-sel float-right"
+		"class" : "add-member-sel-search float-right clearfix"
 	});
 
+	var userNameInput = $('<input>').attr({
+		"id" : "add-member-input",
+		"class" : "add-member-input float-left"
+	}); 
+	
+	var downArrow = $('<div>').attr({
+		"class" : "add-member-down-arrow float-right"
+	}).on('click',function(){
+		if($('#add-username-dropdown-cont').css("display") == "block"){
+			hideUserNameDropDown();
+		}else{
+			showUserNameDropDown();
+		}
+	});
+	
+	
+	userNameSel.append(userNameInput).append(downArrow);
 	userNameCont.append(userNameSel);
 
 	container.append(userTypeCont).append(userNameCont);
@@ -990,7 +1008,173 @@ function appendAddTeamMemberWrapper() {
 
 	// function to append create user popup
 	appendCreateUserPopup();
+	appendUserTypeDropDown();
+	appendUserNameDropDown();
 }
+
+function appendUserNameDropDown(){
+	var dropdownCont = $('<div>').attr({
+		"id" : "add-username-dropdown-cont",
+		"class" : "add-member-dropdown-cont hide"
+	});
+	$('#add-member-sel').parent().append(dropdownCont);
+}
+
+
+function showUserNameDropDown(){
+	$('#add-username-dropdown-cont').css({
+		"left" : $('#add-member-sel').offset().left
+	});
+	$('#add-username-dropdown-cont').show();
+	paintUserNameDropDown();
+}
+
+function hideUserNameDropDown(){
+	$('#add-username-dropdown-cont').hide();
+}
+
+function paintUserNameDropDown(values){
+	var dropdownCont = $('#add-username-dropdown-cont');
+	dropdownCont.html('');
+	
+	values = [
+	         		{
+	         		    "id": 1,
+	         		    "roleCd": "Realtor",
+	         		    "label": "Realtor",
+	         		    "roleDescription": "Realtor"
+	         		},
+	         		{
+	         		    "id": 2,
+	         		    "roleCd": "Sales Manager",
+	         		    "label": "Sales Manager",
+	         		    "roleDescription": "Sales Manager"
+	         		},
+	         		{
+	         		    "id": 3,
+	         		    "roleCd": "Loan Manager",
+	         		    "label": "Loan Manager",
+	         		    "roleDescription": "Loan Manager"
+	         		},
+	         		{
+	         		    "id": 4,
+	         		    "roleCd": "Processor",
+	         		    "label": "Processor",
+	         		    "roleDescription": "Processor"
+	         		},
+	         		{
+	         		    "id": 5,
+	         		    "roleCd": "Setup",
+	         		    "label": "Setup",
+	         		    "roleDescription": "Setup"
+	         		}
+	         	];
+	
+	if(values != undefined && values.length >0){
+		for(var i=0; i<values.length; i++){
+			var value = values[i];
+			var dropDownRow = $('<div>').attr({
+				"class" : "add-member-dropdown-row"
+			}).html(value.label);
+			dropdownCont.append(dropDownRow);
+		}
+	}
+	var addUserdropDownRow = $('<div>').attr({
+		"id" : "add-member-user",
+		"class" : "add-member-dropdown-row"
+	}).html("Add New User");
+	dropdownCont.append(addUserdropDownRow);
+}
+
+
+$(document).on('click','#add-memeber-user-type',function(event){
+	event.stopImmediatePropagation();
+	if($('#add-usertype-dropdown-cont').css("display") == "block"){
+		hideUserTypeDropDown();
+	}else{
+		showUserTypeDropDown();
+	}
+});
+
+
+//Click function to create a user
+$(document).on('click', '#add-member-user', function(event) {
+	event.stopImmediatePropagation();
+	hideUserNameDropDown();
+	showCreateUserPopup();
+});
+
+function showUserTypeDropDown(){
+	$('#add-usertype-dropdown-cont').css({
+		"left" : $('#add-memeber-user-type').offset().left
+	});
+	$('#add-usertype-dropdown-cont').show();
+}
+
+function hideUserTypeDropDown(){
+	$('#add-usertype-dropdown-cont').hide();
+}
+
+function appendUserTypeDropDown(){
+	var dropdownCont = $('<div>').attr({
+		"id" : "add-usertype-dropdown-cont",
+		"class" : "add-member-dropdown-cont hide"
+	});
+	
+	var userRoles = [
+		{
+		    "id": 1,
+		    "roleCd": "Realtor",
+		    "label": "Realtor",
+		    "roleDescription": "Realtor"
+		},
+		{
+		    "id": 2,
+		    "roleCd": "Sales Manager",
+		    "label": "Sales Manager",
+		    "roleDescription": "Sales Manager"
+		},
+		{
+		    "id": 3,
+		    "roleCd": "Loan Manager",
+		    "label": "Loan Manager",
+		    "roleDescription": "Loan Manager"
+		},
+		{
+		    "id": 4,
+		    "roleCd": "Processor",
+		    "label": "Processor",
+		    "roleDescription": "Processor"
+		},
+		{
+		    "id": 5,
+		    "roleCd": "Setup",
+		    "label": "Setup",
+		    "roleDescription": "Setup"
+		}
+	];
+	
+	for(var i=0; i<userRoles.length; i++){
+		var userRole = userRoles[i];
+		var dropDownRow = $('<div>').attr({
+			"class" : "add-member-dropdown-row"
+		}).html(userRole.label)
+		.on('click',function(event){
+			event.stopImmediatePropagation();
+			$('#add-memeber-user-type').html($(this).html());
+			hideUserTypeDropDown();
+		});
+		dropdownCont.append(dropDownRow);
+	}
+	
+	$('#add-memeber-user-type').parent().append(dropdownCont);
+}
+
+$(document).click(function(){
+	if($('#add-usertype-dropdown-cont').css("display") == "block"){
+		hideUserTypeDropDown();
+	}
+});
 
 var users = [ {
 	"firstName" : "Jessica",
@@ -1286,15 +1470,6 @@ function appendCreateUserPopup() {
 
 	$('#create-user-popup').append(saveBtn);
 }
-
-$(document).on('click', '#add-member-sel', function(event) {
-	event.stopImmediatePropagation();
-	if ($('#create-user-popup').css("display") == "block") {
-		hideCreateUserPopup();
-	} else {
-		showCreateUserPopup();
-	}
-});
 
 $(document).on('click', '#create-user-popup', function(event) {
 	event.stopImmediatePropagation();
