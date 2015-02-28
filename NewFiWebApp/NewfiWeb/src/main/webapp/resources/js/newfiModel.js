@@ -1,3 +1,4 @@
+var newfiObject=null;
 var currentHistoryUrl = '';
 var historyCallback = false;
 var refreshSupport = false;
@@ -16,19 +17,101 @@ SNEnum = {
 	LOANPROGRESS : 4
 }
 
+function initialize(newfi){
+	newfiObject = newfi;
+	newfiObject.user = JSON.parse(newfi.user);
+}
 function globalBinder(){
 	
-	$(document).on("click", ".lp-item" , function(element) {
-		saveState(jQuery.data( element, "enum" ).pnName,null,null);
+	$(document).on("click", ".lp-item" , function() {
+		
+		saveState($.data( this, "enum" ).pnName,null,null);
 		return true;
     });
 }
 
 function globalSNBinder(){
-	$(document).on("click", ".lp-t2-item" , function(element) {
-		saveState(PNEnum.LOAN,jQuery.data( element, "enum" ).snName,null);
+	$(document).on("click", ".lp-t2-item" , function() {
+		saveState(PNEnum.LOAN,$.data( this, "snEnum" ).snName,null);
 		return true;
     });
+}
+
+function bindDataToPN(){
+	//Assign values to primary navigation
+	var divArray = $('.left-panel >div');
+	$('.left-panel >div').each(function(){
+		var id = $(this).attr('id');
+		switch (id) {
+		case "lp-customer-profile":
+			$.data(this, "enum", {
+				pnName : PNEnum.PROFILE
+
+			});
+			break;
+		case "lp-talk-wrapper":
+			$.data(this, "enum", {
+				pnName : PNEnum.TEAM
+
+			});
+			break;
+		case "lp-loan-wrapper":
+			$.data(this, "enum", {
+				pnName : PNEnum.LOAN
+
+			});
+			break;
+		default:
+			break;
+		}
+	});
+}
+function bindDataToSN(){
+	
+	
+	
+	$('.lp-t2-wrapper >div').each(function(){
+		
+		var id = $(this).attr('id');
+		var step=id.substr(id.length-1,id.length-2);
+		var divLp = $("#lp-step" + step);
+		switch (step) {
+		case "1":
+			$.data(this, "snEnum", {
+				snName : SNEnum.GETTINGTOKNOWNEWFI
+
+			});
+			break;
+		case "2":
+			$.data(this, "snEnum", {
+				snName : SNEnum.COMPLETEAPPLICATION
+
+			});
+			break;
+		case "3":
+			$.data(this, "snEnum", {
+				snName : SNEnum.LOCKRATE
+
+			});
+			break;
+		case "4":
+			$.data(this, "snEnum", {
+				snName : SNEnum.UPLOAD
+
+			});
+			break;
+		case "5":
+			$.data(this, "snEnum", {
+				snName : SNEnum.LOANPROGRESS
+
+			});
+			break;
+
+		default:
+			break;
+		}	
+	});
+	
 }
 
 /**
@@ -44,13 +127,19 @@ function globalSNBinder(){
 function saveState(primaryNav, secondaryNav, url) {
 
 	var hashUrl = "";
-	if (url != null) {
-		hashUrl = 'pn=' + primaryNav + "&sn=" + secondaryNav;
-	} else {
-		hashUrl = 'pn=' + primaryNav + "&sn=" + secondaryNav + "&" + url;
-	}
+//	if (url == null) {
+//		hashUrl = 'pn=' + primaryNav + "&sn=" + secondaryNav;
+//	} else {
+//		hashUrl = 'pn=' + primaryNav + "&sn=" + secondaryNav + "&" + url;
+//	}
 
-	history.pushState(getRandomID(), null, "?q=" + encodeURIComponent(hashUrl));
+	hashUrl = 'pn/' + primaryNav + getUrlHashFunction(secondaryNav,"&sn/") +getUrlHashFunction(url,"&url/"); 
+	
+	history.pushState(getRandomID(), null, "#" + hashUrl);
+}
+
+function getUrlHashFunction(tag,key){
+	return tag==null?"":key+tag;
 }
 
 function retrieveState() {
@@ -58,9 +147,9 @@ function retrieveState() {
 		console.log('refresh not supported');
 		return;
 	}
-	var decodedlocation = decodeURIComponent(window.location.search
-			.substring(1));
-	var newLocation = decodedlocation.split("q=");
+	var decodedlocation = window.location.search
+			.substring(1);
+	var newLocation = decodedlocation.split("#");
 	newLocation = newLocation && newLocation.length == 2 ? newLocation[1]
 			: null;
 	// parse the parameters out from the url key
@@ -68,7 +157,7 @@ function retrieveState() {
 	if (newLocation) {
 		var entries = newLocation.split("&");
 		for (var i = 0; i < entries.length; i++) {
-			var bits = entries[i].split("=");
+			var bits = entries[i].split("/");
 			if (bits.length == 2) {
 				params[bits[0]] = bits[1];
 			}

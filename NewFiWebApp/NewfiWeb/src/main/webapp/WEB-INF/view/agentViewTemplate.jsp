@@ -8,7 +8,6 @@
 		<link href="resources/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/jquery-ui.css" rel="stylesheet">
 		<link href="resources/css/dropzone.css" rel="stylesheet">
-		<link href="resources/css/style-resp.css" rel="stylesheet">
 	    <link href="resources/css/styles.css" rel="stylesheet">
 	    <link href="resources/css/style-resp.css" rel="stylesheet">
 	</head>
@@ -23,8 +22,9 @@
 	</div>
 		<jsp:include page="footer.jsp"></jsp:include>
 		<script>
-				
+		var newfi = ${newfi};
 			$(document).ready(function(){
+				initialize(newfi);
 				isAgentTypeDashboard=true;
 				paintAgentDashboard();
 				$(window).resize(function(){

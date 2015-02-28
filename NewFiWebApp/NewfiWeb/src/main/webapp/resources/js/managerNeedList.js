@@ -4,15 +4,162 @@ function getLoanNeedsManagerContext(loanId){
 		loanId:loanId,
 		needsList:[],
 		selectedNeeds:[],
-		getNeedsList:function(callback){
-			var data={};
-			data.loanId=1;
+		customList:{},
+		needLookup:{},
+		getCustomNeedList:function(callback){
 			var ob=this;
-			ajaxRequest("rest/getloanneeds","GET","json",data,function(response){
-				if(response.Error){
+			var data={};
+			ob.customList={};
+			ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
+				if(response.error){
 
 				}else{
-					ob.needsList=response.Result;
+					var customList=response.resultObject;
+					for(var i=0;i<customList.length;i++){
+						ob.addCustomNeedToList(customList[i]);
+					}
+					if(callback){
+						callback(ob);
+					}
+				}
+				
+			});
+		},
+		addCustomNeedToList:function(need){
+			var ob=this;
+			var category=need.needCategory;
+			switch(category){
+				case "Credit/Liabilities":
+					if(!ob.customList.liability){
+						ob.customList.liability=[];
+					}
+					ob.customList.liability.push(need);
+				    break;
+			    case "Property":
+			    	if(!ob.customList.property){
+						ob.customList.property=[];
+					}
+					ob.customList.property.push(need);
+				    break;
+			    case "Income/Assets":
+			    	if(!ob.customList.income){
+						ob.customList.income=[];
+					}
+					ob.customList.income.push(need);
+				    break;
+			    case "Other":
+			   		if(!ob.customList.Other){
+						ob.customList.Other=[];
+					}
+					ob.customList.Other.push(need);
+				    break;
+			}
+		},
+		mapNeedCategory : function (category){
+			switch(category){
+				case "liability":
+				        return "Credit/Liabilities";
+			    case "property":
+			    	return "Property";
+			    case "income":
+			    	return "Income/Assets";
+			    case "other":
+			   		return "Other"
+			}
+		},
+		mapNeedCategoryBack : function (category){
+			switch(category){
+				case "Credit/Liabilities":
+				        return "liability";
+			    case "Property":
+			    	return "property";
+			    case "Income/Assets":
+			    	return "income";
+			    case "Other":
+			   		return "other";
+			}
+		},
+		saveCustomNeed:function(callback){
+			var ob=this;
+			var f_category=$("#need_doc_type").val();
+			var category=ob.mapNeedCategory($("#need_doc_type").val());
+			var label=$("#need_doc_title").val();
+			var desc=$("#need_doc_desc").val();
+			if(label==""){
+				alert("Invalid document title");
+			}else if(desc==""){
+				alert("Invalid document description");
+			}else if(category==""){
+				alert("Invalid document type");
+			}else{
+				var data={};
+				data.category=category;
+				data.label=label;
+				data.description=desc;
+				var exist;
+				var categoryList=ob.customList[f_category];
+				if(categoryList){
+					for(var i=0;i<categoryList.length;i++){
+						if(categoryList[i].title==label){
+							exist=categoryList[i];
+							break;
+						}
+					}
+				}
+
+				if(exist){
+						if(!ob.needLookup[exist.title]){
+							var document = exist;
+							document.isChecked=true;
+							ob.addCustomNeedToList(document);
+							var newNeedRow = getNeededDocumentRow(document);
+							
+							$('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').append(newNeedRow);
+							clearAddNeedForm();
+							if(callback){
+								callback();
+							}
+						}else{
+							alert("Need already exist");
+						}
+				}else{
+					ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
+						if(response.error){
+
+						}else{
+							var componentId=response.resultObject;
+							var document = {
+								"isChecked" : true,
+								"title" : label,
+								"desc" : desc,
+								"needType" : componentId,
+								"needCategory" : category
+							};
+							ob.addCustomNeedToList(document);
+							var newNeedRow = getNeededDocumentRow(document);
+							
+							$('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').append(newNeedRow);
+							clearAddNeedForm();
+							if(callback){
+								callback();
+							}
+						}
+						
+					});
+				}
+				
+			}
+		},
+		getNeedsList:function(callback){
+			var data={};
+			data.loanId=this.loanId;
+			var ob=this;
+
+			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
+				if(response.error){
+				
+				}else{
+					ob.needsList=response.resultObject;
 					if(callback){
 						callback(ob);
 					}
@@ -21,21 +168,23 @@ function getLoanNeedsManagerContext(loanId){
 			});
 		},
 		cleanDocData:function(){
-			docData.income=[];
+			docData.liability=[];
 			docData.property=[];
 			docData.asset=[];
 			docData.other=[];
+			this.needLookup={};
 		},
 		populateNeedsList:function(callback){
 			this.cleanDocData();
+			var ob=this;
 			var arrayLength = this.needsList.length;
 			for (var i = 0; i < arrayLength; i++) {
 				var category=this.needsList[i].needCategory;
-
+				ob.needLookup[this.needsList[i].title]=this.needsList[i];
 			    switch (category) {
 				    case "Credit/Liabilities":
 				        //append in Credit/Liabilities div
-				        docData.income.push(this.needsList[i]);
+				        docData.liability.push(this.needsList[i]);
 				       // $('#check').append('<input type="checkbox" name="needsCheckBox" needId="'needsList[i].needType'" title="'+needsList[i].description+'" checked="'+needsList[i].required+'">' + needsList[i].label+'</input>');
 				        break;
 				    case "Property":
@@ -78,11 +227,11 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			data.needs=JSON.stringify(this.selectedNeeds)
 			var ob=this;
-			ajaxRequest("http://localhost:8080/NewfiWeb/rest/saveloanneeds","POST","json",data,function(response){
-				if(response.Error){
-
+			ajaxRequest("rest/loanneeds/"+this.loanId,"POST","json",data,function(response){
+				if(response.error){
+					alert(response.error.message);
 				}else{
-					
+					alert("Save Successful")
 					if(callback){
 						callback(ob);
 					}
@@ -94,6 +243,7 @@ function getLoanNeedsManagerContext(loanId){
 			this.getNeedsList(function(ob){
 				ob.populateNeedsList(callback);
 			});
+			this.getCustomNeedList();
 		}
 	};
 	return loanNeedsListContext;
@@ -104,7 +254,8 @@ function paintAgentNeedsListPage(){
 	var loanNeedContext=getLoanNeedsManagerContext(1);//Insert Proper Loan Id here
 	loanNeedContext.init(function(){
 		appendDocumentToolTip();
-		appendCustomerDetailHeader();
+		var loandetails={"id":1,"createdDate":"Dec 12, 2015 12:00:00 AM","deleted":false,"modifiedDate":"Dec 12, 2015 12:00:00 AM","name":"Sample loan","status":"IN_PROGRESS","user":{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},"loanTeam":[{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},{"id":2,"emailId":"test2@gmail.com","firstName":"Loan","lastName":"Manager","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}},{"id":3,"emailId":"test3@gmail.com","firstName":"Loan","lastName":"Manager2","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}}]};
+		appendCustomerDetailHeader(selectedUserDetail);
 		appendInitialNeedsListWrapper();
 		paintUploadNeededItemsPage();
 	})
@@ -126,11 +277,11 @@ function appendInitialNeedsListWrapper(){
 		"class" : "initial-needs-container clearfix"
 	});
 	
-	var incomeDocContainer = getNeedsListDocumentContainer("income",docData.income).addClass('float-left');
+	var incomeDocContainer = getNeedsListDocumentContainer("income",docData.asset).addClass('float-left');
 	
 	var propertyDocContainer = getNeedsListDocumentContainer("property",docData.property).addClass('float-right');
 	
-	var assetDocContainer = getNeedsListDocumentContainer("asset",docData.asset).addClass('float-right');
+	var assetDocContainer = getNeedsListDocumentContainer("Liabilities",docData.liability).addClass('float-right');
 	
 	var otherDocContainer = getNeedsListDocumentContainer("other",docData.other).addClass('float-left');
 	
@@ -149,7 +300,7 @@ function appendInitialNeedsListWrapper(){
 	var savebtn = $('<div>').attr({
 		"id" : "",
 		"class" : "need-list-save-btn",
-		"onclick": "testFun()"
+		"onclick": "saveLoanNeeds()"
 	}).html("Save Needs");
 	
 	savebtnWrapper.append(savebtn);
@@ -210,8 +361,11 @@ function getNeededDocumentRow(document){
 	
 	return row.append(checkBox).append(docTitle);
 }
-function testFun(){
+function saveLoanNeeds(){
 	contxt.updateNeedsList(function(){
 		contxt.saveSelectedNeedsList();
 	});
+}
+function saveCustomNeed(){
+	contxt.saveCustomNeed();
 }

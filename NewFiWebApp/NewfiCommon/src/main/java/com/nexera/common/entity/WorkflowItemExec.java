@@ -13,17 +13,15 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="workflowitemexec")
+@Table(name = "workflowitemexec")
 @NamedQuery(name = "WorkflowItemExec.findAll", query = "SELECT w FROM WorkflowItemExec w")
 public class WorkflowItemExec implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private Integer completionTime;
 	private Date creationDate;
 	private Date modifiedDate;
-	private byte[] params;
-	private byte[] result;
 	private Date startTime;
+	private Date endTime;
 	private Boolean status;
 	private Boolean success;
 	private WorkflowItemMaster workflowItemMaster;
@@ -42,13 +40,13 @@ public class WorkflowItemExec implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "completion_time")
-	public Integer getCompletionTime() {
-		return this.completionTime;
+	@Column(name = "end_time")
+	public Date getEndTime() {
+		return endTime;
 	}
 
-	public void setCompletionTime(Integer completionTime) {
-		this.completionTime = completionTime;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -69,24 +67,6 @@ public class WorkflowItemExec implements Serializable {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
-	}
-
-	@Lob
-	public byte[] getParams() {
-		return this.params;
-	}
-
-	public void setParams(byte[] params) {
-		this.params = params;
-	}
-
-	@Lob
-	public byte[] getResult() {
-		return this.result;
-	}
-
-	public void setResult(byte[] result) {
-		this.result = result;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

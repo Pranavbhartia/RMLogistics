@@ -47,7 +47,6 @@ function getCustomerSecondaryLeftNavStep(step, text){
 		"class" : "lp-t2-item",
 		"onclick" : "changeSecondaryLeftPanel("+step+");"
 	});
-	
 	var img = $('<div>').attr({
 		"class" : "lp-t2-img lp-t2-img"+step
 	});

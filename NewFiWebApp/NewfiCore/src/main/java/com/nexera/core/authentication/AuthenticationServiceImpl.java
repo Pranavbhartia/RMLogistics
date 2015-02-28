@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.dao.UserDao;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
@@ -15,7 +15,7 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Autowired
-	private UserDao userDao;
+	private UserProfileDao userProfileDao;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 	
@@ -32,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throws NoRecordsFetchedException,DatabaseException {
 
 		LOG.info("Fetching the user object from User Dao");
-		return userDao.findByUserName(userName);
+		return userProfileDao.findByUserName(userName);
 
 	}
 

@@ -40,11 +40,14 @@ public class WorkflowItemMaster implements Serializable {
 	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
 	private List<WorkflowItemExec> workflowItems;
-	private User createdBy;
-	private User modifiedBy;
+	private Integer createdBy;
+	private Integer modifiedBy;
 	private WorkflowItemMaster onSuccess;
 	private List<WorkflowItemMaster> listOnSuccess;
 	private WorkflowItemMaster onFailure;
+	private WorkflowMaster parentWorkflowMaster;
+	private WorkflowItemMaster parentWorkflowItemMaster;
+	private List<WorkflowItemMaster> childWorkflowItemMasterList;
 
 	public WorkflowItemMaster() {
 	}
@@ -148,7 +151,6 @@ public class WorkflowItemMaster implements Serializable {
 		return this.workflowItems;
 	}
 
-
 	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
 
 		this.workflowItems = workflowItems;
@@ -205,25 +207,21 @@ public class WorkflowItemMaster implements Serializable {
 		this.onFailure = onFailure;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by")
-	public User getCreatedBy() {
+	@Column(name = "created_by")
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modified_by")
-	public User getModifiedBy() {
+	@Column(name = "modified_by")
+	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(User modifiedBy) {
+	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -237,5 +235,38 @@ public class WorkflowItemMaster implements Serializable {
 	public void setOnSuccess(WorkflowItemMaster onSuccess) {
 		this.onSuccess = onSuccess;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_master")
+	public WorkflowMaster getParentWorkflowMaster() {
+		return parentWorkflowMaster;
+	}
+
+	public void setParentWorkflowMaster(WorkflowMaster parentWorkflowMaster) {
+		this.parentWorkflowMaster = parentWorkflowMaster;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_workflow_item_master")
+	public WorkflowItemMaster getParentWorkflowItemMaster() {
+		return parentWorkflowItemMaster;
+	}
+
+	public void setParentWorkflowItemMaster(
+			WorkflowItemMaster parentWorkflowItemMaster) {
+		this.parentWorkflowItemMaster = parentWorkflowItemMaster;
+	}
+
+	@OneToMany(mappedBy="parentWorkflowItemMaster",fetch=FetchType.LAZY)
+	public List<WorkflowItemMaster> getChildWorkflowItemMasterList() {
+		return childWorkflowItemMasterList;
+	}
+
+	public void setChildWorkflowItemMasterList(
+			List<WorkflowItemMaster> childWorkflowItemMasterList) {
+		this.childWorkflowItemMasterList = childWorkflowItemMasterList;
+	}
+	
+	
 
 }

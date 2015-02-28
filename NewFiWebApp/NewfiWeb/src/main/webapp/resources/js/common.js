@@ -18,6 +18,9 @@ function ajaxRequest(url,type,dataType,data,successCallBack){
 
 
 function formatPhoneNumberToUsFormat(text){
+	if(text == undefined || text ==null){
+		return "";
+	}
     text = text.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, "($1) $2-$3");
     return text;
 }

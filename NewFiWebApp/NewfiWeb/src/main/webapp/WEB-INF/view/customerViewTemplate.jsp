@@ -1,3 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ page isELIgnored="false"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +32,9 @@
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
+	var newfi = ${newfi};
 		$(document).ready(function() {
+			initialize(newfi);
 			changeLeftPanel(2);
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
@@ -35,33 +45,10 @@
 			
 			
 
-			//Assign values to primary navigation
-			var divArray = $('.left-panel >div');
-			for ( var div in divArray) {
-				var id = $(div).attr('id');
-				switch (id) {
-				case "lp-customer-profile":
-					$.data(div, "enum", {
-						pnName : PNEnum.PROFILE
-
-					});
-					break;
-				case "lp-talk-wrapper":
-					$.data(div, "enum", {
-						pnName : PNEnum.TEAM
-
-					});
-					break;
-				case "lp-loan-wrapper":
-					$.data(div, "enum", {
-						pnName : PNEnum.LOAN
-
-					});
-					break;
-				default:
-					break;
-				}
-			}
+			bindDataToPN();
+			bindDataToSN();
+			
+			
 
 			//Bind primary navigation
 			globalBinder();

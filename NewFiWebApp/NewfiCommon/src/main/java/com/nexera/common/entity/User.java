@@ -3,6 +3,7 @@ package com.nexera.common.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +58,8 @@ public class User implements Serializable, UserDetails {
 	private boolean credentialsNonExpired = true;
 	private boolean enabled = true;
 	private GrantedAuthority[] authorities;
+	private Locale userLocale;
+	private String minutesOffset;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -139,7 +142,7 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_detail")
 	public CustomerDetail getCustomerDetail() {
 		return customerDetail;
@@ -232,6 +235,11 @@ public class User implements Serializable, UserDetails {
 		super();
 	}
 
+	public User(Integer userId) {
+		// TODO Auto-generated constructor stub
+		this.id=userId;
+	}
+
 	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
@@ -267,6 +275,13 @@ public class User implements Serializable, UserDetails {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	@Transient
+	public String getMinutesOffset() {
+		return minutesOffset;
+	}
+	public void setMinutesOffset(String minutesOffset) {
+		this.minutesOffset = minutesOffset;
+	}
 
 	@Transient
 	@Override
@@ -277,9 +292,17 @@ public class User implements Serializable, UserDetails {
 	public void setAuthorities(GrantedAuthority[] authorities) {
 		this.authorities = authorities;
 	}
+	
+	@Transient
+	public Locale getUserLocale() {
+		return userLocale;
+	}
+	public void setUserLocale(Locale userLocale) {
+		this.userLocale = userLocale;
+	}
 
 	// bi-directional many-to-one association to UserRole
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
 	public UserRole getUserRole() {
 		return this.userRole;
