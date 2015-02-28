@@ -126,6 +126,13 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setLqbFileId(loan.getLqbFileId());
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setName(loan.getName());
+		if (loan.getLoanStatus() != null)
+			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
+		loanVo.setUser(LoanServiceImpl.buildUserVO(loan.getUser()));
+
+		
+		loanVo.setLoanDetail(LoanServiceImpl.buildLoanDetailVO(loan
+				.getLoanDetail()));
 
 		return loanVo;
 
@@ -166,6 +173,9 @@ public class LoanServiceImpl implements LoanService {
 		userVO.setId(user.getId());
 		userVO.setFirstName(user.getFirstName());
 		userVO.setLastName(user.getLastName());
+		userVO.setEmailId(user.getEmailId());
+		userVO.setPhoneNumber(user.getPhoneNumber());
+		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 		userVO.setUserRole(LoanServiceImpl.buildUserRoleVO(user.getUserRole()));
 
 		return userVO;
@@ -220,6 +230,7 @@ public class LoanServiceImpl implements LoanService {
 			return null;
 
 		LoanDetailVO detailVO = new LoanDetailVO();
+		detailVO.setId(detail.getId());
 		detailVO.setDownPayment(detail.getDownPayment());
 		detailVO.setLoanAmount(detail.getLoanAmount());
 		detailVO.setRate(detail.getRate());

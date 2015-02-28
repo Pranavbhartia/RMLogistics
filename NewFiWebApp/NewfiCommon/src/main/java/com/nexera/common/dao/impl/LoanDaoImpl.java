@@ -162,6 +162,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		if (loan != null) {
 			Hibernate.initialize(loan.getLoanDetail());
 			Hibernate.initialize(loan.getLoanRates());
+			Hibernate.initialize(loan.getUser());
+			Hibernate.initialize(loan.getLoanStatus());
+			Hibernate.initialize(loan.getLoanType());
 		}
 
 		return loan;

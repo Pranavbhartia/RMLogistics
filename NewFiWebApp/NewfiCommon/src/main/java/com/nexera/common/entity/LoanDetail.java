@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NamedQuery(name = "LoanDetail.findAll", query = "SELECT l FROM LoanDetail l")
 public class LoanDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Double downPayment;
 	private Double emi;
 	private Double loanAmount;
@@ -23,11 +23,11 @@ public class LoanDetail implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
