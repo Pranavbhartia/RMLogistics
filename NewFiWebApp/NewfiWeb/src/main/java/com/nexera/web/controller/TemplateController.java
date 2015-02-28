@@ -23,7 +23,7 @@ public class TemplateController extends DefaultController {
 
 			User user = loadDefaultValues(model, req);
 
-			if (user.getUserRole().getRoleCd().equals(UserRolesEum.CUSTOMER)) {
+			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				return JspLookup.CUSTOMER_VIEW;
 			}else{
 				return JspLookup.AGENT_VIEW;
