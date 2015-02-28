@@ -21,28 +21,32 @@ public class TemplateController extends DefaultController {
 
 	@Autowired
 	LoanService loanService;
-	
+
 	@RequestMapping(value = "home.do")
 	public String showCustomerPage(HttpServletRequest req, Model model) {
 
-		
 		try {
 
 			User user = loadDefaultValues(model, req);
 
-			
-			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
+			if (UserRolesEum.CUSTOMER.toString().equals(
+					user.getUserRole().getRoleCd())) {
 				return JspLookup.CUSTOMER_VIEW;
-			}else{
-				LoansProgressStatusVO loansProgressStatusVO =loanService.getLoansProgressForUser(Integer.valueOf(user.getId()));
-				model.addAttribute("progressVO",loansProgressStatusVO);
+			} else {
+				LoansProgressStatusVO loansProgressStatusVO = loanService
+						.getLoansProgressForUser(Integer.valueOf(user.getId()));
+				model.addAttribute("progressVO", loansProgressStatusVO);
 				return JspLookup.AGENT_VIEW;
 			}
 
-			//return JspLookup.CUSTOM;
+			// return JspLookup.CUSTOM;
 
 		} catch (IOException e) {
 			// TODO: Handle exception scenario
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: Handle exception scenario
+
 			e.printStackTrace();
 		}
 		return JspLookup.ERROR;

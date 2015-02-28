@@ -75,20 +75,17 @@ public class DefaultController {
 			}
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
-		
+
 			Gson gson = new Gson();
-			
-			newfi.put("user",gson.toJson(userVO));
-		
+
+			newfi.put("user", gson.toJson(userVO));
+
 			newfi.put("i18n", new JSONObject(languageMap.get(suffix)));
+			model.addAttribute("userVO", userVO);
 		} catch (org.codehaus.jettison.json.JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		model.addAttribute(
-				"username",
-				utils.getDefaultString(user.getFirstName()) + " "
-						+ utils.getDefaultString(user.getLastName()));
 
 		model.addAttribute("newfi", newfi);
 		return user;

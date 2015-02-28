@@ -12,6 +12,7 @@ public class UserVO implements Serializable {
 	private String emailId;
 	private String firstName;
 	private String lastName;
+	private String displayName;
 	private String password;
 	private String phoneNumber;
 	private String photoImageUrl;
@@ -201,7 +202,7 @@ public class UserVO implements Serializable {
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
-		
+		this.displayName = this.firstName+this.lastName;
 	}
 
 	
