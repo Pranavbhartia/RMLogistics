@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
+import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.web.constants.JspLookup;
 
@@ -31,6 +32,8 @@ public class TemplateController extends DefaultController {
 			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				return JspLookup.CUSTOMER_VIEW;
 			}else{
+				LoansProgressStatusVO loansProgressStatusVO =loanService.getLoansProgressForUser(Integer.valueOf(user.getId()));
+				model.addAttribute("progressVO",loansProgressStatusVO);
 				return JspLookup.AGENT_VIEW;
 			}
 

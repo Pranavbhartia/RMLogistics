@@ -27,5 +27,5 @@ public interface LoanDao extends GenericDao {
 	
 	List<LoanTeam> getLoanTeamList( Loan loan );
 
-    List<Loan> getLoansForUser( User user );
+    List<Loan> getLoansForUser( Integer userId );
 }

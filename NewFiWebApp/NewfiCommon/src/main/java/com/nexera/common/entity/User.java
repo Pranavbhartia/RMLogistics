@@ -235,6 +235,11 @@ public class User implements Serializable, UserDetails {
 		super();
 	}
 
+	public User(Integer userId) {
+		// TODO Auto-generated constructor stub
+		this.id=userId;
+	}
+
 	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
