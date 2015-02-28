@@ -71,13 +71,13 @@ $(document).ready(function() {
 						<div class="login-input-cont">
 							<input type="text" class="login-input login-input-username"
 								placeholder="Username" id="userId"> <input type="hidden"
-								id="inputEmail" name="j_username" class="hideElements"
+								id="inputEmail" name="j_username" class="hide"
 								placeholder="Email address" required autofocus>
 						</div>
 						<div class="login-input-cont">
 							<input type="password" class="login-input login-input-pwd" id="password" placeholder="Password" >
 							<input type="hidden" name="j_password" id="inputPassword"
-								class="hideElements" >
+								class="hide" >
 						</div>
 						<div class="login-submit-button">Login to your account</div>
 						<div class="forgot-pwd">
