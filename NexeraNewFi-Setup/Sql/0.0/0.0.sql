@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `newfi_schema`;
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
 -- Host: 127.0.0.1    Database: newfi_schema
@@ -1004,7 +1006,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,1,NULL,NULL,NULL,NULL,NULL),(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,1,'6507729312',NULL,NULL,NULL,NULL),(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1291,4 +1293,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-28 17:10:51
+-- Dump completed on 2015-02-28 17:56:28
