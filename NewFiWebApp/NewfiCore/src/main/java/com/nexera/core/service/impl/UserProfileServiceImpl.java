@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
 
@@ -35,7 +38,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setEmailId(user.getEmailId());
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-		
+		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
+				.getUserRole()));
 		//userVO.setUsername(user.getUsername());
 		//userVO.setPassword(user.getPassword());
 		/*userVO.setStatus(user.getStatus());
@@ -46,7 +50,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		
 		CustomerDetail customerDetail =  user.getCustomerDetail();
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		
+		if(customerDetail!=null){
 		customerDetailVO.setId(customerDetail.getId());
 		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
 		customerDetailVO.setAddressState(customerDetail.getAddressState());
@@ -58,7 +62,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		}
 		
 		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
-		
+		}
 		
 		
 		
@@ -108,6 +112,47 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return customerDetailVOObj;
 	}
 
+	@Override
+	public List<UserVO> searchUsersByName(String name, UserRoleVO roleVO) {
+
+		UserRole role = UserProfileServiceImpl.parseUserRoleModel(roleVO);
+		return LoanServiceImpl.buildUserVOList(userProfileDao
+				.searchUsersByName(name, role));
+
+	}
+	
+
+	public static UserRoleVO buildUserRoleVO(UserRole role) {
+
+		if (role == null)
+			return null;
+
+		UserRoleVO roleVO = new UserRoleVO();
+
+		roleVO.setId(role.getId());
+		roleVO.setRoleCd(role.getRoleCd());
+		roleVO.setLabel(role.getLabel());
+		roleVO.setRoleDescription(role.getRoleDescription());
+
+		return roleVO;
+
+	}
+
+	public static UserRole parseUserRoleModel(UserRoleVO roleVO) {
+
+		if (roleVO == null)
+			return null;
+
+		UserRole role = new UserRole();
+
+		role.setId(roleVO.getId());
+		role.setRoleCd(roleVO.getRoleCd());
+		role.setLabel(roleVO.getLabel());
+		role.setRoleDescription(roleVO.getRoleDescription());
+
+		return role;
+
+	}
 	
 	
 }

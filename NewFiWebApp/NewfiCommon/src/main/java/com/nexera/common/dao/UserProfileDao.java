@@ -1,11 +1,12 @@
 package com.nexera.common.dao;
 
+import java.util.List;
+
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
-import com.nexera.common.vo.CustomerDetailVO;
-import com.nexera.common.vo.UserVO;
 
 public interface UserProfileDao {
 	
@@ -16,5 +17,7 @@ public interface UserProfileDao {
 	public Integer updateUser(User user);
 
 	public Integer updateCustomerDetails(CustomerDetail CustomerDetail);
+	
+	public List<User> searchUsersByName(String name,UserRole role);
 
 }

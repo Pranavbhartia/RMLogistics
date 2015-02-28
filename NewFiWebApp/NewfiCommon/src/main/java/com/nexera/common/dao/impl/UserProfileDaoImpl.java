@@ -1,6 +1,8 @@
 package com.nexera.common.dao.impl;
 
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -18,6 +20,7 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -98,4 +101,24 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 		return result;
 	}
 
+	@Override
+	public List<User> searchUsersByName(String name, UserRole role) {
+
+		Session session = sessionFactory.getCurrentSession();
+		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
+				+ name + "%'";
+		if (role != null) {
+			searchQuery += " and userRole=:userRole";
+		}
+		int MAX_RESULTS = 50;
+		Query query = session.createQuery(searchQuery);
+
+		if (role != null) {
+			query.setEntity("userRole", role);
+		}
+
+		query.setMaxResults(MAX_RESULTS);
+
+		return query.list();
+	}
 }

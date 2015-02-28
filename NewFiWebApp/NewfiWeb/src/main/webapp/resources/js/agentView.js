@@ -189,17 +189,17 @@ function paintAgentDashboard() {
 
 function paintAgentDashboardCallBack(data) {
 	$('#main-body-wrapper').html(data);
-	
+
 	adjustAgentDashboardOnResize();
 }
 
-
-function getDashboardRightPanel(){
+function getDashboardRightPanel() {
 	var userID = 1;
-	ajaxRequest("rest/loan/retrieveDashboard/"+userID, "GET", "json", {}, paintAgentDashboardRightPanel);
+	ajaxRequest("rest/loan/retrieveDashboard/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
 }
 
-function paintAgentDashboardRightPanel(customerData){
+function paintAgentDashboardRightPanel(customerData) {
 	console.log(customerData);
 	var header = $('<div>').attr({
 		"class" : "agent-customer-list-header clearfix"
@@ -250,7 +250,7 @@ function paintAgentDashboardRightPanel(customerData){
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
-	appendCustomers("leads-container",customerData.customers);
+	appendCustomers("leads-container", customerData.customers);
 }
 
 function appendAgentDashboardContainer() {
@@ -742,7 +742,7 @@ function paintAgentLoanPage(data) {
 	appendCustomerDetailHeader(loanDetails);
 	appendCustomerLoanDetails(loanDetails);
 	appendAddTeamMemberWrapper();
-	appendNewfiTeamWrapper(loanDetails.loanTeam);
+	appendNewfiTeamWrapper(loanDetails);
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
@@ -842,10 +842,16 @@ function appendCustomerDetailHeader(loanDetails) {
 	var rowInitiatedOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
 	}).html("Inititated On");
+	var createdDateStr;
+	var modifiedDateStr;
+	createdDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+			loanDetails.createdDate));
+	modifiedDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+			loanDetails.modifiedDate));
 
 	var rowInitiatedOnValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
-	}).html("01/09/2015 11:58AM");
+	}).html(createdDateStr);
 	rowInitiatedOn.append(rowInitiatedOnTitle).append(rowInitiatedOnValue);
 	cusProfRightContainer.append(rowInitiatedOn);
 
@@ -854,11 +860,11 @@ function appendCustomerDetailHeader(loanDetails) {
 	});
 	var rowLastActiveOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
-	}).html("Last Active On");
+	}).html("Last Acted On");
 
 	var rowLastActiveOnValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
-	}).html("01/24/2015 11:58AM");
+	}).html(modifiedDateStr);
 	rowLastActiveOn.append(rowLastActiveOnTitle).append(rowLastActiveOnValue);
 	cusProfRightContainer.append(rowLastActiveOn);
 
@@ -890,7 +896,8 @@ function appendCustomerLoanDetails(loanDetails) {
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
-		appendLoanDetailsRow("Loan Amount", "$ "+loanDetails.loanDetail.loanAmount);
+		appendLoanDetailsRow("Loan Amount", "$ "
+				+ loanDetails.loanDetail.loanAmount);
 	appendLoanDetailsRow("Lock Rate Details", "4.75 %");
 	appendLoanDetailsRow("Lock Expiration Date", "02/21/2015");
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
@@ -1017,7 +1024,9 @@ var users = [ {
 	}
 } ];
 
-function appendNewfiTeamWrapper(team) {
+function appendNewfiTeamWrapper(loanDetails) {
+	var team = loanDetails.loanTeam;
+	var loanID = loanDetails.id;
 	var wrapper = $('<div>').attr({
 		"class" : "newfi-team-wrapper"
 	});
@@ -1034,7 +1043,7 @@ function appendNewfiTeamWrapper(team) {
 	container.append(tableHeader);
 
 	for (var i = 0; i < team.length; i++) {
-		var tableRow = getTeamListTableRow(team[i]);
+		var tableRow = getTeamListTableRow(team[i], loanID);
 		container.append(tableRow);
 	}
 
@@ -1062,9 +1071,10 @@ function getTeamListTableHeader() {
 	return tableHeaderRow.append(thCol1).append(thCol2).append(thCol3);
 }
 
-function getTeamListTableRow(user) {
+function getTeamListTableRow(user, loanID) {
 	var tableRow = $('<div>').attr({
-		"class" : "newfi-team-list-tr clearfix"
+		"class" : "newfi-team-list-tr clearfix",
+		"userid" : user.id
 	});
 
 	var trCol1 = $('<div>').attr({
@@ -1088,9 +1098,17 @@ function getTeamListTableRow(user) {
 	});
 
 	var userDelIcn = $('<div>').attr({
-		"class" : "user-del-icn"
+		"class" : "user-del-icn",
+		"userid" : user.id,
+		"loanID" : loanID
 	});
-
+	userDelIcn.click(function() {
+		var userID = $(this).attr("userid");
+		var loanID = $(this).attr("loanid");
+		console.log("Delete user called to delete user " + userID
+				+ " out of loan : " + loanID);
+		removeUserFromLoanTeam(userID, loanID);
+	});
 	trCol5.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
@@ -1778,6 +1796,50 @@ function hideDocumentToolTip() {
 
 // TODO - fetches loan details for a loan id
 function getLoanDetails(loanID) {
-	ajaxRequest("rest/loan/get/" + loanID, "GET", "json", {},
-			paintAgentLoanPage);
+	ajaxRequest("rest/loan/" + loanID, "GET", "json", {}, paintAgentLoanPage);
+}
+
+function removeUserFromLoanTeam(userID, loanID) {
+	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "DELETE",
+			"json", {}, onReturnOfRemoveUserFromLoanTeam);
+}
+
+function onReturnOfRemoveUserFromLoanTeam(data) {
+
+	var editLoanTeamVO = data.resultObject;
+	var result = editLoanTeamVO.operationResult;
+	if (!result) {
+		alert("An error occurred, kindly contact admin.");
+		return;
+	}
+
+	var loanID = editLoanTeamVO.loanID;
+	var userID = editLoanTeamVO.userID;
+
+	console.log("User : " + userID + " is removed from loan  : " + loanID);
+	var teamMemberRow = $(".user-del-icn[userid=" + userID + "][loanid="
+			+ loanID + "]");
+	teamMemberRow.parent().parent().remove();
+}
+
+function addUserToLoanTeam(userID, loanID) {
+	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "POST",
+			"json", {}, onReturnOfAddUserToLoanTeam);
+}
+
+function onReturnOfAddUserToLoanTeam(data) {
+
+	var editLoanTeamVO = data.resultObject;
+	var result = editLoanTeamVO.operationResult;
+	if (!result) {
+		alert("An error occurred, kindly contact admin.");
+		return;
+	}
+
+	var loanID = editLoanTeamVO.loanID;
+	var userID = editLoanTeamVO.userID;
+
+	console.log("User : " + userID + " is added to loan  : " + loanID);
+	var teamMemberRow = getTeamListTableRow(editLoanTeamVO.user, loanID);
+	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
 }
