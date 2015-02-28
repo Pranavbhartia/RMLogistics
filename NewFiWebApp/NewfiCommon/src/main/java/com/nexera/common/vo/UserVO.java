@@ -208,7 +208,7 @@ public class UserVO implements Serializable {
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
-		this.displayName = this.firstName+this.lastName;
+		this.displayName = this.firstName+" "+this.lastName;
 	}
 
 	
