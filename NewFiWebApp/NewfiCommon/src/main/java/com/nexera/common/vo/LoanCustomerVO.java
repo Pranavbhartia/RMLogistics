@@ -1,5 +1,6 @@
 package com.nexera.common.vo;
 
+import java.util.Date;
 import java.util.List;
 
 public class LoanCustomerVO {
@@ -12,6 +13,9 @@ public class LoanCustomerVO {
 	private String processor;
 	private String credit_score;
 	private String alert_count;
+	private String role;
+	private Date loanInitiatedOn;
+	private Date lastActedOn;
 	private Integer userID;
 	private Integer loanID;
 	private List<AlertListVO> alerts;
@@ -111,6 +115,30 @@ public class LoanCustomerVO {
 
 	public void setLoanID(Integer loanID) {
 		this.loanID = loanID;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Date getLoanInitiatedOn() {
+		return loanInitiatedOn;
+	}
+
+	public void setLoanInitiatedOn(Date loanInitiatedOn) {
+		this.loanInitiatedOn = loanInitiatedOn;
+	}
+
+	public Date getLastActedOn() {
+		return lastActedOn;
+	}
+
+	public void setLastActedOn(Date lastActedOn) {
+		this.lastActedOn = lastActedOn;
 	}
 
 }
