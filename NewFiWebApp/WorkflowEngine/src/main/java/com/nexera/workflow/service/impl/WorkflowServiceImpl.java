@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowMaster;
@@ -31,6 +32,7 @@ public class WorkflowServiceImpl implements WorkflowService
      * @see com.nexera.workflow.service.WorkflowService#getWorkFlowByWorkFlowType()
      */
     @Override
+    @Transactional
     public WorkflowMaster getWorkFlowByWorkFlowType( String workflowType )
     {
         LOGGER.debug( "Inside method getWorkFlowByWorkFlowType " );
@@ -43,6 +45,7 @@ public class WorkflowServiceImpl implements WorkflowService
      * @see com.nexera.workflow.service.WorkflowService#setWorkflowIntoExecution(com.nexera.workflow.bean.WorkflowMaster)
      */
     @Override
+    @Transactional
     public WorkflowExec setWorkflowIntoExecution( WorkflowMaster workflowMaster )
     {
         LOGGER.debug( "Inside method setWorkflowIntoExecution " );
@@ -52,8 +55,8 @@ public class WorkflowServiceImpl implements WorkflowService
         workflowExec.setCreatedTime( new Date() );
         workflowExec.setWorkflowMaster( workflowMaster );
         workflowExec.setStatus( "Initialized" );
-
-        workflowExec = (WorkflowExec) workflowExecDao.save( workflowExec );
+        int id = (Integer) workflowExecDao.save( workflowExec );
+        workflowExec.setId( id );
         return workflowExec;
     }
 

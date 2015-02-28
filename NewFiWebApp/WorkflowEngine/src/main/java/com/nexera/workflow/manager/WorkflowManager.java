@@ -3,15 +3,14 @@
  */
 package com.nexera.workflow.manager;
 
-import java.util.concurrent.ExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowMaster;
-import com.nexera.workflow.dao.impl.WorkflowMasterDaoImpl;
 import com.nexera.workflow.service.WorkflowService;
 
 
@@ -19,11 +18,12 @@ import com.nexera.workflow.service.WorkflowService;
  * @author Utsav
  *
  */
+@Component
+@Scope ( value = "prototype")
 public class WorkflowManager implements Runnable
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( WorkflowManager.class );
-
 
     private WorkflowMaster workflowMaster;
 

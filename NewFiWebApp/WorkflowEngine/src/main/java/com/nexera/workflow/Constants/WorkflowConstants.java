@@ -9,7 +9,7 @@ package com.nexera.workflow.Constants;
  */
 public class WorkflowConstants
 {
-    public static final String PROPERTY_FILE_NAME = "application.properties";
+    public static final String PROPERTY_FILE_NAME = "application";
 
     public static final String POOL_SIZE = "pool.size";
 }
