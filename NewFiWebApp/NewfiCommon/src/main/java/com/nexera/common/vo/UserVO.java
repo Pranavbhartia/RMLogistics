@@ -51,6 +51,12 @@ public class UserVO implements Serializable {
 	public String getEmailId() {
 		return emailId;
 	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
@@ -202,7 +208,7 @@ public class UserVO implements Serializable {
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
-		this.displayName = this.firstName+this.lastName;
+		this.displayName = this.firstName+" "+this.lastName;
 	}
 
 	

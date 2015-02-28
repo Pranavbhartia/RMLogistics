@@ -120,9 +120,9 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		}
 		String key = null;
 		if(prefix != null){
-			key = subfolderInBucket + "\\"+prefix +file.getName().replaceAll(" ", "_");
+			key = subfolderInBucket + "/"+prefix +file.getName().replaceAll(" ", "_");
 		}else{
-			key = subfolderInBucket + "\\" +file.getName().replaceAll(" ", "_");
+			key = subfolderInBucket + "/" +file.getName().replaceAll(" ", "_");
 		}
 	  
 

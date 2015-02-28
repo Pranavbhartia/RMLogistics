@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import com.amazonaws.util.json.JSONException;
 import com.google.gson.Gson;
-import com.google.gson.JsonSerializer;
-import com.mongodb.util.JSON;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
@@ -72,9 +70,10 @@ public class DefaultController implements InitializingBean {
 			Locale locale = req.getLocale();
 			String suffix = locale.toString();
 
-			if (!languageMap.containsKey(suffix)) {
-				loadLanguageMap(suffix);
-			}
+			Map<String, String> localeText = languageMap.get(suffix);
+			if (localeText==null) {
+				localeText = loadLanguageMap(suffix);
+			} 
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
 
@@ -82,9 +81,9 @@ public class DefaultController implements InitializingBean {
 
 			newfi.put("user", gson.toJson(userVO));
 
-			newfi.put("i18n", new JSONObject(languageMap.get(suffix)));
+			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
-		} catch (org.codehaus.jettison.json.JSONException e) {
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -93,7 +92,8 @@ public class DefaultController implements InitializingBean {
 		return user;
 	}
 
-	private void loadLanguageMap(String suffix) throws IOException {
+	private HashMap<String, String> loadLanguageMap(String suffix)
+			throws IOException {
 		// TODO Auto-generated method stub
 
 		try {
@@ -102,8 +102,10 @@ public class DefaultController implements InitializingBean {
 					.getResourceAsStream("messages_" + suffix + ".properties"));
 			languageMap.put(suffix, new HashMap<String, String>(
 					(Map) properties));
-		} catch (IOException ioe) {
+			return languageMap.get(suffix);
+		} catch (NullPointerException ioe) {
 			LOG.warn("locale file not found, defaulting the user", suffix);
+			return languageMap.get(CommonConstants.DEFAULT_LOCALE);
 
 		}
 

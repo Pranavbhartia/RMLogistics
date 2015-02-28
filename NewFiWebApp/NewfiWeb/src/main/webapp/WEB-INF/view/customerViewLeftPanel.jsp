@@ -1,11 +1,14 @@
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
 		<div id="lp-customer-profile" class="lp-pic-wrapper lp-item clearfix" onclick="showCustomerProfilePage();">
-			<div class="lp-pic float-left"></div>
+			
+			
+     		<div id="myProfilePicture"></div>
+      				
 			<div class="lp-pic-txt float-left">
-				<div class="lp-txt1">Jane Doe</div>
+				<div class="lp-txt1" id ="profileNameId">${user.firstName}</div>
 				<div class="lp-txt2">Home Buyer</div>
-				<div class="lp-txt3">+1 (888) 555-1875</div>
+				<div class="lp-txt3" id= "profilePhoneNumId">${user.phoneNumber}</div>
 			</div>
 		</div>
 		<div id="lp-talk-wrapper" class="lp-talk-wrapper lp-item clearfix" onclick="changeLeftPanel(1);">
