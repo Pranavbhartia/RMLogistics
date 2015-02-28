@@ -1,0 +1,79 @@
+package com.nexera.common.vo;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class UploadedFilesListVO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer id;
+	private Boolean isAssigned;
+	private Boolean isActivate;
+	private String s3path;
+	private LoanVO loan;
+	private UserVO uploadedBy;
+	private Date uploadedDate;
+	private String fileName;
+	private Integer needType;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Boolean getIsAssigned() {
+		return isAssigned;
+	}
+	public void setIsAssigned(Boolean isAssigned) {
+		this.isAssigned = isAssigned;
+	}
+	public Boolean getIsActivate() {
+		return isActivate;
+	}
+	public void setIsActivate(Boolean isActivate) {
+		this.isActivate = isActivate;
+	}
+	public String getS3path() {
+		return s3path;
+	}
+	public void setS3path(String s3path) {
+		this.s3path = s3path;
+	}
+	public LoanVO getLoan() {
+		return loan;
+	}
+	public void setLoan(LoanVO loan) {
+		this.loan = loan;
+	}
+	public UserVO getUploadedBy() {
+		return uploadedBy;
+	}
+	public void setUploadedBy(UserVO uploadedBy) {
+		this.uploadedBy = uploadedBy;
+	}
+	public Date getUploadedDate() {
+		return uploadedDate;
+	}
+	public void setUploadedDate(Date uploadedDate) {
+		this.uploadedDate = uploadedDate;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public Integer getNeedType() {
+		return needType;
+	}
+	public void setNeedType(Integer needType) {
+		this.needType = needType;
+	}
+	
+	
+}

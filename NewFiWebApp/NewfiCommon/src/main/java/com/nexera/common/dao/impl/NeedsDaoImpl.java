@@ -72,6 +72,22 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		}
 	}
 	@Override
+
+	public Integer getLoanNeedListIdByFileId(Integer fileId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.createAlias("uploadFileId", "upFileId");
+		criteria.add(Restrictions.eq("upFileId.id", fileId));
+		LoanNeedsList loanNeedsList =  (LoanNeedsList) criteria.uniqueResult();
+		if(loanNeedsList != null){
+			 LOG.info("loanNeedsList not empty");
+			 return loanNeedsList.getId();
+		}
+		LOG.info("loanNeedsList empty");
+		return null;
+	}
+	
+
 	public List<NeedsListMaster> getMasterNeedsList(Boolean isCustom) {
 		try{
 			Session session = sessionFactory.getCurrentSession();
@@ -87,4 +103,5 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 					hibernateException);
 		}
 	}
+
 }

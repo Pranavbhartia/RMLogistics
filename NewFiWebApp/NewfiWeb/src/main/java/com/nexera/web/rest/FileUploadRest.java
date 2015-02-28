@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,20 +20,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.nexera.common.entity.User;
+import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.ErrorVO;
+import com.nexera.common.vo.FileAssignVO;
 import com.nexera.common.vo.LoanNeedsListVO;
-import com.nexera.common.vo.NeedsListMasterVO;
+import com.nexera.common.vo.UploadFileScreenVO;
+import com.nexera.common.vo.UploadedFilesListVO;
+import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
-import com.nexera.web.controller.FileUploadController;
+
 
 @RestController
 @RequestMapping("/fileupload")
 public class FileUploadRest {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FileUploadRest.class);
 	
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+	
+	@Autowired
+	private NeedsListService needsListService;
+	
+	@Autowired 
+	private LoanService loanService;
+	
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
 	
 	
 	@RequestMapping(value="/upload" , method = RequestMethod.POST ,  headers = "Accept=*")
@@ -38,42 +62,94 @@ public class FileUploadRest {
 		return "true";
 	}
 	
-	@RequestMapping(value="/needlist" , method = RequestMethod.GET)
-	public @ResponseBody String uploadFileToS3Service(){
+	
+	@RequestMapping(value="/loadneedlist/get" , method = RequestMethod.GET)
+	public @ResponseBody String getLoanNeedList(){
+		return new Gson().toJson(needsListService.getLoanNeedsList(1));
+	}
+	
+	@RequestMapping(value="/assignment" , method = RequestMethod.POST)
+	public @ResponseBody String setAssignmentToFiles(@RequestBody  String fileAssignMent){
+		
+		ObjectMapper mapper=new ObjectMapper();
+		TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
+		List<FileAssignVO> val = new ArrayList<FileAssignVO>();
+		try {
+			val = mapper.readValue(fileAssignMent, typeRef);
+			for (FileAssignVO fileAssignVO2 : val) {
+				LOG.info("The file is : "+fileAssignVO2.getFileId()+"  nedd id "+fileAssignVO2.getNeedListId());
+				uploadedFilesListService.updateIsAssignedToTrue( fileAssignVO2.getFileId());
+				uploadedFilesListService.updateFileInLoanNeedList(fileAssignVO2.getNeedListId(), fileAssignVO2.getFileId());
+			}
+		} catch (Exception e) {
+			LOG.info("exception in converting  : " + e.getMessage());
+		} 
+	   return "true";
+	}
+	
+	@RequestMapping(value="/uploadedFile/get/{userId}/{loadId}" , method = RequestMethod.GET)
+	public @ResponseBody String getUserUploadedFileList(@PathVariable ("userId") Integer userId , @PathVariable ("loadId") Integer loadId){
+		LOG.info("getUserUploadedFileList called");
+		List<UploadedFilesListVO> listUploadedFileVO = null;
+		try {
+			listUploadedFileVO = uploadedFilesListService.fetchAll(userId ,  loadId);
+		} catch (Exception e) {
+			LOG.info("getUserUploadedFileList exception  called"+e.getMessage());
+			listUploadedFileVO = Collections.EMPTY_LIST;
+		}
+		return new Gson().toJson(listUploadedFileVO);
+	}
+	
+	
+	@RequestMapping(value="/needlist/get/{userId}/{loanId}" , method = RequestMethod.GET)
+	public @ResponseBody String getNeedList(@PathVariable ("userId") Integer userId ,
+													@PathVariable ("loanId") Integer loanId){
 		LOG.info("File upload Rest service called");
-		List<LoanNeedsListVO> listLoanNeedVo = new ArrayList<LoanNeedsListVO>();
-		LoanNeedsListVO loanNeedsListVO1 = new LoanNeedsListVO();
-		NeedsListMasterVO needsListMasterVO = new NeedsListMasterVO();
-		needsListMasterVO.setId(1);
-		needsListMasterVO.setDescription("Salaried-W-2 forms for the most recent 2 years");
-		loanNeedsListVO1.setNeedsListMaster(needsListMasterVO);
-		listLoanNeedVo.add(loanNeedsListVO1);
 		
-		LoanNeedsListVO loanNeedsListVO2 = new LoanNeedsListVO();
-		NeedsListMasterVO needsListMasterVO2 = new NeedsListMasterVO();
-		needsListMasterVO2.setId(2);
-		needsListMasterVO2.setDescription("Payroll stubs for the past 30 days (showing YTD earnings)");
-		loanNeedsListVO2.setNeedsListMaster(needsListMasterVO2);
-		listLoanNeedVo.add(loanNeedsListVO2);
+		UserVO userVo = new UserVO();
+		userVo.setId(userId);
 		
-		LoanNeedsListVO loanNeedsListVO3 = new LoanNeedsListVO();
-		NeedsListMasterVO needsListMasterVO3 = new NeedsListMasterVO();
-		needsListMasterVO3.setId(3);
-		needsListMasterVO3.setDescription("Refinance - Copy of property tax bill");
-		loanNeedsListVO3.setNeedsListMaster(needsListMasterVO3);
-		listLoanNeedVo.add(loanNeedsListVO3);
 		
-		LoanNeedsListVO loanNeedsListVO4 = new LoanNeedsListVO();
-		NeedsListMasterVO needsListMasterVO4 = new NeedsListMasterVO();
-		needsListMasterVO4.setId(4);
-		needsListMasterVO4.setDescription("Refinance - Copy of homeowner's hazard insurance policy");
-		loanNeedsListVO4.setNeedsListMaster(needsListMasterVO4);
-		listLoanNeedVo.add(loanNeedsListVO4);
-		
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		List<LoanNeedsListVO> loanNeedsVO;
+		List<UploadedFilesListVO> uploadedFilesList;
+		UploadFileScreenVO uploadFileScreenVO = new  UploadFileScreenVO();
+		try {
+			loanNeedsVO = needsListService.getLoanNeedsList(loanId);
+			
+			uploadedFilesList = uploadedFilesListService.fetchAll(userId, loanId);
+			for (UploadedFilesListVO uploadedFilesListVO : uploadedFilesList) {
+				Integer needType = needsListService.getLoanNeedListIdByFileId(uploadedFilesListVO.getId());
+				LOG.info("The need type is : "+needType);
+				uploadedFilesListVO.setNeedType(needType);
+				
+			}
+			
+			uploadFileScreenVO.setListLoanNeedsListVO(loanNeedsVO);
+			uploadFileScreenVO.setListUploadedFilesListVO(uploadedFilesList);
+			commonResponseVO.setResultObject(uploadFileScreenVO);
+		} catch (Exception e) {
+			LOG.info("Exception in needlist/get service "+e.getMessage());
+			ErrorVO errorVo = new ErrorVO();
+			errorVo.setCode("500");
+			errorVo.setMessage("Error in service");
+			commonResponseVO.setError(errorVo);
+		}
 		
 		Gson gson = new Gson();
-		return gson.toJson(listLoanNeedVo);
+		return gson.toJson(commonResponseVO);
 		
+	}
+	
+	private User getUserObject() {
+		final Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			return (User) principal;
+		} else {
+			return null;
+		}
+
 	}
 
 }

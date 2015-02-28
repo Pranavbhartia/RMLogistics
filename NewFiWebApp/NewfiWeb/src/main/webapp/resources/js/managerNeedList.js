@@ -154,9 +154,10 @@ function getLoanNeedsManagerContext(loanId){
 			var data={};
 			data.loanId=this.loanId;
 			var ob=this;
+
 			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
 				if(response.error){
-
+				
 				}else{
 					ob.needsList=response.resultObject;
 					if(callback){

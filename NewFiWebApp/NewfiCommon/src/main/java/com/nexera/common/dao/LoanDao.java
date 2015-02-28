@@ -9,23 +9,30 @@ import com.nexera.common.entity.User;
 
 public interface LoanDao extends GenericDao {
 
+
+	public List<Loan> getLoansOfUser(User user);
+
 	Loan getLoanWithDetails(Integer loanID);
 	
-	List<Loan> getLoansOfUser(User user);
 
-	boolean addToLoanTeam(Loan loan,User user,User addedBy);
 
-	boolean removeFromLoanTeam(Loan loan,User user);
+	public boolean addToLoanTeam(Loan loan,User user,User addedBy);
 
-	List<User> retreiveLoanTeam(Loan loan);
+	public boolean removeFromLoanTeam(Loan loan,User user);
 
-	List<Loan> retreiveLoansAsManager(User loanManager);
+	public List<User> retreiveLoanTeam(Loan loan);
+
+	public List<Loan> retreiveLoansAsManager(User loanManager);
 	
     public LoanAppForm getLoanAppForm(Integer loanId);
+
+
+	public Loan getActiveLoanOfUser(User parseUserModel);
 
 	List<Loan> retrieveLoanForDashboard(User parseUserModel);
 	
 	List<LoanTeam> getLoanTeamList( Loan loan );
 
     List<Loan> getLoansForUser( Integer userId );
+
 }
