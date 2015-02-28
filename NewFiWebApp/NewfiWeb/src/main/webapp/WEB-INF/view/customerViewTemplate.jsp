@@ -32,7 +32,9 @@
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
+	var newfi = ${newfi};
 		$(document).ready(function() {
+			initialize(newfi);
 			changeLeftPanel(2);
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();

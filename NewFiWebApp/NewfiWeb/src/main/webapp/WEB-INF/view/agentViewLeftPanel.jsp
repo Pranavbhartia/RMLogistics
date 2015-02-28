@@ -3,9 +3,9 @@
 		<div class="lp-pic-wrapper lp-item-agent clearfix">
 			<div class="lp-pic float-left"></div>
 			<div class="lp-pic-txt float-left">
-				<div class="lp-txt1">Elen Adarna</div>
-				<div class="lp-txt2">Title Agent</div>
-				<div class="lp-txt3">+1 (888) 555-1987</div>
+				<div class="lp-txt1">${userVO.displayName}</div>
+				<div class="lp-txt2">${userVO.userRole.roleDescription }</div>
+				<div class="lp-txt3">${userVO.phoneNumber }</div>
 			</div>
 		</div>
 		<div class="lp-item-agent clearfix">

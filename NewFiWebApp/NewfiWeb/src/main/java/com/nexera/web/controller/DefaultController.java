@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,16 @@ import org.springframework.ui.Model;
 
 import com.amazonaws.util.json.JSONException;
 import com.google.gson.Gson;
+import com.google.gson.JsonSerializer;
+import com.mongodb.util.JSON;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.UserVO;
 
 @Controller
-public class DefaultController {
+public class DefaultController implements InitializingBean {
 
 	@Autowired
 	protected Utils utils;
@@ -70,16 +75,19 @@ public class DefaultController {
 			if (!languageMap.containsKey(suffix)) {
 				loadLanguageMap(suffix);
 			}
+			UserVO userVO = new UserVO();
+			userVO.setForView(user);
+
+			Gson gson = new Gson();
+
+			newfi.put("user", gson.toJson(userVO));
 
 			newfi.put("i18n", new JSONObject(languageMap.get(suffix)));
+			model.addAttribute("userVO", userVO);
 		} catch (org.codehaus.jettison.json.JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		model.addAttribute(
-				"username",
-				utils.getDefaultString(user.getFirstName()) + " "
-						+ utils.getDefaultString(user.getLastName()));
 
 		model.addAttribute("newfi", newfi);
 		return user;
@@ -88,10 +96,22 @@ public class DefaultController {
 	private void loadLanguageMap(String suffix) throws IOException {
 		// TODO Auto-generated method stub
 
-		Properties properties = new Properties();
-		properties.load(PropertyFileReader.class.getClassLoader()
-				.getResourceAsStream("messages_" + suffix + ".properties"));
-		languageMap.put(suffix, new HashMap<String, String>((Map) properties));
+		try {
+			Properties properties = new Properties();
+			properties.load(PropertyFileReader.class.getClassLoader()
+					.getResourceAsStream("messages_" + suffix + ".properties"));
+			languageMap.put(suffix, new HashMap<String, String>(
+					(Map) properties));
+		} catch (IOException ioe) {
+			LOG.warn("locale file not found, defaulting the user", suffix);
 
+		}
+
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// TODO Auto-generated method stub
+		loadLanguageMap(CommonConstants.DEFAULT_LOCALE);
 	}
 }

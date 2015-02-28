@@ -3,6 +3,8 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.nexera.common.entity.User;
+
 public class UserVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -10,6 +12,7 @@ public class UserVO implements Serializable {
 	private String emailId;
 	private String firstName;
 	private String lastName;
+	private String displayName;
 	private String password;
 	private String phoneNumber;
 	private String photoImageUrl;
@@ -24,6 +27,10 @@ public class UserVO implements Serializable {
 	private List<LoanNotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
+
+	public UserVO() {
+		
+	}
 
 	public int getId() {
 		return id;
@@ -182,6 +189,20 @@ public class UserVO implements Serializable {
 				+ ", loanAppForms=" + loanAppForms + ", loanNotifications="
 				+ loanNotifications + ", loanTeams=" + loanTeams
 				+ ", userEmails=" + userEmails + "]";
+	}
+
+	public void setForView(User user) {
+		// TODO Auto-generated method stub
+		this.firstName=user.getFirstName();
+		this.lastName=user.getLastName();
+		this.phoneNumber=user.getPhoneNumber();
+		this.photoImageUrl=user.getPhotoImageUrl();
+		this.id=user.getId();
+		UserRoleVO roleVO= new UserRoleVO();
+		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
+		this.userRole=roleVO;
+		this.emailId=user.getEmailId();
+		this.displayName = this.firstName+this.lastName;
 	}
 
 	

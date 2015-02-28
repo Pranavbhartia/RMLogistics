@@ -1,3 +1,4 @@
+var newfiObject=null;
 var currentHistoryUrl = '';
 var historyCallback = false;
 var refreshSupport = false;
@@ -16,6 +17,10 @@ SNEnum = {
 	LOANPROGRESS : 4
 }
 
+function initialize(newfi){
+	newfiObject = newfi;
+	newfiObject.user = JSON.parse(newfi.user);
+}
 function globalBinder(){
 	
 	$(document).on("click", ".lp-item" , function() {
