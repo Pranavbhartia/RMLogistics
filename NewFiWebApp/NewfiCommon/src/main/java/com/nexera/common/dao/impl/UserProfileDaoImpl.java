@@ -64,11 +64,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 	public Integer updateUser(User user) {
 		
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
 		Query query = (Query) session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
+		query.setParameter("priPhoneNumber", user.getPhoneNumber());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -90,6 +91,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus", customerDetail.getProfileCompletionStatus());
 		query.setParameter("id", customerDetail.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public Integer updateUser(String s3ImagePath,Integer userid) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.photoImageUrl = :imagePath WHERE usr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("imagePath", s3ImagePath);
+		query.setParameter("id", userid);
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
 		return result;

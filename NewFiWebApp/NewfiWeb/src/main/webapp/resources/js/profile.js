@@ -1,108 +1,111 @@
 /*
-* Functions for customer profile page
-*/
+ * Functions for customer profile page
+ */
 
-function showCustomerProfilePage(){
-	ajaxRequest("customerProfile.do", "GET", "HTML", {}, showCustomerProfilePageCallBack);
+function showCustomerProfilePage() {
+	 $('.lp-right-arrow').remove();
+     $('#right-panel').html('');
+     $('.lp-item').removeClass('lp-item-active');
+     $('#lp-customer-profile').addClass('lp-item-active');
+     var rightArrow = $('<div>').attr({
+             "class" : "lp-right-arrow lp-prof-arrow"
+     });
+     $('#lp-customer-profile').append(rightArrow);
+     var profileMainContainer = $('<div>').attr({
+             "id" : "profile-main-container",
+             "class" : "right-panel-messageDashboard float-left"
+     });
+     $('#right-panel').append(profileMainContainer);
+	
+    paintCutomerProfileContainer();
+ 	adjustRightPanelOnResize();
+ 	getUserProfileData();
 }
 
-function getUserProfileData(){
-	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+function getUserProfileData() {
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {},
+			appendCustPersonalInfoWrapper);
 }
 
-function userProfileData(data){
-
-	showCustomerProfilePageCallBack(data);
-}
-
-function showCustomerProfilePageCallBack(data){
-	$('#main-body-wrapper').html(data);
-	$('.lp-right-arrow').remove();
-	$('#right-panel').html('');
-	$('.lp-item').removeClass('lp-item-active');
-	$('#lp-customer-profile').addClass('lp-item-active');
-	var rightArrow = $('<div>').attr({
-		"class" : "lp-right-arrow lp-prof-arrow"
-	});
-	$('#lp-customer-profile').append(rightArrow);
-	var profileMainContainer = $('<div>').attr({
-		"id" : "profile-main-container",
-		"class" : "right-panel-messageDashboard float-left"
-	});
-	$('#right-panel').append(profileMainContainer);
-	paintCutomerProfileContainer();
-	adjustRightPanelOnResize();
-}
 
 function paintCutomerProfileContainer() {
 	$('#profile-main-container').html('');
-	 getUserProfileData();
+	//getUserProfileData();
 }
 
-function appendCustPersonalInfoWrapper(user){
-	
+function appendCustPersonalInfoWrapper(user) {
+
 	var wrapper = $('<div>').attr({
 		"class" : "cust-personal-info-wrapper"
 	});
-	
+
 	var header = $('<div>').attr({
 		"class" : "cust-personal-info-header"
 	}).html("Personal Information");
-	
+
 	var container = getCustPersonalInfoContainer(user);
-	
+
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
+	$("#uploadFile")
+	.change(
+			function() {
+				
+				fileUpload(this.form, 'uploadCommonImageToS3.do','profilePic', '', '1',user.id);
+
+				// $('#path').val($(this).val());
+			});
+
 }
 
-function getCustPersonalInfoContainer(user){
-	
-	
+function getCustPersonalInfoContainer(user) {
+
 	var container = $('<div>').attr({
 		"class" : "cust-personal-info-container"
 	});
-	
+
 	var nameRow = getCustomerNameFormRow(user);
 	container.append(nameRow);
-	
+
 	var uploadRow = getCustomerUploadPhotoRow(user);
 	container.append(uploadRow);
-	
+
 	var DOBRow = getDOBRow(user);
 	container.append(DOBRow);
-	
+
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
-	
+
 	var secEmailRow = getSecEmailRow(user);
 	container.append(secEmailRow);
-	
-	/*var streetAddrRow = getStreetAddrRow(user);
-	container.append(streetAddrRow);*/
-	
+
+	/*
+	 * var streetAddrRow = getStreetAddrRow(user);
+	 * container.append(streetAddrRow);
+	 */
+
 	var cityRow = getCityRow(user);
 	container.append(cityRow);
-	
+
 	var stateRow = getStateRow(user);
 	container.append(stateRow);
-	
+
 	var zipRow = getZipRow(user);
 	container.append(zipRow);
-	
+
 	var phone1Row = getPhone1Row(user);
 	container.append(phone1Row);
 
 	var phone2Row = getPhone2Row(user);
 	container.append(phone2Row);
-	
+
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
-		"onclick" :"updateUserDetails()"
+		"onclick" : "updateUserDetails()"
 	}).html("Save");
 	container.append(saveBtn);
 	return container;
 }
-
 
 function getCustomerNameFormRow(user) {
 	var row = $('<div>').attr({
@@ -117,37 +120,35 @@ function getCustomerNameFormRow(user) {
 	var firstName = $('<input>').attr({
 		"class" : "prof-form-input",
 		"placeholder" : "First Name",
-		"value":user.firstName,
-		"id":"firstNameId"
+		"value" : user.firstName,
+		"id" : "firstNameId"
 	});
-	
-	
+
 	var lastName = $('<input>').attr({
 		"class" : "prof-form-input",
 		"placeholder" : "Last Name",
-		"value":user.lastName,
-		"id":"lastNameId"
+		"value" : user.lastName,
+		"id" : "lastNameId"
 	});
-	
+
 	var id = $('<input>').attr({
 		"type" : "hidden",
-		"value":user.id,
-		"id":"userid"
+		"value" : user.id,
+		"id" : "userid"
 	});
-	
+
 	var customerDetailsId = $('<input>').attr({
 		"type" : "hidden",
-		"value":user.customerDetail.id,
-		"id":"customerDetailsId"
+		"value" : user.customerDetail.id,
+		"id" : "customerDetailsId"
 	});
-	
-	
-	rowCol2.append(firstName).append(lastName).append(id).append(customerDetailsId);
+
+	rowCol2.append(firstName).append(lastName).append(id).append(
+			customerDetailsId);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-
-function getCustomerUploadPhotoRow() {
+function getCustomerUploadPhotoRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -157,56 +158,60 @@ function getCustomerUploadPhotoRow() {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	var uploadPicPlaceholder = $('<div>').attr({
-		"class" : "prof-pic-upload-placeholder float-left"
+	
+	var uploadPicPlaceholder ;
+	if(user.photoImageUrl == "" || user.photoImageUrl == null || user.photoImageUrl =='undefined'){
+		uploadPicPlaceholder = $('<div>').attr({
+			"id" : "profilePic",
+			"class" : "prof-pic-upload-placeholder float-left"
+		});
+		
+	}else{
+		 uploadPicPlaceholder = $('<div>').attr({
+			"id" : "profilePic",
+			"class" :"prof-pic-upload-placeholder float-left",
+			"style":"background:url("+user.photoImageUrl+")"
+		});
+	}
+	
+	
+	var imageForm = $('<form>').attr({
+		
 	});
+	
 	var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
-		"id":"uploadImageId"
-		 
+		"id" : "uploadFile",
+		"name":"fileName"
+		
 	});
 	
 	var uploadImage = $('<div>').attr({
 		"class" : "uploadImage"
-		 
+
 	}).hide();
-	
-	uploadImage.append(inputHiddenFile);
+
+	imageForm.append(inputHiddenFile);
+	uploadImage.append(imageForm);
 	uploadPicPlaceholder.append(uploadImage);
-	
+
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"
 	});
-	
-	/*var uploadPicCont = $('<div>').attr({
-		"class" : "prof-pic-upload-cont prof-form-input float-left clearfix"
-	});
-	
-	var uploadPicInput = $('<input>').attr({
-		"class" : "hide"
-	});
-	
-	var uploadIcn = $('<div>').attr({
-		"class" : "prof-upload-icn float-right"
-	});
-	
-	uploadPicCont.append(uploadPicInput).append(uploadIcn);
-	*/
+
 	var uploadBtn = $('<div>').attr({
-		"class" : "prof-btn upload-btn float-left",
-		"type":"file"
-		
+		"class" : "prof-btn upload-btn float-left"
+
 	}).click(uploadeImage).html("upload");
-	//uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
+	// uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
 	uploadBottomContianer.append(uploadBtn);
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
-	
+
 	return row.append(rowCol1).append(rowCol2);
 }
 
-
 function getDOBRow(user) {
-	
+
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -216,19 +221,20 @@ function getDOBRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	var dobInput = $('<input>').attr({
-		"class" : "prof-form-input date-picker",
-		"placeholder" : "MM/DD/YYYY",
-		"value":$.datepicker.formatDate('mm/dd/yy',new Date(user.customerDetail.dateOfBirth)),
-		"id":"dateOfBirthId"
-	}).datepicker({
-		orientation: "top auto",
-		autoclose: true
+	var dobInput = $('<input>').attr(
+			{
+				"class" : "prof-form-input date-picker",
+				"placeholder" : "MM/DD/YYYY",
+				"value" : $.datepicker.formatDate('mm/dd/yy', new Date(
+						user.customerDetail.dateOfBirth)),
+				"id" : "dateOfBirthId"
+			}).datepicker({
+		orientation : "top auto",
+		autoclose : true
 	});
 	rowCol2.append(dobInput);
 	return row.append(rowCol1).append(rowCol2);
 }
-
 
 function getPriEmailRow(user) {
 	var row = $('<div>').attr({
@@ -240,16 +246,15 @@ function getPriEmailRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+
 	var emailInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-lg",
-		"value":user.emailId,
-		"id":"priEmailId"
+		"value" : user.emailId,
+		"id" : "priEmailId"
 	});
 	rowCol2.append(emailInput);
 	return row.append(rowCol1).append(rowCol2);
 }
-
 
 function getSecEmailRow(user) {
 	var row = $('<div>').attr({
@@ -261,35 +266,25 @@ function getSecEmailRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+
 	var emailInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-lg",
-		"value":user.customerDetail.secEmailId,
-		"id":"secEmailId"
+		"value" : user.customerDetail.secEmailId,
+		"id" : "secEmailId"
 	});
 	rowCol2.append(emailInput);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-
-
-/*function getStreetAddrRow() {
-	var row = $('<div>').attr({
-		"class" : "prof-form-row clearfix"
-	});
-	var rowCol1 = $('<div>').attr({
-		"class" : "prof-form-row-desc float-left"
-	}).html("Street Address");
-	var rowCol2 = $('<div>').attr({
-		"class" : "prof-form-rc float-left"
-	});
-	var steetAddrInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
-		"value":user.customerDetail.secEmailId
-	});
-	rowCol2.append(steetAddrInput);
-	return row.append(rowCol1).append(rowCol2);
-}*/
+/*
+ * function getStreetAddrRow() { var row = $('<div>').attr({ "class" :
+ * "prof-form-row clearfix" }); var rowCol1 = $('<div>').attr({ "class" :
+ * "prof-form-row-desc float-left" }).html("Street Address"); var rowCol2 = $('<div>').attr({
+ * "class" : "prof-form-rc float-left" }); var steetAddrInput = $('<input>').attr({
+ * "class" : "prof-form-input prof-form-input-lg",
+ * "value":user.customerDetail.secEmailId }); rowCol2.append(steetAddrInput);
+ * return row.append(rowCol1).append(rowCol2); }
+ */
 
 function getCityRow(user) {
 	var row = $('<div>').attr({
@@ -303,8 +298,8 @@ function getCityRow(user) {
 	});
 	var cityInput = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value":user.customerDetail.city,
-		"id":"cityId"
+		"value" : user.customerDetail.addressCity,
+		"id" : "cityId"
 	});
 	rowCol2.append(cityInput);
 	return row.append(rowCol1).append(rowCol2);
@@ -322,13 +317,12 @@ function getStateRow(user) {
 	});
 	var stateInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-sm",
-		"value":user.customerDetail.addressState,
-		"id":"stateId"
+		"value" : user.customerDetail.addressState,
+		"id" : "stateId"
 	});
 	rowCol2.append(stateInput);
 	return row.append(rowCol1).append(rowCol2);
 }
-
 
 function getZipRow(user) {
 	var row = $('<div>').attr({
@@ -342,13 +336,12 @@ function getZipRow(user) {
 	});
 	var zipInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-sm",
-		"value":user.customerDetail.addressZipCode,
-		"id":"zipcodeId"
+		"value" : user.customerDetail.addressZipCode,
+		"id" : "zipcodeId"
 	});
 	rowCol2.append(zipInput);
 	return row.append(rowCol1).append(rowCol2);
 }
-
 
 function getPhone1Row(user) {
 	var row = $('<div>').attr({
@@ -362,13 +355,12 @@ function getPhone1Row(user) {
 	});
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value":user.phoneNumber,
-		"id":"priPhoneNumberId"
+		"value" : user.phoneNumber,
+		"id" : "priPhoneNumberId"
 	});
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
 }
-
 
 function getPhone2Row(user) {
 	var row = $('<div>').attr({
@@ -382,74 +374,179 @@ function getPhone2Row(user) {
 	});
 	var phone2Input = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value":user.customerDetail.secPhoneNumber,
-		"id":"secPhoneNumberId"
+		"value" : user.customerDetail.secPhoneNumber,
+		"id" : "secPhoneNumberId"
 	});
 	rowCol2.append(phone2Input);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function updateUserDetails(){
-	
+function updateUserDetails() {
+
 	var userProfileJson = new Object();
-	
-	/*
-	var customerDetails = {
-			
-			'addressCity' :  $("#cityId").val(),
-			'addressState' : $("#stateId").val(),
-			'addressZipCode' : $("#zipcodeId").val(),
-			'dateOfBirth': $("#dateOfBirthId").val(),
-			'secEmailId' : $("#secEmailId").val(),
-			'secPhoneNumber': $("#secPhoneNumberId").val()
-	};
-	
-	var userProfileJson = {
-			'firstName' :  $("#firstNameId").val(),
-			'lastName' : $("#lastNameId").val(),
-			'phoneNumber' : $("#priPhoneNumberId").val(),
-			'customerDetail':customerDetails
-			};
-*/
-	
+
 	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
 	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
-	userProfileJson.emailId  = $("#priEmailId").val(); 
-	
+	userProfileJson.emailId = $("#priEmailId").val();
+
 	var customerDetails = new Object();
-	
-	customerDetails.id   =  $("#customerDetailsId").val();
-	customerDetails.addressCity   =  $("#cityId").val();
-	customerDetails.addressState  =  $("#stateId").val();
-	customerDetails.addressZipCode =  $("#zipcodeId").val();
+
+	customerDetails.id = $("#customerDetailsId").val();
+	customerDetails.addressCity = $("#cityId").val();
+	customerDetails.addressState = $("#stateId").val();
+	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	
+
 	userProfileJson.customerDetail = customerDetails;
+
+	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json", JSON.stringify(userProfileJson),successFuntion);
 	
+   // not using the above because we need --->contentType : "application/json; charset=utf-8",
 	
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
-		type:"POST",
-		data:JSON.stringify(userProfileJson),
-		dataType :"json",
-		contentType:"application/json; charset=utf-8",
-		success : function(data){
-			
+		type : "POST",
+		data : JSON.stringify(userProfileJson),
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		success : function(data) {
+			alert("----"+$("#firstNameId").val());
+			$("#profileNameId").val($("#firstNameId").val());
+			$("#profilePhoneNumId").val($("#priPhoneNumberId").val());
 		},
-		error:function(error){
-			
+		error : function(error) {
+
 		}
 	});
-	
-	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json",userProfileJson, {});
+}
+
+function uploadeImage() {
+
+	$("#uploadFile").trigger('click');
+
+}
+
+
+function uploadImageFunction(obj){
+		
+		alert(obj);
+		var urlToHit="rest/userprofile/uploadCommonImageToS3";
+		fileUpload($('#fullImageFormId'), urlToHit,'profilePic', '', '1');
+		/*$.ajax( {
+		   url: urlToHit,
+		   type: "POST",
+			  headers : {
+					"Accept" : "application/json; charset=utf-8"
+					
+				},
+		   data: new FormData(obj),
+			  success : function(response) {
+					alert("success");
+				},
+				
+				error : function(e) {
+				alert("error..");
+				},
+				processData: false,
+			    contentType: false
+		 } );*/
 	
 }
 
-function uploadeImage(){
+
+function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
+    // Create the iframe...
 	
-	$("#uploadImageId").click();
+    var iframe = document.createElement("iframe");
+    iframe.setAttribute("id", "upload_"+suffix);
+    iframe.setAttribute("name", "upload_"+suffix);
+    iframe.setAttribute("width", "0");
+    iframe.setAttribute("height", "0");
+    iframe.setAttribute("border", "0");
+    iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+ 
+    // Add to document...
+    form.parentNode.appendChild(iframe);
+    window.frames['upload_'+suffix].name = "upload_"+suffix;
+ 
+    iframeId = document.getElementById("upload_"+suffix);
+ 
+    // Add event...
+    var eventHandler = function () {
+ 
+            if (iframeId.detachEvent) iframeId.detachEvent("onload", eventHandler);
+            else iframeId.removeEventListener("load", eventHandler, false);
+ 
+            // Message from server...
+            if (iframeId.contentDocument) {
+                content = iframeId.contentDocument.body.innerHTML;
+            } else if (iframeId.contentWindow) {
+                content = iframeId.contentWindow.document.body.innerHTML;
+            } else if (iframeId.document) {
+                content = iframeId.document.body.innerHTML;
+            }
+            
+           //here is content
+          // alert("content=="+content);
+		  if(message_div_id!=""){
+		  document.getElementById(message_div_id).innerHTML = content;
+		  }
+           if(content!="error" && img_div_id!=""){
+		  document.getElementById(img_div_id).style.backgroundImage="url("+content+")";
+		  $("#myProfilePicture").css("background","url("+content+")");
+		  $('#loaderWrapper').hide();
+		  } 
+            // Del the iframe...
+            setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+           // iframeId.parentNode.removeChild(iframeId);
+        }
+ 
+    if (iframeId.addEventListener) iframeId.addEventListener("load", eventHandler, true);
+    if (iframeId.attachEvent) iframeId.attachEvent("onload", eventHandler);
+ 
+    // Set properties of form...
+    form.setAttribute("target", "upload_"+suffix);
+    form.setAttribute("action", action_url);
+    form.setAttribute("method", "post");
+    form.setAttribute("enctype", "multipart/form-data");
+    form.setAttribute("encoding", "multipart/form-data");
+ 
+    // Submit the form...
+    form.submit();
+    /*
+    form.removeAttribute("target");
+    form.removeAttribute("action");
+    form.removeAttribute("method");
+    form.removeAttribute("enctype");
+    form.removeAttribute("encoding");
+    */
+	if(message_div_id!=""){
+    document.getElementById(message_div_id).innerHTML = "Uploading...";
+	}
+	
+	//changeProfilePhoto(userId);
+	
+	
+}
+
+function changeProfilePhoto(userId){
+	
+	alert("userId.."+userId);
+	$.ajax({
+		url : "rest/userprofile/getprofilephoto",
+		type : "GET",
+		data : userId,
+		dataType : "Int",
+		success : function(data) {
+			$("myProfilePicture").style.backgroundImage="url("+data+")";
+		},
+		error : function(error) {
+				alert("Errorr .....");
+		}
+	});
+	
 }

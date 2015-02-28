@@ -35,15 +35,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setEmailId(user.getEmailId());
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-		
-		//userVO.setUsername(user.getUsername());
-		//userVO.setPassword(user.getPassword());
-		/*userVO.setStatus(user.getStatus());
-		userVO.setStatus(user.getStatus());*/
-		
-		
-		
-		
+
+			
 		CustomerDetail customerDetail =  user.getCustomerDetail();
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
 		
@@ -58,11 +51,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		}
 		
 		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
-		
-		
-		
-		
-		
+				
 		userVO.setCustomerDetail(customerDetailVO);
 		
 		return userVO;
@@ -106,6 +95,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 		
 		Integer customerDetailVOObj = userProfileDao.updateCustomerDetails(customerDetail);
 		return customerDetailVOObj;
+	}
+
+	@Override
+	public Integer updateUser(String s3ImagePath,Integer userid) {
+
+		Integer number = userProfileDao.updateUser(s3ImagePath ,userid);
+		return null;
 	}
 
 	

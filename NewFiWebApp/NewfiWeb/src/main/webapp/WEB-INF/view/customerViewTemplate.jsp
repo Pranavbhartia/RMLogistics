@@ -23,6 +23,7 @@
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
+	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
 		$(document).ready(function() {
 			changeLeftPanel(2);
@@ -33,11 +34,20 @@
 				adjustRightPanelOnResize();
 			});
 
+			
+			
+			if($("#photoImageUrlID").val() == "" || $("#photoImageUrlID").val() == null){
+				$("#myProfilePicture").addClass("lp-pic float-left");
+				
+			}else{
+				
+				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + $("#photoImageUrlID").val()  + ')');
+			}
+			
+			
 			bindDataToPN();
 			bindDataToSN();
 			
-			
-
 			//Bind primary navigation
 			globalBinder();
 			onpopstate = function(event) {
