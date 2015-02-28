@@ -17,11 +17,12 @@ import com.nexera.web.constants.JspLookup;
 @Controller
 public class TemplateController extends DefaultController {
 
+	@Autowired
+	LoanService loanService;
+	
 	@RequestMapping(value = "home.do")
 	public String showCustomerPage(HttpServletRequest req, Model model) {
 
-		@Autowired
-		LoanService loanService;
 		
 		try {
 
