@@ -71,6 +71,14 @@ public class TemplateComtroller {
 		 mav.setViewName("videoTest");
 		 return mav;
 	 }
+
+	 @RequestMapping(value = "home.do")
+	 public ModelAndView showLoginPage(){
+		 ModelAndView mav = new ModelAndView();
+		 mav.setViewName("login");
+		 return mav;
+	 }
+
 	 
 	 @RequestMapping(value = "customerProfile.do")
 	 public ModelAndView showCustomerProfilePage(){
