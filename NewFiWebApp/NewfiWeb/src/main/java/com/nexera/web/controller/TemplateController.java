@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
 import com.nexera.common.vo.LoansProgressStatusVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.web.constants.JspLookup;
 
@@ -29,6 +30,7 @@ public class TemplateController extends DefaultController {
 
 			User user = loadDefaultValues(model, req);
 
+			
 			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				return JspLookup.CUSTOMER_VIEW;
 			}else{

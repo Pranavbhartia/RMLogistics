@@ -18,9 +18,12 @@ import org.springframework.ui.Model;
 
 import com.amazonaws.util.json.JSONException;
 import com.google.gson.Gson;
+import com.google.gson.JsonSerializer;
+import com.mongodb.util.JSON;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.UserVO;
 
 @Controller
 public class DefaultController {
@@ -70,7 +73,13 @@ public class DefaultController {
 			if (!languageMap.containsKey(suffix)) {
 				loadLanguageMap(suffix);
 			}
-
+			UserVO userVO = new UserVO();
+			userVO.setForView(user);
+		
+			Gson gson = new Gson();
+			
+			newfi.put("user",gson.toJson(userVO));
+		
 			newfi.put("i18n", new JSONObject(languageMap.get(suffix)));
 		} catch (org.codehaus.jettison.json.JSONException e) {
 			// TODO Auto-generated catch block

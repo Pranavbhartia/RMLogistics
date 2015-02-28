@@ -159,7 +159,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				    Hibernate.initialize(loanTeam.getLoan());
 					Loan loan = loanTeam.getLoan();
 					loanListForUser.add( loan );
-					System.out.println(loan.getName());
+				
 				}
 			}
 

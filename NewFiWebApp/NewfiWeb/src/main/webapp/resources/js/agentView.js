@@ -194,7 +194,7 @@ function paintAgentDashboardCallBack(data) {
 }
 
 function getDashboardRightPanel() {
-	var userID = 1;
+	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboard/" + userID, "GET", "json", {},
 			paintAgentDashboardRightPanel);
 }
