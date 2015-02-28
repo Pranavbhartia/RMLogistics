@@ -20,4 +20,6 @@ public interface UserProfileDao {
 	
 	public List<User> searchUsersByName(String name,UserRole role);
 
+	public Integer updateUser(String s3ImagePath, Integer userid);
+
 }

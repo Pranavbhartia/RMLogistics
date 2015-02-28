@@ -6,8 +6,8 @@
   <packaging>pom</packaging>
   <name>NewFiParent</name>
   <modules>
-  	<module>NewfiMuleFlow</module>
-  	<module>NewfiWorkFlow</module>
+  	<!-- <module>NewfiMuleFlow</module>
+  	<module>NewfiWorkFlow</module> -->
   	<module>NewfiCommon</module>
   	<module>NewfiCore</module>
   	<module>NewfiWeb</module>

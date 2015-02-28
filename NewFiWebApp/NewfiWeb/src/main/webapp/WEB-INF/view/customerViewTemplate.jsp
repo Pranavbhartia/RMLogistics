@@ -5,7 +5,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+ <%@ page isELIgnored ="false" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,6 +31,7 @@
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
+	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
 	var newfi = ${newfi};
 		$(document).ready(function() {
@@ -43,11 +44,20 @@
 				adjustRightPanelOnResize();
 			});
 
+			
+			
+			if($("#photoImageUrlID").val() == "" || $("#photoImageUrlID").val() == null){
+				$("#myProfilePicture").addClass("lp-pic float-left");
+				
+			}else{
+				
+				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + $("#photoImageUrlID").val()  + ')');
+			}
+			
+			
 			bindDataToPN();
 			bindDataToSN();
 			
-			
-
 			//Bind primary navigation
 			globalBinder();
 			onpopstate = function(event) {
