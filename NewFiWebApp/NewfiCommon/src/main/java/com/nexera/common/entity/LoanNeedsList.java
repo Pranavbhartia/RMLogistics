@@ -21,8 +21,7 @@ public class LoanNeedsList implements Serializable {
 	private Boolean active;
 	private String comments;
 	private Boolean deleted;
-	private String fileId;
-	private String fileUrl;
+	private UploadedFilesList uploadFileId;
 	private Boolean mandatory;
 	private Boolean systemAction;
 	private Loan loan;
@@ -49,7 +48,9 @@ public class LoanNeedsList implements Serializable {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
 
+	
 	public String getComments() {
 		return this.comments;
 	}
@@ -67,23 +68,8 @@ public class LoanNeedsList implements Serializable {
 		this.deleted = deleted;
 	}
 
-	@Column(name = "file_id")
-	public String getFileId() {
-		return this.fileId;
-	}
-
-	public void setFileId(String fileId) {
-		this.fileId = fileId;
-	}
-
-	@Column(name = "file_url")
-	public String getFileUrl() {
-		return this.fileUrl;
-	}
-
-	public void setFileUrl(String fileUrl) {
-		this.fileUrl = fileUrl;
-	}
+	
+	
 
 	@Column(columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -127,4 +113,13 @@ public class LoanNeedsList implements Serializable {
 		this.needsListMaster = needsListMaster;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="file_id")
+	public UploadedFilesList getUploadFileId() {
+		return uploadFileId;
+	}
+
+	public void setUploadFileId(UploadedFilesList uploadFileId) {
+		this.uploadFileId = uploadFileId;
+	}
 }

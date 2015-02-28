@@ -14,5 +14,6 @@ public interface NeedsDao extends GenericDao {
 	public List<LoanNeedsList> getLoanNeedsList(int loanId) throws NoRecordsFetchedException ;
 	public void deleteLoanNeeds(int loanId);
 	public void deleteLoanNeed(LoanNeedsList need);
+	public Integer getLoanNeedListIdByFileId(Integer fileId);
 	
 }

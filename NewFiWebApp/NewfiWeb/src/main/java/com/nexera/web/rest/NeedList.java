@@ -1,13 +1,9 @@
 package com.nexera.web.rest;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexera.common.dao.NeedsDao;
-import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.core.service.NeedsListService;
-import com.nexera.web.constants.JspLookup;
 @RestController
 public class NeedList {
 

@@ -32,6 +32,8 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
+			
+			
 
 			//Assign values to primary navigation
 			var divArray = $('.left-panel >div');

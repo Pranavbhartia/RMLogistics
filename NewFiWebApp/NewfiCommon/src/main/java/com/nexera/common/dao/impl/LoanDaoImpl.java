@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -131,5 +132,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					"Exception caught in fetchUsersBySimilarEmailId() ",
 					hibernateException);
 		}
+	}
+
+	@Override
+	public Loan getActiveLoanOfUser(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		criteria.add(Restrictions.eq("user", user));
+		criteria.createAlias("loanStatus", "ls");
+		criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
+		return (Loan) criteria.uniqueResult();
 	}
 }

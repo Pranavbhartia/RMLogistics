@@ -1,11 +1,9 @@
 package com.nexera.common.dao.impl;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -15,13 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.NeedsDao;
-import com.nexera.common.dao.UserDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.NeedsListMaster;
-import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -75,6 +69,20 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		} catch (NoRecordsFetchedException e) {
 			
 		}
+	}
+	@Override
+	public Integer getLoanNeedListIdByFileId(Integer fileId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.createAlias("uploadFileId", "upFileId");
+		criteria.add(Restrictions.eq("upFileId.id", fileId));
+		LoanNeedsList loanNeedsList =  (LoanNeedsList) criteria.uniqueResult();
+		if(loanNeedsList != null){
+			 LOG.info("loanNeedsList not empty");
+			 return loanNeedsList.getId();
+		}
+		LOG.info("loanNeedsList empty");
+		return null;
 	}
 	
 }

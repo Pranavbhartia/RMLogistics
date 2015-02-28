@@ -8,6 +8,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack){
 		type : type,
 		dataType : dataType,
 		data : data,
+		contentType: "application/json",
 		success : successCallBack,
 		error : function(){
 			

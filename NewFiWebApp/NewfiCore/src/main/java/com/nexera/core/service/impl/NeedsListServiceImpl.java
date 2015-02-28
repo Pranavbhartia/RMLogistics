@@ -1,9 +1,8 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -17,10 +16,11 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
-import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
+import com.nexera.common.vo.NeedsListMasterVO;
 import com.nexera.core.service.NeedsListService;
 
 @Component
@@ -28,9 +28,10 @@ import com.nexera.core.service.NeedsListService;
 public class NeedsListServiceImpl implements NeedsListService{
 
 	@Autowired
-	NeedsDao needsDao;
+	private NeedsDao needsDao;
+	
 	@Autowired
-	LoanDao loanDao;
+	private LoanDao loanDao;
 	
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
 		List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.loadAll(NeedsListMaster.class);
@@ -248,8 +249,6 @@ public class NeedsListServiceImpl implements NeedsListService{
 			need.setSystemAction(true);
 			need.setActive(true);
 			need.setComments("");
-			need.setFileId("");
-			need.setFileUrl("");
 			need.setMandatory(true);
 			need.setSystemAction(true);
 			
@@ -274,5 +273,50 @@ public class NeedsListServiceImpl implements NeedsListService{
 		}
 		return 1;
 	}
+
+	@Override
+	public List<LoanNeedsListVO> getLoanNeedsList(Integer loanId)  {
+		List<LoanNeedsList> loanNeedsList;
+		try {
+			loanNeedsList = needsDao.getLoanNeedsList(loanId);
+		} catch (NoRecordsFetchedException e) {
+			return Collections.EMPTY_LIST;
+		}
+		List<LoanNeedsListVO> loanNeedsListVO = new ArrayList<>();
+		for (LoanNeedsList loanNeeds : loanNeedsList) {
+			loanNeedsListVO.add(buildLoanNeedsListVO(loanNeeds));
+		}
+		return loanNeedsListVO;
+	}
+	
+	
+	public static LoanNeedsListVO buildLoanNeedsListVO(LoanNeedsList loanNeedsList){
+		
+		if(loanNeedsList == null)
+			 return null;
+		
+		LoanNeedsListVO loanNeedsListVO = new LoanNeedsListVO();
+		loanNeedsListVO.setId(loanNeedsList.getId());
+		loanNeedsListVO.setActive(loanNeedsList.getActive());
+		loanNeedsListVO.setNeedsListMaster(buildLoanNeedsListMasterVO(loanNeedsList.getNeedsListMaster()));
+		return loanNeedsListVO;
+	}
+	
+	public static NeedsListMasterVO buildLoanNeedsListMasterVO(NeedsListMaster needListMaster){
+		if(needListMaster == null)
+			return null;
+		NeedsListMasterVO needListMasterVO = new NeedsListMasterVO();
+		needListMasterVO.setDescription(needListMaster.getDescription());
+		needListMasterVO.setId(needListMaster.getId());
+		needListMasterVO.setLabel(needListMaster.getLabel());
+		return needListMasterVO;
+		
+	}
+	
+	public Integer getLoanNeedListIdByFileId(Integer fileId){
+		return needsDao.getLoanNeedListIdByFileId(fileId);
+		
+	}
+	
 }
 

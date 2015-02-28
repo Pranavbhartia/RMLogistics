@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 public class LoanNeedsListVO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Boolean active;
 	private String comments;
 	private Boolean deleted;

@@ -96,4 +96,17 @@ public class LoanRestService {
 		return new Gson().toJson(responseVO);
 	}
 
+	
+	@RequestMapping(value = "/activeloan/get/{userID}")
+	public @ResponseBody String geActivetLoanOfUser(@PathVariable Integer userID) {
+
+		UserVO user = new UserVO();
+		user.setId(userID);
+		LoanVO loansList = loanService.getActiveLoanOfUser(user);
+
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(loansList);
+
+		return new Gson().toJson(responseVO);
+	}
 }

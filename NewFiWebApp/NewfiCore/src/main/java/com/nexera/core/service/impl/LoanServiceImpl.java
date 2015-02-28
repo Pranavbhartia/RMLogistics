@@ -43,6 +43,14 @@ public class LoanServiceImpl implements LoanService {
 				.parseUserModel(user));
 		return LoanServiceImpl.buildLoanVOList(list);
 	}
+	
+	@Override
+	public LoanVO getActiveLoanOfUser(UserVO user) {
+
+		Loan loan = loanDao.getActiveLoanOfUser(LoanServiceImpl
+				.parseUserModel(user));
+		return LoanServiceImpl.buildLoanVO(loan);
+	}
 
 	@Override
 	public LoanVO getLoanByID(Integer loanID) {
@@ -135,6 +143,8 @@ public class LoanServiceImpl implements LoanService {
 
 		return voList;
 	}
+	
+	
 
 	public static User parseUserModel(UserVO userVO) {
 

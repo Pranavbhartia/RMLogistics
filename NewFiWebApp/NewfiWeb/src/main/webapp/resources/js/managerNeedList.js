@@ -8,7 +8,7 @@ function getLoanNeedsManagerContext(loanId){
 			var data={};
 			data.loanId=1;
 			var ob=this;
-			ajaxRequest("http://localhost:8080/NewfiWeb/rest/getloanneeds","GET","json",data,function(response){
+			ajaxRequest("rest/getloanneeds","GET","json",data,function(response){
 				if(response.Error){
 
 				}else{

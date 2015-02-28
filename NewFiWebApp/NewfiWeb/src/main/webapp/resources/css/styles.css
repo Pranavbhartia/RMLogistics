@@ -2153,3 +2153,7 @@ input.calc-input{
 	height: 36px;
 	background: url(../images/dots.png) no-repeat center;
 }
+
+.assign{
+	width:160px;
+}
