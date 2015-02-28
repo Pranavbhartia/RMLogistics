@@ -1726,6 +1726,27 @@ a, a:hover, a:visited{
 	font-family: 'opensanssemibold';
 }
 
+.add-member-dropdown-cont{
+	position: absolute;
+	width: 235px;
+	background-color: #fdfdfd;
+	border: 1px #dcdcdc solid;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	padding: 5px 0;
+}
+
+.add-member-dropdown-row {
+	padding-left: 20px;
+	line-height: 30px;
+	height: 30px;
+	background-color: #fdfdfd;
+	cursor: pointer;
+}
+
+.add-member-dropdown-row:HOVER{
+	background-color: #fafafa;
+}
 
 .newfi-team-wrapper{
 	margin-bottom:20px;	
@@ -2357,6 +2378,7 @@ input.calc-input{
 	padding-left: 50px;
 	border-radius: 3px;
 	border: transparent;
+	color: #777;
 }
 
 .login-input-cont {
@@ -2374,6 +2396,7 @@ input.calc-input{
 	border: 1px #fff solid;
 	border-radius: 3px;
 	text-align: center;
+	cursor: pointer;
 }
 	
 .forgot-pwd{
@@ -2386,8 +2409,3 @@ input.calc-input{
 	color:#428bca;
 	cursor: pointer;
 }
-.hideElements{
-	display: none;
-}	
-	
-	
