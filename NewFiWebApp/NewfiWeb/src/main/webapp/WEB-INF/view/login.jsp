@@ -79,7 +79,7 @@ $(document).ready(function() {
 							<input type="hidden" name="j_password" id="inputPassword"
 								class="hide" >
 						</div>
-						<input type="submit" name="Login" value="Login to your account">
+						<input type="submit" class="login-submit-button" name="Login" value="Login to your account">
 						<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
 						<div class="forgot-pwd">
 							Forgot Password?<span class="forgot-pwd-link">Click here</span>

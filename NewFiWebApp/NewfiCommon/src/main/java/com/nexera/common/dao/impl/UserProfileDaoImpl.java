@@ -2,6 +2,7 @@ package com.nexera.common.dao.impl;
 
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,6 +43,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 				throw new NoRecordsFetchedException(
 						DisplayMessageConstants.INVALID_USERNAME);
 			}
+			User user = (User) obj;
+			Hibernate.initialize(user.getUserRole());
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
