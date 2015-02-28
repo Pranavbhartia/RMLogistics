@@ -2386,6 +2386,8 @@ input.calc-input{
 	color:#428bca;
 	cursor: pointer;
 }
-	
+.hideElements{
+	display: none;
+}	
 	
 	
