@@ -281,6 +281,10 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
 		loanCustomerVO.setLoanID(loan.getId());
 		loanCustomerVO.setUserID(user.getId());
+		if(user.getUserRole()!=null)
+		loanCustomerVO.setRole(user.getUserRole().getLabel());
+		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
+		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		// TODO get these hard coded data from entity
 		loanCustomerVO.setProcessor("Johny Tester");
 		loanCustomerVO.setPurpose("Purchase TBD");

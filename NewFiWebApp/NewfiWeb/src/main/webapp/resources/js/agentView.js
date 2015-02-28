@@ -334,18 +334,34 @@ function appendCustomers(elementId, customers) {
 
 		var cusName = $('<div>').attr({
 			"class" : "cus-name float-left",
-			"loanid":customer.loanID,
-			"userid":customer.userID
-		}).html(customer.name);
+			"loanid" : customer.loanID,
+			"userid" : customer.userID
+		}).bind(
+				'click',
+				{
+					"customer" : customer
+				},
+				function(event) {
+					event.stopImmediatePropagation();
+					
+					resetSelectedUserDetailObject(
+							event.data.customer);
+					console.log("Customer clicked");
+					var userID = $(this).attr('userid');
+					var loanID = $(this).attr('loanid');
+					paintMyLoansView();
+					changeAgentSecondaryLeftPanel("lp-step2");
+					getLoanDetails(loanID);
+				}).html(customer.name);
 
-		//loan details page to be displayed on click of the customer name
-		cusName.click(function(){
-			console.log("Customer clicked");
-			var userID=$(this).attr('userid');
-			var loanID=$(this).attr('loanid');
-			getLoanDetails(loanID);
-		});
-		
+		// loan details page to be displayed on click of the customer name
+		/*
+		 * cusName.click(function(){ console.log("Customer clicked"); var
+		 * userID=$(this).attr('userid'); var loanID=$(this).attr('loanid');
+		 * paintMyLoansView(); changeAgentSecondaryLeftPanel("lp-step2");
+		 * getLoanDetails(loanID); });
+		 */
+
 		col1.append(onlineStatus).append(profImage).append(cusName);
 
 		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
@@ -745,11 +761,27 @@ function paintMyLoansViewCallBack(data) {
 
 }
 
+// function to reset slected UserdetailObject
+var selectedUserDetail;
+function resetSelectedUserDetailObject(userObject) {
+	selectedUserDetail = new Object();
+	console.log(userObject);
+	selectedUserDetail.userID = userObject.userID;
+	selectedUserDetail.loanID = userObject.loanID;
+	selectedUserDetail.role = userObject.role;
+	selectedUserDetail.phoneNo = userObject.phone_no;
+	selectedUserDetail.emailId = userObject.emailId;
+	selectedUserDetail.firstName = userObject.name;
+	selectedUserDetail.createdDate = userObject.loanInitiatedOn;
+	selectedUserDetail.modifiedDate = userObject.lastActedOn;
+	console.log("Selected usr : "+JSON.stringify(selectedUserDetail));
+}
+
 // This method is called on click of the view loan details secondary nav
 function paintAgentLoanPage(data) {
 
 	var loanDetails = data.resultObject;
-	appendCustomerDetailHeader(loanDetails);
+	appendCustomerDetailHeader(selectedUserDetail);
 	appendCustomerLoanDetails(loanDetails);
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper(loanDetails);
@@ -780,8 +812,7 @@ function changeAgentSecondaryLeftPanel(elementId) {
 }
 
 // Function to append customer's detail in loan manager view
-function appendCustomerDetailHeader(loanDetails) {
-	var user = loanDetails.user;
+function appendCustomerDetailHeader(custHeaderDetails) {
 	var container = $('<div>').attr({
 		"class" : "cus-prof-detail-wrapper clearfix"
 	});
@@ -802,28 +833,21 @@ function appendCustomerDetailHeader(loanDetails) {
 		"class" : "cus-prof-name-txt"
 	});
 
-	var custNameStr = "";
-	if (user.firstName)
-		custNameStr += user.firstName;
-
-	if (user.lastName)
-		custNameStr += " " + user.lastName;
-
-	cusName.html(custNameStr);
+	cusName.html(custHeaderDetails.firstName);
 
 	var cusRole = $('<div>').attr({
 		"class" : "cus-prof-role-txt"
 	});
 
-	if (user.userRole.label)
-		cusRole.html(user.userRole.label);
+	if (custHeaderDetails.role)
+		cusRole.html(custHeaderDetails.role);
 
 	var cusContact = $('<div>').attr({
 		"class" : "cus-prof-role-txt"
 	});
 
-	if (user.phoneNumber)
-		cusContact.html(user.phoneNumber);
+	if (custHeaderDetails.phoneNo)
+		cusContact.html(custHeaderDetails.phoneNo);
 
 	cusProfText.append(cusName).append(cusRole).append(cusContact);
 	cusProfLeftContainer.append(cusProfPic).append(cusProfText);
@@ -841,7 +865,7 @@ function appendCustomerDetailHeader(loanDetails) {
 
 	var rowNewfiIdValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
-	}).html(user.id);
+	}).html(custHeaderDetails.loanID);
 
 	rowNewfiId.append(rowNewfiIdTitle).append(rowNewfiIdValue);
 	cusProfRightContainer.append(rowNewfiId);
@@ -855,9 +879,9 @@ function appendCustomerDetailHeader(loanDetails) {
 	var createdDateStr;
 	var modifiedDateStr;
 	createdDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
-			loanDetails.createdDate));
+			custHeaderDetails.createdDate));
 	modifiedDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
-			loanDetails.modifiedDate));
+			custHeaderDetails.modifiedDate));
 
 	var rowInitiatedOnValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
@@ -879,6 +903,7 @@ function appendCustomerDetailHeader(loanDetails) {
 	cusProfRightContainer.append(rowLastActiveOn);
 
 	container.append(cusProfLeftContainer).append(cusProfRightContainer);
+	$('#center-panel-cont').html("");
 	$('#center-panel-cont').append(container);
 }
 
@@ -985,19 +1010,18 @@ function appendAddTeamMemberWrapper() {
 	var userNameInput = $('<input>').attr({
 		"id" : "add-member-input",
 		"class" : "add-member-input float-left"
-	}); 
-	
+	});
+
 	var downArrow = $('<div>').attr({
 		"class" : "add-member-down-arrow float-right"
-	}).on('click',function(){
-		if($('#add-username-dropdown-cont').css("display") == "block"){
+	}).on('click', function() {
+		if ($('#add-username-dropdown-cont').css("display") == "block") {
 			hideUserNameDropDown();
-		}else{
+		} else {
 			showUserNameDropDown();
 		}
 	});
-	
-	
+
 	userNameSel.append(userNameInput).append(downArrow);
 	userNameCont.append(userNameSel);
 
@@ -1012,7 +1036,7 @@ function appendAddTeamMemberWrapper() {
 	appendUserNameDropDown();
 }
 
-function appendUserNameDropDown(){
+function appendUserNameDropDown() {
 	var dropdownCont = $('<div>').attr({
 		"id" : "add-username-dropdown-cont",
 		"class" : "add-member-dropdown-cont hide"
@@ -1020,8 +1044,7 @@ function appendUserNameDropDown(){
 	$('#add-member-sel').parent().append(dropdownCont);
 }
 
-
-function showUserNameDropDown(){
+function showUserNameDropDown() {
 	$('#add-username-dropdown-cont').css({
 		"left" : $('#add-member-sel').offset().left
 	});
@@ -1029,49 +1052,43 @@ function showUserNameDropDown(){
 	paintUserNameDropDown();
 }
 
-function hideUserNameDropDown(){
+function hideUserNameDropDown() {
 	$('#add-username-dropdown-cont').hide();
 }
 
-function paintUserNameDropDown(values){
+function paintUserNameDropDown(values) {
 	var dropdownCont = $('#add-username-dropdown-cont');
 	dropdownCont.html('');
-	
-	values = [
-	         		{
-	         		    "id": 1,
-	         		    "roleCd": "Realtor",
-	         		    "label": "Realtor",
-	         		    "roleDescription": "Realtor"
-	         		},
-	         		{
-	         		    "id": 2,
-	         		    "roleCd": "Sales Manager",
-	         		    "label": "Sales Manager",
-	         		    "roleDescription": "Sales Manager"
-	         		},
-	         		{
-	         		    "id": 3,
-	         		    "roleCd": "Loan Manager",
-	         		    "label": "Loan Manager",
-	         		    "roleDescription": "Loan Manager"
-	         		},
-	         		{
-	         		    "id": 4,
-	         		    "roleCd": "Processor",
-	         		    "label": "Processor",
-	         		    "roleDescription": "Processor"
-	         		},
-	         		{
-	         		    "id": 5,
-	         		    "roleCd": "Setup",
-	         		    "label": "Setup",
-	         		    "roleDescription": "Setup"
-	         		}
-	         	];
-	
-	if(values != undefined && values.length >0){
-		for(var i=0; i<values.length; i++){
+
+	values = [ {
+		"id" : 1,
+		"roleCd" : "Realtor",
+		"label" : "Realtor",
+		"roleDescription" : "Realtor"
+	}, {
+		"id" : 2,
+		"roleCd" : "Sales Manager",
+		"label" : "Sales Manager",
+		"roleDescription" : "Sales Manager"
+	}, {
+		"id" : 3,
+		"roleCd" : "Loan Manager",
+		"label" : "Loan Manager",
+		"roleDescription" : "Loan Manager"
+	}, {
+		"id" : 4,
+		"roleCd" : "Processor",
+		"label" : "Processor",
+		"roleDescription" : "Processor"
+	}, {
+		"id" : 5,
+		"roleCd" : "Setup",
+		"label" : "Setup",
+		"roleDescription" : "Setup"
+	} ];
+
+	if (values != undefined && values.length > 0) {
+		for (var i = 0; i < values.length; i++) {
 			var value = values[i];
 			var dropDownRow = $('<div>').attr({
 				"class" : "add-member-dropdown-row"
@@ -1086,92 +1103,83 @@ function paintUserNameDropDown(values){
 	dropdownCont.append(addUserdropDownRow);
 }
 
-
-$(document).on('click','#add-memeber-user-type',function(event){
+$(document).on('click', '#add-memeber-user-type', function(event) {
 	event.stopImmediatePropagation();
-	if($('#add-usertype-dropdown-cont').css("display") == "block"){
+	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
 		hideUserTypeDropDown();
-	}else{
+	} else {
 		showUserTypeDropDown();
 	}
 });
 
-
-//Click function to create a user
+// Click function to create a user
 $(document).on('click', '#add-member-user', function(event) {
 	event.stopImmediatePropagation();
 	hideUserNameDropDown();
 	showCreateUserPopup();
 });
 
-function showUserTypeDropDown(){
+function showUserTypeDropDown() {
 	$('#add-usertype-dropdown-cont').css({
 		"left" : $('#add-memeber-user-type').offset().left
 	});
 	$('#add-usertype-dropdown-cont').show();
 }
 
-function hideUserTypeDropDown(){
+function hideUserTypeDropDown() {
 	$('#add-usertype-dropdown-cont').hide();
 }
 
-function appendUserTypeDropDown(){
+function appendUserTypeDropDown() {
 	var dropdownCont = $('<div>').attr({
 		"id" : "add-usertype-dropdown-cont",
 		"class" : "add-member-dropdown-cont hide"
 	});
-	
-	var userRoles = [
-		{
-		    "id": 1,
-		    "roleCd": "Realtor",
-		    "label": "Realtor",
-		    "roleDescription": "Realtor"
-		},
-		{
-		    "id": 2,
-		    "roleCd": "Sales Manager",
-		    "label": "Sales Manager",
-		    "roleDescription": "Sales Manager"
-		},
-		{
-		    "id": 3,
-		    "roleCd": "Loan Manager",
-		    "label": "Loan Manager",
-		    "roleDescription": "Loan Manager"
-		},
-		{
-		    "id": 4,
-		    "roleCd": "Processor",
-		    "label": "Processor",
-		    "roleDescription": "Processor"
-		},
-		{
-		    "id": 5,
-		    "roleCd": "Setup",
-		    "label": "Setup",
-		    "roleDescription": "Setup"
-		}
-	];
-	
-	for(var i=0; i<userRoles.length; i++){
+
+	var userRoles = [ {
+		"id" : 1,
+		"roleCd" : "Realtor",
+		"label" : "Realtor",
+		"roleDescription" : "Realtor"
+	}, {
+		"id" : 2,
+		"roleCd" : "Sales Manager",
+		"label" : "Sales Manager",
+		"roleDescription" : "Sales Manager"
+	}, {
+		"id" : 3,
+		"roleCd" : "Loan Manager",
+		"label" : "Loan Manager",
+		"roleDescription" : "Loan Manager"
+	}, {
+		"id" : 4,
+		"roleCd" : "Processor",
+		"label" : "Processor",
+		"roleDescription" : "Processor"
+	}, {
+		"id" : 5,
+		"roleCd" : "Setup",
+		"label" : "Setup",
+		"roleDescription" : "Setup"
+	} ];
+
+	for (var i = 0; i < userRoles.length; i++) {
 		var userRole = userRoles[i];
 		var dropDownRow = $('<div>').attr({
 			"class" : "add-member-dropdown-row"
-		}).html(userRole.label)
-		.on('click',function(event){
+		}).html(userRole.label).on('click', function(event) {
 			event.stopImmediatePropagation();
 			$('#add-memeber-user-type').html($(this).html());
 			hideUserTypeDropDown();
 		});
 		dropdownCont.append(dropDownRow);
 	}
-	
+
 	$('#add-memeber-user-type').parent().append(dropdownCont);
 }
 
-$(document).click(function(){
-	if($('#add-usertype-dropdown-cont').css("display") == "block"){
+$(document).click(function() {
+	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
 		hideUserTypeDropDown();
 	}
 });
@@ -1918,7 +1926,7 @@ function appendAddNeedsContainer() {
 
 	var addNeedsBtn = $('<div>').attr({
 		"class" : "add-needs-btn",
-		"onclick": "saveCustomNeed()"
+		"onclick" : "saveCustomNeed()"
 	}).html("Add Needs");
 
 	container.append(addNeedsBtn);
@@ -1928,30 +1936,20 @@ function appendAddNeedsContainer() {
 }
 
 // Click event for add needs button
-/*$(document).on(
-		'click',
-		'.add-needs-btn',
-		function() {
-			var docType = $('#need_doc_type :selected').text();
-			var docTitle = $('#need_doc_title').val();
-			var docDesc = $('#need_doc_desc').val();
-
-			if (docTitle == "")
-				return;
-			if (docDesc === "")
-				return;
-
-			var document = {
-				"isChecked" : "true",
-				"title" : docTitle,
-				"desc" : docDesc
-			};
-			var newNeedRow = getNeededDocumentRow(document);
-
-			$('.initial-list-doc-wrapper[data-doc-type="' + docType + '"]')
-					.find('.initial-list-doc-container').append(newNeedRow);
-			clearAddNeedForm();
-		});*/
+/*
+ * $(document).on( 'click', '.add-needs-btn', function() { var docType =
+ * $('#need_doc_type :selected').text(); var docTitle =
+ * $('#need_doc_title').val(); var docDesc = $('#need_doc_desc').val();
+ * 
+ * if (docTitle == "") return; if (docDesc === "") return;
+ * 
+ * var document = { "isChecked" : "true", "title" : docTitle, "desc" : docDesc };
+ * var newNeedRow = getNeededDocumentRow(document);
+ * 
+ * $('.initial-list-doc-wrapper[data-doc-type="' + docType + '"]')
+ * .find('.initial-list-doc-container').append(newNeedRow); clearAddNeedForm();
+ * });
+ */
 
 function clearAddNeedForm() {
 	$('#need_doc_title').val('');
