@@ -150,21 +150,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(Loan.class);
-			List<Loan> allLoansList = criteria.list();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			List<LoanTeam> loanTeamList = criteria.list();
 
-			if (allLoansList != null) {
-				for (Loan loan : allLoansList) {
-					List<LoanTeam> loanTeamList = loan.getLoanTeam();
-					if (loanTeamList != null) {
-						for (LoanTeam loanTeam : loanTeamList) {
-							// check if any loanTeam has the same user then add
-							// loan in list
-							if (loanTeam.getUser().getId() == parseUserModel
-									.getId())
-								loanListForUser.add(loan);
-						}
-					}
+			if (loanTeamList != null) {
+				for (LoanTeam loanTeam : loanTeamList) {
+				    Hibernate.initialize(loanTeam.getLoan());
+					Loan loan = loanTeam.getLoan();
+					loanListForUser.add( loan );
+					System.out.println(loan.getName());
 				}
 			}
 
