@@ -65,21 +65,22 @@ $(document).ready(function() {
 					as: Greeked Text, blind text, placeholder text, dummy content,
 					filter text, lipsum, and mock-content.</div>
 				<div class="login-form-wrapper">
-					<form id="loginForm"
+					<form id="loginForm" name="loginForm"
 						action="j_spring_security_check" method="POST">
 						<div class="form-logo"></div>
 						<div class="login-input-cont">
 							<input type="text" class="login-input login-input-username"
 								placeholder="Username" id="userId"> <input type="hidden"
-								id="inputEmail" name="j_username" class="hideElements"
+								id="inputEmail" name="j_username" class="hide"
 								placeholder="Email address" required autofocus>
 						</div>
 						<div class="login-input-cont">
 							<input type="password" class="login-input login-input-pwd" id="password" placeholder="Password" >
 							<input type="hidden" name="j_password" id="inputPassword"
-								class="hideElements" >
+								class="hide" >
 						</div>
-						<div class="login-submit-button">Login to your account</div>
+						<input type="submit" name="Login" value="Login to your account">
+						<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
 						<div class="forgot-pwd">
 							Forgot Password?<span class="forgot-pwd-link">Click here</span>
 						</div>
