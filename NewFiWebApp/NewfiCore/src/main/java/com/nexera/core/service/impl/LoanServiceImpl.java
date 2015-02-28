@@ -126,13 +126,13 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setDeleted(loan.getDeleted());
 		loanVo.setLoanEmailId(loan.getLoanEmailId());
 		loanVo.setLqbFileId(loan.getLqbFileId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setName(loan.getName());
 		if (loan.getLoanStatus() != null)
 			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
 		loanVo.setUser(LoanServiceImpl.buildUserVO(loan.getUser()));
 
-		
 		loanVo.setLoanDetail(LoanServiceImpl.buildLoanDetailVO(loan
 				.getLoanDetail()));
 
@@ -178,7 +178,8 @@ public class LoanServiceImpl implements LoanService {
 		userVO.setEmailId(user.getEmailId());
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-		userVO.setUserRole(LoanServiceImpl.buildUserRoleVO(user.getUserRole()));
+		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
+				.getUserRole()));
 
 		return userVO;
 	}
@@ -192,38 +193,6 @@ public class LoanServiceImpl implements LoanService {
 		loanTeamVO.setUser(LoanServiceImpl.buildUserVO(loanTeam.getUser()));
 		loanTeamVO.setActive(loanTeam.getActive());
 		return loanTeamVO;
-
-	}
-
-	public static UserRoleVO buildUserRoleVO(UserRole role) {
-
-		if (role == null)
-			return null;
-
-		UserRoleVO roleVO = new UserRoleVO();
-
-		roleVO.setId(role.getId());
-		roleVO.setRoleCd(role.getRoleCd());
-		roleVO.setLabel(role.getLabel());
-		roleVO.setRoleDescription(role.getRoleDescription());
-
-		return roleVO;
-
-	}
-
-	public static UserRole parseUserRoleModel(UserRoleVO roleVO) {
-
-		if (roleVO == null)
-			return null;
-
-		UserRole role = new UserRole();
-
-		role.setId(roleVO.getId());
-		role.setRoleCd(roleVO.getRoleCd());
-		role.setLabel(roleVO.getLabel());
-		role.setRoleDescription(roleVO.getRoleDescription());
-
-		return role;
 
 	}
 
@@ -255,64 +224,67 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboard(UserVO userVO) {
-		
-		//Get all loans this user has access to.	 
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl.parseUserModel(userVO));
-		LoanDashboardVO loanDashboardVO = LoanServiceImpl.buildLoanDashboardVoFromLoanList(loanList);
-		
-		
+
+		// Get all loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl
+				.parseUserModel(userVO));
+		LoanDashboardVO loanDashboardVO = LoanServiceImpl
+				.buildLoanDashboardVoFromLoanList(loanList);
+
 		return loanDashboardVO;
 	}
-	
+
 	/**
 	 * it returns dashboardVO from list of loans
+	 * 
 	 * @param loanList
 	 * @return
 	 */
-	public static LoanDashboardVO buildLoanDashboardVoFromLoanList(List<Loan> loanList) {
+	public static LoanDashboardVO buildLoanDashboardVoFromLoanList(
+			List<Loan> loanList) {
 
-	    LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
-	    List<LoanCustomerVO> loanCustomerVoList = new ArrayList<LoanCustomerVO>();
-	  
-	    if(loanList != null){
-	        for(Loan loan : loanList){
-	            LoanCustomerVO loanCustomerVO = LoanServiceImpl.buildLoanCustomerVoFromUser(loan);
-	            loanCustomerVoList.add( loanCustomerVO );
-	        }
-	    }
-	    
-	    loanDashboardVO.setCustomers( loanCustomerVoList );
-	    //set no of loans as num_found
-	    loanDashboardVO.setNum_found( loanList.size() );
-	    
-	    return loanDashboardVO;
-    }
-	
-	
+		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
+		List<LoanCustomerVO> loanCustomerVoList = new ArrayList<LoanCustomerVO>();
+
+		if (loanList != null) {
+			for (Loan loan : loanList) {
+				LoanCustomerVO loanCustomerVO = LoanServiceImpl
+						.buildLoanCustomerVoFromUser(loan);
+				loanCustomerVoList.add(loanCustomerVO);
+			}
+		}
+
+		loanDashboardVO.setCustomers(loanCustomerVoList);
+		// set no of loans as num_found
+		loanDashboardVO.setNum_found(loanList.size());
+
+		return loanDashboardVO;
+	}
+
 	/**
 	 * return loanCustomerVo from loan
+	 * 
 	 * @param loan
 	 * @return
 	 */
 	public static LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
-	    
 
-	    User user = loan.getUser();
-	    LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
-	    
-	    loanCustomerVO.setTime( loan.getCreatedDate().toString() );
-	    loanCustomerVO.setName( user.getFirstName() +  " " + user.getLastName() );
-        loanCustomerVO.setProf_image( user.getPhotoImageUrl() );
-        loanCustomerVO.setPhone_no( user.getPhoneNumber() );
-        
-        //TODO get these hard coded data from entity
-        loanCustomerVO.setProcessor( "Johny Tester" );
-        loanCustomerVO.setPurpose( "Purchase TBD" );
-        loanCustomerVO.setAlert_count( "3" );
-        loanCustomerVO.setCredit_score( "732" );
-	    
-        return loanCustomerVO;
+		User user = loan.getUser();
+		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
+
+		loanCustomerVO.setTime(loan.getCreatedDate().toString());
+		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
+		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
+		loanCustomerVO.setPhone_no(user.getPhoneNumber());
+
+		// TODO get these hard coded data from entity
+		loanCustomerVO.setProcessor("Johny Tester");
+		loanCustomerVO.setPurpose("Purchase TBD");
+		loanCustomerVO.setAlert_count("3");
+		loanCustomerVO.setCredit_score("732");
+
+		return loanCustomerVO;
 	}
 }

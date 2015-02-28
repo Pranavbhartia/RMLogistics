@@ -1,6 +1,8 @@
 package com.nexera.core.service;
 
-import com.nexera.common.vo.CustomerDetailVO;
+import java.util.List;
+
+import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 
 public interface UserProfileService {
@@ -11,5 +13,5 @@ public interface UserProfileService {
 
 	public Integer updateCustomerDetails(UserVO userVO);
 
-
+	public List<UserVO> searchUsersByName(String name,UserRoleVO role);
 }
