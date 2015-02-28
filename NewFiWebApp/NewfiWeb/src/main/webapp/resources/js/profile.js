@@ -24,25 +24,6 @@ function getUserProfileData() {
 			appendCustPersonalInfoWrapper);
 }
 
-function showCustomerProfilePage(){
-	$('.lp-right-arrow').remove();
-	$('#right-panel').html('');
-	$('.lp-item').removeClass('lp-item-active');
-	$('#lp-customer-profile').addClass('lp-item-active');
-	var rightArrow = $('<div>').attr({
-		"class" : "lp-right-arrow lp-prof-arrow"
-	});
-	$('#lp-customer-profile').append(rightArrow);
-	var profileMainContainer = $('<div>').attr({
-		"id" : "profile-main-container",
-		"class" : "right-panel-messageDashboard float-left"
-	});
-	$('#right-panel').append(profileMainContainer);
-	paintCutomerProfileContainer();
-	adjustRightPanelOnResize();
-}
-
-
 
 function getUserProfileData(){
 	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
@@ -246,12 +227,18 @@ function getDOBRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	
+	var dob = $.datepicker.formatDate('mm/dd/yy', new Date(user.customerDetail.dateOfBirth));
+	
+	if(dob == null || dob =="" || dob =='NaN/NaN/NaN'){
+		
+		dob = "";	
+	}
 	var dobInput = $('<input>').attr(
 			{
 				"class" : "prof-form-input date-picker",
 				"placeholder" : "MM/DD/YYYY",
-				"value" : $.datepicker.formatDate('mm/dd/yy', new Date(
-						user.customerDetail.dateOfBirth)),
+				"value" : dob,
 				"id" : "dateOfBirthId"
 			}).datepicker({
 		orientation : "top auto",
@@ -428,23 +415,21 @@ function updateUserDetails() {
 
 	userProfileJson.customerDetail = customerDetails;
 
-	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json", JSON.stringify(userProfileJson),successFuntion);
-	
-   // not using the above because we need --->contentType : "application/json; charset=utf-8",
-	
+	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json", JSON.stringify(userProfileJson),function(response){});
+
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
-		data : JSON.stringify(userProfileJson),
+		data : {"updateUserInfo":JSON.stringify(userProfileJson)},
 		dataType : "json",
-		contentType : "application/json; charset=utf-8",
 		success : function(data) {
-			alert("----"+$("#firstNameId").val());
-			$("#profileNameId").val($("#firstNameId").val());
-			$("#profilePhoneNumId").val($("#priPhoneNumberId").val());
+			
+			$("#profileNameId").text($("#firstNameId").val());
+			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+		
 		},
 		error : function(error) {
-
+			alert("error"+error);
 		}
 	});
 }
@@ -552,26 +537,5 @@ function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
 	if(message_div_id!=""){
     document.getElementById(message_div_id).innerHTML = "Uploading...";
 	}
-	
-	//changeProfilePhoto(userId);
-	
-	
-}
-
-function changeProfilePhoto(userId){
-	
-	alert("userId.."+userId);
-	$.ajax({
-		url : "rest/userprofile/getprofilephoto",
-		type : "GET",
-		data : userId,
-		dataType : "Int",
-		success : function(data) {
-			$("myProfilePicture").style.backgroundImage="url("+data+")";
-		},
-		error : function(error) {
-				alert("Errorr .....");
-		}
-	});
-	
+		
 }

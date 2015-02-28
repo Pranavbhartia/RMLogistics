@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,13 +66,13 @@ public class UserProfileRest {
 
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.POST)
 	public @ResponseBody
-	String updateprofile(@RequestBody String updateUserInfo) {
+	CommonResponseVO updateprofile(String updateUserInfo) {
 
 		Gson gson = new Gson();
 		UserVO userVO = null;
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
-
+			
 			Integer userUpdateCount = userProfileService.updateUser(userVO);
 			Integer customerDetailsUpdateCount = userProfileService.updateCustomerDetails(userVO);
 			
@@ -82,10 +81,11 @@ public class UserProfileRest {
 			}
 			
 		} catch (Exception e) {
-			LOG.error("Error while updataing the user datails ",  e.getMessage());
+			LOG.error("Error while updataing the user datails ::",  e.getMessage());
 		}
-
-		return "Saved";
+		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
 	}
 
 	@RequestMapping(value = { "/searchByName/{name}", "/searchByName" }, method = RequestMethod.GET)
