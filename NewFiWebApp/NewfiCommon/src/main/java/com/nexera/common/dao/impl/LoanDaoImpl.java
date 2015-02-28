@@ -193,4 +193,36 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		return loan;
 	}
+	
+	/**
+	 * 
+	 */ 
+	@Override
+	public List<LoanTeam> getLoanTeamList( Loan loan ){
+	    
+	    try{
+	        Session session = sessionFactory.getCurrentSession();
+	        Criteria criteria = session.createCriteria(LoanTeam.class);
+	        criteria.add(Restrictions.eq("loan.id", loan.getId()));
+	        List<LoanTeam> team = criteria.list();
+	        
+	        return team;       
+	    }catch (HibernateException hibernateException) {
+	        throw new DatabaseException("Exception caught in retrieveLoanForDashboard() ", hibernateException);
+        }
+	    
+	}
+	
+	/**
+     * 
+     */ 
+    @Override
+    public List<Loan> getLoansForUser( User user ){
+        
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Loan.class);
+        criteria.add(Restrictions.eq("user.id", user.getId()));
+        List<Loan> loanList = criteria.list();
+        return loanList;
+    }
 }

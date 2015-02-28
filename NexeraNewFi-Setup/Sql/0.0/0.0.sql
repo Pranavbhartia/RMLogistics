@@ -1,5 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `newfi_schema`;
+-- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
+--
+-- Host: 127.0.0.1    Database: newfi_schema
+-- ------------------------------------------------------
+-- Server version	5.6.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -240,6 +243,7 @@ CREATE TABLE `loan` (
   `lqb_file_id` int(11) DEFAULT NULL,
   `current_milestone` int(11) DEFAULT NULL,
   `loan_detail` int(11) DEFAULT NULL,
+  `loan_progress_status_master` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_loanMappedToUser_idx` (`user`),
   KEY `FK_loanMappedToType_idx` (`loan_type`),
@@ -247,13 +251,15 @@ CREATE TABLE `loan` (
   KEY `fk_Loan_PropertyType1_idx` (`property_type`),
   KEY `fk_loanMappedToMilestoneCurr_idx` (`current_milestone`),
   KEY `fk_loanMappedToLoanDetail_idx` (`loan_detail`),
-  CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_Loan_MappedToLoanProgressStatus` (`loan_progress_status_master`),
   CONSTRAINT `FK_loanMappedToStatus` FOREIGN KEY (`loan_status`) REFERENCES `loanstatusmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Loan_PropertyType1` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_Loan_MappedToLoanProgressStatus` FOREIGN KEY (`loan_progress_status_master`) REFERENCES `loanprogressstatusmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Loan_PropertyType1` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +268,7 @@ CREATE TABLE `loan` (
 
 LOCK TABLES `loan` WRITE;
 /*!40000 ALTER TABLE `loan` DISABLE KEYS */;
-INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,4),(2,1,'sample loan2',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,7);
 /*!40000 ALTER TABLE `loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,10 +303,10 @@ CREATE TABLE `loanappform` (
   KEY `fk_loanAppFormLinkedToPropertyType_idx` (`property_type`),
   KEY `fk_loanAppFormLinkedToLoanType_idx` (`loan_type`),
   KEY `fk_LoanAppForm_Loan1_idx` (`loan`),
+  CONSTRAINT `fk_LoanAppForm_Loan1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToLoanType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToPropertyType` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_loanAppFormLinkedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_LoanAppForm_Loan1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_loanAppFormLinkedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -592,9 +598,9 @@ CREATE TABLE `loannotification` (
   KEY `FK_notCreatedByUser_idx` (`created_by`),
   KEY `FK_notAlertLinkedToLoan_idx` (`loan`),
   KEY `FK_loanNotifMappedToAssignee_idx` (`created_for`),
+  CONSTRAINT `FK_loanNotifMappedToAssignee` FOREIGN KEY (`created_for`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanNotificationCreatedByUser0` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_loanNotificationLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_loanNotifMappedToAssignee` FOREIGN KEY (`created_for`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_loanNotificationLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -605,6 +611,30 @@ CREATE TABLE `loannotification` (
 LOCK TABLES `loannotification` WRITE;
 /*!40000 ALTER TABLE `loannotification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `loannotification` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `loanprogressstatusmaster`
+--
+
+DROP TABLE IF EXISTS `loanprogressstatusmaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loanprogressstatusmaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loan_progress_status` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `loanprogressstatusmaster`
+--
+
+LOCK TABLES `loanprogressstatusmaster` WRITE;
+/*!40000 ALTER TABLE `loanprogressstatusmaster` DISABLE KEYS */;
+INSERT INTO `loanprogressstatusmaster` VALUES (1,'NEW_PROSPECT'),(2,'LEAD'),(3,'NEW_LOAN'),(4,'IN_PROGRESS'),(5,'CLOSED'),(6,'WITHDRAWN'),(7,'DECLINED');
+/*!40000 ALTER TABLE `loanprogressstatusmaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -656,8 +686,8 @@ CREATE TABLE `loansetting` (
   PRIMARY KEY (`id`),
   KEY `FK_appSettingModfdUsr_idx` (`modified_by`),
   KEY `fk_loanSettingLinkedToLoan_idx` (`loan`),
-  CONSTRAINT `fk_loanSettingLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_LoanSettingModfdUser00` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_LoanSettingModfdUser00` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanSettingLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -921,8 +951,8 @@ CREATE TABLE `uploadedfileslist` (
   PRIMARY KEY (`id`),
   KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
   KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
-  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1066,7 +1096,7 @@ CREATE TABLE `userrole` (
   PRIMARY KEY (`id`),
   KEY `fk_userRoleModifiedBy_idx` (`modified_by`),
   CONSTRAINT `fk_userRoleModifiedBy` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1075,7 +1105,7 @@ CREATE TABLE `userrole` (
 
 LOCK TABLES `userrole` WRITE;
 /*!40000 ALTER TABLE `userrole` DISABLE KEYS */;
-INSERT INTO `userrole` VALUES (1,'CUST','Customer','Customer',1,'2014-12-12 00:00:00',1),(2,'LM','Loan Manager','Loan manager for the loan',1,'2014-12-12 00:00:00',1),(3,'SYS','System','system account',1,'2014-12-12 00:00:00',0);
+INSERT INTO `userrole` VALUES (1,'CUST','Customer','Customer',1,'2014-12-12 00:00:00',1),(2,'REALTOR','Realtor','Realtor',1,'2014-12-12 00:00:00',1),(3,'INTERNAL','Internal','Internal User',1,'2014-12-12 00:00:00',1),(4,'SYSTEM','System user','System User',1,'2014-12-12 00:00:00',0);
 /*!40000 ALTER TABLE `userrole` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1134,8 +1164,8 @@ CREATE TABLE `workflowitemexec` (
   PRIMARY KEY (`id`),
   KEY `fk_wfitemExMappedToItem_idx` (`workflow_item_master`),
   KEY `fk_wfItemExMappedToParent_idx` (`parent_workflow`),
-  CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_wfItemExMappedToParent` FOREIGN KEY (`parent_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_wfItemExMappedToParent` FOREIGN KEY (`parent_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1178,8 +1208,8 @@ CREATE TABLE `workflowitemmaster` (
   KEY `fk_wfItemLinkedToParentItem_idx` (`parent_workflow_item_master`),
   KEY `fk_wfItemMasterLinkedToTask_idx` (`workflow_task`),
   KEY `fk_wfItemLinkedToWorkflowMaster_idx` (`workflow_master`),
-  CONSTRAINT `fk_wfItemLinkedToWorkflowMaster` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemLinkedToParentItem` FOREIGN KEY (`parent_workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfItemLinkedToWorkflowMaster` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemMasterLinkedToTask` FOREIGN KEY (`workflow_task`) REFERENCES `workflowtaskconfigmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnFailure` FOREIGN KEY (`on_failure`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnSuccess` FOREIGN KEY (`on_success`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -1261,4 +1291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-27 19:00:53
+-- Dump completed on 2015-02-28 17:10:51

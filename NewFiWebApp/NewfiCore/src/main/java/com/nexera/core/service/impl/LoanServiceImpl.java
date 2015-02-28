@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
-import com.nexera.common.dao.impl.LoanDaoImpl;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanTeam;
@@ -18,8 +17,10 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanDetailVO;
+import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -315,4 +316,88 @@ public class LoanServiceImpl implements LoanService {
 	    
         return loanCustomerVO;
 	}
+	
+	/**
+     * return getLoanTeamListForLoan from loan
+     * @param loan
+     * @return LoanTeamListVO
+     */
+	@Override
+    @Transactional(readOnly=true)
+	public LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO){
+	    
+	    LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
+	    List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
+	    List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(LoanServiceImpl.parseLoanModel( loanVO ));
+	    if(loanTeamList == null)
+	        return null;
+	    
+	    for(LoanTeam loanTeam : loanTeamList){
+	        LoanTeamVO loanTeamVO = LoanServiceImpl.buildLoanTeamVO( loanTeam );
+	        loanTeamVOList.add( loanTeamVO );
+	    }
+	    loanTeamListVO.setLeanTeamList( loanTeamVOList );   
+	    
+	    return loanTeamListVO; 
+
+	}
+	
+	/**
+     * return getLoanTeamListForLoan from userVO
+     * @param userVO
+     * @return LoanTeamListVO
+     */
+    @Override
+    @Transactional(readOnly=true)
+    public LoansProgressStatusVO getLoansProgressForUser(UserVO userVO){
+            
+        List<Loan> loanList = loanDao.getLoansForUser(LoanServiceImpl.parseUserModel( userVO ));
+        LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl.getLoansProgressStatusVoFromLoanList(loanList);
+        
+        return loansProgressStatusVO;
+        
+    }
+    
+
+    /**
+     * return LoansProgressStatusVO from loanList
+     * @param loanList
+     * @return
+     */
+    public static LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(List<Loan> loanList) {
+        
+        LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
+        int newProspects, totalLeads, newLoans, inProgress, closed, withdrawn , declined;
+        newProspects = totalLeads = newLoans = inProgress = closed = withdrawn = declined = 0;
+        
+        for(Loan loan : loanList){
+            int id = loan.getLoanProgressStatus().getId();
+            
+            if(id == 1)
+                newProspects++;
+            else if(id == 2)
+                totalLeads++;
+            else if(id == 3)
+                newLoans++;
+            else if(id == 4)
+                inProgress++;
+            else if(id == 5)
+                closed++;
+            else if(id == 6)
+                withdrawn++;
+            else if(id == 7)
+                declined++;       
+        }
+        
+        loansProgressStatusVO.setClosed( closed );
+        loansProgressStatusVO.setDeclined( declined );
+        loansProgressStatusVO.setInProgress( inProgress );
+        loansProgressStatusVO.setNewLoans( newLoans );
+        loansProgressStatusVO.setTotalLeads( totalLeads );
+        loansProgressStatusVO.setNewProspects( newProspects );
+        loansProgressStatusVO.setWithdrawn( withdrawn );
+        
+        return loansProgressStatusVO;
+
+    }
 }

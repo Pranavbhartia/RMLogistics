@@ -3,7 +3,9 @@ package com.nexera.core.service;
 import java.util.List;
 
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.UserVO;
 
 public interface LoanService {
@@ -21,5 +23,9 @@ public interface LoanService {
 	List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
 	
 	LoanDashboardVO retrieveDashboard(UserVO user);
+	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
+
+    LoansProgressStatusVO getLoansProgressForUser( UserVO userVO );
+
 
 }

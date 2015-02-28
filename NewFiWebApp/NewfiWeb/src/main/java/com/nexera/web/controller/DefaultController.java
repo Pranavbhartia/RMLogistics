@@ -57,7 +57,7 @@ public class DefaultController {
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public void loadDefaultValues(Model model, HttpServletRequest req)
+	public User loadDefaultValues(Model model, HttpServletRequest req)
 			throws IOException {
 		User user = getUserObject();
 		JSONObject newfi = new JSONObject();
@@ -82,6 +82,7 @@ public class DefaultController {
 						+ utils.getDefaultString(user.getLastName()));
 
 		model.addAttribute("newfi", newfi);
+		return user;
 	}
 
 	private void loadLanguageMap(String suffix) throws IOException {

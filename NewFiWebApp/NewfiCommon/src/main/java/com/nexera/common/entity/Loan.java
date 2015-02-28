@@ -27,6 +27,7 @@ public class Loan implements Serializable {
 	private String name;
 	private User user;
 	private LoanTypeMaster loanType;
+	private LoanProgressStatusMaster loanProgressStatus;
 	private LoanStatusMaster loanStatus;
 	private PropertyTypeMaster propertyType;
 	private LoanMilestoneMaster currentLoanMilestone;
@@ -322,6 +323,19 @@ public class Loan implements Serializable {
 		return loanRate;
 	}
 
+	// bi-directional many-to-one association to LoanProgressStatusMaster
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_progress_status_master")
+	public LoanProgressStatusMaster getLoanProgressStatus()
+    {
+        return loanProgressStatus;
+    }
+
+    public void setLoanProgressStatus( LoanProgressStatusMaster loanProgressStatus )
+    {
+        this.loanProgressStatus = loanProgressStatus;
+    }
+    
 	// bi-directional many-to-one association to LoanSetting
 	@OneToMany(mappedBy = "loan")
 	public List<LoanSetting> getLoanSettings() {
