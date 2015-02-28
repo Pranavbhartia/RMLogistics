@@ -1,7 +1,9 @@
 package com.nexera.common.dao.impl;
 
+import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,13 +19,14 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
-
 @Component
 @Transactional
-public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao {
+public class UserProfileDaoImpl extends GenericDaoImpl implements
+		UserProfileDao {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(UserProfileDaoImpl.class);
@@ -42,6 +45,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 				throw new NoRecordsFetchedException(
 						DisplayMessageConstants.INVALID_USERNAME);
 			}
+			User user = (User) obj;
+			Hibernate.initialize(user.getUserRole());
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
@@ -62,7 +67,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 
 	@Override
 	public Integer updateUser(User user) {
-		
+
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
 		Query query = (Query) session.createQuery(hql);
@@ -76,10 +81,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 		return result;
 	}
 
-
 	@Override
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
-		
+
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
 		Query query = (Query) session.createQuery(hql);
@@ -89,7 +93,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());
 		query.setParameter("secEmailId", customerDetail.getSecEmailId());
 		query.setParameter("dob", customerDetail.getDateOfBirth());
-		query.setParameter("profileStatus", customerDetail.getProfileCompletionStatus());
+		query.setParameter("profileStatus",
+				customerDetail.getProfileCompletionStatus());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -97,7 +102,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 	}
 
 	@Override
-	public Integer updateUser(String s3ImagePath,Integer userid) {
+	public Integer updateUser(String s3ImagePath, Integer userid) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.photoImageUrl = :imagePath WHERE usr.id = :id";
 		Query query = (Query) session.createQuery(hql);
@@ -106,6 +111,26 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements UserProfileDao
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
 		return result;
+	}
+
+	public List<User> searchUsersByName(String name, UserRole role) {
+
+		Session session = sessionFactory.getCurrentSession();
+		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
+				+ name + "%'";
+		if (role != null) {
+			searchQuery += " and userRole=:userRole";
+		}
+		int MAX_RESULTS = 50;
+		Query query = session.createQuery(searchQuery);
+
+		if (role != null) {
+			query.setEntity("userRole", role);
+		}
+
+		query.setMaxResults(MAX_RESULTS);
+
+		return query.list();
 	}
 
 }

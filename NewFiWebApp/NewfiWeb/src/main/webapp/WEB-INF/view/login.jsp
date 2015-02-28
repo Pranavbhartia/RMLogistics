@@ -1,66 +1,93 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ page isELIgnored="false"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="icon" href="../../favicon.ico">
-<title>Signin Template for Bootstrap</title>
+<title>Login</title>
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="resources/css/jquery-ui.css" rel="stylesheet">
+<link href="resources/css/dropzone.css" rel="stylesheet">
+<link href="resources/css/styles.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
+<script src="resources/js/jquery-2.1.3.min.js"></script>
 
-<!-- Bootstrap core CSS -->
-<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript">
 
-<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-<body>
-
-	<div class="container">
-
-
-		<h3>Login with Username and Password</h3>
- 
-		<c:if test="${not empty error}">
-			<div class="error">${error}</div>
-		</c:if>
-		<c:if test="${not empty msg}">
-			<div class="msg">${msg}</div>
-		</c:if>
-
-		<form name='loginForm'
-		  action="<c:url value='/j_spring_security_check' />" method='POST'>
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<label for="inputEmail" class="sr-only">Email address</label> <input
-				type="email" id="inputEmail" name="username" class="form-control"
-				placeholder="Email address" required autofocus> <label
-				for="inputPassword"  class="sr-only">Password</label> <input
-				type="password" name="password" id="inputPassword" class="form-control"
-				placeholder="Password" required>
-			<div class="checkbox">
-				<label> <input type="checkbox" value="remember-me">
-					Remember me
-				</label>
-			</div>
-			
-				<input type="submit" value="Sign in " class="btn btn-lg btn-primary btn-block" />
-					
-			<a href="customerPage.do" >Redirect to Nexera</a>
-		</form>
-
-	</div>
-	<!-- /container -->
-
+$(document).ready(function() {
+	$('#loginForm').submit(function() {
+		var userName = $("#userId").val();
+		var password = $("#password").val();
+		 var dateVar = new Date();
+			var timezone = dateVar.getTimezoneOffset(); 
+		 $("#inputEmail").val(userName + ":"+timezone);
+		 $("#inputPassword").val(password);
+		 
+		 return true;
+		});
+});
 
 	
+</script>
+</head>
+<body>
+
+	<div class="login-body-wrapper">
+		<!-- Login Header -->
+		<div class="login-header-wrapper">
+			<div class="header-container container">
+				<div class="header-row row clearfix">
+					<div class="header-logo float-left"></div>
+					<div class="header-btns-wrapper float-right clearfix">
+						<div class="float-left hdr-contact-no">1-888-415-1620</div>
+						<div class="float-left btn-settings hdr-btn-item"></div>
+						<div class="float-left btn-logout hdr-btn-item">
+							<span class="logout-btn-txt">Logout</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Container -->
+		<div class="login-container container">
+			<div class="container-row row clearfix">
+				<div class="display-title">A New way to Finance your home</div>
+				<div class="display-title-subtxt">Lorem Ipsum is also known
+					as: Greeked Text, blind text, placeholder text, dummy content,
+					filter text, lipsum, and mock-content.</div>
+				<div class="login-form-wrapper">
+					<form id="loginForm" name="loginForm"
+						action="j_spring_security_check" method="POST">
+						<div class="form-logo"></div>
+						<div class="login-input-cont">
+							<input type="text" class="login-input login-input-username"
+								placeholder="Username" id="userId"> <input type="hidden"
+								id="inputEmail" name="j_username" class="hide"
+								placeholder="Email address" required autofocus>
+						</div>
+						<div class="login-input-cont">
+							<input type="password" class="login-input login-input-pwd" id="password" placeholder="Password" >
+							<input type="hidden" name="j_password" id="inputPassword"
+								class="hide" >
+						</div>
+						<input type="submit" class="login-submit-button" name="Login" value="Login to your account">
+						<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
+						<div class="forgot-pwd">
+							Forgot Password?<span class="forgot-pwd-link">Click here</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

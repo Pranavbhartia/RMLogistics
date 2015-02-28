@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,12 +23,23 @@ public class NeedsListMaster implements Serializable {
 	private String label;
 	private Date modifiedDate;
 	private String needCategory;
+	private Boolean isCustom;
 	private List<LoanNeedsList> loanNeedsList;
 	private User modifiedBy;
 
 	public NeedsListMaster() {
 	}
-
+	@Transient
+	public static NeedsListMaster getCustomNeed(String label,String category,String desc,User user){
+		NeedsListMaster need=new NeedsListMaster();
+		need.setDescription(desc);
+		need.setIsCustom(true);
+		need.setLabel(label);
+		need.setNeedCategory(category);
+		need.setModifiedDate(new Date());
+		need.setModifiedBy(user);
+		return need;
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
@@ -105,6 +118,16 @@ public class NeedsListMaster implements Serializable {
 
 	public void setModifiedBy(User modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	@Column(name = "is_custom", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsCustom() {
+		return isCustom;
+	}
+
+	public void setIsCustom(Boolean isCustom) {
+		this.isCustom = isCustom;
 	}
 
 }

@@ -39,8 +39,8 @@ public class UserLoginHandler extends SavedRequestAwareAuthenticationSuccessHand
 			LOG.info("Url Check: " + redirectTo);
 		}
 		else {
-			response.sendRedirect("./" + JspLookup.CUSTOMER_VIEW + ".do");
-			LOG.info("Final Check: " + "./" + JspLookup.CUSTOMER_VIEW + ".do");
+			response.sendRedirect("./" + JspLookup.HOME_PAGE + ".do");
+			LOG.info("Final Check: " + "./" + JspLookup.HOME_PAGE + ".do");
 		}
 	}
 }

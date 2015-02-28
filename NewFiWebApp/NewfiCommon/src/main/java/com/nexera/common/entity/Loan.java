@@ -27,12 +27,13 @@ public class Loan implements Serializable {
 	private String name;
 	private User user;
 	private LoanTypeMaster loanType;
+	private LoanProgressStatusMaster loanProgressStatus;
 	private LoanStatusMaster loanStatus;
 	private PropertyTypeMaster propertyType;
 	private LoanMilestoneMaster currentLoanMilestone;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFee> loanApplicationFees;
-	private List<LoanDetail> loanDetails;
+	private LoanDetail loanDetail;
 	private List<LoanMilestone> loanMilestones;
 	private List<LoanNeedsList> loanNeedsLists;
 	private List<LoanNotification> loanNotifications;
@@ -214,28 +215,14 @@ public class Loan implements Serializable {
 		return loanApplicationFee;
 	}
 
-	// bi-directional many-to-one association to LoanDetail
-	@OneToMany(mappedBy = "loan")
-	public List<LoanDetail> getLoanDetails() {
-		return this.loanDetails;
-	}
-
-	public void setLoanDetails(List<LoanDetail> loanDetails) {
-		this.loanDetails = loanDetails;
-	}
-
-	public LoanDetail addLoandetail(LoanDetail loanDetail) {
-		getLoanDetails().add(loanDetail);
-		loanDetail.setLoan(this);
-
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="loan_detail")
+	public LoanDetail getLoanDetail() {
 		return loanDetail;
 	}
 
-	public LoanDetail removeLoandetail(LoanDetail loanDetail) {
-		getLoanDetails().remove(loanDetail);
-		loanDetail.setLoan(null);
-
-		return loanDetail;
+	public void setLoanDetail(LoanDetail loanDetail) {
+		this.loanDetail = loanDetail;
 	}
 
 	// bi-directional many-to-one association to LoanMilestone
@@ -336,6 +323,19 @@ public class Loan implements Serializable {
 		return loanRate;
 	}
 
+	// bi-directional many-to-one association to LoanProgressStatusMaster
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_progress_status_master")
+	public LoanProgressStatusMaster getLoanProgressStatus()
+    {
+        return loanProgressStatus;
+    }
+
+    public void setLoanProgressStatus( LoanProgressStatusMaster loanProgressStatus )
+    {
+        this.loanProgressStatus = loanProgressStatus;
+    }
+    
 	// bi-directional many-to-one association to LoanSetting
 	@OneToMany(mappedBy = "loan")
 	public List<LoanSetting> getLoanSettings() {

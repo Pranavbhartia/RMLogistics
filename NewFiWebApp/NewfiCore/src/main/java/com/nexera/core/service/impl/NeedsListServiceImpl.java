@@ -33,7 +33,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 	LoanDao loanDao;
 	
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
-		List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.loadAll(NeedsListMaster.class);
+		List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.getMasterNeedsList(false);
 		LinkedHashMap<String, ManagerNeedVo> needsDirectory=new LinkedHashMap<String,ManagerNeedVo>();
 		for(NeedsListMaster need:needs){
 			ManagerNeedVo managerNeedVo=new ManagerNeedVo(need);
@@ -49,7 +49,8 @@ public class NeedsListServiceImpl implements NeedsListService{
 			// TODO Fetch List of Needs List from database for the loan if list is not null and length greater then 0 then those items need to be selected
 			List<ManagerNeedVo> result=new ArrayList<ManagerNeedVo>();
 			if(loanNeeds.size()>0){
-				List<NeedsListMaster> needs=needsDao.loadAll(NeedsListMaster.class);
+				List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.getMasterNeedsList(false);
+				//List<NeedsListMaster> needs=needsDao.loadAll(NeedsListMaster.class);
 				LinkedHashMap<String, LoanNeedsList> needsDir=new LinkedHashMap<String,LoanNeedsList>();
 				for(LoanNeedsList loanNeed:loanNeeds){
 					needsDir.put(loanNeed.getNeedsListMaster().getId()+"", loanNeed);
@@ -63,14 +64,20 @@ public class NeedsListServiceImpl implements NeedsListService{
 					}
 					result.add(needVo);
 				}
+				List<NeedsListMaster> customNeeds=(List<NeedsListMaster>)needsDao.getMasterNeedsList(true);
+				
+				for(NeedsListMaster need:customNeeds){
+					if(needsDir.containsKey(need.getId()+"")){
+						ManagerNeedVo needVo=new ManagerNeedVo(need);
+						needVo.setIsChecked(true);
+						result.add(needVo);
+					}
+				}
 			}else{
-				System.out.println("Get Loan App Form ");
 				LoanAppForm loanAppForm=loanDao.getLoanAppForm(loanId);
-				System.out.println("Got Loan App Form ");
 				if(loanAppForm==null){
 					throw new Exception("Loan Details Not found");
 				}
-				System.out.println("Get master needs List"+loanAppForm.getId());
 				LinkedHashMap<String, ManagerNeedVo> needsList=getMasterNeedsListDirectory();
 				if(needsList.size()<36){
 					throw new Exception("Insufficient Data");
@@ -178,7 +185,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 				needsList.get("22").setIsChecked(true);
 				needsList.get("28").setIsChecked(true);
 				needsList.get("33").setIsChecked(true);
-				System.out.println("Completed Operation");
+				
 				result=new ArrayList<ManagerNeedVo>(needsList.values());
 				// TODO code to Apply Rules comes here
 				
@@ -196,7 +203,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 		//		}
 				
 			}
-			System.out.println(result.size()+"--1");
+			
 			
 //			Collections.sort(result,new Comparator<ManagerNeedVo>() {
 //				 @Override
@@ -209,7 +216,6 @@ public class NeedsListServiceImpl implements NeedsListService{
 //				    }
 //			});
 			
-			System.out.println(result.size()+"----2");
 			return result;
 		
 		} catch (NoRecordsFetchedException e) {
@@ -220,7 +226,6 @@ public class NeedsListServiceImpl implements NeedsListService{
 	}
 	
 	public int saveLoanNeeds(int loanId,List<Integer> needsList){
-		System.out.println("1");
 		LinkedHashMap<String, LoanNeedsList> existingNeeds=new LinkedHashMap<String,LoanNeedsList>();
 		List<LoanNeedsList> ExistingNeedsList = null;
 		try {
@@ -229,11 +234,9 @@ public class NeedsListServiceImpl implements NeedsListService{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("2");
 		for(LoanNeedsList need:ExistingNeedsList){
 			existingNeeds.put(need.getNeedsListMaster().getId()+"", need);
 		}
-		System.out.println("3");
 		List<LoanNeedsList> needs=new ArrayList<LoanNeedsList>();
 		try{
 		for(Integer needId:needsList){
@@ -253,14 +256,13 @@ public class NeedsListServiceImpl implements NeedsListService{
 			need.setMandatory(true);
 			need.setSystemAction(true);
 			
-			System.out.println("3--"+needId.intValue());
 			if(existingNeeds.containsKey(needId.intValue()+"")){
 				existingNeeds.remove(needId.intValue()+"");
 			}else{
 				try{
 				needsDao.save(need);
 				}catch(DatabaseException e){
-					System.out.println("3--error"+e);
+					
 				}
 			}
 		}
@@ -273,6 +275,25 @@ public class NeedsListServiceImpl implements NeedsListService{
 			return 0;
 		}
 		return 1;
+	}
+	@Override
+	public List<ManagerNeedVo> getNeedsListMaster(boolean isCustom){
+		List<NeedsListMaster> customNeeds=needsDao.getMasterNeedsList(isCustom);
+		List<ManagerNeedVo> result=new ArrayList<ManagerNeedVo>();
+		for(NeedsListMaster need:customNeeds){
+			ManagerNeedVo needVo=new ManagerNeedVo(need);
+			result.add(needVo);
+		}
+		return result;
+	}
+
+	@Override
+	public int saveCustomNeed(NeedsListMaster need) {
+		try{
+			return (int) needsDao.save(need);
+		}catch(Exception e){
+			return 0;
+		}
 	}
 }
 
