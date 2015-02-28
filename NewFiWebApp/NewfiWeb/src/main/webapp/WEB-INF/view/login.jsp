@@ -12,6 +12,7 @@
 
 <!-- Bootstrap core CSS -->
 <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="resources/js/jquery-2.1.3.min.js"></script>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -22,6 +23,14 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	var timezone = dateVar.getTimezoneOffset(); 
+	$('#offset').val(timezone);
+});
+</script>
 
 <body>
 
@@ -50,10 +59,10 @@
 				<label> <input type="checkbox" value="remember-me">
 					Remember me
 				</label>
+				
 			</div>
-			
+			<input id="offset" type="hidden" name="offset" value = "offset" />	
 				<input type="submit" value="Sign in " class="btn btn-lg btn-primary btn-block" />
-					
 			<a href="customerPage.do" >Redirect to Nexera</a>
 		</form>
 

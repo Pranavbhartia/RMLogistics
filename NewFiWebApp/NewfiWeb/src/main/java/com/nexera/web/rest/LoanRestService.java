@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -97,6 +98,16 @@ public class LoanRestService {
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loans);
 
 		return new Gson().toJson(responseVO);
+	}
+	
+	@RequestMapping(value = "/retrieveDashboard/{userID}")
+	public @ResponseBody String retrieveDashboard(@PathVariable Integer userID){
+	    UserVO user = new UserVO();
+	    user.setId(userID);
+	    
+	    LoanDashboardVO responseVO = loanService.retrieveDashboard( user );
+	    
+	    return new Gson().toJson(responseVO);
 	}
 
 }
