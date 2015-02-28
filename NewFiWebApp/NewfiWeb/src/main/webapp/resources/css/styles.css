@@ -2443,3 +2443,23 @@ input.calc-input{
 	color:#428bca;
 	cursor: pointer;
 }
+.ui-autocomplete{
+	max-height: 200px;
+	background-color: #fdfdfd;
+	border: 1px #dcdcdc solid;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	padding: 5px 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap; 
+}
+
+.ui-autocomplete>li{
+	padding-left: 20px;
+	line-height: 30px;
+	height: 30px;
+	background-color: #fdfdfd;
+	cursor: pointer;
+}
