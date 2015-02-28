@@ -9,7 +9,7 @@ public class CustomerDetailVO implements Serializable {
 	private String addressCity;
 	private String addressState;
 	private String addressZipCode;
-	private Date dateOfBirth;
+	private Long dateOfBirth;
 	private Integer profileCompletionStatus;
 	private String secEmailId;
 	private String secPhoneNumber;
@@ -38,10 +38,12 @@ public class CustomerDetailVO implements Serializable {
 	public void setAddressZipCode(String addressZipCode) {
 		this.addressZipCode = addressZipCode;
 	}
-	public Date getDateOfBirth() {
+	
+	
+	public Long getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(Long dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	public Integer getProfileCompletionStatus() {

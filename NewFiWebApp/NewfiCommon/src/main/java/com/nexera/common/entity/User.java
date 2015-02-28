@@ -142,7 +142,7 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_detail")
 	public CustomerDetail getCustomerDetail() {
 		return customerDetail;
@@ -297,7 +297,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	// bi-directional many-to-one association to UserRole
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
 	public UserRole getUserRole() {
 		return this.userRole;

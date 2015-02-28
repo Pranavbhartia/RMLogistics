@@ -1,0 +1,4 @@
+function showPersonalDetails(){
+	
+	alert("hii");
+}
