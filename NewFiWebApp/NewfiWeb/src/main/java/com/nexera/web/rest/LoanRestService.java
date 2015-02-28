@@ -5,15 +5,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -23,7 +27,10 @@ public class LoanRestService {
 	@Autowired
 	private LoanService loanService;
 
-	@RequestMapping(value = "/getLoansOfUser/{userID}")
+	@Autowired
+	private UserProfileService userProfileService;
+
+	@RequestMapping(value = "/user/{userID}", method = RequestMethod.GET)
 	public @ResponseBody String getLoansOfUser(@PathVariable Integer userID) {
 
 		UserVO user = new UserVO();
@@ -35,7 +42,7 @@ public class LoanRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/get/{loanID}")
+	@RequestMapping(value = "/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody String getLoanByID(@PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
@@ -48,23 +55,32 @@ public class LoanRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/addToLoanTeam/{loanID}/{userID}")
+	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.POST)
 	public @ResponseBody String addToLoanTeam(@PathVariable Integer loanID,
-			@PathVariable Integer userID) {
+			@RequestParam(value = "userID") Integer userID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
 		UserVO user = new UserVO();
 		user.setId(userID);
 		boolean result = loanService.addToLoanTeam(loan, user);
-		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+		if (result) {
+			user = userProfileService.findUser(userID);
+		}
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setOperationResult(result);
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setUser(user);
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(editLoanTeamVO);
 
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/removeFromLoanTeam/{loanID}/{userID}")
+	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.DELETE)
 	public @ResponseBody String removeFromLoanTeam(
-			@PathVariable Integer loanID, @PathVariable Integer userID) {
+			@PathVariable Integer loanID, @RequestParam(value="userID") Integer userID) {
 
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
@@ -72,12 +88,17 @@ public class LoanRestService {
 		UserVO user = new UserVO();
 		user.setId(userID);
 		boolean result = loanService.removeFromLoanTeam(loan, user);
-		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setOperationResult(result);
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(editLoanTeamVO);
 
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/retreiveLoanTeam/{loanID}")
+	@RequestMapping(value = "/team/{loanID}",method=RequestMethod.GET)
 	public @ResponseBody String retreiveLoanTeam(@PathVariable Integer loanID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
@@ -87,27 +108,15 @@ public class LoanRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/retreiveLoansAsManager/{managerID}")
-	public @ResponseBody String retreiveLoansAsManager(
-			@PathVariable Integer managerID) {
+	//TODO-move this to User profile rest service
+	@RequestMapping(value = "/retrieveDashboard/{userID}")
+	public @ResponseBody String retrieveDashboard(@PathVariable Integer userID) {
+		UserVO user = new UserVO();
+		user.setId(userID);
 
-		UserVO manager = new UserVO();
-		manager.setId(managerID);
-
-		List<LoanVO> loans = loanService.retreiveLoansAsManager(manager);
-		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loans);
+		LoanDashboardVO responseVO = loanService.retrieveDashboard(user);
 
 		return new Gson().toJson(responseVO);
-	}
-	
-	@RequestMapping(value = "/retrieveDashboard/{userID}")
-	public @ResponseBody String retrieveDashboard(@PathVariable Integer userID){
-	    UserVO user = new UserVO();
-	    user.setId(userID);
-	    
-	    LoanDashboardVO responseVO = loanService.retrieveDashboard( user );
-	    
-	    return new Gson().toJson(responseVO);
 	}
 
 }
