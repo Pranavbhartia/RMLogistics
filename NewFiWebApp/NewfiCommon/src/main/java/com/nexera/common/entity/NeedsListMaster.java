@@ -29,7 +29,17 @@ public class NeedsListMaster implements Serializable {
 
 	public NeedsListMaster() {
 	}
-
+	@Transient
+	public static NeedsListMaster getCustomNeed(String label,String category,String desc,User user){
+		NeedsListMaster need=new NeedsListMaster();
+		need.setDescription(desc);
+		need.setIsCustom(true);
+		need.setLabel(label);
+		need.setNeedCategory(category);
+		need.setModifiedDate(new Date());
+		need.setModifiedBy(user);
+		return need;
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {

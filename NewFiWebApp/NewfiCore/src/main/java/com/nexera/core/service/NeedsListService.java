@@ -10,4 +10,8 @@ public interface NeedsListService {
 	public List<ManagerNeedVo> getLoansNeedsList(int loanId) throws Exception;
 	
 	public int saveLoanNeeds(int loanId,List<Integer> needsList);
+	
+	public List<ManagerNeedVo> getNeedsListMaster(boolean isCustom);
+	
+	public int saveCustomNeed(NeedsListMaster need);
 }

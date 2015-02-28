@@ -33,7 +33,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 	LoanDao loanDao;
 	
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
-		List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.loadAll(NeedsListMaster.class);
+		List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.getMasterNeedsList(false);
 		LinkedHashMap<String, ManagerNeedVo> needsDirectory=new LinkedHashMap<String,ManagerNeedVo>();
 		for(NeedsListMaster need:needs){
 			ManagerNeedVo managerNeedVo=new ManagerNeedVo(need);
@@ -49,7 +49,8 @@ public class NeedsListServiceImpl implements NeedsListService{
 			// TODO Fetch List of Needs List from database for the loan if list is not null and length greater then 0 then those items need to be selected
 			List<ManagerNeedVo> result=new ArrayList<ManagerNeedVo>();
 			if(loanNeeds.size()>0){
-				List<NeedsListMaster> needs=needsDao.loadAll(NeedsListMaster.class);
+				List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.getMasterNeedsList(false);
+				//List<NeedsListMaster> needs=needsDao.loadAll(NeedsListMaster.class);
 				LinkedHashMap<String, LoanNeedsList> needsDir=new LinkedHashMap<String,LoanNeedsList>();
 				for(LoanNeedsList loanNeed:loanNeeds){
 					needsDir.put(loanNeed.getNeedsListMaster().getId()+"", loanNeed);
@@ -62,6 +63,15 @@ public class NeedsListServiceImpl implements NeedsListService{
 						needVo.setIsChecked(false);
 					}
 					result.add(needVo);
+				}
+				List<NeedsListMaster> customNeeds=(List<NeedsListMaster>)needsDao.getMasterNeedsList(true);
+				
+				for(NeedsListMaster need:customNeeds){
+					if(needsDir.containsKey(need.getId()+"")){
+						ManagerNeedVo needVo=new ManagerNeedVo(need);
+						needVo.setIsChecked(true);
+						result.add(needVo);
+					}
 				}
 			}else{
 				LoanAppForm loanAppForm=loanDao.getLoanAppForm(loanId);
@@ -265,6 +275,25 @@ public class NeedsListServiceImpl implements NeedsListService{
 			return 0;
 		}
 		return 1;
+	}
+	@Override
+	public List<ManagerNeedVo> getNeedsListMaster(boolean isCustom){
+		List<NeedsListMaster> customNeeds=needsDao.getMasterNeedsList(isCustom);
+		List<ManagerNeedVo> result=new ArrayList<ManagerNeedVo>();
+		for(NeedsListMaster need:customNeeds){
+			ManagerNeedVo needVo=new ManagerNeedVo(need);
+			result.add(needVo);
+		}
+		return result;
+	}
+
+	@Override
+	public int saveCustomNeed(NeedsListMaster need) {
+		try{
+			return (int) needsDao.save(need);
+		}catch(Exception e){
+			return 0;
+		}
 	}
 }
 

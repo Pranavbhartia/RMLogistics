@@ -1417,7 +1417,7 @@ function appendCreateUserPopupDOB() {
  */
 
 var docData = {
-	"income" : [ {
+	"liability" : [ {
 		"isChecked" : "true",
 		"title" : "Salaried-W-2 form",
 		"desc" : "Salaried-W-2 form"
@@ -1558,7 +1558,7 @@ function appendInitialNeedsListWrapper() {
 	var propertyDocContainer = getNeedsListDocumentContainer("property",
 			docData.property).addClass('float-right');
 
-	var assetDocContainer = getNeedsListDocumentContainer("asset",
+	var assetDocContainer = getNeedsListDocumentContainer("liabilities",
 			docData.asset).addClass('float-right');
 
 	var otherDocContainer = getNeedsListDocumentContainer("other",
@@ -1650,7 +1650,7 @@ $(document).on('click', '.doc-checkbox', function() {
 	}
 });
 
-var docTypes = [ "income", "property", "asset", "other" ];
+var docTypes = [ "income", "property", "liability", "other" ];
 
 function appendAddNeedsContainer() {
 	var wrapper = $('<div>').attr({
@@ -1714,7 +1714,8 @@ function appendAddNeedsContainer() {
 	container.append(row1).append(row2).append(row3);
 
 	var addNeedsBtn = $('<div>').attr({
-		"class" : "add-needs-btn"
+		"class" : "add-needs-btn",
+		"onclick": "saveCustomNeed()"
 	}).html("Add Needs");
 
 	container.append(addNeedsBtn);
@@ -1724,7 +1725,7 @@ function appendAddNeedsContainer() {
 }
 
 // Click event for add needs button
-$(document).on(
+/*$(document).on(
 		'click',
 		'.add-needs-btn',
 		function() {
@@ -1747,7 +1748,7 @@ $(document).on(
 			$('.initial-list-doc-wrapper[data-doc-type="' + docType + '"]')
 					.find('.initial-list-doc-container').append(newNeedRow);
 			clearAddNeedForm();
-		});
+		});*/
 
 function clearAddNeedForm() {
 	$('#need_doc_title').val('');

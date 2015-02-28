@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -70,5 +71,20 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 			
 		}
 	}
-	
+	@Override
+	public List<NeedsListMaster> getMasterNeedsList(Boolean isCustom) {
+		try{
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(NeedsListMaster.class);
+			criteria.add(Restrictions.eq("isCustom", isCustom));
+			List<NeedsListMaster> loanNeeds=(List<NeedsListMaster>)criteria.list();
+			return loanNeeds;
+		}catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
+	}
 }
