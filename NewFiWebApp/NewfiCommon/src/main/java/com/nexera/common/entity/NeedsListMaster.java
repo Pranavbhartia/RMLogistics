@@ -1,7 +1,11 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +14,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name = "needslistmaster")
 @NamedQuery(name = "NeedsListMaster.findAll", query = "SELECT n FROM NeedsListMaster n")
 public class NeedsListMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +23,7 @@ public class NeedsListMaster implements Serializable {
 	private String label;
 	private Date modifiedDate;
 	private String needCategory;
+	private Boolean isCustom;
 	private List<LoanNeedsList> loanNeedsList;
 	private User modifiedBy;
 
@@ -102,6 +108,16 @@ public class NeedsListMaster implements Serializable {
 
 	public void setModifiedBy(User modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	@Column(name = "is_custom", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsCustom() {
+		return isCustom;
+	}
+
+	public void setIsCustom(Boolean isCustom) {
+		this.isCustom = isCustom;
 	}
 
 }

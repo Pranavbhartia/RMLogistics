@@ -2,20 +2,24 @@ package com.nexera.core.service;
 
 import java.util.List;
 
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanTeam;
-import com.nexera.common.entity.User;
+import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 
 public interface LoanService {
 
-	List<Loan> getLoansOfUser(User user);
+	List<LoanVO> getLoansOfUser(UserVO user);
 
-	Loan getLoanByID(Integer loanID);
+	LoanVO getLoanByID(Integer loanID);
 
-	boolean addToLoanTeam(User user);
+	boolean addToLoanTeam(LoanVO loan,UserVO user);
 
-	boolean removeFromLoanTeam(User user);
+	boolean removeFromLoanTeam(LoanVO loan,UserVO user);
 
-	List<LoanTeam> retreiveLoanTeam(Loan loan);
+	List<UserVO> retreiveLoanTeam(LoanVO loan);
+
+	List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
+	
+	LoanDashboardVO retrieveDashboard(UserVO user);
 
 }

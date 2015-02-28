@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -10,6 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name = "loanmilestonemaster")
 @NamedQuery(name="LoanMilestoneMaster.findAll", query="SELECT l FROM LoanMilestoneMaster l")
 public class LoanMilestoneMaster implements Serializable {
 	private static final long serialVersionUID = 1L;

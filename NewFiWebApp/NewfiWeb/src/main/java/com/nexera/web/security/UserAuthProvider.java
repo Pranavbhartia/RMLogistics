@@ -32,8 +32,10 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) {
 		LOG.info("Inside authenticate Method of UserAuthProvider");
 
-		String username = authentication.getName();
+		String username = authentication.getName().split(":")[0];
+		String offSet = authentication.getName().split(":")[1];
 		String password = authentication.getCredentials().toString();
+		
 		User user;
 		try {
 			LOG.debug("Validating the form parameters");
@@ -51,6 +53,8 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			if (user != null) {
 				List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+				user.setMinutesOffset(offSet);
+				//user.setMinutesOffset();
 				Authentication auth = new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
 				LOG.info("Authentication provided for user : " + user.getEmailId());
 				return auth;
@@ -62,6 +66,10 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 		}
 		catch (InvalidInputException e) {
 			LOG.error(e.getMessage());
+		}catch (Exception e) {
+			// TODO: handle exception
+			
+			e.printStackTrace();
 		}
 		return null;
 	}

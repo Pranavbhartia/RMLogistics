@@ -1,12 +1,14 @@
 package com.nexera.web.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
 
@@ -23,60 +29,54 @@ public class FileUploadController {
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
 	
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
+	
+	
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
 	@RequestMapping(value = "documentUpload.do" , method = RequestMethod.POST  )
-	public @ResponseBody String  fileUploadToS3System( @RequestParam("file") MultipartFile file){
+	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file){
+		List<String> s3paths = new ArrayList<String>();
+		for (MultipartFile multipartFile : file) {
+			s3paths.add(uploadFile(multipartFile));
+		}
+		return new Gson().toJson(s3paths);
+	} 
+	
+	public String uploadFile(MultipartFile file){
 		String s3Path = null;
 		 try{
-			 
-			 
-			File serverFile = new File( uploadFileToLocal(file));
-			//s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete" );
-			NexeraUtility.convertPDFToJPEG(serverFile);
+			File serverFile = new File( NexeraUtility.uploadFileToLocal(file));
+			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete" );
+			//NexeraUtility.convertPDFToJPEG(serverFile);
+			UploadedFilesList uploadedFilesList = new UploadedFilesList();
+			uploadedFilesList.setIsActivate(false);
+			uploadedFilesList.setIsAssigned(false);
+			uploadedFilesList.setS3path(s3Path);
+			uploadedFilesList.setUploadedBy( getUserObject());
+			uploadedFilesList.setUploadedDate(new Date());
 			
+			Integer fileId = uploadedFilesListService.saveUploadedFile(uploadedFilesList);
+		
+			LOG.info("Added File document row : "+fileId);
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());
 		 }
 		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
 		 
 		 LOG.info("The s3 path is : "+s3Path);
-		 return uploadFileToLocal(file);
-	} 
+		return s3Path;
+	}
 	
-	
-	
-	
-	public String uploadFileToLocal(MultipartFile file){
-		if (!file.isEmpty()) {
-            try {
-                byte[] bytes = file.getBytes();
- 
-                // Creating the directory to store file
-              
-                File dir = new File(NexeraUtility.tomcatDirectoryPath());
-                if (!dir.exists())
-                    dir.mkdirs();
- 
-                String filePath = dir.getAbsolutePath()
-                        + File.separator + file.getOriginalFilename();
-                // Create the file on server
-                File serverFile = new File(filePath);
-                BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(serverFile));
-                stream.write(bytes);
-                stream.close();
- 
-                LOG.info("Server File Location="
-                        + serverFile.getAbsolutePath());
- 
-                return filePath;
-            } catch (Exception e) {
-                LOG.info("Exception in uploading file in local "+e.getMessage());
-                return null;
-            }
-        } else {
-            return null;
-        }
+	private User getUserObject() {
+		final Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			return (User) principal;
+		} else {
+			return null;
+		}
+
 	}
 }

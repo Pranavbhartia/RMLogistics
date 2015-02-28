@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,6 +25,7 @@ import org.hibernate.annotations.Type;
  * 
  */
 @Entity
+@Table(name = "workflowitemmaster")
 @NamedQuery(name = "WorkflowItemMaster.findAll", query = "SELECT w FROM WorkflowItemMaster w")
 public class WorkflowItemMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -35,14 +37,17 @@ public class WorkflowItemMaster implements Serializable {
 	private Date modifiedDate;
 	private byte priority;
 	private Integer startDelay;
-	private String taskName;
+	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
-	private List<WorkflowItem> workflowItems;
-	private User createdBy;
-	private User modifiedBy;
+	private List<WorkflowItemExec> workflowItems;
+	private Integer createdBy;
+	private Integer modifiedBy;
 	private WorkflowItemMaster onSuccess;
 	private List<WorkflowItemMaster> listOnSuccess;
 	private WorkflowItemMaster onFailure;
+	private WorkflowMaster parentWorkflowMaster;
+	private WorkflowItemMaster parentWorkflowItemMaster;
+	private List<WorkflowItemMaster> childWorkflowItemMasterList;
 
 	public WorkflowItemMaster() {
 	}
@@ -75,7 +80,7 @@ public class WorkflowItemMaster implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "is_last_task",columnDefinition = "TINYINT")
+	@Column(name = "is_last_task", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsLastTask() {
 		return this.isLastTask;
@@ -121,13 +126,14 @@ public class WorkflowItemMaster implements Serializable {
 		this.startDelay = startDelay;
 	}
 
-	@Column(name = "task_name")
-	public String getTaskName() {
-		return this.taskName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_task")
+	public WorkflowTaskConfigMaster getTask() {
+		return task;
 	}
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
+	public void setTask(WorkflowTaskConfigMaster task) {
+		this.task = task;
 	}
 
 	@Column(name = "workflow_item_type")
@@ -141,23 +147,24 @@ public class WorkflowItemMaster implements Serializable {
 
 	// bi-directional many-to-one association to WorkflowItem
 	@OneToMany(mappedBy = "workflowItemMaster")
-	public List<WorkflowItem> getWorkflowitems() {
+	public List<WorkflowItemExec> getWorkflowItems() {
 		return this.workflowItems;
 	}
 
-	public void setWorkflowitems(List<WorkflowItem> workflowItems) {
+	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
+
 		this.workflowItems = workflowItems;
 	}
 
-	public WorkflowItem addWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().add(workflowitem);
+	public WorkflowItemExec addWorkflowItem(WorkflowItemExec workflowitem) {
+		getWorkflowItems().add(workflowitem);
 		workflowitem.setWorkflowItemMaster(this);
 
 		return workflowitem;
 	}
 
-	public WorkflowItem removeWorkflowitem(WorkflowItem workflowitem) {
-		getWorkflowitems().remove(workflowitem);
+	public WorkflowItemExec removeWorkflowItem(WorkflowItemExec workflowitem) {
+		getWorkflowItems().remove(workflowitem);
 		workflowitem.setWorkflowItemMaster(null);
 
 		return workflowitem;
@@ -200,26 +207,21 @@ public class WorkflowItemMaster implements Serializable {
 		this.onFailure = onFailure;
 	}
 
-
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by")
-	public User getCreatedBy() {
+	@Column(name = "created_by")
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modified_by")
-	public User getModifiedBy() {
+	@Column(name = "modified_by")
+	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(User modifiedBy) {
+	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -233,5 +235,38 @@ public class WorkflowItemMaster implements Serializable {
 	public void setOnSuccess(WorkflowItemMaster onSuccess) {
 		this.onSuccess = onSuccess;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workflow_master")
+	public WorkflowMaster getParentWorkflowMaster() {
+		return parentWorkflowMaster;
+	}
+
+	public void setParentWorkflowMaster(WorkflowMaster parentWorkflowMaster) {
+		this.parentWorkflowMaster = parentWorkflowMaster;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_workflow_item_master")
+	public WorkflowItemMaster getParentWorkflowItemMaster() {
+		return parentWorkflowItemMaster;
+	}
+
+	public void setParentWorkflowItemMaster(
+			WorkflowItemMaster parentWorkflowItemMaster) {
+		this.parentWorkflowItemMaster = parentWorkflowItemMaster;
+	}
+
+	@OneToMany(mappedBy="parentWorkflowItemMaster",fetch=FetchType.LAZY)
+	public List<WorkflowItemMaster> getChildWorkflowItemMasterList() {
+		return childWorkflowItemMasterList;
+	}
+
+	public void setChildWorkflowItemMasterList(
+			List<WorkflowItemMaster> childWorkflowItemMasterList) {
+		this.childWorkflowItemMasterList = childWorkflowItemMasterList;
+	}
+	
+	
 
 }

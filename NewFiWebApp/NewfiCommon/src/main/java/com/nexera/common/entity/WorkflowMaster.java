@@ -2,6 +2,7 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,6 +23,7 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
+@Table(name = "workflowmaster")
 @NamedQuery(name = "WorkflowMaster.findAll", query = "SELECT w FROM WorkflowMaster w")
 public class WorkflowMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -29,9 +33,10 @@ public class WorkflowMaster implements Serializable {
 	private Date modifiedDate;
 	private String name;
 	private String workflowType;
-	private User createdBy;
-	private User modifiedBy;
+	private Integer createdBy;
+	private Integer modifiedBy;
 	private WorkflowItemMaster startWithWorkflow;
+	private List<WorkflowItemMaster> workflowItemMasterList;
 
 	public WorkflowMaster() {
 	}
@@ -90,7 +95,6 @@ public class WorkflowMaster implements Serializable {
 	public void setWorkflowType(String workflowType) {
 		this.workflowType = workflowType;
 	}
-	
 
 	// bi-directional many-to-one association to WorkflowItemMaster
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -103,26 +107,32 @@ public class WorkflowMaster implements Serializable {
 		this.startWithWorkflow = startWithWorkflow;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by")
-	public User getCreatedBy() {
+	@Column(name = "created_by")
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modified_by")
-	public User getModifiedBy() {
+	@Column(name = "modified_by")
+	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(User modifiedBy) {
+	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	@OneToMany(mappedBy = "parentWorkflowMaster")
+	public List<WorkflowItemMaster> getWorkflowItemMasterList() {
+		return workflowItemMasterList;
+	}
+
+	public void setWorkflowItemMasterList(
+			List<WorkflowItemMaster> workflowItemMasterList) {
+		this.workflowItemMasterList = workflowItemMasterList;
 	}
 
 }

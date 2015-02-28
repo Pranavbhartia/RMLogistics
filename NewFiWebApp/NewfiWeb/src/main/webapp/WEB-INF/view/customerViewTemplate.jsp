@@ -1,3 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ page isELIgnored="false"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,6 +40,28 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
+
+			bindDataToPN();
+			bindDataToSN();
+			
+			
+
+			//Bind primary navigation
+			globalBinder();
+			onpopstate = function(event) {
+	            console.log('history modified');
+	            if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1){
+	                historyCallback= true;
+	               
+	                refreshSupport=true;
+	            }
+	            retrieveState();
+	        };
+			if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1 ){
+	            historyCallback= true;
+	            refreshSupport=true;
+	            retrieveState();
+	        }
 		});
 	</script>
 </body>

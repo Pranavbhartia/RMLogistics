@@ -9,19 +9,20 @@ import org.hibernate.annotations.Type;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the userrole database table.
  * 
  */
 @Entity
-@NamedQuery(name="UserRole.findAll", query="SELECT u FROM UserRole u")
+@Table(name = "userrole")
+@NamedQuery(name = "UserRole.findAll", query = "SELECT u FROM UserRole u")
 public class UserRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private User modifiedBy;
 	private Date modifiedDate;
 	private String roleCd;
+	private String label;
 	private String roleDescription;
 	private Boolean visibleOnLoanTeam;
 	private List<UiComponentPermission> uiComponentPermissions;
@@ -30,9 +31,8 @@ public class UserRole implements Serializable {
 	public UserRole() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -40,7 +40,6 @@ public class UserRole implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modified_by")
@@ -52,9 +51,8 @@ public class UserRole implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date")
+	@Column(name = "modified_date")
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -63,8 +61,7 @@ public class UserRole implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-
-	@Column(name="role_cd")
+	@Column(name = "role_cd")
 	public String getRoleCd() {
 		return this.roleCd;
 	}
@@ -73,8 +70,16 @@ public class UserRole implements Serializable {
 		this.roleCd = roleCd;
 	}
 
+	@Column(name = "label")
+	public String getLabel() {
+		return label;
+	}
 
-	@Column(name="role_description")
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	@Column(name = "role_description")
 	public String getRoleDescription() {
 		return this.roleDescription;
 	}
@@ -83,8 +88,7 @@ public class UserRole implements Serializable {
 		this.roleDescription = roleDescription;
 	}
 
-
-	@Column(name="visible_on_loan_team",columnDefinition = "TINYINT")
+	@Column(name = "visible_on_loan_team", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getVisibleOnLoanTeam() {
 		return this.visibleOnLoanTeam;
@@ -94,34 +98,35 @@ public class UserRole implements Serializable {
 		this.visibleOnLoanTeam = visibleOnLoanTeam;
 	}
 
-
-	//bi-directional many-to-one association to UiComponentPermission
-	@OneToMany(mappedBy="userRole")
+	// bi-directional many-to-one association to UiComponentPermission
+	@OneToMany(mappedBy = "userRole")
 	public List<UiComponentPermission> getUiComponentPermissions() {
 		return this.uiComponentPermissions;
 	}
 
-	public void setUiComponentPermissions(List<UiComponentPermission> uicomponentpermissions) {
+	public void setUiComponentPermissions(
+			List<UiComponentPermission> uicomponentpermissions) {
 		this.uiComponentPermissions = uicomponentpermissions;
 	}
 
-	public UiComponentPermission addUiComponentPermission(UiComponentPermission uicomponentpermission) {
+	public UiComponentPermission addUiComponentPermission(
+			UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().add(uicomponentpermission);
 		uicomponentpermission.setUserRole(this);
 
 		return uicomponentpermission;
 	}
 
-	public UiComponentPermission removeUiComponentPermission(UiComponentPermission uicomponentpermission) {
+	public UiComponentPermission removeUiComponentPermission(
+			UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().remove(uicomponentpermission);
 		uicomponentpermission.setUserRole(null);
 
 		return uicomponentpermission;
 	}
 
-
-	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="userRole")
+	// bi-directional many-to-one association to User
+	@OneToMany(mappedBy = "userRole")
 	public List<User> getUsers() {
 		return this.users;
 	}

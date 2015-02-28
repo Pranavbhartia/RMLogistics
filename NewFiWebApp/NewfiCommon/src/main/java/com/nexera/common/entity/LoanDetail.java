@@ -12,23 +12,22 @@ import javax.persistence.*;
 @NamedQuery(name = "LoanDetail.findAll", query = "SELECT l FROM LoanDetail l")
 public class LoanDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Double downPayment;
 	private Double emi;
 	private Double loanAmount;
 	private Double rate;
-	private Loan loan;
 
 	public LoanDetail() {
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -64,17 +63,6 @@ public class LoanDetail implements Serializable {
 
 	public void setRate(Double rate) {
 		this.rate = rate;
-	}
-
-	// bi-directional many-to-one association to Loan
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan")
-	public Loan getLoan() {
-		return loan;
-	}
-
-	public void setLoan(Loan loan) {
-		this.loan = loan;
 	}
 
 }

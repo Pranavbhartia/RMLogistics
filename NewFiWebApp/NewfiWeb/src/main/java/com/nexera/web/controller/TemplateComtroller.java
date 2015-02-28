@@ -86,5 +86,4 @@ public class TemplateComtroller {
 		 mav.setViewName("customerProfile");
 		 return mav;
 	 }
-
 }

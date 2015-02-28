@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name = "propertytypemaster")
 @NamedQuery(name = "PropertyTypeMaster.findAll", query = "SELECT p FROM PropertyTypeMaster p")
 public class PropertyTypeMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
