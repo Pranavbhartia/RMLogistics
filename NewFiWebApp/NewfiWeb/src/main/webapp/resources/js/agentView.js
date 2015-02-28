@@ -1936,6 +1936,44 @@ function appendAddNeedsContainer() {
 	$('#initial-needs-wrapper').append(wrapper);
 }
 
+$(document).on('keyup','#need_doc_title',function(){
+	
+	var data = contxt.needsList;
+	var searchData = [];
+	for(var i=0; i<data.length; i++){
+		searchData[i] = data[i];
+		searchData[i].label = data[i].title;
+	}
+	initializeDocTitleAutoComplete(searchData);
+});
+
+
+function initializeDocTitleAutoComplete(searchData){
+	$('#need_doc_title').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus: function( event, ui ) {
+	        $( "#need_doc_title" ).val( ui.item.title );
+	        return false;
+	      },
+	    select: function( event, ui ) {
+	        $( "#need_doc_title" ).val( ui.item.title );
+	        $('#need_doc_desc').val( ui.item.desc);
+	        return false;
+		},
+		open : function (){
+			$('.ui-autocomplete').width($('#need_doc_title').width() + 15);
+		}
+	}).autocomplete( "instance" )._renderItem = function( ul, item ) {
+        return $( "<li>")
+        .append(item.title)
+        .appendTo( ul );
+    };
+    //$('.ui-autocomplete>li').width($('#need_doc_title').width());
+}
+
+
+
 // Click event for add needs button
 /*
  * $(document).on( 'click', '.add-needs-btn', function() { var docType =
