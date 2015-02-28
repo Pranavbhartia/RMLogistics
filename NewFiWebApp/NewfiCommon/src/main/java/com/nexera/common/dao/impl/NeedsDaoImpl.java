@@ -16,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
-<<<<<<< HEAD
-=======
 import com.nexera.common.entity.NeedsListMaster;
->>>>>>> upstream/master
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
