@@ -973,37 +973,6 @@ LOCK TABLES `uicomponentpermission` WRITE;
 /*!40000 ALTER TABLE `uicomponentpermission` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `uploadedfileslist`
---
-
-DROP TABLE IF EXISTS `uploadedfileslist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `uploadedfileslist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `s3path` varchar(255) DEFAULT NULL,
-  `uploaded_by` int(11) DEFAULT NULL,
-  `is_assigned` tinyint(4) DEFAULT NULL,
-  `uploaded_date` datetime DEFAULT NULL,
-  `is_activate` tinyint(4) DEFAULT NULL,
-  `loan` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
-  KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
-  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `uploadedfileslist`
---
-
-LOCK TABLES `uploadedfileslist` WRITE;
-/*!40000 ALTER TABLE `uploadedfileslist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `uploadedfileslist` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
