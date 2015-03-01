@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
+﻿CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
@@ -541,6 +541,35 @@ LOCK TABLES `loanmilestonemaster` WRITE;
 /*!40000 ALTER TABLE `loanmilestonemaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+DROP TABLE IF EXISTS `uploadedfileslist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE newfi_schema.uploadedfileslist (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  s3path VARCHAR(255) DEFAULT NULL,
+  uploaded_by INT(11) DEFAULT NULL,
+  is_assigned TINYINT(4) DEFAULT NULL,
+  uploaded_date DATETIME DEFAULT NULL,
+  is_activate TINYINT(4) DEFAULT NULL,
+  loan INT(11) DEFAULT NULL,
+  file_name VARCHAR(50) DEFAULT NULL,
+  PRIMARY KEY (id),
+  INDEX fk_uploadedFilesMappedToLoan_idx (loan),
+  INDEX fk_uploadedFilesMappedToUploader_idx (uploaded_by),
+  CONSTRAINT fk_uploadedFilesMappedToLoan FOREIGN KEY (loan)
+    REFERENCES newfi_schema.loan(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fk_uploadedFilesMappedToUploader FOREIGN KEY (uploaded_by)
+    REFERENCES newfi_schema.user(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = INNODB
+AUTO_INCREMENT = 30
+AVG_ROW_LENGTH = 5461
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
+
+
 --
 -- Table structure for table `loanneedslist`
 --
@@ -548,24 +577,32 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `loanneedslist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `loanneedslist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `loan` int(11) NOT NULL,
-  `need_type` int(11) DEFAULT NULL,
-  `file_id` varchar(500) DEFAULT NULL,
-  `file_url` varchar(1000) DEFAULT NULL,
-  `comments` varchar(200) DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT '0',
-  `system_action` tinyint(4) DEFAULT NULL,
-  `mandatory` tinyint(4) DEFAULT '0',
-  `active` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_User_Attachment_Loan_File1_idx` (`loan`),
-  KEY `fk_User_Attachment_Attachment_Type1_idx` (`need_type`),
-  CONSTRAINT `fk_User_Attachment_Attachment_Type1` FOREIGN KEY (`need_type`) REFERENCES `needslistmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_User_Attachment_Loan_File1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE newfi_schema.loanneedslist (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  loan INT(11) NOT NULL,
+  need_type INT(11) DEFAULT NULL,
+  file_id INT(11) DEFAULT NULL,
+  comments VARCHAR(200) DEFAULT NULL,
+  deleted TINYINT(4) DEFAULT 0,
+  system_action TINYINT(4) DEFAULT NULL,
+  mandatory TINYINT(4) DEFAULT 0,
+  active TINYINT(4) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX fk_UploadFileList_fk (file_id),
+  INDEX fk_User_Attachment_Attachment_Type1_idx (need_type),
+  INDEX fk_User_Attachment_Loan_File1_idx (loan),
+  CONSTRAINT FK_loanneedslist_uploadedfileslist_id FOREIGN KEY (file_id)
+    REFERENCES newfi_schema.uploadedfileslist(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT fk_User_Attachment_Attachment_Type1 FOREIGN KEY (need_type)
+    REFERENCES newfi_schema.needslistmaster(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fk_User_Attachment_Loan_File1 FOREIGN KEY (loan)
+    REFERENCES newfi_schema.loan(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = INNODB
+AUTO_INCREMENT = 12
+AVG_ROW_LENGTH = 1489
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
 
 --
 -- Dumping data for table `loanneedslist`
@@ -575,6 +612,7 @@ LOCK TABLES `loanneedslist` WRITE;
 /*!40000 ALTER TABLE `loanneedslist` DISABLE KEYS */;
 /*!40000 ALTER TABLE `loanneedslist` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 --
 -- Table structure for table `loannotification`
