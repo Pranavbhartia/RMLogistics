@@ -3,14 +3,17 @@
  */
 package com.nexera.workflow.manager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.nexera.workflow.bean.WorkflowExec;
-import com.nexera.workflow.bean.WorkflowMaster;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.service.WorkflowService;
 
 
@@ -25,10 +28,23 @@ public class WorkflowManager implements Runnable
 
     private static final Logger LOGGER = LoggerFactory.getLogger( WorkflowManager.class );
 
-    private WorkflowMaster workflowMaster;
+    private ExecutorService executorService;
+    private int poolSize = 5;
+    private WorkflowItemExec workflowItemExec;
 
     @Autowired
     WorkflowService workflowService;
+
+
+    /**
+      * 
+      */
+    public WorkflowManager()
+    {
+        LOGGER.debug( "Intializing thread pool for thread manager " );
+        ThreadFactory threadFactory = Executors.defaultThreadFactory();
+        executorService = Executors.newFixedThreadPool( poolSize, threadFactory );
+    }
 
 
     /* (non-Javadoc)
@@ -38,26 +54,27 @@ public class WorkflowManager implements Runnable
     public void run()
     {
         LOGGER.debug( "Inside run method " );
-        WorkflowExec workflowExec = workflowService.setWorkflowIntoExecution( getWorkflowMaster() );
+
 
     }
 
 
     /**
-     * @return the workflowMaster
+     * @return the workflowItemExec
      */
-    public WorkflowMaster getWorkflowMaster()
+    public WorkflowItemExec getWorkflowItemExec()
     {
-        return workflowMaster;
+        return workflowItemExec;
     }
 
 
     /**
-     * @param workflowMaster the workflowMaster to set
+     * @param workflowItemExec the workflowItemExec to set
      */
-    public void setWorkflowMaster( WorkflowMaster workflowMaster )
+    public void setWorkflowItemExec( WorkflowItemExec workflowItemExec )
     {
-        this.workflowMaster = workflowMaster;
+        this.workflowItemExec = workflowItemExec;
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.nexera.workflow.engine;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
@@ -10,6 +11,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.nexera.workflow.Constants.Status;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowMaster;
 import com.nexera.workflow.manager.CacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
@@ -45,13 +50,28 @@ public class EngineTrigger
             WorkflowMaster workflowMaster = workflowService.getWorkFlowByWorkFlowType( workflowType );
             if ( workflowMaster != null ) {
                 LOGGER.debug( "Workflow found for this workflowtype " + workflowMaster.getWorkflowType() );
-                if ( !cacheManager.isInitialized() ) {
-                    executorService = cacheManager.initializePool();
+                WorkflowExec workflowExec = workflowService.setWorkflowIntoExecution( workflowMaster );
+                LOGGER.debug( "Workflow has been put into execution , Getting all items associated with workflow " );
+                List<WorkflowItemMaster> workflowItemMasterList = workflowService
+                    .getWorkflowItemMasterListByWorkflowMaster( workflowMaster );
+                for ( WorkflowItemMaster workflowItemMaster : workflowItemMasterList ) {
+                    LOGGER.debug( "Initializing all workflow items " );
+                    if ( !workflowItemMaster.getChildWorkflowItemMasterList().isEmpty() ) {
+                        WorkflowItemExec workflowItemExec = workflowService.setWorkflowItemIntoExecution( workflowExec,
+                            workflowItemMaster, null );
+                        for ( WorkflowItemMaster childworkflowItemMaster : workflowItemMaster.getChildWorkflowItemMasterList() ) {
+                            LOGGER.debug( "In this case will add parent workflow item execution id " );
+                            workflowService.setWorkflowItemIntoExecution( workflowExec, childworkflowItemMaster,
+                                workflowItemExec );
+                        }
+
+                    } else {
+                        if ( workflowItemMaster.getParentWorkflowItemMaster() == null )
+                            workflowService.setWorkflowItemIntoExecution( workflowExec, workflowItemMaster, null );
+                    }
+
                 }
 
-                workflowManager.setWorkflowMaster( workflowMaster );
-                LOGGER.debug( "Putting the workflow into execution " );
-                executorService.execute( workflowManager );
 
             }
         }
@@ -59,11 +79,65 @@ public class EngineTrigger
     }
 
 
+    public String startWorkFlowItemExecution( int workflowItemExecutionId )
+    {
+        LOGGER.debug( "Inside method startWorkFlowItemExecution " );
+        if ( !cacheManager.isInitialized() ) {
+            executorService = cacheManager.initializePool();
+        }
+
+
+        WorkflowItemExec workflowItemExecution = workflowService.getWorkflowExecById( workflowItemExecutionId );
+        if ( workflowItemExecution != null ) {
+            LOGGER.debug( "Updating workflow master status if its not updated " );
+            WorkflowExec workflowExec = workflowItemExecution.getParentWorkflow();
+            if ( !workflowExec.getStatus().equals( Status.STARTED.getStatus() ) )
+                workflowService.updateWorkflowExecStatus( workflowExec );
+            if ( workflowItemExecution.getParentWorkflowItemExec() != null ) {
+                LOGGER.debug( "It does have a parent, its a child entry " );
+                WorkflowItemExec parentWorkflowItemExec = workflowItemExecution.getParentWorkflowItemExec();
+                if ( parentWorkflowItemExec.getStatus().equalsIgnoreCase( Status.NOT_STARTED.getStatus() ) ) {
+                    LOGGER.debug( "Updating the parent workflow to started " );
+                    workflowService.updateWorkflowItemExecutionStatus( parentWorkflowItemExec );
+                    workflowManager.setWorkflowItemExec( workflowItemExecution );
+                    executorService.execute( workflowManager );
+                } else {
+                    LOGGER.debug( "parent is already started " );
+                    workflowManager.setWorkflowItemExec( workflowItemExecution );
+                    executorService.execute( workflowManager );
+                }
+
+            } else {
+                LOGGER.debug( "Doesnt have a parent, can be the parent or can be independent " );
+                List<WorkflowItemExec> childWorkflowItemExecList = workflowService
+                    .getWorkflowItemListByParentWorkflowExecItem( workflowItemExecution );
+                if ( childWorkflowItemExecList != null ) {
+                    LOGGER.debug( " Is the parent " );
+                    for ( WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList ) {
+                        LOGGER.debug( "Starting all child threads together " );
+                        workflowManager.setWorkflowItemExec( childWorkflowItemExec );
+                        executorService.execute( workflowManager );
+                    }
+
+                } else {
+                    LOGGER.debug( "Independent execution" );
+                    workflowManager.setWorkflowItemExec( workflowItemExecution );
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     public static void main( String[] args )
     {
-        String json = "{\"workflowType\":\"loan\"}";
+        String json = "{\"workflowType\":\"LM_WF_ALL\"}";
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext( "spring\\core-context.xml" );
         EngineTrigger engTrigger = (EngineTrigger) applicationContext.getBean( EngineTrigger.class );
-        engTrigger.triggerWorkFlow( json );
+        // engTrigger.triggerWorkFlow( json );
+        engTrigger.startWorkFlowItemExecution( 74 );
+
+
     }
 }
