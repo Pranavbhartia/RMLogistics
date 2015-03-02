@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class NeedList {
 		System.out.println(loanId+"-----------------------");
 		CommonResponseVO response=new CommonResponseVO();
 		try {
-			List<ManagerNeedVo> loanNeeds=needsListService.getLoansNeedsList(loanId);
+			HashMap<String, Object> loanNeeds=needsListService.getLoansNeedsList(loanId);
 			response.setError(null);
 			response.setResultObject(loanNeeds);
 //			result.put("Error", null);
@@ -104,7 +105,7 @@ public class NeedList {
 		return response; 
 	}
 	@RequestMapping(value = "custom" , method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
+	public @ResponseBody CommonResponseVO setCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
 		CommonResponseVO response=new CommonResponseVO();
 		try {
 			User user=null;
