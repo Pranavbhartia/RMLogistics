@@ -49,7 +49,7 @@ public class WorkflowItemMasterDaoImpl extends GenericDaoImpl implements Workflo
             if ( list.isEmpty() )
                 return false;
             else
-                return false;
+                return true;
         }
     }
 

@@ -66,9 +66,10 @@ public class EngineTrigger
                             for ( WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
                                 .getChildWorkflowItemMasterList() ) {
                                 LOGGER.debug( "In this case will add parent workflow item execution id " );
-                                workflowService.setWorkflowItemIntoExecution( workflowExec, childworkflowItemMaster,
-                                    workflowItemExec );
-
+                                if ( !workflowService.checkIfOnSuccessOfAnotherItem( childworkflowItemMaster ) ) {
+                                    workflowService.setWorkflowItemIntoExecution( workflowExec, childworkflowItemMaster,
+                                        workflowItemExec );
+                                }
                             }
 
                         } else {
@@ -178,8 +179,8 @@ public class EngineTrigger
         String json = "{\"workflowType\":\"LM_WF_ALL\"}";
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext( "spring\\core-context.xml" );
         EngineTrigger engTrigger = (EngineTrigger) applicationContext.getBean( EngineTrigger.class );
-        // engTrigger.triggerWorkFlow( json );
-        engTrigger.startWorkFlowItemExecution( 74 );
+        engTrigger.triggerWorkFlow( json );
+        // engTrigger.startWorkFlowItemExecution( 74 );
 
 
     }

@@ -73,7 +73,7 @@ public class WorkflowManager implements Runnable
             getWorkflowItemExec().setStatus( Status.COMPLETED.getStatus() );
             workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
             LOGGER.debug( "Checking if it has an onSuccess item to execute " );
-            //TODO test this
+            //TODO test this Might Have issues regarding parent of success 
             if ( workflowItemMaster.getOnSuccess() != null ) {
                 WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster.getOnSuccess();
                 WorkflowItemExec successWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
