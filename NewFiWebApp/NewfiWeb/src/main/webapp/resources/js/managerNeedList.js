@@ -223,11 +223,12 @@ function getLoanNeedsManagerContext(loanId){
 		},
 		saveSelectedNeedsList:function(callback){
 			//API call TO save Updated Needs List
+			var ob=this;
 			var data={};
 			data.loanId=this.loanId;
-			data.needs=JSON.stringify(this.selectedNeeds)
+			data.needs=JSON.stringify(this.selectedNeeds);
 			var ob=this;
-			ajaxRequest("rest/loanneeds/"+this.loanId,"POST","json",data,function(response){
+			ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
 				if(response.error){
 					alert(response.error.message);
 				}else{
@@ -247,6 +248,18 @@ function getLoanNeedsManagerContext(loanId){
 		}
 	};
 	return loanNeedsListContext;
+}
+function ajaxRequest(url,type,dataType,data,successCallBack){
+	$.ajax({
+		url : url,
+		type : type,
+		dataType : dataType,
+		data : data,
+		success : successCallBack,
+		error : function(){
+			
+		}
+	});
 }
 var contxt;
 function paintAgentNeedsListPage(){
