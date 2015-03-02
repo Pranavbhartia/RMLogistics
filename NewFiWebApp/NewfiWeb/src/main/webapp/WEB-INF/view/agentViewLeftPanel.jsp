@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-item-agent clearfix" onclick="paintMyLoansView();">
+		<div class="lp-item-agent clearfix" onclick="paintAgentDashboard();">
 			<div class="lp-item-header">my loans</div>
 			<div class="lp-item-body lp-agent-item2">
 				<div class="lp-item-body-row lp-item-body-top-row">

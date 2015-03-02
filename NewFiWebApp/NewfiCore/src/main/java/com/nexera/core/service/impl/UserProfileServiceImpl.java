@@ -9,9 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.InternalUserDetail;
+import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -116,11 +120,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return null;
 	}
 
-	public List<UserVO> searchUsersByName(String name, UserRoleVO roleVO) {
+	public List<UserVO> searchUsers(UserVO userVO) {
 
-		UserRole role = UserProfileServiceImpl.parseUserRoleModel(roleVO);
 		return LoanServiceImpl.buildUserVOList(userProfileDao
-				.searchUsersByName(name, role));
+				.searchUsers(parseUserModel(userVO)));
 
 	}
 
@@ -173,6 +176,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
 				.getUserRole()));
 
+		userVO.setInternalUserDetail(UserProfileServiceImpl
+				.buildInternalUserDetailsVO(user.getInternalUserDetail()));
+
 		return userVO;
 	}
 
@@ -193,18 +199,80 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userModel.setUserRole(UserProfileServiceImpl.parseUserRoleModel(userVO
 				.getUserRole()));
 
+		userModel.setInternalUserDetail(UserProfileServiceImpl
+				.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
+
 		return userModel;
 	}
 
 	@Override
 	public UserVO createUser(UserVO userVO) {
 
-		Integer userID = (Integer) userProfileDao.save(UserProfileServiceImpl
+		Integer userID = (Integer) userProfileDao.saveInternalUser(UserProfileServiceImpl
 				.parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
-			user = (User) userProfileDao.load(User.class, userID);
+			user = (User) userProfileDao.loadInternalUser(userID);
 
 		return UserProfileServiceImpl.buildUserVO(user);
+	}
+
+	public static InternalUserDetailVO buildInternalUserDetailsVO(
+			InternalUserDetail internalUserDetail) {
+		// TODO Auto-generated method stub
+
+		if (internalUserDetail == null)
+			return null;
+
+		InternalUserDetailVO detailVO = new InternalUserDetailVO();
+		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
+				.getInternaUserRoleMaster()));
+
+		return detailVO;
+	}
+
+	public static InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
+			InternalUserRoleMaster internal) {
+		if (internal == null)
+			return null;
+
+		InternalUserRoleMasterVO masterVO = new InternalUserRoleMasterVO();
+		masterVO.setId(internal.getId());
+		masterVO.setRoleDescription(internal.getRoleDescription());
+
+		return masterVO;
+	}
+
+	public static InternalUserDetail parseInternalUserDetailsModel(
+			InternalUserDetailVO internalUserDetailVO) {
+		// TODO Auto-generated method stub
+
+		if (internalUserDetailVO == null)
+			return null;
+
+		InternalUserDetail detail = new InternalUserDetail();
+		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
+				.getInternalUserRoleMasterVO()));
+
+		return detail;
+	}
+
+	public static InternalUserRoleMaster parseInternalUserRoleMasterModel(
+			InternalUserRoleMasterVO internalVO) {
+		if (internalVO == null)
+			return null;
+
+		InternalUserRoleMaster master = new InternalUserRoleMaster();
+		master.setId(internalVO.getId());
+		master.setRoleDescription(internalVO.getRoleDescription());
+
+		return master;
+	}
+
+	@Override
+	public UserVO loadInternalUser(Integer userID) {
+		// TODO Auto-generated method stub
+		return UserProfileServiceImpl.buildUserVO(userProfileDao
+				.loadInternalUser(userID));
 	}
 }
