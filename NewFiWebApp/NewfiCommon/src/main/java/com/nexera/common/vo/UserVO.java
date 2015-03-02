@@ -3,6 +3,7 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 
 public class UserVO implements Serializable {
@@ -209,6 +210,35 @@ public class UserVO implements Serializable {
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
 		this.displayName = this.firstName+" "+this.lastName;
+		this.customerDetail = buildCustomerDetailVO(user);
+	    /*this.internalUserDetail;
+		this.realtorDetail;
+	}*/
+	}
+
+	public static CustomerDetailVO buildCustomerDetailVO(User user){
+		
+		if (user == null)
+			return null;
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		
+		CustomerDetail customerDetail = user.getCustomerDetail();
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		if(null != customerDetail.getDateOfBirth()){
+			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+		}else{
+			// if the date of birth id null then ??
+			customerDetailVO.setDateOfBirth(0l);
+		}
+		customerDetailVO.setId(customerDetail.getId());
+		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
+		
+		return customerDetailVO;
+
 	}
 
 	
