@@ -296,7 +296,7 @@ function appendInitialNeedsListWrapper(){
 	
 	var propertyDocContainer = getNeedsListDocumentContainer("property",docData.property).addClass('float-right');
 	
-	var assetDocContainer = getNeedsListDocumentContainer("Liabilities",docData.liability).addClass('float-right');
+	var assetDocContainer = getNeedsListDocumentContainer("liability",docData.liability).addClass('float-right');
 	
 	var otherDocContainer = getNeedsListDocumentContainer("other",docData.other).addClass('float-left');
 	
