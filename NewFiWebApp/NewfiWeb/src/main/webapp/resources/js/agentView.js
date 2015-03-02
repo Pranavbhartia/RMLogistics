@@ -2033,7 +2033,7 @@ function onReturnOfAddUserToLoanTeam(data) {
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
 	if (!result) {
-		alert("An error occurred, kindly contact admin.");
+		showToastMessage("An error occurred, kindly contact admin.");
 		return;
 	}
 
@@ -2042,13 +2042,14 @@ function onReturnOfAddUserToLoanTeam(data) {
 
 	var existingDiv = $('.newfi-team-container').find(
 			'.newfi-team-list-tr[userid=' + userID + ']');
-	if (existingDiv != undefined) {
+	if (existingDiv != undefined && existingDiv.length > 0) {
 		showToastMessage("User already exists on the loan team.");
 		return;
 	}
 
 	var teamMemberRow = getTeamListTableRow(editLoanTeamVO.user, loanID);
 	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
+	showToastMessage("User added to loan team.");
 }
 
 function searchUsersBasedOnNameAndRole(name, roleID) {
