@@ -22,4 +22,8 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> searchUsers(User user);
 
+	public Integer saveInternalUser(User user);
+
+	public User loadInternalUser(Integer userID);
+
 }

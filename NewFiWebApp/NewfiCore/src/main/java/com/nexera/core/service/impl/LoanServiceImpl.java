@@ -395,4 +395,6 @@ public class LoanServiceImpl implements LoanService {
 		return loansProgressStatusVO;
 
 	}
+	
+	
 }

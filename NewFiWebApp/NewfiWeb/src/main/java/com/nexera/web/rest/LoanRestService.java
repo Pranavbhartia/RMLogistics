@@ -65,7 +65,7 @@ public class LoanRestService {
 		user.setId(userID);
 		boolean result = loanService.addToLoanTeam(loan, user);
 		if (result) {
-			user = userProfileService.findUser(userID);
+			user = userProfileService.loadInternalUser(userID);
 		}
 		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
 		editLoanTeamVO.setOperationResult(result);

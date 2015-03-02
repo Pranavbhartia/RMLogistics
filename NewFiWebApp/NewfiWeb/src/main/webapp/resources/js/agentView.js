@@ -1295,7 +1295,13 @@ function getTeamListTableRow(user, loanID) {
 	var userRoleStr = user.userRole.label;
 	// TODO -- remove hard coding for internal user
 	if (user.userRole.id == 3) {
-		userRoleStr = user.internalUserDetail.internaUserRoleMasterVO.roleDescription;
+		//userRoleStr = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		var intRoleID=user.internalUserDetail.internalUserRoleMasterVO.id;
+		for(j in newfiObject.internalUserRoleMasters){
+			var intMaster=newfiObject.internalUserRoleMasters[j];
+			if(intMaster.id==intRoleID)
+				userRoleStr=intMaster.roleDescription;
+		}
 	}
 
 	trCol2.html(userRoleStr);
@@ -2142,23 +2148,7 @@ function createUserAndAddToLoanTeam(user) {
 function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
 	var result = data.resultObject;
-	if (!result) {
-		showToastMessage("An error occurred, kindly contact admin.");
-		return;
-	}
-
-	var loanID = selectedUserDetail.loanID;
-	var userID = result.userID;
-
-	var existingDiv = $('.newfi-team-container').find(
-			'.newfi-team-list-tr[userid=' + userID + ']');
-	if (existingDiv != undefined && existingDiv.length > 0) {
-		showToastMessage("User already exists on the loan team.");
-		return;
-	}
-
-	var teamMemberRow = getTeamListTableRow(result, loanID);
-	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
-	showToastMessage("User added to loan team.");
+	hideCreateUserPopup();
+	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
 
 }

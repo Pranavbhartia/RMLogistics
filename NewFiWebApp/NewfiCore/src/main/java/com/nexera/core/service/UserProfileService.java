@@ -18,4 +18,6 @@ public interface UserProfileService {
 
 	public List<UserVO> searchUsers(UserVO userVO);
 
+	public UserVO loadInternalUser(Integer userID);
+
 }
