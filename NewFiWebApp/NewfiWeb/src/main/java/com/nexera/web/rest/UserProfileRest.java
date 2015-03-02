@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,5 +109,16 @@ public class UserProfileRest {
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
 
 		return new Gson().toJson(responseVO);
+	}
+
+	@RequestMapping(value="/",method = RequestMethod.POST)
+	public @ResponseBody String createUser(@RequestBody String userVOStr) {
+
+		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
+		if(userVO.getUsername()==null)
+			userVO.setUsername(userVO.getEmailId());
+		userVO = userProfileService.createUser(userVO);
+		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
+
 	}
 }
