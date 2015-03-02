@@ -2,6 +2,7 @@ package com.nexera.web.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -22,10 +23,12 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.MasterDataService;
 
 @Controller
 public class DefaultController implements InitializingBean {
@@ -35,6 +38,9 @@ public class DefaultController implements InitializingBean {
 	
 	@Autowired
 	protected LoanService loanService;
+	
+	@Autowired
+	protected MasterDataService masterDataService;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefaultController.class);
@@ -116,6 +122,7 @@ public class DefaultController implements InitializingBean {
 
 			Locale locale = req.getLocale();
 			String suffix = locale.toString();
+			Gson gson = new Gson();
 
 			Map<String, String> localeText = languageMap.get(suffix);
 			if (localeText==null) {
@@ -124,7 +131,10 @@ public class DefaultController implements InitializingBean {
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
 			
-			Gson gson = new Gson();
+			List<InternalUserRoleMaster> internalUserRoleMasters = masterDataService.getInternalUserRoleMaster();
+			newfi.put("internalUserRoleMasters", gson.toJson(internalUserRoleMasters));
+			
+			gson = new Gson();
 
 			newfi.put("user", gson.toJson(userVO));
 
