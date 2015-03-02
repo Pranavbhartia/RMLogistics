@@ -12,7 +12,7 @@ function getLoanNeedsManagerContext(loanId){
 			ob.customList={};
 			ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
 				if(response.error){
-
+					showToastMessage(response.error.message)
 				}else{
 					var customList=response.resultObject;
 					for(var i=0;i<customList.length;i++){
@@ -125,7 +125,7 @@ function getLoanNeedsManagerContext(loanId){
 				}else{
 					ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
-
+							showToastMessage(response.error.message)
 						}else{
 							var componentId=response.resultObject;
 							var document = {
@@ -157,7 +157,7 @@ function getLoanNeedsManagerContext(loanId){
 
 			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
 				if(response.error){
-				
+					showToastMessage(response.error.message)
 				}else{
 					ob.needsList=response.resultObject;
 					if(callback){
@@ -230,9 +230,9 @@ function getLoanNeedsManagerContext(loanId){
 			var ob=this;
 			ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
 				if(response.error){
-					alert(response.error.message);
+					showToastMessage(response.error.message);
 				}else{
-					alert("Save Successful")
+					showToastMessage("Save Successful");
 					if(callback){
 						callback(ob);
 					}
