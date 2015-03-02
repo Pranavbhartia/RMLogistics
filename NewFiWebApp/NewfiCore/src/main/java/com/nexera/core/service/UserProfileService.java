@@ -17,4 +17,8 @@ public interface UserProfileService {
 
 	public List<UserVO> searchUsersByName(String name, UserRoleVO role);
 
+	public Integer competeUserProfile(UserVO userVO);
+
+	public Integer completeCustomerDetails(UserVO userVO);
+
 }

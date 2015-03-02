@@ -22,4 +22,8 @@ public interface UserProfileDao {
 
 	public Integer updateUser(String s3ImagePath, Integer userid);
 
+	public Integer competeUserProfile(User user);
+
+	public Integer completeCustomerDetails(CustomerDetail customerDetail);
+
 }

@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
-import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -42,36 +40,32 @@ public class TemplateController extends DefaultController {
 			.getLogger(TemplateController.class);
 
 	@RequestMapping(value = "home.do")
-	public ModelAndView showCustomerPage(HttpServletRequest req, Model model) {
-
-		ModelAndView mav = new ModelAndView();
+	public String showCustomerPage(HttpServletRequest req, Model model) {
 
 		try {
+			User user = loadDefaultValues(model, req);
+			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 
-			User user = getUserObject();
-
-			if (UserRolesEum.CUSTOMER.toString().equals(
-					user.getUserRole().getRoleCd())) {
-				loadDefaultValuesForCustomer(model, req,user);
-				UserVO userVO = userProfileService.findUser(user.getId());
-				mav.addObject("user", userVO);
-				mav.setViewName(JspLookup.CUSTOMER_VIEW);
+				return JspLookup.CUSTOMER_VIEW;
 			} else {
-				loadDefaultValuesForAgent(model, req,user);
-				mav.setViewName(JspLookup.AGENT_VIEW);
+				return JspLookup.AGENT_VIEW;
 			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
 
 		} catch (Exception e) {
 			// TODO: Handle exception scenario
 
 			e.printStackTrace();
 		}
-		return mav;
+		return JspLookup.ERROR;
 	}
 
-
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
-	public @ResponseBody String uploadCommonImageToS3(
+	public @ResponseBody
+	String uploadCommonImageToS3(
 			@RequestParam("fileName") MultipartFile multipartFile,
 			HttpServletRequest req, Model model)
 	// @RequestParam(value = "fileName", required = true) MultipartFile
@@ -89,7 +83,7 @@ public class TemplateController extends DefaultController {
 			LOG.info("The s3 path is : " + s3Path);
 
 			// save image in the data base
-			User user = getUserObject();
+			User user = loadDefaultValues(model, req);
 			Integer userid = user.getId();
 			Integer num = userProfileService.updateUser(s3Path, userid);
 

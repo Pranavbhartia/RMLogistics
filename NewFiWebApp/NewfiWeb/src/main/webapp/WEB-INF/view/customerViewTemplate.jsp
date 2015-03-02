@@ -36,24 +36,22 @@
 	var newfi = ${newfi};
 		$(document).ready(function() {
 			initialize(newfi);
-			changeLeftPanel(2);
+			changeLeftPanel(2,newfiObject.user);
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
-			
-			
 
 			
 			
-			if($("#photoImageUrlID").val() == "" || $("#photoImageUrlID").val() == null){
+			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
 			}else{
 				
-				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + $("#photoImageUrlID").val()  + ')');
+				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + newfiObject.user.photoImageUrl  + ')');
 			}
 			
 			

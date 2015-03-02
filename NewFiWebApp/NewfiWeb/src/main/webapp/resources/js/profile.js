@@ -19,11 +19,11 @@ function showCustomerProfilePage() {
  	getUserProfileData();
 }
 
-function getUserProfileData() {
+/*function getUserProfileData() {
 	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {},
 			appendCustPersonalInfoWrapper);
 }
-
+*/
 
 function getUserProfileData(){
 	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);

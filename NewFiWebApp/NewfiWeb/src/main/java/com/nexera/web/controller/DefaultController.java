@@ -23,18 +23,13 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
-import com.nexera.core.service.LoanService;
 
 @Controller
 public class DefaultController implements InitializingBean {
 
 	@Autowired
 	protected Utils utils;
-	
-	@Autowired
-	protected LoanService loanService;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefaultController.class);
@@ -45,7 +40,7 @@ public class DefaultController implements InitializingBean {
 
 	protected HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
-	protected User getUserObject() {
+	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		if (principal instanceof User) {
@@ -62,13 +57,12 @@ public class DefaultController implements InitializingBean {
 	 * 
 	 * @param model
 	 * @param req
-	 * @param user 
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public User loadDefaultValuesForCustomer(Model model, HttpServletRequest req, User user)
+	public User loadDefaultValues(Model model, HttpServletRequest req)
 			throws IOException {
-		
+		User user = getUserObject();
 		JSONObject newfi = new JSONObject();
 
 		try {
@@ -82,48 +76,7 @@ public class DefaultController implements InitializingBean {
 			} 
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
-			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-			userVO.setDefaultLoanId(loanVO.getId());
-			Gson gson = new Gson();
 
-			newfi.put("user", gson.toJson(userVO));
-
-			newfi.put("i18n", new JSONObject(localeText));
-			model.addAttribute("userVO", userVO);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		model.addAttribute("newfi", newfi);
-		return user;
-	}
-	/**
-	 * Loads all the default elements required for the UI. Common method to be
-	 * called from all controllers
-	 * 
-	 * @param model
-	 * @param req
-	 * @throws JSONException
-	 * @throws IOException
-	 */
-	public User loadDefaultValuesForAgent(Model model, HttpServletRequest req,User user)
-			throws IOException {
-		
-		JSONObject newfi = new JSONObject();
-
-		try {
-
-			Locale locale = req.getLocale();
-			String suffix = locale.toString();
-
-			Map<String, String> localeText = languageMap.get(suffix);
-			if (localeText==null) {
-				localeText = loadLanguageMap(suffix);
-			} 
-			UserVO userVO = new UserVO();
-			userVO.setForView(user);
-			
 			Gson gson = new Gson();
 
 			newfi.put("user", gson.toJson(userVO));
@@ -162,5 +115,7 @@ public class DefaultController implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
 		loadLanguageMap(CommonConstants.DEFAULT_LOCALE);
+		
 	}
+	
 }
