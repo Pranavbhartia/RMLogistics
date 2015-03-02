@@ -3,9 +3,16 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.UserRolesEum;
 
 public class UserVO implements Serializable {
+	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(UserVO.class);
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int defaultLoanId;
@@ -213,7 +220,17 @@ public class UserVO implements Serializable {
 		this.photoImageUrl=user.getPhotoImageUrl();
 		this.id=user.getId();
 		UserRoleVO roleVO= new UserRoleVO();
-		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
+		if(UserRolesEum.INTERNALUSER.toString().equals(user.getUserRole().getRoleCd())){
+			if(user.getInternalUserDetail()==null){
+				LOG.error("###Data entry issue, user is marked as internal user but mapping not set in table");
+			}else{
+				roleVO.setRoleDescription(user.getInternalUserDetail().getInternaUserRoleMaster().getRoleDescription());	
+			}
+			
+		}else{
+			roleVO.setRoleDescription(user.getUserRole().getRoleDescription());	
+		}
+		
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
 		this.displayName = this.firstName+" "+this.lastName;

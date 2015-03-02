@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,42 +23,36 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.web.rest.util.RestUtil;
 
 
 @RestController
 @RequestMapping(value="/loanneeds/")
-public class NeedList {
+public class NeedsListRestService {
 
 	@Autowired
 	private NeedsListService needsListService;
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NeedList.class);
+			.getLogger(NeedsListRestService.class);
 	
 
 	@RequestMapping(value = "{loanId}" , method=RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getLoanNeeds(@PathVariable int loanId) {
 		System.out.println(loanId+"-----------------------");
-		CommonResponseVO response=new CommonResponseVO();
+		CommonResponseVO response=null;
 		try {
-			List<ManagerNeedVo> loanNeeds=needsListService.getLoansNeedsList(loanId);
-			response.setError(null);
-			response.setResultObject(loanNeeds);
-//			result.put("Error", null);
-//			result.put("Result", loanNeeds);
+			HashMap<String, Object> loanNeeds=needsListService.getLoansNeedsList(loanId);
+			response=RestUtil.wrapObjectForSuccess(loanNeeds);
 		}catch(Exception e){
 			LOG.error(e.getMessage());
-			ErrorVO errorVo=new ErrorVO();
-			errorVo.setCode("500");
-			errorVo.setMessage(e.getMessage());
-			response.setError(errorVo);
-			response.setResultObject(null);
+			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
 		}
 		return response; 
 	}
 
 	@RequestMapping(value = "{loanId}" , method=RequestMethod.POST)
 	public @ResponseBody CommonResponseVO saveLoanNeeds(@RequestParam(required=true) int loanId,String needs) {
-		CommonResponseVO response=new CommonResponseVO();
+		CommonResponseVO response=null;
 		try {
 			
 			ObjectMapper mapper=new ObjectMapper();
@@ -65,47 +60,33 @@ public class NeedList {
 			List<Integer> val=mapper.readValue(needs, typeRef);
 			int result=needsListService.saveLoanNeeds(loanId, val);
 			if(result==1){
-				response.setError(null);
-				response.setResultObject("Success");
+				response=RestUtil.wrapObjectForSuccess("Success");
 			}
 			else{
-				ErrorVO errorVo=new ErrorVO();
-				errorVo.setCode("500");
-				errorVo.setMessage("Save need list failed");
-				response.setError(errorVo);
-				response.setResultObject(null);
+				response=RestUtil.wrapObjectForFailure(null, "500", "Save need list failed");
 			}
 			
 		}catch(Exception e){
-			ErrorVO errorVo=new ErrorVO();
-			errorVo.setCode("500");
-			errorVo.setMessage(e.getMessage());
-			response.setError(errorVo);
-			response.setResultObject(null);
+			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
 			LOG.error(e.getMessage());
 		}
 		return response; 
 	}
 	@RequestMapping(value = "custom" , method=RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCustomNeedsList() {
-		CommonResponseVO response=new CommonResponseVO();
+		CommonResponseVO response=null;
 		try {
 			List<ManagerNeedVo> customNeedsList=needsListService.getNeedsListMaster(true);
-			response.setError(null);
-			response.setResultObject(customNeedsList);
+			response=RestUtil.wrapObjectForSuccess(customNeedsList);
 		}catch(Exception e){
-			ErrorVO errorVo=new ErrorVO();
-			errorVo.setCode("500");
-			errorVo.setMessage(e.getMessage());
-			response.setError(errorVo);
-			response.setResultObject(null);
+			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
 			LOG.error(e.getMessage());
 		}
 		return response; 
 	}
 	@RequestMapping(value = "custom" , method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
-		CommonResponseVO response=new CommonResponseVO();
+	public @ResponseBody CommonResponseVO setCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
+		CommonResponseVO response=null;
 		try {
 			User user=null;
 			try{
@@ -117,14 +98,9 @@ public class NeedList {
 			}
 			NeedsListMaster customNeed=NeedsListMaster.getCustomNeed(label, category, description,user);
 			int needId=needsListService.saveCustomNeed(customNeed);
-			response.setError(null);
-			response.setResultObject(needId);
+			response=RestUtil.wrapObjectForSuccess(needId);
 		}catch(Exception e){
-			ErrorVO errorVo=new ErrorVO();
-			errorVo.setCode("500");
-			errorVo.setMessage(e.getMessage());
-			response.setError(errorVo);
-			response.setResultObject(null);
+			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
 			LOG.error(e.getMessage());
 		}
 		return response; 
