@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -88,30 +89,22 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 
-	@RequestMapping(value = { "/searchByName/{name}", "/searchByName" }, method = RequestMethod.GET)
-	public @ResponseBody String searchUsersByName(@PathVariable String name) {
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public @ResponseBody String searchUsers(
+			@RequestParam(value = "name",required=false) String name,
+			@RequestParam(value = "roleID",required=false) Integer roleID) {
 
 		if (name == null)
 			name = "";
+		
+		UserRoleVO roleVO=null;
+		if(roleID!=null && roleID>0){
+			roleVO=new UserRoleVO();
+			roleVO.setId(roleID);
+		}
+		
 		List<UserVO> userList = userProfileService
-				.searchUsersByName(name, null);
-
-		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
-
-		return new Gson().toJson(responseVO);
-	}
-
-	@RequestMapping(value = "/searchByRole/{roleID}/{name}", method = RequestMethod.GET)
-	public @ResponseBody String searchUsersByName(@PathVariable Integer roleID,
-			@PathVariable String name) {
-
-		UserRoleVO roleVO = new UserRoleVO();
-		roleVO.setId(roleID);
-
-		if (name == null)
-			name = "";
-		List<UserVO> userList = userProfileService.searchUsersByName(name,
-				roleVO);
+				.searchUsersByName(name, roleVO);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
 
