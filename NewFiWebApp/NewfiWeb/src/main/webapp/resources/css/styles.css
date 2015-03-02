@@ -919,6 +919,13 @@ a, a:hover, a:visited{
 	cursor: pointer;
 }
 
+.doc-link-icn {
+	width: 20px;
+	height: 30px;
+	background: url('../images/doc-icon.png') no-repeat center top;
+	cursor: pointer;
+}
+
 
 .uploaded-items-header{
 	line-height: 45px;

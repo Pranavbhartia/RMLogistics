@@ -35,6 +35,7 @@
 	<script>
 	var newfi = ${newfi};
 		$(document).ready(function() {
+			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			changeLeftPanel(2);
 			adjustCenterPanelWidth();
