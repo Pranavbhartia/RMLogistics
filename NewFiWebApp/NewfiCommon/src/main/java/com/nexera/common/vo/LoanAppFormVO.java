@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.PropertyTypeMaster;
 
 public class LoanAppFormVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -25,6 +26,7 @@ public class LoanAppFormVO implements Serializable {
 	private LoanTypeMasterVO loanTypeMaster;
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
+	private Boolean paySecondMortgage;
 
 	public int getId() {
 		return id;
@@ -187,14 +189,25 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSecondMortgage(secondMortgage);
 		loanAppForm.setSelfEmployed(selfEmployed);
 		loanAppForm.setSsIncomeOrDisability(ssIncomeOrDisability);
+		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
+		loanAppForm.setHomeToSell(this.homeToSell);
+		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+		propertyTypeMaster.setId(1);
+		loanAppForm.setPropertyTypeMaster(propertyTypeMaster);
+
 		loanAppForm.setUser(this.getUser().convertToEntity());
-		/*
-		 * loanAppForm.setPropertyTypeMaster(propertyTypeMaster);
-		 * loanAppForm.setLoan(loan);
-		 * loanAppForm.setUserEmploymentHistories(userEmploymentHistories);
-		 */
+
+		loanAppForm.setLoan(this.getLoan().convertToEntity());
 
 		return loanAppForm;
+	}
+
+	public Boolean getPaySecondMortgage() {
+		return paySecondMortgage;
+	}
+
+	public void setPaySecondMortgage(Boolean paySecondMortgage) {
+		this.paySecondMortgage = paySecondMortgage;
 	}
 
 	public LoanAppFormVO convertFromEntity(LoanAppForm loanAppEntity) {
