@@ -10,9 +10,8 @@ import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
 
 public class UserVO implements Serializable {
-	
-	private static final Logger LOG = LoggerFactory
-			.getLogger(UserVO.class);
+
+	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int defaultLoanId;
@@ -37,7 +36,7 @@ public class UserVO implements Serializable {
 	private List<UserEmailVO> userEmails;
 
 	public UserVO() {
-		
+
 	}
 
 	public int getId() {
@@ -59,9 +58,11 @@ public class UserVO implements Serializable {
 	public String getEmailId() {
 		return emailId;
 	}
+
 	public String getDisplayName() {
 		return displayName;
 	}
+
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
@@ -204,37 +205,36 @@ public class UserVO implements Serializable {
 				+ loanNotifications + ", loanTeams=" + loanTeams
 				+ ", userEmails=" + userEmails + "]";
 	}
-	
+
 	public int getDefaultLoanId() {
 		return defaultLoanId;
 	}
+
 	public void setDefaultLoanId(int defaultLoanId) {
 		this.defaultLoanId = defaultLoanId;
 	}
 
 	public void setForView(User user) {
 		// TODO Auto-generated method stub
-		this.firstName=user.getFirstName();
-		this.lastName=user.getLastName();
-		this.phoneNumber=user.getPhoneNumber();
-		this.photoImageUrl=user.getPhotoImageUrl();
-		this.id=user.getId();
-		UserRoleVO roleVO= new UserRoleVO();
-		if(UserRolesEum.INTERNALUSER.toString().equals(user.getUserRole().getRoleCd())){
-			if(user.getInternalUserDetail()==null){
-				LOG.error("###Data entry issue, user is marked as internal user but mapping not set in table");
-			}else{
-				roleVO.setRoleDescription(user.getInternalUserDetail().getInternaUserRoleMaster().getRoleDescription());	
-			}
-			
-		}else{
-			roleVO.setRoleDescription(user.getUserRole().getRoleDescription());	
-		}
-		
-		this.userRole=roleVO;
-		this.emailId=user.getEmailId();
-		this.displayName = this.firstName+" "+this.lastName;
+
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.phoneNumber = user.getPhoneNumber();
+		this.photoImageUrl = user.getPhotoImageUrl();
+		this.id = user.getId();
+		UserRoleVO roleVO = new UserRoleVO();
+		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
+		this.userRole = roleVO;
+		this.emailId = user.getEmailId();
+		this.displayName = this.firstName + " " + this.lastName;
 	}
 
-	
+	public User convertToEntity() {
+		User user = new User();
+
+		user.setId(this.id);
+
+		return user;
+	}
+
 }
