@@ -8,6 +8,7 @@ public class InternalUserDetailVO implements Serializable {
 	private Boolean activeInternal;
 	private UserVO user;
 	private UserVO manager;
+	private InternalUserRoleMasterVO internalUserRoleMasterVO;
 
 	public int getId() {
 		return id;
@@ -39,6 +40,15 @@ public class InternalUserDetailVO implements Serializable {
 
 	public void setManager(UserVO manager) {
 		this.manager = manager;
+	}
+
+	public InternalUserRoleMasterVO getInternalUserRoleMasterVO() {
+		return internalUserRoleMasterVO;
+	}
+
+	public void setInternalUserRoleMasterVO(
+			InternalUserRoleMasterVO internalUserRoleMasterVO) {
+		this.internalUserRoleMasterVO = internalUserRoleMasterVO;
 	}
 
 }

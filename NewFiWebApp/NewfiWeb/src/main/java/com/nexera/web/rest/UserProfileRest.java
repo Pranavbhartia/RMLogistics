@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.InternalUserDetail;
+import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.UserRoleVO;
@@ -29,8 +31,9 @@ public class UserProfileRest {
 	@Autowired
 	private UserProfileService userProfileService;
 
-	private static final Logger LOG = LoggerFactory.getLogger(UserProfileRest.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(UserProfileRest.class);
+
 	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
@@ -43,9 +46,8 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.GET)
-	public @ResponseBody
-	String getUserProfileWithUserId() {
-		
+	public @ResponseBody String getUserProfileWithUserId() {
+
 		LOG.info("completeprofile profile get call : ");
 		Gson gson = new Gson();
 		User user = getUserObject();
@@ -58,7 +60,7 @@ public class UserProfileRest {
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
-			LOG.error("Error while getting the user datails ",  e.getMessage());
+			LOG.error("Error while getting the user datails ", e.getMessage());
 
 		}
 
@@ -66,56 +68,66 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO updateprofile(String updateUserInfo) {
+	public @ResponseBody CommonResponseVO updateprofile(String updateUserInfo) {
 
 		Gson gson = new Gson();
 		UserVO userVO = null;
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
-			
+
 			Integer userUpdateCount = userProfileService.updateUser(userVO);
-			Integer customerDetailsUpdateCount = userProfileService.updateCustomerDetails(userVO);
-			
-			if(userUpdateCount < 0 || customerDetailsUpdateCount < 0 ){
+			Integer customerDetailsUpdateCount = userProfileService
+					.updateCustomerDetails(userVO);
+
+			if (userUpdateCount < 0 || customerDetailsUpdateCount < 0) {
 				LOG.error("Error while updataing the user datails ");
 			}
-			
+
 		} catch (Exception e) {
-			LOG.error("Error while updataing the user datails ::",  e.getMessage());
+			LOG.error("Error while updataing the user datails ::",
+					e.getMessage());
 		}
-		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public @ResponseBody String searchUsers(
-			@RequestParam(value = "name",required=false) String name,
-			@RequestParam(value = "roleID",required=false) Integer roleID) {
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "roleID", required = false) Integer roleID,
+			@RequestParam(value = "roleID", required = false) Integer internalRoleID) {
 
 		if (name == null)
 			name = "";
-		
-		UserRoleVO roleVO=null;
-		if(roleID!=null && roleID>0){
-			roleVO=new UserRoleVO();
+
+		UserRoleVO roleVO = null;
+		InternalUserDetail internalUser=null;
+		if (roleID != null && roleID > 0) {
+			roleVO = new UserRoleVO();
 			roleVO.setId(roleID);
+
+			if (internalRoleID != null) {
+				internalUser = new InternalUserDetail();
+				InternalUserRoleMaster internaUserRoleMaster = new InternalUserRoleMaster();
+				internaUserRoleMaster.setId(internalRoleID);
+				internalUser.setInternaUserRoleMaster(internaUserRoleMaster);
+			}
 		}
-		
-		List<UserVO> userList = userProfileService
-				.searchUsersByName(name, roleVO);
+
+		List<UserVO> userList = userProfileService.searchUsersByName(name,
+				roleVO,internalUser);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
 
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value="/",method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
-		if(userVO.getUsername()==null)
+		if (userVO.getUsername() == null)
 			userVO.setUsername(userVO.getEmailId());
 		userVO = userProfileService.createUser(userVO);
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
