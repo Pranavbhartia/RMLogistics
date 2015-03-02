@@ -88,6 +88,7 @@ public class DefaultController implements InitializingBean {
 			} 
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
+			LOG.info("Avoiding status code check of loan");
 			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
 			userVO.setDefaultLoanId(loanVO.getId());
 			Gson gson = new Gson();

@@ -155,6 +155,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));*/
 		return (Loan) criteria.uniqueResult();
 	}
+	
 
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
 

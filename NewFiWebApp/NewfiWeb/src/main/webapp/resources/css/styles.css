@@ -543,6 +543,9 @@ a, a:hover, a:visited{
 	color: #428bca;
 	cursor: pointer;
 }
+.showAnchor{
+	cursor: pointer;
+}
 
 .closing-cost-cont-desc-row-even{
 	background: #fcfcfc;
