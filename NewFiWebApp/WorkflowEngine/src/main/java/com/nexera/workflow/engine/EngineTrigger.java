@@ -2,6 +2,7 @@ package com.nexera.workflow.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowMaster;
+import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.manager.CacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
 import com.nexera.workflow.service.WorkflowService;
@@ -91,20 +93,31 @@ public class EngineTrigger
         if ( workflowItemExecution != null ) {
             LOGGER.debug( "Updating workflow master status if its not updated " );
             WorkflowExec workflowExec = workflowItemExecution.getParentWorkflow();
-            if ( !workflowExec.getStatus().equals( Status.STARTED.getStatus() ) )
+            if ( !workflowExec.getStatus().equals( Status.STARTED.getStatus() ) ) {
+                workflowExec.setStatus( Status.STARTED.getStatus() );
                 workflowService.updateWorkflowExecStatus( workflowExec );
+            }
             if ( workflowItemExecution.getParentWorkflowItemExec() != null ) {
                 LOGGER.debug( "It does have a parent, its a child entry " );
                 WorkflowItemExec parentWorkflowItemExec = workflowItemExecution.getParentWorkflowItemExec();
                 if ( parentWorkflowItemExec.getStatus().equalsIgnoreCase( Status.NOT_STARTED.getStatus() ) ) {
-                    LOGGER.debug( "Updating the parent workflow to started " );
+                    LOGGER.debug( "Updating the parent workflow item status to started " );
+                    parentWorkflowItemExec.setStatus( Status.STARTED.getStatus() );
                     workflowService.updateWorkflowItemExecutionStatus( parentWorkflowItemExec );
-                    workflowManager.setWorkflowItemExec( workflowItemExecution );
-                    executorService.execute( workflowManager );
-                } else {
-                    LOGGER.debug( "parent is already started " );
-                    workflowManager.setWorkflowItemExec( workflowItemExecution );
-                    executorService.execute( workflowManager );
+                }
+
+                LOGGER.debug( "Updating workflow item execution status  to started" );
+                workflowItemExecution.setStatus( Status.STARTED.getStatus() );
+                workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
+                workflowManager.setWorkflowItemExec( workflowItemExecution );
+                executorService.execute( workflowManager );
+
+                executorService.shutdown();
+                try {
+                    executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
+                } catch ( InterruptedException e ) {
+                    LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
+                    throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
                 }
 
             } else {
@@ -113,15 +126,40 @@ public class EngineTrigger
                     .getWorkflowItemListByParentWorkflowExecItem( workflowItemExecution );
                 if ( childWorkflowItemExecList != null ) {
                     LOGGER.debug( " Is the parent " );
+                    LOGGER.debug( "Updating the workflow item execution status to started " );
+                    workflowItemExecution.setStatus( Status.STARTED.getStatus() );
+                    workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
                     for ( WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList ) {
                         LOGGER.debug( "Starting all child threads together " );
+                        LOGGER.debug( "Updating the child workflow item execution status to started " );
+                        childWorkflowItemExec.setStatus( Status.STARTED.getStatus() );
+                        workflowService.updateWorkflowItemExecutionStatus( childWorkflowItemExec );
                         workflowManager.setWorkflowItemExec( childWorkflowItemExec );
                         executorService.execute( workflowManager );
                     }
+                    executorService.shutdown();
+                    try {
+                        executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
+                    } catch ( InterruptedException e ) {
+                        LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
+                        throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
+                    }
+
 
                 } else {
                     LOGGER.debug( "Independent execution" );
+                    workflowItemExecution.setStatus( Status.STARTED.getStatus() );
+                    workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
                     workflowManager.setWorkflowItemExec( workflowItemExecution );
+                    executorService.execute( workflowManager );
+                    executorService.shutdown();
+                    try {
+                        executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
+                    } catch ( InterruptedException e ) {
+                        LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
+                        throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
+                    }
+
                 }
             }
         }

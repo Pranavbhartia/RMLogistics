@@ -131,7 +131,6 @@ public class WorkflowServiceImpl implements WorkflowService
     public void updateWorkflowExecStatus( WorkflowExec parentWorkflow )
     {
         LOGGER.debug( "Inside method updateWorkflowExecStatus " );
-        parentWorkflow.setStatus( Status.STARTED.getStatus() );
         workflowExecDao.saveOrUpdate( parentWorkflow );
 
     }
@@ -145,7 +144,6 @@ public class WorkflowServiceImpl implements WorkflowService
     public void updateWorkflowItemExecutionStatus( WorkflowItemExec workflowItemExecution )
     {
         LOGGER.debug( "Inside method updateWorkflowItemExecutionStatus " );
-        workflowItemExecution.setStatus( Status.STARTED.getStatus() );
         workflowItemExecDao.saveOrUpdate( workflowItemExecution );
 
     }
