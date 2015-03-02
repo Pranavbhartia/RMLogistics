@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "internaluserrolemaster")
-@NamedQuery(name = "UserRole.findAll", query = "SELECT irm FROM InternaUserRoleMaster irm")
+@NamedQuery(name = "InternalUserRoleMaster.findAll", query = "SELECT irm FROM InternaUserRoleMaster irm")
 public class InternalUserRoleMaster  implements Serializable {
 
 	/**
