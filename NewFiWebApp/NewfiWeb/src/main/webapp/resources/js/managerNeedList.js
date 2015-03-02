@@ -264,10 +264,9 @@ function ajaxRequest(url,type,dataType,data,successCallBack){
 var contxt;
 function paintAgentNeedsListPage(){
 
-	var loanNeedContext=getLoanNeedsManagerContext(1);//Insert Proper Loan Id here
+	var loanNeedContext=getLoanNeedsManagerContext(selectedUserDetail.loanID);//Insert Proper Loan Id here
 	loanNeedContext.init(function(){
 		appendDocumentToolTip();
-		var loandetails={"id":1,"createdDate":"Dec 12, 2015 12:00:00 AM","deleted":false,"modifiedDate":"Dec 12, 2015 12:00:00 AM","name":"Sample loan","status":"IN_PROGRESS","user":{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},"loanTeam":[{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},{"id":2,"emailId":"test2@gmail.com","firstName":"Loan","lastName":"Manager","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}},{"id":3,"emailId":"test3@gmail.com","firstName":"Loan","lastName":"Manager2","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}}]};
 		appendCustomerDetailHeader(selectedUserDetail);
 		appendInitialNeedsListWrapper();
 		paintUploadNeededItemsPage();
