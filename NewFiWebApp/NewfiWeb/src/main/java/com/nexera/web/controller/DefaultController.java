@@ -2,6 +2,7 @@ package com.nexera.web.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -22,14 +23,24 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.LoanService;
+import com.nexera.core.service.MasterDataService;
 
 @Controller
 public class DefaultController implements InitializingBean {
 
 	@Autowired
 	protected Utils utils;
+	
+	@Autowired
+	protected LoanService loanService;
+	
+	@Autowired
+	protected MasterDataService masterDataService;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefaultController.class);
@@ -40,7 +51,7 @@ public class DefaultController implements InitializingBean {
 
 	protected HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
-	private User getUserObject() {
+	protected User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		if (principal instanceof User) {
@@ -57,12 +68,13 @@ public class DefaultController implements InitializingBean {
 	 * 
 	 * @param model
 	 * @param req
+	 * @param user 
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public User loadDefaultValues(Model model, HttpServletRequest req)
+	public User loadDefaultValuesForCustomer(Model model, HttpServletRequest req, User user)
 			throws IOException {
-		User user = getUserObject();
+		
 		JSONObject newfi = new JSONObject();
 
 		try {
@@ -76,8 +88,53 @@ public class DefaultController implements InitializingBean {
 			} 
 			UserVO userVO = new UserVO();
 			userVO.setForView(user);
-
+			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
+			userVO.setDefaultLoanId(loanVO.getId());
 			Gson gson = new Gson();
+
+			newfi.put("user", gson.toJson(userVO));
+
+			newfi.put("i18n", new JSONObject(localeText));
+			model.addAttribute("userVO", userVO);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		model.addAttribute("newfi", newfi);
+		return user;
+	}
+	/**
+	 * Loads all the default elements required for the UI. Common method to be
+	 * called from all controllers
+	 * 
+	 * @param model
+	 * @param req
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	public User loadDefaultValuesForAgent(Model model, HttpServletRequest req,User user)
+			throws IOException {
+		
+		JSONObject newfi = new JSONObject();
+
+		try {
+
+			Locale locale = req.getLocale();
+			String suffix = locale.toString();
+			Gson gson = new Gson();
+
+			Map<String, String> localeText = languageMap.get(suffix);
+			if (localeText==null) {
+				localeText = loadLanguageMap(suffix);
+			} 
+			UserVO userVO = new UserVO();
+			userVO.setForView(user);
+			
+			List<InternalUserRoleMaster> internalUserRoleMasters = masterDataService.getInternalUserRoleMaster();
+			newfi.put("internalUserRoleMasters", gson.toJson(internalUserRoleMasters));
+			
+			gson = new Gson();
 
 			newfi.put("user", gson.toJson(userVO));
 

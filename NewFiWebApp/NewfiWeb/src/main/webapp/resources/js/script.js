@@ -776,7 +776,9 @@ function getClosingCostHeadingCont(text) {
 }
 
 function getRequiredDocuments(){
-	ajaxRequest("rest/fileupload/needlist/get/1/1" , "GET" , "json" , "" , getRequiredDocumentData);
+	var userId = newfiObject.user.id;
+	var activeLoanId = newfiObject.user.defaultLoanId;
+	ajaxRequest("rest/fileupload/needlist/get/"+userId+"/"+activeLoanId , "GET" , "json" , "" , getRequiredDocumentData);
 }
 /*
 * Functions for upload items module
@@ -815,8 +817,8 @@ function paintUploadNeededItemsPage() {
 	    url: "documentUpload.do",
 	    clickable : "#file-upload-icn",
 	    params: {
-	        userID: '1',
-	        loanId : '1'
+	        userID: newfiObject.user.id,
+	        loanId : newfiObject.user.defaultLoanId
 	     },
 	    drop:function(){
 	    	

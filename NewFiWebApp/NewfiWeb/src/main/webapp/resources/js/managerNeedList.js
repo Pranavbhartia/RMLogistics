@@ -6,13 +6,26 @@ function getLoanNeedsManagerContext(loanId){
 		selectedNeeds:[],
 		customList:{},
 		needLookup:{},
+		initialNeeds:false,
+		ajaxRequest	:function (url,type,dataType,data,successCallBack){
+			$.ajax({
+				url : url,
+				type : type,
+				dataType : dataType,
+				data : data,
+				success : successCallBack,
+				error : function(){
+					
+				}
+			});
+		},
 		getCustomNeedList:function(callback){
 			var ob=this;
 			var data={};
 			ob.customList={};
-			ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
 				if(response.error){
-
+					showToastMessage(response.error.message)
 				}else{
 					var customList=response.resultObject;
 					for(var i=0;i<customList.length;i++){
@@ -123,9 +136,9 @@ function getLoanNeedsManagerContext(loanId){
 							alert("Need already exist");
 						}
 				}else{
-					ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
+					ob.ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
-
+							showToastMessage(response.error.message)
 						}else{
 							var componentId=response.resultObject;
 							var document = {
@@ -155,11 +168,12 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			var ob=this;
 
-			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
 				if(response.error){
-				
+					showToastMessage(response.error.message)
 				}else{
-					ob.needsList=response.resultObject;
+					ob.initialNeeds=response.resultObject.initialCreation;
+					ob.needsList=response.resultObject.result;
 					if(callback){
 						callback(ob);
 					}
@@ -223,15 +237,16 @@ function getLoanNeedsManagerContext(loanId){
 		},
 		saveSelectedNeedsList:function(callback){
 			//API call TO save Updated Needs List
+			var ob=this;
 			var data={};
 			data.loanId=this.loanId;
-			data.needs=JSON.stringify(this.selectedNeeds)
+			data.needs=JSON.stringify(this.selectedNeeds);
 			var ob=this;
-			ajaxRequest("rest/loanneeds/"+this.loanId,"POST","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
 				if(response.error){
-					alert(response.error.message);
+					showToastMessage(response.error.message);
 				}else{
-					alert("Save Successful")
+					showToastMessage("Save Successful");
 					if(callback){
 						callback(ob);
 					}
@@ -248,13 +263,13 @@ function getLoanNeedsManagerContext(loanId){
 	};
 	return loanNeedsListContext;
 }
+
 var contxt;
 function paintAgentNeedsListPage(){
 
-	var loanNeedContext=getLoanNeedsManagerContext(1);//Insert Proper Loan Id here
+	var loanNeedContext=getLoanNeedsManagerContext(selectedUserDetail.loanID);//Insert Proper Loan Id here
 	loanNeedContext.init(function(){
 		appendDocumentToolTip();
-		var loandetails={"id":1,"createdDate":"Dec 12, 2015 12:00:00 AM","deleted":false,"modifiedDate":"Dec 12, 2015 12:00:00 AM","name":"Sample loan","status":"IN_PROGRESS","user":{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},"loanTeam":[{"id":1,"emailId":"test@gmail.com","firstName":"Test","lastName":"test","userRole":{"id":1,"roleCd":"CUST","label":"Customer","roleDescription":"Customer"}},{"id":2,"emailId":"test2@gmail.com","firstName":"Loan","lastName":"Manager","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}},{"id":3,"emailId":"test3@gmail.com","firstName":"Loan","lastName":"Manager2","userRole":{"id":2,"roleCd":"LM","label":"Loan Manager","roleDescription":"Loan manager for the loan"}}]};
 		appendCustomerDetailHeader(selectedUserDetail);
 		appendInitialNeedsListWrapper();
 		paintUploadNeededItemsPage();
@@ -296,12 +311,16 @@ function appendInitialNeedsListWrapper(){
 	var savebtnWrapper = $('<div>').attr({
 		"class" : "need-list-save-btn-wrapper"
 	});
+	var saveBtnText="Save Needs";
+	if(contxt.initialNeeds){
+		saveBtnText="Create Initial Needs"
+	}
 	
 	var savebtn = $('<div>').attr({
-		"id" : "",
+		"id" : "saveNeedsButton",
 		"class" : "need-list-save-btn",
 		"onclick": "saveLoanNeeds()"
-	}).html("Save Needs");
+	}).html(saveBtnText);
 	
 	savebtnWrapper.append(savebtn);
 	

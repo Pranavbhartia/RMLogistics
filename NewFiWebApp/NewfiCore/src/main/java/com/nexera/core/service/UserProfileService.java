@@ -17,4 +17,5 @@ public interface UserProfileService {
 
 	public List<UserVO> searchUsersByName(String name, UserRoleVO role);
 
+	public UserVO createUser(UserVO userVO);
 }

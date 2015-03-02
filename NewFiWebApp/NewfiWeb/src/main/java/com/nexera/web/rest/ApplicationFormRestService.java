@@ -29,8 +29,7 @@ public class ApplicationFormRestService {
 
 		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 				LoanAppFormVO.class);
-		System.out.println(loaAppFormVO);
-
+		
 		loanAppFormService.create(loaAppFormVO);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
@@ -46,8 +45,8 @@ public class ApplicationFormRestService {
 
 		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 				LoanAppFormVO.class);
-		System.out.println(loaAppFormVO);
-
+	
+		loaAppFormVO.setId(appFormId);
 		loanAppFormService.save(loaAppFormVO);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);

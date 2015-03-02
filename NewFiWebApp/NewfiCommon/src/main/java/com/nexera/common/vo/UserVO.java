@@ -3,11 +3,18 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.UserRolesEum;
 
 public class UserVO implements Serializable {
+
+	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private int defaultLoanId;
 	private Boolean status;
 	private String emailId;
 	private String firstName;
@@ -199,8 +206,17 @@ public class UserVO implements Serializable {
 				+ ", userEmails=" + userEmails + "]";
 	}
 
+	public int getDefaultLoanId() {
+		return defaultLoanId;
+	}
+
+	public void setDefaultLoanId(int defaultLoanId) {
+		this.defaultLoanId = defaultLoanId;
+	}
+
 	public void setForView(User user) {
 		// TODO Auto-generated method stub
+
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.phoneNumber = user.getPhoneNumber();
@@ -215,10 +231,10 @@ public class UserVO implements Serializable {
 
 	public User convertToEntity() {
 		User user = new User();
-		// to finish the other attributes
-		user.setId(this.getId());
-		return user;
 
+		user.setId(this.id);
+
+		return user;
 	}
 
 }
