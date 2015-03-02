@@ -817,8 +817,8 @@ function paintUploadNeededItemsPage() {
 	    url: "documentUpload.do",
 	    clickable : "#file-upload-icn",
 	    params: {
-	        userID: '1',
-	        loanId : '1'
+	        userID: newfiObject.user.id,
+	        loanId : newfiObject.user.defaultLoanId
 	     },
 	    drop:function(){
 	    	

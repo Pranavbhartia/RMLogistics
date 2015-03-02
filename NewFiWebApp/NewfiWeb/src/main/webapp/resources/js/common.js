@@ -2,6 +2,8 @@
 * This file contains JavaScript functions used across the application
 */
 
+var overlayCount = 0;
+
 function ajaxRequest(url,type,dataType,data,successCallBack){
 	$.ajax({
 		url : url,
@@ -48,3 +50,27 @@ $(document).click(function(){
 		}
 	}
 });
+
+//function to show overlay
+function showOverlay(){
+	if(overlayCount == 0){
+		$('#overlay-loader').show();
+	}
+	overlayCount++;
+}
+
+//function to hide overlay
+function hideOverlay(){
+	overlayCount--;
+	if(overlayCount == 0){
+		$('#overlay-loader').hide();
+	}
+}
+
+//Function to show toast message
+function showToastMessage(message){
+	$('#overlay-toast-txt').html(message);
+	$('#overlay-toast').fadeIn("slow",function(){
+		$('#overlay-toast').fadeOut("slow");
+	});
+}
