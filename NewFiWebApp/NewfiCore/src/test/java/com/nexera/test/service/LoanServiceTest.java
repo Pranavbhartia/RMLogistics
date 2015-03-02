@@ -17,39 +17,39 @@ public class LoanServiceTest {
 	@Autowired
 	private LoanService loanService;
 
-//	@Test
-//	public void test() {
-//		UserVO user = new UserVO();
-//		user.setId(1);
-//		LoanDashboardVO loanDashboardVO = loanService.retrieveDashboard(user);
-//		
-//	}
-//	
-//	@Test
-//    public void testGetLoanTeamListForLoan() {
-//	    LoanVO loanVO = new LoanVO();
-//	    loanVO.setId(1);
-//	    LoanTeamListVO loanTeamListVO = loanService.getLoanTeamListForLoan(loanVO);
-//        List<LoanTeamVO> loanTeamVOList = loanTeamListVO.getLeanTeamList();
-//        for(LoanTeamVO LoanTeamVO : loanTeamVOList){
-//            System.out.println(LoanTeamVO.getUser().getFirstName());
-//        }
-//        
-//    }
-	
-	@Test
-    public void testGetLoansProgressForUser() {
+	// @Test
+	// public void test() {
+	// UserVO user = new UserVO();
+	// user.setId(1);
+	// LoanDashboardVO loanDashboardVO = loanService.retrieveDashboard(user);
+	//
+	// }
+	//
+	// @Test
+	// public void testGetLoanTeamListForLoan() {
+	// LoanVO loanVO = new LoanVO();
+	// loanVO.setId(1);
+	// LoanTeamListVO loanTeamListVO =
+	// loanService.getLoanTeamListForLoan(loanVO);
+	// List<LoanTeamVO> loanTeamVOList = loanTeamListVO.getLeanTeamList();
+	// for(LoanTeamVO LoanTeamVO : loanTeamVOList){
+	// System.out.println(LoanTeamVO.getUser().getFirstName());
+	// }
+	//
+	// }
+
+	public void testGetLoansProgressForUser() {
 		UserVO user = new UserVO();
-	    user.setId(1);
-	    System.out.println("Invoking");
-	   LoanVO loanVO= loanService.getActiveLoanOfUser(user);
-	   System.out.println(loanVO.getId());
-        
-    }
-	
+		user.setId(1);
+		System.out.println("Invoking");
+		LoanVO loanVO = loanService.getActiveLoanOfUser(user);
+		System.out.println(loanVO.getId());
+
+	}
+
 	@Test
-	public void testGetActiveLoan(){
-		
+	public void testGetActiveLoan() {
+
 	}
 
 }
