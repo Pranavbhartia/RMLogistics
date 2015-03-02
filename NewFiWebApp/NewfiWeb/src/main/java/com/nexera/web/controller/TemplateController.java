@@ -89,7 +89,7 @@ public class TemplateController extends DefaultController {
 			LOG.info("The s3 path is : " + s3Path);
 
 			// save image in the data base
-			User user = loadDefaultValues(model, req);
+			User user = getUserObject();
 			Integer userid = user.getId();
 			Integer num = userProfileService.updateUser(s3Path, userid);
 
