@@ -20,6 +20,7 @@ public class NeedsListMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String description;
+	private String shortDescription;
 	private String label;
 	private Date modifiedDate;
 	private String needCategory;
@@ -83,6 +84,13 @@ public class NeedsListMaster implements Serializable {
 
 	public void setNeedCategory(String needCategory) {
 		this.needCategory = needCategory;
+	}
+	@Column(name = "short_description")
+	public String getShortDescription() {
+		return shortDescription;
+	}
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 
 	// bi-directional many-to-one association to LoanNeedsList

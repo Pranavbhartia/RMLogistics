@@ -3,6 +3,7 @@ package com.nexera.core.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -43,12 +44,14 @@ public class NeedsListServiceImpl implements NeedsListService{
 		return needsDirectory;
 	}
 	
-	public List<ManagerNeedVo> getLoansNeedsList(int loanId) throws Exception{
+	public HashMap<String, Object> getLoansNeedsList(int loanId) throws Exception{
 		try {
+			HashMap<String, Object> loanNeedsNStatus=new HashMap<String,Object>();
 			List<LoanNeedsList> loanNeeds=needsDao.getLoanNeedsList(loanId);
 			//TODO Need Loan Details
 			// TODO Fetch List of Needs List from database for the loan if list is not null and length greater then 0 then those items need to be selected
 			List<ManagerNeedVo> result=new ArrayList<ManagerNeedVo>();
+			boolean initialNeedsCreation=false;
 			if(loanNeeds.size()>0){
 				List<NeedsListMaster> needs=(List<NeedsListMaster>)needsDao.getMasterNeedsList(false);
 				//List<NeedsListMaster> needs=needsDao.loadAll(NeedsListMaster.class);
@@ -188,6 +191,7 @@ public class NeedsListServiceImpl implements NeedsListService{
 				needsList.get("33").setIsChecked(true);
 				
 				result=new ArrayList<ManagerNeedVo>(needsList.values());
+				initialNeedsCreation=true;
 				// TODO code to Apply Rules comes here
 				
 				
@@ -216,8 +220,9 @@ public class NeedsListServiceImpl implements NeedsListService{
 //				        }
 //				    }
 //			});
-			
-			return result;
+			loanNeedsNStatus.put("result", result);
+			loanNeedsNStatus.put("initialCreation", initialNeedsCreation);
+			return loanNeedsNStatus;
 		
 		} catch (NoRecordsFetchedException e) {
 			// TODO Auto-generated catch block
@@ -265,11 +270,9 @@ public class NeedsListServiceImpl implements NeedsListService{
 				}
 			}
 		}
-		System.out.println("4");
 		for(LoanNeedsList need:existingNeeds.values()){
 			needsDao.deleteLoanNeed(need);
 		}
-		System.out.println("5");
 		}catch(Exception e){
 			return 0;
 		}
