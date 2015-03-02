@@ -15,5 +15,11 @@ public interface WorkflowItemMasterDao extends GenericDao
      */
     List<WorkflowItemMaster> getWorkflowItemMasterListByWorkflowMaster( WorkflowMaster workflowMaster );
 
+    /**
+     * @param workflowItemMaster
+     * @return
+     */
+    Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster );
+
 
 }

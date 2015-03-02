@@ -58,18 +58,23 @@ public class EngineTrigger
                     .getWorkflowItemMasterListByWorkflowMaster( workflowMaster );
                 for ( WorkflowItemMaster workflowItemMaster : workflowItemMasterList ) {
                     LOGGER.debug( "Initializing all workflow items " );
-                    if ( !workflowItemMaster.getChildWorkflowItemMasterList().isEmpty() ) {
-                        WorkflowItemExec workflowItemExec = workflowService.setWorkflowItemIntoExecution( workflowExec,
-                            workflowItemMaster, null );
-                        for ( WorkflowItemMaster childworkflowItemMaster : workflowItemMaster.getChildWorkflowItemMasterList() ) {
-                            LOGGER.debug( "In this case will add parent workflow item execution id " );
-                            workflowService.setWorkflowItemIntoExecution( workflowExec, childworkflowItemMaster,
-                                workflowItemExec );
-                        }
+                    //TODO test this 
+                    if ( !workflowService.checkIfOnSuccessOfAnotherItem( workflowItemMaster ) ) {
+                        if ( !workflowItemMaster.getChildWorkflowItemMasterList().isEmpty() ) {
+                            WorkflowItemExec workflowItemExec = workflowService.setWorkflowItemIntoExecution( workflowExec,
+                                workflowItemMaster, null );
+                            for ( WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
+                                .getChildWorkflowItemMasterList() ) {
+                                LOGGER.debug( "In this case will add parent workflow item execution id " );
+                                workflowService.setWorkflowItemIntoExecution( workflowExec, childworkflowItemMaster,
+                                    workflowItemExec );
 
-                    } else {
-                        if ( workflowItemMaster.getParentWorkflowItemMaster() == null )
-                            workflowService.setWorkflowItemIntoExecution( workflowExec, workflowItemMaster, null );
+                            }
+
+                        } else {
+                            if ( workflowItemMaster.getParentWorkflowItemMaster() == null )
+                                workflowService.setWorkflowItemIntoExecution( workflowExec, workflowItemMaster, null );
+                        }
                     }
 
                 }
@@ -125,7 +130,7 @@ public class EngineTrigger
                 List<WorkflowItemExec> childWorkflowItemExecList = workflowService
                     .getWorkflowItemListByParentWorkflowExecItem( workflowItemExecution );
                 if ( childWorkflowItemExecList != null ) {
-                    LOGGER.debug( " Is the parent " );
+                    LOGGER.debug( " The item id belongs to parent " + workflowItemExecution );
                     LOGGER.debug( "Updating the workflow item execution status to started " );
                     workflowItemExecution.setStatus( Status.STARTED.getStatus() );
                     workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );

@@ -21,6 +21,7 @@ public class WorkflowItemMasterDaoImpl extends GenericDaoImpl implements Workflo
     /* (non-Javadoc)
      * @see com.nexera.workflow.dao.WorkflowItemMasterDao#getWorkflowItemMasterListByWorkflowMaster(com.nexera.workflow.bean.WorkflowMaster)
      */
+    @SuppressWarnings ( "unchecked")
     @Override
     public List<WorkflowItemMaster> getWorkflowItemMasterListByWorkflowMaster( WorkflowMaster workflowMaster )
     {
@@ -28,6 +29,28 @@ public class WorkflowItemMasterDaoImpl extends GenericDaoImpl implements Workflo
         Criteria criteria = session.createCriteria( WorkflowItemMaster.class );
         criteria.add( Restrictions.eq( "parentWorkflowMaster", workflowMaster ) );
         return criteria.list();
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.nexera.workflow.dao.WorkflowItemMasterDao#checkIfOnSuccessOfAnotherItem(com.nexera.workflow.bean.WorkflowItemMaster)
+     */
+    @SuppressWarnings ( "rawtypes")
+    @Override
+    public Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster )
+    {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria( WorkflowItemMaster.class );
+        criteria.add( Restrictions.eq( "onSuccess", workflowItemMaster ) );
+        List list = criteria.list();
+        if ( list == null )
+            return false;
+        else {
+            if ( list.isEmpty() )
+                return false;
+            else
+                return false;
+        }
     }
 
 }

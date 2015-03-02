@@ -37,4 +37,7 @@ public interface WorkflowService
     List<WorkflowItemExec> getWorkflowItemListByParentWorkflowExecItem( WorkflowItemExec workflowItemExecution );
 
 
+    Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster );
+
+
 }

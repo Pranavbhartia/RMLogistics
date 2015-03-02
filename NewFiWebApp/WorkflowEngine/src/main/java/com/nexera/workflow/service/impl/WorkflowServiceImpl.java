@@ -160,4 +160,15 @@ public class WorkflowServiceImpl implements WorkflowService
         return workflowItemExecDao.getWorkflowItemListByparentWorkflowExecItem( workflowItemExecution );
     }
 
+
+    /* (non-Javadoc)
+     * @see com.nexera.workflow.service.WorkflowService#checkIfOnSuccessOfAnotherItem(com.nexera.workflow.bean.WorkflowItemMaster)
+     */
+    @Override
+    public Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster )
+    {
+        LOGGER.debug( "Inside method checkIfOnSuccessOfAnotherItem " );
+        return workflowItemMasterDao.checkIfOnSuccessOfAnotherItem( workflowItemMaster );
+    }
+
 }
