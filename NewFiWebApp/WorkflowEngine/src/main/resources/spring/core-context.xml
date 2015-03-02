@@ -9,8 +9,11 @@
 	<context:property-placeholder location="classpath:application.properties" />
 
 	<context:component-scan base-package="com.nexera" />
-
-	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+<!-- 
+	<bean id="engineTrigger" class="com.nexera.workflow.engine.EngineTrigger">
+	</bean>
+ -->
+ 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" value="${jdbc.url}" />

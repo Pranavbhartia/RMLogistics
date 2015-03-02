@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class WorkflowManager implements Runnable
             getWorkflowItemExec().setStatus( Status.COMPLETED.getStatus() );
             workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
             LOGGER.debug( "Checking if it has an onSuccess item to execute " );
-            //TODO test this Might Have issues regarding parent of success 
+            //TODO test this Might Have issues regarding parent of success workflow item
             if ( workflowItemMaster.getOnSuccess() != null ) {
                 WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster.getOnSuccess();
                 WorkflowItemExec successWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
@@ -82,6 +83,14 @@ public class WorkflowManager implements Runnable
                 executorService.execute( workflowManager );
 
             }
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
+            } catch ( InterruptedException e ) {
+                LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
+                throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
+            }
+
 
         } else if ( result.equalsIgnoreCase( WorkflowConstants.FAILURE ) ) {
 
@@ -89,6 +98,7 @@ public class WorkflowManager implements Runnable
             getWorkflowItemExec().setStatus( Status.COMPLETED.getStatus() );
             workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
             LOGGER.debug( "Checking if it has an onFailure item to execute " );
+            //TODO test this Might Have issues regarding parent of success workflow item
             if ( workflowItemMaster.getOnFailure() != null ) {
                 WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster.getOnFailure();
                 WorkflowItemExec failureWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
@@ -96,6 +106,13 @@ public class WorkflowManager implements Runnable
                 workflowManager.setWorkflowItemExec( failureWorkflowItemExec );
                 executorService.execute( workflowManager );
 
+            }
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
+            } catch ( InterruptedException e ) {
+                LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
+                throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
             }
 
 

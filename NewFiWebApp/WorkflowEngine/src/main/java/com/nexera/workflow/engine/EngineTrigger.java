@@ -126,6 +126,22 @@ public class EngineTrigger
                     throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
                 }
 
+                LOGGER.debug( "Checking whether the parents all workflow items are executed " );
+                WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution.getParentWorkflowItemExec();
+                List<WorkflowItemExec> childWorkflowItemExecList = workflowService
+                    .getWorkflowItemListByParentWorkflowExecItem( parentEWorkflowItemExec );
+                int count = 0;
+                for ( WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList ) {
+                    if ( childWorkflowItemExec.getStatus().equalsIgnoreCase( Status.COMPLETED.getStatus() ) ) {
+                        count = count + 1;
+                    }
+                }
+                if ( count == childWorkflowItemExecList.size() ) {
+                    LOGGER.debug( "All child items are complete, Updating the parent " );
+                    parentEWorkflowItemExec.setStatus( Status.COMPLETED.getStatus() );
+                    workflowService.updateWorkflowItemExecutionStatus( parentEWorkflowItemExec );
+                }
+
             } else {
                 LOGGER.debug( "Doesnt have a parent, can be the parent or can be independent " );
                 List<WorkflowItemExec> childWorkflowItemExecList = workflowService
@@ -149,6 +165,18 @@ public class EngineTrigger
                     } catch ( InterruptedException e ) {
                         LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
                         throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
+                    }
+
+                    int count = 0;
+                    for ( WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList ) {
+                        if ( childWorkflowItemExec.getStatus().equalsIgnoreCase( Status.COMPLETED.getStatus() ) ) {
+                            count = count + 1;
+                        }
+                    }
+                    if ( count == childWorkflowItemExecList.size() ) {
+                        LOGGER.debug( "All child items are complete, Updating the parent " );
+                        workflowItemExecution.setStatus( Status.COMPLETED.getStatus() );
+                        workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
                     }
 
 
