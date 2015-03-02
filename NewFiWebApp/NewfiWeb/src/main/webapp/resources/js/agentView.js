@@ -1013,13 +1013,17 @@ function appendAddTeamMemberWrapper() {
 	var userNameInput = $('<input>').attr({
 		"id" : "add-member-input",
 		"class" : "add-member-input float-left"
-	}).on('input', function() {
-		var name = $('#add-member-input').val();
-		console.log("Name entered : " + name);
-		// TODO search and display name
-		var roleID = $('#add-memeber-user-type').attr("roleID");
-		searchUsersBasedOnNameAndRole(name, roleID);
-	});
+	}).on(
+			'input',
+			function() {
+				var name = $('#add-member-input').val();
+				console.log("Name entered : " + name);
+				// TODO search and display name
+				var roleID = $('#add-memeber-user-type').attr("roleID");
+				var internalRoleID = $('#add-memeber-user-type').attr(
+						"internalRoleID");
+				searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+			});
 
 	var downArrow = $('<div>').attr({
 		"class" : "add-member-down-arrow float-right"
@@ -1136,13 +1140,14 @@ function appendUserTypeDropDown() {
 
 	var userRoles = [ {
 		"id" : 2,
+		"internalRoleID" : 0,
 		"roleCd" : "Realtor",
 		"label" : "Realtor",
 		"roleDescription" : "Realtor"
-	}];
-	
-	for(i in newfiObject.internalUserRoleMasters){
-		var internalRole=newfiObject.internalUserRoleMasters[i];
+	} ];
+
+	for (i in newfiObject.internalUserRoleMasters) {
+		var internalRole = newfiObject.internalUserRoleMasters[i];
 		userRoles.push({
 			"id" : 3,
 			"internalRoleID" : internalRole.id,
@@ -1157,15 +1162,21 @@ function appendUserTypeDropDown() {
 			"roleID" : userRole.id,
 			"internalRoleID" : userRole.internalRoleID,
 			"roleCD" : userRole.roleCD
-		}).html(userRole.label).on('click', function(event) {
-			event.stopImmediatePropagation();
-			var roleIDCurr = $(this).attr("roleID");
-			var roleIDPrev = $('#add-memeber-user-type').attr("roleID");
-			$('#add-memeber-user-type').attr("roleID", roleIDCurr);
-			$('#add-memeber-user-type').attr("internalRoleID", $(this).attr("internalRoleID"));
-			$('#add-memeber-user-type').html($(this).html());
-			hideUserTypeDropDown();
-		});
+		}).html(userRole.label)
+				.on(
+						'click',
+						function(event) {
+							event.stopImmediatePropagation();
+							var roleIDCurr = $(this).attr("roleID");
+							var roleIDPrev = $('#add-memeber-user-type').attr(
+									"roleID");
+							$('#add-memeber-user-type').attr("roleID",
+									roleIDCurr);
+							$('#add-memeber-user-type').attr("internalRoleID",
+									$(this).attr("internalRoleID"));
+							$('#add-memeber-user-type').html($(this).html());
+							hideUserTypeDropDown();
+						});
 		dropdownCont.append(dropDownRow);
 	}
 
@@ -1279,7 +1290,15 @@ function getTeamListTableRow(user, loanID) {
 
 	var trCol2 = $('<div>').attr({
 		"class" : "newfi-team-list-tr-col2 float-left"
-	}).html(user.userRole.label);
+	});
+
+	var userRoleStr = user.userRole.label;
+	// TODO -- remove hard coding for internal user
+	if (user.userRole.id == 3) {
+		userRoleStr = user.internalUserDetail.internaUserRoleMasterVO.roleDescription;
+	}
+
+	trCol2.html(userRoleStr);
 
 	var trCol3 = $('<div>').attr({
 		"class" : "newfi-team-list-tr-col3 float-left"
@@ -1489,7 +1508,18 @@ function appendCreateUserPopup() {
 					showToastMessage("Email ID cannot be empty");
 					return;
 				}
-
+				user.userRole = {
+					id : $("#add-memeber-user-type").attr("roleid")
+				};
+				if ($("#add-memeber-user-type").attr("roleid") == "3") {
+					user.internalUserDetail = {
+						internalUserRoleMasterVO : {
+							id : $("#add-memeber-user-type").attr(
+									"internalroleid")
+						}
+					}
+				}
+				;
 				createUserAndAddToLoanTeam(user);
 
 			});
@@ -2087,11 +2117,13 @@ function onReturnOfAddUserToLoanTeam(data) {
 	showToastMessage("User added to loan team.");
 }
 
-function searchUsersBasedOnNameAndRole(name, roleID) {
+function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 
 	var restURL = "rest/userprofile/search?name=" + name;
 	if (roleID != undefined && roleID > 0)
 		restURL += "&role=" + roleID;
+	if (internalRoleID != undefined && internalRoleID > 0)
+		restURL += "&internalRoleID=" + roleID;
 
 	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam);
 
@@ -2127,7 +2159,6 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 
 	var teamMemberRow = getTeamListTableRow(result, loanID);
 	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
-	showToastMessage("User added to loan team.");	
-	
+	showToastMessage("User added to loan team.");
 
 }

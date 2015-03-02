@@ -113,19 +113,27 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
-	public List<User> searchUsersByName(String name, UserRole role) {
+	@Override
+	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
 		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
-				+ name + "%'";
-		if (role != null) {
+				+ user.getFirstName() + "%'";
+		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
+		}
+		if(user.getInternalUserDetail()!=null){
+			searchQuery += " and internalUserDetail=:internalUserDetail";
 		}
 		int MAX_RESULTS = 50;
 		Query query = session.createQuery(searchQuery);
 
-		if (role != null) {
-			query.setEntity("userRole", role);
+		if (user.getUserRole() != null) {
+			query.setEntity("userRole", user.getUserRole());
+		}
+
+		if (user.getInternalUserDetail() != null) {
+			query.setEntity("internalUserDetail", user.getInternalUserDetail());
 		}
 
 		query.setMaxResults(MAX_RESULTS);

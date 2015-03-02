@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.nexera.common.entity.InternalUserDetail;
-import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -96,27 +96,29 @@ public class UserProfileRest {
 	public @ResponseBody String searchUsers(
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "roleID", required = false) Integer roleID,
-			@RequestParam(value = "roleID", required = false) Integer internalRoleID) {
+			@RequestParam(value = "internalRoleID", required = false) Integer internalRoleID) {
 
 		if (name == null)
 			name = "";
 
+		UserVO userVO=new UserVO();
+		userVO.setFirstName(name);
 		UserRoleVO roleVO = null;
-		InternalUserDetail internalUser=null;
+		InternalUserDetailVO internalUserVO=null;
 		if (roleID != null && roleID > 0) {
 			roleVO = new UserRoleVO();
 			roleVO.setId(roleID);
 
 			if (internalRoleID != null) {
-				internalUser = new InternalUserDetail();
-				InternalUserRoleMaster internaUserRoleMaster = new InternalUserRoleMaster();
-				internaUserRoleMaster.setId(internalRoleID);
-				internalUser.setInternaUserRoleMaster(internaUserRoleMaster);
+				internalUserVO = new InternalUserDetailVO();
+				InternalUserRoleMasterVO internaUserRoleMasterVO = new InternalUserRoleMasterVO();
+				internaUserRoleMasterVO.setId(internalRoleID);
+				internalUserVO.setInternalUserRoleMasterVO(internaUserRoleMasterVO);
+				
 			}
 		}
-
-		List<UserVO> userList = userProfileService.searchUsersByName(name,
-				roleVO,internalUser);
+		
+		List<UserVO> userList =  userProfileService.searchUsers(userVO);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
 

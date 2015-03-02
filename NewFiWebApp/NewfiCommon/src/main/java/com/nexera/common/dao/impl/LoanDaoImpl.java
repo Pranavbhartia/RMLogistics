@@ -97,6 +97,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				User user = loanTeam.getUser();
 				if (user != null)
 					Hibernate.initialize(user.getUserRole());
+				if (user.getInternalUserDetail() != null)
+					Hibernate.initialize(user.getInternalUserDetail());
+				if (user.getInternalUserDetail() != null) {
+					Hibernate.initialize(user.getInternalUserDetail()
+							.getInternaUserRoleMaster());
+				}
 				userList.add(user);
 			}
 

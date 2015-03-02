@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -116,11 +119,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return null;
 	}
 
-	public List<UserVO> searchUsersByName(String name, UserRoleVO roleVO) {
+	public List<UserVO> searchUsers(UserVO userVO) {
 
-		UserRole role = UserProfileServiceImpl.parseUserRoleModel(roleVO);
 		return LoanServiceImpl.buildUserVOList(userProfileDao
-				.searchUsersByName(name, role));
+				.searchUsers(parseUserModel(userVO)));
 
 	}
 
@@ -206,5 +208,21 @@ public class UserProfileServiceImpl implements UserProfileService {
 			user = (User) userProfileDao.load(User.class, userID);
 
 		return UserProfileServiceImpl.buildUserVO(user);
+	}
+
+	public static InternalUserDetailVO buildInternalUserDetailsVO(
+			InternalUserDetail internalUserDetail) {
+		// TODO Auto-generated method stub
+		
+		if(internalUserDetail==null)return null;
+		
+		InternalUserDetailVO detailVO=new InternalUserDetailVO();
+		detailVO.setActiveInternal(internalUserDetail.getInternaUserRoleMaster());
+		detailVO.setInternalUserRoleMasterVO(internalUserRoleMasterVO);
+		
+		return null;
+	}
+	public static InternalUserRoleMasterVO buildInternalUserRoleMasterVO(InternalUserRoleMaster internal) {
+		
 	}
 }
