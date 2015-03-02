@@ -36,7 +36,7 @@
 	var newfi = ${newfi};
 		$(document).ready(function() {
 			initialize(newfi);
-			changeLeftPanel(2,newfiObject.user);
+			changeLeftPanel(2);
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			$(window).resize(function() {
@@ -44,8 +44,7 @@
 				adjustRightPanelOnResize();
 			});
 
-			
-			
+						
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				

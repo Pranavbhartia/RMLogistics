@@ -231,6 +231,10 @@ public class UserVO implements Serializable {
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
 		
 		CustomerDetail customerDetail = user.getCustomerDetail();
+		
+		if(null == customerDetail){
+			return null;
+		}
 		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
 		customerDetailVO.setAddressState(customerDetail.getAddressState());
 		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());

@@ -21,4 +21,8 @@ public interface UserProfileService {
 
 	public Integer completeCustomerDetails(UserVO userVO);
 
+	Integer managerUpdateUserProfile(UserVO userVO);
+
+	Integer managerUpdateUCustomerDetails(UserVO userVO);
+
 }

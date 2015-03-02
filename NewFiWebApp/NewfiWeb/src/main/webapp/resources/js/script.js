@@ -1,12 +1,17 @@
-function changeLeftPanel(primary,user) {
+function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
 	$('.lp-right-arrow').remove();
 	if (leftPanel == 1) {
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
-		showCustomerLoanPage(user);
+		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper1);
+		
 	}
+}
+
+function appendCustPersonalInfoWrapper1(user) {
+	showCustomerLoanPage(user);
 }
 
 function adjustCenterPanelWidth() {

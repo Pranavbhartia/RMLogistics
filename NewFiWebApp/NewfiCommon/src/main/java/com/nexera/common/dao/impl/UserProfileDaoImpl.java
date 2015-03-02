@@ -168,4 +168,33 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
+	@Override
+	public Integer managerUpdateUserProfile(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("first_name", user.getFirstName());
+		query.setParameter("last_name", user.getLastName());
+		query.setParameter("email_id", user.getEmailId());
+		query.setParameter("id", user.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob WHERE customerdetail.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("city", customerDetail.getAddressCity());
+		query.setParameter("state", customerDetail.getAddressState());
+		query.setParameter("zipcode", customerDetail.getAddressZipCode());
+		query.setParameter("dob", customerDetail.getDateOfBirth());
+		query.setParameter("id", customerDetail.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
 }

@@ -140,4 +140,28 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 	
+	@RequestMapping(value = "/managerupdateprofile", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO managerUpdateprofile(String updateUserInfo) {
+
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(updateUserInfo, UserVO.class);
+			
+			Integer userUpdateCount = userProfileService.managerUpdateUserProfile(userVO);
+			Integer customerDetailsUpdateCount = userProfileService.managerUpdateUCustomerDetails(userVO);
+			
+			if(userUpdateCount < 0 || customerDetailsUpdateCount < 0 ){
+				LOG.error("Error while updataing the user datails ");
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error while updataing the user datails ::",  e.getMessage());
+		}
+		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
+	
 }

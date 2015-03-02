@@ -26,4 +26,8 @@ public interface UserProfileDao {
 
 	public Integer completeCustomerDetails(CustomerDetail customerDetail);
 
+	public Integer managerUpdateUserProfile(User user);
+
+	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail);
+
 }

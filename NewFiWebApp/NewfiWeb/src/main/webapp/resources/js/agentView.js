@@ -331,7 +331,9 @@ function appendCustomers(elementId, customers) {
 		}
 		var profImage = $('<div>').attr({
 			"class" : "cus-img-icn float-left",
-			"style" : "background-image:url(" + customer.prof_image + ")"
+			"style" : "background:url(" + customer.prof_image + ")",
+			"id":"cusImgIcnID"
+				
 		});
 
 		var cusName = $('<div>').attr({
@@ -351,6 +353,7 @@ function appendCustomers(elementId, customers) {
 			getLoanDetails(loanID);
 		}).html(customer.name);
 
+		
 		// loan details page to be displayed on click of the customer name
 		/*
 		 * cusName.click(function(){ console.log("Customer clicked"); var
@@ -762,15 +765,29 @@ function paintMyLoansViewCallBack(data) {
 // function to reset slected UserdetailObject
 var selectedUserDetail;
 function resetSelectedUserDetailObject(userObject) {
+	
+	// userObject this is a "LoanCustomerVO" object
+	
 	selectedUserDetail = new Object();
 	selectedUserDetail.userID = userObject.userID;
 	selectedUserDetail.loanID = userObject.loanID;
 	selectedUserDetail.role = userObject.role;
 	selectedUserDetail.phoneNo = userObject.phone_no;
-	selectedUserDetail.emailId = userObject.emailId;
-	selectedUserDetail.firstName = userObject.name;
+
+	selectedUserDetail.name = userObject.name;
 	selectedUserDetail.createdDate = userObject.loanInitiatedOn;
 	selectedUserDetail.modifiedDate = userObject.lastActedOn;
+	
+	selectedUserDetail.firstName =userObject.firstName;
+	selectedUserDetail.lastName =userObject.lastName;
+	selectedUserDetail.emailId = userObject.emailId;
+	
+	selectedUserDetail.customerId = userObject.customerDetail.id; 
+	selectedUserDetail.city =userObject.customerDetail.addressCity; 
+	selectedUserDetail.state =userObject.customerDetail.addressState; 
+	selectedUserDetail.zipCode =userObject.customerDetail.addressZipCode; 
+	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(userObject.customerDetail.dateOfBirth)); 
+	
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
@@ -833,10 +850,11 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	});
 
 	var cusName = $('<div>').attr({
-		"class" : "cus-prof-name-txt"
+		"class" : "cus-prof-name-txt",
+		"id":"cusProfNameTxtID"
 	});
 
-	cusName.html(custHeaderDetails.firstName);
+	cusName.html(custHeaderDetails.name);
 
 	var cusRole = $('<div>').attr({
 		"class" : "cus-prof-role-txt"
@@ -945,6 +963,15 @@ function appendCustomerLoanDetails(loanDetails) {
 
 	// append cust info popup
 	appendCustomerEditProfilePopUp();
+	
+	$("#uploadFile")
+	.change(
+			function() {
+				
+				photoUpload(this.form, 'uploadCommonImageToS3.do','cusImgIcnID', '', '1',selectedUserDetail.userID);
+
+			});
+
 }
 
 // Function to append loan details row
@@ -1315,11 +1342,17 @@ $(document).on('click', '#cus-prof-popup', function(event) {
 	event.stopImmediatePropagation();
 });
 
-$(document).click(function() {
-	if ($('#cus-prof-popup').css("display") == "block") {
+$(document).on('keyup',function(e){
+	if(e.which==27){
 		hideCustomerEditProfilePopUp();
 	}
 });
+
+/*$(document).click(function() {
+	if ($('#cus-prof-popup').css("display") == "block") {
+		hideCustomerEditProfilePopUp();
+	}
+});*/
 
 function appendCustomerEditProfilePopUp() {
 	var popUpWrapper = $('<div>').attr({
@@ -1335,32 +1368,109 @@ function appendCustomerEditProfilePopUp() {
 		"id" : "cus-prof-container",
 		"class" : "pop-up-container"
 	});
-
+	
+	
 	popUpWrapper.append(header).append(container);
 
 	$('#ld-customer .loan-detail-link').append(popUpWrapper);
 
-	appendCustomerProfEditRow("First Name", "Zach");
-	appendCustomerProfEditRow("Last Name", "Smith");
+	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName ,"firstNameID");
+	appendCustomerProfEditRow("Last Name", selectedUserDetail.lastName , "lastNameID");
 
 	// Upload photo row
 	appendCustomerProfUploadPhotoRow();
 
-	appendCustomerProfEditRow("Street Address", "30650 W Ball rd Lot 203");
-	appendCustomerProfEditRow("City", "Sedalia");
-	appendCustomerProfEditRow("State", "MO");
-	appendCustomerProfEditRow("Zip", "65301");
-	appendCustomerProfEditRow("Email", "zipsmith25@gmail.com");
-	appendCustomerProfEditRow("DOB", "04/01/1984");
+	appendCustomerProfEditRow("City", selectedUserDetail.city ,"cityID");
+	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
+	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");
+	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
+	
+	
+	//appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
+	
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+
+	var label = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("DOB");
+
+	var dob = selectedUserDetail.dob;
+	if (dob == null || dob == "" || dob == 'NaN/NaN/NaN'){
+		dob = "";
+	} 
+	var dobInput = $('<input>').attr(
+			{
+				"class" : "prof-form-input date-picker",
+				"placeholder" : "MM/DD/YYYY",
+				"value" : dob,
+				"id" : "dobID"
+			}).datepicker({
+		orientation : "top auto",
+		autoclose : true
+	});
+
+	row.append(label).append(dobInput);
+	$('#cus-prof-container').append(row);
+	
+	
+	$("#dobID").addClass('prof-form-input date-picker').datepicker({
+		orientation : "top auto",
+		autoclose : true
+	});
 
 	// append save button
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-cust-save-btn"
+		"class" : "prof-cust-save-btn",
+		"onclick": "updateUserProfile()"
 	}).html("save");
 
 	$('#cus-prof-container').append(saveBtn);
 
 }
+
+function updateUserProfile(){
+	
+	
+	var userProfileJson = new Object();
+
+	userProfileJson.id = selectedUserDetail.userID;
+	userProfileJson.firstName = $("#firstNameID").val();
+	userProfileJson.lastName = $("#lastNameID").val();
+	userProfileJson.emailId = $("#emailIdID").val();
+
+	var customerDetails = new Object();
+
+	customerDetails.id = selectedUserDetail.customerId;
+	customerDetails.addressCity = $("#cityID").val();
+	customerDetails.addressState = $("#stateID").val();
+	customerDetails.addressZipCode = $("#zipCodeID").val();
+	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
+
+	userProfileJson.customerDetail = customerDetails;
+
+	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json", JSON.stringify(userProfileJson),function(response){});
+
+	$.ajax({
+		url : "rest/userprofile/managerupdateprofile",
+		type : "POST",
+		data : {"updateUserInfo":JSON.stringify(userProfileJson)},
+		dataType : "json",
+		success : function(data) {
+			
+			
+			$("#cusProfNameTxtID").text(userProfileJson.firstName +" "+userProfileJson.lastName);
+		},
+		error : function(error) {
+			alert("error"+error);
+		}
+	});
+	
+	showToastMessage("Succesfully updated");
+	
+}
+
 
 function showCustomerEditProfilePopUp() {
 	var offset = $('#ld-customer .loan-detail-link').offset();
@@ -1378,7 +1488,7 @@ function hideCustomerEditProfilePopUp() {
 	$('#cus-prof-popup').hide();
 }
 
-function appendCustomerProfEditRow(labelTxt, value) {
+function appendCustomerProfEditRow(labelTxt, value,id) {
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1388,7 +1498,8 @@ function appendCustomerProfEditRow(labelTxt, value) {
 	}).html(labelTxt);
 
 	var inputTag = $('<input>').attr({
-		"class" : "cust-prof-edit-input float-left"
+		"class" : "cust-prof-edit-input float-left",
+		"id":id
 	}).val(value);
 
 	row.append(label).append(inputTag);
@@ -1409,7 +1520,9 @@ function appendCustomerProfUploadPhotoRow() {
 	});
 
 	var uploadIcn = $('<div>').attr({
-		"class" : "cust-prof-upload-icn float-left"
+		"class" : "cust-prof-upload-icn float-left",
+		"style" : "background-image:url(" + selectedUserDetail.photoUrl + ")",
+		"id":"custprofuploadicnID" 
 	});
 
 	var uploadPhotoRc = $('<div>').attr({
@@ -1420,15 +1533,52 @@ function appendCustomerProfUploadPhotoRow() {
 		"class" : "cust-prof-upload-filename"
 	}).html("Jane-Profile.png");
 
-	var uploadBtn = $('<div>').attr({
-		"class" : "cust-prof-upload-btn"
-	}).html("Upload");
+	
+	var imageForm = $('<form>').attr({
+		
+	});
+	
+	var inputHiddenFile = $('<input>').attr({
+		"type" : "file",
+		"id" : "uploadFile",
+		"name":"fileName"
+		
+	});
+	
+	var UserId = $('<input>').attr({
+		"type" : "hidden",
+		"id" : "userIdId",
+		"name":"userId",
+		"value":selectedUserDetail.userID
+	});
+	
+	var uploadImage = $('<div>').attr({
+		"class" : "uploadImage"
 
-	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn);
+	}).hide();
+
+	imageForm.append(inputHiddenFile);
+	imageForm.append(UserId);
+	uploadImage.append(imageForm);
+	
+	var uploadBtn = $('<div>').attr({
+		"class" : "cust-prof-upload-btn",
+		
+	}).click(uploadeImage).html("upload");
+
+	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(uploadImage);
 	uploadPhotoCont.append(uploadIcn).append(uploadPhotoRc);
 	row.append(label).append(uploadPhotoCont);
 	$('#cus-prof-container').append(row);
 }
+
+
+function uploadeImage() {
+
+	$("#uploadFile").trigger('click');
+
+}
+
 
 // Function to append create user popup
 function appendCreateUserPopup() {
@@ -2063,4 +2213,80 @@ function searchUsersBasedOnNameAndRole(name, roleID) {
 
 function onReturnOfUserSearchToAddToLoanTeam(data) {
 	showUserNameDropDown(data.resultObject)
+}
+
+function photoUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
+    // Create the iframe...
+	
+	alert(userId);
+    var iframe = document.createElement("iframe");
+    iframe.setAttribute("id", "upload_"+suffix);
+    iframe.setAttribute("name", "upload_"+suffix);
+    iframe.setAttribute("width", "0");
+    iframe.setAttribute("height", "0");
+    iframe.setAttribute("border", "0");
+    iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+ 
+    // Add to document...
+    form.parentNode.appendChild(iframe);
+    window.frames['upload_'+suffix].name = "upload_"+suffix;
+ 
+    iframeId = document.getElementById("upload_"+suffix);
+ 
+    // Add event...
+    var eventHandler = function () {
+ 
+            if (iframeId.detachEvent) iframeId.detachEvent("onload", eventHandler);
+            else iframeId.removeEventListener("load", eventHandler, false);
+ 
+            // Message from server...
+            if (iframeId.contentDocument) {
+                content = iframeId.contentDocument.body.innerHTML;
+            } else if (iframeId.contentWindow) {
+                content = iframeId.contentWindow.document.body.innerHTML;
+            } else if (iframeId.document) {
+                content = iframeId.document.body.innerHTML;
+            }
+            
+           //here is content
+          // alert("content=="+content);
+		  if(message_div_id!=""){
+		  document.getElementById(message_div_id).innerHTML = content;
+		  }
+           if(content!="error" && img_div_id!=""){
+		 // document.getElementById(img_div_id).style.backgroundImage="url("+content+")";
+          $("#cusImgIcnID").css('background', 'url(' + content  + ')');
+		  $("#custprofuploadicnID").css('background', 'url(' + content  + ')');
+		 
+		  
+		  $('#loaderWrapper').hide();
+		  } 
+            // Del the iframe...
+            setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+           // iframeId.parentNode.removeChild(iframeId);
+        }
+ 
+    if (iframeId.addEventListener) iframeId.addEventListener("load", eventHandler, true);
+    if (iframeId.attachEvent) iframeId.attachEvent("onload", eventHandler);
+ 
+    // Set properties of form...
+    form.setAttribute("target", "upload_"+suffix);
+    form.setAttribute("action", action_url);
+    form.setAttribute("method", "post");
+    form.setAttribute("enctype", "multipart/form-data");
+    form.setAttribute("encoding", "multipart/form-data");
+ 
+    // Submit the form...
+    form.submit();
+    /*
+    form.removeAttribute("target");
+    form.removeAttribute("action");
+    form.removeAttribute("method");
+    form.removeAttribute("enctype");
+    form.removeAttribute("encoding");
+    */
+	if(message_div_id!=""){
+    document.getElementById(message_div_id).innerHTML = "Uploading...";
+	}
+		
 }

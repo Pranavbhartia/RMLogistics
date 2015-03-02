@@ -66,26 +66,25 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
 	public @ResponseBody
 	String uploadCommonImageToS3(
-			@RequestParam("fileName") MultipartFile multipartFile,
-			HttpServletRequest req, Model model)
-	// @RequestParam(value = "fileName", required = true) MultipartFile
-	// multipartFile)
-			throws IOException {
+			@RequestParam("fileName") MultipartFile multipartFile,@RequestParam("userId")int userId,HttpServletRequest req, Model model) throws IOException {
+		
 		NexeraUtility.uploadFileToLocal(multipartFile);
 
 		String s3Path = null;
 		try {
-			File serverFile = new File(
-					NexeraUtility.uploadFileToLocal(multipartFile));
-			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User",
-					"complete");
+			int userid =  userId;
+			
+			File serverFile = new File(NexeraUtility.uploadFileToLocal(multipartFile));
+			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User","complete");
 
 			LOG.info("The s3 path is : " + s3Path);
 
 			// save image in the data base
-			User user = loadDefaultValues(model, req);
-			Integer userid = user.getId();
-			Integer num = userProfileService.updateUser(s3Path, userid);
+			//User user = loadDefaultValues(model, req);
+			//Integer userid = user.getId();
+			if(userid != 0){
+				Integer num = userProfileService.updateUser(s3Path, userid);
+			}
 
 		} catch (Exception e) {
 
