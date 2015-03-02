@@ -362,6 +362,7 @@ a, a:hover, a:visited{
 
 .center-panel{
     width: 840px;
+    min-height:800px;
 	margin-bottom: 80px;
 	padding-top: 15px;
     margin-left: 98px;
@@ -2370,14 +2371,13 @@ input.calc-input{
 
 .login-body-wrapper{
 	width:100%;
-	height:800px;
 	background:url(../images/login-bg.png) no-repeat center 0px;
 	background-size:cover;
 	color: #fff;
 }
 
 .login-body-overlay{
-	height:100%;
+	min-height:inherit;
 	background-image: url(../images/grid-40.png);
 	background-color: rgba(0,0,0,0.4);
 	z-index:2;
@@ -2389,20 +2389,19 @@ input.calc-input{
 }
 
 .login-container{
-	margin-top: 80px;	
+	margin-top: 60px;	
 }
 
 .display-title {
 	text-align: center;
-	font-size: 44px;
-	line-height: 90px;
-	margin-top: 20px;
+	font-size: 36px;
+	line-height: 70px;
 }
 
 .display-title-subtxt{
-	width: 600px;
-	line-height:25px;
-	font-size: 16px;
+	width: 500px;
+	line-height:20px;
+	font-size: 14px;
 	margin: 5px auto;
 	text-align: center;
 }
@@ -2410,36 +2409,46 @@ input.calc-input{
 .form-logo{
 	width: 66px;
 	height: 22px;
-	margin:40px auto;
+	margin:30px auto;
 	background: url(../images/logo.png) no-repeat center;
 }
 
 .login-form-wrapper{
-	width: 340px;
+	width: 300px;
 	margin:10px auto;
 }
 
+.login-input-username{
+	background: url(../images/user-name.png) no-repeat 16px center;
+}
+
+.login-input-pwd{
+	background: url(../images/password.png) no-repeat 16px center;
+}
+
 .login-input{
-	width: 340px;
-	height: 58px;
-	margin:0 auto;
-	line-height: 58px;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
 	padding-left: 50px;
 	border-radius: 3px;
 	border: transparent;
+	background-color:#fff;
+	background-size:16px auto;
 	color: #777;
 }
 
 .login-input-cont {
-	width: 340px;
+	width: 100%;
 	margin-bottom: 20px;
+	opacity:0.8;
 }
 
 .login-submit-button{
-	width: 340px;
-	height: 58px;
-	margin:10px 0;
-	line-height: 58px;
+	width: 100%;
+	height: 50px;
+	margin-bottom:10px;
+	line-height: 50px;
 	color:#fff;
 	background-color:#3D7FB8;
 	border: 1px #fff solid;
@@ -2522,21 +2531,20 @@ input.calc-input{
 
 .overlay-toast-wrapper{
 	position: fixed;
-	bottom: 100px;
-	width: 100%;
-	height: 20px;
+	top: 60px;
+	right: 60px;
 	z-index: 99999999999;
 }
 
 .overlay-toast-txt{
-	width: 200px;
-	background-color: #E65C2E;
-	color: #fff;
+	padding: 0 20px;
+	background-color: #fff;
 	line-height: 35px;
-	margin: 0 auto;
-	margin-top: 20px;
-	min-height: 40px;
+	min-height: 35px;
 	height: auto;
 	text-align: center;
 	font-size: 12px;
+	border: 1px #8EC63F solid;
+	border-left-width: 7px;
+
 }
