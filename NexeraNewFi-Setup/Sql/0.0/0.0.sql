@@ -146,10 +146,13 @@ CREATE TABLE `internaluserdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `manager` int(11) DEFAULT NULL,
   `active_internal` tinyint(4) DEFAULT '1',
+  `user_role` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_internalUserManager_idx` (`manager`),
-  CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `fk_internalUserRole_idx` (`user_role`),
+  CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_internalUserRole` FOREIGN KEY (`user_role`) REFERENCES `internaluserrolemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +161,33 @@ CREATE TABLE `internaluserdetails` (
 
 LOCK TABLES `internaluserdetails` WRITE;
 /*!40000 ALTER TABLE `internaluserdetails` DISABLE KEYS */;
+INSERT INTO `internaluserdetails` VALUES (1,NULL,1,1),(2,NULL,1,1);
 /*!40000 ALTER TABLE `internaluserdetails` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `internaluserrolemaster`
+--
+
+DROP TABLE IF EXISTS `internaluserrolemaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `internaluserrolemaster` (
+  `id` int(11) NOT NULL,
+  `role_name` varchar(45) DEFAULT NULL,
+  `role_description` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `internaluserrolemaster`
+--
+
+LOCK TABLES `internaluserrolemaster` WRITE;
+/*!40000 ALTER TABLE `internaluserrolemaster` DISABLE KEYS */;
+INSERT INTO `internaluserrolemaster` VALUES (1,'LM','Loan Manager'),(2,'SM','Sales Manager'),(3,'PC','Processor');
+/*!40000 ALTER TABLE `internaluserrolemaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1012,7 +1041,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,1,'6507729312',NULL,NULL,NULL,NULL),(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,1,'6507729312',NULL,NULL,NULL,NULL),(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,1),(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1299,4 +1328,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-02 12:49:54
+-- Dump completed on 2015-03-02 13:37:56
