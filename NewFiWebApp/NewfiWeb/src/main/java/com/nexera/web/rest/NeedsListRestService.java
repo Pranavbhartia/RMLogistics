@@ -27,12 +27,12 @@ import com.nexera.core.service.NeedsListService;
 
 @RestController
 @RequestMapping(value="/loanneeds/")
-public class NeedList {
+public class NeedsListRestService {
 
 	@Autowired
 	private NeedsListService needsListService;
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NeedList.class);
+			.getLogger(NeedsListRestService.class);
 	
 
 	@RequestMapping(value = "{loanId}" , method=RequestMethod.GET)
