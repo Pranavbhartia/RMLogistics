@@ -16,25 +16,27 @@ import java.util.Date;
 @Table(name = "uploadedfileslist")
 @NamedQuery(name = "UploadedFilesList.findAll", query = "SELECT l FROM UploadedFilesList l")
 public class UploadedFilesList implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Boolean isAssigned;
 	private Boolean isActivate;
 	private String s3path;
 	private Loan loan;
 	private User uploadedBy;
 	private Date uploadedDate;
+	private String fileName;
 
 	public UploadedFilesList() {
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -96,6 +98,16 @@ public class UploadedFilesList implements Serializable {
 
 	public void setUploadedBy(User uploadedBy) {
 		this.uploadedBy = uploadedBy;
+	}
+	
+	
+	@Column(name = "file_name")
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 }

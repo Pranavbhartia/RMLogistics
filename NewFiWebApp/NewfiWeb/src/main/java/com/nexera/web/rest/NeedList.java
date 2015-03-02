@@ -1,8 +1,7 @@
 package com.nexera.web.rest;
 
-import java.util.List;
 
-import javax.ws.rs.PathParam;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.core.service.NeedsListService;
+
 
 @RestController
 @RequestMapping(value="/loanneeds/")

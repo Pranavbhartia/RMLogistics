@@ -1848,7 +1848,7 @@ a, a:hover, a:visited{
 
 .pop-up-wrapper{
 	position: absolute;
-	width: 450px;
+	width: 445px;
 	padding-bottom:10px;
 	color:#606060;
 	border: 1px #b7b7b7 solid;
@@ -2352,21 +2352,30 @@ input.calc-input{
 }
 
 
+.assign{
+	width:160px;
+}
 
 /*Login page styles*/
 
 .login-body-wrapper{
 	width:100%;
 	height:800px;
-	background:url(../images/login-bg.png) no-repeat center;
-	background-size:100%;	
+	background:url(../images/login-bg.png) no-repeat center 0px;
+	background-size:cover;
 	color: #fff;
+}
+
+.login-body-overlay{
+	height:100%;
+	background-image: url(../images/grid-40.png);
+	background-color: rgba(0,0,0,0.4);
+	z-index:2;
 }
 
 .login-header-wrapper{
 	width: 100%;
 	height: 50px;
-	background-color:inherit; 
 }
 
 .login-container{
@@ -2376,7 +2385,6 @@ input.calc-input{
 .display-title {
 	text-align: center;
 	font-size: 44px;
-	height: 90px;
 	line-height: 90px;
 	margin-top: 20px;
 }
@@ -2439,4 +2447,86 @@ input.calc-input{
 .forgot-pwd-link{
 	color:#428bca;
 	cursor: pointer;
+}
+
+.login-hdr{
+	line-height: 50px;
+	margin: 0 5px;
+}
+
+.hdr-login-btn,.hdr-get-quote,.hdr-signup-btn{
+	cursor: pointer;
+}
+
+.hdr-login-btn{
+	background: url(../images/user_icon.png) no-repeat left center;
+	background-size:16px auto;
+	padding-left: 20px;
+}
+
+.hdr-get-quote{
+	margin-top: 10px;
+	padding:0 10px;
+	height: 30px;
+	line-height: 27px;
+	border: 1px #fff solid;
+	border-radius: 3px;
+}
+
+.hdr-signup-btn{
+	margin-left: 20px;
+}
+
+/*UI autocomplete style changes*/
+.ui-autocomplete{
+	max-height: 200px;
+	background-color: #fdfdfd;
+	border: 1px #dcdcdc solid;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	padding: 5px 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap; 
+}
+
+.ui-autocomplete>li{
+	padding-left: 20px;
+	line-height: 30px;
+	height: 30px;
+	background-color: #fdfdfd;
+	cursor: pointer;
+}
+
+.overlay-loader {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 999999999;
+    background: url(../images/loader.gif) no-repeat center;
+    background-color: rgba(255,255,255,0.7);
+}
+
+.overlay-toast-wrapper{
+	position: fixed;
+	bottom: 100px;
+	width: 100%;
+	height: 20px;
+	z-index: 99999999999;
+}
+
+.overlay-toast-txt{
+	width: 200px;
+	background-color: #E65C2E;
+	color: #fff;
+	line-height: 35px;
+	margin: 0 auto;
+	margin-top: 20px;
+	min-height: 40px;
+	height: auto;
+	text-align: center;
+	font-size: 12px;
 }

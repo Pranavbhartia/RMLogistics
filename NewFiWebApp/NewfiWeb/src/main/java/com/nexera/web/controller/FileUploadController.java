@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
@@ -36,26 +39,35 @@ public class FileUploadController {
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
 	@RequestMapping(value = "documentUpload.do" , method = RequestMethod.POST  )
-	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file){
+	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file , @RequestParam("userID") Integer userID ,  @RequestParam("loanId") Integer loanId ){
+		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId);
 		List<String> s3paths = new ArrayList<String>();
 		for (MultipartFile multipartFile : file) {
-			s3paths.add(uploadFile(multipartFile));
+			s3paths.add(uploadFile(multipartFile, userID , loanId) );
 		}
 		return new Gson().toJson(s3paths);
 	} 
 	
-	public String uploadFile(MultipartFile file){
+	public String uploadFile(MultipartFile file , Integer userId , Integer loanId){
 		String s3Path = null;
 		 try{
 			File serverFile = new File( NexeraUtility.uploadFileToLocal(file));
 			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete" );
 			//NexeraUtility.convertPDFToJPEG(serverFile);
+			
+			User user = new User();
+			user.setId(userId);
+			Loan loan  = new Loan();
+			loan.setId(loanId);
+			
 			UploadedFilesList uploadedFilesList = new UploadedFilesList();
-			uploadedFilesList.setIsActivate(false);
+			uploadedFilesList.setIsActivate(true);
 			uploadedFilesList.setIsAssigned(false);
 			uploadedFilesList.setS3path(s3Path);
-			uploadedFilesList.setUploadedBy( getUserObject());
+			uploadedFilesList.setUploadedBy( user);
 			uploadedFilesList.setUploadedDate(new Date());
+			uploadedFilesList.setLoan(loan);
+			uploadedFilesList.setFileName(file.getOriginalFilename());
 			
 			Integer fileId = uploadedFilesListService.saveUploadedFile(uploadedFilesList);
 		

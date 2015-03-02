@@ -1,5 +1,15 @@
 package com.nexera.common.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.UploadedFilesListDao;
@@ -8,9 +18,59 @@ import com.nexera.common.entity.UploadedFilesList;
 @Component
 public class UploadedFilesListDaoImpl extends GenericDaoImpl implements UploadedFilesListDao {
 
+	private static final Logger LOG = LoggerFactory.getLogger(UploadedFilesListDaoImpl.class);
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
 		return (Integer)save(uploadedFilesList);
 	}
 
+	@Override
+	public List<UploadedFilesList> fetchAll(Integer uesrId, Integer loanId) {
+	
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UploadedFilesList.class);
+		criteria.createAlias("uploadedBy", "upBy");
+		criteria.add(Restrictions.eq("upBy.id", uesrId));
+		criteria.createAlias("loan", "ls");
+		criteria.add(Restrictions.eq("ls.id", loanId));
+		return criteria.list();
+	}
+
+	@Override
+	public void updateIsAssignedToTrue(Integer fileId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE UploadedFilesList set isAssigned = :isAssigned "  + 
+	             "WHERE id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("isAssigned", true);
+		query.setParameter("id", fileId);
+		Integer result = query.executeUpdate();
+		LOG.info("trying to update with file : "+result);
+		
+		
+	}
+
+	@Override
+	public void updateFileInLoanNeedList(Integer needId , Integer fileId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE LoanNeedsList  set uploadFileId = :uploadFileId "  + 
+	             "WHERE id = :id";
+		Query query = session.createQuery(hql);
+		UploadedFilesList uploadedFilesList=new UploadedFilesList();
+		uploadedFilesList.setId(fileId);
+		query.setParameter("uploadFileId", uploadedFilesList);
+		query.setParameter("id", needId);
+		Integer result = query.executeUpdate();
+		LOG.info("trying to update with loan need list : "+result);
+	
+	}
+
+	
+	
 }

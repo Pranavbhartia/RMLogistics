@@ -10,17 +10,21 @@ import com.nexera.common.vo.UserVO;
 
 public interface LoanService {
 
-	List<LoanVO> getLoansOfUser(UserVO user);
+	public List<LoanVO> getLoansOfUser(UserVO user);
 
-	LoanVO getLoanByID(Integer loanID);
+	public LoanVO getLoanByID(Integer loanID);
 
-	boolean addToLoanTeam(LoanVO loan,UserVO user);
+	public boolean addToLoanTeam(LoanVO loan,UserVO user);
 
-	boolean removeFromLoanTeam(LoanVO loan,UserVO user);
+	public boolean removeFromLoanTeam(LoanVO loan,UserVO user);
 
-	List<UserVO> retreiveLoanTeam(LoanVO loan);
+	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
-	List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
+
+	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
+	
+	public LoanVO getActiveLoanOfUser(UserVO user);
+
 	
 	LoanDashboardVO retrieveDashboard(UserVO user);
 	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);

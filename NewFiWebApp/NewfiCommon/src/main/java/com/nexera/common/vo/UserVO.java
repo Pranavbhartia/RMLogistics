@@ -9,6 +9,7 @@ import com.nexera.common.entity.User;
 public class UserVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private int defaultLoanId;
 	private Boolean status;
 	private String emailId;
 	private String firstName;
@@ -196,6 +197,13 @@ public class UserVO implements Serializable {
 				+ ", loanAppForms=" + loanAppForms + ", loanNotifications="
 				+ loanNotifications + ", loanTeams=" + loanTeams
 				+ ", userEmails=" + userEmails + "]";
+	}
+	
+	public int getDefaultLoanId() {
+		return defaultLoanId;
+	}
+	public void setDefaultLoanId(int defaultLoanId) {
+		this.defaultLoanId = defaultLoanId;
 	}
 
 	public void setForView(User user) {

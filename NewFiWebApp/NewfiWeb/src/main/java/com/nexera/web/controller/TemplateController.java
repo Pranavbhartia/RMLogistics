@@ -32,38 +32,35 @@ public class TemplateController extends DefaultController {
 	@Autowired
 	LoanService loanService;
 
-	
 	@Autowired
-	private S3FileUploadServiceImpl s3FileUploadServiceImpl; 
-	
+	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+
 	@Autowired
 	private UserProfileService userProfileService;
-	
-	private static final Logger LOG = LoggerFactory.getLogger(TemplateController.class);
 
-
+	private static final Logger LOG = LoggerFactory
+			.getLogger(TemplateController.class);
 
 	@RequestMapping(value = "home.do")
 	public ModelAndView showCustomerPage(HttpServletRequest req, Model model) {
 
-		ModelAndView mav = new ModelAndView ();
+		ModelAndView mav = new ModelAndView();
 
 		try {
-			
-			User user = loadDefaultValues(model, req);
 
+			User user = getUserObject();
 
-			if (UserRolesEum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
+			if (UserRolesEum.CUSTOMER.toString().equals(
+					user.getUserRole().getRoleCd())) {
+				loadDefaultValuesForCustomer(model, req,user);
 				UserVO userVO = userProfileService.findUser(user.getId());
 				mav.addObject("user", userVO);
 				mav.setViewName(JspLookup.CUSTOMER_VIEW);
-			}else{
+			} else {
+				loadDefaultValuesForAgent(model, req,user);
 				mav.setViewName(JspLookup.AGENT_VIEW);
 			}
 
-		} catch (IOException e) {
-			mav.setViewName(JspLookup.ERROR);
-			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO: Handle exception scenario
 
@@ -71,37 +68,39 @@ public class TemplateController extends DefaultController {
 		}
 		return mav;
 	}
-	
-	 @RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
-		public @ResponseBody
-		String uploadCommonImageToS3(
-				 @RequestParam("fileName") MultipartFile multipartFile, HttpServletRequest req, Model model)
-				//@RequestParam(value = "fileName", required = true) MultipartFile multipartFile)
-				throws IOException {
-		  	NexeraUtility.uploadFileToLocal(multipartFile);
-			
-			String s3Path = null;
-			try {
-				File serverFile = new File( NexeraUtility.uploadFileToLocal(multipartFile));
-				s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete");
 
-				LOG.info("The s3 path is : "+s3Path);
-				
-				// save image in the data base
-				User user = loadDefaultValues(model, req);
-				Integer userid = user.getId();
-				Integer num = userProfileService.updateUser(s3Path ,userid);
-				
-			} catch (Exception e) {
-				
-			}
 
-			return s3Path;
+	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
+	public @ResponseBody String uploadCommonImageToS3(
+			@RequestParam("fileName") MultipartFile multipartFile,
+			HttpServletRequest req, Model model)
+	// @RequestParam(value = "fileName", required = true) MultipartFile
+	// multipartFile)
+			throws IOException {
+		NexeraUtility.uploadFileToLocal(multipartFile);
+
+		String s3Path = null;
+		try {
+			File serverFile = new File(
+					NexeraUtility.uploadFileToLocal(multipartFile));
+			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User",
+					"complete");
+
+			LOG.info("The s3 path is : " + s3Path);
+
+			// save image in the data base
+			User user = getUserObject();
+			Integer userid = user.getId();
+			Integer num = userProfileService.updateUser(s3Path, userid);
+
+		} catch (Exception e) {
 
 		}
-	
-	
-	
+
+		return s3Path;
+
+	}
+
 	//
 	// @RequestMapping(value="customerLoanPage.do")
 	// public ModelAndView showCustomerLaonPage(){

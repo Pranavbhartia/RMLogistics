@@ -43,6 +43,8 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
+			
+			
 
 			
 			
