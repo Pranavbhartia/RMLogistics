@@ -6,11 +6,23 @@ function getLoanNeedsManagerContext(loanId){
 		selectedNeeds:[],
 		customList:{},
 		needLookup:{},
+		ajaxRequest:function (url,type,dataType,data,successCallBack){
+			$.ajax({
+				url : url,
+				type : type,
+				dataType : dataType,
+				data : data,
+				success : successCallBack,
+				error : function(){
+					
+				}
+			});
+		},
 		getCustomNeedList:function(callback){
 			var ob=this;
 			var data={};
 			ob.customList={};
-			ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/custom","GET","json",data,function(response){
 				if(response.error){
 					showToastMessage(response.error.message)
 				}else{
@@ -123,7 +135,7 @@ function getLoanNeedsManagerContext(loanId){
 							alert("Need already exist");
 						}
 				}else{
-					ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
+					ob.ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
 							showToastMessage(response.error.message)
 						}else{
@@ -155,7 +167,7 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			var ob=this;
 
-			ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/"+this.loanId,"GET","json",data,function(response){
 				if(response.error){
 					showToastMessage(response.error.message)
 				}else{
@@ -228,7 +240,7 @@ function getLoanNeedsManagerContext(loanId){
 			data.loanId=this.loanId;
 			data.needs=JSON.stringify(this.selectedNeeds);
 			var ob=this;
-			ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
 				if(response.error){
 					showToastMessage(response.error.message);
 				}else{
@@ -249,18 +261,7 @@ function getLoanNeedsManagerContext(loanId){
 	};
 	return loanNeedsListContext;
 }
-function ajaxRequest(url,type,dataType,data,successCallBack){
-	$.ajax({
-		url : url,
-		type : type,
-		dataType : dataType,
-		data : data,
-		success : successCallBack,
-		error : function(){
-			
-		}
-	});
-}
+
 var contxt;
 function paintAgentNeedsListPage(){
 
