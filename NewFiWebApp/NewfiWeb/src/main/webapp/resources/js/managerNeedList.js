@@ -6,7 +6,8 @@ function getLoanNeedsManagerContext(loanId){
 		selectedNeeds:[],
 		customList:{},
 		needLookup:{},
-		ajaxRequest:function (url,type,dataType,data,successCallBack){
+		initialNeeds:false,
+		ajaxRequest	:function (url,type,dataType,data,successCallBack){
 			$.ajax({
 				url : url,
 				type : type,
@@ -171,7 +172,8 @@ function getLoanNeedsManagerContext(loanId){
 				if(response.error){
 					showToastMessage(response.error.message)
 				}else{
-					ob.needsList=response.resultObject;
+					ob.initialNeeds=response.resultObject.initialCreation;
+					ob.needsList=response.resultObject.result;
 					if(callback){
 						callback(ob);
 					}
@@ -309,12 +311,16 @@ function appendInitialNeedsListWrapper(){
 	var savebtnWrapper = $('<div>').attr({
 		"class" : "need-list-save-btn-wrapper"
 	});
+	var saveBtnText="Save Needs";
+	if(contxt.initialNeeds){
+		saveBtnText="Create Initial Needs"
+	}
 	
 	var savebtn = $('<div>').attr({
-		"id" : "",
+		"id" : "saveNeedsButton",
 		"class" : "need-list-save-btn",
 		"onclick": "saveLoanNeeds()"
-	}).html("Save Needs");
+	}).html(saveBtnText);
 	
 	savebtnWrapper.append(savebtn);
 	
