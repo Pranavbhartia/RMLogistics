@@ -1139,24 +1139,30 @@ function appendUserTypeDropDown() {
 		"roleCd" : "Realtor",
 		"label" : "Realtor",
 		"roleDescription" : "Realtor"
-	}, {
-		"id" : 3,
-		"roleCd" : "Internal",
-		"label" : "Internal User",
-		"roleDescription" : "Internal NewFi employee"
-	} ];
+	}];
+	
+	for(i in newfiObject.internalUserRoleMasters){
+		var internalRole=newfiObject.internalUserRoleMasters[i];
+		userRoles.push({
+			"id" : 3,
+			"internalRoleID" : internalRole.id,
+			"label" : internalRole.roleDescription,
+		});
+	}
 
 	for (var i = 0; i < userRoles.length; i++) {
 		var userRole = userRoles[i];
 		var dropDownRow = $('<div>').attr({
 			"class" : "add-member-dropdown-row",
 			"roleID" : userRole.id,
+			"internalRoleID" : userRole.internalRoleID,
 			"roleCD" : userRole.roleCD
 		}).html(userRole.label).on('click', function(event) {
 			event.stopImmediatePropagation();
 			var roleIDCurr = $(this).attr("roleID");
 			var roleIDPrev = $('#add-memeber-user-type').attr("roleID");
 			$('#add-memeber-user-type').attr("roleID", roleIDCurr);
+			$('#add-memeber-user-type').attr("internalRoleID", $(this).attr("internalRoleID"));
 			$('#add-memeber-user-type').html($(this).html());
 			hideUserTypeDropDown();
 		});
@@ -1450,17 +1456,43 @@ function appendCreateUserPopup() {
 
 	appendCreateUserPopupFirstName();
 	appendCreateUserPopupLastName();
-	appendCreateUserPopupStreetAddr();
-	appendCreateUserPopupCity();
-	appendCreateUserPopupState();
-	appendCreateUserPopupZip();
+	// TODO-decide what needs to be saved for internal users and realtors
+	// appendCreateUserPopupStreetAddr();
+	// appendCreateUserPopupCity();
+	// appendCreateUserPopupState();
+	// appendCreateUserPopupZip();
+	// appendCreateUserPopupDOB();
 	appendCreateUserPopupEmail();
-	appendCreateUserPopupDOB();
 
 	// save button
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-cust-save-btn"
-	}).html("save");
+	}).html("save").on(
+			'click',
+			function(event) {
+				event.stopImmediatePropagation();
+
+				var user = new Object();
+				user.emailId = $('#create-user-emailId').val();
+				user.firstName = $('#create-user-first-name').val();
+				user.lastName = $('#create-user-last-name').val();
+				console.log("Create user button clicked. User : "
+						+ JSON.stringify(user));
+
+				if (user.firstName == "") {
+					showToastMessage("First name cannot be empty");
+					return;
+				} else if (user.lastName == "") {
+					showToastMessage("Last name cannot be empty");
+					return;
+				} else if (user.emailId == "") {
+					showToastMessage("Email ID cannot be empty");
+					return;
+				}
+
+				createUserAndAddToLoanTeam(user);
+
+			});
 
 	$('#create-user-popup').append(saveBtn);
 }
@@ -1497,8 +1529,9 @@ function appendCreateUserPopupFirstName() {
 		"class" : "create-user-popup-label float-left"
 	}).html("First Name");
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input"
-	}).val("Zach");
+		"class" : "create-user-popup-input",
+		"id" : "create-user-first-name"
+	}).val("");
 	row.append(label).append(inputBox);
 	$('#create-user-container').append(row);
 }
@@ -1511,8 +1544,9 @@ function appendCreateUserPopupLastName() {
 		"class" : "create-user-popup-label float-left"
 	}).html("Last Name");
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input"
-	}).val("Smith");
+		"class" : "create-user-popup-input",
+		"id" : "create-user-last-name"
+	}).val("");
 	row.append(label).append(inputBox);
 	$('#create-user-container').append(row);
 }
@@ -1589,8 +1623,9 @@ function appendCreateUserPopupEmail() {
 		"class" : "create-user-popup-label float-left"
 	}).html("Email");
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input"
-	}).val("zismith25@gmail.com");
+		"class" : "create-user-popup-input",
+		"id" : "create-user-emailId"
+	}).val("");
 	row.append(label).append(inputBox);
 	$('#create-user-container').append(row);
 }
@@ -2064,4 +2099,35 @@ function searchUsersBasedOnNameAndRole(name, roleID) {
 
 function onReturnOfUserSearchToAddToLoanTeam(data) {
 	showUserNameDropDown(data.resultObject)
+}
+
+function createUserAndAddToLoanTeam(user) {
+	ajaxRequest("rest/userprofile/", "POST", "json", JSON.stringify(user),
+			onReturnOfCreateUserAndAddToLoanTeam);
+
+}
+
+function onReturnOfCreateUserAndAddToLoanTeam(data) {
+	console.log("Return : " + JSON.stringify(data));
+	var result = data.resultObject;
+	if (!result) {
+		showToastMessage("An error occurred, kindly contact admin.");
+		return;
+	}
+
+	var loanID = selectedUserDetail.loanID;
+	var userID = result.userID;
+
+	var existingDiv = $('.newfi-team-container').find(
+			'.newfi-team-list-tr[userid=' + userID + ']');
+	if (existingDiv != undefined && existingDiv.length > 0) {
+		showToastMessage("User already exists on the loan team.");
+		return;
+	}
+
+	var teamMemberRow = getTeamListTableRow(result, loanID);
+	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
+	showToastMessage("User added to loan team.");	
+	
+
 }

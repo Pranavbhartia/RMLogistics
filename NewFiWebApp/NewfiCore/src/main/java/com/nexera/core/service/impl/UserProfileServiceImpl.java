@@ -156,4 +156,55 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	}
 
+	public static UserVO buildUserVO(User user) {
+
+		if (user == null)
+			return null;
+
+		UserVO userVO = new UserVO();
+
+		userVO.setId(user.getId());
+		userVO.setFirstName(user.getFirstName());
+		userVO.setLastName(user.getLastName());
+		userVO.setEmailId(user.getEmailId());
+		userVO.setPhoneNumber(user.getPhoneNumber());
+		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+
+		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
+				.getUserRole()));
+
+		return userVO;
+	}
+
+	public static User parseUserModel(UserVO userVO) {
+
+		if (userVO == null)
+			return null;
+		User userModel = new User();
+
+		userModel.setId(userVO.getId());
+		userModel.setFirstName(userVO.getFirstName());
+		userModel.setLastName(userVO.getLastName());
+		userModel.setUsername(userVO.getUsername());
+		userModel.setEmailId(userVO.getEmailId());
+		userModel.setPhoneNumber(userVO.getPhoneNumber());
+		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
+
+		userModel.setUserRole(UserProfileServiceImpl.parseUserRoleModel(userVO
+				.getUserRole()));
+
+		return userModel;
+	}
+
+	@Override
+	public UserVO createUser(UserVO userVO) {
+
+		Integer userID = (Integer) userProfileDao.save(UserProfileServiceImpl
+				.parseUserModel(userVO));
+		User user = null;
+		if (userID != null && userID > 0)
+			user = (User) userProfileDao.load(User.class, userID);
+
+		return UserProfileServiceImpl.buildUserVO(user);
+	}
 }
