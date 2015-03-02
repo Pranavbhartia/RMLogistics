@@ -1087,6 +1087,7 @@ function paintUserNameDropDown(values) {
 						var userID = $(this).attr("userID");
 						console.log("User id : " + userID);
 						hideUserNameDropDown();
+						$('#add-member-input').val("");
 						addUserToLoanTeam(userID, selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
@@ -1550,6 +1551,9 @@ function showCreateUserPopup() {
 		"left" : left + 20,
 		"top" : top + 50
 	});
+	$('#create-user-first-name').val("");
+	$('#create-user-last-name').val("");
+	$('#create-user-emailId').val("");
 	$('#create-user-popup').show();
 }
 
@@ -2149,6 +2153,8 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
 	var result = data.resultObject;
 	hideCreateUserPopup();
+	$('#add-member-input').val("");
+	
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
 
 }
