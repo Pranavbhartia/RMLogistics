@@ -81,7 +81,7 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		LoanNeedsList loanNeedsList =  (LoanNeedsList) criteria.uniqueResult();
 		if(loanNeedsList != null){
 			 LOG.info("loanNeedsList not empty");
-			 return loanNeedsList.getId();
+			 return loanNeedsList.getNeedsListMaster().getId();
 		}
 		LOG.info("loanNeedsList empty");
 		return null;

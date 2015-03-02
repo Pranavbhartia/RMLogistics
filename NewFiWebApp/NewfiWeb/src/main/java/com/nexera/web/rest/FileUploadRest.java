@@ -3,6 +3,7 @@ package com.nexera.web.rest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,9 +114,12 @@ public class FileUploadRest {
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		List<LoanNeedsListVO> loanNeedsVO;
 		List<UploadedFilesListVO> uploadedFilesList;
+		
+		Map<String, List<LoanNeedsListVO>> listLoanNeedsListMap;
 		UploadFileScreenVO uploadFileScreenVO = new  UploadFileScreenVO();
 		try {
 			loanNeedsVO = needsListService.getLoanNeedsList(loanId);
+			listLoanNeedsListMap = needsListService.getLoanNeedsMap(loanId);
 			
 			uploadedFilesList = uploadedFilesListService.fetchAll(userId, loanId);
 			for (UploadedFilesListVO uploadedFilesListVO : uploadedFilesList) {
@@ -126,6 +130,7 @@ public class FileUploadRest {
 			}
 			
 			uploadFileScreenVO.setListLoanNeedsListVO(loanNeedsVO);
+			uploadFileScreenVO.setListLoanNeedsListMap(listLoanNeedsListMap);
 			uploadFileScreenVO.setListUploadedFilesListVO(uploadedFilesList);
 			commonResponseVO.setResultObject(uploadFileScreenVO);
 		} catch (Exception e) {

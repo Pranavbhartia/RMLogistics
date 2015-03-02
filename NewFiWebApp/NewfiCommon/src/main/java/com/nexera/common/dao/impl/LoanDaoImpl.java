@@ -157,10 +157,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Loan.class);
 		criteria.add(Restrictions.eq("user", user));
-		criteria.createAlias("loanStatus", "ls");
-		criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
+		/*criteria.createAlias("loanStatus", "ls");
+		criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));*/
 		return (Loan) criteria.uniqueResult();
 	}
+	
 
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
 
