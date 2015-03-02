@@ -117,4 +117,34 @@ public class UserProfileRest {
 
 		return new Gson().toJson(responseVO);
 	}
+	
+	
+	@RequestMapping(value = "/completeprofile", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO completeProfile(String completeUserInfo) {
+
+		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(completeUserInfo, UserVO.class);
+			
+			Integer userUpdateCount = userProfileService.competeUserProfile(userVO);
+			Integer customerDetailsUpdateCount = userProfileService.completeCustomerDetails(userVO);
+			
+			if(userUpdateCount < 0 || customerDetailsUpdateCount < 0 ){
+				LOG.error("Error while updataing the user datails ");
+			}
+			
+			commonResponseVO.setResultObject("success");
+			
+		} catch (Exception e) {
+			commonResponseVO.setResultObject("error");
+			e.printStackTrace();
+			LOG.error("Error while updataing the user datails ::",  e.getMessage());
+		}
+		
+		return commonResponseVO;
+	}
+	
 }
