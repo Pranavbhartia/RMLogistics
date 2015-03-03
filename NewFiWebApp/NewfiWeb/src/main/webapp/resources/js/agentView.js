@@ -199,7 +199,8 @@ function getDashboardRightPanel() {
 			paintAgentDashboardRightPanel);
 }
 
-function paintAgentDashboardRightPanel(customerData) {
+function paintAgentDashboardRightPanel(data) {
+	var customerData=data.resultObject;
 	var header = $('<div>').attr({
 		"class" : "agent-customer-list-header clearfix"
 	});
@@ -819,7 +820,7 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
-		getLoanDetails(1);
+		getLoanDetails(selectedUserDetail.loanID);
 	} else if (elementId == "lp-step3") {
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
@@ -1129,6 +1130,7 @@ function paintUserNameDropDown(values) {
 
 $(document).click(function() {
 	if ($('#add-username-dropdown-cont').css("display") == "block") {
+		$('#add-member-input').val("");
 		hideUserNameDropDown();
 	}
 });
@@ -2281,9 +2283,9 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 
 	var restURL = "rest/userprofile/search?name=" + name;
 	if (roleID != undefined && roleID > 0)
-		restURL += "&role=" + roleID;
+		restURL += "&roleID=" + roleID;
 	if (internalRoleID != undefined && internalRoleID > 0)
-		restURL += "&internalRoleID=" + roleID;
+		restURL += "&internalRoleID=" + internalRoleID;
 
 	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam);
 
