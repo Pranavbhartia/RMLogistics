@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanDetailVO;
@@ -285,6 +287,8 @@ public class LoanServiceImpl implements LoanService {
 	public static LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
 
 		User user = loan.getUser();
+		CustomerDetail customerDetail = user.getCustomerDetail();
+		
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
 		loanCustomerVO.setTime(loan.getCreatedDate().toString());
@@ -302,7 +306,22 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setPurpose("Purchase TBD");
 		loanCustomerVO.setAlert_count("3");
 		loanCustomerVO.setCredit_score("732");
-
+		
+		loanCustomerVO.setFirstName(user.getFirstName());
+		loanCustomerVO.setLastName(user.getLastName());
+		loanCustomerVO.setEmailId(user.getEmailId());
+		
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		if(null != customerDetail.getDateOfBirth())
+		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+		customerDetailVO.setId(customerDetail.getId());
+		
+		loanCustomerVO.setCustomerDetail(customerDetailVO);
+		
 		return loanCustomerVO;
 	}
 

@@ -117,15 +117,69 @@ public class UserProfileRest {
 				
 			}
 		}
-		
-		List<UserVO> userList =  userProfileService.searchUsers(userVO);
 
+		List<UserVO> userList =  userProfileService.searchUsers(userVO);
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
 
 		return new Gson().toJson(responseVO);
 	}
 
+	@RequestMapping(value = "/completeprofile", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO completeProfile(String completeUserInfo) {
+
+		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(completeUserInfo, UserVO.class);
+			
+			Integer userUpdateCount = userProfileService.competeUserProfile(userVO);
+			Integer customerDetailsUpdateCount = userProfileService.completeCustomerDetails(userVO);
+			
+			if(userUpdateCount < 0 || customerDetailsUpdateCount < 0 ){
+				LOG.error("Error while updataing the user datails ");
+			}
+			
+			commonResponseVO.setResultObject("success");
+			
+		} catch (Exception e) {
+			commonResponseVO.setResultObject("error");
+			e.printStackTrace();
+			LOG.error("Error while updataing the user datails ::",  e.getMessage());
+		}
+		
+		return commonResponseVO;
+	}
+	
+	@RequestMapping(value = "/managerupdateprofile", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO managerUpdateprofile(String updateUserInfo) {
+
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(updateUserInfo, UserVO.class);
+			
+			Integer userUpdateCount = userProfileService.managerUpdateUserProfile(userVO);
+			Integer customerDetailsUpdateCount = userProfileService.managerUpdateUCustomerDetails(userVO);
+			
+			if(userUpdateCount < 0 || customerDetailsUpdateCount < 0 ){
+				LOG.error("Error while updataing the user datails ");
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error while updataing the user datails ::",  e.getMessage());
+		}
+		CommonResponseVO commonResponseVO = new CommonResponseVO ();
+		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
+	
+
+
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
@@ -135,4 +189,5 @@ public class UserProfileRest {
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
 
 	}
+
 }

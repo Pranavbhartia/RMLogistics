@@ -72,7 +72,7 @@ public class TemplateController extends DefaultController {
 
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
 	public @ResponseBody String uploadCommonImageToS3(
-			@RequestParam("fileName") MultipartFile multipartFile,
+			@RequestParam("fileName") MultipartFile multipartFile,@RequestParam int userId,
 			HttpServletRequest req, Model model)
 	// @RequestParam(value = "fileName", required = true) MultipartFile
 	// multipartFile)
@@ -89,9 +89,12 @@ public class TemplateController extends DefaultController {
 			LOG.info("The s3 path is : " + s3Path);
 
 			// save image in the data base
-			User user = getUserObject();
-			Integer userid = user.getId();
-			Integer num = userProfileService.updateUser(s3Path, userid);
+			//User user = getUserObject();
+			//nteger userid = user.getId();
+			if(userId != 0){
+				Integer num = userProfileService.updateUser(s3Path, userId);
+			}
+			
 
 		} catch (Exception e) {
 

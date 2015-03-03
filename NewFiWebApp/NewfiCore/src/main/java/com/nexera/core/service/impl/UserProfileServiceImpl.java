@@ -159,6 +159,93 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	}
 
+
+	@Override
+	public Integer competeUserProfile(UserVO userVO) {
+		
+		User user = new User();
+
+		user.setId(userVO.getId());
+		user.setFirstName(userVO.getFirstName());
+		user.setLastName(userVO.getLastName());
+		user.setEmailId(userVO.getEmailId());
+		user.setPhoneNumber(userVO.getPhoneNumber());
+
+		Integer rowCount = userProfileDao.competeUserProfile(user);
+
+		return rowCount;
+	}
+
+	@Override
+	public Integer completeCustomerDetails(UserVO userVO) {
+		
+		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
+		CustomerDetail customerDetail = new CustomerDetail();
+
+		customerDetail.setId(customerDetailVO.getId());
+		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
+		customerDetail.setAddressState(customerDetailVO.getAddressState());
+		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
+		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
+		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
+		
+		if (customerDetailVO.getDateOfBirth() != null) {
+			customerDetail.setDateOfBirth(new Date(customerDetailVO
+					.getDateOfBirth()));
+		} else {
+			customerDetail.setDateOfBirth(null);
+		}
+		customerDetail.setProfileCompletionStatus(customerDetailVO
+				.getProfileCompletionStatus());
+
+		Integer rowCount = userProfileDao.completeCustomerDetails(customerDetail);
+		return rowCount;
+	}
+	
+	@Override
+	public Integer managerUpdateUserProfile(UserVO userVO) {
+		
+		User user = new User();
+
+		user.setId(userVO.getId());
+		user.setFirstName(userVO.getFirstName());
+		user.setLastName(userVO.getLastName());
+		user.setEmailId(userVO.getEmailId());
+		user.setPhoneNumber(userVO.getPhoneNumber());
+
+		Integer rowCount = userProfileDao.managerUpdateUserProfile(user);
+
+		return rowCount;
+	}
+
+	@Override
+	public Integer managerUpdateUCustomerDetails(UserVO userVO) {
+		
+		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
+		CustomerDetail customerDetail = new CustomerDetail();
+
+		customerDetail.setId(customerDetailVO.getId());
+		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
+		customerDetail.setAddressState(customerDetailVO.getAddressState());
+		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
+		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
+		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
+		
+		if (customerDetailVO.getDateOfBirth() != null) {
+			customerDetail.setDateOfBirth(new Date(customerDetailVO
+					.getDateOfBirth()));
+		} else {
+			customerDetail.setDateOfBirth(null);
+		}
+		customerDetail.setProfileCompletionStatus(customerDetailVO
+				.getProfileCompletionStatus());
+
+		Integer rowCount = userProfileDao.managerUpdateUCustomerDetails(customerDetail);
+		return rowCount;
+	}
+
+
+
 	public static UserVO buildUserVO(User user) {
 
 		if (user == null)
@@ -275,4 +362,5 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return UserProfileServiceImpl.buildUserVO(userProfileDao
 				.loadInternalUser(userID));
 	}
+
 }

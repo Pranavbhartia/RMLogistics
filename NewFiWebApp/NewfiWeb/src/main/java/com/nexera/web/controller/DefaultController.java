@@ -1,3 +1,4 @@
+
 package com.nexera.web.controller;
 
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class DefaultController implements InitializingBean {
 	 */
 	public User loadDefaultValuesForCustomer(Model model, HttpServletRequest req, User user)
 			throws IOException {
+
 		
 		JSONObject newfi = new JSONObject();
 
@@ -173,5 +175,8 @@ public class DefaultController implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
 		loadLanguageMap(CommonConstants.DEFAULT_LOCALE);
+
 	}
+
 }
+

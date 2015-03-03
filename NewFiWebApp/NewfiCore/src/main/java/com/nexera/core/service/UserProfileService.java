@@ -14,10 +14,20 @@ public interface UserProfileService {
 
 	public Integer updateUser(String s3ImagePath, Integer userid);
 
+
+	public Integer competeUserProfile(UserVO userVO);
+
+	public Integer completeCustomerDetails(UserVO userVO);
+
+	public Integer managerUpdateUserProfile(UserVO userVO);
+
+	public Integer managerUpdateUCustomerDetails(UserVO userVO);
+
 	public UserVO createUser(UserVO userVO);
 
 	public List<UserVO> searchUsers(UserVO userVO);
 
 	public UserVO loadInternalUser(Integer userID);
+
 
 }

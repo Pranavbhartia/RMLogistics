@@ -1,6 +1,5 @@
 //place for global variables
 var neededItemListObject;
-
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
@@ -8,8 +7,13 @@ function changeLeftPanel(primary) {
 	if (leftPanel == 1) {
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
-		showCustomerLoanPage();
+		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper1);
+		
 	}
+}
+
+function appendCustPersonalInfoWrapper1(user) {
+	showCustomerLoanPage(user);
 }
 
 function adjustCenterPanelWidth() {
@@ -47,6 +51,9 @@ function getCustomerSecondaryLeftNavStep(step, text) {
 		"class" : "lp-t2-item",
 		"onclick" : "changeSecondaryLeftPanel(" + step + ");"
 	});
+
+	
+
 	var img = $('<div>').attr({
 		"class" : "lp-t2-img lp-t2-img" + step
 	});
@@ -72,7 +79,7 @@ function showMessageDashboard() {
 	adjustCenterPanelWidth();
 }
 
-function showCustomerLoanPage() {
+function showCustomerLoanPage(user) {
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -90,11 +97,14 @@ function showCustomerLoanPage() {
 	loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
 
 	$('#right-panel').append(loanDetailsMainContainer);
-	changeSecondaryLeftPanel(2);
+	changeSecondaryLeftPanel(2 ,user);
 	adjustCenterPanelWidth();
+	
+	//TODO: Invoke dynamic binder to listen to secondary navigation clicks
+	globalSNBinder();
 }
 
-function changeSecondaryLeftPanel(secondary) {
+function changeSecondaryLeftPanel(secondary ,user) {
 	secondary = parseInt(secondary);
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
@@ -108,7 +118,7 @@ function changeSecondaryLeftPanel(secondary) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
 		// customer profile page
-		paintProfileCompleteStep1();
+		paintProfileCompleteStep1(user);
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
@@ -124,13 +134,87 @@ function changeSecondaryLeftPanel(secondary) {
  * Functions for complete profile module
  */
 
-function paintProfileCompleteStep1() {
+function paintProfileCompleteStep1(user) {
 	var topHeader = getCompletYourApplicationHeader();
-	var formContainer = getAboutMeDetailsWrapper();
+	var formContainer = getAboutMeDetailsWrapper(user);
 	$('#center-panel-cont').append(topHeader).append(formContainer);
 }
 
-function paintProfileCompleteStep2() {
+function paintProfileCompleteStep2(user) {
+	
+	// On click of this next button the values are getting stored in the data base 
+	var fname =  $('#userFnameId').val();	
+	var lname =  $('#userlnameId').val();
+	var email =  $('#emailId').val();
+	var secEmailId =  $('#secEmailId').val();
+	var priPhone =  $('#priPhoneNumberId').val();
+	var secPhone =  $('#secPhoneNumberId').val();
+	var dob =  $('#dobId').val();	
+	var city =  $('#userCityId').val();
+	var state =  $('#userStateId').val();
+	var zipcode =  $('#userZipcodeId').val();
+
+	
+	// create a json and call a ajax passing this json string 
+	var completeUserInfo = new Object();
+	
+	completeUserInfo.id = parseInt(user.id);
+	completeUserInfo.firstName = fname;
+	completeUserInfo.lastName = lname;
+	completeUserInfo.emailId = email;
+	completeUserInfo.phoneNumber = priPhone;
+
+	var completeCustomerDetails = new Object();
+
+	completeCustomerDetails.id = parseInt(user.customerDetail.id);
+	completeCustomerDetails.addressCity = city;
+	completeCustomerDetails.addressState = state;
+	completeCustomerDetails.addressZipCode = zipcode;
+	completeCustomerDetails.dateOfBirth =new Date(dob).getTime();
+	completeCustomerDetails.secEmailId = secEmailId;
+	completeCustomerDetails.secPhoneNumber = secPhone;
+	
+	completeUserInfo.customerDetail = completeCustomerDetails;
+
+	/*
+	ajaxRequest("rest/userprofile/completeprofile?userID=" + userID, "POST",
+				"json", {}, onReturnOfAddUserToLoanTeam);
+	*/
+	//alert(JSON.stringify(completeUserInfo));
+	// make a ajex call : start 
+	
+	$.ajax({
+		url : "rest/userprofile/completeprofile",
+		type : "POST",
+		data : {"completeUserInfo":JSON.stringify(completeUserInfo)},
+		dataType : "json",
+		success : function(data) {
+
+		},
+		error : function(error) {
+			alert("error"+error);
+		}
+	});
+
+	
+	
+	/*
+	$.ajax({
+		url : "updateUserInfo.do",
+		type:"POST",
+		data:JSON.stringify(updateUserInfo),
+		dataType :"json",
+		contentType:"application/json; charset=utf-8",
+		success : function(data){
+			
+		},
+		error:function(error){
+			
+		}
+	});*/
+	
+	// Ends
+	
 	$('#center-panel-cont').html("");
 	var topHeader = getCompletYourApplicationHeader();
 	var formContainer = getLoanDetailsWrapper();
@@ -147,19 +231,26 @@ function getCompletYourApplicationHeader() {
 	return parent.append(header);
 }
 
-function getAboutMeDetailsWrapper() {
+function getAboutMeDetailsWrapper(user) {
 	var parent = $('<div>').attr({
 		"class" : "about-me-details-wrapper"
 	});
 
 	var header = getAboutMeDetailsHeader();
-	var container = getAboutMeDetailsContainer();
+	var container = getAboutMeDetailsContainer(user);
 
 	var nextButton = $('<div>').attr({
-		"class" : "submit-btn",
-		"onclick" : "paintProfileCompleteStep2()"
-	}).html("Next");
-
+		"class" : "submit-btn"
+	}).bind(
+			'click',
+			{
+				"user" : user
+			},
+			function(event) {
+				event.stopImmediatePropagation();
+				paintProfileCompleteStep2(event.data.user);
+			}).html("Next");
+			
 	return parent.append(header).append(container).append(nextButton);
 }
 
@@ -191,29 +282,118 @@ function getAboutMeDetailsHeader() {
 	return header.append(headerCol1).append(headerCol2);
 }
 
-function getAboutMeDetailsContainer() {
+function getAboutMeDetailsContainer(user) {
 	var container = $('<div>').attr({
 		"class" : "application-form-container clearfix"
 	});
-	var conRow1 = getEditableFormRow("Phone 1", false);
-	var conRow2 = getEditableFormRow("Phone 2", false);
-	var conRow3 = getEditableFormRow("Email", true);
-	conRow3.find('.form-detail-edit').find('input').addClass(
-			'form-detail-input-lg');
-	var conRow4 = getEditableFormRow("DOB", true);
-	conRow4.find('.form-detail-edit').find('input').addClass('date-picker')
-			.attr("placeholder", "MM/DD/YYYY");
-	container.append(conRow1).append(conRow2).append(conRow3).append(conRow4);
+	
+	var emptyValuesContainer = $("<div>").attr({
+					"id" : "emptyValuesContainer"
+	});
+	
+	var nonEmptyValuesContainer = $("<div>").attr({
+		"id" : "nonEmptyValuesContainer"
+	});
+	
 
-	var conRow5 = getNonEditableFormRow("First Name", "Jane");
-	var conRow6 = getNonEditableFormRow("Last Name", "Doe");
-	var conRow7 = getNonEditableFormRow("Street Address", "795 E DRAGRAM");
-	var conRow8 = getNonEditableFormRow("City", "TUCSON");
-	var conRow9 = getNonEditableFormRow("State", "AZ");
-	var conRow10 = getNonEditableFormRow("Zip", "85705");
-
-	return container.append(conRow5).append(conRow6).append(conRow7).append(
-			conRow8).append(conRow9).append(conRow10);
+	if(user.firstName == "" || user.firstName == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("First Name", user.firstName, "userFnameId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("First Name", user.firstName, "userFnameId"));
+	}
+	
+	if(user.lastName == "" || user.lastName == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Last Name", user.lastName,"userlnameId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Last Name", user.lastName, "userlnameId"));
+	}
+	
+	// Primery Email id
+	if(user.emailId == "" || user.emailId == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Email Id", user.emailId, "emailId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Email Id", user.emailId, "emailId"));
+	}
+	
+	// Secondry email id
+	if(user.customerDetail.secEmailId == "" || user.customerDetail.secEmailId == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Second Email Id", user.customerDetail.secEmailId, "secEmailId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Second Email Id", user.customerDetail.secEmailId, "secEmailId"));
+	}
+	
+	// Primery phone number
+	if(user.phoneNumber == "" || user.phoneNumber == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Phone 1", user.phoneNumber ,"priPhoneNumberId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Phone 1", user.phoneNumber ,"priPhoneNumberId"));
+	}
+	
+	// secondry phone number
+	if(user.customerDetail.secPhoneNumber == "" || user.customerDetail.secPhoneNumber == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Phone 2", user.customerDetail.secPhoneNumber , "secPhoneNumberId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Phone 2", user.customerDetail.secPhoneNumber, "secPhoneNumberId"));
+	}
+	
+	//userCity
+	
+	if(user.customerDetail.addressCity == "" || user.customerDetail.addressCity == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("City", user.customerDetail.addressCity, "userCityId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("City", user.customerDetail.addressCity, "userCityId"));
+	}
+	
+	//userState
+	
+	if(user.customerDetail.addressState == "" || user.customerDetail.addressState == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("State", user.customerDetail.addressState, "userStateId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("State", user.customerDetail.addressState ,"userStateId"));
+	}
+	
+	//userZipcode 
+	
+	if(user.customerDetail.addressZipCode == "" || user.customerDetail.addressZipCode == null){
+		
+		nonEmptyValuesContainer.append(getEditableFormRow("Zipcode", user.customerDetail.addressZipCode ,"userZipcodeId"));
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("Zipcode", user.customerDetail.addressZipCode ,"userZipcodeId"));
+	}
+	
+	//dobId
+	
+	if(user.customerDetail.dateOfBirth == "" || user.customerDetail.dateOfBirth == null || user.customerDetail.dateOfBirth =='0l'){
+		
+		var comRow = getEditableFormRow("DOB", user.customerDetail.dateOfBirth , "dobId") ;
+		comRow.find('.form-detail-edit').find('input').addClass('date-picker').attr("placeholder","MM/DD/YYYY").datepicker({
+			orientation : "top auto",
+			autoclose : true
+		});
+		nonEmptyValuesContainer.append(comRow);
+	}else{
+		
+		emptyValuesContainer.append(getNonEditableFormRow("DOB", $.datepicker.formatDate("mm/dd/yy",new Date(user.customerDetail.dateOfBirth)), "dobId"));
+	}
+	
+	return container.append(nonEmptyValuesContainer).append(emptyValuesContainer);
 }
 
 function getLoanDetailsWrapper() {
@@ -302,7 +482,7 @@ function getLoanDetailsContainer() {
 					row16);
 }
 
-function getEditableFormRow(desc, isCompulsory) {
+function getEditableFormRow(desc, isCompulsory ,id) {
 	var row = $('<div>').attr({
 		"class" : "form-detail-edit-row clearfix"
 	});
@@ -317,13 +497,14 @@ function getEditableFormRow(desc, isCompulsory) {
 		"class" : "form-detail-edit float-left"
 	});
 	var editRow = $('<input>').attr({
-		"class" : "form-detail-input"
+		"class" : "form-detail-input",
+		"id": id
 	});
 	rowCol2.append(editRow);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function getNonEditableFormRow(desc, value) {
+function getNonEditableFormRow(desc, value, id) {
 	var row = $('<div>').attr({
 		"class" : "form-detail-row clearfix"
 	});
@@ -334,7 +515,8 @@ function getNonEditableFormRow(desc, value) {
 		"class" : "form-detail-row-value float-left"
 	});
 	var editRow = $('<input>').attr({
-		"class" : "form-detail-input-disabled"
+		"class" : "form-detail-input-disabled",
+		"id":id
 	}).prop("disabled", "true").val(value);
 
 	rowCol2.append(editRow);
