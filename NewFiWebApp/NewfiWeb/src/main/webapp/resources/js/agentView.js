@@ -199,7 +199,8 @@ function getDashboardRightPanel() {
 			paintAgentDashboardRightPanel);
 }
 
-function paintAgentDashboardRightPanel(customerData) {
+function paintAgentDashboardRightPanel(data) {
+	var customerData=data.resultObject;
 	var header = $('<div>').attr({
 		"class" : "agent-customer-list-header clearfix"
 	});
