@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+	
 
 	@Override
 	public UserVO findUser(Integer userid) {
@@ -41,7 +43,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 
-		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
+		userVO.setUserRole(this.buildUserRoleVO(user
 				.getUserRole()));
 
 		CustomerDetail customerDetail = user.getCustomerDetail();
@@ -122,12 +124,25 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	public List<UserVO> searchUsers(UserVO userVO) {
 
-		return LoanServiceImpl.buildUserVOList(userProfileDao
+		return this.buildUserVOList(userProfileDao
 				.searchUsers(parseUserModel(userVO)));
 
 	}
 
-	public static UserRoleVO buildUserRoleVO(UserRole role) {
+	@Override
+	public List<UserVO> buildUserVOList(List<User> userList) {
+
+		if (userList == null)
+			return null;
+
+		List<UserVO> voList = new ArrayList<UserVO>();
+		for (User user : userList) {
+			voList.add(this.buildUserVO(user));
+		}
+
+		return voList;
+	}
+	public UserRoleVO buildUserRoleVO(UserRole role) {
 
 		if (role == null)
 			return null;
@@ -143,7 +158,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	}
 
-	public static UserRole parseUserRoleModel(UserRoleVO roleVO) {
+	private UserRole parseUserRoleModel(UserRoleVO roleVO) {
 
 		if (roleVO == null)
 			return null;
@@ -245,8 +260,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 
 
-
-	public static UserVO buildUserVO(User user) {
+	@Override
+	public UserVO buildUserVO(User user) {
 
 		if (user == null)
 			return null;
@@ -260,16 +275,16 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 
-		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
+		userVO.setUserRole(this.buildUserRoleVO(user
 				.getUserRole()));
 
-		userVO.setInternalUserDetail(UserProfileServiceImpl
+		userVO.setInternalUserDetail(this
 				.buildInternalUserDetailsVO(user.getInternalUserDetail()));
 
 		return userVO;
 	}
 
-	public static User parseUserModel(UserVO userVO) {
+	private User parseUserModel(UserVO userVO) {
 
 		if (userVO == null)
 			return null;
@@ -283,10 +298,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
-		userModel.setUserRole(UserProfileServiceImpl.parseUserRoleModel(userVO
+		userModel.setUserRole(this.parseUserRoleModel(userVO
 				.getUserRole()));
 
-		userModel.setInternalUserDetail(UserProfileServiceImpl
+		userModel.setInternalUserDetail(this
 				.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
 		return userModel;
@@ -295,16 +310,17 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserVO createUser(UserVO userVO) {
 
-		Integer userID = (Integer) userProfileDao.saveInternalUser(UserProfileServiceImpl
+		Integer userID = (Integer) userProfileDao.saveInternalUser(this
 				.parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
 			user = (User) userProfileDao.loadInternalUser(userID);
 
-		return UserProfileServiceImpl.buildUserVO(user);
+		return this.buildUserVO(user);
 	}
-
-	public static InternalUserDetailVO buildInternalUserDetailsVO(
+	
+	@Override
+	public InternalUserDetailVO buildInternalUserDetailsVO(
 			InternalUserDetail internalUserDetail) {
 		// TODO Auto-generated method stub
 
@@ -318,7 +334,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return detailVO;
 	}
 
-	public static InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
+	private InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
 			InternalUserRoleMaster internal) {
 		if (internal == null)
 			return null;
@@ -330,7 +346,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return masterVO;
 	}
 
-	public static InternalUserDetail parseInternalUserDetailsModel(
+	private InternalUserDetail parseInternalUserDetailsModel(
 			InternalUserDetailVO internalUserDetailVO) {
 		// TODO Auto-generated method stub
 
@@ -344,7 +360,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return detail;
 	}
 
-	public static InternalUserRoleMaster parseInternalUserRoleMasterModel(
+	private InternalUserRoleMaster parseInternalUserRoleMasterModel(
 			InternalUserRoleMasterVO internalVO) {
 		if (internalVO == null)
 			return null;
@@ -359,7 +375,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserVO loadInternalUser(Integer userID) {
 		// TODO Auto-generated method stub
-		return UserProfileServiceImpl.buildUserVO(userProfileDao
+		return this.buildUserVO(userProfileDao
 				.loadInternalUser(userID));
 	}
 
