@@ -2282,9 +2282,9 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 
 	var restURL = "rest/userprofile/search?name=" + name;
 	if (roleID != undefined && roleID > 0)
-		restURL += "&role=" + roleID;
+		restURL += "&roleID=" + roleID;
 	if (internalRoleID != undefined && internalRoleID > 0)
-		restURL += "&internalRoleID=" + roleID;
+		restURL += "&internalRoleID=" + internalRoleID;
 
 	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam);
 

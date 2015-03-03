@@ -288,7 +288,7 @@ public class LoanServiceImpl implements LoanService {
 
 		User user = loan.getUser();
 		CustomerDetail customerDetail = user.getCustomerDetail();
-		
+
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
 		loanCustomerVO.setTime(loan.getCreatedDate().toString());
@@ -306,22 +306,24 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setPurpose("Purchase TBD");
 		loanCustomerVO.setAlert_count("3");
 		loanCustomerVO.setCredit_score("732");
-		
+
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
 		loanCustomerVO.setEmailId(user.getEmailId());
-		
+
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		
-		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-		customerDetailVO.setAddressState(customerDetail.getAddressState());
-		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
-		if(null != customerDetail.getDateOfBirth())
-		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
-		customerDetailVO.setId(customerDetail.getId());
-		
+		if (customerDetail != null) {
+			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO.setAddressZipCode(customerDetail
+					.getAddressZipCode());
+			if (null != customerDetail.getDateOfBirth())
+				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
+						.getTime());
+			customerDetailVO.setId(customerDetail.getId());
+		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
-		
+
 		return loanCustomerVO;
 	}
 
@@ -414,6 +416,5 @@ public class LoanServiceImpl implements LoanService {
 		return loansProgressStatusVO;
 
 	}
-	
-	
+
 }
