@@ -21,6 +21,7 @@ import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
+import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.service.WorkflowService;
 
@@ -36,13 +37,13 @@ public class WorkflowManager implements Runnable
 
     private static final Logger LOGGER = LoggerFactory.getLogger( WorkflowManager.class );
 
-    private ExecutorService executorService;
-    private int poolSize = 5;
     private WorkflowItemExec workflowItemExec;
     private String methodName = "execute";
     @Autowired
-    WorkflowService workflowService;
-    private WorkflowManager workflowManager;
+    private WorkflowService workflowService;
+
+    @Autowired
+    private EngineTrigger engineTrigger;
 
 
     /**
@@ -50,9 +51,7 @@ public class WorkflowManager implements Runnable
       */
     public WorkflowManager()
     {
-        LOGGER.debug( "Intializing thread pool for thread manager " );
-        ThreadFactory threadFactory = Executors.defaultThreadFactory();
-        executorService = Executors.newFixedThreadPool( poolSize, threadFactory );
+
     }
 
 
@@ -79,18 +78,9 @@ public class WorkflowManager implements Runnable
                 WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster.getOnSuccess();
                 WorkflowItemExec successWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
                     .getParentWorkflow(), successWorkflowItemMaster, getWorkflowItemExec().getParentWorkflowItemExec() );
-                workflowManager.setWorkflowItemExec( successWorkflowItemExec );
-                executorService.execute( workflowManager );
+                engineTrigger.startWorkFlowItemExecution( successWorkflowItemExec.getId() );
 
             }
-            executorService.shutdown();
-            try {
-                executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
-            } catch ( InterruptedException e ) {
-                LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
-                throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
-            }
-
 
         } else if ( result.equalsIgnoreCase( WorkflowConstants.FAILURE ) ) {
 
@@ -103,18 +93,8 @@ public class WorkflowManager implements Runnable
                 WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster.getOnFailure();
                 WorkflowItemExec failureWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
                     .getParentWorkflow(), failureWorkflowItemMaster, getWorkflowItemExec().getParentWorkflowItemExec() );
-                workflowManager.setWorkflowItemExec( failureWorkflowItemExec );
-                executorService.execute( workflowManager );
-
+                engineTrigger.startWorkFlowItemExecution( failureWorkflowItemExec.getId() );
             }
-            executorService.shutdown();
-            try {
-                executorService.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
-            } catch ( InterruptedException e ) {
-                LOGGER.error( "Exception caught while terminating executor " + e.getMessage() );
-                throw new FatalException( "Exception caught while terminating executor " + e.getMessage() );
-            }
-
 
         } else if ( result.equalsIgnoreCase( WorkflowConstants.PENDING ) ) {
             getWorkflowItemExec().setStatus( Status.PENDING.getStatus() );

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import com.nexera.workflow.vo.WorkflowVO;
 
 
 @Component
+@Scope ( value = "prototype")
 public class EngineTrigger
 {
 
@@ -41,15 +43,15 @@ public class EngineTrigger
     WorkflowManager workflowManager;
 
 
-    public void triggerWorkFlow( String workflowJsonString )
+    public Integer triggerWorkFlow( String workflowJsonString )
     {
         LOGGER.debug( "Triggering a workflow " );
-
+        WorkflowMaster workflowMaster = null;
         Gson gson = new Gson();
         WorkflowVO workflowVO = gson.fromJson( workflowJsonString, WorkflowVO.class );
         if ( workflowVO != null ) {
             String workflowType = workflowVO.getWorkflowType();
-            WorkflowMaster workflowMaster = workflowService.getWorkFlowByWorkFlowType( workflowType );
+            workflowMaster = workflowService.getWorkFlowByWorkFlowType( workflowType );
             if ( workflowMaster != null ) {
                 LOGGER.debug( "Workflow found for this workflowtype " + workflowMaster.getWorkflowType() );
                 WorkflowExec workflowExec = workflowService.setWorkflowIntoExecution( workflowMaster );
@@ -79,10 +81,10 @@ public class EngineTrigger
                     }
 
                 }
-
-
+                return workflowMaster.getId();
             }
         }
+        return 0;
 
     }
 
