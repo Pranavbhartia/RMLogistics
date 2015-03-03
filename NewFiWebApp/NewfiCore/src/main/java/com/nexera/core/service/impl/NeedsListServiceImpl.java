@@ -306,7 +306,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return loanNeedsListVO;
 	}
 
-	public static LoanNeedsListVO buildLoanNeedsListVO(
+	public LoanNeedsListVO buildLoanNeedsListVO(
 			LoanNeedsList loanNeedsList) {
 
 		if (loanNeedsList == null)
@@ -321,7 +321,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return loanNeedsListVO;
 	}
 
-	public static NeedsListMasterVO buildLoanNeedsListMasterVO(
+	public NeedsListMasterVO buildLoanNeedsListMasterVO(
 			NeedsListMaster needListMaster) {
 		if (needListMaster == null)
 			return null;

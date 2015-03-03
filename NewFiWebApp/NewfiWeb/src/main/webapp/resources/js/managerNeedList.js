@@ -239,10 +239,9 @@ function getLoanNeedsManagerContext(loanId){
 			//API call TO save Updated Needs List
 			var ob=this;
 			var data={};
-			data.loanId=this.loanId;
 			data.needs=JSON.stringify(this.selectedNeeds);
 			var ob=this;
-			ob.ajaxRequest("rest/loanneeds/"+data.loanId,"POST","json",data,function(response){
+			ob.ajaxRequest("rest/loanneeds/"+ob.loanId,"POST","json",data,function(response){
 				if(response.error){
 					showToastMessage(response.error.message);
 				}else{
