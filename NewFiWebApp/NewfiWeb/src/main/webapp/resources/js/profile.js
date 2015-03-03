@@ -453,12 +453,12 @@ function uploadeImage() {
 }
 
 
-function uploadImageFunction(obj){
+/*function uploadImageFunction(obj){
 		
 		alert(obj);
 		var urlToHit="rest/userprofile/uploadCommonImageToS3";
 		fileUpload($('#fullImageFormId'), urlToHit,'profilePic', '', '1');
-		/*$.ajax( {
+		$.ajax( {
 		   url: urlToHit,
 		   type: "POST",
 			  headers : {
@@ -475,9 +475,9 @@ function uploadImageFunction(obj){
 				},
 				processData: false,
 			    contentType: false
-		 } );*/
+		 } );
 	
-}
+}*/
 
 
 function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
