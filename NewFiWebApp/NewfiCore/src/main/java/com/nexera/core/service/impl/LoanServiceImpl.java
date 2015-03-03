@@ -312,14 +312,14 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setEmailId(user.getEmailId());
 		
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		
-		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-		customerDetailVO.setAddressState(customerDetail.getAddressState());
-		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
-		if(null != customerDetail.getDateOfBirth())
-		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
-		customerDetailVO.setId(customerDetail.getId());
-		
+		if(customerDetail!=null){
+			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+			if(null != customerDetail.getDateOfBirth())
+			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+			customerDetailVO.setId(customerDetail.getId());
+		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 		
 		return loanCustomerVO;
