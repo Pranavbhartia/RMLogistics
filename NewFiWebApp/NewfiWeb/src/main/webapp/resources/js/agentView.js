@@ -821,7 +821,7 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
-		getLoanDetails(1);
+		getLoanDetails(selectedUserDetail.loanID);
 	} else if (elementId == "lp-step3") {
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
