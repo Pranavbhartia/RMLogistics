@@ -114,8 +114,9 @@ public class UserProfileRest {
 				InternalUserRoleMasterVO internaUserRoleMasterVO = new InternalUserRoleMasterVO();
 				internaUserRoleMasterVO.setId(internalRoleID);
 				internalUserVO.setInternalUserRoleMasterVO(internaUserRoleMasterVO);
-				
+				userVO.setInternalUserDetail(internalUserVO);
 			}
+			userVO.setUserRole(roleVO);
 		}
 
 		List<UserVO> userList =  userProfileService.searchUsers(userVO);

@@ -122,8 +122,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
-		if(user.getInternalUserDetail()!=null){
-			searchQuery += " and internalUserDetail=:internalUserDetail";
+		if (user.getInternalUserDetail() != null
+				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+			searchQuery += " and (internalUserDetail IS NULL OR (internalUserDetail.internaUserRoleMaster=:internaUserRoleMaster))";
 		}
 		int MAX_RESULTS = 50;
 		Query query = session.createQuery(searchQuery);
@@ -132,8 +133,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			query.setEntity("userRole", user.getUserRole());
 		}
 
-		if (user.getInternalUserDetail() != null) {
-			query.setEntity("internalUserDetail", user.getInternalUserDetail());
+		if (user.getInternalUserDetail() != null
+				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+			query.setEntity("internaUserRoleMaster", user
+					.getInternalUserDetail().getInternaUserRoleMaster());
 		}
 
 		query.setMaxResults(MAX_RESULTS);
