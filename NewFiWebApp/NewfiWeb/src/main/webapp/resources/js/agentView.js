@@ -1130,6 +1130,7 @@ function paintUserNameDropDown(values) {
 
 $(document).click(function() {
 	if ($('#add-username-dropdown-cont').css("display") == "block") {
+		$('#add-member-input').val("");
 		hideUserNameDropDown();
 	}
 });
