@@ -28,15 +28,16 @@ function initialize(newfi){
 function globalBinder(){
 	
 	$(document).on("click", ".lp-item" , function() {
-		
-		saveState($.data( this, "enum" ).pnName,null,null);
+		//TODO: Back button needs to be implemented
+		//saveState($.data( this, "enum" ).pnName,null,null);
 		return true;
     });
 }
 
 function globalSNBinder(){
 	$(document).on("click", ".lp-t2-item" , function() {
-		saveState(PNEnum.LOAN,$.data( this, "snEnum" ).snName,null);
+		//TODO: Back button needs to be implemented
+		//saveState(PNEnum.LOAN,$.data( this, "snEnum" ).snName,null);
 		return true;
     });
 }
