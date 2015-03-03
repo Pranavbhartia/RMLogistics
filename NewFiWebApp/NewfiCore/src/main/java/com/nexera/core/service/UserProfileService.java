@@ -17,12 +17,15 @@ public interface UserProfileService {
 
 	public List<UserVO> searchUsersByName(String name, UserRoleVO role);
 
+
 	public Integer competeUserProfile(UserVO userVO);
 
 	public Integer completeCustomerDetails(UserVO userVO);
 
-	Integer managerUpdateUserProfile(UserVO userVO);
+	public Integer managerUpdateUserProfile(UserVO userVO);
 
-	Integer managerUpdateUCustomerDetails(UserVO userVO);
+	public Integer managerUpdateUCustomerDetails(UserVO userVO);
+
+	public UserVO createUser(UserVO userVO);
 
 }

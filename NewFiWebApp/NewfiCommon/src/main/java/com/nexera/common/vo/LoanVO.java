@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.entity.Loan;
+
 public class LoanVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -205,6 +207,14 @@ public class LoanVO implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Loan convertToEntity() {
+
+		Loan loan = new Loan();
+		loan.setId(this.getId());
+		return loan;
+
 	}
 
 }

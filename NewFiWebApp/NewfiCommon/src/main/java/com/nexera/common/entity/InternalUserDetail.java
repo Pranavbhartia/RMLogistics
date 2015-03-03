@@ -6,26 +6,26 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
-
 /**
  * The persistent class for the internaluserdetails database table.
  * 
  */
 @Entity
-@Table(name="internaluserdetails")
-@NamedQuery(name="InternalUserDetail.findAll", query="SELECT i FROM InternalUserDetail i")
+@Table(name = "internaluserdetails")
+@NamedQuery(name = "InternalUserDetail.findAll", query = "SELECT i FROM InternalUserDetail i")
 public class InternalUserDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private Boolean activeInternal;
 	private User manager;
 
+	private InternalUserRoleMaster internaUserRoleMaster;
+
 	public InternalUserDetail() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return this.id;
 	}
@@ -34,8 +34,7 @@ public class InternalUserDetail implements Serializable {
 		this.id = id;
 	}
 
-
-	@Column(name="active_internal",columnDefinition = "TINYINT")
+	@Column(name = "active_internal", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getActiveInternal() {
 		return this.activeInternal;
@@ -45,20 +44,27 @@ public class InternalUserDetail implements Serializable {
 		this.activeInternal = activeInternal;
 	}
 
+	// bi-directional many-to-one association to UserRole
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_role")
+	public InternalUserRoleMaster getInternaUserRoleMaster() {
+		return internaUserRoleMaster;
+	}
 
+	public void setInternaUserRoleMaster(
+			InternalUserRoleMaster internaUserRoleMaster) {
+		this.internaUserRoleMaster = internaUserRoleMaster;
+	}
 
-
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="manager")
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "manager")
 	public User getManager() {
 		return manager;
 	}
 
-
 	public void setManager(User manager) {
 		this.manager = manager;
 	}
-
 
 }

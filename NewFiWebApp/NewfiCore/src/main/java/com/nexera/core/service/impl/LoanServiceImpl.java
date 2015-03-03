@@ -53,6 +53,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public LoanVO getActiveLoanOfUser(UserVO user) {
 
 		Loan loan = loanDao.getActiveLoanOfUser(LoanServiceImpl

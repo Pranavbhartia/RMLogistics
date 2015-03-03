@@ -1,3 +1,9 @@
+
+
+
+
+
+
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
@@ -5,6 +11,7 @@ function changeLeftPanel(primary) {
 	if (leftPanel == 1) {
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
+
 		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper1);
 		
 	}
@@ -13,6 +20,12 @@ function changeLeftPanel(primary) {
 function appendCustPersonalInfoWrapper1(user) {
 	showCustomerLoanPage(user);
 }
+
+
+
+
+
+
 
 function adjustCenterPanelWidth() {
 	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
@@ -77,7 +90,11 @@ function showMessageDashboard() {
 	adjustCenterPanelWidth();
 }
 
+
 function showCustomerLoanPage(user) {
+
+
+
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -102,7 +119,11 @@ function showCustomerLoanPage(user) {
 	globalSNBinder();
 }
 
+
 function changeSecondaryLeftPanel(secondary ,user) {
+
+
+
 	secondary = parseInt(secondary);
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
@@ -116,13 +137,21 @@ function changeSecondaryLeftPanel(secondary ,user) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
 		// customer profile page
+
 		paintProfileCompleteStep1(user);
+
+
+
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
 	} else if (secondary == 4) {
 		// upload need items
+
 		paintUploadNeededItemsPage();
+
+
+
 	} else if (secondary == 5) {
 		// loan progress
 	}
@@ -134,6 +163,7 @@ function changeSecondaryLeftPanel(secondary ,user) {
 
 function paintProfileCompleteStep1(user) {
 	var topHeader = getCompletYourApplicationHeader();
+
 	var formContainer = getAboutMeDetailsWrapper(user);
 	$('#center-panel-cont').append(topHeader).append(formContainer);
 }
@@ -213,6 +243,13 @@ function paintProfileCompleteStep2(user) {
 	
 	// Ends
 	
+
+
+
+
+
+
+
 	$('#center-panel-cont').html("");
 	var topHeader = getCompletYourApplicationHeader();
 	var formContainer = getLoanDetailsWrapper();
@@ -229,12 +266,17 @@ function getCompletYourApplicationHeader() {
 	return parent.append(header);
 }
 
+
 function getAboutMeDetailsWrapper(user) {
+
+
+
 	var parent = $('<div>').attr({
 		"class" : "about-me-details-wrapper"
 	});
 
 	var header = getAboutMeDetailsHeader();
+
 	var container = getAboutMeDetailsContainer(user);
 
 	var nextButton = $('<div>').attr({
@@ -249,6 +291,15 @@ function getAboutMeDetailsWrapper(user) {
 				paintProfileCompleteStep2(event.data.user);
 			}).html("Next");
 			
+
+
+
+
+
+
+
+
+
 	return parent.append(header).append(container).append(nextButton);
 }
 
@@ -284,6 +335,7 @@ function getAboutMeDetailsContainer(user) {
 	var container = $('<div>').attr({
 		"class" : "application-form-container clearfix"
 	});
+
 	
 	var emptyValuesContainer = $("<div>").attr({
 					"id" : "emptyValuesContainer"
@@ -392,6 +444,27 @@ function getAboutMeDetailsContainer(user) {
 	}
 	
 	return container.append(nonEmptyValuesContainer).append(emptyValuesContainer);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 function getLoanDetailsWrapper() {
@@ -502,7 +575,11 @@ function getEditableFormRow(desc, isCompulsory ,id) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+
 function getNonEditableFormRow(desc, value, id) {
+
+
+
 	var row = $('<div>').attr({
 		"class" : "form-detail-row clearfix"
 	});
@@ -513,8 +590,12 @@ function getNonEditableFormRow(desc, value, id) {
 		"class" : "form-detail-row-value float-left"
 	});
 	var editRow = $('<input>').attr({
+
 		"class" : "form-detail-input-disabled",
 		"id":id
+
+
+
 	}).prop("disabled", "true").val(value);
 
 	rowCol2.append(editRow);
@@ -975,11 +1056,35 @@ function getClosingCostHeadingCont(text) {
 	return heading;
 }
 
+
 /*
  * Functions for upload items module
  */
 
 function paintUploadNeededItemsPage() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	var header = $('<div>').attr({
 		"class" : "upload-item-header uppercase"
 	}).html("Upload needed items");
@@ -987,6 +1092,7 @@ function paintUploadNeededItemsPage() {
 		"class" : "upload-item-container"
 	});
 	var fileDragDropCon = getFileDragAndDropContainer();
+
 	var documentContainer = getDocumentContainer();
 	var neededItemsWrapper = getNeedItemsWrapper();
 	var uploadedItemsWrapper = getUploadedItemsWrapper();
@@ -1002,6 +1108,35 @@ function paintUploadNeededItemsPage() {
 			alert("dropped");
 		},
 		complete : function() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 		},
 		dragenter : function() {
@@ -1012,6 +1147,7 @@ function paintUploadNeededItemsPage() {
 		},
 		dragover : function() {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
+
 		}
 	});
 }
@@ -1023,6 +1159,22 @@ function paintUploadNeededItemsPage() {
  * $(document).on(".file-drag-drop-container", "drop", function( event, ui ) {
  * alert("dropped"); });
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function getFileDragAndDropContainer() {
 	var container = $('<div>').attr({
@@ -1050,6 +1202,7 @@ function getFileDragAndDropContainer() {
 
 function getDocumentContainer() {
 	var container = $('<div>').attr({
+
 		"class" : "document-container clearfix"
 	});
 	var col1 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
@@ -1057,6 +1210,76 @@ function getDocumentContainer() {
 	var col3 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
 	var col4 = getDocumentUploadColumn("Payroll stubs for the past 30 days (showing YTD earings)");
 	return container.append(col1).append(col2).append(col3).append(col4);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 function getDocumentUploadColumn(description) {
@@ -1067,6 +1290,7 @@ function getDocumentUploadColumn(description) {
 		"class" : "doc-img"
 	});
 	var docDesc = $('<div>').attr({
+
 		"class" : "doc-desc"
 	}).html(description);
 	var docAssign = $('<div>').attr({
@@ -1076,6 +1300,44 @@ function getDocumentUploadColumn(description) {
 }
 
 function getNeedItemsWrapper() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	var wrapper = $('<div>').attr({
 		"class" : "needed-items-wrapper"
 	});
@@ -1088,12 +1350,83 @@ function getNeedItemsWrapper() {
 	var leftContainer = $('<div>').attr({
 		"class" : "needed-items-lc float-left"
 	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	var incomeDocCont = $('<div>').attr({
 		"class" : "needed-doc-container"
 	});
+
 	var incDocHeading = $('<div>').attr({
 		"class" : "needed-doc-heading"
 	}).html("Income Documents");
+
+
 	incomeDocCont.append(incDocHeading);
 	var incDocRow1 = getNeededDocRow("Salaried-W-2 forms for the most recent 2 years");
 	var incDocRow2 = getNeededDocRow("Payroll stubs for the past 30 days (showing YTD earnings)");
@@ -1111,12 +1444,21 @@ function getNeedItemsWrapper() {
 	leftContainer.append(incomeDocCont).append(propDocContainer);
 	var rightContainer = $('<div>').attr({
 		"class" : "needed-items-rc float-right"
+
+
+
+
 	});
 	container.append(leftContainer).append(rightContainer);
 	return wrapper.append(header).append(container);
+
 }
 
+
 function getNeededDocRow(desc) {
+
+
+
 	var row = $('<div>').attr({
 		"class" : "needed-item-row clearfix"
 	});
@@ -1132,6 +1474,8 @@ function getNeededDocRow(desc) {
 	row.append(leftImage).append(rowDesc).append(docUploadImage);
 	var docRemoveImage = $('<div>').attr({
 		"class" : "doc-remove-icn float-left"
+
+
 	});
 	row.append(docRemoveImage);
 	return row;
@@ -1195,3 +1539,15 @@ function getUnassignedDocRow(desc) {
 	}).html(desc);
 	return row;
 }
+
+
+
+
+
+
+
+
+
+
+
+

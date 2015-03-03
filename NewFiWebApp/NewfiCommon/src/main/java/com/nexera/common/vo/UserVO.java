@@ -3,10 +3,15 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 
 public class UserVO implements Serializable {
+
+	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int defaultLoanId;
@@ -31,7 +36,7 @@ public class UserVO implements Serializable {
 	private List<UserEmailVO> userEmails;
 
 	public UserVO() {
-		
+
 	}
 
 	public int getId() {
@@ -53,9 +58,11 @@ public class UserVO implements Serializable {
 	public String getEmailId() {
 		return emailId;
 	}
+
 	public String getDisplayName() {
 		return displayName;
 	}
+
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
@@ -198,23 +205,29 @@ public class UserVO implements Serializable {
 				+ loanNotifications + ", loanTeams=" + loanTeams
 				+ ", userEmails=" + userEmails + "]";
 	}
-	
+
 	public int getDefaultLoanId() {
 		return defaultLoanId;
 	}
+
 	public void setDefaultLoanId(int defaultLoanId) {
 		this.defaultLoanId = defaultLoanId;
 	}
 
 	public void setForView(User user) {
 		// TODO Auto-generated method stub
-		this.firstName=user.getFirstName();
-		this.lastName=user.getLastName();
-		this.phoneNumber=user.getPhoneNumber();
-		this.photoImageUrl=user.getPhotoImageUrl();
-		this.id=user.getId();
-		UserRoleVO roleVO= new UserRoleVO();
+
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.phoneNumber = user.getPhoneNumber();
+		this.photoImageUrl = user.getPhotoImageUrl();
+		this.id = user.getId();
+		UserRoleVO roleVO = new UserRoleVO();
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
+
+		this.userRole = roleVO;
+		this.emailId = user.getEmailId();
+		this.displayName = this.firstName + " " + this.lastName;
 		this.userRole=roleVO;
 		this.emailId=user.getEmailId();
 		this.displayName = this.firstName+" "+this.lastName;
@@ -251,7 +264,16 @@ public class UserVO implements Serializable {
 		
 		return customerDetailVO;
 
+
 	}
 
-	
+	public User convertToEntity() {
+		User user = new User();
+
+		user.setId(this.id);
+
+		return user;
+
+	}
+
 }

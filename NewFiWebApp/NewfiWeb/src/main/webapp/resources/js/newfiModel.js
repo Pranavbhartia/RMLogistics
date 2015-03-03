@@ -20,6 +20,10 @@ SNEnum = {
 function initialize(newfi){
 	newfiObject = newfi;
 	newfiObject.user = JSON.parse(newfi.user);
+	if(newfi.internalUserRoleMasters!=undefined){
+		newfiObject.internalUserRoleMasters = JSON.parse(newfi.internalUserRoleMasters);	
+	}
+	
 }
 function globalBinder(){
 	

@@ -8,7 +8,7 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
-public interface UserProfileDao {
+public interface UserProfileDao extends GenericDao {
 	
 	public User findByUserName(String userName) throws NoRecordsFetchedException,DatabaseException;
 
