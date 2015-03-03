@@ -2294,8 +2294,6 @@ function onReturnOfUserSearchToAddToLoanTeam(data) {
 }
 
 
-
-
 function createUserAndAddToLoanTeam(user) {
 	ajaxRequest("rest/userprofile/", "POST", "json", JSON.stringify(user),
 			onReturnOfCreateUserAndAddToLoanTeam);
