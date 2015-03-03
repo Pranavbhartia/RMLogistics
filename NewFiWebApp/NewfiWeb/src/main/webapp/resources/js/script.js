@@ -1,9 +1,5 @@
-
-
-
-
-
-
+//place for global variables
+var neededItemListObject;
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
@@ -11,7 +7,6 @@ function changeLeftPanel(primary) {
 	if (leftPanel == 1) {
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
-
 		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper1);
 		
 	}
@@ -20,12 +15,6 @@ function changeLeftPanel(primary) {
 function appendCustPersonalInfoWrapper1(user) {
 	showCustomerLoanPage(user);
 }
-
-
-
-
-
-
 
 function adjustCenterPanelWidth() {
 	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
@@ -90,11 +79,7 @@ function showMessageDashboard() {
 	adjustCenterPanelWidth();
 }
 
-
 function showCustomerLoanPage(user) {
-
-
-
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -119,11 +104,7 @@ function showCustomerLoanPage(user) {
 	globalSNBinder();
 }
 
-
 function changeSecondaryLeftPanel(secondary ,user) {
-
-
-
 	secondary = parseInt(secondary);
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
@@ -137,21 +118,13 @@ function changeSecondaryLeftPanel(secondary ,user) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
 		// customer profile page
-
 		paintProfileCompleteStep1(user);
-
-
-
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
 	} else if (secondary == 4) {
 		// upload need items
-
-		paintUploadNeededItemsPage();
-
-
-
+		uploadNeededItemsPage();
 	} else if (secondary == 5) {
 		// loan progress
 	}
@@ -163,7 +136,6 @@ function changeSecondaryLeftPanel(secondary ,user) {
 
 function paintProfileCompleteStep1(user) {
 	var topHeader = getCompletYourApplicationHeader();
-
 	var formContainer = getAboutMeDetailsWrapper(user);
 	$('#center-panel-cont').append(topHeader).append(formContainer);
 }
@@ -243,13 +215,6 @@ function paintProfileCompleteStep2(user) {
 	
 	// Ends
 	
-
-
-
-
-
-
-
 	$('#center-panel-cont').html("");
 	var topHeader = getCompletYourApplicationHeader();
 	var formContainer = getLoanDetailsWrapper();
@@ -266,17 +231,12 @@ function getCompletYourApplicationHeader() {
 	return parent.append(header);
 }
 
-
 function getAboutMeDetailsWrapper(user) {
-
-
-
 	var parent = $('<div>').attr({
 		"class" : "about-me-details-wrapper"
 	});
 
 	var header = getAboutMeDetailsHeader();
-
 	var container = getAboutMeDetailsContainer(user);
 
 	var nextButton = $('<div>').attr({
@@ -291,15 +251,6 @@ function getAboutMeDetailsWrapper(user) {
 				paintProfileCompleteStep2(event.data.user);
 			}).html("Next");
 			
-
-
-
-
-
-
-
-
-
 	return parent.append(header).append(container).append(nextButton);
 }
 
@@ -335,7 +286,6 @@ function getAboutMeDetailsContainer(user) {
 	var container = $('<div>').attr({
 		"class" : "application-form-container clearfix"
 	});
-
 	
 	var emptyValuesContainer = $("<div>").attr({
 					"id" : "emptyValuesContainer"
@@ -444,27 +394,6 @@ function getAboutMeDetailsContainer(user) {
 	}
 	
 	return container.append(nonEmptyValuesContainer).append(emptyValuesContainer);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 function getLoanDetailsWrapper() {
@@ -575,11 +504,7 @@ function getEditableFormRow(desc, isCompulsory ,id) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-
 function getNonEditableFormRow(desc, value, id) {
-
-
-
 	var row = $('<div>').attr({
 		"class" : "form-detail-row clearfix"
 	});
@@ -590,12 +515,8 @@ function getNonEditableFormRow(desc, value, id) {
 		"class" : "form-detail-row-value float-left"
 	});
 	var editRow = $('<input>').attr({
-
 		"class" : "form-detail-input-disabled",
 		"id":id
-
-
-
 	}).prop("disabled", "true").val(value);
 
 	rowCol2.append(editRow);
@@ -1056,35 +977,27 @@ function getClosingCostHeadingCont(text) {
 	return heading;
 }
 
-
+function getRequiredDocuments() {
+	var userId = newfiObject.user.id;
+	var activeLoanId = newfiObject.user.defaultLoanId;
+	ajaxRequest("rest/fileupload/needlist/get/" + userId + "/" + activeLoanId,
+			"GET", "json", "", getRequiredDocumentData);
+}
 /*
  * Functions for upload items module
  */
 
-function paintUploadNeededItemsPage() {
+function uploadNeededItemsPage(response) {
+	getRequiredDocuments();
+}
 
+function getRequiredDocumentData(neededItemList) {
+	neededItemListObject = neededItemList;
+	$('#center-panel-cont').empty();
+	paintUploadNeededItemsPage(neededItemListObject);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function paintUploadNeededItemsPage(neededItemListObject) {
 	var header = $('<div>').attr({
 		"class" : "upload-item-header uppercase"
 	}).html("Upload needed items");
@@ -1092,50 +1005,32 @@ function paintUploadNeededItemsPage() {
 		"class" : "upload-item-container"
 	});
 	var fileDragDropCon = getFileDragAndDropContainer();
-
+	var showSave = false;
 	var documentContainer = getDocumentContainer();
-	var neededItemsWrapper = getNeedItemsWrapper();
-	var uploadedItemsWrapper = getUploadedItemsWrapper();
+	var submitBtn = $("<div>").attr({
+		"class" : "submit-btn"
+	}).click(saveUserDocumentAssignments).html("Save");
+
+	var neededItemsWrapper = getNeedItemsWrapper(neededItemListObject);
+	// var uploadedItemsWrapper = getUploadedItemsWrapper();
+
 	container.append(fileDragDropCon).append(documentContainer).append(
-			neededItemsWrapper).append(uploadedItemsWrapper);
+			submitBtn).append(neededItemsWrapper);
+
 	$('#center-panel-cont').append(header).append(container);
 
 	// using dropzone js for file upload
-	new Dropzone("#drop-zone", {
-		url : "./IndexNew.do",
+	var myDropZone = new Dropzone("#drop-zone", {
+		url : "documentUpload.do",
 		clickable : "#file-upload-icn",
-		drop : function() {
-			alert("dropped");
+		params : {
+			userID : newfiObject.user.id,
+			loanId : newfiObject.user.defaultLoanId
 		},
-		complete : function() {
+		drop : function() {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		},
+		complete : function(response) {
 
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 		},
@@ -1147,34 +1042,20 @@ function paintUploadNeededItemsPage() {
 		},
 		dragover : function() {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
-
+		},
+		queuecomplete : function() {
+			getRequiredDocuments();
 		}
 	});
+	var uploadedItems = neededItemListObject.resultObject.listUploadedFilesListVO;
+	showFileLink(uploadedItems);
+
+	if ($('.document-cont-col').length == undefined
+			|| $('.document-cont-col').length == 0) {
+		$('.submit-btn').addClass('hide');
+	}
+
 }
-
-/*
- * $(document).on(".file-drag-drop-container", "dropover", function( event, ui ) {
- * $('#file-upload-icn').addClass('file-upload-icn-hover'); });
- * 
- * $(document).on(".file-drag-drop-container", "drop", function( event, ui ) {
- * alert("dropped"); });
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function getFileDragAndDropContainer() {
 	var container = $('<div>').attr({
@@ -1202,142 +1083,120 @@ function getFileDragAndDropContainer() {
 
 function getDocumentContainer() {
 	var container = $('<div>').attr({
-
-		"class" : "document-container clearfix"
+		"class" : "document-container clearfix",
+		"id" : "needListDocumentFileContainer"
 	});
-	var col1 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
-	var col2 = getDocumentUploadColumn("Payroll stubs for the past 30 days (showing YTD earings)");
-	var col3 = getDocumentUploadColumn("Salaried-W-2 forms for the most recent 2 years");
-	var col4 = getDocumentUploadColumn("Payroll stubs for the past 30 days (showing YTD earings)");
-	return container.append(col1).append(col2).append(col3).append(col4);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	var progressBarContainer = $("<div>").attr({
+		"class" : "progress progress-striped active",
+		"role" : "progressbar",
+		"aria-valuemin" : "0",
+		"aria-valuemax" : "100",
+		"aria-valuenow" : "0"
+	});
+
+	var progressBar = $("<div>").attr({
+		"class" : "progress-bar progress-bar-success",
+		"style" : "width:0%",
+		"data-dz-uploadprogress" : ""
+	});
+	progressBarContainer.append(progressBar);
+
+	var documentContainer = $("<div>").attr({
+		"id" : "documentContainer clearfix"
+	});
+	var listUploadedFiles = neededItemListObject.resultObject.listUploadedFilesListVO;
+	for (i in listUploadedFiles) {
+		if (listUploadedFiles[i].needType == undefined
+				|| listUploadedFiles[i].needType == null
+				|| listUploadedFiles[i].needType == "") {
+			var col1 = getDocumentUploadColumn(listUploadedFiles[i]);
+			
+			documentContainer.append(col1);
+			$('.submit-btn').removeClass('hide');
+		}
+
+	}
+
+	return container.append(documentContainer);
 }
 
-function getDocumentUploadColumn(description) {
+function saveUserDocumentAssignments() {
+	console.info("user assignemnt");
+	var fileAssignMentVO = new Array();
+
+	$(".assign").each(function(index) {
+		var fileAssignMent = new Object();
+		fileAssignMent.fileId = $(this).attr('fileid');
+		fileAssignMent.needListId = $(this).val();
+		fileAssignMentVO.push(fileAssignMent);
+	});
+	console.info(fileAssignMentVO);
+
+	$.ajax({
+		url : "rest/fileupload/assignment",
+		type : "POST",
+		data : JSON.stringify(fileAssignMentVO),
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		success : function(data) {
+			saveAssignmentonFile(data);
+		},
+		error : function(error) {
+		}
+	});
+	// ajaxRequest("" , "POST" , "application/json" ,
+	// JSON.stringify(fileAssignMentVO) , saveAssignmentonFile);
+}
+
+function saveAssignmentonFile() {
+	getRequiredDocuments();
+}
+
+function getDocumentUploadColumn(listUploadedFiles) {
 	var column = $('<div>').attr({
 		"class" : "document-cont-col float-left"
 	});
 	var docImg = $('<div>').attr({
-		"class" : "doc-img"
+		"class" : "doc-img showAnchor"
 	});
 	var docDesc = $('<div>').attr({
+		"class" : "doc-desc showAnchor"
+	}).html(listUploadedFiles.fileName);
+	docImg.click(function(){
+		window.open(listUploadedFiles.s3path, '_blank');
+	});
+	var docAssign = $("<select>").attr({
+		"class" : "assign",
+		"fileId" : listUploadedFiles.id
+	});
 
-		"class" : "doc-desc"
-	}).html(description);
-	var docAssign = $('<div>').attr({
-		"class" : "doc-assign"
-	}).html("Assign Document");
+	var assignOption = $("<option>").attr({
+		"value" : "Assign"
+	}).html("Assign");
+	var splitOption = $("<option>").attr({
+		"value" : "split"
+	}).html("Split");
+	docAssign.append(assignOption).append(splitOption);
+
+	var neededItemListObj = neededItemListObject.resultObject.listLoanNeedsListVO;
+
+	for (i in neededItemListObj) {
+		var needsListMasterobj = neededItemListObj[i];
+		var option = $("<option>").attr({
+			"value" : needsListMasterobj.id
+		}).html(needsListMasterobj.needsListMaster.label);
+
+		if (needsListMasterobj.id == listUploadedFiles.needType) {
+			option.attr('selected', 'selected');
+		}
+		docAssign.append(option);
+	}
+
 	return column.append(docImg).append(docDesc).append(docAssign);
 }
 
-function getNeedItemsWrapper() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function getNeedItemsWrapper(neededItemListObject) {
 	var wrapper = $('<div>').attr({
 		"class" : "needed-items-wrapper"
 	});
@@ -1351,72 +1210,72 @@ function getNeedItemsWrapper() {
 		"class" : "needed-items-lc float-left"
 	});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	addNeededDocuments(neededItemListObject, leftContainer, container);
+
+	return wrapper.append(header).append(container);
+}
+
+function addNeededDocuments(neededItemListObject, leftContainer, container) {
+
+	var hasNeeds = false;
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Income_Assets;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Income/Assets", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Credit_Liabilities;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Credit/Liabilities", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Property;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Property", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Other;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Other", needType));
+		hasNeeds = true;
+	}
+
+	if (!hasNeeds) {
+		var incomeDocCont = $('<div>').attr({
+			"class" : "needed-doc-container"
+		});
+
+		var incDocHeading = $('<div>').attr({
+			"class" : "needed-doc-heading"
+		}).html(newfiObject.i18n.nl_noneeds);
+		incomeDocCont.append(incDocHeading);
+		leftContainer.append(incomeDocCont);
+		container.append(leftContainer);
+		return;
+	}
+
+	var rightContainer = $('<div>').attr({
+		"class" : "needed-items-rc float-right"
+	});
+	container.append(leftContainer).append(rightContainer);
+
+}
+
+function showFileLink(uploadedItems) {
+
+	$.each(uploadedItems, function(index, value) {
+		var needId = value.needType;
+		$('#needDoc' + needId).removeClass('hide');
+		$('#needDoc' + needId).addClass('doc-link-icn');
+		$('#needDoc' + needId).click(function() {
+			window.open(value.s3path, '_blank');
+		});
+	});
+}
+function createdNeededList(categoryName, elements) {
 
 	var incomeDocCont = $('<div>').attr({
 		"class" : "needed-doc-container"
@@ -1424,41 +1283,18 @@ function getNeedItemsWrapper() {
 
 	var incDocHeading = $('<div>').attr({
 		"class" : "needed-doc-heading"
-	}).html("Income Documents");
-
+	}).html(categoryName);
 
 	incomeDocCont.append(incDocHeading);
-	var incDocRow1 = getNeededDocRow("Salaried-W-2 forms for the most recent 2 years");
-	var incDocRow2 = getNeededDocRow("Payroll stubs for the past 30 days (showing YTD earnings)");
-	incomeDocCont.append(incDocRow1).append(incDocRow2);
-	var propDocContainer = $('<div>').attr({
-		"class" : "needed-doc-container"
+	$.each(elements, function(i, val) {
+		var needDocRow = getNeededDocRow(val.needsListMaster.label,
+				val.needsListMaster.id);
+		incDocHeading.append(needDocRow);
 	});
-	var propDocHeading = $('<div>').attr({
-		"class" : "needed-doc-heading"
-	}).html("Property Documents");
-	propDocContainer.append(propDocHeading);
-	var propDocRow1 = getNeededDocRow("Refinance - Copy of property tax bill");
-	var propDocRow2 = getNeededDocRow("Refinance - Copy of homeowner's hazard insurance policy");
-	propDocContainer.append(propDocRow1).append(propDocRow2);
-	leftContainer.append(incomeDocCont).append(propDocContainer);
-	var rightContainer = $('<div>').attr({
-		"class" : "needed-items-rc float-right"
-
-
-
-
-	});
-	container.append(leftContainer).append(rightContainer);
-	return wrapper.append(header).append(container);
-
+	return incomeDocCont;
 }
 
-
-function getNeededDocRow(desc) {
-
-
-
+function getNeededDocRow(desc, needId) {
 	var row = $('<div>').attr({
 		"class" : "needed-item-row clearfix"
 	});
@@ -1471,10 +1307,10 @@ function getNeededDocRow(desc) {
 	var docUploadImage = $('<div>').attr({
 		"class" : "doc-uploaded-icn float-left"
 	});
-	row.append(leftImage).append(rowDesc).append(docUploadImage);
+	row.append(leftImage).append(rowDesc);
 	var docRemoveImage = $('<div>').attr({
-		"class" : "doc-remove-icn float-left"
-
+		"class" : "hide float-left",
+		"id" : "needDoc" + needId
 
 	});
 	row.append(docRemoveImage);
@@ -1493,7 +1329,7 @@ function getUploadedItemsWrapper() {
 	});
 	var assetContainer = getAssetContainer();
 	var unassignDocContainer = getUnassignDocContiner();
-	container.append(assetContainer).append(unassignDocContainer);
+	// container.append(assetContainer).append(unassignDocContainer);
 	return wrapper.append(header).append(container);
 }
 
@@ -1540,14 +1376,15 @@ function getUnassignedDocRow(desc) {
 	return row;
 }
 
-
-
-
-
-
-
-
-
-
-
-
+function mapCategories(category) {
+	switch (category) {
+	case "Credit_Liabilities":
+		return "credit/liability";
+	case "Property":
+		return "property";
+	case "Income_Assets":
+		return "income/assets";
+	case "Other":
+		return "other";
+	}
+}

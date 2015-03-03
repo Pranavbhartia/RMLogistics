@@ -51,7 +51,7 @@ public class LoanServiceImpl implements LoanService {
 				.parseUserModel(user));
 		return LoanServiceImpl.buildLoanVOList(list);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO getActiveLoanOfUser(UserVO user) {
@@ -164,8 +164,6 @@ public class LoanServiceImpl implements LoanService {
 
 		return voList;
 	}
-	
-	
 
 	public static User parseUserModel(UserVO userVO) {
 
@@ -194,6 +192,9 @@ public class LoanServiceImpl implements LoanService {
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
 				.getUserRole()));
+
+		userVO.setInternalUserDetail(UserProfileServiceImpl
+				.buildInternalUserDetailsVO(user.getInternalUserDetail()));
 
 		return userVO;
 	}
@@ -296,8 +297,8 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
 		loanCustomerVO.setLoanID(loan.getId());
 		loanCustomerVO.setUserID(user.getId());
-		if(user.getUserRole()!=null)
-		loanCustomerVO.setRole(user.getUserRole().getLabel());
+		if (user.getUserRole() != null)
+			loanCustomerVO.setRole(user.getUserRole().getLabel());
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		// TODO get these hard coded data from entity
@@ -323,88 +324,96 @@ public class LoanServiceImpl implements LoanService {
 		
 		return loanCustomerVO;
 	}
-	
+
 	/**
-     * return getLoanTeamListForLoan from loan
-     * @param loan
-     * @return LoanTeamListVO
-     */
+	 * return getLoanTeamListForLoan from loan
+	 * 
+	 * @param loan
+	 * @return LoanTeamListVO
+	 */
 	@Override
-    @Transactional(readOnly=true)
-	public LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO){
-	    
-	    LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
-	    List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
-	    List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(LoanServiceImpl.parseLoanModel( loanVO ));
-	    if(loanTeamList == null)
-	        return null;
-	    
-	    for(LoanTeam loanTeam : loanTeamList){
-	        LoanTeamVO loanTeamVO = LoanServiceImpl.buildLoanTeamVO( loanTeam );
-	        loanTeamVOList.add( loanTeamVO );
-	    }
-	    loanTeamListVO.setLeanTeamList( loanTeamVOList );   
-	    
-	    return loanTeamListVO; 
+	@Transactional(readOnly = true)
+	public LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO) {
+
+		LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
+		List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
+		List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(LoanServiceImpl
+				.parseLoanModel(loanVO));
+		if (loanTeamList == null)
+			return null;
+
+		for (LoanTeam loanTeam : loanTeamList) {
+			LoanTeamVO loanTeamVO = LoanServiceImpl.buildLoanTeamVO(loanTeam);
+			loanTeamVOList.add(loanTeamVO);
+		}
+		loanTeamListVO.setLeanTeamList(loanTeamVOList);
+
+		return loanTeamListVO;
+
+	}
+
+	/**
+	 * return getLoanTeamListForLoan from userVO
+	 * 
+	 * @param userVO
+	 * @return LoanTeamListVO
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public LoansProgressStatusVO getLoansProgressForUser(Integer userId) {
+
+		List<Loan> loanList = loanDao
+				.retrieveLoanForDashboard(new User(userId));
+		LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl
+				.getLoansProgressStatusVoFromLoanList(loanList);
+
+		return loansProgressStatusVO;
+
+	}
+
+	/**
+	 * return LoansProgressStatusVO from loanList
+	 * 
+	 * @param loanList
+	 * @return
+	 */
+	public static LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(
+			List<Loan> loanList) {
+
+		LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
+		int newProspects, totalLeads, newLoans, inProgress, closed, withdrawn, declined;
+		newProspects = totalLeads = newLoans = inProgress = closed = withdrawn = declined = 0;
+
+		for (Loan loan : loanList) {
+			int id = loan.getLoanProgressStatus().getId();
+
+			if (id == 1)
+				newProspects++;
+			else if (id == 2)
+				totalLeads++;
+			else if (id == 3)
+				newLoans++;
+			else if (id == 4)
+				inProgress++;
+			else if (id == 5)
+				closed++;
+			else if (id == 6)
+				withdrawn++;
+			else if (id == 7)
+				declined++;
+		}
+
+		loansProgressStatusVO.setClosed(closed);
+		loansProgressStatusVO.setDeclined(declined);
+		loansProgressStatusVO.setInProgress(inProgress);
+		loansProgressStatusVO.setNewLoans(newLoans);
+		loansProgressStatusVO.setTotalLeads(totalLeads);
+		loansProgressStatusVO.setNewProspects(newProspects);
+		loansProgressStatusVO.setWithdrawn(withdrawn);
+
+		return loansProgressStatusVO;
 
 	}
 	
-	/**
-     * return getLoanTeamListForLoan from userVO
-     * @param userVO
-     * @return LoanTeamListVO
-     */
-    @Override
-    @Transactional(readOnly=true)
-    public LoansProgressStatusVO getLoansProgressForUser(Integer userId){
-            
-        List<Loan> loanList = loanDao.retrieveLoanForDashboard(new User(userId));
-        LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl.getLoansProgressStatusVoFromLoanList(loanList);
-        
-        return loansProgressStatusVO;
-        
-    }
-    
-
-    /**
-     * return LoansProgressStatusVO from loanList
-     * @param loanList
-     * @return
-     */
-    public static LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(List<Loan> loanList) {
-        
-        LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
-        int newProspects, totalLeads, newLoans, inProgress, closed, withdrawn , declined;
-        newProspects = totalLeads = newLoans = inProgress = closed = withdrawn = declined = 0;
-        
-        for(Loan loan : loanList){
-            int id = loan.getLoanProgressStatus().getId();
-            
-            if(id == 1)
-                newProspects++;
-            else if(id == 2)
-                totalLeads++;
-            else if(id == 3)
-                newLoans++;
-            else if(id == 4)
-                inProgress++;
-            else if(id == 5)
-                closed++;
-            else if(id == 6)
-                withdrawn++;
-            else if(id == 7)
-                declined++;       
-        }
-        
-        loansProgressStatusVO.setClosed( closed );
-        loansProgressStatusVO.setDeclined( declined );
-        loansProgressStatusVO.setInProgress( inProgress );
-        loansProgressStatusVO.setNewLoans( newLoans );
-        loansProgressStatusVO.setTotalLeads( totalLeads );
-        loansProgressStatusVO.setNewProspects( newProspects );
-        loansProgressStatusVO.setWithdrawn( withdrawn );
-        
-        return loansProgressStatusVO;
-
-    }
+	
 }

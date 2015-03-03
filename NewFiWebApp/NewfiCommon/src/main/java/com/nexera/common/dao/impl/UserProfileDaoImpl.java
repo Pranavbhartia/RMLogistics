@@ -113,27 +113,54 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
-	public List<User> searchUsersByName(String name, UserRole role) {
+	@Override
+	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
 		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
-				+ name + "%'";
-		if (role != null) {
+				+ user.getFirstName() + "%'";
+		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
+		}
+		if(user.getInternalUserDetail()!=null){
+			searchQuery += " and internalUserDetail=:internalUserDetail";
 		}
 		int MAX_RESULTS = 50;
 		Query query = session.createQuery(searchQuery);
 
-		if (role != null) {
-			query.setEntity("userRole", role);
+		if (user.getUserRole() != null) {
+			query.setEntity("userRole", user.getUserRole());
+		}
+
+		if (user.getInternalUserDetail() != null) {
+			query.setEntity("internalUserDetail", user.getInternalUserDetail());
 		}
 
 		query.setMaxResults(MAX_RESULTS);
-
-		return query.list();
+		List<User> userList=query.list();
+		
+		for(User userObj:userList){
+			Hibernate.initialize(user.getInternalUserDetail());
+			if (userObj.getInternalUserDetail() != null)
+				Hibernate.initialize(userObj.getInternalUserDetail()
+						.getInternaUserRoleMaster());
+		}
+		
+		return userList;
 	}
 
 	@Override
+	public Integer saveInternalUser(User user) {
+		if(null!=user.getInternalUserDetail()){
+			this.save(user.getInternalUserDetail());
+			sessionFactory.getCurrentSession().flush();
+		}
+		
+		return (Integer) this.save(user);
+	}
+
+	@Override
+
 	public Integer competeUserProfile(User user) {
 		
 		Session session = sessionFactory.getCurrentSession();
@@ -197,4 +224,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
+
+	public User loadInternalUser(Integer userID) {
+		User user = (User) this.load(User.class, userID);
+		if (user != null) {
+			Hibernate.initialize(user.getInternalUserDetail());
+			System.out.println("Test  : loadInternalUser");
+			if (user.getInternalUserDetail() != null)
+				Hibernate.initialize(user.getInternalUserDetail()
+						.getInternaUserRoleMaster());
+
+		}
+		return user;
+		
+	}
 }

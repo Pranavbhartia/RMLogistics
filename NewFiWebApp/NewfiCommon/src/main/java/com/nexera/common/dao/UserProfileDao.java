@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -18,8 +17,6 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateCustomerDetails(CustomerDetail CustomerDetail);
 	
-	public List<User> searchUsersByName(String name,UserRole role);
-
 	public Integer updateUser(String s3ImagePath, Integer userid);
 
 	public Integer competeUserProfile(User user);
@@ -29,5 +26,12 @@ public interface UserProfileDao extends GenericDao {
 	public Integer managerUpdateUserProfile(User user);
 
 	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail);
+
+	public List<User> searchUsers(User user);
+
+	public Integer saveInternalUser(User user);
+
+	public User loadInternalUser(Integer userID);
+
 
 }
