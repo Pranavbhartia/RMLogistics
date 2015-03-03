@@ -2297,8 +2297,6 @@ function onReturnOfUserSearchToAddToLoanTeam(data) {
 
 function photoUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
     // Create the iframe...
-	
-	alert(userId);
     var iframe = document.createElement("iframe");
     iframe.setAttribute("id", "upload_"+suffix);
     iframe.setAttribute("name", "upload_"+suffix);
