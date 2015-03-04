@@ -10,4 +10,5 @@
 <script src="resources/js/profile.js"></script>
 <script src="resources/js/newfiModel.js"></script>
 <script src="resources/js/managerNeedList.js"></script>
+<script src="resources/js/notification.js"></script>
 <script src="resources/js/milestone.js"></script>
