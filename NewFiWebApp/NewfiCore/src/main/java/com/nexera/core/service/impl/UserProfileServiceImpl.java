@@ -284,7 +284,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return userVO;
 	}
 
-	private User parseUserModel(UserVO userVO) {
+	@Override
+	public User parseUserModel(UserVO userVO) {
 
 		if (userVO == null)
 			return null;

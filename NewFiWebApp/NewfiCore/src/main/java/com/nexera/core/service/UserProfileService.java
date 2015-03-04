@@ -43,5 +43,7 @@ public interface UserProfileService {
 
 	public List<UserVO> buildUserVOList(List<User> team);
 
+	User parseUserModel(UserVO userVO);
+
 
 }
