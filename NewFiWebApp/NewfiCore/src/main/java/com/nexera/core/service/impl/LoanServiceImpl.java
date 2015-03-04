@@ -111,7 +111,8 @@ public class LoanServiceImpl implements LoanService {
 				.retreiveLoansAsManager(manager));
 	}
 
-	private Loan parseLoanModel(LoanVO loanVO) {
+	@Override
+	public Loan parseLoanModel(LoanVO loanVO) {
 
 		if (loanVO == null)
 			return null;

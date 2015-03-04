@@ -5,7 +5,7 @@ import java.util.Date;
 public class LoanNotificationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private byte[] content;
+	private String content;
 	private Date createdDate;
 	private Boolean dismissable;
 	private String notificationType;
@@ -13,19 +13,19 @@ public class LoanNotificationVO implements Serializable {
 	private Boolean read;
 	private Date remindOn;
 	private String title;
-	private UserVO createdBy;
-	private LoanVO loan;
-	private UserVO createdFor;
+	private Integer createdByID;
+	private Integer loanID;
+	private Integer createdForID;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public byte[] getContent() {
+	public String getContent() {
 		return content;
 	}
-	public void setContent(byte[] content) {
+	public void setContent(String content) {
 		this.content = content;
 	}
 	public Date getCreatedDate() {
@@ -70,23 +70,23 @@ public class LoanNotificationVO implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public UserVO getCreatedBy() {
-		return createdBy;
+	public Integer getCreatedByID() {
+		return createdByID;
 	}
-	public void setCreatedBy(UserVO createdBy) {
-		this.createdBy = createdBy;
+	public void setCreatedByID(Integer createdByID) {
+		this.createdByID = createdByID;
 	}
-	public LoanVO getLoan() {
-		return loan;
+	public Integer getLoanID() {
+		return loanID;
 	}
-	public void setLoan(LoanVO loan) {
-		this.loan = loan;
+	public void setLoanID(Integer loanID) {
+		this.loanID = loanID;
 	}
-	public UserVO getCreatedFor() {
-		return createdFor;
+	public Integer getCreatedForID() {
+		return createdForID;
 	}
-	public void setCreatedFor(UserVO createdFor) {
-		this.createdFor = createdFor;
+	public void setCreatedForID(Integer createdForID) {
+		this.createdForID = createdForID;
 	}
 
 }
