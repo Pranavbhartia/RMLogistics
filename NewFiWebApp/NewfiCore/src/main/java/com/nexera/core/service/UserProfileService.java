@@ -2,6 +2,11 @@ package com.nexera.core.service;
 
 import java.util.List;
 
+import com.nexera.common.entity.InternalUserDetail;
+import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 
 public interface UserProfileService {
@@ -28,6 +33,15 @@ public interface UserProfileService {
 	public List<UserVO> searchUsers(UserVO userVO);
 
 	public UserVO loadInternalUser(Integer userID);
+
+	public UserRoleVO buildUserRoleVO(UserRole userRole);
+
+	public InternalUserDetailVO buildInternalUserDetailsVO(
+			InternalUserDetail internalUserDetail);
+
+	public UserVO buildUserVO(User user);
+
+	public List<UserVO> buildUserVOList(List<User> team);
 
 
 }
