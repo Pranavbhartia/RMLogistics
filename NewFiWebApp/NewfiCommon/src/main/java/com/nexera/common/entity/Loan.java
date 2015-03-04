@@ -36,7 +36,7 @@ public class Loan implements Serializable {
 	private LoanDetail loanDetail;
 	private List<LoanMilestone> loanMilestones;
 	private List<LoanNeedsList> loanNeedsLists;
-	private List<LoanNotification> loanNotifications;
+	private List<Notification> loanNotifications;
 	private List<LoanRate> loanRates;
 	private List<LoanSetting> loanSettings;
 	private List<LoanTeam> loanTeam;
@@ -275,24 +275,24 @@ public class Loan implements Serializable {
 
 	// bi-directional many-to-one association to LoanNotification
 	@OneToMany(mappedBy = "loan")
-	public List<LoanNotification> getLoanNotifications() {
+	public List<Notification> getLoanNotifications() {
 		return this.loanNotifications;
 	}
 
-	public void setLoanNotifications(List<LoanNotification> loanNotifications) {
+	public void setLoanNotifications(List<Notification> loanNotifications) {
 		this.loanNotifications = loanNotifications;
 	}
 
-	public LoanNotification addLoanNotification(
-			LoanNotification loanNotification) {
+	public Notification addLoanNotification(
+			Notification loanNotification) {
 		getLoanNotifications().add(loanNotification);
 		loanNotification.setLoan(this);
 
 		return loanNotification;
 	}
 
-	public LoanNotification removeLoanNotification(
-			LoanNotification loanNotification) {
+	public Notification removeLoanNotification(
+			Notification loanNotification) {
 		getLoanNotifications().remove(loanNotification);
 		loanNotification.setLoan(null);
 

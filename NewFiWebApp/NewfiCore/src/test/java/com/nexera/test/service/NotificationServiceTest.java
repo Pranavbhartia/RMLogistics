@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.nexera.common.vo.LoanNotificationVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.NotificationService;
@@ -48,11 +48,11 @@ public class NotificationServiceTest {
 			loanVO.setId(loanID);
 		}
 
-		List<LoanNotificationVO> notifications = notificationService
+		List<NotificationVO> notifications = notificationService
 				.findActiveNotifications(loanVO, userVO);
 
 		if (notifications != null)
-			for (LoanNotificationVO not : notifications) {
+			for (NotificationVO not : notifications) {
 
 				System.out.println("Notif id : " + not.getId());
 

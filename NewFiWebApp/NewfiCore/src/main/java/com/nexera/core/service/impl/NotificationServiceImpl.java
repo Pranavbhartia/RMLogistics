@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.NotificationDao;
-import com.nexera.common.entity.LoanNotification;
+import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.LoanNotificationVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -31,52 +31,54 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<LoanNotificationVO> findActiveNotifications(LoanVO loanVO,
+	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
 			UserVO userVO) {
 
-		List<LoanNotificationVO> notList = buildLoanNotificationVOList(notificationDao
+		List<NotificationVO> notList = buildNotificationVOList(notificationDao
 				.findActiveNotifications(loanService.parseLoanModel(loanVO),
 						userProfileService.parseUserModel(userVO)));
 
 		return notList;
 	}
 
-	private LoanNotificationVO buildLoanNotificationVO(
-			LoanNotification loanNotification) {
+	private NotificationVO buildNotificationVO(
+			Notification loanNotification) {
 		if (loanNotification == null)
 			return null;
 
-		LoanNotificationVO vo = new LoanNotificationVO();
+		NotificationVO vo = new NotificationVO();
 		vo.setId(loanNotification.getId());
 		vo.setContent(new String(loanNotification.getContent()));
 		if (loanNotification.getCreatedBy() != null)
 			vo.setCreatedByID(loanNotification.getCreatedBy().getId());
 		if (loanNotification.getCreatedFor() != null)
 			vo.setCreatedForID(loanNotification.getCreatedFor().getId());
+		if (loanNotification.getLoan() != null)
+			vo.setLoanID(loanNotification.getLoan().getId());
 
 		return vo;
 	}
 
-	private List<LoanNotificationVO> buildLoanNotificationVOList(
-			List<LoanNotification> loanNotifications) {
+	private List<NotificationVO> buildNotificationVOList(
+			List<Notification> loanNotifications) {
 
 		if (loanNotifications == null)
 			return null;
 
-		List<LoanNotificationVO> voList = new ArrayList<LoanNotificationVO>();
+		List<NotificationVO> voList = new ArrayList<NotificationVO>();
 
-		for (LoanNotification not : loanNotifications) {
-			voList.add(buildLoanNotificationVO(not));
+		for (Notification not : loanNotifications) {
+			voList.add(buildNotificationVO(not));
 		}
 		return voList;
 	}
 
-	private LoanNotification parseLoanNotificationModel(
-			LoanNotificationVO loanNotification) {
+	private Notification parseNotificationModel(
+			NotificationVO loanNotification) {
 		if (loanNotification == null)
 			return null;
 
-		LoanNotification model = new LoanNotification();
+		Notification model = new Notification();
 		model.setId(loanNotification.getId());
 		if (loanNotification.getContent() != null)
 			model.setContent(loanNotification.getContent().getBytes());
@@ -95,16 +97,16 @@ public class NotificationServiceImpl implements NotificationService {
 		return model;
 	}
 
-	private List<LoanNotification> parseLoanNotificationModelList(
-			List<LoanNotificationVO> loanNotifications) {
+	private List<Notification> parseNotificationModelList(
+			List<NotificationVO> loanNotifications) {
 
 		if (loanNotifications == null)
 			return null;
 
-		List<LoanNotification> modelList = new ArrayList<LoanNotification>();
+		List<Notification> modelList = new ArrayList<Notification>();
 
-		for (LoanNotificationVO not : loanNotifications) {
-			modelList.add(parseLoanNotificationModel(not));
+		for (NotificationVO not : loanNotifications) {
+			modelList.add(parseNotificationModel(not));
 		}
 		return modelList;
 	}

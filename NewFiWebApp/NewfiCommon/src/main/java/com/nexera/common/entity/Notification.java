@@ -14,8 +14,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "loannotification")
-@NamedQuery(name = "LoanNotification.findAll", query = "SELECT l FROM LoanNotification l")
-public class LoanNotification implements Serializable {
+@NamedQuery(name = "Notification.findAll", query = "SELECT l FROM Notification l")
+public class Notification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private byte[] content;
@@ -30,7 +30,7 @@ public class LoanNotification implements Serializable {
 	private Loan loan;
 	private User createdFor;
 
-	public LoanNotification() {
+	public Notification() {
 	}
 
 	@Id
@@ -118,7 +118,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "created_by")
 	public User getCreatedBy() {
 		return createdBy;
@@ -129,7 +129,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Loan
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "loan")
 	public Loan getLoan() {
 		return loan;
@@ -140,7 +140,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "created_for")
 	public User getCreatedFor() {
 		return createdFor;

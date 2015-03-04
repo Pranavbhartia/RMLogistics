@@ -31,7 +31,7 @@ public class UserVO implements Serializable {
 	private RealtorDetailVO realtorDetail;
 	private List<LoanVO> loans;
 	private List<LoanAppFormVO> loanAppForms;
-	private List<LoanNotificationVO> loanNotifications;
+	private List<NotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
 
@@ -167,11 +167,11 @@ public class UserVO implements Serializable {
 		this.loanAppForms = loanAppForms;
 	}
 
-	public List<LoanNotificationVO> getLoanNotifications() {
+	public List<NotificationVO> getLoanNotifications() {
 		return loanNotifications;
 	}
 
-	public void setLoanNotifications(List<LoanNotificationVO> loanNotifications) {
+	public void setLoanNotifications(List<NotificationVO> loanNotifications) {
 		this.loanNotifications = loanNotifications;
 	}
 

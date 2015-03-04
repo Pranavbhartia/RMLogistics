@@ -2,7 +2,7 @@ package com.nexera.common.vo;
 
 import java.io.Serializable;
 import java.util.Date;
-public class LoanNotificationVO implements Serializable {
+public class NotificationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String content;
