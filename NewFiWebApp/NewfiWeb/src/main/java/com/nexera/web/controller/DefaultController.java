@@ -62,6 +62,16 @@ public class DefaultController implements InitializingBean {
 		}
 
 	}
+	
+	
+	protected void editUserPhoto(String photoUrl) {
+		final Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			User user=(User) principal;
+			user.setPhotoImageUrl(photoUrl);
+		}
+	}
 
 	/**
 	 * Loads all the default elements required for the UI. Common method to be

@@ -1,7 +1,14 @@
 package com.nexera.web.rest;
 
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.nexera.common.entity.User;
@@ -22,6 +30,8 @@ import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.RestUtil;
 
 @Controller
@@ -30,6 +40,9 @@ public class UserProfileRest {
 
 	@Autowired
 	private UserProfileService userProfileService;
+	
+	@Autowired
+	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(UserProfileRest.class);
@@ -189,5 +202,7 @@ public class UserProfileRest {
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
 
 	}
+	
+	
 
 }

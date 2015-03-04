@@ -18,6 +18,8 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+
 <script src="resources/js/jquery-2.1.3.min.js"></script>
 
 <script type="text/javascript">

@@ -1,8 +1,10 @@
 package com.nexera.web.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEum;
 import com.nexera.common.vo.UserVO;
@@ -74,27 +77,17 @@ public class TemplateController extends DefaultController {
 	public @ResponseBody String uploadCommonImageToS3(
 			@RequestParam("fileName") MultipartFile multipartFile,@RequestParam int userId,
 			HttpServletRequest req, Model model)
-	// @RequestParam(value = "fileName", required = true) MultipartFile
-	// multipartFile)
+
 			throws IOException {
 		NexeraUtility.uploadFileToLocal(multipartFile);
 
 		String s3Path = null;
 		try {
-			File serverFile = new File(
-					NexeraUtility.uploadFileToLocal(multipartFile));
-			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User",
-					"complete");
-
+			File serverFile = new File(NexeraUtility.uploadFileToLocal(multipartFile));
+			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User","complete");
+			
 			LOG.info("The s3 path is : " + s3Path);
 
-			// save image in the data base
-			//User user = getUserObject();
-			//nteger userid = user.getId();
-			if(userId != 0){
-				Integer num = userProfileService.updateUser(s3Path, userId);
-			}
-			
 
 		} catch (Exception e) {
 
@@ -104,6 +97,97 @@ public class TemplateController extends DefaultController {
 
 	}
 
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/uploadProfilePicture.do")
+	public @ResponseBody
+	String uploadProfilePicture(
+	@RequestParam(value = "fileName", required = true) MultipartFile multipartFile,
+	@RequestParam(required = true) Integer xAxis,
+	@RequestParam(required = true) Integer yAxis,
+	@RequestParam(required = true) Integer width,
+	@RequestParam(required = true) Integer height,
+	@RequestParam(required = true) Integer userId)
+	throws IOException {
+	LOG.info("*******FILE UPLOAD**********");
+	Gson gson = new Gson();
+	User user = null;
+	String s3PathCrop = "error";
+
+	try {
+	
+	String orgName = multipartFile.getOriginalFilename();
+	
+	LOG.info("fileName=" + orgName+" xAxis="+xAxis+" yAxis="+yAxis+" width="+width+" height="+height+" userId="+userId);
+	
+String tempDir="D:\\temp";
+String cropPathDir="D:\\temp\\crop";
+	File dirPath = new File(tempDir);
+	File cropPath = new File(cropPathDir);
+	
+	if (!dirPath.exists()) {
+	dirPath.mkdirs();
+	}
+
+	if (!cropPath.exists()) {
+	cropPath.mkdir();
+	}
+//change
+	String randomString = String.valueOf(System.currentTimeMillis());
+	
+	String filePath = tempDir + File.separator + randomString
+	+ orgName;
+
+	String croppathImage = cropPathDir + File.separator
+	+ randomString + orgName;
+
+	LOG.info("the File path is : " + filePath);
+	LOG.info(tempDir + ":file name=" + orgName);
+
+	
+	File dest = new File(filePath);
+	
+	multipartFile.transferTo(dest);
+	
+	
+	
+	/*try {
+	Thumbnails.of(dest).size(Integer.parseInt(imageWidth),Integer.parseInt(imageHeight)).toFile(dest);
+	} catch (IOException e) {
+	e.printStackTrace();
+	}*/
+
+	// code to crop image using
+	BufferedImage tempCrop = ImageIO.read(dest);
+
+	int widthI          = tempCrop.getWidth();
+	int heightI         = tempCrop.getHeight();
+	System.out.println(widthI+"-Sizi--"+heightI);
+
+	BufferedImage cropped = tempCrop.getSubimage(xAxis, yAxis,
+	width, height);
+	File newCFile = new File(croppathImage);
+	Boolean cropUpload = ImageIO.write(cropped, "jpg", newCFile);
+
+	s3PathCrop = s3FileUploadServiceImpl.uploadToS3(newCFile, "User","complete");
+	LOG.info(cropUpload + "the cropped image path " + s3PathCrop);
+	//userService.changeCropPhoto(user.getId(), s3PathCrop);
+
+	LOG.info("Uploaded to S3 with url: " + s3PathCrop);
+	editUserPhoto(s3PathCrop);
+	if(userId != 0){
+		Integer num = userProfileService.updateUser(s3PathCrop, userId);
+	}
+	
+
+	} catch (Exception e) {
+	LOG.error("REQUEST_FAILED", e);
+	e.printStackTrace();
+	return s3PathCrop;
+	} 
+	return s3PathCrop;
+	}
+	
+	
 	//
 	// @RequestMapping(value="customerLoanPage.do")
 	// public ModelAndView showCustomerLaonPage(){

@@ -89,17 +89,14 @@ public class NexeraUtility {
                 if (!dir.exists())
                     dir.mkdirs();
  
-                filePath = dir.getAbsolutePath()
-                        + File.separator + file.getOriginalFilename();
+                filePath = dir.getAbsolutePath()+ File.separator + file.getOriginalFilename();
                 // Create the file on server
                 File serverFile = new File(filePath);
-                BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(serverFile));
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                 stream.write(bytes);
                 stream.close();
  
-                LOGGER.info("Server File Location="
-                        + serverFile.getAbsolutePath());
+                LOGGER.info("Server File Location="+ serverFile.getAbsolutePath());
  
                
             } catch (Exception e) {

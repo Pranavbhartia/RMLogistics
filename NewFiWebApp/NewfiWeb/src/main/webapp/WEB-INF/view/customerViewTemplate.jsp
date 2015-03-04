@@ -28,6 +28,9 @@
 		<div class="container-row row clearfix">
 			<jsp:include page="customerViewLeftPanel.jsp"></jsp:include>
 			<div id="right-panel"></div>
+			<div id="loading"></div>
+		</div>
+		<div id="imageCropContainerDiv" style="width:200px;height: 200">
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
@@ -74,6 +77,9 @@
 	            refreshSupport=true;
 	            retrieveState();
 	        }
+			
+			
+			
 		});
 	</script>
 </body>

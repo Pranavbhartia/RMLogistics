@@ -7,13 +7,31 @@ function changeLeftPanel(primary) {
 	if (leftPanel == 1) {
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
-		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper1);
 		
+		findUser();
 	}
 }
 
-function appendCustPersonalInfoWrapper1(user) {
+function findUser(){
+	
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+}
+
+
+/*var logedInUser;
+function resetSelectedUserDetailObject(user) {
+	
+	logedInUser = new Object();
+	logedInUser.userID = user.id;
+	logedInUser.phoneNo = user.phone_no;
+}*/
+
+
+function appendCustPersonalInfoWrapper(user) {
+	
+	//resetlogedInUserDetailObject(user);
 	showCustomerLoanPage(user);
+	
 }
 
 function adjustCenterPanelWidth() {
@@ -46,6 +64,7 @@ function getCustomerSecondaryLeftNav() {
 }
 
 function getCustomerSecondaryLeftNavStep(step, text) {
+	
 	var container = $('<div>').attr({
 		"id" : "lp-step" + step,
 		"class" : "lp-t2-item",
@@ -105,6 +124,7 @@ function showCustomerLoanPage(user) {
 }
 
 function changeSecondaryLeftPanel(secondary ,user) {
+	
 	secondary = parseInt(secondary);
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
