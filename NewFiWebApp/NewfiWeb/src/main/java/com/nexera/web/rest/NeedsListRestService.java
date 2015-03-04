@@ -51,7 +51,7 @@ public class NeedsListRestService {
 	}
 
 	@RequestMapping(value = "{loanId}" , method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO saveLoanNeeds(@RequestParam(required=true) int loanId,String needs) {
+	public @ResponseBody CommonResponseVO saveLoanNeeds(@PathVariable int loanId,String needs) {
 		CommonResponseVO response=null;
 		try {
 			
@@ -106,19 +106,5 @@ public class NeedsListRestService {
 		return response; 
 	}
 	
-	/**
-	 * @return the needsListService
-	 */
-	public NeedsListService getNeedsListService() {
-		return needsListService;
-	}
-
-
-
-	/**
-	 * @param needsListService the needsListService to set
-	 */
-	public void setNeedsListService(NeedsListService needsListService) {
-		this.needsListService = needsListService;
-	}
+	
 }
