@@ -42,7 +42,7 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		hierarchyVO.setMessageList(messageList);
 
 		List<MessageId> messageIds = hierarchyVO.createMessageIdVO();
-		hierarchyVO.setMessageIds(messageIds);
+		//hierarchyVO.addToMessageId
 		return hierarchyVO;
 	}
 
