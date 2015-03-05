@@ -58,10 +58,10 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 					case REALTOR:
 						criteria.add(Restrictions.or(userRest, Restrictions
 								.and(Restrictions.isNull("createdFor"),
-										Restrictions
-												.ilike("visibleToUserRoles",
-														UserRolesEnum.REALTOR
-																.toString()))));
+										Restrictions.ilike(
+												"visibleToUserRoles",
+												UserRolesEnum.REALTOR
+														.toString()))));
 						break;
 
 					case INTERNAL:
@@ -70,10 +70,10 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 								Restrictions.and(
 										Restrictions.isNull("createdFor"),
 										Restrictions.and(
-												Restrictions
-														.ilike("visibleToUserRoles",
-																UserRolesEnum.INTERNAL
-																		.toString()),
+												Restrictions.ilike(
+														"visibleToUserRoles",
+														UserRolesEnum.INTERNAL
+																.toString()),
 												Restrictions.or(
 														Restrictions
 																.isNull("visibleToInternalUserRoles"),
@@ -90,7 +90,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 					}
 
 				}
-			}else 
+			} else
 				criteria.add(userRest);
 		}
 
@@ -108,8 +108,12 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		return criteria.list();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.nexera.common.dao.NotificationDao#updateNotificationReadStatus(com.nexera.common.entity.Notification)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.nexera.common.dao.NotificationDao#updateNotificationReadStatus(com
+	 * .nexera.common.entity.Notification)
 	 */
 	@Override
 	public int updateNotificationReadStatus(Notification notification) {
@@ -121,6 +125,21 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
 		return result;
-		
+
+	}
+
+	@Override
+	public Notification updateNotification(Notification notificationModel) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Notification set read=:read, remindOn=:remindOn where id=:id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("read", notificationModel.getRead());
+		query.setParameter("remindOn", notificationModel.getRemindOn());
+		query.setParameter("id", notificationModel.getId());
+		Integer result = query.executeUpdate();
+		if (result != null && result > 0)
+			return notificationModel;
+		else
+			return null;
 	}
 }

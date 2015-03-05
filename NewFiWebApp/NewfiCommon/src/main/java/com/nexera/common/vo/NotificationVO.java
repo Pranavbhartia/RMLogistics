@@ -1,17 +1,16 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.util.Date;
 public class NotificationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String content;
-	private Date createdDate;
+	private Long createdDate;
 	private Boolean dismissable;
 	private String notificationType;
 	private String priority;
 	private Boolean read;
-	private Date remindOn;
+	private Long remindOn;
 	private String title;
 	private Integer createdByID;
 	private Integer loanID;
@@ -28,10 +27,10 @@ public class NotificationVO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getCreatedDate() {
+	public Long getCreatedDate() {
 		return createdDate;
 	}
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(Long createdDate) {
 		this.createdDate = createdDate;
 	}
 	public Boolean getDismissable() {
@@ -58,10 +57,10 @@ public class NotificationVO implements Serializable {
 	public void setRead(Boolean read) {
 		this.read = read;
 	}
-	public Date getRemindOn() {
+	public Long getRemindOn() {
 		return remindOn;
 	}
-	public void setRemindOn(Date remindOn) {
+	public void setRemindOn(Long remindOn) {
 		this.remindOn = remindOn;
 	}
 	public String getTitle() {

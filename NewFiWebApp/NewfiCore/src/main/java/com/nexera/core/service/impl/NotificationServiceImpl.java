@@ -1,9 +1,9 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.coyote.http11.NpnHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.dao.NotificationDao;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
@@ -60,6 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		NotificationVO vo = new NotificationVO();
 		vo.setId(notification.getId());
+		if(notification.getContent()!=null)
 		vo.setContent(new String(notification.getContent()));
 		if (notification.getCreatedBy() != null)
 			vo.setCreatedByID(notification.getCreatedBy().getId());
@@ -68,12 +69,14 @@ public class NotificationServiceImpl implements NotificationService {
 		if (notification.getLoan() != null)
 			vo.setLoanID(notification.getLoan().getId());
 
-		vo.setCreatedDate(notification.getCreatedDate());
+		if (notification.getCreatedDate() != null)
+			vo.setCreatedDate(notification.getCreatedDate().getTime());
 		vo.setRead(notification.getRead());
 		vo.setDismissable(notification.getDismissable());
 		vo.setTitle(notification.getTitle());
 		vo.setPriority(notification.getPriority());
-		vo.setRemindOn(notification.getRemindOn());
+		if (notification.getRemindOn() != null)
+			vo.setRemindOn(notification.getRemindOn().getTime());
 		vo.setNotificationType(notification.getNotificationType());
 
 		return vo;
@@ -110,14 +113,15 @@ public class NotificationServiceImpl implements NotificationService {
 		if (loanNotification.getCreatedForID() != null) {
 			User createdFor = new User();
 			createdFor.setId(loanNotification.getCreatedForID());
-			model.setCreatedBy(createdFor);
+			model.setCreatedFor(createdFor);
 		}
 
 		model.setRead(loanNotification.getRead());
 		model.setDismissable(loanNotification.getDismissable());
 		model.setTitle(loanNotification.getTitle());
 		model.setPriority(loanNotification.getPriority());
-		model.setRemindOn(loanNotification.getRemindOn());
+		if (loanNotification.getRemindOn() != null)
+			model.setRemindOn(new Date(loanNotification.getRemindOn()));
 		model.setNotificationType(loanNotification.getNotificationType());
 
 		return model;
@@ -137,17 +141,25 @@ public class NotificationServiceImpl implements NotificationService {
 		return modelList;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.nexera.core.service.NotificationService#dismissNotification(int)
 	 */
 	@Override
 	public int dismissNotification(int notificationId) {
-		int result=0;
-		Notification notification=new Notification();
+		int result = 0;
+		Notification notification = new Notification();
 		notification.setId(notificationId);
 		notification.setRead(true);
-		result= notificationDao.updateNotificationReadStatus(notification);
+		result = notificationDao.updateNotificationReadStatus(notification);
 		return result;
+	}
+
+	@Override
+	public NotificationVO updateNotification(NotificationVO notificationVO) {
+		return buildNotificationVO(notificationDao
+				.updateNotification(parseNotificationModel(notificationVO)));
 	}
 
 }

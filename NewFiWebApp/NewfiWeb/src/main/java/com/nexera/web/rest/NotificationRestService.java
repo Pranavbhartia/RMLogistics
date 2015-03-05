@@ -78,14 +78,35 @@ public class NotificationRestService {
 
 		return responseVO;
 	}
-	@RequestMapping(value="{notificationId}",method=RequestMethod.DELETE)
-	public @ResponseBody CommonResponseVO dismissNotification(@PathVariable int notificationId) {
-		if(notificationId==0){
+
+	@RequestMapping(value = "{notificationId}", method = RequestMethod.DELETE)
+	public @ResponseBody CommonResponseVO dismissNotification(
+			@PathVariable int notificationId) {
+		if (notificationId == 0) {
 			RestUtil.wrapObjectForFailure(null, "500", "Insufficient Data");
 		}
-		int result=notificationService.dismissNotification(notificationId);
+		int result = notificationService.dismissNotification(notificationId);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+		return responseVO;
+	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	public @ResponseBody CommonResponseVO updateNotification(
+			@RequestBody String notificationVOStr) {
+
+		NotificationVO notificationVO = new Gson().fromJson(notificationVOStr,
+				NotificationVO.class);
+
+		if (notificationVO != null && notificationVO.getId()>0) {
+			notificationVO = notificationService
+					.updateNotification(notificationVO);
+		}else{
+				return RestUtil.wrapObjectForFailure(null, "500", "Insufficient Data");
+		}
+
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(result);
+				.wrapObjectForSuccess(notificationVO);
+
 		return responseVO;
 	}
 }
