@@ -9,7 +9,7 @@ public class MongoQueryVO {
 	Long userId;
 	
 	//Will always be passed.
-	Long roleId;
+	String roleName;
 	
 	//Can be null. Please ignore filtering on this column if it is null
 	String messageType;
@@ -36,12 +36,12 @@ public class MongoQueryVO {
 		this.userId = userId;
 	}
 
-	public Long getRoleId() {
-		return roleId;
+	public String getRoleName() {
+		return roleName;
 	}
 
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public String getMessageType() {
@@ -67,8 +67,5 @@ public class MongoQueryVO {
 	public void setNumberOfRecords(int numberOfRecords) {
 		this.numberOfRecords = numberOfRecords;
 	}
-	
-	
-	
 	
 }

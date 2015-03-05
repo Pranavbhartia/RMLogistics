@@ -12,7 +12,7 @@ public class MongoMessagesVO implements Serializable {
 	// retrieve
 	private String id;
 
-	// Cotnains the actual text that needs to be stored. Will not be null
+	// Contains the actual text that needs to be stored. Will not be null
 	private String body;
 
 	// Contains the list of string references to some URLs which is associated
@@ -32,15 +32,15 @@ public class MongoMessagesVO implements Serializable {
 	private Long createdBy;
 
 	// Role of the user creating it. Will be 0 for System generated alerts
-	private Integer roleId;
+	private String roleName;
 
 	// List of roles who have access to this message. Can be null, for messages
 	// targeted to users
-	private List<Integer> roleList;
+	private List<String> roleList;
 
 	// List of users who have access to this message. Can be null, for messages
 	// targeted to roles.
-	private List<Integer> userList;
+	private List<Long> userList;
 
 	// Loan ID associated with this message
 	private Long loanId;
@@ -93,27 +93,27 @@ public class MongoMessagesVO implements Serializable {
 		this.createdBy = createdBy;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+	public String getRoleName() {
+		return roleName;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
-	public List<Integer> getRoleList() {
+	public List<String> getRoleList() {
 		return roleList;
 	}
 
-	public void setRoleList(List<Integer> roleList) {
+	public void setRoleList(List<String> roleList) {
 		this.roleList = roleList;
 	}
 
-	public List<Integer> getUserList() {
+	public List<Long> getUserList() {
 		return userList;
 	}
 
-	public void setUserList(List<Integer> userList) {
+	public void setUserList(List<Long> userList) {
 		this.userList = userList;
 	}
 
@@ -125,6 +125,6 @@ public class MongoMessagesVO implements Serializable {
 		this.loanId = loanId;
 	}
 
-
-
-}
+	
+	
+	}
