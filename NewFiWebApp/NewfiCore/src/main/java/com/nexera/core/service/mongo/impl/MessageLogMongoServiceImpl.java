@@ -35,8 +35,12 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		 * This method should construct the hierarchy object based on the
 		 * queryVO.
 		 */
-		return createDummyValues();
-		// return null;
+		MongoMessageHierarchyVO hierarchyVO =  createDummyValues();
+
+		
+		
+		return hierarchyVO;
+
 	}
 
 	private MongoMessageHierarchyVO createDummyValues() {

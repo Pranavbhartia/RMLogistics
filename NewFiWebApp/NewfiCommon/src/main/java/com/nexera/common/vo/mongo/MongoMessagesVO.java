@@ -44,6 +44,9 @@ public class MongoMessagesVO implements Serializable {
 
 	// Loan ID associated with this message
 	private Long loanId;
+	
+	//Parent ID for this message
+	private String parentId;
 
 	public String getId() {
 		return id;
@@ -125,4 +128,11 @@ public class MongoMessagesVO implements Serializable {
 		this.loanId = loanId;
 	}
 
+	public String getParentId() {
+	    return parentId;
+    }
+	public void setParentId(String parentId) {
+	    this.parentId = parentId;
+    }
+	
 }
