@@ -29,6 +29,8 @@ public class Notification implements Serializable {
 	private User createdBy;
 	private Loan loan;
 	private User createdFor;
+	private String visibleToUserRoles;
+	private String visibleToInternalUserRoles;
 
 	public Notification() {
 	}
@@ -89,7 +91,7 @@ public class Notification implements Serializable {
 		this.priority = priority;
 	}
 
-	@Column(columnDefinition = "TINYINT")
+	@Column(name="is_read",columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRead() {
 		return this.read;
@@ -148,6 +150,24 @@ public class Notification implements Serializable {
 
 	public void setCreatedFor(User createdFor) {
 		this.createdFor = createdFor;
+	}
+
+	@Column(name = "user_roles")
+	public String getVisibleToUserRoles() {
+		return visibleToUserRoles;
+	}
+
+	public void setVisibleToUserRoles(String visibleToUserRoles) {
+		this.visibleToUserRoles = visibleToUserRoles;
+	}
+
+	@Column(name = "internal_user_roles")
+	public String getVisibleToInternalUserRoles() {
+		return visibleToInternalUserRoles;
+	}
+
+	public void setVisibleToInternalUserRoles(String visibleToInternalUserRoles) {
+		this.visibleToInternalUserRoles = visibleToInternalUserRoles;
 	}
 
 }

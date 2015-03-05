@@ -44,20 +44,28 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	private NotificationVO buildNotificationVO(
-			Notification loanNotification) {
-		if (loanNotification == null)
+			Notification notification) {
+		if (notification == null)
 			return null;
 
 		NotificationVO vo = new NotificationVO();
-		vo.setId(loanNotification.getId());
-		vo.setContent(new String(loanNotification.getContent()));
-		if (loanNotification.getCreatedBy() != null)
-			vo.setCreatedByID(loanNotification.getCreatedBy().getId());
-		if (loanNotification.getCreatedFor() != null)
-			vo.setCreatedForID(loanNotification.getCreatedFor().getId());
-		if (loanNotification.getLoan() != null)
-			vo.setLoanID(loanNotification.getLoan().getId());
+		vo.setId(notification.getId());
+		vo.setContent(new String(notification.getContent()));
+		if (notification.getCreatedBy() != null)
+			vo.setCreatedByID(notification.getCreatedBy().getId());
+		if (notification.getCreatedFor() != null)
+			vo.setCreatedForID(notification.getCreatedFor().getId());
+		if (notification.getLoan() != null)
+			vo.setLoanID(notification.getLoan().getId());
+		
+		vo.setRead(notification.getRead());
+		vo.setDismissable(notification.getDismissable());
+		vo.setTitle(notification.getTitle());
+		vo.setPriority(notification.getPriority());
+		vo.setRemindOn(notification.getRemindOn());
+		vo.setNotificationType(notification.getNotificationType());
 
+		
 		return vo;
 	}
 
@@ -95,6 +103,14 @@ public class NotificationServiceImpl implements NotificationService {
 			createdFor.setId(loanNotification.getCreatedForID());
 			model.setCreatedBy(createdFor);
 		}
+		
+
+		model.setRead(loanNotification.getRead());
+		model.setDismissable(loanNotification.getDismissable());
+		model.setTitle(loanNotification.getTitle());
+		model.setPriority(loanNotification.getPriority());
+		model.setRemindOn(loanNotification.getRemindOn());
+		model.setNotificationType(loanNotification.getNotificationType());
 
 		return model;
 	}
