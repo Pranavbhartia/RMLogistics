@@ -322,8 +322,9 @@ function paintConversations(conversations){
 			"class" : "conv-message"
 		}).html(data.message);
 		var replies = $('<div>').attr({
-			"class" : "reply-cont"
+			"class" : "reply-cont float-left"
 		}).html("Reply");
+		
 		if(data.replies_count != undefined && data.replies_count > 0){
 			replies.append(" ("+data.replies_count+")");
 		}
@@ -334,6 +335,50 @@ function paintConversations(conversations){
 		}
 	}
 }
+
+$(document).on('click','.reply-cont',function(){
+	appendReplyContainer(this);
+});
+
+//Function to append reply container
+function appendReplyContainer(element){
+	
+	$('.reply-cont-wrapper').remove();
+	
+	var parentWidth = $(element).parent().width();
+	var parentLeftPadding = $(element).parent().css("padding-left");
+	var replyContainerWrapper = $('<div>').attr({
+		"class" : "reply-cont-wrapper"
+	}).css({
+		"padding-left" : parentLeftPadding
+	});
+	var textBox = $('<textarea>').attr({
+		"class" : "reply-text-box",
+		"placeholder" : "Type your message here. Press enter to send."
+	}).css({
+		"width" : parentWidth - 40
+	}).on('keyup',function(e){
+		if(e.which == 13){
+			sendMessage(this);
+		}
+	});
+	
+	replyContainerWrapper.append(textBox);
+	$(element).parent().after(replyContainerWrapper);
+	textBox.focus();
+}
+
+//Function to be called when a user presses enter after typing a message
+function sendMessage(element){
+	$(element).parent().remove();
+	var message  = "";
+	if($(element).val() != undefined && $(element).val() != ""){
+		message = $(element).val().trim();
+	}
+	alert("message : "+ message);
+	//TODO : Writing logic on what happens when a user sends a message
+}
+
 
 function paintChildConversations(level,conversations){
 	
