@@ -51,9 +51,9 @@ public class MongoMessageHierarchyVO {
 		return messageIds;
 	}
 
-	public void setMessageIds(List<MessageId> messageIds) {
-		this.messageIds = messageIds;
-	}
+//	public void setMessageIds(List<MessageId> messageIds) {
+//		this.messageIds = messageIds;
+//	}
 
 	public List<MongoMessagesVO> getMessageList() {
 		return messageList;
