@@ -45,7 +45,7 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		
 		List<MongoMessagesVO> messageList = new ArrayList<MongoMessagesVO>();
 		MongoMessagesVO messagesVO = null;
-		for(int i=0;i<10;i++){
+		for(int i=0;i<5;i++){
 			 messagesVO = new MongoMessagesVO();
 			 messagesVO.setBody("Random mesage: " + i);
 			 
@@ -55,20 +55,23 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		}
 		hierarchyVO.setMessageList(messageList);
 
-		List<MessageId> messageIds = hierarchyVO.createMessageIdVO();
-		MessageId messageId = null;
-		for(int i=0;i<10;i++){
-			messageId = new MessageId();
-			messageId.setMessageId(String.valueOf(i));
-			for(int j=0;j<2;j++){
-				messageId = new MessageId();
-				messageId.setMessageId(String.valueOf(i));
-				List<MessageId> list = messageId.createMessageIdVO();
-			}
-			messageIds.add(messageId);
-		}
+		List<MessageId> ids = hierarchyVO.createMessageIdVO();
 		
-		messageId.setMessageId("Reply 1");
+		MessageId messageId = new MessageId();
+		messageId.setMessageId("4");
+		
+		MessageId messageId2 = new MessageId();
+		messageId2.setMessageId("2");
+		messageId.createMessageIdVO().add(messageId2);
+		
+		MessageId messageId3 = new MessageId();
+		messageId3.setMessageId("1");
+		
+		messageId2.createMessageIdVO().add(messageId3);
+		
+		
+		ids.add(messageId);
+		
 		
 		//hierarchyVO.addToMessageId
 		return hierarchyVO;
