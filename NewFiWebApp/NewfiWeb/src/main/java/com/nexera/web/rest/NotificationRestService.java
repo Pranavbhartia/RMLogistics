@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
@@ -59,30 +60,53 @@ public class NotificationRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO createNotification(@RequestBody NotificationVO notificationVO) {
-		
-		//TODO-created by to be fetched from session
-		
-		
-		if(notificationVO==null){
-			
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO createNotification(
+			@RequestBody String notificationVOStr) {
+
+		// TODO-created by to be fetched from session
+
+		NotificationVO notificationVO = new Gson().fromJson(notificationVOStr,
+				NotificationVO.class);
+
+		if (notificationVO != null) {
+			notificationService.createNotification(notificationVO);
 		}
-		
-		
+
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(true);
+				.wrapObjectForSuccess(notificationVO);
 
 		return responseVO;
 	}
-	@RequestMapping(value="{notificationId}",method=RequestMethod.DELETE)
-	public @ResponseBody CommonResponseVO dismissNotification(@PathVariable int notificationId) {
-		if(notificationId==0){
+
+	@RequestMapping(value = "{notificationId}", method = RequestMethod.DELETE)
+	public @ResponseBody CommonResponseVO dismissNotification(
+			@PathVariable int notificationId) {
+		if (notificationId == 0) {
 			RestUtil.wrapObjectForFailure(null, "500", "Insufficient Data");
 		}
-		int result=notificationService.dismissNotification(notificationId);
+		int result = notificationService.dismissNotification(notificationId);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+		return responseVO;
+	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	public @ResponseBody CommonResponseVO updateNotification(
+			@RequestBody String notificationVOStr) {
+
+		NotificationVO notificationVO = new Gson().fromJson(notificationVOStr,
+				NotificationVO.class);
+
+		if (notificationVO != null && notificationVO.getId()>0) {
+			notificationVO = notificationService
+					.updateNotification(notificationVO);
+		}else{
+				return RestUtil.wrapObjectForFailure(null, "500", "Insufficient Data");
+		}
+
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(result);
+				.wrapObjectForSuccess(notificationVO);
+
 		return responseVO;
 	}
 }
