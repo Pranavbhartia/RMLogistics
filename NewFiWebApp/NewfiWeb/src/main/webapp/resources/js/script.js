@@ -127,6 +127,7 @@ function changeSecondaryLeftPanel(secondary ,user) {
 		uploadNeededItemsPage();
 	} else if (secondary == 5) {
 		// loan progress
+		paintCustomerLoanProgressPage();
 	}
 }
 
