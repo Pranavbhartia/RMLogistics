@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
@@ -58,19 +59,21 @@ public class NotificationRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO createNotification(@RequestBody NotificationVO notificationVO) {
-		
-		//TODO-created by to be fetched from session
-		
-		
-		if(notificationVO==null){
-			
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO createNotification(
+			@RequestBody String notificationVOStr) {
+
+		// TODO-created by to be fetched from session
+
+		NotificationVO notificationVO = new Gson().fromJson(notificationVOStr,
+				NotificationVO.class);
+
+		if (notificationVO != null) {
+			notificationService.createNotification(notificationVO);
 		}
-		
-		
+
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(true);
+				.wrapObjectForSuccess(notificationVO);
 
 		return responseVO;
 	}

@@ -8,7 +8,8 @@ import com.nexera.common.vo.UserVO;
 
 public interface NotificationService {
 
-	List<NotificationVO> findActiveNotifications(LoanVO loanVO,
-			UserVO userVO);
+	List<NotificationVO> findActiveNotifications(LoanVO loanVO, UserVO userVO);
+
+	NotificationVO createNotification(NotificationVO notificationVO);
 
 }

@@ -41,8 +41,18 @@ public class NotificationServiceImpl implements NotificationService {
 		return notList;
 	}
 
-	private NotificationVO buildNotificationVO(
-			Notification notification) {
+	@Override
+	@Transactional
+	public NotificationVO createNotification(NotificationVO notificationVO) {
+
+		Notification notification = parseNotificationModel(notificationVO);
+		Integer id = (Integer) notificationDao.save(notification);
+		notificationVO.setId(id);
+		return notificationVO;
+
+	}
+
+	private NotificationVO buildNotificationVO(Notification notification) {
 		if (notification == null)
 			return null;
 
@@ -55,7 +65,8 @@ public class NotificationServiceImpl implements NotificationService {
 			vo.setCreatedForID(notification.getCreatedFor().getId());
 		if (notification.getLoan() != null)
 			vo.setLoanID(notification.getLoan().getId());
-		
+
+		vo.setCreatedDate(notification.getCreatedDate());
 		vo.setRead(notification.getRead());
 		vo.setDismissable(notification.getDismissable());
 		vo.setTitle(notification.getTitle());
@@ -63,7 +74,6 @@ public class NotificationServiceImpl implements NotificationService {
 		vo.setRemindOn(notification.getRemindOn());
 		vo.setNotificationType(notification.getNotificationType());
 
-		
 		return vo;
 	}
 
@@ -81,8 +91,7 @@ public class NotificationServiceImpl implements NotificationService {
 		return voList;
 	}
 
-	private Notification parseNotificationModel(
-			NotificationVO loanNotification) {
+	private Notification parseNotificationModel(NotificationVO loanNotification) {
 		if (loanNotification == null)
 			return null;
 
@@ -101,7 +110,6 @@ public class NotificationServiceImpl implements NotificationService {
 			createdFor.setId(loanNotification.getCreatedForID());
 			model.setCreatedBy(createdFor);
 		}
-		
 
 		model.setRead(loanNotification.getRead());
 		model.setDismissable(loanNotification.getDismissable());
