@@ -571,11 +571,15 @@ function appendSchedulerContainer() {
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY"
-	});
+	}).datepicker({
+		orientation : "top auto",
+		autoclose : true
+	});;
 
 	datePicker.append(datePickerBox);
 
 	var timerPicker = $('<div>').attr({
+		"id" : "sch-msg-time-picker",
 		"class" : "time-picker-cont float-left"
 	});
 
@@ -624,6 +628,10 @@ function appendSchedulerContainer() {
 
 	wrapper.append(container);
 	$('#cust-detail-wrapper').append(wrapper);
+	
+	$('#sch-msg-time-picker').datetimepicker({
+        pickDate : false
+    });
 }
 
 function appendRecentNotesContainer(notes) {
