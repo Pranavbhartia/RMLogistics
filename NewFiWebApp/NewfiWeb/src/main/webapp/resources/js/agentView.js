@@ -571,7 +571,10 @@ function appendSchedulerContainer() {
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY"
-	});
+	}).datepicker({
+		orientation : "top auto",
+		autoclose : true
+	});;
 
 	datePicker.append(datePickerBox);
 

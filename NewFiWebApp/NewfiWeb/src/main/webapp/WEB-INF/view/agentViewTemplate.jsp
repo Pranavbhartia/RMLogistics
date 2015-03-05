@@ -8,6 +8,7 @@
 		<link href="resources/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/jquery-ui.css" rel="stylesheet">
 		<link href="resources/css/font-awesome.min.css" rel="stylesheet">
+		<link href="resources/css/datepicker.css" rel="stylesheet">
 		<link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 		<link href="resources/css/dropzone.css" rel="stylesheet">
 	    <link href="resources/css/styles.css" rel="stylesheet">
