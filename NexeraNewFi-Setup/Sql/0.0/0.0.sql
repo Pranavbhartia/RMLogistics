@@ -622,7 +622,7 @@ CREATE TABLE `loannotification` (
   `created_for` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
-  `is_read` tinyint(4) DEFAULT NULL,
+  `is_read` tinyint(4) DEFAULT 0,
   `remind_on` datetime DEFAULT NULL,
   `priority` varchar(45) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
