@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.UserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -50,7 +50,7 @@ public class TemplateController extends DefaultController {
 
 			User user = getUserObject();
 
-			if (UserRolesEum.CUSTOMER.toString().equals(
+			if (UserRolesEnum.CUSTOMER.toString().equals(
 					user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req,user);
 				UserVO userVO = userProfileService.findUser(user.getId());
