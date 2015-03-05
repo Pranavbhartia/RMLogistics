@@ -106,17 +106,30 @@ function getNotificationContext(loanId,userId){
 		},
 		removeLoanNotification:function(notificationID,callback){
 			var ob=this;
+			var data={};
+			var id=notificationID.substr(4);
+			ajaxRequest("rest/notification/"+id,"DELETE","json",data,function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					var existAry=$("#"+notificationID);
+					if(existAry.length>0){
+						$("#"+notificationID).remove();
+					}
+					if(callback){
+						callback();
+					}
+				}
+				
+			});
 			//var notificationID="LNID"+notification.id;
-			var existAry=$("#"+notificationID);
-			if(existAry.length>0){
-				$("#"+notificationID).remove();
-			}
-			if(callback){
-				callback();
-			}
+			
+		},
+		scheduleAEvent:function(callback){
+			
 		}
 	};
-	notificationContext.initContext();
+	//notificationContext.initContext();
 	return notificationContext;
 }
 function getContext(key){
