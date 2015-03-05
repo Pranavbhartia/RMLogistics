@@ -9,5 +9,6 @@ import com.nexera.common.entity.User;
 public interface NotificationDao extends GenericDao {
 
 	List<Notification> findActiveNotifications(Loan loan, User user);
-
+	
+	int updateNotificationReadStatus(Notification notification);
 }

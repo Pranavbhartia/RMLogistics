@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -77,5 +78,21 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		criteria.add(reminder);
 
 		return criteria.list();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.nexera.common.dao.NotificationDao#updateNotificationReadStatus(com.nexera.common.entity.Notification)
+	 */
+	@Override
+	public int updateNotificationReadStatus(Notification notification) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Notification set read=:read where id=:id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("read", true);
+		query.setParameter("id", notification.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+		
 	}
 }
