@@ -14,7 +14,8 @@
   	
   	
 	<module>WorkflowEngine</module>
-  	
+
+	<module>NewfiMongoCore</module>
   </modules>
   
   <properties>
