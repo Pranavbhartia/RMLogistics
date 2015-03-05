@@ -3,6 +3,8 @@ package com.nexera.core.service.mongo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
@@ -11,6 +13,7 @@ import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.mongo.MessageLogMongoService;
 
+@Component
 public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 
 	@Override
