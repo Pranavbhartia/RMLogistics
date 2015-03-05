@@ -156,6 +156,7 @@ function appendMilestoneMyProfile(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+//Function to append custome miletone application status
 function appendMilestoneApplicationStatus(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-rc m-in-progress"
@@ -248,6 +249,8 @@ function appendMilestoneCreditStatus(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+
+//Function to append customer team milestone
 function appendMilestoneTeam(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-rc m-not-started"
@@ -269,15 +272,162 @@ function appendMilestoneTeam(){
 	
 	header.append(headerTxt).append(headerIcn);
 	
-	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-rc-text"
-	}).html("Add members to Team");
+	var teamTable = getMilestoneTeamMembeTable();
 	
-	wrapper.append(rightBorder).append(header).append(txtRow1);
+	var txtRow1 = $('<div>').attr({
+		"id" : "ms-add-team",
+		"class" : "milestone-rc-text ms-add-team"
+	}).html("Add members to Team")
+	.on('click',function(e){
+		e.stopImmediatePropagation();
+		if($('#ms-add-member-popup').css("display") == "block"){
+			hideMilestoneAddTeamMemberPopup();		
+		}else{
+			showMilestoneAddTeamMemberPopup();
+		}
+	});
+	
+	wrapper.append(rightBorder).append(header).append(teamTable).append(txtRow1);
 	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
+	
+	appendMilestoneAddTeamMemberPopup();
 }
 
+//Function to append pop up to add a team member in loan
+function appendMilestoneAddTeamMemberPopup(){
+	var wrapper = $('<div>').attr({
+		"id" : "ms-add-member-popup",
+		"class" : "ms-add-member-popup hide"
+	}).click(function(e){
+		e.stopPropagation();
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "ms-add-member-popup-header"
+	}).html("Add Agents");
+	
+	var usertypeCont = $('<div>').attr({
+		"class" : "ms-add-memeber-input-cont clearfix float-left"
+	});
+	
+	var usertypeLabel = $('<div>').attr({
+		"class" : "ms-add-memeber-input-label float-left"
+	}).html("User Type");
+	
+	var usertypeInput = $('<input>').attr({
+		"class" : "ms-add-memeber-input-input float-left"
+	});
+	
+	usertypeCont.append(usertypeLabel).append(usertypeInput);
+	
+	var userNameCont = $('<div>').attr({
+		"class" : "ms-add-memeber-input-cont clearfix float-left"
+	});
+	
+	var userNameLabel = $('<div>').attr({
+		"class" : "ms-add-memeber-input-label float-left"
+	}).html("User Name");
+	
+	var userNameInput = $('<input>').attr({
+		"class" : "ms-add-memeber-input-input float-left"
+	});
+	
+	userNameCont.append(userNameLabel).append(userNameInput);
+	
+	var emailCont = $('<div>').attr({
+		"class" : "ms-add-memeber-input-cont clearfix float-left"
+	});
+
+	var emailLabel = $('<div>').attr({
+		"class" : "ms-add-memeber-input-label float-left"
+	}).html("Email");
+	
+	var emailInput = $('<input>').attr({
+		"class" : "ms-add-memeber-input-input float-left"
+	});
+	emailCont.append(emailLabel).append(emailInput);
+	
+	var saveBtnWrapper = $('<div>').attr({
+		"class" : "ms-save-btn-wrapper float-left"
+	});
+	
+	var saveBtn = $('<div>').attr({
+		"class" : "ms-save-btn"
+	}).html("save");
+	
+	saveBtnWrapper.append(saveBtn);
+	
+	wrapper.append(header).append(usertypeCont).append(userNameCont).append(emailCont).append(saveBtnWrapper);
+	$('#ms-add-team').append(wrapper);
+}
+
+$(document).click(function(){
+	if($('#ms-add-member-popup').css("display") == "block"){
+		hideMilestoneAddTeamMemberPopup();
+	}
+});
+
+function showMilestoneAddTeamMemberPopup() {
+	$('#ms-add-member-popup').show();
+}
+
+function hideMilestoneAddTeamMemberPopup() {
+	$('#ms-add-member-popup').hide();
+}
+
+
+
+//Function to get milestone team member table
+function getMilestoneTeamMembeTable(){
+	
+	var tableContainer = $('<div>').attr({
+		"class" : "ms-team-member-table"
+	});
+	
+	var th = getMilestoneTeamMembeTableHeader();
+	var tr1 = getMilestoneTeamMemberRow("Elen Adarna","Title Agent");
+	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew","Loan Manager");
+	
+	return tableContainer.append(th).append(tr1).append(tr2);
+}
+
+//Function to get milestone team member table header
+function getMilestoneTeamMembeTableHeader(){
+	var row = $('<div>').attr({
+		"class" : "ms-team-member-th clearfix"
+	});
+	
+	var nameCol = $('<div>').attr({
+		"class" : "ms-team-member-th-col1 float-left"
+	}).html("Name");
+	
+	var titleCol = $('<div>').attr({
+		"class" : "ms-team-member-th-col2 float-left"
+	}).html("Title");
+	
+	return row.append(nameCol).append(titleCol);
+}
+
+//Function to get milestone team member row
+function getMilestoneTeamMemberRow(name,title){
+	var row = $('<div>').attr({
+		"class" : "ms-team-member-tr clearfix"
+	});
+	
+	var nameCol = $('<div>').attr({
+		"class" : "ms-team-member-tr-col1 float-left"
+	}).html(name);
+	
+	var titleCol = $('<div>').attr({
+		"class" : "ms-team-member-tr-col2 float-left"
+	}).html(title);
+	
+	return row.append(nameCol).append(titleCol);
+}
+
+
+//Function to append milestone initial need list
 function appendMilestoneInitialNeedList(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-lc m-in-progress"
@@ -306,6 +456,8 @@ function appendMilestoneInitialNeedList(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+
+//Function to append customer milestone disclosures 
 function appendMilestoneDisclosures(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-rc m-not-started"
@@ -336,6 +488,8 @@ function appendMilestoneDisclosures(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+
+//Function to append customer milestone application fee
 function appendMilestoneApplicationFee(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-lc m-not-started"
