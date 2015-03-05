@@ -6,6 +6,7 @@ package com.nexera.web.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -77,5 +78,14 @@ public class NotificationRestService {
 
 		return responseVO;
 	}
-
+	@RequestMapping(value="{notificationId}",method=RequestMethod.DELETE)
+	public @ResponseBody CommonResponseVO dismissNotification(@PathVariable int notificationId) {
+		if(notificationId==0){
+			RestUtil.wrapObjectForFailure(null, "500", "Insufficient Data");
+		}
+		int result=notificationService.dismissNotification(notificationId);
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(result);
+		return responseVO;
+	}
 }
