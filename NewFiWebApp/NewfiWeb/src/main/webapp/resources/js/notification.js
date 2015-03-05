@@ -8,42 +8,46 @@ function getNotificationContext(loanId,userId){
 		userNotificationList:[],
 		loanNotificationList:[],
 		getNotificationForUser:function(callback){
-			var ob=this;
-			var data={};
-			data.userID=ob.userId;
-			data.loanID=0;
-			//code to call API to get Notification List for user
-			ajaxRequest("rest/notification","GET","json",data,function(response){
-				if(response.error){
-					showToastMessage(response.error.message)
-				}else{
-					var notificationList=response.resultObject;
-					ob.userNotificationList=notificationList;
-					if(callback){
-						callback(ob);
+			if(userId!=0){
+				var ob=this;
+				var data={};
+				data.userID=ob.userId;
+				data.loanID=0;
+				//code to call API to get Notification List for user
+				ajaxRequest("rest/notification","GET","json",data,function(response){
+					if(response.error){
+						showToastMessage(response.error.message)
+					}else{
+						var notificationList=response.resultObject;
+						ob.userNotificationList=notificationList;
+						if(callback){
+							callback(ob);
+						}
 					}
-				}
-				
-			});
+					
+				});
+			}
 		},
 		getNotificationForLoan:function(callback){
-			var ob=this;
-			var data={};
-			data.userID=0;
-			data.loanID=ob.loanId;
-			//code to call API to get Notification List for loan
-			ajaxRequest("rest/notification","GET","json",data,function(response){
-				if(response.error){
-					showToastMessage(response.error.message)
-				}else{
-					var notificationList=response.resultObject;
-					ob.loanNotificationList=notificationList;
-					if(callback){
-						callback(ob);
+			if(loanId!=0){
+				var ob=this;
+				var data={};
+				data.userID=0;
+				data.loanID=ob.loanId;
+				//code to call API to get Notification List for loan
+				ajaxRequest("rest/notification","GET","json",data,function(response){
+					if(response.error){
+						showToastMessage(response.error.message)
+					}else{
+						var notificationList=response.resultObject;
+						ob.loanNotificationList=notificationList;
+						if(callback){
+							callback(ob);
+						}
 					}
-				}
-				
-			});
+					
+				});
+			}
 		},
 		populateUserNotification:function(callback){
 			var ob=this;
@@ -67,13 +71,15 @@ function getNotificationContext(loanId,userId){
 				callback();
 			}
 		},
-		initContext:function(){
+		initContext:function(draw){
 			var ob=this;
 			//Code need to be changed for notification related to user (Top Notification area)
 			//ob.getNotificationForUser(function(ob){ob.populateUserNotification()});
 
 			ob.getNotificationForLoan(function(ob){
-				ob.populateLoanNotification();
+				if(draw){
+					ob.populateLoanNotification();
+				}
 			});
 		},
 		clearUserNotificationArea:function(ob){
@@ -107,11 +113,14 @@ function getNotificationContext(loanId,userId){
 		removeLoanNotification:function(notificationID,callback){
 			var ob=this;
 			var data={};
-			var id=notificationID.substr(4);
+			var id=notificationID;
+			if((notificationID+"").indexOf("LNID")>0)
+				id=notificationID.substr(4);
 			ajaxRequest("rest/notification/"+id,"DELETE","json",data,function(response){
 				if(response.error){
 					showToastMessage(response.error.message)
 				}else{
+					ob.removeNotificationfromList(notificationID);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
 						$("#"+notificationID).remove();
@@ -125,8 +134,25 @@ function getNotificationContext(loanId,userId){
 			//var notificationID="LNID"+notification.id;
 			
 		},
+		removeNotificationfromList:function(notificationID){
+			var temp=[];
+			var ob=this;
+			for(var i=0;i<ob.loanNotificationList.length;i++){
+				if(ob.loanNotificationList[i].id!=notificationID){
+					temp.push(ob.loanNotificationList[i]);
+				}
+			}
+			ob.loanNotificationList=temp;
+			temp=[];
+			for(var i=0;i<ob.userNotificationList.length;i++){
+				if(ob.userNotificationList[i].id!=notificationID){
+					temp.push(ob.userNotificationList[i]);
+				}
+			}
+			ob.userNotificationList=temp;
+		},
 		scheduleAEvent:function(callback){
-			
+
 		}
 	};
 	//notificationContext.initContext();
