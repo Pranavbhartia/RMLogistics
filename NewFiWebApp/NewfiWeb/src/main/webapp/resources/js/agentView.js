@@ -850,6 +850,7 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {
+		paintAgentLoanProgressPage();
 	}
 
 }
