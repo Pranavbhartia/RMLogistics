@@ -15,4 +15,6 @@ public interface NotificationService {
 	int dismissNotification(int notificationId);
 
 	NotificationVO updateNotification(NotificationVO notificationVO);
+
+	NotificationVO createNotificationAsync(NotificationVO notificationVO);
 }

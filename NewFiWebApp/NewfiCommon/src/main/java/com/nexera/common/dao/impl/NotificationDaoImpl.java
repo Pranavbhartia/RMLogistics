@@ -94,6 +94,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 				criteria.add(userRest);
 		}
 
+		//Fetch only unread notifications
 		criteria.add(Restrictions.eq("read", false));
 
 		Criterion remindOnIsNull = Restrictions.isNull("remindOn");

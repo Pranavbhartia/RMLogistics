@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,19 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional
 	public NotificationVO createNotification(NotificationVO notificationVO) {
+
+		Notification notification = parseNotificationModel(notificationVO);
+		Integer id = (Integer) notificationDao.save(notification);
+		notificationVO.setId(id);
+		return notificationVO;
+
+	}
+	
+
+	@Override
+	@Transactional
+	@Async
+	public NotificationVO createNotificationAsync(NotificationVO notificationVO) {
 
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
