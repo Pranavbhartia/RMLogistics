@@ -10,5 +10,5 @@ public interface NotificationService {
 
 	List<NotificationVO> findActiveNotifications(LoanVO loanVO,
 			UserVO userVO);
-
+	int dismissNotification(int notificationId);
 }

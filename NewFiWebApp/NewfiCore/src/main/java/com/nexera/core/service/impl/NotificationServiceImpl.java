@@ -3,6 +3,7 @@ package com.nexera.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.coyote.http11.NpnHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
 
 @Component
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
@@ -125,6 +127,19 @@ public class NotificationServiceImpl implements NotificationService {
 			modelList.add(parseNotificationModel(not));
 		}
 		return modelList;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.nexera.core.service.NotificationService#dismissNotification(int)
+	 */
+	@Override
+	public int dismissNotification(int notificationId) {
+		int result=0;
+		Notification notification=new Notification();
+		notification.setId(notificationId);
+		notification.setRead(true);
+		result= notificationDao.updateNotificationReadStatus(notification);
+		return result;
 	}
 
 }
