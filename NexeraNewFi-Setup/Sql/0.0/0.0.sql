@@ -622,11 +622,13 @@ CREATE TABLE `loannotification` (
   `created_for` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
-  `read` tinyint(4) DEFAULT NULL,
+  `is_read` tinyint(4) DEFAULT NULL,
   `remind_on` datetime DEFAULT NULL,
   `priority` varchar(45) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `content` longblob,
+  `user_roles` varchar(200) DEFAULT NULL,
+  `internal_user_roles` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_notCreatedByUser_idx` (`created_by`),
   KEY `FK_notAlertLinkedToLoan_idx` (`loan`),
@@ -1142,7 +1144,7 @@ CREATE TABLE `userrole` (
 
 LOCK TABLES `userrole` WRITE;
 /*!40000 ALTER TABLE `userrole` DISABLE KEYS */;
-INSERT INTO `userrole` VALUES (1,'CUST','Customer','Customer',1,'2014-12-12 00:00:00',1),(2,'REALTOR','Realtor','Realtor',1,'2014-12-12 00:00:00',1),(3,'INTERNAL','Internal','Internal User',1,'2014-12-12 00:00:00',1),(4,'SYSTEM','System user','System User',1,'2014-12-12 00:00:00',0);
+INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',1,'2014-12-12 00:00:00',1),(2,'REALTOR','Realtor','Realtor',1,'2014-12-12 00:00:00',1),(3,'INTERNAL','Internal','Internal User',1,'2014-12-12 00:00:00',1),(4,'SYSTEM','System user','System User',1,'2014-12-12 00:00:00',0);
 /*!40000 ALTER TABLE `userrole` ENABLE KEYS */;
 UNLOCK TABLES;
 

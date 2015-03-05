@@ -19,7 +19,6 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -227,8 +226,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
-
-	public User loadInternalUser(Integer userID) {
+	@Override
+	public User findInternalUser(Integer userID) {
 		User user = (User) this.load(User.class, userID);
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());

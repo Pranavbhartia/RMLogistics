@@ -16,7 +16,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
-import com.nexera.common.enums.UserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 
 @Component
 public class NotificationDaoImpl extends GenericDaoImpl implements
@@ -31,7 +31,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notification.class);
 		if (user.getUserRole() == null)
-			user = userProfileDao.findByUserId(user.getId());
+			user = userProfileDao.findInternalUser(user.getId());
 
 		Criterion loanRest = Restrictions.eq("loan", loan);
 		Criterion userRest = Restrictions.eq("createdFor", user);
@@ -47,22 +47,50 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 				UserRole role = user.getUserRole();
 				if (role != null) {
 
-					UserRolesEum roleEnum = UserRolesEum.valueOf(role
+					UserRolesEnum roleEnum = UserRolesEnum.valueOf(role
 							.getRoleCd());
 					switch (roleEnum) {
 					case CUSTOMER:
 						criteria.add(userRest);
 						break;
-					case INTERNALUSER:
-						criteria.add(Restrictions.isNull("user"));
+
+					case REALTOR:
+						criteria.add(Restrictions.or(userRest, Restrictions
+								.and(Restrictions.isNull("createdFor"),
+										Restrictions
+												.ilike("visibleToUserRoles",
+														UserRolesEnum.REALTOR
+																.toString()))));
+						break;
+
+					case INTERNAL:
+						criteria.add(Restrictions.or(
+								userRest,
+								Restrictions.and(
+										Restrictions.isNull("createdFor"),
+										Restrictions.and(
+												Restrictions
+														.ilike("visibleToUserRoles",
+																UserRolesEnum.INTERNAL
+																		.toString()),
+												Restrictions.or(
+														Restrictions
+																.isNull("visibleToInternalUserRoles"),
+														Restrictions
+																.ilike("visibleToInternalUserRoles",
+																		user.getInternalUserDetail()
+																				.getInternaUserRoleMaster()
+																				.getRoleName()))))));
 						break;
 
 					default:
+						criteria.add(userRest);
 						break;
 					}
 
 				}
-			}
+			}else 
+				criteria.add(userRest);
 		}
 
 		criteria.add(Restrictions.eq("read", false));
