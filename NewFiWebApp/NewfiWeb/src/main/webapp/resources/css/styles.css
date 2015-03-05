@@ -1163,6 +1163,7 @@ a, a:hover, a:visited{
 .reply-cont{
 	color:#9d9d9d;
 	line-height: 25px;
+	cursor:pointer;
 }
 
 .assigned-agent-name {
@@ -1473,6 +1474,7 @@ a, a:hover, a:visited{
 }
 
 .date-picker-cont,.time-picker-cont {
+	position:relative;
 	width: 40%;
 	padding-left: 5%;
 }
@@ -1600,6 +1602,23 @@ a, a:hover, a:visited{
 	height: 20px;
 	font-family: 'opensanslight';
 	line-height: 20px;
+}
+
+.reply-cont-wrapper{
+	position: relative;
+	padding: 20px 0;
+	border-bottom: 1px #d4d4d4 solid;
+	background: #fafcfe;
+}
+
+.reply-text-box{
+	z-index: 9;
+	display: block;
+	margin: 0 auto;
+	height: 80px;
+	padding: 10px;
+	border: 1px #d4d4d4 solid;
+	border-radius: 3px;
 }
 
 
@@ -2595,10 +2614,12 @@ input.calc-input{
 
 .milestone-lc-text {
 	text-align: right;
+	cursor: pointer;
 }
 
 .milestone-rc-text {
 	text-align: left;
+	cursor: pointer;
 }
 
 .milestone-lc-header,.milestone-rc-header{
@@ -3088,4 +3109,127 @@ input.calc-input{
 
 .ms-cust-prof-txt-role,.ms-cust-prof-txt-contact{
 	font-family: 'opensanslight';
+}
+
+.ms-team-member-table{
+	line-height: 28px;
+	margin-bottom: 10px;
+}
+
+.ms-team-member-th,.ms-team-member-tr{
+	border-bottom: 1px dashed #dcdcdc;
+	width: 250px;
+}
+
+.ms-team-member-th-col1,.ms-team-member-th-col2,
+.ms-team-member-tr-col1,.ms-team-member-tr-col2{
+	width: 125px;
+	padding: 0 5px;
+}
+
+.ms-add-member-popup{
+	position: absolute;
+	right: 20px;
+	width:800px;
+	margin-top:10px;
+	padding:10px;
+	color:#777;
+	background: #fff;
+	border: 1px #b7b7b7 solid;
+	border-top: 4px #428bca solid;
+	z-index: 99;
+	cursor: auto;
+}
+
+.ms-save-btn {
+	width: 150px;
+	height: 40px;
+	margin: 0 auto;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #fff;
+	background-color: #F6914D;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.ms-add-memeber-input-cont {
+	width: 50%;
+	margin-bottom: 10px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.ms-add-memeber-input-label {
+	width: 100px;
+	text-align: right;
+	padding-right: 20px;
+}
+
+.ms-add-memeber-input-input {
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	border: 1px #dcdcdc solid;
+	border-radius: 3px;
+	background-color: #FAFAFA;
+}
+
+.ms-save-btn-wrapper{
+	width: 100%;
+	margin: 15px 0;
+}
+
+.ms-add-member-popup:after {
+	position: absolute;
+	bottom:100%;
+	right: 35%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	pointer-events: none;
+	border-color: rgba(66, 139, 202, 0);
+	border-bottom-color: #428bca;
+	border-width: 8px;
+	margin-left: -8px;
+}
+
+.ms-add-member-popup-header {
+	height: 40px;
+	margin-bottom: 10px;
+	line-height: 40px;
+	text-align: center;
+	font-family: 'opensanssemibold';
+	font-size: 14px;
+}
+
+
+/*Bootstrap date-time-picker styles*/
+
+.bootstrap-datetimepicker-widget{
+	width: 150px;
+	margin-left: 15px;
+}
+
+.table-condensed>tbody>tr>td{
+	padding: 0;
+}
+
+.bootstrap-datetimepicker-widget .timepicker-hour,
+.bootstrap-datetimepicker-widget .timepicker-minute, 
+.bootstrap-datetimepicker-widget .timepicker-second{
+	font-size: 14px;
+}
+
+.bootstrap-datetimepicker-widget .btn{
+	padding: 6px;
+	font-size: 12px;	
+}
+
+.bootstrap-datetimepicker-widget .btn-green{
+	background: rgb(246, 145, 77);
+	color: #fff;
 }

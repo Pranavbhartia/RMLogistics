@@ -125,6 +125,4 @@ public class MongoMessagesVO implements Serializable {
 		this.loanId = loanId;
 	}
 
-	
-	
-	}
+}

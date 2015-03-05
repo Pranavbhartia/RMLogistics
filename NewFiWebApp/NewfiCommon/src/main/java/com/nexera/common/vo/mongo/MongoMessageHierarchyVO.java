@@ -1,5 +1,6 @@
 package com.nexera.common.vo.mongo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MongoMessageHierarchyVO {
@@ -10,7 +11,18 @@ public class MongoMessageHierarchyVO {
 	//List of all the message objects containing the apropriate data
 	private List<MongoMessagesVO> messageList;
 
-	static class MessageId {
+	
+	public List<MessageId> createMessageIdVO(){
+		messageIds = new ArrayList<MongoMessageHierarchyVO.MessageId>();
+		
+		return messageIds;
+	}
+//	public void addToMessageId(MessageId object){
+//		this.messageIds.add(object);
+//	}
+	
+	
+	public static class MessageId {
 
 		//ID of the message to be looked up against messageList
 		private String messageId;
@@ -30,7 +42,11 @@ public class MongoMessageHierarchyVO {
 		public void setMessageIds(List<MessageId> messageIds) {
 			this.messageIds = messageIds;
 		}
-
+		public List<MessageId> createMessageIdVO(){
+			messageIds = new ArrayList<MongoMessageHierarchyVO.MessageId>();
+			
+			return messageIds;
+		}
 		
 		
 	}
