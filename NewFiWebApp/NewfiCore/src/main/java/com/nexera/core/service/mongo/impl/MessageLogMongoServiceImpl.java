@@ -48,6 +48,7 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		for(int i=0;i<10;i++){
 			 messagesVO = new MongoMessagesVO();
 			 messagesVO.setBody("Random mesage: " + i);
+			 
 			 messageList.add(messagesVO);
 			 messagesVO.setId(String.valueOf(i));
 			 
@@ -55,6 +56,19 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		hierarchyVO.setMessageList(messageList);
 
 		List<MessageId> messageIds = hierarchyVO.createMessageIdVO();
+		MessageId messageId = null;
+		for(int i=0;i<10;i++){
+			messageId = new MessageId();
+			messageId.setMessageId(String.valueOf(i));
+			for(int j=0;j<2;j++){
+				messageId = new MessageId();
+				messageId.setMessageId(String.valueOf(i));
+				List<MessageId> list = messageId.createMessageIdVO();
+			}
+			messageIds.add(messageId);
+		}
+		
+		messageId.setMessageId("Reply 1");
 		
 		//hierarchyVO.addToMessageId
 		return hierarchyVO;

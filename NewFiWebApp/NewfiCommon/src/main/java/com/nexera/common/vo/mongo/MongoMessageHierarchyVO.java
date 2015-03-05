@@ -42,7 +42,11 @@ public class MongoMessageHierarchyVO {
 		public void setMessageIds(List<MessageId> messageIds) {
 			this.messageIds = messageIds;
 		}
-
+		public List<MessageId> createMessageIdVO(){
+			messageIds = new ArrayList<MongoMessageHierarchyVO.MessageId>();
+			
+			return messageIds;
+		}
 		
 		
 	}
