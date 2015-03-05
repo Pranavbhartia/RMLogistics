@@ -9,13 +9,14 @@
   	<!-- <module>NewfiMuleFlow</module>
   	<module>NewfiWorkFlow</module> -->
   	<module>NewfiCommon</module>
+  	<module>NewfiMongoCore</module>
   	<module>NewfiCore</module>
   	<module>NewfiWeb</module>
   	
   	
 	<module>WorkflowEngine</module>
 
-	<module>NewfiMongoCore</module>
+	
   </modules>
   
   <properties>

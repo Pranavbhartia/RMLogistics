@@ -38,10 +38,21 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 
 	private MongoMessageHierarchyVO createDummyValues() {
 		MongoMessageHierarchyVO hierarchyVO = new MongoMessageHierarchyVO();
+		
+		
 		List<MongoMessagesVO> messageList = new ArrayList<MongoMessagesVO>();
+		MongoMessagesVO messagesVO = null;
+		for(int i=0;i<10;i++){
+			 messagesVO = new MongoMessagesVO();
+			 messagesVO.setBody("Random mesage: " + i);
+			 messageList.add(messagesVO);
+			 messagesVO.setId(String.valueOf(i));
+			 
+		}
 		hierarchyVO.setMessageList(messageList);
 
 		List<MessageId> messageIds = hierarchyVO.createMessageIdVO();
+		
 		//hierarchyVO.addToMessageId
 		return hierarchyVO;
 	}
