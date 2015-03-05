@@ -1,8 +1,12 @@
 package com.nexera.core.service.mongo.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
+import com.nexera.common.vo.mongo.MongoMessageHierarchyVO.MessageId;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.mongo.MessageLogMongoService;
@@ -27,7 +31,18 @@ public class MessageLogMongoServiceImpl implements MessageLogMongoService {
 		/*
 		 * This method should construct the hierarchy object based on the queryVO.
 		 */
-		return null;
+		return createDummyValues();
+		//return null;
 	}
+
+	private MongoMessageHierarchyVO createDummyValues() {
+	    MongoMessageHierarchyVO hierarchyVO = new MongoMessageHierarchyVO();
+	    List<MongoMessagesVO> messageList = new ArrayList<MongoMessagesVO>();
+		hierarchyVO.setMessageList(messageList);
+		
+		List<MessageId> messageIds = hierarchyVO.createMessageIdVO();
+		hierarchyVO.setMessageIds(messageIds);
+	    return hierarchyVO;
+    }
 
 }
