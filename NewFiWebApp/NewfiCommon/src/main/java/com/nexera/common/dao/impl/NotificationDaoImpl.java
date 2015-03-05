@@ -59,9 +59,9 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 						criteria.add(Restrictions.or(userRest, Restrictions
 								.and(Restrictions.isNull("createdFor"),
 										Restrictions.ilike(
-												"visibleToUserRoles",
+												"visibleToUserRoles","%"+
 												UserRolesEnum.REALTOR
-														.toString()))));
+														.toString()+"%"))));
 						break;
 
 					case INTERNAL:
@@ -71,17 +71,17 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 										Restrictions.isNull("createdFor"),
 										Restrictions.and(
 												Restrictions.ilike(
-														"visibleToUserRoles",
+														"visibleToUserRoles","%"+
 														UserRolesEnum.INTERNAL
-																.toString()),
+																.toString()+"%"),
 												Restrictions.or(
 														Restrictions
 																.isNull("visibleToInternalUserRoles"),
 														Restrictions
-																.ilike("visibleToInternalUserRoles",
+																.ilike("visibleToInternalUserRoles","%"+
 																		user.getInternalUserDetail()
 																				.getInternaUserRoleMaster()
-																				.getRoleName()))))));
+																				.getRoleName()+"%"))))));
 						break;
 
 					default:
@@ -99,7 +99,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 		Criterion remindOnIsNull = Restrictions.isNull("remindOn");
 		Criterion remindOnIsNotNull = Restrictions.isNotNull("remindOn");
-		Criterion remindDateReached = Restrictions.ge("remindOn", new Date());
+		Criterion remindDateReached = Restrictions.le("remindOn", new Date());
 
 		Criterion reminder = Restrictions.or(remindOnIsNull,
 				Restrictions.and(remindOnIsNotNull, remindDateReached));

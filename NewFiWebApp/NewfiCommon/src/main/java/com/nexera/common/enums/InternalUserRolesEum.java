@@ -16,7 +16,7 @@ public enum InternalUserRolesEum {
 	        return (otherName == null)? false:name.equals(otherName);
 	    }
 
-	    public String toString(){
+	    public String getName(){
 	       return name;
 	    }
 
