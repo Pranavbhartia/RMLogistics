@@ -274,7 +274,11 @@ function paintAgentNeedsListPage(callback){
 		if(callback){
 			callback();
 		}
-		paintUploadNeededItemsPage();
+		
+		currentUserAndLoanOnj.userId = newfiObject.user.id ;
+		currentUserAndLoanOnj.activeLoanId = selectedUserDetail.loanID;
+		
+		getRequiredDocuments();
 	})
 	contxt=loanNeedContext;
 	
