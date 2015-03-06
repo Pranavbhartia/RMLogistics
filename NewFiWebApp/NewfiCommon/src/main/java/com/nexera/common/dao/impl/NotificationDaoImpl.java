@@ -169,6 +169,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 			Criteria criteria = session.createCriteria(Notification.class);
 			criteria.add(Restrictions.eq("createdFor", user));
 			criteria.add(Restrictions.eq("notificationType", type));
+			criteria.add(Restrictions.or(Restrictions.eq("read", false),Restrictions.isNull("read")));
 			List<Notification> notifications=(List<Notification>)criteria.list();
 			return notifications;	
 		}catch (HibernateException hibernateException) {
