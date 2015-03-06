@@ -1,37 +1,36 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.util.Date;
-public class LoanNotificationVO implements Serializable {
+public class NotificationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private byte[] content;
-	private Date createdDate;
+	private String content;
+	private Long createdDate;
 	private Boolean dismissable;
 	private String notificationType;
 	private String priority;
 	private Boolean read;
-	private Date remindOn;
+	private Long remindOn;
 	private String title;
-	private UserVO createdBy;
-	private LoanVO loan;
-	private UserVO createdFor;
+	private Integer createdByID;
+	private Integer loanID;
+	private Integer createdForID;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public byte[] getContent() {
+	public String getContent() {
 		return content;
 	}
-	public void setContent(byte[] content) {
+	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getCreatedDate() {
+	public Long getCreatedDate() {
 		return createdDate;
 	}
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(Long createdDate) {
 		this.createdDate = createdDate;
 	}
 	public Boolean getDismissable() {
@@ -58,10 +57,10 @@ public class LoanNotificationVO implements Serializable {
 	public void setRead(Boolean read) {
 		this.read = read;
 	}
-	public Date getRemindOn() {
+	public Long getRemindOn() {
 		return remindOn;
 	}
-	public void setRemindOn(Date remindOn) {
+	public void setRemindOn(Long remindOn) {
 		this.remindOn = remindOn;
 	}
 	public String getTitle() {
@@ -70,23 +69,23 @@ public class LoanNotificationVO implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public UserVO getCreatedBy() {
-		return createdBy;
+	public Integer getCreatedByID() {
+		return createdByID;
 	}
-	public void setCreatedBy(UserVO createdBy) {
-		this.createdBy = createdBy;
+	public void setCreatedByID(Integer createdByID) {
+		this.createdByID = createdByID;
 	}
-	public LoanVO getLoan() {
-		return loan;
+	public Integer getLoanID() {
+		return loanID;
 	}
-	public void setLoan(LoanVO loan) {
-		this.loan = loan;
+	public void setLoanID(Integer loanID) {
+		this.loanID = loanID;
 	}
-	public UserVO getCreatedFor() {
-		return createdFor;
+	public Integer getCreatedForID() {
+		return createdForID;
 	}
-	public void setCreatedFor(UserVO createdFor) {
-		this.createdFor = createdFor;
+	public void setCreatedForID(Integer createdForID) {
+		this.createdForID = createdForID;
 	}
 
 }

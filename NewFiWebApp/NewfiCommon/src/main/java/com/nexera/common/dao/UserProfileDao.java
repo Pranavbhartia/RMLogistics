@@ -31,7 +31,9 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer saveInternalUser(User user);
 
-	public User loadInternalUser(Integer userID);
+	public User findInternalUser(Integer userID);
+	
+	public String findUserRole(Integer userID) throws NoRecordsFetchedException,DatabaseException;
 
 
 }

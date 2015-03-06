@@ -284,7 +284,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return userVO;
 	}
 
-	private User parseUserModel(UserVO userVO) {
+	@Override
+	public User parseUserModel(UserVO userVO) {
 
 		if (userVO == null)
 			return null;
@@ -314,7 +315,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 				.parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
-			user = (User) userProfileDao.loadInternalUser(userID);
+			user = (User) userProfileDao.findInternalUser(userID);
 
 		return this.buildUserVO(user);
 	}
@@ -376,7 +377,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public UserVO loadInternalUser(Integer userID) {
 		// TODO Auto-generated method stub
 		return this.buildUserVO(userProfileDao
-				.loadInternalUser(userID));
+				.findInternalUser(userID));
 	}
 
 }

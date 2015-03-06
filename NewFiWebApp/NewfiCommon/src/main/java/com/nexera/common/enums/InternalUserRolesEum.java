@@ -1,15 +1,14 @@
 package com.nexera.common.enums;
 
-public enum UserRolesEum {
+public enum InternalUserRolesEum {
 	
-	    CUSTOMER ("CUST"),
-	    REALTOR ("REALTOR"),
-	    INTERNALUSER ("INTERNAL"),
-	    SYSTEMUSER ("SYSTEM");
+	    LM ("Loan Manager"),
+	    SM ("Sales Manager"),
+	    PC ("Processor");
 
 	    private final String name;       
 
-	    private UserRolesEum(String s) {
+	    private InternalUserRolesEum(String s) {
 	        name = s;
 	    }
 

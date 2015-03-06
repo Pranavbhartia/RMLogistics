@@ -335,7 +335,9 @@ function appendCustomers(elementId, customers) {
 			"style" : "background:url(" + customer.prof_image + ")"
 				
 		});
-
+		//code will execute if user is logged in
+		var loanNotificationCntxt=getNotificationContext(customer.loanID,0);
+		addContext(customer.loanID+"-notification",loanNotificationCntxt)
 		var cusName = $('<div>').attr({
 			"class" : "cus-name float-left",
 			"loanid" : customer.loanID,
@@ -399,12 +401,15 @@ function appendCustomers(elementId, customers) {
 							event.data.customer);
 				});
 
-		if (parseInt(customer.alert_count) > 0) {
-			var alerts = $('<div>').attr({
-				"class" : "alerts-count"
-			}).html(customer.alert_count);
-			col7.append(alerts);
-		}
+		loanNotificationCntxt.getNotificationForLoan(function(ob){
+			if (parseInt(ob.loanNotificationList.length) > 0) {
+				var alerts = $('<div>').attr({
+					"class" : "alerts-count"
+				}).html(ob.loanNotificationList.length);
+				col7.append(alerts);
+			}
+		});
+		
 
 		row.append(col1).append(col2).append(col3).append(col4).append(col5)
 				.append(col6).append(col7);
@@ -475,20 +480,21 @@ function appendCustomerDetailContianer(element, customer) {
 		"class" : "cust-detail-wrapper clearfix"
 	});
 	$(element).after(wrapper);
-	appendRecentAlertContainer(customer.alerts);
+	var contxt=getContext(customer.loanID+"-notification");
+	appendRecentAlertContainer(contxt.loanNotificationList,contxt);
 	appendSchedulerContainer();
 	appendRecentNotesContainer(customer.notes);
 	appendTakeNoteContainer();
 }
 
-function appendRecentAlertContainer(alerts) {
+function appendRecentAlertContainer(alerts,contxt) {
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-lw float-left"
 	});
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
 	});
-	var header = $('<div>').attr({
+	var header = $('<div id="alertHeader">').attr({
 		"class" : "cust-detail-header"
 	}).html("recent alerts");
 
@@ -506,7 +512,7 @@ function appendRecentAlertContainer(alerts) {
 
 	if (alerts != undefined) {
 		for (var i = 0; i < alerts.length; i++) {
-			var alertData = alerts[i];
+			var alertData = alerts[i].content;
 			var alertContainer = $('<div>').attr({
 				"class" : "alert-conatiner clearfix"
 			});
@@ -522,11 +528,22 @@ function appendRecentAlertContainer(alerts) {
 
 			var dismissBtn = $('<div>').attr({
 				"class" : "alert-btn float-left"
-			}).html("Dismiss");
+			}).html("Dismiss").bind("click",{notificationid:alerts[i].id,contxt:contxt,container:alertContainer},function(e){
+				var notificationid=e.data.notificationid;
+				var contxt=e.data.contxt;
+				var container=e.data.container;
+				contxt.removeLoanNotification(notificationid,function(){
+					container.remove();
+				});
+				
+			});
 
 			var snoozeBtn = $('<div>').attr({
 				"class" : "alert-btn float-left"
-			}).html("Snooze");
+			}).html("Snooze").bind("click",{notificationid:alerts[i].id,contxt:contxt,container:alertContainer},function(e){
+				var notificationid=e.data.notificationid;
+				alert("Snooze-"+notificationid);
+			});
 
 			alertBtnRow.append(dismissBtn).append(snoozeBtn);
 
@@ -571,11 +588,15 @@ function appendSchedulerContainer() {
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY"
+	}).datepicker({
+		orientation : "top auto",
+		autoclose : true
 	});
 
 	datePicker.append(datePickerBox);
 
 	var timerPicker = $('<div>').attr({
+		"id" : "sch-msg-time-picker",
 		"class" : "time-picker-cont float-left"
 	});
 
@@ -624,6 +645,10 @@ function appendSchedulerContainer() {
 
 	wrapper.append(container);
 	$('#cust-detail-wrapper').append(wrapper);
+
+	$('#sch-msg-time-picker').datetimepicker({
+		pickDate : false
+	});
 }
 
 function appendRecentNotesContainer(notes) {
@@ -825,6 +850,7 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {
+		paintAgentLoanProgressPage();
 	}
 
 }

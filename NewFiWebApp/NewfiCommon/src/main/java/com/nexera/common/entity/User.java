@@ -49,7 +49,7 @@ public class User implements Serializable, UserDetails {
 	private RealtorDetail realtorDetail;
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
-	private List<LoanNotification> loanNotifications;
+	private List<Notification> loanNotifications;
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
 
@@ -191,11 +191,11 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@OneToMany(mappedBy = "createdFor", fetch = FetchType.LAZY)
-	public List<LoanNotification> getLoanNotifications() {
+	public List<Notification> getLoanNotifications() {
 		return loanNotifications;
 	}
 
-	public void setLoanNotifications(List<LoanNotification> loanNotifications) {
+	public void setLoanNotifications(List<Notification> loanNotifications) {
 		this.loanNotifications = loanNotifications;
 	}
 
