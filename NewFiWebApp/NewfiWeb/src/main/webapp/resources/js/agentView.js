@@ -185,6 +185,11 @@ function paintAgentDashboard() {
 	$('#right-panel').append(agentDashboardMainContainer);
 	getDashboardRightPanel();
 	adjustAgentDashboardOnResize();
+	var contxt=getNotificationContext(0,newfiObject.user.id);
+	contxt.getLoanNotificationByType(function(ob){
+		ob.populateLoanNotification();
+	})
+	addContext("notification",contxt);
 }
 
 function paintAgentDashboardCallBack(data) {
@@ -352,7 +357,7 @@ function appendCustomers(elementId, customers) {
 			var loanID = $(this).attr('loanid');
 			paintMyLoansView();
 			changeAgentSecondaryLeftPanel("lp-step2");
-			getLoanDetails(loanID);
+			//getLoanDetails(loanID);
 		}).html(customer.name);
 
 		
@@ -865,6 +870,8 @@ function paintAgentLoanPage(data) {
 	appendCustomerLoanDetails(loanDetails);
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper(loanDetails);
+	var contxt=getContext(loanDetails.id+"-notification");
+	contxt.populateLoanNotification();
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
