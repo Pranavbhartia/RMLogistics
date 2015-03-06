@@ -661,6 +661,7 @@ function appendSchedulerContainer(contxt) {
 			contxt.scheduleAEvent(data,function(){
 				contxt.updateWrapper();
 				contxt.updateLoanListNotificationCount();
+				$("#sch-msg-message").val("");
 			});
 		}
 
