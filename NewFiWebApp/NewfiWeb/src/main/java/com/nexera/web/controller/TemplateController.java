@@ -323,4 +323,11 @@ public class TemplateController extends DefaultController {
 	// mav.setViewName("customerProfile");
 	// return mav;
 	// }
+	
+	@RequestMapping(value = "customerEngagement.do")
+	 public ModelAndView showCustomerEngagementPage(){
+	 ModelAndView mav = new ModelAndView();
+	 mav.setViewName("customerEngagementTemplate");
+	 return mav;
+	}
 }

@@ -1,0 +1,26 @@
+.ce-ques-option {
+	width: 200px;
+	margin: 0 30px;
+	height: 47px;
+	line-height: 47px;
+	text-align: center;
+	background-color: #F47521;
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.ce-ques-options-container {
+	margin: 20px 0;
+}
+
+.ce-ques-wrapper {
+	width: 520px;
+	margin: 0 auto;
+}
+
+.ce-ques-text {
+	font-size: 14px;
+	line-height: 25px;
+	text-align: center;
+}
