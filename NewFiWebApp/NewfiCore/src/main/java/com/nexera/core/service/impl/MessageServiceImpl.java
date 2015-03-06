@@ -1,7 +1,5 @@
 package com.nexera.core.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +10,6 @@ import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
 import com.nexera.common.vo.MessageVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
-import com.nexera.common.vo.mongo.MongoMessageHierarchyVO.MessageId;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
 import com.nexera.core.service.mongo.MongoMessageService;
@@ -45,11 +42,10 @@ public class MessageServiceImpl implements MessageService {
 
 		MessageHierarchyVO messageHierarchyVO = new MessageHierarchyVO();
 
-		List<MessageId> mongomessageIds = mongoHierarchyVO.getMessageIds();
-
-		 
-
+		
 		return null;
 	}
+
+	
 
 }
