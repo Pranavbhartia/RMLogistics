@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -15,10 +16,12 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.DatabaseException;
 
 @Component
 public class NotificationDaoImpl extends GenericDaoImpl implements
@@ -153,5 +156,27 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 			return notificationModel;
 		else
 			return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.nexera.common.dao.NotificationDao#fincNotificationTypeListForUser(com.nexera.common.entity.User)
+	 */
+	@Override
+	public List<Notification> findNotificationTypeListForUser(User user,String type) {
+		// TODO Auto-generated method stub
+		try{
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Notification.class);
+			criteria.add(Restrictions.eq("createdFor", user));
+			criteria.add(Restrictions.eq("notificationType", type));
+			List<Notification> notifications=(List<Notification>)criteria.list();
+			return notifications;	
+		}catch (HibernateException hibernateException) {
+//			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+//					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
 	}
 }

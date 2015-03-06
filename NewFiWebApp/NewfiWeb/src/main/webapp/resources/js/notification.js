@@ -71,7 +71,7 @@ function getNotificationContext(loanId,userId){
 				ob.paintUserNotification(notification);
 			}
 			if(callback){
-				callback();
+				callback(ob);
 			}
 		},
 		populateLoanNotification:function(callback){
@@ -82,7 +82,7 @@ function getNotificationContext(loanId,userId){
 				ob.paintLoanNotification(notification);
 			}
 			if(callback){
-				callback();
+				callback(ob);
 			}
 		},
 		initContext:function(draw){
@@ -106,7 +106,7 @@ function getNotificationContext(loanId,userId){
 			var ob=this;
 			//code to append user notification
 			if(callback){
-				callback();
+				callback(ob);
 			}
 		},
 		paintLoanNotification:function(notification,callback){
@@ -114,14 +114,14 @@ function getNotificationContext(loanId,userId){
 			var closebtn=(notification.dismissable==true?'<div class="lp-alert-close-btn float-right" onclick="removeNotification(\'LNID'+notification.id+'\')"></div>':'');
 			$("#"+ob.loanContainerId).append('<div class="lp-alert-item-container clearfix" id="LNID'+notification.id+'"><div class="lp-alert-item float-left">'+notification.content+'</div>'+closebtn+'</div>');
 			if(callback){
-				callback();
+				callback(ob);
 			}
 		},
 		removeUserNotification:function(notification,callback){
 			var ob=this;
 			//code to remove notification
 			if(callback){
-				callback();
+				callback(ob);
 			}
 		},
 		removeLoanNotification:function(notificationID,callback){
@@ -140,7 +140,7 @@ function getNotificationContext(loanId,userId){
 						$("#"+notificationID).remove();
 					}
 					if(callback){
-						callback();
+						callback(ob);
 					}
 				}
 				
@@ -168,7 +168,7 @@ function getNotificationContext(loanId,userId){
 						$("#"+notificationID).remove();
 					}
 					if(callback){
-						callback();
+						callback(ob);
 					}
 				}
 				
@@ -196,17 +196,37 @@ function getNotificationContext(loanId,userId){
 		scheduleAEvent:function(data,callback){
 			var ob=this;
 			data.loanID=ob.loanId;
+			data.notificationType="NOTIFICATION";
 			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
 				if(response.error){
 					showToastMessage(response.error.message)
 				}else{
 					data.dismissable=true;
-					data.id=response.resultObject;
+					data.id=response.resultObject.id;
 					if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 
 					if(callback){
-						callback();
+						callback(ob);
+					}
+				}
+				
+			});
+		},
+		getLoanNotificationByType:function(callback){
+			var ob=this;
+			var data={}
+			data.userID=ob.userId;
+			data.type="NOTIFICATION";
+			ajaxRequest("rest/notification/bytype","GET","json",data,function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					var notificationList=response.resultObject;
+					ob.loanNotificationList=notificationList;
+					
+					if(callback){
+						callback(ob);
 					}
 				}
 				
