@@ -6,17 +6,19 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.UserRoleNameImageVO;
 
 public interface UserProfileDao extends GenericDao {
-	
-	public User findByUserName(String userName) throws NoRecordsFetchedException,DatabaseException;
+
+	public User findByUserName(String userName)
+	        throws NoRecordsFetchedException, DatabaseException;
 
 	public User findByUserId(Integer userId);
-	
+
 	public Integer updateUser(User user);
 
 	public Integer updateCustomerDetails(CustomerDetail CustomerDetail);
-	
+
 	public Integer updateUser(String s3ImagePath, Integer userid);
 
 	public Integer competeUserProfile(User user);
@@ -32,8 +34,15 @@ public interface UserProfileDao extends GenericDao {
 	public Integer saveInternalUser(User user);
 
 	public User findInternalUser(Integer userID);
-	
-	public String findUserRole(Integer userID) throws NoRecordsFetchedException,DatabaseException;
 
+	public String findUserRole(Integer userID)
+	        throws NoRecordsFetchedException, DatabaseException;
+
+	public UserRoleNameImageVO findUserDetails(int intValue);
+
+	String findUserRoleForMongo(Integer userID)
+	        throws NoRecordsFetchedException, DatabaseException;
+
+	public List<UserRoleNameImageVO> finUserDetailsList(List<Long> userList);
 
 }

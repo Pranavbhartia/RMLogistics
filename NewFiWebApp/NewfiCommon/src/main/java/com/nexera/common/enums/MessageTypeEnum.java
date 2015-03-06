@@ -1,18 +1,15 @@
 package com.nexera.common.enums;
 
-public enum UserRolesEnum {
+public enum MessageTypeEnum {
 	
-	    CUSTOMER ("CUSTOMER"),
-	    REALTOR ("REALTOR"),
-	    INTERNAL ("INTERNAL"),
-	    SYSTEM ("SYSTEM"),
-	    SM ("SM"),
-	    PC ("PC"),
-	    LOANMANAGER ("LM");
+	    NOTE ("NOTE"),
+	    EMAIL ("EMAIL"),
+	    ALERT ("ALERT");
+	    
 
 	    private final String name;       
 
-	    private UserRolesEnum(String s) {
+	    private MessageTypeEnum(String s) {
 	        name = s;
 	    }
 

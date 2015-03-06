@@ -205,9 +205,16 @@
 		</dependency>
 		
 		<!-- Dependency of NewfiCore -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.nexera.newfi</groupId>
 			<artifactId>NewfiCommon</artifactId>
+			<version>1.0</version>
+		</dependency> -->
+		
+		<!-- Dependency of NewfiCore -->
+		<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>NewfiMongoCore</artifactId>
 			<version>1.0</version>
 		</dependency>
 		

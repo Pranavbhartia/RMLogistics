@@ -3,6 +3,8 @@ package com.nexera.common.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nexera.common.vo.MessageVO.MessageUserVO;
+
 public class MessageVO {
 
 	public MessageVO() {
@@ -11,9 +13,19 @@ public class MessageVO {
 		this.otherUsers = new ArrayList<MessageVO.MessageUserVO>();
 	}
 
+	public MessageVO(boolean forTest) {
+		this.createdUser = new MessageUserVO();
+		this.links = new ArrayList<MessageVO.FileVO>();
+		this.otherUsers = new ArrayList<MessageVO.MessageUserVO>();
+		MessageUserVO obj = new MessageUserVO();
+		obj.setImgUrl("test");
+		this.otherUsers.add(obj);
+	}
+
 	// Mongo ID
 	private String id;
 
+	// Loan Id for the message
 	private String loanId;
 
 	// Mongo parent ID
@@ -30,15 +42,22 @@ public class MessageVO {
 
 	// Information about the links this message has access to
 	private List<FileVO> links;
+	
+	private String createdDate;
 
 	// Self reference to the message structure to take care of recursive nesting
-	List<MessageVO> messageVOs;
+	MessageVO messageVO;
 
 	public class MessageUserVO {
+
+		public MessageUserVO() {
+
+		}
 
 		private Integer userID;
 		private String userName;
 		private String imgUrl;
+		private String roleName;
 
 		public Integer getUserID() {
 			return userID;
@@ -62,6 +81,14 @@ public class MessageVO {
 
 		public void setImgUrl(String imgUrl) {
 			this.imgUrl = imgUrl;
+		}
+
+		public String getRoleName() {
+			return roleName;
+		}
+
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
 		}
 
 	}
@@ -140,17 +167,28 @@ public class MessageVO {
 	public List<FileVO> getLinks() {
 		return links;
 	}
+	public String getCreatedDate() {
+	    return createdDate;
+    }
+	public void setCreatedDate(String createdDate) {
+	    this.createdDate = createdDate;
+    }
 
 	public void setLinks(List<FileVO> links) {
 		this.links = links;
 	}
 
-	public List<MessageVO> getMessageVOs() {
-		return messageVOs;
+	public MessageVO getMessageVO() {
+		return messageVO;
 	}
 
-	public void setMessageVOs(List<MessageVO> messageVOs) {
-		this.messageVOs = messageVOs;
+	public void setMessageVO(MessageVO messageVO) {
+		this.messageVO = messageVO;
 	}
+
+	public MessageUserVO createNewUserVO() {
+	    // TODO Auto-generated method stub
+	    return new MessageUserVO();
+    }
 
 }

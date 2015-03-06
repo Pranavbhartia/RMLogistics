@@ -1,5 +1,6 @@
 package com.nexera.common.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -23,6 +24,7 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.UserRoleNameImageVO;
 
 @Component
 @Transactional
@@ -243,6 +245,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String findUserRole(Integer userID)
 	        throws NoRecordsFetchedException, DatabaseException {
 		User user = findByUserId(userID);
@@ -263,5 +266,67 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		}
 
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public String findUserRoleForMongo(Integer userID)
+	        throws NoRecordsFetchedException, DatabaseException {
+		User user = findByUserId(userID);
+		UserRole role = user.getUserRole();
+		String roleName = role.getRoleCd();
+		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(roleName);
+		switch (rolesEnum) {
+		case CUSTOMER:
+			return UserRolesEnum.CUSTOMER.toString();
+		case REALTOR:
+			return UserRolesEnum.REALTOR.toString();
+		case INTERNAL:
+			return user.getInternalUserDetail().getInternaUserRoleMaster()
+			        .getRoleName();
+
+		default:
+			return null;
+
+		}
+
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public UserRoleNameImageVO findUserDetails(int userID) {
+		// TODO Auto-generated method stub
+		UserRoleNameImageVO userVO = new UserRoleNameImageVO();
+		User user = findByUserId(userID);
+		userVO.setUserName(user.getFirstName() + " " + user.getLastName());
+		userVO.setImgPath(user.getPhotoImageUrl());
+		userVO.setUserID(userID);
+		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(user.getUserRole()
+		        .getRoleCd());
+		switch (rolesEnum) {
+		case CUSTOMER:
+			userVO.setUserRole(UserRolesEnum.CUSTOMER.toString());
+			break;
+		case REALTOR:
+			userVO.setUserRole(UserRolesEnum.REALTOR.toString());
+			break;
+		default:
+			userVO.setUserRole(user.getInternalUserDetail()
+			        .getInternaUserRoleMaster().getRoleDescription());
+			break;
+
+		}
+		return userVO;
+	}
+
+	@Override
+	public List<UserRoleNameImageVO> finUserDetailsList(List<Long> roleList) {
+		// TODO Auto-generated method stub
+
+		List<UserRoleNameImageVO> imageVOs = new ArrayList<UserRoleNameImageVO>();
+		for (Long userId : roleList) {
+			imageVOs.add(findUserDetails(userId.intValue()));
+		}
+		return imageVOs;
 	}
 }

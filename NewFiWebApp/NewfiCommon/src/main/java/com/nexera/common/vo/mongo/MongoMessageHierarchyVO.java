@@ -38,8 +38,8 @@ public class MongoMessageHierarchyVO {
 	/**
 	 * @param id
 	 */
-	public void getMongoMessagesVO(String id) {
-		this.idMap.get(id);
+	public MongoMessagesVO getMongoMessagesVO(String id) {
+		return this.idMap.get(id);
 	}
 
 	@Override

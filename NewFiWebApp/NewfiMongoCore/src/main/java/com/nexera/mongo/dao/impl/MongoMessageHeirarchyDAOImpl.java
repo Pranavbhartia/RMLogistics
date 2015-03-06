@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -23,6 +25,7 @@ import com.nexera.mongo.util.MongoUtil;
  * @author Samarth Bhargav
  * 
  */
+
 public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 
 	private DBCollection collection;
@@ -95,19 +98,21 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	}
 
 	public List<MongoMessageHeirarchy> findBy(MongoQueryVO mongoQueryVO) {
-		DBCursor cursor = this.collection.find(constructQuery(mongoQueryVO))
-				.sort(new BasicDBObject("date", -1));
-		List<MongoMessageHeirarchy> list = new ArrayList<MongoMessageHeirarchy>();
-		try {
-			while (cursor.hasNext()) {
-				list.add(toMessageHeirarchy(cursor.next()));
-			}
-			return list;
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
+        int limit = mongoQueryVO.getNumberOfRecords();
+        int skip = mongoQueryVO.getPageNumber() * limit;
+        DBCursor cursor = this.collection.find(constructQuery(mongoQueryVO))
+                .sort(new BasicDBObject("date", -1)).skip(skip).limit(limit);
+        List<MongoMessageHeirarchy> list = new ArrayList<MongoMessageHeirarchy>();
+        try {
+            while (cursor.hasNext()) {
+                list.add(toMessageHeirarchy(cursor.next()));
+            }
+            return list;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
 }
