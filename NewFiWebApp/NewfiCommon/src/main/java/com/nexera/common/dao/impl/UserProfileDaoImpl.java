@@ -19,22 +19,24 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
 @Component
 @Transactional
 public class UserProfileDaoImpl extends GenericDaoImpl implements
-		UserProfileDao {
+        UserProfileDao {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(UserProfileDaoImpl.class);
+	        .getLogger(UserProfileDaoImpl.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	public User findByUserName(String userName)
-			throws NoRecordsFetchedException, DatabaseException {
+	        throws NoRecordsFetchedException, DatabaseException {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(User.class);
@@ -42,17 +44,17 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
 				throw new NoRecordsFetchedException(
-						DisplayMessageConstants.INVALID_USERNAME);
+				        DisplayMessageConstants.INVALID_USERNAME);
 			}
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        hibernateException);
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
 
 	}
@@ -93,7 +95,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("secEmailId", customerDetail.getSecEmailId());
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
-				customerDetail.getProfileCompletionStatus());
+		        customerDetail.getProfileCompletionStatus());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -117,12 +119,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		Session session = sessionFactory.getCurrentSession();
 		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
-				+ user.getFirstName() + "%'";
+		        + user.getFirstName() + "%'";
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
 		if (user.getInternalUserDetail() != null
-				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
 			searchQuery += " and (internalUserDetail IS NULL OR (internalUserDetail.internaUserRoleMaster=:internaUserRoleMaster))";
 		}
 		int MAX_RESULTS = 50;
@@ -133,38 +135,37 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 
 		if (user.getInternalUserDetail() != null
-				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
 			query.setEntity("internaUserRoleMaster", user
-					.getInternalUserDetail().getInternaUserRoleMaster());
+			        .getInternalUserDetail().getInternaUserRoleMaster());
 		}
 
 		query.setMaxResults(MAX_RESULTS);
-		List<User> userList=query.list();
-		
-		for(User userObj:userList){
+		List<User> userList = query.list();
+
+		for (User userObj : userList) {
 			Hibernate.initialize(user.getInternalUserDetail());
 			if (userObj.getInternalUserDetail() != null)
 				Hibernate.initialize(userObj.getInternalUserDetail()
-						.getInternaUserRoleMaster());
+				        .getInternaUserRoleMaster());
 		}
-		
+
 		return userList;
 	}
 
 	@Override
 	public Integer saveInternalUser(User user) {
-		if(null!=user.getInternalUserDetail()){
+		if (null != user.getInternalUserDetail()) {
 			this.save(user.getInternalUserDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-		
+
 		return (Integer) this.save(user);
 	}
 
 	@Override
-
 	public Integer competeUserProfile(User user) {
-		
+
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
 		Query query = (Query) session.createQuery(hql);
@@ -190,7 +191,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("secEmailId", customerDetail.getSecEmailId());
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
-				customerDetail.getProfileCompletionStatus());
+		        customerDetail.getProfileCompletionStatus());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -234,10 +235,33 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			System.out.println("Test  : loadInternalUser");
 			if (user.getInternalUserDetail() != null)
 				Hibernate.initialize(user.getInternalUserDetail()
-						.getInternaUserRoleMaster());
+				        .getInternaUserRoleMaster());
 
 		}
 		return user;
-		
+
+	}
+
+	@Override
+	public String findUserRole(Integer userID)
+	        throws NoRecordsFetchedException, DatabaseException {
+		User user = findByUserId(userID);
+		UserRole role = user.getUserRole();
+		String roleName = role.getRoleCd();
+		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(roleName);
+		switch (rolesEnum) {
+		case CUSTOMER:
+			return UserRolesEnum.CUSTOMER.toString();
+		case REALTOR:
+			return UserRolesEnum.REALTOR.toString();
+		case INTERNAL:
+			return user.getInternalUserDetail().getInternaUserRoleMaster()
+			        .getRoleDescription();
+
+		default:
+			return null;
+
+		}
+
 	}
 }

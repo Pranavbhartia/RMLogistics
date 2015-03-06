@@ -5,6 +5,7 @@ import java.util.List;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 
 public interface LoanDao extends GenericDao {
@@ -14,8 +15,6 @@ public interface LoanDao extends GenericDao {
 
 	Loan getLoanWithDetails(Integer loanID);
 	
-
-
 	public boolean addToLoanTeam(Loan loan,User user,User addedBy);
 
 	public boolean removeFromLoanTeam(Loan loan,User user);
@@ -26,13 +25,14 @@ public interface LoanDao extends GenericDao {
 	
     public LoanAppForm getLoanAppForm(Integer loanId);
 
-
-	public Loan getActiveLoanOfUser(User parseUserModel);
+    public Loan getActiveLoanOfUser(User parseUserModel);
 
 	List<Loan> retrieveLoanForDashboard(User parseUserModel);
 	
 	List<LoanTeam> getLoanTeamList( Loan loan );
 
     List<Loan> getLoansForUser( Integer userId );
+
+	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
 }

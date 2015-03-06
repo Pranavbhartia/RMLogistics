@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.CommonResponseVO;
-import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
-import com.nexera.common.vo.mongo.MongoQueryVO;
-import com.nexera.core.service.mongo.MessageLogMongoService;
+import com.nexera.common.vo.MessageHierarchyVO;
+import com.nexera.common.vo.MessageQueryVO;
+import com.nexera.core.service.MessageService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -25,17 +25,17 @@ public class CommunicationLogRestService {
 	        .getLogger(CommunicationLogRestService.class);
 
 	@Autowired
-	MessageLogMongoService messageLogMongoService;
+	MessageService messageService;
 
 	@RequestMapping(value = "/{userID}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCommunicationLog(
-	        @PathVariable Integer userID, MongoQueryVO mongoQueryVO) {
+	        @PathVariable Integer userID, MessageQueryVO queryVO) {
 
 		CommonResponseVO response = null;
 
-		MongoMessageHierarchyVO hierarchyVO;
+		MessageHierarchyVO hierarchyVO;
 		try {
-			hierarchyVO = messageLogMongoService.getMessages(mongoQueryVO);
+			hierarchyVO = messageService.getMessages(queryVO);
 			response = RestUtil.wrapObjectForSuccess(hierarchyVO);
 		} catch (FatalException | NonFatalException e) {
 			// TODO Auto-generated catch block
