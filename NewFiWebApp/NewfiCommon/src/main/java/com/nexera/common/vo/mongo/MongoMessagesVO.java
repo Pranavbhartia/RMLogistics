@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.vo.MessageVO.FileVO;
+
 public class MongoMessagesVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -17,7 +19,8 @@ public class MongoMessagesVO implements Serializable {
 
 	// Contains the list of string references to some URLs which is associated
 	// with this message, can be null
-	private List<String> relatedLinks;
+	// Information about the links this message has access to
+	private FileVO[] links;
 
 	// This will help us retrieve the message based on a messageType. For ex: If
 	// I want to know all the messages of a particular type. I will pass this in
@@ -45,6 +48,32 @@ public class MongoMessagesVO implements Serializable {
 	// Loan ID associated with this message
 	private Long loanId;
 
+	// Parent ID for this message
+	private String parentId;
+
+	public class FileVO {
+
+		private String fileName;
+		private String url;
+
+		public String getFileName() {
+			return fileName;
+		}
+
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -61,12 +90,12 @@ public class MongoMessagesVO implements Serializable {
 		this.body = body;
 	}
 
-	public List<String> getRelatedLinks() {
-		return relatedLinks;
+	public FileVO[] getLinks() {
+		return links;
 	}
 
-	public void setRelatedLinks(List<String> relatedLinks) {
-		this.relatedLinks = relatedLinks;
+	public void setLinks(FileVO[] links) {
+		this.links = links;
 	}
 
 	public String getMessageType() {
@@ -123,6 +152,14 @@ public class MongoMessagesVO implements Serializable {
 
 	public void setLoanId(Long loanId) {
 		this.loanId = loanId;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 
 }
