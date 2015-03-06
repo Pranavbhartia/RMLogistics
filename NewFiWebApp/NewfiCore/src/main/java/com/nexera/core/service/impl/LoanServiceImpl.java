@@ -3,6 +3,8 @@ package com.nexera.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -12,8 +14,8 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanDetailVO;
@@ -21,16 +23,19 @@ import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
-import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 
 @Component
+
 public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanDao loanDao;
 
+	private static final Logger LOG = LoggerFactory.getLogger(LoanServiceImpl.class);
+	
+	
 	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
@@ -394,6 +399,13 @@ public class LoanServiceImpl implements LoanService {
 
 		return loansProgressStatusVO;
 
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId) {
+		LOG.info("in method fetchUploadedFromLoanNeedId for loanNeedId :  "+loanNeedId);
+		return loanDao.fetchUploadedFromLoanNeedId(loanNeedId);
 	}
 	
 	

@@ -13,6 +13,11 @@ public interface UploadedFilesListDao {
 	public void updateIsAssignedToTrue(Integer fileId);
 
 	public void updateFileInLoanNeedList(Integer needId, Integer fileId);
-	
+
+	public String findFileNameFromId(Integer fileId);
+
+	public void deactivateFileUsingFileId(Integer fileId);
+
+	public UploadedFilesList fetchUsingFileId(Integer fileId);
 	
 }

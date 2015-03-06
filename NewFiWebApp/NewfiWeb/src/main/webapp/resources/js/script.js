@@ -795,85 +795,9 @@ function getClosingCostHeadingCont(text) {
 	return heading;
 }
 
-function getRequiredDocuments() {
-	var userId = newfiObject.user.id;
-	var activeLoanId = newfiObject.user.defaultLoanId;
-	ajaxRequest("rest/fileupload/needlist/get/" + userId + "/" + activeLoanId,
-			"GET", "json", "", getRequiredDocumentData);
-}
-/*
- * Functions for upload items module
- */
 
-function uploadNeededItemsPage(response) {
-	getRequiredDocuments();
-}
 
-function getRequiredDocumentData(neededItemList) {
-	neededItemListObject = neededItemList;
-	$('#center-panel-cont').empty();
-	paintUploadNeededItemsPage(neededItemListObject);
-}
 
-function paintUploadNeededItemsPage(neededItemListObject) {
-	var header = $('<div>').attr({
-		"class" : "upload-item-header uppercase"
-	}).html("Upload needed items");
-	var container = $('<div>').attr({
-		"class" : "upload-item-container"
-	});
-	var fileDragDropCon = getFileDragAndDropContainer();
-	var showSave = false;
-	var documentContainer = getDocumentContainer();
-	var submitBtn = $("<div>").attr({
-		"class" : "submit-btn"
-	}).click(saveUserDocumentAssignments).html("Save");
-
-	var neededItemsWrapper = getNeedItemsWrapper(neededItemListObject);
-	// var uploadedItemsWrapper = getUploadedItemsWrapper();
-
-	container.append(fileDragDropCon).append(documentContainer).append(
-			submitBtn).append(neededItemsWrapper);
-
-	$('#center-panel-cont').append(header).append(container);
-
-	// using dropzone js for file upload
-	var myDropZone = new Dropzone("#drop-zone", {
-		url : "documentUpload.do",
-		clickable : "#file-upload-icn",
-		params : {
-			userID : newfiObject.user.id,
-			loanId : newfiObject.user.defaultLoanId
-		},
-		drop : function() {
-
-		},
-		complete : function(response) {
-
-			$('#file-upload-icn').removeClass('file-upload-hover-icn');
-		},
-		dragenter : function() {
-			$('#file-upload-icn').addClass('file-upload-hover-icn');
-		},
-		dragleave : function() {
-			$('#file-upload-icn').removeClass('file-upload-hover-icn');
-		},
-		dragover : function() {
-			$('#file-upload-icn').addClass('file-upload-hover-icn');
-		},
-		queuecomplete : function() {
-			getRequiredDocuments();
-		}
-	});
-	var uploadedItems = neededItemListObject.resultObject.listUploadedFilesListVO;
-	showFileLink(uploadedItems);
-
-	if ($('.document-cont-col').length == undefined
-			|| $('.document-cont-col').length == 0) {
-		$('.submit-btn').addClass('hide');
-	}
-
-}
 
 function getFileDragAndDropContainer() {
 	var container = $('<div>').attr({
@@ -939,79 +863,8 @@ function getDocumentContainer() {
 	return container.append(documentContainer);
 }
 
-function saveUserDocumentAssignments() {
-	console.info("user assignemnt");
-	var fileAssignMentVO = new Array();
-
-	$(".assign").each(function(index) {
-		var fileAssignMent = new Object();
-		fileAssignMent.fileId = $(this).attr('fileid');
-		fileAssignMent.needListId = $(this).val();
-		fileAssignMentVO.push(fileAssignMent);
-	});
-	console.info(fileAssignMentVO);
-
-	$.ajax({
-		url : "rest/fileupload/assignment",
-		type : "POST",
-		data : JSON.stringify(fileAssignMentVO),
-		dataType : "json",
-		contentType : "application/json; charset=utf-8",
-		success : function(data) {
-			saveAssignmentonFile(data);
-		},
-		error : function(error) {
-		}
-	});
-	// ajaxRequest("" , "POST" , "application/json" ,
-	// JSON.stringify(fileAssignMentVO) , saveAssignmentonFile);
-}
-
 function saveAssignmentonFile() {
 	getRequiredDocuments();
-}
-
-function getDocumentUploadColumn(listUploadedFiles) {
-	var column = $('<div>').attr({
-		"class" : "document-cont-col float-left"
-	});
-	var docImg = $('<div>').attr({
-		"class" : "doc-img showAnchor"
-	});
-	var docDesc = $('<div>').attr({
-		"class" : "doc-desc showAnchor"
-	}).html(listUploadedFiles.fileName);
-	docImg.click(function(){
-		window.open(listUploadedFiles.s3path, '_blank');
-	});
-	var docAssign = $("<select>").attr({
-		"class" : "assign",
-		"fileId" : listUploadedFiles.id
-	});
-
-	var assignOption = $("<option>").attr({
-		"value" : "Assign"
-	}).html("Assign");
-	var splitOption = $("<option>").attr({
-		"value" : "split"
-	}).html("Split");
-	docAssign.append(assignOption).append(splitOption);
-
-	var neededItemListObj = neededItemListObject.resultObject.listLoanNeedsListVO;
-
-	for (i in neededItemListObj) {
-		var needsListMasterobj = neededItemListObj[i];
-		var option = $("<option>").attr({
-			"value" : needsListMasterobj.id
-		}).html(needsListMasterobj.needsListMaster.label);
-
-		if (needsListMasterobj.id == listUploadedFiles.needType) {
-			option.attr('selected', 'selected');
-		}
-		docAssign.append(option);
-	}
-
-	return column.append(docImg).append(docDesc).append(docAssign);
 }
 
 function getNeedItemsWrapper(neededItemListObject) {
@@ -1082,17 +935,7 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 
 }
 
-function showFileLink(uploadedItems) {
 
-	$.each(uploadedItems, function(index, value) {
-		var needId = value.needType;
-		$('#needDoc' + needId).removeClass('hide');
-		$('#needDoc' + needId).addClass('doc-link-icn');
-		$('#needDoc' + needId).click(function() {
-			window.open(value.s3path, '_blank');
-		});
-	});
-}
 function createdNeededList(categoryName, elements) {
 
 	var incomeDocCont = $('<div>').attr({
@@ -1206,3 +1049,20 @@ function mapCategories(category) {
 		return "other";
 	}
 }
+
+function showDialogPopup(title , content , okButtonEvent){
+	 $( "#dialog" ).empty();
+	 $( "#dialog" ).html(content);
+	 $( "#dialog" ).attr("title" ,title );
+	 $( "#dialog" ).dialog({ 
+		   buttons: [{ 
+			      text: "Ok", 
+			      click: function() { 
+			    	 okButtonEvent();
+			         $( this ).dialog( "close" ); 
+			      }
+			   }]
+	});
+}
+
+

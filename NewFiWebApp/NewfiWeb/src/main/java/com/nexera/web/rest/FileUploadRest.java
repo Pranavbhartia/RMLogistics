@@ -1,7 +1,11 @@
 package com.nexera.web.rest;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
@@ -36,6 +42,8 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.core.utility.NexeraUtility;
+import com.nexera.web.rest.util.RestUtil;
 
 
 @RestController
@@ -69,24 +77,91 @@ public class FileUploadRest {
 		return new Gson().toJson(needsListService.getLoanNeedsList(1));
 	}
 	
-	@RequestMapping(value="/assignment" , method = RequestMethod.POST)
-	public @ResponseBody String setAssignmentToFiles(@RequestBody  String fileAssignMent){
+	@RequestMapping(value="/split/{fileId}/{loadId}" , method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO splitPDFDocument( @PathVariable ("fileId") Integer  fileId ,  @PathVariable ("loadId") Integer  loanId){
+		LOG.info("File upload PDF split  service called");
+		LOG.info("File upload   id "+fileId);
+		CommonResponseVO commonResponseVO;
+		UploadedFilesList uploadedFilesList = uploadedFilesListService.fetchUsingFileId(fileId);
+		
+		try {
+			List<File> pdfPages =  splitPdfDocumentIntoMultipleDocs(uploadedFilesList.getS3path());
+				for (File file : pdfPages) {
+					Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct(file, loanId);
+					LOG.info("New file saved with id "+fileSavedId);
+				}
+			
+			uploadedFilesListService.deactivateFileUsingFileId(fileId);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+		} catch (Exception e) {
+			LOG.error("Exception in file split with fileId "+fileId);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
+		}
+		
+		return commonResponseVO;
+	}
+	
+	@RequestMapping(value="/assignment/{loanId}" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO setAssignmentToFiles(@RequestBody  String fileAssignMent , @PathVariable(value = "loanId") Integer loanId ){
 		
 		ObjectMapper mapper=new ObjectMapper();
 		TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
 		List<FileAssignVO> val = new ArrayList<FileAssignVO>();
+		CommonResponseVO commonResponseVO=null;
 		try {
 			val = mapper.readValue(fileAssignMent, typeRef);
-			for (FileAssignVO fileAssignVO2 : val) {
-				LOG.info("The file is : "+fileAssignVO2.getFileId()+"  nedd id "+fileAssignVO2.getNeedListId());
-				uploadedFilesListService.updateIsAssignedToTrue( fileAssignVO2.getFileId());
-				uploadedFilesListService.updateFileInLoanNeedList(fileAssignVO2.getNeedListId(), fileAssignVO2.getFileId());
-			}
+			Map<Integer ,List<Integer>> mapFileMappingToNeed = getmapFromFileAssignObj(val);
+			
+		    for (Integer key : mapFileMappingToNeed.keySet()){
+		    		UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId(key);
+		    		LOG.info("fetchUploadedFromLoanNeedId returned : "+filesList);
+		    		List<Integer> fileIds = mapFileMappingToNeed.get(key);
+		    		
+		    		if(filesList != null){
+		    			fileIds.add(filesList.getId());
+		    		}
+		    		
+		    		if(fileIds.size()>1){
+		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId);
+		    				LOG.info("new file pdf path :: "+newFileRowId);
+		    				uploadedFilesListService.updateFileInLoanNeedList(key, newFileRowId);
+		    				uploadedFilesListService.updateIsAssignedToTrue(newFileRowId);
+		    		}else{
+		    				uploadedFilesListService.updateFileInLoanNeedList(key, fileIds.get(0));
+		    				uploadedFilesListService.updateIsAssignedToTrue( fileIds.get(0));
+		    		}
+		    		
+		    }
+				
+			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+			
 		} catch (Exception e) {
-			LOG.info("exception in converting  : " + e.getMessage());
+			LOG.error("exception in converting  : "+e.getMessage() ,e);
+			e.printStackTrace();
+			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
 		} 
-	   return "true";
+	   return commonResponseVO;
 	}
+	
+	
+	
+	
+	public Map<Integer , List<Integer>> getmapFromFileAssignObj(List<FileAssignVO> fileAssignVO){
+		Map<Integer , List<Integer>> mapFileAssign = new HashMap<Integer , List<Integer>>();
+		for (FileAssignVO fileAssign : fileAssignVO) {
+			List<Integer> tempFileList = mapFileAssign.get(fileAssign.getNeedListId());
+			if(tempFileList == null){
+				tempFileList = new ArrayList<Integer>();
+				tempFileList.add(fileAssign.getFileId());
+				mapFileAssign.put(fileAssign.getNeedListId() ,tempFileList );
+			}else{
+				tempFileList.add(fileAssign.getFileId());
+			}
+		}
+		return mapFileAssign;
+	}
+	
+	
 	
 	@RequestMapping(value="/uploadedFile/get/{userId}/{loadId}" , method = RequestMethod.GET)
 	public @ResponseBody String getUserUploadedFileList(@PathVariable ("userId") Integer userId , @PathVariable ("loadId") Integer loadId){
@@ -126,7 +201,6 @@ public class FileUploadRest {
 				Integer needType = needsListService.getLoanNeedListIdByFileId(uploadedFilesListVO.getId());
 				LOG.info("The need type is : "+needType);
 				uploadedFilesListVO.setNeedType(needType);
-				
 			}
 			
 			uploadFileScreenVO.setListLoanNeedsListVO(loanNeedsVO);
@@ -143,6 +217,13 @@ public class FileUploadRest {
 		
 		Gson gson = new Gson();
 		return gson.toJson(commonResponseVO);
+		
+	}
+	
+	private List<File> splitPdfDocumentIntoMultipleDocs(String s3path) throws Exception{
+	
+		File file = new File(s3FileUploadServiceImpl.downloadFile(s3path, NexeraUtility.tomcatDirectoryPath()+File.separator+(new File(s3path)).getName()));
+		return NexeraUtility.splitPDFPages(file);
 		
 	}
 	

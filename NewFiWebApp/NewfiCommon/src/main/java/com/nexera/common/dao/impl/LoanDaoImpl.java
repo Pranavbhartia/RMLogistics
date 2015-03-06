@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -16,7 +15,9 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 
@@ -239,5 +240,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
         List<Loan> loanList = criteria.list();
         return loanList;
     }
+
+	@Override
+	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId) {
+		Session session = sessionFactory.getCurrentSession();
+		LoanNeedsList loannNeedList = (LoanNeedsList) session.load(LoanNeedsList.class, loanNeedId);
+		return loannNeedList.getUploadFileId();
+	}
 
 }
