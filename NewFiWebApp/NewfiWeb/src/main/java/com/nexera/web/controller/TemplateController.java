@@ -72,6 +72,23 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
+	@RequestMapping(value = "calculater.do")
+	public ModelAndView showcalculaterPage(HttpServletRequest req, Model model) {
+
+		ModelAndView mav = new ModelAndView();
+
+		try {
+
+			mav.setViewName("calculator");
+
+		} catch (Exception e) {
+			// TODO: Handle exception scenario
+
+			e.printStackTrace();
+		}
+		return mav;
+	}
+	
 	/*
 	 * @RequestMapping(value = "/uploadCommonImageToS3.do", method =
 	 * RequestMethod.POST) public @ResponseBody String uploadCommonImageToS3(

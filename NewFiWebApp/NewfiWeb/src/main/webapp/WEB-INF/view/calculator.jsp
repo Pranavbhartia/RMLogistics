@@ -29,14 +29,15 @@
 									Type</div>
 								<div class="loan-type-sel-rc float-left">
 									<form>
-										<input type="radio" checked /> Purchase <input type="radio" />Refinance
+										<input type="radio" name ="LoanType" checked value="Purchase"/> Purchase 
+										<input type="radio" name ="LoanType" value="Refinance" />Refinance
 									</form>
 								</div>
 							</div>
 							<div class="loan-type-sel-row clearfix">
 								<div class="loan-type-sel-label float-left">Home Buying</div>
 								<div class="loan-type-sel-rc float-left">
-									<select class="calc-select">
+									<select class="calc-select" id ="HomeBuying">
 										<option selected="selected">Select One</option>
 										<option>Signed a purchase Agreement</option>
 										<option>Get PreApproved</option>
@@ -306,7 +307,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="calc-btn">Submit</div>
+						<div class="calc-btn" id ="SubmitID">Submit</div>
 					</div>
 
 				</div>
@@ -320,6 +321,25 @@
 				$(this).parent().hide();
 				$(this).parent().next().show();
 			});
+			
+			/* $(document).on('click','#SubmitID',function(){
+				
+				var radioValue = $("input[name='LoanType']:checked").val();
+				alert("selected value is : "+radioValue);
+			}); */
+			
+			 $("#SubmitID").click(function(){      
+			       
+				   var teaseRate = new Object(); 
+				   var  LoanType =  ($("input[name='LoanType']:checked").val());
+			       var  HomeBuying =  $( "#HomeBuying option:selected" ).text();
+			       
+			       teaseRate.LoanType = LoanType;
+			       teaseRate.HomeBuying = HomeBuying;
+			       alert(JSON.stringify(teaseRate));
+			    });
+			
+			
 		});
 	</script>
 
