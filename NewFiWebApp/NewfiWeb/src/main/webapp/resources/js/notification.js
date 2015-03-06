@@ -9,6 +9,7 @@ function getNotificationContext(loanId,userId){
 		userNotificationList:[],
 		loanNotificationList:[],
 		existingWrapper:{},
+		headerText:"",
 		getNotificationForUser:function(callback){
 			if(userId!=0){
 				var ob=this;
@@ -43,11 +44,11 @@ function getNotificationContext(loanId,userId){
 					}else{
 						var notificationList=response.resultObject;
 						ob.loanNotificationList=notificationList;
+						ob.headerText="important alerts";
 						if(callback){
 							callback(ob);
 						}
 					}
-					
 				});
 			}
 		},
@@ -81,6 +82,7 @@ function getNotificationContext(loanId,userId){
 				var notification=ob.loanNotificationList[i];
 				ob.paintLoanNotification(notification);
 			}
+			$("#alertHeder").html(ob.headerText);
 			if(callback){
 				callback(ob);
 			}
@@ -128,7 +130,7 @@ function getNotificationContext(loanId,userId){
 			var ob=this;
 			var data={};
 			var id=notificationID;
-			if((notificationID+"").indexOf("LNID")>0)
+			if((notificationID+"").indexOf("LNID")>=0)
 				id=notificationID.substr(4);
 			ajaxRequest("rest/notification/"+id,"DELETE","json",data,function(response){
 				if(response.error){
@@ -224,12 +226,12 @@ function getNotificationContext(loanId,userId){
 				}else{
 					var notificationList=response.resultObject;
 					ob.loanNotificationList=notificationList;
+					ob.headerText="upcoming events";
 					
 					if(callback){
 						callback(ob);
 					}
 				}
-				
 			});
 		},
 		updateWrapper:function(callback){
