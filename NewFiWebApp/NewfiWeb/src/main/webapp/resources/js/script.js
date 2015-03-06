@@ -1,5 +1,8 @@
 //place for global variables
 var neededItemListObject;
+var currentUserAndLoanOnj = new Object();
+
+
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
@@ -1046,9 +1049,7 @@ function getDocumentContainer() {
 	return container.append(documentContainer);
 }
 
-function saveAssignmentonFile() {
-	getRequiredDocuments();
-}
+
 
 function getNeedItemsWrapper(neededItemListObject) {
 	var wrapper = $('<div>').attr({

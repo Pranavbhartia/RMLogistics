@@ -3,25 +3,32 @@
  */
 var SPLIT_DOC = "Split Document";
 
+
+
 function uploadNeededItemsPage() {
+	var userId = newfiObject.user.id;
+	var activeLoanId = newfiObject.user.defaultLoanId;
+	currentUserAndLoanOnj.userId = userId;
+	currentUserAndLoanOnj.activeLoanId = activeLoanId;
 	getRequiredDocuments();
 }
 
-function getRequiredDocuments() {
-	var userId = newfiObject.user.id;
-	var activeLoanId = newfiObject.user.defaultLoanId;
-	ajaxRequest("rest/fileupload/needlist/get/" + userId + "/" + activeLoanId,
+function getRequiredDocuments( ) {
+	
+	ajaxRequest("rest/fileupload/needlist/get/" + currentUserAndLoanOnj.userId  + "/" + currentUserAndLoanOnj.activeLoanId,
 			"GET", "json", "", getRequiredDocumentData);
 }
 
 function getRequiredDocumentData(neededItemList) {
 	neededItemListObject = neededItemList;
-	$('#center-panel-cont').empty();
+	$('#uploadedNeedContainer').remove();
 	paintUploadNeededItemsPage(neededItemListObject);
 }
 
 
-
+function saveAssignmentonFile() {
+	getRequiredDocuments();
+}
 
 function checkForSplitOption(select){
 	
@@ -41,7 +48,7 @@ function checkForSplitOption(select){
 
 function splitPDFDocument(dataObject){
 	console.info(dataObject.fileName +" and "+dataObject.fileId);
-	ajaxRequest("rest/fileupload/split/"+dataObject.fileId+"/"+  newfiObject.user.defaultLoanId,
+	ajaxRequest("rest/fileupload/split/"+dataObject.fileId+"/"+  currentUserAndLoanOnj.activeLoanId,
 			"GET", "json", "", afterPDFSplit);
 }
 
@@ -131,7 +138,7 @@ function saveUserDocumentAssignments() {
 	console.info(fileAssignMentVO);
 
 	$.ajax({
-		url : "rest/fileupload/assignment/"+newfiObject.user.defaultLoanId,
+		url : "rest/fileupload/assignment/"+currentUserAndLoanOnj.activeLoanId,
 		type : "POST",
 		data : JSON.stringify(fileAssignMentVO),
 		dataType : "json",
@@ -151,6 +158,9 @@ function saveUserDocumentAssignments() {
 
 
 function paintUploadNeededItemsPage(neededItemListObject) {
+	var uploadedNeedContainer = $("<div>").attr({
+				"id" :"uploadedNeedContainer"
+	});
 	var header = $('<div>').attr({
 		"class" : "upload-item-header uppercase"
 	}).html("Upload needed items");
@@ -170,15 +180,15 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	container.append(fileDragDropCon).append(documentContainer).append(
 			submitBtn).append(neededItemsWrapper);
 
-	$('#center-panel-cont').append(header).append(container);
-
+	uploadedNeedContainer.append(header).append(container);
+	$('#center-panel-cont').append(uploadedNeedContainer);
 	// using dropzone js for file upload
 	var myDropZone = new Dropzone("#drop-zone", {
 		url : "documentUpload.do",
 		clickable : "#file-upload-icn",
 		params : {
 			userID : newfiObject.user.id,
-			loanId : newfiObject.user.defaultLoanId
+			loanId : currentUserAndLoanOnj.activeLoanId 
 		},
 		drop : function() {
 
