@@ -14,7 +14,10 @@ import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
+import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
+import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
+import com.nexera.core.service.mongo.MongoMessageService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -26,6 +29,11 @@ public class CommunicationLogRestService {
 
 	@Autowired
 	MessageService messageService;
+	
+	@Autowired
+	MongoMessageService mongoMessageService;
+	
+	
 
 	@RequestMapping(value = "/{userID}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCommunicationLog(
@@ -48,4 +56,25 @@ public class CommunicationLogRestService {
 		return response;
 	}
 
+	
+	@RequestMapping(value = "/test/{userID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getCommunicationLogForTest(
+	        @PathVariable Integer userID, MongoQueryVO queryVO) {
+
+		CommonResponseVO response = null;
+
+		MongoMessageHierarchyVO hierarchyVO;
+		try {
+			hierarchyVO = mongoMessageService.getMessages(queryVO);
+			response = RestUtil.wrapObjectForSuccess(hierarchyVO);
+		} catch (FatalException | NonFatalException e) {
+			// TODO Auto-generated catch block
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+			LOG.error("Error in retrieving communication log", e);
+
+		}
+
+		return response;
+	}
 }
