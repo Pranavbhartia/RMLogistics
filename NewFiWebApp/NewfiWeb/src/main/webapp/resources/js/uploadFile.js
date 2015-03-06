@@ -48,7 +48,7 @@ function checkForSplitOption(select){
 
 function splitPDFDocument(dataObject){
 	console.info(dataObject.fileName +" and "+dataObject.fileId);
-	ajaxRequest("rest/fileupload/split/"+dataObject.fileId+"/"+  currentUserAndLoanOnj.activeLoanId,
+	ajaxRequest("rest/fileupload/split/"+dataObject.fileId+"/"+  currentUserAndLoanOnj.activeLoanId+"/"+currentUserAndLoanOnj.userId,
 			"GET", "json", "", afterPDFSplit);
 }
 
@@ -138,7 +138,7 @@ function saveUserDocumentAssignments() {
 	console.info(fileAssignMentVO);
 
 	$.ajax({
-		url : "rest/fileupload/assignment/"+currentUserAndLoanOnj.activeLoanId,
+		url : "rest/fileupload/assignment/"+currentUserAndLoanOnj.activeLoanId+"/"+currentUserAndLoanOnj.userId,
 		type : "POST",
 		data : JSON.stringify(fileAssignMentVO),
 		dataType : "json",
@@ -187,7 +187,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		url : "documentUpload.do",
 		clickable : "#file-upload-icn",
 		params : {
-			userID : newfiObject.user.id,
+			userID : currentUserAndLoanOnj.userId,
 			loanId : currentUserAndLoanOnj.activeLoanId 
 		},
 		drop : function() {
