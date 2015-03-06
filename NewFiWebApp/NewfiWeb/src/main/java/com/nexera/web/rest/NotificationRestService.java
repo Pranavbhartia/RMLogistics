@@ -109,4 +109,24 @@ public class NotificationRestService {
 
 		return responseVO;
 	}
+	@RequestMapping(value="/bytype",method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getLoanByID(
+			@RequestParam(value = "userID", required = false) Integer userID,
+			@RequestParam(value = "type", required = false) String type) {
+
+		UserVO userVO = null;
+		LoanVO loanVO = null;
+
+		if (userID != null) {
+			userVO = new UserVO();
+			userVO.setId(userID);
+		}
+
+		List<NotificationVO> notifications = notificationService.findNotificationTypeListForUser(userID,type);
+
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(notifications);
+
+		return responseVO;
+	}
 }

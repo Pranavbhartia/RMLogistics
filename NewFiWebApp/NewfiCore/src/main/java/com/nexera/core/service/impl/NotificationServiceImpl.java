@@ -247,4 +247,17 @@ public class NotificationServiceImpl implements NotificationService {
 				.updateNotification(parseNotificationModel(notificationVO)));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.nexera.core.service.NotificationService#findNotificationTypeListForUser(com.nexera.common.vo.UserVO)
+	 */
+	@Override
+	public List<NotificationVO> findNotificationTypeListForUser(int userId,String type) {
+		// TODO Auto-generated method stub
+		User user=new User();
+		user.setId(userId);
+		List<NotificationVO> notList = buildNotificationVOList(notificationDao
+				.findNotificationTypeListForUser(user,type));
+		return notList;
+	}
+
 }

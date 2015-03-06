@@ -23,4 +23,6 @@ public interface NotificationService {
 	NotificationVO createRoleBasedNotification(NotificationVO notificationVO,
 			List<UserRolesEnum> userRoles,
 			List<InternalUserRolesEum> internalUserRoles);
+	
+	List<NotificationVO> findNotificationTypeListForUser(int userId,String type);
 }

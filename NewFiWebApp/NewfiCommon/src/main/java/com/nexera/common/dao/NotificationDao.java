@@ -13,4 +13,6 @@ public interface NotificationDao extends GenericDao {
 	int updateNotificationReadStatus(Notification notification);
 
 	Notification updateNotification(Notification notificationModel);
+	
+	List<Notification> findNotificationTypeListForUser(User user,String type);
 }
