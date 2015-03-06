@@ -52,33 +52,15 @@ public class FileUploadController {
 		String s3Path = null;
 		 try{
 			File serverFile = new File( NexeraUtility.uploadFileToLocal(file));
-			s3Path = s3FileUploadServiceImpl.uploadToS3(serverFile, "User" , "complete" );
-			//NexeraUtility.convertPDFToJPEG(serverFile);
-			
-			User user = new User();
-			user.setId(userId);
-			Loan loan  = new Loan();
-			loan.setId(loanId);
-			
-			UploadedFilesList uploadedFilesList = new UploadedFilesList();
-			uploadedFilesList.setIsActivate(true);
-			uploadedFilesList.setIsAssigned(false);
-			uploadedFilesList.setS3path(s3Path);
-			uploadedFilesList.setUploadedBy( user);
-			uploadedFilesList.setUploadedDate(new Date());
-			uploadedFilesList.setLoan(loan);
-			uploadedFilesList.setFileName(file.getOriginalFilename());
-			
-			Integer fileId = uploadedFilesListService.saveUploadedFile(uploadedFilesList);
-		
-			LOG.info("Added File document row : "+fileId);
+			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId);
+			LOG.info("Added File document row : "+savedRowId);
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());
 		 }
 		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
 		 
 		 LOG.info("The s3 path is : "+s3Path);
-		return s3Path;
+		 return s3Path;
 	}
 	
 	private User getUserObject() {

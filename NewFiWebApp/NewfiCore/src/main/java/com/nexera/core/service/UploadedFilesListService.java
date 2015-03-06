@@ -1,6 +1,10 @@
 package com.nexera.core.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import org.apache.pdfbox.exceptions.COSVisitorException;
 
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.UploadedFilesListVO;
@@ -14,4 +18,19 @@ public interface UploadedFilesListService {
 	public void updateIsAssignedToTrue(Integer fileId);
 
 	public void updateFileInLoanNeedList(Integer needId, Integer fileId);
+
+	public String findFileNameFromId(Integer fileId);
+	
+	public void deactivateFileUsingFileId(Integer fileId);
+
+	public List<String> downloadFileFromS3Service(List<Integer> fileIds);
+	
+	public Integer mergeAndUploadFiles(List<Integer> fileIds , Integer loanId) throws  IOException, COSVisitorException;
+
+	public Integer addUploadedFilelistObejct(File file, Integer loanId);
+
+	void updateIsAssignedToTrue(List<Integer> fileIds);
+
+	public UploadedFilesList fetchUsingFileId(Integer fileId);
+	
 }

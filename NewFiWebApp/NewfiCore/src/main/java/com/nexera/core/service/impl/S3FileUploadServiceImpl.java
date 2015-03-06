@@ -200,12 +200,11 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	}
 
-	public String downloadFile(String fileUrl, String fileName)
+	public String downloadFile(String fileUrl, String filePath)
 			throws Exception {
-		ClasspathPropertiesFileCredentialsProvider credentialsProvider = new ClasspathPropertiesFileCredentialsProvider();
-		String accessKey = credentialsProvider.getCredentials()
-				.getAWSAccessKeyId();
-		AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+		
+		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
 		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
 		String key = fileUrl.replace(s3BaseUrl + uniqueBucketName, "");
 		key = key.substring(1, key.length());
@@ -217,7 +216,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 			inputStream = new BufferedInputStream(s3Object.getObjectContent());
 
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(
-					fileName));
+					filePath));
 			byte buf[] = new byte[1024];
 			int len;
 			while ((len = inputStream.read(buf)) > 0)
@@ -225,7 +224,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 			out.flush();
 			out.close();
 
-			return fileName;
+			return filePath;
 		}/* catch (IOException e) {
 
 			throw new Exception(e);
