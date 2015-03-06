@@ -1277,4 +1277,66 @@ function showDialogPopup(title , content , okButtonEvent){
 	});
 }
 
+/*
+ * Function for notification popup
+ */
 
+
+
+$(document).on('click','#alert-notification-btn',function(e){
+	e.stopImmediatePropagation();
+	if($(this).has('#alert-popup-wrapper').length == 1){
+		if($('#alert-popup-wrapper').css("display") == "block"){
+			hideAlertNotificationPopup();
+		}else{
+			showAlertNotificationPopup();
+		}
+	}else{
+		appendAlertNotificationPopup();		
+	}
+});
+
+
+function showAlertNotificationPopup(){
+	$('#alert-popup-wrapper').show();
+}
+
+function hideAlertNotificationPopup(){
+	$('#alert-popup-wrapper').hide();
+}
+
+
+function appendAlertNotificationPopup(){
+	var alertWrapper = $('<div>').attr({
+		"id" : "alert-popup-wrapper",
+		"class" : "alert-popup-wrapper"
+	});
+	
+	
+	var row1 = getAlertNotificationRow("Salaried-W2-forms",false);
+	var row2 = getAlertNotificationRow("Salaried-W2-forms",false);
+	var row3 = getAlertNotificationRow("Salaried-W2-forms",false);
+	
+	alertWrapper.append(row1).append(row2).append(row3);
+	
+	$('#alert-notification-btn').append(alertWrapper);
+}
+
+function getAlertNotificationRow(alert,isSystemAlert){
+	var row = $('<div>').attr({
+		"class" : "alert-popup-row clearfix"
+	});
+	
+	var alertTxt = $('<div>').attr({
+		"class" : "alert-popup-txt float-left"
+	}).html(alert);
+	row.append(alertTxt);
+	
+	if(!isSystemAlert){
+		var alertRemoveIcn = $('<div>').attr({
+			"class" : "alert-rm-icn float-right"
+		});
+		row.append(alertRemoveIcn);
+	}
+	return row;
+}
