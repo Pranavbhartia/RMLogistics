@@ -73,6 +73,7 @@ public class NotificationServiceTest {
 		List<InternalUserRolesEum> internalUserRoles = null;
 		NotificationVO notificationVO = new NotificationVO();
 		notificationVO.setCreatedByID(1);
+		notificationVO.setLoanID(1);
 		notificationVO.setContent("Role based notification");
 
 		userRoles = new ArrayList<UserRolesEnum>();
