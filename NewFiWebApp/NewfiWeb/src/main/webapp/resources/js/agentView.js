@@ -400,7 +400,7 @@ function appendCustomers(elementId, customers) {
 					appendCustomerDetailContianer($(this).parent(),
 							event.data.customer);
 				});
-
+		loanNotificationCntxt.loanLstCntElement=col7;
 		loanNotificationCntxt.getNotificationForLoan(function(ob){
 			if (parseInt(ob.loanNotificationList.length) > 0) {
 				var alerts = $('<div>').attr({
@@ -482,15 +482,22 @@ function appendCustomerDetailContianer(element, customer) {
 	$(element).after(wrapper);
 	var contxt=getContext(customer.loanID+"-notification");
 	appendRecentAlertContainer(contxt.loanNotificationList,contxt);
-	appendSchedulerContainer();
+	appendSchedulerContainer(contxt);
 	appendRecentNotesContainer(customer.notes);
 	appendTakeNoteContainer();
 }
 
-function appendRecentAlertContainer(alerts,contxt) {
-	var wrapper = $('<div>').attr({
+function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
+	var wrapper = {};
+	if(!existingWrapper){
+		wrapper = $('<div>').attr({
 		"class" : "cust-detail-lw float-left"
-	});
+		});	
+	}else{
+		wrapper=existingWrapper;
+		wrapper.empty();
+	}
+	contxt.existingWrapper=wrapper;
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
 	});
@@ -534,6 +541,7 @@ function appendRecentAlertContainer(alerts,contxt) {
 				var container=e.data.container;
 				contxt.removeLoanNotification(notificationid,function(){
 					container.remove();
+					contxt.updateLoanListNotificationCount();
 				});
 				
 			});
@@ -542,12 +550,19 @@ function appendRecentAlertContainer(alerts,contxt) {
 				"class" : "alert-btn float-left"
 			}).html("Snooze").bind("click",{notificationid:alerts[i].id,contxt:contxt,container:alertContainer},function(e){
 				var notificationid=e.data.notificationid;
-				alert("Snooze-"+notificationid);
+				var contxt=e.data.contxt;
+				var container=e.data.container;
+				contxt.snoozeLoanNotification(notificationid,5,function(){
+					container.remove();
+					contxt.updateLoanListNotificationCount();
+				});
 			});
 
 			alertBtnRow.append(dismissBtn).append(snoozeBtn);
 
-			alertLeftCol.append(alertTxt).append(alertBtnRow);
+			alertLeftCol.append(alertTxt);
+			if(alerts[i].dismissable==true)
+				alertLeftCol.append(alertBtnRow);
 			var editBtn = $('<div>').attr({
 				"class" : "alert-edit-btn float-right"
 			}).html("Edit");
@@ -559,10 +574,11 @@ function appendRecentAlertContainer(alerts,contxt) {
 	container.append(recentAlertWrapper);
 
 	wrapper.append(container);
-	$('#cust-detail-wrapper').append(wrapper);
+	if(!existingWrapper)
+		$('#cust-detail-wrapper').append(wrapper);
 }
 
-function appendSchedulerContainer() {
+function appendSchedulerContainer(contxt) {
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -587,7 +603,8 @@ function appendSchedulerContainer() {
 
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
-		"placeholder" : "MM/DD/YYYY"
+		"placeholder" : "MM/DD/YYYY",
+		"id" : "sch-msg-date-picker"
 	}).datepicker({
 		orientation : "top auto",
 		autoclose : true
@@ -609,7 +626,8 @@ function appendSchedulerContainer() {
 
 	var messageBox = $('<textarea>').attr({
 		"class" : "scheduled-msg-textbox",
-		"placeholder" : "Type your message here. When done click submit"
+		"placeholder" : "Type your message here. When done click submit",
+		"id" : "sch-msg-message"
 	});
 
 	var buttonRow = $('<div>').attr({
@@ -622,7 +640,26 @@ function appendSchedulerContainer() {
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit");
+	}).html("Submit").bind("click",{contxt:contxt},function(e){
+		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
+		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
+		snoozeTime.setHours(dat.getHours());
+		snoozeTime.setMinutes(dat.getMinutes())
+		var message=$("#sch-msg-message").val();
+		if(snoozeTime!="Invalid Date"){
+			var data={};
+			data.content=message;
+			data.createdDate=new Date().getTime();
+			data.remindOn=snoozeTime.getTime();
+			data.createdByID=newfiObject.user.id;
+			data.createdForID=newfiObject.user.id;
+			contxt.scheduleAEvent(data,function(){
+				contxt.updateWrapper();
+				contxt.updateLoanListNotificationCount();
+			});
+		}
+
+	});
 	col1.append(col1Btn);
 
 	var col2 = $('<div>').attr({

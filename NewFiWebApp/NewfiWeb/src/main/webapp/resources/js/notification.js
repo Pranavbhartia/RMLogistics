@@ -3,10 +3,12 @@ function getNotificationContext(loanId,userId){
 	var notificationContext={
 		loanId:loanId,
 		userId:userId,
+		loanLstCntElement:{},
 		userContainerId:"",
 		loanContainerId:"notificationParentContainer",
 		userNotificationList:[],
 		loanNotificationList:[],
+		existingWrapper:{},
 		getNotificationForUser:function(callback){
 			if(userId!=0){
 				var ob=this;
@@ -47,6 +49,18 @@ function getNotificationContext(loanId,userId){
 					}
 					
 				});
+			}
+		},
+		updateLoanListNotificationCount:function(){
+			var ob=this;
+			if(ob.loanLstCntElement){
+				ob.loanLstCntElement.empty();
+				if (parseInt(ob.loanNotificationList.length) > 0) {
+					var alerts = $('<div>').attr({
+						"class" : "alerts-count"
+					}).html(ob.loanNotificationList.length);
+					ob.loanLstCntElement.append(alerts);
+				}
 			}
 		},
 		populateUserNotification:function(callback){
@@ -134,6 +148,34 @@ function getNotificationContext(loanId,userId){
 			//var notificationID="LNID"+notification.id;
 			
 		},
+		snoozeLoanNotification:function(notificationID,snoozeTimeMin,callback){
+			var ob=this;
+			var data={};
+			var id=notificationID;
+			if((notificationID+"").indexOf("LNID")>0)
+				id=notificationID.substr(4);
+			data.id=id;
+			snoozeTimeMin=1000*60*snoozeTimeMin;
+			data.remindOn=new Date().getTime()+snoozeTimeMin;
+			data.read=false;
+			ajaxRequest("rest/notification","PUT","json",JSON.stringify(data),function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					ob.removeNotificationfromList(notificationID);
+					var existAry=$("#"+notificationID);
+					if(existAry.length>0){
+						$("#"+notificationID).remove();
+					}
+					if(callback){
+						callback();
+					}
+				}
+				
+			});
+			//var notificationID="LNID"+notification.id;
+			
+		},
 		removeNotificationfromList:function(notificationID){
 			var temp=[];
 			var ob=this;
@@ -151,8 +193,27 @@ function getNotificationContext(loanId,userId){
 			}
 			ob.userNotificationList=temp;
 		},
-		scheduleAEvent:function(callback){
+		scheduleAEvent:function(data,callback){
+			var ob=this;
+			data.loanID=ob.loanId;
+			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					data.dismissable=true;
+					data.id=response.resultObject;
+					if(new Date().getTime()<=data.remindOn)
+						ob.loanNotificationList.push(data);
 
+					if(callback){
+						callback();
+					}
+				}
+				
+			});
+		},
+		updateWrapper:function(callback){
+			appendRecentAlertContainer(this.loanNotificationList,this,this.existingWrapper);
 		}
 	};
 	//notificationContext.initContext();
