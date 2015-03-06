@@ -19,6 +19,8 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -240,4 +242,21 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return user;
 		
 	}
+
+	@Override
+    public String findUserRole(Integer userID)
+            throws NoRecordsFetchedException, DatabaseException {
+		User user = findByUserId(userID);
+		UserRole role  = user.getUserRole();
+		String roleName = role.getRoleCd();
+//		switch (roleName) {
+//		case UserRolesEnum.:
+//			
+//			break;
+//
+//		default:
+//			break;
+//		}
+	    return null;
+    }
 }
