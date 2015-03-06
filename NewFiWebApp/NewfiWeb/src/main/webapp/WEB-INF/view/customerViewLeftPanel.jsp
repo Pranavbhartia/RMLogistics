@@ -32,13 +32,15 @@
 		</div>
 		<div class="lp-alert-wrapper lp-item clearfix">
 			<div class="lp-alert-header">important alerts</div>
-			<div class="lp-alert-item-container clearfix">
-				<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
-				<div class="lp-alert-close-btn float-right"></div>
-			</div>
-			<div class="lp-alert-item-container clearfix">
-				<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
-				<div class="lp-alert-close-btn float-right"></div>
+			<div id="notificationParentContainer">
+				<div class="lp-alert-item-container clearfix">
+					<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
+					<div class="lp-alert-close-btn float-right"></div>
+				</div>
+				<div class="lp-alert-item-container clearfix">
+					<div class="lp-alert-item float-left">Salaried-W-2 forms- Pending</div>
+					<div class="lp-alert-close-btn float-right"></div>
+				</div>
 			</div>
 		</div>
 	</div>
