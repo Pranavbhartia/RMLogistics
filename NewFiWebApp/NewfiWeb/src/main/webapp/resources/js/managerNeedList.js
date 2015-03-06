@@ -275,7 +275,7 @@ function paintAgentNeedsListPage(callback){
 			callback();
 		}
 		
-		currentUserAndLoanOnj.userId = newfiObject.user.id ;
+		currentUserAndLoanOnj.userId = selectedUserDetail.userID;
 		currentUserAndLoanOnj.activeLoanId = selectedUserDetail.loanID;
 		
 		getRequiredDocuments();

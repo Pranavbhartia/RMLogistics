@@ -52,7 +52,7 @@ public class FileUploadController {
 		String s3Path = null;
 		 try{
 			File serverFile = new File( NexeraUtility.uploadFileToLocal(file));
-			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId);
+			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
 			LOG.info("Added File document row : "+savedRowId);
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());

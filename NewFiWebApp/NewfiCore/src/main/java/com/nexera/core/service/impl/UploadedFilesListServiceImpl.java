@@ -144,20 +144,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return downloadFiles;
 	}
 	
-	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId) throws IOException, COSVisitorException {
+	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId , Integer userId) throws IOException, COSVisitorException {
 		List<String> filePaths = downloadFileFromS3Service(fileIds);
 		String newFilepath = null;
 		newFilepath = NexeraUtility.joinPDDocuments(filePaths);
-		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId );
+		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId  , userId);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
 		return fileSavedId;
 	}
 	
-	public Integer addUploadedFilelistObejct(File file  , Integer loanId){
+	public Integer addUploadedFilelistObejct(File file  , Integer loanId , Integer userId){
 		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "User" , "complete" );
-		User user  = getUserObject();
+		User user  = new User();
+		user.setId(userId);
 		Loan loan  = new Loan();
 		loan.setId(loanId);
 		

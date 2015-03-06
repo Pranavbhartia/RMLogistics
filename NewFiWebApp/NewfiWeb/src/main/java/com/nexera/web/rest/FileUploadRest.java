@@ -77,8 +77,8 @@ public class FileUploadRest {
 		return new Gson().toJson(needsListService.getLoanNeedsList(1));
 	}
 	
-	@RequestMapping(value="/split/{fileId}/{loadId}" , method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO splitPDFDocument( @PathVariable ("fileId") Integer  fileId ,  @PathVariable ("loadId") Integer  loanId){
+	@RequestMapping(value="/split/{fileId}/{loadId}/{userId}" , method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO splitPDFDocument( @PathVariable ("fileId") Integer  fileId ,  @PathVariable ("loadId") Integer  loanId , @PathVariable ("userId") Integer  userId){
 		LOG.info("File upload PDF split  service called");
 		LOG.info("File upload   id "+fileId);
 		CommonResponseVO commonResponseVO;
@@ -87,7 +87,7 @@ public class FileUploadRest {
 		try {
 			List<File> pdfPages =  splitPdfDocumentIntoMultipleDocs(uploadedFilesList.getS3path());
 				for (File file : pdfPages) {
-					Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct(file, loanId);
+					Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct(file, loanId , userId);
 					LOG.info("New file saved with id "+fileSavedId);
 				}
 			
@@ -101,8 +101,8 @@ public class FileUploadRest {
 		return commonResponseVO;
 	}
 	
-	@RequestMapping(value="/assignment/{loanId}" , method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO setAssignmentToFiles(@RequestBody  String fileAssignMent , @PathVariable(value = "loanId") Integer loanId ){
+	@RequestMapping(value="/assignment/{loanId}/{userId}" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO setAssignmentToFiles(@RequestBody  String fileAssignMent , @PathVariable(value = "loanId") Integer loanId , @PathVariable(value = "userId") Integer userId ){
 		
 		ObjectMapper mapper=new ObjectMapper();
 		TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
@@ -122,7 +122,7 @@ public class FileUploadRest {
 		    		}
 		    		
 		    		if(fileIds.size()>1){
-		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId);
+		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId , userId);
 		    				LOG.info("new file pdf path :: "+newFileRowId);
 		    				uploadedFilesListService.updateFileInLoanNeedList(key, newFileRowId);
 		    				uploadedFilesListService.updateIsAssignedToTrue(newFileRowId);
