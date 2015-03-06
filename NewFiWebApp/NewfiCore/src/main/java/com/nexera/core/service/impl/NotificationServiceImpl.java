@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.InternalUserRolesEum;
@@ -174,7 +175,12 @@ public class NotificationServiceImpl implements NotificationService {
 			createdFor.setId(loanNotification.getCreatedForID());
 			model.setCreatedFor(createdFor);
 		}
-
+		
+		if(loanNotification.getLoanID()!=null){
+			Loan loan=new Loan();
+			loan.setId(loanNotification.getLoanID());
+		}
+		
 		model.setRead(loanNotification.getRead());
 		model.setDismissable(loanNotification.getDismissable());
 		model.setTitle(loanNotification.getTitle());
