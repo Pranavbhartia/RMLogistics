@@ -11,10 +11,10 @@ import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO.MessageId;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
-import com.nexera.core.service.mongo.MessageLogMongoService;
+import com.nexera.core.service.mongo.MongoMessageService;
 
 @Component
-public class MessageLogMongoServiceImpl implements MessageLogMongoService {
+public class MongoMessageServiceImpl implements MongoMessageService {
 
 	@Override
 	public String saveMessage(MongoMessagesVO messagesVO)
