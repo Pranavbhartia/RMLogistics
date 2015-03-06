@@ -14,8 +14,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "loannotification")
-@NamedQuery(name = "LoanNotification.findAll", query = "SELECT l FROM LoanNotification l")
-public class LoanNotification implements Serializable {
+@NamedQuery(name = "Notification.findAll", query = "SELECT l FROM Notification l")
+public class Notification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private byte[] content;
@@ -29,8 +29,10 @@ public class LoanNotification implements Serializable {
 	private User createdBy;
 	private Loan loan;
 	private User createdFor;
+	private String visibleToUserRoles;
+	private String visibleToInternalUserRoles;
 
-	public LoanNotification() {
+	public Notification() {
 	}
 
 	@Id
@@ -89,7 +91,7 @@ public class LoanNotification implements Serializable {
 		this.priority = priority;
 	}
 
-	@Column(columnDefinition = "TINYINT")
+	@Column(name="is_read",columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getRead() {
 		return this.read;
@@ -118,7 +120,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "created_by")
 	public User getCreatedBy() {
 		return createdBy;
@@ -129,7 +131,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Loan
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "loan")
 	public Loan getLoan() {
 		return loan;
@@ -140,7 +142,7 @@ public class LoanNotification implements Serializable {
 	}
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "created_for")
 	public User getCreatedFor() {
 		return createdFor;
@@ -148,6 +150,24 @@ public class LoanNotification implements Serializable {
 
 	public void setCreatedFor(User createdFor) {
 		this.createdFor = createdFor;
+	}
+
+	@Column(name = "user_roles")
+	public String getVisibleToUserRoles() {
+		return visibleToUserRoles;
+	}
+
+	public void setVisibleToUserRoles(String visibleToUserRoles) {
+		this.visibleToUserRoles = visibleToUserRoles;
+	}
+
+	@Column(name = "internal_user_roles")
+	public String getVisibleToInternalUserRoles() {
+		return visibleToInternalUserRoles;
+	}
+
+	public void setVisibleToInternalUserRoles(String visibleToInternalUserRoles) {
+		this.visibleToInternalUserRoles = visibleToInternalUserRoles;
 	}
 
 }

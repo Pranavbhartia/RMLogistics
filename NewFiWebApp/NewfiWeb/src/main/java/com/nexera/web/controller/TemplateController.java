@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.UserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -50,7 +50,7 @@ public class TemplateController extends DefaultController {
 
 			User user = getUserObject();
 
-			if (UserRolesEum.CUSTOMER.toString().equals(
+			if (UserRolesEnum.CUSTOMER.toString().equals(
 					user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req,user);
 				UserVO userVO = userProfileService.findUser(user.getId());
@@ -72,7 +72,7 @@ public class TemplateController extends DefaultController {
 
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
 	public @ResponseBody String uploadCommonImageToS3(
-			@RequestParam("fileName") MultipartFile multipartFile,
+			@RequestParam("fileName") MultipartFile multipartFile,@RequestParam int userId,
 			HttpServletRequest req, Model model)
 	// @RequestParam(value = "fileName", required = true) MultipartFile
 	// multipartFile)
@@ -89,9 +89,12 @@ public class TemplateController extends DefaultController {
 			LOG.info("The s3 path is : " + s3Path);
 
 			// save image in the data base
-			User user = getUserObject();
-			Integer userid = user.getId();
-			Integer num = userProfileService.updateUser(s3Path, userid);
+			//User user = getUserObject();
+			//nteger userid = user.getId();
+			if(userId != 0){
+				Integer num = userProfileService.updateUser(s3Path, userId);
+			}
+			
 
 		} catch (Exception e) {
 

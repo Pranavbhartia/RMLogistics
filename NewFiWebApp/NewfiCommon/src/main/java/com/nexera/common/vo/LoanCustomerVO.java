@@ -20,6 +20,12 @@ public class LoanCustomerVO {
 	private Integer loanID;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
+	
+	
+	private String firstName;
+	private String lastName;
+	private String emailId;
+	private CustomerDetailVO customerDetail;
 
 	public String getName() {
 		return name;
@@ -141,4 +147,39 @@ public class LoanCustomerVO {
 		this.lastActedOn = lastActedOn;
 	}
 
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public CustomerDetailVO getCustomerDetail() {
+		return customerDetail;
+	}
+
+	public void setCustomerDetail(CustomerDetailVO customerDetail) {
+		this.customerDetail = customerDetail;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	
+	
 }

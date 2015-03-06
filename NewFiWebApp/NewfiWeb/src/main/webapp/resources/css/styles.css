@@ -1163,6 +1163,7 @@ a, a:hover, a:visited{
 .reply-cont{
 	color:#9d9d9d;
 	line-height: 25px;
+	cursor:pointer;
 }
 
 .assigned-agent-name {
@@ -1473,6 +1474,7 @@ a, a:hover, a:visited{
 }
 
 .date-picker-cont,.time-picker-cont {
+	position:relative;
 	width: 40%;
 	padding-left: 5%;
 }
@@ -1600,6 +1602,23 @@ a, a:hover, a:visited{
 	height: 20px;
 	font-family: 'opensanslight';
 	line-height: 20px;
+}
+
+.reply-cont-wrapper{
+	position: relative;
+	padding: 20px 0;
+	border-bottom: 1px #d4d4d4 solid;
+	background: #fafcfe;
+}
+
+.reply-text-box{
+	z-index: 9;
+	display: block;
+	margin: 0 auto;
+	height: 80px;
+	padding: 10px;
+	border: 1px #d4d4d4 solid;
+	border-radius: 3px;
 }
 
 
@@ -2546,5 +2565,671 @@ input.calc-input{
 	font-size: 12px;
 	border: 1px #8EC63F solid;
 	border-left-width: 7px;
+}
 
+
+/*Loan progress styles*/
+
+.loan-progress-milestone-wrapper{
+	position: relative;
+}
+
+.loan-progress-header {
+	line-height: 45px;
+	background-color: #f5f9fc;
+	padding-left: 20px;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
+
+.loan-progress-heading {
+	text-align: center;
+	font-size: 24px;
+	line-height: 40px;
+	margin-bottom: 30px;
+}
+
+.milestone-lc,.milestone-rc{
+	position:relative;
+	box-sizing:border-box;
+	width: 50%;
+	padding-bottom: 10px;
+}
+
+.milestone-lc{
+	padding-right: 20px;
+}
+
+.milestone-rc{
+	position:relative;
+	left: 50%;
+	padding-left: 20px;
+	margin-left: 2px;
+}
+
+.milestone-lc-text,.milestone-rc-text{
+	line-height: 22px;
+	color:#428bca;
+}
+
+.milestone-lc-text {
+	text-align: right;
+	cursor: pointer;
+}
+
+.milestone-rc-text {
+	text-align: left;
+	cursor: pointer;
+}
+
+.milestone-lc-header,.milestone-rc-header{
+	margin:0 -5px 10px -5px;
+	height: 25px;
+}
+
+.milestone-lc-header-txt,.milestone-rc-header-txt{
+	position:relative;
+	height: 25px;
+	line-height: 25px;
+	padding:0 15px;
+	border-radius:3px;
+	background-color: #EBEBEB;
+	box-sizing: border-box;
+}
+
+.m-not-started .milestone-lc-header-txt,
+.m-not-started .milestone-rc-header-txt{
+	border: 1px #888 solid;
+}
+
+.milestone-lc-header-txt:after{
+	left: 100%;
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: #EBEBEB;
+	border-width: 2px;
+	margin-left: 2px;
+	margin-top: -4px;
+	transform: rotate(135deg);
+	border-bottom-width: 14px;
+}
+
+.m-not-started .milestone-lc-header-txt:after{
+	border-width: 1px;
+	border-bottom-width: 14px;
+}
+
+.m-not-started .milestone-lc-header-txt:before{
+	left: 100%;
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: #888;
+	border-width: 2px;
+	margin-left: 2px;
+	margin-top: -4px;
+	transform: rotate(135deg);
+	border-bottom-width: 15px;
+	z-index: -1;
+}
+
+.milestone-rc-header-txt:after{
+	left: 0;
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #EBEBEB;
+	border-width: 2px;
+	margin-left: -4px;
+	margin-top: -5px;
+	transform: rotate(45deg);
+	border-top-width: 14px;
+}
+
+.m-not-started .milestone-rc-header-txt:after{
+	border-width: 1px;
+	border-top-width: 14px;
+}
+
+.m-not-started .milestone-rc-header-txt:before{
+	left: 0;
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #888;
+	border-width: 2px;
+	margin-left: -5px;
+	margin-top: -6px;
+	transform: rotate(45deg);
+	border-top-width: 15px;
+	z-index: -1;
+}
+
+.m-complete .milestone-lc-header-txt,
+.m-complete .milestone-rc-header-txt{
+	background-color: #7AB10D;	
+	color:#fff;
+}
+
+.m-complete .milestone-lc-header-txt:after{
+	border-bottom-color: #7AB10D;
+}
+
+.m-complete .milestone-rc-header-txt:after{
+	border-top-color: #7AB10D;
+}
+
+.m-not-started .milestone-lc-header-txt,
+.m-not-started .milestone-rc-header-txt{
+	color:#888;
+}
+
+.m-in-progress .milestone-lc-header-txt,
+.m-in-progress .milestone-rc-header-txt{
+	background-color: #F47521;
+	color:#fff;	
+}
+
+.m-in-progress .milestone-lc-header-txt:after{
+	border-bottom-color: #F47521;
+}
+
+.m-in-progress .milestone-rc-header-txt:after{
+	border-top-color: #F47521;
+}
+
+.miestone-progress-bar {
+	width: 80px;
+	height: 18px;
+	border: 1px #dcdcdc solid;
+	border-radius: 3px;
+	padding: 0 4px;
+}
+
+.miestone-progress-bar-txt{
+	padding: 0 10px;
+	line-height: 20px;
+	color: #F47521;
+}
+
+.miestone-progress-grid {
+	width: 5px;
+	height: 8px;
+	margin: 4px 1px;
+	background-color: #F47521;
+	border-radius: 5px;
+}
+
+.miestone-progress-grid-incomplete {
+	opacity: 0.4;
+}
+
+.milestone-lc:before{
+	position: absolute;
+	left: 100%;
+	top: 32px;
+	width: 18px;
+	height: 18px;
+	content: " ";
+	border: 7px #ebebeb solid;
+	border-radius: 50%;
+	background: #fff;
+	border-color: #888;
+	margin-left: -9px;
+	z-index:10;
+}
+
+.milestone-lc:after{
+	position: absolute;
+	left: 100%;
+	top: 32px;
+	width: 16px;
+	height: 16px;
+	content: " ";
+	box-sizing: border-box;
+	border: 5px #fff solid;
+	border-radius: 50%;
+	background: #D2DEDF;
+	margin-left: -8px;
+	margin-top: 1px;
+	z-index: 11;
+} 
+
+.milestone-rc:before{
+	position:absolute;
+	left:0;
+	top:32px;
+	width: 18px;
+	height: 18px;
+	content:" ";
+	border:7px #ebebeb solid;
+	border-radius:50%;
+	background: #fff;
+	margin-left: -11px;
+	border-color: #888;
+	z-index:10;
+}
+
+.milestone-rc:after{
+	position: absolute;
+	left: 0;
+	top: 32px;
+	width: 16px;
+	height: 16px;
+	content: " ";
+	box-sizing: border-box;
+	border: 5px #fff solid;
+	border-radius: 50%;
+	background: #D2DEDF;
+	margin-left: -10px;
+	margin-top: 1px;
+	z-index: 11;
+} 
+
+.m-not-started:after{
+	background-color: #ebebeb;
+}
+
+.m-complete:after{
+	background-color: #7AB10D;
+}
+
+.m-in-progress:after{
+	background-color: #F47521;
+}
+
+.milestone-lc-border{
+	position: absolute;
+	height: 100%;
+	right: -2px;
+	top: 32px;
+	z-index: 9;
+	border-right: 3px #ebebeb solid;
+}
+
+.milestone-rc-border{
+	position: absolute;
+	height: 100%;
+	left: -3px;
+	top: 32px;
+	z-index: 9;
+	border-left: 3px #ebebeb solid;
+}
+
+.m-in-progress .milestone-lc-border,
+.m-in-progress .milestone-rc-border{
+ 	border-color: #F47521;
+}
+
+.m-complete .milestone-lc-border,
+.m-complete .milestone-rc-border{
+ 	border-color: #7AB10D;
+}
+
+.milestone-rc-header-icn,.milestone-lc-header-icn {
+	width: 35px;
+	height: 35px;
+	box-sizing:border-box;
+	margin-top: -5px;
+	border-radius: 50%;
+	background-color: #ebebeb;
+}
+
+.milestone-lc-header-icn{
+	margin-right: 10px;
+}
+
+.milestone-rc-header-icn{
+	margin-left: 10px;
+}
+
+.m-complete .milestone-lc-header-icn,
+.m-complete .milestone-rc-header-icn{
+	background-color: #7AB10D;
+}
+
+.m-in-progress .milestone-lc-header-icn,
+.m-in-progress .milestone-rc-header-icn{
+	background-color: #F47521;
+}
+
+.m-not-started .milestone-lc-header-icn,
+.m-not-started .milestone-rc-header-icn{
+	border: 1px #888 solid;
+} 
+
+.ms-icn-application-status{
+	background-image:url(../images/ms-application-status.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-application-status{
+	background-image:url(../images/ms-application-status-grey.png);
+}
+
+.ms-icn-application-fee{
+	background-image:url(../images/ms-application-fee.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-application-fee{
+	background-image:url(../images/ms-application-fee-grey.png);
+}
+
+.ms-icn-appraisal{
+	background-image:url(../images/ms-appraisal.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-appraisal{
+	background-image:url(../images/ms-appraisal-grey.png);
+}
+
+.ms-icn-credit-status{
+	background-image:url(../images/ms-credit-status.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-credit-status{
+	background-image:url(../images/ms-credit-status-grey.png);
+}
+
+.ms-icn-disclosure{
+	background-image:url(../images/ms-disclosure.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-disclosure{
+	background-image:url(../images/ms-disclosure-grey.png);
+}
+
+.ms-icn-initial-need-list{
+	background-image:url(../images/ms-initial-need-list.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-initial-need-list{
+	background-image:url(../images/ms-initial-need-list-grey.png);
+}
+
+.ms-icn-closing-status{
+	background-image:url(../images/ms-initial-need-list.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-closing-status{
+	background-image:url(../images/ms-initial-need-list-grey.png);
+}
+
+.ms-icn-lock-rate{
+	background-image:url(../images/ms-lock-rate.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-lock-rate{
+	background-image:url(../images/ms-lock-rate-grey.png);
+}
+
+.ms-icn-team{
+	background-image:url(../images/ms-team.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-team{
+	background-image:url(../images/ms-team-grey.png);
+}
+
+.ms-icn-underwriting{
+	background-image:url(../images/ms-underwriting.png);
+	background-repeat:  no-repeat;
+	background-position:  center; 
+}
+
+.m-not-started .ms-icn-underwriting{
+	background-image:url(../images/ms-underwriting-grey.png);
+}
+
+.milestone-header-bar-step {
+	position:relative;
+	width: 160px;
+	height: 54px;
+	border-radius: 27px 0 0 27px;
+	margin-right: -21px;
+	color:#fff;
+	border: 2px solid #fff;
+	padding-left: 55px;
+	padding-right: 20px;
+}
+
+.milestone-header-bar-step:last-child{
+	border-radius: 27px;
+}
+
+.m-step-complete{
+	background-color: #7AB10D;
+}
+
+.m-step-in-progress{
+	background-color: #646C76;
+}
+
+.m-step-not-started{
+	background-color: #DBE0E5;
+}
+
+.milestone-header-bar {
+	height: 80px;
+	padding: 10px 10px 10px 0;
+}
+
+.milestone-header-step-text {
+	position:absolute;
+	left:0;
+	width: 46px;
+	height: 46px;
+	line-height: 46px;
+	text-align: center;
+	background-color: #fff;
+	border-radius: 50%;
+	margin: 2px;
+}
+
+.m-step-complete .milestone-header-step-text{
+	color: #7AB10D;
+}
+
+.m-step-in-progress .milestone-header-step-text{
+	color: #646C76;
+}
+
+.m-step-not-started .milestone-header-step-text{
+	color: #DBE0E5;
+}
+
+.milestone-header-text {
+	height: 50px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.ms-cust-prof-container {
+	position: absolute;
+	left: 50%;
+	top:0;
+	margin-left: 20px;
+}
+
+.ms-cust-prof-img{
+	width: 50px;
+	height: 50px;
+	background: url(../images/cus-icn.png) no-repeat center;
+	border-radius:50%;
+}
+
+.ms-cust-prof-txt-cont{
+	margin-left: 10px;
+}
+
+.ms-cust-prof-txt-name{
+	font-size: 14px;
+	line-height: 20px;
+	text-transform: capitalize;
+	font-family: 'opensanssemibold';
+}
+
+.ms-cust-prof-txt-role,.ms-cust-prof-txt-contact{
+	font-family: 'opensanslight';
+}
+
+.ms-team-member-table{
+	line-height: 28px;
+	margin-bottom: 10px;
+}
+
+.ms-team-member-th,.ms-team-member-tr{
+	border-bottom: 1px dashed #dcdcdc;
+	width: 250px;
+}
+
+.ms-team-member-th-col1,.ms-team-member-th-col2,
+.ms-team-member-tr-col1,.ms-team-member-tr-col2{
+	width: 125px;
+	padding: 0 5px;
+}
+
+.ms-add-member-popup{
+	position: absolute;
+	right: 20px;
+	width:800px;
+	margin-top:10px;
+	padding:10px;
+	color:#777;
+	background: #fff;
+	border: 1px #b7b7b7 solid;
+	border-top: 4px #428bca solid;
+	z-index: 99;
+	cursor: auto;
+}
+
+.ms-save-btn {
+	width: 150px;
+	height: 40px;
+	margin: 0 auto;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #fff;
+	background-color: #F6914D;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.ms-add-memeber-input-cont {
+	width: 50%;
+	margin-bottom: 10px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.ms-add-memeber-input-label {
+	width: 100px;
+	text-align: right;
+	padding-right: 20px;
+}
+
+.ms-add-memeber-input-input {
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	border: 1px #dcdcdc solid;
+	border-radius: 3px;
+	background-color: #FAFAFA;
+}
+
+.ms-save-btn-wrapper{
+	width: 100%;
+	margin: 15px 0;
+}
+
+.ms-add-member-popup:after {
+	position: absolute;
+	bottom:100%;
+	right: 35%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	pointer-events: none;
+	border-color: rgba(66, 139, 202, 0);
+	border-bottom-color: #428bca;
+	border-width: 8px;
+	margin-left: -8px;
+}
+
+.ms-add-member-popup-header {
+	height: 40px;
+	margin-bottom: 10px;
+	line-height: 40px;
+	text-align: center;
+	font-family: 'opensanssemibold';
+	font-size: 14px;
+}
+
+
+/*Bootstrap date-time-picker styles*/
+
+.bootstrap-datetimepicker-widget{
+	width: 150px;
+	margin-left: 15px;
+}
+
+.table-condensed>tbody>tr>td{
+	padding: 0;
+}
+
+.bootstrap-datetimepicker-widget .timepicker-hour,
+.bootstrap-datetimepicker-widget .timepicker-minute, 
+.bootstrap-datetimepicker-widget .timepicker-second{
+	font-size: 14px;
+}
+
+.bootstrap-datetimepicker-widget .btn{
+	padding: 6px;
+	font-size: 12px;	
+}
+
+.bootstrap-datetimepicker-widget .btn-green{
+	background: rgb(246, 145, 77);
+	color: #fff;
 }

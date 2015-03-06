@@ -17,13 +17,21 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateCustomerDetails(CustomerDetail CustomerDetail);
 	
-
 	public Integer updateUser(String s3ImagePath, Integer userid);
+
+	public Integer competeUserProfile(User user);
+
+	public Integer completeCustomerDetails(CustomerDetail customerDetail);
+
+	public Integer managerUpdateUserProfile(User user);
+
+	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail);
 
 	public List<User> searchUsers(User user);
 
 	public Integer saveInternalUser(User user);
 
-	public User loadInternalUser(Integer userID);
+	public User findInternalUser(Integer userID);
+
 
 }

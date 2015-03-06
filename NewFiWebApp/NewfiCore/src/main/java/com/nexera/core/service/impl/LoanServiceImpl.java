@@ -11,11 +11,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanDetailVO;
@@ -25,6 +27,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.UserProfileService;
 
 @Component
 
@@ -32,6 +35,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanDao loanDao;
+	
+	@Autowired
+	private UserProfileService userProfileService;
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoanServiceImpl.class);
 	
@@ -50,24 +56,24 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public List<LoanVO> getLoansOfUser(UserVO user) {
 
-		List<Loan> list = loanDao.getLoansOfUser(LoanServiceImpl
+		List<Loan> list = loanDao.getLoansOfUser(this
 				.parseUserModel(user));
-		return LoanServiceImpl.buildLoanVOList(list);
+		return this.buildLoanVOList(list);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO getActiveLoanOfUser(UserVO user) {
 
-		Loan loan = loanDao.getActiveLoanOfUser(LoanServiceImpl
+		Loan loan = loanDao.getActiveLoanOfUser(this
 				.parseUserModel(user));
-		return LoanServiceImpl.buildLoanVO(loan);
+		return this.buildLoanVO(loan);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO getLoanByID(Integer loanID) {
-		return LoanServiceImpl.buildLoanVO((Loan) loanDao
+		return this.buildLoanVO((Loan) loanDao
 				.getLoanWithDetails(loanID));
 	}
 
@@ -75,8 +81,8 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional()
 	public boolean addToLoanTeam(LoanVO loan, UserVO user) {
 
-		Loan loanModel = LoanServiceImpl.parseLoanModel(loan);
-		User userModel = LoanServiceImpl.parseUserModel(user);
+		Loan loanModel = this.parseLoanModel(loan);
+		User userModel = this.parseUserModel(user);
 
 		// TODO CHange the added by appropriately, move the get user obj in
 		// correct service
@@ -87,8 +93,8 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional()
 	public boolean removeFromLoanTeam(LoanVO loan, UserVO user) {
 
-		Loan loanModel = LoanServiceImpl.parseLoanModel(loan);
-		User userModel = LoanServiceImpl.parseUserModel(user);
+		Loan loanModel = this.parseLoanModel(loan);
+		User userModel = this.parseUserModel(user);
 		return loanDao.removeFromLoanTeam(loanModel, userModel);
 	}
 
@@ -96,23 +102,24 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
 
-		List<User> team = loanDao.retreiveLoanTeam(LoanServiceImpl
+		List<User> team = loanDao.retreiveLoanTeam(this
 				.parseLoanModel(loanVO));
 
-		return LoanServiceImpl.buildUserVOList(team);
+		return userProfileService.buildUserVOList(team);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
 
-		User manager = LoanServiceImpl.parseUserModel(loanManager);
+		User manager = this.parseUserModel(loanManager);
 
-		return LoanServiceImpl.buildLoanVOList(loanDao
+		return this.buildLoanVOList(loanDao
 				.retreiveLoansAsManager(manager));
 	}
 
-	public static Loan parseLoanModel(LoanVO loanVO) {
+	@Override
+	public Loan parseLoanModel(LoanVO loanVO) {
 
 		if (loanVO == null)
 			return null;
@@ -130,7 +137,7 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
-	public static LoanVO buildLoanVO(Loan loan) {
+	private LoanVO buildLoanVO(Loan loan) {
 
 		if (loan == null)
 			return null;
@@ -146,29 +153,29 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setName(loan.getName());
 		if (loan.getLoanStatus() != null)
 			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-		loanVo.setUser(LoanServiceImpl.buildUserVO(loan.getUser()));
+		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
 
-		loanVo.setLoanDetail(LoanServiceImpl.buildLoanDetailVO(loan
+		loanVo.setLoanDetail(this.buildLoanDetailVO(loan
 				.getLoanDetail()));
 
 		return loanVo;
 
 	}
 
-	public static List<LoanVO> buildLoanVOList(List<Loan> loanList) {
+	private List<LoanVO> buildLoanVOList(List<Loan> loanList) {
 
 		if (loanList == null)
 			return null;
 
 		List<LoanVO> voList = new ArrayList<LoanVO>();
 		for (Loan loan : loanList) {
-			voList.add(LoanServiceImpl.buildLoanVO(loan));
+			voList.add(this.buildLoanVO(loan));
 		}
 
 		return voList;
 	}
 
-	public static User parseUserModel(UserVO userVO) {
+	private User parseUserModel(UserVO userVO) {
 
 		if (userVO == null)
 			return null;
@@ -180,41 +187,19 @@ public class LoanServiceImpl implements LoanService {
 		return user;
 	}
 
-	public static UserVO buildUserVO(User user) {
-
-		if (user == null)
-			return null;
-
-		UserVO userVO = new UserVO();
-
-		userVO.setId(user.getId());
-		userVO.setFirstName(user.getFirstName());
-		userVO.setLastName(user.getLastName());
-		userVO.setEmailId(user.getEmailId());
-		userVO.setPhoneNumber(user.getPhoneNumber());
-		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-		userVO.setUserRole(UserProfileServiceImpl.buildUserRoleVO(user
-				.getUserRole()));
-
-		userVO.setInternalUserDetail(UserProfileServiceImpl
-				.buildInternalUserDetailsVO(user.getInternalUserDetail()));
-
-		return userVO;
-	}
-
-	public static LoanTeamVO buildLoanTeamVO(LoanTeam loanTeam) {
+	private LoanTeamVO buildLoanTeamVO(LoanTeam loanTeam) {
 		if (loanTeam == null)
 			return null;
 
 		LoanTeamVO loanTeamVO = new LoanTeamVO();
 		loanTeamVO.setId(loanTeam.getId());
-		loanTeamVO.setUser(LoanServiceImpl.buildUserVO(loanTeam.getUser()));
+		loanTeamVO.setUser(userProfileService.buildUserVO(loanTeam.getUser()));
 		loanTeamVO.setActive(loanTeam.getActive());
 		return loanTeamVO;
 
 	}
 
-	public static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
+	private LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
 		if (detail == null)
 			return null;
 
@@ -228,27 +213,15 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
-	public static List<UserVO> buildUserVOList(List<User> userList) {
-
-		if (userList == null)
-			return null;
-
-		List<UserVO> voList = new ArrayList<UserVO>();
-		for (User user : userList) {
-			voList.add(LoanServiceImpl.buildUserVO(user));
-		}
-
-		return voList;
-	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboard(UserVO userVO) {
 
 		// Get all loans this user has access to.
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(LoanServiceImpl
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
 				.parseUserModel(userVO));
-		LoanDashboardVO loanDashboardVO = LoanServiceImpl
+		LoanDashboardVO loanDashboardVO = this
 				.buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
@@ -260,7 +233,7 @@ public class LoanServiceImpl implements LoanService {
 	 * @param loanList
 	 * @return
 	 */
-	public static LoanDashboardVO buildLoanDashboardVoFromLoanList(
+	private LoanDashboardVO buildLoanDashboardVoFromLoanList(
 			List<Loan> loanList) {
 
 		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
@@ -268,7 +241,7 @@ public class LoanServiceImpl implements LoanService {
 
 		if (loanList != null) {
 			for (Loan loan : loanList) {
-				LoanCustomerVO loanCustomerVO = LoanServiceImpl
+				LoanCustomerVO loanCustomerVO = this
 						.buildLoanCustomerVoFromUser(loan);
 				loanCustomerVoList.add(loanCustomerVO);
 			}
@@ -287,9 +260,11 @@ public class LoanServiceImpl implements LoanService {
 	 * @param loan
 	 * @return
 	 */
-	public static LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
+	private LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
 
 		User user = loan.getUser();
+		CustomerDetail customerDetail = user.getCustomerDetail();
+
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
 		loanCustomerVO.setTime(loan.getCreatedDate().toString());
@@ -308,6 +283,23 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setAlert_count("3");
 		loanCustomerVO.setCredit_score("732");
 
+		loanCustomerVO.setFirstName(user.getFirstName());
+		loanCustomerVO.setLastName(user.getLastName());
+		loanCustomerVO.setEmailId(user.getEmailId());
+
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		if (customerDetail != null) {
+			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO.setAddressZipCode(customerDetail
+					.getAddressZipCode());
+			if (null != customerDetail.getDateOfBirth())
+				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
+						.getTime());
+			customerDetailVO.setId(customerDetail.getId());
+		}
+		loanCustomerVO.setCustomerDetail(customerDetailVO);
+
 		return loanCustomerVO;
 	}
 
@@ -323,13 +315,13 @@ public class LoanServiceImpl implements LoanService {
 
 		LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
 		List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
-		List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(LoanServiceImpl
+		List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(this
 				.parseLoanModel(loanVO));
 		if (loanTeamList == null)
 			return null;
 
 		for (LoanTeam loanTeam : loanTeamList) {
-			LoanTeamVO loanTeamVO = LoanServiceImpl.buildLoanTeamVO(loanTeam);
+			LoanTeamVO loanTeamVO = this.buildLoanTeamVO(loanTeam);
 			loanTeamVOList.add(loanTeamVO);
 		}
 		loanTeamListVO.setLeanTeamList(loanTeamVOList);
@@ -350,7 +342,7 @@ public class LoanServiceImpl implements LoanService {
 
 		List<Loan> loanList = loanDao
 				.retrieveLoanForDashboard(new User(userId));
-		LoansProgressStatusVO loansProgressStatusVO = LoanServiceImpl
+		LoansProgressStatusVO loansProgressStatusVO = this
 				.getLoansProgressStatusVoFromLoanList(loanList);
 
 		return loansProgressStatusVO;
@@ -363,7 +355,7 @@ public class LoanServiceImpl implements LoanService {
 	 * @param loanList
 	 * @return
 	 */
-	public static LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(
+	private LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(
 			List<Loan> loanList) {
 
 		LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
@@ -401,12 +393,12 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
+
 	@Override
 	@Transactional(readOnly = true)
 	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId) {
 		LOG.info("in method fetchUploadedFromLoanNeedId for loanNeedId :  "+loanNeedId);
 		return loanDao.fetchUploadedFromLoanNeedId(loanNeedId);
 	}
-	
-	
+
 }

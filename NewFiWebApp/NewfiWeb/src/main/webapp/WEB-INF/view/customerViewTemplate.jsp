@@ -15,8 +15,10 @@
 <title>Nexera</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
+<link href="resources/css/font-awesome.min.css" rel="stylesheet">
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/datepicker.css" rel="stylesheet">
+<link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
@@ -44,17 +46,14 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 			});
-			
-			
 
-			
-			
-			if($("#photoImageUrlID").val() == "" || $("#photoImageUrlID").val() == null){
+						
+			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
 			}else{
 				
-				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + $("#photoImageUrlID").val()  + ')');
+				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + newfiObject.user.photoImageUrl  + ')');
 			}
 			
 			

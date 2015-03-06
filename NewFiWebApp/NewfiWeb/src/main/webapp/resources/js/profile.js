@@ -19,11 +19,11 @@ function showCustomerProfilePage() {
  	getUserProfileData();
 }
 
-function getUserProfileData() {
+/*function getUserProfileData() {
 	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {},
 			appendCustPersonalInfoWrapper);
 }
-
+*/
 
 function getUserProfileData(){
 	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
@@ -192,12 +192,21 @@ function getCustomerUploadPhotoRow(user) {
 		
 	});
 	
+	var inputHiddenFile1 = $('<input>').attr({
+		"type" : "hidden",
+		"id" : "userIDD",
+		"value":user.id,
+		"name":"userId"
+		
+	});
+	
 	var uploadImage = $('<div>').attr({
 		"class" : "uploadImage"
 
 	}).hide();
 
 	imageForm.append(inputHiddenFile);
+	imageForm.append(inputHiddenFile1);
 	uploadImage.append(imageForm);
 	uploadPicPlaceholder.append(uploadImage);
 
@@ -426,12 +435,15 @@ function updateUserDetails() {
 			
 			$("#profileNameId").text($("#firstNameId").val());
 			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+			
 		
 		},
 		error : function(error) {
 			alert("error"+error);
 		}
 	});
+	
+	showToastMessage("Succesfully updated");
 }
 
 function uploadeImage() {
@@ -441,12 +453,12 @@ function uploadeImage() {
 }
 
 
-function uploadImageFunction(obj){
+/*function uploadImageFunction(obj){
 		
 		alert(obj);
 		var urlToHit="rest/userprofile/uploadCommonImageToS3";
 		fileUpload($('#fullImageFormId'), urlToHit,'profilePic', '', '1');
-		/*$.ajax( {
+		$.ajax( {
 		   url: urlToHit,
 		   type: "POST",
 			  headers : {
@@ -463,9 +475,9 @@ function uploadImageFunction(obj){
 				},
 				processData: false,
 			    contentType: false
-		 } );*/
+		 } );
 	
-}
+}*/
 
 
 function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {

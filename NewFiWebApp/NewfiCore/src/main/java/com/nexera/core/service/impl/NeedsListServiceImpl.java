@@ -18,12 +18,14 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeedsListMasterVO;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.utility.CoreCommonConstants;
 
 @Component
 @Transactional
@@ -96,109 +98,113 @@ public class NeedsListServiceImpl implements NeedsListService {
 					throw new Exception("Insufficient Data");
 				}
 
-				if (loanAppForm.getMaritalStatus().equals("Divorced")) {
+				if (loanAppForm.getMaritalStatus().equals(CoreCommonConstants.MARITAL_STATUS_DIVORCED)) {
 					// #1
 					{
-						ManagerNeedVo managerNeedVo = needsList.get("1");
+						String indx=MasterNeedsEnum.Divorce_Settlement_Agree_No1.getIndx();
+						ManagerNeedVo managerNeedVo = needsList.get(indx);
 						managerNeedVo.setIsChecked(true);
 					}
-				} else if (loanAppForm.getMaritalStatus().equals("Settlement")) {
+				} else if (loanAppForm.getMaritalStatus().equals(CoreCommonConstants.MARITAL_STATUS_SETTLEMENT)) {
 					// #4
 					{
-						ManagerNeedVo managerNeedVo = needsList.get("4");
+						ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Cancelled_Check_Child_Support.getIndx());
 						managerNeedVo.setIsChecked(true);
 					}
 				}
 				if (loanAppForm.getReceiveAlimonyChildSupport()) {
 					// #3,
-					ManagerNeedVo managerNeedVo = needsList.get("3");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Divorce_Separation_Settlement_Agreement_No3.getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
 
 				if (loanAppForm.getSecondMortgage()) {
 					// #7
-					ManagerNeedVo managerNeedVo = needsList.get("7");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Mortgage_Equity_Line_Statement.getIndx());
 					managerNeedVo.setIsChecked(true);
 					if (!loanAppForm.getPaySecondMortgage()) {
 						// #13
-						ManagerNeedVo managerNeedVo1 = needsList.get("13");
+						ManagerNeedVo managerNeedVo1 = needsList.get(MasterNeedsEnum.Loan_Agreement_2nd_Mortgage_Line.getIndx());
 						managerNeedVo.setIsChecked(true);
 					}
 				}
 				if (loanAppForm.getHomeToSell()) {
 					// #10
-					ManagerNeedVo managerNeedVo = needsList.get("10");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Purchase_Contract_Home_Currently_Sold.getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
 				if (loanAppForm.getOwnsOtherProperty()) {
 					// #12
-					ManagerNeedVo managerNeedVo = needsList.get("12");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Additional_Properties.getIndx());
 					managerNeedVo.setIsChecked(true);
 					if (loanAppForm.getRentedOtherProperty()) {
-						// #31
-						ManagerNeedVo managerNeedVo32 = needsList.get("32");
-						managerNeedVo.setIsChecked(true);
+						// #32
+						ManagerNeedVo managerNeedVo32 = needsList.get(MasterNeedsEnum.Rental_Lease_Agreements.getIndx());
+						managerNeedVo32.setIsChecked(true);
 					}
 				}
 				if (loanAppForm.getHomeRecentlySold()) {
 					// #15
-					ManagerNeedVo managerNeedVo = needsList.get("15");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Settlement_HUD_1_Property_Recently_Sold.getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
 				if (loanAppForm.getHoaDues()) {
 					// #16
-					ManagerNeedVo managerNeedVo = needsList.get("16");
+					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Proof_of_HOA_Dues.getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
-				if (loanAppForm.getLoanTypeMaster().getId() == 1) {
+				if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_PURCHASE) {
 					// Purchase type
 					// #5,#11,#14
-					needsList.get("5").setIsChecked(true);
-					needsList.get("11").setIsChecked(true);
-					needsList.get("14").setIsChecked(true);
-					if (loanAppForm.getPropertyTypeMaster().getId() == 2) {
-						// Renting Purpose
+					needsList.get(MasterNeedsEnum.Copy_of_Check_Transfer_Escrow_Receipt.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Homeowner_Insurance_Quote.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Purchase_Contract_Including_Addendums.getIndx()).setIsChecked(true);
+					
+					if (loanAppForm.getPropertyTypeMaster().getId() == CoreCommonConstants.PROPERTY_TYPE_RENTING) {
+						// Renting Purpose :2
 						// #8
-						needsList.get("8").setIsChecked(true);
+						needsList.get(MasterNeedsEnum.Cancelled_Checks_Rent_Payments.getIndx()).setIsChecked(true);
 					}
-				} else if (loanAppForm.getLoanTypeMaster().getId() == 2
-						|| loanAppForm.getLoanTypeMaster().getId() == 3) {
-					// All Refinance
+				} else if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE
+						|| loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE_CASH_OUT) {
+					// All Refinance 2,3
 					// #6
-					needsList.get("6").setIsChecked(true);
-					if (loanAppForm.getLoanTypeMaster().getId() == 2) {
+					needsList.get(MasterNeedsEnum.Mortgage_Statement.getIndx()).setIsChecked(true);
+					if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE) {
 						// #9
-						needsList.get("9").setIsChecked(true);
+						needsList.get(MasterNeedsEnum.Homeowner_Insurance.getIndx()).setIsChecked(true);
 					}
 				}
 				if (loanAppForm.getEmployed()) {
 					// #17,#18,
-					needsList.get("17").setIsChecked(true);
-					needsList.get("18").setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Paychecks_Most_Recent_30_Days.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.W2s_Previous_2_Years.getIndx()).setIsChecked(true);
+					
 				}
 				if (loanAppForm.getSsIncomeOrDisability()) {
 					// #19,#20,#21
-					needsList.get("19").setIsChecked(true);
-					needsList.get("20").setIsChecked(true);
-					needsList.get("21").setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Social_Security_Award_Letter.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
 				}
 				if (loanAppForm.getSelfEmployed()) {
 					// #20,#21,#24,#25,#26
-					needsList.get("20").setIsChecked(true);
-					needsList.get("21").setIsChecked(true);
-					needsList.get("24").setIsChecked(true);
-					needsList.get("25").setIsChecked(true);
-					needsList.get("26").setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Federal_Corporation_Partnership_K_1s_all_partnerships.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Year_to_date_Profit_Loss_Business.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Year_to_date_Balance_Sheet_Business.getIndx()).setIsChecked(true);					
 				}
 				if (loanAppForm.getPensionOrRetirement()) {
 					// #20,#21
-					needsList.get("20").setIsChecked(true);
-					needsList.get("21").setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
 				}
 				// #22,#28,#33
-				needsList.get("22").setIsChecked(true);
-				needsList.get("28").setIsChecked(true);
-				needsList.get("33").setIsChecked(true);
+				needsList.get(MasterNeedsEnum.Federal_Tax_Returns_Previous_2_Years.getIndx()).setIsChecked(true);
+				needsList.get(MasterNeedsEnum.Months2_Statements_Bank_Accounts.getIndx()).setIsChecked(true);
+				needsList.get(MasterNeedsEnum.Driver_License_Passport.getIndx()).setIsChecked(true);
+				
 
 				result = new ArrayList<ManagerNeedVo>(needsList.values());
 				initialNeedsCreation = true;
@@ -300,7 +306,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return loanNeedsListVO;
 	}
 
-	public static LoanNeedsListVO buildLoanNeedsListVO(
+	public LoanNeedsListVO buildLoanNeedsListVO(
 			LoanNeedsList loanNeedsList) {
 
 		if (loanNeedsList == null)
@@ -315,7 +321,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return loanNeedsListVO;
 	}
 
-	public static NeedsListMasterVO buildLoanNeedsListMasterVO(
+	public NeedsListMasterVO buildLoanNeedsListMasterVO(
 			NeedsListMaster needListMaster) {
 		if (needListMaster == null)
 			return null;

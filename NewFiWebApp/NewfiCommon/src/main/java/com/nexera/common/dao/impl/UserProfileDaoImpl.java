@@ -19,7 +19,6 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -122,8 +121,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
-		if(user.getInternalUserDetail()!=null){
-			searchQuery += " and internalUserDetail=:internalUserDetail";
+		if (user.getInternalUserDetail() != null
+				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+			searchQuery += " and (internalUserDetail IS NULL OR (internalUserDetail.internaUserRoleMaster=:internaUserRoleMaster))";
 		}
 		int MAX_RESULTS = 50;
 		Query query = session.createQuery(searchQuery);
@@ -132,8 +132,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			query.setEntity("userRole", user.getUserRole());
 		}
 
-		if (user.getInternalUserDetail() != null) {
-			query.setEntity("internalUserDetail", user.getInternalUserDetail());
+		if (user.getInternalUserDetail() != null
+				&& user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
+			query.setEntity("internaUserRoleMaster", user
+					.getInternalUserDetail().getInternaUserRoleMaster());
 		}
 
 		query.setMaxResults(MAX_RESULTS);
@@ -160,7 +162,72 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public User loadInternalUser(Integer userID) {
+
+	public Integer competeUserProfile(User user) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("first_name", user.getFirstName());
+		query.setParameter("last_name", user.getLastName());
+		query.setParameter("email_id", user.getEmailId());
+		query.setParameter("priPhoneNumber", user.getPhoneNumber());
+		query.setParameter("id", user.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public Integer completeCustomerDetails(CustomerDetail customerDetail) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("city", customerDetail.getAddressCity());
+		query.setParameter("state", customerDetail.getAddressState());
+		query.setParameter("zipcode", customerDetail.getAddressZipCode());
+		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());
+		query.setParameter("secEmailId", customerDetail.getSecEmailId());
+		query.setParameter("dob", customerDetail.getDateOfBirth());
+		query.setParameter("profileStatus",
+				customerDetail.getProfileCompletionStatus());
+		query.setParameter("id", customerDetail.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public Integer managerUpdateUserProfile(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("first_name", user.getFirstName());
+		query.setParameter("last_name", user.getLastName());
+		query.setParameter("email_id", user.getEmailId());
+		query.setParameter("id", user.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob WHERE customerdetail.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("city", customerDetail.getAddressCity());
+		query.setParameter("state", customerDetail.getAddressState());
+		query.setParameter("zipcode", customerDetail.getAddressZipCode());
+		query.setParameter("dob", customerDetail.getDateOfBirth());
+		query.setParameter("id", customerDetail.getId());
+		int result = query.executeUpdate();
+		System.out.println("Rows affected: " + result);
+		return result;
+	}
+
+	@Override
+	public User findInternalUser(Integer userID) {
 		User user = (User) this.load(User.class, userID);
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());

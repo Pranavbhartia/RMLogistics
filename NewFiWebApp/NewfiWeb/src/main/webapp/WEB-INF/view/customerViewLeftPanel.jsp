@@ -6,9 +6,9 @@
      		<div id="myProfilePicture"></div>
       				
 			<div class="lp-pic-txt float-left">
-				<div class="lp-txt1" id ="profileNameId">${user.firstName}</div>
+				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
 				<div class="lp-txt2">Home Buyer</div>
-				<div class="lp-txt3" id= "profilePhoneNumId">${user.phoneNumber}</div>
+				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div>
 			</div>
 		</div>
 		<div id="lp-talk-wrapper" class="lp-talk-wrapper lp-item clearfix" onclick="changeLeftPanel(1);">

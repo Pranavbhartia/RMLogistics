@@ -2,6 +2,7 @@ package com.nexera.core.service;
 
 import java.util.List;
 
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
@@ -32,4 +33,9 @@ public interface LoanService {
     LoansProgressStatusVO getLoansProgressForUser( Integer i );
 
     public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
+    Loan parseLoanModel(LoanVO loanVO);
+
+
+
 }

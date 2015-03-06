@@ -6,8 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.UserRolesEum;
 
 public class UserVO implements Serializable {
 
@@ -31,7 +31,7 @@ public class UserVO implements Serializable {
 	private RealtorDetailVO realtorDetail;
 	private List<LoanVO> loans;
 	private List<LoanAppFormVO> loanAppForms;
-	private List<LoanNotificationVO> loanNotifications;
+	private List<NotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
 
@@ -167,11 +167,11 @@ public class UserVO implements Serializable {
 		this.loanAppForms = loanAppForms;
 	}
 
-	public List<LoanNotificationVO> getLoanNotifications() {
+	public List<NotificationVO> getLoanNotifications() {
 		return loanNotifications;
 	}
 
-	public void setLoanNotifications(List<LoanNotificationVO> loanNotifications) {
+	public void setLoanNotifications(List<NotificationVO> loanNotifications) {
 		this.loanNotifications = loanNotifications;
 	}
 
@@ -224,9 +224,47 @@ public class UserVO implements Serializable {
 		this.id = user.getId();
 		UserRoleVO roleVO = new UserRoleVO();
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
+
 		this.userRole = roleVO;
 		this.emailId = user.getEmailId();
 		this.displayName = this.firstName + " " + this.lastName;
+		this.userRole=roleVO;
+		this.emailId=user.getEmailId();
+		this.displayName = this.firstName+" "+this.lastName;
+		this.customerDetail = buildCustomerDetailVO(user);
+	    /*this.internalUserDetail;
+		this.realtorDetail;
+	}*/
+	}
+
+	public static CustomerDetailVO buildCustomerDetailVO(User user){
+		
+		if (user == null)
+			return null;
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		
+		CustomerDetail customerDetail = user.getCustomerDetail();
+		
+		if(null == customerDetail){
+			return null;
+		}
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		if(null != customerDetail.getDateOfBirth()){
+			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+		}else{
+			// if the date of birth id null then ??
+			customerDetailVO.setDateOfBirth(0l);
+		}
+		customerDetailVO.setId(customerDetail.getId());
+		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
+		
+		return customerDetailVO;
+
+
 	}
 
 	public User convertToEntity() {
@@ -235,6 +273,7 @@ public class UserVO implements Serializable {
 		user.setId(this.id);
 
 		return user;
+
 	}
 
 }
