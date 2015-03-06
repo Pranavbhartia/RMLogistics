@@ -6,7 +6,7 @@ import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 
-public interface MessageLogMongoService {
+public interface MongoMessageService {
 	
 	public String saveMessage(MongoMessagesVO messagesVO) throws FatalException,NonFatalException;
 	

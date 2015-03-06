@@ -1,4 +1,5 @@
 
+
 function showCustomerProfilePage() {
 	 $('.lp-right-arrow').remove();
      $('#right-panel').html('');
@@ -26,7 +27,7 @@ function showCustomerProfilePage() {
 */
 
 function getUserProfileData(){
-	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, customerPersonalInfoWrapper);
 }
 
 function userProfileData(data){
@@ -39,7 +40,7 @@ function paintCutomerProfileContainer() {
 	//getUserProfileData();
 }
 
-function appendCustPersonalInfoWrapper(user) {
+function customerPersonalInfoWrapper(user) {
 
 	var wrapper = $('<div>').attr({
 		"class" : "cust-personal-info-wrapper"
@@ -53,14 +54,6 @@ function appendCustPersonalInfoWrapper(user) {
 
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
-	$("#uploadFile")
-	.change(
-			function() {
-				
-				fileUpload(this.form, 'uploadCommonImageToS3.do','profilePic', '', '1',user.id);
-
-				// $('#path').val($(this).val());
-			});
 
 }
 
@@ -154,13 +147,18 @@ function getCustomerNameFormRow(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+
+
 function getCustomerUploadPhotoRow(user) {
+	
+    
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Upload Photo");
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -181,35 +179,136 @@ function getCustomerUploadPhotoRow(user) {
 	}
 	
 	
-	var imageForm = $('<form>').attr({
-		
+	var uploadBottomContianer = $('<div>').attr({
+		"class" : "clearfix"
 	});
+
 	
 	var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
-		"id" : "uploadFile",
+		"id" : "prof-image",
+		"name":"fileName",
+		"value": "Upload"
+		
+	});
+	
+	var inputHiddenDiv = $('<div>').attr({
+		"style" : "display:none"
+
+	});
+		
+	var canvasTage =  $('<canvas>').attr({
+		"id" : "canvasid",
+		"style": "display:none",
+	});
+	
+	var imageTage =  $('<img>').attr({
+		"id" : "target",
+		"style": "display:none",
+	});
+	
+	//outer.append(jcExample).append(article).append(imageTage);
+	
+	inputHiddenDiv.append(inputHiddenFile);
+	
+	var uploadBtn = $('<div>').attr({
+		"class" : "prof-btn upload-btn float-left"
+
+	}).click(uploadeImage).html("upload");
+	
+	uploadBottomContianer.append(uploadBtn).append(inputHiddenDiv);
+		
+	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
+	
+	return row.append(rowCol1).append(rowCol2);//.append(outer);
+}
+
+function uploadeImage() {
+
+	$("#prof-image").trigger('click');
+
+}
+
+
+/*function getCustomerUploadPhotoRow(user) {
+	
+    //$('#loading').html('<img src="http://preloaders.net/preloaders/287/Filling%20broken%20ring.gif"> loading...');
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Upload Photo");
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	
+	var uploadPicPlaceholder ;
+	if(user.photoImageUrl == "" || user.photoImageUrl == null || user.photoImageUrl =='undefined'){
+		uploadPicPlaceholder = $('<div>').attr({
+			"id" : "profilePic",
+			"class" : "prof-pic-upload-placeholder float-left"
+		});
+		
+	}else{
+		 uploadPicPlaceholder = $('<div>').attr({
+			"id" : "profilePic",
+			"class" :"prof-pic-upload-placeholder float-left",
+			"style":"background:url("+user.photoImageUrl+")"
+		});
+	}
+		
+	var imageForm = $('<form>').attr({
+		"id" : "fullImageFormId"
+	});
+	
+	var imageTage =  $('<img>').attr({
+		"id" : "target",
+		"style": "display:none",
+	});
+	
+	var canvasTage =  $('<canvas>').attr({
+		"id" : "canvasid",
+		"style": "display:none",
+	});
+	
+	
+	var inputHiddenFile = $('<input>').attr({
+		"type" : "file",
+		"id" : "prof-image",
 		"name":"fileName"
 		
 	});
 	
-	var inputHiddenFile1 = $('<input>').attr({
-		"type" : "hidden",
-		"id" : "userIDD",
-		"value":user.id,
-		"name":"userId"
+	var uploadcontinue = $('<input>').attr({
+		"type" : "button",
+		"id" : "uploadcontinue",
+		"value":"upload"
 		
 	});
 	
-	var uploadImage = $('<div>').attr({
-		"class" : "uploadImage"
+	imageForm.append(inputHiddenFile).append(imageTage).append(uploadcontinue);
+	
+	var outerDiv =   $('<div>').attr({
+		"id" : "outer",
+	});
+	
+	var jcExampleDiv =   $('<div>').attr({
+		"class" : "jcExample",
+	});
+	
+	var articleDiv =   $('<div>').attr({
+		"id" : "article",
+	});
+	
+	
+	articleDiv.append(imageTage);
+	jcExampleDiv.append(articleDiv);
+	outerDiv.append(jcExampleDiv);
 
-	}).hide();
-
-	imageForm.append(inputHiddenFile);
-	imageForm.append(inputHiddenFile1);
-	uploadImage.append(imageForm);
-	uploadPicPlaceholder.append(uploadImage);
-
+	
+	
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"
 	});
@@ -219,11 +318,14 @@ function getCustomerUploadPhotoRow(user) {
 
 	}).click(uploadeImage).html("upload");
 	// uploadBottomContianer.append(uploadPicCont).append(uploadBtn);
-	uploadBottomContianer.append(uploadBtn);
+	
+	uploadBottomContianer.append(uploadBtn).append(imageForm).append(canvasTage).append(outerDiv);
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 
+	
+	
 	return row.append(rowCol1).append(rowCol2);
-}
+}*/
 
 function getDOBRow(user) {
 
@@ -271,11 +373,21 @@ function getPriEmailRow(user) {
 	var emailInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-lg",
 		"value" : user.emailId,
-		"id" : "priEmailId"
+		"id" : "priEmailId",
+		"onblur":"emailValidation(this.value)"
 	});
 	rowCol2.append(emailInput);
 	return row.append(rowCol1).append(rowCol2);
 }
+
+function emailValidation(email) {
+	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if(!regex.test(email)){
+    	alert("Incorrect Email");
+    	validationFails = true;
+    }
+}
+
 
 function getSecEmailRow(user) {
 	var row = $('<div>').attr({
@@ -404,6 +516,13 @@ function getPhone2Row(user) {
 
 function updateUserDetails() {
 
+	
+	/*alert(validationFails);
+	
+	if(validationFails){
+		return false;
+	}*/
+	
 	var userProfileJson = new Object();
 
 	userProfileJson.id = $("#userid").val();
@@ -446,11 +565,6 @@ function updateUserDetails() {
 	showToastMessage("Succesfully updated");
 }
 
-function uploadeImage() {
-
-	$("#uploadFile").trigger('click');
-
-}
 
 
 /*function uploadImageFunction(obj){
@@ -514,12 +628,21 @@ function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
             
            //here is content
           // alert("content=="+content);
+		  
+		 //$("#fileUploadId").val($("#uploadFile").val());
+	
+		  
+            //$("#fileId").html($("#originalImageId").html());
+			
 		  if(message_div_id!=""){
 		  document.getElementById(message_div_id).innerHTML = content;
 		  }
            if(content!="error" && img_div_id!=""){
 		  document.getElementById(img_div_id).style.backgroundImage="url("+content+")";
 		  $("#myProfilePicture").css("background","url("+content+")");
+		  //
+		  
+		  createCropDiv('imageCropContainerDiv',content);
 		  $('#loaderWrapper').hide();
 		  } 
             // Del the iframe...
@@ -550,4 +673,82 @@ function fileUpload(form, action_url, img_div_id,message_div_id,suffix,userId) {
     document.getElementById(message_div_id).innerHTML = "Uploading...";
 	}
 		
+}
+
+function createCropDiv(divToAppend,url){
+	$("#"+divToAppend).empty();
+	var $containerDiv = $("<div>");
+	var $divImg = $("<img src='"+url+"' id='target' alt='[Jcrop Example]' />");
+	var $containerDiv1 = $("<div id='preview-pane'>");
+	var $containerDiv2 = $("<div class='preview-container'>");
+	var $divImg1 = $("<img src='"+url+"' class='jcrop-preview' alt='[Preview]' />");
+	var $containerDiv3 = $("<div id='cropDoneId' class='loginPageButton'>").text("Done");
+	$containerDiv3.click(function(){
+	$("#fullImageFormId").attr('action','uploadProfilePicture.do');
+	$("#fullImageFormId").submit();
+	selectedAvatar=null;
+	//lightbox_close();
+	});
+	$containerDiv.append($divImg);
+	$containerDiv1.append($containerDiv2);
+	$containerDiv2.append($divImg1);
+	$containerDiv.append($containerDiv1);
+	$containerDiv.append($containerDiv3);
+	$("#"+divToAppend).append($containerDiv);
+	jQuery(function($){
+
+	    // Create variables (in this scope) to hold the API and image size
+	    var jcrop_api,
+	        boundx,
+	        boundy,
+
+	        // Grab some information about the preview pane
+	        $preview = $('#preview-pane'),
+	        $pcnt = $('#preview-pane .preview-container'),
+	        $pimg = $('#preview-pane .preview-container img'),
+
+	        xsize = $pcnt.width(),
+	        ysize = $pcnt.height();
+	    
+	    console.log('init',[xsize,ysize]);
+	    $('#target').Jcrop({
+	      onChange: updatePreview,
+	      onSelect: updatePreview,
+	      aspectRatio: 1
+	    },function(){
+	      // Use the API to get the real image size
+	      var bounds = this.getBounds();
+	      boundx = bounds[0];
+	      boundy = bounds[1];
+	      // Store the API in the jcrop_api variable
+	      jcrop_api = this;
+
+	      // Move the preview into the jcrop container for css positioning
+	      $preview.appendTo(jcrop_api.ui.holder);
+	    });
+
+	    function updatePreview(c)
+	    {
+
+	      if (parseInt(c.w) > 0)
+	      {
+	 
+	        var rx = xsize / c.w;
+	        var ry = ysize / c.h;
+	         $('#xId').val(c.x);
+	         $('#yId').val(c.y);
+	         $('#wId').val(Math.round(c.w));
+	         $('#hId').val(Math.round(c.h));
+	       
+	         $pimg.css({
+	          width: Math.round(rx * boundx) + 'px',
+	          height: Math.round(ry * boundy) + 'px',
+	          marginLeft: '-' + Math.round(rx * c.x) + 'px',
+	          marginTop: '-' + Math.round(ry * c.y) + 'px'
+	        });
+	      }
+	    };
+
+	  });
+
 }

@@ -35,7 +35,7 @@ public class Utils {
 		return inputStr;
 	}
 
-	public String getDateInUserLocale(Date date) {
+	public String getDateInUserLocaleFormatted(Date date) {
 
 		Integer offSetFromUser = getOffsetFromUserObject();
 		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -51,6 +51,44 @@ public class Utils {
 				localeDate = new Date(date.getTime() - offset);
 			}
 			return dateFormat.format(localeDate);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Date getDateInUserLocale(Date date) {
+
+		Integer offSetFromUser = getOffsetFromUserObject();
+		Date localeDate = null;
+		try {
+
+			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
+			localeDate = new Date(date.getTime() - offset);
+
+			return localeDate;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Date getUserDateInGMT(Date date) {
+
+		Integer offSetFromUser = getOffsetFromUserObject();
+		Date gmt = null;
+		try {
+
+			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
+			if (offset > 0) {
+				gmt = new Date(date.getTime() - offset);
+			} else {
+				offset = offset * -1;
+				gmt = new Date(date.getTime() + offset);
+			}
+			return gmt;
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -113,7 +113,7 @@ public class LoanNeedsList implements Serializable {
 		this.needsListMaster = needsListMaster;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="file_id")
 	public UploadedFilesList getUploadFileId() {
 		return uploadFileId;

@@ -37,6 +37,7 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements Uploaded
 		criteria.add(Restrictions.eq("upBy.id", uesrId));
 		criteria.createAlias("loan", "ls");
 		criteria.add(Restrictions.eq("ls.id", loanId));
+		criteria.add(Restrictions.eq("isActivate", true));
 		return criteria.list();
 	}
 
@@ -71,6 +72,29 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements Uploaded
 	
 	}
 
+	@Override
+	public String findFileNameFromId(Integer fileId) {
+		Session session = sessionFactory.getCurrentSession();
+		UploadedFilesList filesList = (UploadedFilesList) session.load(UploadedFilesList.class, fileId);
+		LOG.info("Receive file name with id : "+filesList.getFileName());
+		return filesList.getFileName();
+	}
+
+	@Override
+	public void deactivateFileUsingFileId(Integer fileId) {
+		Session session = sessionFactory.getCurrentSession();
+		UploadedFilesList filesList = (UploadedFilesList) session.load(UploadedFilesList.class, fileId);
+		filesList.setIsActivate(false);
+		session.update(filesList);
+	
+	}
+
+	@Override
+	public UploadedFilesList fetchUsingFileId(Integer fileId) {
+		Session session = sessionFactory.getCurrentSession();
+		UploadedFilesList filesList = (UploadedFilesList) session.load(UploadedFilesList.class, fileId);
+		return filesList;
+	}
 	
 	
 }

@@ -5,12 +5,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
@@ -30,6 +35,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private Utils utils;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -54,14 +62,64 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
+	@Override
+	@Transactional
+	@Async
+	public NotificationVO createNotificationAsync(NotificationVO notificationVO) {
+
+		Notification notification = parseNotificationModel(notificationVO);
+		Integer id = (Integer) notificationDao.save(notification);
+		notificationVO.setId(id);
+		return notificationVO;
+
+	}
+
+	@Override
+	@Transactional
+	public NotificationVO createRoleBasedNotification(
+			NotificationVO notificationVO, List<UserRolesEnum> userRoles,
+			List<InternalUserRolesEum> internalUserRoles) {
+
+		Notification notification = parseNotificationModel(notificationVO);
+
+		if (userRoles != null && userRoles.size() > 0) {
+
+			StringBuilder userRolesVisible = new StringBuilder("");
+			for (UserRolesEnum rolesEnum : userRoles) {
+				userRolesVisible.append(rolesEnum.toString() + ",");
+			}
+
+			notification.setVisibleToUserRoles(userRolesVisible.toString());
+		}
+
+		if (internalUserRoles != null && internalUserRoles.size() > 0) {
+
+			notification.setVisibleToUserRoles(UserRolesEnum.INTERNAL
+					.toString());
+			StringBuilder internalUserRolesVisible = new StringBuilder("");
+			for (InternalUserRolesEum rolesEnumInternal : internalUserRoles) {
+				internalUserRolesVisible.append(rolesEnumInternal.toString()
+						+ ",");
+			}
+
+			notification.setVisibleToInternalUserRoles(internalUserRolesVisible
+					.toString());
+		}
+
+		Integer id = (Integer) notificationDao.save(notification);
+		notificationVO.setId(id);
+		return notificationVO;
+
+	}
+
 	private NotificationVO buildNotificationVO(Notification notification) {
 		if (notification == null)
 			return null;
 
 		NotificationVO vo = new NotificationVO();
 		vo.setId(notification.getId());
-		if(notification.getContent()!=null)
-		vo.setContent(new String(notification.getContent()));
+		if (notification.getContent() != null)
+			vo.setContent(new String(notification.getContent()));
 		if (notification.getCreatedBy() != null)
 			vo.setCreatedByID(notification.getCreatedBy().getId());
 		if (notification.getCreatedFor() != null)
@@ -70,13 +128,15 @@ public class NotificationServiceImpl implements NotificationService {
 			vo.setLoanID(notification.getLoan().getId());
 
 		if (notification.getCreatedDate() != null)
-			vo.setCreatedDate(notification.getCreatedDate().getTime());
+			vo.setCreatedDate(utils.getDateInUserLocale(
+					notification.getCreatedDate()).getTime());
 		vo.setRead(notification.getRead());
 		vo.setDismissable(notification.getDismissable());
 		vo.setTitle(notification.getTitle());
 		vo.setPriority(notification.getPriority());
 		if (notification.getRemindOn() != null)
-			vo.setRemindOn(notification.getRemindOn().getTime());
+			vo.setRemindOn(utils
+					.getDateInUserLocale(notification.getRemindOn()).getTime());
 		vo.setNotificationType(notification.getNotificationType());
 
 		return vo;
@@ -115,13 +175,19 @@ public class NotificationServiceImpl implements NotificationService {
 			createdFor.setId(loanNotification.getCreatedForID());
 			model.setCreatedFor(createdFor);
 		}
-
+		
+		if(loanNotification.getLoanID()!=null){
+			Loan loan=new Loan();
+			loan.setId(loanNotification.getLoanID());
+		}
+		
 		model.setRead(loanNotification.getRead());
 		model.setDismissable(loanNotification.getDismissable());
 		model.setTitle(loanNotification.getTitle());
 		model.setPriority(loanNotification.getPriority());
 		if (loanNotification.getRemindOn() != null)
-			model.setRemindOn(new Date(loanNotification.getRemindOn()));
+			model.setRemindOn(utils.getUserDateInGMT(new Date(
+					loanNotification.getRemindOn())));
 		model.setNotificationType(loanNotification.getNotificationType());
 
 		return model;

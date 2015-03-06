@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
@@ -25,6 +26,9 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+
+	@Autowired
+	private Utils utils;
 
 	@Override
 	public List<Notification> findActiveNotifications(Loan loan, User user) {
@@ -60,8 +64,10 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 								.and(Restrictions.isNull("createdFor"),
 										Restrictions.ilike(
 												"visibleToUserRoles",
-												UserRolesEnum.REALTOR
-														.toString()))));
+												"%"
+														+ UserRolesEnum.REALTOR
+																.toString()
+														+ "%"))));
 						break;
 
 					case INTERNAL:
@@ -70,18 +76,22 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 								Restrictions.and(
 										Restrictions.isNull("createdFor"),
 										Restrictions.and(
-												Restrictions.ilike(
-														"visibleToUserRoles",
-														UserRolesEnum.INTERNAL
-																.toString()),
+												Restrictions
+														.ilike("visibleToUserRoles",
+																"%"
+																		+ UserRolesEnum.INTERNAL
+																				.toString()
+																		+ "%"),
 												Restrictions.or(
 														Restrictions
 																.isNull("visibleToInternalUserRoles"),
 														Restrictions
 																.ilike("visibleToInternalUserRoles",
-																		user.getInternalUserDetail()
-																				.getInternaUserRoleMaster()
-																				.getRoleName()))))));
+																		"%"
+																				+ user.getInternalUserDetail()
+																						.getInternaUserRoleMaster()
+																						.getRoleName()
+																				+ "%"))))));
 						break;
 
 					default:
@@ -94,11 +104,13 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 				criteria.add(userRest);
 		}
 
+		// Fetch only unread notifications
 		criteria.add(Restrictions.eq("read", false));
 
 		Criterion remindOnIsNull = Restrictions.isNull("remindOn");
 		Criterion remindOnIsNotNull = Restrictions.isNotNull("remindOn");
-		Criterion remindDateReached = Restrictions.ge("remindOn", new Date());
+		Criterion remindDateReached = Restrictions.le("remindOn",
+				utils.getDateInUserLocale(new Date()));
 
 		Criterion reminder = Restrictions.or(remindOnIsNull,
 				Restrictions.and(remindOnIsNotNull, remindDateReached));
