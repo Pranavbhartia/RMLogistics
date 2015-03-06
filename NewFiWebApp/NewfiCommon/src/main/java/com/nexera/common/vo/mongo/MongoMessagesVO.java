@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.nexera.common.vo.MessageVO.FileVO;
-
 public class MongoMessagesVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,7 +49,7 @@ public class MongoMessagesVO implements Serializable {
 	// Parent ID for this message
 	private String parentId;
 
-	public class FileVO {
+	public static class FileVO {
 
 		private String fileName;
 		private String url;

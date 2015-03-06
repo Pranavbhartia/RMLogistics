@@ -1,11 +1,33 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.nexera.newfi</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.0</version>
-  </parent>
-  <artifactId>NewfiMongoCore</artifactId>
-  <name>NewfiMongoCore</name>
-  <description>Project for Mongo interaction</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.nexera.newfi</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>NewfiMongoCore</artifactId>
+	<name>NewfiMongoCore</name>
+	<description>Project for Mongo interaction</description>
+	<properties>
+		<mongo.version>2.13.0</mongo.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>NewfiCore</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>
