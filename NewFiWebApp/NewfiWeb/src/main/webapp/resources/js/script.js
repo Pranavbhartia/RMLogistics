@@ -13,6 +13,9 @@ function changeLeftPanel(primary) {
 		
 		findUser();
 	}
+	var contxt=getNotificationContext(newfiObject.user.defaultLoanId,newfiObject.user.id);
+	contxt.initContext(true);
+	addContext("notification",contxt);
 }
 
 function findUser(){
