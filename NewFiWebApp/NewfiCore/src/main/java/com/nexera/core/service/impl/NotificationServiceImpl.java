@@ -179,16 +179,35 @@ public class NotificationServiceImpl implements NotificationService {
 		if(loanNotification.getLoanID()!=null){
 			Loan loan=new Loan();
 			loan.setId(loanNotification.getLoanID());
+			model.setLoan(loan);
 		}
-		
-		model.setRead(loanNotification.getRead());
-		model.setDismissable(loanNotification.getDismissable());
+		if(loanNotification.getRead()!=null){
+			model.setRead(loanNotification.getRead());
+		}else{
+			model.setRead(false);
+		}
+		if(loanNotification.getDismissable()==null){
+			model.setDismissable(true);
+		}else
+			model.setDismissable(loanNotification.getDismissable());
 		model.setTitle(loanNotification.getTitle());
-		model.setPriority(loanNotification.getPriority());
+		if(loanNotification.getPriority()==null){
+			model.setPriority("HIGH");
+		}else
+			model.setPriority(loanNotification.getPriority());
 		if (loanNotification.getRemindOn() != null)
 			model.setRemindOn(utils.getUserDateInGMT(new Date(
 					loanNotification.getRemindOn())));
-		model.setNotificationType(loanNotification.getNotificationType());
+		if(loanNotification.getCreatedDate()==null){
+			model.setCreatedDate(new Date());
+		}else{
+			model.setRemindOn(utils.getUserDateInGMT(new Date(
+					loanNotification.getCreatedDate())));
+		}
+		if(loanNotification.getNotificationType()==null){
+			model.setNotificationType("Sample");
+		}else
+			model.setNotificationType(loanNotification.getNotificationType());
 
 		return model;
 	}

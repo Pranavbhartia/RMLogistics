@@ -202,7 +202,7 @@ function getNotificationContext(loanId,userId){
 				}else{
 					data.dismissable=true;
 					data.id=response.resultObject;
-					if(new Date().getTime()<=data.remindOn)
+					if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 
 					if(callback){
