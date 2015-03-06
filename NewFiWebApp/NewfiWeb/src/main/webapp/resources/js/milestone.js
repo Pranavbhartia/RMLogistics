@@ -1,3 +1,4 @@
+//Function to paint to loan progress page
 function paintCustomerLoanProgressPage(){
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
@@ -669,4 +670,410 @@ function paintMilestoneCustomerProfileDetails(){
 	custTxtContainer.append(name).append(role).append(contact);
 	container.append(custImg).append(custTxtContainer);
 	$('#loan-progress-milestone-wrapper').append(container);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * JavaScript functions for loan manager Agent page
+ */
+
+
+
+
+
+
+//Function to paint to loan progress page
+function paintAgentLoanProgressPage(){
+	
+	appendCustomerDetailHeader(selectedUserDetail);
+	
+	var wrapper = $('<div>').attr({
+		"class" : "loan-progress-wrapper"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "loan-progress-header"
+	}).html("loan progress");
+	var container = $('<div>').attr({
+		"id" : "agent-loan-progress",
+		"class" : "loan-progress-container"
+	});
+	wrapper.append(header).append(container);
+	$('#center-panel-cont').append(wrapper);
+	
+	paintAgentLoanProgressContainer();
+}
+
+
+function paintAgentLoanProgressContainer() {
+	var loanProgressCont = $('<div>').attr({
+		"id" : "loan-progress-milestone-wrapper",
+		"class" : "loan-progress-milestone-wrapper"
+	});
+	$('#agent-loan-progress').append(loanProgressCont);
+	
+	
+	//Append agent page loan progress milestones
+	appendAgentMilestoneMakeInitialContact();
+	appendAgentMilestoneSystemEducation();
+	appendAgentMilestone1003Status();
+	appendAgentMilestoneCreditBureau();
+	appendAgentMilestoneNeededItems();
+	appendAgentMilestoneAddTeam();
+	appendAgentMilestoneDisclosures();
+	appendAgentMilestoneApplicationFee();
+	appendAgentMilestoneAppraisal();
+	appendAgentMilestoneLockRate();
+	appendAgentMilestoneUnderwriting();
+	appendAgentMilestoneClosingStatus();
+	
+	//adjustBorderMilestoneContainer();
+}
+
+
+function appendAgentMilestoneMakeInitialContact(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-in-progress"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("Make Initial Contact");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("Schedule an alert");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+
+function appendAgentMilestoneSystemEducation(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-in-progress"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("System Education");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Rates");
+	
+	var txtRow2 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Application");
+	
+	var txtRow3 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Communication");
+	
+	var txtRow4 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Needs List/Documents");
+	
+	var txtRow5 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Loan Progress");
+	
+	var txtRow6 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Profile");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1).append(txtRow2).append(txtRow3).append(txtRow4).append(txtRow5).append(txtRow6);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestone1003Status(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-in-progress"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("1003 Complete");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("LQB 654823");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneCreditBureau(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-complete"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("Credit bureau");
+	
+	header.append(headerTxt);
+	
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Credit Score");
+	
+	var txtRow2 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("AUS (Automated Underwriting)");
+	
+	var txtRow3 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Loan Manager Decision");
+	
+	var txtRow4 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("QC");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1).append(txtRow2).append(txtRow3).append(txtRow4);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneNeededItems(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("Needed Items");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("Click here to add needed item");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneAddTeam(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-complete"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("Add Team");
+	
+	header.append(headerTxt);
+	
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Click here to add team member");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneDisclosures(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("Disclosures/Intent To Proceed");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("Click here to add disclosures");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneApplicationFee(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("Appication Fee");
+	
+	header.append(headerTxt);
+	
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Click here to edit application fee");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneAppraisal(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("Appraisal");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("Click here to start appraisal");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneLockRate(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("Lock Your Rate");
+	
+	header.append(headerTxt);
+	
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Click here to lock rate");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneUnderwriting(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc m-not-started"
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html("Underwriting Status");
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html("Pending");
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneClosingStatus(){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc m-not-started"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html("Loan Closed/Declined");
+	
+	header.append(headerTxt);
+	
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-rc-text"
+	}).html("Closing status");
+	
+	wrapper.append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
