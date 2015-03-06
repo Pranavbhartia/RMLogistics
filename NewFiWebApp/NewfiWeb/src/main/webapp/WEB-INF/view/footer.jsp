@@ -11,3 +11,4 @@
 <script src="resources/js/newfiModel.js"></script>
 <script src="resources/js/managerNeedList.js"></script>
 <script src="resources/js/jquery.Jcrop.js"></script>
+<script src="resources/js/jcrop.js"></script>

@@ -23,14 +23,36 @@
 </head>
 
 <body>
+<style>
+.btn-pu{
+	width: 100px;
+	line-height: 32px;
+	text-align: center;
+	border: 1px solid #dcdcdc;
+	cursor: pointer;
+	float: left;
+	maring: 0 30px;
+}
+</style>
+	<div id="popup-overlay" class="popup-overlay" style="display: none;position: fixed; height: 100%; width: 100%; overflow: auto;z-index: 9999; background-color: rgba(255, 255, 255, 0.901961) !important;">
+		<div class="overlay-container" style="width: 500px; margin: 100px auto; border: 1px solid #dcdcdc;background-color: #fff;overflow: hidden;">
+			<img alt="" src="" id="pu-img">
+			<canvas id="pu-canvas" style="height: 150px;width: 150px;z-index: -9;position: relative;margin-bottom: -150px;"></canvas>
+			<div style="height: 50px; margin-top: 20px;" class="btn-container">
+				<div id="btn-pu-save" class="btn-pu btn-pu-save">Save</div>
+				<div id="btn-pu-cancel" class="btn-pu btn-pu-cancel">Cancel</div>
+			</div>
+		</div>
+	</div>
 	<jsp:include page="header.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="container-row row clearfix">
 			<jsp:include page="customerViewLeftPanel.jsp"></jsp:include>
+			
 			<div id="right-panel"></div>
+			<div id="imageCropContainerDiv" style="width:200px;height: 200">
+			</div>
 			<div id="loading"></div>
-		</div>
-		<div id="imageCropContainerDiv" style="width:200px;height: 200">
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
@@ -54,7 +76,8 @@
 				
 			}else{
 				
-				 $("#myProfilePicture").addClass("lp-pic float-left").css('background', 'url(' + newfiObject.user.photoImageUrl  + ')');
+				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
+				 
 			}
 			
 			
@@ -78,7 +101,10 @@
 	            retrieveState();
 	        }
 			
-			
+			$(document).on('change', '#prof-image', function() {
+				
+				initiateJcrop(this);
+			});
 			
 		});
 	</script>

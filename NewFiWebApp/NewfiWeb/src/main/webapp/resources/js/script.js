@@ -21,14 +21,14 @@ function findUser(){
 /*var logedInUser;
 function resetSelectedUserDetailObject(user) {
 	
-	logedInUser = new Object();
-	logedInUser.userID = user.id;
+	user = new Object();
+	user.id = user.id;
 	logedInUser.phoneNo = user.phone_no;
 }*/
 
 
 function appendCustPersonalInfoWrapper(user) {
-	
+	//alert(logedInUser.userID);
 	//resetlogedInUserDetailObject(user);
 	showCustomerLoanPage(user);
 	
@@ -64,6 +64,7 @@ function getCustomerSecondaryLeftNav() {
 }
 
 function getCustomerSecondaryLeftNavStep(step, text) {
+	
 	
 	var container = $('<div>').attr({
 		"id" : "lp-step" + step,
@@ -116,14 +117,14 @@ function showCustomerLoanPage(user) {
 	loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
 
 	$('#right-panel').append(loanDetailsMainContainer);
-	changeSecondaryLeftPanel(2 ,user);
+	changeSecondaryLeftPanel(2);
 	adjustCenterPanelWidth();
 	
 	//TODO: Invoke dynamic binder to listen to secondary navigation clicks
 	globalSNBinder();
 }
 
-function changeSecondaryLeftPanel(secondary ,user) {
+function changeSecondaryLeftPanel(secondary) {
 	
 	secondary = parseInt(secondary);
 	$('.lp-t2-item').removeClass('t2-active');
@@ -137,8 +138,12 @@ function changeSecondaryLeftPanel(secondary ,user) {
 	if (secondary == 1) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
+		
+		// make a ajax call and get user
+		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, paintProfileCompleteStep1);
+		
 		// customer profile page
-		paintProfileCompleteStep1(user);
+		
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
