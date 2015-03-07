@@ -63,13 +63,14 @@ public class CommunicationLogRestService {
 	public @ResponseBody CommonResponseVO saveCommunicationLog(
 	        @RequestBody String messageVOString) {
 
-		CommonResponseVO response = null;
+		CommonResponseVO response = new CommonResponseVO();
 
 		try {
 			MessageVO messageVO = new Gson().fromJson(messageVOString,
 			        MessageVO.class);
-			messageService.saveMessage(messageVO,
+			String messageId = messageService.saveMessage(messageVO,
 			        MessageTypeEnum.NOTE.toString());
+			response.setResultObject(messageId);
 		} catch (FatalException | NonFatalException e) {
 			// TODO Auto-generated catch block
 			response = RestUtil.wrapObjectForFailure(null, "500",
