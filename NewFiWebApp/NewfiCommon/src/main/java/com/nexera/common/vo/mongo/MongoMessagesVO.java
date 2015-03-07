@@ -1,6 +1,7 @@
 package com.nexera.common.vo.mongo;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +70,12 @@ public class MongoMessagesVO implements Serializable {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
+		@Override
+        public String toString() {
+	        return "FileVO [fileName=" + fileName + ", url=" + url + "]";
+        }
+		
 
 	}
 
@@ -159,5 +166,14 @@ public class MongoMessagesVO implements Serializable {
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
+
+	@Override
+    public String toString() {
+	    return "MongoMessagesVO [id=" + id + ", body=" + body +  ", messageType=" + messageType
+	            + ", createdDate=" + createdDate + ", createdBy=" + createdBy
+	            + ", roleName=" + roleName + ", roleList=" + roleList
+	            + ", userList=" + userList + ", loanId=" + loanId
+	            + ", parentId=" + parentId + "]";
+    }
 
 }

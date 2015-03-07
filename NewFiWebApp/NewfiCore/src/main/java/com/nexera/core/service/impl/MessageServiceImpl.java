@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +20,8 @@ import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
 import com.nexera.common.vo.MessageVO;
-import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
+import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
@@ -29,6 +31,9 @@ import com.nexera.mongo.service.impl.MongoCoreMessageServiceImpl;
 
 @Component
 public class MessageServiceImpl implements MessageService {
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(MessageServiceImpl.class);
 
 	@Autowired
 	UserProfileDao userProfileDao;
@@ -41,20 +46,25 @@ public class MessageServiceImpl implements MessageService {
 	        throws FatalException, NonFatalException {
 
 		MongoMessagesVO mongoMessagesVO = new MongoMessagesVO();
-		mongoMessagesVO.setBody(mongoMessagesVO.getBody());
+		LOG.debug("Messaege from UI: " + messagesVO);
+		mongoMessagesVO.setBody(messagesVO.getMessage());
 		mongoMessagesVO.setCreatedBy(new Long(messagesVO.getCreatedUser()
 		        .getUserID()));
+		mongoMessagesVO.setParentId(messagesVO.getParentId());
 		mongoMessagesVO.setLoanId(Long.valueOf(messagesVO.getLoanId()));
 		mongoMessagesVO.setMessageType(messageType);
 		mongoMessagesVO.setRoleName(messagesVO.getCreatedUser().getRoleName());
 		List<Long> userAccessList = getUserIds(messagesVO.getOtherUsers());
 		List<String> userRoleList = getUserRoles(messagesVO.getOtherUsers());
+		userAccessList.add(new Long(messagesVO.getCreatedUser().getUserID()));
+		userRoleList.add(messagesVO.getCreatedUser().getRoleName());
 		mongoMessagesVO.setUserList(userAccessList);
 		mongoMessagesVO.setRoleList(userRoleList);
 		// TODO: Take care of GMT conversion
 		mongoMessagesVO.setCreatedDate(new Date(System.currentTimeMillis()));
 
 		MongoCoreMessageService mongoMessageService = new MongoCoreMessageServiceImpl();
+		LOG.debug("Saving Mongo message: " + mongoMessagesVO);
 		return mongoMessageService.saveMessage(mongoMessagesVO);
 
 	}
@@ -77,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public MessageHierarchyVO getMessages(MessageQueryVO queryVO)
 	        throws FatalException, NonFatalException {
 		// TODO Auto-generated method stub
@@ -88,7 +98,8 @@ public class MessageServiceImpl implements MessageService {
 		mongoQueryVO.setUserId(queryVO.getUserId());
 		mongoQueryVO.setPageNumber(queryVO.getPageNumber());
 		mongoQueryVO.setNumberOfRecords(queryVO.getNumberOfRecords());
-		mongoQueryVO.setRoleName(userProfileDao.findUserRoleForMongo(queryVO.getUserId().intValue()));
+		mongoQueryVO.setRoleName(userProfileDao.findUserRoleForMongo(queryVO
+		        .getUserId().intValue()));
 		MongoCoreMessageService mongoMessageService = new MongoCoreMessageServiceImpl();
 		MongoMessageHierarchyVO mongoHierarchyVO = mongoMessageService
 		        .getMessages(mongoQueryVO);
@@ -100,10 +111,11 @@ public class MessageServiceImpl implements MessageService {
 	private MessageHierarchyVO constructMessageHierarchy(
 	        MongoMessageHierarchyVO mongoHierarchyVO) {
 		List<List<MessageVO>> messageVOMasterList = new ArrayList<List<MessageVO>>();
-		List<MessageVO> messageVOList = new ArrayList<MessageVO>();
+		List<MessageVO> messageVOList;
 		List<List<String>> messages = mongoHierarchyVO.getMessageIds();
 
 		for (List<String> list : messages) {
+			messageVOList = new ArrayList<MessageVO>();
 			for (String messageId : list) {
 				MongoMessagesVO mongoMessagesVO = mongoHierarchyVO
 				        .getMongoMessagesVO(messageId);

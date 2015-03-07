@@ -3,8 +3,6 @@ package com.nexera.common.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nexera.common.vo.MessageVO.MessageUserVO;
-
 public class MessageVO {
 
 	public MessageVO() {
@@ -91,6 +89,12 @@ public class MessageVO {
 			this.roleName = roleName;
 		}
 
+		@Override
+        public String toString() {
+	        return "MessageUserVO [userID=" + userID + ", userName=" + userName
+	                + ", imgUrl=" + imgUrl + ", roleName=" + roleName + "]";
+        }
+
 	}
 
 	public class FileVO {
@@ -113,6 +117,12 @@ public class MessageVO {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
+		@Override
+        public String toString() {
+	        return "FileVO [fileName=" + fileName + ", url=" + url + "]";
+        }
+		
 
 	}
 
@@ -190,5 +200,15 @@ public class MessageVO {
 	    // TODO Auto-generated method stub
 	    return new MessageUserVO();
     }
+
+	@Override
+    public String toString() {
+		
+	    return "MessageVO [id=" + id + ", loanId=" + loanId + ", parentId="
+	            + parentId + ", message=" + message + ", createdUser="
+	            + createdUser + ", otherUsers=" + otherUsers +  ", createdDate=" + createdDate + "]";
+    }
+	
+	
 
 }
