@@ -101,7 +101,7 @@ function showMessageDashboard() {
 		"class" : "right-panel-messageDashboard float-left"
 	});
 	$('#right-panel').append(convMainContainer);
-	paintGettingToKnowMessageDashboard();
+	getConversationsofUser();
 	adjustCenterPanelWidth();
 }
 

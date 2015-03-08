@@ -71,12 +71,16 @@ public class CommunicationLogRestService {
 			String messageId = messageService.saveMessage(messageVO,
 			        MessageTypeEnum.NOTE.toString());
 			response.setResultObject(messageId);
-		} catch (FatalException | NonFatalException e) {
+			LOG.info("saving communication complete.");
+		} catch (FatalException | NonFatalException e ) {
 			// TODO Auto-generated catch block
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        e.getMessage());
 			LOG.error("Error in retrieving communication log", e);
 
+		}catch(Exception e){
+			LOG.error("Error in retrieving communication log", e);
+			e.printStackTrace();
 		}
 
 		return response;
