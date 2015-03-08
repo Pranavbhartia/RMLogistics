@@ -143,6 +143,7 @@ public class MessageServiceImpl implements MessageService {
 	private MessageVO createMessageVO(MongoMessagesVO mongoMessagesVO) {
 		// TODO Auto-generated method stub
 		MessageVO messageVO = new MessageVO();
+		messageVO.setId(mongoMessagesVO.getId());
 		messageVO.setMessage(mongoMessagesVO.getBody());
 		List<UserRoleNameImageVO> nameImageVOs = new ArrayList<UserRoleNameImageVO>();
 		UserRoleNameImageVO nameImageVO = userProfileDao
