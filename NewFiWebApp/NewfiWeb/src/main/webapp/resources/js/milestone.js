@@ -142,7 +142,7 @@ function appendMilestoneMyProfile(){
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-lc-text"
-	}).html("Online Appication");
+	}).html("Online Application");
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-lc-text"
@@ -858,7 +858,7 @@ function appendAgentMilestoneCreditBureau(){
 	
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-rc-text"
-	}).html("Credit Score");
+	}).html("Credit Score EQ - 686 ~ TU - 694 ~ Ex - 714");
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-rc-text"
@@ -866,7 +866,7 @@ function appendAgentMilestoneCreditBureau(){
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-rc-text"
-	}).html("Loan Manager Decision");
+	}).html("Loan Manager Decision: Pass/Declined");
 	
 	var txtRow4 = $('<div>').attr({
 		"class" : "milestone-rc-text"
