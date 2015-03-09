@@ -176,6 +176,8 @@ function getMessageDashboardWrapper() {
 		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , userRole);
 	}
 	
+	
+	
 	/*addClass('assigned-agent-unselect');*/
 	
 
