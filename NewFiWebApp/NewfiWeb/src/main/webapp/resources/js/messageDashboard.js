@@ -105,10 +105,10 @@ function successCallBackSaveMessage(){
 }
 
 function getConversationsofUser(){
-		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintGettingToKnowMessageDashboard);
+		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintCommunicationLog);
 }
 
-function paintGettingToKnowMessageDashboard(response){
+function paintCommunicationLog(response){
 	var rightArrow = $('<div>').attr({
 		"class" : "lp-right-arrow"
 	});
@@ -154,6 +154,7 @@ function getMessageDashboardWrapper() {
 		"class" : "assigned-agent-wrapper clearfix"
 	});
 	
+
 	for(i in myLoanTeam){
 		if(myLoanTeam[i].emailId == newfiObject.user.emailId)
 			continue;
@@ -165,7 +166,7 @@ function getMessageDashboardWrapper() {
 	
 	/*addClass('assigned-agent-unselect');*/
 	
-	
+
 	
 	container.append(assignedAgentWrapper);
 	

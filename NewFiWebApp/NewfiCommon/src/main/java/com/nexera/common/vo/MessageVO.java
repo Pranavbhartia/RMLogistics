@@ -1,6 +1,7 @@
 package com.nexera.common.vo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MessageVO {
@@ -40,8 +41,10 @@ public class MessageVO {
 
 	// Information about the links this message has access to
 	private List<FileVO> links;
-	
+
 	private String createdDate;
+
+	private Date sortOrderDate;
 
 	// Self reference to the message structure to take care of recursive nesting
 	MessageVO messageVO;
@@ -90,10 +93,10 @@ public class MessageVO {
 		}
 
 		@Override
-        public String toString() {
-	        return "MessageUserVO [userID=" + userID + ", userName=" + userName
-	                + ", imgUrl=" + imgUrl + ", roleName=" + roleName + "]";
-        }
+		public String toString() {
+			return "MessageUserVO [userID=" + userID + ", userName=" + userName
+			        + ", imgUrl=" + imgUrl + ", roleName=" + roleName + "]";
+		}
 
 	}
 
@@ -119,10 +122,9 @@ public class MessageVO {
 		}
 
 		@Override
-        public String toString() {
-	        return "FileVO [fileName=" + fileName + ", url=" + url + "]";
-        }
-		
+		public String toString() {
+			return "FileVO [fileName=" + fileName + ", url=" + url + "]";
+		}
 
 	}
 
@@ -177,12 +179,14 @@ public class MessageVO {
 	public List<FileVO> getLinks() {
 		return links;
 	}
+
 	public String getCreatedDate() {
-	    return createdDate;
-    }
+		return createdDate;
+	}
+
 	public void setCreatedDate(String createdDate) {
-	    this.createdDate = createdDate;
-    }
+		this.createdDate = createdDate;
+	}
 
 	public void setLinks(List<FileVO> links) {
 		this.links = links;
@@ -197,18 +201,25 @@ public class MessageVO {
 	}
 
 	public MessageUserVO createNewUserVO() {
-	    // TODO Auto-generated method stub
-	    return new MessageUserVO();
-    }
+		// TODO Auto-generated method stub
+		return new MessageUserVO();
+	}
+
+	public Date getSortOrderDate() {
+		return sortOrderDate;
+	}
+
+	public void setSortOrderDate(Date sortOrderDate) {
+		this.sortOrderDate = sortOrderDate;
+	}
 
 	@Override
-    public String toString() {
-		
-	    return "MessageVO [id=" + id + ", loanId=" + loanId + ", parentId="
-	            + parentId + ", message=" + message + ", createdUser="
-	            + createdUser + ", otherUsers=" + otherUsers +  ", createdDate=" + createdDate + "]";
-    }
-	
-	
+	public String toString() {
+
+		return "MessageVO [id=" + id + ", loanId=" + loanId + ", parentId="
+		        + parentId + ", message=" + message + ", createdUser="
+		        + createdUser + ", otherUsers=" + otherUsers + ", createdDate="
+		        + createdDate + "]";
+	}
 
 }

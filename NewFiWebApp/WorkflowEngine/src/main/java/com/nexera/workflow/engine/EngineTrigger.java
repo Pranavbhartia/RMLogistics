@@ -1,5 +1,6 @@
 package com.nexera.workflow.engine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -201,6 +202,17 @@ public class EngineTrigger
         }
 
         return null;
+    }
+
+
+    public List<WorkflowItemExec> getWorkflowItemExecByWorkflowMasterExec( int workflowexecId )
+    {
+        LOGGER.debug( "Inside method getWorkflowItemExecByWorkflowMasterExec" );
+        WorkflowExec workflowExec = workflowService.getWorkflowExecFromId( workflowexecId );
+        if ( workflowExec != null ) {
+            return workflowExec.getWorkflowItems();
+        }
+        return new ArrayList<WorkflowItemExec>();
     }
 
 
