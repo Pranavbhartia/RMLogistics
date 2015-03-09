@@ -71,7 +71,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		
 		MessageVO messageVO = new MessageVO();
 		String message = new String(CommunicationLogConstants.MODIFY_NEED);
-		
+		message.replaceFirst(CommunicationLogConstants.CUSTOMER, replacement)
 		
 		
 	}
