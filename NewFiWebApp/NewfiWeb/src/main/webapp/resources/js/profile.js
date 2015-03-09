@@ -222,6 +222,7 @@ function getCustomerUploadPhotoRow(user) {
 function uploadeImage() {
 
 	$("#prof-image").trigger('click');
+	$(".overlay-container").css("display","block");
 
 }
 
@@ -857,4 +858,12 @@ function saveEditUserProfile(user){
 	var formContainer = getLoanDetailsWrapper();
 	$('#center-panel-cont').append(topHeader).append(formContainer);
 	
+}
+
+
+function cancelUploadPhoto(){
+	
+	$('#pu-img').attr('src', "");
+	$("#popup-overlay").css("display","none");
+	$('#pu-img').css("display", "none");
 }
