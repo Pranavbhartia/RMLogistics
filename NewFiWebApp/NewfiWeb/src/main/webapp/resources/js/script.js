@@ -127,6 +127,7 @@ function showCustomerLoanPage(user) {
 	adjustCenterPanelWidth();
 	
 	//TODO: Invoke dynamic binder to listen to secondary navigation clicks
+	bindDataToSN();
 	globalSNBinder();
 }
 

@@ -139,6 +139,20 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 			}
 
 		}
+		if(addedList!=null && !addedList.isEmpty()){
+			message = message+"\n\n"+ "Following items were added to the list";
+		}
+		for (Integer neededList : addedList) {
+	        String label = needListLookup.get(neededList);
+	        message = message+ "\n > " + label;
+        }
+		if(removedList!=null && !removedList.isEmpty()){
+			message = message+"\n\n"+ "Following items were removed from the list";
+		}
+		for (Integer neededList : removedList) {
+	        String label = needListLookup.get(neededList);
+	        message = message+ "\n > " + label;
+        }
 		messageVO.setMessage(message);
 		messageVO.setOtherUsers(messageUserVOs);
 		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
