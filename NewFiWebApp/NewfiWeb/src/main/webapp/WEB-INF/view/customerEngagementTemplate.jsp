@@ -13,7 +13,7 @@
 </head>
 
 <body>
-	<jsp:include page="header.jsp"></jsp:include>
+	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="container-row row clearfix">
 			<div id="ce-main-container"></div>			
