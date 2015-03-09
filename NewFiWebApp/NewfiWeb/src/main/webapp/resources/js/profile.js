@@ -172,7 +172,7 @@ function getCustomerUploadPhotoRow(user) {
 		uploadPicPlaceholder = $('<div>').attr({
 			"id" : "profilePic",
 			"class" : "prof-pic-upload-placeholder float-left",
-			"style" : "background:url(" + user.photoImageUrl + ")"
+			"style" : "background-image:url(" + user.photoImageUrl + ")"
 		});
 	}
 
@@ -863,7 +863,6 @@ function saveEditUserProfile(user){
 
 function cancelUploadPhoto(){
 	
-	$('#pu-img').attr('src', "");
-	$("#popup-overlay").css("display","none");
-	$('#pu-img').css("display", "none");
+	//$("#popup-overlay").css("display", "none");
+	//$('#pu-img').attr('src', "");
 }
