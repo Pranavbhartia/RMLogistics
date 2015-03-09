@@ -300,7 +300,7 @@ function getDOBRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("DOB");
+	}).html("Date of Birth");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -331,7 +331,7 @@ function getPriEmailRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Primery Email");
+	}).html("Primary Email");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -360,7 +360,7 @@ function getSecEmailRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Secondry Email");
+	}).html("Secondary Email");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -447,7 +447,7 @@ function getPhone1Row(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Phone 1");
+	}).html("Primary Phone");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -466,7 +466,7 @@ function getPhone2Row(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Phone 2");
+	}).html("Secondary Phone");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});

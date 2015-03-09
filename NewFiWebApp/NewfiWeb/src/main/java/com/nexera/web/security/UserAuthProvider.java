@@ -14,9 +14,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.core.authentication.AuthenticationService;
@@ -54,6 +55,8 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 				List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 				user.setMinutesOffset(offSet);
+				
+				//user.setDisplayRoleCode();
 				//user.setMinutesOffset();
 				Authentication auth = new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
 				LOG.info("Authentication provided for user : " + user.getEmailId());
