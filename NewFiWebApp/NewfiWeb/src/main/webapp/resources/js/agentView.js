@@ -337,7 +337,7 @@ function appendCustomers(elementId, customers) {
 		}
 		var profImage = $('<div>').attr({
 			"class" : "cus-img-icn float-left",
-			"style" : "background:url(" + customer.prof_image + ")"
+			"style" : "background-image:url(" + customer.prof_image + ")"
 				
 		});
 		//code will execute if user is logged in
