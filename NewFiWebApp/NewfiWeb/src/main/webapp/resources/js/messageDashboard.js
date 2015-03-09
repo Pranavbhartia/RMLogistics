@@ -68,10 +68,10 @@ function successCallBackSaveMessage(){
 }
 
 function getConversationsofUser(){
-		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintGettingToKnowMessageDashboard);
+		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintCommunicationLog);
 }
 
-function paintGettingToKnowMessageDashboard(response){
+function paintCommunicationLog(response){
 	var rightArrow = $('<div>').attr({
 		"class" : "lp-right-arrow"
 	});
@@ -105,6 +105,7 @@ function getMessageDashboardWrapper() {
 		"class" : "assigned-agent-wrapper clearfix"
 	});
 	
+	//TODO: Change this to dynamically retrieving the team of the user.
 	var agent1 = getAssignedAgentContainer("Weno Carasbong", "Real State Agent", "+1 (888) 555-1875");
 	var agent2 = getAssignedAgentContainer("Renov Leonga", "Loan Officer", "+1 (888) 555-6755");
 	var agent3 = getAssignedAgentContainer("Elen Adarna", "Title Agent", "+1 (888) 555-1987").addClass('assigned-agent-unselect');
