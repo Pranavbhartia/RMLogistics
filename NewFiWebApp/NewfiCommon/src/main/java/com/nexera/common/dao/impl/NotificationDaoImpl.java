@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -118,6 +119,9 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		Criterion reminder = Restrictions.or(remindOnIsNull,
 				Restrictions.and(remindOnIsNotNull, remindDateReached));
 
+		criteria.addOrder(Order.desc("createdDate"));
+		criteria.addOrder(Order.desc("remindOn"));
+		
 		criteria.add(reminder);
 
 		return criteria.list();

@@ -6,6 +6,7 @@ package com.nexera.web.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
-import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
@@ -35,16 +37,26 @@ public class NotificationRestService {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getLoanByID(
-			@RequestParam(value = "loanID", required = false) Integer loanID,
-			@RequestParam(value = "userID", required = false) Integer userID) {
+			@RequestParam(value = "loanID", required = false) Integer loanID) {
 
 		UserVO userVO = null;
 		LoanVO loanVO = null;
 
-		if (userID != null) {
-			userVO = new UserVO();
-			userVO.setId(userID);
+		//Find the current logged in user
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext()
+				.getAuthentication()==null)
+			RestUtil.wrapObjectForFailure(null, "403", "Not logged in.");
+		
+		final Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (principal!=null && (principal instanceof User)) {
+			User user = (User) principal;
+				userVO=userProfileService.buildUserVO(user);
+			
+		} else {
+			RestUtil.wrapObjectForFailure(null, "403", "Not logged in.");
 		}
+		
 
 		if (loanID != null) {
 			loanVO = new LoanVO();
