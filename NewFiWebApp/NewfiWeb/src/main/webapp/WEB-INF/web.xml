@@ -12,6 +12,7 @@
 		<param-value>
 		classpath:NewfiCommon-Configuration.xml,
 			classpath:NewfiCore-Configuration.xml,
+			classpath:NewfiMongoCore-Configuration.xml,
 			/WEB-INF/app-security.xml
 		</param-value>
 	</context-param>
