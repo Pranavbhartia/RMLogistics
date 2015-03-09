@@ -31,6 +31,14 @@ public class LoanVO implements Serializable {
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
 
+	public LoanVO(int loanId) {
+	    this.id = loanId;
+    }
+
+	public LoanVO() {
+	    // TODO Auto-generated constructor stub
+    }
+
 	public int getId() {
 		return id;
 	}

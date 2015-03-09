@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommunicationLogConstants;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.entity.Loan;
@@ -24,6 +26,7 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeedsListMasterVO;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.utility.CoreCommonConstants;
 
@@ -35,8 +38,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private NeedsDao needsDao;
 
 	@Autowired
+	Utils utils;
+	
+	@Autowired
 	private LoanDao loanDao;
 
+	@Autowired
+	private MessageServiceHelper messageServiceHelper;
+	
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
 		List<NeedsListMaster> needs = (List<NeedsListMaster>) needsDao
 				.getMasterNeedsList(false);
@@ -245,17 +254,19 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	public int saveLoanNeeds(int loanId, List<Integer> needsList) {
 		LinkedHashMap<String, LoanNeedsList> existingNeeds = new LinkedHashMap<String, LoanNeedsList>();
-		List<LoanNeedsList> ExistingNeedsList = null;
+		List<LoanNeedsList> existingNeedsList = null;
+		List<Integer> addedList = new ArrayList<Integer>();
+		List<Integer> removedList = new ArrayList<Integer>();
 		try {
-			ExistingNeedsList = needsDao.getLoanNeedsList(loanId);
+			existingNeedsList = needsDao.getLoanNeedsList(loanId);
 		} catch (NoRecordsFetchedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		for (LoanNeedsList need : ExistingNeedsList) {
+		for (LoanNeedsList need : existingNeedsList) {
 			existingNeeds.put(need.getNeedsListMaster().getId() + "", need);
 		}
-		List<LoanNeedsList> needs = new ArrayList<LoanNeedsList>();
+		
 		try {
 			for (Integer needId : needsList) {
 				LoanNeedsList need = new LoanNeedsList();
@@ -265,6 +276,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 				needListMaster.setId(needId.intValue());
 				need.setLoan(loan);
 				need.setNeedsListMaster(needListMaster);
+				
 				need.setDeleted(false);
 				need.setSystemAction(true);
 				need.setActive(true);
@@ -276,6 +288,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					existingNeeds.remove(needId.intValue() + "");
 				} else {
 					try {
+						addedList.add(needId.intValue());
 						needsDao.save(need);
 					} catch (DatabaseException e) {
 
@@ -283,11 +296,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 				}
 			}
 			for (LoanNeedsList need : existingNeeds.values()) {
+				removedList.add(need.getNeedsListMaster().getId());
 				needsDao.deleteLoanNeed(need);
 			}
 		} catch (Exception e) {
 			return 0;
 		}
+		messageServiceHelper.generateCommunicationLogMessage(loanId,utils.getLoggedInUser(),addedList,removedList);
 		return 1;
 	}
 

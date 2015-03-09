@@ -98,7 +98,7 @@ public class Utils {
 
 	private Integer getOffsetFromUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
+		        .getAuthentication().getPrincipal();
 		if (principal instanceof User) {
 			User user = (User) principal;
 			if (user.getMinutesOffset() == null) {
@@ -111,6 +111,15 @@ public class Utils {
 		}
 
 	}
-	
-	
+
+	public User getLoggedInUser() {
+		final Object principal = SecurityContextHolder.getContext()
+		        .getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			User user = (User) principal;
+			return user;
+		}
+		return null;
+	}
+
 }
