@@ -158,19 +158,25 @@ function getMessageDashboardWrapper() {
 	for(i in myLoanTeam){
 		if(myLoanTeam[i].emailId == newfiObject.user.emailId)
 			continue;
+		
+		var userRole = myLoanTeam[i].userRole.roleCd;
+		var userDescription  = myLoanTeam[i].userRole.roleDescription;
+		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
+			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
+			userDescription = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
 		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, 
-													myLoanTeam[i].userRole.roleDescription,
+				userDescription,
 															myLoanTeam[i].emailId , myLoanTeam[i].photoImageUrl );
 		assignedAgentWrapper.append(agent);
 		
-		var userRole = myLoanTeam[i].userRole.roleCd;
-		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
-			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
-		}
+		
 		
 		
 		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , userRole);
 	}
+	
+	
 	
 	/*addClass('assigned-agent-unselect');*/
 	
