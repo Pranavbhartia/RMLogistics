@@ -188,7 +188,8 @@ function paintAgentDashboard() {
 	var contxt=getNotificationContext(0,newfiObject.user.id);
 	contxt.getLoanNotificationByType(function(ob){
 		ob.populateLoanNotification();
-	})
+	});
+	contxt.getNotificationForUser();
 	addContext("notification",contxt);
 }
 
@@ -471,10 +472,11 @@ function appendCustomerTableHeader(elementId) {
  *            container to which the it is to be appended
  */
 function appendCustomerDetailContianer(element, customer) {
-
+	var contxt=getContext(customer.loanID+"-notification");
 	if ($(element).next().hasClass("cust-detail-wrapper")) {
 		$('#cust-detail-wrapper').remove();
 		$('.leads-container-tr').removeClass('leads-container-tr-sel');
+		contxt.existingWrapper=undefined;
 		return;
 	}
 	$('#cust-detail-wrapper').remove();
@@ -485,7 +487,6 @@ function appendCustomerDetailContianer(element, customer) {
 		"class" : "cust-detail-wrapper clearfix"
 	});
 	$(element).after(wrapper);
-	var contxt=getContext(customer.loanID+"-notification");
 	appendRecentAlertContainer(contxt.loanNotificationList,contxt);
 	appendSchedulerContainer(contxt);
 	appendRecentNotesContainer(customer.notes);
@@ -568,10 +569,16 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 			alertLeftCol.append(alertTxt);
 			if(alerts[i].dismissable==true)
 				alertLeftCol.append(alertBtnRow);
-			var editBtn = $('<div>').attr({
-				"class" : "alert-edit-btn float-right"
-			}).html("Edit");
-			alertContainer.append(alertLeftCol).append(editBtn);
+			if(alerts[i].remindOn){
+				var dat=new Date(alerts[i].remindOn);
+				var amPm=dat.getHours()>12?"PM":"AM";
+				var hr=dat.getHours()%12<10?("0"+dat.getHours()%12):dat.getHours()%12;
+				var min=dat.getMinutes()<10?("0"+dat.getMinutes()):dat.getMinutes();
+				var editBtn = $('<div>').attr({
+					"class" : "float-right"
+				}).html($.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm);
+				alertContainer.append(alertLeftCol).append(editBtn);
+			}
 			recentAlertWrapper.append(alertContainer);
 		}
 	}
