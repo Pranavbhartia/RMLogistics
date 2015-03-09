@@ -8,14 +8,13 @@ function getNotificationContext(loanId,userId){
 		loanContainerId:"notificationParentContainer",
 		userNotificationList:[],
 		loanNotificationList:[],
-		existingWrapper:{},
+		existingWrapper:undefined,
 		headerText:"",
 		getNotificationForUser:function(callback){
 			if(userId!=0){
 				var ob=this;
 				var data={};
 				data.userID=ob.userId;
-				data.loanID=0;
 				//code to call API to get Notification List for user
 				ajaxRequest("rest/notification","GET","json",data,function(response){
 					if(response.error){
@@ -40,7 +39,7 @@ function getNotificationContext(loanId,userId){
 				//code to call API to get Notification List for loan
 				ajaxRequest("rest/notification","GET","json",data,function(response){
 					if(response.error){
-						showToastMessage(response.error.message)
+						showToastMessage(response.error.message);
 					}else{
 						var notificationList=response.resultObject;
 						ob.loanNotificationList=notificationList;
@@ -90,7 +89,7 @@ function getNotificationContext(loanId,userId){
 		initContext:function(draw){
 			var ob=this;
 			//Code need to be changed for notification related to user (Top Notification area)
-			//ob.getNotificationForUser(function(ob){ob.populateUserNotification()});
+			ob.getNotificationForUser();
 
 			ob.getNotificationForLoan(function(ob){
 				if(draw){
@@ -132,18 +131,30 @@ function getNotificationContext(loanId,userId){
 			var id=notificationID;
 			if((notificationID+"").indexOf("LNID")>=0)
 				id=notificationID.substr(4);
+			if((notificationID+"").indexOf("UNID")>=0)
+				id=notificationID.substr(4);
 			ajaxRequest("rest/notification/"+id,"DELETE","json",data,function(response){
 				if(response.error){
-					showToastMessage(response.error.message)
+					showToastMessage(response.error.message);
 				}else{
-					ob.removeNotificationfromList(notificationID);
+					showToastMessage("Notification Dismissed");
+					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
 						$("#"+notificationID).remove();
 					}
+					existAry=$("#"+"LNID"+id);
+					if(existAry.length>0){
+						$("#"+"LNID"+id).remove();
+					}
+					existAry=$("#"+"UNID"+id);
+					if(existAry.length>0){
+						$("#"+"UNID"+id).remove();
+					}
 					if(callback){
 						callback(ob);
 					}
+					removeNotificationFromAllContext(id);
 				}
 				
 			});
@@ -154,7 +165,7 @@ function getNotificationContext(loanId,userId){
 			var ob=this;
 			var data={};
 			var id=notificationID;
-			if((notificationID+"").indexOf("LNID")>0)
+			if((notificationID+"").indexOf("LNID")>=0)
 				id=notificationID.substr(4);
 			data.id=id;
 			snoozeTimeMin=1000*60*snoozeTimeMin;
@@ -162,9 +173,10 @@ function getNotificationContext(loanId,userId){
 			data.read=false;
 			ajaxRequest("rest/notification","PUT","json",JSON.stringify(data),function(response){
 				if(response.error){
-					showToastMessage(response.error.message)
+					showToastMessage(response.error.message);
 				}else{
-					ob.removeNotificationfromList(notificationID);
+					showToastMessage("Success");
+					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
 						$("#"+notificationID).remove();
@@ -178,22 +190,34 @@ function getNotificationContext(loanId,userId){
 			//var notificationID="LNID"+notification.id;
 			
 		},
+		removeNotificationFromLoanList:function(notificationID){
+			if((notificationID+"").indexOf("LNID")<0)
+				notificationID="LNID"+notificationID;
+			var existAry=$("#"+notificationID);
+			if(existAry.length>0){
+				$("#"+notificationID).remove();
+			}
+		},
 		removeNotificationfromList:function(notificationID){
 			var temp=[];
 			var ob=this;
+			var found=false;
 			for(var i=0;i<ob.loanNotificationList.length;i++){
 				if(ob.loanNotificationList[i].id!=notificationID){
 					temp.push(ob.loanNotificationList[i]);
-				}
+				}else
+					found=true;
 			}
 			ob.loanNotificationList=temp;
 			temp=[];
 			for(var i=0;i<ob.userNotificationList.length;i++){
 				if(ob.userNotificationList[i].id!=notificationID){
 					temp.push(ob.userNotificationList[i]);
-				}
+				}else
+					found=true;
 			}
 			ob.userNotificationList=temp;
+			return found;
 		},
 		scheduleAEvent:function(data,callback){
 			var ob=this;
@@ -201,8 +225,9 @@ function getNotificationContext(loanId,userId){
 			data.notificationType="NOTIFICATION";
 			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
 				if(response.error){
-					showToastMessage(response.error.message)
+					showToastMessage(response.error.message);
 				}else{
+					showToastMessage("Notification Scheduled");
 					data.dismissable=true;
 					data.id=response.resultObject.id;
 					if(new Date().getTime()>=data.remindOn)
@@ -235,11 +260,31 @@ function getNotificationContext(loanId,userId){
 			});
 		},
 		updateWrapper:function(callback){
-			appendRecentAlertContainer(this.loanNotificationList,this,this.existingWrapper);
+			if(this.existingWrapper)
+				appendRecentAlertContainer(this.loanNotificationList,this,this.existingWrapper);
 		}
 	};
 	//notificationContext.initContext();
 	return notificationContext;
+}
+function removeNotificationFromAllContext(notificationId){
+	if(newfiObject.contextHolder){
+		for(var contxtKey in newfiObject.contextHolder){
+			if(contxtKey.indexOf("notification")>=0){
+				var contxt=newfiObject.contextHolder[contxtKey]	
+				var found=contxt.removeNotificationfromList(notificationId);
+				if(found==true){
+					if(contxtKey.indexOf("notification")==0){
+						contxt.removeNotificationFromLoanList(notificationId);
+					}else{
+						contxt.updateLoanListNotificationCount();
+						contxt.updateWrapper();
+					}
+				}
+			}
+		}
+	}
+		
 }
 function getContext(key){
 	if(newfiObject){
@@ -275,4 +320,127 @@ function removeNotification(id){
 	}else{
 
 	}
+}
+function getTimeElapsedString(dat){
+	var seconds=(new Date().getTime()-dat)/1000;
+	var future=false;
+	if(seconds<0){
+		seconds=seconds*-1;
+		future=true;
+	}
+	if(seconds>=60){
+		var minutes=seconds/60;
+		seconds=seconds%60;
+		if(minutes>=60){
+			var hrs=minutes/60;
+			minutes=minutes%60;
+			if(hrs>24){
+				var days=hrs/24;
+				hrs=hrs%24;
+				if(days>30){
+					var amPm=dat.getHours()>12?"PM":"AM";
+					var hr=dat.getHours()%12<10?("0"+dat.getHours()%12):dat.getHours()%12;
+					var min=dat.getMinutes()<10?("0"+dat.getMinutes()):dat.getMinutes();
+					return "On "+$.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm;
+				}else{
+					if(future)
+						return "After "+parseInt(days)+" Days";
+					else
+						return parseInt(days)+" Days ago";
+				}
+			}else{
+				if(future)
+					return "After "+parseInt(hrs)+" Hours "+parseInt(minutes)+" Minutes"
+				else
+					return parseInt(hrs)+" Hours "+parseInt(minutes)+" Minutes ago";
+			}
+		}else{
+			if(future)
+				return "After "+parseInt(minutes)+" Minutes "+parseInt(seconds)+" Seconds ago";
+			else
+				return parseInt(minutes)+" Minutes "+parseInt(seconds)+" Seconds ago";
+		}
+	}else{
+		if(future)
+			return "After "+parseInt(seconds)+" Seconds ago";
+		else
+			return parseInt(seconds)+" Seconds ago";
+	}
+}
+
+function appendAlertNotificationPopup(){
+	var alertWrapper = $('<div>').attr({
+		"id" : "alert-popup-wrapper",
+		"class" : "alert-popup-wrapper"
+	});
+	var contxt=getContext("notification");
+	for(var i=0;i<contxt.userNotificationList.length;i++){
+		var row = getAlertNotificationRow(contxt.userNotificationList[i],contxt);
+		alertWrapper.append(row);
+	}
+	/*var row1 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",false);
+	var row2 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",true);
+	var row3 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",false);
+	var row4 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
+	var row5 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
+	var row6 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
+	
+	alertWrapper.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6);*/
+	
+	$('#alert-notification-btn').append(alertWrapper);
+}
+
+function getAlertNotificationRow(notification,contxt){
+	var row = $('<div id="UNID'+notification.id+'">').attr({
+		"class" : "alert-popup-row clearfix"
+	});
+	
+	var container = $('<div>').attr({
+		"class" : "alert-popup-container clearfix"
+	}); 
+	
+	var alertIcn = $('<div>').attr({
+		"class" : "alert-popup-icn float-left"
+	});
+	
+	if(!notification.dismissable){
+		alertIcn.addClass('alert-system-icn');
+	}else{
+		alertIcn.addClass('alert-user-icn');
+	}
+	
+	var alertTxtCont = $('<div>').attr({
+		"class" : "alert-popup-cont float-left"
+	});
+	
+	var alertTxt = $('<div>').attr({
+		"class" : "alert-popup-txt"
+	}).html(notification.content);
+	
+	var alertTime = $('<div>').attr({
+		"class" : "alert-popup-time"
+	}).html(getTimeElapsedString(notification.remindOn));
+	
+	alertTxtCont.append(alertTxt).append(alertTime);
+	
+	container.append(alertIcn).append(alertTxtCont);
+	
+	if(notification.dismissable){
+		var alertRemoveIcn = $('<div>').attr({
+			"class" : "alert-rm-icn float-right",
+			"UNID" : "UNID"+notification.id
+		}).on('click',function(e){
+			var notificationId=this.getAttribute("UNID");
+			var contxt=getContext("notification");
+			contxt.removeLoanNotification(notificationId)
+			e.stopImmediatePropagation();
+		});
+		container.append(alertRemoveIcn);
+	}
+	return row.append(container);
+}
+
+
+function dismissAlert(element){
+	$(element).closest('.alert-popup-row').remove();
 }

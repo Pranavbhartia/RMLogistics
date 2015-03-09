@@ -341,6 +341,8 @@ function paintConversations(conversations){
 		
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
+			if(otherUserBinded[k].userID == newfiObject.user.id)
+				continue;
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
@@ -421,9 +423,9 @@ function paintChildConversations(level,conversations){
 		var conContainer = $('<div>').attr({
 			"class" : "clearfix conversation-container-child conversation-container-l"+level
 		});
-		if(i%2==1){
+		/*if(i%2==1){
 			conContainer.addClass("conversation-container-even-child");
-		}
+		}*/
 		var topRow = $('<div>').attr({
 			"class" : "conv-top-row clearfix"
 		});
@@ -440,11 +442,11 @@ function paintChildConversations(level,conversations){
 		
 		var profName = $('<div>').attr({
 			"class" : "con-prof-name semi-bold"
-		}).html(data.name);
+		}).html(data.createdUser.userName);
 		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
-		}).html(data.time); 
+		}).html(data.createdDate); 
 		
 		col2.append(profName).append(messageTime);
 		
@@ -454,6 +456,10 @@ function paintChildConversations(level,conversations){
 		
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
+			
+			if(otherUserBinded[k].userID == newfiObject.user.id)
+				continue;
+			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
