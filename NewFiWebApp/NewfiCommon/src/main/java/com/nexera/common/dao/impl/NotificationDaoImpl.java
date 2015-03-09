@@ -37,6 +37,9 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 	@Override
 	public List<Notification> findActiveNotifications(Loan loan, User user) {
 
+		if(user==null)
+			return null;
+		
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notification.class);
 		if (user.getUserRole() == null)

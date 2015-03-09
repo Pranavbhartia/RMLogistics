@@ -107,10 +107,16 @@ public class Utils {
 
 	}
 
+	//To be used by all modules to fetch the currently logged in user
 	public User getLoggedInUser() {
+		
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext()
+				.getAuthentication()==null)
+			return null;
+		
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
-		if (principal instanceof User) {
+		if (principal!=null && principal instanceof User) {
 			User user = (User) principal;
 			return user;
 		}
