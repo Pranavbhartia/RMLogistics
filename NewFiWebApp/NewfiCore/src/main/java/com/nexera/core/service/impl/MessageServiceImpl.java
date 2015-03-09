@@ -2,6 +2,8 @@ package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -124,6 +126,13 @@ public class MessageServiceImpl implements MessageService {
 				MessageVO messageVO = createMessageVO(mongoMessagesVO);
 				messageVOList.add(messageVO);
 			}
+			Collections.sort(messageVOList, new Comparator<MessageVO>() {
+				  public int compare(MessageVO o1, MessageVO o2) {
+				      if (o1.getSortOrderDate() == null || o2.getSortOrderDate() == null)
+				        return 0;
+				      return o2.getSortOrderDate().compareTo(o1.getSortOrderDate());
+				  }
+				});
 			messageVOMasterList.add(messageVOList);
 		}
 		MessageHierarchyVO hierarchyVO = new MessageHierarchyVO();
@@ -148,6 +157,7 @@ public class MessageServiceImpl implements MessageService {
 		List<UserRoleNameImageVO> nameImageVOs = new ArrayList<UserRoleNameImageVO>();
 		UserRoleNameImageVO nameImageVO = userProfileDao
 		        .findUserDetails(mongoMessagesVO.getCreatedBy().intValue());
+		
 		MessageUserVO createdUser = messageVO.createNewUserVO();
 		createdUser.setImgUrl(nameImageVO.getImgPath());
 		createdUser.setRoleName(nameImageVO.getUserRole());
@@ -160,6 +170,7 @@ public class MessageServiceImpl implements MessageService {
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
 		                        .getCreatedDate()));
 		messageVO.setParentId(mongoMessagesVO.getParentId());
+		messageVO.setSortOrderDate(mongoMessagesVO.getCreatedDate());
 		List<UserRoleNameImageVO> nameList = userProfileDao
 		        .finUserDetailsList(mongoMessagesVO.getUserList());
 		List<MessageUserVO> userVOs = new ArrayList<MessageVO.MessageUserVO>();
