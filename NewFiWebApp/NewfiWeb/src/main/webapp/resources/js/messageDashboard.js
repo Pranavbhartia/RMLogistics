@@ -452,6 +452,15 @@ function paintChildConversations(level,conversations){
 			"class" : "float-right"
 		});
 		
+		var otherUserBinded = data.otherUsers;
+		for(k in otherUserBinded ){
+			var userImage = $('<div>').attr({
+				"class" : "conv-prof-image float-left",
+				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+			});
+			col3.append(userImage);
+		}
+		
 		topRow.append(col1).append(col2).append(col3);
 		
 		var messageContent = $('<div>').attr({
