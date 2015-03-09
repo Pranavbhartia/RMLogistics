@@ -40,4 +40,7 @@ public interface WorkflowService
     Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster );
 
 
+    WorkflowExec getWorkflowExecFromId( int workflowexecId );
+
+
 }
