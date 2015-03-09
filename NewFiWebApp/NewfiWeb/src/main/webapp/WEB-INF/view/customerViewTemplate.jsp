@@ -42,7 +42,7 @@
 			<canvas id="pu-canvas" style="height: 150px;width: 150px;z-index: -9;position: relative;margin-bottom: -150px;"></canvas>
 			<div style="height: 50px; margin-top: 20px;" class="btn-container">
 				<div id="btn-pu-save" class="btn-pu btn-pu-save">Save</div>
-				<div id="btn-pu-cancel" class="btn-pu btn-pu-cancel">Cancel</div>
+				<div id="btn-pu-cancel" class="btn-pu btn-pu-cancel" onclick="javascript:cancelUploadPhoto()">Cancel</div>
 			</div>
 		</div>
 	</div>

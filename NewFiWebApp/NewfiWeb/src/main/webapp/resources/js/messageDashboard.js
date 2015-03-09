@@ -3,6 +3,10 @@
  */
 
 var parentId = null; 
+var loanTeam;
+
+var otherUsers ;
+
 function adjustRightPanelOnResize() {
 	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
 		var leftPanelWidth = $('.left-panel').width();
@@ -13,10 +17,20 @@ function adjustRightPanelOnResize() {
 
 
 function saveParentMessage(){
+	if(otherUsers.length==0){
+		showDialogPopup("Select A Person" , "You need to select a person before replying!" , callBackpopupFunction);
+		return;
+	}
+	
+	
 	parentId = null;
 	var messageText = $("#textareaParent").val();
 	doSavemessageAjaxCall(messageText);
 	
+}
+
+function callBackpopupFunction(){
+	return false;
 }
 
 function  doSavemessageAjaxCall(messageText){
@@ -28,12 +42,7 @@ function  doSavemessageAjaxCall(messageText){
 	createdUser.userName = newfiObject.user.displayName;
 	createdUser.roleName = newfiObject.user.userRole.roleDescription;
 	
-	var otherUsers = new Array();
-	var oUser = new Object();
-	oUser.userID = "2";
-	oUser.userName = "test2";
-	oUser.roleName = "LM";
-	otherUsers.push(oUser);
+	
 	
 	
 	message.loanId = newfiObject.user.defaultLoanId;
@@ -44,6 +53,34 @@ function  doSavemessageAjaxCall(messageText){
 	message.links = new Array();
 	message.messageVOs = "null";
 	saveMessageCall(message);
+}
+
+function addOtherUserObject(userId){
+	var myLoanTeam = loanTeam.resultObject;
+	for(i in myLoanTeam){
+		if(myLoanTeam[i].id == userId){
+			createOtherUserobject(myLoanTeam[i].id ,  myLoanTeam[i].firstName , myLoanTeam[i].userRole.roleDescription);
+			break;
+		}
+	}
+}
+
+function removeOtherUserObject(userId){
+	for(i in otherUsers){
+		if(otherUsers[i].userID == userId) {
+	    	otherUsers.splice(i,1);
+	    	break;
+	    }
+	}
+}
+
+function createOtherUserobject(userID , userName ,roleName ){
+	
+	var oUser = new Object();
+	oUser.userID = userID;
+	oUser.userName = userName;
+	oUser.roleName = roleName;
+	otherUsers.push(oUser);
 }
 
 function setCurrentMessageReplyId(parentMessageId){
@@ -88,7 +125,19 @@ function paintCommunicationLog(response){
 	adjustRightPanelOnResize();
 }
 
+function getLoanTemUsingloanId(){
+	otherUsers = new Array();
+	ajaxRequest("rest/loan/"+newfiObject.user.defaultLoanId+"/team", "GET","json", "", getCurrentLoanTeamObject);
+}
+
+function getCurrentLoanTeamObject(response){
+	loanTeam = response;
+	getConversationsofUser();
+}
+
+
 function getMessageDashboardWrapper() {
+	var myLoanTeam = loanTeam.resultObject;
 	var wrapper = $('<div>').attr({
 		"class" : "message-wrapper"
 	});
@@ -105,12 +154,27 @@ function getMessageDashboardWrapper() {
 		"class" : "assigned-agent-wrapper clearfix"
 	});
 	
-	//TODO: Change this to dynamically retrieving the team of the user.
-	var agent1 = getAssignedAgentContainer("Weno Carasbong", "Real State Agent", "+1 (888) 555-1875");
-	var agent2 = getAssignedAgentContainer("Renov Leonga", "Loan Officer", "+1 (888) 555-6755");
-	var agent3 = getAssignedAgentContainer("Elen Adarna", "Title Agent", "+1 (888) 555-1987").addClass('assigned-agent-unselect');
+
+	for(i in myLoanTeam){
+		if(myLoanTeam[i].emailId == newfiObject.user.emailId)
+			continue;
+		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, 
+													myLoanTeam[i].userRole.roleDescription,
+															myLoanTeam[i].emailId , myLoanTeam[i].photoImageUrl );
+		assignedAgentWrapper.append(agent);
+		
+		var userRole = myLoanTeam[i].userRole.roleCd;
+		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
+			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
+		}
+		
+		
+		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , userRole);
+	}
 	
-	assignedAgentWrapper.append(agent1).append(agent2).append(agent3);
+	/*addClass('assigned-agent-unselect');*/
+	
+
 	
 	container.append(assignedAgentWrapper);
 	
@@ -145,7 +209,8 @@ function getMessageDashboardWrapper() {
 			var name = $(this).find('.assigned-agent-cont-rc').find('.assigned-agent-name').html().trim();
 			var agentIncluedeInMessage = $('<div>').attr({
 				"class" : "message-recipient-icn float-left clearfix",
-				"data-agent" : $(this).attr("data-agent")
+				"data-agent" : $(this).attr("data-agent"),
+				"agentId" : $(this).attr("agentId")
 			}).html(name);
 			
 			var removePersonIcn = $('<div>').attr({
@@ -174,10 +239,11 @@ function getMessageDashboardWrapper() {
 	return wrapper.append(container);
 }
 
-function getAssignedAgentContainer(agentName, agentRole, contactNo){
+function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageUrl){
 	var container = $('<div>').attr({
 		"class" : "assigned-agent-container clearfix float-left",
-		"data-agent" : agentName
+		"data-agent" : agentName,
+		"agentId" : id
 	});
 	var leftCol = $('<div>').attr({
 		"class" : "assigned-agent-cont-lc float-left"
@@ -185,6 +251,9 @@ function getAssignedAgentContainer(agentName, agentRole, contactNo){
 	var imgCont = $('<div>').attr({
 		"class" : "assigned-agent-img"
 	});
+	
+	imgCont.css("background" , "url('"+imageUrl+"')");
+	
 	var onlineStatus = $('<div>').attr({
 		"class" : "assigned-agent-online-status"
 	}).html('Chat Now');
@@ -245,8 +314,7 @@ function paintConversations(conversations){
 		
 		var col1 = $('<div>').attr({
 			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url('baseUrl/cus-icn.png')"
-			
+			"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
 		});
 		
 		var col2 = $('<div>').attr({
@@ -267,7 +335,19 @@ function paintConversations(conversations){
 			"class" : "float-right"
 		});
 		
-		topRow.append(col1).append(col2).append(col3);
+		
+		
+		topRow.append(col1).append(col2);
+		
+		var otherUserBinded = data.otherUsers;
+		for(k in otherUserBinded ){
+			var userImage = $('<div>').attr({
+				"class" : "conv-prof-image float-left",
+				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+			});
+			col3.append(userImage);
+		}
+		topRow.append(col3);
 		
 		var messageContent = $('<div>').attr({
 			"class" : "conv-message"
@@ -282,9 +362,9 @@ function paintConversations(conversations){
 		}*/
 		conContainer.append(topRow).append(messageContent).append(replies);
 		$('#conv-container').append(conContainer);
-		/*if(data.conv_thread.length > 0){
-			paintChildConversations(1,data.conv_thread);
-		}*/
+		if(conversations[i].length> 0){
+			paintChildConversations(1,user);
+		}
 	}
 }
 
@@ -336,7 +416,7 @@ function sendMessage(element){
 
 function paintChildConversations(level,conversations){
 	
-	for(var i=0; i<conversations.length; i++){
+	for(var i=1; i<conversations.length; i++){
 		var data = conversations[i];
 		var conContainer = $('<div>').attr({
 			"class" : "clearfix conversation-container-child conversation-container-l"+level
@@ -350,7 +430,7 @@ function paintChildConversations(level,conversations){
 		
 		var col1 = $('<div>').attr({
 			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url("+data.prof_image+")"
+			"style" :  "background-image:url("+data.createdUser.imgUrl+")"
 			
 		});
 		
@@ -372,6 +452,15 @@ function paintChildConversations(level,conversations){
 			"class" : "float-right"
 		});
 		
+		var otherUserBinded = data.otherUsers;
+		for(k in otherUserBinded ){
+			var userImage = $('<div>').attr({
+				"class" : "conv-prof-image float-left",
+				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+			});
+			col3.append(userImage);
+		}
+		
 		topRow.append(col1).append(col2).append(col3);
 		
 		var messageContent = $('<div>').attr({
@@ -380,9 +469,7 @@ function paintChildConversations(level,conversations){
 		var replies = $('<div>').attr({
 			"class" : "reply-cont"
 		}).html("Reply");
-		if(data.replies_count != undefined && data.replies_count > 0){
-			replies.append(" ("+data.replies_count+")");
-		}
+		
 		conContainer.append(topRow).append(messageContent).append(replies);
 		$('#conv-container').append(conContainer);
 	}
@@ -398,7 +485,8 @@ function paintMessageRecipients(){
 			var name = $(this).find('.assigned-agent-cont-rc').find('.assigned-agent-name').html().trim();
 			var agentIncluedeInMessage = $('<div>').attr({
 				"class" : "message-recipient-icn float-left clearfix",
-				"data-agent" : $(this).attr("data-agent")
+				"data-agent" : $(this).attr("data-agent"), 
+				"agentId" : $(this).attr("agentId")
 			}).html(name);
 			
 			var removePersonIcn = $('<div>').attr({
@@ -412,6 +500,8 @@ function paintMessageRecipients(){
 			} 
 			$('#message-recipient-container').append(agentIncluedeInMessage);
 			index++;
+			
+			
 		}
 	});
 }
@@ -421,8 +511,10 @@ $(document).on('click','.assigned-agent-container',function(){
 	//var agent = $(this).attr("data-agent");
 	if($(this).hasClass('assigned-agent-unselect')){
 		$(this).removeClass('assigned-agent-unselect');		
+		addOtherUserObject($(this).attr("agentId"));
 	}else{
 		$(this).addClass('assigned-agent-unselect');
+		removeOtherUserObject( $(this).attr("agentId"));
 	}
 	paintMessageRecipients();
 	//$('.message-recipient-icn[data-agent="'+agent+'"]').remove();
@@ -434,5 +526,6 @@ $(document).on('click','.message-recipient-remove-icn',function(){
 	var agent = $(this).parent().attr("data-agent");
 	//$(this).parent().remove();
 	$('.assigned-agent-container[data-agent="'+agent+'"]').addClass('assigned-agent-unselect');
+	removeOtherUserObject( $(this).parent().attr("agentId"));
 	paintMessageRecipients();
 });

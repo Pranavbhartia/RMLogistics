@@ -1,3 +1,7 @@
+.ce-refinance-wrapper{
+	margin-top: 30px;
+}
+
 .ce-ques-option {
 	width: 200px;
 	margin: 0 30px;
@@ -8,6 +12,9 @@
 	color: #fff;
 	border-radius: 3px;
 	cursor: pointer;
+	font-size: 14px;
+	font-family: 'opensanssemibold';
+	text-transform: capitalize;
 }
 
 .ce-ques-options-container {
@@ -17,10 +24,43 @@
 .ce-ques-wrapper {
 	width: 520px;
 	margin: 0 auto;
+	padding: 20px 0;
 }
 
 .ce-ques-text {
 	font-size: 14px;
 	line-height: 25px;
 	text-align: center;
+}
+
+.ce-cp{
+	margin-left: 60px;	
+}
+.ce-lp{
+	width: 275px;
+	height: 672px;
+	background: url(../images/left-nav.png) no-repeat center;
+}
+
+.ce-option {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	color: #fff;
+	background: #6c9f2e;
+	margin-bottom: 20px;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 18px;
+	font-family: 'opensanssemibold';
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.ce-rp-ques-text {
+	font-family: 'opensansemibold';
+	font-size: 40px;
+	line-height: 45px;
+	margin-bottom: 20px;
+	text-transform: capitalize;
 }

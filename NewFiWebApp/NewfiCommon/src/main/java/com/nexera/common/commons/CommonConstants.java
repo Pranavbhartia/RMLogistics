@@ -34,4 +34,5 @@ public interface CommonConstants {
 	public static final String DEFAULT_LOCALE="en_US";
 	
 	
+	
 }

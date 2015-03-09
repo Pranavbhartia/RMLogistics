@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.GenericDao;
 import com.nexera.common.entity.InternalUserRoleMaster;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.core.service.MasterDataService;
 
 @Component
@@ -20,11 +21,17 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<InternalUserRoleMaster> getInternalUserRoleMaster() {
 
 		return genericDao.loadAll(InternalUserRoleMaster.class);
 
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<NeedsListMaster> getNeedListMaster() {
+		return genericDao.loadAll(NeedsListMaster.class);
 	}
 
 }
