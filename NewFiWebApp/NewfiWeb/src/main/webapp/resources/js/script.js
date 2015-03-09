@@ -101,7 +101,7 @@ function showMessageDashboard() {
 		"class" : "right-panel-messageDashboard float-left"
 	});
 	$('#right-panel').append(convMainContainer);
-	getConversationsofUser();
+	getLoanTemUsingloanId();
 	adjustCenterPanelWidth();
 }
 
@@ -268,8 +268,9 @@ function getAboutMeDetailsWrapper(user) {
 		"class" : "about-me-details-wrapper"
 	});
 
-	var header = getAboutMeDetailsHeader();
+	var header = getAboutMeDetailsHeader(user);
 	var container = getAboutMeDetailsContainer(user);
+	var editProfileInfo = editProfileInformation(user);
 
 	var nextButton = $('<div>').attr({
 		"class" : "submit-btn"
@@ -282,11 +283,12 @@ function getAboutMeDetailsWrapper(user) {
 				event.stopImmediatePropagation();
 				paintProfileCompleteStep2(event.data.user);
 			}).html("Next");
-			
-	return parent.append(header).append(container).append(nextButton);
+	
+	container.append(nextButton);		
+	return parent.append(header).append(container).append(editProfileInfo);
 }
 
-function getAboutMeDetailsHeader() {
+function getAboutMeDetailsHeader(user) {
 	var header = $('<div>').attr({
 		"class" : "application-form-header clearfix"
 	});
@@ -307,8 +309,10 @@ function getAboutMeDetailsHeader() {
 	}).html("4/10");
 	col2LeftCol.html(progressSpan).append(" Completed");
 	var col2RightCol = $('<div>').attr({
-		"class" : "edit-form float-right"
+		"class" : "edit-form float-right",
+		"onclick":"showHideEditProfile()"
 	}).html("Edit");
+
 	col2Container.append(col2LeftCol).append(col2RightCol);
 	headerCol2.append(col2Container);
 	return header.append(headerCol1).append(headerCol2);

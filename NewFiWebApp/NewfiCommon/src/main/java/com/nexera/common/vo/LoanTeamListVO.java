@@ -8,19 +8,16 @@ import java.util.List;
  * @author rohit
  *
  */
-public class LoanTeamListVO implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    private List<LoanTeamVO> leanTeamList;
+public class LoanTeamListVO implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private List<LoanTeamVO> loanTeamList;
 
-    public List<LoanTeamVO> getLeanTeamList()
-    {
-        return leanTeamList;
-    }
+	public List<LoanTeamVO> getLoanTeamList() {
+		return loanTeamList;
+	}
 
-    public void setLeanTeamList( List<LoanTeamVO> leanTeamList )
-    {
-        this.leanTeamList = leanTeamList;
-    }
+	public void setLoanTeamList(List<LoanTeamVO> loanTeamList) {
+		this.loanTeamList = loanTeamList;
+	}
 
 }

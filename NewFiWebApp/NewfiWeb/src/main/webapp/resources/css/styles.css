@@ -704,6 +704,7 @@ a,a:hover,a:visited {
 	color: #428BCA;
 	padding: 0 20px;
 	font-family: 'opensanssemibold';
+	cursor: pointer;
 }
 
 .progress-span-text {
@@ -3338,8 +3339,7 @@ input.calc-input {
 	font-size: 10px;
 	font-family: 'opensanslight';
 	padding-left: 10px;
-	background: url(../images/clock.png) no-repeat left center;
-	background-size:10px;
+	background: url(../images/time.png) no-repeat left center;
 }
 
 .alert-rm-icn {
@@ -3366,7 +3366,14 @@ input.calc-input {
 .alert-popup-icn {
 	width: 40px;
 	height: 40px;
-	background: url(../images/alert.png) no-repeat center;
+}
+
+.alert-user-icn{
+	background: url(../images/alert_user.png) no-repeat center;
+}
+
+.alert-system-icn{
+	background: url(../images/alert_sys.png) no-repeat center;
 }
 
 .alert-popup-row:last-child .alert-popup-container {

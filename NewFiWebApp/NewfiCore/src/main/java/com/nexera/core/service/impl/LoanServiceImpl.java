@@ -324,7 +324,7 @@ public class LoanServiceImpl implements LoanService {
 			LoanTeamVO loanTeamVO = this.buildLoanTeamVO(loanTeam);
 			loanTeamVOList.add(loanTeamVO);
 		}
-		loanTeamListVO.setLeanTeamList(loanTeamVOList);
+		loanTeamListVO.setLoanTeamList(loanTeamVOList);
 
 		return loanTeamListVO;
 
