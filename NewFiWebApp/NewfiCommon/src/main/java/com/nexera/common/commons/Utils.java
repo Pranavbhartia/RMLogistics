@@ -44,12 +44,7 @@ public class Utils {
 			dateFormat.setTimeZone(TimeZone.getTimeZone(GMT));
 
 			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
-			if (offset > 0) {
-				localeDate = new Date(date.getTime() + offset);
-			} else {
-				offset = offset * -1;
-				localeDate = new Date(date.getTime() - offset);
-			}
+			localeDate = new Date(date.getTime() - offset);
 			return dateFormat.format(localeDate);
 
 		} catch (Exception e) {
@@ -82,12 +77,7 @@ public class Utils {
 		try {
 
 			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
-			if (offset > 0) {
-				gmt = new Date(date.getTime() - offset);
-			} else {
-				offset = offset * -1;
-				gmt = new Date(date.getTime() + offset);
-			}
+			gmt = new Date(date.getTime() + offset);
 			return gmt;
 
 		} catch (Exception e) {
@@ -97,9 +87,14 @@ public class Utils {
 	}
 
 	private Integer getOffsetFromUserObject() {
+		
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext()
+				.getAuthentication()==null)
+			return 0;
+		
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
-		if (principal instanceof User) {
+		if (principal!=null && (principal instanceof User)) {
 			User user = (User) principal;
 			if (user.getMinutesOffset() == null) {
 				return 0;
