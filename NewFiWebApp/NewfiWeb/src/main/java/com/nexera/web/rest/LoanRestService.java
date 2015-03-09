@@ -97,7 +97,7 @@ public class LoanRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/team/{loanID}",method=RequestMethod.GET)
+	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.GET)
 	public @ResponseBody CommonResponseVO retreiveLoanTeam(@PathVariable Integer loanID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
