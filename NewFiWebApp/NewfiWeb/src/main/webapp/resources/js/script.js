@@ -1285,7 +1285,16 @@ function showDialogPopup(title , content , okButtonEvent){
  * Function for notification popup
  */
 
+$(document).on('click','#alert-popup-wrapper',function(e){
+	e.stopImmediatePropagation();
+});
 
+
+$(document).on('click',function(e){
+	if($('#alert-popup-wrapper').css("display") == "block"){
+		hideAlertNotificationPopup();
+	}
+});
 
 $(document).on('click','#alert-notification-btn',function(e){
 	e.stopImmediatePropagation();
@@ -1317,30 +1326,66 @@ function appendAlertNotificationPopup(){
 	});
 	
 	
-	var row1 = getAlertNotificationRow("Salaried-W2-forms",false);
-	var row2 = getAlertNotificationRow("Salaried-W2-forms",false);
-	var row3 = getAlertNotificationRow("Salaried-W2-forms",false);
+	var row1 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",false);
+	var row2 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",true);
+	var row3 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",false);
+	var row4 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
+	var row5 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
+	var row6 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum","2hr ago",false);
 	
-	alertWrapper.append(row1).append(row2).append(row3);
+	alertWrapper.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6);
 	
 	$('#alert-notification-btn').append(alertWrapper);
 }
 
-function getAlertNotificationRow(alert,isSystemAlert){
+function getAlertNotificationRow(alert,time,isSystemAlert){
 	var row = $('<div>').attr({
 		"class" : "alert-popup-row clearfix"
 	});
 	
+	var container = $('<div>').attr({
+		"class" : "alert-popup-container clearfix"
+	}); 
+	
+	var alertIcn = $('<div>').attr({
+		"class" : "alert-popup-icn float-left"
+	});
+	
+	if(isSystemAlert){
+		alertIcn.addClass('alert-system-icn');
+	}else{
+		alertIcn.addClass('alert-user-icn');
+	}
+	
+	var alertTxtCont = $('<div>').attr({
+		"class" : "alert-popup-cont float-left"
+	});
+	
 	var alertTxt = $('<div>').attr({
-		"class" : "alert-popup-txt float-left"
+		"class" : "alert-popup-txt"
 	}).html(alert);
-	row.append(alertTxt);
+	
+	var alertTime = $('<div>').attr({
+		"class" : "alert-popup-time"
+	}).html(time);
+	
+	alertTxtCont.append(alertTxt).append(alertTime);
+	
+	container.append(alertIcn).append(alertTxtCont);
 	
 	if(!isSystemAlert){
 		var alertRemoveIcn = $('<div>').attr({
 			"class" : "alert-rm-icn float-right"
+		}).on('click',function(e){
+			e.stopImmediatePropagation();
+			dismissAlert(this);
 		});
-		row.append(alertRemoveIcn);
+		container.append(alertRemoveIcn);
 	}
-	return row;
+	return row.append(container);
+}
+
+
+function dismissAlert(element){
+	$(element).closest('.alert-popup-row').remove();
 }
