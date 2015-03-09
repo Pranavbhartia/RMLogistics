@@ -49,7 +49,7 @@ function  doSavemessageAjaxCall(messageText){
 	message.parentId = parentId;
 	message.message = messageText;
 	message.createdUser = createdUser;
-	message.otherUser = otherUsers;
+	message.otherUsers = otherUsers;
 	message.links = new Array();
 	message.messageVOs = "null";
 	saveMessageCall(message);
@@ -158,10 +158,18 @@ function getMessageDashboardWrapper() {
 	for(i in myLoanTeam){
 		if(myLoanTeam[i].emailId == newfiObject.user.emailId)
 			continue;
-		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, myLoanTeam[i].userRole.roleDescription, myLoanTeam[i].emailId);
+		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, 
+													myLoanTeam[i].userRole.roleDescription,
+															myLoanTeam[i].emailId , myLoanTeam[i].photoImageUrl );
 		assignedAgentWrapper.append(agent);
 		
-		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , myLoanTeam[i].userRole.roleDescription);
+		var userRole = myLoanTeam[i].userRole.roleCd;
+		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
+			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
+		}
+		
+		
+		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , userRole);
 	}
 	
 	/*addClass('assigned-agent-unselect');*/
@@ -201,7 +209,8 @@ function getMessageDashboardWrapper() {
 			var name = $(this).find('.assigned-agent-cont-rc').find('.assigned-agent-name').html().trim();
 			var agentIncluedeInMessage = $('<div>').attr({
 				"class" : "message-recipient-icn float-left clearfix",
-				"data-agent" : $(this).attr("data-agent")
+				"data-agent" : $(this).attr("data-agent"),
+				"agentId" : $(this).attr("agentId")
 			}).html(name);
 			
 			var removePersonIcn = $('<div>').attr({
@@ -230,7 +239,7 @@ function getMessageDashboardWrapper() {
 	return wrapper.append(container);
 }
 
-function getAssignedAgentContainer(id , agentName, agentRole, contactNo){
+function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageUrl){
 	var container = $('<div>').attr({
 		"class" : "assigned-agent-container clearfix float-left",
 		"data-agent" : agentName,
@@ -242,6 +251,9 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo){
 	var imgCont = $('<div>').attr({
 		"class" : "assigned-agent-img"
 	});
+	
+	imgCont.css("background" , "url('"+imageUrl+"')");
+	
 	var onlineStatus = $('<div>').attr({
 		"class" : "assigned-agent-online-status"
 	}).html('Chat Now');
@@ -302,8 +314,7 @@ function paintConversations(conversations){
 		
 		var col1 = $('<div>').attr({
 			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url('baseUrl/cus-icn.png')"
-			
+			"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
 		});
 		
 		var col2 = $('<div>').attr({
@@ -324,7 +335,19 @@ function paintConversations(conversations){
 			"class" : "float-right"
 		});
 		
-		topRow.append(col1).append(col2).append(col3);
+		
+		
+		topRow.append(col1).append(col2);
+		
+		var otherUserBinded = data.otherUsers;
+		for(k in otherUserBinded ){
+			var userImage = $('<div>').attr({
+				"class" : "conv-prof-image float-left",
+				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+			});
+			col3.append(userImage);
+		}
+		topRow.append(col3);
 		
 		var messageContent = $('<div>').attr({
 			"class" : "conv-message"
@@ -407,7 +430,7 @@ function paintChildConversations(level,conversations){
 		
 		var col1 = $('<div>').attr({
 			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url("+data.prof_image+")"
+			"style" :  "background-image:url("+data.createdUser.imgUrl+")"
 			
 		});
 		
@@ -453,7 +476,8 @@ function paintMessageRecipients(){
 			var name = $(this).find('.assigned-agent-cont-rc').find('.assigned-agent-name').html().trim();
 			var agentIncluedeInMessage = $('<div>').attr({
 				"class" : "message-recipient-icn float-left clearfix",
-				"data-agent" : $(this).attr("data-agent")
+				"data-agent" : $(this).attr("data-agent"), 
+				"agentId" : $(this).attr("agentId")
 			}).html(name);
 			
 			var removePersonIcn = $('<div>').attr({
@@ -478,7 +502,7 @@ $(document).on('click','.assigned-agent-container',function(){
 	//var agent = $(this).attr("data-agent");
 	if($(this).hasClass('assigned-agent-unselect')){
 		$(this).removeClass('assigned-agent-unselect');		
-		addOtherUserObject($(this).attr("agentId"))
+		addOtherUserObject($(this).attr("agentId"));
 	}else{
 		$(this).addClass('assigned-agent-unselect');
 		removeOtherUserObject( $(this).attr("agentId"));
@@ -493,5 +517,6 @@ $(document).on('click','.message-recipient-remove-icn',function(){
 	var agent = $(this).parent().attr("data-agent");
 	//$(this).parent().remove();
 	$('.assigned-agent-container[data-agent="'+agent+'"]').addClass('assigned-agent-unselect');
+	removeOtherUserObject( $(this).parent().attr("agentId"));
 	paintMessageRecipients();
 });

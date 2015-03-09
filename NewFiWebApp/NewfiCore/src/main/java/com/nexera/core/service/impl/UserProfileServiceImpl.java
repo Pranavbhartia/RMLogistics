@@ -342,6 +342,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 		InternalUserRoleMasterVO masterVO = new InternalUserRoleMasterVO();
 		masterVO.setId(internal.getId());
+		masterVO.setRoleName(internal.getRoleName());
 		masterVO.setRoleDescription(internal.getRoleDescription());
 
 		return masterVO;
