@@ -151,7 +151,7 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background: url(../images/cus-icn.png) no-repeat center;
+	background-image: url(../images/cus-icn.png) no-repeat center;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -3394,4 +3394,28 @@ input.calc-input {
 
 .alert-popup-row:last-child .alert-popup-container {
 	border-bottom: none;
+}
+
+
+
+.overlay-container{
+	width:500px;
+	margin: 100px auto;
+	border: 1px solid #dcdcdc;
+	background-color: #fff;
+	overflow: hidden;
+}
+
+#pu-canvas{
+
+	height:150 px;
+	width: 150 px;
+	z-index: -9;
+	position: relative;
+	margin-bottom: -150 px;
+}
+
+.btn-container{
+	height: 50 px;
+	margin-top: 20 px;
 }

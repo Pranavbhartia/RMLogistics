@@ -193,18 +193,6 @@ function getCustomerUploadPhotoRow(user) {
 
 	});
 
-	var canvasTage = $('<canvas>').attr({
-		"id" : "canvasid",
-		"style" : "display:none",
-	});
-
-	var imageTage = $('<img>').attr({
-		"id" : "target",
-		"style" : "display:none",
-	});
-
-	// outer.append(jcExample).append(article).append(imageTage);
-
 	inputHiddenDiv.append(inputHiddenFile);
 
 	var uploadBtn = $('<div>').attr({
@@ -216,7 +204,7 @@ function getCustomerUploadPhotoRow(user) {
 
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 
-	return row.append(rowCol1).append(rowCol2);// .append(outer);
+	return row.append(rowCol1).append(rowCol2);
 }
 
 function uploadeImage() {
@@ -860,9 +848,3 @@ function saveEditUserProfile(user){
 	
 }
 
-
-function cancelUploadPhoto(){
-	
-	//$("#popup-overlay").css("display", "none");
-	//$('#pu-img').attr('src', "");
-}

@@ -2,7 +2,10 @@ var imageMaxWidth = 500;
 var ratio = 1;
 
 function initiateJcrop(input) {
-
+	
+	var divToShowImage= createUploadPhotoContent();
+	$("#popup-overlay").html(divToShowImage);
+	
 	$("#popup-overlay").css("display", "block");
 	
 	if (input.files && input.files[0]) {
@@ -15,14 +18,7 @@ function initiateJcrop(input) {
 			ratio = $('#pu-img').width() / imageMaxWidth;
 			$('#pu-img').css("display", "block");
 			$('#pu-img').width(imageMaxWidth);
-			
-			/*$('#target').Jcrop({
-				setSelect : [ 100, 100, 50, 50 ],
-				onSelect : updatePreview,
-				onChange : updatePreview,
-				aspectRatio: 1,
-				trackDocument: true
-			});*/
+
 			
 			$('#pu-img').Jcrop({
 				setSelect : [ 100, 100, 50, 50 ],
@@ -47,7 +43,7 @@ function initiateJcrop(input) {
 					formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
 
 					formData.append("userid",newfiObject.user.id);
-
+					showOverlay();
 					$.ajax({
 						url : "uploadCommonImageToS3.do",
 						type : "POST",
@@ -57,14 +53,15 @@ function initiateJcrop(input) {
 						cache : false,
 						data : formData,
 						success : function(data) {
-							alert('saved');
-							//$(".jcrop-holder").css("display", "none");
-							$("#myProfilePicture").css({"background": "url("+data+")","background-size": "cover"});
+							
+							
+							$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"});
 							 
-							$("#profilePic").css({"background": "url("+data+")","background-size": "cover"});
+							$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});
 							//
 						},
 						complete : function() {
+							hideOverlay();
 						},
 						error : function(e) {
 						}
@@ -83,4 +80,53 @@ function updatePreview(c) {
 						* ratio, (c.h) * ratio, 0, 0, canvas.width,
 						canvas.height);
 	}
+}
+
+function createUploadPhotoContent(){
+	
+	var overlayDiv = $('<div>').attr({
+		"class" : "overlay-container"
+	});
+	
+	var img =  $('<img>').attr({
+		"alt" : "upload profile image",
+		"src":"",
+		"id":"pu-img"
+	});
+	var canvas = $('<canvas>').attr({
+		"id" : "pu-canvas"
+	});
+	
+	var btnContainerDiv = $('<div>').attr({
+		"class" : "btn-container"
+	});
+	var btnSaveDiv = $('<div>').attr({
+		"id" : "btn-pu-save"
+	}).html("Save");
+	
+	var btnCancelDiv = $('<div>').attr({
+		"id" : "btn-pu-cancel",
+		"onclick":"cancelUploadPhoto()"
+	}).html("Cancel");
+	
+	btnContainerDiv.append(btnSaveDiv).append(btnCancelDiv);
+	return overlayDiv.append(img).append(canvas).append(btnContainerDiv);
+	
+}
+
+function cancelUploadPhoto(){
+
+	$("#popup-overlay").empty();
+	$("#popup-overlay").css("display", "none");
+	return false;
+}
+
+
+function validatePhotoExtention(filename){
+	
+	var extension = filename.replace(/^.*\./, '');
+	extension = extension.toLowerCase();
+	if(extension != "jpg" ||extension != "jpeg" || extension != "png" ){
+		cancelUploadPhoto();
+	}   		
 }
