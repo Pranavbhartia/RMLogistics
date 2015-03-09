@@ -119,7 +119,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public Integer updateUser(String s3ImagePath, Integer userid) {
 
 		Integer number = userProfileDao.updateUser(s3ImagePath, userid);
-		return null;
+		return number;
 	}
 
 	public List<UserVO> searchUsers(UserVO userVO) {

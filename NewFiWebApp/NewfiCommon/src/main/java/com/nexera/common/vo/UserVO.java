@@ -60,6 +60,9 @@ public class UserVO implements Serializable {
 	}
 
 	public String getDisplayName() {
+		if(displayName==null || displayName.isEmpty()){
+			return this.firstName + " " + this.lastName;
+		}
 		return displayName;
 	}
 

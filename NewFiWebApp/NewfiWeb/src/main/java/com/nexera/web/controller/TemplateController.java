@@ -146,18 +146,18 @@ public class TemplateController extends DefaultController {
 			 s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User","complete");
 			 editUserPhoto(s3Path);
 			 // save the s3 url in the data base
-			 Integer num = userProfileService.updateUser(s3Path, userid);
-			 
-			 if(num < 0 ){
+			Integer num = userProfileService.updateUser(s3Path, userid);
+		
+			if(!num.equals(1) ){
 				 
 				 LOG.error("Error whiile saving s3 url in the data base");
 
 			 }
-			 LOG.error("S3 path-----"+s3Path);
+			 LOG.info("S3 path-----"+s3Path);
 
 		} catch (Exception e) {
 			
-			 LOG.error("Exception whiile saving s3 url in the data base" +e.getMessage());
+			LOG.error("Exception whiile saving s3 url in the data base" +e.getMessage());
 			e.printStackTrace();
 		}
 

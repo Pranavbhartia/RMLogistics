@@ -158,19 +158,25 @@ function getMessageDashboardWrapper() {
 	for(i in myLoanTeam){
 		if(myLoanTeam[i].emailId == newfiObject.user.emailId)
 			continue;
+		
+		var userRole = myLoanTeam[i].userRole.roleCd;
+		var userDescription  = myLoanTeam[i].userRole.roleDescription;
+		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
+			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
+			userDescription = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
 		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, 
-													myLoanTeam[i].userRole.roleDescription,
+				userDescription,
 															myLoanTeam[i].emailId , myLoanTeam[i].photoImageUrl );
 		assignedAgentWrapper.append(agent);
 		
-		var userRole = myLoanTeam[i].userRole.roleCd;
-		if( myLoanTeam[i].userRole.roleCd == "INTERNAL"){
-			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
-		}
+		
 		
 		
 		createOtherUserobject(myLoanTeam[i].id , myLoanTeam[i].firstName , userRole);
 	}
+	
+	
 	
 	/*addClass('assigned-agent-unselect');*/
 	
@@ -341,6 +347,8 @@ function paintConversations(conversations){
 		
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
+			if(otherUserBinded[k].userID == newfiObject.user.id)
+				continue;
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
@@ -421,9 +429,9 @@ function paintChildConversations(level,conversations){
 		var conContainer = $('<div>').attr({
 			"class" : "clearfix conversation-container-child conversation-container-l"+level
 		});
-		if(i%2==1){
+		/*if(i%2==1){
 			conContainer.addClass("conversation-container-even-child");
-		}
+		}*/
 		var topRow = $('<div>').attr({
 			"class" : "conv-top-row clearfix"
 		});
@@ -440,11 +448,11 @@ function paintChildConversations(level,conversations){
 		
 		var profName = $('<div>').attr({
 			"class" : "con-prof-name semi-bold"
-		}).html(data.name);
+		}).html(data.createdUser.userName);
 		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
-		}).html(data.time); 
+		}).html(data.createdDate); 
 		
 		col2.append(profName).append(messageTime);
 		
@@ -454,6 +462,10 @@ function paintChildConversations(level,conversations){
 		
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
+			
+			if(otherUserBinded[k].userID == newfiObject.user.id)
+				continue;
+			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
