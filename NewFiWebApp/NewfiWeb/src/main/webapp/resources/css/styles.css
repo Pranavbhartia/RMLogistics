@@ -835,6 +835,10 @@ a,a:hover,a:visited {
 	background: url(../images/doc-upload-placeholder.png) no-repeat center;
 }
 
+.file-upload-loading{
+	background: url(../images/upload-loader.gif) no-repeat center;
+}
+
 .file-upload-hover-icn {
 	background: url(../images/doc-upload.png) no-repeat center;
 }
@@ -2385,7 +2389,19 @@ input.calc-input {
 }
 
 .assign {
-	width: 160px;
+	display: block;
+	width: 95%;
+	max-width: 160px;
+	margin: 0 auto;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	height: 35px;
+	line-height: 35px;
+	padding-left: 10px;
+	border: 1px #E2E2E2 solid;
+	border-radius: 3px;
+	background: url(../images/select-down.png) no-repeat 97% center;
+	background-color: #FAFAFA;
 }
 
 /*Login page styles*/

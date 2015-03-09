@@ -194,7 +194,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 
 		},
 		complete : function(response) {
-
+			$('#file-upload-icn').removeClass('file-upload-loading');
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 		},
 		dragenter : function() {
@@ -208,6 +208,9 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		},
 		queuecomplete : function() {
 			getRequiredDocuments();
+		},
+		addedfile : function(){
+			$('#file-upload-icn').addClass('file-upload-loading');
 		}
 	});
 	var uploadedItems = neededItemListObject.resultObject.listUploadedFilesListVO;
