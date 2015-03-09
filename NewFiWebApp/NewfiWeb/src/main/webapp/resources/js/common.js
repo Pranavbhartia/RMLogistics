@@ -5,6 +5,7 @@
 var overlayCount = 0;
 
 function ajaxRequest(url,type,dataType,data,successCallBack){
+	showOverlay();
 	$.ajax({
 		url : url,
 		type : type,
@@ -12,6 +13,9 @@ function ajaxRequest(url,type,dataType,data,successCallBack){
 		data : data,
 		contentType: "application/json",
 		success : successCallBack,
+		complete:function(){
+			hideOverlay();
+		},
 		error : function(){
 			
 		}
