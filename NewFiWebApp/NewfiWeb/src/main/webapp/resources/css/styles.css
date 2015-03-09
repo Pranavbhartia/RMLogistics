@@ -704,6 +704,7 @@ a,a:hover,a:visited {
 	color: #428BCA;
 	padding: 0 20px;
 	font-family: 'opensanssemibold';
+	cursor: pointer;
 }
 
 .progress-span-text {
