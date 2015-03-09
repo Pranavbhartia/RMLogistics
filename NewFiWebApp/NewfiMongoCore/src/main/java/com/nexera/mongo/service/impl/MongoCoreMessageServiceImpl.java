@@ -9,19 +9,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
-import com.nexera.core.service.mongo.MongoMessageService;
 import com.nexera.mongo.dao.MongoMessageDAO;
 import com.nexera.mongo.dao.MongoMessageHeirarchyDAO;
 import com.nexera.mongo.dao.impl.MongoMessageDAOImpl;
 import com.nexera.mongo.dao.impl.MongoMessageHeirarchyDAOImpl;
 import com.nexera.mongo.entity.MongoMessageHeirarchy;
+import com.nexera.mongo.service.MongoCoreMessageService;
 
-public class MongoMessageServiceImpl implements MongoMessageService {
+
+public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 
 	private MongoMessageDAO messageDAO = new MongoMessageDAOImpl();
 	private MongoMessageHeirarchyDAO heriarchyDAO = new MongoMessageHeirarchyDAOImpl();
@@ -33,12 +36,12 @@ public class MongoMessageServiceImpl implements MongoMessageService {
 	public String saveMessage(MongoMessagesVO messagesVO)
 			throws FatalException, NonFatalException {
 		String id = this.messageDAO.save(messagesVO);
-
+ 
 		// If Parent ID is null, then it is a new message, and not part of a
 		// chain
 		if (messagesVO.getParentId() == null) {
 			MongoMessageHeirarchy mh = new MongoMessageHeirarchy();
-			mh.setDate(new Date());
+			mh.setDate(new Date(System.currentTimeMillis()));
 			mh.setLoanId(messagesVO.getLoanId());
 			mh.setMessages(Arrays.asList(id));
 			mh.setMessageType(messagesVO.getMessageType());
@@ -56,7 +59,7 @@ public class MongoMessageServiceImpl implements MongoMessageService {
 			// Add the new ID to the end of the list
 			mh.getMessages().add(id);
 			// Update the date
-			mh.setDate(new Date());
+			mh.setDate(new Date(System.currentTimeMillis()));
 			// Save the new record
 			this.heriarchyDAO.save(mh);
 		}

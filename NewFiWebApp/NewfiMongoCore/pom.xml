@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.nexera.newfi</groupId>
-			<artifactId>NewfiCore</artifactId>
+			<artifactId>NewfiCommon</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

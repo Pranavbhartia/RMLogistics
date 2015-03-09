@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 
 public interface GenericDao {
 
@@ -28,4 +29,6 @@ public interface GenericDao {
 			throws DatabaseException;
 	
 	public void saveAll(List data) throws DatabaseException;
+
+	
 }

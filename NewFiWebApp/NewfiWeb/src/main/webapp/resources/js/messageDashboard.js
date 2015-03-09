@@ -2,7 +2,7 @@
  * Functions for customer message dashboard
  */
 
-
+var parentId = null; 
 function adjustRightPanelOnResize() {
 	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
 		var leftPanelWidth = $('.left-panel').width();
@@ -12,8 +12,66 @@ function adjustRightPanelOnResize() {
 }
 
 
+function saveParentMessage(){
+	parentId = null;
+	var messageText = $("#textareaParent").val();
+	doSavemessageAjaxCall(messageText);
+	
+}
 
-function paintGettingToKnowMessageDashboard(){
+function  doSavemessageAjaxCall(messageText){
+	
+	var message = new Object();
+	
+	var createdUser = new Object();
+	createdUser.userID = newfiObject.user.id;
+	createdUser.userName = newfiObject.user.displayName;
+	createdUser.roleName = newfiObject.user.userRole.roleDescription;
+	
+	var otherUsers = new Array();
+	var oUser = new Object();
+	oUser.userID = "2";
+	oUser.userName = "test2";
+	oUser.roleName = "LM";
+	otherUsers.push(oUser);
+	
+	
+	message.loanId = newfiObject.user.defaultLoanId;
+	message.parentId = parentId;
+	message.message = messageText;
+	message.createdUser = createdUser;
+	message.otherUsers = otherUsers;
+	message.links = new Array();
+	message.messageVOs = "null";
+	saveMessageCall(message);
+}
+
+function setCurrentMessageReplyId(parentMessageId){
+	parentId = parentMessageId;
+}
+
+function setReplyToMessageObject(messageText){
+	
+	doSavemessageAjaxCall(messageText);
+}
+
+
+function saveMessageCall(message){
+	console.info(message);
+	ajaxRequest("rest/commlog/save", "POST", "json", JSON.stringify(message), successCallBackSaveMessage);
+}
+
+
+function successCallBackSaveMessage(){
+	console.info("successCallBackSaveMessage saved method claeed ");
+	showMessageDashboard();
+}
+
+function getConversationsofUser(){
+		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintCommunicationLog);
+}
+
+function paintCommunicationLog(response){
 	var rightArrow = $('<div>').attr({
 		"class" : "lp-right-arrow"
 	});
@@ -23,120 +81,9 @@ function paintGettingToKnowMessageDashboard(){
 	$('#conv-main-container').append(msgDashboardWrapper).append(conversationHistoryWrapper);
 	$('#conv-container').html('');
 	var baseUrl = "resources/images/";
-	var conversations = [
-	                     {
-	                    	 "name" : "Jane Doe",
-	                    	 "prof_image" : baseUrl+"cus-icn.png",
-	                    	 "time" : "Yesterday at 3:30pm",
-	                    	 "message" : "I have attached the files requested\n\n" +
-	                    	 		"* Salaried-W-2 for the most recent 2 years\n" +
-	                    	 		"* Payroll stubs for the past 30 days(showing YTD earnings)\n" +
-	                    	 		"* Refinance - Copy of property tax bill\n" +
-	                    	 		"* Refinance - Copy of homeowner's hazard insurance policy\n" +
-	                    	 		"* Most recent retirement fund or stock portfolio statement\n" +
-	                    	 		"* 2 months bank statements (all pages)",
-	                    	 "replies_count" : 1,
-	                    	 "people_included" :[],
-	                    	 "conv_thread" : [
-	                    	                  {
-	                    	                	  "name" : "Elen Adarna",
-	                 	                    	 "prof_image" : baseUrl+"profile_pic_3.png",
-	                 	                    	 "time" : "7/30/2009 9:08PM",
-	                 	                    	 "message" : "The following item(s) have been requested by Laura Ryan to continue processing your loan.\n" +
-	                 	                    	 		"Please login to your control panel at www.myturboloan.com and upload or fax the following supporting documentation as soon as possible:\n\n" +
-	                 	                    	 		"* Salaried-W-2 for the most recent 2 years\n" +
-	                	                    	 		"* Payroll stubs for the past 30 days(showing YTD earnings)\n" +
-	                	                    	 		"* Refinance - Copy of property tax bill\n" +
-	                	                    	 		"* Refinance - Copy of homeowner's hazard insurance policy\n" +
-	                	                    	 		"* Most recent retirement fund or stock portfolio statement\n" +
-	                	                    	 		"* 2 months bank statements (all pages)",
-	                 	                    	 "replies_count" : 0,
-	                 	                    	 "people_included" :[],
-	                 	                    	 "conv_thread" : []
-	                    	                  }
-	                    	                  ]
-	                    	
- 	                     },
- 	                    {
-	                    	 "name" : "Renov Leonga",
-	                    	 "prof_image" : baseUrl+"profile_pic_2.png",
-	                    	 "time" : "1/30/2009 9:08PM",
-	                    	 "message" : "Hello, I have been assigned to help you through myTurboLoan progress. You will find my contact" +
-	                    	 		"information below. You should expect to hear from me soon." +
-	                    	 		"If you have questions about your loan, please don't hesitate to contact me directly.",
-	                    	 "replies_count" : 3,
-	                    	 "people_included" :[],
-	                    	 "conv_thread" : [
-	                    	                  {
-	                    	                	  "name" : "Elen Adarna",
-	                 	                    	 "prof_image" : baseUrl+"profile_pic_3.png",
-	                 	                    	 "time" : "7/30/2009 9:08PM",
-	                 	                    	 "message" : "I am not sure why you need to contact me for Don Gridley's phone number because it was" +
-	                 	                    	 		"provided on the application and is in the contact area but his home phone is (586) 677-7781 and" +
-	                 	                    	 		"his cell phone is (248) 797-9822.",
-	                 	                    	 "replies_count" : 0,
-	                 	                    	 "people_included" :[],
-	                 	                    	 "conv_thread" : []
-	                    	                  },
-	                    	                  {
-	                    	                	  "name" : "Elen Adarna",
-	                 	                    	 "prof_image" : baseUrl+"profile_pic_3.png",
-	                 	                    	 "time" : "7/30/2009 9:08PM",
-	                 	                    	"message" : "I am not sure why you need to contact me for Don Gridley's phone number because it was" +
-             	                    	 		"provided on the application and is in the contact area but his home phone is (586) 677-7781 and" +
-             	                    	 		"his cell phone is (248) 797-9822.",
-	                 	                    	 "replies_count" : 0,
-	                 	                    	 "people_included" :[],
-	                 	                    	 "conv_thread" : []
-	                    	                  },
-	                    	                  {
-	                    	                	  "name" : "Elen Adarna",
-	                 	                    	 "prof_image" : baseUrl+"profile_pic_3.png",
-	                 	                    	 "time" : "7/30/2009 9:08PM",
-	                 	                    	"message" : "I am not sure why you need to contact me for Don Gridley's phone number because it was" +
-             	                    	 		"provided on the application and is in the contact area but his home phone is (586) 677-7781 and" +
-             	                    	 		"his cell phone is (248) 797-9822.",
-	                 	                    	 "replies_count" : 0,
-	                 	                    	 "people_included" :[],
-	                 	                    	 "conv_thread" : []
-	                    	                  }
-	                    	                  ]
-	                    		 
- 	                     },
- 	                    {
-	                    	 "name" : "Elena Adarna",
-	                    	 "prof_image" : baseUrl+"profile_pic_3.png",
-	                    	 "time" : "1/30/2009 9:08PM",
-	                    	 "message" : "The following item(s) have been requested by Laura Ryan to continue processing your loan.\n" +
-                  	 		"Please login to your control panel at www.myturboloan.com and upload or fax the following supporting documentation as soon as possible:\n\n" +
-                  	 		"* Salaried-W-2 for the most recent 2 years\n" +
-                 	 		"* Payroll stubs for the past 30 days(showing YTD earnings)\n" +
-                 	 		"* Refinance - Copy of property tax bill\n" +
-                 	 		"* Refinance - Copy of homeowner's hazard insurance policy\n" +
-                 	 		"* Most recent retirement fund or stock portfolio statement\n" +
-                 	 		"* 2 months bank statements (all pages)",
-	                    	 "replies_count" : 1,
-	                    	 "people_included" :[],
-	                    	 "conv_thread" : [
-	                    	                  {
-	                    	                	  "name" : "Jane Doe",
-	                 	                    	 "prof_image" : baseUrl+"cus-icn.png",
-	                 	                    	 "time" : "7/30/2009 9:08PM",
-	                 	                    	"message" : "I have attached the files requested\n\n" +
-	        	                    	 		"* Salaried-W-2 for the most recent 2 years\n" +
-	        	                    	 		"* Payroll stubs for the past 30 days(showing YTD earnings)\n" +
-	        	                    	 		"* Refinance - Copy of property tax bill\n" +
-	        	                    	 		"* Refinance - Copy of homeowner's hazard insurance policy\n" +
-	        	                    	 		"* Most recent retirement fund or stock portfolio statement\n" +
-	        	                    	 		"* 2 months bank statements (all pages)",
-	                 	                    	 "replies_count" : 0,
-	                 	                    	 "people_included" :[],
-	                 	                    	 "conv_thread" : []
-	                    	                  }
-	                    	                  ]
-	                    		 
- 	                     }
-	                     ];
+	
+	
+	var conversations = response.resultObject.messageVOs;
 	paintConversations(conversations);
 	adjustRightPanelOnResize();
 }
@@ -158,6 +105,7 @@ function getMessageDashboardWrapper() {
 		"class" : "assigned-agent-wrapper clearfix"
 	});
 	
+	//TODO: Change this to dynamically retrieving the team of the user.
 	var agent1 = getAssignedAgentContainer("Weno Carasbong", "Real State Agent", "+1 (888) 555-1875");
 	var agent2 = getAssignedAgentContainer("Renov Leonga", "Loan Officer", "+1 (888) 555-6755");
 	var agent3 = getAssignedAgentContainer("Elen Adarna", "Title Agent", "+1 (888) 555-1987").addClass('assigned-agent-unselect');
@@ -171,6 +119,7 @@ function getMessageDashboardWrapper() {
 	});
 	var textBox = $('<textarea>').attr({
 		"class" : "message-cont-textinput",
+		"id" :"textareaParent" ,
 		"placeholder" : "Type your message here. Recipients are hightlighted with blue circle, click to toggle. When done click send"
 	});
 	
@@ -215,7 +164,8 @@ function getMessageDashboardWrapper() {
 	bottomContainer.append(messageRecipients);
 	
 	var messageBtn = $('<div>').attr({
-		"class" : "message-btn float-right"
+		"class" : "message-btn float-right" , 
+		"onclick" : "saveParentMessage()"
 	}).html("Send Message");
 	
 	bottomContainer.append(messageBtn);
@@ -281,7 +231,8 @@ function getConversationHistoryWrapper(){
 function paintConversations(conversations){
 	
 	for(var i=0; i<conversations.length; i++){
-		var data = conversations[i];
+		var user = conversations[i];
+		var data = user[0];
 		var conContainer = $('<div>').attr({
 			"class" : "conversation-container clearfix"
 		});
@@ -294,7 +245,7 @@ function paintConversations(conversations){
 		
 		var col1 = $('<div>').attr({
 			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url("+data.prof_image+")"
+			"style" :  "background-image:url('baseUrl/cus-icn.png')"
 			
 		});
 		
@@ -304,11 +255,11 @@ function paintConversations(conversations){
 		
 		var profName = $('<div>').attr({
 			"class" : "con-prof-name semi-bold"
-		}).html(data.name);
+		}).html(data.createdUser.userName);
 		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
-		}).html(data.time); 
+		}).html(data.createdDate); 
 		
 		col2.append(profName).append(messageTime);
 		
@@ -322,17 +273,18 @@ function paintConversations(conversations){
 			"class" : "conv-message"
 		}).html(data.message);
 		var replies = $('<div>').attr({
-			"class" : "reply-cont float-left"
+			"class" : "reply-cont float-left",
+			"onclick" : "setCurrentMessageReplyId('"+data.id+"')"
 		}).html("Reply");
 		
-		if(data.replies_count != undefined && data.replies_count > 0){
+		/*if(data.replies_count != undefined && data.replies_count > 0){
 			replies.append(" ("+data.replies_count+")");
-		}
+		}*/
 		conContainer.append(topRow).append(messageContent).append(replies);
 		$('#conv-container').append(conContainer);
-		if(data.conv_thread.length > 0){
+		/*if(data.conv_thread.length > 0){
 			paintChildConversations(1,data.conv_thread);
-		}
+		}*/
 	}
 }
 
@@ -354,6 +306,7 @@ function appendReplyContainer(element){
 	});
 	var textBox = $('<textarea>').attr({
 		"class" : "reply-text-box",
+		"id" : "replyToParent",
 		"placeholder" : "Type your message here. Press enter to send."
 	}).css({
 		"width" : parentWidth - 40
@@ -375,7 +328,8 @@ function sendMessage(element){
 	if($(element).val() != undefined && $(element).val() != ""){
 		message = $(element).val().trim();
 	}
-	alert("message : "+ message);
+	console.info("message : "+ message);
+	setReplyToMessageObject(message);
 	//TODO : Writing logic on what happens when a user sends a message
 }
 

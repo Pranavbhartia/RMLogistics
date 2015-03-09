@@ -8,7 +8,7 @@ import com.nexera.common.vo.MessageQueryVO;
 
 public interface MessageService {
 
-public String saveMessage(MessageVO messagesVO) throws FatalException,NonFatalException;
+public String saveMessage(MessageVO messagesVO,String messageType) throws FatalException,NonFatalException;
 	
 	public MessageHierarchyVO getMessages(MessageQueryVO QueryVO) throws FatalException,NonFatalException;
 

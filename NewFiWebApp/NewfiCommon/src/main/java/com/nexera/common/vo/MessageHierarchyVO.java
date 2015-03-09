@@ -4,14 +4,13 @@ import java.util.List;
 
 public class MessageHierarchyVO {
 
-	List<MessageVO> messageVOs;
+	List<List<MessageVO>> messageVOs;
 
-	public List<MessageVO> getMessageVOs() {
-		return messageVOs;
-	}
-
-	public void setMessageVOs(List<MessageVO> messageVOs) {
-		this.messageVOs = messageVOs;
-	}
+	public List<List<MessageVO>> getMessageVOs() {
+	    return messageVOs;
+    }
+	public void setMessageVOs(List<List<MessageVO>> messageVOs) {
+	    this.messageVOs = messageVOs;
+    }
 
 }

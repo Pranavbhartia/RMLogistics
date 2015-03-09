@@ -36,4 +36,4 @@ public class UserRepositoryService implements UserDetailsService {
 		LOG.info("Method: loadUserByUsername finished.");
 		return user;
 	}
-}
+} 
