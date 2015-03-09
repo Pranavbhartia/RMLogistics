@@ -9,6 +9,7 @@ function getNotificationContext(loanId,userId){
 		userNotificationList:[],
 		loanNotificationList:[],
 		existingWrapper:undefined,
+		alertWrapper:undefined,
 		headerText:"",
 		getNotificationForUser:function(callback){
 			if(userId!=0){
@@ -232,7 +233,7 @@ function getNotificationContext(loanId,userId){
 					data.id=response.resultObject.id;
 					if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
-
+					updateDefaultContext(data);
 					if(callback){
 						callback(ob);
 					}
@@ -266,6 +267,15 @@ function getNotificationContext(loanId,userId){
 	};
 	//notificationContext.initContext();
 	return notificationContext;
+}
+function updateDefaultContext(notification){
+	var contxt=getContext("notification");
+	contxt.loanNotificationList.push(notification);
+	contxt.userNotificationList.push(notification);
+	contxt.paintLoanNotification(notification);
+	var row = getAlertNotificationRow(notification,contxt);
+	if(contxt.alertWrapper)
+		contxt.alertWrapper.append(row);
 }
 function removeNotificationFromAllContext(notificationId){
 	if(newfiObject.contextHolder){
@@ -338,6 +348,7 @@ function getTimeElapsedString(dat){
 				var days=hrs/24;
 				hrs=hrs%24;
 				if(days>30){
+					var dat=new Date(dat);
 					var amPm=dat.getHours()>12?"PM":"AM";
 					var hr=dat.getHours()%12<10?("0"+dat.getHours()%12):dat.getHours()%12;
 					var min=dat.getMinutes()<10?("0"+dat.getMinutes()):dat.getMinutes();
@@ -374,6 +385,7 @@ function appendAlertNotificationPopup(){
 		"class" : "alert-popup-wrapper"
 	});
 	var contxt=getContext("notification");
+	contxt.alertWrapper=alertWrapper
 	for(var i=0;i<contxt.userNotificationList.length;i++){
 		var row = getAlertNotificationRow(contxt.userNotificationList[i],contxt);
 		alertWrapper.append(row);
@@ -391,6 +403,8 @@ function appendAlertNotificationPopup(){
 }
 
 function getAlertNotificationRow(notification,contxt){
+	if(notification.remindOn>new Date().getTime())
+		return;
 	var row = $('<div id="UNID'+notification.id+'">').attr({
 		"class" : "alert-popup-row clearfix"
 	});
