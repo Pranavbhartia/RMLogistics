@@ -156,6 +156,7 @@ function getNotificationContext(loanId,userId){
 						callback(ob);
 					}
 					removeNotificationFromAllContext(id);
+					ob.updateWrapper();
 				}
 				
 			});

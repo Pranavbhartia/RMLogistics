@@ -122,8 +122,8 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		Criterion reminder = Restrictions.or(remindOnIsNull,
 				Restrictions.and(remindOnIsNotNull, remindDateReached));
 
-		criteria.addOrder(Order.desc("createdDate"));
 		criteria.addOrder(Order.desc("remindOn"));
+		criteria.addOrder(Order.desc("createdDate"));
 		
 		criteria.add(reminder);
 

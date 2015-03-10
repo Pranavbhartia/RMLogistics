@@ -524,6 +524,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 	});
 
 	if (alerts != undefined) {
+		var count=0;
 		for (var i = 0; i < alerts.length; i++) {
 			var alertData = alerts[i].content;
 			var alertContainer = $('<div>').attr({
@@ -569,6 +570,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 			alertLeftCol.append(alertTxt);
 			if(alerts[i].dismissable==true)
 				alertLeftCol.append(alertBtnRow);
+			alertContainer.append(alertLeftCol);
 			if(alerts[i].remindOn){
 				var dat=new Date(alerts[i].remindOn);
 				var amPm=dat.getHours()>12?"PM":"AM";
@@ -577,9 +579,12 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 				var editBtn = $('<div>').attr({
 					"class" : "float-right"
 				}).html($.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm);
-				alertContainer.append(alertLeftCol).append(editBtn);
+				alertContainer.append(editBtn);
 			}
 			recentAlertWrapper.append(alertContainer);
+			count++;
+			if(count==3)
+				break;
 		}
 	}
 
