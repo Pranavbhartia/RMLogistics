@@ -151,7 +151,7 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background-image: url(../images/cus-icn.png) no-repeat center;
+	background: url(../images/cus-icn.png) no-repeat center;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -876,7 +876,8 @@ a,a:hover,a:visited {
 }
 
 .doc-desc {
-	height: 30px !important;
+	height: 51px !important;
+	word-break:break-word;
 	padding: 5px 10%;
 	text-align: center;
 	overflow: hidden;
