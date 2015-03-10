@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,6 +40,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.nexera.core.utility.NexeraUtility;
 
 import eu.medsea.mimeutil.MimeUtil;
 /**
@@ -119,10 +121,12 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 			subfolderInBucket=""+random;
 		}
 		String key = null;
+		
+		String fileName = NexeraUtility.randomStringOfLength()+"."+FilenameUtils.getExtension(file.getName());
 		if(prefix != null){
-			key = subfolderInBucket + "/"+prefix +file.getName().replaceAll(" ", "_");
+			key = subfolderInBucket + "/"+prefix +fileName.replaceAll(" ", "_");
 		}else{
-			key = subfolderInBucket + "/" +file.getName().replaceAll(" ", "_");
+			key = subfolderInBucket + "/" +fileName.replaceAll(" ", "_");
 		}
 	  
 

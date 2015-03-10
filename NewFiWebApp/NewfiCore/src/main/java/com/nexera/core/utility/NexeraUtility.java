@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.PDFToImage;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -22,11 +22,12 @@ public class NexeraUtility {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(NexeraUtility.class);
 	
-	private static final String IMAGE_FORMAT="jpg";
-    private static final String COLOR="rgb";
-    private static final Integer RESOLUTION=256;
-    private static final Integer IMAGETYPE=24;
-	
+	private static final String OUTPUT_FILENAME = "1.jpg";
+	private static final String OUTPUT_PREFIX = "-outputPrefix";
+	private static final String END_PAGE = "-endPage";
+
+	private static final String PAGE_NUMBER = "1";
+	private static final String START_PAGE = "-startPage";
 	
 	@SuppressWarnings("unchecked")
 	public static List<PDPage> splitPDFTOPages(File file){
@@ -54,10 +55,10 @@ public class NexeraUtility {
 				 	PDDocument newDocument = new PDDocument();
 	                newDocument.addPage(pdPage);
 	                String filepath = tomcatDirectoryPath() + File.separator +file.getName().replace(".pdf", "") +"_"+ pageNum +".pdf";
-	                 
+	               
 	                File newFile = new File(filepath);
 	                newFile.createNewFile();
-
+	                
 	                newDocument.save(newFile);
 	                newDocument.close();
 	                pageNum++;
@@ -91,7 +92,7 @@ public class NexeraUtility {
                 if (!dir.exists())
                     dir.mkdirs();
  
-                String fileName =  randomStringOfLength()+"."+FilenameUtils.getExtension(file.getOriginalFilename());
+                String fileName =  file.getOriginalFilename();
                 
                 filePath = dir.getAbsolutePath()
                         + File.separator + fileName;
@@ -141,6 +142,30 @@ public class NexeraUtility {
 	    return buffer.substring(0, length);  
 	}
 
+	
+	public static String convertPDFToThumbnail(String pdfFile, String imageFilePath)
+			throws Exception {
+
+		String[] args = new String[7];
+		args[0] = START_PAGE;
+		args[1] = PAGE_NUMBER;
+		args[2] = END_PAGE;
+		args[3] = PAGE_NUMBER;
+		args[4] = OUTPUT_PREFIX;
+		args[5] = imageFilePath+File.separator;
+		args[6] = pdfFile;
+
+		try {
+
+			PDFToImage.main(args);
+			String imageFile = imageFilePath+File.separator + OUTPUT_FILENAME;
+			LOGGER.info("Image path for thumbnail : "+imageFile);
+			return imageFile;
+
+		} catch (Exception e) {
+			throw new Exception();
+		}
+	}
 
 	private static String uuidString() {
 	    return UUID.randomUUID().toString().replaceAll("-", "");
