@@ -223,7 +223,8 @@ public class FileUploadRest {
 	private List<File> splitPdfDocumentIntoMultipleDocs(String s3path) throws Exception{
 	
 		File file = new File(s3FileUploadServiceImpl.downloadFile(s3path, NexeraUtility.tomcatDirectoryPath()+File.separator+(new File(s3path)).getName()));
-		return NexeraUtility.splitPDFPages(file);
+		List<File> splittedFiles =  NexeraUtility.splitPDFPages(file);
+		return splittedFiles;
 		
 	}
 	
