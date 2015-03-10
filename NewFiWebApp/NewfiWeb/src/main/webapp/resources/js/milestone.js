@@ -78,6 +78,8 @@ function getInternalEmployeeMileStoneContext(workflowId){
 				appendAgentMilestoneLockRate();
 				appendAgentMilestoneUnderwriting();
 				appendAgentMilestoneClosingStatus();
+				
+				adjustBorderMilestoneContainer();
 				if(callback){
 					callback(ob);
 				}
