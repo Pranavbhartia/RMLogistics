@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.web.rest.util.RestUtil;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkflowItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
@@ -26,8 +24,8 @@ import com.nexera.workflow.vo.WorkflowVO;
 public class WorkflowRestService {
 
 	private WorkflowService workflowService;
-	@Autowired
-	private EngineTrigger engineTrigger;
+	//@Autowired
+	//private EngineTrigger engineTrigger;
 	private static final Logger LOG = LoggerFactory
 			.getLogger(WorkflowRestService.class);
 
@@ -41,8 +39,8 @@ public class WorkflowRestService {
 			WorkflowVO workflowVO = new WorkflowVO();
 			workflowVO.setWorkflowType(workflowType);
 			Gson gson = new Gson();
-			int workfFlowId = engineTrigger.triggerWorkFlow(gson.toJson(workflowVO));
-			response = RestUtil.wrapObjectForSuccess(workfFlowId);
+			//int workfFlowId = engineTrigger.triggerWorkFlow(gson.toJson(workflowVO));
+			response = RestUtil.wrapObjectForSuccess(12);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
