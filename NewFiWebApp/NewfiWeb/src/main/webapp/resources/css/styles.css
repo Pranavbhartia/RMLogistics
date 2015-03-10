@@ -869,6 +869,8 @@ a,a:hover,a:visited {
 
 .doc-img {
 	height: 100px;
+	margin: 0 auto;
+	width: 80px;
 	background: url(../images/pdf.png) no-repeat center;
 }
 
