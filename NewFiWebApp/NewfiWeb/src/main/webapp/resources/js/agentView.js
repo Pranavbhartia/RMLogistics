@@ -884,7 +884,15 @@ function paintAgentLoanPage(data) {
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper(loanDetails);
 	var contxt=getContext(loanDetails.id+"-notification");
-	contxt.populateLoanNotification();
+	if(contxt){
+		contxt.populateLoanNotification();
+	}else{
+		contxt=getNotificationContext(loanDetails.id,0);
+		contxt.getNotificationForLoan(function(ob){
+			contxt.populateLoanNotification();
+		});
+	}
+	
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
