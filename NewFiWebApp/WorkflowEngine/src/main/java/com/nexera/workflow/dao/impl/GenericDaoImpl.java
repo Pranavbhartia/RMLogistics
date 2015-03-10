@@ -19,7 +19,7 @@ import com.nexera.workflow.dao.GenericDao;
 import com.nexera.workflow.exception.DatabaseException;
 
 
-@Component
+@Component(value="WorkflowGenericDAO")
 public class GenericDaoImpl implements GenericDao
 {
 
