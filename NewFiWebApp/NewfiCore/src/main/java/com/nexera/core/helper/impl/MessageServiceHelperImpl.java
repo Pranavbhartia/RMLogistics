@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.CommunicationLogConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
@@ -88,7 +87,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		MessageVO messageVO = new MessageVO();
 		String message = new String(CommunicationLogConstants.MODIFY_NEED);
 
-		messageVO.setLoanId(String.valueOf(loanId));
+		messageVO.setLoanId(loanId);
 		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
 		        System.currentTimeMillis())));
 		/*
