@@ -35,4 +35,6 @@ public interface LoanDao extends GenericDao {
 
 	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
+	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
+
 }

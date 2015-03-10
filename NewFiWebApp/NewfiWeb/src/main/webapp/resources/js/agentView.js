@@ -2390,3 +2390,14 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 
 }
 
+function entryPointForAgentView(loanID,callback){
+	
+	ajaxRequest("rest/loan/"+loanID+"/retrieveDashboard", "GET", "json", undefined,
+			function(response){
+				resetSelectedUserDetailObject(response.resultObject);
+				callback();
+				
+	});
+	
+}
+
