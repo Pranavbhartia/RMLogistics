@@ -591,6 +591,14 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 }
 
 function appendSchedulerContainer(contxt) {
+	var wrapper = getSchedulerContainer(contxt);
+	$('#cust-detail-wrapper').append(wrapper);
+
+	$('#sch-msg-time-picker').datetimepicker({
+		pickDate : false
+	});
+}
+function getSchedulerContainer(contxt,data){
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -652,14 +660,15 @@ function appendSchedulerContainer(contxt) {
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind("click",{contxt:contxt},function(e){
+	}).html("Submit").bind("click",{contxt:contxt,data:data},function(e){
 		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
 		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
 		snoozeTime.setHours(dat.getHours());
 		snoozeTime.setMinutes(dat.getMinutes())
 		var message=$("#sch-msg-message").val();
 		if(snoozeTime!="Invalid Date"){
-			var data={};
+			if(data===undefined)
+				data={};
 			data.content=message;
 			data.createdDate=new Date().getTime();
 			data.remindOn=snoozeTime.getTime();
@@ -694,11 +703,7 @@ function appendSchedulerContainer(contxt) {
 			buttonRow);
 
 	wrapper.append(container);
-	$('#cust-detail-wrapper').append(wrapper);
-
-	$('#sch-msg-time-picker').datetimepicker({
-		pickDate : false
-	});
+	return wrapper;
 }
 
 function appendRecentNotesContainer(notes) {
