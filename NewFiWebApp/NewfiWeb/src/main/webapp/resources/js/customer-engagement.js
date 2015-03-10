@@ -4,6 +4,16 @@ function paintSelectLoanTypeQuestion(){
 	
 	$('#ce-main-container').html('');
 	
+	var rateIcon = $('<div>').attr({
+		"class" : "ce-rate-icon"
+	});
+	
+	var titleText = $('<div>').attr({
+		"class" : "ce-title"
+	}).html("A New way to Finance your home");
+	
+	$('#ce-main-container').append(rateIcon).append(titleText);
+	
 	var wrapper = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -27,7 +37,7 @@ function paintSelectLoanTypeQuestion(){
 	
 	var question = $('<div>').attr({
 		"class" : "ce-ques-text"
-	}).html("Why Pay thousands more to use a loan officer ?");
+	}).html("Why Pay thousands more to use a loan officer ?<br/>With newfi, saving weeks of headache and thousands of dollars is easy.");
 	
 	wrapper.append(optionsContainer).append(question);
 	
@@ -54,11 +64,63 @@ function paintRefinanceMainContainer(){
 }
 
 
+var itemsList = [
+                 "Living Situation",
+                 "Home Information",
+                 "Desired Location",
+                 "Who's on the loan",
+                 "My Money",
+                 "Government Questions",
+                 "My Credit",
+                 "My Solutions"
+                 ];
+
 function getRefinanceLeftPanel(){
 	var container = $('<div>').attr({
 		"class" : "ce-lp float-left"
 	});
+	
+	for(var i=0;i<itemsList.length; i++){
+		var itemCompletionStage = "";
+		if(i < 2){
+			itemCompletionStage = "COMPLETE";
+		}else if(i == 2){
+			itemCompletionStage = "IN_PROGRESS";
+		}else{
+			itemCompletionStage = "NOT_STARTED";
+		}
+		var itemCont = getRefinanceLeftPanelItem(itemsList[i],i+1,itemCompletionStage);
+		container.append(itemCont);
+	}
+	
 	return container;
+}
+
+function getRefinanceLeftPanelItem(itemTxt, stepNo, itemCompletionStage){
+	var itemCont = $('<div>').attr({
+		"class" : "ce-lp-item clearfix",
+		"data-step" : stepNo
+	});
+	
+	var leftIcon = $('<div>').attr({
+		"class" : "ce-lp-item-icon float-left"
+	});
+	
+	if(itemCompletionStage == "COMPLETE"){
+		itemCont.addClass('ce-lp-complete');
+	}else if(itemCompletionStage == "NOT_STARTED"){
+		itemCont.addClass('ce-lp-not-started');
+		leftIcon.html(stepNo);
+	}else if(itemCompletionStage == "IN_PROGRESS"){
+		itemCont.addClass('ce-lp-in-progress');
+		leftIcon.html(stepNo);
+	}
+	
+	var textCont = $('<div>').attr({
+		"class" : "ce-lp-item-text float-left"
+	}).html(itemTxt);
+	
+	return itemCont.append(leftIcon).append(textCont);
 }
 
 function paintRefinanceQuest1(){
@@ -110,7 +172,7 @@ function getMutipleChoiceQuestion(quesText,options){
 	return container.append(quesTextCont).append(optionContainer);
 }
 
-function getTextQuestion(quesText,clickEvent){
+function getTextQuestion(quesText,clickEvent,name){
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -124,7 +186,8 @@ function getTextQuestion(quesText,clickEvent){
 	}); 
 	
 	var inputBox = $('<input>').attr({
-		"class" : "ce-input"
+		"class" : "ce-input",
+		"name" : name
 	}); 
 	
 	optionContainer.append(inputBox);
@@ -138,6 +201,12 @@ function getTextQuestion(quesText,clickEvent){
 	
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
+
+function paintCurrentMorgageStep(){
+	
+}
+
+
 
 function paintRefinanceStep1a(){
 	var quesTxt = "How many years are left on your mortgage?";
