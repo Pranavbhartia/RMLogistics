@@ -204,6 +204,15 @@ public class UserProfileRest {
 
 	}
 	
+	@RequestMapping(value = "/findteaserate", method = RequestMethod.POST)
+
+	public @ResponseBody String getTeaserRate(String teaseRate) {
+
+		System.out.println("teaseRate ..."+teaseRate);
+		return null;
+
+	}
+	
 	
 
 }

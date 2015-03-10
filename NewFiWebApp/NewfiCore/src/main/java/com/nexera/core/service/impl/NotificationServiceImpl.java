@@ -201,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService {
 		if(loanNotification.getCreatedDate()==null){
 			model.setCreatedDate(new Date());
 		}else{
-			model.setRemindOn(utils.getUserDateInGMT(new Date(
+			model.setCreatedDate(utils.getUserDateInGMT(new Date(
 					loanNotification.getCreatedDate())));
 		}
 		if(loanNotification.getNotificationType()==null){

@@ -1,4 +1,79 @@
 //Function to paint to loan progress page
+
+function getInternalEmployeeMileStoneContext(workflowId){
+	
+	var internalEmployeeMileStoneContext = {
+			workflowId:workflowId,
+			workItemExecList:{},
+			ajaxRequest	:function (url,type,dataType,data,successCallBack){
+				$.ajax({
+					url : url,
+					type : type,
+					dataType : dataType,
+					data : data,
+					success : successCallBack,
+					error : function(){						
+					}
+				});
+			},
+			
+	getWorkFlowItemStatuses: function(callback)
+	{
+		var ob=this;
+		var data={};
+		ob.workItemExecList={};
+		ob.ajaxRequest("rest/workflow/"+ob.workflowId,"GET","json",data,function(response){
+			if(response.error){
+				showToastMessage(response.error.message)
+			}else{
+				var workItemExecList=response.resultObject;
+				//alert (workItemExecList[0].status + "--" + workItemExecList[0].displayContent);
+				appendAgentMilestoneItem(workItemExecList[0].status, workItemExecList[0].displayContent, "Schedule An Alert");
+				var childList =[];
+				childList.push (workItemExecList[1]);
+				childList.push (workItemExecList[2]);
+				
+				appendAgentMilestoneItemWithChildren(workItemExecList[7].status, workItemExecList[7].displayContent, "Schedule An Alert",childList);
+				for(var i=0;i<workItemExecList.length;i++){
+					if (ob.checkIfChild == false)
+					{
+						
+						//appendAgentMilestoneItem(workItemExecList[0].status, workItemExecList[0].displayContent, "");
+					}
+					else
+					{
+						
+					}
+				}
+				if(callback){
+					callback(ob);
+				}
+			}
+			
+		});
+	},
+	
+	checkIfChild : function (workflowItem)
+	{
+		var ob=this;		
+		if (workflowItem.parentWorkflowItemExec!=null)
+			return true;
+		else
+			return false;
+	},
+	
+	initialize:function(callback){
+		this.getWorkFlowItemStatuses(function(ob){
+			
+		});
+		
+		if(callback){
+			callback();
+		}
+	}
+};
+	return internalEmployeeMileStoneContext;
+}
 function paintCustomerLoanProgressPage(){
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
@@ -142,7 +217,7 @@ function appendMilestoneMyProfile(){
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-lc-text"
-	}).html("Online Appication");
+	}).html("Online Application");
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-lc-text"
@@ -716,7 +791,7 @@ function paintAgentLoanProgressPage(){
 	paintAgentLoanProgressContainer();
 }
 
-
+var lmContext;
 function paintAgentLoanProgressContainer() {
 	var loanProgressCont = $('<div>').attr({
 		"id" : "loan-progress-milestone-wrapper",
@@ -724,28 +799,50 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 	
-	
+	var lmMileStoneContext=getInternalEmployeeMileStoneContext(3);//
+	lmMileStoneContext.initialize(function(){		
+		
+		
+		appendAgentMilestone1003Status();
+		appendAgentMilestoneCreditBureau();
+		appendAgentMilestoneNeededItems();
+		appendAgentMilestoneAddTeam();
+		appendAgentMilestoneDisclosures();
+		appendAgentMilestoneApplicationFee();
+		appendAgentMilestoneAppraisal();
+		appendAgentMilestoneLockRate();
+		appendAgentMilestoneUnderwriting();
+		appendAgentMilestoneClosingStatus();
+				
+		
+	});
+	lmContext=lmMileStoneContext;
 	//Append agent page loan progress milestones
-	appendAgentMilestoneMakeInitialContact();
-	appendAgentMilestoneSystemEducation();
-	appendAgentMilestone1003Status();
-	appendAgentMilestoneCreditBureau();
-	appendAgentMilestoneNeededItems();
-	appendAgentMilestoneAddTeam();
-	appendAgentMilestoneDisclosures();
-	appendAgentMilestoneApplicationFee();
-	appendAgentMilestoneAppraisal();
-	appendAgentMilestoneLockRate();
-	appendAgentMilestoneUnderwriting();
-	appendAgentMilestoneClosingStatus();
+	
 	
 	//adjustBorderMilestoneContainer();
 }
+function getProgressStatusClass (status)
+{
+	var progressClass = "m-in-progress";
+	if (status == 0)
+		{
+		progressClass = "m-in-progress";
+		
+		}
+		else if (status == 1)
+		{
+			progressClass = "m-complete";
+		
+		}
+	return progressClass;
+	}
 
 
-function appendAgentMilestoneMakeInitialContact(){
+function appendAgentMilestoneItem(status, displayContent, inputText){
+	var progressClass = getProgressStatusClass(status);
 	var wrapper = $('<div>').attr({
-		"class" : "milestone-lc m-in-progress"
+		"class" : "milestone-lc " +progressClass
 	});
 	var rightBorder = $('<div>').attr({
 		"class" : "milestone-lc-border"
@@ -756,16 +853,47 @@ function appendAgentMilestoneMakeInitialContact(){
 	
 	var headerTxt = $('<div>').attr({
 		"class" : "milestone-lc-header-txt float-right"
-	}).html("Make Initial Contact");
+	}).html(displayContent);
 	
 	header.append(headerTxt);
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-lc-text"
-	}).html("Schedule an alert");
+	}).html(inputText);
 	
 	wrapper.append(rightBorder).append(header).append(txtRow1);
 	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+function appendAgentMilestoneItemWithChildren(status, displayContent, inputText, childList){
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-rc " + getProgressStatusClass(status)
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-rc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-rc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-rc-header-txt float-left"
+	}).html(displayContent);
+	
+	header.append(headerTxt);
+	var workItem = wrapper.append(rightBorder).append(header);
+	
+	for	(index = 0; index < childList.length; index++) {
+	
+		
+		var txtRow1 = $('<div>').attr({
+			"class" : "milestone-rc-text"
+		}).html(childList[index].displayContent);	
+		workItem.append(txtRow1);
+	}
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+
 }
 
 
@@ -814,6 +942,33 @@ function appendAgentMilestoneSystemEducation(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+function appendAgentMilestoneMakeInitialContact(status, displayContent, inputText){
+	var progressClass = getProgressStatusClass(status);
+	var wrapper = $('<div>').attr({
+		"class" : "milestone-lc " +progressClass
+	});
+	var rightBorder = $('<div>').attr({
+		"class" : "milestone-lc-border"
+	});
+	var header = $('<div>').attr({
+		"class" : "milestone-lc-header clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "milestone-lc-header-txt float-right"
+	}).html(displayContent);
+	
+	header.append(headerTxt);
+	var txtRow1 = $('<div>').attr({
+		"class" : "milestone-lc-text"
+	}).html(inputText);
+	
+	wrapper.append(rightBorder).append(header).append(txtRow1);
+	
+	$('#loan-progress-milestone-wrapper').append(wrapper);
+}
+
+
 function appendAgentMilestone1003Status(){
 	var wrapper = $('<div>').attr({
 		"class" : "milestone-lc m-in-progress"
@@ -858,7 +1013,7 @@ function appendAgentMilestoneCreditBureau(){
 	
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-rc-text"
-	}).html("Credit Score");
+	}).html("Credit Score EQ - 686 ~ TU - 694 ~ Ex - 714");
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-rc-text"
@@ -866,7 +1021,7 @@ function appendAgentMilestoneCreditBureau(){
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-rc-text"
-	}).html("Loan Manager Decision");
+	}).html("Loan Manager Decision: Pass/Declined");
 	
 	var txtRow4 = $('<div>').attr({
 		"class" : "milestone-rc-text"
@@ -1077,3 +1232,4 @@ function appendAgentMilestoneClosingStatus(){
 	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
+

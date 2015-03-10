@@ -2,6 +2,7 @@ package com.nexera.common.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 public class LoanTeamVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
@@ -11,6 +12,9 @@ public class LoanTeamVO implements Serializable {
 	private LoanVO loan;
 	private UserVO assignedBy;
 	private UserVO user;
+	
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -53,5 +57,6 @@ public class LoanTeamVO implements Serializable {
 	public void setUser(UserVO user) {
 		this.user = user;
 	}
+	
 
 }
