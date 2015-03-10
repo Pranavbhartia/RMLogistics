@@ -47,7 +47,6 @@ public class FileUploadController {
 		String s3Path = null;
 		 try{
 			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
-			NexeraUtility.convertPDFToThumbnail(localFilePath, NexeraUtility.tomcatDirectoryPath()); 
 			File serverFile = new File(localFilePath );
 			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
 			LOG.info("Added File document row : "+savedRowId);
