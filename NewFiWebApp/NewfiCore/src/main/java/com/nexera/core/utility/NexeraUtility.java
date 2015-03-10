@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.PDFToImage;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -22,7 +23,7 @@ public class NexeraUtility {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(NexeraUtility.class);
 	
-	private static final String OUTPUT_FILENAME = "1.jpg";
+	private static final String OUTPUT_FILENAME_EXT = "jpg";
 	private static final String OUTPUT_PREFIX = "-outputPrefix";
 	private static final String END_PAGE = "-endPage";
 
@@ -59,7 +60,7 @@ public class NexeraUtility {
 	                File newFile = new File(filepath);
 	                newFile.createNewFile();
 	                
-	                newDocument.save(newFile);
+	                newDocument.save(filepath);
 	                newDocument.close();
 	                pageNum++;
 	                
@@ -156,9 +157,10 @@ public class NexeraUtility {
 		args[6] = pdfFile;
 
 		try {
-
+			File file = new File(pdfFile);
+			String fileName = file.getName().replace(FilenameUtils.getExtension(file.getName()), "");
 			PDFToImage.main(args);
-			String imageFile = imageFilePath+File.separator + OUTPUT_FILENAME;
+			String imageFile = imageFilePath+File.separator + PAGE_NUMBER+"." +OUTPUT_FILENAME_EXT;
 			LOGGER.info("Image path for thumbnail : "+imageFile);
 			return imageFile;
 

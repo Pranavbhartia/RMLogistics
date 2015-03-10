@@ -26,7 +26,8 @@ public class UploadedFilesList implements Serializable {
 	private User uploadedBy;
 	private Date uploadedDate;
 	private String fileName;
-
+	private String s3ThumbPath;
+	
 	public UploadedFilesList() {
 	}
 
@@ -108,6 +109,15 @@ public class UploadedFilesList implements Serializable {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	@Column(name = "s3thumbnail")
+	public String getS3ThumbPath() {
+		return s3ThumbPath;
+	}
+
+	public void setS3ThumbPath(String s3ThumbPath) {
+		this.s3ThumbPath = s3ThumbPath;
 	}
 
 }
