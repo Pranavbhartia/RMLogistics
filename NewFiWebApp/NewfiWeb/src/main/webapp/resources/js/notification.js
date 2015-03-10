@@ -156,6 +156,7 @@ function getNotificationContext(loanId,userId){
 						callback(ob);
 					}
 					removeNotificationFromAllContext(id);
+					ob.updateWrapper();
 				}
 				
 			});
@@ -223,7 +224,7 @@ function getNotificationContext(loanId,userId){
 		scheduleAEvent:function(data,callback){
 			var ob=this;
 			data.loanID=ob.loanId;
-			if(data.notificationType&&data.notificationType!="")
+			if(!data.notificationType&&data.notificationType!="")
 				data.notificationType="NOTIFICATION";
 			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
 				if(response.error){
