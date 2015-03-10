@@ -27,9 +27,6 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
-	private static final Logger LOG = LoggerFactory
-	        .getLogger(MongoMessageHeirarchyDAOImpl.class);
 
 	protected DBObject constructQuery(MongoQueryVO query) {
 		BasicDBObject q = new BasicDBObject();
@@ -48,10 +45,7 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	 * @param mh
 	 */
 	public void save(MongoMessageHeirarchy mh) {
-		LOG.info(mh.toString());
-		mongoTemplate.insert(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
-		LOG.info(mh.getId());
-				
+		mongoTemplate.save(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);				
 	}
 	
 	/**
