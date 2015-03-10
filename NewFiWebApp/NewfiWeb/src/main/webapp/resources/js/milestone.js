@@ -865,7 +865,7 @@ function appendAgentMilestoneItem(status, displayContent, inputText){
 	var floatClass = "float-right";
 	var progressClass = getProgressStatusClass(status);
 	var rightLeftClass =  "milestone-lc";
-	if (countOfTasks %2 == 0)
+	if (countOfTasks %2 == 1)
 	{
 		rightLeftClass = "milestone-lc";
 		floatClass ="float-right";
@@ -902,7 +902,7 @@ function appendAgentMilestoneItemWithChildren(status, displayContent, inputText,
 	countOfTasks++;
 	var rightLeftClass =  "milestone-lc";
 	var floatClass = "float-right";
-	if (countOfTasks %2 == 0)
+	if (countOfTasks %2 == 1)
 	{
 		rightLeftClass = "milestone-lc";
 		floatClass ="float-right";
