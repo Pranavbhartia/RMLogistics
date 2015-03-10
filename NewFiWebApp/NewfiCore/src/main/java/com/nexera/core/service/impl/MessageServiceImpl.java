@@ -160,6 +160,7 @@ public class MessageServiceImpl implements MessageService {
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
 		                        .getCreatedDate()));
 		messageVO.setParentId(mongoMessagesVO.getParentId());
+		messageVO.setLoanId(mongoMessagesVO.getLoanId());
 		List<UserRoleNameImageVO> nameList = userProfileDao
 		        .finUserDetailsList(mongoMessagesVO.getUserList());
 		List<MessageUserVO> userVOs = new ArrayList<MessageVO.MessageUserVO>();

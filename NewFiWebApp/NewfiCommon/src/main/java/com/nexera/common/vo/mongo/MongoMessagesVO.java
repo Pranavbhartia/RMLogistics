@@ -1,7 +1,6 @@
 package com.nexera.common.vo.mongo;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
