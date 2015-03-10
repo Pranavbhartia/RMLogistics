@@ -223,7 +223,8 @@ function getNotificationContext(loanId,userId){
 		scheduleAEvent:function(data,callback){
 			var ob=this;
 			data.loanID=ob.loanId;
-			data.notificationType="NOTIFICATION";
+			if(data.notificationType&&data.notificationType!="")
+				data.notificationType="NOTIFICATION";
 			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
 				if(response.error){
 					showToastMessage(response.error.message);
@@ -457,4 +458,22 @@ function getAlertNotificationRow(notification,contxt){
 
 function dismissAlert(element){
 	$(element).closest('.alert-popup-row').remove();
+}
+
+function addNotificationPopup(loanId,element,notificationType){
+	var wrapper = $('<div>').attr({
+		"id" : "ms-add-member-popup",
+		"class" : "ms-add-member-popup hide"
+	}).click(function(e){
+		e.stopPropagation();
+	});
+	var contxt=getContext(loanId+"-notification");
+	var data={};
+	data.dismissable=false;
+	if(notificationType)
+		data.notificationType=notificationType;
+	var component=getSchedulerContainer(contxt,data)
+	
+	wrapper.append(component);
+	element.append(wrapper);
 }

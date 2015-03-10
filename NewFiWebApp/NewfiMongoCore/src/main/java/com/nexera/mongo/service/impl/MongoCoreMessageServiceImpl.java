@@ -68,6 +68,8 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			}
 			// Add the new ID to the end of the list
 			mh.getMessages().add(id);
+			//Null the id as it has to be a new record
+			mh.setId(null);
 			// Update the date
 			mh.setDate(new Date(System.currentTimeMillis()));
 			// Save the new record
