@@ -1,7 +1,7 @@
 //Function to paint to loan progress page
 
 function getInternalEmployeeMileStoneContext(workflowId){
-	alert(workflowId);
+	
 	var internalEmployeeMileStoneContext = {
 			workflowId:workflowId,
 			workItemExecList:{},
@@ -27,13 +27,13 @@ function getInternalEmployeeMileStoneContext(workflowId){
 				showToastMessage(response.error.message)
 			}else{
 				var workItemExecList=response.resultObject;
-				alert (workItemExecList[0].status + "--" + workItemExecList[0].displayContent);
-				appendAgentMilestoneItem(workItemExecList[0].status, workItemExecList[0].displayContent, "Schedule An Alert121212");
+				//alert (workItemExecList[0].status + "--" + workItemExecList[0].displayContent);
+				appendAgentMilestoneItem(workItemExecList[0].status, workItemExecList[0].displayContent, "Schedule An Alert");
 				var childList =[];
 				childList.push (workItemExecList[1]);
 				childList.push (workItemExecList[2]);
 				
-				appendAgentMilestoneItemWithChildren(workItemExecList[7].status, workItemExecList[7].displayContent, "Schedule An Alert121212",childList);
+				appendAgentMilestoneItemWithChildren(workItemExecList[7].status, workItemExecList[7].displayContent, "Schedule An Alert",childList);
 				for(var i=0;i<workItemExecList.length;i++){
 					if (ob.checkIfChild == false)
 					{
@@ -801,7 +801,7 @@ function paintAgentLoanProgressContainer() {
 	
 	var lmMileStoneContext=getInternalEmployeeMileStoneContext(3);//
 	lmMileStoneContext.initialize(function(){		
-		alert("finished");
+		
 		
 		appendAgentMilestone1003Status();
 		appendAgentMilestoneCreditBureau();
@@ -885,7 +885,7 @@ function appendAgentMilestoneItemWithChildren(status, displayContent, inputText,
 	
 	for	(index = 0; index < childList.length; index++) {
 	
-		alert(childList[index].displayContent);
+		
 		var txtRow1 = $('<div>').attr({
 			"class" : "milestone-rc-text"
 		}).html(childList[index].displayContent);	
