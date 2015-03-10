@@ -3423,3 +3423,35 @@ input.calc-input {
 	height: 50 px;
 	margin-top: 20 px;
 }
+
+/*Drop zone popup styles*/
+
+.ui-dialog-buttonset{
+	margin: 0 auto;
+	display: block;
+	float: none;
+	width: 100px;
+	background: #F47521;
+	color: #fff;
+	text-transform: uppercase;
+	text-align: center;
+	border-radius: 3px;
+}
+
+.ui-dialog-buttonset button{
+	background: transparent;
+	border: none;
+}
+
+.ui-dialog-buttonset{
+	float: none !important;
+}
+
+.ui-dialog-titlebar-close{
+	background: transparent;
+	border: none;
+	background: url(../images/close.png) no-repeat center;
+}
+
+:focus {outline:none;} ::-moz-focus-inner {border:0;}
+
