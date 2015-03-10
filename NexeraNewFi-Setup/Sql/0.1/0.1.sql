@@ -58,3 +58,10 @@ ADD CONSTRAINT `fk_lnLMWorkflow`
   REFERENCES `newfi_schema`.`workflowexec` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+  
+  
+  
+  alter table newfi_schema.uploadedfileslist
+  add column s3thumbnail varchar(250);
+
+
