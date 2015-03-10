@@ -865,6 +865,7 @@ a,a:hover,a:visited {
 .document-cont-col {
 	width: 25%;
 	padding: 0 10px;
+	margin: 5px 0;
 }
 
 .doc-img {
@@ -875,7 +876,7 @@ a,a:hover,a:visited {
 }
 
 .doc-desc {
-	height: 61px;
+	height: 30px !important;
 	padding: 5px 10%;
 	text-align: center;
 	overflow: hidden;
