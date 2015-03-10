@@ -29,7 +29,7 @@ function globalBinder(){
 	
 	$(document).on("click", ".lp-item" , function() {
 		//TODO: Back button needs to be implemented
-		//saveState($.data( this, "enum" ).pnName,null,null);
+		saveState($.data( this, "enum" ).pnName,null,null);
 		return true;
     });
 }
@@ -37,7 +37,7 @@ function globalBinder(){
 function globalSNBinder(){
 	$(document).on("click", ".lp-t2-item" , function() {
 		//TODO: Back button needs to be implemented
-		//saveState(PNEnum.LOAN,$.data( this, "snEnum" ).snName,null);
+		saveState(PNEnum.LOAN,$.data( this, "snEnum" ).snName,null);
 		return true;
     });
 }

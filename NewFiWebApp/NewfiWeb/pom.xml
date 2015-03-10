@@ -20,8 +20,6 @@
 		<jsp.version>2.2</jsp.version>
 		<jstl.version>1.2</jstl.version>
 		<servlet.version>2.5</servlet.version>
-
-		<dev.deployment.path>/apps/tomcat/apache-tomcat-7.0.55/webapps</dev.deployment.path> 
 		<!-- Uncomment this if you require maven to publish the war in a specific 
 			folder such as the tomcat's webapps <dev.deployment.path>E:\Nexera\apache-tomcat-7.0.56\webapps</dev.deployment.path> -->
 
@@ -82,7 +80,11 @@
 			<artifactId>NewfiCore</artifactId>
 			<version>1.0</version>
 		</dependency>
-
+<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>WorkflowEngine</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 		<!-- Spring Security -->
 
@@ -145,9 +147,6 @@
 				<!-- Uncomment this if you require maven to publish the war in a specific 
 					folder such as the tomcat's webapps <configuration> <outputDirectory>${dev.deployment.path}</outputDirectory> 
 					</configuration> -->
-
-					<configuration> <outputDirectory>${dev.deployment.path}</outputDirectory> 
-					</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

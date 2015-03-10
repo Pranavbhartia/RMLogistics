@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.exception.FatalException;
@@ -18,24 +21,31 @@ import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.mongo.dao.MongoMessageDAO;
 import com.nexera.mongo.dao.MongoMessageHeirarchyDAO;
-import com.nexera.mongo.dao.impl.MongoMessageDAOImpl;
-import com.nexera.mongo.dao.impl.MongoMessageHeirarchyDAOImpl;
 import com.nexera.mongo.entity.MongoMessageHeirarchy;
 import com.nexera.mongo.service.MongoCoreMessageService;
 
-
+@Component
 public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
+	
+	@Autowired
+	private MongoMessageDAO messageDAO;
+	
+	@Autowired
+	private MongoMessageHeirarchyDAO heriarchyDAO;
+	
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(MongoCoreMessageServiceImpl.class);
 
-	private MongoMessageDAO messageDAO = new MongoMessageDAOImpl();
-	private MongoMessageHeirarchyDAO heriarchyDAO = new MongoMessageHeirarchyDAOImpl();
-
-	/*
-	 * This method is expected to save the messageVO oject and return the mongo
-	 * message ID.
+	/**
+	 * Saves a message into mongo and returns id
+	 * @param messagesVO
+	 * @return
+	 * @throws FatalException
+	 * @throws NonFatalException
 	 */
 	public String saveMessage(MongoMessagesVO messagesVO)
 			throws FatalException, NonFatalException {
-		String id = this.messageDAO.save(messagesVO);
+		String id = messageDAO.save(messagesVO);
  
 		// If Parent ID is null, then it is a new message, and not part of a
 		// chain
@@ -46,7 +56,7 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			mh.setMessages(Arrays.asList(id));
 			mh.setMessageType(messagesVO.getMessageType());
 			mh.setUserList(messagesVO.getUserList());
-			this.heriarchyDAO.save(mh);
+			heriarchyDAO.save(mh);
 		} else {
 			// It is not a new message
 			// fetch the oldest hierarchy, add a new record containing this one
@@ -61,20 +71,27 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			// Update the date
 			mh.setDate(new Date(System.currentTimeMillis()));
 			// Save the new record
-			this.heriarchyDAO.save(mh);
+			heriarchyDAO.save(mh);
 		}
 		return id;
 	}
 
-	/*
-	 * This method should construct the hierarchy object based on the queryVO.
+	/**
+	 * Fetches messages and constructs hierarchy from mongo based on the query
+	 * @param mongoQueryVO
+	 * @return
+	 * @throws FatalException
+	 * @throws NonFatalException
 	 */
 	public MongoMessageHierarchyVO getMessages(MongoQueryVO mongoQueryVO)
 			throws FatalException, NonFatalException {
-
+		LOG.info("MongoCoreMessageServiceImpl : getMessages method called.");
+		
 		// First, find the ordered Heirarchy
-		List<MongoMessageHeirarchy> mhList = this.heriarchyDAO
+		List<MongoMessageHeirarchy> mhList = heriarchyDAO
 				.findBy(mongoQueryVO);
+		
+		LOG.info(" Message size retrieved : " + mhList.size());
 
 		Set<String> messageIds = new HashSet<String>();
 		List<List<String>> threadList = new ArrayList<List<String>>();
@@ -85,7 +102,7 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			threadList.add(mids);
 		}
 		// Find all the messages
-		Map<String, MongoMessagesVO> idMap = this.messageDAO
+		Map<String, MongoMessagesVO> idMap = messageDAO
 				.findMany(messageIds);
 
 		// Construct the Hierarchy object
@@ -95,6 +112,8 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 		for (Entry<String, MongoMessagesVO> entry : idMap.entrySet()) {
 			mhvo.setMongoMessages(entry.getKey(), entry.getValue());
 		}
+		
+		LOG.info("MongoCoreMessageServiceImpl : end of method getMessages.");
 		return mhvo;
 	}
 

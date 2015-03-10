@@ -151,7 +151,7 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background: url(../images/cus-icn.png) no-repeat center;
+	background-image: url(../images/cus-icn.png) no-repeat center;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -833,6 +833,10 @@ a,a:hover,a:visited {
 	margin: 0 auto;
 	cursor: pointer;
 	background: url(../images/doc-upload-placeholder.png) no-repeat center;
+}
+
+.file-upload-loading{
+	background: url(../images/upload-loader.gif) no-repeat center;
 }
 
 .file-upload-hover-icn {
@@ -2385,7 +2389,19 @@ input.calc-input {
 }
 
 .assign {
-	width: 160px;
+	display: block;
+	width: 95%;
+	max-width: 160px;
+	margin: 0 auto;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	height: 35px;
+	line-height: 35px;
+	padding-left: 10px;
+	border: 1px #E2E2E2 solid;
+	border-radius: 3px;
+	background: url(../images/select-down.png) no-repeat 97% center;
+	background-color: #FAFAFA;
 }
 
 /*Login page styles*/
@@ -3378,4 +3394,28 @@ input.calc-input {
 
 .alert-popup-row:last-child .alert-popup-container {
 	border-bottom: none;
+}
+
+
+
+.overlay-container{
+	width:500px;
+	margin: 100px auto;
+	border: 1px solid #dcdcdc;
+	background-color: #fff;
+	overflow: hidden;
+}
+
+#pu-canvas{
+
+	height:150 px;
+	width: 150 px;
+	z-index: -9;
+	position: relative;
+	margin-bottom: -150 px;
+}
+
+.btn-container{
+	height: 50 px;
+	margin-top: 20 px;
 }

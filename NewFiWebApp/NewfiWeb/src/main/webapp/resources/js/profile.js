@@ -172,7 +172,7 @@ function getCustomerUploadPhotoRow(user) {
 		uploadPicPlaceholder = $('<div>').attr({
 			"id" : "profilePic",
 			"class" : "prof-pic-upload-placeholder float-left",
-			"style" : "background:url(" + user.photoImageUrl + ")"
+			"style" : "background-image:url(" + user.photoImageUrl + ")"
 		});
 	}
 
@@ -193,18 +193,6 @@ function getCustomerUploadPhotoRow(user) {
 
 	});
 
-	var canvasTage = $('<canvas>').attr({
-		"id" : "canvasid",
-		"style" : "display:none",
-	});
-
-	var imageTage = $('<img>').attr({
-		"id" : "target",
-		"style" : "display:none",
-	});
-
-	// outer.append(jcExample).append(article).append(imageTage);
-
 	inputHiddenDiv.append(inputHiddenFile);
 
 	var uploadBtn = $('<div>').attr({
@@ -216,7 +204,7 @@ function getCustomerUploadPhotoRow(user) {
 
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 
-	return row.append(rowCol1).append(rowCol2);// .append(outer);
+	return row.append(rowCol1).append(rowCol2);
 }
 
 function uploadeImage() {
@@ -300,7 +288,7 @@ function getDOBRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("DOB");
+	}).html("Date of Birth");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -331,7 +319,7 @@ function getPriEmailRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Primery Email");
+	}).html("Primary Email");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -360,7 +348,7 @@ function getSecEmailRow(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Secondry Email");
+	}).html("Secondary Email");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -447,7 +435,7 @@ function getPhone1Row(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Phone 1");
+	}).html("Primary Phone");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -466,7 +454,7 @@ function getPhone2Row(user) {
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Phone 2");
+	}).html("Secondary Phone");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -860,10 +848,3 @@ function saveEditUserProfile(user){
 	
 }
 
-
-function cancelUploadPhoto(){
-	
-	$('#pu-img').attr('src', "");
-	$("#popup-overlay").css("display","none");
-	$('#pu-img').css("display", "none");
-}
