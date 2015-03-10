@@ -25,7 +25,7 @@ public class MessageVO {
 	private String id;
 
 	// Loan Id for the message
-	private String loanId;
+	private int loanId;
 
 	// Mongo parent ID
 	private String parentId;
@@ -136,11 +136,11 @@ public class MessageVO {
 		this.id = id;
 	}
 
-	public String getLoanId() {
+	public int getLoanId() {
 		return loanId;
 	}
 
-	public void setLoanId(String loanId) {
+	public void setLoanId(int loanId) {
 		this.loanId = loanId;
 	}
 

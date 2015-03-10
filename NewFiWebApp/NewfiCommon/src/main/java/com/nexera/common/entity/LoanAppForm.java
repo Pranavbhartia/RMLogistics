@@ -13,7 +13,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="loanappform")
+@Table(name = "loanappform")
 @NamedQuery(name = "LoanAppForm.findAll", query = "SELECT l FROM LoanAppForm l")
 public class LoanAppForm implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -36,6 +36,8 @@ public class LoanAppForm implements Serializable {
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
 	private List<UserEmploymentHistory> userEmploymentHistories;
+	private WorkflowExec customerWorkflow;
+	private WorkflowExec loanManagerWorkflow;
 
 	public LoanAppForm() {
 	}
@@ -248,6 +250,26 @@ public class LoanAppForm implements Serializable {
 		userEmploymentHistory.setLoanAppForm(null);
 
 		return userEmploymentHistory;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_workflow")
+	public WorkflowExec getCustomerWorkflow() {
+		return customerWorkflow;
+	}
+
+	public void setCustomerWorkflow(WorkflowExec customerWorkflow) {
+		this.customerWorkflow = customerWorkflow;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_manager_workflow")
+	public WorkflowExec getLoanManagerWorkflow() {
+		return loanManagerWorkflow;
+	}
+
+	public void setLoanManagerWorkflow(WorkflowExec loanManagerWorkflow) {
+		this.loanManagerWorkflow = loanManagerWorkflow;
 	}
 
 }

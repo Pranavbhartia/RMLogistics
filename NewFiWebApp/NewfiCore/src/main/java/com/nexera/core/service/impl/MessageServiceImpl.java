@@ -55,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 		mongoMessagesVO.setCreatedBy(new Long(messagesVO.getCreatedUser()
 		        .getUserID()));
 		mongoMessagesVO.setParentId(messagesVO.getParentId());
-		mongoMessagesVO.setLoanId(Long.valueOf(messagesVO.getLoanId()));
+		mongoMessagesVO.setLoanId(messagesVO.getLoanId());
 		mongoMessagesVO.setMessageType(messageType);
 		mongoMessagesVO.setRoleName(messagesVO.getCreatedUser().getRoleName());
 		List<Long> userAccessList = getUserIds(messagesVO.getOtherUsers());
@@ -170,6 +170,7 @@ public class MessageServiceImpl implements MessageService {
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
 		                        .getCreatedDate()));
 		messageVO.setParentId(mongoMessagesVO.getParentId());
+		messageVO.setLoanId(mongoMessagesVO.getLoanId());
 		messageVO.setSortOrderDate(mongoMessagesVO.getCreatedDate());
 		List<UserRoleNameImageVO> nameList = userProfileDao
 		        .finUserDetailsList(mongoMessagesVO.getUserList());

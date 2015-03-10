@@ -2,8 +2,6 @@ package com.nexera.mongo.dao.impl;
 
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -27,9 +25,6 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
-	private static final Logger LOG = LoggerFactory
-	        .getLogger(MongoMessageHeirarchyDAOImpl.class);
 
 	protected DBObject constructQuery(MongoQueryVO query) {
 		BasicDBObject q = new BasicDBObject();
@@ -48,10 +43,7 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	 * @param mh
 	 */
 	public void save(MongoMessageHeirarchy mh) {
-		LOG.info(mh.toString());
-		mongoTemplate.insert(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
-		LOG.info(mh.getId());
-				
+		mongoTemplate.insert(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);				
 	}
 	
 	/**
