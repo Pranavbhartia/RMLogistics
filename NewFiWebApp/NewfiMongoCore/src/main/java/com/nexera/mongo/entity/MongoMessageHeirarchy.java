@@ -19,7 +19,7 @@ public class MongoMessageHeirarchy {
 	private List<String> messages;
 	private List<String> roleList;
 	private List<Long> userList;
-	private Long loanId;
+	private int loanId;
 	private String messageType;
 	private Date date;
 
@@ -43,11 +43,11 @@ public class MongoMessageHeirarchy {
 		this.messages = messages;
 	}
 
-	public Long getLoanId() {
+	public int getLoanId() {
 		return loanId;
 	}
 
-	public void setLoanId(Long loanId) {
+	public void setLoanId(int loanId) {
 		this.loanId = loanId;
 	}
 
