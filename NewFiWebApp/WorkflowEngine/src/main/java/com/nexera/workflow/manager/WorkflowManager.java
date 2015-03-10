@@ -5,10 +5,6 @@ package com.nexera.workflow.manager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +17,6 @@ import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.service.WorkflowService;
 
@@ -42,9 +37,6 @@ public class WorkflowManager implements Runnable
     @Autowired
     private WorkflowService workflowService;
 
-    @Autowired
-    private EngineTrigger engineTrigger;
-
 
     /**
       * 
@@ -63,48 +55,7 @@ public class WorkflowManager implements Runnable
     {
         LOGGER.debug( "Inside run method " );
 
-        WorkflowItemMaster workflowItemMaster = getWorkflowItemExec().getWorkflowItemMaster();
-        LOGGER.debug( "Updating workflowitem master to pending " );
-
-        String result = executeMethod( workflowItemMaster );
-        if ( result.equalsIgnoreCase( WorkflowConstants.SUCCESS ) ) {
-
-            LOGGER.debug( "Updating workflowitem master to completed " );
-            getWorkflowItemExec().setStatus( Status.COMPLETED.getStatus() );
-            workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
-            LOGGER.debug( "Checking if it has an onSuccess item to execute " );
-            //TODO test this Might Have issues regarding parent of success workflow item
-            if ( workflowItemMaster.getOnSuccess() != null ) {
-                WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster.getOnSuccess();
-                WorkflowItemExec successWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
-                    .getParentWorkflow(), successWorkflowItemMaster, getWorkflowItemExec().getParentWorkflowItemExec() );
-                engineTrigger.startWorkFlowItemExecution( successWorkflowItemExec.getId() );
-
-            }
-
-        } else if ( result.equalsIgnoreCase( WorkflowConstants.FAILURE ) ) {
-
-            LOGGER.debug( "Updating workflowitem master to completed " );
-            getWorkflowItemExec().setStatus( Status.COMPLETED.getStatus() );
-            workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
-            LOGGER.debug( "Checking if it has an onFailure item to execute " );
-            //TODO test this Might Have issues regarding parent of success workflow item
-            if ( workflowItemMaster.getOnFailure() != null ) {
-                WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster.getOnFailure();
-                WorkflowItemExec failureWorkflowItemExec = workflowService.setWorkflowItemIntoExecution( getWorkflowItemExec()
-                    .getParentWorkflow(), failureWorkflowItemMaster, getWorkflowItemExec().getParentWorkflowItemExec() );
-                engineTrigger.startWorkFlowItemExecution( failureWorkflowItemExec.getId() );
-            }
-
-        } else if ( result.equalsIgnoreCase( WorkflowConstants.PENDING ) ) {
-            getWorkflowItemExec().setStatus( Status.PENDING.getStatus() );
-            workflowService.updateWorkflowItemExecutionStatus( getWorkflowItemExec() );
-        } else {
-            LOGGER.error( "Invalid state returned " );
-            throw new FatalException( "Invalid state returned " );
-        }
-
-
+        startWorkFlowItemExecution( getWorkflowItemExec().getId() );
     }
 
 
@@ -166,6 +117,60 @@ public class WorkflowManager implements Runnable
         }
 
         return result;
+
+    }
+
+
+    public void startWorkFlowItemExecution( int workflowItemExecutionId )
+    {
+
+        WorkflowItemExec workflowItemExecution = workflowService.getWorkflowExecById( workflowItemExecutionId );
+        if ( workflowItemExecution != null ) {
+            LOGGER.debug( "Updating workflow master status if its not updated " );
+            WorkflowItemMaster workflowItemMaster = workflowItemExecution.getWorkflowItemMaster();
+            String result = executeMethod( workflowItemMaster );
+
+            if ( result.equalsIgnoreCase( WorkflowConstants.SUCCESS ) ) {
+
+                LOGGER.debug( "Updating workflowitem master to completed " );
+                workflowItemExecution.setStatus( Status.COMPLETED.getStatus() );
+                workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
+                LOGGER.debug( "Checking if it has an onSuccess item to execute " );
+                if ( workflowItemMaster.getOnSuccess() != null ) {
+                    WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster.getOnSuccess();
+                    WorkflowItemExec successWorkflowItemExec = workflowService.setWorkflowItemIntoExecution(
+                        workflowItemExecution.getParentWorkflow(), successWorkflowItemMaster,
+                        workflowItemExecution.getParentWorkflowItemExec() );
+                    startWorkFlowItemExecution( successWorkflowItemExec.getId() );
+
+                }
+
+            } else if ( result.equalsIgnoreCase( WorkflowConstants.FAILURE ) ) {
+
+                LOGGER.debug( "Updating workflowitem master to completed " );
+                workflowItemExecution.setStatus( Status.COMPLETED.getStatus() );
+                workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
+                LOGGER.debug( "Checking if it has an onFailure item to execute " );
+                //TODO test this Might Have issues regarding parent of success workflow item
+                if ( workflowItemMaster.getOnFailure() != null ) {
+                    WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster.getOnFailure();
+                    WorkflowItemExec failureWorkflowItemExec = workflowService.setWorkflowItemIntoExecution(
+                        workflowItemExecution.getParentWorkflow(), failureWorkflowItemMaster,
+                        workflowItemExecution.getParentWorkflowItemExec() );
+                    startWorkFlowItemExecution( failureWorkflowItemExec.getId() );
+                }
+
+            } else if ( result.equalsIgnoreCase( WorkflowConstants.PENDING ) ) {
+                workflowItemExecution.setStatus( Status.PENDING.getStatus() );
+                workflowService.updateWorkflowItemExecutionStatus( workflowItemExecution );
+            } else {
+                LOGGER.error( "Invalid state returned " );
+                throw new FatalException( "Invalid state returned " );
+            }
+
+
+        }
+
 
     }
 
