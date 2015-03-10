@@ -25,13 +25,14 @@ function getAgentSecondaryLeftNav() {
 		"class" : "lp-t2-wrapper"
 	});
 
+	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 = getAgentSecondaryLeftNavStep(1, "application progress");
 	var step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
 	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />your rate");
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	return leftTab2Wrapper.append(step1).append(step2).append(step3).append(
+	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(step3).append(
 			step4).append(step5);
 }
 
@@ -907,7 +908,10 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	$('#center-panel-cont').html('');
 
 	// Check the id and paint the corresponding right panel
-	if (elementId == "lp-step1") {
+	if(elementId == "lp-step0") {
+		console.log("talk to your team");
+	}
+	else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
 		getLoanDetails(selectedUserDetail.loanID);

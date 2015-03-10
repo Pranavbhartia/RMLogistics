@@ -3455,3 +3455,8 @@ input.calc-input {
 
 :focus {outline:none;} ::-moz-focus-inner {border:0;}
 
+
+.ui-dialog-titlebar{
+	background: #428bca;
+	color: #fff;
+}
