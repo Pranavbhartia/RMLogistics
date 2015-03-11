@@ -6,13 +6,20 @@
 
 
 <div class="payment-details-wrapper" style="display: block; position: relative; margin: 100px auto 0px; width: 40%;">
-	<div id="payment-details-form" class="payment-details-form" style="background-color: rgb(246, 248, 247); padding: 20px 0px;">
-		<div class="ms-add-member-popup-header" style="font-size: 23px;">Your card details</div>
+	<div id="payment-details-form" class="payment-details-form"
+		style="background-color: rgb(246, 248, 247); padding: 20px 0px; border-width: 4px 1px 1px; border-style: solid; border-color: rgb(66, 139, 202) rgb(183, 183, 183);">
+		<div class="ms-add-member-popup-header" style="font-size: 23px;">Your
+			card details</div>
 		<form id="checkout" method="POST">
-			<div id="dropin" class="payment-dropin" style="width: 405px; margin-left: 67px; margin-top: 30px;"></div>
+			<div id="dropin" class="payment-dropin"
+				style="width: 405px; margin-left: 67px; margin-top: 30px;"></div>
 			<div class="clearfix">
-				<input type="submit" class="login-submit-button" style="margin-top: 14px; width: 29%; margin-left: 29px; margin-bottom: 22px;" value="Make Payment" /> 
-				<input type="button" id="cancel-payment" class="login-submit-button" style="margin-top: 14px; width: 29%; float: right; margin-right: 29px; margin-bottom: 22px;" value="Cancel" />
+				<input type="submit" class="login-submit-button"
+					style="margin-top: 14px; width: 29%; margin-left: 29px; margin-bottom: 22px;"
+					value="Make Payment" /> <input type="button" id="cancel-payment"
+					class="login-submit-button"
+					style="margin-top: 14px; width: 29%; float: right; margin-right: 29px; margin-bottom: 22px;"
+					value="Cancel" />
 			</div>
 		</form>
 	</div>
