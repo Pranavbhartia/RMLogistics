@@ -3526,3 +3526,7 @@ input.calc-input {
 .ms-add-notification-popup:after{
 	right:80px;
 }
+
+.dial{
+	font-family: 'opensanssemibold' !important;
+}

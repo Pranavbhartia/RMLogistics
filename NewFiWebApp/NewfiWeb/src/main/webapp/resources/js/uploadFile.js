@@ -27,7 +27,10 @@ function getRequiredDocumentData(neededItemList) {
 	$("#knobUpload").knob({
 			"data-width" : "50",
 			"data-displayInput": false,
-			"readOnly":true
+			"readOnly":true,
+			'draw' : function () { 
+				$(this.i).val(this.cv + '/' + this.o.max);
+		      }		
 	});
 }
 
@@ -244,9 +247,14 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 				"class" : "dial",
 				"id" : "knobUpload",
 				"data-min" : "0",
+				"data-width" : "175",
+				"data-thickness" : "0.15",
+				"data-fgColor" : "#F47521",
+				"data-bgColor" : "#EFE1DB",
 				"data-max" : knobScore.neededItemRequired,
 				"value" : knobScore.totalSubmittedItem
 	});
+	
 	rightContainer.append(inputBox);
 	container.append(leftContainer).append(rightContainer);
 
