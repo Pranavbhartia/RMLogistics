@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
+import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
@@ -28,6 +31,9 @@ public class LoanRestService {
 
 	@Autowired
 	private UserProfileService userProfileService;
+	
+	@Autowired
+	private Utils utils;
 
 	@RequestMapping(value = "/user/{userID}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getLoansOfUser(@PathVariable Integer userID) {
@@ -114,6 +120,24 @@ public class LoanRestService {
 		user.setId(userID);
 
 		LoanDashboardVO responseVO = loanService.retrieveDashboard(user);
+
+		return RestUtil.wrapObjectForSuccess(responseVO);
+	}
+
+
+	//TODO-move this to User profile rest service
+	@RequestMapping(value = "/{loanID}/retrieveDashboard")
+	public @ResponseBody CommonResponseVO retrieveLoanForDashboard(@PathVariable Integer loanID) {
+		
+		User user=utils.getLoggedInUser();
+		if(user==null)
+			return RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in.");
+		
+		UserVO userVO = userProfileService.buildUserVO(user);
+		LoanVO loanVO=new LoanVO();
+		loanVO.setId(loanID);
+
+		LoanCustomerVO responseVO = loanService.retrieveDashboard(userVO,loanVO);
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
