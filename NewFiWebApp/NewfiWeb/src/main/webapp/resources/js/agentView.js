@@ -32,8 +32,8 @@ function getAgentSecondaryLeftNav() {
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(step3).append(
-			step4).append(step5);
+	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(
+			step3).append(step4).append(step5);
 }
 
 function getAgentSecondaryLeftNavStep(step, text) {
@@ -356,7 +356,7 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
-			saveState('loan',selectedUserDetail.loanID, "detail");
+			saveState('loan', selectedUserDetail.loanID, "detail");
 			entryPointForAgentView(selectedUserDetail.loanID, '2')
 			// getLoanDetails(loanID);
 		}).html(customer.name);
@@ -522,7 +522,7 @@ function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 	});
 
 	if (alerts != undefined) {
-		var count=0;
+		var count = 0;
 		for (var i = 0; i < alerts.length; i++) {
 			var alertData = alerts[i].content;
 			var alertContainer = $('<div>').attr({
@@ -578,19 +578,23 @@ function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 				alertLeftCol.append(alertBtnRow);
 
 			alertContainer.append(alertLeftCol);
-			if(alerts[i].remindOn){
-				var dat=new Date(alerts[i].remindOn);
-				var amPm=dat.getHours()>12?"PM":"AM";
-				var hr=dat.getHours()%12<10?("0"+dat.getHours()%12):dat.getHours()%12;
-				var min=dat.getMinutes()<10?("0"+dat.getMinutes()):dat.getMinutes();
+			if (alerts[i].remindOn) {
+				var dat = new Date(alerts[i].remindOn);
+				var amPm = dat.getHours() > 12 ? "PM" : "AM";
+				var hr = dat.getHours() % 12 < 10 ? ("0" + dat.getHours() % 12)
+						: dat.getHours() % 12;
+				var min = dat.getMinutes() < 10 ? ("0" + dat.getMinutes())
+						: dat.getMinutes();
 				var editBtn = $('<div>').attr({
 					"class" : "float-right"
-				}).html($.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm);
+				}).html(
+						$.datepicker.formatDate('M-dd-yy', dat) + " " + hr
+								+ ":" + min + " " + amPm);
 				alertContainer.append(editBtn);
 			}
 			recentAlertWrapper.append(alertContainer);
 			count++;
-			if(count==3)
+			if (count == 3)
 				break;
 		}
 	}
@@ -611,7 +615,7 @@ function appendSchedulerContainer(contxt) {
 	});
 }
 
-function getSchedulerContainer(contxt,tempData){
+function getSchedulerContainer(contxt, tempData) {
 
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
@@ -674,36 +678,44 @@ function getSchedulerContainer(contxt,tempData){
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
-		var tempData=e.data.tempData;
-		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
-		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
-		snoozeTime.setHours(dat.getHours());
-		snoozeTime.setMinutes(dat.getMinutes())
-		var message=$("#sch-msg-message").val();
-		if(message==""){
-			showToastMessage("Invalid Message");
-		}else if(snoozeTime=="Invalid Date"){
-			showToastMessage("Invalid Date");
-		}else{
-			var data={};
-			if(tempData){
-				for(key in tempData){
-					data[key]=tempData[key];
+	}).html("Submit").bind(
+			"click",
+			{
+				contxt : contxt,
+				tempData : tempData
+			},
+			function(e) {
+				var tempData = e.data.tempData;
+				var dat = $('#sch-msg-time-picker ').data('DateTimePicker')
+						.getDate()._d
+				var snoozeTime = $('#sch-msg-date-picker').data('datepicker')
+						.getDate();
+				snoozeTime.setHours(dat.getHours());
+				snoozeTime.setMinutes(dat.getMinutes())
+				var message = $("#sch-msg-message").val();
+				if (message == "") {
+					showToastMessage("Invalid Message");
+				} else if (snoozeTime == "Invalid Date") {
+					showToastMessage("Invalid Date");
+				} else {
+					var data = {};
+					if (tempData) {
+						for (key in tempData) {
+							data[key] = tempData[key];
+						}
+					}
+					data.content = message;
+					data.createdDate = new Date().getTime();
+					data.remindOn = snoozeTime.getTime();
+					data.createdByID = newfiObject.user.id;
+					data.createdForID = newfiObject.user.id;
+					contxt.scheduleAEvent(data, function() {
+						contxt.updateWrapper();
+						contxt.updateLoanListNotificationCount();
+						$("#sch-msg-message").val("");
+					});
 				}
-			}
-			data.content=message;
-			data.createdDate=new Date().getTime();
-			data.remindOn=snoozeTime.getTime();
-			data.createdByID=newfiObject.user.id;
-			data.createdForID=newfiObject.user.id;
-			contxt.scheduleAEvent(data,function(){
-				contxt.updateWrapper();
-				contxt.updateLoanListNotificationCount();
-				$("#sch-msg-message").val("");
 			});
-		}
-	});
 	col1.append(col1Btn);
 
 	var col2 = $('<div>').attr({
@@ -854,7 +866,7 @@ function paintMyLoansView() {
 	});
 	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
 	$('#right-panel').append(rightPanelCont);
-	//For backbutton support
+	// For backbutton support
 	bindDataToSN();
 
 }
@@ -932,10 +944,9 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	$('#center-panel-cont').html('');
 
 	// Check the id and paint the corresponding right panel
-	if(elementId == "lp-step0") {
+	if (elementId == "lp-step0") {
 		console.log("talk to your team");
-	}
-	else if (elementId == "lp-step1") {
+	} else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
 		getLoanDetails(selectedUserDetail.loanID);
@@ -2445,5 +2456,5 @@ function entryPointForAgentView(loanID, viewName) {
 function entryPointAgentViewChangeNav(viewName) {
 
 	paintMyLoansView();
-	changeAgentSecondaryLeftPanel('lp-step'+viewName);
+	changeAgentSecondaryLeftPanel('lp-step' + viewName);
 }

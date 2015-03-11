@@ -31,402 +31,436 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 
+
 @Component
-public class LoanServiceImpl implements LoanService {
+public class LoanServiceImpl implements LoanService
+{
 
-	@Autowired
-	private LoanDao loanDao;
+    @Autowired
+    private LoanDao loanDao;
 
-	@Autowired
-	private UserProfileService userProfileService;
+    @Autowired
+    private UserProfileService userProfileService;
 
-	private static final Logger LOG = LoggerFactory
-	        .getLogger(LoanServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger( LoanServiceImpl.class );
 
-	private User getUserObject() {
-		final Object principal = SecurityContextHolder.getContext()
-		        .getAuthentication().getPrincipal();
-		if (principal instanceof User) {
-			return (User) principal;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<LoanVO> getLoansOfUser(UserVO user) {
 
-		List<Loan> list = loanDao.getLoansOfUser(this.parseUserModel(user));
-		return this.buildLoanVOList(list);
-	}
+    private User getUserObject()
+    {
+        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if ( principal instanceof User ) {
+            return (User) principal;
+        } else {
+            return null;
+        }
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public LoanVO getActiveLoanOfUser(UserVO user) {
 
-		Loan loan = loanDao.getActiveLoanOfUser(this.parseUserModel(user));
-		return this.buildLoanVO(loan);
-	}
+    @Override
+    @Transactional ( readOnly = true)
+    public List<LoanVO> getLoansOfUser( UserVO user )
+    {
 
-	@Override
-	@Transactional(readOnly = true)
-	public LoanVO getLoanByID(Integer loanID) {
-		return this.buildLoanVO((Loan) loanDao.getLoanWithDetails(loanID));
-	}
+        List<Loan> list = loanDao.getLoansOfUser( this.parseUserModel( user ) );
+        return this.buildLoanVOList( list );
+    }
 
-	@Override
-	@Transactional()
-	public boolean addToLoanTeam(LoanVO loan, UserVO user) {
 
-		Loan loanModel = this.parseLoanModel(loan);
-		User userModel = this.parseUserModel(user);
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanVO getActiveLoanOfUser( UserVO user )
+    {
 
-		// TODO CHange the added by appropriately, move the get user obj in
-		// correct service
-		return loanDao.addToLoanTeam(loanModel, userModel, getUserObject());
-	}
+        Loan loan = loanDao.getActiveLoanOfUser( this.parseUserModel( user ) );
+        return this.buildLoanVO( loan );
+    }
 
-	@Override
-	@Transactional()
-	public boolean removeFromLoanTeam(LoanVO loan, UserVO user) {
 
-		Loan loanModel = this.parseLoanModel(loan);
-		User userModel = this.parseUserModel(user);
-		return loanDao.removeFromLoanTeam(loanModel, userModel);
-	}
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanVO getLoanByID( Integer loanID )
+    {
+        return this.buildLoanVO( (Loan) loanDao.getLoanWithDetails( loanID ) );
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
 
-		List<User> team = loanDao.retreiveLoanTeam(this.parseLoanModel(loanVO));
+    @Override
+    @Transactional ( )
+    public boolean addToLoanTeam( LoanVO loan, UserVO user )
+    {
 
-		return userProfileService.buildUserVOList(team);
-	}
+        Loan loanModel = this.parseLoanModel( loan );
+        User userModel = this.parseUserModel( user );
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
+        // TODO CHange the added by appropriately, move the get user obj in
+        // correct service
+        return loanDao.addToLoanTeam( loanModel, userModel, getUserObject() );
+    }
 
-		User manager = this.parseUserModel(loanManager);
 
-		return this.buildLoanVOList(loanDao.retreiveLoansAsManager(manager));
-	}
+    @Override
+    @Transactional ( )
+    public boolean removeFromLoanTeam( LoanVO loan, UserVO user )
+    {
 
-	@Override
-	public Loan parseLoanModel(LoanVO loanVO) {
+        Loan loanModel = this.parseLoanModel( loan );
+        User userModel = this.parseUserModel( user );
+        return loanDao.removeFromLoanTeam( loanModel, userModel );
+    }
 
-		if (loanVO == null)
-			return null;
 
-		Loan loan = new Loan();
-		loan.setId(loanVO.getId());
-		loan.setCreatedDate(loanVO.getCreatedDate());
-		loan.setDeleted(loanVO.getDeleted());
-		loan.setLoanEmailId(loanVO.getLoanEmailId());
-		loan.setLqbFileId(loanVO.getLqbFileId());
-		loan.setModifiedDate(loanVO.getModifiedDate());
-		loan.setName(loanVO.getName());
+    @Override
+    @Transactional ( readOnly = true)
+    public List<UserVO> retreiveLoanTeam( LoanVO loanVO )
+    {
 
-		return loan;
+        List<User> team = loanDao.retreiveLoanTeam( this.parseLoanModel( loanVO ) );
 
-	}
+        return userProfileService.buildUserVOList( team );
+    }
 
-	private LoanVO buildLoanVO(Loan loan) {
 
-		if (loan == null)
-			return null;
+    @Override
+    @Transactional ( readOnly = true)
+    public List<LoanVO> retreiveLoansAsManager( UserVO loanManager )
+    {
 
-		LoanVO loanVo = new LoanVO();
-		loanVo.setId(loan.getId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setDeleted(loan.getDeleted());
-		loanVo.setLoanEmailId(loan.getLoanEmailId());
-		loanVo.setLqbFileId(loan.getLqbFileId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setModifiedDate(loan.getModifiedDate());
-		loanVo.setName(loan.getName());
-		if (loan.getLoanStatus() != null)
-			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
+        User manager = this.parseUserModel( loanManager );
 
-		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
+        return this.buildLoanVOList( loanDao.retreiveLoansAsManager( manager ) );
+    }
 
-		return loanVo;
 
-	}
+    @Override
+    public Loan parseLoanModel( LoanVO loanVO )
+    {
 
-	private List<LoanVO> buildLoanVOList(List<Loan> loanList) {
+        if ( loanVO == null )
+            return null;
 
-		if (loanList == null)
-			return null;
+        Loan loan = new Loan();
+        loan.setId( loanVO.getId() );
+        loan.setCreatedDate( loanVO.getCreatedDate() );
+        loan.setDeleted( loanVO.getDeleted() );
+        loan.setLoanEmailId( loanVO.getLoanEmailId() );
+        loan.setLqbFileId( loanVO.getLqbFileId() );
+        loan.setModifiedDate( loanVO.getModifiedDate() );
+        loan.setName( loanVO.getName() );
 
-		List<LoanVO> voList = new ArrayList<LoanVO>();
-		for (Loan loan : loanList) {
-			voList.add(this.buildLoanVO(loan));
-		}
-
-		return voList;
-	}
-
-	private User parseUserModel(UserVO userVO) {
+        return loan;
 
-		if (userVO == null)
-			return null;
+    }
 
-		User user = new User();
 
-		user.setId(userVO.getId());
-
-		return user;
-	}
-
-	private LoanTeamVO buildLoanTeamVO(LoanTeam loanTeam) {
-		if (loanTeam == null)
-			return null;
-
-		LoanTeamVO loanTeamVO = new LoanTeamVO();
-		loanTeamVO.setId(loanTeam.getId());
-		loanTeamVO.setUser(userProfileService.buildUserVO(loanTeam.getUser()));
-		loanTeamVO.setActive(loanTeam.getActive());
-		return loanTeamVO;
-
-	}
-
-	private LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
-		if (detail == null)
-			return null;
-
-		LoanDetailVO detailVO = new LoanDetailVO();
-		detailVO.setId(detail.getId());
-		detailVO.setDownPayment(detail.getDownPayment());
-		detailVO.setLoanAmount(detail.getLoanAmount());
-		detailVO.setRate(detail.getRate());
-
-		return detailVO;
-
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public LoanDashboardVO retrieveDashboard(UserVO userVO) {
-
-		// Get all loans this user has access to.
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
-		        .parseUserModel(userVO));
-		LoanDashboardVO loanDashboardVO = this
-		        .buildLoanDashboardVoFromLoanList(loanList);
-
-		return loanDashboardVO;
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	public LoanCustomerVO retrieveDashboard(UserVO userVO,LoanVO loanVO) {
-
-		// Get all loans this user has access to.
-		Loan loan = loanDao.retrieveLoanForDashboard(this
-				.parseUserModel(userVO),this.parseLoanModel(loanVO));
-		LoanCustomerVO loanCustomerVO = this
-				.buildLoanCustomerVoFromUser(loan);
-
-		return loanCustomerVO;
-	}
-
-	/**
-	 * it returns dashboardVO from list of loans
-	 * 
-	 * @param loanList
-	 * @return
-	 */
-	private LoanDashboardVO buildLoanDashboardVoFromLoanList(List<Loan> loanList) {
-
-		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
-		List<LoanCustomerVO> loanCustomerVoList = new ArrayList<LoanCustomerVO>();
-
-		if (loanList != null) {
-			for (Loan loan : loanList) {
-				LoanCustomerVO loanCustomerVO = this
-				        .buildLoanCustomerVoFromUser(loan);
-				loanCustomerVoList.add(loanCustomerVO);
-			}
-		}
-
-		loanDashboardVO.setCustomers(loanCustomerVoList);
-		// set no of loans as num_found
-		loanDashboardVO.setNum_found(loanList.size());
-
-		return loanDashboardVO;
-	}
-
-	/**
-	 * return loanCustomerVo from loan
-	 * 
-	 * @param loan
-	 * @return
-	 */
-	private LoanCustomerVO buildLoanCustomerVoFromUser(Loan loan) {
-
-		User user = loan.getUser();
-		CustomerDetail customerDetail = user.getCustomerDetail();
-
-		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
-
-		loanCustomerVO.setTime(loan.getCreatedDate().toString());
-		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
-		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
-		loanCustomerVO.setPhone_no(user.getPhoneNumber());
-		loanCustomerVO.setLoanID(loan.getId());
-		loanCustomerVO.setUserID(user.getId());
-		if (user.getUserRole() != null)
-			loanCustomerVO.setRole(user.getUserRole().getLabel());
-		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
-		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
-		// TODO get these hard coded data from entity
-		loanCustomerVO.setProcessor("Johny Tester");
-		loanCustomerVO.setPurpose("Purchase TBD");
-		loanCustomerVO.setAlert_count("3");
-		loanCustomerVO.setCredit_score("732");
-
-		loanCustomerVO.setFirstName(user.getFirstName());
-		loanCustomerVO.setLastName(user.getLastName());
-		loanCustomerVO.setEmailId(user.getEmailId());
-
-		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		if (customerDetail != null) {
-			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-			customerDetailVO.setAddressState(customerDetail.getAddressState());
-			customerDetailVO.setAddressZipCode(customerDetail
-			        .getAddressZipCode());
-			if (null != customerDetail.getDateOfBirth())
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-				        .getTime());
-			customerDetailVO.setId(customerDetail.getId());
-		}
-		loanCustomerVO.setCustomerDetail(customerDetailVO);
-
-		return loanCustomerVO;
-	}
-
-	/**
-	 * return getLoanTeamListForLoan from loan
-	 * 
-	 * @param loan
-	 * @return LoanTeamListVO
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO) {
-
-		LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
-		List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
-		List<LoanTeam> loanTeamList = loanDao.getLoanTeamList(this
-		        .parseLoanModel(loanVO));
-		if (loanTeamList == null)
-			return null;
-
-		for (LoanTeam loanTeam : loanTeamList) {
-			LoanTeamVO loanTeamVO = this.buildLoanTeamVO(loanTeam);
-			loanTeamVOList.add(loanTeamVO);
-		}
-		loanTeamListVO.setLoanTeamList(loanTeamVOList);
-
-		return loanTeamListVO;
-
-	}
-
-	/**
-	 * return getLoanTeamListForLoan from userVO
-	 * 
-	 * @param userVO
-	 * @return LoanTeamListVO
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public LoansProgressStatusVO getLoansProgressForUser(Integer userId) {
-
-		List<Loan> loanList = loanDao
-		        .retrieveLoanForDashboard(new User(userId));
-		LoansProgressStatusVO loansProgressStatusVO = this
-		        .getLoansProgressStatusVoFromLoanList(loanList);
-
-		return loansProgressStatusVO;
-
-	}
-
-	/**
-	 * return LoansProgressStatusVO from loanList
-	 * 
-	 * @param loanList
-	 * @return
-	 */
-	private LoansProgressStatusVO getLoansProgressStatusVoFromLoanList(
-	        List<Loan> loanList) {
-
-		LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
-		int newProspects, totalLeads, newLoans, inProgress, closed, withdrawn, declined;
-		newProspects = totalLeads = newLoans = inProgress = closed = withdrawn = declined = 0;
-
-		for (Loan loan : loanList) {
-			int id = loan.getLoanProgressStatus().getId();
-
-			if (id == 1)
-				newProspects++;
-			else if (id == 2)
-				totalLeads++;
-			else if (id == 3)
-				newLoans++;
-			else if (id == 4)
-				inProgress++;
-			else if (id == 5)
-				closed++;
-			else if (id == 6)
-				withdrawn++;
-			else if (id == 7)
-				declined++;
-		}
-
-		loansProgressStatusVO.setClosed(closed);
-		loansProgressStatusVO.setDeclined(declined);
-		loansProgressStatusVO.setInProgress(inProgress);
-		loansProgressStatusVO.setNewLoans(newLoans);
-		loansProgressStatusVO.setTotalLeads(totalLeads);
-		loansProgressStatusVO.setNewProspects(newProspects);
-		loansProgressStatusVO.setWithdrawn(withdrawn);
-
-		return loansProgressStatusVO;
-
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId) {
-		LOG.info("in method fetchUploadedFromLoanNeedId for loanNeedId :  "
-		        + loanNeedId);
-		return loanDao.fetchUploadedFromLoanNeedId(loanNeedId);
-	}
-
-	@Override
-	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
-	        int loanManagerWFID) {
-		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
-
-		Hibernate.initialize(loan.getCustomerWorkflow());
-		WorkflowExec wFItem = loan.getCustomerWorkflow();
-		if (loan.getCustomerWorkflow() == null) {
-			wFItem = new WorkflowExec();
-		}
-		wFItem.setId(customerWorkflowID);
-		loan.setCustomerWorkflow(wFItem);
-		Hibernate.initialize(loan.getLoanManagerWorkflow());
-		WorkflowExec wFItem1 = loan.getLoanManagerWorkflow();
-		if (wFItem1 == null) {
-			wFItem1 = new WorkflowExec();
-		}
-		wFItem1.setId(loanManagerWFID);
-		loan.setLoanManagerWorkflow(wFItem);
-		loanDao.save(loan);
-	}
+    private LoanVO buildLoanVO( Loan loan )
+    {
+
+        if ( loan == null )
+            return null;
+
+        LoanVO loanVo = new LoanVO();
+        loanVo.setId( loan.getId() );
+        loanVo.setCreatedDate( loan.getCreatedDate() );
+        loanVo.setDeleted( loan.getDeleted() );
+        loanVo.setLoanEmailId( loan.getLoanEmailId() );
+        loanVo.setLqbFileId( loan.getLqbFileId() );
+        loanVo.setCreatedDate( loan.getCreatedDate() );
+        loanVo.setModifiedDate( loan.getModifiedDate() );
+        loanVo.setName( loan.getName() );
+        if ( loan.getLoanStatus() != null )
+            loanVo.setStatus( loan.getLoanStatus().getLoanStatusCd() );
+        loanVo.setUser( userProfileService.buildUserVO( loan.getUser() ) );
+
+        loanVo.setLoanDetail( this.buildLoanDetailVO( loan.getLoanDetail() ) );
+
+        return loanVo;
+
+    }
+
+
+    private List<LoanVO> buildLoanVOList( List<Loan> loanList )
+    {
+
+        if ( loanList == null )
+            return null;
+
+        List<LoanVO> voList = new ArrayList<LoanVO>();
+        for ( Loan loan : loanList ) {
+            voList.add( this.buildLoanVO( loan ) );
+        }
+
+        return voList;
+    }
+
+
+    private User parseUserModel( UserVO userVO )
+    {
+
+        if ( userVO == null )
+            return null;
+
+        User user = new User();
+
+        user.setId( userVO.getId() );
+
+        return user;
+    }
+
+
+    private LoanTeamVO buildLoanTeamVO( LoanTeam loanTeam )
+    {
+        if ( loanTeam == null )
+            return null;
+
+        LoanTeamVO loanTeamVO = new LoanTeamVO();
+        loanTeamVO.setId( loanTeam.getId() );
+        loanTeamVO.setUser( userProfileService.buildUserVO( loanTeam.getUser() ) );
+        loanTeamVO.setActive( loanTeam.getActive() );
+        return loanTeamVO;
+
+    }
+
+
+    private LoanDetailVO buildLoanDetailVO( LoanDetail detail )
+    {
+        if ( detail == null )
+            return null;
+
+        LoanDetailVO detailVO = new LoanDetailVO();
+        detailVO.setId( detail.getId() );
+        detailVO.setDownPayment( detail.getDownPayment() );
+        detailVO.setLoanAmount( detail.getLoanAmount() );
+        detailVO.setRate( detail.getRate() );
+
+        return detailVO;
+
+    }
+
+
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanDashboardVO retrieveDashboard( UserVO userVO )
+    {
+
+        // Get all loans this user has access to.
+        List<Loan> loanList = loanDao.retrieveLoanForDashboard( this.parseUserModel( userVO ) );
+        LoanDashboardVO loanDashboardVO = this.buildLoanDashboardVoFromLoanList( loanList );
+
+        return loanDashboardVO;
+    }
+
+
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanCustomerVO retrieveDashboard( UserVO userVO, LoanVO loanVO )
+    {
+
+        // Get all loans this user has access to.
+        Loan loan = loanDao.retrieveLoanForDashboard( this.parseUserModel( userVO ), this.parseLoanModel( loanVO ) );
+        LoanCustomerVO loanCustomerVO = this.buildLoanCustomerVoFromUser( loan );
+
+        return loanCustomerVO;
+    }
+
+
+    /**
+     * it returns dashboardVO from list of loans
+     * 
+     * @param loanList
+     * @return
+     */
+    private LoanDashboardVO buildLoanDashboardVoFromLoanList( List<Loan> loanList )
+    {
+
+        LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
+        List<LoanCustomerVO> loanCustomerVoList = new ArrayList<LoanCustomerVO>();
+
+        if ( loanList != null ) {
+            for ( Loan loan : loanList ) {
+                LoanCustomerVO loanCustomerVO = this.buildLoanCustomerVoFromUser( loan );
+                loanCustomerVoList.add( loanCustomerVO );
+            }
+        }
+
+        loanDashboardVO.setCustomers( loanCustomerVoList );
+        // set no of loans as num_found
+        loanDashboardVO.setNum_found( loanList.size() );
+
+        return loanDashboardVO;
+    }
+
+
+    /**
+     * return loanCustomerVo from loan
+     * 
+     * @param loan
+     * @return
+     */
+    private LoanCustomerVO buildLoanCustomerVoFromUser( Loan loan )
+    {
+
+        User user = loan.getUser();
+        CustomerDetail customerDetail = user.getCustomerDetail();
+
+        LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
+
+        loanCustomerVO.setTime( loan.getCreatedDate().toString() );
+        loanCustomerVO.setName( user.getFirstName() + " " + user.getLastName() );
+        loanCustomerVO.setProf_image( user.getPhotoImageUrl() );
+        loanCustomerVO.setPhone_no( user.getPhoneNumber() );
+        loanCustomerVO.setLoanID( loan.getId() );
+        loanCustomerVO.setUserID( user.getId() );
+        if ( user.getUserRole() != null )
+            loanCustomerVO.setRole( user.getUserRole().getLabel() );
+        loanCustomerVO.setLoanInitiatedOn( loan.getCreatedDate() );
+        loanCustomerVO.setLastActedOn( loan.getModifiedDate() );
+        // TODO get these hard coded data from entity
+        loanCustomerVO.setProcessor( "Johny Tester" );
+        loanCustomerVO.setPurpose( "Purchase TBD" );
+        loanCustomerVO.setAlert_count( "3" );
+        loanCustomerVO.setCredit_score( "732" );
+
+        loanCustomerVO.setFirstName( user.getFirstName() );
+        loanCustomerVO.setLastName( user.getLastName() );
+        loanCustomerVO.setEmailId( user.getEmailId() );
+
+        CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+        if ( customerDetail != null ) {
+            customerDetailVO.setAddressCity( customerDetail.getAddressCity() );
+            customerDetailVO.setAddressState( customerDetail.getAddressState() );
+            customerDetailVO.setAddressZipCode( customerDetail.getAddressZipCode() );
+            if ( null != customerDetail.getDateOfBirth() )
+                customerDetailVO.setDateOfBirth( customerDetail.getDateOfBirth().getTime() );
+            customerDetailVO.setId( customerDetail.getId() );
+        }
+        loanCustomerVO.setCustomerDetail( customerDetailVO );
+
+        return loanCustomerVO;
+    }
+
+
+    /**
+     * return getLoanTeamListForLoan from loan
+     * 
+     * @param loan
+     * @return LoanTeamListVO
+     */
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanTeamListVO getLoanTeamListForLoan( LoanVO loanVO )
+    {
+
+        LoanTeamListVO loanTeamListVO = new LoanTeamListVO();
+        List<LoanTeamVO> loanTeamVOList = new ArrayList<LoanTeamVO>();
+        List<LoanTeam> loanTeamList = loanDao.getLoanTeamList( this.parseLoanModel( loanVO ) );
+        if ( loanTeamList == null )
+            return null;
+
+        for ( LoanTeam loanTeam : loanTeamList ) {
+            LoanTeamVO loanTeamVO = this.buildLoanTeamVO( loanTeam );
+            loanTeamVOList.add( loanTeamVO );
+        }
+        loanTeamListVO.setLoanTeamList( loanTeamVOList );
+
+        return loanTeamListVO;
+
+    }
+
+
+    /**
+     * return getLoanTeamListForLoan from userVO
+     * 
+     * @param userVO
+     * @return LoanTeamListVO
+     */
+    @Override
+    @Transactional ( readOnly = true)
+    public LoansProgressStatusVO getLoansProgressForUser( Integer userId )
+    {
+
+        List<Loan> loanList = loanDao.retrieveLoanForDashboard( new User( userId ) );
+        LoansProgressStatusVO loansProgressStatusVO = this.getLoansProgressStatusVoFromLoanList( loanList );
+
+        return loansProgressStatusVO;
+
+    }
+
+
+    /**
+     * return LoansProgressStatusVO from loanList
+     * 
+     * @param loanList
+     * @return
+     */
+    private LoansProgressStatusVO getLoansProgressStatusVoFromLoanList( List<Loan> loanList )
+    {
+
+        LoansProgressStatusVO loansProgressStatusVO = new LoansProgressStatusVO();
+        int newProspects, totalLeads, newLoans, inProgress, closed, withdrawn, declined;
+        newProspects = totalLeads = newLoans = inProgress = closed = withdrawn = declined = 0;
+
+        for ( Loan loan : loanList ) {
+            int id = loan.getLoanProgressStatus().getId();
+
+            if ( id == 1 )
+                newProspects++;
+            else if ( id == 2 )
+                totalLeads++;
+            else if ( id == 3 )
+                newLoans++;
+            else if ( id == 4 )
+                inProgress++;
+            else if ( id == 5 )
+                closed++;
+            else if ( id == 6 )
+                withdrawn++;
+            else if ( id == 7 )
+                declined++;
+        }
+
+        loansProgressStatusVO.setClosed( closed );
+        loansProgressStatusVO.setDeclined( declined );
+        loansProgressStatusVO.setInProgress( inProgress );
+        loansProgressStatusVO.setNewLoans( newLoans );
+        loansProgressStatusVO.setTotalLeads( totalLeads );
+        loansProgressStatusVO.setNewProspects( newProspects );
+        loansProgressStatusVO.setWithdrawn( withdrawn );
+
+        return loansProgressStatusVO;
+
+    }
+
+
+    @Override
+    @Transactional ( readOnly = true)
+    public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId )
+    {
+        LOG.info( "in method fetchUploadedFromLoanNeedId for loanNeedId :  " + loanNeedId );
+        return loanDao.fetchUploadedFromLoanNeedId( loanNeedId );
+    }
+
+
+    @Override
+    @Transactional
+    public void saveWorkflowInfo( int loanID, int customerWorkflowID, int loanManagerWFID )
+    {
+        Loan loan = (Loan) loanDao.load( Loan.class, loanID );
+
+        Hibernate.initialize( loan.getCustomerWorkflow() );
+        WorkflowExec wFItem = loan.getCustomerWorkflow();
+        if ( loan.getCustomerWorkflow() == null ) {
+            wFItem = new WorkflowExec();
+        }
+        wFItem.setId( customerWorkflowID );
+        loan.setCustomerWorkflow( wFItem );
+        Hibernate.initialize( loan.getLoanManagerWorkflow() );
+        WorkflowExec wFItem1 = loan.getLoanManagerWorkflow();
+        if ( wFItem1 == null ) {
+            wFItem1 = new WorkflowExec();
+        }
+        wFItem1.setId( loanManagerWFID );
+        loan.setLoanManagerWorkflow( wFItem1 );
+        loanDao.save( loan );
+    }
 
 }

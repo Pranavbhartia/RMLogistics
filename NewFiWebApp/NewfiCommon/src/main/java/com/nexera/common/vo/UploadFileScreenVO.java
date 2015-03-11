@@ -14,7 +14,8 @@ public class UploadFileScreenVO implements Serializable {
 	Map<String, List<LoanNeedsListVO>> listLoanNeedsListMap;
 	List<LoanNeedsListVO> listLoanNeedsListVO;
 	List<UploadedFilesListVO> listUploadedFilesListVO;
-
+	private NeededItemScoreVO neededItemScoreVO;
+	
 	public List<LoanNeedsListVO> getListLoanNeedsListVO() {
 		return listLoanNeedsListVO;
 	}
@@ -37,6 +38,14 @@ public class UploadFileScreenVO implements Serializable {
 	public void setListLoanNeedsListMap(
 			Map<String, List<LoanNeedsListVO>> listLoanNeedsListMap) {
 		this.listLoanNeedsListMap = listLoanNeedsListMap;
+	}
+
+	public NeededItemScoreVO getNeededItemScoreVO() {
+		return neededItemScoreVO;
+	}
+
+	public void setNeededItemScoreVO(NeededItemScoreVO neededItemScoreVO) {
+		this.neededItemScoreVO = neededItemScoreVO;
 	}
 
 }
