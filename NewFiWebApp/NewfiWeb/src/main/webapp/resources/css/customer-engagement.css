@@ -1,65 +1,65 @@
 .ce-refinance-wrapper{
-	margin-top: 30px;
+	margin-top: 60px;
 }
 
 .ce-ques-option {
-	width: 200px;
-	margin: 0 30px;
-	height: 47px;
-	line-height: 47px;
+	width: 260px;
+	margin: 0 10px;
+	height: 55px;
+	line-height: 55px;
 	text-align: center;
-	background-color: #F47521;
+	background-color: #6c9f2e;
 	color: #fff;
 	border-radius: 3px;
 	cursor: pointer;
-	font-size: 14px;
+	font-size: 34px;
 	font-family: 'opensanssemibold';
 	text-transform: capitalize;
 }
 
 .ce-ques-options-container {
-	margin: 20px 0;
+	margin: 10px 0;
 }
 
 .ce-ques-wrapper {
-	width: 520px;
+	width: 560px;
 	margin: 0 auto;
-	padding: 20px 0;
+	padding: 10px 0;
 }
 
 .ce-ques-text {
-	font-size: 14px;
+	font-size: 16px;
 	line-height: 25px;
 	text-align: center;
+	margin: 20px 0;
 }
 
 .ce-cp{
 	margin-left: 60px;	
 }
+
 .ce-lp{
 	width: 275px;
-	height: 672px;
-	background: url(../images/left-nav.png) no-repeat center;
 }
 
 .ce-option {
 	width: 100%;
-	height: 50px;
-	line-height: 50px;
+	height: 55px;
+	line-height: 55px;
 	color: #fff;
 	background: #6c9f2e;
 	margin-bottom: 20px;
 	border-radius: 3px;
 	text-align: center;
-	font-size: 18px;
+	font-size: 34px;
 	font-family: 'opensanssemibold';
 	text-transform: capitalize;
 	cursor: pointer;
 }
 
 .ce-rp-ques-text {
-	font-family: 'opensansemibold';
-	font-size: 40px;
+	font-family: 'opensanssemibold';
+	font-size: 36px;
 	line-height: 45px;
 	margin-bottom: 20px;
 	text-transform: capitalize;
@@ -72,6 +72,7 @@
 	border: 1px solid #dcdcdc;
 	border-radius: 3px;
 	background: #fafafa;
+	font-size: 18px;
 }
 
 .ce-options-cont {
@@ -83,7 +84,7 @@
 	margin: 0 auto;
 	background: #6c9f2e;
 	color: #fff;
-	font-size: 16px;
+	font-size: 20px;
 	font-family: 'opensanssemibold';
 	height: 40px;
 	line-height: 40px;
@@ -91,4 +92,64 @@
 	text-transform: capitalize;
 	border-radius: 3px;
 	cursor: pointer;
+}
+
+.ce-title {
+    text-align: center;
+    font-size: 36px;
+    font-family: 'opensanssemibold';
+}
+
+.ce-rate-icon {
+    height: 170px;
+    margin-top: 100px;
+    background: url(../images/rate_logo_green.png) no-repeat center;
+}
+
+.ce-lp-item-icon{
+	position:relative;
+	width:45px;
+	height: 66px;
+	line-height: 50px;
+	font-size:19px;
+	background-repeat: no-repeat;
+	background-position: center;
+	color:#fff;	
+	text-align: center;
+	font-family: 'opensanssemibold';
+}
+
+.ce-lp-complete .ce-lp-item-icon{
+	background-image: url(../images/bubble_green.png);
+}
+
+.ce-lp-complete .ce-lp-item-icon:after{
+	position:absolute;
+	top:0;
+	left:0;
+	content: " ";
+	width:45px;
+	height: 50px;
+	background: url(../images/tick_white.png) no-repeat center;
+	z-index:1;
+}
+
+.ce-lp-not-started .ce-lp-item-icon{
+	background-image: url(../images/bubble_grey.png);
+}
+
+.ce-lp-in-progress .ce-lp-item-icon{
+	background-image: url(../images/bubble_orange.png);
+}
+
+.ce-lp-item-text {
+    padding-left: 15px;
+    line-height: 44px;
+    font-size: 19px;
+    font-family: 'opensanssemibold';
+    text-transform: capitalize;
+}
+
+.ce-lp-not-started .ce-lp-item-text{
+	opacity: 0.6;
 }

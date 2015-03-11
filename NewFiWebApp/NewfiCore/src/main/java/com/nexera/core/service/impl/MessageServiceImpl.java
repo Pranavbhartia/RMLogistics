@@ -29,7 +29,6 @@ import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
 import com.nexera.mongo.service.MongoCoreMessageService;
-import com.nexera.mongo.service.impl.MongoCoreMessageServiceImpl;
 
 @Component
 public class MessageServiceImpl implements MessageService {
@@ -42,6 +41,9 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	MongoCoreMessageService mongoMessageService;
 
 	@Override
 	public String saveMessage(MessageVO messagesVO, String messageType)
@@ -53,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 		mongoMessagesVO.setCreatedBy(new Long(messagesVO.getCreatedUser()
 		        .getUserID()));
 		mongoMessagesVO.setParentId(messagesVO.getParentId());
-		mongoMessagesVO.setLoanId(Long.valueOf(messagesVO.getLoanId()));
+		mongoMessagesVO.setLoanId(messagesVO.getLoanId());
 		mongoMessagesVO.setMessageType(messageType);
 		mongoMessagesVO.setRoleName(messagesVO.getCreatedUser().getRoleName());
 		List<Long> userAccessList = getUserIds(messagesVO.getOtherUsers());
@@ -65,7 +67,6 @@ public class MessageServiceImpl implements MessageService {
 		// TODO: Take care of GMT conversion
 		mongoMessagesVO.setCreatedDate(new Date(System.currentTimeMillis()));
 
-		MongoCoreMessageService mongoMessageService = new MongoCoreMessageServiceImpl();
 		LOG.debug("Saving Mongo message: " + mongoMessagesVO);
 		return mongoMessageService.saveMessage(mongoMessagesVO);
 
@@ -102,7 +103,6 @@ public class MessageServiceImpl implements MessageService {
 		mongoQueryVO.setNumberOfRecords(queryVO.getNumberOfRecords());
 		mongoQueryVO.setRoleName(userProfileDao.findUserRoleForMongo(queryVO
 		        .getUserId().intValue()));
-		MongoCoreMessageService mongoMessageService = new MongoCoreMessageServiceImpl();
 		MongoMessageHierarchyVO mongoHierarchyVO = mongoMessageService
 		        .getMessages(mongoQueryVO);
 
@@ -170,6 +170,7 @@ public class MessageServiceImpl implements MessageService {
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
 		                        .getCreatedDate()));
 		messageVO.setParentId(mongoMessagesVO.getParentId());
+		messageVO.setLoanId(mongoMessagesVO.getLoanId());
 		messageVO.setSortOrderDate(mongoMessagesVO.getCreatedDate());
 		List<UserRoleNameImageVO> nameList = userProfileDao
 		        .finUserDetailsList(mongoMessagesVO.getUserList());

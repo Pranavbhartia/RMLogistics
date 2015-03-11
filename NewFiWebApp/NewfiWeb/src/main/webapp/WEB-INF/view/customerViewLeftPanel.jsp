@@ -1,3 +1,4 @@
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
 		<div id="lp-customer-profile" class="lp-pic-wrapper lp-item clearfix" onclick="showCustomerProfilePage();">
@@ -14,10 +15,11 @@
 		<div id="lp-talk-wrapper" class="lp-talk-wrapper lp-item clearfix" onclick="changeLeftPanel(1);">
 			<div class="lp-talk-txt">talk to your newfi team</div>
 			<div class="lp-talk-pics clearfix">
-				<div class="lp-talk-pic lp-talk-pic1"></div>
-				<div class="lp-talk-pic lp-talk-pic2"></div>
-				<div class="lp-talk-pic lp-talk-pic3"></div>
-				<div class="lp-talk-pic lp-talk-pic4"></div>
+			<div class="lp-talk-pic lp-talk-pic1"></div>
+			<c:forEach var="image" items="${loanTeamImage}">
+				<div class="lp-talk-pic lp-talk-pic2" style="background-image:url(${image})"></div>
+			</c:forEach>
+			
 			</div>
 		</div>
 		<div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix" onclick="changeLeftPanel(2);">

@@ -25,13 +25,14 @@ function getAgentSecondaryLeftNav() {
 		"class" : "lp-t2-wrapper"
 	});
 
+	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 = getAgentSecondaryLeftNavStep(1, "application progress");
 	var step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
 	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />your rate");
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	return leftTab2Wrapper.append(step1).append(step2).append(step3).append(
+	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(step3).append(
 			step4).append(step5);
 }
 
@@ -524,6 +525,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 	});
 
 	if (alerts != undefined) {
+		var count=0;
 		for (var i = 0; i < alerts.length; i++) {
 			var alertData = alerts[i].content;
 			var alertContainer = $('<div>').attr({
@@ -569,6 +571,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 			alertLeftCol.append(alertTxt);
 			if(alerts[i].dismissable==true)
 				alertLeftCol.append(alertBtnRow);
+			alertContainer.append(alertLeftCol);
 			if(alerts[i].remindOn){
 				var dat=new Date(alerts[i].remindOn);
 				var amPm=dat.getHours()>12?"PM":"AM";
@@ -577,9 +580,12 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 				var editBtn = $('<div>').attr({
 					"class" : "float-right"
 				}).html($.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm);
-				alertContainer.append(alertLeftCol).append(editBtn);
+				alertContainer.append(editBtn);
 			}
 			recentAlertWrapper.append(alertContainer);
+			count++;
+			if(count==3)
+				break;
 		}
 	}
 
@@ -591,6 +597,14 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 }
 
 function appendSchedulerContainer(contxt) {
+	var wrapper = getSchedulerContainer(contxt);
+	$('#cust-detail-wrapper').append(wrapper);
+
+	$('#sch-msg-time-picker').datetimepicker({
+		pickDate : false
+	});
+}
+function getSchedulerContainer(contxt,data){
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -652,14 +666,15 @@ function appendSchedulerContainer(contxt) {
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind("click",{contxt:contxt},function(e){
+	}).html("Submit").bind("click",{contxt:contxt,data:data},function(e){
 		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
 		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
 		snoozeTime.setHours(dat.getHours());
 		snoozeTime.setMinutes(dat.getMinutes())
 		var message=$("#sch-msg-message").val();
 		if(snoozeTime!="Invalid Date"){
-			var data={};
+			if(data===undefined)
+				data={};
 			data.content=message;
 			data.createdDate=new Date().getTime();
 			data.remindOn=snoozeTime.getTime();
@@ -694,11 +709,7 @@ function appendSchedulerContainer(contxt) {
 			buttonRow);
 
 	wrapper.append(container);
-	$('#cust-detail-wrapper').append(wrapper);
-
-	$('#sch-msg-time-picker').datetimepicker({
-		pickDate : false
-	});
+	return wrapper;
 }
 
 function appendRecentNotesContainer(notes) {
@@ -879,7 +890,15 @@ function paintAgentLoanPage(data) {
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper(loanDetails);
 	var contxt=getContext(loanDetails.id+"-notification");
-	contxt.populateLoanNotification();
+	if(contxt){
+		contxt.populateLoanNotification();
+	}else{
+		contxt=getNotificationContext(loanDetails.id,0);
+		contxt.getNotificationForLoan(function(ob){
+			contxt.populateLoanNotification();
+		});
+	}
+	
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
@@ -894,7 +913,10 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	$('#center-panel-cont').html('');
 
 	// Check the id and paint the corresponding right panel
-	if (elementId == "lp-step1") {
+	if(elementId == "lp-step0") {
+		console.log("talk to your team");
+	}
+	else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
 		getLoanDetails(selectedUserDetail.loanID);

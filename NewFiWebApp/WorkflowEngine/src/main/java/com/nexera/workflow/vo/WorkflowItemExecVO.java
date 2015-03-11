@@ -96,6 +96,7 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setId(entity.getId());
 		workflowItemExecVO.setModifiedDate(entity.getModifiedDate());
 		workflowItemExecVO.setStatus(entity.getStatus());
+		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster().getDescription());
 		return workflowItemExecVO;
 	}
 

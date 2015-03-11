@@ -23,6 +23,16 @@
 			<artifactId>WorkflowEngine</artifactId>
 			<version>1.0</version>
 		</dependency>
-    
+    <dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>NewFiCommon</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>NewFiCore</artifactId>
+			<version>1.0</version>
+		</dependency>
   </dependencies>
 </project>

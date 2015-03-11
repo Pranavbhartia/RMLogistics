@@ -1,7 +1,6 @@
 package com.nexera.web.controller;
 
 import java.io.File;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,10 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
@@ -51,7 +46,8 @@ public class FileUploadController {
 	public String uploadFile(MultipartFile file , Integer userId , Integer loanId){
 		String s3Path = null;
 		 try{
-			File serverFile = new File( NexeraUtility.uploadFileToLocal(file));
+			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
+			File serverFile = new File(localFilePath );
 			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
 			LOG.info("Added File document row : "+savedRowId);
 		 }catch(Exception e){

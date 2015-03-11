@@ -1,7 +1,6 @@
 package com.nexera.common.vo.mongo;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class MongoMessagesVO implements Serializable {
 	private List<Long> userList;
 
 	// Loan ID associated with this message
-	private Long loanId;
+	private int loanId;
 
 	// Parent ID for this message
 	private String parentId;
@@ -151,11 +150,11 @@ public class MongoMessagesVO implements Serializable {
 		this.userList = userList;
 	}
 
-	public Long getLoanId() {
+	public int getLoanId() {
 		return loanId;
 	}
 
-	public void setLoanId(Long loanId) {
+	public void setLoanId(int loanId) {
 		this.loanId = loanId;
 	}
 

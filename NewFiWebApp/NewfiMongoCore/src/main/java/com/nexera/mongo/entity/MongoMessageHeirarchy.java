@@ -14,17 +14,27 @@ import java.util.List;
  * 
  */
 public class MongoMessageHeirarchy {
+	
+	private String id;
 	private List<String> messages;
 	private List<String> roleList;
 	private List<Long> userList;
-	private Long loanId;
+	private int loanId;
 	private String messageType;
 	private Date date;
 
 	public MongoMessageHeirarchy() {
 
 	}
+	
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	public List<String> getMessages() {
 		return messages;
 	}
@@ -33,11 +43,11 @@ public class MongoMessageHeirarchy {
 		this.messages = messages;
 	}
 
-	public Long getLoanId() {
+	public int getLoanId() {
 		return loanId;
 	}
 
-	public void setLoanId(Long loanId) {
+	public void setLoanId(int loanId) {
 		this.loanId = loanId;
 	}
 

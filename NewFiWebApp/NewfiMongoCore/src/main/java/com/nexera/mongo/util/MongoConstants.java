@@ -11,4 +11,5 @@ public class MongoConstants {
 	public static final int PORT = 27017;
 	public static final String MESSAGE_COLLECTION = "Messages";
 	public static final String MESSAGE_HEIRARCHY_COLLECTION = "MessageHeirarchy";
+	public static final String MONGO_ID = "_id";
 }

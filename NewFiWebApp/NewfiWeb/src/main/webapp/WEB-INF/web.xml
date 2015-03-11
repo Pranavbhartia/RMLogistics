@@ -12,7 +12,10 @@
 		<param-value>
 		classpath:NewfiCommon-Configuration.xml,
 			classpath:NewfiCore-Configuration.xml,
-			/WEB-INF/app-security.xml
+			classpath:NewfiMongoCore-Configuration.xml,
+			/WEB-INF/app-security.xml,
+			classpath:/spring/workflow-engine-core-context.xml
+			
 		</param-value>
 	</context-param>
 	<context-param>

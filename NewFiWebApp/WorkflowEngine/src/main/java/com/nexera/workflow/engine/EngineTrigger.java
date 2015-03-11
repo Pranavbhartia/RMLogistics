@@ -1,6 +1,6 @@
 package com.nexera.workflow.engine;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +90,7 @@ public class EngineTrigger
     }
 
 
-    public String startWorkFlowItemExecution( int workflowItemExecutionId )
+    public void startWorkFlowItemExecution( int workflowItemExecutionId )
     {
         LOGGER.debug( "Inside method startWorkFlowItemExecution " );
         if ( !cacheManager.isInitialized() ) {
@@ -201,7 +201,6 @@ public class EngineTrigger
             }
         }
 
-        return null;
     }
 
 
@@ -212,7 +211,7 @@ public class EngineTrigger
         if ( workflowExec != null ) {
             return workflowExec.getWorkflowItems();
         }
-        return new ArrayList<WorkflowItemExec>();
+        return Collections.EMPTY_LIST;
     }
 
 
