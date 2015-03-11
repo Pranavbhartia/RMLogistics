@@ -83,9 +83,11 @@ public class WorkflowRestService
         try {
 
             LOG.info( "loanId----" + loanId );
-            String stateInfo = "";// Make a call to Workflow Engine which will call the renderStateInfo
+            /*String stateInfo = "";// Make a call to Workflow Engine which will call the renderStateInfo
             // to the work flow engine pass the loanId.. as Object[]..
-
+            */String[] params = new String[1];
+            params[0] = String.valueOf( loanId );
+            String stateInfo = engineTrigger.getRenderStateInfoOfItem( workflowItemId, params );
             response = RestUtil.wrapObjectForSuccess( stateInfo );
             LOG.debug( "Response" + response );
         } catch ( Exception e ) {

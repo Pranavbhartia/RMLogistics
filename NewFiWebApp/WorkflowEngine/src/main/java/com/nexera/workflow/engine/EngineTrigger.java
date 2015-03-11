@@ -295,8 +295,8 @@ public class EngineTrigger {
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
 				        new Class[] { String[].class });
-				Object[] param = params;
-				result = (String) method.invoke(obj, param);
+				
+				result = (String) method.invoke(obj, new Object[]{params});
 
 			} catch (ClassNotFoundException e) {
 				LOGGER.debug("Class Not Found " + e.getMessage());
