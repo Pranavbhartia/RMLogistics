@@ -39,4 +39,7 @@ public interface LoanDao extends GenericDao {
 
 	public Integer getTotalNeededItem(Integer loanId);
 
+	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
+
+
 }
