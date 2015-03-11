@@ -95,7 +95,7 @@ public class WorkflowRestService {
 			MilestoneNotificationVO milestoneNoticationVO = gson.fromJson(
 			        milestoneNotificationStr, MilestoneNotificationVO.class);
 			LOG.info("workflowItem ID"
-			        + milestoneNoticationVO.getWorkflowItemId());
+			        + milestoneNoticationVO.getMilestoneId());
 			String stateInfo = "";// Make a call to Workflow Engine which will
 			                      // call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
@@ -129,15 +129,7 @@ public class WorkflowRestService {
 			workflowItemExecVO.setStateInfo("Schedule an Alert");
 			list.add(workflowItemExecVO);
 
-			WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
-			childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-			        .getStatusValue());
-			childWorkflowItemExecVO.setSuccess(true);
-			childWorkflowItemExecVO.setId(numberOrder++);
-			childWorkflowItemExecVO.setDisplayContent("Child for one");
-			childWorkflowItemExecVO
-			        .setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO);
+			
 
 			workflowItemExecVO = new WorkflowItemExecVO();
 			workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
@@ -148,7 +140,7 @@ public class WorkflowRestService {
 			list.add(workflowItemExecVO);
 			// make some child workflow items
 
-			childWorkflowItemExecVO = new WorkflowItemExecVO();
+			WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
 			childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
 			        .getStatusValue());
 			childWorkflowItemExecVO.setSuccess(true);
@@ -213,7 +205,7 @@ public class WorkflowRestService {
 			        .getStatusValue());
 			workflowItemExecVO.setSuccess(true);
 			workflowItemExecVO.setDisplayContent("1003 Complete");
-			childWorkflowItemExecVO2.setDisplayContent("Click here to apply application");
+			workflowItemExecVO.setDisplayContent("Click here to apply application");
 			workflowItemExecVO.setId(numberOrder++);
 			list.add(workflowItemExecVO);
 

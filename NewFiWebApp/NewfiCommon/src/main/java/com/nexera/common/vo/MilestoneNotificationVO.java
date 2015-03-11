@@ -2,17 +2,18 @@ package com.nexera.common.vo;
 
 public class MilestoneNotificationVO {
 
-	private int workflowItemId;
+	private int milestoneId;
 	private int loanId;
 
 	private NotificationVO notificationVO;
 
-	public int getWorkflowItemId() {
-		return workflowItemId;
+	
+	public int getMilestoneId() {
+		return milestoneId;
 	}
 
-	public void setWorkflowItemId(int workflowItemId) {
-		this.workflowItemId = workflowItemId;
+	public void setMilestoneId(int milestoneId) {
+		this.milestoneId = milestoneId;
 	}
 
 	public int getLoanId() {
