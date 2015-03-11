@@ -12,7 +12,7 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NotificationService notificationService;
 
-	public String execute(Object... objects) {
+	public String execute(Object[] objects) {
 
 		int loanID = Integer.parseInt(objects[0].toString());
 		NotificationVO notificationVO = (NotificationVO) objects[1];
@@ -20,7 +20,7 @@ public class AlertManager implements IWorkflowTaskExecutor {
 		return String.valueOf(loanID);
 	}
 
-	public Object renderStateInfo(Object... inputs) {
+	public String renderStateInfo(String[] inputs) {
 
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}

@@ -93,7 +93,7 @@ public class WorkflowRestService {
 			workflowItemExecVO.setSuccess(true);
 			workflowItemExecVO.setId(numberOrder++);
 			workflowItemExecVO.setDisplayContent("Make Initial Contact");
-			workflowItemExecVO.setActionContent("Schedule an Alert");
+			workflowItemExecVO.setStateInfo("Schedule an Alert");
 			list.add(workflowItemExecVO);
 
 			WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();

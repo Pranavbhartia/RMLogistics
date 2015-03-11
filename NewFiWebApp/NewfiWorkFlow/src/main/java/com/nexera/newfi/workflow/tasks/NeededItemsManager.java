@@ -10,12 +10,12 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NeedsListService needsListService;
 
-	public String execute(Object... objects) {
+	public String execute(Object[] objects) {
 
 		return null;
 	}
 
-	public Object renderStateInfo(Object... inputs) {
+	public String renderStateInfo(String[] inputs) {
 		int loanId = Integer.parseInt(inputs[0].toString());
 		// Make a service call to get the number of needed items' assigned against the 
 		return "4 out of 10";
