@@ -76,7 +76,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setS3path(uploadedFilesList.getS3path());
 		filesListVO.setUploadedDate(uploadedFilesList.getUploadedDate());
 		filesListVO.setFileName(uploadedFilesList.getFileName());
-		
+		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
 		
 		LoanVO loanVo = new LoanVO();
 		loanVo.setId(uploadedFilesList.getLoan().getId());
@@ -157,6 +157,24 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 	public Integer addUploadedFilelistObejct(File file  , Integer loanId , Integer userId){
 		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "User" , "complete" );
+		LOG.info("File Path : "+file.getPath());
+		String s3PathThumbNail = null;
+		String thumbPath = null;
+		try {
+			thumbPath = NexeraUtility.convertPDFToThumbnail(file.getPath(), NexeraUtility.tomcatDirectoryPath());
+			
+		} catch (Exception e) {
+			
+			LOG.error("Exception in s3PathThumbNail : "+e.getMessage());
+		}
+		
+		LOG.info("The thumbnail path for local  :  "+thumbPath);
+		if(thumbPath!= null){
+			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(thumbPath), "User" , "image" );
+		}
+		
+		LOG.info("The s3PathThumbNail path for   :  "+s3PathThumbNail);
+		
 		User user  = new User();
 		user.setId(userId);
 		Loan loan  = new Loan();
@@ -170,6 +188,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setUploadedDate(new Date());
 		uploadedFilesList.setLoan(loan);
 		uploadedFilesList.setFileName(file.getName());
+		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}

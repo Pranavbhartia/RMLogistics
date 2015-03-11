@@ -41,6 +41,8 @@ public class Loan implements Serializable {
 	private List<LoanSetting> loanSettings;
 	private List<LoanTeam> loanTeam;
 	private List<TransactionDetails> transactionDetails;
+	private WorkflowExec customerWorkflow;
+	private WorkflowExec loanManagerWorkflow;
 
 	public Loan() {
 	}
@@ -393,6 +395,27 @@ public class Loan implements Serializable {
 		loanTeam.setLoan(null);
 
 		return loanTeam;
+	}
+
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_workflow")
+	public WorkflowExec getCustomerWorkflow() {
+		return customerWorkflow;
+	}
+
+	public void setCustomerWorkflow(WorkflowExec customerWorkflow) {
+		this.customerWorkflow = customerWorkflow;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_manager_workflow")
+	public WorkflowExec getLoanManagerWorkflow() {
+		return loanManagerWorkflow;
+	}
+
+	public void setLoanManagerWorkflow(WorkflowExec loanManagerWorkflow) {
+		this.loanManagerWorkflow = loanManagerWorkflow;
 	}
 
 }

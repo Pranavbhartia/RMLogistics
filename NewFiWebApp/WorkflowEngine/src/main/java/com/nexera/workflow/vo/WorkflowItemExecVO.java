@@ -15,6 +15,17 @@ public class WorkflowItemExecVO {
 	private Boolean success;
 	private String displayContent;
 	private WorkflowItemExecVO parentWorkflowItemExec;
+	public String stateInfo;
+
+	
+
+	public String getStateInfo() {
+		return stateInfo;
+	}
+
+	public void setStateInfo(String stateInfo) {
+		this.stateInfo = stateInfo;
+	}
 
 	public WorkflowItemExecVO getParentWorkflowItemExec() {
 		return parentWorkflowItemExec;
@@ -96,6 +107,8 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setId(entity.getId());
 		workflowItemExecVO.setModifiedDate(entity.getModifiedDate());
 		workflowItemExecVO.setStatus(entity.getStatus());
+		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster().getDescription());
+		
 		return workflowItemExecVO;
 	}
 

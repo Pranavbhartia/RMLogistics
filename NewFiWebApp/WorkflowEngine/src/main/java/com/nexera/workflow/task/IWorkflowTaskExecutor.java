@@ -2,7 +2,9 @@ package com.nexera.workflow.task;
 
 public interface IWorkflowTaskExecutor {
 
-	public String execute();
+	public String execute(Object[] inputs);
 
-	public Object renderState();
+	public String renderStateInfo(String[] inputs);
+
+	public Object[] getParamsForExecute();
 }

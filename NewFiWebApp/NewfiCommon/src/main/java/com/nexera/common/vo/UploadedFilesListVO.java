@@ -19,6 +19,7 @@ public class UploadedFilesListVO implements Serializable {
 	private Date uploadedDate;
 	private String fileName;
 	private Integer needType;
+	private String s3ThumbPath;
 	
 	public Integer getId() {
 		return id;
@@ -73,6 +74,12 @@ public class UploadedFilesListVO implements Serializable {
 	}
 	public void setNeedType(Integer needType) {
 		this.needType = needType;
+	}
+	public String getS3ThumbPath() {
+		return s3ThumbPath;
+	}
+	public void setS3ThumbPath(String s3ThumbPath) {
+		this.s3ThumbPath = s3ThumbPath;
 	}
 	
 	

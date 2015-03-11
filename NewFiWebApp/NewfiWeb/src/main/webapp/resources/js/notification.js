@@ -156,6 +156,7 @@ function getNotificationContext(loanId,userId){
 						callback(ob);
 					}
 					removeNotificationFromAllContext(id);
+					ob.updateWrapper();
 				}
 				
 			});
@@ -223,8 +224,13 @@ function getNotificationContext(loanId,userId){
 		scheduleAEvent:function(data,callback){
 			var ob=this;
 			data.loanID=ob.loanId;
-			data.notificationType="NOTIFICATION";
-			ajaxRequest("rest/notification","POST","json",JSON.stringify(data),function(response){
+			if(!data.notificationType&&data.notificationType!="")
+				data.notificationType="NOTIFICATION";
+			var url="rest/notification"
+			if(data.OTHURL){
+				url=data.OTHURL;
+			}
+			ajaxRequest(url,"POST","json",JSON.stringify(data),function(response){
 				if(response.error){
 					showToastMessage(response.error.message);
 				}else{
@@ -457,4 +463,31 @@ function getAlertNotificationRow(notification,contxt){
 
 function dismissAlert(element){
 	$(element).closest('.alert-popup-row').remove();
+}
+
+function hideNotificationPopup(){
+	$('#ms-add-notification-popup').hide();
+}
+
+function showNotificationPopup(){
+	$('#ms-add-notification-popup').show();
+}
+
+function addNotificationPopup(loanId,element,data){
+	var wrapper = $('<div>').attr({
+		"id" : "ms-add-notification-popup",
+		"class" : "ms-add-notification-popup ms-add-member-popup"
+	}).click(function(e){
+		e.stopPropagation();
+	});
+	var contxt=getContext(loanId+"-notification");
+	
+	var component=getSchedulerContainer(contxt,data)
+	
+	wrapper.append(component);
+	$(element).append(wrapper);
+	
+	$('#sch-msg-time-picker').datetimepicker({
+		pickDate : false
+	});
 }

@@ -65,6 +65,19 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	var docImg = $('<div>').attr({
 		"class" : "doc-img showAnchor"
 	});
+	
+	var img = $("<img>").attr({
+		 		"src" : listUploadedFiles.s3ThumbPath
+	}).load(function(){
+		docImg.css({
+			"background" : "url('"+listUploadedFiles.s3ThumbPath+"') no-repeat center",
+			
+			"background-size" : "cover"
+			
+		});
+	});
+	
+	
 	var docDesc = $('<div>').attr({
 		"class" : "doc-desc showAnchor"
 	}).html(listUploadedFiles.fileName);
@@ -194,7 +207,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 
 		},
 		complete : function(response) {
-			$('#file-upload-icn').removeClass('file-upload-loading');
+			hideOverlay();
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 		},
 		dragenter : function() {
@@ -207,9 +220,11 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
 		},
 		queuecomplete : function() {
+			
 			getRequiredDocuments();
 		},
 		addedfile : function(){
+			showOverlay();
 			$('#file-upload-icn').addClass('file-upload-loading');
 		}
 	});

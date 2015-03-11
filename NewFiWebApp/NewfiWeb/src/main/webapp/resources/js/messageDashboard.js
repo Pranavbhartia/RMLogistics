@@ -258,7 +258,7 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageU
 		"class" : "assigned-agent-img"
 	});
 	
-	imgCont.css("background" , "url('"+imageUrl+"')");
+	imgCont.css("background-image" , "url('"+imageUrl+"')");
 	
 	var onlineStatus = $('<div>').attr({
 		"class" : "assigned-agent-online-status"

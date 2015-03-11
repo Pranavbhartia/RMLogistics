@@ -1,7 +1,7 @@
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
 		<div class="lp-pic-wrapper lp-item-agent clearfix">
-			<div class="lp-pic float-left"></div>
+			<div class="lp-pic float-left" style="background-image:url(${userVO.photoImageUrl})"></div>
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1">${userVO.firstName}</div>
 				<div class="lp-txt2">${userVO.userRole.roleDescription }</div>
