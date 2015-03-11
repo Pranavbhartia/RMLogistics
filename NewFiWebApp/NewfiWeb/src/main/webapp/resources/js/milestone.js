@@ -933,8 +933,9 @@ function appendAgentMilestoneItemWithChildren(status, displayContent, inputText,
 	
 	for	(index = 0; index < childList.length; index++) {
 		var txtRow1 = $('<div>').attr({
-			"class" : rightLeftClass+"-text"
-		}).html(childList[index].displayContent);	
+			"class" : rightLeftClass+"-text",
+			"mileNotificationId" : childList[index].id
+		}).html(childList[index].displayContent).bind("click",function(e){milestoneChildEventHandler(e)});
 		workItem.append(txtRow1);
 	}	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
@@ -1205,3 +1206,13 @@ function appendAgentMilestoneClosingStatus(){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+
+function milestoneChildEventHandler(event){
+	//condition need to be finalized for identifying each element
+	if(event.target.innerHTML=="Child for one"){
+		var data={};
+		data.milestoneId=event.target.getAttribute("milenotificationid");
+		addNotificationPopup(selectedUserDetail.loanID,event.target,data);
+
+	}
+}
