@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +53,29 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
+	// workflow/3/milestone/state/workflowIte
+	
+	@RequestMapping(value = "{loanId}/milestone/", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(@PathVariable int loanId,
+			@RequestParam(value="workflowItemId") Integer workflowItemId) {
+
+		LOG.info("workflowItemExecId----" + workflowItemId);
+		CommonResponseVO response = null;
+		try {
+			
+			LOG.info("loanId----" + loanId);
+			String stateInfo = "";// Make a call to Workflow Engine which will call the renderStateInfo
+			// to the work flow engine pass the loanId.. as Object[]..
+			
+			response = RestUtil.wrapObjectForSuccess(stateInfo);
+			LOG.debug("Response" + response);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+					e.getMessage());
+		}
+		return response;
+	}
 
 	@RequestMapping(value = "{workflowId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getWorkflowItems(
@@ -69,6 +93,7 @@ public class WorkflowRestService {
 			workflowItemExecVO.setSuccess(true);
 			workflowItemExecVO.setId(numberOrder++);
 			workflowItemExecVO.setDisplayContent("Make Initial Contact");
+			workflowItemExecVO.setActionContent("Schedule an Alert");
 			list.add(workflowItemExecVO);
 
 			WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
