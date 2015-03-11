@@ -13,6 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.nexera.workflow.dao.GenericDao;
@@ -26,6 +27,7 @@ public class GenericDaoImpl implements GenericDao
     private static final int BATCH_SIZE = 5;
 
     @Autowired
+    @Qualifier("sessionFactoryWF")
     protected SessionFactory sessionFactory;
 
 

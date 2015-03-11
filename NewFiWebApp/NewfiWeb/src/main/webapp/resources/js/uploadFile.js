@@ -71,8 +71,7 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	}).load(function(){
 		docImg.css({
 			"background" : "url('"+listUploadedFiles.s3ThumbPath+"') no-repeat center",
-			"border": "2px solid #dddddd",
-			"border-radius": "25px",
+			
 			"background-size" : "cover"
 			
 		});
