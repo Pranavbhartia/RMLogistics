@@ -23,6 +23,12 @@ function getRequiredDocumentData(neededItemList) {
 	neededItemListObject = neededItemList;
 	$('#uploadedNeedContainer').remove();
 	paintUploadNeededItemsPage(neededItemListObject);
+	
+	$("#knobUpload").knob({
+			"data-width" : "50",
+			"data-displayInput": false,
+			"readOnly":true
+	});
 }
 
 
@@ -166,6 +172,85 @@ function saveUserDocumentAssignments() {
 	// JSON.stringify(fileAssignMentVO) , saveAssignmentonFile);
 }
 
+
+
+function getNeedItemsWrapper(neededItemListObject) {
+	var wrapper = $('<div>').attr({
+		"class" : "needed-items-wrapper"
+	});
+	var header = $('<div>').attr({
+		"class" : "needed-items-header uppercase"
+	}).html("needed items");
+	var container = $('<div>').attr({
+		"class" : "needed-items-container clearfix"
+	});
+	var leftContainer = $('<div>').attr({
+		"class" : "needed-items-lc float-left"
+	});
+
+	addNeededDocuments(neededItemListObject, leftContainer, container);
+
+	return wrapper.append(header).append(container);
+}
+
+function addNeededDocuments(neededItemListObject, leftContainer, container) {
+
+	var hasNeeds = false;
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Income_Assets;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Income/Assets", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Credit_Liabilities;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Credit/Liabilities", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Property;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Property", needType));
+		hasNeeds = true;
+	}
+
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Other;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("Other", needType));
+		hasNeeds = true;
+	}
+
+	if (!hasNeeds) {
+		var incomeDocCont = $('<div>').attr({
+			"class" : "needed-doc-container"
+		});
+
+		var incDocHeading = $('<div>').attr({
+			"class" : "needed-doc-heading"
+		}).html(newfiObject.i18n.nl_noneeds);
+		incomeDocCont.append(incDocHeading);
+		leftContainer.append(incomeDocCont);
+		container.append(leftContainer);
+		return;
+	}
+
+	var rightContainer = $('<div>').attr({
+		"class" : "needed-items-rc float-right"
+	});
+	var knobScore = neededItemListObject.resultObject.neededItemScoreVO;
+	
+	var inputBox = $("<input>").attr({
+				"class" : "dial",
+				"id" : "knobUpload",
+				"data-min" : "0",
+				"data-max" : knobScore.neededItemRequired,
+				"value" : knobScore.totalSubmittedItem
+	});
+	rightContainer.append(inputBox);
+	container.append(leftContainer).append(rightContainer);
+
+}
 
 
 

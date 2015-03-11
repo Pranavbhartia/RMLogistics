@@ -16,6 +16,9 @@ public class LoanNeedsListVO implements Serializable {
 	private LoanVO loan;
 	private NeedsListMasterVO needsListMaster;
 	private UserVO uploadedBy;
+	
+	
+	
 	public int getId() {
 		return id;
 	}
