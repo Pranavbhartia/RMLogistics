@@ -934,6 +934,8 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	// Check the id and paint the corresponding right panel
 	if(elementId == "lp-step0") {
 		console.log("talk to your team");
+		
+		showMessageDashboard();
 	}
 	else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {

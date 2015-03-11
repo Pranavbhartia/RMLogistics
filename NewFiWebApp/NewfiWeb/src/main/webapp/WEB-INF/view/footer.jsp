@@ -19,6 +19,7 @@
 <script src="resources/js/uploadFile.js"></script>
 <script src="resources/js/notification.js"></script>
 <script src="resources/js/milestone.js"></script>
+<script src="resources/js/jquery.knob.js"></script>
 
 <div id="dialog" >
 </div>
