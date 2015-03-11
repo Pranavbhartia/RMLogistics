@@ -613,7 +613,7 @@ function appendSchedulerContainer(contxt) {
 	});
 }
 
-function getSchedulerContainer(contxt){
+function getSchedulerContainer(contxt,tempData){
 
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
@@ -676,7 +676,8 @@ function getSchedulerContainer(contxt){
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind("click",{contxt:contxt},function(e){
+	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
+		var tempData=e.data.tempData;
 		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
 		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
 		snoozeTime.setHours(dat.getHours());
@@ -688,6 +689,11 @@ function getSchedulerContainer(contxt){
 			showToastMessage("Invalid Date");
 		}else{
 			var data={};
+			if(tempData){
+				for(key in tempData){
+					data[key]=tempData[key];
+				}
+			}
 			data.content=message;
 			data.createdDate=new Date().getTime();
 			data.remindOn=snoozeTime.getTime();
