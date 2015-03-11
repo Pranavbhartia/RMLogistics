@@ -612,7 +612,9 @@ function appendSchedulerContainer(contxt) {
 		pickDate : false
 	});
 }
-function getSchedulerContainer(contxt, data) {
+
+function getSchedulerContainer(contxt){
+
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -674,36 +676,30 @@ function getSchedulerContainer(contxt, data) {
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind(
-			"click",
-			{
-				contxt : contxt,
-				data : data
-			},
-			function(e) {
-				var dat = $('#sch-msg-time-picker ').data('DateTimePicker')
-						.getDate()._d
-				var snoozeTime = $('#sch-msg-date-picker').data('datepicker')
-						.getDate();
-				snoozeTime.setHours(dat.getHours());
-				snoozeTime.setMinutes(dat.getMinutes())
-				var message = $("#sch-msg-message").val();
-				if (snoozeTime != "Invalid Date") {
-					if (data === undefined)
-						data = {};
-					data.content = message;
-					data.createdDate = new Date().getTime();
-					data.remindOn = snoozeTime.getTime();
-					data.createdByID = newfiObject.user.id;
-					data.createdForID = newfiObject.user.id;
-					contxt.scheduleAEvent(data, function() {
-						contxt.updateWrapper();
-						contxt.updateLoanListNotificationCount();
-						$("#sch-msg-message").val("");
-					});
-				}
-
+	}).html("Submit").bind("click",{contxt:contxt},function(e){
+		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
+		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
+		snoozeTime.setHours(dat.getHours());
+		snoozeTime.setMinutes(dat.getMinutes())
+		var message=$("#sch-msg-message").val();
+		if(message==""){
+			showToastMessage("Invalid Message");
+		}else if(snoozeTime=="Invalid Date"){
+			showToastMessage("Invalid Date");
+		}else{
+			var data={};
+			data.content=message;
+			data.createdDate=new Date().getTime();
+			data.remindOn=snoozeTime.getTime();
+			data.createdByID=newfiObject.user.id;
+			data.createdForID=newfiObject.user.id;
+			contxt.scheduleAEvent(data,function(){
+				contxt.updateWrapper();
+				contxt.updateLoanListNotificationCount();
+				$("#sch-msg-message").val("");
 			});
+		}
+	});
 	col1.append(col1Btn);
 
 	var col2 = $('<div>').attr({
