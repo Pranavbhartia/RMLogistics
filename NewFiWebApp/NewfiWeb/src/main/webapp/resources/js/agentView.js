@@ -356,6 +356,7 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
+			saveState('loan',selectedUserDetail.loanID, "detail");
 			entryPointForAgentView(selectedUserDetail.loanID, '2')
 			// getLoanDetails(loanID);
 		}).html(customer.name);
