@@ -25,10 +25,7 @@
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
-		var newfi = $
-		{
-			newfi
-		};
+		var newfi = ${newfi};
 		$(document).ready(function() {
 			initialize(newfi);
 			isAgentTypeDashboard = true;
