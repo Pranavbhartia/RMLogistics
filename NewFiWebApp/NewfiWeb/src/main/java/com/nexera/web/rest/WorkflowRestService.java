@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.core.service.LoanService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkflowItemStatus;
@@ -22,188 +24,188 @@ import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
 
+
 @RestController
-@RequestMapping(value = "/workflow/")
-public class WorkflowRestService {
+@RequestMapping ( value = "/workflow/")
+public class WorkflowRestService
+{
 
-	private WorkflowService workflowService;
-	@Autowired
-	private EngineTrigger engineTrigger;
-	private static final Logger LOG = LoggerFactory
-			.getLogger(WorkflowRestService.class);
+    private WorkflowService workflowService;
 
-	@RequestMapping(value = "create/{workflowType}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO createWorkflow(
-			@PathVariable String workflowType) {
+    @Autowired
+    private EngineTrigger engineTrigger;
 
-		LOG.info("workflowId----" + workflowType);
-		CommonResponseVO response = null;
-		try {
-			WorkflowVO workflowVO = new WorkflowVO();
-			workflowVO.setWorkflowType(workflowType);
-			Gson gson = new Gson();
-			int workfFlowId = engineTrigger.triggerWorkFlow(gson
-					.toJson(workflowVO));
-			response = RestUtil.wrapObjectForSuccess(workfFlowId);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-					e.getMessage());
-		}
-		return response;
-	}
-	// workflow/3/milestone/state/workflowIte
-	
-	@RequestMapping(value = "{loanId}/milestone/", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(@PathVariable int loanId,
-			@RequestParam(value="workflowItemId") Integer workflowItemId) {
+    @Autowired
+    private LoanService loanService;
+    private static final Logger LOG = LoggerFactory.getLogger( WorkflowRestService.class );
 
-		LOG.info("workflowItemExecId----" + workflowItemId);
-		CommonResponseVO response = null;
-		try {
-			
-			LOG.info("loanId----" + loanId);
-			String stateInfo = "";// Make a call to Workflow Engine which will call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-			
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-					e.getMessage());
-		}
-		return response;
-	}
 
-	@RequestMapping(value = "{workflowId}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getWorkflowItems(
-			@PathVariable int workflowId) {
-		LOG.info("workflowId----" + workflowId);
-		CommonResponseVO response = null;
-		try {
-			// List<WorkflowItemExec> list =
-			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
-			List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
-			int numberOrder = 1;
-			WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
-			workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-					.getStatusValue());
-			workflowItemExecVO.setSuccess(true);
-			workflowItemExecVO.setId(numberOrder++);
-			workflowItemExecVO.setDisplayContent("Make Initial Contact");
-			workflowItemExecVO.setStateInfo("Schedule an Alert");
-			list.add(workflowItemExecVO);
+    @RequestMapping ( value = "create/{loanID}", method = RequestMethod.GET)
+    public @ResponseBody CommonResponseVO createWorkflow( @PathVariable int loanID )
+    {
 
-			WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
-			childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO.setSuccess(true);
-			childWorkflowItemExecVO.setId(numberOrder++);
-			childWorkflowItemExecVO.setDisplayContent("Child for one");
-			childWorkflowItemExecVO
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO);
+        LOG.debug( "Loan ID for this workflow is " + loanID );
+        CommonResponseVO response = null;
+        try {
+            WorkflowVO workflowVO = new WorkflowVO();
+            LOG.debug( "Putting loan manager workflow into execution  " );
+            workflowVO.setWorkflowType( WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE );
+            Gson gson = new Gson();
+            int loanManagerWFID = engineTrigger.triggerWorkFlow( gson.toJson( workflowVO ) );
 
-			workflowItemExecVO = new WorkflowItemExecVO();
-			workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			workflowItemExecVO.setSuccess(true);
-			workflowItemExecVO.setDisplayContent("System Education");
-			workflowItemExecVO.setId(numberOrder++);
-			list.add(workflowItemExecVO);
-			// make some child workflow items
+            LOG.debug( "Putting customer workflow into execution  " );
+            workflowVO.setWorkflowType( WorkflowConstants.CUSTOMER_WORKFLOW_TYPE );
+            int customerWFID = engineTrigger.triggerWorkFlow( gson.toJson( workflowVO ) );
 
-			childWorkflowItemExecVO = new WorkflowItemExecVO();
-			childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO.setSuccess(true);
-			childWorkflowItemExecVO.setId(numberOrder++);
-			childWorkflowItemExecVO.setDisplayContent("Rates");
-			childWorkflowItemExecVO
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO);
 
-			WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-			childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO2.setSuccess(true);
-			childWorkflowItemExecVO2.setId(numberOrder++);
-			childWorkflowItemExecVO2.setDisplayContent("Application");
-			childWorkflowItemExecVO2
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO2);
+            loanService.saveWorkflowInfo( loanID, customerWFID, loanManagerWFID );
 
-			childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-			childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO2.setSuccess(true);
-			childWorkflowItemExecVO2.setId(numberOrder++);
-			childWorkflowItemExecVO2.setDisplayContent("Communication");
-			childWorkflowItemExecVO2
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO2);
+            String successMessage = "The Loan " + loanID + " has been put into execution ";
+            response = RestUtil.wrapObjectForSuccess( successMessage );
+            LOG.debug( "Response" + response );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
+            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
+        }
+        return response;
+    }
 
-			childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-			childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO2.setSuccess(true);
-			childWorkflowItemExecVO2.setId(numberOrder++);
-			childWorkflowItemExecVO2.setDisplayContent("Needs List/ Documents");
-			childWorkflowItemExecVO2
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO2);
 
-			childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-			childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO2.setSuccess(true);
-			childWorkflowItemExecVO2.setId(numberOrder++);
-			childWorkflowItemExecVO2.setDisplayContent("Loan Progress");
-			childWorkflowItemExecVO2
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO2);
+    // workflow/3/milestone/state/workflowIte
 
-			childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-			childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-					.getStatusValue());
-			childWorkflowItemExecVO2.setSuccess(true);
-			childWorkflowItemExecVO2.setId(numberOrder++);
-			childWorkflowItemExecVO2.setDisplayContent("Profile");
-			childWorkflowItemExecVO2
-					.setParentWorkflowItemExec(workflowItemExecVO);
-			list.add(childWorkflowItemExecVO2);
+    @RequestMapping ( value = "{loanId}/milestone/", method = RequestMethod.GET)
+    public @ResponseBody CommonResponseVO getWorkflowItemStateInfo( @PathVariable int loanId,
+        @RequestParam ( value = "workflowItemId") Integer workflowItemId )
+    {
 
-			/*
-			 * workflowItemExecVO = new WorkflowItemExecVO();
-			 * workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
-			 * .getStatusValue()); workflowItemExecVO.setSuccess(true);
-			 * workflowItemExecVO.setDisplayContent("1003 Complete");
-			 * workflowItemExecVO.setId(numberOrder++);
-			 * list.add(workflowItemExecVO);
-			 * 
-			 * workflowItemExecVO = new WorkflowItemExecVO();
-			 * workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-			 * .getStatusValue()); workflowItemExecVO.setSuccess(true);
-			 * workflowItemExecVO.setDisplayContent("Credit Bureau");
-			 * workflowItemExecVO.setId(numberOrder++);
-			 * list.add(workflowItemExecVO);
-			 * 
-			 * workflowItemExecVO = new WorkflowItemExecVO();
-			 * workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-			 * .getStatusValue()); workflowItemExecVO.setSuccess(true);
-			 * workflowItemExecVO.setId(numberOrder++);
-			 * workflowItemExecVO.setDisplayContent("Needed Items");
-			 * list.add(workflowItemExecVO);
-			 */
-			response = RestUtil.wrapObjectForSuccess(list);
-			LOG.debug("Response" + list.size());
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-					e.getMessage());
-		}
-		return response;
-	}
+        LOG.info( "workflowItemExecId----" + workflowItemId );
+        CommonResponseVO response = null;
+        try {
+
+            LOG.info( "loanId----" + loanId );
+            String stateInfo = "";// Make a call to Workflow Engine which will call the renderStateInfo
+            // to the work flow engine pass the loanId.. as Object[]..
+
+            response = RestUtil.wrapObjectForSuccess( stateInfo );
+            LOG.debug( "Response" + response );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
+            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
+        }
+        return response;
+    }
+
+
+    @RequestMapping ( value = "{workflowId}", method = RequestMethod.GET)
+    public @ResponseBody CommonResponseVO getWorkflowItems( @PathVariable int workflowId )
+    {
+        LOG.info( "workflowId----" + workflowId );
+        CommonResponseVO response = null;
+        try {
+            // List<WorkflowItemExec> list =
+            // workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
+            List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
+            int numberOrder = 1;
+            WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
+            workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
+            workflowItemExecVO.setSuccess( true );
+            workflowItemExecVO.setId( numberOrder++ );
+            workflowItemExecVO.setDisplayContent( "Make Initial Contact" );
+            workflowItemExecVO.setStateInfo( "Schedule an Alert" );
+            list.add( workflowItemExecVO );
+
+            WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
+            childWorkflowItemExecVO.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO.setSuccess( true );
+            childWorkflowItemExecVO.setId( numberOrder++ );
+            childWorkflowItemExecVO.setDisplayContent( "Child for one" );
+            childWorkflowItemExecVO.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO );
+
+            workflowItemExecVO = new WorkflowItemExecVO();
+            workflowItemExecVO.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            workflowItemExecVO.setSuccess( true );
+            workflowItemExecVO.setDisplayContent( "System Education" );
+            workflowItemExecVO.setId( numberOrder++ );
+            list.add( workflowItemExecVO );
+            // make some child workflow items
+
+            childWorkflowItemExecVO = new WorkflowItemExecVO();
+            childWorkflowItemExecVO.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO.setSuccess( true );
+            childWorkflowItemExecVO.setId( numberOrder++ );
+            childWorkflowItemExecVO.setDisplayContent( "Rates" );
+            childWorkflowItemExecVO.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO );
+
+            WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+            childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO2.setSuccess( true );
+            childWorkflowItemExecVO2.setId( numberOrder++ );
+            childWorkflowItemExecVO2.setDisplayContent( "Application" );
+            childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO2 );
+
+            childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+            childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO2.setSuccess( true );
+            childWorkflowItemExecVO2.setId( numberOrder++ );
+            childWorkflowItemExecVO2.setDisplayContent( "Communication" );
+            childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO2 );
+
+            childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+            childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO2.setSuccess( true );
+            childWorkflowItemExecVO2.setId( numberOrder++ );
+            childWorkflowItemExecVO2.setDisplayContent( "Needs List/ Documents" );
+            childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO2 );
+
+            childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+            childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO2.setSuccess( true );
+            childWorkflowItemExecVO2.setId( numberOrder++ );
+            childWorkflowItemExecVO2.setDisplayContent( "Loan Progress" );
+            childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO2 );
+
+            childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+            childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
+            childWorkflowItemExecVO2.setSuccess( true );
+            childWorkflowItemExecVO2.setId( numberOrder++ );
+            childWorkflowItemExecVO2.setDisplayContent( "Profile" );
+            childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
+            list.add( childWorkflowItemExecVO2 );
+
+            /*
+             * workflowItemExecVO = new WorkflowItemExecVO();
+             * workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
+             * .getStatusValue()); workflowItemExecVO.setSuccess(true);
+             * workflowItemExecVO.setDisplayContent("1003 Complete");
+             * workflowItemExecVO.setId(numberOrder++);
+             * list.add(workflowItemExecVO);
+             * 
+             * workflowItemExecVO = new WorkflowItemExecVO();
+             * workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+             * .getStatusValue()); workflowItemExecVO.setSuccess(true);
+             * workflowItemExecVO.setDisplayContent("Credit Bureau");
+             * workflowItemExecVO.setId(numberOrder++);
+             * list.add(workflowItemExecVO);
+             * 
+             * workflowItemExecVO = new WorkflowItemExecVO();
+             * workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+             * .getStatusValue()); workflowItemExecVO.setSuccess(true);
+             * workflowItemExecVO.setId(numberOrder++);
+             * workflowItemExecVO.setDisplayContent("Needed Items");
+             * list.add(workflowItemExecVO);
+             */
+            response = RestUtil.wrapObjectForSuccess( list );
+            LOG.debug( "Response" + list.size() );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
+            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
+        }
+        return response;
+    }
 }
