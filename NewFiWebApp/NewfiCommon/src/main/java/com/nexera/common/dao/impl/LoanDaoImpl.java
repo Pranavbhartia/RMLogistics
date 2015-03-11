@@ -163,7 +163,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return (Loan) criteria.uniqueResult();
 	}
 	
-
+	@Override
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
 
 		try {
@@ -190,6 +190,34 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					hibernateException);
 		}
 	}
+
+	@Override
+	public Loan retrieveLoanForDashboard(User parseUserModel,Loan loan) {
+
+		try {
+			Loan loanForUser = null;
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			LoanTeam loanTeam = (LoanTeam) criteria.uniqueResult();
+
+			if (loanTeam != null) {
+				
+				    Hibernate.initialize(loanTeam.getLoan());
+				    loanForUser = loanTeam.getLoan();
+				
+				
+			}
+
+			return loanForUser;
+		} catch (HibernateException hibernateException) {
+
+			throw new DatabaseException(
+					"Exception caught in retrieveLoanForDashboard(User parseUserModel,Loan loan) ",
+					hibernateException);
+		}
+	}
+
 
 	@Override
 	public Loan getLoanWithDetails(Integer loanID) {
