@@ -8,7 +8,7 @@
 				<div class="lp-txt3">${userVO.phoneNumber }</div>
 			</div>
 		</div>
-		<div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan">
+		<div class="lp-item-agent clearfix">
 			<div class="lp-item-header">work on your loan</div>
 			<div class="lp-item-body lp-agent-item1">
 				<div class="lp-item-body-row lp-item-body-top-row">
@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard();">
+		<div class="lp-item-agent clearfix" onclick="paintAgentDashboard();">
 			<div class="lp-item-header">my loans</div>
 			<div class="lp-item-body lp-agent-item2">
 				<div class="lp-item-body-row lp-item-body-top-row">
@@ -34,7 +34,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-item lp-item-agent clearfix" id="lp-my-archives">
+		<div class="lp-item-agent clearfix">
 			<div class="lp-item-header">my archives</div>
 			<div class="lp-item-body lp-agent-item3">
 				<div class="lp-item-body-row lp-item-body-top-row">
@@ -51,7 +51,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-alert-wrapper lp-item clearfix" id="lp-imp-alerts">
+		<div class="lp-alert-wrapper lp-item clearfix">
 			<div class="lp-alert-header" id="alertHeder">important alerts</div>
 			<div id="notificationParentContainer">
 				<div class="lp-alert-item-container clearfix">

@@ -356,7 +356,10 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
-			entryPointForAgentView(selectedUserDetail.loanID, '2')
+			var userID = $(this).attr('userid');
+			var loanID = $(this).attr('loanid');
+			paintMyLoansView();
+			changeAgentSecondaryLeftPanel("lp-step2");
 			// getLoanDetails(loanID);
 		}).html(customer.name);
 
@@ -675,7 +678,6 @@ function getSchedulerContainer(contxt,tempData){
 		"class" : "msg-btn-submit float-right"
 	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
 		var tempData=e.data.tempData;
-		var contxt=e.data.contxt;
 		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
 		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
 		snoozeTime.setHours(dat.getHours());
@@ -687,29 +689,20 @@ function getSchedulerContainer(contxt,tempData){
 			showToastMessage("Invalid Date");
 		}else{
 			var data={};
+			if(tempData){
+				for(key in tempData){
+					data[key]=tempData[key];
+				}
+			}
 			data.content=message;
 			data.createdDate=new Date().getTime();
 			data.remindOn=snoozeTime.getTime();
 			data.createdByID=newfiObject.user.id;
 			data.createdForID=newfiObject.user.id;
-			data.loanID=contxt.loanId;
-			data.notificationType="NOTIFICATION";
-			if(tempData){
-				var wrapperData={};
-				for(key in tempData){
-					wrapperData[key]=tempData[key];
-				}
-				
-				wrapperData.notificationVo=data;
-				data=wrapperData;
-			}
 			contxt.scheduleAEvent(data,function(){
 				contxt.updateWrapper();
 				contxt.updateLoanListNotificationCount();
 				$("#sch-msg-message").val("");
-				if(tempData){
-					removeNotificationPopup();
-				}
 			});
 		}
 	});
@@ -863,8 +856,6 @@ function paintMyLoansView() {
 	});
 	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
 	$('#right-panel').append(rightPanelCont);
-	//For backbutton support
-	bindDataToSN();
 
 }
 
@@ -2454,5 +2445,11 @@ function entryPointForAgentView(loanID, viewName) {
 function entryPointAgentViewChangeNav(viewName) {
 
 	paintMyLoansView();
-	changeAgentSecondaryLeftPanel('lp-step'+viewName);
+
+	if (viewName == "LOAN_DETAILS")
+		changeAgentSecondaryLeftPanel("lp-step2");
+	else if (viewName == "NEEDS_LIST")
+		changeAgentSecondaryLeftPanel("lp-step4");
+	else if (viewName == "MILESTONE")
+		changeAgentSecondaryLeftPanel("lp-step5");
 }

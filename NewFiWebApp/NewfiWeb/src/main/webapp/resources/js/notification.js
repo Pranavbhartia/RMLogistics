@@ -224,7 +224,8 @@ function getNotificationContext(loanId,userId){
 		scheduleAEvent:function(data,callback){
 			var ob=this;
 			data.loanID=ob.loanId;
-			
+			if(!data.notificationType&&data.notificationType!="")
+				data.notificationType="NOTIFICATION";
 			var url="rest/notification"
 			if(data.OTHURL){
 				url=data.OTHURL;
@@ -467,9 +468,7 @@ function dismissAlert(element){
 function hideNotificationPopup(){
 	$('#ms-add-notification-popup').hide();
 }
-function removeNotificationPopup(){
-	$('#ms-add-notification-popup').remove();
-}
+
 function showNotificationPopup(){
 	$('#ms-add-notification-popup').show();
 }
@@ -483,7 +482,7 @@ function addNotificationPopup(loanId,element,data){
 	});
 	var contxt=getContext(loanId+"-notification");
 	
-	var component=getSchedulerContainer(contxt,data);
+	var component=getSchedulerContainer(contxt,data)
 	
 	wrapper.append(component);
 	$(element).append(wrapper);
@@ -491,5 +490,4 @@ function addNotificationPopup(loanId,element,data){
 	$('#sch-msg-time-picker').datetimepicker({
 		pickDate : false
 	});
-	showNotificationPopup();
 }

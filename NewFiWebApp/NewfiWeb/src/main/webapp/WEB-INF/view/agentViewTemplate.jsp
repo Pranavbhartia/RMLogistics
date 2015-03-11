@@ -30,8 +30,6 @@
 				initialize(newfi);
 				isAgentTypeDashboard=true;
 				paintAgentDashboard();
-				bindDataToPN();
-				retrieveState();
 				$(window).resize(function(){
 					adjustAgentDashboardOnResize();
 					adjustCenterPanelWidth();
