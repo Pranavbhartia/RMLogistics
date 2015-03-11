@@ -675,6 +675,7 @@ function getSchedulerContainer(contxt,tempData){
 		"class" : "msg-btn-submit float-right"
 	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
 		var tempData=e.data.tempData;
+		var contxt=e.data.contxt;
 		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
 		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
 		snoozeTime.setHours(dat.getHours());
@@ -686,20 +687,29 @@ function getSchedulerContainer(contxt,tempData){
 			showToastMessage("Invalid Date");
 		}else{
 			var data={};
-			if(tempData){
-				for(key in tempData){
-					data[key]=tempData[key];
-				}
-			}
 			data.content=message;
 			data.createdDate=new Date().getTime();
 			data.remindOn=snoozeTime.getTime();
 			data.createdByID=newfiObject.user.id;
 			data.createdForID=newfiObject.user.id;
+			data.loanID=contxt.loanId;
+			data.notificationType="NOTIFICATION";
+			if(tempData){
+				var wrapperData={};
+				for(key in tempData){
+					wrapperData[key]=tempData[key];
+				}
+				
+				wrapperData.notificationVo=data;
+				data=wrapperData;
+			}
 			contxt.scheduleAEvent(data,function(){
 				contxt.updateWrapper();
 				contxt.updateLoanListNotificationCount();
 				$("#sch-msg-message").val("");
+				if(tempData){
+					removeNotificationPopup();
+				}
 			});
 		}
 	});
