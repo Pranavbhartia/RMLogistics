@@ -1,7 +1,5 @@
 package com.nexera.test.service;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +30,14 @@ public class EmailServiceTest {
 		emailRecipientVO.setEmailID("anoop@raremile.com");
 		recipients.add(emailRecipientVO);
 
+		emailEntity.setSenderEmailId("web@newfi.com");
 		emailEntity.setRecipients(recipients);
 		emailEntity.setBody("Test HTML message <br/> <H1> Check format </H1>");
 		emailEntity.setSenderName("Newfi System");
 		emailEntity.setSubject("Nexera Newfi Portal");
 		emailEntity.setTemplateBased(false);
 
-		sendEmailService.sendMail(emailEntity);
+		sendEmailService.sendMail(emailEntity,false);
 		System.out.println("Email sent");
 	}
 
