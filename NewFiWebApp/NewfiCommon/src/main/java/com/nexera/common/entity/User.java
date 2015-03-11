@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -52,6 +50,7 @@ public class User implements Serializable, UserDetails {
 	private List<Notification> loanNotifications;
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
+	private List<TransactionDetails> transactionDetails;
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
@@ -310,6 +309,16 @@ public class User implements Serializable, UserDetails {
 
 	public void setUserRole(UserRole userRole) {
 		this.userRole = userRole;
+	}
+	
+	// bi-directional many-to-one association to LoanAppForm
+	@OneToMany(mappedBy = "user")
+	public List<TransactionDetails> getTransactionDetails() {
+		return this.transactionDetails;
+	}
+
+	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
+		this.transactionDetails = transactionDetails;
 	}
 
 }

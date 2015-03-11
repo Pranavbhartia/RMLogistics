@@ -33,6 +33,13 @@ public interface CommonConstants {
 	public static final String CONFIG_PROPERTIES_FILE = "config.properties";
 	public static final String DEFAULT_LOCALE="en_US";
 	
-	
-	
+
+	/**
+	 * Braintree constants
+	 */
+	public static final int SANDBOX_MODE_TRUE = 1;
+	public static final String SUCCESS_KEY = "success";
+	public static final String MESSAGE_KEY = "message";
+	public static final int SUCCESS = 1;
+	public static final int FAILURE = 0;
 }

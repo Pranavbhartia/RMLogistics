@@ -586,7 +586,7 @@ function appendMilestoneApplicationFee(){
 	});
 	header.append(headerTxt).append(headerIcn);
 	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-lc-text"
+		"class" : "milestone-lc-text pay-application-fee"
 	}).html("Click here to Pay Application Fee");
 	
 	wrapper.append(leftBorder).append(header).append(txtRow1);
