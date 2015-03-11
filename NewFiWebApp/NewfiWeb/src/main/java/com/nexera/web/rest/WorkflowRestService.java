@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.MilestoneNotificationVO;
+import com.nexera.core.service.LoanService;
 import com.nexera.web.rest.util.RestUtil;
+import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkflowItemStatus;
 import com.nexera.workflow.service.WorkflowService;
@@ -31,22 +33,38 @@ public class WorkflowRestService {
 	private WorkflowService workflowService;
 	@Autowired
 	private EngineTrigger engineTrigger;
+
+	@Autowired
+	private LoanService loanService;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(WorkflowRestService.class);
 
-	@RequestMapping(value = "create/{workflowType}", method = RequestMethod.GET)
+	@RequestMapping(value = "create/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO createWorkflow(
-	        @PathVariable String workflowType) {
+	        @PathVariable int loanID) {
 
-		LOG.info("workflowId----" + workflowType);
+		LOG.debug("Loan ID for this workflow is " + loanID);
 		CommonResponseVO response = null;
 		try {
 			WorkflowVO workflowVO = new WorkflowVO();
-			workflowVO.setWorkflowType(workflowType);
+			LOG.debug("Putting loan manager workflow into execution  ");
+			workflowVO
+			        .setWorkflowType(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE);
 			Gson gson = new Gson();
-			int workfFlowId = engineTrigger.triggerWorkFlow(gson
+			int loanManagerWFID = engineTrigger.triggerWorkFlow(gson
 			        .toJson(workflowVO));
-			response = RestUtil.wrapObjectForSuccess(workfFlowId);
+
+			LOG.debug("Putting customer workflow into execution  ");
+			workflowVO
+			        .setWorkflowType(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE);
+			int customerWFID = engineTrigger.triggerWorkFlow(gson
+			        .toJson(workflowVO));
+
+			loanService.saveWorkflowInfo(loanID, customerWFID, loanManagerWFID);
+
+			String successMessage = "The Loan " + loanID
+			        + " has been put into execution ";
+			response = RestUtil.wrapObjectForSuccess(successMessage);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -68,10 +86,14 @@ public class WorkflowRestService {
 		try {
 
 			LOG.info("loanId----" + loanId);
-			String stateInfo = "";// Make a call to Workflow Engine which will
-			                      // call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-
+			/*
+			 * String stateInfo = "";// Make a call to Workflow Engine which
+			 * will call the renderStateInfo // to the work flow engine pass the
+			 * loanId.. as Object[]..
+			 */String[] params = new String[1];
+			params[0] = String.valueOf(loanId);
+			String stateInfo = engineTrigger.getRenderStateInfoOfItem(
+			        workflowItemId, params);
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -94,8 +116,7 @@ public class WorkflowRestService {
 			Gson gson = new Gson();
 			MilestoneNotificationVO milestoneNoticationVO = gson.fromJson(
 			        milestoneNotificationStr, MilestoneNotificationVO.class);
-			LOG.info("workflowItem ID"
-			        + milestoneNoticationVO.getMilestoneId());
+			LOG.info("workflowItem ID" + milestoneNoticationVO.getMilestoneId());
 			String stateInfo = "";// Make a call to Workflow Engine which will
 			                      // call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
@@ -128,8 +149,6 @@ public class WorkflowRestService {
 			workflowItemExecVO.setDisplayContent("Make Initial Contact");
 			workflowItemExecVO.setStateInfo("Schedule an Alert");
 			list.add(workflowItemExecVO);
-
-			
 
 			workflowItemExecVO = new WorkflowItemExecVO();
 			workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
@@ -205,7 +224,8 @@ public class WorkflowRestService {
 			        .getStatusValue());
 			workflowItemExecVO.setSuccess(true);
 			workflowItemExecVO.setDisplayContent("1003 Complete");
-			workflowItemExecVO.setDisplayContent("Click here to apply application");
+			workflowItemExecVO
+			        .setDisplayContent("Click here to apply application");
 			workflowItemExecVO.setId(numberOrder++);
 			list.add(workflowItemExecVO);
 
@@ -341,4 +361,5 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
+
 }

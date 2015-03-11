@@ -80,9 +80,14 @@
 			<artifactId>NewfiCore</artifactId>
 			<version>1.0</version>
 		</dependency>
-<dependency>
+		<dependency>
 			<groupId>com.nexera.newfi</groupId>
 			<artifactId>WorkflowEngine</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>newfi-workflow</artifactId>
 			<version>1.0</version>
 		</dependency>
 

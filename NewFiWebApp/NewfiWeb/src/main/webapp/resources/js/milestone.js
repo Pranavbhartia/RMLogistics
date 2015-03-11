@@ -30,8 +30,12 @@ function getInternalEmployeeMileStoneContext(workflowId){
 				var workItemExecList=response.resultObject;
 				
 				var childList =[];
+				
+				
+				
 				for(var i=0;i<workItemExecList.length;i++){
-					var currentWorkItem = workItemExecList[i];					
+					var currentWorkItem = workItemExecList[i];
+					
 					if (i==0)
 					{
 						parentWorkItem = currentWorkItem;
@@ -42,12 +46,14 @@ function getInternalEmployeeMileStoneContext(workflowId){
 						//This is a parent - push all the ones so far in parent		
 						if(childList.length !=0)
 						{
-							appendAgentMilestoneItemWithChildren(parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo,childList);						
+							appendAgentMilestoneItemWithChildren(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,parentWorkItem.stateInfo,childList);						
 							childList =[];							
 						}
 						else
 						{
+
 							appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
+
 						}
 						parentWorkItem = currentWorkItem;
 					}
@@ -57,15 +63,17 @@ function getInternalEmployeeMileStoneContext(workflowId){
 						childList.push (currentWorkItem);
 						if (i == workItemExecList.length-1)
 						{
+
 							appendAgentMilestoneItemWithChildren(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo,childList);
 						}
 					}					
 				}
 				//Last item append
+
 				appendAgentMilestoneItem(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo);
 				
 				
-				
+
 				adjustBorderMilestoneContainer();
 				if(callback){
 					callback(ob);
@@ -85,7 +93,8 @@ function getInternalEmployeeMileStoneContext(workflowId){
 	},
 	
 	initialize:function(callback){
-		this.getWorkFlowItemStatuses(function(ob){		
+		this.getWorkFlowItemStatuses(function(ob){
+			
 		});
 		
 		if(callback){
@@ -848,7 +857,9 @@ function getProgressStatusClass (status)
 }
 
 
-function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
+
+function appendAgentMilestoneItem(status, displayContent, inputText){
+
 	countOfTasks++;
 	var floatClass = "float-right";
 	var progressClass = getProgressStatusClass(status);
@@ -878,6 +889,7 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 	}).html(displayContent);
 	
 	header.append(headerTxt);
+
 	wrapper.append(rightBorder).append(header);
 	if (stateInfo!="")
 	{
@@ -889,6 +901,7 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 		wrapper.append(txtRow1);
 	}
 
+	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
@@ -925,9 +938,8 @@ function appendAgentMilestoneItemWithChildren(status, displayContent, inputText,
 	
 	for	(index = 0; index < childList.length; index++) {
 		var txtRow1 = $('<div>').attr({
-			"class" : rightLeftClass+"-text",
-			"mileNotificationId" : childList[index].id
-		}).html(childList[index].displayContent).bind("click",function(e){milestoneChildEventHandler(e)});
+			"class" : rightLeftClass+"-text"
+		}).html(childList[index].displayContent);	
 		workItem.append(txtRow1);
 	}	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
