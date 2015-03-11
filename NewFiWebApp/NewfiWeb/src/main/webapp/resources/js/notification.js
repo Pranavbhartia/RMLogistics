@@ -465,10 +465,18 @@ function dismissAlert(element){
 	$(element).closest('.alert-popup-row').remove();
 }
 
+function hideNotificationPopup(){
+	$('#ms-add-notification-popup').hide();
+}
+
+function showNotificationPopup(){
+	$('#ms-add-notification-popup').show();
+}
+
 function addNotificationPopup(loanId,element,data){
 	var wrapper = $('<div>').attr({
-		"id" : "ms-add-member-popup",
-		"class" : "ms-add-member-popup hide"
+		"id" : "ms-add-notification-popup",
+		"class" : "ms-add-notification-popup ms-add-member-popup"
 	}).click(function(e){
 		e.stopPropagation();
 	});
@@ -477,5 +485,9 @@ function addNotificationPopup(loanId,element,data){
 	var component=getSchedulerContainer(contxt,data)
 	
 	wrapper.append(component);
-	element.append(wrapper);
+	$(element).append(wrapper);
+	
+	$('#sch-msg-time-picker').datetimepicker({
+		pickDate : false
+	});
 }
