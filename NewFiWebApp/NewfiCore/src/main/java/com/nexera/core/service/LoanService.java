@@ -35,7 +35,7 @@ public interface LoanService {
     public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
     Loan parseLoanModel(LoanVO loanVO);
-
+    public void saveWorkflowInfo(int loanID, int customerWorkflowID, int loanManagerWFID) ;
 
 
 }
