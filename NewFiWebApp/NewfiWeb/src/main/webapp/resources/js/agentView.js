@@ -356,10 +356,7 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
-			var userID = $(this).attr('userid');
-			var loanID = $(this).attr('loanid');
-			paintMyLoansView();
-			changeAgentSecondaryLeftPanel("lp-step2");
+			entryPointForAgentView(selectedUserDetail.loanID, '2')
 			// getLoanDetails(loanID);
 		}).html(customer.name);
 
@@ -856,6 +853,8 @@ function paintMyLoansView() {
 	});
 	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
 	$('#right-panel').append(rightPanelCont);
+	//For backbutton support
+	bindDataToSN();
 
 }
 
@@ -2445,11 +2444,5 @@ function entryPointForAgentView(loanID, viewName) {
 function entryPointAgentViewChangeNav(viewName) {
 
 	paintMyLoansView();
-
-	if (viewName == "LOAN_DETAILS")
-		changeAgentSecondaryLeftPanel("lp-step2");
-	else if (viewName == "NEEDS_LIST")
-		changeAgentSecondaryLeftPanel("lp-step4");
-	else if (viewName == "MILESTONE")
-		changeAgentSecondaryLeftPanel("lp-step5");
+	changeAgentSecondaryLeftPanel('lp-step'+viewName);
 }
