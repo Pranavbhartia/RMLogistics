@@ -211,6 +211,7 @@ public class FileUploadRest {
 			uploadFileScreenVO.setListLoanNeedsListVO(loanNeedsVO);
 			uploadFileScreenVO.setListLoanNeedsListMap(listLoanNeedsListMap);
 			uploadFileScreenVO.setListUploadedFilesListVO(uploadedFilesList);
+			uploadFileScreenVO.setNeededItemScoreVO(needsListService.getNeededItemsScore(loanId));
 			commonResponseVO.setResultObject(uploadFileScreenVO);
 		} catch (Exception e) {
 			LOG.info("Exception in needlist/get service "+e.getMessage());
