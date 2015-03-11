@@ -31,12 +31,8 @@ function getInternalEmployeeMileStoneContext(workflowId){
 				//alert (workItemExecList[0].status + "--" + workItemExecList[0].displayContent);
 				//appendAgentMilestoneItem(workItemExecList[0].status, workItemExecList[0].displayContent, "Schedule An Alert");
 				var childList =[];
-				
-				
-				
 				for(var i=0;i<workItemExecList.length;i++){
-					var currentWorkItem = workItemExecList[i];
-					
+					var currentWorkItem = workItemExecList[i];					
 					if (i==0)
 					{
 						parentWorkItem = currentWorkItem;
@@ -47,12 +43,12 @@ function getInternalEmployeeMileStoneContext(workflowId){
 						//This is a parent - push all the ones so far in parent		
 						if(childList.length !=0)
 						{
-							appendAgentMilestoneItemWithChildren(parentWorkItem.status, parentWorkItem.displayContent, "Schedule An Alert",childList);						
+							appendAgentMilestoneItemWithChildren(parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo,childList);						
 							childList =[];							
 						}
 						else
 						{
-							appendAgentMilestoneItem(parentWorkItem.status, parentWorkItem.displayContent, "Schedule An Alert");
+							appendAgentMilestoneItem(parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
 						}
 						parentWorkItem = currentWorkItem;
 					}
@@ -62,22 +58,14 @@ function getInternalEmployeeMileStoneContext(workflowId){
 						childList.push (currentWorkItem);
 						if (i == workItemExecList.length-1)
 						{
-							appendAgentMilestoneItemWithChildren(parentWorkItem.status, parentWorkItem.displayContent, "Schedule An Alert",childList);
+							appendAgentMilestoneItemWithChildren(parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo,childList);
 						}
 					}					
 				}
 				//Last item append
-				appendAgentMilestoneItem(parentWorkItem.status, parentWorkItem.displayContent, "Schedule An Alert");
-				appendAgentMilestone1003Status();
-				appendAgentMilestoneCreditBureau();
-				appendAgentMilestoneNeededItems();
-				appendAgentMilestoneAddTeam();
-				appendAgentMilestoneDisclosures();
-				appendAgentMilestoneApplicationFee();
-				appendAgentMilestoneAppraisal();
-				appendAgentMilestoneLockRate();
-				appendAgentMilestoneUnderwriting();
-				appendAgentMilestoneClosingStatus();
+				appendAgentMilestoneItem(parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo);
+				
+				
 				
 				adjustBorderMilestoneContainer();
 				if(callback){
@@ -98,8 +86,7 @@ function getInternalEmployeeMileStoneContext(workflowId){
 	},
 	
 	initialize:function(callback){
-		this.getWorkFlowItemStatuses(function(ob){
-			
+		this.getWorkFlowItemStatuses(function(ob){		
 		});
 		
 		if(callback){
@@ -862,7 +849,7 @@ function getProgressStatusClass (status)
 }
 
 
-function appendAgentMilestoneItem(status, displayContent, inputText){
+function appendAgentMilestoneItem(status, displayContent, stateInfo){
 	countOfTasks++;
 	var floatClass = "float-right";
 	var progressClass = getProgressStatusClass(status);
@@ -892,11 +879,14 @@ function appendAgentMilestoneItem(status, displayContent, inputText){
 	}).html(displayContent);
 	
 	header.append(headerTxt);
-	var txtRow1 = $('<div>').attr({
-		"class" : rightLeftClass+"-text"
-	}).html(inputText);
-	
-	wrapper.append(rightBorder).append(header).append(txtRow1);	
+	wrapper.append(rightBorder).append(header);
+	if (stateInfo!="")
+	{
+		var txtRow1 = $('<div>').attr({
+			"class" : rightLeftClass+"-text"
+		}).html(stateInfo);		
+		wrapper.append(txtRow1);
+	}
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
