@@ -60,7 +60,7 @@ public class NexeraUtility {
 	                File newFile = new File(filepath);
 	                newFile.createNewFile();
 	                
-	                newDocument.save(filepath);
+	                newDocument.save(newFile);
 	                newDocument.close();
 	                pageNum++;
 	                
