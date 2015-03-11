@@ -25,13 +25,13 @@
 		</dependency>
     <dependency>
 			<groupId>com.nexera.newfi</groupId>
-			<artifactId>NewFiCommon</artifactId>
+			<artifactId>NewfiCommon</artifactId>
 			<version>1.0</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.nexera.newfi</groupId>
-			<artifactId>NewFiCore</artifactId>
+			<artifactId>NewfiCore</artifactId>
 			<version>1.0</version>
 		</dependency>
   </dependencies>
