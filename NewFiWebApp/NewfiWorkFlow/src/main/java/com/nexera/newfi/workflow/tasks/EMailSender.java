@@ -12,14 +12,16 @@ public class EMailSender implements IWorkflowTaskExecutor {
 		return null;
 	}
 
-	public Object renderStateInfo(Object input) {
-		
-		return "";
-	}
+	
 
 	public Object[] getParamsForExecute() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public Object renderStateInfo(Object... inputs) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
 
 }
