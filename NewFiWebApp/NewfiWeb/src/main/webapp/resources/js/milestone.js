@@ -947,7 +947,7 @@ function milestoneChildEventHandler(event){
 	}
 	
 	else if(event.target.innerHTML=="Click here to add a Team Member"){
-		event.stopImmediatePropagation();
+		
 		var teamTable = getMilestoneTeamMembeTable();
 		if($('#ms-add-member-popup').css("display") == "block"){
 			hideMilestoneAddTeamMemberPopup();		
