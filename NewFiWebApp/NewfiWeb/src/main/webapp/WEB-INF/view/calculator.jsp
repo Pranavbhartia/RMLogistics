@@ -344,7 +344,8 @@
 						</div>
 						<div class="calc-btn" id ="submitID">Submit</div>
 					</div>
-
+					<div class ="hide" id="slider"></div>
+                 <div class="teaserresult" id ="teaserresult"></div>
 				</div>
 			</div>
 		</div>
@@ -357,11 +358,34 @@
 				$(this).parent().next().show();
 			});
 			
-			/* $(document).on('click','#SubmitID',function(){
-				
-				var radioValue = $("input[name='LoanType']:checked").val();
-				alert("selected value is : "+radioValue);
-			}); */
+			$(document).on('click','#submitID',function(){
+				$(this).parent().hide();
+				$(this).parent().next().show();
+			});
+			
+			var loanDuration = [15,20,35,40];
+			var sliderValue ;
+			
+			$(function() {
+			    $( "#slider" ).slider({
+			    	//value: 5,
+			    	min: loanDuration[0],
+			    	max: loanDuration[loanDuration.length-1],
+			    	change: function (event, ui){
+			    		var value1 = ui.value;
+			    		
+			    		for (var i in loanDuration) {
+			    		    if (loanDuration[i] < value1) {
+			    		        sliderValue = loanDuration[++i];
+			    		    } 
+			    		}
+						if(sliderValue!=value1)
+			    		$( "#slider" ).slider( "option", "value", sliderValue );
+			    	}
+			    });				
+			  
+			  });
+			
 			
 			 $("#submitID").click(function(){      
 			       
@@ -431,12 +455,14 @@
 			       
 			        $.ajax({
 			    	   
-			    	   url:"rest/userprofile/findteaserate",
+			    	   url:"rest/calculator/findteaserate",
 			    	   type:"POST",
 			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
 			    	   datatype:"application/json",
-			    	   success : function(){
-			    		   alert("success");
+			    	   success : function(data){
+			    		   var teaserresult = data
+                          //$('#teaserresult').html(teaserresult);
+			    		   //alert(teaserresult);
 			    	   },
 			    	   error :function(){
 			    		   alert("error");
