@@ -27,12 +27,16 @@ public interface LoanDao extends GenericDao {
 
     public Loan getActiveLoanOfUser(User parseUserModel);
 
-	List<Loan> retrieveLoanForDashboard(User parseUserModel);
+    public List<Loan> retrieveLoanForDashboard(User parseUserModel);
 	
-	List<LoanTeam> getLoanTeamList( Loan loan );
+    public List<LoanTeam> getLoanTeamList( Loan loan );
 
-    List<Loan> getLoansForUser( Integer userId );
+    public List<Loan> getLoansForUser( Integer userId );
 
 	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
+	public Integer getNeededItemsRequired(Integer loanId);
+
+	public Integer getTotalNeededItem(Integer loanId);
 
 }

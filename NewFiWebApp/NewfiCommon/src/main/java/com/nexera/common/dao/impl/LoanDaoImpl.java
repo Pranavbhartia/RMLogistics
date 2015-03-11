@@ -9,7 +9,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanDao;
@@ -24,6 +28,10 @@ import com.nexera.common.exception.DatabaseException;
 @Component
 public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
+	private static final Logger LOG = LoggerFactory.getLogger(LoanDaoImpl.class);
+	
+	
+	
 	@Override
 	public List<Loan> getLoansOfUser(User user) {
 
@@ -246,6 +254,28 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Session session = sessionFactory.getCurrentSession();
 		LoanNeedsList loannNeedList = (LoanNeedsList) session.load(LoanNeedsList.class, loanNeedId);
 		return loannNeedList.getUploadFileId();
+	}
+
+	@Override
+	public Integer getNeededItemsRequired(Integer loanId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria =    session.createCriteria(LoanNeedsList.class).createAlias("loan", "loanList").add(Restrictions.eq("loanList.id", loanId));
+		LOG.info("criteria : "+criteria);
+		Integer result =  (Integer) criteria.list().size();
+		LOG.info("criteria result: "+result);
+		return result ;
+	}
+
+	@Override
+	public Integer getTotalNeededItem(Integer loanId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria =    session.createCriteria(LoanNeedsList.class).createAlias("loan", "loanList")
+									.add(Restrictions.eq("loanList.id", loanId)).createAlias("uploadFileId", "upload").add(Restrictions.isNotNull("upload.id"));
+		LOG.info("criteria : "+criteria);
+		Integer result =  (Integer) criteria.list().size();
+		LOG.info("criteria result: "+result);
+		return result ;
 	}
 
 }
