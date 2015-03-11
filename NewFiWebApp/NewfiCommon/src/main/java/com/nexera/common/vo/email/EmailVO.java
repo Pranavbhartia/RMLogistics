@@ -1,5 +1,6 @@
 package com.nexera.common.vo.email;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,9 @@ public class EmailVO {
 	private Map<String, String> tokenMap;
 
 	public List<EmailRecipientVO> getRecipients() {
+		if(recipients==null){
+			return Collections.EMPTY_LIST;
+		}
 		return recipients;
 	}
 
@@ -102,5 +106,16 @@ public class EmailVO {
 		return tokenMap.remove(key);
 
 	}
+
+	@Override
+    public String toString() {
+	    return "EmailVO [recipients=" + recipients + ", subject=" + subject
+	            + ", body=" + body + ", senderEmailId=" + senderEmailId
+	            + ", senderName=" + senderName + ", isTemplateBased="
+	            + isTemplateBased + ", templateName=" + templateName
+	            + ", tokenMap=" + tokenMap + "]";
+    }
+	
+	
 
 }

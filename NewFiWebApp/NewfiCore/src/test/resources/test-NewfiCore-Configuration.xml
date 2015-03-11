@@ -16,6 +16,7 @@
 	
 	<import resource="classpath:test-hibernate-config.xml"/>
 	<import resource="classpath:test-NewfiCommon-Configuration.xml"/>
+	<import resource="classpath:NewfiMongoCore-Configuration.xml"/>
 	
 	
 	

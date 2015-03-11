@@ -24,7 +24,7 @@ public class NeedListServiceTest {
 	
 	@Test
 	public void testGetNeededItemsScore(){
-		System.out.println(needListService.getNeededItemsScore());
+		//System.out.println(needListService.getNeededItemsScore());
 	}
 
 }
