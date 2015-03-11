@@ -220,6 +220,19 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public LoanCustomerVO retrieveDashboard(UserVO userVO,LoanVO loanVO) {
+
+		// Get all loans this user has access to.
+		Loan loan = loanDao.retrieveLoanForDashboard(this
+				.parseUserModel(userVO),this.parseLoanModel(loanVO));
+		LoanCustomerVO loanCustomerVO = this
+				.buildLoanCustomerVoFromUser(loan);
+
+		return loanCustomerVO;
+	}
 
 	/**
 	 * it returns dashboardVO from list of loans
