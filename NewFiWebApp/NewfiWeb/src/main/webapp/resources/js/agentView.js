@@ -1241,7 +1241,7 @@ function paintUserNameDropDown(values) {
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
 		"class" : "add-member-dropdown-row"
-	}).html("Add New User");
+	}).html("Add New User").on('click',showAddUserPopUp);
 	dropdownCont.append(addUserdropDownRow);
 }
 
@@ -1271,11 +1271,12 @@ function userTypeClicked(){
 });*/
 
 // Click function to create a user
-$(document).on('click', '#add-member-user', function(event) {
+
+function showAddUserPopUp(){
 	event.stopImmediatePropagation();
 	hideUserNameDropDown();
 	showCreateUserPopup();
-});
+}
 
 function showUserTypeDropDown() {
 	$('#add-usertype-dropdown-cont').css({
