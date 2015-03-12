@@ -37,7 +37,7 @@ public class EmailServiceTest {
 		emailEntity.setSubject("Nexera Newfi Portal");
 		emailEntity.setTemplateBased(false);
 
-		sendEmailService.sendMail(emailEntity,false);
+//		sendEmailService.sendMail(emailEntity,false);
 		System.out.println("Email sent");
 	}
 
