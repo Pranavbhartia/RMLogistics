@@ -244,14 +244,20 @@ function appendMilestoneMyProfile(){
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("Online Application");
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("Photo");
 	
 	var txtRow4 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("SMS Texting Preferences");
 	
 	wrapper.append(leftBorder).append(header).append(progressBarCont).append(txtRow1).append(txtRow2).append(txtRow3).append(txtRow4);
@@ -501,6 +507,8 @@ function appendMilestoneInitialNeedList(){
 	header.append(headerTxt).append(headerIcn);
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-step4").click();
 	}).html("16 of 18 Complete");
 	
 	wrapper.append(leftBorder).append(header).append(txtRow1);
@@ -593,6 +601,8 @@ function appendMilestoneLockRates(){
 	
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-rc-text"
+	}).click(function(){
+		$("#lp-step3").click();
 	}).html("Click here to Request Rate Lock");
 	
 	wrapper.append(rightBorder).append(header).append(txtRow1);
