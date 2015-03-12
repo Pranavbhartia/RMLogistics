@@ -925,10 +925,11 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	});
 	$('#' + elementId).append(rightArrow);
 	$('#center-panel-cont').html('');
-
+	doPagination=false;
 	// Check the id and paint the corresponding right panel
 	if (elementId == "lp-step0") {
-		showMessageDashboard();
+		doPagination=true;
+		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
