@@ -914,9 +914,9 @@ a,a:hover,a:visited {
 }
 
 .needed-items-rc {
-	width: 175px;
+
 	height: 175px;
-	background: url(../images/progress.png) no-repeat center;
+	
 }
 
 .needed-doc-heading {
@@ -1467,8 +1467,9 @@ a,a:hover,a:visited {
 	margin-bottom: 5px;
 	line-height: 25px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-family: 'opensanssemibold';
+	font-size: 14px;
 }
 
 .cust-detail-container {
@@ -1514,12 +1515,12 @@ a,a:hover,a:visited {
 }
 
 .date-picker-input {
-	background: url(../images/calendar.png) no-repeat right center;
+	background: url(../images/calendar.png) no-repeat 96% center;
 	background-color: #fff;
 }
 
 .time-picker-input {
-	background: url(../images/clock.png) no-repeat right center;
+	background: url(../images/clock.png) no-repeat 98% center;
 	background-color: #fff;
 }
 
@@ -3218,47 +3219,50 @@ input.calc-input {
 .ms-add-member-popup {
 	position: absolute;
 	right: 20px;
-	width: 800px;
+	width: 650px;
 	margin-top: 10px;
 	padding: 10px;
 	color: #777;
 	background: #fff;
 	border: 1px #b7b7b7 solid;
 	border-top: 4px #428bca solid;
+	border-radius: 3px;
 	z-index: 99;
 	cursor: auto;
 }
 
 .ms-save-btn {
 	width: 150px;
-	height: 40px;
+	height: 35px;
 	margin: 0 auto;
-	line-height: 40px;
+	line-height: 35px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	color: #fff;
 	background-color: #F6914D;
 	border-radius: 3px;
 	cursor: pointer;
+	letter-spacing: 0.5px;
+	font-size: 14px;
 }
 
 .ms-add-memeber-input-cont {
 	width: 50%;
 	margin-bottom: 10px;
-	height: 40px;
-	line-height: 40px;
+	height: 35px;
+	line-height: 35px;
 }
 
 .ms-add-memeber-input-label {
 	width: 100px;
 	text-align: right;
-	padding-right: 20px;
+	padding-right: 15px;
 }
 
 .ms-add-memeber-input-input {
-	width: 200px;
-	height: 40px;
-	line-height: 40px;
+	width: 210px;
+	height: 35px;
+	line-height: 35px;
 	padding-left: 10px;
 	border: 1px #dcdcdc solid;
 	border-radius: 3px;
@@ -3267,13 +3271,12 @@ input.calc-input {
 
 .ms-save-btn-wrapper {
 	width: 100%;
-	margin: 15px 0;
 }
 
 .ms-add-member-popup:after {
 	position: absolute;
 	bottom: 100%;
-	right: 35%;
+	right: 50%;
 	border: solid transparent;
 	content: " ";
 	height: 0;
@@ -3459,4 +3462,71 @@ input.calc-input {
 .ui-dialog-titlebar{
 	background: #428bca;
 	color: #fff;
+}
+
+
+.ms-add-notification-popup{
+	width: 450px;
+	left: 0;
+}
+
+.ms-add-notification-popup .cust-detail-rw{
+	width: 100%;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.ms-add-notification-popup .cust-detail-container{
+	height: auto;
+}
+
+.ms-add-notification-popup input,.ms-add-notification-popup textarea{
+	border:1px solid #dcdcdc;
+	background-color: #fafafa;
+	border-radius:3px;
+}
+
+.ms-add-notification-popup .cust-detail-container{
+	background-color: transparent;
+}
+
+.ms-add-notification-popup .cust-detail-container{
+	padding: 0 10px;
+}
+
+.ms-add-notification-popup .msg-btn-row{
+	line-height: 35px;
+	height: 40px;
+}
+
+.ms-add-notification-popup .cust-detail-header{
+	margin-bottom: 10px; 
+}
+
+.ms-add-notification-popup .msg-btn-row{
+	margin-top: 0;
+}
+
+.ms-add-notification-popup .msg-btn-submit{
+	padding:0;
+	height: 35px;
+	width: 85px;
+	font-size: 14px;
+	text-align: center;
+}
+
+.ms-add-notification-popup .msg-btn-clear{
+	font-size: 14px;
+}
+
+.ms-add-notification-popup textarea{
+	margin-bottom: 5px;
+}
+
+.ms-add-notification-popup:after{
+	right:80px;
+}
+
+.dial{
+	font-family: 'opensanssemibold' !important;
 }

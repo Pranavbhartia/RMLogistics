@@ -344,7 +344,10 @@
 						</div>
 						<div class="calc-btn" id ="submitID">Submit</div>
 					</div>
+<<<<<<< HEAD
 					<div class ="hide" id="slider"></div>
+=======
+>>>>>>> upstream/master
                  <div class="teaserresult" id ="teaserresult"></div>
 				</div>
 			</div>
@@ -451,18 +454,15 @@
 			       teaseRate.numOfunits =numOfunits;
 			       teaseRate.state =state;
 			       teaseRate.county =county;
-			       
-			       
+			       			       
 			        $.ajax({
-			    	   
-			    	   url:"rest/calculator/findteaserate",
+
+			    	   url:"rest/userprofile/findteaserate",
 			    	   type:"POST",
 			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
 			    	   datatype:"application/json",
-			    	   success : function(data){
-			    		   var teaserresult = data
-                          //$('#teaserresult').html(teaserresult);
-			    		   //alert(teaserresult);
+			    	   success : function(){
+			    		   alert("success");
 			    	   },
 			    	   error :function(){
 			    		   alert("error");

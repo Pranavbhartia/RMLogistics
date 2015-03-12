@@ -1,4 +1,4 @@
-package com.nexera.common.vo;
+package com.nexera.common.vo.lqb;
 
 import java.util.ArrayList;
 

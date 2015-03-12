@@ -32,8 +32,8 @@ function getAgentSecondaryLeftNav() {
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(step3).append(
-			step4).append(step5);
+	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(
+			step3).append(step4).append(step5);
 }
 
 function getAgentSecondaryLeftNavStep(step, text) {
@@ -186,12 +186,12 @@ function paintAgentDashboard() {
 	$('#right-panel').append(agentDashboardMainContainer);
 	getDashboardRightPanel();
 	adjustAgentDashboardOnResize();
-	var contxt=getNotificationContext(0,newfiObject.user.id);
-	contxt.getLoanNotificationByType(function(ob){
+	var contxt = getNotificationContext(0, newfiObject.user.id);
+	contxt.getLoanNotificationByType(function(ob) {
 		ob.populateLoanNotification();
 	});
 	contxt.getNotificationForUser();
-	addContext("notification",contxt);
+	addContext("notification", contxt);
 }
 
 function paintAgentDashboardCallBack(data) {
@@ -207,7 +207,7 @@ function getDashboardRightPanel() {
 }
 
 function paintAgentDashboardRightPanel(data) {
-	var customerData=data.resultObject;
+	var customerData = data.resultObject;
 	var header = $('<div>').attr({
 		"class" : "agent-customer-list-header clearfix"
 	});
@@ -334,17 +334,18 @@ function appendCustomers(elementId, customers) {
 			"class" : "onl-status-icn float-left"
 		});
 		// TODO customer prof default pic to be set correctly
-		if (customer.prof_image == undefined || customer.prof_image =="" || customer.prof_image == null) {
+		if (customer.prof_image == undefined || customer.prof_image == ""
+				|| customer.prof_image == null) {
 			customer.prof_image = "resources/images/cus-icn.png";
 		}
 		var profImage = $('<div>').attr({
 			"class" : "cus-img-icn float-left",
 			"style" : "background-image:url(" + customer.prof_image + ")"
-				
+
 		});
-		//code will execute if user is logged in
-		var loanNotificationCntxt=getNotificationContext(customer.loanID,0);
-		addContext(customer.loanID+"-notification",loanNotificationCntxt)
+		// code will execute if user is logged in
+		var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
+		addContext(customer.loanID + "-notification", loanNotificationCntxt)
 		var cusName = $('<div>').attr({
 			"class" : "cus-name float-left",
 			"loanid" : customer.loanID,
@@ -355,14 +356,11 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
-			var userID = $(this).attr('userid');
-			var loanID = $(this).attr('loanid');
-			paintMyLoansView();
-			changeAgentSecondaryLeftPanel("lp-step2");
-			//getLoanDetails(loanID);
+			saveState('loan', selectedUserDetail.loanID, "detail");
+			entryPointForAgentView(selectedUserDetail.loanID, '2')
+			// getLoanDetails(loanID);
 		}).html(customer.name);
 
-		
 		// loan details page to be displayed on click of the customer name
 		/*
 		 * cusName.click(function(){ console.log("Customer clicked"); var
@@ -407,8 +405,8 @@ function appendCustomers(elementId, customers) {
 					appendCustomerDetailContianer($(this).parent(),
 							event.data.customer);
 				});
-		loanNotificationCntxt.loanLstCntElement=col7;
-		loanNotificationCntxt.getNotificationForLoan(function(ob){
+		loanNotificationCntxt.loanLstCntElement = col7;
+		loanNotificationCntxt.getNotificationForLoan(function(ob) {
 			if (parseInt(ob.loanNotificationList.length) > 0) {
 				var alerts = $('<div>').attr({
 					"class" : "alerts-count"
@@ -416,7 +414,6 @@ function appendCustomers(elementId, customers) {
 				col7.append(alerts);
 			}
 		});
-		
 
 		row.append(col1).append(col2).append(col3).append(col4).append(col5)
 				.append(col6).append(col7);
@@ -473,11 +470,11 @@ function appendCustomerTableHeader(elementId) {
  *            container to which the it is to be appended
  */
 function appendCustomerDetailContianer(element, customer) {
-	var contxt=getContext(customer.loanID+"-notification");
+	var contxt = getContext(customer.loanID + "-notification");
 	if ($(element).next().hasClass("cust-detail-wrapper")) {
 		$('#cust-detail-wrapper').remove();
 		$('.leads-container-tr').removeClass('leads-container-tr-sel');
-		contxt.existingWrapper=undefined;
+		contxt.existingWrapper = undefined;
 		return;
 	}
 	$('#cust-detail-wrapper').remove();
@@ -488,23 +485,23 @@ function appendCustomerDetailContianer(element, customer) {
 		"class" : "cust-detail-wrapper clearfix"
 	});
 	$(element).after(wrapper);
-	appendRecentAlertContainer(contxt.loanNotificationList,contxt);
+	appendRecentAlertContainer(contxt.loanNotificationList, contxt);
 	appendSchedulerContainer(contxt);
 	appendRecentNotesContainer(customer.notes);
 	appendTakeNoteContainer();
 }
 
-function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
+function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 	var wrapper = {};
-	if(!existingWrapper){
+	if (!existingWrapper) {
 		wrapper = $('<div>').attr({
-		"class" : "cust-detail-lw float-left"
-		});	
-	}else{
-		wrapper=existingWrapper;
+			"class" : "cust-detail-lw float-left"
+		});
+	} else {
+		wrapper = existingWrapper;
 		wrapper.empty();
 	}
-	contxt.existingWrapper=wrapper;
+	contxt.existingWrapper = wrapper;
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
 	});
@@ -525,7 +522,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 	});
 
 	if (alerts != undefined) {
-		var count=0;
+		var count = 0;
 		for (var i = 0; i < alerts.length; i++) {
 			var alertData = alerts[i].content;
 			var alertContainer = $('<div>').attr({
@@ -543,24 +540,32 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 
 			var dismissBtn = $('<div>').attr({
 				"class" : "alert-btn float-left"
-			}).html("Dismiss").bind("click",{notificationid:alerts[i].id,contxt:contxt,container:alertContainer},function(e){
-				var notificationid=e.data.notificationid;
-				var contxt=e.data.contxt;
-				var container=e.data.container;
-				contxt.removeLoanNotification(notificationid,function(){
+			}).html("Dismiss").bind("click", {
+				notificationid : alerts[i].id,
+				contxt : contxt,
+				container : alertContainer
+			}, function(e) {
+				var notificationid = e.data.notificationid;
+				var contxt = e.data.contxt;
+				var container = e.data.container;
+				contxt.removeLoanNotification(notificationid, function() {
 					container.remove();
 					contxt.updateLoanListNotificationCount();
 				});
-				
+
 			});
 
 			var snoozeBtn = $('<div>').attr({
 				"class" : "alert-btn float-left"
-			}).html("Snooze").bind("click",{notificationid:alerts[i].id,contxt:contxt,container:alertContainer},function(e){
-				var notificationid=e.data.notificationid;
-				var contxt=e.data.contxt;
-				var container=e.data.container;
-				contxt.snoozeLoanNotification(notificationid,5,function(){
+			}).html("Snooze").bind("click", {
+				notificationid : alerts[i].id,
+				contxt : contxt,
+				container : alertContainer
+			}, function(e) {
+				var notificationid = e.data.notificationid;
+				var contxt = e.data.contxt;
+				var container = e.data.container;
+				contxt.snoozeLoanNotification(notificationid, 5, function() {
 					container.remove();
 					contxt.updateLoanListNotificationCount();
 				});
@@ -569,22 +574,27 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 			alertBtnRow.append(dismissBtn).append(snoozeBtn);
 
 			alertLeftCol.append(alertTxt);
-			if(alerts[i].dismissable==true)
+			if (alerts[i].dismissable == true)
 				alertLeftCol.append(alertBtnRow);
+
 			alertContainer.append(alertLeftCol);
-			if(alerts[i].remindOn){
-				var dat=new Date(alerts[i].remindOn);
-				var amPm=dat.getHours()>12?"PM":"AM";
-				var hr=dat.getHours()%12<10?("0"+dat.getHours()%12):dat.getHours()%12;
-				var min=dat.getMinutes()<10?("0"+dat.getMinutes()):dat.getMinutes();
+			if (alerts[i].remindOn) {
+				var dat = new Date(alerts[i].remindOn);
+				var amPm = dat.getHours() > 12 ? "PM" : "AM";
+				var hr = dat.getHours() % 12 < 10 ? ("0" + dat.getHours() % 12)
+						: dat.getHours() % 12;
+				var min = dat.getMinutes() < 10 ? ("0" + dat.getMinutes())
+						: dat.getMinutes();
 				var editBtn = $('<div>').attr({
 					"class" : "float-right"
-				}).html($.datepicker.formatDate('M-dd-yy', dat)+" "+hr+":"+min+" "+amPm);
+				}).html(
+						$.datepicker.formatDate('M-dd-yy', dat) + " " + hr
+								+ ":" + min + " " + amPm);
 				alertContainer.append(editBtn);
 			}
 			recentAlertWrapper.append(alertContainer);
 			count++;
-			if(count==3)
+			if (count == 3)
 				break;
 		}
 	}
@@ -592,7 +602,7 @@ function appendRecentAlertContainer(alerts,contxt,existingWrapper) {
 	container.append(recentAlertWrapper);
 
 	wrapper.append(container);
-	if(!existingWrapper)
+	if (!existingWrapper)
 		$('#cust-detail-wrapper').append(wrapper);
 }
 
@@ -604,7 +614,9 @@ function appendSchedulerContainer(contxt) {
 		pickDate : false
 	});
 }
-function getSchedulerContainer(contxt,data){
+
+function getSchedulerContainer(contxt, tempData) {
+
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -666,28 +678,44 @@ function getSchedulerContainer(contxt,data){
 
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind("click",{contxt:contxt,data:data},function(e){
-		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d	
-		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
-		snoozeTime.setHours(dat.getHours());
-		snoozeTime.setMinutes(dat.getMinutes())
-		var message=$("#sch-msg-message").val();
-		if(snoozeTime!="Invalid Date"){
-			if(data===undefined)
-				data={};
-			data.content=message;
-			data.createdDate=new Date().getTime();
-			data.remindOn=snoozeTime.getTime();
-			data.createdByID=newfiObject.user.id;
-			data.createdForID=newfiObject.user.id;
-			contxt.scheduleAEvent(data,function(){
-				contxt.updateWrapper();
-				contxt.updateLoanListNotificationCount();
-				$("#sch-msg-message").val("");
+	}).html("Submit").bind(
+			"click",
+			{
+				contxt : contxt,
+				tempData : tempData
+			},
+			function(e) {
+				var tempData = e.data.tempData;
+				var dat = $('#sch-msg-time-picker ').data('DateTimePicker')
+						.getDate()._d
+				var snoozeTime = $('#sch-msg-date-picker').data('datepicker')
+						.getDate();
+				snoozeTime.setHours(dat.getHours());
+				snoozeTime.setMinutes(dat.getMinutes())
+				var message = $("#sch-msg-message").val();
+				if (message == "") {
+					showToastMessage("Invalid Message");
+				} else if (snoozeTime == "Invalid Date") {
+					showToastMessage("Invalid Date");
+				} else {
+					var data = {};
+					if (tempData) {
+						for (key in tempData) {
+							data[key] = tempData[key];
+						}
+					}
+					data.content = message;
+					data.createdDate = new Date().getTime();
+					data.remindOn = snoozeTime.getTime();
+					data.createdByID = newfiObject.user.id;
+					data.createdForID = newfiObject.user.id;
+					contxt.scheduleAEvent(data, function() {
+						contxt.updateWrapper();
+						contxt.updateLoanListNotificationCount();
+						$("#sch-msg-message").val("");
+					});
+				}
 			});
-		}
-
-	});
 	col1.append(col1Btn);
 
 	var col2 = $('<div>').attr({
@@ -838,6 +866,8 @@ function paintMyLoansView() {
 	});
 	rightPanelCont.append(secondaryNav).append(agentCenetrPanel);
 	$('#right-panel').append(rightPanelCont);
+	// For backbutton support
+	bindDataToSN();
 
 }
 
@@ -851,9 +881,9 @@ function paintMyLoansViewCallBack(data) {
 // function to reset slected UserdetailObject
 var selectedUserDetail;
 function resetSelectedUserDetailObject(userObject) {
-	
+
 	// userObject this is a "LoanCustomerVO" object
-	
+
 	selectedUserDetail = new Object();
 	selectedUserDetail.userID = userObject.userID;
 	selectedUserDetail.loanID = userObject.loanID;
@@ -863,17 +893,18 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.name = userObject.name;
 	selectedUserDetail.createdDate = userObject.loanInitiatedOn;
 	selectedUserDetail.modifiedDate = userObject.lastActedOn;
-	
-	selectedUserDetail.firstName =userObject.firstName;
-	selectedUserDetail.lastName =userObject.lastName;
+
+	selectedUserDetail.firstName = userObject.firstName;
+	selectedUserDetail.lastName = userObject.lastName;
 	selectedUserDetail.emailId = userObject.emailId;
-	
-	selectedUserDetail.customerId = userObject.customerDetail.id; 
-	selectedUserDetail.city =userObject.customerDetail.addressCity; 
-	selectedUserDetail.state =userObject.customerDetail.addressState; 
-	selectedUserDetail.zipCode =userObject.customerDetail.addressZipCode; 
-	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(userObject.customerDetail.dateOfBirth)); 
-	
+
+	selectedUserDetail.customerId = userObject.customerDetail.id;
+	selectedUserDetail.city = userObject.customerDetail.addressCity;
+	selectedUserDetail.state = userObject.customerDetail.addressState;
+	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
+	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
+			userObject.customerDetail.dateOfBirth));
+
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
@@ -889,16 +920,16 @@ function paintAgentLoanPage(data) {
 	appendCustomerLoanDetails(loanDetails);
 	appendAddTeamMemberWrapper();
 	appendNewfiTeamWrapper(loanDetails);
-	var contxt=getContext(loanDetails.id+"-notification");
-	if(contxt){
+	var contxt = getContext(loanDetails.id + "-notification");
+	if (contxt) {
 		contxt.populateLoanNotification();
-	}else{
-		contxt=getNotificationContext(loanDetails.id,0);
-		contxt.getNotificationForLoan(function(ob){
+	} else {
+		contxt = getNotificationContext(loanDetails.id, 0);
+		contxt.getNotificationForLoan(function(ob) {
 			contxt.populateLoanNotification();
 		});
 	}
-	
+
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
@@ -913,10 +944,9 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	$('#center-panel-cont').html('');
 
 	// Check the id and paint the corresponding right panel
-	if(elementId == "lp-step0") {
+	if (elementId == "lp-step0") {
 		console.log("talk to your team");
-	}
-	else if (elementId == "lp-step1") {
+	} else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
 		getLoanDetails(selectedUserDetail.loanID);
@@ -942,7 +972,7 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var cusProfPic = $('<div>').attr({
 		"class" : "cus-img-icn float-left",
 		"style" : "background-image:url(" + custHeaderDetails.photoUrl + ")",
-		"id":"cusProfPicID"
+		"id" : "cusProfPicID"
 
 	});
 
@@ -952,7 +982,7 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 
 	var cusName = $('<div>').attr({
 		"class" : "cus-prof-name-txt",
-		"id":"cusProfNameTxtID"
+		"id" : "cusProfNameTxtID"
 	});
 
 	cusName.html(custHeaderDetails.name);
@@ -1064,12 +1094,12 @@ function appendCustomerLoanDetails(loanDetails) {
 
 	// append cust info popup
 	appendCustomerEditProfilePopUp();
-	
-	$("#uploadFile")
-	.change(
+
+	$("#uploadFile").change(
 			function() {
-				
-				photoUpload(this.form, 'uploadCommonImageToS3.do','cusImgIcnID', '', '1',selectedUserDetail.userID);
+
+				photoUpload(this.form, 'uploadCommonImageToS3.do',
+						'cusImgIcnID', '', '1', selectedUserDetail.userID);
 
 			});
 
@@ -1425,12 +1455,13 @@ function getTeamListTableRow(user, loanID) {
 	var userRoleStr = user.userRole.label;
 	// TODO -- remove hard coding for internal user
 	if (user.userRole.id == 3) {
-		//userRoleStr = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
-		var intRoleID=user.internalUserDetail.internalUserRoleMasterVO.id;
-		for(j in newfiObject.internalUserRoleMasters){
-			var intMaster=newfiObject.internalUserRoleMasters[j];
-			if(intMaster.id==intRoleID)
-				userRoleStr=intMaster.roleDescription;
+		// userRoleStr =
+		// user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		var intRoleID = user.internalUserDetail.internalUserRoleMasterVO.id;
+		for (j in newfiObject.internalUserRoleMasters) {
+			var intMaster = newfiObject.internalUserRoleMasters[j];
+			if (intMaster.id == intRoleID)
+				userRoleStr = intMaster.roleDescription;
 		}
 	}
 
@@ -1476,17 +1507,16 @@ $(document).on('click', '#cus-prof-popup', function(event) {
 	event.stopImmediatePropagation();
 });
 
-$(document).on('keyup',function(e){
-	if(e.which==27){
+$(document).on('keyup', function(e) {
+	if (e.which == 27) {
 		hideCustomerEditProfilePopUp();
 	}
 });
 
-/*$(document).click(function() {
-	if ($('#cus-prof-popup').css("display") == "block") {
-		hideCustomerEditProfilePopUp();
-	}
-});*/
+/*
+ * $(document).click(function() { if ($('#cus-prof-popup').css("display") ==
+ * "block") { hideCustomerEditProfilePopUp(); } });
+ */
 
 function appendCustomerEditProfilePopUp() {
 	var popUpWrapper = $('<div>').attr({
@@ -1502,26 +1532,26 @@ function appendCustomerEditProfilePopUp() {
 		"id" : "cus-prof-container",
 		"class" : "pop-up-container"
 	});
-	
-	
+
 	popUpWrapper.append(header).append(container);
 
 	$('#ld-customer .loan-detail-link').append(popUpWrapper);
 
-	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName ,"firstNameID");
-	appendCustomerProfEditRow("Last Name", selectedUserDetail.lastName , "lastNameID");
+	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName,
+			"firstNameID");
+	appendCustomerProfEditRow("Last Name", selectedUserDetail.lastName,
+			"lastNameID");
 
 	// Upload photo row
 	appendCustomerProfUploadPhotoRow();
 
-	appendCustomerProfEditRow("City", selectedUserDetail.city ,"cityID");
+	appendCustomerProfEditRow("City", selectedUserDetail.city, "cityID");
 	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
 	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");
 	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
-	
-	
-	//appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
-	
+
+	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
+
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1531,24 +1561,22 @@ function appendCustomerEditProfilePopUp() {
 	}).html("DOB");
 
 	var dob = selectedUserDetail.dob;
-	if (dob == null || dob == "" || dob == 'NaN/NaN/NaN'){
+	if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
 		dob = "";
-	} 
-	var dobInput = $('<input>').attr(
-			{
-				"class" : "prof-form-input date-picker",
-				"placeholder" : "MM/DD/YYYY",
-				"value" : dob,
-				"id" : "dobID"
-			}).datepicker({
+	}
+	var dobInput = $('<input>').attr({
+		"class" : "prof-form-input date-picker",
+		"placeholder" : "MM/DD/YYYY",
+		"value" : dob,
+		"id" : "dobID"
+	}).datepicker({
 		orientation : "top auto",
 		autoclose : true
 	});
 
 	row.append(label).append(dobInput);
 	$('#cus-prof-container').append(row);
-	
-	
+
 	$("#dobID").addClass('prof-form-input date-picker').datepicker({
 		orientation : "top auto",
 		autoclose : true
@@ -1557,16 +1585,15 @@ function appendCustomerEditProfilePopUp() {
 	// append save button
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-cust-save-btn",
-		"onclick": "updateUserProfile()"
+		"onclick" : "updateUserProfile()"
 	}).html("save");
 
 	$('#cus-prof-container').append(saveBtn);
 
 }
 
-function updateUserProfile(){
-	
-	
+function updateUserProfile() {
+
 	var userProfileJson = new Object();
 
 	userProfileJson.id = selectedUserDetail.userID;
@@ -1584,27 +1611,31 @@ function updateUserProfile(){
 
 	userProfileJson.customerDetail = customerDetails;
 
-	//ajaxRequest("rest/userprofile/updateprofile", "POST", "json", JSON.stringify(userProfileJson),function(response){});
+	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
+	// JSON.stringify(userProfileJson),function(response){});
 
-	$.ajax({
-		url : "rest/userprofile/managerupdateprofile",
-		type : "POST",
-		data : {"updateUserInfo":JSON.stringify(userProfileJson)},
-		dataType : "json",
-		success : function(data) {
-			
-			
-			$("#cusProfNameTxtID").text(userProfileJson.firstName +" "+userProfileJson.lastName);
-		},
-		error : function(error) {
-			alert("error"+error);
-		}
-	});
-	
+	$
+			.ajax({
+				url : "rest/userprofile/managerupdateprofile",
+				type : "POST",
+				data : {
+					"updateUserInfo" : JSON.stringify(userProfileJson)
+				},
+				dataType : "json",
+				success : function(data) {
+
+					$("#cusProfNameTxtID").text(
+							userProfileJson.firstName + " "
+									+ userProfileJson.lastName);
+				},
+				error : function(error) {
+					alert("error" + error);
+				}
+			});
+
 	showToastMessage("Succesfully updated");
-	
-}
 
+}
 
 function showCustomerEditProfilePopUp() {
 	var offset = $('#ld-customer .loan-detail-link').offset();
@@ -1622,7 +1653,7 @@ function hideCustomerEditProfilePopUp() {
 	$('#cus-prof-popup').hide();
 }
 
-function appendCustomerProfEditRow(labelTxt, value,id) {
+function appendCustomerProfEditRow(labelTxt, value, id) {
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1633,7 +1664,7 @@ function appendCustomerProfEditRow(labelTxt, value,id) {
 
 	var inputTag = $('<input>').attr({
 		"class" : "cust-prof-edit-input float-left",
-		"id":id
+		"id" : id
 	}).val(value);
 
 	row.append(label).append(inputTag);
@@ -1656,7 +1687,7 @@ function appendCustomerProfUploadPhotoRow() {
 	var uploadIcn = $('<div>').attr({
 		"class" : "cust-prof-upload-icn float-left",
 		"style" : "background-image:url(" + selectedUserDetail.photoUrl + ")",
-		"id":"custprofuploadicnID" 
+		"id" : "custprofuploadicnID"
 	});
 
 	var uploadPhotoRc = $('<div>').attr({
@@ -1667,25 +1698,24 @@ function appendCustomerProfUploadPhotoRow() {
 		"class" : "cust-prof-upload-filename"
 	}).html("Jane-Profile.png");
 
-	
 	var imageForm = $('<form>').attr({
-		
+
 	});
-	
+
 	var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
 		"id" : "uploadFile",
-		"name":"fileName"
-		
+		"name" : "fileName"
+
 	});
-	
+
 	var UserId = $('<input>').attr({
 		"type" : "hidden",
 		"id" : "userIdId",
-		"name":"userId",
-		"value":selectedUserDetail.userID
+		"name" : "userId",
+		"value" : selectedUserDetail.userID
 	});
-	
+
 	var uploadImage = $('<div>').attr({
 		"class" : "uploadImage"
 
@@ -1694,25 +1724,24 @@ function appendCustomerProfUploadPhotoRow() {
 	imageForm.append(inputHiddenFile);
 	imageForm.append(UserId);
 	uploadImage.append(imageForm);
-	
+
 	var uploadBtn = $('<div>').attr({
 		"class" : "cust-prof-upload-btn",
-		
+
 	}).click(uploadeImage).html("upload");
 
-	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(uploadImage);
+	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
+			uploadImage);
 	uploadPhotoCont.append(uploadIcn).append(uploadPhotoRc);
 	row.append(label).append(uploadPhotoCont);
 	$('#cus-prof-container').append(row);
 }
-
 
 function uploadeImage() {
 
 	$("#uploadFile").trigger('click');
 
 }
-
 
 // Function to append create user popup
 function appendCreateUserPopup() {
@@ -2395,7 +2424,6 @@ function onReturnOfUserSearchToAddToLoanTeam(data) {
 	showUserNameDropDown(data.resultObject)
 }
 
-
 function createUserAndAddToLoanTeam(user) {
 	ajaxRequest("rest/userprofile/", "POST", "json", JSON.stringify(user),
 			onReturnOfCreateUserAndAddToLoanTeam);
@@ -2407,8 +2435,26 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	var result = data.resultObject;
 	hideCreateUserPopup();
 	$('#add-member-input').val("");
-	
+
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
 
 }
 
+function entryPointForAgentView(loanID, viewName) {
+	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
+		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
+				"json", undefined, function(response) {
+					resetSelectedUserDetailObject(response.resultObject);
+					entryPointAgentViewChangeNav(viewName);
+
+				});
+	else
+		entryPointAgentViewChangeNav(viewName)
+
+}
+
+function entryPointAgentViewChangeNav(viewName) {
+
+	paintMyLoansView();
+	changeAgentSecondaryLeftPanel('lp-step' + viewName);
+}

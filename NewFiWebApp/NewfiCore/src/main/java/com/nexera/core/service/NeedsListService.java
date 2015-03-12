@@ -7,6 +7,7 @@ import java.util.Map;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
+import com.nexera.common.vo.NeededItemScoreVO;
 
 public interface NeedsListService {
 
@@ -14,7 +15,6 @@ public interface NeedsListService {
 	
 	public int saveLoanNeeds(int loanId,List<Integer> needsList);
 	
-
 	public List<LoanNeedsListVO> getLoanNeedsList(Integer loanId); 
 	
 	public Map<String, List<LoanNeedsListVO>> getLoanNeedsMap(Integer loanId);
@@ -23,7 +23,7 @@ public interface NeedsListService {
 
 	public List<ManagerNeedVo> getNeedsListMaster(boolean isCustom);
 	
-	
+	public NeededItemScoreVO getNeededItemsScore(Integer loanId);
 	
 	public int saveCustomNeed(NeedsListMaster need);
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
@@ -35,6 +36,9 @@ public interface LoanService {
     public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
     Loan parseLoanModel(LoanVO loanVO);
+
+	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+
     public void saveWorkflowInfo(int loanID, int customerWorkflowID, int loanManagerWFID) ;
 
 

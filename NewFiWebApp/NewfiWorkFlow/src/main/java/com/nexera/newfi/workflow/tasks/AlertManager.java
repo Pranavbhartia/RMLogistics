@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
+import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 public class AlertManager implements IWorkflowTaskExecutor {
@@ -11,17 +12,17 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NotificationService notificationService;
 
-	public String execute(Object... objects) {
+	public String execute(Object[] objects) {
 
 		int loanID = Integer.parseInt(objects[0].toString());
 		NotificationVO notificationVO = (NotificationVO) objects[1];
 		notificationService.createNotification(notificationVO);
-		return null;
+		return String.valueOf(loanID);
 	}
 
-	public Object renderState(Object input) {
+	public String renderStateInfo(String[] inputs) {
 
-		return null;
+		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
 
 	public Object[] getParamsForExecute() {

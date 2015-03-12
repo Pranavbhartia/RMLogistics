@@ -139,12 +139,12 @@ function paintRefinanceQuest1(){
 	    },
 	    {
 	    	"text" : "Pay Off My Mortgage Faster",
-	    	"onselect" : paintRefinanceStep1a,
+	    	"onselect" : paintRefinanceLiveNow,
 	    	"value" : 1
 	    },
 	    {
 	    	"text" : "Take Cash Out of My Home",
-	    	"onselect" : paintRefinanceStep1b,
+	    	"onselect" : paintRefinanceLiveNow,
 	    	"value" : 2
 	    }
 	    ];
@@ -174,7 +174,9 @@ function getMutipleChoiceQuestion(quesText,options,name){
 		}).html(options[i].text)
 		.bind('click',{"option":options[i],"name" : name},function(event){
 			var key = event.data.name;
+
 			refinanceTeaserRate[key] = event.data.option.value;
+
 			event.data.option.onselect();
 		});
 		optionContainer.append(option);
@@ -272,19 +274,28 @@ function paintRefinanceStartLiving(){
 
 function paintRefinanceStep1a(){
 	var quesTxt = "How many years are left on your mortgage?";
+	
 	var quesCont = getTextQuestion(quesTxt,paintRefinanceStep2,"yearLeftOnMortgage");
+	
 	$('#ce-refinance-cp').html(quesCont);
 }
 
 function paintRefinanceStep1b() {
 	var quesTxt = "How much cash do you want to take out?";
-	var quesCont = getTextQuestion(quesTxt,paintRefinanceStep2,"cashTakeOut");
+	var quesCont = getTextQuestion(quesTxt,paintRefinanceStep3,"cashTakeOut");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
 function paintRefinanceStep2() {
 	var quesTxt = "What is your current mortgage balance?";
+	if(refinanceTeaserRate['refinanceOption'] == 0 || refinanceTeaserRate['refinanceOption'] == 1)
+	{
 	var quesCont = getTextQuestion(quesTxt,paintRefinanceStep3,"currentMortgageBalance");
+	}
+	if(refinanceTeaserRate['refinanceOption'] == 2)
+	{
+	var quesCont = getTextQuestion(quesTxt,paintRefinanceStep1b,"currentMortgageBalance");
+	}
 	$('#ce-refinance-cp').html(quesCont);
 }
 
@@ -601,7 +612,7 @@ function paintRefinanceDOB(){
 function paintRefinanceSSN(){
 	
 	var quesTxt = "Please enter your social security number.";
-	var quesCont = getTextQuestion(quesTxt,paintRefinanceCreaditScore,"ssn");
+	var quesCont = getTextQuestion(quesTxt,paintRefinanceCreditScore,"ssn");
 	$('#ce-refinance-cp').html(quesCont);
 	/*var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
@@ -649,10 +660,10 @@ function paintRefinanceSSN(){
 	
 }
 
-function paintRefinanceCreaditScore(){
+function paintRefinanceCreditScore(){
 	
-	var quesTxt = "Give Your Creadit Score";
-	var quesCont = getTextQuestion(quesTxt,paintRefinancePhoneNumber,"phoneNumber");
+	var quesTxt = "Give Your Credit Score";
+	var quesCont = getTextQuestion(quesTxt,paintRefinancePhoneNumber,"creditscore");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
@@ -678,6 +689,23 @@ function paintRefinanceSeeRates(){
 	container.append(quesTextCont);
 	
 	$('#ce-refinance-cp').html(container);
+	
+	$.ajax({
+	   
+	   url:"rest/calculator/findteaseratevalue",
+	   type:"POST",
+	   data:{"teaseRate":JSON.stringify(refinanceTeaserRate)},
+	   datatype:"application/json",
+	   success : function(data){
+		  alert("success");
+          //$('#teaserresult').html(teaserresult);
+		   //alert(teaserresult);
+	   },
+	   error :function(){
+		   alert("error");
+	   }
+	   
+   });
 }
 
 /*function paintRefinanceStep7() {

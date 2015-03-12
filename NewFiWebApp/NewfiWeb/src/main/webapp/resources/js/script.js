@@ -101,6 +101,7 @@ function showMessageDashboard() {
 		"class" : "right-panel-messageDashboard float-left"
 	});
 	$('#right-panel').append(convMainContainer);
+	
 	getLoanTemUsingloanId();
 	adjustCenterPanelWidth();
 }
@@ -1082,75 +1083,6 @@ function getDocumentContainer() {
 	return container.append(documentContainer);
 }
 
-
-
-function getNeedItemsWrapper(neededItemListObject) {
-	var wrapper = $('<div>').attr({
-		"class" : "needed-items-wrapper"
-	});
-	var header = $('<div>').attr({
-		"class" : "needed-items-header uppercase"
-	}).html("needed items");
-	var container = $('<div>').attr({
-		"class" : "needed-items-container clearfix"
-	});
-	var leftContainer = $('<div>').attr({
-		"class" : "needed-items-lc float-left"
-	});
-
-	addNeededDocuments(neededItemListObject, leftContainer, container);
-
-	return wrapper.append(header).append(container);
-}
-
-function addNeededDocuments(neededItemListObject, leftContainer, container) {
-
-	var hasNeeds = false;
-
-	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Income_Assets;
-	if (needType != undefined && needType.length != 0) {
-		leftContainer.append(createdNeededList("Income/Assets", needType));
-		hasNeeds = true;
-	}
-
-	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Credit_Liabilities;
-	if (needType != undefined && needType.length != 0) {
-		leftContainer.append(createdNeededList("Credit/Liabilities", needType));
-		hasNeeds = true;
-	}
-
-	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Property;
-	if (needType != undefined && needType.length != 0) {
-		leftContainer.append(createdNeededList("Property", needType));
-		hasNeeds = true;
-	}
-
-	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.Other;
-	if (needType != undefined && needType.length != 0) {
-		leftContainer.append(createdNeededList("Other", needType));
-		hasNeeds = true;
-	}
-
-	if (!hasNeeds) {
-		var incomeDocCont = $('<div>').attr({
-			"class" : "needed-doc-container"
-		});
-
-		var incDocHeading = $('<div>').attr({
-			"class" : "needed-doc-heading"
-		}).html(newfiObject.i18n.nl_noneeds);
-		incomeDocCont.append(incDocHeading);
-		leftContainer.append(incomeDocCont);
-		container.append(leftContainer);
-		return;
-	}
-
-	var rightContainer = $('<div>').attr({
-		"class" : "needed-items-rc float-right"
-	});
-	container.append(leftContainer).append(rightContainer);
-
-}
 
 
 function createdNeededList(categoryName, elements) {

@@ -15,6 +15,17 @@ function adjustRightPanelOnResize() {
 	}
 }
 
+function setCurrentUserObject(){
+	if(selectedUserDetail==null){
+		currentUserAndLoanOnj.userId = newfiObject.user.id;
+		currentUserAndLoanOnj.activeLoanId = newfiObject.user.defaultLoanId;
+	}else{
+		currentUserAndLoanOnj.userId = selectedUserDetail.userID;
+		currentUserAndLoanOnj.activeLoanId = selectedUserDetail.loanID;
+	}
+	
+}
+
 
 function saveParentMessage(){
 	if(otherUsers.length==0){
@@ -42,10 +53,7 @@ function  doSavemessageAjaxCall(messageText){
 	createdUser.userName = newfiObject.user.displayName;
 	createdUser.roleName = newfiObject.user.userRole.roleDescription;
 	
-	
-	
-	
-	message.loanId = newfiObject.user.defaultLoanId;
+	message.loanId = currentUserAndLoanOnj.activeLoanId;
 	message.parentId = parentId;
 	message.message = messageText;
 	message.createdUser = createdUser;
@@ -70,6 +78,15 @@ function removeOtherUserObject(userId){
 		if(otherUsers[i].userID == userId) {
 	    	otherUsers.splice(i,1);
 	    	break;
+	    }
+	}
+}
+
+function getOtherUserObject(userId){
+	for(i in otherUsers){
+		if(otherUsers[i].userID == userId) {
+	    	return otherUsers[i];
+	    	
 	    }
 	}
 }
@@ -105,7 +122,7 @@ function successCallBackSaveMessage(){
 }
 
 function getConversationsofUser(){
-		ajaxRequest("rest/commlog/"+newfiObject.user.id+"/"+newfiObject.user.defaultLoanId+"/0", "GET", "json", "", paintCommunicationLog);
+		ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/0", "GET", "json", "", paintCommunicationLog);
 }
 
 function paintCommunicationLog(response){
@@ -126,8 +143,9 @@ function paintCommunicationLog(response){
 }
 
 function getLoanTemUsingloanId(){
+	setCurrentUserObject();
 	otherUsers = new Array();
-	ajaxRequest("rest/loan/"+newfiObject.user.defaultLoanId+"/team", "GET","json", "", getCurrentLoanTeamObject);
+	ajaxRequest("rest/loan/"+currentUserAndLoanOnj.activeLoanId+"/team", "GET","json", "", getCurrentLoanTeamObject);
 }
 
 function getCurrentLoanTeamObject(response){
@@ -338,21 +356,22 @@ function paintConversations(conversations){
 		col2.append(profName).append(messageTime);
 		
 		var col3 = $('<div>').attr({
-			"class" : "float-right"
+			"class" : "float-right",
+			"id" : data.id
 		});
-		
-		
 		
 		topRow.append(col1).append(col2);
 		
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
-			if(otherUserBinded[k].userID == newfiObject.user.id)
-				continue;
+			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
+				"id" : otherUserBinded[k].userID,
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
 			});
+			if(otherUserBinded[k].userID == data.createdUser.userID)
+				userImage.hide();
 			col3.append(userImage);
 		}
 		topRow.append(col3);
@@ -417,9 +436,20 @@ function sendMessage(element){
 		message = $(element).val().trim();
 	}
 	console.info("message : "+ message);
+	var newOtherUsers = new Array();
+	$( "#"+parentId+" div" ).each(function( index ) {
+		var userId = $(this).attr('id');
+		if(userId != newfiObject.user.id){
+			newOtherUsers.push(getOtherUserObject(userId));
+		}
+		//setOnlySelectedUser($(this).attr('id'));
+	});
+	otherUsers = newOtherUsers;
 	setReplyToMessageObject(message);
 	//TODO : Writing logic on what happens when a user sends a message
 }
+
+
 
 
 function paintChildConversations(level,conversations){
@@ -463,13 +493,14 @@ function paintChildConversations(level,conversations){
 		var otherUserBinded = data.otherUsers;
 		for(k in otherUserBinded ){
 			
-			if(otherUserBinded[k].userID == newfiObject.user.id)
-				continue;
+			
 			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
 				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
 			});
+			if(otherUserBinded[k].userID == data.createdUser.userID)
+				userImage.hide();
 			col3.append(userImage);
 		}
 		
@@ -479,7 +510,8 @@ function paintChildConversations(level,conversations){
 			"class" : "conv-message"
 		}).html(data.message);
 		var replies = $('<div>').attr({
-			"class" : "reply-cont"
+			"class" : "reply-cont",
+			"onclick" : "setCurrentMessageReplyId('"+data.id+"')"
 		}).html("Reply");
 		
 		conContainer.append(topRow).append(messageContent).append(replies);

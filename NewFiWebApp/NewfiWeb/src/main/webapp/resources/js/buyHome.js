@@ -313,7 +313,7 @@ function getMutipleChoiceQuestion123(quesText,options,name){
 	
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
+		"class" : "ce-buyhome-save-btn"
 	}).html("Save & Continue")
 	.bind('click',function(){
 		buyHomeTeaserRate["beforeTax"] =  $('input[name="beforeTax"]').val();
@@ -482,7 +482,7 @@ function getBuyHomeTextQuestion(quesText,clickEvent,name){
 	optionContainer.append(inputBox);
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
+		"class" : "ce-buyhome-save-btn"
 	}).html("Save & Continue")
 	.bind('click',{'clickEvent':clickEvent,"name":name},function(event){
 		var key = event.data.name;

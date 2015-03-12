@@ -72,6 +72,11 @@ public class FileUploadRest {
 	}
 	
 	
+	@RequestMapping(value="{loanId}/score/get" , method = RequestMethod.GET)
+	public @ResponseBody String getLoanNeedRequirementScore(@PathVariable ("loanId") Integer  loanId ){
+		return new Gson().toJson(needsListService.getNeededItemsScore(loanId));
+	}
+	
 	@RequestMapping(value="/loadneedlist/get" , method = RequestMethod.GET)
 	public @ResponseBody String getLoanNeedList(){
 		return new Gson().toJson(needsListService.getLoanNeedsList(1));
@@ -206,6 +211,7 @@ public class FileUploadRest {
 			uploadFileScreenVO.setListLoanNeedsListVO(loanNeedsVO);
 			uploadFileScreenVO.setListLoanNeedsListMap(listLoanNeedsListMap);
 			uploadFileScreenVO.setListUploadedFilesListVO(uploadedFilesList);
+			uploadFileScreenVO.setNeededItemScoreVO(needsListService.getNeededItemsScore(loanId));
 			commonResponseVO.setResultObject(uploadFileScreenVO);
 		} catch (Exception e) {
 			LOG.info("Exception in needlist/get service "+e.getMessage());
