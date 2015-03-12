@@ -1,11 +1,112 @@
 //Function to paint to loan progress page
 countOfTasks=0;
-function getInternalEmployeeMileStoneContext(workflowId){
-	
-	var internalEmployeeMileStoneContext = {
+var workFlowContext ={
+		init: function(workflowId,loanId){
+			this.workflowId =workflowId;
+			this.loanId =loanId;
+		},
+		
+		workflowId:{},
+		loanId:{},
+		
+		mileStoneSteps:[],
+		mileStoneContextList:{},
+		ajaxRequest	:function (url,type,dataType,data,successCallBack){
+			$.ajax({
+				url : url,
+				type : type,
+				dataType : dataType,
+				data : data,
+				success : successCallBack,
+				error : function(){						
+				}
+			});
+		},
+		getMileStoneSteps: function(callback)
+		{
+			var ob=this;
+			var data={};
+			ob.ajaxRequest("rest/workflow/"+ob.workflowId,"GET","json",data,function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					ob.mileStoneSteps = response.resultObject;										
+				}
+				if(callback){
+					callback(ob);
+				}
+			});
 			
+		},
+		checkIfChild : function (workflowItem)
+		{
+			var ob=this;		
+			if (workflowItem.parentWorkflowItemExec!=null)
+				return true;
+			else
+				return false;
+		},
+		
+		renderMileStoneSteps: function(callback){
+			var ob=this;
+			var workItemExecList=this.mileStoneSteps;				
+			var childList =[];
+			for(var i=0;i<workItemExecList.length;i++){
+				var currentWorkItem = workItemExecList[i];					
+				if (i==0)
+				{
+					parentWorkItem = currentWorkItem;
+				}
+				else if (ob.checkIfChild(currentWorkItem) == false) // It is a parent
+				{	
+					//The next item is a parent.
+					//This is a parent - push all the ones so far in parent		
+					if(childList.length !=0)
+					{							
+						appendAgentMilestoneItemWithChildren(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,childList);						
+						childList =[];							
+					}
+					else
+					{								
+						appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
+					}
+					parentWorkItem = currentWorkItem;
+				}
+				else if (ob.checkIfChild(currentWorkItem) == true && currentWorkItem.parentWorkflowItemExec.id == parentWorkItem.id)
+				{
+					//Keep collecting..						
+					childList.push (currentWorkItem);						
+				}					
+			}
+			//Last item append
+		if (childList.length !=0)
+		{			
+			appendAgentMilestoneItemWithChildren(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, childList);
+		}
+		else if ( childList.length ==0)
+		{			
+			appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
+		}
+		adjustBorderMilestoneContainer();
+		if(callback){
+			callback(ob);
+		}
+		},
+		initialize:function(callback){			
+			this.getMileStoneSteps(function(ob){
+				ob.renderMileStoneSteps();
+			});			
+			if(callback){
+				callback();
+			}
+		}
+};
+function getInternalEmployeeMileStoneContext(workflowId, mileStoneId){
+	
+	var internalEmployeeMileStoneContext = {			
 			workflowId:workflowId,
-			workItemExecList:{},
+			mileStoneId:mileStoneId,
+			
 			ajaxRequest	:function (url,type,dataType,data,successCallBack){
 				$.ajax({
 					url : url,
@@ -16,88 +117,7 @@ function getInternalEmployeeMileStoneContext(workflowId){
 					error : function(){						
 					}
 				});
-			},
-			
-	getWorkFlowItemStatuses: function(callback)
-	{
-		var ob=this;
-		var data={};
-		ob.workItemExecList={};
-		ob.ajaxRequest("rest/workflow/"+ob.workflowId,"GET","json",data,function(response){
-			if(response.error){
-				showToastMessage(response.error.message)
-			}else{
-				var workItemExecList=response.resultObject;				
-				var childList =[];
-				for(var i=0;i<workItemExecList.length;i++){
-					var currentWorkItem = workItemExecList[i];					
-					if (i==0)
-					{
-						parentWorkItem = currentWorkItem;
-					}
-					else if (ob.checkIfChild(currentWorkItem) == false) // It is a parent
-					{	
-						//The next item is a parent.
-						//This is a parent - push all the ones so far in parent		
-						if(childList.length !=0)
-						{							
-							appendAgentMilestoneItemWithChildren(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,parentWorkItem.stateInfo,childList);						
-							childList =[];							
-						}
-						else
-						{								
-							appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
-						}
-						parentWorkItem = currentWorkItem;
-					}
-					else if (ob.checkIfChild(currentWorkItem) == true && currentWorkItem.parentWorkflowItemExec.id == parentWorkItem.id)
-					{
-						//Keep collecting..						
-						childList.push (currentWorkItem);						
-					}					
-				}
-				//Last item append
-
-				//appendAgentMilestoneItem(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo);
-				
-				
-			if (childList.length !=0)
-			{
-				
-				appendAgentMilestoneItemWithChildren(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo,childList);
-			}
-			else if ( childList.length ==0)
-			{
-				
-			appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
-			}
-			adjustBorderMilestoneContainer();
-			if(callback){
-				callback(ob);
-			}
-			}
-			
-		});
-	},
-	
-	checkIfChild : function (workflowItem)
-	{
-		var ob=this;		
-		if (workflowItem.parentWorkflowItemExec!=null)
-			return true;
-		else
-			return false;
-	},
-	
-	initialize:function(callback){
-		this.getWorkFlowItemStatuses(function(ob){
-			
-		});
-		
-		if(callback){
-			callback();
-		}
-	}
+			},	
 };
 	return internalEmployeeMileStoneContext;
 }
@@ -146,8 +166,7 @@ function getCustomerMilestoneLoanProgressHeaderBarStep(status,step,heading){
 		col.addClass('m-step-in-progress');
 	}else if(status == "NOT_STARTED"){
 		col.addClass('m-step-not-started');
-	}
-	
+	}	
 	var stepText = $('<div>').attr({
 		"class" : "milestone-header-step-text"
 	}).html(step);
@@ -404,7 +423,7 @@ function appendMilestoneTeam(){
 }
 
 //Function to append pop up to add a team member in loan
-function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
+function appendMilestoneAddTeamMemberPopup(loanID,itemToAppendTo,data){
 	var wrapper = $('<div>').attr({
 		"id" : "ms-add-member-popup",
 		"class" : "ms-add-member-popup"
@@ -414,7 +433,7 @@ function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
 	//$(itemToAppendTo).html("");
 	if($('#ms-add-member-popup').length==0)
 	$(itemToAppendTo).append(wrapper);
-	appendAddTeamMemberWrapper('ms-add-member-popup',true);
+	appendAddTeamMemberWrapper('ms-add-member-popup',true,data);
 }
 
 $(document).click(function(){
@@ -734,27 +753,6 @@ function paintMilestoneCustomerProfileDetails(){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * JavaScript functions for loan manager Agent page
- */
-
-
-
-
-
-
 //Function to paint to loan progress page
 function paintAgentLoanProgressPage(){
 	
@@ -785,14 +783,10 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 	
-	var lmMileStoneContext=getInternalEmployeeMileStoneContext(3);//
-	lmMileStoneContext.initialize(function(){		
-		
-		
-				
-		
+	workFlowContext.init(3,4);
+	workFlowContext.initialize(function(){		
 	});
-	lmContext=lmMileStoneContext;
+	lmContext=workFlowContext;
 	//Append agent page loan progress milestones
 	
 	
@@ -844,6 +838,11 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 		"class" : rightLeftClass+"-header-txt " +floatClass
 	}).html(displayContent);
 	
+	var headerCheckBox = $('<div>').attr({
+		  "class" : "ms-check-box-header box-border-box " +floatClass,
+		  "data-checked" : "checked"
+		 });
+	headerTxt.append(headerCheckBox);
 	header.append(headerTxt);
 
 	wrapper.append(rightBorder).append(header);
@@ -854,15 +853,28 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 			"mileNotificationId" : itemId,
 			"data-text" : stateInfo
 		}).html(stateInfo);	
+		
 		txtRow1.bind("click",function(e){milestoneChildEventHandler(e)});
+		
+		var itemCheckBox = $('<div>').attr({
+			   "class" : "ms-check-box box-border-box " + floatClass,
+			   "data-checked" : "unchecked"
+			  }).on('click',function(){
+			   if($(this).attr("data-checked") == "checked"){
+			    $(this).attr("data-checked","unchecked");
+			   }else{
+			    $(this).attr("data-checked","checked");
+			   }  
+			  });
+			  
+		txtRow1.append(itemCheckBox);
+		
 		wrapper.append(txtRow1);
 	}
-
-	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
-function appendAgentMilestoneItemWithChildren(itemId, status, displayContent, inputText, childList){
+function appendAgentMilestoneItemWithChildren(itemId, status, displayContent, childList){
 	countOfTasks++;
 	var rightLeftClass =  "milestone-lc";
 	var floatClass = "float-right";
@@ -890,6 +902,12 @@ function appendAgentMilestoneItemWithChildren(itemId, status, displayContent, in
 		"class" : rightLeftClass+"-header-txt "+floatClass
 	}).html(displayContent);
 	
+	var headerCheckBox = $('<div>').attr({
+		  "class" : "ms-check-box-header box-border-box " +floatClass,
+		  "data-checked" : "checked"
+		 });
+	headerTxt.append(headerCheckBox);
+	
 	header.append(headerTxt);
 	var workItem = wrapper.append(rightBorder).append(header);
 	
@@ -899,14 +917,23 @@ function appendAgentMilestoneItemWithChildren(itemId, status, displayContent, in
 			"mileNotificationId" : itemId,
 			"data-text" : childList[index].displayContent
 		}).html(childList[index].displayContent);	
-		txtRow1.bind("click",function(e){milestoneChildEventHandler(e)});		
+		txtRow1.bind("click",function(e){milestoneChildEventHandler(e)});
+		var itemCheckBox = $('<div>').attr({
+			   "class" : "ms-check-box box-border-box " + floatClass,
+			   "data-checked" : "unchecked"
+			  }).on('click',function(){
+			   if($(this).attr("data-checked") == "checked"){
+			    $(this).attr("data-checked","unchecked");
+			   }else{
+			    $(this).attr("data-checked","checked");
+			   }  
+			  });
+			  
+		txtRow1.append(itemCheckBox);
 		workItem.append(txtRow1);
 	}	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
-
-
-
 
 function milestoneChildEventHandler(event){
 	//condition need to be finalized for identifying each element
@@ -916,10 +943,12 @@ function milestoneChildEventHandler(event){
 		data.OTHURL="rest/workflow/milestone/alert"
 		data.milestoneId=event.target.getAttribute("milenotificationid");
 		addNotificationPopup(selectedUserDetail.loanID,event.target,data);
-	}
-	
+	}	
 	else if($(event.target).attr("data-text")=="Click here to add a Team Member"){		
-		var teamTable = getMilestoneTeamMembeTable();		
-		appendMilestoneAddTeamMemberPopup(event.target);
+		var teamTable = getMilestoneTeamMembeTable();	
+		var data={};		
+		data.OTHURL="rest/workflow/milestone/addMember"
+		data.loanID=selectedUserDetail.loanID;
+		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,event.target,data);
 	}
 }
