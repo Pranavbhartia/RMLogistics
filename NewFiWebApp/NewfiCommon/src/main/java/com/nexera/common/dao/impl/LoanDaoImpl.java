@@ -9,8 +9,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +26,9 @@ import com.nexera.common.exception.DatabaseException;
 @Component
 public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LoanDaoImpl.class);
-	
-	
-	
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LoanDaoImpl.class);
+
 	@Override
 	public List<Loan> getLoansOfUser(User user) {
 
@@ -110,7 +107,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					Hibernate.initialize(user.getInternalUserDetail());
 				if (user.getInternalUserDetail() != null) {
 					Hibernate.initialize(user.getInternalUserDetail()
-							.getInternaUserRoleMaster());
+					        .getInternaUserRoleMaster());
 				}
 				userList.add(user);
 			}
@@ -155,22 +152,23 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
 	}
 
 	@Override
-
 	public Loan getActiveLoanOfUser(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Loan.class);
 		criteria.add(Restrictions.eq("user", user));
-		/*criteria.createAlias("loanStatus", "ls");
-		criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));*/
+		/*
+		 * criteria.createAlias("loanStatus", "ls");
+		 * criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
+		 */
 		return (Loan) criteria.uniqueResult();
 	}
-	
+
 	@Override
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel) {
 
@@ -183,10 +181,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 			if (loanTeamList != null) {
 				for (LoanTeam loanTeam : loanTeamList) {
-				    Hibernate.initialize(loanTeam.getLoan());
+					Hibernate.initialize(loanTeam.getLoan());
 					Loan loan = loanTeam.getLoan();
-					loanListForUser.add( loan );
-				
+					loanListForUser.add(loan);
+
 				}
 			}
 
@@ -194,13 +192,13 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-					"Exception caught in retrieveLoanForDashboard() ",
-					hibernateException);
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
 		}
 	}
 
 	@Override
-	public Loan retrieveLoanForDashboard(User parseUserModel,Loan loan) {
+	public Loan retrieveLoanForDashboard(User parseUserModel, Loan loan) {
 
 		try {
 			Loan loanForUser = null;
@@ -211,22 +209,20 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			LoanTeam loanTeam = (LoanTeam) criteria.uniqueResult();
 
 			if (loanTeam != null) {
-				
-				    Hibernate.initialize(loanTeam.getLoan());
-				    loanForUser = loanTeam.getLoan();
-				
-				
+
+				Hibernate.initialize(loanTeam.getLoan());
+				loanForUser = loanTeam.getLoan();
+
 			}
 
 			return loanForUser;
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-					"Exception caught in retrieveLoanForDashboard(User parseUserModel,Loan loan) ",
-					hibernateException);
+			        "Exception caught in retrieveLoanForDashboard(User parseUserModel,Loan loan) ",
+			        hibernateException);
 		}
 	}
-
 
 	@Override
 	public Loan getLoanWithDetails(Integer loanID) {
@@ -245,7 +241,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		return loan;
 	}
-	
+
 	@Override
 	public Loan getLoanWorkflowDetails(Integer loanID) {
 		Session session = sessionFactory.getCurrentSession();
@@ -260,65 +256,74 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		return loan;
 	}
+
 	/**
 	 * 
-	 */ 
+	 */
 	@Override
-	public List<LoanTeam> getLoanTeamList( Loan loan ){
-	    
-	    try{
-	        Session session = sessionFactory.getCurrentSession();
-	        Criteria criteria = session.createCriteria(LoanTeam.class);
-	        criteria.add(Restrictions.eq("loan.id", loan.getId()));
-	        List<LoanTeam> team = criteria.list();
-	        
-	        return team;       
-	    }catch (HibernateException hibernateException) {
-	        throw new DatabaseException("Exception caught in retrieveLoanForDashboard() ", hibernateException);
-        }
-	    
+	public List<LoanTeam> getLoanTeamList(Loan loan) {
+
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("loan.id", loan.getId()));
+			List<LoanTeam> team = criteria.list();
+
+			return team;
+		} catch (HibernateException hibernateException) {
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
+
 	}
-	
+
 	/**
      * 
-     */ 
-    @Override
-    public List<Loan> getLoansForUser( Integer userID ){
-        
-        Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(Loan.class);
-        criteria.add(Restrictions.eq("user.id", userID));
-        List<Loan> loanList = criteria.list();
-        return loanList;
-    }
+     */
+	@Override
+	public List<Loan> getLoansForUser(Integer userID) {
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		criteria.add(Restrictions.eq("user.id", userID));
+		List<Loan> loanList = criteria.list();
+		return loanList;
+	}
 
 	@Override
 	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId) {
 		Session session = sessionFactory.getCurrentSession();
-		LoanNeedsList loannNeedList = (LoanNeedsList) session.load(LoanNeedsList.class, loanNeedId);
+		LoanNeedsList loannNeedList = (LoanNeedsList) session.load(
+		        LoanNeedsList.class, loanNeedId);
 		return loannNeedList.getUploadFileId();
 	}
 
 	@Override
 	public Integer getNeededItemsRequired(Integer loanId) {
-		
+
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria =    session.createCriteria(LoanNeedsList.class).createAlias("loan", "loanList").add(Restrictions.eq("loanList.id", loanId));
-		LOG.info("criteria : "+criteria);
-		Integer result =  (Integer) criteria.list().size();
-		LOG.info("criteria result: "+result);
-		return result ;
+		Criteria criteria = session.createCriteria(LoanNeedsList.class)
+		        .createAlias("loan", "loanList")
+		        .add(Restrictions.eq("loanList.id", loanId));
+		LOG.info("criteria : " + criteria);
+		Integer result = (Integer) criteria.list().size();
+		LOG.info("criteria result: " + result);
+		return result;
 	}
 
 	@Override
 	public Integer getTotalNeededItem(Integer loanId) {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria =    session.createCriteria(LoanNeedsList.class).createAlias("loan", "loanList")
-									.add(Restrictions.eq("loanList.id", loanId)).createAlias("uploadFileId", "upload").add(Restrictions.isNotNull("upload.id"));
-		LOG.info("criteria : "+criteria);
-		Integer result =  (Integer) criteria.list().size();
-		LOG.info("criteria result: "+result);
-		return result ;
+		Criteria criteria = session.createCriteria(LoanNeedsList.class)
+		        .createAlias("loan", "loanList")
+		        .add(Restrictions.eq("loanList.id", loanId))
+		        .createAlias("uploadFileId", "upload")
+		        .add(Restrictions.isNotNull("upload.id"));
+		LOG.info("criteria : " + criteria);
+		Integer result = (Integer) criteria.list().size();
+		LOG.info("criteria result: " + result);
+		return result;
 	}
 
 }
