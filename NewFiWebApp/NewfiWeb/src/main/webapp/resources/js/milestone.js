@@ -167,7 +167,11 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else
 			{
-				return;
+				txtRow1.html(workItem.stateInfo);
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+				itemToAppendTo.append(txtRow1);;
 			}
 						
 			ob.ajaxRequest(ajaxURL, "GET", "json", data,
