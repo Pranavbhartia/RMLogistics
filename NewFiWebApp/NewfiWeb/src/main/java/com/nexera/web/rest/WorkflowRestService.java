@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.MilestoneNotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.web.rest.util.RestUtil;
@@ -127,7 +128,37 @@ public class WorkflowRestService
         }
         return response;
     }
+    @RequestMapping(value = "/milestone/sendMail", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO sendMail(
 
+	@RequestBody String milestoneNotificationStr) {
+
+		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
+		CommonResponseVO response = null;
+		try {
+
+			Gson gson = new Gson();
+			EmailNotificationVo emailNotificationVo = gson.fromJson(
+			        milestoneNotificationStr, EmailNotificationVo.class);
+			LOG.info("workflowItem ID" + emailNotificationVo.getMilestoneId());
+			
+			String stateInfo = "";// Make a call to Workflow Engine which will
+			                      // call the renderStateInfo
+			// to the work flow engine pass the loanId.. as Object[]..
+			Object params[]=new Object[3];
+			params[0]=emailNotificationVo.getEmailId();
+			params[1]=emailNotificationVo.getParams();
+			engineTrigger.startWorkFlowItemExecution(emailNotificationVo.getMilestoneId(),params);
+			
+			response = RestUtil.wrapObjectForSuccess(stateInfo);
+			LOG.debug("Response" + response);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
 
     @RequestMapping ( value = "{workflowId}", method = RequestMethod.GET)
     public @ResponseBody CommonResponseVO getWorkflowItems( @PathVariable int workflowId )
