@@ -28,12 +28,13 @@ public interface CommonConstants {
 
 	int PAGINATION_SIZE = 5;
 
+	public static final String DEFAULT_FROM_ADDRESS = "newfiportal";
+
 	public static final String MESSAGE_PROPERTIES_FILE = "displaymessage.properties";	
 	public static final String LABEL_PROPERTIES_FILE = "message.properties";
 	public static final String CONFIG_PROPERTIES_FILE = "config.properties";
 	public static final String DEFAULT_LOCALE="en_US";
 	
-
 	/**
 	 * Braintree constants
 	 */
@@ -42,4 +43,5 @@ public interface CommonConstants {
 	public static final String MESSAGE_KEY = "message";
 	public static final int SUCCESS = 1;
 	public static final int FAILURE = 0;
+
 }

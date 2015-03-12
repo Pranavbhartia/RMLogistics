@@ -6,12 +6,17 @@ import org.springframework.stereotype.Component;
 /**
  * Entity containing the smtp settings for sending mail
  */
+@Component
 public class SmtpSettings {
 
 	@Value("${SMTP_HOST}")
 	private String mailHost;
 	@Value("${SMTP_PORT}")
 	private int mailPort;
+	@Value("${SENDGRID_USERNAME}")
+	private String senderName;
+	@Value("${SENDGRID_PASSWORD}")
+	private String senderPassword;
 
 	public static String MAIL_SMTP_AUTH = "true";
 	public static String MAIL_SMTP_STARTTLS_ENABLE = "true";
@@ -33,10 +38,26 @@ public class SmtpSettings {
 		this.mailPort = mailPort;
 	}
 
+	public String getSenderName() {
+		return senderName;
+	}
+
+	public String getSenderPassword() {
+		return senderPassword;
+	}
+
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
+	}
+
+	public void setSenderPassword(String senderPassword) {
+		this.senderPassword = senderPassword;
+	}
+
 	@Override
 	public String toString() {
 		return "SmtpSettings [mailHost=" + mailHost + ", mailPort=" + mailPort
-				+ "]";
+		        + "]";
 	}
 
 }

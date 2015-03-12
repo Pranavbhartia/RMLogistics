@@ -914,9 +914,9 @@ a,a:hover,a:visited {
 }
 
 .needed-items-rc {
-	width: 175px;
+
 	height: 175px;
-	background: url(../images/progress.png) no-repeat center;
+	
 }
 
 .needed-doc-heading {
@@ -3525,4 +3525,8 @@ input.calc-input {
 
 .ms-add-notification-popup:after{
 	right:80px;
+}
+
+.dial{
+	font-family: 'opensanssemibold' !important;
 }

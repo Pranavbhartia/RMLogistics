@@ -9,4 +9,6 @@ public interface SendGridEmailService {
 	public void sendMail(EmailVO emailEntity) throws InvalidInputException,
 			UndeliveredEmailException;
 
+	void sendAsyncMail(EmailVO emailEntity);
+
 }

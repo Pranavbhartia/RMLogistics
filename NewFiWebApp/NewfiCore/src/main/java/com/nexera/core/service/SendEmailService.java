@@ -10,9 +10,10 @@ import com.nexera.common.vo.email.EmailVO;
 public interface SendEmailService {
 
 	/**
-	 * Sends mail with subject and body provided as raw text
+	 * Sends mail with subject and body provided as raw text, Set sync = false for delivering the mail asynchronously
 	 */
-	public boolean sendMail(EmailVO emailEntity) throws InvalidInputException,
-			UndeliveredEmailException;
+
+	boolean sendMail(EmailVO emailEntity, boolean sync)
+            throws InvalidInputException, UndeliveredEmailException;
 
 }

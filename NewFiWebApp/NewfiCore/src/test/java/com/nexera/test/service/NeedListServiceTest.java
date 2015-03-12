@@ -21,5 +21,10 @@ public class NeedListServiceTest {
 	public void testGetLoanNeedsMap() {
 		needListService.getLoanNeedsMap(1);
 	}
+	
+	@Test
+	public void testGetNeededItemsScore(){
+		//System.out.println(needListService.getNeededItemsScore());
+	}
 
 }

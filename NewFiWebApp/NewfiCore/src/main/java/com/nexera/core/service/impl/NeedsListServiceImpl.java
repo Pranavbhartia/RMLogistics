@@ -25,6 +25,7 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
+import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.common.vo.NeedsListMasterVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.NeedsListService;
@@ -38,7 +39,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private NeedsDao needsDao;
 
 	@Autowired
-	Utils utils;
+	private Utils utils;
 	
 	@Autowired
 	private LoanDao loanDao;
@@ -374,6 +375,10 @@ public class NeedsListServiceImpl implements NeedsListService {
 			return 0;
 		}
 	}
+	
+	
+	
+	
 
 	@Override
 	public Map<String, List<LoanNeedsListVO>> getLoanNeedsMap(Integer loanId) {
@@ -399,6 +404,16 @@ public class NeedsListServiceImpl implements NeedsListService {
 			listVOs.add(buildLoanNeedsListVO(loanNeeds));
 		}
 		return map;
+	}
+
+	@Override
+	public NeededItemScoreVO getNeededItemsScore(Integer loanId) {
+		Integer neededItemRequired  = loanDao.getNeededItemsRequired(loanId);
+		Integer totalNeededItem  = loanDao.getTotalNeededItem(loanId);
+		NeededItemScoreVO neededItemScoreVO = new NeededItemScoreVO();
+		neededItemScoreVO.setNeededItemRequired(neededItemRequired);
+		neededItemScoreVO.setTotalSubmittedItem(totalNeededItem);
+		return neededItemScoreVO;
 	}
 
 }

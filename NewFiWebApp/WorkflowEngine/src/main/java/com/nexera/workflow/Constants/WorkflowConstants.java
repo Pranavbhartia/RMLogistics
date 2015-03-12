@@ -18,4 +18,11 @@ public class WorkflowConstants
     public static final String FAILURE = "failure";
 
     public static final String PENDING = "pending";
+
+    public static final String RENDER_STATE_INFO_METHOD = "renderStateInfo";
+
+    public static final String EXECUTE_METHOD = "execute";
+    
+    public static final String LOAN_MANAGER_WORKFLOW_TYPE = "";
+    public static final String CUSTOMER_WORKFLOW_TYPE = "";
 }
