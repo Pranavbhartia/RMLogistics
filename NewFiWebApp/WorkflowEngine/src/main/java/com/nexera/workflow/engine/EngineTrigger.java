@@ -103,11 +103,11 @@ public class EngineTrigger {
 
 	}
 
-	public void startWorkFlowItemExecution(int workflowItemExecutionId) {
+	public void startWorkFlowItemExecution(int workflowItemExecutionId,
+	        Object[] params) {
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
-		if (!cacheManager.isInitialized()) {
-			executorService = cacheManager.initializePool();
-		}
+
+		executorService = cacheManager.initializePool();
 
 		WorkflowItemExec workflowItemExecution = workflowService
 		        .getWorkflowExecById(workflowItemExecutionId);
@@ -137,6 +137,7 @@ public class EngineTrigger {
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
+				workflowManager.setParams(params);
 				executorService.execute(workflowManager);
 
 				executorService.shutdown();
@@ -175,7 +176,7 @@ public class EngineTrigger {
 				LOGGER.debug("Doesnt have a parent, can be the parent or can be independent ");
 				List<WorkflowItemExec> childWorkflowItemExecList = workflowService
 				        .getWorkflowItemListByParentWorkflowExecItem(workflowItemExecution);
-				if (childWorkflowItemExecList != null) {
+				if (!childWorkflowItemExecList.isEmpty()) {
 					LOGGER.debug(" The item id belongs to parent "
 					        + workflowItemExecution);
 					LOGGER.debug("Updating the workflow item execution status to started ");
@@ -191,6 +192,7 @@ public class EngineTrigger {
 						        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
 						workflowManager
 						        .setWorkflowItemExec(childWorkflowItemExec);
+						workflowManager.setParams(params);
 						executorService.execute(workflowManager);
 					}
 					executorService.shutdown();
@@ -226,6 +228,7 @@ public class EngineTrigger {
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					workflowManager.setWorkflowItemExec(workflowItemExecution);
+					workflowManager.setParams(params);
 					executorService.execute(workflowManager);
 					executorService.shutdown();
 					try {
@@ -295,8 +298,8 @@ public class EngineTrigger {
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
 				        new Class[] { String[].class });
-				
-				result = (String) method.invoke(obj, new Object[]{params});
+
+				result = (String) method.invoke(obj, new Object[] { params });
 
 			} catch (ClassNotFoundException e) {
 				LOGGER.debug("Class Not Found " + e.getMessage());
