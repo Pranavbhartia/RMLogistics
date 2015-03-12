@@ -193,7 +193,14 @@ public class RateCalculatorRestService {
 	}
 
 
-	
+	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
+
+	public @ResponseBody String getTeaserRateValue(String teaseRate) {
+		
+		System.out.println(teaseRate);
+		return teaseRate;		
+		
+	}
 	
 
 }
