@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.LoanCustomerVO;
@@ -130,9 +131,10 @@ public class LoanRestService {
 	public @ResponseBody CommonResponseVO retrieveLoanForDashboard(@PathVariable Integer loanID) {
 		
 		User user=utils.getLoggedInUser();
-		if(user==null)
-			return RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in.");
-		
+		if(user==null){
+			throw new BaseRestException();
+			//return RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in.");
+		}
 		UserVO userVO = userProfileService.buildUserVO(user);
 		LoanVO loanVO=new LoanVO();
 		loanVO.setId(loanID);
