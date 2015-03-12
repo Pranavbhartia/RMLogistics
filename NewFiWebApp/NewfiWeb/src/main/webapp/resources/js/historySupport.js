@@ -53,7 +53,7 @@ function bindDataToPN() {
 			break;
 		case "lp-loan-wrapper":
 			$.data(this, "enum", {
-				pnName : PNEnum.LOAN
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
