@@ -22,7 +22,8 @@ function adjustCustomerNameWidth() {
 
 function getAgentSecondaryLeftNav() {
 	var leftTab2Wrapper = $('<div>').attr({
-		"class" : "lp-t2-wrapper"
+		"class" : "lp-t2-wrapper",
+		"id" : "agent-sec-nav"
 	});
 
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
