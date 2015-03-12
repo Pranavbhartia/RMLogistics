@@ -615,8 +615,7 @@ function appendSchedulerContainer(contxt) {
 	});
 }
 
-function getSchedulerContainer(contxt, tempData) {
-
+function getSchedulerContainer(contxt,tempData){
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -626,19 +625,15 @@ function getSchedulerContainer(contxt, tempData) {
 	var header = $('<div>').attr({
 		"class" : "cust-detail-header"
 	}).html("scheduler");
-
 	var dtPickerRow = $('<div>').attr({
 		"class" : "dt-picker-row clearfix"
 	});
-
 	var dtText = $('<div>').attr({
 		"class" : "dt-picker-text float-left"
 	}).html("Date/Time");
-
 	var datePicker = $('<div>').attr({
 		"class" : "date-picker-cont float-left"
 	});
-
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY",
@@ -647,95 +642,82 @@ function getSchedulerContainer(contxt, tempData) {
 		orientation : "top auto",
 		autoclose : true
 	});
-
 	datePicker.append(datePickerBox);
-
 	var timerPicker = $('<div>').attr({
 		"id" : "sch-msg-time-picker",
 		"class" : "time-picker-cont float-left"
 	});
-
 	var timerPickerBox = $('<input>').attr({
 		"class" : "time-picker-input",
 		"placeholder" : "11:58AM"
 	});
 	timerPicker.append(timerPickerBox);
 	dtPickerRow.append(dtText).append(datePicker).append(timerPicker);
-
 	var messageBox = $('<textarea>').attr({
 		"class" : "scheduled-msg-textbox",
 		"placeholder" : "Type your message here. When done click submit",
 		"id" : "sch-msg-message"
 	});
-
 	var buttonRow = $('<div>').attr({
 		"class" : "msg-btn-row clearfix"
 	});
-
 	var col1 = $('<div>').attr({
 		"class" : "msg-btn-col1 float-left clearfix"
 	});
-
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind(
-			"click",
-			{
-				contxt : contxt,
-				tempData : tempData
-			},
-			function(e) {
-				var tempData = e.data.tempData;
-				var dat = $('#sch-msg-time-picker ').data('DateTimePicker')
-						.getDate()._d
-				var snoozeTime = $('#sch-msg-date-picker').data('datepicker')
-						.getDate();
-				snoozeTime.setHours(dat.getHours());
-				snoozeTime.setMinutes(dat.getMinutes())
-				var message = $("#sch-msg-message").val();
-				if (message == "") {
-					showToastMessage("Invalid Message");
-				} else if (snoozeTime == "Invalid Date") {
-					showToastMessage("Invalid Date");
-				} else {
-					var data = {};
-					if (tempData) {
-						for (key in tempData) {
-							data[key] = tempData[key];
-						}
-					}
-					data.content = message;
-					data.createdDate = new Date().getTime();
-					data.remindOn = snoozeTime.getTime();
-					data.createdByID = newfiObject.user.id;
-					data.createdForID = newfiObject.user.id;
-					contxt.scheduleAEvent(data, function() {
-						contxt.updateWrapper();
-						contxt.updateLoanListNotificationCount();
-						$("#sch-msg-message").val("");
-					});
+	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
+		var tempData=e.data.tempData;
+		var contxt=e.data.contxt;
+		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d
+		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
+		snoozeTime.setHours(dat.getHours());
+		snoozeTime.setMinutes(dat.getMinutes())
+		var message=$("#sch-msg-message").val();
+		if(message==""){
+			showToastMessage("Invalid Message");
+		}else if(snoozeTime=="Invalid Date"){
+			showToastMessage("Invalid Date");
+		}else{
+			var data={};
+			data.content=message;
+			data.createdDate=new Date().getTime();
+			data.remindOn=snoozeTime.getTime();
+			data.createdByID=newfiObject.user.id;
+			data.createdForID=newfiObject.user.id;
+			data.loanID=contxt.loanId;
+			data.notificationType="NOTIFICATION";
+			if(tempData){
+				var wrapperData={};
+				for(key in tempData){
+					wrapperData[key]=tempData[key];
+				}
+				wrapperData.notificationVo=data;
+				data=wrapperData;
+			}
+			contxt.scheduleAEvent(data,function(){
+				contxt.updateWrapper();
+				contxt.updateLoanListNotificationCount();
+				$("#sch-msg-message").val("");
+				if(tempData){
+					removeNotificationPopup();
 				}
 			});
+		}
+	});
 	col1.append(col1Btn);
-
 	var col2 = $('<div>').attr({
 		"class" : "msg-btn-col2 float-left"
 	}).html("or");
-
 	var col3 = $('<div>').attr({
 		"class" : "msg-btn-col3 float-left clearfix"
 	});
-
 	var col3Btn = $('<div>').attr({
 		"class" : "msg-btn-clear float-left"
 	}).html("Clear");
 	col3.append(col3Btn);
-
 	buttonRow.append(col1).append(col2).append(col3);
-
-	container.append(header).append(dtPickerRow).append(messageBox).append(
-			buttonRow);
-
+	container.append(header).append(dtPickerRow).append(messageBox).append(buttonRow);
 	wrapper.append(container);
 	return wrapper;
 }
