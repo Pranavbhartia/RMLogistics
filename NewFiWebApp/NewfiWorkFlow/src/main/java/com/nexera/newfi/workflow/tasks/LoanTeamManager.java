@@ -16,19 +16,23 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	LoanService loanService;
 
 	public String execute(Object[] inputs) {
-		// TODO Auto-generated method stub
+		int loanID = Integer.parseInt(inputs[0].toString());
+		LoanVO loanVO = new LoanVO();
+		loanVO.setId(loanID);
+		int userID = Integer.parseInt(inputs[1].toString());
+		UserVO userVO = new UserVO();
+		userVO.setId(userID);
+		loanService.addToLoanTeam(loanVO, userVO);
 		return null;
 	}
 
 	public String renderStateInfo(String[] inputs) {
-
 		Integer loanId = Integer.parseInt(inputs[0]);
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanId);
 		List<UserVO> loanTeam = loanService.retreiveLoanTeam(loanVO);
 		Gson gson = new Gson();
 		return gson.toJson(loanTeam);
-
 	}
 
 	public Object[] getParamsForExecute() {

@@ -84,13 +84,13 @@ public class WorkflowRestService {
 		LOG.info("workflowItemExecId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
-
 			LOG.info("loanId----" + loanId);
 			/*
 			 * String stateInfo = "";// Make a call to Workflow Engine which
 			 * will call the renderStateInfo // to the work flow engine pass the
 			 * loanId.. as Object[]..
-			 */String[] params = new String[1];
+			 */
+			String[] params = new String[1];
 			params[0] = String.valueOf(loanId);
 			String stateInfo = engineTrigger.getRenderStateInfoOfItem(
 			        workflowItemId, params);
@@ -106,13 +106,11 @@ public class WorkflowRestService {
 
 	@RequestMapping(value = "/milestone/alert", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
-
 	@RequestBody String milestoneNotificationStr) {
 
 		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
 		CommonResponseVO response = null;
 		try {
-
 			Gson gson = new Gson();
 			MilestoneNotificationVO milestoneNoticationVO = gson.fromJson(
 			        milestoneNotificationStr, MilestoneNotificationVO.class);
@@ -120,7 +118,6 @@ public class WorkflowRestService {
 			String stateInfo = "";// Make a call to Workflow Engine which will
 			                      // call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
-
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -131,6 +128,7 @@ public class WorkflowRestService {
 		return response;
 	}
 
+	
 	@RequestMapping(value = "{workflowId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getWorkflowItems(
 	        @PathVariable int workflowId) {
