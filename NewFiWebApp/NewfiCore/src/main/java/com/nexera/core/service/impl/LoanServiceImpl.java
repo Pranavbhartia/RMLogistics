@@ -172,7 +172,15 @@ public class LoanServiceImpl implements LoanService
         loanVo.setUser( userProfileService.buildUserVO( loan.getUser() ) );
 
         loanVo.setLoanDetail( this.buildLoanDetailVO( loan.getLoanDetail() ) );
-
+        if(loan.getCustomerWorkflow()!= null)
+        {
+        	loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId()); 
+        }
+        if(loan.getLoanManagerWorkflow()!= null)
+        {
+        	loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow().getId()); 
+        }
+        
         return loanVo;
 
     }

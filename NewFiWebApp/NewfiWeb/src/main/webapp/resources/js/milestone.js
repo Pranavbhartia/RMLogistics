@@ -22,6 +22,22 @@ var workFlowContext ={
 				}
 			});
 		},
+		getWorkflowID: function(callback)
+		{
+			var ob=this;
+			var data={};
+			ob.ajaxRequest("rest/workflow/"+ob.loanId,"GET","json",data,function(response){
+				if(response.error){
+					showToastMessage(response.error.message)
+				}else{
+					ob.workflowId = response.resultObject;										
+				}
+				if(callback){
+					callback(ob);
+				}
+			});
+			
+		},
 		getMileStoneSteps: function(callback)
 		{
 			var ob=this;
@@ -783,7 +799,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 	
-	workFlowContext.init(3,4);
+	workFlowContext.init(1,selectedUserDetail.loanID);
 	workFlowContext.initialize(function(){		
 	});
 	lmContext=workFlowContext;

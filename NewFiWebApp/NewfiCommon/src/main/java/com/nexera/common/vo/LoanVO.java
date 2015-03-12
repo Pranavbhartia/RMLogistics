@@ -30,6 +30,25 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
+	
+	private int customerWorkflowID;
+	private int loanManagerWorkflowID;
+
+	public int getCustomerWorkflowID() {
+		return customerWorkflowID;
+	}
+
+	public void setCustomerWorkflowID(int customerWorkflowID) {
+		this.customerWorkflowID = customerWorkflowID;
+	}
+
+	public int getLoanManagerWorkflowID() {
+		return loanManagerWorkflowID;
+	}
+
+	public void setLoanManagerWorkflowID(int loanManagerWorkflowID) {
+		this.loanManagerWorkflowID = loanManagerWorkflowID;
+	}
 
 	public LoanVO(int loanId) {
 	    this.id = loanId;
