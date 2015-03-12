@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.workflow.Constants.Status;
@@ -19,7 +18,6 @@ import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.service.WorkflowService;
 
@@ -40,6 +38,9 @@ public class WorkflowManager implements Runnable {
 	private Object[] params;
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	/**
       * 
@@ -72,12 +73,11 @@ public class WorkflowManager implements Runnable {
 			String className = workflowTaskConfigMaster.getClassName();
 			String systemSpecificParameter = workflowTaskConfigMaster
 			        .getParams();
-			if(systemSpecificParameter == null)
-			{
-				//TODO temporary solution
+			if (systemSpecificParameter == null) {
 				systemSpecificParameter = "";
 			}
 			String[] systemSpecificParams = systemSpecificParameter.split(",");
+
 			if (systemSpecificParams[0] == "") {
 				params = itemSpecificParams;
 			} else {
@@ -95,15 +95,10 @@ public class WorkflowManager implements Runnable {
 
 			LOGGER.debug("Calling java reflection api to invoke method with specified params ");
 			try {
-				
-				ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-				        "spring\\workflow-engine-core-context.xml");
-				EngineTrigger engTrigger = (EngineTrigger) applicationContext
-				        .getBean(EngineTrigger.class);
-				
 				Class classToLoad = Class.forName(className);
-				Object obj = classToLoad.newInstance();
-			
+
+				Object obj = applicationContext.getBean(classToLoad);
+
 				Method method = classToLoad.getDeclaredMethod(methodName,
 				        new Class[] { Object[].class });
 				result = (String) method.invoke(obj, new Object[] { params });
@@ -112,12 +107,6 @@ public class WorkflowManager implements Runnable {
 				LOGGER.debug("Class Not Found " + e.getMessage());
 				throw new FatalException("Specified Class Not Found "
 				        + e.getMessage());
-			} catch (InstantiationException e) {
-				LOGGER.debug("Cannot instantiate object of this class "
-				        + e.getMessage());
-				throw new FatalException(
-				        "Cannot instantiate object of this class"
-				                + e.getMessage());
 			} catch (IllegalAccessException e) {
 				LOGGER.debug("Unable to access the object" + e.getMessage());
 				throw new FatalException("Unable to access the object "
