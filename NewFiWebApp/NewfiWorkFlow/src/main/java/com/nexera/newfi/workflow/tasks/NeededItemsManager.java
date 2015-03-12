@@ -1,11 +1,13 @@
 package com.nexera.newfi.workflow.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
+@Component
 public class NeededItemsManager implements IWorkflowTaskExecutor {
 
 	@Autowired

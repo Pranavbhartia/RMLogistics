@@ -263,14 +263,20 @@ function appendMilestoneMyProfile(){
 	
 	var txtRow2 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("Online Application");
 	
 	var txtRow3 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("Photo");
 	
 	var txtRow4 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-customer-profile").click();
 	}).html("SMS Texting Preferences");
 	
 	wrapper.append(leftBorder).append(header).append(progressBarCont).append(txtRow1).append(txtRow2).append(txtRow3).append(txtRow4);
@@ -424,64 +430,10 @@ function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
 	}).click(function(e){
 		e.stopPropagation();
 	});
-	
-	var header = $('<div>').attr({
-		"class" : "ms-add-member-popup-header"
-	}).html("Add Agents");
-	
-	var usertypeCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-	
-	var usertypeLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("User Type");
-	
-	var usertypeInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	
-	usertypeCont.append(usertypeLabel).append(usertypeInput);
-	
-	var userNameCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-	
-	var userNameLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("User Name");
-	
-	var userNameInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	
-	userNameCont.append(userNameLabel).append(userNameInput);
-	
-	var emailCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-
-	var emailLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("Email");
-	
-	var emailInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	emailCont.append(emailLabel).append(emailInput);
-	
-	var saveBtnWrapper = $('<div>').attr({
-		"class" : "ms-save-btn-wrapper float-left"
-	});
-	
-	var saveBtn = $('<div>').attr({
-		"class" : "ms-save-btn"
-	}).html("save");
-	
-	saveBtnWrapper.append(saveBtn);
-	
-	wrapper.append(header).append(usertypeCont).append(userNameCont).append(emailCont).append(saveBtnWrapper);
+	//$(itemToAppendTo).html("");
+	if($('#ms-add-member-popup').length==0)
 	$(itemToAppendTo).append(wrapper);
+	appendAddTeamMemberWrapper('ms-add-member-popup',true);
 }
 
 $(document).click(function(){
@@ -574,6 +526,8 @@ function appendMilestoneInitialNeedList(){
 	header.append(headerTxt).append(headerIcn);
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-lc-text"
+	}).click(function(){
+		$("#lp-step4").click();
 	}).html("16 of 18 Complete");
 	
 	wrapper.append(leftBorder).append(header).append(txtRow1);
@@ -666,6 +620,8 @@ function appendMilestoneLockRates(){
 	
 	var txtRow1 = $('<div>').attr({
 		"class" : "milestone-rc-text"
+	}).click(function(){
+		$("#lp-step3").click();
 	}).html("Click here to Request Rate Lock");
 	
 	wrapper.append(rightBorder).append(header).append(txtRow1);

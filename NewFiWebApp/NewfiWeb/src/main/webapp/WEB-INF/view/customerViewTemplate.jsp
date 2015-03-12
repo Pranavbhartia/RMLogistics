@@ -57,6 +57,7 @@
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			changeLeftPanel(2);
+			retrieveState();
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			$(window).resize(function() {

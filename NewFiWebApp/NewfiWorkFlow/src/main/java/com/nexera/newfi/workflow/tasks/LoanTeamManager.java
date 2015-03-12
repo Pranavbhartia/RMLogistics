@@ -3,6 +3,7 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.nexera.common.vo.LoanVO;
@@ -10,6 +11,7 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
+@Component
 public class LoanTeamManager implements IWorkflowTaskExecutor {
 
 	@Autowired
