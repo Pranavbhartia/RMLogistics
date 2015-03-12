@@ -376,6 +376,14 @@ a,a:hover,a:visited {
 	background-image: url(../images/t2-pic5-active.png);
 }
 
+.lp-t2-agent-item .lp-t2-img1{
+	background-image: url(../images/lp-app-progress.png);
+}
+
+.lp-t2-agent-item.t2-active .lp-t2-img1{
+	background-image: url(../images/lp-app-progress-active.png);
+}
+
 .center-panel {
 	width: 840px;
 	min-height: 800px;
