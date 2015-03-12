@@ -44,6 +44,31 @@ public class TemplateController extends DefaultController {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(TemplateController.class);
 
+	
+	@RequestMapping(value = "calculator.do")
+	public ModelAndView showCustomerPage1(HttpServletRequest req, Model model) {
+
+		ModelAndView mav = new ModelAndView();
+
+		try {
+
+			
+
+				mav.setViewName("calculator");
+			
+
+		} catch (Exception e) {
+			// TODO: Handle exception scenario
+
+			e.printStackTrace();
+		}
+		return mav;
+	}
+	
+	
+	
+	
+	
 	@RequestMapping(value = "home.do")
 	public ModelAndView showCustomerPage(HttpServletRequest req, Model model) {
 
@@ -72,23 +97,6 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
-	@RequestMapping(value = "calculater.do")
-	public ModelAndView showcalculaterPage(HttpServletRequest req, Model model) {
-
-		ModelAndView mav = new ModelAndView();
-
-		try {
-
-			mav.setViewName("calculator");
-
-		} catch (Exception e) {
-			// TODO: Handle exception scenario
-
-			e.printStackTrace();
-		}
-		return mav;
-	}
-	
 	/*
 	 * @RequestMapping(value = "/uploadCommonImageToS3.do", method =
 	 * RequestMethod.POST) public @ResponseBody String uploadCommonImageToS3(
@@ -146,18 +154,18 @@ public class TemplateController extends DefaultController {
 			 s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User","complete");
 			 editUserPhoto(s3Path);
 			 // save the s3 url in the data base
-			Integer num = userProfileService.updateUser(s3Path, userid);
-		
-			if(!num.equals(1) ){
+			 Integer num = userProfileService.updateUser(s3Path, userid);
+			 
+			 if(num < 0 ){
 				 
 				 LOG.error("Error whiile saving s3 url in the data base");
 
 			 }
-			 LOG.info("S3 path-----"+s3Path);
+			 LOG.error("S3 path-----"+s3Path);
 
 		} catch (Exception e) {
 			
-			LOG.error("Exception whiile saving s3 url in the data base" +e.getMessage());
+			 LOG.error("Exception whiile saving s3 url in the data base" +e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -323,6 +331,9 @@ public class TemplateController extends DefaultController {
 	// mav.setViewName("customerProfile");
 	// return mav;
 	// }
+	
+	
+	
 	
 	@RequestMapping(value = "customerEngagement.do")
 	 public ModelAndView showCustomerEngagementPage(){

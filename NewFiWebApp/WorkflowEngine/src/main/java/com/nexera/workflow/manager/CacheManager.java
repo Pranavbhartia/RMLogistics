@@ -38,8 +38,8 @@ public class CacheManager
     {
         LOGGER.debug( "Inside method initialize thread pool " );
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
-        String poolSizeString = bundle.getString( WorkflowConstants.POOL_SIZE );
-        executorService = Executors.newFixedThreadPool( Integer.parseInt( poolSizeString ), threadFactory );
+        //String poolSizeString = bundle.getString( WorkflowConstants.POOL_SIZE );
+        executorService = Executors.newFixedThreadPool( Integer.parseInt( "5" ), threadFactory );
 
         setInitialized( true );
         return executorService;

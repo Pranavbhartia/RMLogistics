@@ -32,7 +32,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lp-alert-wrapper lp-item clearfix">
+		<div id="lp-alert-wrapper" class="lp-alert-wrapper lp-item clearfix">
 			<div class="lp-alert-header" id="alertHeder">important alerts</div>
 			<div id="notificationParentContainer">
 				<div class="lp-alert-item-container clearfix">
