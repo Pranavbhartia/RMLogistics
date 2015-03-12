@@ -411,64 +411,10 @@ function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
 	}).click(function(e){
 		e.stopPropagation();
 	});
-	
-	var header = $('<div>').attr({
-		"class" : "ms-add-member-popup-header"
-	}).html("Add Agents");
-	
-	var usertypeCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-	
-	var usertypeLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("User Type");
-	
-	var usertypeInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	
-	usertypeCont.append(usertypeLabel).append(usertypeInput);
-	
-	var userNameCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-	
-	var userNameLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("User Name");
-	
-	var userNameInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	
-	userNameCont.append(userNameLabel).append(userNameInput);
-	
-	var emailCont = $('<div>').attr({
-		"class" : "ms-add-memeber-input-cont clearfix float-left"
-	});
-
-	var emailLabel = $('<div>').attr({
-		"class" : "ms-add-memeber-input-label float-left"
-	}).html("Email");
-	
-	var emailInput = $('<input>').attr({
-		"class" : "ms-add-memeber-input-input float-left"
-	});
-	emailCont.append(emailLabel).append(emailInput);
-	
-	var saveBtnWrapper = $('<div>').attr({
-		"class" : "ms-save-btn-wrapper float-left"
-	});
-	
-	var saveBtn = $('<div>').attr({
-		"class" : "ms-save-btn"
-	}).html("save");
-	
-	saveBtnWrapper.append(saveBtn);
-	
-	wrapper.append(header).append(usertypeCont).append(userNameCont).append(emailCont).append(saveBtnWrapper);
+	//$(itemToAppendTo).html("");
+	if($('#ms-add-member-popup').length==0)
 	$(itemToAppendTo).append(wrapper);
+	appendAddTeamMemberWrapper('ms-add-member-popup',true);
 }
 
 $(document).click(function(){

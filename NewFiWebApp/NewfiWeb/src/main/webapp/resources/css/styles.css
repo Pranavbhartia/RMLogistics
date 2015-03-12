@@ -321,6 +321,10 @@ a,a:hover,a:visited {
 	height: 40px;
 }
 
+.lp-t2-img0 {
+	background: url(../images/ConversaionIcon.png) no-repeat center;
+}
+
 .lp-t2-img1 {
 	background: url(../images/t2-pic1-inactive.png) no-repeat center;
 }
@@ -346,6 +350,10 @@ a,a:hover,a:visited {
 	color: #fff;
 	background-color: #428bca;
 	overflow: visible;
+}
+
+.t2-active .lp-t2-img0 {
+	background: url(../images/ConversaionIcon_white.png) no-repeat center;
 }
 
 .t2-active .lp-t2-img1 {
@@ -2701,6 +2709,7 @@ input.calc-input {
 .milestone-lc-text,.milestone-rc-text {
 	line-height: 22px;
 	color: #428bca;
+	margin-bottom: 2px;
 }
 
 .milestone-lc-text {
@@ -2715,17 +2724,24 @@ input.calc-input {
 
 .milestone-lc-header,.milestone-rc-header {
 	margin: 0 -5px 10px -5px;
-	height: 25px;
+	height: 30px;
 }
 
 .milestone-lc-header-txt,.milestone-rc-header-txt {
 	position: relative;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 15px;
+	height: 28px;
+	line-height: 28px;
 	border-radius: 3px;
 	background-color: #EBEBEB;
-	box-sizing: border-box;
+	border: 1px solid transparent;
+}
+
+.milestone-lc-header-txt{
+	padding: 0 15px;	
+}
+
+.milestone-rc-header-txt{
+	padding: 0 15px;	
 }
 
 .m-not-started .milestone-lc-header-txt,.m-not-started .milestone-rc-header-txt
@@ -3528,6 +3544,98 @@ input.calc-input {
 	right:80px;
 }
 
-.dial{
+.dial {
 	font-family: 'opensanssemibold' !important;
+	width: 116px !important;
+	margin-left: -145px !important;
+}
+
+.ms-check-box{
+    width: 16px;
+    height: 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    margin: 0 5px;
+}
+
+.ms-check-box-header{
+	width: 16px;
+    height: 16px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    margin: 5px;
+}
+
+.ms-check-box-header[data-checked="checked"]{
+	background: url(../images/tick_check.png) no-repeat center;
+	background-size: 11px;
+}
+
+.m-not-started .ms-check-box-header{
+	border-color:#888;
+}
+
+.milestone-lc .ms-check-box-header{
+	margin-right: -10px;
+	margin-left: 10px;
+}
+
+.milestone-rc .ms-check-box-header{
+	margin-left: -10px;
+	margin-right: 10px;
+}
+
+.ms-check-box[data-checked="checked"]{
+	background: url(../images/tick_check.png) no-repeat center;
+	background-color: #F47521;
+	background-size: 11px;
+	border:none;
+}
+
+
+/*Milestone page styles for add member to loan team*/
+#ms-add-member-popup .add-member-sel, #ms-add-member-popup .add-member-sel-search
+	{
+	width: 180px;
+}
+
+#ms-add-member-popup .add-member-input {
+	width: 150px;
+}
+
+#ms-add-member-popup .add-member-input-cont{
+	position: relative;
+}
+
+#ms-add-member-popup .add-member-dropdown-cont{
+	left:94px !important;
+	width: 180px;
+}
+
+#ms-add-member-popup .header-down-icn{
+	display:none;
+}
+
+#ms-add-member-popup .add-team-mem-header{
+	text-align: center;
+	background: none;
+}
+
+#ms-add-member-popup .add-team-mem-wrapper{
+	border-bottom: none;
+}
+
+#ms-add-member-popup  .add-member-sel-search{
+	position: relative;
+}
+
+#ms-add-member-popup  .create-user-popup{
+	left:auto !important;
+	top:auto !important;
+	right: -55px;
+	bottom:-55px;
+}
+
+#ms-add-member-popup  .create-user-popup:after{
+	display:none;
 }
