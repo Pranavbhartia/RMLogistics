@@ -15,6 +15,8 @@ public interface LoanDao extends GenericDao {
 
 	Loan getLoanWithDetails(Integer loanID);
 	
+	public Loan getLoanWorkflowDetails(Integer loanID);
+	
 	public boolean addToLoanTeam(Loan loan,User user,User addedBy);
 
 	public boolean removeFromLoanTeam(Loan loan,User user);
