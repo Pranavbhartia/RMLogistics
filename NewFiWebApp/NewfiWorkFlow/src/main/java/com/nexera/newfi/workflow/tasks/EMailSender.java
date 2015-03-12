@@ -2,9 +2,11 @@ package com.nexera.newfi.workflow.tasks;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
+@Component
 public class EMailSender implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(EMailSender.class);
