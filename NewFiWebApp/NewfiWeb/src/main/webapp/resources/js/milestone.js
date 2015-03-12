@@ -91,10 +91,10 @@ var workFlowContext = {
 				// The next item is a parent.
 				// This is a parent - push all the ones so far in parent
 				if (childList.length != 0) {
-					appendAgentMilestoneItem(parentWorkItem, childList);
+					appendMilestoneItem(parentWorkItem, childList);
 					childList = [];
 				} else {
-					appendAgentMilestoneItem(parentWorkItem);
+					appendMilestoneItem(parentWorkItem);
 				}
 				parentWorkItem = currentWorkItem;
 			} else if (ob.checkIfChild(currentWorkItem) == true
@@ -105,9 +105,9 @@ var workFlowContext = {
 		}
 		// Last item append
 		if (childList.length != 0) {
-			appendAgentMilestoneItem(parentWorkItem, childList);
+			appendMilestoneItem(parentWorkItem, childList);
 		} else if (childList.length == 0) {
-			appendAgentMilestoneItem(parentWorkItem);
+			appendMilestoneItem(parentWorkItem);
 		}
 		countOfTasks=0;
 		adjustBorderMilestoneContainer();
@@ -127,12 +127,13 @@ var workFlowContext = {
 		}
 	}
 };
-function getInternalEmployeeMileStoneContext(workflowId, mileStoneId) {
+function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 
 	var internalEmployeeMileStoneContext = {
-		workflowId : workflowId,
+		
 		mileStoneId : mileStoneId,
-
+		workItem : workItem,
+		infoText : {},
 		ajaxRequest : function(url, type, dataType, data, successCallBack) {
 			$.ajax({
 				url : url,
@@ -144,15 +145,42 @@ function getInternalEmployeeMileStoneContext(workflowId, mileStoneId) {
 				}
 			});
 		},
-		getStateInfo : function(callback) {
+		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
-			ob.ajaxRequest("rest/workflow/" + ob.loanId, "GET", "json", data,
+			var txtRow1 = $('<div>').attr({
+				"class" : rightLeftClass + "-text",
+				"mileNotificationId" : ob.workItem.itemId,
+				"data-text" : ob.infoText
+			})
+			var ajaxURL = "";	
+			if (ob.workItem.displayContent=="Make Initial Contact")
+			{
+				ajaxURL = "rest/workflow/details/1";
+				// in some cases we wont have to make a REST call - how to handle that?
+				//For eg: Schefule An Alert - need not come from a REST call 
+			}
+			if (ob.workItem.displayContent=="Needed Items")
+			{
+				ajaxURL = "rest/workflow/needCount/1";
+				// Just exposed a rest service to test - with hard coded loan ID
+			}
+			else
+			{
+				return;
+			}
+						
+			ob.ajaxRequest(ajaxURL, "GET", "json", data,
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
 						} else {
-							ob.workflowId = response.resultObject;
+							ob.infoText =  response.resultObject;
+							txtRow1.html(ob.infoText);
+							txtRow1.bind("click", function(e) {
+								milestoneChildEventHandler(e)
+							});
+							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
 							callback(ob);
@@ -813,7 +841,7 @@ function paintAgentLoanProgressPage() {
 	paintAgentLoanProgressContainer();
 }
 
-var lmContext;
+
 function paintAgentLoanProgressContainer() {
 	var loanProgressCont = $('<div>').attr({
 		"id" : "loan-progress-milestone-wrapper",
@@ -825,7 +853,7 @@ function paintAgentLoanProgressContainer() {
 
 	workFlowContext.initialize("AGENT", function() {
 	});
-	lmContext = workFlowContext;
+	
 	// Append agent page loan progress milestones
 
 	// adjustBorderMilestoneContainer();
@@ -840,7 +868,7 @@ function getProgressStatusClass(status) {
 	return progressClass;
 }
 
-function appendAgentMilestoneItem(workflowItem, childList) {
+function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
 	var floatClass = "float-right";
@@ -876,15 +904,7 @@ function appendAgentMilestoneItem(workflowItem, childList) {
 
 	wrapper.append(rightBorder).append(header);
 	if (workflowItem.stateInfo != "") {
-		var txtRow1 = $('<div>').attr({
-			"class" : rightLeftClass + "-text",
-			"mileNotificationId" : workflowItem.itemId,
-			"data-text" : workflowItem.stateInfo
-		}).html(workflowItem.stateInfo);
-		txtRow1.bind("click", function(e) {
-			milestoneChildEventHandler(e)
-		});
-		wrapper.append(txtRow1);
+		appendInfoAction(rightLeftClass, wrapper, workflowItem);
 	}
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
@@ -910,22 +930,23 @@ function appendAgentMilestoneItem(workflowItem, childList) {
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
 
-			if (childList[index].stateInfo != null) {
-				var childInfoText = $('<div>').attr({
-					"class" : rightLeftClass + "-text",
-					"mileNotificationId" : childList[index].id,
-					"data-text" : childList[index].stateInfo
-				}).html(childList[index].stateInfo);
-				childInfoText.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				wrapper.append(childInfoText);
+			if (childList[index].stateInfo != null && childList[index].stateInfo!="") {
+				appendInfoAction(rightLeftClass, wrapper, childList[index]);				
 			}
 		}
 	}
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
+// this will add a "Information Link" that is clickable to the task.
+function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
+{
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
+
+	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
+	
+	return mileStoneStepContext;
+}
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
 	event.stopPropagation();

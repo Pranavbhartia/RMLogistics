@@ -19,7 +19,9 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneNotificationVO;
+import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.engine.EngineTrigger;
@@ -36,6 +38,8 @@ public class WorkflowRestService {
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private NeedsListService needsListService;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(WorkflowRestService.class);
 
@@ -80,6 +84,27 @@ public class WorkflowRestService {
 			LOG.debug("Putting loan manager workflow into execution ");
 			
 			response = RestUtil.wrapObjectForSuccess(loanVO);
+			LOG.debug("Response" + response);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "needCount/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO getNeedCount(@PathVariable int loanID) {
+		LOG.debug("Loan ID for this workflow is " + loanID);
+		CommonResponseVO response = null;
+		try {
+			// This needs to be changed.
+			NeededItemScoreVO scoreVo = needsListService.getNeededItemsScore(loanID);
+			String needString = scoreVo.getTotalSubmittedItem() + " out of " + scoreVo.getNeededItemRequired();
+			LOG.debug("Putting loan manager workflow into execution ");
+			
+			response = RestUtil.wrapObjectForSuccess(needString);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
