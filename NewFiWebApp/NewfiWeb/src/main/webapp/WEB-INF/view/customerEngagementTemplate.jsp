@@ -24,6 +24,7 @@
 	<script src="resources/js/bootstrap.min.js"></script>
 	<script src="resources/js/common.js"></script>
 	<script src="resources/js/customer-engagement.js"></script>
+	<script src="resources/js/buyHome.js"></script>
 	<script>
 		$(document).ready(function() {
 			paintSelectLoanTypeQuestion();

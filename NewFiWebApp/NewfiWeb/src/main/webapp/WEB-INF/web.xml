@@ -83,10 +83,10 @@
 
 	<error-page>
 		<error-code>500</error-code>
-		<location>/WEB-INF/view/errorpage500.jsp</location>
+		<location>/404.do</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/view/errorpage404.jsp</location>
+		<location>/404.do</location>
 	</error-page>
 </web-app>
