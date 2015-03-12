@@ -40,39 +40,46 @@ function getInternalEmployeeMileStoneContext(workflowId){
 					{
 						parentWorkItem = currentWorkItem;
 					}
-					else if (ob.checkIfChild(currentWorkItem) == false)
+					else if (ob.checkIfChild(currentWorkItem) == false) // It is a parent
 					{	
 						//The next item is a parent.
 						//This is a parent - push all the ones so far in parent		
 						if(childList.length !=0)
 						{
+							
 							appendAgentMilestoneItemWithChildren(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,parentWorkItem.stateInfo,childList);						
 							childList =[];							
 						}
 						else
-						{
-
+						{	
+							
 							appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
-
 						}
 						parentWorkItem = currentWorkItem;
 					}
 					else if (ob.checkIfChild(currentWorkItem) == true && currentWorkItem.parentWorkflowItemExec.id == parentWorkItem.id)
 					{
 						//Keep collecting..
+						
 						childList.push (currentWorkItem);
-						if (i == workItemExecList.length-1)
-						{
-
-							appendAgentMilestoneItemWithChildren(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo,childList);
-						}
+						
 					}					
 				}
 				//Last item append
 
-				appendAgentMilestoneItem(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo);
+				//appendAgentMilestoneItem(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo);
 				
 				
+			if (childList.length !=0)
+			{
+				
+				appendAgentMilestoneItemWithChildren(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent,  parentWorkItem.stateInfo,childList);
+			}
+			else if ( childList.length ==0)
+			{
+				
+			appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
+			}
 
 				adjustBorderMilestoneContainer();
 				if(callback){
@@ -858,7 +865,7 @@ function getProgressStatusClass (status)
 
 
 
-function appendAgentMilestoneItem(status, displayContent, inputText){
+function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 
 	countOfTasks++;
 	var floatClass = "float-right";
@@ -905,7 +912,7 @@ function appendAgentMilestoneItem(status, displayContent, inputText){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
-function appendAgentMilestoneItemWithChildren(status, displayContent, inputText, childList){
+function appendAgentMilestoneItemWithChildren(id, status, displayContent, inputText, childList){
 	countOfTasks++;
 	var rightLeftClass =  "milestone-lc";
 	var floatClass = "float-right";
