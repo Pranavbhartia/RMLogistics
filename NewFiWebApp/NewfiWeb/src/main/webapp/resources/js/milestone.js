@@ -27,15 +27,10 @@ function getInternalEmployeeMileStoneContext(workflowId){
 			if(response.error){
 				showToastMessage(response.error.message)
 			}else{
-				var workItemExecList=response.resultObject;
-				
+				var workItemExecList=response.resultObject;				
 				var childList =[];
-				
-				
-				
 				for(var i=0;i<workItemExecList.length;i++){
-					var currentWorkItem = workItemExecList[i];
-					
+					var currentWorkItem = workItemExecList[i];					
 					if (i==0)
 					{
 						parentWorkItem = currentWorkItem;
@@ -45,24 +40,20 @@ function getInternalEmployeeMileStoneContext(workflowId){
 						//The next item is a parent.
 						//This is a parent - push all the ones so far in parent		
 						if(childList.length !=0)
-						{
-							
+						{							
 							appendAgentMilestoneItemWithChildren(parentWorkItem.id,parentWorkItem.status, parentWorkItem.displayContent,parentWorkItem.stateInfo,childList);						
 							childList =[];							
 						}
 						else
-						{	
-							
+						{								
 							appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
 						}
 						parentWorkItem = currentWorkItem;
 					}
 					else if (ob.checkIfChild(currentWorkItem) == true && currentWorkItem.parentWorkflowItemExec.id == parentWorkItem.id)
 					{
-						//Keep collecting..
-						
-						childList.push (currentWorkItem);
-						
+						//Keep collecting..						
+						childList.push (currentWorkItem);						
 					}					
 				}
 				//Last item append
@@ -80,11 +71,10 @@ function getInternalEmployeeMileStoneContext(workflowId){
 				
 			appendAgentMilestoneItem(parentWorkItem.id, parentWorkItem.status, parentWorkItem.displayContent, parentWorkItem.stateInfo);
 			}
-
-				adjustBorderMilestoneContainer();
-				if(callback){
-					callback(ob);
-				}
+			adjustBorderMilestoneContainer();
+			if(callback){
+				callback(ob);
+			}
 			}
 			
 		});
@@ -404,14 +394,14 @@ function appendMilestoneTeam(){
 	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 	
-	appendMilestoneAddTeamMemberPopup();
+	appendMilestoneAddTeamMemberPopup(txtRow1);
 }
 
 //Function to append pop up to add a team member in loan
-function appendMilestoneAddTeamMemberPopup(){
+function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
 	var wrapper = $('<div>').attr({
 		"id" : "ms-add-member-popup",
-		"class" : "ms-add-member-popup hide"
+		"class" : "ms-add-member-popup"
 	}).click(function(e){
 		e.stopPropagation();
 	});
@@ -472,12 +462,12 @@ function appendMilestoneAddTeamMemberPopup(){
 	saveBtnWrapper.append(saveBtn);
 	
 	wrapper.append(header).append(usertypeCont).append(userNameCont).append(emailCont).append(saveBtnWrapper);
-	$('#ms-add-team').append(wrapper);
+	$(itemToAppendTo).append(wrapper);
 }
 
 $(document).click(function(){
 	if($('#ms-add-member-popup').css("display") == "block"){
-		hideMilestoneAddTeamMemberPopup();
+		removeMilestoneAddTeamMemberPopup();
 	}
 });
 
@@ -489,6 +479,9 @@ function hideMilestoneAddTeamMemberPopup() {
 	$('#ms-add-member-popup').hide();
 }
 
+function removeMilestoneAddTeamMemberPopup() {
+	$('#ms-add-member-popup').remove();
+}
 
 
 //Function to get milestone team member table
@@ -902,7 +895,8 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 	{
 		var txtRow1 = $('<div>').attr({
 			"class" : rightLeftClass+"-text",
-			"mileNotificationId" : itemId
+			"mileNotificationId" : itemId,
+			"data-text" : stateInfo
 		}).html(stateInfo);	
 		txtRow1.bind("click",function(e){milestoneChildEventHandler(e)});
 		wrapper.append(txtRow1);
@@ -912,7 +906,7 @@ function appendAgentMilestoneItem(itemId, status, displayContent, stateInfo){
 	$('#loan-progress-milestone-wrapper').append(wrapper);
 }
 
-function appendAgentMilestoneItemWithChildren(id, status, displayContent, inputText, childList){
+function appendAgentMilestoneItemWithChildren(itemId, status, displayContent, inputText, childList){
 	countOfTasks++;
 	var rightLeftClass =  "milestone-lc";
 	var floatClass = "float-right";
@@ -945,8 +939,11 @@ function appendAgentMilestoneItemWithChildren(id, status, displayContent, inputT
 	
 	for	(index = 0; index < childList.length; index++) {
 		var txtRow1 = $('<div>').attr({
-			"class" : rightLeftClass+"-text"
+			"class" : rightLeftClass+"-text",
+			"mileNotificationId" : itemId,
+			"data-text" : childList[index].displayContent
 		}).html(childList[index].displayContent);	
+		txtRow1.bind("click",function(e){milestoneChildEventHandler(e)});		
 		workItem.append(txtRow1);
 	}	
 	$('#loan-progress-milestone-wrapper').append(wrapper);
@@ -957,22 +954,16 @@ function appendAgentMilestoneItemWithChildren(id, status, displayContent, inputT
 
 function milestoneChildEventHandler(event){
 	//condition need to be finalized for identifying each element
-	if(event.target.innerHTML=="Schedule an Alert"){
+	event.stopPropagation();
+	if($(event.target).attr("data-text")=="Schedule an Alert"){
 		var data={};		
 		data.OTHURL="rest/workflow/milestone/alert"
 		data.milestoneId=event.target.getAttribute("milenotificationid");
 		addNotificationPopup(selectedUserDetail.loanID,event.target,data);
-
 	}
 	
-	else if(event.target.innerHTML=="Click here to add a Team Member"){
-		
-		var teamTable = getMilestoneTeamMembeTable();
-		if($('#ms-add-member-popup').css("display") == "block"){
-			hideMilestoneAddTeamMemberPopup();		
-		}else{
-			showMilestoneAddTeamMemberPopup();
-		}
-
+	else if($(event.target).attr("data-text")=="Click here to add a Team Member"){		
+		var teamTable = getMilestoneTeamMembeTable();		
+		appendMilestoneAddTeamMemberPopup(event.target);
 	}
 }
