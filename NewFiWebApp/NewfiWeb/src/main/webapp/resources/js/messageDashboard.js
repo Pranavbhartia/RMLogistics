@@ -22,6 +22,16 @@ function getConversationPagination(){
 	ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/"+currentPage, "GET", "json", "", paintConversationPagination);
 }
 
+function showAgentMessageDashboard() {
+	var convMainContainer = $('<div>').attr({
+		"id" : "conv-main-container",
+		"class" : "agent-message-dashboard"
+	});
+	$('#center-panel-cont').append(convMainContainer);
+	getLoanTemUsingloanId();
+	adjustCenterPanelWidth();
+}
+
 function paintConversationPagination(response){
 	var conversations = response.resultObject.messageVOs;
 	paintConversations(conversations);

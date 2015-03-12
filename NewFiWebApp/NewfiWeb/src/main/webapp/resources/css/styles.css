@@ -1773,7 +1773,6 @@ a,a:hover,a:visited {
 
 .add-member-input-cont {
 	width: 50%;
-	height: 40px;
 	line-height: 40px;
 	padding-left: 10px;
 	padding-right: 40px;
@@ -3546,8 +3545,9 @@ input.calc-input {
 
 .dial {
 	font-family: 'opensanssemibold' !important;
-	width: 116px !important;
+	width: 140px !important;
 	margin-left: -145px !important;
+	font-size: 32px !important;
 }
 
 .ms-check-box{
@@ -3638,4 +3638,8 @@ input.calc-input {
 
 #ms-add-member-popup  .create-user-popup:after{
 	display:none;
+}
+
+.agent-message-dashboard{
+	margin-left:-15px;
 }
