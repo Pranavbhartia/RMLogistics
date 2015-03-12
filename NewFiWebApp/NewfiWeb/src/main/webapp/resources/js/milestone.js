@@ -404,7 +404,7 @@ function appendMilestoneTeam(){
 }
 
 //Function to append pop up to add a team member in loan
-function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
+function appendMilestoneAddTeamMemberPopup(loanID,itemToAppendTo,data){
 	var wrapper = $('<div>').attr({
 		"id" : "ms-add-member-popup",
 		"class" : "ms-add-member-popup"
@@ -414,7 +414,7 @@ function appendMilestoneAddTeamMemberPopup(itemToAppendTo){
 	//$(itemToAppendTo).html("");
 	if($('#ms-add-member-popup').length==0)
 	$(itemToAppendTo).append(wrapper);
-	appendAddTeamMemberWrapper('ms-add-member-popup',true);
+	appendAddTeamMemberWrapper('ms-add-member-popup',true,data);
 }
 
 $(document).click(function(){
@@ -919,7 +919,10 @@ function milestoneChildEventHandler(event){
 	}
 	
 	else if($(event.target).attr("data-text")=="Click here to add a Team Member"){		
-		var teamTable = getMilestoneTeamMembeTable();		
-		appendMilestoneAddTeamMemberPopup(event.target);
+		var teamTable = getMilestoneTeamMembeTable();	
+		var data={};		
+		data.OTHURL="rest/workflow/milestone/addMember"
+		data.loanID=selectedUserDetail.loanID;
+		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,event.target,data);
 	}
 }

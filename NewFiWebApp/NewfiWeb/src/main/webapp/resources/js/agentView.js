@@ -1112,10 +1112,10 @@ function appendLoanDetailsRow(label, value, isLink) {
 }
 
 // Function to append add team member wrapper in loan managaer view
-function appendAddTeamMemberWrapper(parentElement,clearParent) {
+function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 	var wrapper = $('<div>').attr({
 		"class" : "add-team-mem-wrapper"
-	});
+	}).data("additionalData",data);
 
 	var header = $('<div>').attr({
 		"class" : "add-team-mem-header clearfix"
@@ -1133,13 +1133,12 @@ function appendAddTeamMemberWrapper(parentElement,clearParent) {
 
 	var userTypeCont = $('<div>').attr({
 		"class" : "add-member-input-cont float-left clearfix"
-	}).html("User Type")
-	.on('click',userTypeClicked);
+	}).html("User Type");
 
 	var userTypeSel = $('<div>').attr({
 		"id" : "add-memeber-user-type",
 		"class" : "add-member-sel float-right"
-	});
+	}).on('click',userTypeClicked);;
 
 	userTypeCont.append(userTypeSel);
 
@@ -1253,7 +1252,8 @@ $(document).click(function() {
 	}
 });
 
-function userTypeClicked(){
+function userTypeClicked(event){
+	event.stopImmediatePropagation();
 	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
 		hideUserTypeDropDown();
 	} else {
@@ -2378,6 +2378,18 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 }
 
 function addUserToLoanTeam(userID, loanID) {
+	
+	var addData=$('.add-team-mem-wrapper').data('additionalData');
+	
+	if(addData && addData.OTHURL){
+		
+		addData.userID=userID;
+		ajaxRequest(addData.OTHURL, "POST",
+				"json", JSON.stringify(addData)  , onReturnOfAddUserToLoanTeam);
+		return;
+	}
+	
+	
 	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "POST",
 			"json", {}, onReturnOfAddUserToLoanTeam);
 }
@@ -2423,6 +2435,7 @@ function onReturnOfUserSearchToAddToLoanTeam(data) {
 }
 
 function createUserAndAddToLoanTeam(user) {
+
 	ajaxRequest("rest/userprofile/", "POST", "json", JSON.stringify(user),
 			onReturnOfCreateUserAndAddToLoanTeam);
 
