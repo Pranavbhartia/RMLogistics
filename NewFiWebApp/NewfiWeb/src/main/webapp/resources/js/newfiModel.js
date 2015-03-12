@@ -4,28 +4,30 @@ var historyCallback = false;
 var refreshSupport = true;
 
 PNEnum = {
-	PROFILE : 0,
-	TEAM : 1,
-	LOAN : 2
-}
+	PROFILE : "myProfile",
+	TEAM : "myTeam",
+	MY_LOAN : "myLoan",
+	ALERT:"myAlerts"
+};
 
 
 SNEnum = {
-	GETTINGTOKNOWNEWFI : 0,
-	COMPLETEAPPLICATION : 1,
-	LOCKRATE : 2,
-	UPLOAD : 3,
-	LOANPROGRESS : 4
-}
+	1 : "myTeam",
+	2 : "my-application",
+	3 : "lock-my-rate",
+	4 : "upload-my-needs",
+	5 : "my-loan-progress"
+
+};
 
 
 
 AgentViewPNEnum = {
 	WORK_ON_LOAN : "work",
-	MY_LOANS : "loan",
+	LOAN : "loan",
 	MY_ARCHIVES : "archive",
 	MY_IMP_ALERTS:"alert"
-}
+};
 
 
 
