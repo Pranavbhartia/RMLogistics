@@ -3530,3 +3530,13 @@ input.calc-input {
 .dial{
 	font-family: 'opensanssemibold' !important;
 }
+
+/*Milestone page styles for add member to loan team*/
+#ms-add-member-popup .add-member-sel,#ms-add-member-popup .add-member-sel-search {
+
+	width: 180px;
+}
+
+#ms-add-member-popup .add-member-input {
+width: 150px;
+}
