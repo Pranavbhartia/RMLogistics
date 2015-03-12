@@ -3544,10 +3544,10 @@ input.calc-input {
 	right:80px;
 }
 
-.dial{
+.dial {
 	font-family: 'opensanssemibold' !important;
 	width: 116px !important;
-	margin-left: -145px !important; 
+	margin-left: -145px !important;
 }
 
 .ms-check-box{
@@ -3590,4 +3590,15 @@ input.calc-input {
 	background-color: #F47521;
 	background-size: 11px;
 	border:none;
+}
+
+
+/*Milestone page styles for add member to loan team*/
+#ms-add-member-popup .add-member-sel, #ms-add-member-popup .add-member-sel-search
+	{
+	width: 180px;
+}
+
+#ms-add-member-popup .add-member-input {
+	width: 150px;
 }

@@ -901,7 +901,7 @@ function paintAgentLoanPage(data) {
 	var loanDetails = data.resultObject;
 	appendCustomerDetailHeader(selectedUserDetail);
 	appendCustomerLoanDetails(loanDetails);
-	appendAddTeamMemberWrapper();
+	appendAddTeamMemberWrapper('center-panel-cont');
 	appendNewfiTeamWrapper(loanDetails);
 	var contxt = getContext(loanDetails.id + "-notification");
 	if (contxt) {
@@ -1112,7 +1112,7 @@ function appendLoanDetailsRow(label, value, isLink) {
 }
 
 // Function to append add team member wrapper in loan managaer view
-function appendAddTeamMemberWrapper() {
+function appendAddTeamMemberWrapper(parentElement,clearParent) {
 	var wrapper = $('<div>').attr({
 		"class" : "add-team-mem-wrapper"
 	});
@@ -1133,7 +1133,8 @@ function appendAddTeamMemberWrapper() {
 
 	var userTypeCont = $('<div>').attr({
 		"class" : "add-member-input-cont float-left clearfix"
-	}).html("User Type");
+	}).html("User Type")
+	.on('click',userTypeClicked);
 
 	var userTypeSel = $('<div>').attr({
 		"id" : "add-memeber-user-type",
@@ -1182,7 +1183,10 @@ function appendAddTeamMemberWrapper() {
 	container.append(userTypeCont).append(userNameCont);
 
 	wrapper.append(header).append(container);
-	$('#center-panel-cont').append(wrapper);
+	if(clearParent){
+		$('#'+parentElement).html("");
+	}
+	$('#'+parentElement).append(wrapper);
 
 	// function to append create user popup
 	appendCreateUserPopup();
@@ -1248,14 +1252,23 @@ $(document).click(function() {
 	}
 });
 
-$(document).on('click', '#add-memeber-user-type', function(event) {
+function userTypeClicked(){
+	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
+		hideUserTypeDropDown();
+	} else {
+		showUserTypeDropDown();
+	}
+}
+
+
+/*$(document).on('click', '#add-memeber-user-type', function(event) {
 	event.stopImmediatePropagation();
 	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
 		hideUserTypeDropDown();
 	} else {
 		showUserTypeDropDown();
 	}
-});
+});*/
 
 // Click function to create a user
 $(document).on('click', '#add-member-user', function(event) {
