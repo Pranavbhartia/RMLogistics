@@ -344,7 +344,7 @@
 						</div>
 						<div class="calc-btn" id ="submitID">Submit</div>
 					</div>
-
+                 <div class="teaserresult" id ="teaserresult"></div>
 				</div>
 			</div>
 		</div>
@@ -431,12 +431,23 @@
 			       
 			        $.ajax({
 			    	   
+<<<<<<< Updated upstream
 			    	   url:"rest/userprofile/findteaserate",
 			    	   type:"POST",
 			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
 			    	   datatype:"application/json",
 			    	   success : function(){
 			    		   alert("success");
+=======
+			    	   url:"rest/calculator/findteaserate",
+			    	   type:"POST",
+			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
+			    	   datatype:"application/json",
+			    	   success : function(data){
+			    		   var teaserresult = data
+                          $('#teaserresult').html(teaserresult);
+			    		   alert(teaserresult);
+>>>>>>> Stashed changes
 			    	   },
 			    	   error :function(){
 			    		   alert("error");
