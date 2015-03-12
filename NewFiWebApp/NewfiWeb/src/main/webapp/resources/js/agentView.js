@@ -1232,6 +1232,7 @@ function paintUserNameDropDown(values) {
 						var userID = $(this).attr("userID");
 						console.log("User id : " + userID);
 						hideUserNameDropDown();
+						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
 						addUserToLoanTeam(userID, selectedUserDetail.loanID);
 					});
@@ -2431,6 +2432,7 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
 	var result = data.resultObject;
 	hideCreateUserPopup();
+	hideMilestoneAddTeamMemberPopup();
 	$('#add-member-input').val("");
 
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
