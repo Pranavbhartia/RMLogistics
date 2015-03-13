@@ -10,11 +10,12 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-		classpath:NewfiCommon-Configuration.xml,
+			classpath:NewfiCommon-Configuration.xml,
 			classpath:NewfiCore-Configuration.xml,
 			classpath:NewfiMongoCore-Configuration.xml,
 			/WEB-INF/app-security.xml,
-			classpath:/spring/workflow-engine-core-context.xml
+			classpath:spring/workflow-engine-core-context.xml,
+			classpath:spring/newfi-workflow-core-context.xml
 			
 		</param-value>
 	</context-param>

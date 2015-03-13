@@ -37,7 +37,7 @@ public class WorkflowItemMaster implements Serializable
     private Boolean isLastTask;
     private Integer maxRunTime;
     private Date modifiedDate;
-    private boolean priority;
+    private Boolean priority;
     private Integer startDelay;
     private WorkflowTaskConfigMaster task;
     private String workflowItemType;
@@ -345,7 +345,7 @@ public class WorkflowItemMaster implements Serializable
      */
     @Column ( name = "priority", columnDefinition = "TINYINT")
     @Type ( type = "org.hibernate.type.NumericBooleanType")
-    public boolean isPriority()
+    public Boolean isPriority()
     {
         return priority;
     }
@@ -354,7 +354,7 @@ public class WorkflowItemMaster implements Serializable
     /**
      * @param priority the priority to set
      */
-    public void setPriority( boolean priority )
+    public void setPriority( Boolean priority )
     {
         this.priority = priority;
     }

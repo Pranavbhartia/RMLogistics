@@ -3,7 +3,7 @@
 <script src="resources/js/bootstrap.min.js"></script>
 <script src="resources/js/dropzone.js"></script>
 <script src="resources/js/bootstrap-datepicker.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+<script src="resources/js/moment.min.js"></script>
 <script src="resources/js/bootstrap-datetimepicker.js"></script>
 <script src="resources/js/common.js"></script>
 <script src="resources/js/script.js"></script>

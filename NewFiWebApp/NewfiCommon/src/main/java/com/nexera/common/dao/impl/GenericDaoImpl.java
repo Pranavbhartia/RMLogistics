@@ -24,6 +24,7 @@ public class GenericDaoImpl implements GenericDao {
 	private static final int BATCH_SIZE = 5;
 	
 	@Autowired
+	
 	protected SessionFactory sessionFactory;
 
 	public Object save(Object obj) throws DatabaseException {

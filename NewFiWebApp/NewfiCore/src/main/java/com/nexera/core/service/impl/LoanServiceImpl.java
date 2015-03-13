@@ -172,6 +172,12 @@ public class LoanServiceImpl implements LoanService
         loanVo.setUser( userProfileService.buildUserVO( loan.getUser() ) );
 
         loanVo.setLoanDetail( this.buildLoanDetailVO( loan.getLoanDetail() ) );
+        if ( loan.getCustomerWorkflow() != null ) {
+            loanVo.setCustomerWorkflowID( loan.getCustomerWorkflow().getId() );
+        }
+        if ( loan.getLoanManagerWorkflow() != null ) {
+            loanVo.setLoanManagerWorkflowID( loan.getLoanManagerWorkflow().getId() );
+        }
 
         return loanVo;
 
@@ -463,4 +469,27 @@ public class LoanServiceImpl implements LoanService
         loanDao.save( loan );
     }
 
+
+    @Override
+    @Transactional ( readOnly = true)
+    public LoanVO findWorkflowInfoById( int loanID )
+    {
+        Loan loan = (Loan) loanDao.getLoanWorkflowDetails( loanID );
+        LoanVO loanVO = null;
+        if ( loan != null ) {
+            loanVO = this.buildLoanVO( loan );
+            return loanVO;
+        }
+        return loanVO;
+    }
+
+
+    @Override
+    @Transactional
+    public List<Loan> getAllLoans()
+    {
+        List<Loan> loanList = loanDao.loadAll( Loan.class );
+        return loanList;
+
+    }
 }
