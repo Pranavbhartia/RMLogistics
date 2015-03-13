@@ -3469,7 +3469,12 @@ padding-left: 90px;
 	margin-bottom: -150px; */
 }
 
+.ce-lp-complete {
+	cursor: pointer;
+}
 
-
+.ce-lp-in-progress{
+	cursor: pointer;
+}
 
 
