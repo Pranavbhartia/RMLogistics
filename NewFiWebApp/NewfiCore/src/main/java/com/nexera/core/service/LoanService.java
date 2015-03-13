@@ -11,36 +11,56 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.UserVO;
 
-public interface LoanService {
 
-	public List<LoanVO> getLoansOfUser(UserVO user);
+public interface LoanService
+{
 
-	public LoanVO getLoanByID(Integer loanID);
+    public List<LoanVO> getLoansOfUser( UserVO user );
 
-	public boolean addToLoanTeam(LoanVO loan,UserVO user);
 
-	public boolean removeFromLoanTeam(LoanVO loan,UserVO user);
+    public LoanVO getLoanByID( Integer loanID );
 
-	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
-	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
-	
-	public LoanVO getActiveLoanOfUser(UserVO user);
+    public boolean addToLoanTeam( LoanVO loan, UserVO user );
 
-	LoanDashboardVO retrieveDashboard(UserVO user);
 
-	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
+    public boolean removeFromLoanTeam( LoanVO loan, UserVO user );
+
+
+    public List<UserVO> retreiveLoanTeam( LoanVO loan );
+
+
+    public List<LoanVO> retreiveLoansAsManager( UserVO loanManager );
+
+
+    public LoanVO getActiveLoanOfUser( UserVO user );
+
+
+    LoanDashboardVO retrieveDashboard( UserVO user );
+
+
+    LoanTeamListVO getLoanTeamListForLoan( LoanVO loan );
+
 
     LoansProgressStatusVO getLoansProgressForUser( Integer i );
 
-    public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
-    Loan parseLoanModel(LoanVO loanVO);
+    public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId );
 
-	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
 
-    public void saveWorkflowInfo(int loanID, int customerWorkflowID, int loanManagerWFID) ;
-    public LoanVO findWorkflowInfoById(int loanID) ;
+    Loan parseLoanModel( LoanVO loanVO );
+
+
+    LoanCustomerVO retrieveDashboard( UserVO userVO, LoanVO loanVO );
+
+
+    public void saveWorkflowInfo( int loanID, int customerWorkflowID, int loanManagerWFID );
+
+
+    public LoanVO findWorkflowInfoById( int loanID );
+
+
+    public List<Loan> getAllLoans();
 
 
 }
