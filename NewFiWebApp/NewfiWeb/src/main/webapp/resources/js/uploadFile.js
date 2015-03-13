@@ -142,6 +142,7 @@ function showFileLink(uploadedItems) {
 
 
 function saveUserDocumentAssignments() {
+	showOverlay();
 	console.info("user assignemnt");
 	var fileAssignMentVO = new Array();
 
@@ -167,6 +168,7 @@ function saveUserDocumentAssignments() {
 		contentType : "application/json; charset=utf-8",
 		success : function(data) {
 			saveAssignmentonFile(data);
+			hideOverlay();
 		},
 		error : function(error) {
 		}
@@ -302,6 +304,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		complete : function(response) {
 			hideOverlay();
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
+			getRequiredDocuments();
 		},
 		dragenter : function() {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
@@ -314,7 +317,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		},
 		queuecomplete : function() {
 			
-			getRequiredDocuments();
+			
 		},
 		addedfile : function(){
 			showOverlay();

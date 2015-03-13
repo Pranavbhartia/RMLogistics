@@ -46,6 +46,9 @@ public class EngineTrigger {
 	@Autowired
 	WorkflowManager workflowManager;
 
+	@Autowired
+	private ApplicationContext applicationContext;
+
 	public Integer triggerWorkFlow(String workflowJsonString) {
 		LOGGER.debug("Triggering a workflow ");
 		WorkflowMaster workflowMaster = null;
@@ -293,7 +296,7 @@ public class EngineTrigger {
 			LOGGER.debug("Calling java reflection api to invoke method with specified params ");
 			try {
 				Class classToLoad = Class.forName(className);
-				Object obj = classToLoad.newInstance();
+				Object obj = applicationContext.getBean(classToLoad);
 
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
@@ -303,9 +306,6 @@ public class EngineTrigger {
 
 			} catch (ClassNotFoundException e) {
 				LOGGER.debug("Class Not Found " + e.getMessage());
-			} catch (InstantiationException e) {
-				LOGGER.debug("Cannot instantiate object of this class "
-				        + e.getMessage());
 			} catch (IllegalAccessException e) {
 				LOGGER.debug("Unable to access the object" + e.getMessage());
 			} catch (NoSuchMethodException e) {
