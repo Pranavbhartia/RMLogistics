@@ -28,6 +28,67 @@
 	<script>
 		$(document).ready(function() {
 			paintSelectLoanTypeQuestion();
+			
+			$(document).on('click','#progressBaarId_1',function(){
+				paintRefinanceMainContainer();
+			});
+			$(document).on('click','#progressBaarId_2',function(){
+				if(stages>1){
+					progressBaar(2);
+					paintRefinanceLiveNow();
+				}
+			});
+			$(document).on('click','#progressBaarId_3',function(){
+				if(stages>2){
+					progressBaar(3);
+					paintRefinanceStartLiving();
+				}
+			});
+			$(document).on('click','#progressBaarId_4',function(){
+				if(stages>3){
+					progressBaar(4);
+					paintRefinanceMyIncome();
+				}
+			});
+			$(document).on('click','#progressBaarId_5',function(){
+				if(stages>4){
+					progressBaar(5);
+					paintRefinanceDOB();
+				}
+			});
+			
+			//--- Buy home progress baar button 
+			
+			$(document).on('click','#homeProgressBaarId_1',function(){
+				paintBuyHomeContainer();
+			});
+			$(document).on('click','#homeProgressBaarId_2',function(){
+				if(active>1){
+					homeProgressBaar(2);
+					paintBuyHomeRenting();
+				}
+			});
+			$(document).on('click','#homeProgressBaarId_3',function(){
+				if(active>2){
+					homeProgressBaar(3);
+					paintBuyHomEachMonthrent();
+				}
+			});
+			$(document).on('click','#homeProgressBaarId_4',function(){
+				if(active>3){
+					homeProgressBaar(4);
+					paintBuyHomeMyIncome();
+				}
+			});
+			$(document).on('click','#homeProgressBaarId_5',function(){
+				if(active>4){
+					homeProgressBaar(5);
+					paintBuyHomeSSN();
+				}
+			});
+			
+			
+
 		});
 	</script>
 </body>
