@@ -3,169 +3,54 @@ package com.nexera.common.vo.lqb;
 public class TeaserRateVO {
 
 	
-	private String loanType;
-	private String homeBuying;
-	private String firstTimeHomeBuyerId;
-	private String preferredLoanType;
-	private String estimatedPurachsePrice;
-	private String days;
-	private String employmentStatus;
-	private String loanAmount;
-	private String custCreditScore;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String preferredPhone;
-	private String  aboutus;
-	private String  occupancyType;
-	private String  alternatePhone;
-	private String  preferTaxes;
-	private String  agent;
-	private String  veteran;
-	private String  address;
-	private String  unit;
-	private String  zip;
-	private String  city;
-	private String  typeProperty;
-	private String  numOfunits;
-	private String  state;
-	private String  county;
-	
-
-	
-	
-	
-	public String getLoanType() {
-		return loanType;
+	   private String refinanceOption;
+	   private String liveNow;
+	   private String currentAddress ;
+	   private String city;
+	   private String state;
+	   private String zipCode;
+	   private String startLiving;
+	   private String yearLeftOnMortgage;
+	   private String currentMortgageBalance;
+	   private String currentMortgagePayment;
+	   private String privateincludeTaxes;
+	   private String annualPropertyTaxes;
+	   private String annualHomeownersInsurance;
+	   private String homeWorthToday;
+	   private String isVeteran;
+	   private String beforeTax;
+	   private String workPlace;
+	   private String startWorking;
+	   private String selfEmployed;
+	   private String disability;
+	   private String pension;
+	   private String dob;
+	   private String ssn;
+	   private String creditscore;
+	   private String phoneNumber;
+	   private String cashTakeOut;
+	   private String livingSituation;
+	   private String rentPerMonth;
+	   private String liveEarlier;
+	   private String sellYourHome;
+	   private String purchaseforNewHome;
+	public String getRefinanceOption() {
+		return refinanceOption;
 	}
-	public void setLoanType(String loanType) {
-		this.loanType = loanType;
+	public void setRefinanceOption(String refinanceOption) {
+		this.refinanceOption = refinanceOption;
 	}
-	public String getHomeBuying() {
-		return homeBuying;
+	public String getLiveNow() {
+		return liveNow;
 	}
-	public void setHomeBuying(String homeBuying) {
-		this.homeBuying = homeBuying;
+	public void setLiveNow(String liveNow) {
+		this.liveNow = liveNow;
 	}
-	public String getFirstTimeHomeBuyerId() {
-		return firstTimeHomeBuyerId;
+	public String getCurrentAddress() {
+		return currentAddress;
 	}
-	public void setFirstTimeHomeBuyerId(String firstTimeHomeBuyerId) {
-		this.firstTimeHomeBuyerId = firstTimeHomeBuyerId;
-	}
-	public String getPreferredLoanType() {
-		return preferredLoanType;
-	}
-	public void setPreferredLoanType(String preferredLoanType) {
-		this.preferredLoanType = preferredLoanType;
-	}
-	public String getEstimatedPurachsePrice() {
-		return estimatedPurachsePrice;
-	}
-	public void setEstimatedPurachsePrice(String estimatedPurachsePrice) {
-		this.estimatedPurachsePrice = estimatedPurachsePrice;
-	}
-	public String getDays() {
-		return days;
-	}
-	public void setDays(String days) {
-		this.days = days;
-	}
-	public String getEmploymentStatus() {
-		return employmentStatus;
-	}
-	public void setEmploymentStatus(String employmentStatus) {
-		this.employmentStatus = employmentStatus;
-	}
-	public String getLoanAmount() {
-		return loanAmount;
-	}
-	public void setLoanAmount(String loanAmount) {
-		this.loanAmount = loanAmount;
-	}
-	public String getCustCreditScore() {
-		return custCreditScore;
-	}
-	public void setCustCreditScore(String custCreditScore) {
-		this.custCreditScore = custCreditScore;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPreferredPhone() {
-		return preferredPhone;
-	}
-	public void setPreferredPhone(String preferredPhone) {
-		this.preferredPhone = preferredPhone;
-	}
-	public String getAboutus() {
-		return aboutus;
-	}
-	public void setAboutus(String aboutus) {
-		this.aboutus = aboutus;
-	}
-	public String getOccupancyType() {
-		return occupancyType;
-	}
-	public void setOccupancyType(String occupancyType) {
-		this.occupancyType = occupancyType;
-	}
-	public String getAlternatePhone() {
-		return alternatePhone;
-	}
-	public void setAlternatePhone(String alternatePhone) {
-		this.alternatePhone = alternatePhone;
-	}
-	public String getPreferTaxes() {
-		return preferTaxes;
-	}
-	public void setPreferTaxes(String preferTaxes) {
-		this.preferTaxes = preferTaxes;
-	}
-	public String getAgent() {
-		return agent;
-	}
-	public void setAgent(String agent) {
-		this.agent = agent;
-	}
-	public String getVeteran() {
-		return veteran;
-	}
-	public void setVeteran(String veteran) {
-		this.veteran = veteran;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getUnit() {
-		return unit;
-	}
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-	public String getZip() {
-		return zip;
-	}
-	public void setZip(String zip) {
-		this.zip = zip;
+	public void setCurrentAddress(String currentAddress) {
+		this.currentAddress = currentAddress;
 	}
 	public String getCity() {
 		return city;
@@ -173,31 +58,169 @@ public class TeaserRateVO {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getTypeProperty() {
-		return typeProperty;
-	}
-	public void setTypeProperty(String typeProperty) {
-		this.typeProperty = typeProperty;
-	}
-	public String getNumOfunits() {
-		return numOfunits;
-	}
-	public void setNumOfunits(String numOfunits) {
-		this.numOfunits = numOfunits;
-	}
 	public String getState() {
 		return state;
 	}
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getCounty() {
-		return county;
+	public String getZipCode() {
+		return zipCode;
 	}
-	public void setCounty(String county) {
-		this.county = county;
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
-	
+	public String getStartLiving() {
+		return startLiving;
+	}
+	public void setStartLiving(String startLiving) {
+		this.startLiving = startLiving;
+	}
+	public String getYearLeftOnMortgage() {
+		return yearLeftOnMortgage;
+	}
+	public void setYearLeftOnMortgage(String yearLeftOnMortgage) {
+		this.yearLeftOnMortgage = yearLeftOnMortgage;
+	}
+	public String getCurrentMortgageBalance() {
+		return currentMortgageBalance;
+	}
+	public void setCurrentMortgageBalance(String currentMortgageBalance) {
+		this.currentMortgageBalance = currentMortgageBalance;
+	}
+	public String getCurrentMortgagePayment() {
+		return currentMortgagePayment;
+	}
+	public void setCurrentMortgagePayment(String currentMortgagePayment) {
+		this.currentMortgagePayment = currentMortgagePayment;
+	}
+	public String getPrivateincludeTaxes() {
+		return privateincludeTaxes;
+	}
+	public void setPrivateincludeTaxes(String privateincludeTaxes) {
+		this.privateincludeTaxes = privateincludeTaxes;
+	}
+	public String getAnnualPropertyTaxes() {
+		return annualPropertyTaxes;
+	}
+	public void setAnnualPropertyTaxes(String annualPropertyTaxes) {
+		this.annualPropertyTaxes = annualPropertyTaxes;
+	}
+	public String getAnnualHomeownersInsurance() {
+		return annualHomeownersInsurance;
+	}
+	public void setAnnualHomeownersInsurance(String annualHomeownersInsurance) {
+		this.annualHomeownersInsurance = annualHomeownersInsurance;
+	}
+	public String getHomeWorthToday() {
+		return homeWorthToday;
+	}
+	public void setHomeWorthToday(String homeWorthToday) {
+		this.homeWorthToday = homeWorthToday;
+	}
+	public String getIsVeteran() {
+		return isVeteran;
+	}
+	public void setIsVeteran(String isVeteran) {
+		this.isVeteran = isVeteran;
+	}
+	public String getBeforeTax() {
+		return beforeTax;
+	}
+	public void setBeforeTax(String beforeTax) {
+		this.beforeTax = beforeTax;
+	}
+	public String getWorkPlace() {
+		return workPlace;
+	}
+	public void setWorkPlace(String workPlace) {
+		this.workPlace = workPlace;
+	}
+	public String getStartWorking() {
+		return startWorking;
+	}
+	public void setStartWorking(String startWorking) {
+		this.startWorking = startWorking;
+	}
+	public String getSelfEmployed() {
+		return selfEmployed;
+	}
+	public void setSelfEmployed(String selfEmployed) {
+		this.selfEmployed = selfEmployed;
+	}
+	public String getDisability() {
+		return disability;
+	}
+	public void setDisability(String disability) {
+		this.disability = disability;
+	}
+	public String getPension() {
+		return pension;
+	}
+	public void setPension(String pension) {
+		this.pension = pension;
+	}
+	public String getDob() {
+		return dob;
+	}
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+	public String getSsn() {
+		return ssn;
+	}
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
+	public String getCreditscore() {
+		return creditscore;
+	}
+	public void setCreditscore(String creditscore) {
+		this.creditscore = creditscore;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public String getCashTakeOut() {
+		return cashTakeOut;
+	}
+	public void setCashTakeOut(String cashTakeOut) {
+		this.cashTakeOut = cashTakeOut;
+	}
+	public String getLivingSituation() {
+		return livingSituation;
+	}
+	public void setLivingSituation(String livingSituation) {
+		this.livingSituation = livingSituation;
+	}
+	public String getRentPerMonth() {
+		return rentPerMonth;
+	}
+	public void setRentPerMonth(String rentPerMonth) {
+		this.rentPerMonth = rentPerMonth;
+	}
+	public String getLiveEarlier() {
+		return liveEarlier;
+	}
+	public void setLiveEarlier(String liveEarlier) {
+		this.liveEarlier = liveEarlier;
+	}
+	public String getSellYourHome() {
+		return sellYourHome;
+	}
+	public void setSellYourHome(String sellYourHome) {
+		this.sellYourHome = sellYourHome;
+	}
+	public String getPurchaseforNewHome() {
+		return purchaseforNewHome;
+	}
+	public void setPurchaseforNewHome(String purchaseforNewHome) {
+		this.purchaseforNewHome = purchaseforNewHome;
+	}
+	   
 	
 	
 	
