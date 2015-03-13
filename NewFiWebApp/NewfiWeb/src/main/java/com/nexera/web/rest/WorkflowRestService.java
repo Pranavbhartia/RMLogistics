@@ -2,7 +2,6 @@ package com.nexera.web.rest;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
@@ -73,7 +71,7 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "details/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody
 	CommonResponseVO getWorkflowDetails(@PathVariable int loanID) {
@@ -82,7 +80,6 @@ public class WorkflowRestService {
 		try {
 			LoanVO loanVO = loanService.findWorkflowInfoById(loanID);
 			LOG.debug("Putting loan manager workflow into execution ");
-			
 			response = RestUtil.wrapObjectForSuccess(loanVO);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -92,7 +89,7 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "needCount/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody
 	CommonResponseVO getNeedCount(@PathVariable int loanID) {
@@ -100,10 +97,11 @@ public class WorkflowRestService {
 		CommonResponseVO response = null;
 		try {
 			// This needs to be changed.
-			NeededItemScoreVO scoreVo = needsListService.getNeededItemsScore(loanID);
-			String needString = scoreVo.getTotalSubmittedItem() + " out of " + scoreVo.getNeededItemRequired();
+			NeededItemScoreVO scoreVo = needsListService
+			        .getNeededItemsScore(loanID);
+			String needString = scoreVo.getTotalSubmittedItem() + " out of "
+			        + scoreVo.getNeededItemRequired();
 			LOG.debug("Putting loan manager workflow into execution ");
-			
 			response = RestUtil.wrapObjectForSuccess(needString);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -113,7 +111,6 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-
 
 	// workflow/3/milestone/state/workflowIte
 	@RequestMapping(value = "{loanId}/milestone/", method = RequestMethod.GET)
@@ -158,8 +155,7 @@ public class WorkflowRestService {
 			// call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
 			
-			
-			//TODO the responseObject Should be Int value returned by notification service 
+			//TODO service should return same result as Notification Service 
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -169,28 +165,25 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
+
 	@RequestMapping(value = "/milestone/sendMail", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO sendMail(
-
-	@RequestBody String milestoneNotificationStr) {
-
+	public @ResponseBody
+	CommonResponseVO sendMail(@RequestBody String milestoneNotificationStr) {
 		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
 		CommonResponseVO response = null;
 		try {
-
 			Gson gson = new Gson();
 			EmailNotificationVo emailNotificationVo = gson.fromJson(
 			        milestoneNotificationStr, EmailNotificationVo.class);
 			LOG.info("workflowItem ID" + emailNotificationVo.getMilestoneId());
-			
 			String stateInfo = "";// Make a call to Workflow Engine which will
-			                      // call the renderStateInfo
+			// call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
-			Object params[]=new Object[3];
-			params[0]=emailNotificationVo.getEmailId();
-			params[1]=emailNotificationVo.getParams();
-			engineTrigger.startWorkFlowItemExecution(emailNotificationVo.getMilestoneId(),params);
-			
+			Object params[] = new Object[3];
+			params[0] = "Sample Template";
+			params[1] = emailNotificationVo.getEmailId();
+			engineTrigger.startWorkFlowItemExecution(
+			        emailNotificationVo.getMilestoneId(), params);
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
@@ -219,7 +212,7 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "customer/{workflowId}", method = RequestMethod.GET)
 	public @ResponseBody
 	CommonResponseVO prepareTestListForCustomer(@PathVariable int workflowId) {
@@ -238,353 +231,313 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-private List<WorkflowItemExecVO> prepareTestListForLoanManager ()
-{
-	List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
-	int numberOrder = 1;
-	WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setId(numberOrder++);
-	workflowItemExecVO.setDisplayContent("Make Initial Contact");
-	workflowItemExecVO.setStateInfo("Schedule an Alert");
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("System Education");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	// make some child workflow items
-	WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
-	childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO.setSuccess(true);
-	childWorkflowItemExecVO.setId(numberOrder++);
-	childWorkflowItemExecVO.setDisplayContent("Rates");
-	childWorkflowItemExecVO
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO);
-	WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Application");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Communication");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Needs List/ Documents");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Loan Progress");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Profile");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("1003 Complete");
-	workflowItemExecVO
-	        .setDisplayContent("Click here to apply application");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Credit Bureau");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Credit Score");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("AUS");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Loan Manager Decision");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("QC");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Needed Items");
-	workflowItemExecVO.setStateInfo("4/10 Completed");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Add Team");
-	workflowItemExecVO.setStateInfo("Click here to add a Team Member");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO
-	        .setDisplayContent("Disclosures / Intent to Proceed");
-	workflowItemExecVO.setStateInfo("Click to add Disclosures");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Application Fee");
-	workflowItemExecVO
-	        .setStateInfo("Click here to edit Application Fee");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Appraisal");
-	workflowItemExecVO
-	        .setStateInfo("Click here to edit start Appraisal");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Lock Your Rate");
-	workflowItemExecVO.setStateInfo("Click here to lock your rate");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Underwriting status");
-	workflowItemExecVO.setStateInfo("Pending");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Loan Closure Status");
-	workflowItemExecVO.setStateInfo("Closing Status");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	return list;
-}
 
-private List<WorkflowItemExecVO> prepareTestListForCustomer ()
-{
-	List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
-	int numberOrder = 1;
-	WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setId(numberOrder++);
-	workflowItemExecVO.setDisplayContent("My Profile");
-	workflowItemExecVO.setStateInfo("");
-	list.add(workflowItemExecVO);
-	
-	// make some child workflow items
-	WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
-	childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO.setSuccess(true);
-	childWorkflowItemExecVO.setId(numberOrder++);
-	childWorkflowItemExecVO.setDisplayContent("Account");
-	childWorkflowItemExecVO
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO);
-	WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Online Application");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Photo");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	
-	
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("SMS Texting Preferences");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Application Status ");
-	workflowItemExecVO
-	        .setStateInfo("40%");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Connect your online application");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	
-	
-	childWorkflowItemExecVO2 = new WorkflowItemExecVO();
-	childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
-	        .getStatusValue());
-	childWorkflowItemExecVO2.setSuccess(true);
-	childWorkflowItemExecVO2.setId(numberOrder++);
-	childWorkflowItemExecVO2.setDisplayContent("Contact your Loan Manager");
-	childWorkflowItemExecVO2
-	        .setParentWorkflowItemExec(workflowItemExecVO);
-	list.add(childWorkflowItemExecVO2);
-	
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Credit Status");
-	workflowItemExecVO.setStateInfo("EQ 786~ TU-289 ~ Ex - 121");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Team");
-	workflowItemExecVO.setStateInfo("Add Team Members To Team");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Application Fee");
-	workflowItemExecVO.setStateInfo("Click to pay");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Lock Rate");
-	workflowItemExecVO.setStateInfo("Click to lock Rate");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Appraisal");
-	workflowItemExecVO.setStateInfo("Status ..");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Underwriting");
-	workflowItemExecVO.setStateInfo("Pending.");
-	workflowItemExecVO.setId(numberOrder++);
-	list.add(workflowItemExecVO);
-	
-	workflowItemExecVO = new WorkflowItemExecVO();
-	workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
-	        .getStatusValue());
-	workflowItemExecVO.setSuccess(true);
-	workflowItemExecVO.setDisplayContent("Closing Status");
-	workflowItemExecVO.setStateInfo("Download Payment Coupon.");
-	workflowItemExecVO.setId(numberOrder++);
-	
-	list.add(workflowItemExecVO);
-	return list;
-}
+	private List<WorkflowItemExecVO> prepareTestListForLoanManager() {
+		List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
+		int numberOrder = 1;
+		WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setId(numberOrder++);
+		workflowItemExecVO.setDisplayContent("Make Initial Contact");
+		workflowItemExecVO.setStateInfo("Schedule an Alert");
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("System Education");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		// make some child workflow items
+		WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
+		childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO.setSuccess(true);
+		childWorkflowItemExecVO.setId(numberOrder++);
+		childWorkflowItemExecVO.setDisplayContent("Rates");
+		childWorkflowItemExecVO.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO);
+		WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Application");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Communication");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Needs List/ Documents");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Loan Progress");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Profile");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("1003 Complete");
+		workflowItemExecVO.setDisplayContent("Click here to apply application");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Credit Bureau");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Credit Score");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("AUS");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Loan Manager Decision");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("QC");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Needed Items");
+		workflowItemExecVO.setStateInfo("4/10 Completed");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Add Team");
+		workflowItemExecVO.setStateInfo("Click here to add a Team Member");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Disclosures / Intent to Proceed");
+		workflowItemExecVO.setStateInfo("Click to add Disclosures");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Application Fee");
+		workflowItemExecVO.setStateInfo("Click here to edit Application Fee");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Appraisal");
+		workflowItemExecVO.setStateInfo("Click here to edit start Appraisal");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Lock Your Rate");
+		workflowItemExecVO.setStateInfo("Click here to lock your rate");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Underwriting status");
+		workflowItemExecVO.setStateInfo("Pending");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Loan Closure Status");
+		workflowItemExecVO.setStateInfo("Closing Status");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		return list;
+	}
+
+	private List<WorkflowItemExecVO> prepareTestListForCustomer() {
+		List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
+		int numberOrder = 1;
+		WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setId(numberOrder++);
+		workflowItemExecVO.setDisplayContent("My Profile");
+		workflowItemExecVO.setStateInfo("");
+		list.add(workflowItemExecVO);
+		// make some child workflow items
+		WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
+		childWorkflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO.setSuccess(true);
+		childWorkflowItemExecVO.setId(numberOrder++);
+		childWorkflowItemExecVO.setDisplayContent("Account");
+		childWorkflowItemExecVO.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO);
+		WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Online Application");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Photo");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("SMS Texting Preferences");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.IN_PROGRESS
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Application Status ");
+		workflowItemExecVO.setStateInfo("40%");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2
+		        .setDisplayContent("Connect your online application");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
+		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
+		        .getStatusValue());
+		childWorkflowItemExecVO2.setSuccess(true);
+		childWorkflowItemExecVO2.setId(numberOrder++);
+		childWorkflowItemExecVO2.setDisplayContent("Contact your Loan Manager");
+		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
+		list.add(childWorkflowItemExecVO2);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Credit Status");
+		workflowItemExecVO.setStateInfo("EQ 786~ TU-289 ~ Ex - 121");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Team");
+		workflowItemExecVO.setStateInfo("Add Team Members To Team");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Application Fee");
+		workflowItemExecVO.setStateInfo("Click to pay");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Lock Rate");
+		workflowItemExecVO.setStateInfo("Click to lock Rate");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Appraisal");
+		workflowItemExecVO.setStateInfo("Status ..");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Underwriting");
+		workflowItemExecVO.setStateInfo("Pending.");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setStatus(WorkflowItemStatus.NOT_STARTED
+		        .getStatusValue());
+		workflowItemExecVO.setSuccess(true);
+		workflowItemExecVO.setDisplayContent("Closing Status");
+		workflowItemExecVO.setStateInfo("Download Payment Coupon.");
+		workflowItemExecVO.setId(numberOrder++);
+		list.add(workflowItemExecVO);
+		return list;
+	}
 }
