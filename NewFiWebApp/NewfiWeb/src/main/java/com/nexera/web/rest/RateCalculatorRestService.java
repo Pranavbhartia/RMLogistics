@@ -46,7 +46,12 @@ public class RateCalculatorRestService {
 		Gson gson = new Gson();
 		LOG.info("findteaseratevalue - inout xml is"+teaseRate);
 		TeaserRateVO teaserRateVO = gson.fromJson(teaseRate, TeaserRateVO.class); 
-        String requestXML = CreateXmlForTeaserRate(teaserRateVO);
+		LOG.info("teaserRateVO"+teaserRateVO.getCity());
+		LOG.info("teaserRateVO"+teaserRateVO.getCurrentAddress());
+		LOG.info("teaserRateVO"+teaserRateVO.getCurrentMortgageBalance());
+		LOG.info("teaserRateVO"+teaserRateVO.getCreditscore());
+		
+		String requestXML = CreateXmlForTeaserRate(teaserRateVO);
 		LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
 		List<TeaserRateResponseVO> teaserRateResponseVO = invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
 		LOG.info("Json resonse returned to JSP is"+gson.toJson(teaserRateResponseVO));
@@ -73,9 +78,9 @@ public class RateCalculatorRestService {
 	{
 		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 				+ "<loan "
-				+ "sHouseValPe="+"\""+teaserRateVO.getEstimatedPurachsePrice()+"\""
+				+ "sHouseValPe="+"\""+teaserRateVO.getHomeWorthToday()+"\""
 				+ " "
-				+ "sLAmtCalcPe="+"\""+teaserRateVO.getLoanAmount()+"\""
+				+ "sLAmtCalcPe="+"\""+teaserRateVO.getCurrentMortgageBalance()+"\""
 				+ " "
 				+ "sLPurposeTPe="+"\""+"1"+"\""
 				+ " "
@@ -103,13 +108,13 @@ public class RateCalculatorRestService {
 				+ " "
 				+ "sSpStatePe="+"\""+teaserRateVO.getState()+"\""
 				+ " "
-				+ "sSpCounty="+"\""+teaserRateVO.getCounty()+"\""
+				+ "sSpCounty="+"\""+teaserRateVO.getCity()+"\""
 				+ " "
-				+ "sProdRLckdDays="+"\""+teaserRateVO.getDays()+"\""
+				+ "sProdRLckdDays="+"\""+"30"+"\""
 				+ " "
-				+ "sSpZip="+"\""+teaserRateVO.getZip()+"\""
+				+ "sSpZip="+"\""+teaserRateVO.getZipCode()+"\""
 				+ " "
-				+ "sOccTPe="+"\""+teaserRateVO.getOccupancyType()+"\""
+				+ "sOccTPe="+"\""+"0"+"\""
 				+ " "
 				+ "sProdSpT="+"\""+"0"+"\""
 				+ " "
