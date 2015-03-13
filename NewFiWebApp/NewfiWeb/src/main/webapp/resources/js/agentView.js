@@ -2086,9 +2086,10 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
 	if (!result) {
-		alert("An error occurred, kindly contact admin.");
+		showToastMessage("An error occurred, kindly contact admin.");
 		return;
-	}
+	}else
+		showToastMessage("User removed successfully");
 
 	var loanID = editLoanTeamVO.loanID;
 	var userID = editLoanTeamVO.userID;
