@@ -24,7 +24,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<!---End-header---->
 			<!--start-content------>
 			<div class="content">
-				<img src="resources/images/404-error-img.png" title="error" />
+			<!-- 	<img src="resources/images/404-error-img.png" title="error"/> -->
 				<p><span><label>O</label>oops.....</span>You seem to have requested a page that doesn't exist.</p>
 				<a href="#">Back To Home</a>
 				<div class="copy-right">
