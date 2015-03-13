@@ -18,21 +18,21 @@ function initiateJcrop(input) {
 			//ratio = 2.08;
 			var myImage = new Image(); 
 			myImage.src = e.target.result;
-			console.log("success width"+myImage.width);
-			console.log("success height"+myImage.height);
+			//console.log("success width"+myImage.width);
+			//console.log("success height"+myImage.height);
 			if(myImage.width > myImage.height){
-			console.log("success it is a landscape image");
+			//console.log("success it is a landscape image");
             $('#pu-img').width(width_red);
 			
 			}else{
-			console.log("success it is a portrait image");
+			//console.log("success it is a portrait image");
             $('#pu-img').height(height_red); 
 			
 			
 			}
 			$('#pu-img').attr('src', e.target.result);
 			
-			console.log("ratio"+ratio);
+			//console.log("ratio"+ratio);
 			$('#pu-img').css("display", "block");
 			// $('#pu-img').width(imageMaxWidth);
 			 //var tempRatio = actWidth/newWidth;
@@ -96,9 +96,9 @@ function initiateJcrop(input) {
 function updatePreview(c) {
 
 
-	console.log("in updatepreview the ratio is"+ratio);
-console.log("c value"+c.x);
-console.log("c value 2:"+c.y+":w:"+c.w+"c.h:"+c.h+"c.x2:"+c.x2+"c.y2:"+c.y2);
+	//console.log("in updatepreview the ratio is"+ratio);
+//console.log("c value"+c.x);
+//console.log("c value 2:"+c.y+":w:"+c.w+"c.h:"+c.h+"c.x2:"+c.x2+"c.y2:"+c.y2);
 		var imageObj = $("#pu-img")[0];
 		var canvas = $("#pu-canvas")[0];
 		/* var context = canvas.getContext("2d");
