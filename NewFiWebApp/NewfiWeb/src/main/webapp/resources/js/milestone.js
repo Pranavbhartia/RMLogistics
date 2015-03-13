@@ -149,13 +149,13 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			var data = {};
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
-				"mileNotificationId" : ob.workItem.itemId,
+				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.infoText
 			})
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
 			{
-				ajaxURL = "rest/workflow/details/1";
+				ajaxURL = "";//rest/workflow/details/1";
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
@@ -164,16 +164,10 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			else
-			{
-				txtRow1.html(workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);;
-			}
-						
-			ob.ajaxRequest(ajaxURL, "GET", "json", data,
+			
+					
+			if(ajaxURL&&ajaxURL!=""){
+				ob.ajaxRequest(ajaxURL, "GET", "json", data,
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
@@ -189,6 +183,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							callback(ob);
 						}
 					});
+			}else{
+				txtRow1.html(workItem.stateInfo);
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+				itemToAppendTo.append(txtRow1);
+			}	
+
 
 		}
 	};

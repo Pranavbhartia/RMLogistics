@@ -157,6 +157,9 @@ public class WorkflowRestService {
 			String stateInfo = "";// Make a call to Workflow Engine which will
 			// call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
+			
+			
+			//TODO the responseObject Should be Int value returned by notification service 
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
