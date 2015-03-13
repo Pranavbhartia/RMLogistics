@@ -40,6 +40,7 @@ public interface LoanService {
 	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
 
     public void saveWorkflowInfo(int loanID, int customerWorkflowID, int loanManagerWFID) ;
+    public LoanVO findWorkflowInfoById(int loanID) ;
 
 
 }

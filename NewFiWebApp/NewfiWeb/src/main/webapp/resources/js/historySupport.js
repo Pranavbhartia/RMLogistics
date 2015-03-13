@@ -22,8 +22,13 @@ function globalSNBinder() {
 				// TODO: Back button needs to be implemented
 				console.log("Sec nav clicked : "
 						+ $.data(this, "snEnum").snName);
-				saveState('loan', selectedUserDetail.loanID, $.data(this,
-						"snEnum").snName);
+				if (selectedUserDetail)
+					saveState($.data(this, "snEnum").pnName,
+							selectedUserDetail.loanID,
+							$.data(this, "snEnum").snName);
+				else
+					saveState($.data(this, "snEnum").pnName, $.data(this,
+							"snEnum").snName, null);
 				return true;
 			});
 }
@@ -48,7 +53,14 @@ function bindDataToPN() {
 			break;
 		case "lp-loan-wrapper":
 			$.data(this, "enum", {
-				pnName : PNEnum.LOAN
+				pnName : PNEnum.MY_LOAN
+
+			});
+			break;
+
+		case "lp-alert-wrapper":
+			$.data(this, "enum", {
+				pnName : PNEnum.ALERT
 
 			});
 			break;
@@ -95,7 +107,7 @@ function bindDataToPN() {
 function bindDataToSN() {
 
 	// Customer view
-	$('.lp-t2-wrapper >div').each(function() {
+	$('#cust-sec-nav >div').each(function() {
 
 		var id = $(this).attr('id');
 		var step = id.substr(id.length - 1, id.length - 2);
@@ -103,31 +115,36 @@ function bindDataToSN() {
 		switch (step) {
 		case "1":
 			$.data(this, "snEnum", {
-				snName : SNEnum.GETTINGTOKNOWNEWFI
+				snName : SNEnum[1],
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
 		case "2":
 			$.data(this, "snEnum", {
-				snName : SNEnum.COMPLETEAPPLICATION
+				snName : SNEnum[2],
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
 		case "3":
 			$.data(this, "snEnum", {
-				snName : SNEnum.LOCKRATE
+				snName : SNEnum[3],
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
 		case "4":
 			$.data(this, "snEnum", {
-				snName : SNEnum.UPLOAD
+				snName : SNEnum[4],
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
 		case "5":
 			$.data(this, "snEnum", {
-				snName : SNEnum.LOANPROGRESS
+				snName : SNEnum[5],
+				pnName : PNEnum.MY_LOAN
 
 			});
 			break;
@@ -144,7 +161,7 @@ function bindDataToSN() {
 	 * LOAN_DETAIL : "detail", LOCK_RATE:"lock-rate", NEEDS_LIST:"needs",
 	 * LOAN_PROGRESS:"progress" }
 	 */
-	$('.lp-t2-wrapper > div').each(function() {
+	$('#agent-sec-nav > div').each(function() {
 
 		var id = $(this).attr('id');
 		var step = id.substr(id.length - 1, id.length - 2);
@@ -152,37 +169,43 @@ function bindDataToSN() {
 		switch (step) {
 		case "0":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[0]
+				snName : AgentViewSNEnum[0],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
 		case "1":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[1]
+				snName : AgentViewSNEnum[1],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
 		case "2":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[2]
+				snName : AgentViewSNEnum[2],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
 		case "3":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[3]
+				snName : AgentViewSNEnum[3],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
 		case "4":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[4]
+				snName : AgentViewSNEnum[4],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
 		case "5":
 			$.data(this, "snEnum", {
-				snName : AgentViewSNEnum[5]
+				snName : AgentViewSNEnum[5],
+				pnName: AgentViewPNEnum.LOAN
 
 			});
 			break;
@@ -257,12 +280,26 @@ function retrieveState() {
 	// If Agent/internal user is logged in
 
 	switch (primary) {
+	
+	case PNEnum['MY_LOAN']:
+		console.log('Work on my loans');
+		if (loanID) {
+			for (i = 1; i <=5; i++) {
+				if (loanID == SNEnum[i])
+					loanID = i;
+			}
+			entryPointCustomerViewChangeNav(loanID);
+		} else 
+			entryPointCustomerViewChangeNav(2);
+	
+		break;
+	
 	case AgentViewPNEnum['WORK_ON_LOAN']:
 		console.log('Profile view');
 		break;
 
-	case AgentViewPNEnum['MY_LOANS']:
-		console.log('Work on my loans');
+	case AgentViewPNEnum['LOAN']:
+		console.log('Work on loans');
 		if (secondary) {
 			for (i = 0; i < 6; i++) {
 				if (secondary == AgentViewSNEnum[i])

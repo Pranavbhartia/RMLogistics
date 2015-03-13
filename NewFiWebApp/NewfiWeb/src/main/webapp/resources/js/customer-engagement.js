@@ -391,7 +391,7 @@ function paintRefinanceStep2() {
 	{
 	  quesCont = getTextQuestion(quesTxt,paintRefinanceStep3,"currentMortgageBalance");
 	}
-	if(refinanceTeaserRate['refinanceOption'] == 2)
+	if(refinanceTeaserRate['refinanceOption'] == 'takeCashOut')
 	{
 	   quesCont = getTextQuestion(quesTxt,paintRefinanceStep1b,"currentMortgageBalance");
 	}
@@ -781,9 +781,9 @@ function paintRefinanceSeeRates(){
 	   data:{"teaseRate":JSON.stringify(refinanceTeaserRate)},
 	   datatype:"application/json",
 	   success : function(data){
-		  alert("success");
-          //$('#teaserresult').html(teaserresult);
-		   //alert(teaserresult);
+		   var teaserresult = data;
+	       obj =  JSON.parse(teaserresult);
+	        alert(obj);
 	   },
 	   error :function(){
 		   alert("error");

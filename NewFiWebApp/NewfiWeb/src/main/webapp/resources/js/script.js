@@ -1,16 +1,17 @@
 //place for global variables
 var neededItemListObject;
 var currentUserAndLoanOnj = new Object();
-
+var doPagination = false;
 
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
 	$('.lp-item').removeClass('lp-item-active');
 	$('.lp-right-arrow').remove();
 	if (leftPanel == 1) {
+		doPagination = true;
 		showMessageDashboard();
 	} else if (leftPanel == 2) {
-		
+		doPagination = false;
 		findUser();
 	}
 	var contxt=getNotificationContext(newfiObject.user.defaultLoanId,newfiObject.user.id);
@@ -56,7 +57,8 @@ function adjustCenterPanelWidth() {
 
 function getCustomerSecondaryLeftNav() {
 	var leftTab2Wrapper = $('<div>').attr({
-		"class" : "lp-t2-wrapper"
+		"class" : "lp-t2-wrapper",
+		"id":"cust-sec-nav"
 	});
 
 	var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
@@ -146,12 +148,7 @@ function changeSecondaryLeftPanel(secondary) {
 	if (secondary == 1) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
-		
-		// make a ajax call and get user
 		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, paintProfileCompleteStep1);
-		
-		// customer profile page
-		
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
@@ -1321,4 +1318,12 @@ function getAlertNotificationRow(alert,time,isSystemAlert){
 
 function dismissAlert(element){
 	$(element).closest('.alert-popup-row').remove();
+}
+
+
+//History support for customer
+
+function entryPointCustomerViewChangeNav(viewName) {
+
+	changeSecondaryLeftPanel(viewName);
 }

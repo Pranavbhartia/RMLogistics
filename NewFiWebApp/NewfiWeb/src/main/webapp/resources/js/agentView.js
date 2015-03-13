@@ -22,7 +22,8 @@ function adjustCustomerNameWidth() {
 
 function getAgentSecondaryLeftNav() {
 	var leftTab2Wrapper = $('<div>').attr({
-		"class" : "lp-t2-wrapper"
+		"class" : "lp-t2-wrapper",
+		"id" : "agent-sec-nav"
 	});
 
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
@@ -52,129 +53,6 @@ function getAgentSecondaryLeftNavStep(step, text) {
 
 	return container.append(img).append(txt);
 }
-
-var imageBaseUrl = "resources/images/";
-
-var custData = {
-	"num_found" : "",
-	"customers" : [
-			{
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:58AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 3,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Chad Mcintosh",
-				"prof_image" : imageBaseUrl + "photos2.png",
-				"time" : "01/08/2015 12:48AM",
-				"phone_no" : "3865618993",
-				"purpose" : "Purchase",
-				"processor" : "Jennifer Standifer",
-				"credit_score" : "842",
-				"alert_count" : 1,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Kimberly Burkeen",
-				"prof_image" : imageBaseUrl + "photos3.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "9043309807",
-				"purpose" : "Purchase",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 0,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Sherry Andreu",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "9043309807",
-				"purpose" : "Purchase",
-				"processor" : "Jennifer Standifer",
-				"credit_score" : "699",
-				"alert_count" : 3,
-				"alerts" : [
-						"Salaried-W-2 forms - Pending",
-						"Payroll stubs for the past 30 days (showing YTD earings) - Pending",
-						"Payroll stub for the past 30 days," ],
-				"notes" : [
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						},
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						},
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						} ]
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 2,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 0,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 1,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 2,
-				"alerts" : [],
-				"notes" : []
-			} ]
-};
 
 function paintAgentDashboard() {
 	$('.lp-right-arrow').remove();
@@ -615,8 +493,7 @@ function appendSchedulerContainer(contxt) {
 	});
 }
 
-function getSchedulerContainer(contxt, tempData) {
-
+function getSchedulerContainer(contxt,tempData){
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -626,19 +503,15 @@ function getSchedulerContainer(contxt, tempData) {
 	var header = $('<div>').attr({
 		"class" : "cust-detail-header"
 	}).html("scheduler");
-
 	var dtPickerRow = $('<div>').attr({
 		"class" : "dt-picker-row clearfix"
 	});
-
 	var dtText = $('<div>').attr({
 		"class" : "dt-picker-text float-left"
 	}).html("Date/Time");
-
 	var datePicker = $('<div>').attr({
 		"class" : "date-picker-cont float-left"
 	});
-
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY",
@@ -647,95 +520,82 @@ function getSchedulerContainer(contxt, tempData) {
 		orientation : "top auto",
 		autoclose : true
 	});
-
 	datePicker.append(datePickerBox);
-
 	var timerPicker = $('<div>').attr({
 		"id" : "sch-msg-time-picker",
 		"class" : "time-picker-cont float-left"
 	});
-
 	var timerPickerBox = $('<input>').attr({
 		"class" : "time-picker-input",
 		"placeholder" : "11:58AM"
 	});
 	timerPicker.append(timerPickerBox);
 	dtPickerRow.append(dtText).append(datePicker).append(timerPicker);
-
 	var messageBox = $('<textarea>').attr({
 		"class" : "scheduled-msg-textbox",
 		"placeholder" : "Type your message here. When done click submit",
 		"id" : "sch-msg-message"
 	});
-
 	var buttonRow = $('<div>').attr({
 		"class" : "msg-btn-row clearfix"
 	});
-
 	var col1 = $('<div>').attr({
 		"class" : "msg-btn-col1 float-left clearfix"
 	});
-
 	var col1Btn = $('<div>').attr({
 		"class" : "msg-btn-submit float-right"
-	}).html("Submit").bind(
-			"click",
-			{
-				contxt : contxt,
-				tempData : tempData
-			},
-			function(e) {
-				var tempData = e.data.tempData;
-				var dat = $('#sch-msg-time-picker ').data('DateTimePicker')
-						.getDate()._d
-				var snoozeTime = $('#sch-msg-date-picker').data('datepicker')
-						.getDate();
-				snoozeTime.setHours(dat.getHours());
-				snoozeTime.setMinutes(dat.getMinutes())
-				var message = $("#sch-msg-message").val();
-				if (message == "") {
-					showToastMessage("Invalid Message");
-				} else if (snoozeTime == "Invalid Date") {
-					showToastMessage("Invalid Date");
-				} else {
-					var data = {};
-					if (tempData) {
-						for (key in tempData) {
-							data[key] = tempData[key];
-						}
-					}
-					data.content = message;
-					data.createdDate = new Date().getTime();
-					data.remindOn = snoozeTime.getTime();
-					data.createdByID = newfiObject.user.id;
-					data.createdForID = newfiObject.user.id;
-					contxt.scheduleAEvent(data, function() {
-						contxt.updateWrapper();
-						contxt.updateLoanListNotificationCount();
-						$("#sch-msg-message").val("");
-					});
+	}).html("Submit").bind("click",{contxt:contxt,tempData:tempData},function(e){
+		var tempData=e.data.tempData;
+		var contxt=e.data.contxt;
+		var dat=$('#sch-msg-time-picker ').data('DateTimePicker').getDate()._d
+		var snoozeTime=$('#sch-msg-date-picker').data('datepicker').getDate();
+		snoozeTime.setHours(dat.getHours());
+		snoozeTime.setMinutes(dat.getMinutes())
+		var message=$("#sch-msg-message").val();
+		if(message==""){
+			showToastMessage("Invalid Message");
+		}else if(snoozeTime=="Invalid Date"){
+			showToastMessage("Invalid Date");
+		}else{
+			var data={};
+			data.content=message;
+			data.createdDate=new Date().getTime();
+			data.remindOn=snoozeTime.getTime();
+			data.createdByID=newfiObject.user.id;
+			data.createdForID=newfiObject.user.id;
+			data.loanID=contxt.loanId;
+			data.notificationType="NOTIFICATION";
+			if(tempData){
+				var wrapperData={};
+				for(key in tempData){
+					wrapperData[key]=tempData[key];
+				}
+				wrapperData.notificationVo=data;
+				data=wrapperData;
+			}
+			contxt.scheduleAEvent(data,function(){
+				contxt.updateWrapper();
+				contxt.updateLoanListNotificationCount();
+				$("#sch-msg-message").val("");
+				if(tempData){
+					removeNotificationPopup();
 				}
 			});
+		}
+	});
 	col1.append(col1Btn);
-
 	var col2 = $('<div>').attr({
 		"class" : "msg-btn-col2 float-left"
 	}).html("or");
-
 	var col3 = $('<div>').attr({
 		"class" : "msg-btn-col3 float-left clearfix"
 	});
-
 	var col3Btn = $('<div>').attr({
 		"class" : "msg-btn-clear float-left"
 	}).html("Clear");
 	col3.append(col3Btn);
-
 	buttonRow.append(col1).append(col2).append(col3);
-
-	container.append(header).append(dtPickerRow).append(messageBox).append(
-			buttonRow);
-
+	container.append(header).append(dtPickerRow).append(messageBox).append(buttonRow);
 	wrapper.append(container);
 	return wrapper;
 }
@@ -918,7 +778,7 @@ function paintAgentLoanPage(data) {
 	var loanDetails = data.resultObject;
 	appendCustomerDetailHeader(selectedUserDetail);
 	appendCustomerLoanDetails(loanDetails);
-	appendAddTeamMemberWrapper();
+	appendAddTeamMemberWrapper('center-panel-cont');
 	appendNewfiTeamWrapper(loanDetails);
 	var contxt = getContext(loanDetails.id + "-notification");
 	if (contxt) {
@@ -942,10 +802,11 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	});
 	$('#' + elementId).append(rightArrow);
 	$('#center-panel-cont').html('');
-
+	doPagination=false;
 	// Check the id and paint the corresponding right panel
 	if (elementId == "lp-step0") {
-		console.log("talk to your team");
+		doPagination=true;
+		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
@@ -1129,10 +990,10 @@ function appendLoanDetailsRow(label, value, isLink) {
 }
 
 // Function to append add team member wrapper in loan managaer view
-function appendAddTeamMemberWrapper() {
+function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 	var wrapper = $('<div>').attr({
 		"class" : "add-team-mem-wrapper"
-	});
+	}).data("additionalData",data);
 
 	var header = $('<div>').attr({
 		"class" : "add-team-mem-header clearfix"
@@ -1155,7 +1016,7 @@ function appendAddTeamMemberWrapper() {
 	var userTypeSel = $('<div>').attr({
 		"id" : "add-memeber-user-type",
 		"class" : "add-member-sel float-right"
-	});
+	}).on('click',userTypeClicked);;
 
 	userTypeCont.append(userTypeSel);
 
@@ -1199,7 +1060,10 @@ function appendAddTeamMemberWrapper() {
 	container.append(userTypeCont).append(userNameCont);
 
 	wrapper.append(header).append(container);
-	$('#center-panel-cont').append(wrapper);
+	if(clearParent){
+		$('#'+parentElement).html("");
+	}
+	$('#'+parentElement).append(wrapper);
 
 	// function to append create user popup
 	appendCreateUserPopup();
@@ -1245,6 +1109,7 @@ function paintUserNameDropDown(values) {
 						var userID = $(this).attr("userID");
 						console.log("User id : " + userID);
 						hideUserNameDropDown();
+						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
 						addUserToLoanTeam(userID, selectedUserDetail.loanID);
 					});
@@ -1254,7 +1119,7 @@ function paintUserNameDropDown(values) {
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
 		"class" : "add-member-dropdown-row"
-	}).html("Add New User");
+	}).html("Add New User").on('click',showAddUserPopUp);
 	dropdownCont.append(addUserdropDownRow);
 }
 
@@ -1265,21 +1130,32 @@ $(document).click(function() {
 	}
 });
 
-$(document).on('click', '#add-memeber-user-type', function(event) {
+function userTypeClicked(event){
 	event.stopImmediatePropagation();
 	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
 		hideUserTypeDropDown();
 	} else {
 		showUserTypeDropDown();
 	}
-});
+}
+
+
+/*$(document).on('click', '#add-memeber-user-type', function(event) {
+	event.stopImmediatePropagation();
+	if ($('#add-usertype-dropdown-cont').css("display") == "block") {
+		hideUserTypeDropDown();
+	} else {
+		showUserTypeDropDown();
+	}
+});*/
 
 // Click function to create a user
-$(document).on('click', '#add-member-user', function(event) {
+
+function showAddUserPopUp(){
 	event.stopImmediatePropagation();
 	hideUserNameDropDown();
 	showCreateUserPopup();
-});
+}
 
 function showUserTypeDropDown() {
 	$('#add-usertype-dropdown-cont').css({
@@ -1348,48 +1224,6 @@ $(document).click(function() {
 		hideUserTypeDropDown();
 	}
 });
-
-var users = [ {
-	"firstName" : "Jessica",
-	"lastName" : "Cockrell",
-	"emailId" : "Jessica@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Loan Manager"
-	}
-}, {
-	"firstName" : "Regina",
-	"lastName" : "Fleming",
-	"emailId" : "Regina@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Processor"
-	}
-}, {
-	"firstName" : "Scott",
-	"lastName" : "Harris",
-	"emailId" : "Scott.Harris@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Loan Agent"
-	}
-}, {
-	"firstName" : "Brenda",
-	"lastName" : "Allen",
-	"emailId" : "Brenda@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Sales Manager"
-	}
-}, {
-	"firstName" : "Annalisa",
-	"lastName" : "Detrick",
-	"emailId" : "Annalisa.Detrick@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Setup"
-	}
-} ];
 
 function appendNewfiTeamWrapper(loanDetails) {
 	var team = loanDetails.loanTeam;
@@ -1969,121 +1803,6 @@ function appendCreateUserPopupDOB() {
  * Functions for agent view needs list page
  */
 
-var docData = {
-	"liability" : [ {
-		"isChecked" : "true",
-		"title" : "Salaried-W-2 form",
-		"desc" : "Salaried-W-2 form"
-	}, {
-		"isChecked" : "true",
-		"title" : "Other income",
-		"desc" : "Other income"
-	}, {
-		"isChecked" : "true",
-		"title" : "Interest/Dividend",
-		"desc" : "Interest/Dividend"
-	}, {
-		"isChecked" : "true",
-		"title" : "Alimony/Child Support",
-		"desc" : "Alimony/Child Support"
-	}, {
-		"isChecked" : "false",
-		"title" : "Alimony/Child Support",
-		"desc" : "Alimony/Child Support"
-	}, {
-		"isChecked" : "false",
-		"title" : "Rental Income",
-		"desc" : "Rental Income"
-	}, {
-		"isChecked" : "false",
-		"title" : "Social security or disability income",
-		"desc" : "Social security or disability income"
-	}, {
-		"isChecked" : "false",
-		"title" : "Award letter",
-		"desc" : "Award letter"
-	}, {
-		"isChecked" : "false",
-		"title" : "YTD P/L statement",
-		"desc" : "YTD P/L statement"
-	}, {
-		"isChecked" : "false",
-		"title" : "Federal Tax returns",
-		"desc" : "Federal Tax returns"
-	}, {
-		"isChecked" : "false",
-		"title" : "Payroll Stubs",
-		"desc" : "Payroll Stubs"
-	} ],
-	"property" : [ {
-		"isChecked" : "true",
-		"title" : "Condos and PDU's",
-		"desc" : "Condos and PDU's"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase contract from home",
-		"desc" : "Purchase contract from home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Home Owner's insurance",
-		"desc" : "Home Owner's insurance"
-	}, {
-		"isChecked" : "true",
-		"title" : "Property tax bill",
-		"desc" : "Property tax bill"
-	}, {
-		"isChecked" : "false",
-		"title" : "Home Owner's hazard insurance policy",
-		"desc" : "Home Owner's hazard insurance policy"
-	}, {
-		"isChecked" : "false",
-		"title" : "Cancelled check rents",
-		"desc" : "Cancelled check rents"
-	} ],
-	"asset" : [ {
-		"isChecked" : "true",
-		"title" : "Cancelled statement from close of home",
-		"desc" : "Cancelled statement from close of home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase agreement",
-		"desc" : "Purchase agreement"
-	}, {
-		"isChecked" : "false",
-		"title" : "Letter from provider of home",
-		"desc" : "Letter from provider of home"
-	}, {
-		"isChecked" : "false",
-		"title" : "Retirement fund or stock portfolio",
-		"desc" : "Retirement fund or stock portfolio"
-	}, {
-		"isChecked" : "false",
-		"title" : "Bank statement",
-		"desc" : "Bank statement"
-	} ],
-	"other" : [ {
-		"isChecked" : "true",
-		"title" : "Cancelled statement from close of home",
-		"desc" : "Cancelled statement from close of home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase agreement",
-		"desc" : ""
-	}, {
-		"isChecked" : "false",
-		"title" : "Letter from provider of home",
-		"desc" : "Letter from provider of home"
-	}, {
-		"isChecked" : "false",
-		"title" : "Retirement fund or stock portfolio",
-		"desc" : "Retirement fund or stock portfolio"
-	}, {
-		"isChecked" : "false",
-		"title" : "Bank statement",
-		"desc" : "Bank statement"
-	} ]
-};
-
 function paintAgentNeedsListPage() {
 	appendDocumentToolTip();
 	appendCustomerDetailHeader();
@@ -2380,6 +2099,18 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 }
 
 function addUserToLoanTeam(userID, loanID) {
+	
+	var addData=$('.add-team-mem-wrapper').data('additionalData');
+	
+	if(addData && addData.OTHURL){
+		
+		addData.userID=userID;
+		ajaxRequest(addData.OTHURL, "POST",
+				"json", JSON.stringify(addData)  , onReturnOfAddUserToLoanTeam);
+		return;
+	}
+	
+	
 	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "POST",
 			"json", {}, onReturnOfAddUserToLoanTeam);
 }
@@ -2425,6 +2156,7 @@ function onReturnOfUserSearchToAddToLoanTeam(data) {
 }
 
 function createUserAndAddToLoanTeam(user) {
+
 	ajaxRequest("rest/userprofile/", "POST", "json", JSON.stringify(user),
 			onReturnOfCreateUserAndAddToLoanTeam);
 
@@ -2434,6 +2166,7 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
 	var result = data.resultObject;
 	hideCreateUserPopup();
+	hideMilestoneAddTeamMemberPopup();
 	$('#add-member-input').val("");
 
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);

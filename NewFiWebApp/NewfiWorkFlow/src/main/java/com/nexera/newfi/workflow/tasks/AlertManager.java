@@ -1,12 +1,14 @@
 package com.nexera.newfi.workflow.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
+@Component
 public class AlertManager implements IWorkflowTaskExecutor {
 
 	@Autowired

@@ -4,8 +4,38 @@
 
 var parentId = null; 
 var loanTeam;
-
+var currentPage;
 var otherUsers ;
+
+$(window).scroll(function(){
+	if(doPagination==true){
+		if  ($(window).scrollTop() == $(document).height() - $(window).height()){
+	          console.info("run our call for pagination");
+	          currentPage++;
+	          getConversationPagination();
+	    }
+	}
+    
+}); 
+
+function getConversationPagination(){
+	ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/"+currentPage, "GET", "json", "", paintConversationPagination);
+}
+
+function showAgentMessageDashboard() {
+	var convMainContainer = $('<div>').attr({
+		"id" : "conv-main-container",
+		"class" : "agent-message-dashboard"
+	});
+	$('#center-panel-cont').append(convMainContainer);
+	getLoanTemUsingloanId();
+	adjustCenterPanelWidth();
+}
+
+function paintConversationPagination(response){
+	var conversations = response.resultObject.messageVOs;
+	paintConversations(conversations);
+}
 
 function adjustRightPanelOnResize() {
 	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
@@ -122,7 +152,7 @@ function successCallBackSaveMessage(){
 }
 
 function getConversationsofUser(){
-		ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/0", "GET", "json", "", paintCommunicationLog);
+		ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/"+currentPage, "GET", "json", "", paintCommunicationLog);
 }
 
 function paintCommunicationLog(response){
@@ -143,6 +173,8 @@ function paintCommunicationLog(response){
 }
 
 function getLoanTemUsingloanId(){
+	$(window).scrollTop(0);
+	currentPage = 0;
 	setCurrentUserObject();
 	otherUsers = new Array();
 	ajaxRequest("rest/loan/"+currentUserAndLoanOnj.activeLoanId+"/team", "GET","json", "", getCurrentLoanTeamObject);

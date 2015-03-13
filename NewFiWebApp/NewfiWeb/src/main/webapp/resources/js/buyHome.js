@@ -587,7 +587,7 @@ function paintBuyHomeMyMoney(quesText,options,name){
 function saleYourCurrentHome(){
 	
 	var quesTxt = "What is the listing price of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeMortgagebalance,"priceOfHome");
+	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeMortgagebalance,"homeWorthToday");
 	$('#ce-refinance-cp').html(quesCont);
 	
 }
@@ -595,7 +595,7 @@ function saleYourCurrentHome(){
 function paintBuyHomeMortgagebalance(){
 	
 	var quesTxt = "What is the mortgage balance of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePurchaseforNewHome,"mortgagebalance");
+	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePurchaseforNewHome,"currentMortgageBalance");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
