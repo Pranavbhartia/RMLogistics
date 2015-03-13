@@ -521,6 +521,13 @@
 	.initial-list-doc-wrapper,.add-needs-wrapper,.need-list-save-btn-wrapper{
 		padding-left: 10px;
 	}
+	
+	.newfi-team-list-tr-col1,.newfi-team-list-tr-col2{
+		width: 40%;
+	}
+	.newfi-team-list-tr-col3{
+		display: none;
+	}
 }
 
 

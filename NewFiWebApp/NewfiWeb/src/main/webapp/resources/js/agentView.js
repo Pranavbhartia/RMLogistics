@@ -54,129 +54,6 @@ function getAgentSecondaryLeftNavStep(step, text) {
 	return container.append(img).append(txt);
 }
 
-var imageBaseUrl = "resources/images/";
-
-var custData = {
-	"num_found" : "",
-	"customers" : [
-			{
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:58AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 3,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Chad Mcintosh",
-				"prof_image" : imageBaseUrl + "photos2.png",
-				"time" : "01/08/2015 12:48AM",
-				"phone_no" : "3865618993",
-				"purpose" : "Purchase",
-				"processor" : "Jennifer Standifer",
-				"credit_score" : "842",
-				"alert_count" : 1,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Kimberly Burkeen",
-				"prof_image" : imageBaseUrl + "photos3.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "9043309807",
-				"purpose" : "Purchase",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 0,
-				"alerts" : [],
-				"notes" : []
-			},
-			{
-				"name" : "Sherry Andreu",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "9043309807",
-				"purpose" : "Purchase",
-				"processor" : "Jennifer Standifer",
-				"credit_score" : "699",
-				"alert_count" : 3,
-				"alerts" : [
-						"Salaried-W-2 forms - Pending",
-						"Payroll stubs for the past 30 days (showing YTD earings) - Pending",
-						"Payroll stub for the past 30 days," ],
-				"notes" : [
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						},
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						},
-						{
-							"name" : "Jane Doe",
-							"time" : "Yesterday at 3:30pm",
-							"message" : "I have attached the files requested\n\n"
-									+ "* Salaried-W-2 for the most recent 2 years\n"
-									+ "* Payroll stubs for the past 30 days(showing YTD earnings)\n"
-						} ]
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 2,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 0,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 1,
-				"alerts" : [],
-				"notes" : []
-			}, {
-				"name" : "Jessica Cockrell",
-				"prof_image" : imageBaseUrl + "photos1.png",
-				"time" : "01/09/2015 11:18AM",
-				"phone_no" : "8645547862",
-				"purpose" : "Purchase TBD",
-				"processor" : "Johny Tester",
-				"credit_score" : "731",
-				"alert_count" : 2,
-				"alerts" : [],
-				"notes" : []
-			} ]
-};
-
 function paintAgentDashboard() {
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
@@ -925,10 +802,11 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	});
 	$('#' + elementId).append(rightArrow);
 	$('#center-panel-cont').html('');
-
+	doPagination=false;
 	// Check the id and paint the corresponding right panel
 	if (elementId == "lp-step0") {
-		showMessageDashboard();
+		doPagination=true;
+		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
@@ -1346,48 +1224,6 @@ $(document).click(function() {
 		hideUserTypeDropDown();
 	}
 });
-
-var users = [ {
-	"firstName" : "Jessica",
-	"lastName" : "Cockrell",
-	"emailId" : "Jessica@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Loan Manager"
-	}
-}, {
-	"firstName" : "Regina",
-	"lastName" : "Fleming",
-	"emailId" : "Regina@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Processor"
-	}
-}, {
-	"firstName" : "Scott",
-	"lastName" : "Harris",
-	"emailId" : "Scott.Harris@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Loan Agent"
-	}
-}, {
-	"firstName" : "Brenda",
-	"lastName" : "Allen",
-	"emailId" : "Brenda@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Sales Manager"
-	}
-}, {
-	"firstName" : "Annalisa",
-	"lastName" : "Detrick",
-	"emailId" : "Annalisa.Detrick@domain.com",
-	"userRole" : {
-		"visibleOnLoanTeam" : true,
-		"label" : "Setup"
-	}
-} ];
 
 function appendNewfiTeamWrapper(loanDetails) {
 	var team = loanDetails.loanTeam;
@@ -1966,121 +1802,6 @@ function appendCreateUserPopupDOB() {
 /*
  * Functions for agent view needs list page
  */
-
-var docData = {
-	"liability" : [ {
-		"isChecked" : "true",
-		"title" : "Salaried-W-2 form",
-		"desc" : "Salaried-W-2 form"
-	}, {
-		"isChecked" : "true",
-		"title" : "Other income",
-		"desc" : "Other income"
-	}, {
-		"isChecked" : "true",
-		"title" : "Interest/Dividend",
-		"desc" : "Interest/Dividend"
-	}, {
-		"isChecked" : "true",
-		"title" : "Alimony/Child Support",
-		"desc" : "Alimony/Child Support"
-	}, {
-		"isChecked" : "false",
-		"title" : "Alimony/Child Support",
-		"desc" : "Alimony/Child Support"
-	}, {
-		"isChecked" : "false",
-		"title" : "Rental Income",
-		"desc" : "Rental Income"
-	}, {
-		"isChecked" : "false",
-		"title" : "Social security or disability income",
-		"desc" : "Social security or disability income"
-	}, {
-		"isChecked" : "false",
-		"title" : "Award letter",
-		"desc" : "Award letter"
-	}, {
-		"isChecked" : "false",
-		"title" : "YTD P/L statement",
-		"desc" : "YTD P/L statement"
-	}, {
-		"isChecked" : "false",
-		"title" : "Federal Tax returns",
-		"desc" : "Federal Tax returns"
-	}, {
-		"isChecked" : "false",
-		"title" : "Payroll Stubs",
-		"desc" : "Payroll Stubs"
-	} ],
-	"property" : [ {
-		"isChecked" : "true",
-		"title" : "Condos and PDU's",
-		"desc" : "Condos and PDU's"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase contract from home",
-		"desc" : "Purchase contract from home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Home Owner's insurance",
-		"desc" : "Home Owner's insurance"
-	}, {
-		"isChecked" : "true",
-		"title" : "Property tax bill",
-		"desc" : "Property tax bill"
-	}, {
-		"isChecked" : "false",
-		"title" : "Home Owner's hazard insurance policy",
-		"desc" : "Home Owner's hazard insurance policy"
-	}, {
-		"isChecked" : "false",
-		"title" : "Cancelled check rents",
-		"desc" : "Cancelled check rents"
-	} ],
-	"asset" : [ {
-		"isChecked" : "true",
-		"title" : "Cancelled statement from close of home",
-		"desc" : "Cancelled statement from close of home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase agreement",
-		"desc" : "Purchase agreement"
-	}, {
-		"isChecked" : "false",
-		"title" : "Letter from provider of home",
-		"desc" : "Letter from provider of home"
-	}, {
-		"isChecked" : "false",
-		"title" : "Retirement fund or stock portfolio",
-		"desc" : "Retirement fund or stock portfolio"
-	}, {
-		"isChecked" : "false",
-		"title" : "Bank statement",
-		"desc" : "Bank statement"
-	} ],
-	"other" : [ {
-		"isChecked" : "true",
-		"title" : "Cancelled statement from close of home",
-		"desc" : "Cancelled statement from close of home"
-	}, {
-		"isChecked" : "true",
-		"title" : "Purchase agreement",
-		"desc" : ""
-	}, {
-		"isChecked" : "false",
-		"title" : "Letter from provider of home",
-		"desc" : "Letter from provider of home"
-	}, {
-		"isChecked" : "false",
-		"title" : "Retirement fund or stock portfolio",
-		"desc" : "Retirement fund or stock portfolio"
-	}, {
-		"isChecked" : "false",
-		"title" : "Bank statement",
-		"desc" : "Bank statement"
-	} ]
-};
 
 function paintAgentNeedsListPage() {
 	appendDocumentToolTip();
