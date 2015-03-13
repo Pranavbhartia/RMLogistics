@@ -22,6 +22,7 @@
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 </head>
 
 <body>
@@ -57,7 +58,6 @@
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			changeLeftPanel(2);
-			retrieveState();
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			$(window).resize(function() {
@@ -100,8 +100,12 @@
 				
 				//alert($('#prof-image')[0].files[0].name);
 				//alert("hiii");
-				//validatePhotoExtention();
-				initiateJcrop(this);
+				var fileName=$("#prof-image").val();
+				//console.log("fileName"+fileName);
+	            var status=validatePhotoExtention(fileName);
+	            //alert("status"+status);
+				if(status!=false){
+				initiateJcrop(this);}
 			});
 			
 		});

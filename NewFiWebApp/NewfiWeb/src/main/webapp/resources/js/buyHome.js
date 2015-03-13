@@ -1,7 +1,6 @@
 var buyHomeTeaserRate = new Object();
 
 function paintBuyHomeContainer(){
-	alert('buyhome1');
 	
 	$('#ce-main-container').html('');
 	var wrapper = $('<div>').attr({
@@ -24,7 +23,7 @@ function paintBuyHomeContainer(){
 
 function paintBuyHomeQuest(){
 	var quesText = "Living Situation";
-		alert('buyhome2');
+	
 	var options = [
 	    {
 	    	"text" : "Renting",
@@ -44,7 +43,6 @@ function paintBuyHomeQuest(){
 
 
 function getBuyHomeMutipleChoiceQuestion(quesText,options,name){
-		alert('buyhome3');
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -76,58 +74,246 @@ function getBuyHomeMutipleChoiceQuestion(quesText,options,name){
 // Renting
 
 function paintBuyHomeRenting(){
-		alert('buyhome4');
-	var quesTxt = "Where You Live Now ?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeCurrentAddress,"whereLiveNow");
-	$('#ce-refinance-cp').html(quesCont);
-
+		
+	var quesTxt1 = "Where You Live Now ?";
+	var quesTxt2 = "Your Current Address ?"; 
+	var quesTxt3 = "City"; 
+	var quesTxt4 = "State"; 
+	var quesTxt5 = "ZIP Code"; 
+	
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+	});
+	
+	var quesTextCont1 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt1);
+	
+	var optionContainer1  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox1 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "liveNow"
+	}); 
+	
+	var quesTextCont2 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt2);
+	
+	var optionContainer2  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox2 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "currentAddress"
+	}); 
+	
+	var quesTextCont3 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt3);
+	
+	var optionContainer3  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox3 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "city"
+	});
+	
+	
+	var quesTextCont4 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt4);
+	
+	var optionContainer4  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox4 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "state"
+	}); 
+	
+	var quesTextCont5 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt5);
+	
+	var optionContainer5  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox5 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "zipCode"
+	}); 
+	
+	
+	quesTextCont1.append(optionContainer1).append(inputBox1);
+	quesTextCont2.append(optionContainer2).append(inputBox2);
+	quesTextCont3.append(optionContainer3).append(inputBox3);
+	quesTextCont4.append(optionContainer4).append(inputBox4);
+	quesTextCont5.append(optionContainer5).append(inputBox5);
+	
+	var saveBtn = $('<div>').attr({
+		"class" : "ce-save-btn"
+	}).html("Save & Continue")
+	.bind('click',function(event){
+		
+		buyHomeTeaserRate["liveNow"] =  $('input[name="liveNow"]').val();
+		buyHomeTeaserRate["currentAddress"] =  $('input[name="currentAddress"]').val();
+		buyHomeTeaserRate["city"] =  $('input[name="city"]').val();
+		buyHomeTeaserRate["state"] =  $('input[name="state"]').val();
+		buyHomeTeaserRate["zipCode"] =  $('input[name="zipCode"]').val();
+		
+		paintBuyHomEachMonthrent();
+	});
+	
+	
+	$('#ce-refinance-cp').html(container.append(quesTextCont1).append(quesTextCont2).append(quesTextCont3).append(quesTextCont4).append(quesTextCont5).append(saveBtn));
 }
 
-function paintBuyHomeCurrentAddress(){
-	alert('buyhome5');
-	var quesTxt = "What Is Your Current Address?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeCity,"currentAddress");
-	$('#ce-refinance-cp').html(quesCont);
+
+function  paintBuyHomEachMonthrent(){
+	
+	var quesTxt1 = "How much do you pay each month for rent?";
+	var quesTxt2 = "When did you start living here?"; 
+	var quesTxt3 = "Where did you live earlier"; 
+
+	
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+	});
+	
+	var quesTextCont1 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt1);
+	
+	var optionContainer1  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox1 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "rentPerMonth"
+	}); 
+	
+	var quesTextCont2 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt2);
+	
+	var optionContainer2  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox2 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "startLiving"
+	}); 
+	
+	var quesTextCont3 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt3);
+	
+	var optionContainer3  = $('<div>').attr({
+		"class" : "ce-options-cont"
+	}); 
+	
+	var inputBox3 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "liveEarlier"
+	});
+	
+	
+	
+	quesTextCont1.append(optionContainer1).append(inputBox1);
+	quesTextCont2.append(optionContainer2).append(inputBox2);
+	quesTextCont3.append(optionContainer3).append(inputBox3);
+
+	
+	var saveBtn = $('<div>').attr({
+		"class" : "ce-save-btn"
+	}).html("Save & Continue")
+	.bind('click',function(event){
+		
+		buyHomeTeaserRate["rentPerMonth"] =  $('input[name="rentPerMonth"]').val();
+		buyHomeTeaserRate["startLiving"] =  $('input[name="startLiving"]').val();
+		buyHomeTeaserRate["liveEarlier"] =  $('input[name="liveEarlier"]').val();
+
+		
+		paintBuyHomeStartMilitaryloans();
+	});
+	
+	if(buyHomeTeaserRate["livingSituation"] == 0 ){
+		$('#ce-refinance-cp').html(container.append(quesTextCont1).append(quesTextCont2).append(quesTextCont3).append(saveBtn));
+	}else{
+		var quesTextCont4 = paintBuyHomeSellHome();
+		
+		$('#ce-refinance-cp').html(container.append(quesTextCont2).append(quesTextCont3).append(quesTextCont4).append(saveBtn));
+	}	
+	
 }
 
-
-function paintBuyHomeCity(){
-	alert('buyhome6');
-	var quesTxt = "What Is Your City?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeState,"city");
-	$('#ce-refinance-cp').html(quesCont);
+function paintBuyHomeSellHome(){
+	
+	var quesText = "Are you planning to sell your current home?";
+	
+	var options = [
+	    {
+	    	"text" : "Yes",
+	    	//"onselect" : paintBuyHomeRenting,
+	    	"value" : 0
+	    },
+	    {
+	    	"text" : "No",
+	    	//"onselect" : paintBuyHomeOwner,
+	    	"value" : 1
+	    }
+	    ];
+	
+	return  paintSellYourHome(quesText,options,"sellYourHome");
+	
+	
 }
 
-function paintBuyHomeState(){
-	alert('buyhome7');
-	var quesTxt = "What Is Your State?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeZip,"state");
-	$('#ce-refinance-cp').html(quesCont);
+function paintSellYourHome(quesText,options,name){
+	
+		var container = $('<div>').attr({
+			"class" : "ce-ques-wrapper"
+		});
+		
+		var quesTextCont = $('<div>').attr({
+			"class" : "ce-rp-ques-text"
+			
+		}).html(quesText);
+		
+		var optionContainer  = $('<div>').attr({
+			"class" : "ce-options-cont"
+		}); 
+		
+		for(var i=0; i<options.length; i++){
+			var option = $('<div>').attr({
+				"class" : "ce-option",
+				"id":"ce-option_"+i,
+				"value":options[i].value
+			}).html(options[i].text)
+			.bind('click',{"option":options[i],"name" : name},function(event){
+				var key = event.data.name;
+				buyHomeTeaserRate[key] = event.data.option.value;
+				
+			});
+			optionContainer.append(option);
+		}
+		
+		return container.append(quesTextCont).append(optionContainer);
 }
 
-function paintBuyHomeZip(){
-	alert('buyhome8');
-	var quesTxt = "What Is Your ZipCode?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeRent,"zipCode");
-	$('#ce-refinance-cp').html(quesCont);
-}
-
-function paintBuyHomeRent(){
-	alert('buyhome9');
-	var quesTxt = "How much do you pay each month for rent?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeStartLiving,"rent");
-	$('#ce-refinance-cp').html(quesCont);
-}
-
-function paintBuyHomeStartLiving(){
-	alert('buyhome10');
-	var quesTxt = "When did you start living here?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeStartMilitaryloans,"startLiving");
-	$('#ce-refinance-cp').html(quesCont);
-}
 
 function paintBuyHomeStartMilitaryloans(){
-	alert('buyhome11');
+	
 	var quesTxt = "Are you eligible for, and interested in, VA/military loans?";
 	var options = [
 	       	    {
@@ -149,7 +335,7 @@ function paintBuyHomeStartMilitaryloans(){
 }
 
 function paintBuyHomeMyIncome(){
-	alert('buyhome12');
+	
 	var quesTxt = "Select all that apply";
 	var options = [
 		       	    {
@@ -177,7 +363,7 @@ function paintBuyHomeMyIncome(){
 		       	    	"value" : 3
 		       	    }
 		       	  ];
-	var quesCont = getMutipleChoiceQuestionbuyHome123(quesTxt,options,"");
+	var quesCont = paintBuyHomeMyMoney(quesTxt,options,name);
 		
    	$('#ce-refinance-cp').html(quesCont);
 	
@@ -185,15 +371,72 @@ function paintBuyHomeMyIncome(){
 
 
 function painBuyHomeEmployed(divId){
-	alert('buyhome13');
+	
 	var quesTxt = "About how much do you make a year";
-	var quesCont = getMultiTextQuestion(quesTxt);
+	var quesCont = getBuyHomeMyMoney(quesTxt);
 	$('#ce-option_'+divId).toggle();
 	$('#ce-option_'+divId).html(quesCont);
 }
 
+
+function getBuyHomeMyMoney(quesText){
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper",
+	});
+	
+	var quesTextCont = $('<div>').attr({
+		"class" : "ce-rp-ques-text",
+	}).html(quesText);
+	
+	var optionContainer  = $('<div>').attr({
+		"class" : "ce-options-cont",
+	}); 
+	
+	///----
+	var quesTextCont1 = $('<div>').attr({
+		"class" : "ce-rp-ques-text",
+	}).html("Before Tax");
+	
+	var inputBox1 = $('<input>').attr({
+		"class" : "ce-input",
+		"name": "beforeTax",
+	}); 
+	
+	quesTextCont1.append(inputBox1);
+	
+	///----
+	var quesTextCont2 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("Where Do You Work ?");
+	
+	var inputBox2 = $('<input>').attr({
+		"class" : "ce-input",
+		"name": "workPlace"
+	}); 
+	
+	quesTextCont2.append(inputBox2);
+	
+	///----
+	var quesTextCont3 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("When Did You Start Wokring ?");
+	
+	var inputBox3 = $('<input>').attr({
+		"class" : "ce-input",
+		"name": "startWorking"
+	}); 
+	
+	///----
+	
+	quesTextCont3.append(inputBox3);
+
+	optionContainer.append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
+	
+	return container.append(quesTextCont).append(optionContainer);
+}
+
 function paintBuyHomeSelfEmployed(divId){
-	alert('buyhome14');
+	
 	var quesTxt = "How much do you make a year?";
 
 	var container = $('<div>').attr({
@@ -221,7 +464,7 @@ function paintBuyHomeSelfEmployed(divId){
 }
 
 function paintBuyHomeDisability(divId){
-	alert('buyhome15');
+	
 	var quesTxt = "About how much do you get monthly?";
 
 	var container = $('<div>').attr({
@@ -249,7 +492,7 @@ function paintBuyHomeDisability(divId){
 }
 
 function paintBuyHomePension(divId){
-	alert('buyhome16');
+	
 	var quesTxt = "About how much do you get monthly?";
 
 	var container = $('<div>').attr({
@@ -280,8 +523,7 @@ function paintBuyHomePension(divId){
 
 
 
-function getMutipleChoiceQuestionBuyHome123(quesText,options,name){
-	alert('buyhome17');
+function paintBuyHomeMyMoney(quesText,options,name){
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -326,16 +568,26 @@ function getMutipleChoiceQuestionBuyHome123(quesText,options,name){
 		buyHomeTeaserRate["disability"] =  $('input[name="disability"]').val();
 		buyHomeTeaserRate["pension"] =  $('input[name="pension"]').val();
 		
-		saleYourCurrentHome();
+		if(buyHomeTeaserRate["livingSituation"] ==0){
+			paintBuyHomeDob();
+		}
+		else{
+			if(buyHomeTeaserRate["sellYourHome"]== 0){
+				saleYourCurrentHome();
+			}else{
+				paintBuyHomeSSN();
+			}
+			
+		}
 	});
 	
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
 
 function saleYourCurrentHome(){
-	alert('buyhome18');
+	
 	var quesTxt = "What is the listing price of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeMortgagebalance,"priceOfHome");
+	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeMortgagebalance,"homeWorthToday");
 	$('#ce-refinance-cp').html(quesCont);
 	
 }
@@ -343,7 +595,7 @@ function saleYourCurrentHome(){
 function paintBuyHomeMortgagebalance(){
 	
 	var quesTxt = "What is the mortgage balance of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePurchaseforNewHome,"mortgagebalance");
+	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePurchaseforNewHome,"currentMortgageBalance");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
@@ -365,19 +617,23 @@ function paintBuyHomeDob(){
 function paintBuyHomeSSN(){
 	
 	var quesTxt = "Please enter your social security number.";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePhone,"ssn");
-	$('#ce-refinance-cp').html(quesCont);
-}
-
-function paintBuyHomePhone(){
-	
-	var quesTxt = "Please enter you phone number.";
 	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomeSeeRates,"ssn");
 	$('#ce-refinance-cp').html(quesCont);
-	
 }
 
 function paintBuyHomeSeeRates(){
+	
+	if(buyHomeTeaserRate["ssn"] == "" || buyHomeTeaserRate["ssn"] == undefined ){
+		var quesTxt = "Please give Your Credit Score";
+		var quesCont = getTextQuestion(quesTxt,paintBuyHomeSeeTeaserRate,"creditscore");
+		$('#ce-refinance-cp').html(quesCont);
+	}else{
+		paintBuyHomeSeeTeaserRate();
+	}
+
+}
+
+function paintBuyHomeSeeTeaserRate(){
 	
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
@@ -484,8 +740,8 @@ function getBuyHomeTextQuestion(quesText,clickEvent,name){
 	
 	optionContainer.append(inputBox);
 	
-	var buyHomesaveBtn = $('<div>').attr({
-		"class" : "ce-buyhome-save-btn"
+	var saveBtn = $('<div>').attr({
+		"class" : "ce-save-btn"
 	}).html("Save & Continue")
 	.bind('click',{'clickEvent':clickEvent,"name":name},function(event){
 		var key = event.data.name;
@@ -493,7 +749,7 @@ function getBuyHomeTextQuestion(quesText,clickEvent,name){
 		event.data.clickEvent();
 	});
 	
-	return container.append(quesTextCont).append(optionContainer).append(buyHomeSavesaveBtn);
+	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
 
 
@@ -594,5 +850,5 @@ function paintBuyHomePension(divId){
 
 function paintBuyHomeOwner(){
 	
-	
+	paintBuyHomeRenting();
 }
