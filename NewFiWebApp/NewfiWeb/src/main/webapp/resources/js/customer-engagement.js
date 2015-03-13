@@ -698,7 +698,14 @@ function paintRefinanceSeeRates(){
 	   datatype:"application/json",
 	   success : function(data){
 		  alert("success");
-          //$('#teaserresult').html(teaserresult);
+         var teaserresult = data;
+          obj =  JSON.parse(teaserresult);
+        alert(obj);
+       
+           //alert(obj[0].loanDuration);
+           //alert(obj[0].rateVO);
+          $('#teaserresult').html(teaserresult);
+        
 		   //alert(teaserresult);
 	   },
 	   error :function(){
