@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -108,9 +110,9 @@ public class EngineTrigger {
 
 	}
 
-	public void startWorkFlowItemExecution(int workflowItemExecutionId) {
+	public String startWorkFlowItemExecution(int workflowItemExecutionId) {
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
-
+		Future<String> future = null;
 		executorService = cacheManager.initializePool();
 
 		WorkflowItemExec workflowItemExecution = workflowService
@@ -141,19 +143,7 @@ public class EngineTrigger {
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
-				executorService.execute(workflowManager);
-
-				executorService.shutdown();
-				try {
-					executorService.awaitTermination(Long.MAX_VALUE,
-					        TimeUnit.NANOSECONDS);
-				} catch (InterruptedException e) {
-					LOGGER.error("Exception caught while terminating executor "
-					        + e.getMessage());
-					throw new FatalException(
-					        "Exception caught while terminating executor "
-					                + e.getMessage());
-				}
+				future = executorService.submit(workflowManager);
 
 				LOGGER.debug("Checking whether the parents all workflow items are executed ");
 				WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution
@@ -196,7 +186,7 @@ public class EngineTrigger {
 						        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
 						workflowManager
 						        .setWorkflowItemExec(childWorkflowItemExec);
-						executorService.execute(workflowManager);
+						executorService.submit(workflowManager);
 					}
 					executorService.shutdown();
 					try {
@@ -231,23 +221,19 @@ public class EngineTrigger {
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					workflowManager.setWorkflowItemExec(workflowItemExecution);
-					executorService.execute(workflowManager);
-					executorService.shutdown();
-					try {
-						executorService.awaitTermination(Long.MAX_VALUE,
-						        TimeUnit.NANOSECONDS);
-					} catch (InterruptedException e) {
-						LOGGER.error("Exception caught while terminating executor "
-						        + e.getMessage());
-						throw new FatalException(
-						        "Exception caught while terminating executor "
-						                + e.getMessage());
-					}
+					future = executorService.submit(workflowManager);
 
 				}
 			}
 		}
-
+		try {
+			return future.get();
+		} catch (InterruptedException e) {
+			return "Exception Occured ";
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			return "Exception Occured ";
+		}
 	}
 
 	public String getRenderStateInfoOfItem(int workflowItemExecId) {

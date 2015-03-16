@@ -188,7 +188,7 @@ public class WorkflowServiceImpl implements WorkflowService
 	 */
     @Override
     public void saveParamsInExecTable(Integer milestoneID, String params) {
-	   WorkflowItemExec workflowItemExec = (WorkflowItemExec)workflowExecDao.load(WorkflowExec.class, milestoneID);
+	   WorkflowItemExec workflowItemExec = (WorkflowItemExec)workflowExecDao.load(WorkflowItemExec.class, milestoneID);
 	   if(workflowItemExec != null)
 	   {
 		   workflowItemExec.setParams(params);
