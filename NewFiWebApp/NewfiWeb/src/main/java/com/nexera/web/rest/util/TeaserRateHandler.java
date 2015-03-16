@@ -74,10 +74,7 @@ public class TeaserRateHandler extends DefaultHandler {
         				rateVoList.add(rateVo);
     					totalClosingCostVal="";
     					
-    					Iterator<LqbTeaserRateVo> itr= rateVoList.iterator();
-    					while(itr.hasNext()){
-    						LOG.info("itr val is "+itr.next().getClosingCost());
-    					}
+    					
     					
     					
     				}else{
