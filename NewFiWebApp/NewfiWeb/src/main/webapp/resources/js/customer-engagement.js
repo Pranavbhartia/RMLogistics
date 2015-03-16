@@ -773,7 +773,10 @@ function paintRefinanceSeeRates() {
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
+
 	var teaserRate = getRateProgramContainer();
+
+
 
 	container.append(quesTextCont).append(teaserRate);
 
@@ -791,6 +794,54 @@ function paintRefinanceSeeRates() {
 			var teaserresult = data;
 			obj = JSON.parse(teaserresult);
 			alert(obj);
+			
+			
+var rateVoJson;
+var counter = 0;
+var rateAndClosingCost =0;
+alert(teaserresult);
+teaserresult=obj;
+for (var i in teaserresult) {
+   
+    var loanDuration = teaserresult[i].loanDuration;
+    console.log("loanDuration"+loanDuration);
+    
+    if ("30 YR FIXED CONFORMING".match(".*\\b" + loanDuration + "\\b.*")) {
+    console.log('inside if');
+    alert('inside if');
+    
+    
+    
+        rateVoJson = JSON.stringify(teaserresult[i].rateVO);
+        rateVoJsonArrayLength = JSON.parse(rateVoJson).length;
+
+        index = parseInt(rateVoJsonArrayLength / 2);
+        rateAndClosingCost = JSON.parse(rateVoJson)[index];
+        counter ++;
+        console.log(counter);
+console.log(rateVoJson);
+console.log(rateVoJsonArrayLength);
+console.log(index);
+console.log(rateAndClosingCost);
+        break;
+    }
+}
+
+
+
+if (rateAndClosingCost === undefined) {
+    alert("No rate is present");
+}
+alert(rateAndClosingCost.teaserRate);
+console.log(" median rate :"+rateAndClosingCost.teaserRate);
+
+var rateresult = $('<div>').attr({
+		"class" : "ce-rate-result cp-est-cost-btn"
+	}).html(rateAndClosingCost.teaserRate);
+	container.append(rateresult);
+	$('#ce-refinance-cp').append(rateresult);
+// $('#ce-rate-result').html(rateAndClosingCost.teaserRate);
+			
 		},
 		error : function() {
 			alert("error");
@@ -891,6 +942,10 @@ function getTenureSlider() {
 		max : 30,
 		value : 10
 	});
+	
+	
+	
+	
 	tenureSilder.append(tenureSliderTextCon).append(tsIcon);
 	return tenureSilder;
 }
