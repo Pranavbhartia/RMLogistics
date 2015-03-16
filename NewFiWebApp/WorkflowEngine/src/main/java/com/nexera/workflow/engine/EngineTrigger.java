@@ -324,6 +324,14 @@ public class EngineTrigger {
 		return Collections.EMPTY_LIST;
 	}
 
+	public void changeStateOfWorkflowItemExec(int workflowItemExecId,
+            String status) {
+            WorkflowItemExec workflowItemExecution = workflowService
+                    .getWorkflowExecById(workflowItemExecId);
+            workflowItemExecution.setStatus(status);
+            workflowService
+                    .updateWorkflowItemExecutionStatus(workflowItemExecution);
+    }
 	/*
 	 * public static void main(String[] args) { String json =
 	 * "{\"workflowType\":\"LM_WF_ALL\"}"; ApplicationContext applicationContext
