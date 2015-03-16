@@ -552,10 +552,25 @@ function getMilestoneTeamMembeTable(userList) {
 	});
 
 	var th = getMilestoneTeamMembeTableHeader();
+	tableContainer.append(th).append(tr1);
+	for (i in userList) {
+
+		var user = userList[i];
+		var dispName = user.displayName;
+		var userRole = userList[i].userRole;
+		var roleLabel = userRole.label;
+		if (userRole.id == 3) {
+			if (user.internalUserDetail
+					&& user.internalUserDetail.internalUserRoleMasterVO
+					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
+		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+	}
 	var tr1 = getMilestoneTeamMemberRow("Elen Adarna", "Title Agent");
 	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew", "Loan Manager");
 
-	return tableContainer.append(th).append(tr1).append(tr2);
+	return tableContainer;
 }
 
 // Function to get milestone team member table header
