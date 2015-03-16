@@ -28,8 +28,7 @@ var workFlowContext = {
 		var ob = this;
 		var data = {};
 		
-		ob
-				.ajaxRequest(
+		ob.ajaxRequest(
 						"rest/workflow/details/" + ob.loanId,
 						"GET",
 						"json",
@@ -133,7 +132,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		
 		mileStoneId : mileStoneId,
 		workItem : workItem,
-		infoText : {},
+		infoText : workItem.stateInfo,
 		ajaxRequest : function(url, type, dataType, data, successCallBack) {
 			$.ajax({
 				url : url,
@@ -946,7 +945,7 @@ function appendMilestoneItem(workflowItem, childList) {
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
 	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
-
+	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
 	
 	return mileStoneStepContext;

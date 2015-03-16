@@ -12,6 +12,7 @@
 
 		<!-- Generic properties -->
 		<java.version>1.7</java.version>
+		<quartz.version>2.2.1</quartz.version>
 		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
 
@@ -40,6 +41,34 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring-framework.version}</version>
 		</dependency>
+		
+		<!-- Spring 3 dependencies -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+		<version>${spring-framework.version}</version>
+	</dependency>
+ 
+	<!-- QuartzJobBean in spring-context-support.jar -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context-support</artifactId>
+		<version>${spring-framework.version}</version>
+	</dependency>
+ 
+	<!-- Spring + Quartz need transaction -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-tx</artifactId>
+		<version>${spring-framework.version}</version>
+	</dependency>
+ 
+	<!-- Quartz framework -->
+	<dependency>
+		<groupId>org.quartz-scheduler</groupId>
+		<artifactId>quartz</artifactId>
+		<version>${quartz.version}</version>
+	</dependency>
 		
 		<!-- Test Artifacts -->
 		<dependency>

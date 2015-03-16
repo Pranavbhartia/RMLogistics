@@ -129,7 +129,7 @@ public class WorkflowItemExec implements Serializable
 
 
     // bi-directional many-to-one association to WorkflowItemMaster
-    @ManyToOne ( fetch = FetchType.LAZY)
+    @ManyToOne ( fetch = FetchType.EAGER)
     @JoinColumn ( name = "workflow_item_master")
     public WorkflowItemMaster getWorkflowItemMaster()
     {
