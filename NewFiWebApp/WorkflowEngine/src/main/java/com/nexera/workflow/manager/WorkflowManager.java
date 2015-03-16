@@ -152,7 +152,7 @@ public class WorkflowManager implements Callable<String> {
 
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.EXECUTE_METHOD,
-				        new Class[] { Map.class });
+				        new Class[] { HashMap.class });
 
 				result = (String) method.invoke(obj, params);
 
