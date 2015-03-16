@@ -40,6 +40,7 @@ public class Loan implements Serializable {
 	private List<LoanRate> loanRates;
 	private List<LoanSetting> loanSettings;
 	private List<LoanTeam> loanTeam;
+	private List<TransactionDetails> transactionDetails;
 	private WorkflowExec customerWorkflow;
 	private WorkflowExec loanManagerWorkflow;
 
@@ -174,6 +175,16 @@ public class Loan implements Serializable {
 
 	public void setLoanAppForms(List<LoanAppForm> loanAppForms) {
 		this.loanAppForms = loanAppForms;
+	}
+	
+	// bi-directional many-to-one association to LoanAppForm
+	@OneToMany(mappedBy = "loan")
+	public List<TransactionDetails> getTransactionDetails() {
+		return this.transactionDetails;
+	}
+
+	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
+		this.transactionDetails = transactionDetails;
 	}
 
 	public LoanAppForm addLoanAppForm(LoanAppForm loanAppForm) {

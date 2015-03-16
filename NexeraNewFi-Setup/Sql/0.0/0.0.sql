@@ -1335,3 +1335,31 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2015-03-02 13:37:56
+
+-- Creating a new table to hold payment details
+
+CREATE TABLE IF NOT EXISTS `newfi_schema`.`transactiondetails` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `transaction_id` VARCHAR(20) NOT NULL,
+  `loan_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `amount` FLOAT NOT NULL,
+  `created_date` TIMESTAMP NOT NULL,
+  `created_by` INT(11) NOT NULL,
+  `modified_date` TIMESTAMP NOT NULL,
+  `modified_by` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_transactiondetails_loan1_idx` (`loan_id` ASC),
+  INDEX `fk_transactiondetails_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_transactiondetails_loan1`
+    FOREIGN KEY (`loan_id`)
+    REFERENCES `newfi_schema`.`loan` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transactiondetails_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `newfi_schema`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Holds the transaction details';

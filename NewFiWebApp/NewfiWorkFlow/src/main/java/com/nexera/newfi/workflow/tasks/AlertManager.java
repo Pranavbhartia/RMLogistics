@@ -1,5 +1,7 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +16,17 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NotificationService notificationService;
 
-	public String execute(Object[] objects) {
+	public String execute(HashMap<String, Object> objectMap) {
 
-		int loanID = Integer.parseInt(objects[0].toString());
-		NotificationVO notificationVO = (NotificationVO) objects[1];
+		int loanID = Integer.parseInt(objectMap
+		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		NotificationVO notificationVO = (NotificationVO) objectMap
+		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
 		notificationService.createNotification(notificationVO);
 		return String.valueOf(loanID);
 	}
 
-	public String renderStateInfo(String[] inputs) {
+	public String renderStateInfo(HashMap<String, Object> inputMap) {
 
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
