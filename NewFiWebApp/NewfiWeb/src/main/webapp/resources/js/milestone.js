@@ -152,7 +152,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.infoText
-			})
+			});
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
 			{
@@ -167,7 +167,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 
 			if (ob.workItem.displayContent == "Add Team") {
-				ajaxURL = "rest/loan/1/team";
+				ajaxURL = "rest/loan/"+selectedUserDetail.loanID+"/team";
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
@@ -187,7 +187,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
-							callback(itemToAppendTo,response.resultObject);
+							callback(itemToAppendTo,ob);
 						}
 					});
 			}else{
@@ -540,12 +540,13 @@ function removeMilestoneAddTeamMemberPopup() {
 
 // Function to get milestone team member table
 
-function paintMilestoneTeamMemberTable(appendTo,userList){
+function paintMilestoneTeamMemberTable(appendTo,object){
 	
-	appendTo.append(getMilestoneTeamMembeTable(userList));
+	var userList=object.infoText;
+	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
 }
 
-function getMilestoneTeamMembeTable(userList) {
+function getMilestoneTeamMembeTable(userList,milestoneID) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
@@ -554,7 +555,8 @@ function getMilestoneTeamMembeTable(userList) {
 	
 	var addNewMember = $('<div>').attr({
 		"class" : "milestone-rc-text",
-		"data-text" : "Click here to add a Team Member"
+		"data-text" : "Click here to add a Team Member",
+		"mileNotificationId":milestoneID
 	}).html("Click here to add a Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});
@@ -1006,8 +1008,8 @@ function milestoneChildEventHandler(event) {
 	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/addUserToLoanTeam";
-		data.milestoneID=14;
+		data.milestoneID=$(event.target).attr("mileNotificationId");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
