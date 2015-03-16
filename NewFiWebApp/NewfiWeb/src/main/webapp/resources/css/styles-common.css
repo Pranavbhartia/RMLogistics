@@ -3,7 +3,9 @@
 	height: 45px;
 	line-height: 45px;
 	border:1px solid #dcdcdc;
-	background: #fafafa;
+	background-color: #fafafa;
+	background-repeat:no-repeat;
+	background-position:10px center;
 	border-radius:3px;
 	margin: 20px auto;
 	padding-left: 40px;
@@ -48,4 +50,16 @@
 	margin: 5px auto;
 	text-align: center;
 	margin-bottom: 45px;
+}
+
+.reg-fname{
+	background-image:url(../images/fname.png); 
+}
+
+.reg-lname{
+	background-image:url(../images/lname.png); 
+}
+
+.reg-email{
+	background-image:url(../images/email.png); 
 }
