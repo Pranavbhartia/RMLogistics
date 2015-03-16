@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
@@ -18,10 +19,13 @@ public class AlertManager implements IWorkflowTaskExecutor {
 
 	public String execute(HashMap<String, Object> objectMap) {
 
-		int loanID = Integer.parseInt(objectMap
-		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		NotificationVO notificationVO = (NotificationVO) objectMap
-		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
+		int loanID = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String notificationVOStr = objectMap.get(
+		        WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME).toString();
+		Gson gson = new Gson();
+		NotificationVO notificationVO = gson.fromJson(notificationVOStr,
+		        NotificationVO.class);
 		notificationService.createNotification(notificationVO);
 		return String.valueOf(loanID);
 	}

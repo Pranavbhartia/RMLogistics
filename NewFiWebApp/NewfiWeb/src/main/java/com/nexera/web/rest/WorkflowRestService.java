@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
-import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneLoanTeamVO;
 import com.nexera.common.vo.MilestoneNotificationVO;
@@ -24,6 +25,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.Constants.WorkflowConstants;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkflowItemStatus;
 import com.nexera.workflow.service.WorkflowService;
@@ -44,8 +46,8 @@ public class WorkflowRestService {
 	        .getLogger(WorkflowRestService.class);
 
 	@RequestMapping(value = "create/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO createWorkflow(@PathVariable int loanID) {
+	public @ResponseBody CommonResponseVO createWorkflow(
+	        @PathVariable int loanID) {
 		LOG.debug("Loan ID for this workflow is " + loanID);
 		CommonResponseVO response = null;
 		try {
@@ -75,8 +77,8 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "details/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO getWorkflowDetails(@PathVariable int loanID) {
+	public @ResponseBody CommonResponseVO getWorkflowDetails(
+	        @PathVariable int loanID) {
 		LOG.debug("Loan ID for this workflow is " + loanID);
 		CommonResponseVO response = null;
 		try {
@@ -93,8 +95,7 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "needCount/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO getNeedCount(@PathVariable int loanID) {
+	public @ResponseBody CommonResponseVO getNeedCount(@PathVariable int loanID) {
 		LOG.debug("Loan ID for this workflow is " + loanID);
 		CommonResponseVO response = null;
 		try {
@@ -116,8 +117,8 @@ public class WorkflowRestService {
 
 	// workflow/3/milestone/state/workflowIte
 	@RequestMapping(value = "{loanId}/milestone/", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO getWorkflowItemStateInfo(@PathVariable int loanId,
+	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
+	        @PathVariable int loanId,
 	        @RequestParam(value = "workflowItemId") Integer workflowItemId) {
 		LOG.info("workflowItemExecId----" + workflowItemId);
 		CommonResponseVO response = null;
@@ -143,8 +144,7 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "/milestone/alert", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO getWorkflowItemStateInfo(
+	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
 	        @RequestBody String milestoneNotificationStr) {
 		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
 		CommonResponseVO response = null;
@@ -167,8 +167,8 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "/milestone/addUserToLoanTeam", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO addUserToLoanTeam(@RequestBody String milestoneAddTeamVOStr) {
+	public @ResponseBody CommonResponseVO addUserToLoanTeam(
+	        @RequestBody String milestoneAddTeamVOStr) {
 		LOG.info("milestoneAddTeamVO----" + milestoneAddTeamVOStr);
 		CommonResponseVO response = null;
 		try {
@@ -195,8 +195,8 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "/milestone/sendMail", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO sendMail(@RequestBody String milestoneNotificationStr) {
+	public @ResponseBody CommonResponseVO sendMail(
+	        @RequestBody String milestoneNotificationStr) {
 		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
 		CommonResponseVO response = null;
 		try {
@@ -223,15 +223,23 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "{workflowId}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO getWorkflowItems(@PathVariable int workflowId) {
+	public @ResponseBody CommonResponseVO getWorkflowItems(
+	        @PathVariable int workflowId) {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-			// List<WorkflowItemExec> list =
-			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
-			List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
-			response = RestUtil.wrapObjectForSuccess(list);
+			
+			List<WorkflowItemExec> list = engineTrigger.getWorkflowItemExecByWorkflowMasterExec(workflowId);
+			List<WorkflowItemExecVO> volist = new ArrayList<WorkflowItemExecVO>();
+			
+			for (WorkflowItemExec workflowItem : list)
+				
+			{
+				WorkflowItemExecVO workflowItemVO  = new WorkflowItemExecVO();
+				volist.add(workflowItemVO.convertToVO(workflowItem));	
+			}
+			//List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
+			response = RestUtil.wrapObjectForSuccess(volist);
 			LOG.debug("Response" + list.size());
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -242,8 +250,8 @@ public class WorkflowRestService {
 	}
 
 	@RequestMapping(value = "customer/{workflowId}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO prepareTestListForCustomer(@PathVariable int workflowId) {
+	public @ResponseBody CommonResponseVO prepareTestListForCustomer(
+	        @PathVariable int workflowId) {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {

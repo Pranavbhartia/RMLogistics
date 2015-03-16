@@ -176,6 +176,7 @@ public class WorkflowServiceImpl implements WorkflowService
      * @see com.nexera.workflow.service.WorkflowService#getWorkflowExecFromId(int)
      */
     @Override
+    @Transactional
     public WorkflowExec getWorkflowExecFromId( int workflowexecId )
     {
         LOGGER.debug( "Inside method getWorkflowExecFromId " );
