@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.nexera.common.vo.LoanVO;
@@ -33,8 +32,12 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
-	@Transactional(readOnly=true)
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		
+		Integer loanIdInt=(Integer) inputMap
+		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME);
+		System.out.println("Loan id : "+inputMap
+		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME));
 		int loanID = Integer.parseInt(inputMap
 		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
