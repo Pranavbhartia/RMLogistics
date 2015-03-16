@@ -83,6 +83,10 @@ a,a:hover,a:visited {
 	display: block;
 }
 
+.margin-top30{
+	margin-top: 30px;
+}
+
 .container {
 	/*max-width: 980px;*/
 	
@@ -206,6 +210,7 @@ a,a:hover,a:visited {
 
 .lp-talk-pic2 {
 	background: url(../images/photos1.png) no-repeat center;
+	background-size:cover; 
 }
 
 .lp-talk-pic3 {
@@ -409,31 +414,45 @@ a,a:hover,a:visited {
 .cp-rate-btn,.cp-est-cost-btn {
 	color: #fff;
 	font-size: 22px;
-	background-color: #8EC63F;
+	background-color: #8dC63F;
 	border-radius: 3px;
-	line-height: 45px;
+	line-height: 40px;
 	text-align: center;
 }
 
 .rate-program-container-col1 {
 	margin-left: 35px;
-	margin-top: 20px;
+	margin-top: 0px;
 	width: 135px;
 }
 
+.cp-btn-cont{
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.cp-cost-cont {
+	line-height: 35px;
+	height: 35px;
+	text-align: center;
+	background: #fafafa;
+	border-radius: 3px;
+	border: 1px #e2e2e2 solid;
+}
+
 .rate-program-container-col2 {
-	margin-left: 15px;
+	margin-left: 30px;
 	width: 410px;
 }
 
 .rate-program-container-col3 {
-	margin-left: 40px;
-	margin-top: 15px;
+	margin-left: 30px;
+	margin-top: 0px;
 	width: 155px;
 }
 
 .rate-program-container {
-	margin-bottom: 55px;
+	margin-bottom: 35px;
 }
 
 .uppercase {
@@ -451,10 +470,10 @@ a,a:hover,a:visited {
 }
 
 .cp-rate-header-text {
-	font-size: 15px;
+	font-size: 14px;
 	color: #606060;
 	text-align: center;
-	height: 44px;
+	margin-bottom: 5px;
 }
 
 .rate-slider-icon,.tenure-slider-icon {
@@ -465,8 +484,7 @@ a,a:hover,a:visited {
 }
 
 .tenure-slider-icon {
-	/*margin-left: 5px;*/
-	
+	padding: 0 2px;
 }
 
 .slider-text-cont {
@@ -603,8 +621,22 @@ a,a:hover,a:visited {
 	line-height: 15px;
 }
 
+.cp-lock-btn{
+	background: #F37521;
+	color: #fff;
+	height: 45px;
+	line-height: 45px;
+	text-align: center;
+	width: 200px;
+	border-radius: 3px;
+	cursor: pointer;
+	text-transform: uppercase;
+	margin: 20px auto;
+	margin-left:136px;
+}
+
 .cp-est-header-text {
-	padding: 0 20px;
+	/* padding: 0 20px; */
 	margin-bottom: 5px;
 	font-size: 14px;
 	color: #606060;
@@ -1181,6 +1213,7 @@ a,a:hover,a:visited {
 	margin-right: 20px;
 	background: url(../images/cus-icn.png) no-repeat center;
 	border-radius: 50%;
+	background-size: cover;
 }
 
 .con-prof-name {
@@ -2593,6 +2626,7 @@ input.calc-input {
 	overflow: hidden;
 	z-index: 999999999;
 	background: url(../images/loader.gif) no-repeat center;
+	background-size:100px;
 	background-color: rgba(255, 255, 255, 0.7);
 }
 
@@ -3731,4 +3765,43 @@ text-transform: uppercase;
 cursor: pointer;
 float: left;
 }
+
+#loaderPagination{
+	margin-left:20%;
+	background-size: 11px;
+	height:32px ;
+	width:32px;
+
+}
+
+.unlink{
+	cursor: default;
+	opacity : 0.2;
+}
+
+
 /*end of changes*/
+.tenure-grid-container {
+	position: relative;
+	left: 0;
+	top: 9px;
+	width: 100%;
+	height: 20px;
+	border: 3px solid transparent;
+}
+
+.tenure-grid-item {
+	position: absolute;
+	display: inline-block;
+	margin-left: -5px;
+}
+
+.tenure-grid-item:before{
+	position: absolute;
+	bottom: 100%;
+	left: 3px;
+	width: 1px;
+	height: 12px;
+	content: " ";
+	background: #dcdcdc;
+}

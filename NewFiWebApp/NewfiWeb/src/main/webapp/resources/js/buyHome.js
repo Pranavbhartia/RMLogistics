@@ -1,3 +1,89 @@
+var teaserRate = [{
+    "loanDuration": "15 YR FIXED CONFORMING",
+        "rateVO": [{
+        "teaserRate": "3.000",
+            "closingCost": "0"
+    }, {
+        "teaserRate": "2.875",
+            "closingCost": "$1,782.62"
+    }, {
+        "teaserRate": "2.750",
+            "closingCost": "$3,512.43"
+    }]
+}, {
+    "loanDuration": "20 YR FIXED CONFORMING",
+        "rateVO": [{
+        "teaserRate": "3.625",
+            "closingCost": "0"
+    }, {
+        "teaserRate": "3.500",
+            "closingCost": "$1,155.53"
+    }, {
+        "teaserRate": "3.375",
+            "closingCost": "$3,658.15"
+    }, {
+        "teaserRate": "3.250",
+            "closingCost": "$6,166.37"
+    }]
+}, {
+    "loanDuration": "30 YR FIXED CONFORMING",
+        "rateVO": [{
+        "teaserRate": "3.875",
+            "closingCost": "0"
+    }, {
+        "teaserRate": "3.750",
+            "closingCost": "$493.10"
+    }, {
+        "teaserRate": "3.625",
+            "closingCost": "$2,872.52"
+    }, {
+        "teaserRate": "3.500",
+            "closingCost": "$5,660.73"
+    }]
+}, {
+    "loanDuration": "5/1 1 YR LIBOR CONFORMING  2/2/5 30 YR ARM",
+        "rateVO": [{
+        "teaserRate": "3.125",
+            "closingCost": "0"
+    }, {
+        "teaserRate": "3.000",
+            "closingCost": "$425.20"
+    }, {
+        "teaserRate": "2.875",
+            "closingCost": "$1,443.82"
+    }, {
+        "teaserRate": "2.750",
+            "closingCost": "$2,456.83"
+    }, {
+        "teaserRate": "2.625",
+            "closingCost": "$3,472.65"
+    }, {
+        "teaserRate": "2.500",
+            "closingCost": "$4,796.47"
+    }]
+}, {
+    "loanDuration": "7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM",
+        "rateVO": [{
+        "teaserRate": "3.250",
+            "closingCost": "0"
+    }, {
+        "teaserRate": "3.125",
+            "closingCost": "$347.38"
+    }, {
+        "teaserRate": "3.000",
+            "closingCost": "$1,643.20"
+    }, {
+        "teaserRate": "2.875",
+            "closingCost": "$2,950.22"
+    }, {
+        "teaserRate": "2.750",
+            "closingCost": "$4,262.83"
+    }, {
+        "teaserRate": "2.625",
+            "closingCost": "$5,569.85"
+    }]
+}];
+
 var active = 0;
 
 var buyHomeTeaserRate = new Object();
@@ -731,20 +817,23 @@ function paintBuyHomeSeeRates() {
 
 function paintBuyHomeSeeTeaserRate() {
 
-	$(".ce-lp").html(" ");
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
+		"class" : "ce-rate-main-container"
 	});
 
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
-	var teaserRate = getRateProgramContainer();
 
-	container.append(quesTextCont).append(teaserRate);
-	//container.append(quesTextCont);
+	var rateProgramWrapper = getRateProgramContainer();
+	var loanSummaryWrapper = getLoanSummaryWrapper();
+	var closingCostWrapper = getClosingCostSummaryContainer();
+
+
+
+	container.append(quesTextCont).append(rateProgramWrapper).append(loanSummaryWrapper).append(closingCostWrapper);
 
 	$('#ce-refinance-cp').html(container);
 
@@ -757,9 +846,8 @@ function paintBuyHomeSeeTeaserRate() {
 		},
 		datatype : "application/json",
 		success : function(data) {
-			//alert("success");
-			// $('#teaserresult').html(teaserresult);
-			// alert(teaserresult);
+		
+			paintteaserRate(teaserRate);
 		},
 		error : function() {
 			alert("error");
@@ -767,6 +855,112 @@ function paintBuyHomeSeeTeaserRate() {
 
 	});
 }
+var tenureYear = [];
+var rateObjArray = [];
+var sortedTenureYear = [];
+var year;
+var index;
+var unsortTenureYear = [];
+function paintteaserRate(teaserRate){
+	
+	
+	for (var i in teaserRate) {
+
+	    var loanDurationConform = teaserRate[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    tenureYear.push(parseInt(year));
+	    rateObjArray.push(teaserRate[i].rateVO);
+	}
+	
+
+	for(var i = 0 ; i <tenureYear.length ; i++){
+	   unsortTenureYear[i] = tenureYear[i];
+	}
+
+
+	sortedTenureYear = sortYear(tenureYear);
+	tenureSlider(sortedTenureYear);
+	
+	
+	
+	index = unsortTenureYear.indexOf(sortedTenureYear[0]); 
+	var rateVOArrayObj = rateObjArray[index];
+	$("#teaserRateId").html(rateVOArrayObj[0].teaserRate+ " %");
+	$("#closingCostId").html(rateVOArrayObj[0].closingCost+ " ");
+	
+	rateCostSlider(rateVOArrayObj);
+	
+}
+
+function sortYear(tenureYear) {
+    var sortedTenureYear = [];
+    sortedTenureYear = tenureYear;
+    sortedTenureYear.sort(function(a, b){return a-b});
+   return sortedTenureYear;
+}
+
+
+function tenureSlider(sortedTenureYear){
+	$('.tenure-grid-container').remove();
+	var grids = getTenureSliderGrids(sortedTenureYear);
+	$('#tenure-slider').parent().append(grids);
+	console.log(sortedTenureYear);
+    $(function () {
+    $("#tenure-slider").slider({
+        min: 0, 
+        max: sortedTenureYear.length - 1, 
+        slide: function (event, ui) {
+            $("#amount").val(sortedTenureYear[ui.value] + "Year");
+        },
+        change:function( event, ui ) {
+        $("#rate-slider").slider("destroy");
+        $('#years-text').html(sortedTenureYear[ui.value]);
+        tenureYearDate = sortedTenureYear[ui.value];
+           
+        index = unsortTenureYear.indexOf(tenureYearDate); 
+        var rateVOArrayObj = rateObjArray[index];
+        console.log("rateVOArrayObjLength.."+rateVOArrayObj.length);
+        
+        // Rate slider change
+        rateCostSlider(rateVOArrayObj);
+        
+        },
+        create : function(event, ui){
+        	rateCostSlider(rateObjArray[0]);
+        }
+    });
+    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
+});
+    
+}
+
+
+
+function rateCostSlider(rateVOArrayObj){
+
+	$('.rate-slider').find('.tenure-grid-container').remove();
+	var grids = getRateCostSliderGrids(rateVOArrayObj);
+	$('#rate-slider').parent().append(grids);
+		    $("#rate-slider").slider({
+		        min: 0, 
+		        max: rateVOArrayObj.length - 1,
+		        change:function( event, ui ) {
+		        
+		        $(".cp-rate-btn").html(rateVOArrayObj[ui.value].teaserRate+ " %");
+		        $(".cp-est-cost-btn").html(rateVOArrayObj[ui.value].closingCost+ " ");
+		        },
+		        create:function(event,ui){
+		        	 $(".cp-rate-btn").html(rateVOArrayObj[0].teaserRate+ " %");
+		             $(".cp-est-cost-btn").html(rateVOArrayObj[0].closingCost+ " ");
+		        }
+		    });
+		    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
+}
+
 
 function getBuyHomeMultiTextQuestion(quesText) {
 	var container = $('<div>').attr({

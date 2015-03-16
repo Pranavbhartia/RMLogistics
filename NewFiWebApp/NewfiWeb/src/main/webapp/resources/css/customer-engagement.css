@@ -243,3 +243,7 @@
 	text-transform: capitalize;
 	cursor: pointer;
 }
+
+.ce-rate-main-container{
+	width: 830px;
+}
