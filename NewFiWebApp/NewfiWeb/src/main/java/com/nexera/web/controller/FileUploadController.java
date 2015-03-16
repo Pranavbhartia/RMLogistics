@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,15 @@ public class FileUploadController {
 	
 	public String uploadFile(MultipartFile file , Integer userId , Integer loanId){
 		String s3Path = null;
-		 try{
+		
+		LOG.info("File content type  : "+file.getContentType());
+		
+		try{
+			/*if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg")){
+				LOG.info("Received an image.converting to PDF");
+				file = NexeraUtility.convertImageToPDF(file);
+				
+			}*/
 			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
 			File serverFile = new File(localFilePath );
 			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
