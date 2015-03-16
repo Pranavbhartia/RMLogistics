@@ -8,6 +8,9 @@ public final class DisplayMessageConstants {
 
 	
 	private DisplayMessageConstants() {}
+	
+	// Success message constants
+	public static final String PAYMENT_SUCCESSFUL="PAYMENT_SUCCESSFUL";
 
 	// error message constants for user related fields
 	public static final String INVALID_FIRSTNAME = "INVALID_FIRSTNAME";
@@ -19,4 +22,6 @@ public final class DisplayMessageConstants {
 	public static  final String INVALID_PASSWORD="INVALID_PASSWORD";
 	public static final String GENERAL_ERROR = "GENERAL_ERROR";
 	
+	public static final String CREDIT_CARD_INVALID = "CREDIT_CARD_INVALID";
+	public static final String PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL";
 }

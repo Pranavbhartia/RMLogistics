@@ -2165,6 +2165,29 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 
 }
 
+//Click function to show payment page
+$(document).on('click', '.pay-application-fee', function(event) {
+	console.log("Pay application fee clicked!");
+	showOverlay();
+	$('body').addClass('body-no-scroll');
+	url = "./payment/paymentpage.do";
+	
+	 $.ajax({
+	        url : url,
+	        type : "GET",
+	        success : function(data) {
+	        	console.log("Show payment called with data : " + data);
+	        	$("#popup-overlay").html(data);
+	        	hideOverlay();
+	        	$("#popup-overlay").show();
+	        },
+	        error : function(e) {
+	        	hideOverlay();
+	            console.error("error : " + e);
+	        }
+	    });
+});
+
 function entryPointForAgentView(loanID, viewName) {
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
 		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
