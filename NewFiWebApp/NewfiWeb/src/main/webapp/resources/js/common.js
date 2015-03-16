@@ -4,8 +4,14 @@
 
 var overlayCount = 0;
 
-function ajaxRequest(url,type,dataType,data,successCallBack){
-	showOverlay();
+function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div){
+	if(isPagination){
+		showPaginationScrollIcon(div);
+	}else{
+		showOverlay();
+	}
+	
+	
 	$.ajax({
 		url : url,
 		type : type,
@@ -14,7 +20,12 @@ function ajaxRequest(url,type,dataType,data,successCallBack){
 		contentType: "application/json",
 		success : successCallBack,
 		complete:function(){
-			hideOverlay();
+			if(isPagination){
+				removePaginationScrollIcon(div);
+			}else{
+				hideOverlay();
+			}
+			
 		},
 		error : function(){
 			
@@ -61,6 +72,15 @@ function showOverlay(){
 		$('#overlay-loader').show();
 	}
 	overlayCount++;
+}
+
+function showPaginationScrollIcon(div){
+	var img = '<img id="loaderPagination" src="resources/images/loading.gif" >';
+	$("#"+div).append(img);
+}
+
+function removePaginationScrollIcon(div){
+	$("#"+div+" > #loaderPagination").remove();
 }
 
 //function to hide overlay

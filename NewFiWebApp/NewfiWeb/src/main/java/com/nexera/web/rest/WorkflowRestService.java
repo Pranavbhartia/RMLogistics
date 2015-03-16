@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
@@ -35,7 +33,6 @@ import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
 
 
-@RestController
 @RequestMapping ( value = "/workflow/")
 public class WorkflowRestService
 {
@@ -83,7 +80,6 @@ public class WorkflowRestService
         try {
             LoanVO loanVO = loanService.findWorkflowInfoById( loanID );
             LOG.debug( "Putting loan manager workflow into execution " );
-
             response = RestUtil.wrapObjectForSuccess( loanVO );
             LOG.debug( "Response" + response );
         } catch ( Exception e ) {
@@ -104,38 +100,7 @@ public class WorkflowRestService
             NeededItemScoreVO scoreVo = needsListService.getNeededItemsScore( loanID );
             String needString = scoreVo.getTotalSubmittedItem() + " out of " + scoreVo.getNeededItemRequired();
             LOG.debug( "Putting loan manager workflow into execution " );
-
             response = RestUtil.wrapObjectForSuccess( needString );
-            LOG.debug( "Response" + response );
-        } catch ( Exception e ) {
-            LOG.error( e.getMessage() );
-            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
-        }
-        return response;
-    }
-
-
-    // workflow/3/milestone/state/workflowIte
-    @RequestMapping ( value = "{loanId}/milestone/", method = RequestMethod.GET)
-    public @ResponseBody CommonResponseVO getWorkflowItemStateInfo( @PathVariable int loanId,
-        @RequestParam ( value = "workflowItemId") Integer workflowItemId )
-    {
-        LOG.info( "workflowItemExecId----" + workflowItemId );
-        CommonResponseVO response = null;
-        try {
-            LOG.info( "loanId----" + loanId );
-            /*
-             * String stateInfo = "";// Make a call to Workflow Engine which
-             * will call the renderStateInfo // to the work flow engine pass the
-             * loanId.. as Object[]..
-             */
-
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put( "LoanId", loanId );
-            String paramJson = Utils.convertMapToJson( map );
-            workflowService.saveParamsInExecTable( workflowItemId, paramJson );
-            String stateInfo = engineTrigger.getRenderStateInfoOfItem( workflowItemId );
-            response = RestUtil.wrapObjectForSuccess( stateInfo );
             LOG.debug( "Response" + response );
         } catch ( Exception e ) {
             LOG.error( e.getMessage() );
@@ -441,7 +406,6 @@ public class WorkflowRestService
         workflowItemExecVO.setDisplayContent( "My Profile" );
         workflowItemExecVO.setStateInfo( "" );
         list.add( workflowItemExecVO );
-
         // make some child workflow items
         WorkflowItemExecVO childWorkflowItemExecVO = new WorkflowItemExecVO();
         childWorkflowItemExecVO.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
@@ -457,7 +421,6 @@ public class WorkflowRestService
         childWorkflowItemExecVO2.setDisplayContent( "Online Application" );
         childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
         list.add( childWorkflowItemExecVO2 );
-
         childWorkflowItemExecVO2 = new WorkflowItemExecVO();
         childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
         childWorkflowItemExecVO2.setSuccess( true );
@@ -465,8 +428,6 @@ public class WorkflowRestService
         childWorkflowItemExecVO2.setDisplayContent( "Photo" );
         childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
         list.add( childWorkflowItemExecVO2 );
-
-
         childWorkflowItemExecVO2 = new WorkflowItemExecVO();
         childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
         childWorkflowItemExecVO2.setSuccess( true );
@@ -474,8 +435,6 @@ public class WorkflowRestService
         childWorkflowItemExecVO2.setDisplayContent( "SMS Texting Preferences" );
         childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
         list.add( childWorkflowItemExecVO2 );
-
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.IN_PROGRESS.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -483,7 +442,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "40%" );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         childWorkflowItemExecVO2 = new WorkflowItemExecVO();
         childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
         childWorkflowItemExecVO2.setSuccess( true );
@@ -491,8 +449,6 @@ public class WorkflowRestService
         childWorkflowItemExecVO2.setDisplayContent( "Connect your online application" );
         childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
         list.add( childWorkflowItemExecVO2 );
-
-
         childWorkflowItemExecVO2 = new WorkflowItemExecVO();
         childWorkflowItemExecVO2.setStatus( WorkflowItemStatus.COMPLETED.getStatusValue() );
         childWorkflowItemExecVO2.setSuccess( true );
@@ -500,8 +456,6 @@ public class WorkflowRestService
         childWorkflowItemExecVO2.setDisplayContent( "Contact your Loan Manager" );
         childWorkflowItemExecVO2.setParentWorkflowItemExec( workflowItemExecVO );
         list.add( childWorkflowItemExecVO2 );
-
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -509,7 +463,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "EQ 786~ TU-289 ~ Ex - 121" );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -517,7 +470,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "Add Team Members To Team" );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -525,7 +477,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "Click to pay" );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -533,8 +484,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "Click to lock Rate" );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -542,7 +491,6 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "Status .." );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
@@ -550,15 +498,14 @@ public class WorkflowRestService
         workflowItemExecVO.setStateInfo( "Pending." );
         workflowItemExecVO.setId( numberOrder++ );
         list.add( workflowItemExecVO );
-
         workflowItemExecVO = new WorkflowItemExecVO();
         workflowItemExecVO.setStatus( WorkflowItemStatus.NOT_STARTED.getStatusValue() );
         workflowItemExecVO.setSuccess( true );
         workflowItemExecVO.setDisplayContent( "Closing Status" );
         workflowItemExecVO.setStateInfo( "Download Payment Coupon." );
         workflowItemExecVO.setId( numberOrder++ );
-
         list.add( workflowItemExecVO );
         return list;
     }
+
 }
