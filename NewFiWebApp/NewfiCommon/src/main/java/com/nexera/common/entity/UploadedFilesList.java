@@ -27,6 +27,8 @@ public class UploadedFilesList implements Serializable {
 	private Date uploadedDate;
 	private String fileName;
 	private String s3ThumbPath;
+	private User assignedBy;
+	
 	
 	public UploadedFilesList() {
 	}
@@ -118,6 +120,16 @@ public class UploadedFilesList implements Serializable {
 
 	public void setS3ThumbPath(String s3ThumbPath) {
 		this.s3ThumbPath = s3ThumbPath;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "assigned_by")
+	public User getAssignedBy() {
+		return assignedBy;
+	}
+
+	public void setAssignedBy(User assignedBy) {
+		this.assignedBy = assignedBy;
 	}
 
 }

@@ -3740,5 +3740,10 @@ float: left;
 
 }
 
+.unlink{
+	cursor: default;
+	opacity : 0.2;
+}
+
 
 /*end of changes*/
