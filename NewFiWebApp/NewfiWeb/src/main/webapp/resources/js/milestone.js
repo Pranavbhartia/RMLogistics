@@ -961,7 +961,8 @@ function milestoneChildEventHandler(event) {
 	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/addMember"
+		data.OTHURL = "rest/workflow/milestone/addUserToLoanTeam";
+		data.milestoneID=14;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
