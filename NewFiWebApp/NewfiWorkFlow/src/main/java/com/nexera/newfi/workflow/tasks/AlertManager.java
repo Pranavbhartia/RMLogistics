@@ -1,8 +1,11 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
@@ -14,15 +17,24 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NotificationService notificationService;
 
-	public String execute(Object[] objects) {
+	@SuppressWarnings("unchecked")
+	public String execute(HashMap<String, Object> objectMap) {
 
-		int loanID = Integer.parseInt(objects[0].toString());
-		NotificationVO notificationVO = (NotificationVO) objects[1];
+		/*
+		 * int loanID = Integer.parseInt(objectMap
+		 * .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		 */
+		HashMap<String, Object> notification = (HashMap<String, Object>) objectMap
+		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
+		ObjectMapper mapper = new ObjectMapper();
+		NotificationVO notificationVO = mapper.convertValue(notification,
+		        NotificationVO.class);
+
 		notificationService.createNotification(notificationVO);
-		return String.valueOf(loanID);
+		return String.valueOf(notificationVO.getId());
 	}
 
-	public String renderStateInfo(String[] inputs) {
+	public String renderStateInfo(HashMap<String, Object> inputMap) {
 
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}

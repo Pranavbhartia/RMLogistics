@@ -49,7 +49,7 @@ function checkForSplitOption(select){
 			object.fileName = fileName;
 			
 			showDialogPopup("Confirm File Split" , 
-					"Are you sure want to split the current PDF document." , function(){splitPDFDocument(object)} );
+					"Are you sure want to split the current PDF document." , function(){splitPDFDocument(object);} );
 		}
 		
 }
@@ -57,7 +57,12 @@ function checkForSplitOption(select){
 
 function splitPDFDocument(dataObject){
 	console.info(dataObject.fileName +" and "+dataObject.fileId);
-	ajaxRequest("rest/fileupload/split/"+dataObject.fileId+"/"+  currentUserAndLoanOnj.activeLoanId+"/"+currentUserAndLoanOnj.userId,
+	var url = "rest/fileupload/split/"
+										+dataObject.fileId+"/"
+										+currentUserAndLoanOnj.activeLoanId
+										+"/"+currentUserAndLoanOnj.userId
+										+"/"+newfiObject.user.id;
+	ajaxRequest(url,
 			"GET", "json", "", afterPDFSplit);
 }
 
@@ -80,7 +85,6 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	}).load(function(){
 		docImg.css({
 			"background" : "url('"+listUploadedFiles.s3ThumbPath+"') no-repeat center",
-			
 			"background-size" : "cover"
 			
 		});
@@ -90,9 +94,27 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	var docDesc = $('<div>').attr({
 		"class" : "doc-desc showAnchor"
 	}).html(listUploadedFiles.fileName);
-	docImg.click(function(){
-		window.open(listUploadedFiles.s3path, '_blank');
-	});
+	
+	
+	if(newfiObject.user.userRole.roleDescription == "Realtor"){
+		if(listUploadedFiles.assignedByUser.userId == newfiObject.user.id ){
+			docImg.click(function(){
+				window.open(listUploadedFiles.s3path, '_blank');
+			});
+		}else{
+			docImg.addClass("unlink");
+		}
+	}else{
+		docImg.click(function(){
+			window.open(listUploadedFiles.s3path, '_blank');
+		});
+	}
+	
+	
+	
+
+	
+	
 	var docAssign = $("<select>").attr({
 		"class" : "assign",
 		"fileId" : listUploadedFiles.id,
@@ -161,7 +183,7 @@ function saveUserDocumentAssignments() {
 	console.info(fileAssignMentVO);
 
 	$.ajax({
-		url : "rest/fileupload/assignment/"+currentUserAndLoanOnj.activeLoanId+"/"+currentUserAndLoanOnj.userId,
+		url : "rest/fileupload/assignment/"+currentUserAndLoanOnj.activeLoanId+"/"+currentUserAndLoanOnj.userId+"/"+newfiObject.user.id,
 		type : "POST",
 		data : JSON.stringify(fileAssignMentVO),
 		dataType : "json",
@@ -296,7 +318,8 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		clickable : "#file-upload-icn",
 		params : {
 			userID : currentUserAndLoanOnj.userId,
-			loanId : currentUserAndLoanOnj.activeLoanId 
+			loanId : currentUserAndLoanOnj.activeLoanId ,
+			assignedBy : newfiObject.user.id
 		},
 		drop : function() {
 

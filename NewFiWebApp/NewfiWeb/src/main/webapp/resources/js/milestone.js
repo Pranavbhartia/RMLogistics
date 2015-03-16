@@ -138,6 +138,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				url : url,
 				type : type,
 				dataType : dataType,
+				contentType: "application/json",
 				data : data,
 				success : successCallBack,
 				error : function() {
@@ -147,15 +148,16 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
+			data.milestoneId=ob.mileStoneId;
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
-				"mileNotificationId" : ob.workItem.itemId,
+				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.infoText
-			})
+			});
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
 			{
-				ajaxURL = "rest/workflow/details/1";
+				ajaxURL = "";//rest/workflow/details/1";
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
@@ -164,31 +166,39 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			else
-			{
-				txtRow1.html(workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);;
+			if (ob.workItem.displayContent == "Add Team") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=selectedUserDetail.loanID;
+				callback = paintMilestoneTeamMemberTable;
+				// Just exposed a rest service to test - with hard coded loan ID
 			}
-						
-			ob.ajaxRequest(ajaxURL, "GET", "json", data,
+			
+					
+			if(ajaxURL&&ajaxURL!=""){
+				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
 						} else {
 							ob.infoText =  response.resultObject;
-							txtRow1.html(ob.infoText);
+							//txtRow1.html(ob.infoText);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
 							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
-							callback(ob);
+							callback(itemToAppendTo,ob);
 						}
 					});
+			}else{
+				txtRow1.html(workItem.stateInfo);
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+				itemToAppendTo.append(txtRow1);
+			}	
+
 
 		}
 	};
@@ -530,17 +540,55 @@ function removeMilestoneAddTeamMemberPopup() {
 }
 
 // Function to get milestone team member table
-function getMilestoneTeamMembeTable() {
+
+function paintMilestoneTeamMemberTable(appendTo,object){
+	
+	var userList=JSON.parse(object.infoText);
+	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
+}
+
+function getMilestoneTeamMembeTable(userList,milestoneID) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
 	});
 
-	var th = getMilestoneTeamMembeTableHeader();
-	var tr1 = getMilestoneTeamMemberRow("Elen Adarna", "Title Agent");
-	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew", "Loan Manager");
+	
+	var addNewMember = $('<div>').attr({
+		"class" : "milestone-rc-text",
+		"data-text" : "Click here to add a Team Member",
+		"mileNotificationId":milestoneID
+	}).html("Click here to add a Team Member").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
 
-	return tableContainer.append(th).append(tr1).append(tr2);
+	tableContainer.append(addNewMember);
+	
+	if(!userList ||  userList.length==0)
+		return;
+	
+	//team table header
+	var th = getMilestoneTeamMembeTableHeader();
+	tableContainer.append(th);
+	
+	for (i in userList) {
+
+		var user = userList[i];
+		var dispName = user.firstName+" "+user.lastName;
+		var userRole = userList[i].userRole;
+		var roleLabel = userRole.label;
+		if (userRole.id == 3) {
+			if (user.internalUserDetail
+					&& user.internalUserDetail.internalUserRoleMasterVO
+					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
+		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+	}
+	
+	
+
+	return tableContainer;
 }
 
 // Function to get milestone team member table header
@@ -662,7 +710,7 @@ function appendMilestoneApplicationFee() {
 	});
 	header.append(headerTxt).append(headerIcn);
 	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-lc-text"
+		"class" : "milestone-lc-text pay-application-fee"
 	}).html("Click here to Pay Application Fee");
 
 	wrapper.append(leftBorder).append(header).append(txtRow1);
@@ -944,7 +992,7 @@ function appendMilestoneItem(workflowItem, childList) {
 // this will add a "Information Link" that is clickable to the task.
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
-	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
 	
@@ -955,15 +1003,36 @@ function milestoneChildEventHandler(event) {
 	event.stopPropagation();
 	if ($(event.target).attr("data-text") == "Schedule an Alert") {
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/alert"
 		data.milestoneId = event.target.getAttribute("milenotificationid");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/addMember"
+		data.milestoneID=$(event.target).attr("mileNotificationId");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
+	} else if ($(event.target).attr("data-text") == "Click to pay") {
+		console.log("Pay application fee clicked!");
+		showOverlay();
+		$('body').addClass('body-no-scroll');
+		url = "./payment/paymentpage.do";
+		
+		 $.ajax({
+		        url : url,
+		        type : "GET",
+		        success : function(data) {
+		        	console.log("Show payment called with data : " + data);
+		        	$("#popup-overlay").html(data);
+		        	hideOverlay();
+		        	$("#popup-overlay").show();
+		        },
+		        error : function(e) {
+		        	hideOverlay();
+		            console.error("error : " + e);
+		        }
+		    });
 	}
 }

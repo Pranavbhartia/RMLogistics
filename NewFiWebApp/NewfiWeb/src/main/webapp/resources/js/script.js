@@ -593,8 +593,7 @@ function getRateProgramContainer() {
 		"class" : "cp-rate-header-text"
 	}).html("Interest Rate");
 	var rateValue = $('<div>').attr({
-		"class" : "cp-rate-btn",
-		"id":"teaserRateId"
+		"class" : "cp-rate-btn"
 	}).html("3.375%");
 	rateBtnContainer.append(rateLabel).append(rateValue);
 	rpCol1.append(rateBtnContainer);
@@ -635,8 +634,7 @@ function getRateProgramContainer() {
 		"class" : "cp-est-header-text"
 	}).html("Monthly Payment");
 	var paymentValue = $('<div>').attr({
-		"class" : "cp-est-cost-btn",
-		"id":"closingCostId"
+		"class" : "cp-est-cost-btn"
 	}).html("$ 8,185.75");
 	paymentBtnContainer.append(paymentlabel).append(paymentValue);
 	rpCol3.append(paymentBtnContainer);
@@ -665,36 +663,11 @@ function getRateProgramContainer() {
 			mobileScreenCont);
 	
 	parentWrapper.append(rpHeader).append(rpContainer);
-	
-	var lockRateBtnApply = $('<div>').attr({
-		"class" : "cp-lock-btn  float-left"
-	}).click(function(){
-		
-		$.ajax({
-			
-			url:"/register.do",
-			type:"GET",
-			success :function(){},
-			error :function(){}
-		});
-		
-	}).html("Apply Now");
-	
-	var lockRateBtnRegister = $('<div>').attr({
-		"class" : "cp-lock-btn float-left"
-	}).html("Register for alerts");
-	
 	var lockRateBtn = $('<div>').attr({
-		"class" : " clearfix",
-    	
-	}).append(lockRateBtnApply).append(lockRateBtnRegister);
-	
-	/*var lockRateBtn = $('<div>').attr({
 		"class" : "cp-lock-btn"
-	}).html("lock your rate");*/
+	}).html("lock your rate");
 	
 	parentWrapper.append(lockRateBtn);
-	//parentWrapper.append(lockRateBtn);
 	return parentWrapper;
 }
 
@@ -715,6 +688,11 @@ function getRateSlider() {
 	var rsIcon = $('<div>').attr({
 		"id" : "rate-slider",
 		"class" : "rate-slider-icon"
+	}).slider({
+		orientation : "horizontal",
+		range : "min",
+		max : 100,
+		value : 40
 	});
 	rateSlider.append(rateSliderTextCon).append(rsIcon);
 	return rateSlider;
@@ -781,25 +759,6 @@ function getTenureSliderGrids(gridArray){
 }
 
 
-function getRateCostSliderGrids(gridArray){
-	var gridContainer = $('<div>').attr({
-		"class" : "tenure-grid-container"
-	});
-	
-	for(var i=0;i<gridArray.length; i++){
-		var leftOffset = i/(gridArray.length-1) * 100;
-		var gridItem = $('<div>').attr({
-			"class" : "tenure-grid-item"
-		}).css({
-			"left" : leftOffset + "%"
-		});
-		
-		gridContainer.append(gridItem);
-	}
-	
-	return gridContainer;
-}
-
 function getSliderContainerForMobileScreen() {
 	var mobileSliderCont = $('<div>').attr({
 		"class" : "mobile-slider-container clearfix"
@@ -816,8 +775,7 @@ function getSliderContainerForMobileScreen() {
 		"class" : "cp-rate-header-text"
 	}).html("Interest Rate");
 	var rateValue = $('<div>').attr({
-		"class" : "cp-rate-btn",
-		"id":"teaseRate"
+		"class" : "cp-rate-btn"
 	}).html("3.375%");
 	rateBtnContainer.append(rateLabel).append(rateValue);
 	col1.append(rateBtnContainer);
@@ -849,8 +807,7 @@ function getSliderContainerForMobileScreen() {
 		"class" : "cp-est-header-text"
 	}).html("Monthly Payment");
 	var paymentValue = $('<div>').attr({
-		"class" : "cp-est-cost-btn",
-		"id":"closingCostId"
+		"class" : "cp-est-cost-btn"
 	}).html("$ 8,185.75");
 	paymentBtnContainer.append(paymentlabel).append(paymentValue);
 	col2.append(paymentBtnContainer);

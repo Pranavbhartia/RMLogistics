@@ -50,7 +50,7 @@ public class WorkflowItemMaster implements Serializable
     private WorkflowMaster parentWorkflowMaster;
     private WorkflowItemMaster parentWorkflowItemMaster;
     private List<WorkflowItemMaster> childWorkflowItemMasterList;
-    private String params;
+    
 
 
     public WorkflowItemMaster()
@@ -357,25 +357,6 @@ public class WorkflowItemMaster implements Serializable
     public void setPriority( Boolean priority )
     {
         this.priority = priority;
-    }
-
-
-    /**
-     * @return the params
-     */
-    @Column ( name = "params")
-    public String getParams()
-    {
-        return params;
-    }
-
-
-    /**
-     * @param params the params to set
-     */
-    public void setParams( String params )
-    {
-        this.params = params;
     }
 
 

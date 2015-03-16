@@ -12,5 +12,6 @@ public interface JspLookup {
 	public static final String HOME_PAGE = "home";
 	public static final String TEASER_RATE_CALC = "teaserRateCalc";
 	public static final String CUSTOMER_UPLOAD_DOCUMENT = "customerUploadRequiredFiles";
+	public static final String PAYMENT_PAGE="payment";
 
 }

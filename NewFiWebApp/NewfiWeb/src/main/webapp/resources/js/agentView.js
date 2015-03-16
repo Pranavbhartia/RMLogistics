@@ -2,6 +2,7 @@
  *Contains JavaScript functions for agent dashboard pages
  */
 var isAgentTypeDashboard;
+var docData = [];
 
 function adjustAgentDashboardOnResize() {
 	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
@@ -2138,7 +2139,7 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 	if (internalRoleID != undefined && internalRoleID > 0)
 		restURL += "&internalRoleID=" + internalRoleID;
 
-	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam);
+	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam,true);
 
 }
 
@@ -2163,6 +2164,29 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
 
 }
+
+//Click function to show payment page
+$(document).on('click', '.pay-application-fee', function(event) {
+	console.log("Pay application fee clicked!");
+	showOverlay();
+	$('body').addClass('body-no-scroll');
+	url = "./payment/paymentpage.do";
+	
+	 $.ajax({
+	        url : url,
+	        type : "GET",
+	        success : function(data) {
+	        	console.log("Show payment called with data : " + data);
+	        	$("#popup-overlay").html(data);
+	        	hideOverlay();
+	        	$("#popup-overlay").show();
+	        },
+	        error : function(e) {
+	        	hideOverlay();
+	            console.error("error : " + e);
+	        }
+	    });
+});
 
 function entryPointForAgentView(loanID, viewName) {
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
