@@ -25,9 +25,9 @@ public interface UploadedFilesListService {
 
 	public List<String> downloadFileFromS3Service(List<Integer> fileIds);
 	
-	public Integer mergeAndUploadFiles(List<Integer> fileIds , Integer loanId, Integer userId) throws  IOException, COSVisitorException;
+	public Integer mergeAndUploadFiles(List<Integer> fileIds , Integer loanId, Integer userId , Integer assignedBy) throws  IOException, COSVisitorException;
 
-	public Integer addUploadedFilelistObejct(File file, Integer loanId ,  Integer userId);
+	public Integer addUploadedFilelistObejct(File file, Integer loanId ,  Integer userId , Integer assignedBy);
 
 	void updateIsAssignedToTrue(List<Integer> fileIds);
 

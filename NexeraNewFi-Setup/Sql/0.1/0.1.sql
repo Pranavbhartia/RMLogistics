@@ -65,3 +65,5 @@ ADD CONSTRAINT `fk_lnLMWorkflow`
   add column s3thumbnail varchar(250);
 
 
+alter table newfi_schema.uploadedfileslist
+  add column assigned_by TinyInt(4);

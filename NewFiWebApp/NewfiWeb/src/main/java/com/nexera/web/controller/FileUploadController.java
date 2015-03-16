@@ -35,16 +35,19 @@ public class FileUploadController {
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
 	@RequestMapping(value = "documentUpload.do" , method = RequestMethod.POST  )
-	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file , @RequestParam("userID") Integer userID ,  @RequestParam("loanId") Integer loanId ){
-		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId);
+	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file 
+										, @RequestParam("userID") Integer userID 
+										, @RequestParam("loanId") Integer loanId 
+										, @RequestParam("assignedBy") Integer assignedBy){
+		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy);
 		List<String> s3paths = new ArrayList<String>();
 		for (MultipartFile multipartFile : file) {
-			s3paths.add(uploadFile(multipartFile, userID , loanId) );
+			s3paths.add(uploadFile(multipartFile, userID , loanId , assignedBy) );
 		}
 		return new Gson().toJson(s3paths);
 	} 
 	
-	public String uploadFile(MultipartFile file , Integer userId , Integer loanId){
+	public String uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
 		String s3Path = null;
 		
 		LOG.info("File content type  : "+file.getContentType());
@@ -57,7 +60,7 @@ public class FileUploadController {
 			}*/
 			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
 			File serverFile = new File(localFilePath );
-			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
+			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
 			LOG.info("Added File document row : "+savedRowId);
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());

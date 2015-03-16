@@ -19,7 +19,6 @@ public interface UserProfileService {
 
 	public Integer updateUser(String s3ImagePath, Integer userid);
 
-
 	public Integer competeUserProfile(UserVO userVO);
 
 	public Integer completeCustomerDetails(UserVO userVO);
