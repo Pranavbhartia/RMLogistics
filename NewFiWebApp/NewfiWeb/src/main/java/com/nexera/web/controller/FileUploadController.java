@@ -51,14 +51,15 @@ public class FileUploadController {
 		String s3Path = null;
 		
 		LOG.info("File content type  : "+file.getContentType());
-		
+		String localFilePath = null;
 		try{
-			/*if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg")){
+			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg")){
 				LOG.info("Received an image.converting to PDF");
-				file = NexeraUtility.convertImageToPDF(file);
-				
-			}*/
-			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
+				localFilePath = NexeraUtility.convertImageToPDF(file);
+			}else{
+				localFilePath = NexeraUtility.uploadFileToLocal(file);
+			}
+			 NexeraUtility.uploadFileToLocal(file);
 			File serverFile = new File(localFilePath );
 			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
 			LOG.info("Added File document row : "+savedRowId);

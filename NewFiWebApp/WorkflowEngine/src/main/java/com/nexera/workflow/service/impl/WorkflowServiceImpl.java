@@ -21,22 +21,26 @@ import com.nexera.workflow.dao.WorkflowMasterDao;
 import com.nexera.workflow.service.WorkflowService;
 
 @Component
-public class WorkflowServiceImpl implements WorkflowService {
 
-	@Autowired
-	WorkflowMasterDao workflowMasterDao;
+public class WorkflowServiceImpl implements WorkflowService
+{
 
-	@Autowired
-	WorkflowExecDao workflowExecDao;
+    @Autowired
+    WorkflowMasterDao workflowMasterDao;
 
-	@Autowired
-	WorkflowItemExecDao workflowItemExecDao;
+    @Autowired
+    WorkflowExecDao workflowExecDao;
 
-	@Autowired
-	WorkflowItemMasterDao workflowItemMasterDao;
+    @Autowired
+    WorkflowItemExecDao workflowItemExecDao;
 
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(WorkflowServiceImpl.class);
+    @Autowired
+    WorkflowItemMasterDao workflowItemMasterDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( WorkflowServiceImpl.class );
+
+
+    
 
 	/*
 	 * (non-Javadoc)
@@ -224,5 +228,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 		}
 
 	}
+
 
 }
