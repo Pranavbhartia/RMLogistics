@@ -41,7 +41,7 @@ public class RestInterceptor implements Callable
         message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
-            NewFiManager.userTicket = Utils.getUserTicket( "APITEST", "LQB2014" );
+            NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             NewFiManager.generationTime = System.currentTimeMillis();
         } else {
             long generationTime = NewFiManager.generationTime;
@@ -50,7 +50,7 @@ public class RestInterceptor implements Callable
             long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
             if ( differenceInHours >= 4 ) {
                 LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
-                NewFiManager.userTicket = Utils.getUserTicket( "APITEST", "LQB2014" );
+                NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
         }
         String[] inputParameters = getAllParameters( restParameters );
