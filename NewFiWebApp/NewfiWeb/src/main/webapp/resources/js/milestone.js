@@ -138,6 +138,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				url : url,
 				type : type,
 				dataType : dataType,
+				contentType: "application/json",
 				data : data,
 				success : successCallBack,
 				error : function() {
@@ -165,22 +166,22 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-
 			if (ob.workItem.displayContent == "Add Team") {
-				ajaxURL = "rest/loan/"+selectedUserDetail.loanID+"/team";
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.LOAN_ID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			
 					
 			if(ajaxURL&&ajaxURL!=""){
-				ob.ajaxRequest(ajaxURL, "GET", "json", data,
+				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
 						} else {
 							ob.infoText =  response.resultObject;
-							txtRow1.html(ob.infoText);
+							//txtRow1.html(ob.infoText);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
@@ -542,7 +543,7 @@ function removeMilestoneAddTeamMemberPopup() {
 
 function paintMilestoneTeamMemberTable(appendTo,object){
 	
-	var userList=object.infoText;
+	var userList=JSON.parse(object.infoText);
 	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
 }
 
@@ -573,7 +574,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	for (i in userList) {
 
 		var user = userList[i];
-		var dispName = user.displayName;
+		var dispName = user.firstName+" "+user.lastName;
 		var userRole = userList[i].userRole;
 		var roleLabel = userRole.label;
 		if (userRole.id == 3) {
