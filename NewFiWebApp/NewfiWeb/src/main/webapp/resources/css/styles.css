@@ -3731,4 +3731,14 @@ text-transform: uppercase;
 cursor: pointer;
 float: left;
 }
+
+#loaderPagination{
+	margin-left:20%;
+	background-size: 11px;
+	height:32px ;
+	width:32px;
+
+}
+
+
 /*end of changes*/

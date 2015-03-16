@@ -19,7 +19,7 @@ $(window).scroll(function(){
 }); 
 
 function getConversationPagination(){
-	ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/"+currentPage, "GET", "json", "", paintConversationPagination);
+	ajaxRequest("rest/commlog/"+currentUserAndLoanOnj.userId+"/"+currentUserAndLoanOnj.activeLoanId+"/"+currentPage, "GET", "json", "", paintConversationPagination ,true , "conv-container");
 }
 
 function showAgentMessageDashboard() {
