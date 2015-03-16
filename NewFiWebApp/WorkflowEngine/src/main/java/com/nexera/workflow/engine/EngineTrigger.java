@@ -3,7 +3,9 @@ package com.nexera.workflow.engine;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -27,6 +28,7 @@ import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.manager.CacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
 import com.nexera.workflow.service.WorkflowService;
+import com.nexera.workflow.utils.Util;
 import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
@@ -106,8 +108,7 @@ public class EngineTrigger {
 
 	}
 
-	public void startWorkFlowItemExecution(int workflowItemExecutionId,
-	        Object[] params) {
+	public void startWorkFlowItemExecution(int workflowItemExecutionId) {
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
 
 		executorService = cacheManager.initializePool();
@@ -140,7 +141,6 @@ public class EngineTrigger {
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
-				workflowManager.setParams(params);
 				executorService.execute(workflowManager);
 
 				executorService.shutdown();
@@ -184,6 +184,7 @@ public class EngineTrigger {
 					        + workflowItemExecution);
 					LOGGER.debug("Updating the workflow item execution status to started ");
 					workflowItemExecution.setStatus(Status.STARTED.getStatus());
+					// TODO decide what will happen to parent exec ?
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
@@ -195,7 +196,6 @@ public class EngineTrigger {
 						        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
 						workflowManager
 						        .setWorkflowItemExec(childWorkflowItemExec);
-						workflowManager.setParams(params);
 						executorService.execute(workflowManager);
 					}
 					executorService.shutdown();
@@ -231,7 +231,6 @@ public class EngineTrigger {
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					workflowManager.setWorkflowItemExec(workflowItemExecution);
-					workflowManager.setParams(params);
 					executorService.execute(workflowManager);
 					executorService.shutdown();
 					try {
@@ -251,46 +250,48 @@ public class EngineTrigger {
 
 	}
 
-	public String getRenderStateInfoOfItem(int workflowItemExecId,
-	        String[] params) {
+	public String getRenderStateInfoOfItem(int workflowItemExecId) {
 		LOGGER.debug("Inside method getRenderStaetInfoOfItem ");
 		WorkflowItemExec workflowItemExec = workflowService
 		        .getWorkflowExecById(workflowItemExecId);
 		if (workflowItemExec != null) {
-			String output = executeMethod(
-			        workflowItemExec.getWorkflowItemMaster(), params);
+			String output = executeMethod(workflowItemExec);
 			return output;
 		}
 		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String executeMethod(WorkflowItemMaster workflowItemMaster,
-	        String[] itemSpecificParams) {
+	private String executeMethod(WorkflowItemExec workflowItemExec) {
 
-		String[] params;
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> itemParamMap;
+		Map<String, Object> systemParamMap;
 		String result = null;
-		WorkflowTaskConfigMaster workflowTaskConfigMaster = workflowItemMaster
-		        .getTask();
+		WorkflowTaskConfigMaster workflowTaskConfigMaster = workflowItemExec
+		        .getWorkflowItemMaster().getTask();
 		if (workflowTaskConfigMaster != null) {
 			LOGGER.debug("Will call the respective method of this workflow item ");
 			String className = workflowTaskConfigMaster.getClassName();
-			String systemSpecificParams = workflowTaskConfigMaster.getParams();
-			if (systemSpecificParams == null) {
-				params = itemSpecificParams;
-			} else {
-				String[] systemSpecificParamArray = systemSpecificParams
-				        .split(",");
-				if (itemSpecificParams == null) {
-					params = systemSpecificParamArray;
-				} else {
-					params = systemSpecificParamArray;
-					int i = params.length;
-					for (String itemParam : itemSpecificParams) {
-						LOGGER.debug("Appending the input parameters after system specific parameters ");
-						params[i++] = itemParam;
-					}
+			String systemSpecificParamsJson = workflowTaskConfigMaster
+			        .getParams();
+			systemParamMap = Util.convertJsonToMap(systemSpecificParamsJson);
+			if (systemParamMap == null) {
+
+				if (workflowItemExec.getParams() != null) {
+					String jsonParamString = workflowItemExec.getParams();
+					itemParamMap = Util.convertJsonToMap(jsonParamString);
+					params.putAll(itemParamMap);
 				}
+
+			} else {
+				params.putAll(systemParamMap);
+				if (workflowItemExec.getParams() != null) {
+					String jsonParamString = workflowItemExec.getParams();
+					itemParamMap = Util.convertJsonToMap(jsonParamString);
+					params.putAll(itemParamMap);
+				}
+
 			}
 
 			LOGGER.debug("Calling java reflection api to invoke method with specified params ");
@@ -325,6 +326,7 @@ public class EngineTrigger {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<WorkflowItemExec> getWorkflowItemExecByWorkflowMasterExec(
 	        int workflowexecId) {
 		LOGGER.debug("Inside method getWorkflowItemExecByWorkflowMasterExec");
@@ -336,14 +338,15 @@ public class EngineTrigger {
 		return Collections.EMPTY_LIST;
 	}
 
-	public static void main(String[] args) {
-		String json = "{\"workflowType\":\"LM_WF_ALL\"}";
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-		        "spring\\workflow-engine-core-context.xml");
-		EngineTrigger engTrigger = (EngineTrigger) applicationContext
-		        .getBean(EngineTrigger.class);
-		engTrigger.triggerWorkFlow(json);
-		// engTrigger.startWorkFlowItemExecution( 74 );
-
-	}
+	/*
+	 * public static void main(String[] args) { String json =
+	 * "{\"workflowType\":\"LM_WF_ALL\"}"; ApplicationContext applicationContext
+	 * = new ClassPathXmlApplicationContext(
+	 * "spring\\workflow-engine-core-context.xml"); EngineTrigger engTrigger =
+	 * (EngineTrigger) applicationContext .getBean(EngineTrigger.class);
+	 * engTrigger.triggerWorkFlow(json); //
+	 * engTrigger.startWorkFlowItemExecution( 74 );
+	 * 
+	 * }
+	 */
 }
