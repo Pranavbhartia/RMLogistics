@@ -250,7 +250,7 @@ public class EngineTrigger {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String executeMethod(WorkflowItemExec workflowItemExec) {
 
-		Map<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> itemParamMap;
 		Map<String, Object> systemParamMap;
 		String result = null;
@@ -287,7 +287,7 @@ public class EngineTrigger {
 
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
-				        new Class[] { Map.class });
+				        new Class[] { HashMap.class });
 
 				result = (String) method.invoke(obj, params);
 
