@@ -1002,8 +1002,8 @@ function milestoneChildEventHandler(event) {
 	event.stopPropagation();
 	if ($(event.target).attr("data-text") == "Schedule an Alert") {
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/alert"
 		data.milestoneId = event.target.getAttribute("milenotificationid");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
 		var teamTable = getMilestoneTeamMembeTable();

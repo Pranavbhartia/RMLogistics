@@ -53,7 +53,7 @@ public class EMailSender implements IWorkflowTaskExecutor {
 				e.printStackTrace();
 			}
 		}
-		return "";
+		return "success";
 	}
 
 	public Object[] getParamsForExecute() {
