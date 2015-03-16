@@ -206,6 +206,7 @@ a,a:hover,a:visited {
 
 .lp-talk-pic2 {
 	background: url(../images/photos1.png) no-repeat center;
+	background-size:cover; 
 }
 
 .lp-talk-pic3 {
