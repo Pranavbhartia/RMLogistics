@@ -165,6 +165,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
+
+			if (ob.workItem.displayContent == "Add Team") {
+				ajaxURL = "rest/loan/1/team";
+				callback = paintMilestoneTeamMemberTable;
+				// Just exposed a rest service to test - with hard coded loan ID
+			}
 			
 					
 			if(ajaxURL&&ajaxURL!=""){
@@ -181,7 +187,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
-							callback(ob);
+							callback(itemToAppendTo,response.resultObject);
 						}
 					});
 			}else{
@@ -533,7 +539,13 @@ function removeMilestoneAddTeamMemberPopup() {
 }
 
 // Function to get milestone team member table
-function getMilestoneTeamMembeTable() {
+
+function paintMilestoneTeamMemberTable(appendTo,userList){
+	
+	appendTo.append(getMilestoneTeamMembeTable(userList));
+}
+
+function getMilestoneTeamMembeTable(userList) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
