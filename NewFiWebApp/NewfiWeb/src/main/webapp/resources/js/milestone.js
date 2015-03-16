@@ -147,6 +147,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
+			data.milestoneId=ob.mileStoneId;
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : ob.workItem.id,
@@ -946,7 +947,7 @@ function appendMilestoneItem(workflowItem, childList) {
 // this will add a "Information Link" that is clickable to the task.
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
-	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
 	

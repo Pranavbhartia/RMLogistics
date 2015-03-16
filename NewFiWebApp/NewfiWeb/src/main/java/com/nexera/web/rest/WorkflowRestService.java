@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.MilestoneLoanTeamVO;
 import com.nexera.common.vo.MilestoneNotificationVO;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.LoanService;
@@ -154,8 +156,34 @@ public class WorkflowRestService {
 			String stateInfo = "";// Make a call to Workflow Engine which will
 			// call the renderStateInfo
 			// to the work flow engine pass the loanId.. as Object[]..
-			
-			//TODO service should return same result as Notification Service 
+			response = RestUtil.wrapObjectForSuccess(stateInfo);
+			LOG.debug("Response" + response);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+
+	@RequestMapping(value = "/milestone/addUserToLoanTeam", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO addUserToLoanTeam(@RequestBody String milestoneAddTeamVOStr) {
+		LOG.info("milestoneAddTeamVO----" + milestoneAddTeamVOStr);
+		CommonResponseVO response = null;
+		try {
+			Gson gson = new Gson();
+			MilestoneLoanTeamVO milestoneNoticationVO = gson.fromJson(
+			        milestoneAddTeamVOStr, MilestoneLoanTeamVO.class);
+			LOG.info("workflowItem ID" + milestoneNoticationVO.getMilestoneID());
+			String stateInfo = "";// Make a call to Workflow Engine which will
+			// call the renderStateInfo
+			// to the work flow engine pass the loanId.. as Object[]..
+			String params[] = new String[2];
+			params[0] = String.valueOf(milestoneNoticationVO.getLoanID());
+			params[1] = String.valueOf(milestoneNoticationVO.getUserID());
+			stateInfo = engineTrigger.getRenderStateInfoOfItem(
+			        milestoneNoticationVO.getMilestoneID(), params);
 			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {

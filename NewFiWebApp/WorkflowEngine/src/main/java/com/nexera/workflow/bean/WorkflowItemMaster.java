@@ -151,7 +151,7 @@ public class WorkflowItemMaster implements Serializable
     }
 
 
-    @ManyToOne ( fetch = FetchType.LAZY)
+    @ManyToOne ( fetch = FetchType.EAGER)
     @JoinColumn ( name = "workflow_task")
     public WorkflowTaskConfigMaster getTask()
     {
