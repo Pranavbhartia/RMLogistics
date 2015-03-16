@@ -24,9 +24,6 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LoanBatchProcessor.class);
 
-	/*
-	 * @Autowired private ThreadPoolManager threadPoolManager;
-	 */
 	@Autowired
 	private LoanService loanService;
 
@@ -42,11 +39,6 @@ public class LoanBatchProcessor extends QuartzJobBean {
 
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		LOGGER.debug("Triggering the Quartz Schedular ");
-		/*
-		 * if ( !threadPoolManager.isInitialized() ) { LOGGER.debug(
-		 * "Creating a fixed size thread pool " ); executorService =
-		 * threadPoolManager.initializePool(); }
-		 */
 
 		List<Loan> loanList = loanService.getAllLoans();
 		if (loanList != null) {
