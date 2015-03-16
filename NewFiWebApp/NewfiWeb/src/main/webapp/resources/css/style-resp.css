@@ -76,7 +76,6 @@
 	.cp-rate-header-text,
 	.cp-est-header-text{
 		font-size: 13px;
-		height: 41px;
 	}
 	.rate-slider{
 		margin-bottom: 15px;
@@ -259,7 +258,7 @@
 		margin-left:10px; 	
 	}
 	.rate-program-container-col1{
-		width: 16%;
+		width: 19%;
 	}
 	.rate-program-container-col2{
 		width: 50%;
@@ -282,7 +281,6 @@
 	}
 	.cp-rate-header-text{
 		font-size: 13px;
-		height: 36px;
 		margin-bottom: 5px;
 	}
 	.rate-slider{
