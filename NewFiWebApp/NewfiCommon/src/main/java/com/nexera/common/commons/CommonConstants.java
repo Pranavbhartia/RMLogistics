@@ -43,5 +43,11 @@ public interface CommonConstants {
 	public static final String MESSAGE_KEY = "message";
 	public static final int SUCCESS = 1;
 	public static final int FAILURE = 0;
-
+	
+	/*
+	 * SendGrid constants
+	 */
+	public static final String SENDER_NAME = "NewFi Team";
+	public static final String SENDER_EMAIL_ID = "support@newfi.com";
+	public static final String EMAIL_FOOTER = "Thanks and Regards," + "\n" + "Newfi Team";
 }

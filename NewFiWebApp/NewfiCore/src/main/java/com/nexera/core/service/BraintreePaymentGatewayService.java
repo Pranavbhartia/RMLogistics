@@ -7,6 +7,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.PaymentException;
 import com.nexera.common.exception.PaymentUnsuccessfulException;
+import com.nexera.common.exception.UndeliveredEmailException;
 
 /**
  * @author karthik
@@ -34,8 +35,9 @@ public interface BraintreePaymentGatewayService {
 	 * @throws PaymentUnsuccessfulException 
 	 * @throws CreditCardException 
 	 * @throws NoRecordsFetchedException 
+	 * @throws UndeliveredEmailException 
 	 */
-	public void makePayment(String paymentNonce, float amount, int loanId, User user) throws InvalidInputException, PaymentException, PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException;
+	public void makePayment(String paymentNonce, float amount, int loanId, User user) throws InvalidInputException, PaymentException, PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException, UndeliveredEmailException;
 	
 
 }
