@@ -298,7 +298,20 @@ public class WorkflowRestService {
         }
         return response;
     }
-    
+    @RequestMapping ( value = "changestateofworkflowitemexec/{workflowId}", method = RequestMethod.POST)
+    public @ResponseBody CommonResponseVO changeStateOfWorkflowItemExec(@PathVariable int workflowId,@RequestParam(value="status")String status )
+    {
+        LOG.info( "workflowId----" + workflowId );
+        CommonResponseVO response = null;
+        try {
+            engineTrigger.changeStateOfWorkflowItemExec( workflowId,status );
+            response = RestUtil.wrapObjectForSuccess( "Success" );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
+            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
+        }
+        return response;
+    }
 	private List<WorkflowItemExecVO> prepareTestListForLoanManager() {
 		List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
 		int numberOrder = 1;
