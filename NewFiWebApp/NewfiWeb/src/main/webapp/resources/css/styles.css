@@ -1181,6 +1181,7 @@ a,a:hover,a:visited {
 	margin-right: 20px;
 	background: url(../images/cus-icn.png) no-repeat center;
 	border-radius: 50%;
+	background-size: cover;
 }
 
 .con-prof-name {
