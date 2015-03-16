@@ -190,8 +190,9 @@ public class NexeraUtility {
 	    return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 	
-	public static MultipartFile convertImageToPDF(MultipartFile multipartFile) {
+	public static String convertImageToPDF(MultipartFile multipartFile) {
 		MultipartFile multipartPDF   = null;
+		String filepath = null;
 		try{
 		File file = multipartToFile(multipartFile);
 		
@@ -213,7 +214,8 @@ public class NexeraUtility {
 		contentStream.close();
 		in.close();
 
-		String filepath = tomcatDirectoryPath() + File.separator +file.getName().replace(FilenameUtils.getExtension(file.getName()), "") +".pdf";
+	    filepath = tomcatDirectoryPath() + 
+				File.separator +file.getName().replace(FilenameUtils.getExtension(file.getName()), "") +"pdf";
 		
 		
 		LOGGER.info("filepath after convertin to PDF : "+filepath);
@@ -224,12 +226,12 @@ public class NexeraUtility {
         
 		document.save(filepath);
 		document.close();
-		multipartPDF = filePathToMultipart(filepath);
+		
 		}catch(Exception e){
 			LOGGER.error("Exception in convertImageToPDF : "+e.getMessage());
 			e.printStackTrace();
 		}
-		return multipartPDF ;
+		return filepath ;
 		
 	}
 	
