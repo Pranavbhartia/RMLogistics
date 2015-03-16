@@ -1,10 +1,12 @@
 package com.nexera.workflow.task;
 
+import java.util.HashMap;
+
 public interface IWorkflowTaskExecutor {
 
-	public String execute(Object[] inputs);
+	public String execute(HashMap<String, Object> objectMap);
 
-	public String renderStateInfo(String[] inputs);
+	public String renderStateInfo(HashMap<String, Object> inputMap);
 
 	public Object[] getParamsForExecute();
 }
