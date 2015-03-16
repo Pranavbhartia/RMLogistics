@@ -8,7 +8,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.nexera.common.vo.LqbTeaserRateVo;
+import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 
 
@@ -63,7 +63,7 @@ public class TeaserRateHandler extends DefaultHandler {
     	LOG.info("end Element  qName # "+qName);
     		if(qName.equalsIgnoreCase("Program")) {
     			//add it to the list
-    			//teaserRateVo.setRateVO(rateVoList);
+    			teaserRateVo.setRateVO(rateVoList);
     			teaserRateList.add(teaserRateVo);
        		}
    		}
