@@ -551,8 +551,23 @@ function getMilestoneTeamMembeTable(userList) {
 		"class" : "ms-team-member-table"
 	});
 
+	
+	var addNewMember = $('<div>').attr({
+		"class" : "milestone-rc-text",
+		"data-text" : "Click here to add a Team Member"
+	}).html("Click here to add a Team Member").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
+
+	tableContainer.append(addNewMember);
+	
+	if(!userList ||  userList.length==0)
+		return;
+	
+	//team table header
 	var th = getMilestoneTeamMembeTableHeader();
-	tableContainer.append(th).append(tr1);
+	tableContainer.append(th);
+	
 	for (i in userList) {
 
 		var user = userList[i];
@@ -567,8 +582,8 @@ function getMilestoneTeamMembeTable(userList) {
 		}
 		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
 	}
-	var tr1 = getMilestoneTeamMemberRow("Elen Adarna", "Title Agent");
-	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew", "Loan Manager");
+	
+	
 
 	return tableContainer;
 }
