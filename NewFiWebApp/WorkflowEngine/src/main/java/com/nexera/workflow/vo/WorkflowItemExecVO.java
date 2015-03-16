@@ -3,7 +3,6 @@ package com.nexera.workflow.vo;
 import java.util.Date;
 
 import com.nexera.workflow.bean.WorkflowItemExec;
-import com.nexera.workflow.enums.WorkflowItemStatus;
 
 public class WorkflowItemExecVO {
 	private Integer id;
@@ -16,8 +15,16 @@ public class WorkflowItemExecVO {
 	private String displayContent;
 	private WorkflowItemExecVO parentWorkflowItemExec;
 	public String stateInfo;
-
 	
+	public String workflowItemType;
+
+	public String getWorkflowItemType() {
+		return workflowItemType;
+	}
+
+	public void setWorkflowItemType(String workflowItemType) {
+		this.workflowItemType = workflowItemType;
+	}
 
 	public String getStateInfo() {
 		return stateInfo;
@@ -32,7 +39,7 @@ public class WorkflowItemExecVO {
 	}
 
 	public void setParentWorkflowItemExec(
-			WorkflowItemExecVO parentWorkflowItemExec) {
+	        WorkflowItemExecVO parentWorkflowItemExec) {
 		this.parentWorkflowItemExec = parentWorkflowItemExec;
 	}
 
@@ -107,8 +114,15 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setId(entity.getId());
 		workflowItemExecVO.setModifiedDate(entity.getModifiedDate());
 		workflowItemExecVO.setStatus(entity.getStatus());
-		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster().getDescription());
+		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster()
+		        .getDescription());
 		
+		if (entity.getParentWorkflowItemExec() != null) {
+			workflowItemExecVO.setParentWorkflowItemExec(this
+			        .convertToVO(entity.getParentWorkflowItemExec()));
+			
+		}
+		workflowItemExecVO.setWorkflowItemType(entity.getWorkflowItemMaster().getWorkflowItemType());
 		return workflowItemExecVO;
 	}
 

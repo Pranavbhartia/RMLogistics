@@ -18,7 +18,7 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	NotificationService notificationService;
 
 	@SuppressWarnings("unchecked")
-    public String execute(HashMap<String, Object> objectMap) {
+	public String execute(HashMap<String, Object> objectMap) {
 
 		/*
 		 * int loanID = Integer.parseInt(objectMap
