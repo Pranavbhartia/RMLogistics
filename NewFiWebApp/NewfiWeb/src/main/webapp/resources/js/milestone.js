@@ -168,7 +168,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			if (ob.workItem.displayContent == "Add Team") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.LOAN_ID=selectedUserDetail.loanID;
+				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
