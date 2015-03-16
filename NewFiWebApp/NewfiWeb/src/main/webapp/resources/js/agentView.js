@@ -2,6 +2,7 @@
  *Contains JavaScript functions for agent dashboard pages
  */
 var isAgentTypeDashboard;
+var docData = [];
 
 function adjustAgentDashboardOnResize() {
 	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
@@ -1076,13 +1077,10 @@ function appendUserNameDropDown() {
 		"id" : "add-username-dropdown-cont",
 		"class" : "add-member-dropdown-cont hide"
 	});
-	$('#add-member-sel').parent().append(dropdownCont);
+	$('#add-member-sel').append(dropdownCont);
 }
 
 function showUserNameDropDown(namesList) {
-	$('#add-username-dropdown-cont').css({
-		"left" : $('#add-member-sel').offset().left
-	});
 	$('#add-username-dropdown-cont').show();
 	paintUserNameDropDown(namesList);
 }
@@ -1158,9 +1156,6 @@ function showAddUserPopUp(){
 }
 
 function showUserTypeDropDown() {
-	$('#add-usertype-dropdown-cont').css({
-		"left" : $('#add-memeber-user-type').offset().left
-	});
 	$('#add-usertype-dropdown-cont').show();
 }
 
@@ -1216,7 +1211,7 @@ function appendUserTypeDropDown() {
 		dropdownCont.append(dropDownRow);
 	}
 
-	$('#add-memeber-user-type').parent().append(dropdownCont);
+	$('#add-memeber-user-type').append(dropdownCont);
 }
 
 $(document).click(function() {
@@ -1662,10 +1657,6 @@ $(document).click(function() {
 function showCreateUserPopup() {
 	var left = $('#center-panel-cont').offset().left;
 	var top = $('#add-member-sel').offset().top;
-	$('#create-user-popup').css({
-		"left" : left + 20,
-		"top" : top + 50
-	});
 	$('#create-user-first-name').val("");
 	$('#create-user-last-name').val("");
 	$('#create-user-emailId').val("");
@@ -2173,6 +2164,29 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
 
 }
+
+//Click function to show payment page
+$(document).on('click', '.pay-application-fee', function(event) {
+	console.log("Pay application fee clicked!");
+	showOverlay();
+	$('body').addClass('body-no-scroll');
+	url = "./payment/paymentpage.do";
+	
+	 $.ajax({
+	        url : url,
+	        type : "GET",
+	        success : function(data) {
+	        	console.log("Show payment called with data : " + data);
+	        	$("#popup-overlay").html(data);
+	        	hideOverlay();
+	        	$("#popup-overlay").show();
+	        },
+	        error : function(e) {
+	        	hideOverlay();
+	            console.error("error : " + e);
+	        }
+	    });
+});
 
 function entryPointForAgentView(loanID, viewName) {
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)

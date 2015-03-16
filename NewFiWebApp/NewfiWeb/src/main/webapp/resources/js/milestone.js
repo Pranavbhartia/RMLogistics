@@ -147,15 +147,16 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
+			data.milestoneId=ob.mileStoneId;
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
-				"mileNotificationId" : ob.workItem.itemId,
+				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.infoText
 			})
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
 			{
-				ajaxURL = "rest/workflow/details/1";
+				ajaxURL = "";//rest/workflow/details/1";
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
@@ -164,16 +165,10 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			else
-			{
-				txtRow1.html(workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);;
-			}
-						
-			ob.ajaxRequest(ajaxURL, "GET", "json", data,
+			
+					
+			if(ajaxURL&&ajaxURL!=""){
+				ob.ajaxRequest(ajaxURL, "GET", "json", data,
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
@@ -189,6 +184,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							callback(ob);
 						}
 					});
+			}else{
+				txtRow1.html(workItem.stateInfo);
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+				itemToAppendTo.append(txtRow1);
+			}	
+
 
 		}
 	};
@@ -662,7 +665,7 @@ function appendMilestoneApplicationFee() {
 	});
 	header.append(headerTxt).append(headerIcn);
 	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-lc-text"
+		"class" : "milestone-lc-text pay-application-fee"
 	}).html("Click here to Pay Application Fee");
 
 	wrapper.append(leftBorder).append(header).append(txtRow1);
@@ -944,7 +947,7 @@ function appendMilestoneItem(workflowItem, childList) {
 // this will add a "Information Link" that is clickable to the task.
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
-	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
 	
@@ -965,5 +968,25 @@ function milestoneChildEventHandler(event) {
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
+	} else if ($(event.target).attr("data-text") == "Click to pay") {
+		console.log("Pay application fee clicked!");
+		showOverlay();
+		$('body').addClass('body-no-scroll');
+		url = "./payment/paymentpage.do";
+		
+		 $.ajax({
+		        url : url,
+		        type : "GET",
+		        success : function(data) {
+		        	console.log("Show payment called with data : " + data);
+		        	$("#popup-overlay").html(data);
+		        	hideOverlay();
+		        	$("#popup-overlay").show();
+		        },
+		        error : function(e) {
+		        	hideOverlay();
+		            console.error("error : " + e);
+		        }
+		    });
 	}
 }

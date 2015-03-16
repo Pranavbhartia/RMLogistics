@@ -348,6 +348,9 @@
 	.prof-form-input-lg{
 		width: 300px;
 	}
+	.add-member-sel,.add-member-sel-search{
+		float: left;
+	}
 }
 
 
@@ -393,6 +396,9 @@
 	}
 	.cus-name {
 		padding-left: 10px;
+	}
+	.add-member-input-cont {
+		padding-right: 10px;
 	}
 }
 

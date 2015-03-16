@@ -241,7 +241,7 @@ function paintRefinanceLiveNow() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt1);
 
 	var optionContainer1 = $('<div>').attr({
@@ -255,7 +255,7 @@ function paintRefinanceLiveNow() {
 	});
 
 	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt2);
 
 	var optionContainer2 = $('<div>').attr({
@@ -269,7 +269,7 @@ function paintRefinanceLiveNow() {
 	});
 
 	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
 	var optionContainer3 = $('<div>').attr({
@@ -283,7 +283,7 @@ function paintRefinanceLiveNow() {
 	});
 
 	var quesTextCont4 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt4);
 
 	var optionContainer4 = $('<div>').attr({
@@ -297,7 +297,7 @@ function paintRefinanceLiveNow() {
 	});
 
 	var quesTextCont5 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt5);
 
 	var optionContainer5 = $('<div>').attr({
@@ -310,11 +310,17 @@ function paintRefinanceLiveNow() {
 		"value" : refinanceTeaserRate["zipCode"]
 	});
 
-	quesTextCont1.append(optionContainer1).append(inputBox1);
-	quesTextCont2.append(optionContainer2).append(inputBox2);
-	quesTextCont3.append(optionContainer3).append(inputBox3);
-	quesTextCont4.append(optionContainer4).append(inputBox4);
-	quesTextCont5.append(optionContainer5).append(inputBox5);
+	optionContainer1.append(inputBox1);
+	optionContainer2.append(inputBox2);
+	optionContainer3.append(inputBox3);
+	optionContainer4.append(inputBox4);
+	optionContainer5.append(inputBox5);
+	
+	quesTextCont1.append(optionContainer1);
+	quesTextCont2.append(optionContainer2);
+	quesTextCont3.append(optionContainer3);
+	quesTextCont4.append(optionContainer4);
+	quesTextCont5.append(optionContainer5);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -381,7 +387,7 @@ function paintRefinanceZip() {
 function paintRefinanceStartLiving() {
 	stages = 3;
 	progressBaar(3);
-	var quesTxt = "When did you start living here ?";
+	var quesTxt = "When did you start living here?";
 	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep1a, "startLiving");
 
 	$('#ce-refinance-cp').html(quesCont);
@@ -532,7 +538,7 @@ function paintRefinanceSelfEmployed(divId) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-option-text"
 	}).html(quesTxt);
 
 	var optionContainer = $('<div>').attr({
@@ -560,7 +566,7 @@ function paintRefinanceDisability(divId) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-option-text"
 	}).html(quesTxt);
 
 	var optionContainer = $('<div>').attr({
@@ -588,7 +594,7 @@ function paintRefinancePension(divId) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-option-text"
 	}).html(quesTxt);
 
 	var optionContainer = $('<div>').attr({
@@ -623,17 +629,19 @@ function paintRefinanceMyMoney(quesText, options, name) {
 	for (var i = 0; i < options.length; i++) {
 
 		var optionIncome = $('<div>').attr({
-			"class" : "hide",
+			"class" : "hide ce-option-ques-wrapper",
 			"id" : "ce-option_" + i
 		});
 
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "ce-option-checkbox",
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
+			$('.ce-option-checkbox').removeClass("ce-option-checked");
+			$(this).addClass("ce-option-checked");
 			var key = event.data.name;
 			refinanceTeaserRate[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
@@ -675,7 +683,7 @@ function getMultiTextQuestion(quesText) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text",
+		"class" : "ce-option-text",
 	}).html(quesText);
 
 	var optionContainer = $('<div>').attr({

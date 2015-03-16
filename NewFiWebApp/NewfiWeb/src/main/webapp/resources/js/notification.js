@@ -233,6 +233,9 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Notification Scheduled");
+					if(data.milestoneId){
+						data=data.notificationVo;
+					}
 					data.dismissable=true;
 					data.id=response.resultObject.id;
 					if(new Date().getTime()>=data.remindOn)
