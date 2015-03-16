@@ -199,6 +199,7 @@ function validatePhotoExtention(filename){
     return true;
     }
     }
-   alert("You must upload an image file with one of the following extensions:"+ extensionsArray.join(', ')+"."); 
+    showToastMessage("You must upload an image file with one of the following extensions:"+ extensionsArray.join(', ')+".");
+  //alert("You must upload an image file with one of the following extensions:"+ extensionsArray.join(', ')+"."); 
    return false;
 }
