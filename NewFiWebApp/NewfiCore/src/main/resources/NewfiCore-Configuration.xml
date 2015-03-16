@@ -14,6 +14,14 @@
 	<context:annotation-config />
 	<task:annotation-driven />
 
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="2" />
+		<property name="maxPoolSize" value="5" />
+		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
+
 	<bean name="complexJobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass"
