@@ -2,6 +2,8 @@ package com.nexera.core.service.impl;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,11 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.PaymentException;
 import com.nexera.common.exception.PaymentUnsuccessfulException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.BraintreePaymentGatewayService;
-import com.nexera.core.service.SendGridMailService;
+import com.nexera.core.service.SendGridEmailService;
+
 
 /**
  * @author karthik This is the class that has methods to make api calls to Braintree payment gateway
@@ -70,7 +75,7 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 	private TransactionDetailsDao transactionDetailsDao;
 	
 	@Autowired 
-	private SendGridMailService sendGridMailService;
+	private SendGridEmailService sendGridMailService;
 	
 	/**
 	 * Method to generate client token to be used by the front end.
@@ -235,10 +240,25 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 			LOG.debug("Transaction successfully created. Updating the database.");
 			updateTransactionDetails(transactionId, loanId, user, amount);
 			LOG.debug("Database updated with the new transaction details.");
-			Map<String, String> substitutions = new HashMap<String, String>();
-			substitutions.put("-name-", "Karthik Srivatsa");
 			LOG.debug("Sending mail");
-			sendGridMailService.sendEmailUsingTemplate(user.getEmailId(), user.getFirstName() + " " + user.getLastName(),"Your payment was successful", substitutions,paymentTemplateId );
+			//Making the Mail VOs
+			EmailVO emailVO = new EmailVO();
+			EmailRecipientVO recipientVO = new EmailRecipientVO();			
+			recipientVO.setRecipientName(user.getFirstName() + " " + user.getLastName());
+			recipientVO.setEmailID(user.getEmailId());
+			
+			//We create the substitutions map
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", new String[]{recipientVO.getRecipientName()});
+			
+			emailVO.setRecipients(new ArrayList<EmailRecipientVO>(Arrays.asList(recipientVO)));
+			emailVO.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+			emailVO.setSenderName(CommonConstants.SENDER_NAME);
+			emailVO.setSubject("Your payment is successful");
+			emailVO.setTemplateId(paymentTemplateId);
+			emailVO.setTokenMap(substitutions);
+			
+			sendGridMailService.sendAsyncMail(emailVO);
 		}
 
 		LOG.info("makePayment successfully complete!");
