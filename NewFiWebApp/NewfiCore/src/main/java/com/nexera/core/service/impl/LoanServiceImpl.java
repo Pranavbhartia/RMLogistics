@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
@@ -38,22 +39,14 @@ public class LoanServiceImpl implements LoanService
 
     @Autowired
     private LoanDao loanDao;
+    
+    @Autowired
+    private Utils utils;
 
     @Autowired
     private UserProfileService userProfileService;
 
     private static final Logger LOG = LoggerFactory.getLogger( LoanServiceImpl.class );
-
-
-    private User getUserObject()
-    {
-        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if ( principal instanceof User ) {
-            return (User) principal;
-        } else {
-            return null;
-        }
-    }
 
 
     @Override
@@ -92,9 +85,7 @@ public class LoanServiceImpl implements LoanService
         Loan loanModel = this.parseLoanModel( loan );
         User userModel = this.parseUserModel( user );
 
-        // TODO CHange the added by appropriately, move the get user obj in
-        // correct service
-        return loanDao.addToLoanTeam( loanModel, userModel, getUserObject() );
+        return loanDao.addToLoanTeam( loanModel, userModel, utils.getLoggedInUser() );
     }
 
 

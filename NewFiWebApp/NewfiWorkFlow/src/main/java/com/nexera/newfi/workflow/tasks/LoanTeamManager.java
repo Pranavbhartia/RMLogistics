@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
@@ -18,6 +19,9 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 
 	@Autowired
 	LoanService loanService;
+	
+	@Autowired
+	private UserProfileService userProfileService;
 
 	public String execute(HashMap<String, Object> objectMap) {
 		int loanID = Integer.parseInt(objectMap
@@ -29,15 +33,12 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		UserVO userVO = new UserVO();
 		userVO.setId(userID);
 		loanService.addToLoanTeam(loanVO, userVO);
-		return null;
+		UserVO user=userProfileService.loadInternalUser(userID);
+		return new Gson().toJson(user);
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		
-		Integer loanIdInt=(Integer) inputMap
-		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME);
-		System.out.println("Loan id : "+inputMap
-		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME));
 		int loanID = Integer.parseInt(inputMap
 		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
