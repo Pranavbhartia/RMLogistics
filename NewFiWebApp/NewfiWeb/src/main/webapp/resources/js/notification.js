@@ -235,9 +235,12 @@ function getNotificationContext(loanId,userId){
 					showToastMessage("Notification Scheduled");
 					if(data.milestoneId){
 						data=data.notificationVo;
+						data.id=response.resultObject;
 					}
+					else
+						data.id=response.resultObject.id;
 					data.dismissable=true;
-					data.id=response.resultObject.id;
+					
 					if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 					updateDefaultContext(data);
