@@ -2139,7 +2139,7 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 	if (internalRoleID != undefined && internalRoleID > 0)
 		restURL += "&internalRoleID=" + internalRoleID;
 
-	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam);
+	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam,true);
 
 }
 

@@ -152,7 +152,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.infoText
-			})
+			});
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
 			{
@@ -163,6 +163,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			if (ob.workItem.displayContent=="Needed Items")
 			{
 				ajaxURL = "rest/workflow/needCount/1";
+				// Just exposed a rest service to test - with hard coded loan ID
+			}
+
+			if (ob.workItem.displayContent == "Add Team") {
+				ajaxURL = "rest/loan/"+selectedUserDetail.loanID+"/team";
+				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			
@@ -181,7 +187,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
-							callback(ob);
+							callback(itemToAppendTo,ob);
 						}
 					});
 			}else{
@@ -533,17 +539,55 @@ function removeMilestoneAddTeamMemberPopup() {
 }
 
 // Function to get milestone team member table
-function getMilestoneTeamMembeTable() {
+
+function paintMilestoneTeamMemberTable(appendTo,object){
+	
+	var userList=object.infoText;
+	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
+}
+
+function getMilestoneTeamMembeTable(userList,milestoneID) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
 	});
 
-	var th = getMilestoneTeamMembeTableHeader();
-	var tr1 = getMilestoneTeamMemberRow("Elen Adarna", "Title Agent");
-	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew", "Loan Manager");
+	
+	var addNewMember = $('<div>').attr({
+		"class" : "milestone-rc-text",
+		"data-text" : "Click here to add a Team Member",
+		"mileNotificationId":milestoneID
+	}).html("Click here to add a Team Member").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
 
-	return tableContainer.append(th).append(tr1).append(tr2);
+	tableContainer.append(addNewMember);
+	
+	if(!userList ||  userList.length==0)
+		return;
+	
+	//team table header
+	var th = getMilestoneTeamMembeTableHeader();
+	tableContainer.append(th);
+	
+	for (i in userList) {
+
+		var user = userList[i];
+		var dispName = user.displayName;
+		var userRole = userList[i].userRole;
+		var roleLabel = userRole.label;
+		if (userRole.id == 3) {
+			if (user.internalUserDetail
+					&& user.internalUserDetail.internalUserRoleMasterVO
+					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
+		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+	}
+	
+	
+
+	return tableContainer;
 }
 
 // Function to get milestone team member table header
@@ -958,13 +1002,14 @@ function milestoneChildEventHandler(event) {
 	event.stopPropagation();
 	if ($(event.target).attr("data-text") == "Schedule an Alert") {
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/alert"
 		data.milestoneId = event.target.getAttribute("milenotificationid");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/addMember"
+		data.milestoneID=$(event.target).attr("mileNotificationId");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);

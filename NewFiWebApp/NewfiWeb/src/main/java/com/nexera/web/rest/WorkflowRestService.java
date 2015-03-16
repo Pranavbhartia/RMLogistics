@@ -1,7 +1,9 @@
 package com.nexera.web.rest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
@@ -115,34 +118,6 @@ public class WorkflowRestService {
 		return response;
 	}
 
-	// workflow/3/milestone/state/workflowIte
-	@RequestMapping(value = "{loanId}/milestone/", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
-	        @PathVariable int loanId,
-	        @RequestParam(value = "workflowItemId") Integer workflowItemId) {
-		LOG.info("workflowItemExecId----" + workflowItemId);
-		CommonResponseVO response = null;
-		try {
-			LOG.info("loanId----" + loanId);
-			/*
-			 * String stateInfo = "";// Make a call to Workflow Engine which
-			 * will call the renderStateInfo // to the work flow engine pass the
-			 * loanId.. as Object[]..
-			 */
-			String[] params = new String[1];
-			params[0] = String.valueOf(loanId);
-			String stateInfo = engineTrigger.getRenderStateInfoOfItem(
-			        workflowItemId, params);
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-			        e.getMessage());
-		}
-		return response;
-	}
-
 	@RequestMapping(value = "/milestone/alert", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
 	        @RequestBody String milestoneNotificationStr) {
@@ -166,79 +141,24 @@ public class WorkflowRestService {
 		return response;
 	}
 
-	@RequestMapping(value = "/milestone/addUserToLoanTeam", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO addUserToLoanTeam(
-	        @RequestBody String milestoneAddTeamVOStr) {
-		LOG.info("milestoneAddTeamVO----" + milestoneAddTeamVOStr);
-		CommonResponseVO response = null;
-		try {
-			Gson gson = new Gson();
-			MilestoneLoanTeamVO milestoneNoticationVO = gson.fromJson(
-			        milestoneAddTeamVOStr, MilestoneLoanTeamVO.class);
-			LOG.info("workflowItem ID" + milestoneNoticationVO.getMilestoneID());
-			String stateInfo = "";// Make a call to Workflow Engine which will
-			// call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-			String params[] = new String[2];
-			params[0] = String.valueOf(milestoneNoticationVO.getLoanID());
-			params[1] = String.valueOf(milestoneNoticationVO.getUserID());
-			stateInfo = engineTrigger.getRenderStateInfoOfItem(
-			        milestoneNoticationVO.getMilestoneID(), params);
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-			        e.getMessage());
-		}
-		return response;
-	}
-
-	@RequestMapping(value = "/milestone/sendMail", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO sendMail(
-	        @RequestBody String milestoneNotificationStr) {
-		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
-		CommonResponseVO response = null;
-		try {
-			Gson gson = new Gson();
-			EmailNotificationVo emailNotificationVo = gson.fromJson(
-			        milestoneNotificationStr, EmailNotificationVo.class);
-			LOG.info("workflowItem ID" + emailNotificationVo.getMilestoneId());
-			String stateInfo = "";// Make a call to Workflow Engine which will
-			// call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-			Object params[] = new Object[3];
-			params[0] = "Sample Template";
-			params[1] = emailNotificationVo.getEmailId();
-			engineTrigger.startWorkFlowItemExecution(
-			        emailNotificationVo.getMilestoneId(), params);
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-			        e.getMessage());
-		}
-		return response;
-	}
-
 	@RequestMapping(value = "{workflowId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getWorkflowItems(
 	        @PathVariable int workflowId) {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-			
-			List<WorkflowItemExec> list = engineTrigger.getWorkflowItemExecByWorkflowMasterExec(workflowId);
+
+			List<WorkflowItemExec> list = engineTrigger
+			        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
 			List<WorkflowItemExecVO> volist = new ArrayList<WorkflowItemExecVO>();
-			
+
 			for (WorkflowItemExec workflowItem : list)
-				
+
 			{
-				WorkflowItemExecVO workflowItemVO  = new WorkflowItemExecVO();
-				volist.add(workflowItemVO.convertToVO(workflowItem));	
+				WorkflowItemExecVO workflowItemVO = new WorkflowItemExecVO();
+				volist.add(workflowItemVO.convertToVO(workflowItem));
 			}
-			//List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
+			// List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
 			response = RestUtil.wrapObjectForSuccess(volist);
 			LOG.debug("Response" + list.size());
 		} catch (Exception e) {
@@ -576,4 +496,5 @@ public class WorkflowRestService {
 		list.add(workflowItemExecVO);
 		return list;
 	}
+
 }

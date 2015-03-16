@@ -19,10 +19,12 @@ import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraUtility;
 
 @Component
@@ -40,6 +42,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
 	
+	@Autowired
+	private UserProfileService userProfileService;
+	
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
 		// TODO Auto-generated method stub
@@ -54,7 +59,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	
-	public static List<UploadedFilesListVO> buildUpdateFileVoList(List<UploadedFilesList> filesLists){
+	public  List<UploadedFilesListVO> buildUpdateFileVoList(List<UploadedFilesList> filesLists){
 		
 		List<UploadedFilesListVO> uploadedFilesListVOs = new ArrayList<UploadedFilesListVO>();
 		for (UploadedFilesList uploadedFilesList : filesLists) {
@@ -64,7 +69,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 	
 	
-	public static UploadedFilesListVO buildUpdateFileVo(UploadedFilesList uploadedFilesList){
+	public  UploadedFilesListVO buildUpdateFileVo(UploadedFilesList uploadedFilesList){
 		
 		if(uploadedFilesList == null)
 			return null;
@@ -77,6 +82,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setUploadedDate(uploadedFilesList.getUploadedDate());
 		filesListVO.setFileName(uploadedFilesList.getFileName());
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
+		
+		AssignedUserVO assignedUserVo = new AssignedUserVO();
+		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
+		assignedUserVo.setUserRole(userProfileService.buildUserRoleVO(uploadedFilesList.getAssignedBy().getUserRole()));
+		
+		filesListVO.setAssignedByUser(assignedUserVo);
+		
 		
 		LoanVO loanVo = new LoanVO();
 		loanVo.setId(uploadedFilesList.getLoan().getId());
@@ -144,19 +156,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return downloadFiles;
 	}
 	
-	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId , Integer userId) throws IOException, COSVisitorException {
+	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId , Integer userId , Integer assignedBy) throws IOException, COSVisitorException {
 		List<String> filePaths = downloadFileFromS3Service(fileIds);
 		String newFilepath = null;
 		newFilepath = NexeraUtility.joinPDDocuments(filePaths);
-		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId  , userId);
+		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId  , userId , assignedBy);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
 		return fileSavedId;
 	}
 	
-	public Integer addUploadedFilelistObejct(File file  , Integer loanId , Integer userId){
-		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "User" , "complete" );
+	public Integer addUploadedFilelistObejct(File file  , Integer loanId , Integer userId , Integer assignedBy){
+		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document" , "complete" );
 		LOG.info("File Path : "+file.getPath());
 		String s3PathThumbNail = null;
 		String thumbPath = null;
@@ -170,7 +182,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		
 		LOG.info("The thumbnail path for local  :  "+thumbPath);
 		if(thumbPath!= null){
-			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(thumbPath), "User" , "image" );
+			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(thumbPath), "document" , "image" );
 		}
 		
 		LOG.info("The s3PathThumbNail path for   :  "+s3PathThumbNail);
@@ -179,6 +191,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		user.setId(userId);
 		Loan loan  = new Loan();
 		loan.setId(loanId);
+		User assignByUser = new User();
+		assignByUser.setId(assignedBy);
 		
 		UploadedFilesList uploadedFilesList = new UploadedFilesList();
 		uploadedFilesList.setIsActivate(true);
@@ -189,6 +203,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setLoan(loan);
 		uploadedFilesList.setFileName(file.getName());
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
+		uploadedFilesList.setAssignedBy(assignByUser);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}

@@ -3,9 +3,7 @@ package com.nexera.web.rest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
@@ -82,8 +79,11 @@ public class FileUploadRest {
 		return new Gson().toJson(needsListService.getLoanNeedsList(1));
 	}
 	
-	@RequestMapping(value="/split/{fileId}/{loadId}/{userId}" , method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO splitPDFDocument( @PathVariable ("fileId") Integer  fileId ,  @PathVariable ("loadId") Integer  loanId , @PathVariable ("userId") Integer  userId){
+	@RequestMapping(value="/split/{fileId}/{loadId}/{userId}/{assignedBy}" , method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO splitPDFDocument( @PathVariable ("fileId") Integer  fileId 
+															,  @PathVariable ("loadId") Integer  loanId 
+															,  @PathVariable ("userId") Integer  userId 
+															,  @PathVariable ("assignedBy") Integer  assignedBy ){
 		LOG.info("File upload PDF split  service called");
 		LOG.info("File upload   id "+fileId);
 		CommonResponseVO commonResponseVO;
@@ -92,7 +92,7 @@ public class FileUploadRest {
 		try {
 			List<File> pdfPages =  splitPdfDocumentIntoMultipleDocs(uploadedFilesList.getS3path());
 				for (File file : pdfPages) {
-					Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct(file, loanId , userId);
+					Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct(file, loanId , userId , assignedBy);
 					LOG.info("New file saved with id "+fileSavedId);
 				}
 			
@@ -106,8 +106,11 @@ public class FileUploadRest {
 		return commonResponseVO;
 	}
 	
-	@RequestMapping(value="/assignment/{loanId}/{userId}" , method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO setAssignmentToFiles(@RequestBody  String fileAssignMent , @PathVariable(value = "loanId") Integer loanId , @PathVariable(value = "userId") Integer userId ){
+	@RequestMapping(value="/assignment/{loanId}/{userId}/{assignedBy}" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO setAssignmentToFiles(@RequestBody  String fileAssignMent 
+																, @PathVariable(value = "loanId") Integer loanId 
+																, @PathVariable(value = "userId") Integer userId
+																, @PathVariable(value = "assignedBy") Integer assignedBy){
 		
 		ObjectMapper mapper=new ObjectMapper();
 		TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
@@ -127,7 +130,7 @@ public class FileUploadRest {
 		    		}
 		    		
 		    		if(fileIds.size()>1){
-		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId , userId);
+		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId , userId , assignedBy);
 		    				LOG.info("new file pdf path :: "+newFileRowId);
 		    				uploadedFilesListService.updateFileInLoanNeedList(key, newFileRowId);
 		    				uploadedFilesListService.updateIsAssignedToTrue(newFileRowId);

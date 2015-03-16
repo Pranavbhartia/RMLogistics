@@ -206,6 +206,7 @@ a,a:hover,a:visited {
 
 .lp-talk-pic2 {
 	background: url(../images/photos1.png) no-repeat center;
+	background-size:cover; 
 }
 
 .lp-talk-pic3 {
@@ -1181,6 +1182,7 @@ a,a:hover,a:visited {
 	margin-right: 20px;
 	background: url(../images/cus-icn.png) no-repeat center;
 	border-radius: 50%;
+	background-size: cover;
 }
 
 .con-prof-name {
@@ -3731,4 +3733,19 @@ text-transform: uppercase;
 cursor: pointer;
 float: left;
 }
+
+#loaderPagination{
+	margin-left:20%;
+	background-size: 11px;
+	height:32px ;
+	width:32px;
+
+}
+
+.unlink{
+	cursor: default;
+	opacity : 0.2;
+}
+
+
 /*end of changes*/
