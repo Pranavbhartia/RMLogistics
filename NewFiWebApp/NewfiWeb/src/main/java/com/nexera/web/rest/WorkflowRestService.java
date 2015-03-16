@@ -260,12 +260,12 @@ public class WorkflowRestService
         return response;
     }
 
-
-    @RequestMapping ( value = "renderstate/{workflowId}", method = RequestMethod.GET)
-    public @ResponseBody CommonResponseVO getRenderStateInfoOfItem( @PathVariable int workflowId, @RequestBody String params )
-    {
-        LOG.info( "workflowId----" + workflowId );
-        CommonResponseVO response = null;
+	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO getRenderStateInfoOfItem(
+	        @PathVariable int workflowId,
+	        @RequestBody(required = false) String params) {
+		LOG.info("workflowId----" + workflowId);
+		CommonResponseVO response = null;
         try {
             // List<WorkflowItemExec> list =
             // workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
