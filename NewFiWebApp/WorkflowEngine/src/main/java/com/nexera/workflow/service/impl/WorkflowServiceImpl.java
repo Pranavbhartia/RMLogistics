@@ -182,4 +182,18 @@ public class WorkflowServiceImpl implements WorkflowService
         return (WorkflowExec) workflowExecDao.load( WorkflowExec.class, workflowexecId );
     }
 
+
+	/* (non-Javadoc)
+	 * @see com.nexera.workflow.service.WorkflowService#saveParamsInExecTable(java.lang.Integer, java.lang.String[])
+	 */
+    @Override
+    public void saveParamsInExecTable(Integer milestoneID, String params) {
+	   WorkflowItemExec workflowItemExec = (WorkflowItemExec)workflowExecDao.load(WorkflowExec.class, milestoneID);
+	   if(workflowItemExec != null)
+	   {
+		   workflowItemExec.setParams(params);
+	   }
+	    
+    }
+
 }
