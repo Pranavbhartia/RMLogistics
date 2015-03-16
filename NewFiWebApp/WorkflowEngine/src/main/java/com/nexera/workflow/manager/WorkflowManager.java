@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import com.nexera.workflow.utils.Util;
  */
 @Component
 @Scope(value = "prototype")
-public class WorkflowManager implements Runnable {
+public class WorkflowManager implements Callable<String> {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(WorkflowManager.class);
@@ -49,19 +50,7 @@ public class WorkflowManager implements Runnable {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public void run() {
-		LOGGER.debug("Inside run method ");
-
-		startWorkFlowItemExecution(getWorkflowItemExec());
-	}
-
-	public void startWorkFlowItemExecution(
+	public String startWorkFlowItemExecution(
 	        WorkflowItemExec workflowItemExecution) {
 
 		LOGGER.debug("Updating workflow master status if its not updated ");
@@ -118,6 +107,8 @@ public class WorkflowManager implements Runnable {
 			LOGGER.error("Invalid state returned ");
 			throw new FatalException("Invalid state returned ");
 		}
+
+		return result;
 
 	}
 
@@ -199,6 +190,18 @@ public class WorkflowManager implements Runnable {
 	 */
 	public void setWorkflowItemExec(WorkflowItemExec workflowItemExec) {
 		this.workflowItemExec = workflowItemExec;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.concurrent.Callable#call()
+	 */
+	@Override
+	public String call() throws Exception {
+		LOGGER.debug("Inside run method ");
+
+		return startWorkFlowItemExecution(getWorkflowItemExec());
 	}
 
 }
