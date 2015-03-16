@@ -103,9 +103,6 @@ public class WorkflowManager implements Callable<String> {
 			workflowItemExecution.setStatus(Status.PENDING.getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
-		} else {
-			LOGGER.error("Invalid state returned ");
-			throw new FatalException("Invalid state returned ");
 		}
 
 		return result;

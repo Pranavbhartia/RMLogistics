@@ -241,14 +241,14 @@ public class EngineTrigger {
 		WorkflowItemExec workflowItemExec = workflowService
 		        .getWorkflowExecById(workflowItemExecId);
 		if (workflowItemExec != null) {
-			String output = executeMethod(workflowItemExec);
+			String output = renderStateOfItem(workflowItemExec);
 			return output;
 		}
 		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String executeMethod(WorkflowItemExec workflowItemExec) {
+	private String renderStateOfItem(WorkflowItemExec workflowItemExec) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> itemParamMap;
@@ -287,7 +287,7 @@ public class EngineTrigger {
 
 				Method method = classToLoad.getDeclaredMethod(
 				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
-				        new Class[] { Map.class });
+				        new Class[] { HashMap.class });
 
 				result = (String) method.invoke(obj, params);
 

@@ -250,9 +250,9 @@ public class WorkflowRestService
 
             workflowService.saveParamsInExecTable( workflowItemId, params );
 
-            Object result = engineTrigger.startWorkFlowItemExecution( workflowItemId );
+            String result = engineTrigger.startWorkFlowItemExecution( workflowItemId );
 
-            response = RestUtil.wrapObjectForSuccess( "" );
+            response = RestUtil.wrapObjectForSuccess( result );
         } catch ( Exception e ) {
             LOG.error( e.getMessage() );
             response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
@@ -260,12 +260,13 @@ public class WorkflowRestService
         return response;
     }
 
-	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getRenderStateInfoOfItem(
-	        @PathVariable int workflowId,
-	        @RequestBody(required = false) String params) {
-		LOG.info("workflowId----" + workflowId);
-		CommonResponseVO response = null;
+
+    @RequestMapping ( value = "renderstate/{workflowId}", method = RequestMethod.POST)
+    public @ResponseBody CommonResponseVO getRenderStateInfoOfItem( @PathVariable int workflowId,
+        @RequestBody ( required = false) String params )
+    {
+        LOG.info( "workflowId----" + workflowId );
+        CommonResponseVO response = null;
         try {
             // List<WorkflowItemExec> list =
             // workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
@@ -275,8 +276,8 @@ public class WorkflowRestService
             HashMap<String, Object> map=mapper.readValue(params, typeRef);*/
 
             workflowService.saveParamsInExecTable( workflowId, params );
-            engineTrigger.getRenderStateInfoOfItem( workflowId );
-            response = RestUtil.wrapObjectForSuccess( "" );
+            String result = engineTrigger.getRenderStateInfoOfItem( workflowId );
+            response = RestUtil.wrapObjectForSuccess( result );
         } catch ( Exception e ) {
             LOG.error( e.getMessage() );
             response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
