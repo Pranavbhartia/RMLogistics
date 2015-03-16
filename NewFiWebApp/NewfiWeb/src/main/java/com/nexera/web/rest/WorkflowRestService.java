@@ -233,7 +233,55 @@ public class WorkflowRestService
         return response;
     }
 
-
+    @RequestMapping(value = "execute/{workflowId}", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO executeWorkflowItem(@PathVariable int workflowItemId,@RequestBody String params) {
+		LOG.info("workflowId----" + workflowItemId);
+		CommonResponseVO response = null;
+		try {
+			// List<WorkflowItemExec> list =
+			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
+			
+			/*ObjectMapper mapper=new ObjectMapper();
+			TypeReference<HashMap<String, Object>> typeRef=new TypeReference<HashMap<String, Object>>() {};
+			HashMap<String, Object> map=mapper.readValue(params, typeRef);*/
+			workflowService.saveParamsInExecTable( workflowItemId, params );
+			
+//			Object result=engineTrigger.startWorkFlowItemExecution(workflowItemId);
+			
+			response = RestUtil.wrapObjectForSuccess("");
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO getRenderStateInfoOfItem(@PathVariable int workflowId,@RequestBody String params) {
+		LOG.info("workflowId----" + workflowId);
+		CommonResponseVO response = null;
+		try {
+			// List<WorkflowItemExec> list =
+			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
+			
+			/*ObjectMapper mapper=new ObjectMapper();
+			TypeReference<HashMap<String, Object>> typeRef=new TypeReference<HashMap<String, Object>>() {};
+			HashMap<String, Object> map=mapper.readValue(params, typeRef);*/
+			
+			workflowService.saveParamsInExecTable( workflowId, params );
+			engineTrigger.getRenderStateInfoOfItem(workflowId);
+			response = RestUtil.wrapObjectForSuccess("");
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+	
     private List<WorkflowItemExecVO> prepareTestListForLoanManager()
     {
         List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
