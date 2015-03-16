@@ -133,7 +133,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt1);
 
 	var optionContainer1 = $('<div>').attr({
@@ -146,7 +146,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt2);
 
 	var optionContainer2 = $('<div>').attr({
@@ -159,7 +159,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
 	var optionContainer3 = $('<div>').attr({
@@ -172,7 +172,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont4 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt4);
 
 	var optionContainer4 = $('<div>').attr({
@@ -185,7 +185,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont5 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt5);
 
 	var optionContainer5 = $('<div>').attr({
@@ -196,12 +196,16 @@ function paintBuyHomeRenting() {
 		"class" : "ce-input",
 		"name" : "zipCode"
 	});
-
-	quesTextCont1.append(optionContainer1).append(inputBox1);
-	quesTextCont2.append(optionContainer2).append(inputBox2);
-	quesTextCont3.append(optionContainer3).append(inputBox3);
-	quesTextCont4.append(optionContainer4).append(inputBox4);
-	quesTextCont5.append(optionContainer5).append(inputBox5);
+	optionContainer1.append(inputBox1);
+	optionContainer2.append(inputBox2);
+	optionContainer3.append(inputBox3);
+	optionContainer4.append(inputBox4);
+	optionContainer5.append(inputBox5);
+	quesTextCont1.append(optionContainer1);
+	quesTextCont2.append(optionContainer2);
+	quesTextCont3.append(optionContainer3);
+	quesTextCont4.append(optionContainer4);
+	quesTextCont5.append(optionContainer5);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -250,7 +254,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt1);
 
 	var optionContainer1 = $('<div>').attr({
@@ -263,7 +267,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt2);
 
 	var optionContainer2 = $('<div>').attr({
@@ -276,7 +280,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
 	var optionContainer3 = $('<div>').attr({
@@ -288,9 +292,13 @@ function paintBuyHomEachMonthrent() {
 		"name" : "liveEarlier"
 	});
 
-	quesTextCont1.append(optionContainer1).append(inputBox1);
-	quesTextCont2.append(optionContainer2).append(inputBox2);
-	quesTextCont3.append(optionContainer3).append(inputBox3);
+	optionContainer1.append(inputBox1);
+	optionContainer2.append(inputBox2);
+	optionContainer3.append(inputBox3);
+	
+	quesTextCont1.append(optionContainer1);
+	quesTextCont2.append(optionContainer2);
+	quesTextCont3.append(optionContainer3);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -354,7 +362,7 @@ function paintSellYourHome(quesText, options, name) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 
 	}).html(quesText);
 
@@ -364,7 +372,7 @@ function paintSellYourHome(quesText, options, name) {
 
 	for (var i = 0; i < options.length; i++) {
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "ce--sub-option",
 			"id" : "ce-option_" + i,
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
@@ -604,17 +612,19 @@ function paintBuyHomeMyMoney(quesText, options, name) {
 	for (var i = 0; i < options.length; i++) {
 
 		var optionIncome = $('<div>').attr({
-			"class" : "hide",
+			"class" : "hide ce-option-ques-wrapper",
 			"id" : "ce-option_" + i
 		});
 
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "ce-option-checkbox",
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
+			$('.ce-option-checkbox').removeClass("ce-option-checked");
+			$(this).addClass("ce-option-checked");
 			var key = event.data.name;
 			buyHomeTeaserRate[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);

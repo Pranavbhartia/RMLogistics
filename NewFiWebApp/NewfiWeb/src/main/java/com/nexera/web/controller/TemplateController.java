@@ -341,4 +341,11 @@ public class TemplateController extends DefaultController {
 	 mav.setViewName("customerEngagementTemplate");
 	 return mav;
 	}
+	
+	@RequestMapping(value = "register.do")
+	 public ModelAndView showCustomerRegisterPage(){
+	 ModelAndView mav = new ModelAndView();
+	 mav.setViewName("register");
+	 return mav;
+	}
 }

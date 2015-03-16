@@ -23,6 +23,7 @@
 
 .ce-ques-wrapper {
 	width: 560px;
+	max-width:100%;
 	margin: 0 auto;
 	padding: 10px 0;
 }
@@ -66,8 +67,10 @@
 }
 
 .ce-input {
-	width: 100%;
+	width:450px;
+	max-width: 100%;
 	height: 40px;
+	padding-left: 10px;
 	line-height: 40px;
 	border: 1px solid #dcdcdc;
 	border-radius: 3px;
@@ -152,4 +155,91 @@
 
 .ce-lp-not-started .ce-lp-item-text{
 	opacity: 0.6;
+}
+
+.ce-rp-sub-ques-text {
+	line-height: 30px;
+	margin-bottom:5px;
+	font-size: 16px;
+	font-family: 'opensanssemibold';
+}
+
+.ce-option-checkbox {
+	width: 100%;
+	height: 35px;
+	line-height: 35px;
+	border-radius: 3px;
+	padding-left:30px;
+	background: url(../images/check_box_unchecked.png) no-repeat left center;
+	font-size: 16px;
+	font-family: 'opensanssemibold';
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.ce-option-checked{
+	background: url(../images/check_box_checked.png) no-repeat left center;
+}
+
+.ce-option-ques-wrapper {
+	position:relative;
+    border: 1px solid #dcdcdc;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 3px;
+    width: 500px;
+}
+
+.ce-option-ques-wrapper:after,.ce-option-ques-wrapper:before{
+	position: absolute;
+	content: " ";
+	width: 0;
+	height: 0;
+	left:40px;
+	bottom:100%;
+	border-color: transparent;
+	border-style:solid;
+}
+
+.ce-option-ques-wrapper:after{
+	border-width: 12px;
+	border-bottom-color: #dcdcdc;
+	z-index: 0;
+}
+
+.ce-option-ques-wrapper:before{
+	border-width: 10px;
+	border-bottom-color: #fff;
+	margin-left:2px;
+	z-index: 1;
+}
+
+.ce-option-ques-wrapper .ce-rp-ques-text{
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.ce-option-text {
+	line-height: 20px;
+	height: 20px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	font-family: 'opensanssemibold';
+}
+
+.ce--sub-option {
+	width: 100px;
+	display:inline-block;
+	height: 35px;
+	line-height: 35px;
+	color: #fff;
+	background: #6c9f2e;
+	margin-bottom: 20px;
+	margin-right:20px;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 16px;
+	font-family: 'opensanssemibold';
+	text-transform: capitalize;
+	cursor: pointer;
 }
