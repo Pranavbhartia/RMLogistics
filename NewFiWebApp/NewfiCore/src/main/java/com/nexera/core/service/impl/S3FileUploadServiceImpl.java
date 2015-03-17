@@ -25,6 +25,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ import com.nexera.core.utility.NexeraUtility;
 
 import eu.medsea.mimeutil.MimeUtil;
 /**
- * @author Balaji Mohan
+ * @author Akash bhatia
  * @created 05-Aug-2014
  * 
  * Brief: Write a quick description of what the class is supposed to do.
@@ -65,6 +66,8 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 	@Value("${accessKey}")
 	private String accessKey;
 
+	@Autowired
+	private NexeraUtility nexeraUtility;
 	
 	//private static final String FILE_BUCKET = "x3-profile-img";
 	private String uniqueBucketName;
@@ -122,7 +125,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		}
 		String key = null;
 		
-		String fileName = NexeraUtility.randomStringOfLength()+"."+FilenameUtils.getExtension(file.getName());
+		String fileName = nexeraUtility.randomStringOfLength()+"."+FilenameUtils.getExtension(file.getName());
 		if(prefix != null){
 			key = subfolderInBucket + "/"+prefix +fileName.replaceAll(" ", "_");
 		}else{
