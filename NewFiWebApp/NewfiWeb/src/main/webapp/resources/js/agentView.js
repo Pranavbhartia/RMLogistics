@@ -2098,7 +2098,23 @@ function addUserToLoanTeam(userID, loanID) {
 		
 		addData.userID=userID;
 		ajaxRequest(addData.OTHURL, "POST",
-				"json", JSON.stringify(addData)  , onReturnOfAddUserToLoanTeam);
+				"json", JSON.stringify(addData)  , function(data){
+			
+			
+			var user=JSON.parse(data.resultObject);
+			var userID=user.id;
+			var userTableRow=getMilestoneTeamMembeTableRow(user);
+			var container=$( ".ms-team-member-table");
+			var existingDiv = $('.ms-team-member-table').find(
+					'.ms-team-member-tr[userid=' + userID + ']');
+			if (existingDiv != undefined && existingDiv.length > 0) {
+				showToastMessage("User already exists on the loan team.");
+				return;
+			}else
+				showToastMessage("User added to loan team.");
+				
+			container.append(userTableRow);
+		});
 		return;
 	}
 	
