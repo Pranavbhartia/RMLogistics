@@ -39,10 +39,11 @@ public class EMailSender implements IWorkflowTaskExecutor {
 			recipients.add(emailRecipientVO);
 			emailEntity.setSenderEmailId("web@newfi.com");
 			emailEntity.setRecipients(recipients);
-			emailEntity.setBody(emailTemplate);
+			//emailEntity.setBody(emailTemplate);
 			emailEntity.setSenderName("Newfi System");
 			emailEntity.setSubject("Nexera Newfi Portal");
-			emailEntity.setTemplateBased(false);
+			emailEntity.setTemplateBased(true);
+			emailEntity.setTemplateName(emailTemplate);
 			try {
 				sendEmailService.sendMail(emailEntity, false);
 			} catch (InvalidInputException e) {
