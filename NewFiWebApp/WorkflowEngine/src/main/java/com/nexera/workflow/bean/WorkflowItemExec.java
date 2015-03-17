@@ -38,6 +38,7 @@ public class WorkflowItemExec implements Serializable {
 	private WorkflowExec parentWorkflow;
 	private WorkflowItemExec parentWorkflowItemExec;
 	private String params;
+	private Boolean clickable;
 
 	public WorkflowItemExec() {
 	}
@@ -101,6 +102,16 @@ public class WorkflowItemExec implements Serializable {
 		this.success = success;
 	}
 
+	
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getClickable() {
+		return this.clickable;
+	}
+
+	public void setClickable(Boolean clickable) {
+		this.clickable = clickable;
+	}
 	// bi-directional many-to-one association to WorkflowItemMaster
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "workflow_item_master")

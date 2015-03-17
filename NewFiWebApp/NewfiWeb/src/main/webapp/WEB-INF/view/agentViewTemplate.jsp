@@ -13,9 +13,13 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<!-- added for loan manager profile pic-->
+<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 </head>
 
 <body>
+<div id="popup-overlay" class="popup-overlay" style="display: none;position: fixed; height: 100%; width: 100%; overflow: auto;z-index: 9999; background-color: rgba(255, 255, 255, 0.901961) !important;">
+	</div>
 	<jsp:include page="header.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="container-row row clearfix">
@@ -30,11 +34,55 @@
 			initialize(newfi);
 			isAgentTypeDashboard = true;
 			paintAgentDashboard();
-			bindDataToPN();
 			retrieveState();
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();
 				adjustCenterPanelWidth();
+			});
+			
+			//TODO added for loan profile page		
+
+            if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
+				$("#myProfilePicture").addClass("lp-pic float-left");
+				
+			}else{
+				
+				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
+				 
+			}
+			bindDataToPN();
+			bindDataToSN();
+			
+			//Bind primary navigation
+			globalBinder();
+			onpopstate = function(event) {
+	            console.log('history modified');
+	            if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1){
+	                historyCallback= true;
+	               
+	                refreshSupport=true;
+	            }
+	            retrieveState();
+	        };
+			if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1 ){
+	            historyCallback= true;
+	            refreshSupport=true;
+	            retrieveState();
+	        }
+			
+			$(document).on('change', '#prof-image', function() {
+				
+				//alert($('#prof-image')[0].files[0].name);
+				//alert("hiii");
+				var fileName=$("#prof-image").val();
+				//console.log("fileName"+fileName);
+	            var status=validatePhotoExtention(fileName);
+	            //alert("status"+status);
+				if(status!=false){
+					
+				initiateJcrop(this);
+				
+				}
 			});
 		});
 	</script>

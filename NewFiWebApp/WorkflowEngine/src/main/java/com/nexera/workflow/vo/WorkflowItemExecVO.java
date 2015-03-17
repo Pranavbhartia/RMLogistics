@@ -15,6 +15,7 @@ public class WorkflowItemExecVO {
 	private String displayContent;
 	private WorkflowItemExecVO parentWorkflowItemExec;
 	public String stateInfo;
+	private boolean clickable;
 	
 	public String workflowItemType;
 
@@ -114,6 +115,7 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setId(entity.getId());
 		workflowItemExecVO.setModifiedDate(entity.getModifiedDate());
 		workflowItemExecVO.setStatus(entity.getStatus());
+		workflowItemExecVO.setClickable(entity.getClickable());
 		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster()
 		        .getDescription());
 		
@@ -125,5 +127,13 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setWorkflowItemType(entity.getWorkflowItemMaster().getWorkflowItemType());
 		return workflowItemExecVO;
 	}
+
+	public boolean isClickable() {
+	    return clickable;
+    }
+
+	public void setClickable(boolean clickable) {
+	    this.clickable = clickable;
+    }
 
 }
