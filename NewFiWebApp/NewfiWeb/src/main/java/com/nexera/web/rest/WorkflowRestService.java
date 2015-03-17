@@ -304,7 +304,7 @@ public class WorkflowRestService {
         LOG.info( "workflowId----" + workflowId );
         CommonResponseVO response = null;
         try {
-        	String status="1";
+        	String status="3";
         	String stat=params;
             engineTrigger.changeStateOfWorkflowItemExec( workflowId,status);
             response = RestUtil.wrapObjectForSuccess( "Success" );
