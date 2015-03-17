@@ -190,6 +190,7 @@ public class WorkflowServiceImpl implements WorkflowService
 	 * (com.nexera.workflow.bean.WorkflowItemMaster)
 	 */
 	@Override
+	@Transactional
 	public Boolean checkIfOnSuccessOfAnotherItem(
 	        WorkflowItemMaster workflowItemMaster) {
 		LOGGER.debug("Inside method checkIfOnSuccessOfAnotherItem ");
@@ -204,6 +205,7 @@ public class WorkflowServiceImpl implements WorkflowService
 	 * com.nexera.workflow.service.WorkflowService#getWorkflowExecFromId(int)
 	 */
 	@Override
+	@Transactional
 	public WorkflowExec getWorkflowExecFromId(int workflowexecId) {
 		LOGGER.debug("Inside method getWorkflowExecFromId ");
 		return (WorkflowExec) workflowExecDao.load(WorkflowExec.class,
