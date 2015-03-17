@@ -53,7 +53,7 @@ public class FileUploadController {
 		LOG.info("File content type  : "+file.getContentType());
 		String localFilePath = null;
 		try{
-			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg")){
+			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
 				LOG.info("Received an image.converting to PDF");
 				localFilePath = NexeraUtility.convertImageToPDF(file);
 			}else{

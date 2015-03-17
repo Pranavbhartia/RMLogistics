@@ -1,20 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.nexera.newfi</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.0</version>
-  </parent>
-  <artifactId>NewfiCore</artifactId>
-  <name>NewfiCore</name>
-  <description>Core projecting, contains Service layer implementation, batch jobs, Mule integration etc.</description>
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.nexera.newfi</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>NewfiCore</artifactId>
+	<name>NewfiCore</name>
+	<description>Core projecting, contains Service layer implementation, batch jobs, Mule integration etc.</description>
+	<properties>
 
 		<!-- Generic properties -->
 		<java.version>1.7</java.version>
 		<quartz.version>2.2.1</quartz.version>
-		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
+		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+			<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
 
 		<!-- Hibernate / JPA -->
 		<hibernate.version>4.2.1.Final</hibernate.version>
@@ -28,48 +29,48 @@
 
 		<!-- PowerMock -->
 		<powermock.version>1.5.6</powermock.version>
-		
-		
+
+
 
 	</properties>
 
 	<dependencies>
-		
+
 		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring-framework.version}</version>
 		</dependency>
-		
+
 		<!-- Spring 3 dependencies -->
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-core</artifactId>
-		<version>${spring-framework.version}</version>
-	</dependency>
- 
-	<!-- QuartzJobBean in spring-context-support.jar -->
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context-support</artifactId>
-		<version>${spring-framework.version}</version>
-	</dependency>
- 
-	<!-- Spring + Quartz need transaction -->
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-tx</artifactId>
-		<version>${spring-framework.version}</version>
-	</dependency>
- 
-	<!-- Quartz framework -->
-	<dependency>
-		<groupId>org.quartz-scheduler</groupId>
-		<artifactId>quartz</artifactId>
-		<version>${quartz.version}</version>
-	</dependency>
-		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<!-- QuartzJobBean in spring-context-support.jar -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<!-- Spring + Quartz need transaction -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<!-- Quartz framework -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+
 		<!-- Test Artifacts -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -165,15 +166,15 @@
 		</dependency>
 
 		<!-- Dependency for Fileupload -->
-		
+
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.3</version>
 		</dependency>
 
-			<!-- Dependency for Tomcat  catalina -->
-		
+		<!-- Dependency for Tomcat catalina -->
+
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
@@ -225,43 +226,45 @@
 			<artifactId>httpmime</artifactId>
 			<version>4.3.1</version>
 		</dependency>
-		
+
 		<!-- Dependency of Apache PDF bo -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>1.8.8</version>
 		</dependency>
-		
+
 		<!-- Dependency of NewfiCore -->
-		<!-- <dependency>
-			<groupId>com.nexera.newfi</groupId>
-			<artifactId>NewfiCommon</artifactId>
-			<version>1.0</version>
-		</dependency> -->
-		
+		<!-- <dependency> <groupId>com.nexera.newfi</groupId> <artifactId>NewfiCommon</artifactId> 
+			<version>1.0</version> </dependency> -->
+
 		<!-- Dependency of NewfiCore -->
 		<dependency>
 			<groupId>com.nexera.newfi</groupId>
 			<artifactId>NewfiMongoCore</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.4</version>
 		</dependency>
-		
+
 		<!-- Braintree payment gateway -->
-		
+
 		<dependency>
 			<groupId>com.braintreepayments.gateway</groupId>
 			<artifactId>braintree-java</artifactId>
 			<version>2.40.0</version>
-		</dependency>	
+		</dependency>
 
+		<dependency>
+			<groupId>com.sun.media</groupId>
+			<artifactId>jai-codec</artifactId>
+			<version>1.1.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -282,29 +285,29 @@
 				</configuration>
 			</plugin>
 
-			
+
 		</plugins>
 	</build>
 
 	<profiles>
-	    <profile>
-	        <id>dev</id>
-	        <build>
-	            <filters>
-	                <filter>src/main/resources/filler.dev.properties</filter>
-	            </filters>
-	        </build>
-	    </profile>
-	    <profile>
-	        <id>test</id>
-	        <build>
-	            <filters>
-	                <filter>src/main/resources/filler.test.properties</filter>
-	            </filters>
-	        </build>
-	    </profile>
+		<profile>
+			<id>dev</id>
+			<build>
+				<filters>
+					<filter>src/main/resources/filler.dev.properties</filter>
+				</filters>
+			</build>
+		</profile>
+		<profile>
+			<id>test</id>
+			<build>
+				<filters>
+					<filter>src/main/resources/filler.test.properties</filter>
+				</filters>
+			</build>
+		</profile>
 	</profiles>
-
+ 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>Codehaus</id>
@@ -313,5 +316,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
+		
 	</pluginRepositories>
 </project>
