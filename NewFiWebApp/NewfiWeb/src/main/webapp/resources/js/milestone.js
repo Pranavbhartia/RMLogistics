@@ -152,7 +152,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : ob.workItem.id,
-				"data-text" : ob.infoText
+				"data-text" : ob.workItem.workflowItemType
 			});
 			var ajaxURL = "";	
 			if (ob.workItem.displayContent=="Make Initial Contact")
@@ -962,7 +962,7 @@ function appendMilestoneItem(workflowItem, childList) {
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : childList[index].id,
-				"data-text" : childList[index].displayContent
+				"data-text" : childList[index].workflowItemType
 			}).html(childList[index].displayContent);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
@@ -1001,12 +1001,12 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
 	event.stopPropagation();
-	if ($(event.target).attr("data-text") == "Schedule an Alert") {
+	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		var data = {};
 		data.milestoneId = event.target.getAttribute("milenotificationid");
 		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
-	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
+	} else if ($(event.target).attr("data-text") == "TEAM_STATUS") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
@@ -1014,7 +1014,7 @@ function milestoneChildEventHandler(event) {
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
-	} else if ($(event.target).attr("data-text") == "Click to pay") {
+	} else if ($(event.target).attr("data-text") == "APP_FEE") {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
