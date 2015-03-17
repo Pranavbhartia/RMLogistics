@@ -38,7 +38,21 @@ public class WorkflowItemMaster implements Serializable
     private Integer maxRunTime;
     private Date modifiedDate;
     private Boolean priority;
-    private Integer startDelay;
+    private Boolean clickable;
+    
+    @Column ( name = "clickable", columnDefinition = "TINYINT")
+    @Type ( type = "org.hibernate.type.NumericBooleanType")
+    public Boolean getClickable() {
+		return clickable;
+	}
+
+
+	public void setClickable(Boolean clickable) {
+		this.clickable = clickable;
+	}
+
+
+	private Integer startDelay;
     private WorkflowTaskConfigMaster task;
     private String workflowItemType;
     private List<WorkflowItemExec> workflowItems;
