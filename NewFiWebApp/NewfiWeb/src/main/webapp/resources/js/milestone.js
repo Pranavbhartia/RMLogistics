@@ -155,18 +155,20 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"data-text" : ob.workItem.workflowItemType
 			});
 			var ajaxURL = "";	
-			if (ob.workItem.displayContent=="Make Initial Contact")
+			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
 				ajaxURL = "";//rest/workflow/details/1";
+				ob.workItem.stateInfo = "Schedule An Alert";
+				workItem.stateInfo = "Schedule An Alert";
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
-			if (ob.workItem.displayContent=="Needed Items")
+			if (ob.workItem.workflowItemType=="NEEDS_STATUS")
 			{
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			if (ob.workItem.displayContent == "Add Team") {
+			if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
@@ -181,7 +183,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							showToastMessage(response.error.message)
 						} else {
 							ob.infoText =  response.resultObject;
-							//txtRow1.html(ob.infoText);
+							txtRow1.html(ob.infoText);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
@@ -1048,9 +1050,9 @@ function appendMilestoneItem(workflowItem, childList) {
 	header.append(headerTxt);
 
 	wrapper.append(rightBorder).append(header);
-	if (workflowItem.stateInfo) {
+	//if (workflowItem.stateInfo) {
 		appendInfoAction(rightLeftClass, wrapper, workflowItem);
-	}
+	//}
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
 			var childRow = $('<div>').attr({
