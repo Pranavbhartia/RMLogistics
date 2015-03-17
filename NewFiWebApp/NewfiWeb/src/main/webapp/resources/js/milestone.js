@@ -1048,6 +1048,18 @@ function clearStatusClass(container){
 	container.removeClass("m-in-progress");
 	container.removeClass("m-complete");
 }
+function getStatusClass(workflowItem){
+	switch(workflowItem.status){
+		case "0":
+			return "unchecked";
+		case "1":
+			return "unchecked";
+		case "2":
+			return "unchecked";
+		case "3":
+			return "checked";
+	}
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -1080,7 +1092,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	var headerCheckBox = $('<div>').attr({
 		"class" : "ms-check-box-header box-border-box " + floatClass,
-		"data-checked" : "checked"
+		"data-checked" : getStatusClass(workflowItem)
 	});
 	if(workflowItem.clickable){
 		headerCheckBox.bind('click', {
@@ -1120,7 +1132,7 @@ function appendMilestoneItem(workflowItem, childList) {
 			});
 			var itemCheckBox = $('<div>').attr({
 				"class" : "ms-check-box box-border-box " + floatClass,
-				"data-checked" : "unchecked"
+				"data-checked" : getStatusClass(childList[index])
 			})
 			if(childList[index].clickable){
 				itemCheckBox.bind('click', {
