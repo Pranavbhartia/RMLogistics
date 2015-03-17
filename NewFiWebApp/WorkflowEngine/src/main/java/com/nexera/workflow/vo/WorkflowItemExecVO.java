@@ -15,6 +15,7 @@ public class WorkflowItemExecVO {
 	private String displayContent;
 	private WorkflowItemExecVO parentWorkflowItemExec;
 	public String stateInfo;
+	private boolean clickable;
 	
 	public String workflowItemType;
 
@@ -125,5 +126,13 @@ public class WorkflowItemExecVO {
 		workflowItemExecVO.setWorkflowItemType(entity.getWorkflowItemMaster().getWorkflowItemType());
 		return workflowItemExecVO;
 	}
+
+	public boolean isClickable() {
+	    return clickable;
+    }
+
+	public void setClickable(boolean clickable) {
+	    this.clickable = clickable;
+    }
 
 }

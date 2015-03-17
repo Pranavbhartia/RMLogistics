@@ -918,7 +918,81 @@ function getProgressStatusClass(status) {
 	}
 	return progressClass;
 }
-
+function updateMileStoneElementState(url,data,callback,targetElement){
+	
+	ajaxRequest(url,"POST","json",data,function(response){
+		if(response.error){
+			showToastMessage(response.error.message);
+		}else{
+			if(callback){
+				callback(response.resultObject,targetElement);
+			}
+		}
+		
+	});
+}
+function checkboxActionEvent(workflowItem,targetElement,callback){
+	var wf=workflowItem;
+	var wfContainer=$("#WF"+wf.id);
+	var parentChk=wfContainer.attr("WFparent");
+	var childChk=wfContainer.attr("WFchild");
+	var targetData={};
+	targetData.targetElement=targetElement;
+	targetData.parentChk=parentChk;
+	targetData.childChk=childChk;
+	if(parentChk){
+		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
+		var data={};
+		data.status="1";//since we will send only completed status from frontend
+		updateMileStoneElementState(url,data,callback,targetData)
+	}else{
+		var url="rest/workflow/execute/"+wf.id;
+		var data={};
+		updateMileStoneElementState(url,data,callback,targetData)
+	}
+	/*if(callback){
+		callback({},targetData);
+	}*/
+}
+function updateMilestoneView(wf,data,targetData){
+	targetElement=targetData.targetElement;
+	if(data.match(/success/i)){
+		if(targetData.parentChk){
+			targetElement.attr("data-checked", "checked");
+			var parentContainer=$("#WF"+wf.id);
+			clearStatusClass(parentContainer);
+			parentContainer.addClass("m-complete");
+		}else{
+			var parentid=wf.parentWorkflowItemExec.id;
+			targetElement.attr("data-checked", "checked");
+			var parentContainer=$("#WF"+parentid);
+			var childs=parentContainer.find(".milestone-rc-text");
+			var childsChecked=true;
+			for(var i=0;i<childs.length;i++){
+				var child=childs[i];
+				var childCheckbox=$(child).find(".ms-check-box");
+				if($(childCheckbox).attr("data-checked")=="unchecked"){
+					childsChecked=false;
+				}
+			}
+			if(childsChecked){
+				var parentCheckBox=parentContainer.find(".ms-check-box-header");
+				$(parentCheckBox).attr("data-checked","checked");
+				clearStatusClass(parentContainer);
+				parentContainer.addClass("m-complete");
+			}else{
+				clearStatusClass(parentContainer);
+				parentContainer.addClass("m-in-progress");
+			}
+		}
+		
+	}
+}
+function clearStatusClass(container){
+	container.removeClass("m-not-started");
+	container.removeClass("m-in-progress");
+	container.removeClass("m-complete");
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -933,8 +1007,11 @@ function appendMilestoneItem(workflowItem, childList) {
 		floatClass = "float-left";
 	}
 	var wrapper = $('<div>').attr({
-		"class" : rightLeftClass + " " + progressClass
+		"class" : rightLeftClass + " " + progressClass,
+		"id":"WF"+workflowItem.id
 	});
+	wrapper.attr("WFparent",true);
+	
 	var rightBorder = $('<div>').attr({
 		"class" : rightLeftClass + "-border"
 	});
@@ -950,11 +1027,28 @@ function appendMilestoneItem(workflowItem, childList) {
 		"class" : "ms-check-box-header box-border-box " + floatClass,
 		"data-checked" : "checked"
 	});
+	if(workflowItem.clickable){
+		headerCheckBox.bind('click', {
+			"workflowItem" : workflowItem
+		}, function(event) {
+			event.stopImmediatePropagation();
+			if ($(this).attr("data-checked") == "unchecked") {
+				var wf=event.data.workflowItem;
+				var targetElement=$(this);
+				checkboxActionEvent(wf,targetElement,function(data,targetData){
+					updateMilestoneView(wf,data,targetData);
+				})
+				
+			} 
+			
+			// getLoanDetails(loanID);
+		})
+	}
 	headerTxt.append(headerCheckBox);
 	header.append(headerTxt);
 
 	wrapper.append(rightBorder).append(header);
-	if (workflowItem.stateInfo != "") {
+	if (workflowItem.stateInfo) {
 		appendInfoAction(rightLeftClass, wrapper, workflowItem);
 	}
 	if (childList != null) {
@@ -962,22 +1056,34 @@ function appendMilestoneItem(workflowItem, childList) {
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : childList[index].id,
-				"data-text" : childList[index].workflowItemType
+				"data-text" : childList[index].workflowItemType,
+				"id":"WF"+childList[index].id
 			}).html(childList[index].displayContent);
+			childRow.attr("WFchild",true);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
 			});
 			var itemCheckBox = $('<div>').attr({
 				"class" : "ms-check-box box-border-box " + floatClass,
 				"data-checked" : "unchecked"
-			}).on('click', function() {
-				if ($(this).attr("data-checked") == "checked") {
-					$(this).attr("data-checked", "unchecked");
-				} else {
-					$(this).attr("data-checked", "checked");
-				}
-			});
-
+			})
+			if(childList[index].clickable){
+				itemCheckBox.bind('click', {
+					"workflowItem" : childList[index]
+				}, function(event) {
+					event.stopImmediatePropagation();
+					if ($(this).attr("data-checked") == "unchecked") {
+						var wf=event.data.workflowItem;
+						var targetElement=$(this);
+						checkboxActionEvent(wf,targetElement,function(data,targetData){
+							updateMilestoneView(wf,data,targetData);
+						})
+						
+					} 
+			
+			// getLoanDetails(loanID);
+				})
+			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
 

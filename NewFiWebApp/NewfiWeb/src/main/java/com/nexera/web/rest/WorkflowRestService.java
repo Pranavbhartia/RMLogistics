@@ -312,7 +312,7 @@ public class WorkflowRestService {
         }
         return response;
     }
-	private List<WorkflowItemExecVO> prepareTestListForLoanManager() {
+    private List<WorkflowItemExecVO> prepareTestListForLoanManager() {
 		List<WorkflowItemExecVO> list = new ArrayList<WorkflowItemExecVO>();
 		int numberOrder = 1;
 		WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
@@ -322,6 +322,7 @@ public class WorkflowRestService {
 		workflowItemExecVO.setId(numberOrder++);
 		workflowItemExecVO.setDisplayContent("Make Initial Contact");
 		workflowItemExecVO.setStateInfo("Schedule an Alert");
+		workflowItemExecVO.setClickable(true);
 		list.add(workflowItemExecVO);
 		workflowItemExecVO = new WorkflowItemExecVO();
 		workflowItemExecVO.setStatus(WorkflowItemStatus.COMPLETED
@@ -338,6 +339,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO.setId(numberOrder++);
 		childWorkflowItemExecVO.setDisplayContent("Rates");
 		childWorkflowItemExecVO.setParentWorkflowItemExec(workflowItemExecVO);
+		childWorkflowItemExecVO.setClickable(true);
 		list.add(childWorkflowItemExecVO);
 		WorkflowItemExecVO childWorkflowItemExecVO2 = new WorkflowItemExecVO();
 		childWorkflowItemExecVO2.setStatus(WorkflowItemStatus.COMPLETED
@@ -345,6 +347,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO2.setSuccess(true);
 		childWorkflowItemExecVO2.setId(numberOrder++);
 		childWorkflowItemExecVO2.setDisplayContent("Application");
+		childWorkflowItemExecVO2.setClickable(true);
 		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
 		list.add(childWorkflowItemExecVO2);
 		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
@@ -353,6 +356,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO2.setSuccess(true);
 		childWorkflowItemExecVO2.setId(numberOrder++);
 		childWorkflowItemExecVO2.setDisplayContent("Communication");
+		childWorkflowItemExecVO2.setClickable(true);
 		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
 		list.add(childWorkflowItemExecVO2);
 		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
@@ -361,6 +365,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO2.setSuccess(true);
 		childWorkflowItemExecVO2.setId(numberOrder++);
 		childWorkflowItemExecVO2.setDisplayContent("Needs List/ Documents");
+		childWorkflowItemExecVO2.setClickable(true);
 		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
 		list.add(childWorkflowItemExecVO2);
 		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
@@ -369,6 +374,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO2.setSuccess(true);
 		childWorkflowItemExecVO2.setId(numberOrder++);
 		childWorkflowItemExecVO2.setDisplayContent("Loan Progress");
+		childWorkflowItemExecVO2.setClickable(true);
 		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
 		list.add(childWorkflowItemExecVO2);
 		childWorkflowItemExecVO2 = new WorkflowItemExecVO();
@@ -377,6 +383,7 @@ public class WorkflowRestService {
 		childWorkflowItemExecVO2.setSuccess(true);
 		childWorkflowItemExecVO2.setId(numberOrder++);
 		childWorkflowItemExecVO2.setDisplayContent("Profile");
+		childWorkflowItemExecVO2.setClickable(true);
 		childWorkflowItemExecVO2.setParentWorkflowItemExec(workflowItemExecVO);
 		list.add(childWorkflowItemExecVO2);
 		workflowItemExecVO = new WorkflowItemExecVO();
