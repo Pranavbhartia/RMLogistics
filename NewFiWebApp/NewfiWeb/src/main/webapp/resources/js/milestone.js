@@ -205,20 +205,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Click here to lock rate";
 				workItem.stateInfo = "Click here to lock rates";
 				
-			}
-			else if (ob.workItem.workflowItemType=="UW_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Pending";
-				workItem.stateInfo = "Pending";
-				
-			}
+			}			
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Closing Status";
-				workItem.stateInfo = "Closing Status";
-				
+				workItem.stateInfo = "Closing Status";				
 			}
 			//Click here to edit start Appraisal
 			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
@@ -617,7 +609,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	
 	var addNewMember = $('<div>').attr({
 		"class" : "milestone-rc-text",
-		"data-text" : "Click here to add a Team Member",
+		"data-text" : "TEAM_STATUS",
 		"mileNotificationId":milestoneID
 	}).html("Click here to add a Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
@@ -980,7 +972,7 @@ function getProgressStatusClass(status) {
 	return progressClass;
 }
 function updateMileStoneElementState(url,data,callback,targetElement){
-	
+	data=JSON.stringify(data);
 	ajaxRequest(url,"POST","json",data,function(response){
 		if(response.error){
 			showToastMessage(response.error.message);
