@@ -22,6 +22,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.PaymentException;
 import com.nexera.common.exception.PaymentUnsuccessfulException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.core.service.BraintreePaymentGatewayService;
 
 /**
@@ -100,6 +101,10 @@ public class PaymentRestService {
 			result.addProperty(CommonConstants.SUCCESS_KEY, CommonConstants.FAILURE);
 			result.addProperty(CommonConstants.MESSAGE_KEY, messageUtils.getDisplayMessage(DisplayMessageConstants.GENERAL_ERROR, DisplayMessageType.ERROR_MESSAGE).getMessage());
 			return jsonBuilder.toJson(result);
+		}
+		catch (UndeliveredEmailException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		result.addProperty(CommonConstants.SUCCESS_KEY, CommonConstants.SUCCESS);
