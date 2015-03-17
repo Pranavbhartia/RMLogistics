@@ -163,17 +163,19 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
-			if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
 			{
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			if (ob.workItem.workflowItemType == "TEAM_STATUS") {
+			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				ob.workItem.stateInfo ="Click here to add a new Team Member"
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
+			else return;
 			
 					
 			if(ajaxURL&&ajaxURL!=""){
@@ -183,7 +185,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							showToastMessage(response.error.message)
 						} else {
 							ob.infoText =  response.resultObject;
-							txtRow1.html(ob.infoText);
+							txtRow1.html(ob.workItem.stateInfo);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
@@ -556,15 +558,6 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	});
 
 	
-	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text",
-		"data-text" : "Click here to add a Team Member",
-		"mileNotificationId":milestoneID
-	}).html("Click here to add a Team Member").bind("click", function(e) {
-		milestoneChildEventHandler(e)
-	});
-
-	tableContainer.append(addNewMember);
 	
 	if(!userList ||  userList.length==0)
 		return;
