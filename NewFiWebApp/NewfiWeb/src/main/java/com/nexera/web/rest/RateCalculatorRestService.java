@@ -76,11 +76,29 @@ public class RateCalculatorRestService {
 	
 	public String CreateXmlForTeaserRate(TeaserRateVO teaserRateVO)
 	{
+		String loanAmount ;
+		String loanPurpose;
+		if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+			
+			loanAmount = teaserRateVO.getCashTakeOut()+teaserRateVO.getCurrentMortgageBalance();
+			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
+		}else{
+			loanAmount = teaserRateVO.getCurrentMortgageBalance();
+		}
+		
+      if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "payOffMortgage".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+			
+	        loanPurpose = "1";
+			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
+		}else{
+			loanPurpose = "0";
+		}
+		
 		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 				+ "<loan "
 				+ "sHouseValPe="+"\""+teaserRateVO.getHomeWorthToday()+"\""
 				+ " "
-				+ "sLAmtCalcPe="+"\""+teaserRateVO.getCurrentMortgageBalance()+"\""
+				+ "sLAmtCalcPe="+"\""+loanAmount+"\""
 				+ " "
 				+ "sLPurposeTPe="+"\""+"1"+"\""
 				+ " "

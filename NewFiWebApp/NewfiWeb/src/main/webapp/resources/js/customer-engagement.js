@@ -315,7 +315,7 @@ function paintRefinanceLiveNow() {
 	optionContainer3.append(inputBox3);
 	optionContainer4.append(inputBox4);
 	optionContainer5.append(inputBox5);
-	
+
 	quesTextCont1.append(optionContainer1);
 	quesTextCont2.append(optionContainer2);
 	quesTextCont3.append(optionContainer3);
@@ -770,26 +770,28 @@ function paintRefinancePhoneNumber() {
 
 function paintRefinanceSeeRates() {
 
-	$(".ce-lp").html(" ");
+	// teaserFixYourRatePage();
+
 	delete sessionStorage.refinaceData;
+
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
+		"class" : "ce-rate-main-container"
 	});
 
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
+	var rateProgramWrapper = getRateProgramContainer();
+	var loanSummaryWrapper = getLoanSummaryWrapper();
+	var closingCostWrapper = getClosingCostSummaryContainer();
 
-	var teaserRate = getRateProgramContainer();
-
-
-
-	container.append(quesTextCont).append(teaserRate);
-
+	//container.append(quesTextCont).append(rateProgramWrapper).append(
+		//	loanSummaryWrapper).append(closingCostWrapper);
+container.append(quesTextCont).append(rateProgramWrapper);
 	$('#ce-refinance-cp').html(container);
-
+$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/calculator/findteaseratevalue",
@@ -799,28 +801,43 @@ function paintRefinanceSeeRates() {
 		},
 		datatype : "application/json",
 		success : function(data) {
-			var teaserresult = data;
-			obj = JSON.parse(teaserresult);
-			alert(obj);
 			
+			$('#overlay-loader').hide();
 			
+			paintteaserRate(data);
+			printMedianRate(data,container);
+			
+		},
+		error : function() {
+			alert("error");
+			$('#overlay-loader').hide();
+		}
+
+	});
+}
+
+
+
+
+function printMedianRate(data,container){
+teaserresult = JSON.parse(data);
 var rateVoJson;
 var counter = 0;
 var rateAndClosingCost =0;
-alert(teaserresult);
-teaserresult=obj;
-for (var i in teaserresult) {
+//alert(teaserresult);
+
+for (var j in teaserresult) {
    
-    var loanDuration = teaserresult[i].loanDuration;
+    var loanDuration = teaserresult[j].loanDuration;
     console.log("loanDuration"+loanDuration);
     
     if ("30 YR FIXED CONFORMING".match(".*\\b" + loanDuration + "\\b.*")) {
     console.log('inside if');
-    alert('inside if');
+  //  alert('inside if');
     
     
     
-        rateVoJson = JSON.stringify(teaserresult[i].rateVO);
+        rateVoJson = JSON.stringify(teaserresult[j].rateVO);
         rateVoJsonArrayLength = JSON.parse(rateVoJson).length;
 
         index = parseInt(rateVoJsonArrayLength / 2);
@@ -840,23 +857,22 @@ console.log(rateAndClosingCost);
 if (rateAndClosingCost === undefined) {
     alert("No rate is present");
 }
-alert(rateAndClosingCost.teaserRate);
+//alert(rateAndClosingCost.teaserRate);
 console.log(" median rate :"+rateAndClosingCost.teaserRate);
 
 var rateresult = $('<div>').attr({
-		"class" : "ce-rate-result cp-est-cost-btn"
-	}).html(rateAndClosingCost.teaserRate);
-	container.append(rateresult);
-	$('#ce-refinance-cp').append(rateresult);
-// $('#ce-rate-result').html(rateAndClosingCost.teaserRate);
-			
-		},
-		error : function() {
-			alert("error");
-		}
+"class" : "ce-rate-result cp-est-cost-btn"
+}).html(rateAndClosingCost.teaserRate);
+container.append(rateresult);
+$('#ce-refinance-cp').append(rateresult);
 
-	});
+
+
 }
+
+
+
+
 
 function progressBaar(num) {
 
@@ -877,110 +893,12 @@ function progressBaar(num) {
 	}
 }
 
-function getRateProgramContainer() {
-	var parentWrapper = $('<div>').attr({
-		"class" : "rate-program-wrapper"
-	});
-	var rpHeader = $('<div>').attr({
-		"class" : "rate-program-header uppercase"
-	}).html("RATES & PROGRAM");
-	var rpContainer = $('<div>').attr({
-		"class" : "rate-program-container clearfix"
-	});
-	var rpCol1 = $('<div>').attr({
-		"class" : "rate-program-container-col1 float-left"
-	});
-	var col1Txt = $('<div>').attr({
-		"class" : "cp-rate-header-text"
-	}).html("Interest Rate");
-	var col1btn = $('<div>').attr({
-		"class" : "cp-rate-btn"
-	}).html("3.375%");
-	rpCol1.append(col1Txt).append(col1btn);
-
-	var rpCol2 = $('<div>').attr({
-		"class" : "rate-program-container-col2 float-left"
-	});
-
-	var tenureSlider = getTenureSlider();
-
-	rpCol2.append(tenureSlider);
-
-	var rpCol3 = $('<div>').attr({
-		"class" : "rate-program-container-col3 float-left"
-	});
-	var col3Txt = $('<div>').attr({
-		"class" : "cp-est-header-text"
-	}).html("Estimated Closing Cost");
-	var col3btn = $('<div>').attr({
-		"class" : "cp-est-cost-btn"
-	}).html("$ 8,185.75");
-	rpCol3.append(col3Txt).append(col3btn);
-	var mobileScreenCont = getSliderContainerForMobileScreen();
-	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(
-			mobileScreenCont);
-	parentWrapper.append(rpHeader).append(rpContainer);
-	return parentWrapper;
-}
-
-function getTenureSlider() {
-	var tenureSilder = $('<div>').attr({
-		"class" : "tenure-slider"
-	});
-	var tenureSliderTextCon = $('<div>').attr({
-		"class" : "slider-text-cont clearfix"
-	});
-	var tsLeftText = $('<div>').attr({
-		"class" : "slider-text-left float-left"
-	}).html("Length of Loan");
-	var tsRightText = $('<div>').attr({
-		"class" : "slider-text-right float-right"
-	});
-	var tsYearSpan = $('<span>').attr({
-		"id" : "years-text"
-	}).html('30');
-	tsRightText.append(tsYearSpan).append(" Years");
-	tenureSliderTextCon.append(tsLeftText).append(tsRightText);
-	var tsIcon = $('<div>').attr({
-		"id" : "tenure-slider",
-		"class" : "tenure-slider-icon"
-	}).slider({
-		orientation : "horizontal",
-		range : "min",
-		max : 30,
-		value : 10
-	});
-	
-	
-	
-	
-	tenureSilder.append(tenureSliderTextCon).append(tsIcon);
-	return tenureSilder;
-}
-
-function getSliderContainerForMobileScreen() {
-	var mobileSliderCont = $('<div>').attr({
-		"class" : "mobile-slider-container clearfix"
-	});
-	var col1 = $('<div>').attr({
-		"class" : "rate-program-container-rs float-left"
-	});
-	var col1Txt = $('<div>').attr({
-		"class" : "cp-rate-header-text"
-	}).html("Interest Rate");
-	var col1btn = $('<div>').attr({
-		"class" : "cp-rate-btn"
-	}).html("3.375%");
-	col1.append(col1Txt).append(col1btn);
-	var col2 = $('<div>').attr({
-		"class" : "rate-program-container-ts float-left"
-	});
-	var col2Txt = $('<div>').attr({
-		"class" : "cp-est-header-text"
-	}).html("Estimated Closing Cost");
-	var col2btn = $('<div>').attr({
-		"class" : "cp-est-cost-btn"
-	}).html("$ 8,185.75");
-	col2.append(col2Txt).append(col2btn);
-	return mobileSliderCont.append(col1).append(col2);
+function teaserFixYourRatePage() {
+	$('#ce-refinance-cp').html('');
+	var rateProgramWrapper = getRateProgramContainer();
+	//var loanSummaryWrapper = getLoanSummaryWrapper();
+	//var closingCostWrapper = getClosingCostSummaryContainer();
+	//$('#ce-refinance-cp').append(rateProgramWrapper).append(loanSummaryWrapper)
+	//		.append(closingCostWrapper);
+	$('#ce-refinance-cp').append(rateProgramWrapper);
 }
