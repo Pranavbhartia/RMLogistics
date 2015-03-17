@@ -636,7 +636,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 		}
-		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+		tableContainer.append(getMilestoneTeamMembeTableRow(user));
 	}
 	
 	
@@ -644,6 +644,18 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	return tableContainer;
 }
 
+function getMilestoneTeamMembeTableRow(user){
+	var dispName = user.firstName+" "+user.lastName;
+	var userRole = user.userRole;
+	var roleLabel = userRole.label;
+	if (userRole.id == 3) {
+		if (user.internalUserDetail
+				&& user.internalUserDetail.internalUserRoleMasterVO
+				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+	}
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id);
+}
 // Function to get milestone team member table header
 function getMilestoneTeamMembeTableHeader() {
 	var row = $('<div>').attr({
@@ -662,9 +674,10 @@ function getMilestoneTeamMembeTableHeader() {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title) {
+function getMilestoneTeamMemberRow(name, title,userID) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-tr clearfix"
+		"class" : "ms-team-member-tr clearfix",
+		"userID":userID
 	});
 
 	var nameCol = $('<div>').attr({
