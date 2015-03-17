@@ -163,12 +163,71 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
-			if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
-				ajaxURL = "rest/workflow/needCount/1";
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to apply application";
+				workItem.stateInfo = "Click here to apply application";
+				
+			} 
+			
+			else if (ob.workItem.workflowItemType=="DISCLOSURE_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click to add Disclosures";
+				workItem.stateInfo = "Click to add Disclosures";
+				
+			}//
+			else if (ob.workItem.workflowItemType=="APP_FEE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "";
+				workItem.stateInfo = "";
+				
+			}
+			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to start Appraisal";
+				workItem.stateInfo = "Click here to start Appraisal";
+				
+			}
+			else if (ob.workItem.workflowItemType=="LOCK_RATE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to lock rate";
+				workItem.stateInfo = "Click here to lock rates";
+				
+			}
+			else if (ob.workItem.workflowItemType=="UW_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to lock rate";
+				workItem.stateInfo = "Click here to lock rates";
+				
+			}
+			else if (ob.workItem.workflowItemType=="UW_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Pending";
+				workItem.stateInfo = "Pending";
+				
+			}
+			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Closing Status";
+				workItem.stateInfo = "Closing Status";
+				
+			}
+			//Click here to edit start Appraisal
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			{
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=selectedUserDetail.loanID;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			if (ob.workItem.workflowItemType == "TEAM_STATUS") {
+			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
