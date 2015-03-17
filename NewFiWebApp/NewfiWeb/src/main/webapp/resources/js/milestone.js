@@ -948,6 +948,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	}else{
 		var url="rest/workflow/execute/"+wf.id;
 		var data={};
+		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
 	/*if(callback){
