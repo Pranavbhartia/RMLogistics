@@ -41,6 +41,9 @@ public class TemplateController extends DefaultController {
 	@Autowired
 	private UserProfileService userProfileService;
 
+	@Autowired
+	private NexeraUtility nexeraUtility;
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(TemplateController.class);
 
@@ -141,7 +144,7 @@ public class TemplateController extends DefaultController {
 				LOG.error("Buffered Image is null");
 			}
 			
-			 File dir = new File(NexeraUtility.tomcatDirectoryPath());
+			 File dir = new File(nexeraUtility.tomcatDirectoryPath());
              if (!dir.exists())
                  dir.mkdirs();
 
