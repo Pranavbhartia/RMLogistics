@@ -38,7 +38,21 @@ public class WorkflowItemMaster implements Serializable
     private Integer maxRunTime;
     private Date modifiedDate;
     private Boolean priority;
-    private Integer startDelay;
+    private Boolean clickable;
+    
+    @Column ( name = "clickable", columnDefinition = "TINYINT")
+    @Type ( type = "org.hibernate.type.NumericBooleanType")
+    public Boolean getClickable() {
+		return clickable;
+	}
+
+
+	public void setClickable(Boolean clickable) {
+		this.clickable = clickable;
+	}
+
+
+	private Integer startDelay;
     private WorkflowTaskConfigMaster task;
     private String workflowItemType;
     private List<WorkflowItemExec> workflowItems;
@@ -50,7 +64,7 @@ public class WorkflowItemMaster implements Serializable
     private WorkflowMaster parentWorkflowMaster;
     private WorkflowItemMaster parentWorkflowItemMaster;
     private List<WorkflowItemMaster> childWorkflowItemMasterList;
-    private String params;
+    
 
 
     public WorkflowItemMaster()
@@ -357,25 +371,6 @@ public class WorkflowItemMaster implements Serializable
     public void setPriority( Boolean priority )
     {
         this.priority = priority;
-    }
-
-
-    /**
-     * @return the params
-     */
-    @Column ( name = "params")
-    public String getParams()
-    {
-        return params;
-    }
-
-
-    /**
-     * @param params the params to set
-     */
-    public void setParams( String params )
-    {
-        this.params = params;
     }
 
 

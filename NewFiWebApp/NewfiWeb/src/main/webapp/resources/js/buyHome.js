@@ -133,7 +133,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt1);
 
 	var optionContainer1 = $('<div>').attr({
@@ -146,7 +146,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt2);
 
 	var optionContainer2 = $('<div>').attr({
@@ -159,7 +159,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
 	var optionContainer3 = $('<div>').attr({
@@ -172,7 +172,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont4 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt4);
 
 	var optionContainer4 = $('<div>').attr({
@@ -185,7 +185,7 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont5 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt5);
 
 	var optionContainer5 = $('<div>').attr({
@@ -196,12 +196,16 @@ function paintBuyHomeRenting() {
 		"class" : "ce-input",
 		"name" : "zipCode"
 	});
-
-	quesTextCont1.append(optionContainer1).append(inputBox1);
-	quesTextCont2.append(optionContainer2).append(inputBox2);
-	quesTextCont3.append(optionContainer3).append(inputBox3);
-	quesTextCont4.append(optionContainer4).append(inputBox4);
-	quesTextCont5.append(optionContainer5).append(inputBox5);
+	optionContainer1.append(inputBox1);
+	optionContainer2.append(inputBox2);
+	optionContainer3.append(inputBox3);
+	optionContainer4.append(inputBox4);
+	optionContainer5.append(inputBox5);
+	quesTextCont1.append(optionContainer1);
+	quesTextCont2.append(optionContainer2);
+	quesTextCont3.append(optionContainer3);
+	quesTextCont4.append(optionContainer4);
+	quesTextCont5.append(optionContainer5);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -250,7 +254,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt1);
 
 	var optionContainer1 = $('<div>').attr({
@@ -263,7 +267,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt2);
 
 	var optionContainer2 = $('<div>').attr({
@@ -276,7 +280,7 @@ function paintBuyHomEachMonthrent() {
 	});
 
 	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
 	var optionContainer3 = $('<div>').attr({
@@ -288,9 +292,13 @@ function paintBuyHomEachMonthrent() {
 		"name" : "liveEarlier"
 	});
 
-	quesTextCont1.append(optionContainer1).append(inputBox1);
-	quesTextCont2.append(optionContainer2).append(inputBox2);
-	quesTextCont3.append(optionContainer3).append(inputBox3);
+	optionContainer1.append(inputBox1);
+	optionContainer2.append(inputBox2);
+	optionContainer3.append(inputBox3);
+	
+	quesTextCont1.append(optionContainer1);
+	quesTextCont2.append(optionContainer2);
+	quesTextCont3.append(optionContainer3);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -354,7 +362,7 @@ function paintSellYourHome(quesText, options, name) {
 	});
 
 	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
+		"class" : "ce-rp-sub-ques-text"
 
 	}).html(quesText);
 
@@ -364,7 +372,7 @@ function paintSellYourHome(quesText, options, name) {
 
 	for (var i = 0; i < options.length; i++) {
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "ce--sub-option",
 			"id" : "ce-option_" + i,
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
@@ -604,17 +612,19 @@ function paintBuyHomeMyMoney(quesText, options, name) {
 	for (var i = 0; i < options.length; i++) {
 
 		var optionIncome = $('<div>').attr({
-			"class" : "hide",
+			"class" : "hide ce-option-ques-wrapper",
 			"id" : "ce-option_" + i
 		});
 
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "ce-option-checkbox",
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
+			$('.ce-option-checkbox').removeClass("ce-option-checked");
+			$(this).addClass("ce-option-checked");
 			var key = event.data.name;
 			buyHomeTeaserRate[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
@@ -719,25 +729,30 @@ function paintBuyHomeSeeRates() {
 
 }
 
+
+
 function paintBuyHomeSeeTeaserRate() {
 
-	$(".ce-lp").html(" ");
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
+		"class" : "ce-rate-main-container"
 	});
 
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
-	var teaserRate = getRateProgramContainer();
 
-	container.append(quesTextCont).append(teaserRate);
-	//container.append(quesTextCont);
+	var rateProgramWrapper = getRateProgramContainer();
+	//var loanSummaryWrapper = getLoanSummaryWrapper();
+	//var closingCostWrapper = getClosingCostSummaryContainer();
 
+   
+
+	//container.append(quesTextCont).append(rateProgramWrapper).append(loanSummaryWrapper).append(closingCostWrapper);
+   container.append(quesTextCont).append(rateProgramWrapper);
 	$('#ce-refinance-cp').html(container);
-
+			$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/calculator/findteaseratevalue",
@@ -747,16 +762,127 @@ function paintBuyHomeSeeTeaserRate() {
 		},
 		datatype : "application/json",
 		success : function(data) {
-			//alert("success");
-			// $('#teaserresult').html(teaserresult);
-			// alert(teaserresult);
+		
+			paintteaserRate(data);
+			printMedianRate(data,container);
+			$('#overlay-loader').hide();
 		},
 		error : function() {
 			alert("error");
+			$('#overlay-loader').hide();
 		}
 
 	});
 }
+var tenureYear = [];
+var rateObjArray = [];
+var sortedTenureYear = [];
+var year;
+var index;
+var unsortTenureYear = [];
+ var loanDurationConform;
+ var rateVOArrayObj;
+function paintteaserRate(teaserRate){
+ 	
+teaserRate= JSON.parse(teaserRate);
+
+	for (var i in teaserRate) {
+
+	     loanDurationConform = teaserRate[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    tenureYear.push(parseInt(year));
+	    rateObjArray.push(teaserRate[i].rateVO);
+	}
+	
+
+	for(var i = 0 ; i <tenureYear.length ; i++){
+	   unsortTenureYear[i] = tenureYear[i];
+	}
+
+
+	sortedTenureYear = sortYear(tenureYear);
+	tenureSlider(sortedTenureYear);
+	
+	
+	
+	index = unsortTenureYear.indexOf(sortedTenureYear[0]); 
+	 rateVOArrayObj = rateObjArray[index];
+	$("#teaserRateId").html(rateVOArrayObj[0].teaserRate+ " %");
+	$("#closingCostId").html(rateVOArrayObj[0].closingCost+ " ");
+	
+	rateCostSlider(rateVOArrayObj);
+	
+}
+
+function sortYear(tenureYear) {
+    var sortedTenureYear = [];
+    sortedTenureYear = tenureYear;
+    sortedTenureYear.sort(function(a, b){return a-b});
+   return sortedTenureYear;
+}
+
+
+function tenureSlider(sortedTenureYear){
+	$('.tenure-grid-container').remove();
+	var grids = getTenureSliderGrids(sortedTenureYear);
+	$('#tenure-slider').parent().append(grids);
+	console.log(sortedTenureYear);
+    $(function () {
+    $("#tenure-slider").slider({
+        min: 0, 
+        max: sortedTenureYear.length - 1, 
+        slide: function (event, ui) {
+            $("#amount").val(sortedTenureYear[ui.value] + "Year");
+        },
+        change:function( event, ui ) {
+        $("#rate-slider").slider("destroy");
+        $('#years-text').html(sortedTenureYear[ui.value]);
+        tenureYearDate = sortedTenureYear[ui.value];
+           
+        index = unsortTenureYear.indexOf(tenureYearDate); 
+        var rateVOArrayObj = rateObjArray[index];
+        console.log("rateVOArrayObjLength.."+rateVOArrayObj.length);
+        
+        // Rate slider change
+        rateCostSlider(rateVOArrayObj);
+        
+        },
+        create : function(event, ui){
+        	rateCostSlider(rateObjArray[0]);
+        }
+    });
+    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
+});
+    
+}
+
+
+
+function rateCostSlider(rateVOArrayObj){
+
+	$('.rate-slider').find('.tenure-grid-container').remove();
+	var grids = getRateCostSliderGrids(rateVOArrayObj);
+	$('#rate-slider').parent().append(grids);
+		    $("#rate-slider").slider({
+		        min: 0, 
+		        max: rateVOArrayObj.length - 1,
+		        change:function( event, ui ) {
+		        
+		        $(".cp-rate-btn").html(rateVOArrayObj[ui.value].teaserRate+ " %");
+		        $(".cp-est-cost-btn").html(rateVOArrayObj[ui.value].closingCost+ " ");
+		        },
+		        create:function(event,ui){
+		        	 $(".cp-rate-btn").html(rateVOArrayObj[0].teaserRate+ " %");
+		             $(".cp-est-cost-btn").html(rateVOArrayObj[0].closingCost+ " ");
+		        }
+		    });
+		    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
+}
+
 
 function getBuyHomeMultiTextQuestion(quesText) {
 	var container = $('<div>').attr({

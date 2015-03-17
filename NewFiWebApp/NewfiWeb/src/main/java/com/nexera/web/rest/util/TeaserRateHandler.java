@@ -1,5 +1,6 @@
 package com.nexera.web.rest.util;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class TeaserRateHandler extends DefaultHandler {
     private TeaserRateResponseVO teaserRateVo = new TeaserRateResponseVO();
     private ArrayList<LqbTeaserRateVo> rateVoList = new  ArrayList<LqbTeaserRateVo>() ;
     String tempVal = "";
-    
+    String totalClosingCostVal="";
     //getter method for TeaserRateResponseVO list
     public List<TeaserRateResponseVO> getTeaserRateList() {
         return teaserRateList;
@@ -47,9 +48,45 @@ public class TeaserRateHandler extends DefaultHandler {
     		
     		if(qName.equalsIgnoreCase("RateOption")) {
     			LqbTeaserRateVo rateVo = new LqbTeaserRateVo();
-    			rateVo.setTeaserRate(attributes.getValue("Rate"));
-    			rateVo.setClosingCost(attributes.getValue("TotalClosingCost"));
-    			rateVoList.add(rateVo);
+    			
+    			LOG.info("TotalClosingCost  value # "+attributes.getValue("TotalClosingCost"));
+    			
+    			if(attributes.getValue("TotalClosingCost").toString().contains("(")){
+    				totalClosingCostVal= attributes.getValue("Rate");
+    				LOG.info("TotalClosingCost contains ( "+totalClosingCostVal);
+    			}
+    			else{
+    				LOG.info("TotalClosingCost does not contains (");
+    				if(!"".equalsIgnoreCase(totalClosingCostVal))
+    				{LOG.info("TotalClosingCost is not equal to space hence setting cost as 0");
+    				LqbTeaserRateVo tempRateVo = new LqbTeaserRateVo();
+    				tempRateVo.setClosingCost("0");
+    				tempRateVo.setTeaserRate(totalClosingCostVal);
+    				
+    				LOG.info("Setting rate VO list tempRateVo values is "+tempRateVo.getClosingCost()+"  "+tempRateVo.getTeaserRate());
+    				
+    				rateVoList.add(tempRateVo);
+    					
+    				
+    					rateVo.setClosingCost(attributes.getValue("TotalClosingCost"));
+        				rateVo.setTeaserRate(attributes.getValue("Rate"));
+        				LOG.info("Setting rate VO list rateVo values is "+rateVo.getClosingCost()+"  "+rateVo.getTeaserRate());
+        				rateVoList.add(rateVo);
+    					totalClosingCostVal="";
+    					
+    					
+    					
+    					
+    				}else{
+    					LOG.info("Inside else"); 
+    				rateVo.setClosingCost(attributes.getValue("TotalClosingCost"));
+    				rateVo.setTeaserRate(attributes.getValue("Rate"));
+    				rateVoList.add(rateVo);
+    				}
+    			}
+    			
+    			
+    			
     			
     		}
     	}

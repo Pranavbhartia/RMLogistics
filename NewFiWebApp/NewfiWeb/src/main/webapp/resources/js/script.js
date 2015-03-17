@@ -2,6 +2,8 @@
 var neededItemListObject;
 var currentUserAndLoanOnj = new Object();
 var doPagination = false;
+var loanType = "refinance";
+
 
 function changeLeftPanel(primary) {
 	var leftPanel = parseInt(primary);
@@ -582,14 +584,39 @@ function getRateProgramContainer() {
 	var rpCol1 = $('<div>').attr({
 		"class" : "rate-program-container-col1 float-left"
 	});
-	var col1Txt = $('<div>').attr({
+	
+	var rateBtnContainer = $('<div>').attr({
+		"class" : "cp-btn-cont"
+	}); 
+	
+	var rateLabel = $('<div>').attr({
 		"class" : "cp-rate-header-text"
 	}).html("Interest Rate");
-	var col1btn = $('<div>').attr({
+	var rateValue = $('<div>').attr({
 		"class" : "cp-rate-btn"
 	}).html("3.375%");
-	rpCol1.append(col1Txt).append(col1btn);
-
+	rateBtnContainer.append(rateLabel).append(rateValue);
+	rpCol1.append(rateBtnContainer);
+	
+	if(loanType == "refinance"){
+		rateBtnContainer.addClass('margin-top30');
+	}
+	
+	if(loanType == "purchase"){
+		var downPaymentBtnContainer = $('<div>').attr({
+			"class" : "cp-btn-cont"
+		});
+		var downPaymentlabel = $('<div>').attr({
+			"class" : "cp-est-header-text"
+		}).html("Down Payment");
+		var downPaymentValue = $('<div>').attr({
+			"class" : "cp-cost-cont"
+		}).html("$ 100,000.00");
+		downPaymentBtnContainer.append(downPaymentlabel).append(downPaymentValue);
+		
+		rpCol1.append(downPaymentBtnContainer);
+	}
+	
 	var rpCol2 = $('<div>').attr({
 		"class" : "rate-program-container-col2 float-left"
 	});
@@ -600,17 +627,47 @@ function getRateProgramContainer() {
 	var rpCol3 = $('<div>').attr({
 		"class" : "rate-program-container-col3 float-left"
 	});
-	var col3Txt = $('<div>').attr({
+	var paymentBtnContainer = $('<div>').attr({
+		"class" : "cp-btn-cont"
+	}); 
+	var paymentlabel = $('<div>').attr({
 		"class" : "cp-est-header-text"
-	}).html("Estimated Closing Cost");
-	var col3btn = $('<div>').attr({
+	}).html("Monthly Payment");
+	var paymentValue = $('<div>').attr({
 		"class" : "cp-est-cost-btn"
 	}).html("$ 8,185.75");
-	rpCol3.append(col3Txt).append(col3btn);
+	paymentBtnContainer.append(paymentlabel).append(paymentValue);
+	rpCol3.append(paymentBtnContainer);
+
+	if(loanType == "refinance"){
+		paymentBtnContainer.addClass('margin-top30');
+	}
+	
+	if(loanType == "purchase"){
+		var purchaseAmount = $('<div>').attr({
+			"class" : "cp-btn-cont"
+		});
+		var purchaselabel = $('<div>').attr({
+			"class" : "cp-est-header-text"
+		}).html("Purchase Amount");
+		var purchaseValue = $('<div>').attr({
+			"class" : "cp-cost-cont"
+		}).html("$ 473,000.00");
+		purchaseAmount.append(purchaselabel).append(purchaseValue);
+		
+		rpCol3.append(purchaseAmount);
+	}
+	
 	var mobileScreenCont = getSliderContainerForMobileScreen();
 	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(
 			mobileScreenCont);
+	
 	parentWrapper.append(rpHeader).append(rpContainer);
+	var lockRateBtn = $('<div>').attr({
+		"class" : "cp-lock-btn"
+	}).html("lock your rate");
+	
+	parentWrapper.append(lockRateBtn);
 	return parentWrapper;
 }
 
@@ -654,6 +711,9 @@ function getTenureSlider() {
 	var tsRightText = $('<div>').attr({
 		"class" : "slider-text-right float-right"
 	});
+	
+	var gridArray = [0,3,5,7,10,15,20,30];
+	
 	var tsYearSpan = $('<span>').attr({
 		"id" : "years-text"
 	}).html('30');
@@ -665,12 +725,39 @@ function getTenureSlider() {
 	}).slider({
 		orientation : "horizontal",
 		range : "min",
-		max : 30,
-		value : 10
+		max : gridArray.length - 1,
+		value : gridArray[0],
+		change:function(event,ui){
+			$('#years-text').html(gridArray[ui.value]);
+		}
 	});
 	tenureSilder.append(tenureSliderTextCon).append(tsIcon);
+	
+	var sliderGrids = getTenureSliderGrids(gridArray);
+	
+	tenureSilder.append(sliderGrids);
 	return tenureSilder;
 }
+
+function getTenureSliderGrids(gridArray){
+	var gridContainer = $('<div>').attr({
+		"class" : "tenure-grid-container"
+	});
+	
+	for(var i=0;i<gridArray.length; i++){
+		var leftOffset = i/(gridArray.length-1) * 100;
+		var gridItem = $('<div>').attr({
+			"class" : "tenure-grid-item"
+		}).css({
+			"left" : leftOffset + "%"
+		}).html(gridArray[i]);
+		
+		gridContainer.append(gridItem);
+	}
+	
+	return gridContainer;
+}
+
 
 function getSliderContainerForMobileScreen() {
 	var mobileSliderCont = $('<div>').attr({
@@ -679,23 +766,67 @@ function getSliderContainerForMobileScreen() {
 	var col1 = $('<div>').attr({
 		"class" : "rate-program-container-rs float-left"
 	});
-	var col1Txt = $('<div>').attr({
+
+	var rateBtnContainer = $('<div>').attr({
+		"class" : "cp-btn-cont"
+	}); 
+	
+	var rateLabel = $('<div>').attr({
 		"class" : "cp-rate-header-text"
 	}).html("Interest Rate");
-	var col1btn = $('<div>').attr({
+	var rateValue = $('<div>').attr({
 		"class" : "cp-rate-btn"
 	}).html("3.375%");
-	col1.append(col1Txt).append(col1btn);
+	rateBtnContainer.append(rateLabel).append(rateValue);
+	col1.append(rateBtnContainer);
+	
+	if(loanType == "purchase"){
+		var downPaymentBtnContainer = $('<div>').attr({
+			"class" : "cp-btn-cont"
+		});
+		var downPaymentlabel = $('<div>').attr({
+			"class" : "cp-est-header-text"
+		}).html("Down Payment");
+		var downPaymentValue = $('<div>').attr({
+			"class" : "cp-cost-cont"
+		}).html("$ 100,000.00");
+		downPaymentBtnContainer.append(downPaymentlabel).append(downPaymentValue);
+		
+		col1.append(downPaymentBtnContainer);
+	}
+	
+	
 	var col2 = $('<div>').attr({
 		"class" : "rate-program-container-ts float-left"
 	});
-	var col2Txt = $('<div>').attr({
+	
+	var paymentBtnContainer = $('<div>').attr({
+		"class" : "cp-btn-cont"
+	}); 
+	var paymentlabel = $('<div>').attr({
 		"class" : "cp-est-header-text"
-	}).html("Estimated Closing Cost");
-	var col2btn = $('<div>').attr({
+	}).html("Monthly Payment");
+	var paymentValue = $('<div>').attr({
 		"class" : "cp-est-cost-btn"
 	}).html("$ 8,185.75");
-	col2.append(col2Txt).append(col2btn);
+	paymentBtnContainer.append(paymentlabel).append(paymentValue);
+	col2.append(paymentBtnContainer);
+	
+	if(loanType == "purchase"){
+		var purchaseAmount = $('<div>').attr({
+			"class" : "cp-btn-cont"
+		});
+		var purchaselabel = $('<div>').attr({
+			"class" : "cp-est-header-text"
+		}).html("Purchase Amount");
+		var purchaseValue = $('<div>').attr({
+			"class" : "cp-cost-cont"
+		}).html("$ 473,000.00");
+		purchaseAmount.append(purchaselabel).append(purchaseValue);
+	
+		col2.append(purchaseAmount);
+	}
+	
 	return mobileSliderCont.append(col1).append(col2);
 }
 
@@ -704,7 +835,12 @@ function getLoanSummaryWrapper() {
 		"class" : "loan-summary-wrapper"
 	});
 	var header = getLoanSummaryHeader();
-	var container = getLoanSummaryContainer();
+	var container;
+	if(loanType == "refinance"){
+		container = getLoanSummaryContainerRefinance();
+	}else if(loanType == "purchase"){
+		container = getLoanSummaryContainerPurchase();
+	}
 	var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
 	parentWrapper.append(header).append(container).append(bottomText);
 	return parentWrapper;
@@ -724,7 +860,46 @@ function getLoanSummaryHeader() {
 	return headerCont;
 }
 
-function getLoanSummaryContainer() {
+function getLoanSummaryContainerPurchase() {
+	var container = $('<div>').attr({
+		"class" : "loan-summary-container clearfix"
+	});
+	var leftCol = $('<div>').attr({
+		"class" : "loan-summary-lp float-left"
+	});
+	// add rows in left column
+	var lcRow1 = getLaonSummaryApplyBtnRow();
+	var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase");
+	var lcRow3 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
+	var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
+	var lcRow5 = getLoanSummaryRow("Purchase Amount", "$ 473,000.000");
+	var lcRow6 = getLoanSummaryRow("Interest Rate", "3.375%");
+	var lcRow7 = getLoanSummaryRow("Loan Amount", "$ 373,000.000");
+	var lcRow8 = getLoanSummaryRow("ARP", "3.547%");
+	var lcRow9 = getLoanSummaryRow("Estimated<br/>Closing Cost", "$8,185.75");
+	leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(
+			lcRow5).append(lcRow6).append(lcRow7).append(lcRow8).append(lcRow9);
+
+	var rightCol = $('<div>').attr({
+		"class" : "loan-summary-rp float-right"
+	});
+	// add rows in right column
+	var rcRow1 = getLoanSummaryRow("Monthly Payment", "");
+	var rcRow2 = getLoanSummaryRow("Principal Interest", "$ 1,649.20");
+	var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
+	rcRow3.addClass("no-border-bottom");
+	var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
+	var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
+	var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment",
+			"$ 1,649.02");
+	rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4)
+			.append(rcRow5).append(rcRow6);
+
+	container.append(leftCol).append(rightCol);
+	return container;
+}
+
+function getLoanSummaryContainerRefinance() {
 	var container = $('<div>').attr({
 		"class" : "loan-summary-container clearfix"
 	});

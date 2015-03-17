@@ -138,6 +138,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				url : url,
 				type : type,
 				dataType : dataType,
+				contentType: "application/json",
 				data : data,
 				success : successCallBack,
 				error : function() {
@@ -147,33 +148,36 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
+			data.milestoneId=ob.mileStoneId;
 			var txtRow1 = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
-				"mileNotificationId" : ob.workItem.itemId,
-				"data-text" : ob.infoText
-			})
+				"mileNotificationId" : ob.workItem.id,
+				"data-text" : ob.workItem.workflowItemType
+			});
 			var ajaxURL = "";	
-			if (ob.workItem.displayContent=="Make Initial Contact")
+			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
-				ajaxURL = "rest/workflow/details/1";
+				ajaxURL = "";//rest/workflow/details/1";
+				ob.workItem.stateInfo = "Schedule An Alert";
+				workItem.stateInfo = "Schedule An Alert";
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
-			if (ob.workItem.displayContent=="Needed Items")
+			if (ob.workItem.workflowItemType=="NEEDS_STATUS")
 			{
 				ajaxURL = "rest/workflow/needCount/1";
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			else
-			{
-				txtRow1.html(workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);;
+			if (ob.workItem.workflowItemType == "TEAM_STATUS") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=selectedUserDetail.loanID;
+				callback = paintMilestoneTeamMemberTable;
+				// Just exposed a rest service to test - with hard coded loan ID
 			}
-						
-			ob.ajaxRequest(ajaxURL, "GET", "json", data,
+			
+					
+			if(ajaxURL&&ajaxURL!=""){
+				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
@@ -186,9 +190,17 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							itemToAppendTo.append(txtRow1);
 						}
 						if (callback) {
-							callback(ob);
+							callback(itemToAppendTo,ob);
 						}
 					});
+			}else{
+				txtRow1.html(workItem.stateInfo);
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+				itemToAppendTo.append(txtRow1);
+			}	
+
 
 		}
 	};
@@ -530,17 +542,55 @@ function removeMilestoneAddTeamMemberPopup() {
 }
 
 // Function to get milestone team member table
-function getMilestoneTeamMembeTable() {
+
+function paintMilestoneTeamMemberTable(appendTo,object){
+	
+	var userList=JSON.parse(object.infoText);
+	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
+}
+
+function getMilestoneTeamMembeTable(userList,milestoneID) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
 	});
 
-	var th = getMilestoneTeamMembeTableHeader();
-	var tr1 = getMilestoneTeamMemberRow("Elen Adarna", "Title Agent");
-	var tr2 = getMilestoneTeamMemberRow("Sherry Andrew", "Loan Manager");
+	
+	var addNewMember = $('<div>').attr({
+		"class" : "milestone-rc-text",
+		"data-text" : "Click here to add a Team Member",
+		"mileNotificationId":milestoneID
+	}).html("Click here to add a Team Member").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
 
-	return tableContainer.append(th).append(tr1).append(tr2);
+	tableContainer.append(addNewMember);
+	
+	if(!userList ||  userList.length==0)
+		return;
+	
+	//team table header
+	var th = getMilestoneTeamMembeTableHeader();
+	tableContainer.append(th);
+	
+	for (i in userList) {
+
+		var user = userList[i];
+		var dispName = user.firstName+" "+user.lastName;
+		var userRole = userList[i].userRole;
+		var roleLabel = userRole.label;
+		if (userRole.id == 3) {
+			if (user.internalUserDetail
+					&& user.internalUserDetail.internalUserRoleMasterVO
+					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
+		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+	}
+	
+	
+
+	return tableContainer;
 }
 
 // Function to get milestone team member table header
@@ -870,7 +920,83 @@ function getProgressStatusClass(status) {
 	}
 	return progressClass;
 }
-
+function updateMileStoneElementState(url,data,callback,targetElement){
+	
+	ajaxRequest(url,"POST","json",data,function(response){
+		if(response.error){
+			showToastMessage(response.error.message);
+		}else{
+			if(callback){
+				callback(response.resultObject,targetElement);
+			}
+		}
+		
+	});
+}
+function checkboxActionEvent(workflowItem,targetElement,callback){
+	var wf=workflowItem;
+	var wfContainer=$("#WF"+wf.id);
+	var parentChk=wfContainer.attr("WFparent");
+	var childChk=wfContainer.attr("WFchild");
+	var targetData={};
+	targetData.targetElement=targetElement;
+	targetData.parentChk=parentChk;
+	targetData.childChk=childChk;
+	if(parentChk){
+		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
+		var data={};
+		data.status="1";//since we will send only completed status from frontend
+		updateMileStoneElementState(url,data,callback,targetData)
+	}else{
+		var url="rest/workflow/execute/"+wf.id;
+		var data={};
+		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
+		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+		updateMileStoneElementState(url,data,callback,targetData)
+	}
+	/*if(callback){
+		callback({},targetData);
+	}*/
+}
+function updateMilestoneView(wf,data,targetData){
+	targetElement=targetData.targetElement;
+	if(data.match(/success/i)){
+		if(targetData.parentChk){
+			targetElement.attr("data-checked", "checked");
+			var parentContainer=$("#WF"+wf.id);
+			clearStatusClass(parentContainer);
+			parentContainer.addClass("m-complete");
+		}else{
+			var parentid=wf.parentWorkflowItemExec.id;
+			targetElement.attr("data-checked", "checked");
+			var parentContainer=$("#WF"+parentid);
+			var childs=parentContainer.find(".milestone-rc-text");
+			var childsChecked=true;
+			for(var i=0;i<childs.length;i++){
+				var child=childs[i];
+				var childCheckbox=$(child).find(".ms-check-box");
+				if($(childCheckbox).attr("data-checked")=="unchecked"){
+					childsChecked=false;
+				}
+			}
+			if(childsChecked){
+				var parentCheckBox=parentContainer.find(".ms-check-box-header");
+				$(parentCheckBox).attr("data-checked","checked");
+				clearStatusClass(parentContainer);
+				parentContainer.addClass("m-complete");
+			}else{
+				clearStatusClass(parentContainer);
+				parentContainer.addClass("m-in-progress");
+			}
+		}
+		
+	}
+}
+function clearStatusClass(container){
+	container.removeClass("m-not-started");
+	container.removeClass("m-in-progress");
+	container.removeClass("m-complete");
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -885,8 +1011,11 @@ function appendMilestoneItem(workflowItem, childList) {
 		floatClass = "float-left";
 	}
 	var wrapper = $('<div>').attr({
-		"class" : rightLeftClass + " " + progressClass
+		"class" : rightLeftClass + " " + progressClass,
+		"id":"WF"+workflowItem.id
 	});
+	wrapper.attr("WFparent",true);
+	
 	var rightBorder = $('<div>').attr({
 		"class" : rightLeftClass + "-border"
 	});
@@ -902,34 +1031,63 @@ function appendMilestoneItem(workflowItem, childList) {
 		"class" : "ms-check-box-header box-border-box " + floatClass,
 		"data-checked" : "checked"
 	});
+	if(workflowItem.clickable){
+		headerCheckBox.bind('click', {
+			"workflowItem" : workflowItem
+		}, function(event) {
+			event.stopImmediatePropagation();
+			if ($(this).attr("data-checked") == "unchecked") {
+				var wf=event.data.workflowItem;
+				var targetElement=$(this);
+				checkboxActionEvent(wf,targetElement,function(data,targetData){
+					updateMilestoneView(wf,data,targetData);
+				})
+				
+			} 
+			
+			// getLoanDetails(loanID);
+		})
+	}
 	headerTxt.append(headerCheckBox);
 	header.append(headerTxt);
 
 	wrapper.append(rightBorder).append(header);
-	if (workflowItem.stateInfo != "") {
+	//if (workflowItem.stateInfo) {
 		appendInfoAction(rightLeftClass, wrapper, workflowItem);
-	}
+	//}
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text",
 				"mileNotificationId" : childList[index].id,
-				"data-text" : childList[index].displayContent
+				"data-text" : childList[index].workflowItemType,
+				"id":"WF"+childList[index].id
 			}).html(childList[index].displayContent);
+			childRow.attr("WFchild",true);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
 			});
 			var itemCheckBox = $('<div>').attr({
 				"class" : "ms-check-box box-border-box " + floatClass,
 				"data-checked" : "unchecked"
-			}).on('click', function() {
-				if ($(this).attr("data-checked") == "checked") {
-					$(this).attr("data-checked", "unchecked");
-				} else {
-					$(this).attr("data-checked", "checked");
-				}
-			});
-
+			})
+			if(childList[index].clickable){
+				itemCheckBox.bind('click', {
+					"workflowItem" : childList[index]
+				}, function(event) {
+					event.stopImmediatePropagation();
+					if ($(this).attr("data-checked") == "unchecked") {
+						var wf=event.data.workflowItem;
+						var targetElement=$(this);
+						checkboxActionEvent(wf,targetElement,function(data,targetData){
+							updateMilestoneView(wf,data,targetData);
+						})
+						
+					} 
+			
+			// getLoanDetails(loanID);
+				})
+			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
 
@@ -944,7 +1102,7 @@ function appendMilestoneItem(workflowItem, childList) {
 // this will add a "Information Link" that is clickable to the task.
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
-	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.itemId,workflowItem);
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
 	
@@ -953,19 +1111,20 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
 	event.stopPropagation();
-	if ($(event.target).attr("data-text") == "Schedule an Alert") {
+	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/alert"
 		data.milestoneId = event.target.getAttribute("milenotificationid");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
-	} else if ($(event.target).attr("data-text") == "Click here to add a Team Member") {
+	} else if ($(event.target).attr("data-text") == "TEAM_STATUS") {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
-		data.OTHURL = "rest/workflow/milestone/addMember"
+		data.milestoneID=$(event.target).attr("mileNotificationId");
+		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
-	} else if ($(event.target).attr("data-text") == "Click to pay") {
+	} else if ($(event.target).attr("data-text") == "APP_FEE") {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');

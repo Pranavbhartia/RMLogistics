@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +35,33 @@ public class FileUploadController {
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
 	@RequestMapping(value = "documentUpload.do" , method = RequestMethod.POST  )
-	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file , @RequestParam("userID") Integer userID ,  @RequestParam("loanId") Integer loanId ){
-		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId);
+	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file 
+										, @RequestParam("userID") Integer userID 
+										, @RequestParam("loanId") Integer loanId 
+										, @RequestParam("assignedBy") Integer assignedBy){
+		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy);
 		List<String> s3paths = new ArrayList<String>();
 		for (MultipartFile multipartFile : file) {
-			s3paths.add(uploadFile(multipartFile, userID , loanId) );
+			s3paths.add(uploadFile(multipartFile, userID , loanId , assignedBy) );
 		}
 		return new Gson().toJson(s3paths);
 	} 
 	
-	public String uploadFile(MultipartFile file , Integer userId , Integer loanId){
+	public String uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
 		String s3Path = null;
-		 try{
-			String localFilePath =  NexeraUtility.uploadFileToLocal(file);
+		
+		LOG.info("File content type  : "+file.getContentType());
+		String localFilePath = null;
+		try{
+			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
+				LOG.info("Received an image.converting to PDF");
+				localFilePath = NexeraUtility.convertImageToPDF(file);
+			}else{
+				localFilePath = NexeraUtility.uploadFileToLocal(file);
+			}
+			 NexeraUtility.uploadFileToLocal(file);
 			File serverFile = new File(localFilePath );
-			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId);
+			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
 			LOG.info("Added File document row : "+savedRowId);
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());

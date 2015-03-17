@@ -20,6 +20,9 @@ public class UploadedFilesListVO implements Serializable {
 	private String fileName;
 	private Integer needType;
 	private String s3ThumbPath;
+	private AssignedUserVO assignedByUser;
+	
+	
 	
 	public Integer getId() {
 		return id;
@@ -81,6 +84,13 @@ public class UploadedFilesListVO implements Serializable {
 	public void setS3ThumbPath(String s3ThumbPath) {
 		this.s3ThumbPath = s3ThumbPath;
 	}
+	public AssignedUserVO getAssignedByUser() {
+		return assignedByUser;
+	}
+	public void setAssignedByUser(AssignedUserVO assignedByUser) {
+		this.assignedByUser = assignedByUser;
+	}
+	
 	
 	
 }

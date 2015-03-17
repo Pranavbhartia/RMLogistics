@@ -43,4 +43,8 @@ public interface WorkflowService
     WorkflowExec getWorkflowExecFromId( int workflowexecId );
 
 
+	
+    void saveParamsInExecTable(Integer milestoneID, String params);
+
+
 }
