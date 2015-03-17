@@ -33,27 +33,28 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
-
+@Component
 public class NexeraUtility {
 
-	private static final Logger LOGGER = LoggerFactory
+	private  static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
 
-	private static final String OUTPUT_FILENAME_EXT = "jpg";
-	private static final String OUTPUT_PREFIX = "-outputPrefix";
-	private static final String END_PAGE = "-endPage";
+	private  final String OUTPUT_FILENAME_EXT = "jpg";
+	private  final String OUTPUT_PREFIX = "-outputPrefix";
+	private  final String END_PAGE = "-endPage";
 
-	private static final String PAGE_NUMBER = "1";
-	private static final String START_PAGE = "-startPage";
+	private  final String PAGE_NUMBER = "1";
+	private  final String START_PAGE = "-startPage";
 
 	@SuppressWarnings("unchecked")
-	public static List<PDPage> splitPDFTOPages(File file) {
+	public  List<PDPage> splitPDFTOPages(File file) {
 		PDDocument document = null;
 		List<PDPage> pdfPages = null;
 		// Create a Splitter object
@@ -68,7 +69,7 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
-	public static List<File> splitPDFPages(File file) {
+	public  List<File> splitPDFPages(File file) {
 
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
@@ -99,12 +100,12 @@ public class NexeraUtility {
 		return newPdfpages;
 	}
 
-	public static String tomcatDirectoryPath() {
+	public  String tomcatDirectoryPath() {
 		String rootPath = System.getProperty("catalina.home");
 		return rootPath + File.separator + "tmpFiles";
 	}
 
-	public static String uploadFileToLocal(MultipartFile file) {
+	public  String uploadFileToLocal(MultipartFile file) {
 		String filePath = null;
 		if (!file.isEmpty()) {
 			try {
@@ -112,7 +113,7 @@ public class NexeraUtility {
 
 				// Creating the directory to store file
 
-				File dir = new File(NexeraUtility.tomcatDirectoryPath());
+				File dir = new File(this.tomcatDirectoryPath());
 				if (!dir.exists())
 					dir.mkdirs();
 
@@ -140,10 +141,10 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public static String joinPDDocuments(List<String> fileUrls)
+	public  String joinPDDocuments(List<String> fileUrls)
 	        throws IOException, COSVisitorException {
 		PDFMergerUtility mergePDF = new PDFMergerUtility();
-		String newFilePath = NexeraUtility.tomcatDirectoryPath()
+		String newFilePath = this.tomcatDirectoryPath()
 		        + File.separator + randomStringOfLength() + ".pdf";
 
 		for (String fileUrl : fileUrls) {
@@ -155,7 +156,7 @@ public class NexeraUtility {
 		return newFilePath;
 	}
 
-	public static String randomStringOfLength() {
+	public  String randomStringOfLength() {
 		Integer length = 10;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
@@ -166,7 +167,7 @@ public class NexeraUtility {
 		return buffer.substring(0, length);
 	}
 
-	public static String convertPDFToThumbnail(String pdfFile,
+	public  String convertPDFToThumbnail(String pdfFile,
 	        String imageFilePath) throws Exception {
 
 		String[] args = new String[7];
@@ -193,11 +194,11 @@ public class NexeraUtility {
 		}
 	}
 
-	private static String uuidString() {
+	private  String uuidString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public static String convertImageToPDF(MultipartFile multipartFile) {
+	public  String convertImageToPDF(MultipartFile multipartFile) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
 		try {
@@ -275,14 +276,14 @@ public class NexeraUtility {
 
 	}
 
-	public static File multipartToFile(MultipartFile multipart)
+	public  File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		File convFile = new File(multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
 	}
 
-	public static MultipartFile filePathToMultipart(String filePath)
+	public  MultipartFile filePathToMultipart(String filePath)
 	        throws IOException {
 		File file = new File(filePath);
 		DiskFileItem fileItem = new DiskFileItem("file", "text/plain", false,
@@ -292,7 +293,7 @@ public class NexeraUtility {
 		return multipartFile;
 	}
 
-	public static String convertImageToPDFDocument(MultipartFile multipartFile) {
+	public  String convertImageToPDFDocument(MultipartFile multipartFile) {
 
 		File file = null;
 		String filepath = null;
@@ -359,7 +360,7 @@ public class NexeraUtility {
 
 	}
 
-	public static BufferedImage convertRenderedImage(RenderedImage img) {
+	public  BufferedImage convertRenderedImage(RenderedImage img) {
 		if (img instanceof BufferedImage) {
 			return (BufferedImage) img;
 		}
