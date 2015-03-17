@@ -253,7 +253,7 @@ public class WorkflowRestService {
 
 
     @RequestMapping ( value = "execute/{workflowItemId}", method = RequestMethod.POST)
-    public @ResponseBody CommonResponseVO executeWorkflowItem( @PathVariable int workflowItemId, @RequestBody String params )
+    public @ResponseBody CommonResponseVO executeWorkflowItem( @PathVariable int workflowItemId, @RequestBody(required=false) String params )
     {
         LOG.info( "workflowItemId----" + workflowItemId );
         CommonResponseVO response = null;
@@ -299,12 +299,14 @@ public class WorkflowRestService {
         return response;
     }
     @RequestMapping ( value = "changestateofworkflowitemexec/{workflowId}", method = RequestMethod.POST)
-    public @ResponseBody CommonResponseVO changeStateOfWorkflowItemExec(@PathVariable int workflowId,@RequestParam(value="status")String status )
+    public @ResponseBody CommonResponseVO changeStateOfWorkflowItemExec(@PathVariable int workflowId,@RequestBody(required=false)String params)
     {
         LOG.info( "workflowId----" + workflowId );
         CommonResponseVO response = null;
         try {
-            engineTrigger.changeStateOfWorkflowItemExec( workflowId,status );
+        	String status="1";
+        	String stat=params;
+            engineTrigger.changeStateOfWorkflowItemExec( workflowId,status);
             response = RestUtil.wrapObjectForSuccess( "Success" );
         } catch ( Exception e ) {
             LOG.error( e.getMessage() );
