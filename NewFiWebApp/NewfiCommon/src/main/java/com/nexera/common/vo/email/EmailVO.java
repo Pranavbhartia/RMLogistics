@@ -21,8 +21,8 @@ public class EmailVO {
 	private String senderEmailId;
 	private String senderName;
 	private boolean isTemplateBased;
-	private String templateName;
-	private Map<String, String> tokenMap;
+	private String templateId;
+	private Map<String, String[]> substitutionsMap;
 
 	public List<EmailRecipientVO> getRecipients() {
 		if(recipients==null){
@@ -75,35 +75,35 @@ public class EmailVO {
 		this.isTemplateBased = isTemplateBased;
 	}
 
-	public String getTemplateName() {
-		return templateName;
+	public String getTemplateId(){
+		return templateId;
 	}
 
-	public void setTemplateName(String templateName) {
-		this.templateName = templateName;
+	public void setTemplateId(String templateId) {
+		this.templateId = templateId;
 	}
 
-	public Map<String, String> getTokenMap() {
-		return tokenMap;
+	public Map<String, String[]> getTokenMap() {
+		return substitutionsMap;
 	}
 
-	public void setTokenMap(Map<String, String> tokenMap) {
-		this.tokenMap = tokenMap;
+	public void setTokenMap(Map<String, String[]> tokenMap) {
+		this.substitutionsMap = tokenMap;
 	}
 
-	public String addToTokenMap(String key, String value) {
-		if (tokenMap == null)
-			tokenMap = new HashMap<String, String>();
+	public String[] addToTokenMap(String key, String[] value) {
+		if (substitutionsMap == null)
+			substitutionsMap = new HashMap<String, String[]>();
 
-		return tokenMap.put(key, value);
+		return substitutionsMap.put(key, value);
 
 	}
 
-	public String removeTokenFromMap(String key, String value) {
-		if (tokenMap == null)
+	public String[] removeTokenFromMap(String key, String[] value) {
+		if (substitutionsMap == null)
 			return null;
 
-		return tokenMap.remove(key);
+		return substitutionsMap.remove(key);
 
 	}
 
@@ -112,8 +112,8 @@ public class EmailVO {
 	    return "EmailVO [recipients=" + recipients + ", subject=" + subject
 	            + ", body=" + body + ", senderEmailId=" + senderEmailId
 	            + ", senderName=" + senderName + ", isTemplateBased="
-	            + isTemplateBased + ", templateName=" + templateName
-	            + ", tokenMap=" + tokenMap + "]";
+	            + isTemplateBased + ", templateName=" + templateId
+	            + ", tokenMap=" + substitutionsMap + "]";
     }
 	
 	
