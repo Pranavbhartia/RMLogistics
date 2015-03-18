@@ -145,6 +145,18 @@ public class EngineTrigger {
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
 				future = executorService.submit(workflowManager);
 
+				executorService.shutdown();
+				try {
+					executorService.awaitTermination(Long.MAX_VALUE,
+					        TimeUnit.NANOSECONDS);
+				} catch (InterruptedException e) {
+					LOGGER.error("Exception caught while terminating executor "
+					        + e.getMessage());
+					throw new FatalException(
+					        "Exception caught while terminating executor "
+					                + e.getMessage());
+				}
+
 				LOGGER.debug("Checking whether the parents all workflow items are executed ");
 				WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution
 				        .getParentWorkflowItemExec();
@@ -325,13 +337,13 @@ public class EngineTrigger {
 	}
 
 	public void changeStateOfWorkflowItemExec(int workflowItemExecId,
-            String status) {
-            WorkflowItemExec workflowItemExecution = workflowService
-                    .getWorkflowExecById(workflowItemExecId);
-            workflowItemExecution.setStatus(status);
-            workflowService
-                    .updateWorkflowItemExecutionStatus(workflowItemExecution);
-    }
+	        String status) {
+		WorkflowItemExec workflowItemExecution = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		workflowItemExecution.setStatus(status);
+		workflowService
+		        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+	}
 	/*
 	 * public static void main(String[] args) { String json =
 	 * "{\"workflowType\":\"LM_WF_ALL\"}"; ApplicationContext applicationContext
