@@ -1156,6 +1156,7 @@ function showAddUserPopUp(){
 }
 
 function showUserTypeDropDown() {
+	appendUserTypeDropDown();
 	$('#add-usertype-dropdown-cont').show();
 }
 
