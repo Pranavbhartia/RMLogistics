@@ -45,6 +45,13 @@ function bindDataToPN() {
 
 			});
 			break;
+		case "lp-loan-manager-profile":
+			$.data(this, "enum", {
+				pnName : PNEnum.PROFILE
+
+			});
+			break;
+			
 		case "lp-talk-wrapper":
 			$.data(this, "enum", {
 				pnName : PNEnum.TEAM
