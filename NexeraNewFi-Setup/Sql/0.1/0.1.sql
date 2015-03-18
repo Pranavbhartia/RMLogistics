@@ -1,9 +1,9 @@
---Status column changed to a enum
+-- Status column changed to a enum
 
 ALTER TABLE `newfi_schema`.`workflowexec` 
 CHANGE COLUMN `status` `status` ENUM('0','1','2','3') NULL ;
 
---Added Parent workflowItemExec column as a foreign key to the same table to track sub items
+-- Added Parent workflowItemExec column as a foreign key to the same table to track sub items
 
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
 ADD COLUMN `parent_workflow_itemexec` INT NULL AFTER `modified_date`,
@@ -17,10 +17,10 @@ ADD CONSTRAINT `fk_wfItem_linkedToWfItemExec`
 
   
   
-  --Adding reference of workflows to the Loan App form
+  -- Adding reference of workflows to the Loan App form
   
   
-  ALTER TABLE `newfi_schema`.`loanappform` 
+ALTER TABLE `newfi_schema`.`loanappform` 
 ADD COLUMN `customer_workflow` INT NULL AFTER `loan_type`,
 ADD COLUMN `loan_manager_workflow` INT NULL AFTER `customer_workflow`,
 ADD INDEX `fk_lnFrmCustWorkflow_idx` (`customer_workflow` ASC),
@@ -39,7 +39,7 @@ ADD CONSTRAINT `fk_lnFrmLMWorkflow`
 
   
   
-  --Adding reference of workflows to the Loan entity
+  -- Adding reference of workflows to the Loan entity
   
   
   ALTER TABLE `newfi_schema`.`loan` 
@@ -61,9 +61,9 @@ ADD CONSTRAINT `fk_lnLMWorkflow`
   
   
   
-  alter table newfi_schema.uploadedfileslist
-  add column s3thumbnail varchar(250);
+  ALTER TABLE newfi_schema.uploadedfileslist
+  ADD COLUMN s3thumbnail VARCHAR(250);
 
 
-alter table newfi_schema.uploadedfileslist
-  add column assigned_by TinyInt(4);
+ALTER TABLE newfi_schema.uploadedfileslist
+  ADD COLUMN assigned_by TINYINT(4);
