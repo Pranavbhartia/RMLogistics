@@ -1,4 +1,4 @@
---
+﻿--
 -- Dumping data for table `userrole`
 --
 --
@@ -85,17 +85,7 @@ INSERT INTO `needslistmaster` VALUES (1,'Credit/Liabilities','Divorce Decree/Set
 
 
 
---
--- Dumping data for table `uploadedfileslist`
---
 
-LOCK TABLES `uploadedfileslist` WRITE;
-/*!40000 ALTER TABLE `uploadedfileslist` DISABLE KEYS */;
-INSERT INTO `uploadedfileslist` VALUES 
-(30,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete16121437418-ETicket.pdf',1,0,'2015-03-02 09:59:36',1,1,'16121437418-ETicket.pdf',NULL,NULL),
-(31,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeUILRXX.pdf',1,0,'2015-03-02 10:05:14',1,1,'UILRXX.pdf',NULL,NULL);
-/*!40000 ALTER TABLE `uploadedfileslist` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 
