@@ -75,3 +75,13 @@ ALTER TABLE `newfi_schema`.`workflowitemmaster`
 ADD COLUMN `clickable` TINYINT(4) NULL DEFAULT 1 AFTER `params`;
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
 ADD COLUMN `clickable` TINYINT(4) NULL DEFAULT 1 AFTER `params`;
+ALTER TABLE `newfi_schema`.`workflowitemmaster` 
+DROP FOREIGN KEY `fk_wfItemOnSuccess`;
+ALTER TABLE `newfi_schema`.`workflowitemmaster` 
+CHANGE COLUMN `on_success` `on_success` INT(11) NULL ;
+ALTER TABLE `newfi_schema`.`workflowitemmaster` 
+ADD CONSTRAINT `fk_wfItemOnSuccess`
+  FOREIGN KEY (`on_success`)
+  REFERENCES `newfi_schema`.`workflowitemmaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
