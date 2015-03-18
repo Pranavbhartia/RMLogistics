@@ -253,14 +253,28 @@ public class EngineTrigger {
 		WorkflowItemExec workflowItemExec = workflowService
 		        .getWorkflowExecById(workflowItemExecId);
 		if (workflowItemExec != null) {
-			String output = renderStateOfItem(workflowItemExec);
+			String output = reflectionExecuteMethod(workflowItemExec,
+			        WorkflowConstants.RENDER_STATE_INFO_METHOD);
+			return output;
+		}
+		return null;
+	}
+
+	public String checkStatus(int workflowItemExecId) {
+		LOGGER.debug("Inside method checkStatus ");
+		WorkflowItemExec workflowItemExec = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		if (workflowItemExec != null) {
+			String output = reflectionExecuteMethod(workflowItemExec,
+			        WorkflowConstants.CHECK_STATUS_METHOD);
 			return output;
 		}
 		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String renderStateOfItem(WorkflowItemExec workflowItemExec) {
+	private String reflectionExecuteMethod(WorkflowItemExec workflowItemExec,
+	        String methodName) {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> itemParamMap;
@@ -297,8 +311,7 @@ public class EngineTrigger {
 				Class classToLoad = Class.forName(className);
 				Object obj = applicationContext.getBean(classToLoad);
 
-				Method method = classToLoad.getDeclaredMethod(
-				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
+				Method method = classToLoad.getDeclaredMethod(methodName,
 				        new Class[] { HashMap.class });
 
 				result = (String) method.invoke(obj, params);
