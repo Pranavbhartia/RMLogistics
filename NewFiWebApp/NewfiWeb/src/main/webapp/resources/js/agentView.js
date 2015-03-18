@@ -1149,7 +1149,7 @@ function userTypeClicked(event){
 
 // Click function to create a user
 
-function showAddUserPopUp(){
+function showAddUserPopUp(event){
 	event.stopImmediatePropagation();
 	hideUserNameDropDown();
 	showCreateUserPopup();
