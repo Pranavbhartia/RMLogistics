@@ -5,12 +5,11 @@
 var overlayCount = 0;
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div){
-	if(isPagination){
-		showPaginationScrollIcon(div);
-	}else{
+	if(isPagination===undefined){
 		showOverlay();
-	}
-	
+	}else if(isPagination==true){
+		showPaginationScrollIcon(div);
+	}	
 	
 	$.ajax({
 		url : url,

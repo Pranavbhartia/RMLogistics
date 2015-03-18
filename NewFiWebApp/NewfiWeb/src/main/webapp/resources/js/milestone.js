@@ -37,8 +37,35 @@ var workFlowContext = {
 							if (response.error) {
 								showToastMessage(response.error.message)
 							} else {
-								ob.customerWorkflowID = response.resultObject.customerWorkflowID;
-								ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;
+								if(response.resultObject.loanManagerWorkflowID==0){
+									ob.createWorkflow(function(ob){
+										ob.getWorkflowID(callback);
+									})
+								}else{
+									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
+									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
+									if(callback){
+										callback(ob);
+									}
+								}
+								
+							}
+							
+						});
+
+	},
+	createWorkflow : function(callback) {
+		var ob = this;
+		var data = {};
+		
+		ob.ajaxRequest(
+						"rest/workflow/create/" + ob.loanId,
+						"GET",
+						"json",
+						data,
+						function(response) {
+							if (response.error) {
+								showToastMessage(response.error.message)
 							}
 							if (callback) {
 								callback(ob);
@@ -132,7 +159,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		
 		mileStoneId : mileStoneId,
 		workItem : workItem,
-		infoText : workItem.stateInfo,
+		
 		ajaxRequest : function(url, type, dataType, data, successCallBack) {
 			$.ajax({
 				url : url,
@@ -217,35 +244,42 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=selectedUserDetail.loanID;
+				callback =false;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				//ob.workItem.stateInfo ="Click here to add a new Team Member"
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
+			else return;
 			
 					
+			
 			if(ajaxURL&&ajaxURL!=""){
 				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
 						} else {
-							ob.infoText =  response.resultObject;
-							txtRow1.html(ob.infoText);
+							ob.workItem.stateInfo=  response.resultObject;							
+						}
+						if (callback) {
+							callback(itemToAppendTo,ob);
+						}
+						else
+						{
+							txtRow1.html(ob.workItem.stateInfo);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
 							itemToAppendTo.append(txtRow1);
 						}
-						if (callback) {
-							callback(itemToAppendTo,ob);
-						}
 					});
 			}else{
-				txtRow1.html(workItem.stateInfo);
+				txtRow1.html(ob.workItem.stateInfo);
 				txtRow1.bind("click", function(e) {
 					milestoneChildEventHandler(e)
 				});
@@ -258,6 +292,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 function paintCustomerLoanProgressPage() {
+
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
 	});
@@ -571,6 +606,8 @@ function appendMilestoneAddTeamMemberPopup(loanID, itemToAppendTo, data) {
 	// $(itemToAppendTo).html("");
 	if ($('#ms-add-member-popup').length == 0)
 		$(itemToAppendTo).append(wrapper);
+	else
+		showMilestoneAddTeamMemberPopup();
 	appendAddTeamMemberWrapper('ms-add-member-popup', true, data);
 }
 
@@ -596,7 +633,7 @@ function removeMilestoneAddTeamMemberPopup() {
 
 function paintMilestoneTeamMemberTable(appendTo,object){
 	
-	var userList=JSON.parse(object.infoText);
+	var userList=JSON.parse(object.workItem.stateInfo);
 	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
 }
 
@@ -607,6 +644,9 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	});
 
 	
+	if(!userList ||  userList.length==0)
+		return;
+	
 	var addNewMember = $('<div>').attr({
 		"class" : "milestone-rc-text",
 		"data-text" : "TEAM_STATUS",
@@ -616,9 +656,6 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	});
 
 	tableContainer.append(addNewMember);
-	
-	if(!userList ||  userList.length==0)
-		return;
 	
 	//team table header
 	var th = getMilestoneTeamMembeTableHeader();
@@ -938,6 +975,7 @@ function paintMilestoneCustomerProfileDetails() {
 
 // Function to paint to loan progress page
 function paintAgentLoanProgressPage() {
+
 
 	appendCustomerDetailHeader(selectedUserDetail);
 

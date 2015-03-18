@@ -85,23 +85,16 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,Initializi
 		Email email = new Email();
 		
 		List<String> recipientEmailIdsList = new ArrayList<>();
-		List<String> recipientUserNamesList = new ArrayList<>();
 		
 		for( EmailRecipientVO recipientVO : emailEntity.getRecipients()){
 			if( recipientVO.getEmailID() == null || recipientVO.getEmailID().isEmpty()){
 				LOG.error("sendEmailUsingTemplate : recipient email id is null or empty!");
 				throw new InvalidInputException("sendEmailUsingTemplate : recipient email id is null or empty!");
 			}
-			if( recipientVO.getRecipientName() == null || recipientVO.getRecipientName().isEmpty()){
-				LOG.error("sendEmailUsingTemplate : recipient name is null or empty!");
-				throw new InvalidInputException("sendEmailUsingTemplate : recipient name is null or empty!");
-			}
 			recipientEmailIdsList.add(recipientVO.getEmailID());
-			recipientUserNamesList.add(recipientVO.getRecipientName());				
 		}
 
 		email.addTo(recipientEmailIdsList.toArray(new String[recipientEmailIdsList.size()]));
-		email.addToName(recipientUserNamesList.toArray(new String[recipientUserNamesList.size()]));
 		email.setFrom(emailEntity.getSenderEmailId());
 		email.setFromName(emailEntity.getSenderName());
 		email.setSubject(emailEntity.getSubject());
