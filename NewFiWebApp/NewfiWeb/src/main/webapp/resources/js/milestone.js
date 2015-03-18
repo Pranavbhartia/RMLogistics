@@ -977,10 +977,10 @@ function paintAgentLoanProgressContainer() {
 }
 function getProgressStatusClass(status) {
 	var progressClass = "m-not-started";
-	if (status == 2) {
-		progressClass = "m-in-progress";
-	} else if (status == 1) {
+	if (status == 3) {
 		progressClass = "m-complete";
+	} else if (status == 1||status == 2) {
+		progressClass = "m-in-progress";
 	}
 	return progressClass;
 }
@@ -1016,6 +1016,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		var data={};
 		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+		data["EMAIL_RECIPIENT_NAME"]=selectedUserDetail.name;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
 	/*if(callback){
