@@ -10,6 +10,7 @@
 	<http use-expressions="true" auto-config="true" entry-point-ref="customEntryPoint"
 		authentication-manager-ref="authenticationManager">
 		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/customerEngagement.do" access="permitAll" />
 
 
 		<intercept-url pattern="/*.do" access="isAuthenticated()" />
