@@ -1239,7 +1239,15 @@ function milestoneChildEventHandler(event) {
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
-	} else if ($(event.target).attr("data-text") == "APP_FEE") {
+	}
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+		 changeAgentSecondaryLeftPanel("lp-step4");
+	}
+	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
+		 changeAgentSecondaryLeftPanel("lp-step1");
+	}
+	
+	 else if ($(event.target).attr("data-text") == "APP_FEE") {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
