@@ -495,3 +495,9 @@ function addNotificationPopup(loanId,element,data){
 	});
 	showNotificationPopup();
 }
+
+$(document).click(function() {
+	if ($('#ms-add-notification-popup').css("display") == "block") {
+		removeNotificationPopup();
+	}
+});
