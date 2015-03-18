@@ -221,12 +221,15 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				ob.workItem.stateInfo ="Click here to add a new Team Member"
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
+			else return;
 			
 					
+			
 			if(ajaxURL&&ajaxURL!=""){
 				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
@@ -234,7 +237,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							showToastMessage(response.error.message)
 						} else {
 							ob.infoText =  response.resultObject;
-							txtRow1.html(ob.infoText);
+							txtRow1.html(ob.workItem.stateInfo);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
@@ -571,6 +574,8 @@ function appendMilestoneAddTeamMemberPopup(loanID, itemToAppendTo, data) {
 	// $(itemToAppendTo).html("");
 	if ($('#ms-add-member-popup').length == 0)
 		$(itemToAppendTo).append(wrapper);
+	else
+		showMilestoneAddTeamMemberPopup();
 	appendAddTeamMemberWrapper('ms-add-member-popup', true, data);
 }
 
@@ -606,16 +611,6 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 		"class" : "ms-team-member-table"
 	});
 
-	
-	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text",
-		"data-text" : "TEAM_STATUS",
-		"mileNotificationId":milestoneID
-	}).html("Click here to add a Team Member").bind("click", function(e) {
-		milestoneChildEventHandler(e)
-	});
-
-	tableContainer.append(addNewMember);
 	
 	if(!userList ||  userList.length==0)
 		return;
