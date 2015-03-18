@@ -82,7 +82,7 @@ function bindDataToPN() {
 			break;
 		case "lp-my-loans":
 			$.data(this, "enum", {
-				pnName : AgentViewPNEnum.MY_LOANS
+				pnName : AgentViewPNEnum.LOAN
 
 			});
 			break;

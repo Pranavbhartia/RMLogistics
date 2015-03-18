@@ -61,6 +61,8 @@ public class FileUploadRest {
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
 	
+	@Autowired
+	private NexeraUtility nexeraUtility;
 	
 	@RequestMapping(value="/upload" , method = RequestMethod.POST ,  headers = "Accept=*")
 	public @ResponseBody String uploadFileToS3Service(@RequestParam(value="file" , required = true) MultipartFile multipartFile , HttpServletRequest request , HttpServletResponse response){
@@ -231,8 +233,8 @@ public class FileUploadRest {
 	
 	private List<File> splitPdfDocumentIntoMultipleDocs(String s3path) throws Exception{
 	
-		File file = new File(s3FileUploadServiceImpl.downloadFile(s3path, NexeraUtility.tomcatDirectoryPath()+File.separator+(new File(s3path)).getName()));
-		List<File> splittedFiles =  NexeraUtility.splitPDFPages(file);
+		File file = new File(s3FileUploadServiceImpl.downloadFile(s3path, nexeraUtility.tomcatDirectoryPath()+File.separator+(new File(s3path)).getName()));
+		List<File> splittedFiles =  nexeraUtility.splitPDFPages(file);
 		return splittedFiles;
 		
 	}

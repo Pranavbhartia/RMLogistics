@@ -1,43 +1,43 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.nexera.newfi</groupId>
-  <artifactId>parent</artifactId>
-  <version>1.0</version>
-  <packaging>pom</packaging>
-  <name>NewFiParent</name>
-  <modules>
-  	<!-- <module>NewfiMuleFlow</module>
-  	 -->
-  	<module>NewfiCommon</module>
-  	<module>NewfiMongoCore</module>
-  	<module>NewfiCore</module>
-  	<module>WorkflowEngine</module>
-  	<module>NewfiWorkFlow</module>
-  	<module>NewfiWeb</module>
-  	
-  	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.nexera.newfi</groupId>
+	<artifactId>parent</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>NewFiParent</name>
+	<modules>
+		<!-- <module>NewfiMuleFlow</module> -->
+		<module>NewfiCommon</module>
+		<module>NewfiMongoCore</module>
+		<module>NewfiCore</module>
+		<module>WorkflowEngine</module>
+		<module>NewfiWorkFlow</module>
+		<module>NewfiWeb</module>
 
-  </modules>
-  
-  <properties>
-  		<!-- Spring version -->
-  		<spring-framework.version>4.1.4.RELEASE</spring-framework.version>
-  		
-  		<!-- Spring Security -->
+
+
+	</modules>
+
+	<properties>
+		<!-- Spring version -->
+		<spring-framework.version>4.1.4.RELEASE</spring-framework.version>
+
+		<!-- Spring Security -->
 		<spring.security>3.2.3.RELEASE</spring.security>
-  		
-  		<!-- Logging -->
+
+		<!-- Logging -->
 		<logback.version>1.0.13</logback.version>
 		<slf4j.version>1.7.5</slf4j.version>
-  		
-  		<!-- Google json -->
+
+		<!-- Google json -->
 		<gson.version>1.7.1</gson.version>
-  </properties>
-  
-  <dependencies>
-  
-  
-  		<!-- Logging with SLF4J & LogBack -->
+	</properties>
+
+	<dependencies>
+
+
+		<!-- Logging with SLF4J & LogBack -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -50,16 +50,16 @@
 			<version>${logback.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		
-		<!-- dependency for json  -->
+
+		<!-- dependency for json -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
 		</dependency>
-		
-		
-		<!-- Spring Security Core-->
+
+
+		<!-- Spring Security Core -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -75,8 +75,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-  	
-  </dependencies>
-  
-  
+
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>jboss-3rd-party-releases</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+		</repository>
+	</repositories>
+
 </project>

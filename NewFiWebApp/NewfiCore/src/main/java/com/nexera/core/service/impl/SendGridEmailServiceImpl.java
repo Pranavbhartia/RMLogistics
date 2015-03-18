@@ -1,41 +1,39 @@
 package com.nexera.core.service.impl;
 
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
+import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
-import com.nexera.core.config.SmtpSettings;
 import com.nexera.core.service.SendGridEmailService;
+import com.sendgrid.SendGrid;
+import com.sendgrid.SendGridException;
+import com.sendgrid.SendGrid.Email;
+import com.sendgrid.SendGrid.Response;
 
 @Component
-public class SendGridEmailServiceImpl implements SendGridEmailService {
+public class SendGridEmailServiceImpl implements SendGridEmailService,InitializingBean {
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(SendGridEmailServiceImpl.class);
 
-	@Autowired
-	private SmtpSettings smtpSettings;
-
+	@Value("${SENDGRID_USERNAME}")
+	private String sendGridUserName;
+	
+	@Value("${SENDGRID_PASSWORD}")
+	private String sendGridPassword;
+	
+	private SendGrid sendGrid;
+	
 	@Override
 	public void sendMail(EmailVO emailEntity) throws InvalidInputException,
 	        UndeliveredEmailException {
@@ -56,98 +54,98 @@ public class SendGridEmailServiceImpl implements SendGridEmailService {
 
 	private void prepareAndSend(EmailVO emailEntity)
 	        throws InvalidInputException, UndeliveredEmailException {
+		if( emailEntity.getRecipients() == null || emailEntity.getRecipients().size() == 0){
+			LOG.error("sendEmailUsingTemplate : recipientEmailId is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : recipientEmailId is null or empty!");
+		}
+		
+		if( emailEntity.getTokenMap() == null || emailEntity.getTokenMap().isEmpty()){
+			LOG.error("sendEmailUsingTemplate : substitutions is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : substitutions is null or empty!");
+		}
+		if( emailEntity.getTemplateId() == null || emailEntity.getTemplateId().isEmpty()){
+			LOG.error("sendEmailUsingTemplate : templateId is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : templateId is null or empty!");
+		}
+		if( emailEntity.getSenderName() == null || emailEntity.getSenderName().isEmpty()){
+			LOG.error("sendEmailUsingTemplate : senderName is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : senderName is null or empty!");
+		}
+		if( emailEntity.getSenderEmailId() == null || emailEntity.getSenderEmailId().isEmpty()){
+			LOG.error("sendEmailUsingTemplate : sender email id is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : sender email id is null or empty!");
+		}
+		if( emailEntity.getSubject() == null || emailEntity.getSubject().isEmpty()){
+			LOG.error("sendEmailUsingTemplate : subject is null or empty!");
+			throw new InvalidInputException("sendEmailUsingTemplate : subject is null or empty!");
+		}
+		
+		Response response = null;
+		LOG.info("sendEmailUsingTemplateToMultiple called to send mails");
+		Email email = new Email();
+		
+		List<String> recipientEmailIdsList = new ArrayList<>();
+		List<String> recipientUserNamesList = new ArrayList<>();
+		
+		for( EmailRecipientVO recipientVO : emailEntity.getRecipients()){
+			if( recipientVO.getEmailID() == null || recipientVO.getEmailID().isEmpty()){
+				LOG.error("sendEmailUsingTemplate : recipient email id is null or empty!");
+				throw new InvalidInputException("sendEmailUsingTemplate : recipient email id is null or empty!");
+			}
+			if( recipientVO.getRecipientName() == null || recipientVO.getRecipientName().isEmpty()){
+				LOG.error("sendEmailUsingTemplate : recipient name is null or empty!");
+				throw new InvalidInputException("sendEmailUsingTemplate : recipient name is null or empty!");
+			}
+			recipientEmailIdsList.add(recipientVO.getEmailID());
+			recipientUserNamesList.add(recipientVO.getRecipientName());				
+		}
 
-		// Create the mail session object
-		Session session = createSession();
-		LOG.debug("Preparing transport object for sending mail");
-		Transport transport = null;
+		email.addTo(recipientEmailIdsList.toArray(new String[recipientEmailIdsList.size()]));
+		email.addToName(recipientUserNamesList.toArray(new String[recipientUserNamesList.size()]));
+		email.setFrom(emailEntity.getSenderEmailId());
+		email.setFromName(emailEntity.getSenderName());
+		email.setSubject(emailEntity.getSubject());
+		email.setText(CommonConstants.EMAIL_FOOTER);
+		
+		for(Entry<String, String[]> entry : emailEntity.getTokenMap().entrySet()){
+			email.addSubstitution(entry.getKey(), entry.getValue());
+		}
+		
+		email.addFilter("templates", "enable", "1");
+		email.addFilter("templates", "template_id", emailEntity.getTemplateId());
+		
+		LOG.debug("Email entity has been initialised");
+		
 		try {
-			transport = session.getTransport(SmtpSettings.MAIL_TRANSPORT);
-
-			transport.connect(smtpSettings.getMailHost(),
-			        smtpSettings.getMailPort(), smtpSettings.getSenderName(),
-			        smtpSettings.getSenderPassword());
-			LOG.trace("Connection successful");
-			// Adding the recipients to address list
-			Address[] addresses = createRecipientAddresses(emailEntity
-			        .getRecipients());
-			// Setting up new MimeMessage
-			Message message = createMessage(emailEntity, session, addresses);
-
-			transport.sendMessage(message, addresses);
-		} catch (MessagingException | UnsupportedEncodingException e) {
-			throw new UndeliveredEmailException("Error sending email: ", e);
-		} finally {
-			if (transport != null) {
-				try {
-					transport.close();
-				} catch (MessagingException e) {
-					LOG.warn("Email transport is not closed in SendGridEmail implemnetation. Might cause a leak");
-
-				}
-			}
+			LOG.debug("Making sendgrid api call");
+			response = sendGrid.send(email);
+			LOG.debug("Api call complete");
 		}
-
-		LOG.info("Mail sent successfully. Returning from method sendMail");
-	}
-
-	private Message createMessage(EmailVO emailEntity, Session session,
-	        Address[] addresses) throws UnsupportedEncodingException,
-	        MessagingException, InvalidInputException {
-
-		LOG.debug("Creating message");
-		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(emailEntity.getSenderEmailId(),
-		        emailEntity.getSenderName()));
-
-		// Set the subject of mail
-		message.setSubject(emailEntity.getSubject());
-
-		// Set the mail body
-		message.setContent(emailEntity.getBody(), "text/html");
-		return message;
-	}
-
-	/**
-	 * Method to create mail session
-	 * 
-	 * @return
-	 */
-	private Session createSession() {
-		LOG.debug("Preparing session object for sending mail");
-		Properties properties = new Properties();
-		properties.put("mail.smtp.auth", SmtpSettings.MAIL_SMTP_AUTH);
-		properties.put("mail.smtp.starttls.enable",
-		        SmtpSettings.MAIL_SMTP_STARTTLS_ENABLE);
-		Session mailSession = Session.getInstance(properties);
-		LOG.debug("Returning the session object");
-		return mailSession;
-	}
-
-	/**
-	 * Method creates addresses from the recipient list
-	 * 
-	 * @param recipients
-	 * @return
-	 * @throws AddressException
-	 */
-	private Address[] createRecipientAddresses(List<EmailRecipientVO> recipients)
-	        throws AddressException {
-		LOG.debug("Creating recipient addresses");
-		StringBuilder recipientsSb = new StringBuilder();
-		int count = 0;
-		for (EmailRecipientVO recipient : recipients) {
-			if (count != 0) {
-				recipientsSb.append(",");
-			}
-			LOG.debug("Adding recipient : " + recipient.getEmailID());
-			recipientsSb.append(recipient.getEmailID());
-			count++;
+		catch (SendGridException e) {
+			LOG.error("SendGridException caught while sending mail  for templateId : " + emailEntity.getTemplateId() + " message : " + e.getMessage());
+			throw new UndeliveredEmailException("SendGridException caught while sending mail  for templateId : " + emailEntity.getTemplateId() + " message : " + e.getMessage());
 		}
-		LOG.debug("Recipients are : " + recipientsSb);
-
-		// Adding the recipients to address list
-		Address[] addresses = InternetAddress.parse(recipientsSb.toString());
-		return addresses;
+		
+		LOG.info("Email api call status : " + response.getStatus() + " message : " + response.getMessage());
+		
+		if(response.getStatus() == true){
+			LOG.debug("Api call successful. Email sent");
+		}
+		else{
+			LOG.error("Mail not delivered. Reason : " + response.getMessage());
+			throw new UndeliveredEmailException("Mail not delivered. Reason : " + response.getMessage());
+		}
 	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		LOG.info("Settings Up sendGrid gateway");
+
+		if (sendGrid == null) {
+			LOG.info("Initialising Sendgrid gateway with " + sendGridUserName + " and " + sendGridPassword);
+			sendGrid = new SendGrid(sendGridUserName, sendGridPassword);
+			LOG.info("Sendgrid gateway initialised!");
+		}
+	}
+
 }

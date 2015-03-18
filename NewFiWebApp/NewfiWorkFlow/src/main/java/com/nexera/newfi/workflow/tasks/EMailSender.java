@@ -3,6 +3,7 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.SendEmailService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
@@ -23,7 +25,8 @@ public class EMailSender implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(EMailSender.class);
 	@Autowired
-	private SendEmailService sendEmailService;
+	private SendGridEmailService sendGridEmailService;
+	//private SendEmailService sendEmailService;
 	
 	public String execute(HashMap<String, Object> objectMap) {
 		// Call the Email Sender here.
@@ -36,22 +39,23 @@ public class EMailSender implements IWorkflowTaskExecutor {
 			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 			EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
 			emailRecipientVO.setEmailID(recipient);
+			emailRecipientVO.setRecipientName(objectMap.get(WorkflowDisplayConstants.EMAIL_RECIPIENT_NAME).toString());
 			recipients.add(emailRecipientVO);
 			emailEntity.setSenderEmailId("web@newfi.com");
 			emailEntity.setRecipients(recipients);
-			emailEntity.setBody(emailTemplate);
+
 			emailEntity.setSenderName("Newfi System");
 			emailEntity.setSubject("Nexera Newfi Portal");
-			emailEntity.setTemplateBased(false);
-			try {
-				sendEmailService.sendMail(emailEntity, false);
-			} catch (InvalidInputException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UndeliveredEmailException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", new String[] { objectMap.get(WorkflowDisplayConstants.EMAIL_RECIPIENT_NAME).toString() });
+			// emailEntity.setTemplateBased(true);
+			emailEntity.setTokenMap(substitutions);
+			emailEntity.setTemplateId(emailTemplate);
+
+			// sendEmailService.sendMail(emailEntity, false);
+			sendGridEmailService.sendAsyncMail(emailEntity);
+
+
 		}
 		return "success";
 	}

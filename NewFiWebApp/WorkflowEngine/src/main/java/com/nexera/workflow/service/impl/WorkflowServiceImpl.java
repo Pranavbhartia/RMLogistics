@@ -74,6 +74,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		workflowExec.setCreatedTime(new Date());
 		workflowExec.setWorkflowMaster(workflowMaster);
 		workflowExec.setStatus(Status.NOT_STARTED.getStatus());
+		
 		int id = (Integer) workflowExecDao.save(workflowExec);
 		workflowExec.setId(id);
 		return workflowExec;
@@ -99,6 +100,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		workflowItemExec.setParentWorkflow(parentWorkflow);
 		workflowItemExec.setStatus(Status.NOT_STARTED.getStatus());
 		workflowItemExec.setCreationDate(new Date());
+		workflowItemExec.setClickable(workflowItemMaster.getClickable());
 		int id = (Integer) workflowItemExecDao.save(workflowItemExec);
 		workflowItemExec.setId(id);
 		return workflowItemExec;
@@ -190,6 +192,7 @@ public class WorkflowServiceImpl implements WorkflowService
 	 * (com.nexera.workflow.bean.WorkflowItemMaster)
 	 */
 	@Override
+	@Transactional
 	public Boolean checkIfOnSuccessOfAnotherItem(
 	        WorkflowItemMaster workflowItemMaster) {
 		LOGGER.debug("Inside method checkIfOnSuccessOfAnotherItem ");
@@ -204,6 +207,7 @@ public class WorkflowServiceImpl implements WorkflowService
 	 * com.nexera.workflow.service.WorkflowService#getWorkflowExecFromId(int)
 	 */
 	@Override
+	@Transactional
 	public WorkflowExec getWorkflowExecFromId(int workflowexecId) {
 		LOGGER.debug("Inside method getWorkflowExecFromId ");
 		return (WorkflowExec) workflowExecDao.load(WorkflowExec.class,

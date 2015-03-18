@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.amazonaws.services.s3.metrics.S3ServiceMetric;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
@@ -44,6 +43,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 	@Autowired
 	private UserProfileService userProfileService;
+	
+	@Autowired
+	private NexeraUtility nexeraUtility;
+	
 	
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
@@ -145,7 +148,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			 UploadedFilesList uploadedFilesList = uploadedFilesListDao.fetchUsingFileId(fileId);
 			 try {
 				 
-				String fileName = s3FileUploadServiceImpl.downloadFile(uploadedFilesList.getS3path(),NexeraUtility.tomcatDirectoryPath()+File.separator+ uploadedFilesList.getFileName());
+				String fileName = s3FileUploadServiceImpl.downloadFile(uploadedFilesList.getS3path(),nexeraUtility.tomcatDirectoryPath()+File.separator+ uploadedFilesList.getFileName());
 				downloadFiles.add(fileName);
 				LOG.info("s3 download returned  : "+fileName);
 			 } catch (Exception e) {
@@ -159,7 +162,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId , Integer userId , Integer assignedBy) throws IOException, COSVisitorException {
 		List<String> filePaths = downloadFileFromS3Service(fileIds);
 		String newFilepath = null;
-		newFilepath = NexeraUtility.joinPDDocuments(filePaths);
+		newFilepath = nexeraUtility.joinPDDocuments(filePaths);
 		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId  , userId , assignedBy);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
@@ -173,7 +176,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		String s3PathThumbNail = null;
 		String thumbPath = null;
 		try {
-			thumbPath = NexeraUtility.convertPDFToThumbnail(file.getPath(), NexeraUtility.tomcatDirectoryPath());
+			thumbPath = nexeraUtility.convertPDFToThumbnail(file.getPath(), nexeraUtility.tomcatDirectoryPath());
 			
 		} catch (Exception e) {
 			

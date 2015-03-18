@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,9 @@ public class FileUploadController {
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
 	
+	@Autowired
+	private NexeraUtility nexeraUtility;
+	
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
@@ -53,13 +55,13 @@ public class FileUploadController {
 		LOG.info("File content type  : "+file.getContentType());
 		String localFilePath = null;
 		try{
-			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg")){
+			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
 				LOG.info("Received an image.converting to PDF");
-				localFilePath = NexeraUtility.convertImageToPDF(file);
+				localFilePath = nexeraUtility.convertImageToPDF(file);
 			}else{
-				localFilePath = NexeraUtility.uploadFileToLocal(file);
+				localFilePath = nexeraUtility.uploadFileToLocal(file);
 			}
-			 NexeraUtility.uploadFileToLocal(file);
+			 nexeraUtility.uploadFileToLocal(file);
 			File serverFile = new File(localFilePath );
 			Integer savedRowId = uploadedFilesListService.addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
 			LOG.info("Added File document row : "+savedRowId);

@@ -19,6 +19,7 @@ function showCustomerProfilePage() {
 	getUserProfileData();
 }
 
+
 /*
  * function getUserProfileData() {
  * ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {},
@@ -30,6 +31,137 @@ function getUserProfileData() {
 			customerPersonalInfoWrapper);
 }
 
+//TODO changes ranjitha
+
+function showLoanManagerProfilePage(){
+
+
+	$('.lp-right-arrow').remove();
+	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
+	$('#lp-loan-manager-profile').addClass('lp-item-active');
+	var rightArrow = $('<div>').attr({
+		"class" : "lp-right-arrow lp-prof-arrow"
+	}); 
+	$('#lp-loan-manager-profile').append(rightArrow);
+	var profileMainContainer = $('<div>').attr({
+		"id" : "loan-profile-main-container",
+		"class" : "right-panel-messageDashboard float-left"
+	});
+	$('#right-panel').append(profileMainContainer);
+
+	paintLMProfileContainer();
+	adjustRightPanelOnResize();
+	getUserProfileDataLM();
+}
+
+function paintLMProfileContainer() {
+	$('#loan-profile-main-container').html('');
+	// getUserProfileData();
+}
+
+function getUserProfileDataLM() {
+	ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {},
+			LoanPersonalInfoWrapper);
+}
+
+function LoanPersonalInfoWrapper(user) {
+
+/* 	 var wrapper = $('<div>').attr({
+		"class" : "cust-personal-info-wrapper"
+	});  */
+
+	var wrapper = $('<div>').attr({
+		"class" : "loan-personal-info-wrapper"
+	});
+
+	var header = $('<div>').attr({
+		//included that of customer css
+		"class" : "cust-personal-info-header"
+	}).html("Personal Information");
+
+	var container = getLoanPersonalInfoContainer(user);
+
+	wrapper.append(header).append(container);
+	$('#loan-profile-main-container').append(wrapper);
+
+}
+
+function getLoanPersonalInfoContainer(user) {
+
+	var container = $('<div>').attr({
+		"class" : "loan-personal-info-container"
+	});
+
+	var nameRow = getCustomerNameFormRow(user);
+	container.append(nameRow);
+
+	var uploadRow = getCustomerUploadPhotoRow(user);
+	container.append(uploadRow);
+
+	var DOBRow = getDOBRow(user);
+	container.append(DOBRow);
+
+	var priEmailRow = getPriEmailRow(user);
+	container.append(priEmailRow);
+
+	var phone1Row = getPhone1Row(user);
+	container.append(phone1Row);
+
+
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-btn prof-save-btn",
+		"onclick" : "updateLMDetails()"
+	}).html("Save");
+	container.append(saveBtn);
+	return container;
+}
+
+function updateLMDetails() {
+
+	var userProfileJson = new Object();
+
+	userProfileJson.id = $("#userid").val();
+	userProfileJson.firstName = $("#firstNameId").val();
+	userProfileJson.lastName = $("#lastNameId").val();
+	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	userProfileJson.emailId = $("#priEmailId").val();
+
+	var customerDetails = new Object();
+
+	customerDetails.id = $("#customerDetailsId").val();
+	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
+
+
+	userProfileJson.customerDetail = customerDetails;
+    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+
+if(phoneStatus!=false)
+if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
+	$.ajax({
+		url : "rest/userprofile/updateprofile",
+		type : "POST",
+		data : {
+			"updateUserInfo" : JSON.stringify(userProfileJson)
+		},
+		dataType : "json",
+		success : function(data) {
+
+			$("#profileNameId").text($("#firstNameId").val());
+			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+
+		},
+		error : function(error) {
+			showToastMessage("Mandatory Fileds should not be empty");
+		}
+	});
+
+	showToastMessage("Succesfully updated");}else{
+		showToastMessage("Mandatory fields should not be empty");
+	}
+}
+
+//end of changes
 function userProfileData(data) {
 
 	showCustomerProfilePageCallBack(data);
@@ -44,6 +176,10 @@ function customerPersonalInfoWrapper(user) {
 
 	var wrapper = $('<div>').attr({
 		"class" : "cust-personal-info-wrapper"
+	});	
+
+	var wrapper = $('<div>').attr({
+		"class" : "loan-personal-info-wrapper"
 	});
 
 	var header = $('<div>').attr({
@@ -56,6 +192,7 @@ function customerPersonalInfoWrapper(user) {
 	$('#profile-main-container').append(wrapper);
 
 }
+
 
 function getCustPersonalInfoContainer(user) {
 
@@ -106,13 +243,22 @@ function getCustPersonalInfoContainer(user) {
 	return container;
 }
 
+
 function getCustomerNameFormRow(user) {
+
+    var span=$('<span>').attr({
+	
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+
+	//span.css("color":"red");
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Name");
+	rowCol1.append(span);
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -314,12 +460,19 @@ function getDOBRow(user) {
 }
 
 function getPriEmailRow(user) {
+
+    var span=$('<span>').attr({	
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Email");
+	
+	rowCol1.append(span);
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -341,6 +494,7 @@ function emailValidation(email) {
 		validationFails = true;
 	}
 }
+
 
 function getSecEmailRow(user) {
 	var row = $('<div>').attr({
@@ -430,22 +584,37 @@ function getZipRow(user) {
 }
 
 function getPhone1Row(user) {
+
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input",
 		"value" : user.phoneNumber,
-		"id" : "priPhoneNumberId"
+		"id" : "priPhoneNumberId",
+		
 	});
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
+}
+//TODO added 
+function phoneNumberValidation(phoneNo){
+
+var regex = /^\d{10}$/;   
+	if (!regex.test(phoneNo)) {
+		showToastMessage("Invalid phone number");
+		validationFails = true;
+		return false
+	}
+return true;
 }
 
 function getPhone2Row(user) {
@@ -497,6 +666,10 @@ function updateUserDetails() {
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
 	// JSON.stringify(userProfileJson),function(response){});
+var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+
+if(phoneStatus!=false)
+if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
 
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
@@ -516,8 +689,13 @@ function updateUserDetails() {
 		}
 	});
 
-	showToastMessage("Succesfully updated");
+	showToastMessage("Succesfully updated");}
+	else{
+		showToastMessage("Mandatory Fileds should not be empty");
+	}
 }
+
+
 
 /*
  * function uploadImageFunction(obj){
@@ -847,4 +1025,5 @@ function saveEditUserProfile(user){
 	$('#center-panel-cont').append(topHeader).append(formContainer);
 	
 }
+
 

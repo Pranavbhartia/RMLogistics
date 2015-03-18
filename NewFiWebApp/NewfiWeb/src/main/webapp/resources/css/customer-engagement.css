@@ -78,14 +78,6 @@
 	font-size: 18px;
 }
 
-.width-75{
- 	width: 75px;
-}
-
-.width-150{
- 	width: 150px;
-}
-
 .ce-options-cont {
 	margin-bottom: 20px;
 }
@@ -254,14 +246,4 @@
 
 .ce-rate-main-container{
 	width: 830px;
-}
-
-.cp-averagerate-header-text{
-    width: 224px;
-}
-
-.cp-averagerate-btn{
-	
-	width:160px;
-	margin-left: 33px;
 }
