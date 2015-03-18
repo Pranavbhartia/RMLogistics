@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -20,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -78,9 +84,18 @@ public class RateCalculatorRestService {
 	{
 		String loanAmount ;
 		String loanPurpose;
+		
+
+		if("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance()) && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())){
+			
+			loanAmount =  "280000";
+			LOG.info("setting hardcoded calue for loan amount ");
+		}
+		
+		
 		if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
 			
-			loanAmount = teaserRateVO.getCashTakeOut()+teaserRateVO.getCurrentMortgageBalance();
+			loanAmount =  Integer.parseInt(teaserRateVO.getCashTakeOut()) +Integer.parseInt(teaserRateVO.getCurrentMortgageBalance())+"";
 			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
 		}else{
 			loanAmount = teaserRateVO.getCurrentMortgageBalance();
@@ -89,11 +104,22 @@ public class RateCalculatorRestService {
       if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "payOffMortgage".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
 			
 	        loanPurpose = "1";
-			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
+			LOG.info("Inside loan purpose "+loanPurpose);
 		}else{
 			loanPurpose = "0";
+			LOG.info("Inside loan purpose "+loanPurpose);
 		}
 		
+      if("".equalsIgnoreCase(teaserRateVO.getHomeWorthToday())){
+    	  LOG.info("Setting hardcoded homeworth to 350000 ");
+    	  teaserRateVO.setHomeWorthToday("350000");
+      }
+      String stateFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+      
+      if("".equalsIgnoreCase(stateFromAPI)){
+    	  stateFromAPI ="CA";
+      }
+      
 		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 				+ "<loan "
 				+ "sHouseValPe="+"\""+teaserRateVO.getHomeWorthToday()+"\""
@@ -124,7 +150,7 @@ public class RateCalculatorRestService {
 				+ " "
 				+ "sCreditScoreType1="+"\""+"750"+"\""
 				+ " "
-				+ "sSpStatePe="+"\""+teaserRateVO.getState()+"\""
+				+ "sSpStatePe="+"\""+stateFromAPI+"\""
 				+ " "
 				+ "sSpCounty="+"\""+teaserRateVO.getCity()+"\""
 				+ " "
@@ -153,7 +179,15 @@ public class RateCalculatorRestService {
 	}
 	
 	
-	
+	String getStateUtlity(String zipCode){
+		String geoServiceAPI = "http://www.webservicex.net/uszip.asmx/GetInfoByZIP?USZip="+zipCode;
+		RestTemplate restTemplate = new RestTemplate();
+        String  geoResponse = restTemplate.getForObject(geoServiceAPI, String.class);
+		LOG.info("State Utility Response is "+geoResponse);
+		String state = parseXML(geoResponse);
+		return state;
+		
+	}
 	
 	
 	
@@ -215,6 +249,51 @@ public class RateCalculatorRestService {
 		}
 		
 		return null;
+	}
+
+	
+	
+	
+	private  String parseXML(String xml)
+	{   String state = "";
+	System.out.println("xml is"+xml);
+		try{
+		DocumentBuilderFactory factory =  DocumentBuilderFactory.newInstance();
+					 
+			
+					    DocumentBuilder builder = factory.newDocumentBuilder();
+					 
+				    //Load and Parse the XML document
+					    //document contains the complete XML as a Tree.
+				    Document document = builder.parse(new InputSource(new StringReader(xml)));
+				    NodeList nodeList = document.getDocumentElement().getChildNodes();
+				    
+				    System.out.println("document is"+document);
+				    System.out.println("nodeList is"+nodeList);
+				    
+				    for (int i = 0; i < nodeList.getLength(); i++) {
+				    	Node node = nodeList.item(i);
+				    	//node.getAttributes().getNamedItem("STATE").getNodeValue();
+				    	
+				    	if (node.getNodeType() == Node.ELEMENT_NODE) {
+				    		Element eElement = (Element) node;
+				    		System.out.println("State : " + eElement.getElementsByTagName("STATE").item(0).getTextContent());
+				    	state = eElement.getElementsByTagName("STATE").item(0).getTextContent();
+				    	}
+				    	
+				    }
+				    
+				    
+				    
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+				
+		
+		return state;
+		
+		
 	}
 
 
