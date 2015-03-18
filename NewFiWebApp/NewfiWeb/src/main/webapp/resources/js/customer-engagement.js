@@ -205,6 +205,19 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"class" : "ce-input",
 		"name" : name,
 		"value" : refinanceTeaserRate[name]
+	}).on("load keydown", function(e){
+          
+		if(name != 'zipCode'){
+			$('input[name='+name+']').maskMoney({
+				thousands:',',
+				decimal:'.',
+				allowZero:true,
+				prefix: '$',
+			    precision:0,
+			    allowNegative:true
+			});
+		}
+		
 	});
 
 	optionContainer.append(inputBox);
@@ -223,8 +236,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		event.data.clickEvent();
 	});
 
-	return container.append(quesTextCont).append(optionContainer).append(
-			saveBtn);
+	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
 
 function paintRefinanceLiveNow() {
@@ -330,12 +342,10 @@ function paintRefinanceLiveNow() {
 
 				refinanceTeaserRate["liveNow"] = $('input[name="liveNow"]')
 						.val();
-				refinanceTeaserRate["currentAddress"] = $(
-						'input[name="currentAddress"]').val();
+				refinanceTeaserRate["currentAddress"] = $('input[name="currentAddress"]').val();
 				refinanceTeaserRate["city"] = $('input[name="city"]').val();
 				refinanceTeaserRate["state"] = $('input[name="state"]').val();
-				refinanceTeaserRate["zipCode"] = $('input[name="zipCode"]')
-						.val();
+				refinanceTeaserRate["zipCode"] = $('input[name="zipCode"]').val();
 
 				paintRefinanceStartLiving();
 				sessionStorage.refinaceData = JSON
@@ -411,8 +421,7 @@ progressBaar(2);
 	var quesCont = "";
 	//if (refinanceTeaserRate['refinanceOption'] == 'lowerMonthlyPayment'
 		//	|| refinanceTeaserRate['refinanceOption'] == 'payOffMortgage') {
-		quesCont = getTextQuestion(quesTxt, paintRefinanceStep3,
-				"currentMortgageBalance");
+		quesCont = getTextQuestion(quesTxt, paintRefinanceStep3,"currentMortgageBalance");
 	//}
 //	if (refinanceTeaserRate['refinanceOption'] == 'takeCashOut') {
 //		quesCont = getTextQuestion(quesTxt, paintRefinanceStep1b,
@@ -432,8 +441,7 @@ stages = 3;
 progressBaar(3);
 
 	var quesTxt = "What is your current mortgage payment?";
-	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep4,
-			"currentMortgagePayment");
+	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep4,"currentMortgagePayment");
 	$('#ce-refinance-cp').html(quesCont);
 }
 

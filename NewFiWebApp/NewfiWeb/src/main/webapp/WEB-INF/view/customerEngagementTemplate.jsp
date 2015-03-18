@@ -27,8 +27,21 @@
 	<script src="resources/js/script.js"></script>
 	<script src="resources/js/customer-engagement.js"></script>
 	<script src="resources/js/buyHome.js"></script>
+	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script>
 		$(document).ready(function() {
+			
+			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){
+				$('input[name="currentMortgageBalance"]').maskMoney({
+					thousands:',',
+					decimal:'.',
+					allowZero:true,
+					prefix: '$',
+				    precision:0,
+				    allowNegative:true
+				});				
+			}) */
+			
 			paintSelectLoanTypeQuestion();
 			
 			$(document).on('click','#progressBaarId_1',function(){
@@ -93,5 +106,7 @@
 
 		});
 	</script>
+	
+	
 </body>
 </html>
