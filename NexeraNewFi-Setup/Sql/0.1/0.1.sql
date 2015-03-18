@@ -67,3 +67,11 @@ ADD CONSTRAINT `fk_lnLMWorkflow`
 
 ALTER TABLE newfi_schema.uploadedfileslist
   ADD COLUMN assigned_by TINYINT(4);
+
+ALTER TABLE `newfi_schema`.`workflowitemmaster` ADD COLUMN `params` TEXT NULL AFTER `parent_workflow_item_master`; 
+
+ALTER TABLE `newfi_schema`.`workflowitemexec` ADD COLUMN `params` TEXT NULL AFTER `parent_workflow_itemexec`; 
+ALTER TABLE `newfi_schema`.`workflowitemmaster` 
+ADD COLUMN `clickable` TINYINT(4) NULL DEFAULT 1 AFTER `params`;
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD COLUMN `clickable` TINYINT(4) NULL DEFAULT 1 AFTER `params`;
