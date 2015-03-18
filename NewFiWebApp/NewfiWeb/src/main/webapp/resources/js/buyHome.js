@@ -1,9 +1,10 @@
+
 var active = 0;
 
 var buyHomeTeaserRate = new Object();
 
-var buyHomeitemsList = [ "Living Situation", "Home Information",
-		"Loan Information", "My Money", "My Credit" ];
+var buyHomeitemsList = [ "Your priority", "Loan Amount",
+		"Zip Code", "Your Rates"];
 
 function getBuyHomeLeftPanel() {
 	var container = $('<div>').attr({
@@ -68,12 +69,12 @@ function paintBuyHomeQuest() {
 	var quesText = "Living Situation";
 
 	var options = [ {
-		"text" : "Renting",
-		"onselect" : paintBuyHomeRenting,
+		"text" : "I am currently renting",
+		"onselect" : paintRentOfYourHouse,
 		"value" : 0
 	}, {
 		"text" : "I am a home owner",
-		"onselect" : paintBuyHomeOwner,
+		"onselect" : saleYourCurrentHome,
 		"value" : 1
 	} ];
 
@@ -122,6 +123,7 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 function paintBuyHomeRenting() {
 	active = 2;
 	homeProgressBaar(2);
+
 	var quesTxt1 = "Where You Live Now ?";
 	var quesTxt2 = "Your Current Address ?";
 	var quesTxt3 = "City";
@@ -133,17 +135,15 @@ function paintBuyHomeRenting() {
 	});
 
 	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-sub-ques-text"
+		"class" : "ce-rp-ques-text"
 	}).html(quesTxt1);
 
-	var optionContainer1 = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox1 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "liveNow"
-	});
+	/*
+	 * var optionContainer1 = $('<div>').attr({ "class" : "ce-options-cont" });
+	 * 
+	 * var inputBox1 = $('<input>').attr({ "class" : "ce-input", "name" :
+	 * "liveNow" });
+	 */
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-sub-ques-text"
@@ -196,12 +196,12 @@ function paintBuyHomeRenting() {
 		"class" : "ce-input",
 		"name" : "zipCode"
 	});
-	optionContainer1.append(inputBox1);
+	// optionContainer1.append(inputBox1);
 	optionContainer2.append(inputBox2);
 	optionContainer3.append(inputBox3);
 	optionContainer4.append(inputBox4);
 	optionContainer5.append(inputBox5);
-	quesTextCont1.append(optionContainer1);
+	// quesTextCont1.append(optionContainer1);
 	quesTextCont2.append(optionContainer2);
 	quesTextCont3.append(optionContainer3);
 	quesTextCont4.append(optionContainer4);
@@ -277,9 +277,14 @@ function paintBuyHomEachMonthrent() {
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "startLiving"
+	}).blur(function(){
+		
+		if($('input[name="rentPerMonth"]').val() > 2){
+			alert("grater then 2");
+		}
 	});
 
-	var quesTextCont3 = $('<div>').attr({
+	/*var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
@@ -290,15 +295,15 @@ function paintBuyHomEachMonthrent() {
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "liveEarlier"
-	});
+	});*/
 
 	optionContainer1.append(inputBox1);
 	optionContainer2.append(inputBox2);
-	optionContainer3.append(inputBox3);
-	
+	//optionContainer3.append(inputBox3);
+
 	quesTextCont1.append(optionContainer1);
 	quesTextCont2.append(optionContainer2);
-	quesTextCont3.append(optionContainer3);
+	//quesTextCont3.append(optionContainer3);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -306,26 +311,22 @@ function paintBuyHomEachMonthrent() {
 			'click',
 			function(event) {
 
-				buyHomeTeaserRate["rentPerMonth"] = $(
-						'input[name="rentPerMonth"]').val();
-				buyHomeTeaserRate["startLiving"] = $(
-						'input[name="startLiving"]').val();
-				buyHomeTeaserRate["liveEarlier"] = $(
-						'input[name="liveEarlier"]').val();
+				buyHomeTeaserRate["rentPerMonth"] = $('input[name="rentPerMonth"]').val();
+				buyHomeTeaserRate["startLiving"] = $('input[name="startLiving"]').val();
+				buyHomeTeaserRate["liveEarlier"] = $('input[name="liveEarlier"]').val();
 
-				paintBuyHomeStartMilitaryloans();
+				paintPlanToBuyYourHouse();
+				// paintBuyHomeStartMilitaryloans();
 			});
 
 	if (buyHomeTeaserRate["livingSituation"] == 0) {
 
-		$('#ce-refinance-cp').html(
-				container.append(quesTextCont1).append(quesTextCont2).append(
-						quesTextCont3).append(saveBtn));
+		$('#ce-refinance-cp').html(container.append(quesTextCont1).append(saveBtn));
 	} else {
 		var quesTextCont4 = paintBuyHomeSellHome();
 
 		$('#ce-refinance-cp').html(
-				container.append(quesTextCont2).append(quesTextCont3).append(
+				container.append(
 						quesTextCont4).append(saveBtn));
 	}
 	/*
@@ -336,6 +337,25 @@ function paintBuyHomEachMonthrent() {
 	 * $('#stepNoId_3').html("3");
 	 */
 }
+
+function paintPlanToBuyYourHouse() {
+
+	var quesTxt = "Where do you plan to buy your house.";
+	var quesCont = getBuyHomeTextQuestion(quesTxt,
+			paintBuyHomeStartMilitaryloans, "planToBuyYourHouseZip");
+	$('#ce-refinance-cp').html(quesCont);
+}
+
+function paintRentOfYourHouse() {
+	active = 2;
+	homeProgressBaar(2);
+	var quesTxt = "How much do you pay each month for rent?";
+	var quesCont = getBuyHomeTextQuestion(quesTxt,
+			paintHomeZipCode, "rentPerMonth");
+	$('#ce-refinance-cp').html(quesCont);
+}
+
+
 
 function paintBuyHomeSellHome() {
 
@@ -404,8 +424,7 @@ function paintBuyHomeStartMilitaryloans() {
 		"value" : 0
 	} ];
 
-	var quesCont = getBuyHomeMutipleChoiceQuestion(quesTxt, options,
-			"isVeteran");
+	var quesCont = getBuyHomeMutipleChoiceQuestion(quesTxt, options,"isVeteran");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
@@ -652,27 +671,65 @@ function paintBuyHomeMyMoney(quesText, options, name) {
 						buyHomeTeaserRate["pension"] = $(
 								'input[name="pension"]').val();
 
-						if (buyHomeTeaserRate["livingSituation"] == 0) {
-							paintBuyHomeDob();
-						} else {
-							if (buyHomeTeaserRate["sellYourHome"] == 0) {
-								saleYourCurrentHome();
-							} else {
-								paintBuyHomeSSN();
-							}
-
-						}
+						paintPriceOfTheHouse();
+						/*
+						 * if (buyHomeTeaserRate["livingSituation"] == 0) {
+						 * 
+						 * paintPriceOfTheHouse(); } else { if
+						 * (buyHomeTeaserRate["sellYourHome"] == 0) {
+						 * saleYourCurrentHome(); } else { paintBuyHomeSSN(); }
+						 *  }
+						 */
 					});
 
 	return container.append(quesTextCont).append(optionContainer).append(
 			saveBtn);
 }
 
-function saleYourCurrentHome() {
+function paintPriceOfTheHouse() {
 
+	var quesTxt = "what is the price of the house that you want to buy?";
+	var quesCont;
+
+	quesCont = getBuyHomeTextQuestion(quesTxt, paintLoanAmmount,"homeWorthToday");
+
+	$('#ce-refinance-cp').html(quesCont);
+
+}
+
+function paintLoanAmmount() {
+
+	var quesTxt = "How much of this amount you want for loan?";
+	var quesCont = getBuyHomeTextQuestion(quesTxt, wantTosellYourHome,"currentMortgageBalance");
+	$('#ce-refinance-cp').html(quesCont);
+
+}
+
+function wantTosellYourHome(){
+	
+	if (buyHomeTeaserRate["sellYourHome"] == 0) {
+		saleYourCurrentHome();
+	}else{
+		paintBuyHomeDob();
+	}
+}
+
+
+function saleYourCurrentHome() {
+	active = 2;
+	homeProgressBaar(2);
 	var quesTxt = "What is the listing price of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeMortgagebalance,
-			"homeWorthToday");
+	var quesCont = getBuyHomeTextQuestion(quesTxt, paintHomeZipCode,"homeWorthToday");
+	$('#ce-refinance-cp').html(quesCont);
+
+}
+
+
+function paintHomeZipCode() {
+	active = 3;
+	homeProgressBaar(3);
+	var quesTxt = "Do you know the city or ZIP code where you want to buy a home?";
+	var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate,"zipCode");
 	$('#ce-refinance-cp').html(quesCont);
 
 }
@@ -729,10 +786,9 @@ function paintBuyHomeSeeRates() {
 
 }
 
-
-
 function paintBuyHomeSeeTeaserRate() {
-
+    	active = 4;
+	homeProgressBaar(4);
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
 		"class" : "ce-rate-main-container"
@@ -742,17 +798,11 @@ function paintBuyHomeSeeTeaserRate() {
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
-
 	var rateProgramWrapper = getRateProgramContainer();
-	//var loanSummaryWrapper = getLoanSummaryWrapper();
-	//var closingCostWrapper = getClosingCostSummaryContainer();
 
-   
-
-	//container.append(quesTextCont).append(rateProgramWrapper).append(loanSummaryWrapper).append(closingCostWrapper);
-   container.append(quesTextCont).append(rateProgramWrapper);
+	container.append(quesTextCont).append(rateProgramWrapper);
 	$('#ce-refinance-cp').html(container);
-			$('#overlay-loader').show();
+	$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/calculator/findteaseratevalue",
@@ -762,9 +812,10 @@ function paintBuyHomeSeeTeaserRate() {
 		},
 		datatype : "application/json",
 		success : function(data) {
-		
-			paintteaserRate(data);
-			printMedianRate(data,container);
+           var teaserRate = data;
+			//paintteaserRate(data);
+			paintteaserRate(teaserRate);
+			//printMedianRate(teaserRate, container);
 			$('#overlay-loader').hide();
 		},
 		error : function() {
@@ -780,109 +831,124 @@ var sortedTenureYear = [];
 var year;
 var index;
 var unsortTenureYear = [];
- var loanDurationConform;
- var rateVOArrayObj;
-function paintteaserRate(teaserRate){
- 	
-teaserRate= JSON.parse(teaserRate);
+var loanDurationConform;
+var rateVOArrayObj;
+function paintteaserRate(teaserRate) {
 
-	for (var i in teaserRate) {
+	teaserRate = JSON.parse(teaserRate);
 
-	     loanDurationConform = teaserRate[i].loanDuration;
-	    year = loanDurationConform.split(" ")[0];
+	for ( var i in teaserRate) {
 
-	    if (year.indexOf("/") > 0) {
-	        year = year.split("/")[0];
-	    }
-	    tenureYear.push(parseInt(year));
-	    rateObjArray.push(teaserRate[i].rateVO);
-	}
-	
+		loanDurationConform = teaserRate[i].loanDuration;
+		year = loanDurationConform.split(" ")[0];
 
-	for(var i = 0 ; i <tenureYear.length ; i++){
-	   unsortTenureYear[i] = tenureYear[i];
+		if (year.indexOf("/") > 0) {
+			year = year.split("/")[0];
+		}
+		tenureYear.push(parseInt(year));
+		rateObjArray.push(teaserRate[i].rateVO);
 	}
 
+	for (var i = 0; i < tenureYear.length; i++) {
+		unsortTenureYear[i] = tenureYear[i];
+	}
 
 	sortedTenureYear = sortYear(tenureYear);
 	tenureSlider(sortedTenureYear);
-	
-	
-	
-	index = unsortTenureYear.indexOf(sortedTenureYear[0]); 
-	 rateVOArrayObj = rateObjArray[index];
-	$("#teaserRateId").html(rateVOArrayObj[0].teaserRate+ " %");
-	$("#closingCostId").html(rateVOArrayObj[0].closingCost+ " ");
-	
+
+	index = unsortTenureYear.indexOf(sortedTenureYear[sortedTenureYear.length-1]);
+	rateVOArrayObj = rateObjArray[index];
+	$("#teaserRateId").html(rateVOArrayObj[0].teaserRate + " %");
+	$("#closingCostId").html(rateVOArrayObj[0].closingCost + " ");
+
 	rateCostSlider(rateVOArrayObj);
-	
+
 }
 
 function sortYear(tenureYear) {
-    var sortedTenureYear = [];
-    sortedTenureYear = tenureYear;
-    sortedTenureYear.sort(function(a, b){return a-b});
-   return sortedTenureYear;
+	var sortedTenureYear = [];
+	sortedTenureYear = tenureYear;
+	sortedTenureYear.sort(function(a, b) {
+		return a - b
+	});
+	return sortedTenureYear;
 }
 
-
-function tenureSlider(sortedTenureYear){
+function tenureSlider(sortedTenureYear) {
+	
 	$('.tenure-grid-container').remove();
 	var grids = getTenureSliderGrids(sortedTenureYear);
 	$('#tenure-slider').parent().append(grids);
 	console.log(sortedTenureYear);
-    $(function () {
-    $("#tenure-slider").slider({
-        min: 0, 
-        max: sortedTenureYear.length - 1, 
-        slide: function (event, ui) {
-            $("#amount").val(sortedTenureYear[ui.value] + "Year");
-        },
-        change:function( event, ui ) {
-        $("#rate-slider").slider("destroy");
-        $('#years-text').html(sortedTenureYear[ui.value]);
-        tenureYearDate = sortedTenureYear[ui.value];
-           
-        index = unsortTenureYear.indexOf(tenureYearDate); 
-        var rateVOArrayObj = rateObjArray[index];
-        console.log("rateVOArrayObjLength.."+rateVOArrayObj.length);
-        
-        // Rate slider change
-        rateCostSlider(rateVOArrayObj);
-        
-        },
-        create : function(event, ui){
-        	rateCostSlider(rateObjArray[0]);
-        }
-    });
-    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
-});
-    
+	
+		$("#tenure-slider").slider({
+			
+			value:sortedTenureYear[sortedTenureYear.length - 1],
+			min : 0,
+			max : sortedTenureYear.length - 1,
+			slide : function(event, ui) {
+				//$("#amount").val(sortedTenureYear[ui.value] + "Year");
+			},
+			change : function(event, ui) {
+				$("#rate-slider").slider("destroy");
+				$('#years-text').html(sortedTenureYear[ui.value]);
+				tenureYearDate = sortedTenureYear[ui.value];
+
+				index = unsortTenureYear.indexOf(tenureYearDate);
+				var rateVOArrayObj = rateObjArray[index];
+				console.log("rateVOArrayObjLength.." + rateVOArrayObj.length);
+
+				// Rate slider change
+				rateCostSlider(rateVOArrayObj);
+
+			},
+			create : function(event, ui) {
+				
+				console.log("slider is created...");
+				tenureYearDate = sortedTenureYear[ui.value];
+				console.log("tenureYearDate..."+tenureYearDate);
+				index = unsortTenureYear.indexOf(tenureYearDate);
+				console.log("tenureYearDate..."+tenureYearDate);
+				var rateVOArrayObj = rateObjArray[index];
+				console.log("tenureYearDate..."+tenureYearDate);
+				console.log("rateVOArrayObjLength.." + rateVOArrayObj.length);
+				rateCostSlider(rateVOArrayObj);
+			}
+		});
+		//$("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")]+ "Years");
+	
+
 }
 
+function rateCostSlider(rateVOArrayObj) {
 
-
-function rateCostSlider(rateVOArrayObj){
-
+	index = parseInt(rateVOArrayObj.length / 2);
+	medienRateCostObj = rateVOArrayObj[index];
+	
+	console.log("index... "+index);
+	console.log("medienRateCostObj... "+medienRateCostObj);
+	
 	$('.rate-slider').find('.tenure-grid-container').remove();
 	var grids = getRateCostSliderGrids(rateVOArrayObj);
 	$('#rate-slider').parent().append(grids);
-		    $("#rate-slider").slider({
-		        min: 0, 
-		        max: rateVOArrayObj.length - 1,
-		        change:function( event, ui ) {
-		        
-		        $(".cp-rate-btn").html(rateVOArrayObj[ui.value].teaserRate+ " %");
-		        $(".cp-est-cost-btn").html(rateVOArrayObj[ui.value].closingCost+ " ");
-		        },
-		        create:function(event,ui){
-		        	 $(".cp-rate-btn").html(rateVOArrayObj[0].teaserRate+ " %");
-		             $(".cp-est-cost-btn").html(rateVOArrayObj[0].closingCost+ " ");
-		        }
-		    });
-		    $("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");  
-}
+	$("#rate-slider").slider({
+						value:index,
+						min : 0,
+						max : rateVOArrayObj.length - 1,
+						change : function(event, ui) {
 
+							$(".cp-rate-btn").html(rateVOArrayObj[ui.value].teaserRate + " %");
+							$(".cp-est-cost-btn").html(rateVOArrayObj[ui.value].closingCost + " ");
+							
+						},
+						create : function(event, ui) {
+							console.log("--------yo yo--------");
+							$(".cp-rate-btn").html(rateVOArrayObj[index].teaserRate + " %");
+							$(".cp-est-cost-btn").html(rateVOArrayObj[index].closingCost + " ");
+						}
+					});
+	$("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")] + "Years");
+}
 
 function getBuyHomeMultiTextQuestion(quesText) {
 	var container = $('<div>').attr({
@@ -1070,7 +1136,7 @@ function paintBuyHomeOwner() {
 
 function homeProgressBaar(num) {
 
-	var count = 5;
+	var count = 4;
 	$("#homeProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
 	$('#homeStepNoId_' + num).html(num);
@@ -1086,3 +1152,60 @@ function homeProgressBaar(num) {
 		$('#homeStepNoId_' + i).html(i);
 	}
 }
+
+
+
+function getMonthYearTextQuestion(quesText, clickEvent, name) {
+	 var container = $('<div>').attr({
+	  "class" : "ce-ques-wrapper"
+	 });
+
+	 var quesTextCont = $('<div>').attr({
+	  "class" : "ce-rp-ques-text"
+	 }).html(quesText);
+
+	 var optionContainer = $('<div>').attr({
+	  "class" : "ce-options-cont"
+	 });
+
+	 var monthDropDown = $('<select>').attr({
+	  "class" : "ce-input width-75",
+	  "name" : name,
+	  "id":"monthId"
+	 });
+	 
+	 for(var i=1;i<=12;i++){
+	  
+	  var option = $("<option>").attr({
+		  
+	  }).html(i);
+	  monthDropDown.append(option);
+	 }
+	 
+	 var yearInput = $('<input>').attr({
+	  "class" : "ce-input width-150",
+	  "name" : name,
+	  "value" : refinanceTeaserRate[name],
+	  "placeholder" : "YYYY"
+	 });
+
+	 optionContainer.append(monthDropDown).append(yearInput);
+
+	 var saveBtn = $('<div>').attr({
+	  "class" : "ce-save-btn"
+	 }).html("Save & Continue").bind('click', {
+	  'clickEvent' : clickEvent,
+	  "name" : name
+	 }, function(event) {
+	  var key = event.data.name;
+	  refinanceTeaserRate[key] = $('input[name="' + key + '"]').val();
+
+	  sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
+
+	  event.data.clickEvent();
+	 });
+
+	 return container.append(quesTextCont).append(optionContainer).append(
+	   saveBtn);
+	}
+

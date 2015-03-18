@@ -145,6 +145,18 @@ public class EngineTrigger {
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
 				future = executorService.submit(workflowManager);
 
+				executorService.shutdown();
+				try {
+					executorService.awaitTermination(Long.MAX_VALUE,
+					        TimeUnit.NANOSECONDS);
+				} catch (InterruptedException e) {
+					LOGGER.error("Exception caught while terminating executor "
+					        + e.getMessage());
+					throw new FatalException(
+					        "Exception caught while terminating executor "
+					                + e.getMessage());
+				}
+
 				LOGGER.debug("Checking whether the parents all workflow items are executed ");
 				WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution
 				        .getParentWorkflowItemExec();
@@ -241,14 +253,28 @@ public class EngineTrigger {
 		WorkflowItemExec workflowItemExec = workflowService
 		        .getWorkflowExecById(workflowItemExecId);
 		if (workflowItemExec != null) {
-			String output = renderStateOfItem(workflowItemExec);
+			String output = reflectionExecuteMethod(workflowItemExec,
+			        WorkflowConstants.RENDER_STATE_INFO_METHOD);
+			return output;
+		}
+		return null;
+	}
+
+	public String checkStatus(int workflowItemExecId) {
+		LOGGER.debug("Inside method checkStatus ");
+		WorkflowItemExec workflowItemExec = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		if (workflowItemExec != null) {
+			String output = reflectionExecuteMethod(workflowItemExec,
+			        WorkflowConstants.CHECK_STATUS_METHOD);
 			return output;
 		}
 		return null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String renderStateOfItem(WorkflowItemExec workflowItemExec) {
+	private String reflectionExecuteMethod(WorkflowItemExec workflowItemExec,
+	        String methodName) {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> itemParamMap;
@@ -285,8 +311,7 @@ public class EngineTrigger {
 				Class classToLoad = Class.forName(className);
 				Object obj = applicationContext.getBean(classToLoad);
 
-				Method method = classToLoad.getDeclaredMethod(
-				        WorkflowConstants.RENDER_STATE_INFO_METHOD,
+				Method method = classToLoad.getDeclaredMethod(methodName,
 				        new Class[] { HashMap.class });
 
 				result = (String) method.invoke(obj, params);
@@ -325,13 +350,13 @@ public class EngineTrigger {
 	}
 
 	public void changeStateOfWorkflowItemExec(int workflowItemExecId,
-            String status) {
-            WorkflowItemExec workflowItemExecution = workflowService
-                    .getWorkflowExecById(workflowItemExecId);
-            workflowItemExecution.setStatus(status);
-            workflowService
-                    .updateWorkflowItemExecutionStatus(workflowItemExecution);
-    }
+	        String status) {
+		WorkflowItemExec workflowItemExecution = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		workflowItemExecution.setStatus(status);
+		workflowService
+		        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+	}
 	/*
 	 * public static void main(String[] args) { String json =
 	 * "{\"workflowType\":\"LM_WF_ALL\"}"; ApplicationContext applicationContext

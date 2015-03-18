@@ -37,8 +37,35 @@ var workFlowContext = {
 							if (response.error) {
 								showToastMessage(response.error.message)
 							} else {
-								ob.customerWorkflowID = response.resultObject.customerWorkflowID;
-								ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;
+								if(response.resultObject.loanManagerWorkflowID==0){
+									ob.createWorkflow(function(ob){
+										ob.getWorkflowID(callback);
+									})
+								}else{
+									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
+									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
+									if(callback){
+										callback(ob);
+									}
+								}
+								
+							}
+							
+						});
+
+	},
+	createWorkflow : function(callback) {
+		var ob = this;
+		var data = {};
+		
+		ob.ajaxRequest(
+						"rest/workflow/create/" + ob.loanId,
+						"GET",
+						"json",
+						data,
+						function(response) {
+							if (response.error) {
+								showToastMessage(response.error.message)
 							}
 							if (callback) {
 								callback(ob);
@@ -163,9 +190,60 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
+			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to apply application";
+				workItem.stateInfo = "Click here to apply application";
+				
+			} 
+			
+			else if (ob.workItem.workflowItemType=="DISCLOSURE_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click to add Disclosures";
+				workItem.stateInfo = "Click to add Disclosures";
+				
+			}//
+			else if (ob.workItem.workflowItemType=="APP_FEE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "";
+				workItem.stateInfo = "";
+				
+			}
+			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to start Appraisal";
+				workItem.stateInfo = "Click here to start Appraisal";
+				
+			}
+			else if (ob.workItem.workflowItemType=="LOCK_RATE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to lock rate";
+				workItem.stateInfo = "Click here to lock rates";
+				
+			}
+			else if (ob.workItem.workflowItemType=="UW_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to lock rate";
+				workItem.stateInfo = "Click here to lock rates";
+				
+			}			
+			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Closing Status";
+				workItem.stateInfo = "Closing Status";				
+			}
+			//Click here to edit start Appraisal
 			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
 			{
-				ajaxURL = "rest/workflow/needCount/1";
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=selectedUserDetail.loanID;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
@@ -178,6 +256,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else return;
 			
 					
+			
 			if(ajaxURL&&ajaxURL!=""){
 				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
@@ -209,6 +288,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 function paintCustomerLoanProgressPage() {
+
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
 	});
@@ -522,6 +602,8 @@ function appendMilestoneAddTeamMemberPopup(loanID, itemToAppendTo, data) {
 	// $(itemToAppendTo).html("");
 	if ($('#ms-add-member-popup').length == 0)
 		$(itemToAppendTo).append(wrapper);
+	else
+		showMilestoneAddTeamMemberPopup();
 	appendAddTeamMemberWrapper('ms-add-member-popup', true, data);
 }
 
@@ -558,7 +640,6 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	});
 
 	
-	
 	if(!userList ||  userList.length==0)
 		return;
 	
@@ -578,7 +659,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 		}
-		tableContainer.append(getMilestoneTeamMemberRow(dispName, roleLabel));
+		tableContainer.append(getMilestoneTeamMembeTableRow(user));
 	}
 	
 	
@@ -586,6 +667,18 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	return tableContainer;
 }
 
+function getMilestoneTeamMembeTableRow(user){
+	var dispName = user.firstName+" "+user.lastName;
+	var userRole = user.userRole;
+	var roleLabel = userRole.label;
+	if (userRole.id == 3) {
+		if (user.internalUserDetail
+				&& user.internalUserDetail.internalUserRoleMasterVO
+				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+	}
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id);
+}
 // Function to get milestone team member table header
 function getMilestoneTeamMembeTableHeader() {
 	var row = $('<div>').attr({
@@ -604,9 +697,10 @@ function getMilestoneTeamMembeTableHeader() {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title) {
+function getMilestoneTeamMemberRow(name, title,userID) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-tr clearfix"
+		"class" : "ms-team-member-tr clearfix",
+		"userID":userID
 	});
 
 	var nameCol = $('<div>').attr({
@@ -868,6 +962,7 @@ function paintMilestoneCustomerProfileDetails() {
 // Function to paint to loan progress page
 function paintAgentLoanProgressPage() {
 
+
 	appendCustomerDetailHeader(selectedUserDetail);
 
 	var wrapper = $('<div>').attr({
@@ -906,15 +1001,15 @@ function paintAgentLoanProgressContainer() {
 }
 function getProgressStatusClass(status) {
 	var progressClass = "m-not-started";
-	if (status == 2) {
-		progressClass = "m-in-progress";
-	} else if (status == 1) {
+	if (status == 3) {
 		progressClass = "m-complete";
+	} else if (status == 1||status == 2) {
+		progressClass = "m-in-progress";
 	}
 	return progressClass;
 }
 function updateMileStoneElementState(url,data,callback,targetElement){
-	
+	data=JSON.stringify(data);
 	ajaxRequest(url,"POST","json",data,function(response){
 		if(response.error){
 			showToastMessage(response.error.message);
@@ -945,6 +1040,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		var data={};
 		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+		data["EMAIL_RECIPIENT_NAME"]=selectedUserDetail.name;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
 	/*if(callback){
@@ -990,6 +1086,18 @@ function clearStatusClass(container){
 	container.removeClass("m-in-progress");
 	container.removeClass("m-complete");
 }
+function getStatusClass(workflowItem){
+	switch(workflowItem.status){
+		case "0":
+			return "unchecked";
+		case "1":
+			return "unchecked";
+		case "2":
+			return "unchecked";
+		case "3":
+			return "checked";
+	}
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -1022,7 +1130,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	var headerCheckBox = $('<div>').attr({
 		"class" : "ms-check-box-header box-border-box " + floatClass,
-		"data-checked" : "checked"
+		"data-checked" : getStatusClass(workflowItem)
 	});
 	if(workflowItem.clickable){
 		headerCheckBox.bind('click', {
@@ -1062,7 +1170,7 @@ function appendMilestoneItem(workflowItem, childList) {
 			});
 			var itemCheckBox = $('<div>').attr({
 				"class" : "ms-check-box box-border-box " + floatClass,
-				"data-checked" : "unchecked"
+				"data-checked" : getStatusClass(childList[index])
 			})
 			if(childList[index].clickable){
 				itemCheckBox.bind('click', {

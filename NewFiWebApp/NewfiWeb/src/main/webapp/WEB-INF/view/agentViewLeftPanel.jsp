@@ -1,7 +1,7 @@
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
 	
-		<div id="lp-loan-manager-profile" class="lp-pic-wrapper lp-item-agent clearfix"  onclick="showLoanManagerProfilePage();" >
+		<div id="lp-loan-manager-profile" class="lp-pic-wrapper lp-item clearfix"  onclick="showLoanManagerProfilePage();" >
 		
 				<div id="myProfilePicture"></div>
 			<div class="lp-pic-txt float-left">
