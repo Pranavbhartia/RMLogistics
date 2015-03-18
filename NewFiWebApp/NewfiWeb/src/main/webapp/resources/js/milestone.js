@@ -159,7 +159,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		
 		mileStoneId : mileStoneId,
 		workItem : workItem,
-		infoText : workItem.stateInfo,
+		
 		ajaxRequest : function(url, type, dataType, data, successCallBack) {
 			$.ajax({
 				url : url,
@@ -244,11 +244,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=selectedUserDetail.loanID;
+				callback =false;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				ob.workItem.stateInfo ="Click here to add a new Team Member"
+				//ob.workItem.stateInfo ="Click here to add a new Team Member"
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
@@ -263,19 +264,22 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						if (response.error) {
 							showToastMessage(response.error.message)
 						} else {
-							ob.infoText =  response.resultObject;
+							ob.workItem.stateInfo=  response.resultObject;							
+						}
+						if (callback) {
+							callback(itemToAppendTo,ob);
+						}
+						else
+						{
 							txtRow1.html(ob.workItem.stateInfo);
 							txtRow1.bind("click", function(e) {
 								milestoneChildEventHandler(e)
 							});
 							itemToAppendTo.append(txtRow1);
 						}
-						if (callback) {
-							callback(itemToAppendTo,ob);
-						}
 					});
 			}else{
-				txtRow1.html(workItem.stateInfo);
+				txtRow1.html(ob.workItem.stateInfo);
 				txtRow1.bind("click", function(e) {
 					milestoneChildEventHandler(e)
 				});
@@ -629,7 +633,7 @@ function removeMilestoneAddTeamMemberPopup() {
 
 function paintMilestoneTeamMemberTable(appendTo,object){
 	
-	var userList=JSON.parse(object.infoText);
+	var userList=JSON.parse(object.workItem.stateInfo);
 	appendTo.append(getMilestoneTeamMembeTable(userList,object.mileStoneId));
 }
 
@@ -642,6 +646,16 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 	
 	if(!userList ||  userList.length==0)
 		return;
+	
+	var addNewMember = $('<div>').attr({
+		"class" : "milestone-rc-text",
+		"data-text" : "TEAM_STATUS",
+		"mileNotificationId":milestoneID
+	}).html("Click here to add a Team Member").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
+
+	tableContainer.append(addNewMember);
 	
 	//team table header
 	var th = getMilestoneTeamMembeTableHeader();
