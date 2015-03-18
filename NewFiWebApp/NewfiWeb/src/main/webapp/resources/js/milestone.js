@@ -37,8 +37,35 @@ var workFlowContext = {
 							if (response.error) {
 								showToastMessage(response.error.message)
 							} else {
-								ob.customerWorkflowID = response.resultObject.customerWorkflowID;
-								ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;
+								if(response.resultObject.loanManagerWorkflowID==0){
+									ob.createWorkflow(function(ob){
+										ob.getWorkflowID(callback);
+									})
+								}else{
+									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
+									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
+									if(callback){
+										callback(ob);
+									}
+								}
+								
+							}
+							
+						});
+
+	},
+	createWorkflow : function(callback) {
+		var ob = this;
+		var data = {};
+		
+		ob.ajaxRequest(
+						"rest/workflow/create/" + ob.loanId,
+						"GET",
+						"json",
+						data,
+						function(response) {
+							if (response.error) {
+								showToastMessage(response.error.message)
 							}
 							if (callback) {
 								callback(ob);
@@ -261,6 +288,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 function paintCustomerLoanProgressPage() {
+
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
 	});
@@ -933,6 +961,7 @@ function paintMilestoneCustomerProfileDetails() {
 
 // Function to paint to loan progress page
 function paintAgentLoanProgressPage() {
+
 
 	appendCustomerDetailHeader(selectedUserDetail);
 
