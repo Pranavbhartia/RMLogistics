@@ -950,7 +950,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Lock Rate Details", "4.75 %");
 	appendLoanDetailsRow("Lock Expiration Date", "02/21/2015");
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
-	appendLoanDetailsRow("Credit", "TU-646/EQ-686/EX-685", true);
+	appendLoanDetailsRow("Credit", "TU-646 | EQ-686 | EX-685", true);
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
 
