@@ -230,7 +230,7 @@ function getRateCostSliderGrids(gridArray){
 	return gridContainer;
 }
 
-function getSliderContainerForMobileScreen() {
+/*function getSliderContainerForMobileScreen() {
 	var mobileSliderCont = $('<div>').attr({
 		"class" : "mobile-slider-container clearfix"
 	});
@@ -301,4 +301,4 @@ function getSliderContainerForMobileScreen() {
 	}
 	
 	return mobileSliderCont.append(col1).append(col2);
-}
+}*/
