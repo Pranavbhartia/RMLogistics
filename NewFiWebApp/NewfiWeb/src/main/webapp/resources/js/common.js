@@ -74,6 +74,7 @@ function showOverlay(){
 }
 
 function showPaginationScrollIcon(div){
+	removePaginationScrollIcon(div);
 	var img = '<img id="loaderPagination" src="resources/images/loading.gif" >';
 	$("#"+div).append(img);
 }
