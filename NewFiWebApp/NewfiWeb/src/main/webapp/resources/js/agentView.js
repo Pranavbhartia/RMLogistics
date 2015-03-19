@@ -30,7 +30,7 @@ function getAgentSecondaryLeftNav() {
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 = getAgentSecondaryLeftNavStep(1, "application progress");
 	var step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
-	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />your rate");
+	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />rate");
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
@@ -1343,10 +1343,12 @@ $(document).on('keyup', function(e) {
 	}
 });
 
-/*
- * $(document).click(function() { if ($('#cus-prof-popup').css("display") ==
- * "block") { hideCustomerEditProfilePopUp(); } });
- */
+
+$(document).click(function() {
+	if ($('#cus-prof-popup').css("display") == "block") {
+	  hideCustomerEditProfilePopUp(); 
+	} 
+});
 
 function appendCustomerEditProfilePopUp() {
 	var popUpWrapper = $('<div>').attr({
@@ -1402,6 +1404,9 @@ function appendCustomerEditProfilePopUp() {
 	}).datepicker({
 		orientation : "top auto",
 		autoclose : true
+	}).on('show', function(e) {
+	    var $popup = $('.datepicker');
+	    $popup.click(function () { return false; });
 	});
 
 	row.append(label).append(dobInput);
@@ -1457,6 +1462,7 @@ function updateUserProfile() {
 					$("#cusProfNameTxtID").text(
 							userProfileJson.firstName + " "
 									+ userProfileJson.lastName);
+					hideCustomerEditProfilePopUp();
 				},
 				error : function(error) {
 					alert("error" + error);
