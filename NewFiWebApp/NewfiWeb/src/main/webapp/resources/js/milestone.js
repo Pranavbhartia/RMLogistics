@@ -79,7 +79,7 @@ var workFlowContext = {
 		ob.currentRole = role;
 		var ajaxURL = "rest/workflow/";
 		if (role == "CUSTOMER") {
-			ajaxURL = ajaxURL + "customer/" + ob.customerWorkflowID;
+			ajaxURL = ajaxURL  + ob.customerWorkflowID;
 		} else {
 			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 		}
