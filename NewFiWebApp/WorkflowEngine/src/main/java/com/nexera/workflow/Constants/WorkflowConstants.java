@@ -19,6 +19,8 @@ public class WorkflowConstants {
 
 	public static final String RENDER_STATE_INFO_METHOD = "renderStateInfo";
 
+	public static final String CHECK_STATUS_METHOD = "checkStatus";
+
 	public static final String EXECUTE_METHOD = "execute";
 
 	public static final String LOAN_MANAGER_WORKFLOW_TYPE = "LM_WF_ALL";
