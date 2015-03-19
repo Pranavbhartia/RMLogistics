@@ -31,7 +31,7 @@ function getUserProfileData() {
 			customerPersonalInfoWrapper);
 }
 
-//TODO changes ranjitha
+//TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
 
@@ -57,7 +57,7 @@ function showLoanManagerProfilePage(){
 
 function paintLMProfileContainer() {
 	$('#loan-profile-main-container').html('');
-	// getUserProfileData();
+
 }
 
 function getUserProfileDataLM() {
@@ -105,7 +105,7 @@ function getLoanPersonalInfoContainer(user) {
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
 
-	var phone1Row = getPhone1Row(user);
+	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
 
 
@@ -136,9 +136,10 @@ function updateLMDetails() {
 	userProfileJson.customerDetail = customerDetails;
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
-if(phoneStatus!=false)
-if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
-	$.ajax({
+
+   if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
+     if(phoneStatus!=false){
+	    $.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
 		data : {
@@ -156,7 +157,7 @@ if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId")
 		}
 	});
 
-	showToastMessage("Succesfully updated");}else{
+	showToastMessage("Succesfully updated");}}else{
 		showToastMessage("Mandatory fields should not be empty");
 	}
 }
@@ -245,20 +246,21 @@ function getCustPersonalInfoContainer(user) {
 
 
 function getCustomerNameFormRow(user) {
-
+    //TODO added for validation 
     var span=$('<span>').attr({
 	
 		"class" : "mandatoryClass"
 	}).html("*").css("color","red");
 
-	//span.css("color":"red");
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Name");
+	
 	rowCol1.append(span);
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -460,7 +462,7 @@ function getDOBRow(user) {
 }
 
 function getPriEmailRow(user) {
-
+    //TODO added for validation
     var span=$('<span>').attr({	
 		"class" : "mandatoryClass"
 	}).html("*").css("color","red");
@@ -473,6 +475,7 @@ function getPriEmailRow(user) {
 	}).html("Primary Email");
 	
 	rowCol1.append(span);
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -584,7 +587,6 @@ function getZipRow(user) {
 }
 
 function getPhone1Row(user) {
-
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -592,7 +594,6 @@ function getPhone1Row(user) {
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
-	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -605,7 +606,34 @@ function getPhone1Row(user) {
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
 }
-//TODO added 
+//TODO added for validation LM
+
+function getPhone1RowLM(user) {
+    var span=$('<span>').attr({
+	
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+	
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Primary Phone");
+	rowCol1.append(span);
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var phone1Input = $('<input>').attr({
+		"class" : "prof-form-input",
+		"value" : user.phoneNumber,
+		"id" : "priPhoneNumberId",
+		
+	});
+	rowCol2.append(phone1Input);
+	return row.append(rowCol1).append(rowCol2);
+}
+
 function phoneNumberValidation(phoneNo){
 
 var regex = /^\d{10}$/;   
@@ -616,7 +644,7 @@ var regex = /^\d{10}$/;
 	}
 return true;
 }
-
+//END of changes
 function getPhone2Row(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -638,12 +666,6 @@ function getPhone2Row(user) {
 
 function updateUserDetails() {
 
-	/*
-	 * alert(validationFails);
-	 * 
-	 * if(validationFails){ return false; }
-	 */
-
 	var userProfileJson = new Object();
 
 	userProfileJson.id = $("#userid").val();
@@ -664,13 +686,12 @@ function updateUserDetails() {
 
 	userProfileJson.customerDetail = customerDetails;
 
-	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
-	// JSON.stringify(userProfileJson),function(response){});
-var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+	
+  
 
-if(phoneStatus!=false)
-if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
-
+    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
+    if(phoneStatus!=false){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
@@ -690,7 +711,7 @@ if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId")
 	});
 
 	showToastMessage("Succesfully updated");}
-	else{
+	}else{
 		showToastMessage("Mandatory Fileds should not be empty");
 	}
 }
