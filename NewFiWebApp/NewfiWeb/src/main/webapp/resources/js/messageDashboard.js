@@ -217,7 +217,7 @@ function getMessageDashboardWrapper() {
 		}
 		var agent = getAssignedAgentContainer(myLoanTeam[i].id , myLoanTeam[i].firstName+" "+myLoanTeam[i].lastName, 
 				userDescription,
-															myLoanTeam[i].emailId , myLoanTeam[i].photoImageUrl );
+				formatPhoneNumberToUsFormat(myLoanTeam[i].phoneNumber) , myLoanTeam[i].photoImageUrl );
 		assignedAgentWrapper.append(agent);
 		
 		
