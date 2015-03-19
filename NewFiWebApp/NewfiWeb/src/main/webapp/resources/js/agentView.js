@@ -1358,7 +1358,7 @@ function appendCustomerEditProfilePopUp() {
 
 	var header = $('<div>').attr({
 		"class" : "pop-up-header"
-	}).html("User Profile - 654321");
+	}).html("User Profile - "+selectedUserDetail.userID);
 
 	var container = $('<div>').attr({
 		"id" : "cus-prof-container",
