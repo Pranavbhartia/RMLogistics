@@ -5,7 +5,7 @@ var workFlowContext = {
 		this.countOfTasks = 0;
 		this.loanId = loanId;
 	},
-
+	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
 	loanManagerWorkflowID : {},
 	currentRole : {},
@@ -107,6 +107,8 @@ var workFlowContext = {
 		var ob = this;
 		var workItemExecList = this.mileStoneSteps;
 		var childList = [];
+		workFlowContext.itemsStatesToBeFetched=[];
+		workFlowContext.mileStoneContextList={};
 		for (var i = 0; i < workItemExecList.length; i++) {
 			var currentWorkItem = workItemExecList[i];
 			if (i == 0) {
@@ -140,6 +142,21 @@ var workFlowContext = {
 		if (callback) {
 			callback(ob);
 		}
+	},
+	fetchLatestStatus:function(callback){
+		var ob=this;
+		var data={};
+		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
+		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+			if (response.error) {
+				showToastMessage(response.error.message)
+			} else {
+				ob.mileStoneSteps = response.resultObject;
+			}
+			if (callback) {
+				callback(ob);
+			}
+		});
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
@@ -1116,6 +1133,8 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
 	var floatClass = "float-right";
+	if(workflowItem.status!=3)
+		workFlowContext.itemsStatesToBeFetched.push(workflowItem.id);
 	var progressClass = getProgressStatusClass(workflowItem.status);
 	var rightLeftClass = "milestone-lc";
 	if (countOfTasks % 2 == 1) {
@@ -1167,9 +1186,8 @@ function appendMilestoneItem(workflowItem, childList) {
 	header.append(headerTxt);
 
 	wrapper.append(rightBorder).append(header);
-	//if (workflowItem.stateInfo) {
-		appendInfoAction(rightLeftClass, wrapper, workflowItem);
-	//}
+	var WFContxt=appendInfoAction(rightLeftClass, wrapper, workflowItem);
+	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
 			var childRow = $('<div>').attr({
@@ -1182,6 +1200,9 @@ function appendMilestoneItem(workflowItem, childList) {
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
 			});
+			if(childList[index].status!=3)
+				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
+
 			var itemCheckBox = $('<div>').attr({
 				"class" : "ms-check-box box-border-box " + floatClass,
 				"data-checked" : getStatusClass(childList[index])
@@ -1207,7 +1228,8 @@ function appendMilestoneItem(workflowItem, childList) {
 			wrapper.append(childRow);
 
 			if (childList[index].stateInfo != null && childList[index].stateInfo!="") {
-				appendInfoAction(rightLeftClass, wrapper, childList[index]);				
+				var WFContxt=appendInfoAction(rightLeftClass, wrapper, childList[index]);
+				workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
 			}
 		}
 	}
@@ -1239,7 +1261,15 @@ function milestoneChildEventHandler(event) {
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
-	} else if ($(event.target).attr("data-text") == "APP_FEE") {
+	}
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+		 changeAgentSecondaryLeftPanel("lp-step4");
+	}
+	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
+		 changeAgentSecondaryLeftPanel("lp-step1");
+	}
+	
+	 else if ($(event.target).attr("data-text") == "APP_FEE") {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
