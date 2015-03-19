@@ -247,3 +247,12 @@
 .ce-rate-main-container{
 	width: 830px;
 }
+
+.ce-app-lp-item-text{
+	
+  padding-left: 15px;
+  line-height: 44px;
+  font-size: 15px;
+  font-family: 'opensanssemibold';
+  text-transform: capitalize;
+}
