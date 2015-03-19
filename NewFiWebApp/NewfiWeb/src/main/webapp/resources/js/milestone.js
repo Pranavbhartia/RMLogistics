@@ -211,7 +211,7 @@ var workFlowContext = {
 		NEEDS_EDU : { active : ""	, inactive : "m-not-started "	},
 		LOAN_PROGRESS : { active : ""	, inactive : "m-not-started "	},
 		PROFILE_INFO : { active : ""	, inactive : "m-not-started "	},
-		"1003_COMPLETE" : { active : ""	, inactive : "m-not-started "	},
+		"1003_COMPLETE" : { active : "ms-icn-disclosure"	, inactive : "m-not-started "	},
 		CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
 		CREDIT_SCORE : { active : ""	, inactive : "m-not-started "	},
 		AUS_STATUS : { active : ""	, inactive : "m-not-started "	},
@@ -222,7 +222,7 @@ var workFlowContext = {
 		APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		APPRAISAL_STATUS : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
 		LOCK_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
-		UW_STATUS : { active : ""	, inactive : "m-not-started "	},
+		UW_STATUS : { active : "ms-icn-disclosure"	, inactive : "m-not-started "	},
 		CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
 		MANAGE_PROFILE : { active : ""	, inactive : "m-not-started "	},
 		MANAGE_ACCOUNT : { active : ""	, inactive : "m-not-started "	},
@@ -282,33 +282,42 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				// in some cases we wont have to make a REST call - how to handle that?
 				//For eg: Schefule An Alert - need not come from a REST call 
 			}
+			
+			else if (ob.workItem.workflowItemType=="CREDIT_SCORE")
+			{
+				
+				ajaxURL = "";
+				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
+				workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
+			
+			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to apply application";
-				workItem.stateInfo = "Click here to apply application";
+				ob.workItem.stateInfo = "Click here to view application ";
+				workItem.stateInfo = "Click here to view application ";
 				
 			} 
 			
 			else if (ob.workItem.workflowItemType=="DISCLOSURE_STATUS")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "Click to add Disclosures";
-				workItem.stateInfo = "Click to add Disclosures";
+				ob.workItem.stateInfo = "Click to view Disclosures Status";
+				workItem.stateInfo = "Click to view Disclosures Status";
 				
 			}//
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "";
-				workItem.stateInfo = "";
+				ob.workItem.stateInfo = "Pending";
+				workItem.stateInfo = "Pending";
 				
 			}
 			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to start Appraisal";
-				workItem.stateInfo = "Click here to start Appraisal";
+				ob.workItem.stateInfo = "Click here to view Appraisal Status";
+				workItem.stateInfo = "Click here to view Appraisal Status";
 				
 			}
 			else if (ob.workItem.workflowItemType=="LOCK_RATE")
@@ -321,8 +330,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to lock rate";
-				workItem.stateInfo = "Click here to lock rates";
+				ob.workItem.stateInfo = "Click here to view Underwriting status";
+				workItem.stateInfo = "Click here to view Underwriting status";
 				
 			}			
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
@@ -336,7 +345,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=selectedUserDetail.loanID;
-				callback =false;
+				callback =paintNeedsInfo;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
@@ -429,6 +438,30 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		}
 	};
 	return internalEmployeeMileStoneContext;
+}
+function paintNeedsInfo(itemToAppendTo,ob)
+{
+	rightLeftClass = "milestone-lc";
+	var txtRow1 = $('<div>').attr({
+		"class" : rightLeftClass + "-text" + " milestone-plain-text",
+	});
+	var information=JSON.parse(ob.workItem.stateInfo);
+	txtRow1.html(information.totalSubmittedItem + " out of " + information.neededItemRequired);
+	
+	itemToAppendTo.append(txtRow1);
+	if (information.totalSubmittedItem != information.neededItemRequired)
+	{
+		txtRow1 = $('<div>').attr({
+			"class" : rightLeftClass + "-text",
+			"mileNotificationId" : ob.workItem.id,
+			"data-text" : ob.workItem.workflowItemType
+		});
+		txtRow1.html("Click here to upload more items");
+		txtRow1.bind("click", function(e) {
+			milestoneChildEventHandler(e)
+		});
+		itemToAppendTo.append(txtRow1);
+	}
 }
 function paintCustomerLoanProgressPage() {
 
@@ -1353,11 +1386,9 @@ function appendMilestoneItem(workflowItem, childList) {
 			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
-
-			if (childList[index].stateInfo != null && childList[index].stateInfo!="") {
-				var WFContxt=appendInfoAction(rightLeftClass, wrapper, childList[index]);
-				workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
-			}
+			var WFContxt=appendInfoAction(rightLeftClass, wrapper, childList[index]);
+			workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
+			
 		}
 	}
 	$('#loan-progress-milestone-wrapper').append(wrapper);
@@ -1395,8 +1426,8 @@ function milestoneChildEventHandler(event) {
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
 		 changeAgentSecondaryLeftPanel("lp-step1");
 	}
-	
-	 else if ($(event.target).attr("data-text") == "APP_FEE") {
+	 
+	 else if ($(event.target).attr("data-text") == "APP_FEE1") {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
