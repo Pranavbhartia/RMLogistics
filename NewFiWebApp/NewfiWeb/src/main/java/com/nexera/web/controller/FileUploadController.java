@@ -1,8 +1,14 @@
 package com.nexera.web.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,4 +90,34 @@ public class FileUploadController {
 		}
 
 	}
+	
+	
+	@RequestMapping(value = "/readFileAsStream.do" , method = RequestMethod.GET) 
+	public void doDownload(HttpServletRequest request, HttpServletResponse response , @RequestParam ("s3FileId") String  s3FileId) throws Exception {
+	       String s3FileURL = uploadedFilesListService.fetchUsingFileUUID(s3FileId).getS3path();
+	       LOG.info("The s3path = "+s3FileURL);
+	       String localFilePath = nexeraUtility.tomcatDirectoryPath()+File.separator+nexeraUtility.randomStringOfLength()+".pdf";
+	       
+		   File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
+		   FileInputStream inputStream = new FileInputStream(downloadFile);
+
+		  
+		   response.setContentType("application/pdf");
+
+		   // get output stream of the response
+		   OutputStream outStream = response.getOutputStream();
+
+		   byte[] buffer = new byte[2048];
+		   int bytesRead = -1;
+
+		   // write bytes read from the input stream into the output stream
+		   while ((bytesRead = inputStream.read(buffer)) != -1) {
+		       outStream.write(buffer, 0, bytesRead);
+		   }
+
+		   inputStream.close();
+		   outStream.close();
+	}
+	
+	
 }

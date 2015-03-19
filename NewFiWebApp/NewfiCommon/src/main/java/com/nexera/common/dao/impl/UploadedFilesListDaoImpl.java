@@ -95,6 +95,14 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements Uploaded
 		UploadedFilesList filesList = (UploadedFilesList) session.load(UploadedFilesList.class, fileId);
 		return filesList;
 	}
+
+	@Override
+	public UploadedFilesList fetchUsingFileUUID(String uuid) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UploadedFilesList.class).add(Restrictions.eq("uuidFileId", uuid));
+		UploadedFilesList filesList = (UploadedFilesList) criteria.uniqueResult();
+		return filesList;
+	}
 	
 	
 }
