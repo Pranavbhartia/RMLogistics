@@ -532,6 +532,10 @@
 	.newfi-team-list-tr-col3{
 		display: none;
 	}
+	.add-member-input-cont{
+		width: 100%;
+		margin: 10px 0;
+	}
 }
 
 

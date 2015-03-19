@@ -12,6 +12,7 @@ var workFlowContext = {
 	loanId : {},
 
 	mileStoneSteps : [],
+	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
 	ajaxRequest : function(url, type, dataType, data, successCallBack) {
 		$.ajax({
@@ -79,7 +80,7 @@ var workFlowContext = {
 		ob.currentRole = role;
 		var ajaxURL = "rest/workflow/";
 		if (role == "CUSTOMER") {
-			ajaxURL = ajaxURL + "customer/" + ob.customerWorkflowID;
+			ajaxURL = ajaxURL  + ob.customerWorkflowID;
 		} else {
 			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 		}
@@ -94,6 +95,33 @@ var workFlowContext = {
 			}
 		});
 
+	},
+	structureParentChild:function(){
+		var ob=this;
+		var tempList=ob.mileStoneSteps;
+		var finalList=[];
+		for(var i=0;i<tempList.length;i++){
+			var currentWorkItem = tempList[i];
+			if(currentWorkItem.parentWorkflowItemExec){
+				continue;
+			}else{
+				var parent=JSON.parse(JSON.stringify(currentWorkItem))
+				var childList=[];
+				for(var j=i+1;j<tempList.length;j++){
+					var currChild= tempList[j];
+					if(currChild.parentWorkflowItemExec){
+						if(currChild.parentWorkflowItemExec.id==parent.id){
+							childList.push(currChild)
+						}
+					}else{
+						continue;
+					}
+				}
+				parent.childList=childList;
+				finalList.push(parent)
+			}
+		}
+		ob.mileStoneStepsStructured=finalList;
 	},
 	checkIfChild : function(workflowItem) {
 		var ob = this;

@@ -1,0 +1,115 @@
+.cust-app-lp {
+    width: 275px;
+    height: 1000px;
+}
+.cust-app-rp {
+    width: 549px;
+}
+.app-ques-text {
+    font-family: 'opensanssemibold';
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+}
+.app-option {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    padding-left: 30px;
+    background: url(../images/check_box_unchecked.png) no-repeat left center;
+    font-size: 16px;
+    font-family: 'opensanssemibold';
+    text-transform: capitalize;
+    cursor: pointer;
+}
+.app-option-checked {
+	background: url(../images/check_box_checked.png) no-repeat left center;
+}
+.app-ques-wrapper {
+    margin: 10px 0;
+    padding: 5px 0;
+}
+.app-ques-header-txt {
+    font-family: 'opensanssemibold';
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+}
+.app-input {
+    width: 400px;
+    height: 35px;
+    padding-left: 10px;
+    line-height: 35px;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    background: #fafafa;
+    font-size: 14px;
+}
+.app-save-btn {
+    width: 160px;
+    height: 40px;
+    line-height: 40px;
+    margin: 15px auto;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    background: #6c9f2e;
+    border-radius: 3px;
+    text-transform: capitalize;
+    font-family: 'opensanssemibold';
+    cursor: pointer;
+}
+.app-options-cont {
+    position: relative;
+    width: 400px;
+}
+.app-dropdown-cont {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    background: #fafafa;
+    z-index: 2;
+}
+.app-option-selected {
+    height: 35px;
+    padding-left: 10px;
+    line-height: 35px;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    background: #fafafa;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+.app-option-sel {
+    height: 30px;
+    padding-left: 10px;
+    line-height: 30px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.app-option-sel:hover {
+    background: #e2e2e2;
+}
+
+.app-option-choice {
+	display: inline-block;
+	width: 50px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	margin-right: 10px;
+	color: #fff;
+	background: #6c9f2e;
+	border-radius: 3px;
+	font-size: 14px;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.app-option-choice[isSelected="true"] {
+	background: #F47521;
+}

@@ -150,7 +150,8 @@ function changeSecondaryLeftPanel(secondary) {
 	if (secondary == 1) {
 		// getting to know newfi page
 	} else if (secondary == 2) {
-		ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, paintProfileCompleteStep1);
+		//ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, paintProfileCompleteStep1);
+		paintCustomerApplicationPage();
 	} else if (secondary == 3) {
 		// fix your rate page
 		paintFixYourRatePage();
