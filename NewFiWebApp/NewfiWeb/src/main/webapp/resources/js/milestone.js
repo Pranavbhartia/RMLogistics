@@ -168,6 +168,53 @@ var workFlowContext = {
 		if (callback) {
 			callback();
 		}
+	},
+	getCssClassForWfItem : function(wfItemType,stateNumber){
+		
+		var status="active";
+		if(stateNumber>1)
+			status="inactive";
+		var cssMap={
+		INITIAL_CONTACT : { active : ""	, inactive : "m-not-started "	},
+		SYSTEM_EDU : { active : ""	, inactive : "m-not-started "	},
+		RATES_EDU : { active : ""	, inactive : "m-not-started "	},
+		APP_EDU : { active : "ms-icn-application-status"	, inactive : "m-not-started ms-icn-application-status"	},
+		COMM_EDU : { active : ""	, inactive : "m-not-started "	},
+		NEEDS_EDU : { active : ""	, inactive : "m-not-started "	},
+		LOAN_PROGRESS : { active : ""	, inactive : "m-not-started "	},
+		PROFILE_INFO : { active : ""	, inactive : "m-not-started "	},
+		"1003_COMPLETE" : { active : ""	, inactive : "m-not-started "	},
+		CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
+		CREDIT_SCORE : { active : ""	, inactive : "m-not-started "	},
+		AUS_STATUS : { active : ""	, inactive : "m-not-started "	},
+		QC_STATUS : { active : ""	, inactive : "m-not-started "	},
+		NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
+		TEAM_STATUS : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
+		DISCLOSURE_STATUS : { active : "ms-icn-disclosure"	, inactive : "m-not-started ms-icn-disclosure"	},
+		APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		APPRAISAL_STATUS : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
+		LOCK_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
+		UW_STATUS : { active : ""	, inactive : "m-not-started "	},
+		CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
+		MANAGE_PROFILE : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_ACCOUNT : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_ONLINE_APP : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_PHOTO : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_SMS : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_APP_STATUS : { active : ""	, inactive : "m-not-started "	},
+		CONNECT_ONLINE_APP : { active : ""	, inactive : "m-not-started "	},
+		CONTACT_LOAN_MANAGER : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_CREDIT_STATUS : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_TEAM : { active : ""	, inactive : "m-not-started "	},
+		MANAGE_APP_FEE : { active : ""	, inactive : "m-not-started "	},
+		LOCK_YOUR_RATE : { active : ""	, inactive : "m-not-started "	},
+		VIEW_APPRAISAL : { active : ""	, inactive : "m-not-started "	},
+		VIEW_UW : { active : ""	, inactive : "m-not-started "	},
+		VIEW_CLOSING : { active : ""	, inactive : "m-not-started "	}
+		}
+		if(cssMap[wfItemType] && cssMap[wfItemType][status])
+			return cssMap[wfItemType][status]
+		
 	}
 };
 function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
@@ -304,6 +351,53 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}	
 
 
+		},
+		getCssClassForWfItem : function(wfItemType){
+			
+			var status="active";
+			if(stateNumber>1)
+				status="inactive";
+			var cssMap={
+			INITIAL_CONTACT : { active : ""	, inactive : "m-not-started "	},
+			SYSTEM_EDU : { active : ""	, inactive : "m-not-started "	},
+			RATES_EDU : { active : ""	, inactive : "m-not-started "	},
+			APP_EDU : { active : "ms-icn-application-status"	, inactive : "m-not-started ms-icn-application-status"	},
+			COMM_EDU : { active : ""	, inactive : "m-not-started "	},
+			NEEDS_EDU : { active : ""	, inactive : "m-not-started "	},
+			LOAN_PROGRESS : { active : ""	, inactive : "m-not-started "	},
+			PROFILE_INFO : { active : ""	, inactive : "m-not-started "	},
+			"1003_COMPLETE" : { active : ""	, inactive : "m-not-started "	},
+			CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
+			CREDIT_SCORE : { active : ""	, inactive : "m-not-started "	},
+			AUS_STATUS : { active : ""	, inactive : "m-not-started "	},
+			QC_STATUS : { active : ""	, inactive : "m-not-started "	},
+			NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
+			TEAM_STATUS : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
+			DISCLOSURE_STATUS : { active : "ms-icn-disclosure"	, inactive : "m-not-started ms-icn-disclosure"	},
+			APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+			APPRAISAL_STATUS : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
+			LOCK_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
+			UW_STATUS : { active : ""	, inactive : "m-not-started "	},
+			CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
+			MANAGE_PROFILE : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_ACCOUNT : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_ONLINE_APP : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_PHOTO : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_SMS : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_APP_STATUS : { active : ""	, inactive : "m-not-started "	},
+			CONNECT_ONLINE_APP : { active : ""	, inactive : "m-not-started "	},
+			CONTACT_LOAN_MANAGER : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_CREDIT_STATUS : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_TEAM : { active : ""	, inactive : "m-not-started "	},
+			MANAGE_APP_FEE : { active : ""	, inactive : "m-not-started "	},
+			LOCK_YOUR_RATE : { active : ""	, inactive : "m-not-started "	},
+			VIEW_APPRAISAL : { active : ""	, inactive : "m-not-started "	},
+			VIEW_UW : { active : ""	, inactive : "m-not-started "	},
+			VIEW_CLOSING : { active : ""	, inactive : "m-not-started "	}
+			}
+			if(cssMap[wfItemType] && cssMap[wfItemType][status])
+				return cssMap[wfItemType][status]
+			
 		}
 	};
 	return internalEmployeeMileStoneContext;
@@ -1161,6 +1255,11 @@ function appendMilestoneItem(workflowItem, childList) {
 		"class" : rightLeftClass + "-header-txt " + floatClass
 	}).html(workflowItem.displayContent);
 
+
+	var headerIcn = $('<div>').attr({
+		"class" : "milestone-lc-header-icn "
+	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType)).addClass(floatClass);
+	
 	var headerCheckBox = $('<div>').attr({
 		"class" : "ms-check-box-header box-border-box " + floatClass,
 		"data-checked" : getStatusClass(workflowItem)
@@ -1183,7 +1282,7 @@ function appendMilestoneItem(workflowItem, childList) {
 		})
 	}
 	headerTxt.append(headerCheckBox);
-	header.append(headerTxt);
+	header.append(headerTxt).append(headerIcn);
 
 	wrapper.append(rightBorder).append(header);
 	var WFContxt=appendInfoAction(rightLeftClass, wrapper, workflowItem);
@@ -1291,3 +1390,5 @@ function milestoneChildEventHandler(event) {
 		    });
 	}
 }
+
+
