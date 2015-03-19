@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
@@ -22,13 +23,20 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		int loanId = Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		// Make a service call to get the number of needed items' assigned
 		// against the
 		NeededItemScoreVO neededItemScoreVO = needsListService
 		        .getNeededItemsScore(loanId);
-		return neededItemScoreVO.getTotalSubmittedItem() + " out of "
-		        + neededItemScoreVO.getNeededItemRequired();
+		StringBuffer strBuff = new StringBuffer();
+		strBuff.append(neededItemScoreVO.getTotalSubmittedItem() + " out of "
+		        + neededItemScoreVO.getNeededItemRequired());
+		if (neededItemScoreVO.getTotalSubmittedItem() == neededItemScoreVO.getNeededItemRequired())
+		{
+			neededItemScoreVO.setNeedsMet(true);
+		}
+		return new Gson().toJson(neededItemScoreVO);
 	}
 
 	public Object[] getParamsForExecute() {
