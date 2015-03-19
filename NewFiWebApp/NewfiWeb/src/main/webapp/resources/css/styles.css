@@ -3178,7 +3178,7 @@ input.calc-input {
 
 .milestone-header-bar-step {
 	position: relative;
-	width: 160px;
+	width: 22%;
 	height: 54px;
 	border-radius: 27px 0 0 27px;
 	margin-right: -21px;
@@ -3276,6 +3276,10 @@ input.calc-input {
 .ms-team-member-th,.ms-team-member-tr {
 	border-bottom: 1px dashed #dcdcdc;
 	width: 250px;
+}
+
+.ms-team-member-th-col1,.ms-team-member-th-col2{
+	font-family: 'opensanssemibold';
 }
 
 .ms-team-member-th-col1,.ms-team-member-th-col2,.ms-team-member-tr-col1,.ms-team-member-tr-col2
