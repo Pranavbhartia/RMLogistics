@@ -49,14 +49,19 @@ INSERT INTO `loanstatusmaster` VALUES (1,'IN_PROGRESS','In progress','2015-12-12
 UNLOCK TABLES;
 
 
-INSERT INTO `loantypemaster` VALUES (1,'REF','Refinance','2015-12-12 00:00:00',1);
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('1', 'PUR', 'Purchase', '2015-12-12 00:00:00', '1');
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('2', 'REF', 'Refinance', '2015-12-12 00:00:00', '1');
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('3', 'REFCO', 'Refinance Cashout', '2015-12-12 00:00:00', '1');
+
 
 
 INSERT INTO `loanprogressstatusmaster` VALUES (1,'NEW_PROSPECT'),(2,'LEAD'),(3,'NEW_LOAN'),(4,'IN_PROGRESS'),(5,'CLOSED'),(6,'WITHDRAWN'),(7,'DECLINED');
 
 LOCK TABLES `propertytypemaster` WRITE;
 /*!40000 ALTER TABLE `propertytypemaster` DISABLE KEYS */;
-INSERT INTO `propertytypemaster` VALUES (1,'1','type 1',NULL,NULL);
+INSERT INTO `newfi_schema`.`propertytypemaster` (`id`, `property_type_cd`, `description`, `modified_date`) VALUES ('1', 'RES', 'Residence', '2015-01-01');
+INSERT INTO `newfi_schema`.`propertytypemaster` (`id`, `property_type_cd`, `description`, `modified_date`) VALUES ('2', 'RENT', 'Renting', '2015-01-01');
+
 /*!40000 ALTER TABLE `propertytypemaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
