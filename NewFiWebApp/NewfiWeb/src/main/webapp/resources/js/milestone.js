@@ -821,7 +821,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 		return;
 	
 	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text",
+		"class" : "milestone-rc-text showAnchor",
 		"data-text" : "TEAM_STATUS",
 		"mileNotificationId":milestoneID
 	}).html("Click here to add a Team Member").bind("click", function(e) {
