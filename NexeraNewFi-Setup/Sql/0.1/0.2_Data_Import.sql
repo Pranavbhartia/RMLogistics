@@ -31,9 +31,10 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Test','test','test@gmail.com','test@gmail.com','1234',1,1,'6507729312',NULL,NULL,NULL,NULL),
-(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,NULL),
-(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,2,NULL,NULL,NULL,NULL,1);
+INSERT INTO `user` VALUES (1,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
+(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
+(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 --
