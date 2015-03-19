@@ -3670,10 +3670,6 @@ input.calc-input {
 	position: relative;
 }
 
-#ms-add-member-popup .add-member-dropdown-cont {
-	left: 94px !important;
-	width: 180px;
-}
 
 #ms-add-member-popup .header-down-icn {
 	display: none;
