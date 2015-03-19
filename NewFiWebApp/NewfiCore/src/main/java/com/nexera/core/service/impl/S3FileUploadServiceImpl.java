@@ -136,7 +136,12 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				uniqueBucketName, key, file);
 
-		putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+		if(FilenameUtils.getExtension(file.getName()).equals("pdf")){
+			putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
+		}else{
+			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+		}
+		
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setCacheControl("public");
 		metadata.setExpirationTime(getCacheExpiryDate());

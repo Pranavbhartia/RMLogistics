@@ -21,6 +21,15 @@
 		<property name="maxPoolSize" value="5" />
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
+	
+	
+	<bean id="emailTaskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="2" />
+		<property name="maxPoolSize" value="5" />
+		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
+
 
 	<bean name="complexJobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
@@ -28,6 +37,20 @@
 			value="com.nexera.core.batchprocessor.LoanBatchProcessor" />
 		<property name="durability" value="true" />
 	</bean>
+
+	<bean name="emailJobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.EmailBatchProcessor" />
+		<property name="durability" value="true" />
+	</bean>
+	
+		<bean id="emailCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="emailJobDetail" />
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+	</bean>
+
 
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -41,12 +64,14 @@
 		<property name="jobDetails">
 			<list>
 				<ref bean="complexJobDetail" />
+				<ref bean="emailJobDetail" />
 			</list>
 		</property>
 
 		<property name="triggers">
 			<list>
 				<ref bean="cronTrigger" />
+				<ref bean="emailCronTrigger" />
 			</list>
 		</property>
 	</bean>
