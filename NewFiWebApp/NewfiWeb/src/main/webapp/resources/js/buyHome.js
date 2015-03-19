@@ -737,8 +737,7 @@ function paintHomeZipCode() {
 function paintBuyHomeMortgagebalance() {
 
 	var quesTxt = "What is the mortgage balance of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,
-			paintBuyHomePurchaseforNewHome, "currentMortgageBalance");
+	var quesCont = getBuyHomeTextQuestion(quesTxt,paintBuyHomePurchaseforNewHome, "currentMortgageBalance");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
