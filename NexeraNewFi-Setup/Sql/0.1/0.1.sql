@@ -85,3 +85,7 @@ ADD CONSTRAINT `fk_wfItemOnSuccess`
   REFERENCES `newfi_schema`.`workflowitemmaster` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+  
+  
+  alter table newfi_schema.uploadedfileslist
+  add column uuidfileid varchar(100);
