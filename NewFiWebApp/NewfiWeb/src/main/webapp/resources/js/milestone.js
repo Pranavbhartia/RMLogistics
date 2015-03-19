@@ -1285,7 +1285,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 
 	var headerIcn = $('<div>').attr({
-		"class" : "milestone-lc-header-icn "
+		"class" : rightLeftClass+"-header-icn "
 	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType)).addClass(floatClass);
 	
 	var headerCheckBox = $('<div>').attr({
