@@ -96,23 +96,12 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	}).html(listUploadedFiles.fileName);
 	
 	
-	if(newfiObject.user.userRole.roleDescription == "Realtor"){
-		if(listUploadedFiles.assignedByUser.userId == newfiObject.user.id ){
-			docImg.click(function(){
-				window.open(listUploadedFiles.s3path, '_blank');
-			});
-		}else{
-			docImg.addClass("unlink");
-		}
-	}else{
-		docImg.click(function(){
-			window.open(listUploadedFiles.s3path, '_blank');
-		});
-	}
+	var ahrefFile = $("<a>").attr({
+					"href" : "readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId,
+					"target" : "_blank"
+	});
 	
 	
-	
-
 	
 	
 	var docAssign = $("<select>").attr({
@@ -144,7 +133,28 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		docAssign.append(option);
 	}
 
-	return column.append(docImg).append(docDesc).append(docAssign);
+	
+	if(newfiObject.user.userRole.roleDescription == "Realtor"){
+		if(listUploadedFiles.assignedByUser.userId == newfiObject.user.id ){
+			docImg.click(function(){
+				window.open("readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId, '_blank');
+			});
+			ahrefFile.append(docDesc);
+		}else{
+			docImg.addClass("unlink");
+			ahrefFile = docDesc;
+			docAssign.hide();
+		}
+	}else{
+		
+		docImg.click(function(){
+			window.open("readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId, '_blank');
+		});
+		ahrefFile.append(docDesc);
+	}
+	column.append(docImg).append(ahrefFile);
+	
+	return column.append(docAssign);
 }
 
 
@@ -155,7 +165,7 @@ function showFileLink(uploadedItems) {
 		$('#needDoc' + needId).removeClass('hide');
 		$('#needDoc' + needId).addClass('doc-link-icn');
 		$('#needDoc' + needId).click(function() {
-			window.open(value.s3path, '_blank');
+			window.open("readFileAsStream.do?s3FileId="+value.uuidFileId, '_blank');
 		});
 	});
 }
@@ -339,8 +349,6 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
 		},
 		queuecomplete : function() {
-			
-			
 		},
 		addedfile : function(){
 			showOverlay();

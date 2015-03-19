@@ -85,6 +85,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setUploadedDate(uploadedFilesList.getUploadedDate());
 		filesListVO.setFileName(uploadedFilesList.getFileName());
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
+		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
 		
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
@@ -207,6 +208,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setFileName(file.getName());
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		uploadedFilesList.setAssignedBy(assignByUser);
+		uploadedFilesList.setUuidFileId(nexeraUtility.randomStringOfLength());
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}
@@ -215,6 +217,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileId(fileId);
+	}
+
+	@Override
+	public UploadedFilesList fetchUsingFileUUID(String uuidFileId) {
+		// TODO Auto-generated method stub
+		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
 	}
 	
 	

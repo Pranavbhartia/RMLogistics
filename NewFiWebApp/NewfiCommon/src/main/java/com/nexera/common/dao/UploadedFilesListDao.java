@@ -20,4 +20,6 @@ public interface UploadedFilesListDao {
 
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 	
+	public UploadedFilesList fetchUsingFileUUID(String uuid);
+	
 }

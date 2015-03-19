@@ -32,5 +32,7 @@ public interface UploadedFilesListService {
 	void updateIsAssignedToTrue(List<Integer> fileIds);
 
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
+
+	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
 	
 }
