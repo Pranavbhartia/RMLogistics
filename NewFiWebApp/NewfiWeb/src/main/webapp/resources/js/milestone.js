@@ -10,7 +10,7 @@ var workFlowContext = {
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
-
+	initAttempted:false,
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
@@ -39,9 +39,14 @@ var workFlowContext = {
 								showToastMessage(response.error.message)
 							} else {
 								if(response.resultObject.loanManagerWorkflowID==0){
-									ob.createWorkflow(function(ob){
-										ob.getWorkflowID(callback);
-									})
+									if(ob.initAttempted){
+										showToastMessage("Master Tables Not Populated")
+									}else{
+										ob.initAttempted=true;
+										ob.createWorkflow(function(ob){
+											ob.getWorkflowID(callback);
+										});
+									}
 								}else{
 									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
 									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
@@ -355,10 +360,59 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				callback = paintMilestoneTeamMemberTable;
 				// Just exposed a rest service to test - with hard coded loan ID
 			}
-			else return;
+			//else return;
 			
-					
+			else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
+				workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
+						
+			}
 			
+			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click Here to Pay Application Fee";
+				workItem.stateInfo = "Click Here to Pay Application Fee";
+						
+			}
+			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to lock your rate";
+				workItem.stateInfo = "Click here to lock your rate";
+						
+			}
+			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Not ordered";
+				workItem.stateInfo = "Not ordered";
+						
+			}
+			else if (ob.workItem.workflowItemType=="MANAGE_TEAM")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Click here to add Team member";
+				workItem.stateInfo = "Click here to add Team member";
+						
+			}
+			
+			else if (ob.workItem.workflowItemType=="VIEW_UW")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "N/A";
+				workItem.stateInfo = "N/A";
+						
+			}
+			else if (ob.workItem.workflowItemType=="VIEW_CLOSING")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "Closed On";
+				workItem.stateInfo = "Closed on.";
+						
+			}
 			if(ajaxURL&&ajaxURL!=""){
 				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
@@ -389,7 +443,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 
 
 		},
-		getCssClassForWfItem : function(wfItemType){
+		getCssClassForWfItem : function(wfItemType,stateNumber){
 			
 			var status="active";
 			if(stateNumber>1)
@@ -1320,7 +1374,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	var headerIcn = $('<div>').attr({
 		"class" : rightLeftClass+"-header-icn "
-	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType)).addClass(floatClass);
+	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType,workflowItem.status)).addClass(floatClass);
 	
 	var headerCheckBox = $('<div>').attr({
 		"class" : "ms-check-box-header box-border-box " + floatClass,
@@ -1424,10 +1478,10 @@ function milestoneChildEventHandler(event) {
 				event.target, data);
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
-		 changeAgentSecondaryLeftPanel("lp-step4");
+		 $("#lp-step4").click();
 	}
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
-		 changeAgentSecondaryLeftPanel("lp-step1");
+		 $("#lp-step1").click();
 	}
 	
 	 else if ($(event.target).attr("data-text") == "APP_FEE1") {

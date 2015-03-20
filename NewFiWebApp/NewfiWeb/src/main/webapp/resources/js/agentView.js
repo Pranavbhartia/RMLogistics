@@ -953,17 +953,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit", "TU-646 | EQ-686 | EX-685", true);
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
-
-	// append cust info popup
-	appendCustomerEditProfilePopUp();
-
-	$("#uploadFile").change(
-			function() {
-
-				photoUpload(this.form, 'uploadCommonImageToS3.do',
-						'cusImgIcnID', '', '1', selectedUserDetail.userID);
-
-			});
+    appendCustomerEditProfilePopUp();
 
 }
 
@@ -1048,6 +1038,7 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 	var downArrow = $('<div>').attr({
 		"class" : "add-member-down-arrow float-right"
 	}).on('click', function() {
+		
 		if ($('#add-username-dropdown-cont').css("display") == "block") {
 			hideUserNameDropDown();
 		} else {
@@ -1317,14 +1308,33 @@ function getTeamListTableRow(user, loanID) {
 	userDelIcn.click(function() {
 		var userID = $(this).attr("userid");
 		var loanID = $(this).attr("loanid");
-		removeUserFromLoanTeam(userID, loanID);
+		confirmRemoveUser("Are you sure you want to delete the user?",userID, loanID);
 	});
 	trCol5.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
 }
 
+function confirmRemoveUser(textMessage, userID, loanID){
+	
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click',function(){
+			removeUserFromLoanTeam(userID, loanID);
+			$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-cancel').on('click',function(){
+		$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-popup').show();
+}
+
 $(document).on('click', '#ld-customer .loan-detail-link', function(event) {
+
 	event.stopImmediatePropagation();
 	if ($('#cus-prof-popup').css("display") == "block") {
 		hideCustomerEditProfilePopUp();
@@ -1371,6 +1381,7 @@ function appendCustomerEditProfilePopUp() {
 
 	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName,
 			"firstNameID");
+
 	appendCustomerProfEditRow("Last Name", selectedUserDetail.lastName,
 			"lastNameID");
 
@@ -1381,7 +1392,7 @@ function appendCustomerEditProfilePopUp() {
 	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
 	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");
 	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
-
+     $('#emailIdID').attr("readonly", true) 
 	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 
 	var row = $('<div>').attr({
@@ -1448,7 +1459,7 @@ function updateUserProfile() {
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
 	// JSON.stringify(userProfileJson),function(response){});
-
+	if($("#firstNameID").val()!=""&&$("#lastNameID").val()!=""&&$("#emailIdID").val()!=""){
 	$
 			.ajax({
 				url : "rest/userprofile/managerupdateprofile",
@@ -1469,7 +1480,9 @@ function updateUserProfile() {
 				}
 			});
 
-	showToastMessage("Succesfully updated");
+	showToastMessage("Succesfully updated");}else{
+	showToastMessage("Mandatory feilds cannot be empty");
+	}
 
 }
 
@@ -1490,6 +1503,12 @@ function hideCustomerEditProfilePopUp() {
 }
 
 function appendCustomerProfEditRow(labelTxt, value, id) {
+	
+	var span=$('<span>').attr({
+		
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+	
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1498,9 +1517,14 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		"class" : "cust-prof-edit-label float-left"
 	}).html(labelTxt);
 
+	if(id=="firstNameID"||id=="lastNameID"||id=="emailIdID"){
+		label.append(span);
+		}
+	
 	var inputTag = $('<input>').attr({
 		"class" : "cust-prof-edit-input float-left",
-		"id" : id
+		"id" : id,
+		
 	}).val(value);
 
 	row.append(label).append(inputTag);
@@ -1508,6 +1532,7 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 }
 
 function appendCustomerProfUploadPhotoRow() {
+
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1534,48 +1559,40 @@ function appendCustomerProfUploadPhotoRow() {
 		"class" : "cust-prof-upload-filename"
 	}).html("Jane-Profile.png");
 
-	var imageForm = $('<form>').attr({
 
-	});
 
-	var inputHiddenFile = $('<input>').attr({
+		var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
-		"id" : "uploadFile",
-		"name" : "fileName"
+		"id" : "prof-image",
+		"name" :  selectedUserDetail.customerId,
+		"value" : "Upload"
+
+	});
+	var inputHiddenDiv = $('<div>').attr({
+		"style" : "display:none"
 
 	});
 
-	var UserId = $('<input>').attr({
-		"type" : "hidden",
-		"id" : "userIdId",
-		"name" : "userId",
-		"value" : selectedUserDetail.userID
-	});
-
-	var uploadImage = $('<div>').attr({
-		"class" : "uploadImage"
-
-	}).hide();
-
-	imageForm.append(inputHiddenFile);
-	imageForm.append(UserId);
-	uploadImage.append(imageForm);
+	inputHiddenDiv.append(inputHiddenFile);
 
 	var uploadBtn = $('<div>').attr({
 		"class" : "cust-prof-upload-btn",
-
-	}).click(uploadeImage).html("upload");
+         "id":"uploadID",
+		 "onclick":"uploadeImage()"
+	}).html("upload");
 
 	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
-			uploadImage);
+			inputHiddenDiv);
 	uploadPhotoCont.append(uploadIcn).append(uploadPhotoRc);
 	row.append(label).append(uploadPhotoCont);
 	$('#cus-prof-container').append(row);
+	
 }
 
 function uploadeImage() {
 
-	$("#uploadFile").trigger('click');
+	$("#prof-image").trigger('click');
+	$(".overlay-container").css("display","block");
 
 }
 
@@ -1675,12 +1692,15 @@ function hideCreateUserPopup() {
 }
 
 function appendCreateUserPopupFirstName() {
+
+	
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
 		"class" : "create-user-popup-label float-left"
 	}).html("First Name");
+	
 	var inputBox = $('<input>').attr({
 		"class" : "create-user-popup-input",
 		"id" : "create-user-first-name"
@@ -1777,7 +1797,8 @@ function appendCreateUserPopupEmail() {
 	}).html("Email");
 	var inputBox = $('<input>').attr({
 		"class" : "create-user-popup-input",
-		"id" : "create-user-emailId"
+		"id" : "create-user-emailId",
+		
 	}).val("");
 	row.append(label).append(inputBox);
 	$('#create-user-container').append(row);

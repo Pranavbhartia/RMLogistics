@@ -48,7 +48,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		return gson.toJson(loanTeam);
 	}
 
-	public Object[] getParamsForExecute() {
+	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}

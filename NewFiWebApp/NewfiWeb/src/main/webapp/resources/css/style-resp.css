@@ -132,11 +132,12 @@
 		width: 225px;
 	}
 	.right-panel-messageDashboard{
-		width:95% !important;
+		width:100% !important;
 		margin-left: 0;
 	}
 	.message-wrapper{
 		margin-left: 0;
+		padding-left: 5px;
 	}
 	.message-cont-textinput{
 		width: 99%;
@@ -218,6 +219,81 @@
 	}
 	.cus-prof-pic-txt{
 		margin-left: 20px;
+	}
+	.prof-form-input{
+		display: block;
+		margin-bottom: 10px;
+	}
+	.prof-form-input-lg{
+		width: 250px;
+	}
+	.milestone-lc, .milestone-rc{
+		width: 100%;
+		left: 0;
+	}
+	.ms-cust-prof-container{
+		display: none;
+	}
+	.milestone-lc:after,.milestone-lc:before{
+		left:0;
+	}
+	.milestone-lc-border{
+		left: -1px;
+		right: auto;
+	}
+	.milestone-lc{
+		padding-left:20px;
+		padding-right: 0; 
+	}
+	.milestone-lc-text {
+		text-align: left;
+	}
+	.milestone-lc-header-txt,.milestone-lc-header-icn{
+		float: left;
+	}
+	.milestone-lc-header-icn{
+		margin-right: 0;
+		margin-left: 10px;
+	}
+	.milestone-lc .ms-check-box-header {
+		margin-left: -10px;
+		margin-right: 10px;
+		float: left;
+	}
+	.milestone-lc-header-txt:after{
+		left: 0;
+		border-color: transparent;
+		transform: rotate(45deg);
+		border-top-width: 14px;
+		margin-left: -11px;
+		margin-top: -5px;
+		border-top-color:#ebebeb;
+	}
+	
+	.m-not-started  .milestone-lc-header-txt:before{
+		left:0;
+		margin-top: -6px;
+		margin-left:-10px;
+		transform: rotate(45deg);
+		border-color: rgba(136, 183, 213, 0);
+		border-top-color: #888;
+		border-top-width: 15px;
+	}
+	.m-complete .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #7AB10D;
+	}
+	.m-in-progress .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #F47521;
+	}
+	.ms-check-box{
+		float: left;
+	}
+	.m-not-started .milestone-lc-header-txt:after {
+		border-width: 1px;
+		border-top-width: 14px;
+		margin-left: -3px;
 	}
 }
 
@@ -348,6 +424,9 @@
 	}
 	.add-member-sel,.add-member-sel-search{
 		float: left;
+	}
+	.ms-team-member-th,.ms-team-member-tr{	
+		width: 195px;
 	}
 }
 
@@ -535,6 +614,13 @@
 	.add-member-input-cont{
 		width: 100%;
 		margin: 10px 0;
+	}
+	.prof-form-row-desc{
+		width: 100%;
+		text-align: left;
+	}
+	.prof-form-row{
+		padding: 5px 0;
 	}
 }
 

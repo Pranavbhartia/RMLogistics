@@ -331,8 +331,8 @@ function getCustomerUploadPhotoRow(user) {
 	var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
 		"id" : "prof-image",
-		"name" : "fileName",
-		"value" : "Upload"
+		"name" : user.id,
+		"value" :"Upload"
 
 	});
 
@@ -484,6 +484,7 @@ function getPriEmailRow(user) {
 		"class" : "prof-form-input prof-form-input-lg",
 		"value" : user.emailId,
 		"id" : "priEmailId",
+		"readonly":true,
 		"onblur" : "emailValidation(this.value)"
 	});
 	rowCol2.append(emailInput);
@@ -598,9 +599,10 @@ function getPhone1Row(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone1Input = $('<input>').attr({
-		"class" : "prof-form-input",
+		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.phoneNumber,
 		"id" : "priPhoneNumberId",
+		
 		
 	});
 	rowCol2.append(phone1Input);
@@ -630,6 +632,7 @@ function getPhone1RowLM(user) {
 		"id" : "priPhoneNumberId",
 		
 	});
+	
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
 }
@@ -656,7 +659,7 @@ function getPhone2Row(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone2Input = $('<input>').attr({
-		"class" : "prof-form-input",
+		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.customerDetail.secPhoneNumber,
 		"id" : "secPhoneNumberId"
 	});
@@ -716,105 +719,6 @@ function updateUserDetails() {
 	}
 }
 
-
-
-/*
- * function uploadImageFunction(obj){
- * 
- * alert(obj); var urlToHit="rest/userprofile/uploadCommonImageToS3";
- * fileUpload($('#fullImageFormId'), urlToHit,'profilePic', '', '1'); $.ajax( {
- * url: urlToHit, type: "POST", headers : { "Accept" : "application/json;
- * charset=utf-8"
- *  }, data: new FormData(obj), success : function(response) { alert("success"); },
- * 
- * error : function(e) { alert("error.."); }, processData: false, contentType:
- * false } );
- *  }
- */
-
-function fileUpload(form, action_url, img_div_id, message_div_id, suffix,
-		userId) {
-	// Create the iframe...
-
-	var iframe = document.createElement("iframe");
-	iframe.setAttribute("id", "upload_" + suffix);
-	iframe.setAttribute("name", "upload_" + suffix);
-	iframe.setAttribute("width", "0");
-	iframe.setAttribute("height", "0");
-	iframe.setAttribute("border", "0");
-	iframe.setAttribute("style", "width: 0; height: 0; border: none;");
-
-	// Add to document...
-	form.parentNode.appendChild(iframe);
-	window.frames['upload_' + suffix].name = "upload_" + suffix;
-
-	iframeId = document.getElementById("upload_" + suffix);
-
-	// Add event...
-	var eventHandler = function() {
-
-		if (iframeId.detachEvent)
-			iframeId.detachEvent("onload", eventHandler);
-		else
-			iframeId.removeEventListener("load", eventHandler, false);
-
-		// Message from server...
-		if (iframeId.contentDocument) {
-			content = iframeId.contentDocument.body.innerHTML;
-		} else if (iframeId.contentWindow) {
-			content = iframeId.contentWindow.document.body.innerHTML;
-		} else if (iframeId.document) {
-			content = iframeId.document.body.innerHTML;
-		}
-
-		// here is content
-		// alert("content=="+content);
-
-		// $("#fileUploadId").val($("#uploadFile").val());
-
-		// $("#fileId").html($("#originalImageId").html());
-
-		if (message_div_id != "") {
-			document.getElementById(message_div_id).innerHTML = content;
-		}
-		if (content != "error" && img_div_id != "") {
-			document.getElementById(img_div_id).style.backgroundImage = "url("
-					+ content + ")";
-			$("#myProfilePicture").css("background", "url(" + content + ")");
-			//
-
-			createCropDiv('imageCropContainerDiv', content);
-			$('#loaderWrapper').hide();
-		}
-		// Del the iframe...
-		setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
-		// iframeId.parentNode.removeChild(iframeId);
-	}
-
-	if (iframeId.addEventListener)
-		iframeId.addEventListener("load", eventHandler, true);
-	if (iframeId.attachEvent)
-		iframeId.attachEvent("onload", eventHandler);
-
-	// Set properties of form...
-	form.setAttribute("target", "upload_" + suffix);
-	form.setAttribute("action", action_url);
-	form.setAttribute("method", "post");
-	form.setAttribute("enctype", "multipart/form-data");
-	form.setAttribute("encoding", "multipart/form-data");
-
-	// Submit the form...
-	form.submit();
-	/*
-	 * form.removeAttribute("target"); form.removeAttribute("action");
-	 * form.removeAttribute("method"); form.removeAttribute("enctype");
-	 * form.removeAttribute("encoding");
-	 */
-	if (message_div_id != "") {
-		document.getElementById(message_div_id).innerHTML = "Uploading...";
-	}
-
-}
 
 function createCropDiv(divToAppend, url) {
 	$("#" + divToAppend).empty();

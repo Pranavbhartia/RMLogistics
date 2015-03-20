@@ -36,7 +36,7 @@ public interface UserProfileService {
 	public UserRoleVO buildUserRoleVO(UserRole userRole);
 
 	public InternalUserDetailVO buildInternalUserDetailsVO(
-			InternalUserDetail internalUserDetail);
+	        InternalUserDetail internalUserDetail);
 
 	public UserVO buildUserVO(User user);
 
@@ -44,5 +44,6 @@ public interface UserProfileService {
 
 	User parseUserModel(UserVO userVO);
 
+	public UserVO findUserByMail(String userMailAddress);
 
 }

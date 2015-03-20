@@ -14,18 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
@@ -43,7 +44,7 @@ import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.RestUtil;
 
 
-@RestController
+@Controller
 @RequestMapping("/fileupload")
 public class FileUploadRest {
 	
@@ -63,6 +64,10 @@ public class FileUploadRest {
 	
 	@Autowired
 	private NexeraUtility nexeraUtility;
+	
+	@Autowired
+	private Utils utils;
+	
 	
 	@RequestMapping(value="/upload" , method = RequestMethod.POST ,  headers = "Accept=*")
 	public @ResponseBody String uploadFileToS3Service(@RequestParam(value="file" , required = true) MultipartFile multipartFile , HttpServletRequest request , HttpServletResponse response){
@@ -238,6 +243,34 @@ public class FileUploadRest {
 		return splittedFiles;
 		
 	}
+	
+	
+	@RequestMapping(value = "documentUpload" , method = RequestMethod.POST  )
+	public @ResponseBody String  filesUploadToS3System( @RequestParam(value =  "file") MultipartFile[] file 
+										, @RequestParam(value = "userID") Integer userID 
+										, @RequestParam(value =  "loanId") Integer loanId 
+										, @RequestParam(value =  "assignedBy") Integer assignedBy){
+		
+		LOG.info("Checking for User Session : ");
+		
+		User user=utils.getLoggedInUser();
+		if(user==null){
+			
+			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in."));
+		}
+		
+		
+		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy);
+		List<String> unsupportedFile = new ArrayList<String>();
+		for (MultipartFile multipartFile : file) {
+			Boolean isFileUploaded = uploadedFilesListService.uploadFile(multipartFile, userID , loanId , assignedBy);
+			if(!isFileUploaded){
+				unsupportedFile.add( multipartFile.getOriginalFilename());
+			}
+			
+		}
+		return new Gson().toJson(unsupportedFile);
+	} 
 	
 	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()

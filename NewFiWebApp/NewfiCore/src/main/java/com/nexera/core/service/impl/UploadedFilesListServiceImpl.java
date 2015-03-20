@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
@@ -86,6 +87,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setFileName(uploadedFilesList.getFileName());
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
 		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
+		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
 		
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
@@ -198,6 +200,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		User assignByUser = new User();
 		assignByUser.setId(assignedBy);
 		
+		List<File> splittedFiles =  nexeraUtility.splitPDFPages(file);
+		
+		
 		UploadedFilesList uploadedFilesList = new UploadedFilesList();
 		uploadedFilesList.setIsActivate(true);
 		uploadedFilesList.setIsAssigned(false);
@@ -209,6 +214,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		uploadedFilesList.setAssignedBy(assignByUser);
 		uploadedFilesList.setUuidFileId(nexeraUtility.randomStringOfLength());
+		uploadedFilesList.setTotalPages(splittedFiles.size());
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}
@@ -225,6 +231,36 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
 	}
 	
-	
+	@Override
+	public Boolean uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
+		String s3Path = null;
+		
+		LOG.info("File content type  : "+file.getContentType());
+		String localFilePath = null;
+		Boolean fileUpload = false;
+		try{
+			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
+				LOG.info("Received an image.converting to PDF");
+				localFilePath = nexeraUtility.convertImageToPDF(file);
+				fileUpload = true;
+			}else if(file.getContentType().equalsIgnoreCase("application/pdf")){
+				localFilePath = nexeraUtility.uploadFileToLocal(file);
+				fileUpload = true;
+			}
+			if(fileUpload){
+				nexeraUtility.uploadFileToLocal(file);
+				File serverFile = new File(localFilePath );
+				Integer savedRowId = addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
+				LOG.info("Added File document row : "+savedRowId);
+			}
+			
+		 }catch(Exception e){
+			 LOG.info(" Exception uploading s3 :  "+e.getMessage());
+		 }
+		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
+		 
+		 LOG.info("The s3 path is : "+s3Path);
+		 return fileUpload;
+	}
 	
 }

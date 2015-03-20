@@ -10,11 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.exception.InvalidInputException;
-import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
-import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -57,7 +54,7 @@ public class EMailSender implements IWorkflowTaskExecutor {
 
 
 		}
-		return "success";
+		return WorkflowDisplayConstants.WORKFLOW_TASK_SUCCESS;
 	}
 
 	public Object[] getParamsForExecute() {
@@ -68,6 +65,11 @@ public class EMailSender implements IWorkflowTaskExecutor {
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 
 		return "";
+	}
+
+	public String checkStatus(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
