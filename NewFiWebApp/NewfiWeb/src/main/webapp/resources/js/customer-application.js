@@ -11,7 +11,7 @@ var applicationItemsList = [ {
 		                    },
 	                        {
 								"text":"My Income",
-		                        "onselect" : paintRefinanceMyIncome
+		                        "onselect" : paintMyIncome
 		                    },
 			                {
 							    "text":"Government Questions",
@@ -96,13 +96,11 @@ function paintCustomerApplicationPage() {
 }
 
 
-function getQuestionsContainer(questions,target) {
+function getQuestionsContainer(questions) {
     var questionsContainer = $('<div>').attr({
         "class": "app-ques-container"
     });
-    if(target){
-    	target.parent().data("subContainer",questionsContainer);
-    }
+    
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
         var quesCont = getApplicationQuestion(question);
@@ -419,8 +417,226 @@ function paintCustomerApplicationPageStep1b() {
     
     
 }
-
+function getQuestionContext(question,parentContainer){
+	var contxt={
+			type: question.type,
+	        text: question.text,
+	        name: question.name,
+	        options:question.options,
+	        container :undefined,
+	        childContainers:{},
+	        childContexts:{},
+	        value:question.selected,
+	        parentContainer:parentContainer,
+	        drawQuestion:function(callback){
+	        	var ob=this;
+	        	if (ob.type == "mcq") {
+	                quesCont = getApplicationMultipleChoiceQues(question);
+	            } else if (ob.type == "desc") {
+	            	ob.container = getContextApplicationTextQues(ob);
+	            } else if (ob.type == "select") {
+	                quesCont = getApplicationSelectQues(question);
+	            } else if (ob.type == "yesno") {
+	            	ob.container = getContextApplicationYesNoQues(ob);
+	            }
+	        	
+	        	parentContainer.append(ob.container);
+	        	
+	        },
+	        deleteContainer:function(callback){
+	        	
+	        },
+	        clickHandler:function(newValue,callback){
+	        	var ob=this;
+	        	if(ob.value!=""&&ob.value!=newValue){
+	        		if(ob.type=="yesno"){
+	        			for(var key in ob.childContainers){
+	        				var container=ob.childContainers[key];
+	        				container.remove();
+	        			}
+	        			ob.childContainers={};
+	        	        ob.childContexts={};
+	        		}
+	        	}
+	        },
+	        clearChildren:function(callback){
+	        	
+	        },
+	        drawChildQuestions:function(option,questions){
+	        	var ob=this;
+	        	var childContainer = $('<div>');
+	        	ob.childContainers[option]=childContainer;
+	        	ob.childContexts[option]=[];
+	        	for(var i=0;i<questions.length;i++){
+	        		var question=questions[i];
+	            	var contxt=getQuestionContext(question,childContainer);
+	            	contxt.drawQuestion();
+	            	ob.childContexts[option].push(contxt);
+	        	}
+	        	ob.container.append(childContainer);
+	        }
+	};
+	return contxt;
+}
+var quesContxts=[];
 function paintCustomerApplicationPageStep2() {
+	appProgressBaar(2); // this is to show the bubble status in the left panel
+	quesContxts = []; // when ever call the above function clean the array object
+	$('#app-right-panel').html('');
+    var quesHeaderTxt = "Who's on the Loan?";
+
+    var quesHeaderTextCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    }).html(quesHeaderTxt);
+    //TODO-try nested yesno question
+    var questions = [{
+        type: "yesno",
+        text: "Are you married?",
+        name: "isMarried",
+        options: [{
+            text: "Yes",
+            addQuestions:[{
+                type: "yesno",
+                text: "Is your spouse on the loan?",
+                name: "isSouseOnLoan",
+                options: [{
+                    text: "Yes",
+                    addQuestions:[{
+                        type: "desc",
+                        text: "What is your spouse name ?",
+                        name: "spouseName"
+                    }]
+                }, {
+                    text: "No"
+                }],
+                selected: ""
+            }]
+        }, {
+            text: "No"
+        }],
+        selected: ""
+    }];
+    
+    $('#app-right-panel').append(quesHeaderTextCont);
+   
+   
+    
+    for(var i=0;i<questions.length;i++){
+    	var question=questions[i];
+    	var contxt=getQuestionContext(question,$('#app-right-panel'));
+    	contxt.drawQuestion();
+    	
+    	quesContxts.push(contxt);
+    }
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "app-save-btn"
+    }).html("Save & continue").on('click', function() {
+        
+    	appUserDetails["isMarried"] = quesContxts[0].value;
+    	appUserDetails["isSouseOnLoan"]  = null;
+    	appUserDetails["spouseName"]  = null;
+    	
+    	if( quesContxts[0].childContexts.Yes !=  undefined){
+    		appUserDetails["isSouseOnLoan"]  = quesContxts[0].childContexts.Yes[0].value;
+    	}
+    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
+    	 appUserDetails["spouseName"]  = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+    	}
+
+    	//paintCustomerApplicationPageStep3();
+    	paintMyIncome();
+
+    });
+    $('#app-right-panel').append(saveAndContinueButton);
+    
+}
+
+function getContextApplicationYesNoQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont",
+        "name": contxt.name
+    });
+
+    for (var i = 0; i < contxt.options.length; i++) {
+        var option = contxt.options[i];
+        var optionCont = $('<div>').attr({
+            "class": "app-option-choice",
+            "isSelected" : "false"
+        }).html(option.text);
+        
+        optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
+        	$(this).parent().find('.app-option-choice').attr("isSelected","false");
+        	$(this).attr("isSelected","true");
+        	var ctx=event.data.contxt;
+        	ctx.clickHandler(event.data.value);
+        	if(ctx.value!=event.data.value){
+	        	ctx.value=event.data.value;
+	        	var opt=event.data.option;
+	        	if(opt.addQuestions){
+	        		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
+	        	}
+        	}
+        });
+       
+        	
+//        optionCont.data("addQuestions",option.addQuestions).on('click',function(event){
+//        	alert(option.addQuestions);
+        		
+//    		if($(event.target).parent().data("subContainer")){
+//    			var subContainer=$(event.target).parent().data("subContainer");
+//    			subContainer.remove();
+//    		}
+//        	if($(event.target).data("addQuestions")){	
+//        	container.append(getQuestionsContainer($(event.target).data("addQuestions"),$(event.target)));
+//        	} 
+        	
+//    	});
+
+        optionsContainer.append(optionCont);
+    }
+
+    return container.append(quesTextCont).append(optionsContainer);
+}
+function getContextApplicationTextQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont"
+    });
+
+    var optionCont = $('<input>').attr({
+        "class": "app-input",
+        "name": contxt.name
+    }).bind("change",{"contxt":contxt},function(event){
+    	var ctx=event.data.contxt;
+    	ctx.value=$(this).val();
+    });
+
+    if (contxt.value != undefined) {
+        optionCont.val(contxt.value);
+    }
+
+    optionsContainer.append(optionCont);
+
+    return container.append(quesTextCont).append(optionsContainer);
+}
+
+
+/*function paintCustomerApplicationPageStep2() {
 	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Who's on the Loan?";
@@ -472,9 +688,9 @@ function paintCustomerApplicationPageStep2() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
 }
+*/
 
-
-function paintRefinanceMyIncome() {
+function paintMyIncome() {
 
 	appProgressBaar(3);
 	var quesTxt = "Select all that apply";
@@ -649,24 +865,6 @@ function paintRefinancePension(divId) {
 	$('#ce-option_' + divId).html(container);
 }
 
-function paintSpouseInLoan(){
-	
-	
-	    var questions = [{
-	        type: "yesno",
-	        text: "Is your spouse going to be on the loan?",
-	        name: "spouseInLoan",
-	        options: [{
-	            text: "Yes",
-	        }, {
-	            text: "No"
-	        }],
-	        selected: ""
-	    }];
-
-	    var questionsContainer = getQuestionsContainer(questions);
-        return questionsContainer;
-}
 
 function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 	var container = $('<div>').attr({
@@ -967,7 +1165,7 @@ function paintCustomerApplicationPageStep4a() {
             text: "Yes"
         }, {
             text: "No",
-            sub_questions: [{
+            addQuestions: [{
                 type: "select",
                 text: "Are you a permanent resident alien?",
                 name: "isPermanentResidentAlien",
@@ -1002,7 +1200,7 @@ function paintCustomerApplicationPageStep4a() {
         name: "isOwnershipInterestInProperty",
         options: [{
             text: "Yes",
-            sub_questions: [{
+            addQuestions: [{
                 type: "select",
                 text: "What type of property did you own? Select the choice that fits best.",
                 name: "",
