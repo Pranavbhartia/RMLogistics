@@ -57,12 +57,14 @@ function initiateJcrop(input) {
 					
 					// $('#prof-image').attr('src', dataurl);
 					// $('#overlay-main').hide();
+                    var userid=document.getElementById("prof-image").name;
 
 					var formData = new FormData();
 					formData.append("imageBase64", dataurl);
 					formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
 
-					formData.append("userid",newfiObject.user.id);
+
+					formData.append("userid",userid);
 					showOverlay();
 					$.ajax({
 						url : "uploadCommonImageToS3.do",
@@ -74,10 +76,19 @@ function initiateJcrop(input) {
 						data : formData,
 						success : function(data) {
 							
+							if(newfiObject.user.id==userid){
 							
 							$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"});
 							 
-							$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});
+							$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});}
+							else{
+							
+							$("#cusProfPicID").css({"background-image": "url("+data+")","background-size": "cover"});
+							 
+							$("#custprofuploadicnID").css({"background-image": "url("+data+")","background-size": "cover"});
+							
+							
+							}
 							//
 						},
 						complete : function() {

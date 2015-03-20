@@ -42,12 +42,12 @@
 			
 			//TODO added for loan profile page		
 
-            if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
+             if(newfi.user.photoImageUrl == "" || newfi.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
 			}else{
 				
-				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
+				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfi.user.photoImageUrl+")","background-size": "cover"});
 				 
 			}
 			bindDataToPN();
@@ -84,6 +84,8 @@
 				
 				}
 			});
+			
+    
 		});
 	</script>
 </body>

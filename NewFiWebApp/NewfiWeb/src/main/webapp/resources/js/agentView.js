@@ -954,16 +954,6 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
 
-	// append cust info popup
-	appendCustomerEditProfilePopUp();
-
-	$("#uploadFile").change(
-			function() {
-
-				photoUpload(this.form, 'uploadCommonImageToS3.do',
-						'cusImgIcnID', '', '1', selectedUserDetail.userID);
-
-			});
 
 }
 
@@ -1048,6 +1038,7 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 	var downArrow = $('<div>').attr({
 		"class" : "add-member-down-arrow float-right"
 	}).on('click', function() {
+		
 		if ($('#add-username-dropdown-cont').css("display") == "block") {
 			hideUserNameDropDown();
 		} else {
@@ -1325,6 +1316,7 @@ function getTeamListTableRow(user, loanID) {
 }
 
 $(document).on('click', '#ld-customer .loan-detail-link', function(event) {
+appendCustomerEditProfilePopUp();
 	event.stopImmediatePropagation();
 	if ($('#cus-prof-popup').css("display") == "block") {
 		hideCustomerEditProfilePopUp();
@@ -1508,6 +1500,7 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 }
 
 function appendCustomerProfUploadPhotoRow() {
+
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1534,48 +1527,40 @@ function appendCustomerProfUploadPhotoRow() {
 		"class" : "cust-prof-upload-filename"
 	}).html("Jane-Profile.png");
 
-	var imageForm = $('<form>').attr({
 
-	});
 
-	var inputHiddenFile = $('<input>').attr({
+		var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
-		"id" : "uploadFile",
-		"name" : "fileName"
+		"id" : "prof-image",
+		"name" :  selectedUserDetail.customerId,
+		"value" : "Upload"
+
+	});
+	var inputHiddenDiv = $('<div>').attr({
+		"style" : "display:none"
 
 	});
 
-	var UserId = $('<input>').attr({
-		"type" : "hidden",
-		"id" : "userIdId",
-		"name" : "userId",
-		"value" : selectedUserDetail.userID
-	});
-
-	var uploadImage = $('<div>').attr({
-		"class" : "uploadImage"
-
-	}).hide();
-
-	imageForm.append(inputHiddenFile);
-	imageForm.append(UserId);
-	uploadImage.append(imageForm);
+	inputHiddenDiv.append(inputHiddenFile);
 
 	var uploadBtn = $('<div>').attr({
 		"class" : "cust-prof-upload-btn",
-
-	}).click(uploadeImage).html("upload");
+         "id":"uploadID",
+		 "onclick":"uploadeImage()"
+	}).html("upload");
 
 	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
-			uploadImage);
+			inputHiddenDiv);
 	uploadPhotoCont.append(uploadIcn).append(uploadPhotoRc);
 	row.append(label).append(uploadPhotoCont);
 	$('#cus-prof-container').append(row);
+	
 }
 
 function uploadeImage() {
 
-	$("#uploadFile").trigger('click');
+	$("#prof-image").trigger('click');
+	$(".overlay-container").css("display","block");
 
 }
 
