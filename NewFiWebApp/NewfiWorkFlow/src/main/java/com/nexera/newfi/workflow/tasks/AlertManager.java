@@ -19,11 +19,6 @@ public class AlertManager implements IWorkflowTaskExecutor {
 
 	@SuppressWarnings("unchecked")
 	public String execute(HashMap<String, Object> objectMap) {
-
-		/*
-		 * int loanID = Integer.parseInt(objectMap
-		 * .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		 */
 		HashMap<String, Object> notification = (HashMap<String, Object>) objectMap
 		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
 		ObjectMapper mapper = new ObjectMapper();
@@ -44,12 +39,5 @@ public class AlertManager implements IWorkflowTaskExecutor {
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
 	
-	public Object[] getParamsForExecute() {
-		// TODO Auto-generated method stub
-		Object[] objectParams = new Object[1];
-		objectParams[0] = ""; // loanID is a parameter.
-
-		return null;
-	}
-
+	
 }
