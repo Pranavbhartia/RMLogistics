@@ -599,7 +599,7 @@ function getPhone1Row(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone1Input = $('<input>').attr({
-		"class" : "prof-form-input",
+		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.phoneNumber,
 		"id" : "priPhoneNumberId",
 		
@@ -659,7 +659,7 @@ function getPhone2Row(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var phone2Input = $('<input>').attr({
-		"class" : "prof-form-input",
+		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.customerDetail.secPhoneNumber,
 		"id" : "secPhoneNumberId"
 	});

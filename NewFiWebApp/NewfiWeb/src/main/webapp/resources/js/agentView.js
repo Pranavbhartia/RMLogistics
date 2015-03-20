@@ -1308,11 +1308,29 @@ function getTeamListTableRow(user, loanID) {
 	userDelIcn.click(function() {
 		var userID = $(this).attr("userid");
 		var loanID = $(this).attr("loanid");
-		removeUserFromLoanTeam(userID, loanID);
+		confirmRemoveUser("Are you sure you want to delete the user?",userID, loanID);
 	});
 	trCol5.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
+}
+
+function confirmRemoveUser(textMessage, userID, loanID){
+	
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click',function(){
+			removeUserFromLoanTeam(userID, loanID);
+			$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-cancel').on('click',function(){
+		$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-popup').show();
 }
 
 $(document).on('click', '#ld-customer .loan-detail-link', function(event) {

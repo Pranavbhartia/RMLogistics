@@ -38,6 +38,7 @@
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();
 				adjustCenterPanelWidth();
+				adjustRightPanelOnResize();
 			});
 			
 			//TODO added for loan profile page		
