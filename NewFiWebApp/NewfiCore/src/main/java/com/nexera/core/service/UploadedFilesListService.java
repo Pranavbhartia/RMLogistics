@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.UploadedFilesListVO;
@@ -34,5 +35,8 @@ public interface UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
+
+	public Boolean uploadFile(MultipartFile file, Integer userId, Integer loanId,
+			Integer assignedBy);
 	
 }
