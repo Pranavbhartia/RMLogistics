@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.mock.web.MockMultipartFile;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +62,10 @@ public class EmailProcessor implements Runnable {
 	public void run() {
 		LOGGER.debug("Inside run method ");
 		try {
+			if(true){
+				//TODO: (Anoop) There is an issue with Multipart file conversion, hence returning. Needs to be fixed by UTSAV
+				return;
+			}
 			String subject = message.getSubject();
 			LOGGER.debug("Mail subject is " + subject);
 			Address[] fromAddress = message.getFrom();
@@ -151,9 +155,9 @@ public class EmailProcessor implements Runnable {
 			content = Files.readAllBytes(path);
 		} catch (final IOException e) {
 		}
-		MultipartFile result = new MockMultipartFile(name, name, contentType,
-		        content);
-		return result;
+//		MultipartFile result = new MockMultipartFile(name, name, contentType,
+//		        content);
+		return null;
 	}
 
 	public File convertInputStreamToFile(InputStream inputStream, String dirPath)
