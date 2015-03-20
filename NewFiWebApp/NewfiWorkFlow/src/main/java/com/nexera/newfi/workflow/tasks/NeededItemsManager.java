@@ -32,13 +32,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		StringBuffer strBuff = new StringBuffer();
 		strBuff.append(neededItemScoreVO.getTotalSubmittedItem() + " out of "
 		        + neededItemScoreVO.getNeededItemRequired());
-		
 		return new Gson().toJson(neededItemScoreVO);
-	}
-
-	public Object[] getParamsForExecute() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
