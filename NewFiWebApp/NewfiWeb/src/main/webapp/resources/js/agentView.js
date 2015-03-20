@@ -1464,7 +1464,7 @@ function updateUserProfile() {
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
 	// JSON.stringify(userProfileJson),function(response){});
-
+	if($("#firstNameID").val()!=""&&$("#lastNameID").val()!=""&&$("#emailIdID").val()!=""){
 	$
 			.ajax({
 				url : "rest/userprofile/managerupdateprofile",
@@ -1485,7 +1485,9 @@ function updateUserProfile() {
 				}
 			});
 
-	showToastMessage("Succesfully updated");
+	showToastMessage("Succesfully updated");}else{
+	showToastMessage("Mandatory feilds cannot be empty");
+	}
 
 }
 
@@ -1506,6 +1508,12 @@ function hideCustomerEditProfilePopUp() {
 }
 
 function appendCustomerProfEditRow(labelTxt, value, id) {
+	
+	var span=$('<span>').attr({
+		
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+	
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1514,6 +1522,10 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		"class" : "cust-prof-edit-label float-left"
 	}).html(labelTxt);
 
+	if(id=="firstNameID"||id=="lastNameID"||id=="emailIdID"){
+		label.append(span);
+		}
+	
 	var inputTag = $('<input>').attr({
 		"class" : "cust-prof-edit-input float-left",
 		"id" : id,
