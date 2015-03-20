@@ -21,7 +21,7 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
-		return null;
+		return "3";
 	}
 
 }
