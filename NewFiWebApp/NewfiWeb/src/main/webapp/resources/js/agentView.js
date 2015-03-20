@@ -513,13 +513,18 @@ function getSchedulerContainer(contxt,tempData){
 	var datePicker = $('<div>').attr({
 		"class" : "date-picker-cont float-left"
 	});
+	var dateToday = new Date();
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY",
 		"id" : "sch-msg-date-picker"
 	}).datepicker({
 		orientation : "top auto",
-		autoclose : true
+		autoclose : true,
+    	startDate: dateToday
+	}).on('show', function(e) {
+	    var $popup = $('.datepicker');
+	    $popup.click(function () { return false; });
 	});
 	datePicker.append(datePickerBox);
 	var timerPicker = $('<div>').attr({
