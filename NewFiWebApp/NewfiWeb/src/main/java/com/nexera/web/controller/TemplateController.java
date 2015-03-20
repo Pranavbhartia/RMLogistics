@@ -155,7 +155,8 @@ public class TemplateController extends DefaultController {
 			ImageIO.write(image, "png", fileLocal);
 
 			 s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User","complete");
-			 editUserPhoto(s3Path);
+			 //Changed for loan profile bug fix
+			 editUserPhoto(s3Path,userid);
 			 // save the s3 url in the data base
 			 Integer num = userProfileService.updateUser(s3Path, userid);
 			 

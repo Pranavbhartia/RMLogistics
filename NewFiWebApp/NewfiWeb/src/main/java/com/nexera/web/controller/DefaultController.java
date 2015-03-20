@@ -65,12 +65,14 @@ public class DefaultController implements InitializingBean {
 
 	}
 
-	protected void editUserPhoto(String photoUrl) {
+	protected void editUserPhoto(String photoUrl, Integer userid) {
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
 		if (principal instanceof User) {
 			User user = (User) principal;
-			user.setPhotoImageUrl(photoUrl);
+			if (user.getId() == userid) {
+				user.setPhotoImageUrl(photoUrl);
+			}
 		}
 	}
 
@@ -109,9 +111,9 @@ public class DefaultController implements InitializingBean {
 			List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
 			List<String> imageList = new ArrayList<String>();
 			for (LoanTeamVO loanTeamVO : userList) {
-	            imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
-            }
-			
+				imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+			}
+
 			model.addAttribute("loanTeamImage", imageList);
 			newfi.put("user", gson.toJson(userVO));
 
