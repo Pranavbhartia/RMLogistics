@@ -438,7 +438,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 
 
 		},
-		getCssClassForWfItem : function(wfItemType){
+		getCssClassForWfItem : function(wfItemType,stateNumber){
 			
 			var status="active";
 			if(stateNumber>1)
@@ -1369,7 +1369,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	var headerIcn = $('<div>').attr({
 		"class" : rightLeftClass+"-header-icn "
-	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType)).addClass(floatClass);
+	}).addClass(workFlowContext.getCssClassForWfItem(workflowItem.workflowItemType,workflowItem.status)).addClass(floatClass);
 	
 	var headerCheckBox = $('<div>').attr({
 		"class" : "ms-check-box-header box-border-box " + floatClass,
@@ -1473,10 +1473,10 @@ function milestoneChildEventHandler(event) {
 				event.target, data);
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
-		 changeAgentSecondaryLeftPanel("lp-step4");
+		 $("#lp-step4").click();
 	}
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
-		 changeAgentSecondaryLeftPanel("lp-step1");
+		 $("#lp-step1").click();
 	}
 	
 	 else if ($(event.target).attr("data-text") == "APP_FEE1") {
