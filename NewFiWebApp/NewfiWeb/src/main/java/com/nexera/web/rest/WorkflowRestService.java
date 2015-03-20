@@ -1,5 +1,6 @@
 package com.nexera.web.rest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.vo.CommonResponseVO;
@@ -276,7 +282,40 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-
+	
+	@RequestMapping ( value = "getupdatedstatus", method = RequestMethod.GET)
+    public @ResponseBody CommonResponseVO getUpdatedStatus(@RequestParam(value="items")String items)
+    {
+        LOG.info( "getUpdatedStatus----" );
+        CommonResponseVO response = null;
+        ObjectMapper mapper=new ObjectMapper();
+        TypeReference<List<Integer>> typeRef=new TypeReference<List<Integer>>() {};
+		List<Integer> milestoneItems = null;
+		try {
+			milestoneItems = mapper.readValue(items, typeRef);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+        try {
+        	HashMap<Integer, String> resultStatus=new HashMap<Integer,String>();
+        	for(Integer workflowItemExecId: milestoneItems){
+        		System.out.println(workflowItemExecId+"----------------------");
+        		String result=engineTrigger.checkStatus(workflowItemExecId);
+        		if(result!=null)
+        			resultStatus.put(workflowItemExecId, result);
+        	}
+        	
+            response = RestUtil.wrapObjectForSuccess( resultStatus );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
+            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
+        }
+        return response;
+    }
 	
 
 }

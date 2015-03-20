@@ -287,8 +287,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				
 				ajaxURL = "";
-				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
-				workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
+				ob.workItem.stateInfo = "EQ-646 | TU-686 | EX-685";
+				workItem.stateInfo = "EQ-646 | TU-686 | EX-685";
 			
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
@@ -870,7 +870,7 @@ function getMilestoneTeamMembeTable(userList,milestoneID) {
 		return;
 	
 	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text",
+		"class" : "milestone-rc-text showAnchor",
 		"data-text" : "TEAM_STATUS",
 		"mileNotificationId":milestoneID
 	}).html("Click here to add a Team Member").bind("click", function(e) {

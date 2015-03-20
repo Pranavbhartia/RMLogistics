@@ -22,6 +22,8 @@
 <script src="resources/js/milestone.js"></script>
 <script src="resources/js/jquery.knob.js"></script>
 <script src="resources/js/customer-application.js"></script>
+<script src="resources/js/include/jquery-maskMoney.js"></script>
+
 <div id="dialog" >
 </div>
 
