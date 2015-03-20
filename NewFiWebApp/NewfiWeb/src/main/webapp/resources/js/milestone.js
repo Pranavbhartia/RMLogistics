@@ -10,7 +10,7 @@ var workFlowContext = {
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
-
+	initAttempted:false,
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
@@ -39,9 +39,14 @@ var workFlowContext = {
 								showToastMessage(response.error.message)
 							} else {
 								if(response.resultObject.loanManagerWorkflowID==0){
-									ob.createWorkflow(function(ob){
-										ob.getWorkflowID(callback);
-									})
+									if(ob.initAttempted){
+										showToastMessage("Master Tables Not Populated")
+									}else{
+										ob.initAttempted=true;
+										ob.createWorkflow(function(ob){
+											ob.getWorkflowID(callback);
+										});
+									}
 								}else{
 									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
 									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
