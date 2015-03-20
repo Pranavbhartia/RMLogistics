@@ -87,5 +87,8 @@ ADD CONSTRAINT `fk_wfItemOnSuccess`
   ON UPDATE NO ACTION;
   
   
-  alter table newfi_schema.uploadedfileslist
+  ALTER table newfi_schema.uploadedfileslist
   add column uuidfileid varchar(100);
+  
+  ALTER table newfi_schema.uploadedfileslist
+  add column totalpages int(5);
