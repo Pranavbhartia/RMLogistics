@@ -1,13 +1,11 @@
 package com.nexera.core.processor;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
@@ -61,83 +57,108 @@ public class EmailProcessor implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.debug("Inside run method ");
+
 		try {
-			if(true){
-				//TODO: (Anoop) There is an issue with Multipart file conversion, hence returning. Needs to be fixed by UTSAV
-				return;
-			}
+			MimeMessage mimeMsg = (MimeMessage) message;
+			MimeMessage mimeMessage = new MimeMessage(mimeMsg);
 			String subject = message.getSubject();
 			LOGGER.debug("Mail subject is " + subject);
 			Address[] fromAddress = message.getFrom();
 			Address[] toAddress = message.getAllRecipients();
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
-
+			// TODO remove this
+			fromAddressString = "rohit.patidar@raremile.com";
 			UserVO uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
 			String messageId = null;
 			String loanId = null;
 			if (toAddressString != null) {
-				String[] toAddressArray = toAddressString.split("-");
-				if (toAddressArray[1] != null) {
-					loanId = toAddressArray[1];
-					messageId = toAddressArray[0];
-				}
+				// TODO remove this
+				loanId = "1";
+				/*
+				 * String[] toAddressArray = toAddressString.split("-"); if
+				 * (toAddressArray.length == 1) { LOGGER.debug(
+				 * "This is a new message, does not contain a message id");
+				 * loanId = toAddressArray[0]; } else if (toAddressArray.length
+				 * == 2) {
+				 * LOGGER.debug("This is a reply mail, must contain a message id"
+				 * ); messageId = toAddressArray[0]; loanId = toAddressArray[1];
+				 * }
+				 */
+
 			}
 
 			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
-			getEmailBodyContent(loanVO, uploadedByUser, loanVO.getUser(),
-			        message);
+			String emailBody = getEmailBody(mimeMessage);
+			LOGGER.debug("Body of the email is " + emailBody);
+			extractAttachmentAndUpload(loanVO, uploadedByUser,
+			        loanVO.getUser(), mimeMessage);
 		} catch (MessagingException e) {
 
 		}
 
 	}
 
-	private void getEmailBodyContent(LoanVO loanVO, UserVO uploadedByUser,
-	        UserVO actualUser, Message message) {
+	private String getEmailBody(MimeMessage mimeMessage) {
+		String body = null;
 		try {
-			MimeMessage mimeMsg = (MimeMessage) message;
-			MimeMessage mimeMessage = new MimeMessage(mimeMsg);
 			String contentType = mimeMessage.getContentType();
-			String body = null;
 			if (contentType.contains("multipart")) {
 				Multipart multipart = (Multipart) mimeMessage.getContent();
 				for (int i = 0; i < multipart.getCount(); i++) {
 					BodyPart bodyPart = multipart.getBodyPart(i);
-					String disposition = bodyPart.getDisposition();
 					if (body == null) {
 						body = getText(bodyPart);
 						body = removeTags(body);
 						body = removeUTFCharacters(body);
-
 					}
-
-					if (disposition != null
-					        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-						LOGGER.debug("This mail contains attachment ");
-						DataHandler dataHandler = bodyPart.getDataHandler();
-						InputStream inputStream = dataHandler.getInputStream();
-						String path = nexeraUtility.tomcatDirectoryPath();
-						File file = convertInputStreamToFile(inputStream, path);
-
-						uploadedFileListService.uploadFile(
-						        convertFileToMultiPartFile(file),
-						        actualUser.getId(), loanVO.getId(),
-						        uploadedByUser.getId());
-					}
-
 				}
 			} else {
 				LOGGER.debug("Normal Plain Text Email ");
-				{
-					body = mimeMessage.getContent().toString();
+				body = mimeMessage.getContent().toString();
+			}
+		} catch (MessagingException me) {
+			LOGGER.error("Exception caught " + me.getMessage());
+		} catch (IOException e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+		}
+		return body;
+	}
 
+	private void extractAttachmentAndUpload(LoanVO loanVO,
+	        UserVO uploadedByUser, UserVO actualUser, MimeMessage mimeMessage) {
+		try {
+
+			Multipart multipart = (Multipart) mimeMessage.getContent();
+			for (int i = 0; i < multipart.getCount(); i++) {
+				BodyPart bodyPart = multipart.getBodyPart(i);
+				String disposition = bodyPart.getDisposition();
+
+				if (disposition != null
+				        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+					LOGGER.debug("This mail contains attachment ");
+					DataHandler dataHandler = bodyPart.getDataHandler();
+					InputStream inputStream = dataHandler.getInputStream();
+					String path = nexeraUtility.tomcatDirectoryPath();
+
+					File file = convertInputStreamToFile(inputStream, path);
+					
+					LOGGER.debug("Uploading the file in the system ");
+					uploadedFileListService.uploadFile(nexeraUtility
+					        .filePathToMultipart(file.getAbsolutePath()),
+					        actualUser.getId(), loanVO.getId(), uploadedByUser
+					                .getId());
+					if (file.exists()) {
+						LOGGER.debug("Remove the temp file after uploading it into the system ");
+						file.delete();
+
+					}
 				}
+
 			}
 
-			LOGGER.debug("Content of mail is " + body);
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
 		} catch (IOException e) {
@@ -146,18 +167,19 @@ public class EmailProcessor implements Runnable {
 
 	}
 
-	public MultipartFile convertFileToMultiPartFile(File file) {
-		Path path = Paths.get(file.getAbsolutePath());
-		String name = file.getName();
-		String contentType = "text/plain";
-		byte[] content = null;
+	public byte[] convertInputStreamToByteArray(InputStream inputStream) {
+		byte[] buffer = new byte[8192];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		int bytesRead;
 		try {
-			content = Files.readAllBytes(path);
-		} catch (final IOException e) {
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+		} catch (IOException e) {
+			// TODO call exception class
 		}
-//		MultipartFile result = new MockMultipartFile(name, name, contentType,
-//		        content);
-		return null;
+		return baos.toByteArray();
 	}
 
 	public File convertInputStreamToFile(InputStream inputStream, String dirPath)
@@ -169,11 +191,10 @@ public class EmailProcessor implements Runnable {
 			        + nexeraUtility.randomStringOfLength() + ".pdf");
 			if (file.createNewFile()) {
 				outputStream = new FileOutputStream(file);
-				int read = 0;
-				byte[] bytes = new byte[1024];
-				while ((read = inputStream.read(bytes)) != -1) {
-					outputStream.write(bytes, 0, read);
-				}
+				byte[] bytes = convertInputStreamToByteArray(inputStream);
+				outputStream.write(bytes);
+				outputStream.flush();
+
 			}
 		} finally {
 			if (inputStream != null) {

@@ -1,6 +1,7 @@
 package com.nexera.core.batchprocessor;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
@@ -23,6 +24,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.nexera.common.exception.FatalException;
 import com.nexera.core.processor.EmailProcessor;
 
 @DisallowConcurrentExecution
@@ -69,14 +71,14 @@ public class EmailBatchProcessor extends QuartzJobBean {
 			Store store = session.getStore(protocol);
 			store.connect(imapHost, username, password);
 			Folder inbox = store.getFolder(folderName);
-			inbox.open(Folder.READ_ONLY);
+			inbox.open(Folder.READ_WRITE);
 			fetchUnReadMails(inbox);
+			inbox.close(true);
+			store.close();
 		} catch (NoSuchProviderException e) {
-			System.out.println(e.toString());
-			System.exit(1);
+			// TODO catch this exception a particular table
 		} catch (MessagingException e) {
-			System.out.println(e.toString());
-			System.exit(2);
+			// TODO catch this exception a particular table
 		}
 
 	}
@@ -91,7 +93,24 @@ public class EmailBatchProcessor extends QuartzJobBean {
 			for (Message unreadMsg : msg) {
 				emailProcessor.setMessage(unreadMsg);
 				emailTaskExecutor.execute(emailProcessor);
+				// Uncomment to mark the mail as read after processing
+				/*
+				 * inbox.setFlags(new Message[] { unreadMsg }, new Flags(
+				 * Flags.Flag.SEEN), true);
+				 */
 			}
+			emailTaskExecutor.shutdown();
+			try {
+				emailTaskExecutor.getThreadPoolExecutor().awaitTermination(
+				        Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			} catch (InterruptedException e) {
+				LOGGER.error("Exception caught while terminating executor "
+				        + e.getMessage());
+				throw new FatalException(
+				        "Exception caught while terminating executor "
+				                + e.getMessage());
+			}
+
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while reading mails " + e.getMessage());
 		}
