@@ -1,9 +1,4 @@
-﻿--
--- Dumping data for table `userrole`
---
---
--- Dumping data for table `user`
---
+﻿
 LOCK TABLES `userrole` WRITE;
 INSERT INTO `userrole` VALUES (4,'SYSTEM','System user','System User',NULL,'2014-12-12 00:00:00',0);
 UNLOCK TABLES;
@@ -18,7 +13,7 @@ INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',4,'2014-12-12 
 (3,'INTERNAL','Internal','Internal User',4,'2014-12-12 00:00:00',1);
 UNLOCK TABLES;
 
-UPDATE `newfi_schema`.`user` SET `customer_detail`='1' WHERE `id`='1';
+
 
 LOCK TABLES `internaluserrolemaster` WRITE;
 INSERT INTO `internaluserrolemaster` VALUES (1,'LM','Loan Manager'),(2,'SM','Sales Manager'),(3,'PC','Processor');
@@ -29,12 +24,27 @@ LOCK TABLES `internaluserdetails` WRITE;
 INSERT INTO `internaluserdetails` VALUES (1,NULL,1,1),(2,NULL,1,1);
 UNLOCK TABLES;
 
+LOCK TABLES `customerdetails` WRITE;
+INSERT INTO `newfi_schema`.`customerdetails` (`id`) VALUES ('1');
+INSERT INTO `newfi_schema`.`customerdetails` (`id`) VALUES ('2');
+INSERT INTO `newfi_schema`.`customerdetails` (`id`) VALUES ('3');
+UNLOCK TABLES;
+
 LOCK TABLES `user` WRITE;
+
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
-(2,'Loan','Manager','test2@gmail.com','test2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
-(3,'Loan','Manager2','test3@gmail.com','test3@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
-(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,3,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES 
+(1,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
+
+(2,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
+(3,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+
+(5,'Test','Customer','customer@gmail.com','customer@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',2,NULL,NULL),
+(6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+
+(7,'Test','Customer','raremile@gmail.com','raremile@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',3,NULL,NULL),
+(8,'Loan','Manager2','loanmanager4@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2);
+
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 --
@@ -45,14 +55,14 @@ UNLOCK TABLES;
 
 LOCK TABLES `loanstatusmaster` WRITE;
 /*!40000 ALTER TABLE `loanstatusmaster` DISABLE KEYS */;
-INSERT INTO `loanstatusmaster` VALUES (1,'IN_PROGRESS','In progress','2015-12-12 00:00:00',1);
+INSERT INTO `loanstatusmaster` VALUES (1,'IN_PROGRESS','In progress','2015-12-12 00:00:00',4);
 /*!40000 ALTER TABLE `loanstatusmaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
-INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('1', 'PUR', 'Purchase', '2015-12-12 00:00:00', '1');
-INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('2', 'REF', 'Refinance', '2015-12-12 00:00:00', '1');
-INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('3', 'REFCO', 'Refinance Cashout', '2015-12-12 00:00:00', '1');
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('1', 'PUR', 'Purchase', '2015-12-12 00:00:00', '4');
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('2', 'REF', 'Refinance', '2015-12-12 00:00:00', '4');
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('3', 'REFCO', 'Refinance Cashout', '2015-12-12 00:00:00', '4');
 
 
 
@@ -66,23 +76,35 @@ INSERT INTO `newfi_schema`.`propertytypemaster` (`id`, `property_type_cd`, `desc
 /*!40000 ALTER TABLE `propertytypemaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
-INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL);
-INSERT INTO `loan` VALUES (2,2,'sample loan2',1,'2015-12-12 00:00:00','2015-12-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,7,NULL,NULL);
+INSERT INTO `loan` VALUES (1,1,'Sample loan',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL);
+INSERT INTO `loan` VALUES (2,5,'sample loan2',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,7,NULL,NULL);
+INSERT INTO `loan` VALUES (3,7,'sample loan2',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,7,NULL,NULL);
 
 
 INSERT INTO `loanappform` VALUES (1,1,1,'Divorced',0,0,1,1,1,0,0,0,1,0,0,0,1,1,NULL,NULL);
+INSERT INTO `loanappform` VALUES (2,5,2,'Divorced',0,0,1,1,1,0,0,0,1,0,0,0,1,1,NULL,NULL);
+INSERT INTO `loanappform` VALUES (3,7,3,'Divorced',0,0,1,1,1,0,0,0,1,0,0,0,1,1,NULL,NULL);
+
+
+
+
+INSERT INTO `loanteam` VALUES 
+(1,1,1,1,'2015-02-12 00:00:00',1,NULL),
+(2,1,2,2,'2015-02-12 00:00:00',1,NULL),
+(3,1,3,1,'2015-02-27 15:52:22',1,NULL),
+
+(4,2,5,1,'2015-02-12 00:00:00',1,NULL),
+(5,2,6,2,'2015-02-12 00:00:00',1,NULL),
+
+(6,3,7,1,'2015-02-12 00:00:00',1,NULL),
+(7,3,8,2,'2015-02-12 00:00:00',1,NULL);
 
 
 
 
 
-INSERT INTO `loanteam` VALUES (1,1,1,1,'2015-12-12 00:00:00',1,NULL),(2,1,2,2,'2015-12-12 00:00:00',1,NULL),(3,1,3,1,'2015-02-27 15:52:22',1,NULL);
 
 
-
-
-INSERT INTO `newfi_schema`.`customerdetails` (`id`) VALUES ('1');
-UPDATE `newfi_schema`.`user` SET `customer_detail`='1' WHERE `id`='1';
 
 
 
