@@ -70,4 +70,9 @@ public class EMailSender implements IWorkflowTaskExecutor {
 		return "";
 	}
 
+	public String checkStatus(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

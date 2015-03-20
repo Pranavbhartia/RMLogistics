@@ -28,7 +28,7 @@ public class UploadedFilesList implements Serializable {
 	private String fileName;
 	private String s3ThumbPath;
 	private User assignedBy;
-	
+	private String uuidFileId;
 	
 	public UploadedFilesList() {
 	}
@@ -128,8 +128,18 @@ public class UploadedFilesList implements Serializable {
 		return assignedBy;
 	}
 
+	
 	public void setAssignedBy(User assignedBy) {
 		this.assignedBy = assignedBy;
+	}
+
+	@Column(name = "uuidfileid")
+	public String getUuidFileId() {
+		return uuidFileId;
+	}
+
+	public void setUuidFileId(String uuidFileId) {
+		this.uuidFileId = uuidFileId;
 	}
 
 }

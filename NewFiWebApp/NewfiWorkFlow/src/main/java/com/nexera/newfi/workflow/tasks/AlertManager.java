@@ -38,7 +38,12 @@ public class AlertManager implements IWorkflowTaskExecutor {
 
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
+	
+	public String checkStatus(HashMap<String, Object> inputMap) {
 
+		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
+	}
+	
 	public Object[] getParamsForExecute() {
 		// TODO Auto-generated method stub
 		Object[] objectParams = new Object[1];
