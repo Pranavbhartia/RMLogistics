@@ -484,6 +484,7 @@ function getPriEmailRow(user) {
 		"class" : "prof-form-input prof-form-input-lg",
 		"value" : user.emailId,
 		"id" : "priEmailId",
+		"readonly":true,
 		"onblur" : "emailValidation(this.value)"
 	});
 	rowCol2.append(emailInput);
@@ -602,6 +603,7 @@ function getPhone1Row(user) {
 		"value" : user.phoneNumber,
 		"id" : "priPhoneNumberId",
 		
+		
 	});
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
@@ -630,6 +632,7 @@ function getPhone1RowLM(user) {
 		"id" : "priPhoneNumberId",
 		
 	});
+	
 	rowCol2.append(phone1Input);
 	return row.append(rowCol1).append(rowCol2);
 }

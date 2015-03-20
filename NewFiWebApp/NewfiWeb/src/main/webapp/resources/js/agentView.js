@@ -953,7 +953,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit", "TU-646 | EQ-686 | EX-685", true);
 	appendLoanDetailsRow("Credit Decision", "Pass");
 	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
-
+    appendCustomerEditProfilePopUp();
 
 }
 
@@ -1316,7 +1316,7 @@ function getTeamListTableRow(user, loanID) {
 }
 
 $(document).on('click', '#ld-customer .loan-detail-link', function(event) {
-appendCustomerEditProfilePopUp();
+
 	event.stopImmediatePropagation();
 	if ($('#cus-prof-popup').css("display") == "block") {
 		hideCustomerEditProfilePopUp();
@@ -1363,6 +1363,7 @@ function appendCustomerEditProfilePopUp() {
 
 	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName,
 			"firstNameID");
+
 	appendCustomerProfEditRow("Last Name", selectedUserDetail.lastName,
 			"lastNameID");
 
@@ -1373,7 +1374,7 @@ function appendCustomerEditProfilePopUp() {
 	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
 	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");
 	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
-
+     $('#emailIdID').attr("readonly", true) 
 	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 
 	var row = $('<div>').attr({
@@ -1492,7 +1493,8 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 
 	var inputTag = $('<input>').attr({
 		"class" : "cust-prof-edit-input float-left",
-		"id" : id
+		"id" : id,
+		
 	}).val(value);
 
 	row.append(label).append(inputTag);
@@ -1660,12 +1662,15 @@ function hideCreateUserPopup() {
 }
 
 function appendCreateUserPopupFirstName() {
+
+	
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
 		"class" : "create-user-popup-label float-left"
 	}).html("First Name");
+	
 	var inputBox = $('<input>').attr({
 		"class" : "create-user-popup-input",
 		"id" : "create-user-first-name"
@@ -1762,7 +1767,8 @@ function appendCreateUserPopupEmail() {
 	}).html("Email");
 	var inputBox = $('<input>').attr({
 		"class" : "create-user-popup-input",
-		"id" : "create-user-emailId"
+		"id" : "create-user-emailId",
+		
 	}).val("");
 	row.append(label).append(inputBox);
 	$('#create-user-container').append(row);
