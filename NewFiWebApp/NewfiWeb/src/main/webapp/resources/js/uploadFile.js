@@ -117,8 +117,12 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	var splitOption = $("<option>").attr({
 		"value" : SPLIT_DOC
 		}).html(SPLIT_DOC);
-	docAssign.append(assignOption).append(splitOption);
+	docAssign.append(assignOption);
 
+	if(listUploadedFiles.totalPages>1){
+		docAssign.append(splitOption);
+	}
+	
 	var neededItemListObj = neededItemListObject.resultObject.listLoanNeedsListVO;
 
 	for (i in neededItemListObj) {
@@ -351,7 +355,10 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 				
 				return false;	
 			}
-			unSupportedFile.push(response[0]);
+			if(response[0]!= undefined){
+				unSupportedFile.push(response[0]);
+			}
+			
 		},
 		dragenter : function() {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
