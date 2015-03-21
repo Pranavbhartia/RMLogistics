@@ -496,9 +496,4 @@ function addNotificationPopup(loanId,element,data){
 	showNotificationPopup();
 }
 
-$(document).click(function(event) {
-	if ($('#ms-add-notification-popup').css("display") == "block") {
-		if ($(event.target).attr("class") != "day") 
-		removeNotificationPopup();
-	}
-});
+

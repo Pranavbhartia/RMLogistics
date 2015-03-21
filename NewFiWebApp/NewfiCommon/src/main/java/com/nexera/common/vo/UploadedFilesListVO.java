@@ -22,7 +22,7 @@ public class UploadedFilesListVO implements Serializable {
 	private String s3ThumbPath;
 	private AssignedUserVO assignedByUser;
 	private String uuidFileId;
-	
+	private Integer totalPages;
 	
 	public Integer getId() {
 		return id;
@@ -95,6 +95,12 @@ public class UploadedFilesListVO implements Serializable {
 	}
 	public void setUuidFileId(String uuidFileId) {
 		this.uuidFileId = uuidFileId;
+	}
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
 	
 	

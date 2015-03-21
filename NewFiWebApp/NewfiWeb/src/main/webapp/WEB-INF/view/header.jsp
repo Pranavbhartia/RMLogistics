@@ -15,3 +15,11 @@
 <div id="overlay-toast" class="overlay-toast-wrapper hide">
 	<div id="overlay-toast-txt" class="overlay-toast-txt"></div>
 </div>
+
+<div id="overlay-popup" class="overlay-popup-wrapper hide">
+	<div id="overlay-popup-txt" class="overlay-popup-txt"></div>
+	<div class="overlay-popup-btn-wrapper">
+		<div id="overlay-confirm" class="overlay-btn">Yes</div>
+		<div id="overlay-cancel" class="overlay-btn">No</div>
+	</div>
+</div>
