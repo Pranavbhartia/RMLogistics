@@ -834,7 +834,7 @@ var loanDurationConform;
 var rateVOArrayObj;
 function paintteaserRate(teaserRate) {
 
-	teaserRate = JSON.parse(teaserRate);
+	//teaserRate = JSON.parse(teaserRate);
 
 	for ( var i in teaserRate) {
 
