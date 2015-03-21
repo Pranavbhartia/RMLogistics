@@ -32,6 +32,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MasterDataService;
+import com.nexera.core.service.UserProfileService;
 
 @Controller
 public class DefaultController implements InitializingBean {
@@ -44,6 +45,9 @@ public class DefaultController implements InitializingBean {
 
 	@Autowired
 	protected MasterDataService masterDataService;
+	
+	@Autowired
+	protected UserProfileService userProfileService;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DefaultController.class);
@@ -152,8 +156,8 @@ public class DefaultController implements InitializingBean {
 			if (localeText == null) {
 				localeText = loadLanguageMap(suffix);
 			}
-			UserVO userVO = new UserVO();
-			userVO.setForView(user);
+			//Loading complete details of the user
+			UserVO userVO = userProfileService.loadInternalUser(user.getId());
 
 			List<InternalUserRoleMaster> internalUserRoleMasters = masterDataService
 			        .getInternalUserRoleMaster();

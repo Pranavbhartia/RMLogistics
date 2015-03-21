@@ -52,7 +52,7 @@ public class PaymentRestService {
 		}
 	}
 
-	@RequestMapping(value = "makepayment.do", method = RequestMethod.POST)
+	@RequestMapping(value = "pay", method = RequestMethod.POST)
 	public @ResponseBody
 	String makePayment(Model model, HttpServletRequest request) {
 		LOG.info("Payment Controller called to make a payment");
