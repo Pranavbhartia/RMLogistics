@@ -1,4 +1,4 @@
-package com.nexera.web.controller;
+package com.nexera.web.rest;
 
 import java.io.IOException;
 
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.TeaserRateVO;
 import com.nexera.core.service.UserProfileService;
 
 @RestController
@@ -28,6 +30,9 @@ public class ShopperRegistrationController {
 		
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is"+registrationDetails);
+		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class); 
+		
+		userProfileService.saveUser(userVO);
 		
 		return gson.toJson(registrationDetails);
 	}

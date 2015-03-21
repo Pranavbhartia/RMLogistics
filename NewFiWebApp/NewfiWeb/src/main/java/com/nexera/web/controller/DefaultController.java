@@ -59,8 +59,7 @@ public class DefaultController implements InitializingBean {
 	protected HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
 	protected User getUserObject() {
-		final Object principal = SecurityContextHolder.getContext()
-		        .getAuthentication().getPrincipal();
+		final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User) {
 			return (User) principal;
 		} else {

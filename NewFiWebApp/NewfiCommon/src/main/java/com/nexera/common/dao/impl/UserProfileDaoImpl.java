@@ -329,4 +329,11 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 		return imageVOs;
 	}
+	
+	 public User saveUser(User user){
+		
+		 Session session = sessionFactory.getCurrentSession();
+		 session.save(user);
+		 return user;
+	}
 }

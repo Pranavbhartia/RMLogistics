@@ -51,25 +51,27 @@
 			$(document).on('click','#progressBaarId_2',function(){
 				if(stages>1){
 					progressBaar(2);
-					paintRefinanceLiveNow();
+					//paintRefinanceLiveNow();
+					paintRefinanceStep2();
 				}
 			});
 			$(document).on('click','#progressBaarId_3',function(){
 				if(stages>2){
 					progressBaar(3);
-					paintRefinanceStartLiving();
+					//paintRefinanceStartLiving();
+					paintRefinanceStep3();
 				}
 			});
 			$(document).on('click','#progressBaarId_4',function(){
 				if(stages>3){
 					progressBaar(4);
-					paintRefinanceMyIncome();
+					paintRefinanceHomeWorthToday();
 				}
 			});
 			$(document).on('click','#progressBaarId_5',function(){
 				if(stages>4){
 					progressBaar(5);
-					paintRefinanceDOB();
+					paintRefinanceHomeZipCode();
 				}
 			});
 			
@@ -81,16 +83,16 @@
 			$(document).on('click','#homeProgressBaarId_2',function(){
 				if(active>1){
 					homeProgressBaar(2);
-					paintBuyHomeRenting();
+					paintRentOfYourHouse();
 				}
 			});
 			$(document).on('click','#homeProgressBaarId_3',function(){
 				if(active>2){
 					homeProgressBaar(3);
-					paintBuyHomEachMonthrent();
+					paintHomeZipCode();
 				}
 			});
-			$(document).on('click','#homeProgressBaarId_4',function(){
+			/* $(document).on('click','#homeProgressBaarId_4',function(){
 				if(active>3){
 					homeProgressBaar(4);
 					paintBuyHomeMyIncome();
@@ -101,8 +103,25 @@
 					homeProgressBaar(5);
 					paintBuyHomeSSN();
 				}
+			}); */
+			
+			$(document).on('keypress','input[name="yearLeftOnMortgage"]',function(e){
+				
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+			        //display error message
+			        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+			          return false;
+			    }
 			});
 			
+			$(document).on('keypress','input[name="zipCode"]',function(e){
+				
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+			        //display error message
+			        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+			          return false;
+			    }
+			});
 			
 
 		});

@@ -328,7 +328,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"value" : refinanceTeaserRate[name]
 	}).on("load keydown", function(e){
           
-		if(name != 'zipCode'){
+		if(name != 'zipCode' && name != 'yearLeftOnMortgage'){
 			$('input[name='+name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -340,6 +340,13 @@ function getTextQuestion(quesText, clickEvent, name) {
 		}
 		
 	});
+	
+	var span = $('<span>').attr({
+		"id":"errmsg"
+		
+	});
+	
+	inputBox.append(span);
 
 	optionContainer.append(inputBox);
 
@@ -350,11 +357,13 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
-		refinanceTeaserRate[key] = $('input[name="' + key + '"]').val();
+		inputValue= $('input[name="' + key + '"]').val();
 
+		refinanceTeaserRate[key]  = inputValue;
 		sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-
-		event.data.clickEvent();
+        if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
+        	event.data.clickEvent();
+        }
 	});
 
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
@@ -528,8 +537,7 @@ function paintRefinanceStep1a() {
 
 	var quesTxt = "How many years are left on your mortgage?";
 
-	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,
-			"yearLeftOnMortgage");
+	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"yearLeftOnMortgage");
 
 	$('#ce-refinance-cp').html(quesCont);
 }
@@ -1104,9 +1112,9 @@ function paintApplyNow(){
 		
 	}).html("Get Started").bind('click',{"userDetails":registration},function(event){
 		
-		registration.fname = $('input[name="fname"]').val();
-		registration.lname = $('input[name="lname"]').val();
-		registration.email = $('input[name="email"]').val();
+		registration.firstName = $('input[name="fname"]').val();
+		registration.lastName = $('input[name="lname"]').val();
+		registration.emailId = $('input[name="email"]').val();
 		
 		saveUserAndRedirect(registration);
 	});
@@ -1140,11 +1148,13 @@ function saveUserAndRedirect(registration){
 			//$('#overlay-loader').hide();
 			
 			alert ("sucesss");
+			window.location.href = "http://localhost:8082/NewfiWeb/home.do";
 			//printMedianRate(data,container);
 			
 		},
-		error : function() {
-			alert("error");
+		error : function(data) {
+			alert(data);
+			$('#ce-main-container').html(data.toString());
 			//$('#overlay-loader').hide();
 		}
 

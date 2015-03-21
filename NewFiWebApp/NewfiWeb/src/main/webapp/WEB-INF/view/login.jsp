@@ -71,7 +71,7 @@
 							<div class="form-logo"></div>
 							<div class="login-input-cont">
 								<input type="text" class="login-input login-input-username"
-							l		placeholder="Username" id="userId"> <input
+									placeholder="Username" id="userId"> <input
 									type="hidden" id="inputEmail" name="j_username" class="hide"
 									placeholder="Email address" required autofocus>
 							</div>

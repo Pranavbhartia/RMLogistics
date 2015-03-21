@@ -45,4 +45,6 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<UserRoleNameImageVO> finUserDetailsList(List<Long> userList);
 
+	
+	public User saveUser(User user) throws DatabaseException;
 }
