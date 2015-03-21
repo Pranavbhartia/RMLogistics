@@ -53,16 +53,16 @@ public class RestInterceptor implements Callable
                 NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
         }
-        String[] inputParameters = getAllParameters( restParameters );
+        Object[] inputParameters = getAllParameters( restParameters );
         message.setPayload( inputParameters );
         return message;
     }
 
 
-    public String[] getAllParameters( RestParameters restParameters )
+    public Object[] getAllParameters( RestParameters restParameters )
     {
         LOG.debug( "Inside method getAllParameters" );
-        String[] inputParams = null;
+        Object[] inputParams = null;
         if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_CREATE ) ) {
             LOG.debug( "Operation Chosen Was Create " );
             inputParams = new String[2];
@@ -82,7 +82,7 @@ public class RestInterceptor implements Callable
             inputParams[3] = restParameters.getLoanVO().getFormat();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOCK_LOAN_PROGRAM ) ) {
             LOG.debug( "Operation Chosen Was LockLoanProgram " );
-            inputParams = new String[5];
+            inputParams = new Object[5];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
             inputParams[2] = restParameters.getLoanVO().getIlpTemplateId();
@@ -95,7 +95,7 @@ public class RestInterceptor implements Callable
             inputParams[1] = restParameters.getLoanVO().getsXmlData();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_SAVE ) ) {
             LOG.debug( "Operation Chosen Was Save " );
-            inputParams = new String[4];
+            inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
             inputParams[2] = restParameters.getLoanVO().getsDataContent();
