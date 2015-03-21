@@ -14,6 +14,9 @@ import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
@@ -27,7 +30,6 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Autowired
 	private UserProfileDao userProfileDao;
-	
 
 	@Override
 	public UserVO findUser(Integer userid) {
@@ -43,8 +45,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 
-		userVO.setUserRole(this.buildUserRoleVO(user
-				.getUserRole()));
+		userVO.setUserRole(this.buildUserRoleVO(user.getUserRole()));
 
 		CustomerDetail customerDetail = user.getCustomerDetail();
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
@@ -53,17 +54,17 @@ public class UserProfileServiceImpl implements UserProfileService {
 			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
 			customerDetailVO.setAddressState(customerDetail.getAddressState());
 			customerDetailVO.setAddressZipCode(customerDetail
-					.getAddressZipCode());
+			        .getAddressZipCode());
 			customerDetailVO.setSecPhoneNumber(customerDetail
-					.getSecPhoneNumber());
+			        .getSecPhoneNumber());
 			customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
 			if (customerDetail.getDateOfBirth() != null) {
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-						.getTime());
+				        .getTime());
 			}
 
 			customerDetailVO.setProfileCompletionStatus(customerDetail
-					.getProfileCompletionStatus());
+			        .getProfileCompletionStatus());
 
 		}
 
@@ -103,15 +104,15 @@ public class UserProfileServiceImpl implements UserProfileService {
 		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
 		if (customerDetailVO.getDateOfBirth() != null) {
 			customerDetail.setDateOfBirth(new Date(customerDetailVO
-					.getDateOfBirth()));
+			        .getDateOfBirth()));
 		} else {
 			customerDetail.setDateOfBirth(null);
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
-				.getProfileCompletionStatus());
+		        .getProfileCompletionStatus());
 
 		Integer customerDetailVOObj = userProfileDao
-				.updateCustomerDetails(customerDetail);
+		        .updateCustomerDetails(customerDetail);
 		return customerDetailVOObj;
 	}
 
@@ -125,7 +126,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public List<UserVO> searchUsers(UserVO userVO) {
 
 		return this.buildUserVOList(userProfileDao
-				.searchUsers(parseUserModel(userVO)));
+		        .searchUsers(parseUserModel(userVO)));
 
 	}
 
@@ -142,6 +143,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 		return voList;
 	}
+
 	public UserRoleVO buildUserRoleVO(UserRole role) {
 
 		if (role == null)
@@ -174,10 +176,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	}
 
-
 	@Override
 	public Integer competeUserProfile(UserVO userVO) {
-		
+
 		User user = new User();
 
 		user.setId(userVO.getId());
@@ -193,7 +194,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public Integer completeCustomerDetails(UserVO userVO) {
-		
+
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
 		CustomerDetail customerDetail = new CustomerDetail();
 
@@ -203,23 +204,24 @@ public class UserProfileServiceImpl implements UserProfileService {
 		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
 		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
 		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-		
+
 		if (customerDetailVO.getDateOfBirth() != null) {
 			customerDetail.setDateOfBirth(new Date(customerDetailVO
-					.getDateOfBirth()));
+			        .getDateOfBirth()));
 		} else {
 			customerDetail.setDateOfBirth(null);
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
-				.getProfileCompletionStatus());
+		        .getProfileCompletionStatus());
 
-		Integer rowCount = userProfileDao.completeCustomerDetails(customerDetail);
+		Integer rowCount = userProfileDao
+		        .completeCustomerDetails(customerDetail);
 		return rowCount;
 	}
-	
+
 	@Override
 	public Integer managerUpdateUserProfile(UserVO userVO) {
-		
+
 		User user = new User();
 
 		user.setId(userVO.getId());
@@ -235,7 +237,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public Integer managerUpdateUCustomerDetails(UserVO userVO) {
-		
+
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
 		CustomerDetail customerDetail = new CustomerDetail();
 
@@ -245,20 +247,20 @@ public class UserProfileServiceImpl implements UserProfileService {
 		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
 		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
 		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-		
+
 		if (customerDetailVO.getDateOfBirth() != null) {
 			customerDetail.setDateOfBirth(new Date(customerDetailVO
-					.getDateOfBirth()));
+			        .getDateOfBirth()));
 		} else {
 			customerDetail.setDateOfBirth(null);
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
-				.getProfileCompletionStatus());
+		        .getProfileCompletionStatus());
 
-		Integer rowCount = userProfileDao.managerUpdateUCustomerDetails(customerDetail);
+		Integer rowCount = userProfileDao
+		        .managerUpdateUCustomerDetails(customerDetail);
 		return rowCount;
 	}
-
 
 	@Override
 	public UserVO buildUserVO(User user) {
@@ -275,11 +277,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 
-		userVO.setUserRole(this.buildUserRoleVO(user
-				.getUserRole()));
+		userVO.setUserRole(this.buildUserRoleVO(user.getUserRole()));
 
-		userVO.setInternalUserDetail(this
-				.buildInternalUserDetailsVO(user.getInternalUserDetail()));
+		userVO.setInternalUserDetail(this.buildInternalUserDetailsVO(user
+		        .getInternalUserDetail()));
 
 		return userVO;
 	}
@@ -299,11 +300,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
-		userModel.setUserRole(this.parseUserRoleModel(userVO
-				.getUserRole()));
+		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
 
 		userModel.setInternalUserDetail(this
-				.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
+		        .parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
 		return userModel;
 	}
@@ -312,17 +312,17 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public UserVO createUser(UserVO userVO) {
 
 		Integer userID = (Integer) userProfileDao.saveInternalUser(this
-				.parseUserModel(userVO));
+		        .parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
 			user = (User) userProfileDao.findInternalUser(userID);
 
 		return this.buildUserVO(user);
 	}
-	
+
 	@Override
 	public InternalUserDetailVO buildInternalUserDetailsVO(
-			InternalUserDetail internalUserDetail) {
+	        InternalUserDetail internalUserDetail) {
 		// TODO Auto-generated method stub
 
 		if (internalUserDetail == null)
@@ -330,13 +330,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 		InternalUserDetailVO detailVO = new InternalUserDetailVO();
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
-				.getInternaUserRoleMaster()));
+		        .getInternaUserRoleMaster()));
 
 		return detailVO;
 	}
 
 	private InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
-			InternalUserRoleMaster internal) {
+	        InternalUserRoleMaster internal) {
 		if (internal == null)
 			return null;
 
@@ -349,7 +349,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 
 	private InternalUserDetail parseInternalUserDetailsModel(
-			InternalUserDetailVO internalUserDetailVO) {
+	        InternalUserDetailVO internalUserDetailVO) {
 		// TODO Auto-generated method stub
 
 		if (internalUserDetailVO == null)
@@ -357,13 +357,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 		InternalUserDetail detail = new InternalUserDetail();
 		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
-				.getInternalUserRoleMasterVO()));
+		        .getInternalUserRoleMasterVO()));
 
 		return detail;
 	}
 
 	private InternalUserRoleMaster parseInternalUserRoleMasterModel(
-			InternalUserRoleMasterVO internalVO) {
+	        InternalUserRoleMasterVO internalVO) {
 		if (internalVO == null)
 			return null;
 
@@ -377,8 +377,26 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserVO loadInternalUser(Integer userID) {
 		// TODO Auto-generated method stub
-		return this.buildUserVO(userProfileDao
-				.findInternalUser(userID));
+		return this.buildUserVO(userProfileDao.findInternalUser(userID));
+	}
+
+	@Override
+	public UserVO findUserByMail(String userMailAddress) {
+
+		User user = null;
+		UserVO userVO = null;
+		try {
+			user = userProfileDao.findByUserName(userMailAddress);
+			if (user != null) {
+				userVO = buildUserVO(user);
+			}
+
+		} catch (DatabaseException e) {
+
+		} catch (NoRecordsFetchedException e) {
+
+		}
+		return userVO;
 	}
 
 }

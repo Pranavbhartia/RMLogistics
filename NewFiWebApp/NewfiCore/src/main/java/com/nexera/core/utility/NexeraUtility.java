@@ -209,8 +209,7 @@ public class NexeraUtility {
 			// InputStream in = new FileInputStream(file);
 			// BufferedImage bimg = ImageIO.read(in);
 			float width, height;
-			if (FilenameUtils.getExtension(file.getName()).toLowerCase()
-			        .endsWith("tif")) {
+			if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
 				FileSeekableStream fss = new FileSeekableStream(file);
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
@@ -234,15 +233,11 @@ public class NexeraUtility {
 
 			PDXObjectImage img = null;
 
-			if (FilenameUtils.getExtension(file.getName()).toLowerCase()
-			        .endsWith("jpg")) {
+			if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
 				img = new PDJpeg(document, new FileInputStream(file));
-			} else if (FilenameUtils.getExtension(file.getName()).toLowerCase()
-			        .endsWith("png")) {
+			} else if (multipartFile.getContentType().equalsIgnoreCase("image/png")) {
 				img = new PDPixelMap(document, ImageIO.read(file));
-
-			} else if (FilenameUtils.getExtension(file.getName()).toLowerCase()
-			        .endsWith("tif")) {
+			} else if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
 
 			}

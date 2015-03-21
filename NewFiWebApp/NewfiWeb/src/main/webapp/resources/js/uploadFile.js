@@ -117,8 +117,12 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	var splitOption = $("<option>").attr({
 		"value" : SPLIT_DOC
 		}).html(SPLIT_DOC);
-	docAssign.append(assignOption).append(splitOption);
+	docAssign.append(assignOption);
 
+	if(listUploadedFiles.totalPages>1){
+		docAssign.append(splitOption);
+	}
+	
 	var neededItemListObj = neededItemListObject.resultObject.listLoanNeedsListVO;
 
 	for (i in neededItemListObj) {
@@ -323,8 +327,9 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	uploadedNeedContainer.append(header).append(container);
 	$('#center-panel-cont').append(uploadedNeedContainer);
 	// using dropzone js for file upload
+	var unSupportedFile = new Array();
 	var myDropZone = new Dropzone("#drop-zone", {
-		url : "documentUpload.do",
+		url : "rest/fileupload/documentUpload",
 		clickable : "#file-upload-icn",
 		params : {
 			userID : currentUserAndLoanOnj.userId,
@@ -334,10 +339,26 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		drop : function() {
 
 		},
-		complete : function(response) {
+		complete : function(file, response) {
 			hideOverlay();
+			
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 			getRequiredDocuments();
+		},
+		success : function(file, response){
+			console.info(response);
+			if(response.error != undefined){
+				showDialogPopup("User Session " , "Session logged out! Click ok to continue" , function(){
+					location.reload();
+					return false;
+				}); 
+				
+				return false;	
+			}
+			if(response[0]!= undefined){
+				unSupportedFile.push(response[0]);
+			}
+			
 		},
 		dragenter : function() {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
@@ -349,6 +370,18 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			$('#file-upload-icn').addClass('file-upload-hover-icn');
 		},
 		queuecomplete : function() {
+			
+			var list = $("<div>");
+			for(i in unSupportedFile){
+				list.append("<p>").append(unSupportedFile[i]);
+			}
+			if(unSupportedFile.length>0){
+				showDialogPopup("Unsupported File" , list , function(){
+					return false;
+				});
+			}
+			unSupportedFile = new Array();
+			console.info(unSupportedFile);
 		},
 		addedfile : function(){
 			showOverlay();

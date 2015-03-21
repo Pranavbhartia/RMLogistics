@@ -29,6 +29,7 @@ public class UploadedFilesList implements Serializable {
 	private String s3ThumbPath;
 	private User assignedBy;
 	private String uuidFileId;
+	private Integer totalPages;
 	
 	public UploadedFilesList() {
 	}
@@ -140,6 +141,15 @@ public class UploadedFilesList implements Serializable {
 
 	public void setUuidFileId(String uuidFileId) {
 		this.uuidFileId = uuidFileId;
+	}
+
+	@Column(name = "totalpages")
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
 
 }

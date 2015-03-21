@@ -10,7 +10,7 @@ var workFlowContext = {
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
-
+	initAttempted:false,
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
@@ -39,9 +39,14 @@ var workFlowContext = {
 								showToastMessage(response.error.message)
 							} else {
 								if(response.resultObject.loanManagerWorkflowID==0){
-									ob.createWorkflow(function(ob){
-										ob.getWorkflowID(callback);
-									})
+									if(ob.initAttempted){
+										showToastMessage("Master Tables Not Populated")
+									}else{
+										ob.initAttempted=true;
+										ob.createWorkflow(function(ob){
+											ob.getWorkflowID(callback);
+										});
+									}
 								}else{
 									ob.customerWorkflowID = response.resultObject.customerWorkflowID;
 									ob.loanManagerWorkflowID = response.resultObject.loanManagerWorkflowID;	
@@ -175,7 +180,11 @@ var workFlowContext = {
 		var ob=this;
 		var data={};
 		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
-		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+		data.data={};
+		data.data.userId=newfiObject.user.id;
+		data.data.defaultLoanId=newfiObject.user.defaultLoanId;
+		data.data=JSON.stringify(data.data);
+		ajaxRequest("rest/workflow/getupdatedstatus", "GET", "json", data, function(response) {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {

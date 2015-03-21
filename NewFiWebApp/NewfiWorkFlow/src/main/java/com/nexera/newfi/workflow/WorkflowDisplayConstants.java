@@ -16,4 +16,7 @@ public class WorkflowDisplayConstants {
 	public static final String EMAIL_RECIPIENT_NAME = "EMAIL_RECIPIENT_NAME";
 	public static final String SYSTEM_PARAM_KEY_NAME = "SYSTEM_PARAM";
 	
+	public static final String WORKFLOW_TASK_SUCCESS = "success";
+	public static final String WORKFLOW_TASK_STARTED = "started";
+	
 }
