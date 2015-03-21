@@ -46,4 +46,6 @@ public interface UserProfileService {
 
 	public UserVO findUserByMail(String userMailAddress);
 
+	public UserVO saveUser(UserVO userVO);
+
 }

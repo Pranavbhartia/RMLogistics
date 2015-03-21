@@ -1,4 +1,125 @@
 //JavaScript functions for customer engagement pages
+var teaserRate = [
+                  {
+                      "loanDuration": "15 YR FIXED CONFORMING",
+                      "rateVO": [
+                          {
+                              "teaserRate": "3.000",
+                              "closingCost": "0"
+                          },
+                          {
+                              "teaserRate": "2.875",
+                              "closingCost": "$1,782.62"
+                          },
+                          {
+                              "teaserRate": "2.750",
+                              "closingCost": "$3,512.43"
+                          }
+                      ]
+                  },
+                  {
+                      "loanDuration": "20 YR FIXED CONFORMING",
+                      "rateVO": [
+                          {
+                              "teaserRate": "3.625",
+                              "closingCost": "0"
+                          },
+                          {
+                              "teaserRate": "3.500",
+                              "closingCost": "$1,155.53"
+                          },
+                          {
+                              "teaserRate": "3.375",
+                              "closingCost": "$3,658.15"
+                          },
+                          {
+                              "teaserRate": "3.250",
+                              "closingCost": "$6,166.37"
+                          }
+                      ]
+                  },
+                  {
+                      "loanDuration": "30 YR FIXED CONFORMING",
+                      "rateVO": [
+                          {
+                              "teaserRate": "3.875",
+                              "closingCost": "0"
+                          },
+                          {
+                              "teaserRate": "3.750",
+                              "closingCost": "$493.10"
+                          },
+                          {
+                              "teaserRate": "3.625",
+                              "closingCost": "$2,872.52"
+                          },
+                          {
+                              "teaserRate": "3.500",
+                              "closingCost": "$5,660.73"
+                          }
+                      ]
+                  },
+                  {
+                      "loanDuration": "5/1 1 YR LIBOR CONFORMING  2/2/5 30 YR ARM",
+                      "rateVO": [
+                          {
+                              "teaserRate": "3.125",
+                              "closingCost": "0"
+                          },
+                          {
+                              "teaserRate": "3.000",
+                              "closingCost": "$425.20"
+                          },
+                          {
+                              "teaserRate": "2.875",
+                              "closingCost": "$1,443.82"
+                          },
+                          {
+                              "teaserRate": "2.750",
+                              "closingCost": "$2,456.83"
+                          },
+                          {
+                              "teaserRate": "2.625",
+                              "closingCost": "$3,472.65"
+                          },
+                          {
+                              "teaserRate": "2.500",
+                              "closingCost": "$4,796.47"
+                          }
+                      ]
+                  },
+                  {
+                      "loanDuration": "7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM",
+                      "rateVO": [
+                          {
+                              "teaserRate": "3.250",
+                              "closingCost": "0"
+                          },
+                          {
+                              "teaserRate": "3.125",
+                              "closingCost": "$347.38"
+                          },
+                          {
+                              "teaserRate": "3.000",
+                              "closingCost": "$1,643.20"
+                          },
+                          {
+                              "teaserRate": "2.875",
+                              "closingCost": "$2,950.22"
+                          },
+                          {
+                              "teaserRate": "2.750",
+                              "closingCost": "$4,262.83"
+                          },
+                          {
+                              "teaserRate": "2.625",
+                              "closingCost": "$5,569.85"
+                          }
+                      ]
+                  }
+              ];
+
+
 
 var refinanceTeaserRate = new Object();
 if (sessionStorage.refinaceData) {
@@ -207,7 +328,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"value" : refinanceTeaserRate[name]
 	}).on("load keydown", function(e){
           
-		if(name != 'zipCode'){
+		if(name != 'zipCode' && name != 'yearLeftOnMortgage'){
 			$('input[name='+name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -219,6 +340,13 @@ function getTextQuestion(quesText, clickEvent, name) {
 		}
 		
 	});
+	
+	var span = $('<span>').attr({
+		"id":"errmsg"
+		
+	});
+	
+	inputBox.append(span);
 
 	optionContainer.append(inputBox);
 
@@ -229,11 +357,13 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
-		refinanceTeaserRate[key] = $('input[name="' + key + '"]').val();
+		inputValue= $('input[name="' + key + '"]').val();
 
+		refinanceTeaserRate[key]  = inputValue;
 		sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-
-		event.data.clickEvent();
+        if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
+        	event.data.clickEvent();
+        }
 	});
 
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
@@ -407,8 +537,7 @@ function paintRefinanceStep1a() {
 
 	var quesTxt = "How many years are left on your mortgage?";
 
-	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,
-			"yearLeftOnMortgage");
+	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"yearLeftOnMortgage");
 
 	$('#ce-refinance-cp').html(quesCont);
 }
@@ -775,9 +904,9 @@ function paintRefinancePhoneNumber() {
 
 function paintRefinanceSeeRates() {
 
-	// teaserFixYourRatePage();
-stages = 6;
-progressBaar(6);
+	
+	stages = 6;
+	progressBaar(6);
 	delete sessionStorage.refinaceData;
 
 	var quesTxt = "Analyze & Adjust Your Numbers";
@@ -790,14 +919,14 @@ progressBaar(6);
 	}).html(quesTxt);
 
 	var rateProgramWrapper = getRateProgramContainer();
-	var loanSummaryWrapper = getLoanSummaryWrapper();
-	var closingCostWrapper = getClosingCostSummaryContainer();
+	//var loanSummaryWrapper = getLoanSummaryWrapper();
+	//var closingCostWrapper = getClosingCostSummaryContainer();
 
 	//container.append(quesTextCont).append(rateProgramWrapper).append(
 		//	loanSummaryWrapper).append(closingCostWrapper);
-container.append(quesTextCont).append(rateProgramWrapper);
+	container.append(quesTextCont).append(rateProgramWrapper);
 	$('#ce-refinance-cp').html(container);
-$('#overlay-loader').show();
+	$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/calculator/findteaseratevalue",
@@ -810,7 +939,7 @@ $('#overlay-loader').show();
 			
 			$('#overlay-loader').hide();
 			
-			paintteaserRate(data);
+			paintteaserRate(teaserRate);
 			//printMedianRate(data,container);
 			
 		},
@@ -907,4 +1036,128 @@ function teaserFixYourRatePage() {
 	//$('#ce-refinance-cp').append(rateProgramWrapper).append(loanSummaryWrapper)
 	//		.append(closingCostWrapper);
 	$('#ce-refinance-cp').append(rateProgramWrapper);
+}
+
+
+function paintApplyNow(){
+	
+	var registration = new Object ();
+	var parentWrapper = $('<div>').attr({
+		"class" : "container-row row clearfix"
+	});
+	
+	var regMainContainer = $('<div>').attr({
+		"class" : "reg-main-container"
+	});
+	
+	var regDisplayTitle = $('<div>').attr({
+		"class": "reg-display-title"
+		
+	}).html("Lorem Ipsum Lorem Ipsum");
+	
+	var regDisplaySubTitle = $('<div>').attr({
+		"class":"reg-display-title-subtxt"
+		
+	}).html("Lorem Ipsum is also knownas: Greeked Text, blind text, placeholder text, dummy content,filter text, lipsum, and mock-content");
+	
+	var regInputContainerFname = $('<div>').attr({
+		"class":"reg-input-cont reg-fname"
+		
+	});
+	
+	var regInputfname = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"First Name",
+		"name":"fname"
+		
+	});
+	
+	regInputContainerFname.append(regInputfname);
+	
+	var regInputContainerlname = $('<div>').attr({
+		"class":"reg-input-cont reg-lname"
+		
+	});
+	
+	var regInputlname = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"Last Name",
+		"name":"lname"
+	});
+	
+	regInputContainerlname.append(regInputlname);
+	
+	
+	var regInputContainerEmail = $('<div>').attr({
+		"class":"reg-input-cont reg-email"
+		
+	});
+	
+	var regInputEmail = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"Email",
+		"name":"email"
+		
+	});
+	
+	regInputContainerEmail.append(regInputEmail);
+	
+	var regContainerGetStarted = $('<div>').attr({
+		"class":"reg-btn-wrapper clearfix"
+		
+	});
+	
+	var regGetStarted = $('<div>').attr({
+		"class":"reg-btn float-left",
+		
+	}).html("Get Started").bind('click',{"userDetails":registration},function(event){
+		
+		registration.firstName = $('input[name="fname"]').val();
+		registration.lastName = $('input[name="lname"]').val();
+		registration.emailId = $('input[name="email"]').val();
+		
+		saveUserAndRedirect(registration);
+	});
+	
+	regContainerGetStarted.append(regGetStarted);
+	
+	regMainContainer.append(regDisplayTitle);
+	regMainContainer.append(regDisplaySubTitle);
+	regMainContainer.append(regInputContainerFname);
+	regMainContainer.append(regInputContainerlname);
+	regMainContainer.append(regInputContainerEmail);
+	regMainContainer.append(regContainerGetStarted);
+	return parentWrapper.append(regMainContainer);
+		
+}
+
+function saveUserAndRedirect(registration){
+	
+	//alert(JSON.stringify(registration));
+	
+	$.ajax({
+
+		url : "rest/shopper/registration",
+		type : "POST",
+		data : {
+			"registrationDetails" : JSON.stringify(registration)
+		},
+		datatype : "application/json",
+		success : function(data) {
+			
+			//$('#overlay-loader').hide();
+			
+			alert ("sucesss");
+			window.location.href = "http://localhost:8082/NewfiWeb/home.do";
+			//printMedianRate(data,container);
+			
+		},
+		error : function(data) {
+			alert(data);
+			$('#ce-main-container').html(data.toString());
+			//$('#overlay-loader').hide();
+		}
+
+	});
+	
 }
