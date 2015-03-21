@@ -226,6 +226,7 @@ public class UserVO implements Serializable {
 		this.photoImageUrl = user.getPhotoImageUrl();
 		this.id = user.getId();
 		UserRoleVO roleVO = new UserRoleVO();
+		roleVO.setId(user.getUserRole().getId());
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
 
 		this.userRole = roleVO;

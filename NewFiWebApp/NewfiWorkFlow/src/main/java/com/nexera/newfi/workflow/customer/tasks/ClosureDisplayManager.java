@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
-public class AccountStatusManager implements IWorkflowTaskExecutor {
+public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -21,7 +21,7 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
-		return "3";
+		return null;
 	}
 
 }
