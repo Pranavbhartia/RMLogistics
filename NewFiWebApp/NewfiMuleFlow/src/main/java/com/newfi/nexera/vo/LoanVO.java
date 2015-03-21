@@ -23,15 +23,15 @@ public class LoanVO
 
     private String notes;
 
-    private String format;
+    private Integer format;
 
     private String sXmlQuery;
 
     private String IlpTemplateId;
 
-    private String requestedRate;
+    private Float requestedRate;
 
-    private String requestedFee;
+    private Float requestedFee;
 
 
     /**
@@ -125,24 +125,6 @@ public class LoanVO
 
 
     /**
-     * @return the format
-     */
-    public String getFormat()
-    {
-        return format;
-    }
-
-
-    /**
-     * @param format the format to set
-     */
-    public void setFormat( String format )
-    {
-        this.format = format;
-    }
-
-
-    /**
      * @return the sXmlQuery
      */
     public String getsXmlQuery()
@@ -179,42 +161,6 @@ public class LoanVO
 
 
     /**
-     * @return the requestedRate
-     */
-    public String getRequestedRate()
-    {
-        return requestedRate;
-    }
-
-
-    /**
-     * @param requestedRate the requestedRate to set
-     */
-    public void setRequestedRate( String requestedRate )
-    {
-        this.requestedRate = requestedRate;
-    }
-
-
-    /**
-     * @return the requestedFee
-     */
-    public String getRequestedFee()
-    {
-        return requestedFee;
-    }
-
-
-    /**
-     * @param requestedFee the requestedFee to set
-     */
-    public void setRequestedFee( String requestedFee )
-    {
-        this.requestedFee = requestedFee;
-    }
-
-
-    /**
      * @return the documentType
      */
     public String getDocumentType()
@@ -247,6 +193,60 @@ public class LoanVO
     public void setNotes( String notes )
     {
         this.notes = notes;
+    }
+
+
+    /**
+     * @return the format
+     */
+    public Integer getFormat()
+    {
+        return format;
+    }
+
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat( Integer format )
+    {
+        this.format = format;
+    }
+
+
+    /**
+     * @return the requestedRate
+     */
+    public Float getRequestedRate()
+    {
+        return requestedRate;
+    }
+
+
+    /**
+     * @param requestedRate the requestedRate to set
+     */
+    public void setRequestedRate( Float requestedRate )
+    {
+        this.requestedRate = requestedRate;
+    }
+
+
+    /**
+     * @return the requestedFee
+     */
+    public Float getRequestedFee()
+    {
+        return requestedFee;
+    }
+
+
+    /**
+     * @param requestedFee the requestedFee to set
+     */
+    public void setRequestedFee( Float requestedFee )
+    {
+        this.requestedFee = requestedFee;
     }
 
 }
