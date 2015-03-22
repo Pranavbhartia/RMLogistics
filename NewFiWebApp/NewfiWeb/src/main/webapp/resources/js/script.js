@@ -664,11 +664,18 @@ function getRateProgramContainer() {
 			mobileScreenCont);
 	
 	parentWrapper.append(rpHeader).append(rpContainer);
-	var lockRateBtn = $('<div>').attr({
+	var applyNow = $('<div>').attr({
 		"class" : "cp-lock-btn"
-	}).html("lock your rate");
+	}).html("Apply Now").bind('click',function(event){
+		$('#ce-main-container').html('');
+		var applyNow = paintApplyNow();
+		$('#ce-main-container').html(applyNow);
+	});
 	
-	parentWrapper.append(lockRateBtn);
+	var NotifyMe = $('<div>').attr({
+		"class" : "cp-lock-btn"
+	}).html("Notify Me");
+	parentWrapper.append(applyNow).append(NotifyMe);
 	return parentWrapper;
 }
 
