@@ -90,9 +90,9 @@ public class LqbInvoker {
 		System.out.println("Invoking rest...");
 
 		LqbInvoker invoker=new LqbInvoker();
-		invoker.invokeRest("http://graph.facebook.com/balaji.mx");
+		//invoker.invokeRest("http://graph.facebook.com/balaji.mx");
 		//LqbAuth.invokeRestSpring("http://graph.facebook.com/infosys");
-		invoker.invokeRestSpring("http://graph.facebook.com/balaji.mx");
+		//invoker.invokeRestSpring("http://graph.facebook.com/balaji.mx");
 		invoker.invokeRestSpringParseObj("http://graph.facebook.com/balaji.mx");
 
 	}
