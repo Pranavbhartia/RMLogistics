@@ -60,7 +60,7 @@ $(document).ready(function() {
 		<!-- Main Container -->
 		<div class="login-container container">
 			<div class="container-row row clearfix">
-				<div class="display-title">AAAAAAAAAAAA New way to Finance your home</div>
+				<div class="display-title">A New way to Finance your home</div>
 				<div class="display-title-subtxt">Lorem Ipsum is also known
 					as: Greeked Text, blind text, placeholder text, dummy content,
 					filter text, lipsum, and mock-content.</div>

@@ -408,12 +408,23 @@ public class UserProfileServiceImpl implements UserProfileService {
 		User user = new User();
 		user.setFirstName(userVO.getFirstName());
 		user.setLastName(userVO.getLastName());
-		user.setEmailId(userVO.getEmailId());
-		user.setUsername(userVO.getEmailId());
+	
+		user.setEmailId(userVO.getEmailId().split(":")[0]);
+		user.setUsername(userVO.getEmailId().split(":")[0]);
+		user.setPassword("123abc");
+		user.setStatus(true);
+		
+		UserRole userRole = new UserRole();
+		userRole.setId(1);
+		user.setUserRole(userRole);
+		
 		
 		user = userProfileDao.saveUser(user);
 		UserVO userVOobj  = new UserVO();
 		userVOobj.setFirstName(user.getFirstName());
+		userVOobj.setUsername(user.getUsername());
+		userVOobj.setLastName(user.getLastName());
+		userVOobj.setPassword(user.getPassword());
 		
 	    return userVOobj;
     }

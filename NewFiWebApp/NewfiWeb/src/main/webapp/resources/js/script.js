@@ -674,7 +674,13 @@ function getRateProgramContainer() {
 	
 	var NotifyMe = $('<div>').attr({
 		"class" : "cp-lock-btn"
-	}).html("Notify Me");
+	}).html("Notify Me").bind('click',function(event){
+		
+		$('#ce-main-container').html('');
+		var notifyForRatesAlerts = paintNotifyForRatesAlerts();
+		$('#ce-main-container').html(notifyForRatesAlerts);
+		
+	});
 	parentWrapper.append(applyNow).append(NotifyMe);
 	return parentWrapper;
 }
