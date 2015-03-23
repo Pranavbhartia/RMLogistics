@@ -109,23 +109,23 @@ public class WorkflowItemExecVO {
 	}
 
 	public WorkflowItemExecVO convertToVO(WorkflowItemExec entity) {
-//		WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
-		this.setCreationDate(entity.getCreationDate());
-		this.setEndTime(entity.getEndTime());
-		this.setId(entity.getId());
-		this.setModifiedDate(entity.getModifiedDate());
-		this.setStatus(entity.getStatus());
-		this.setClickable(entity.getClickable());
-		this.setDisplayContent(entity.getWorkflowItemMaster()
+		WorkflowItemExecVO workflowItemExecVO = new WorkflowItemExecVO();
+		workflowItemExecVO.setCreationDate(entity.getCreationDate());
+		workflowItemExecVO.setEndTime(entity.getEndTime());
+		workflowItemExecVO.setId(entity.getId());
+		workflowItemExecVO.setModifiedDate(entity.getModifiedDate());
+		workflowItemExecVO.setStatus(entity.getStatus());
+		workflowItemExecVO.setClickable(entity.getClickable());
+		workflowItemExecVO.setDisplayContent(entity.getWorkflowItemMaster()
 		        .getDescription());
 		
 		if (entity.getParentWorkflowItemExec() != null) {
-			this.setParentWorkflowItemExec(this
+			workflowItemExecVO.setParentWorkflowItemExec(workflowItemExecVO
 			        .convertToVO(entity.getParentWorkflowItemExec()));
 			
 		}
-		this.setWorkflowItemType(entity.getWorkflowItemMaster().getWorkflowItemType());
-		return this;
+		workflowItemExecVO.setWorkflowItemType(entity.getWorkflowItemMaster().getWorkflowItemType());
+		return workflowItemExecVO;
 	}
 
 	public boolean isClickable() {

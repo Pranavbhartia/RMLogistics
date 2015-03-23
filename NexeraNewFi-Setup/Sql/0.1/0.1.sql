@@ -92,3 +92,13 @@ ADD CONSTRAINT `fk_wfItemOnSuccess`
   
   ALTER table newfi_schema.uploadedfileslist
   add column totalpages int(5);
+
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD COLUMN `parent_workflow_item_master` INT NULL AFTER `clickable`,
+ADD INDEX `fk_wfItemEx_linkedToWfItemExec_idx` (`parent_workflow_item_master` ASC);
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD CONSTRAINT `fk_wfItemEx_linkedToWfItemExec`
+  FOREIGN KEY (`parent_workflow_item_master`)
+  REFERENCES `newfi_schema`.`workflowitemexec` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
