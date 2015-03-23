@@ -341,13 +341,6 @@ function getTextQuestion(quesText, clickEvent, name) {
 		
 	});
 	
-	var span = $('<span>').attr({
-		"id":"errmsg"
-		
-	});
-	
-	inputBox.append(span);
-
 	optionContainer.append(inputBox);
 
 	var saveBtn = $('<div>').attr({
@@ -363,6 +356,8 @@ function getTextQuestion(quesText, clickEvent, name) {
 		sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
         if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
         	event.data.clickEvent();
+        }else{
+        	showToastMessage("Please give awnsers of the questions");
         }
 	});
 
@@ -1114,7 +1109,12 @@ function paintApplyNow(){
 		
 		registration.firstName = $('input[name="fname"]').val();
 		registration.lastName = $('input[name="lname"]').val();
-		registration.emailId = $('input[name="email"]').val();
+		
+		var dateVar = new Date();
+		var timezone = dateVar.getTimezoneOffset();
+		registration.emailId = $('input[name="email"]').val() + ":" + timezone;
+		
+		
 		
 		saveUserAndRedirect(registration);
 	});
@@ -1134,7 +1134,7 @@ function paintApplyNow(){
 function saveUserAndRedirect(registration){
 	
 	//alert(JSON.stringify(registration));
-	
+	$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/shopper/registration",
@@ -1146,9 +1146,169 @@ function saveUserAndRedirect(registration){
 		success : function(data) {
 			
 			//$('#overlay-loader').hide();
+			$('#overlay-loader').hide();
+			//alert (data);
+			window.location.href = data;
+			//printMedianRate(data,container);
 			
-			alert ("sucesss");
-			window.location.href = "http://localhost:8082/NewfiWeb/home.do";
+		},
+		error : function(data) {
+			alert(data);
+			$('#ce-main-container').html(data.toString());
+			//$('#overlay-loader').hide();
+		}
+
+	});
+	
+}
+
+
+
+//  notify me for the rates alerts 
+
+
+
+function paintNotifyForRatesAlerts(){
+	
+	var registration = new Object ();
+	var parentWrapper = $('<div>').attr({
+		"class" : "container-row row clearfix"
+	});
+	
+	var regMainContainer = $('<div>').attr({
+		"class" : "reg-main-container"
+	});
+	
+	var regDisplayTitle = $('<div>').attr({
+		"class": "reg-display-title"
+		
+	}).html("Lorem Ipsum Lorem Ipsum");
+	
+	var regDisplaySubTitle = $('<div>').attr({
+		"class":"reg-display-title-subtxt"
+		
+	}).html("Lorem Ipsum is also knownas: Greeked Text, blind text, placeholder text, dummy content,filter text, lipsum, and mock-content");
+	
+	var regInputContainerFname = $('<div>').attr({
+		"class":"reg-input-cont reg-fname"
+		
+	});
+	
+	var regInputfname = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"First Name",
+		"name":"fname"
+		
+	});
+	
+	regInputContainerFname.append(regInputfname);
+	
+	var regInputContainerlname = $('<div>').attr({
+		"class":"reg-input-cont reg-lname"
+		
+	});
+	
+	var regInputlname = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"Last Name",
+		"name":"lname"
+	});
+	
+	regInputContainerlname.append(regInputlname);
+	
+	
+	var regInputContainerEmail = $('<div>').attr({
+		"class":"reg-input-cont reg-email"
+		
+	});
+	
+	var regInputEmail = $('<input>').attr({
+		"class":"reg-input",
+		"placeholder":"Email",
+		"name":"email"
+		
+	});
+	
+	regInputContainerEmail.append(regInputEmail);
+	
+	
+	// radio button 
+	
+	var regRatioContainer = $('<div>').attr({
+		"class":""
+		
+	});
+	
+	
+	var regRadioNotify1 = $('<input>').attr({
+		"type":"radio",
+		"class":"reg-radio",
+		"name":"notifyme"
+		
+	}).html("Daily");
+	var regRadioNotify2 = $('<input>').attr({
+		"type":"radio",
+		"class":"reg-radio",
+		"name":"notifyme"
+		
+	}).html("Weekly");
+	
+	regRatioContainer.append(regRadioNotify1);
+	regRatioContainer.append(regRadioNotify2);
+	
+	
+	
+	var regContainerGetStarted = $('<div>').attr({
+		"class":"reg-btn-wrapper clearfix"
+		
+	});
+	
+	var regGetStarted = $('<div>').attr({
+		"class":"reg-btn float-left",
+		
+	}).html("Notify Me").bind('click',{"userDetails":registration},function(event){
+		
+		registration.firstName = $('input[name="fname"]').val();
+		registration.lastName = $('input[name="lname"]').val();
+		var dateVar = new Date();
+		var timezone = dateVar.getTimezoneOffset();
+		registration.emailId = $('input[name="email"]').val() + ":" + timezone;
+		saveUserAndNotifyRatesAlerts(registration);
+	});
+	
+	regContainerGetStarted.append(regGetStarted);
+	
+	regMainContainer.append(regDisplayTitle);
+	regMainContainer.append(regDisplaySubTitle);
+	regMainContainer.append(regInputContainerFname);
+	regMainContainer.append(regInputContainerlname);
+	regMainContainer.append(regInputContainerEmail);
+	regMainContainer.append(regRatioContainer);
+	
+	regMainContainer.append(regContainerGetStarted);
+	
+	
+	return parentWrapper.append(regMainContainer);
+		
+}
+
+function saveUserAndNotifyRatesAlerts(registration){
+	
+	//alert(JSON.stringify(registration));
+	 $('#overlay-loader').show();
+	$.ajax({
+
+		url : "rest/shopper/registration",
+		type : "POST",
+		data : {
+			"registrationDetails" : JSON.stringify(registration)
+		},
+		datatype : "application/json",
+		success : function(data) {
+			
+			 $('#overlay-loader').hide();
+			
+			window.location.href = data;
 			//printMedianRate(data,container);
 			
 		},

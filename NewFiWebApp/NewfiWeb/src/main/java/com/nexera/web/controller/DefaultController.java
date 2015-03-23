@@ -107,19 +107,21 @@ public class DefaultController implements InitializingBean {
 			userVO.setForView(user);
 			LOG.info("Avoiding status code check of loan");
 			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-			userVO.setDefaultLoanId(loanVO.getId());
 			Gson gson = new Gson();
-			LoanTeamListVO loanTeamListVO = loanService
-			        .getLoanTeamListForLoan(loanVO);
-			List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
-			List<String> imageList = new ArrayList<String>();
-			for (LoanTeamVO loanTeamVO : userList) {
-				imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+			if(null!=loanVO ){
+				userVO.setDefaultLoanId(loanVO.getId());
+				
+				LoanTeamListVO loanTeamListVO = loanService.getLoanTeamListForLoan(loanVO);
+				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
+				List<String> imageList = new ArrayList<String>();
+				for (LoanTeamVO loanTeamVO : userList) {
+					imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+				}
+	
+				model.addAttribute("loanTeamImage", imageList);
 			}
-
-			model.addAttribute("loanTeamImage", imageList);
-			newfi.put("user", gson.toJson(userVO));
-
+				newfi.put("user", gson.toJson(userVO));
+			
 			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
 		} catch (JSONException e) {

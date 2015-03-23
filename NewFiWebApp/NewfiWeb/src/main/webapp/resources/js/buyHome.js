@@ -1061,6 +1061,19 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : name
+	}).on("load keydown", function(e){
+          
+		if(name != 'zipCode'){
+			$('input[name='+name+']').maskMoney({
+				thousands:',',
+				decimal:'.',
+				allowZero:true,
+				prefix: '$',
+			    precision:0,
+			    allowNegative:true
+			});
+		}
+		
 	});
 
 	optionContainer.append(inputBox);
