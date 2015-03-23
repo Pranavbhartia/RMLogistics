@@ -733,10 +733,11 @@ a,a:hover,a:visited {
 }
 
 .complete-application-header {
-	line-height: 45px;
+	line-height: 55px;
 	background-color: #f5f9fc;
 	padding-left: 20px;
 	border-radius: 3px;
+	font-size: 22px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 	text-align: center;
@@ -824,15 +825,18 @@ a,a:hover,a:visited {
 }
 
 .submit-btn {
-	width: 100px;
-	margin: 15px auto;
+	width: 120px;
+	height: 40px;
 	line-height: 40px;
-	background-color: #F47521;
+	margin:15px auto;
+	font-size: 16px;
 	color: #fff;
+	background-color: #6c9f2e;
 	border-radius: 3px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	cursor: pointer;
+	font-family: 'opensanssemibold';
 }
 
 .save-app-btn {
@@ -2424,12 +2428,22 @@ input.calc-input {
 	width: 120px;
 	height: 40px;
 	line-height: 40px;
+	font-size: 16px;
 	color: #fff;
-	background-color: #F6914D;
+	background-color: #6c9f2e;
 	border-radius: 3px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	cursor: pointer;
+	font-family: 'opensanssemibold';
+}
+
+.upload-btn{
+	width:auto;
+	padding: 0 20px;
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
 }
 
 .prof-save-btn {
