@@ -224,7 +224,8 @@ a,a:hover,a:visited {
 .lp-item {
 	position:relative;
 	width: 211px;
-	margin-bottom: 1px;
+	margin: 1px 0;
+	box-shadow: 0px -1px 0px #fff inset;
 	border-bottom: 1px solid #dcdcdc;
 	cursor: pointer;
 }
@@ -1202,7 +1203,7 @@ a,a:hover,a:visited {
 	background-color: #fafcfe;
 }
 
-.conversation-container-l1 {
+.conversation-container-child {
 	padding-left: 95px;
 }
 
@@ -1346,7 +1347,7 @@ a,a:hover,a:visited {
 	margin-bottom: 10px;
 	padding-left: 20px;
 	padding-right: 10px;
-	background-color: #f2fcfe;
+	background-color: #EAF5FD;
 }
 
 .agent-customer-list-header-txt {
