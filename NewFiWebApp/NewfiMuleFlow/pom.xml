@@ -14,8 +14,8 @@
 
 		<mule.version>3.5.0</mule.version>
 		<eclipsePluginVersion>2.8</eclipsePluginVersion>
-		<jdkName>JavaSE-1.6</jdkName>
-		<jdk.version>1.6</jdk.version>
+		<jdkName>JavaSE-1.7</jdkName>
+		<jdk.version>1.7</jdk.version>
 		<junit.version>4.9</junit.version>
 	</properties>
 
@@ -245,8 +245,9 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.2.4</version>
+			<version>2.3</version>
 		</dependency>
+
 
 
 		<!-- Mule Transports -->

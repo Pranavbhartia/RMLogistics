@@ -75,7 +75,7 @@ public class RestInterceptor implements Callable
             inputParams[1] = restParameters.getLoanVO().getsTemplateName();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOAD ) ) {
             LOG.debug( "Operation Chosen Was Load " );
-            inputParams = new String[4];
+            inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
             inputParams[2] = restParameters.getLoanVO().getsXmlQuery();
