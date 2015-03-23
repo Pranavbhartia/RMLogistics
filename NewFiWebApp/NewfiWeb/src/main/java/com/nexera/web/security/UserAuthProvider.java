@@ -41,7 +41,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 		try {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
-			user = authenticationService.getUserWithLoginName(username);
+			user = authenticationService.getUserWithLoginName(username,password);
 
 			
 

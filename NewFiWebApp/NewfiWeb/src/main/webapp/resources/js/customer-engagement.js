@@ -363,6 +363,8 @@ function getTextQuestion(quesText, clickEvent, name) {
 		sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
         if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
         	event.data.clickEvent();
+        }else{
+        	showToastMessage("Please give awnsers of the questions");
         }
 	});
 

@@ -284,7 +284,6 @@ function getApplicationMultipleChoiceQues(question) {
         	if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         	}else{
-	        	$(this).parent().find('.app-option').removeClass('app-option-checked');
 	        	$(this).addClass('app-option-checked');
         	}
         });
@@ -347,7 +346,7 @@ function paintCustomerApplicationPageStep1a() {
     
 	appProgressBaar(1);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Address";
+    var quesHeaderTxt = "Home Address";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -1063,8 +1062,11 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
-			$('.ce-option-checkbox').removeClass("ce-option-checked");
-			$(this).addClass("ce-option-checked");
+			if($(this).hasClass('app-option-checked')){
+        		$(this).removeClass('app-option-checked');
+        	}else{
+	        	$(this).addClass('app-option-checked');
+        	}
 			var key = event.data.name;
 			appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);

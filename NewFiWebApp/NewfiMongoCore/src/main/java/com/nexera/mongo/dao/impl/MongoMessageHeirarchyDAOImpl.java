@@ -22,7 +22,7 @@ import com.nexera.mongo.util.MongoConstants;
  */
 @Component
 public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
-	
+
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
@@ -30,61 +30,63 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 		BasicDBObject q = new BasicDBObject();
 		q.put("loanId", query.getLoanId());
 		q.put("$or", Arrays.asList(
-				new BasicDBObject("roleList", query.getRoleName()),
-				new BasicDBObject("userList", query.getUserId())));
+		        new BasicDBObject("roleList", query.getRoleName()),
+		        new BasicDBObject("userList", query.getUserId())));
 		if (query.getMessageType() != null) {
 			q.put("messageType", query.getMessageType());
 		}
 		return q;
 	}
-	
+
 	/**
 	 * Saves a particular message hierarchy document into the collection
+	 * 
 	 * @param mh
 	 */
 	public void save(MongoMessageHeirarchy mh) {
-		mongoTemplate.insert(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);				
+		mongoTemplate.insert(mh, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
 	}
-	
+
 	/**
 	 * Returns the hierarchy document for a message id
+	 * 
 	 * @param messageid
 	 * @return
 	 */
 	public MongoMessageHeirarchy findLatestByMessageId(String messageId) {
-		DBObject queryObject = QueryBuilder.start("messages").is(messageId).get();
+		// TODO: Change Method name
+		// TODO Add Test Case
+		DBObject queryObject = QueryBuilder.start("lastMessage").is(messageId)
+		        .get();
 		BasicQuery query = new BasicQuery(queryObject);
 		query.with(new Sort(Direction.DESC, "date"));
-		query.limit(1);
-		
-		List<MongoMessageHeirarchy> messageHeirarchies = mongoTemplate.find(query, MongoMessageHeirarchy.class, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
-		
-		
-		if( messageHeirarchies != null && messageHeirarchies.size() > 0 ){
-			return messageHeirarchies.get(0);
-		}
-		else {
-			return null;
-		}
+
+		MongoMessageHeirarchy messageHeirarchy = mongoTemplate.findOne(query,
+		        MongoMessageHeirarchy.class,
+		        MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
+		return messageHeirarchy;
 	}
-	
+
 	/**
 	 * Fetches the mongo hierarchies for a particular query
+	 * 
 	 * @param mongoQueryVO
 	 * @return
 	 */
 	public List<MongoMessageHeirarchy> findBy(MongoQueryVO mongoQueryVO) {
-        int limit = mongoQueryVO.getNumberOfRecords();
-        int skip = mongoQueryVO.getPageNumber() * limit;
-        
-        BasicQuery query = new BasicQuery(constructQuery(mongoQueryVO));
-        query.with(new Sort(Direction.DESC, "date"));
-        query.skip(skip);
-        query.limit(limit);
-        
-        List<MongoMessageHeirarchy> messageHeirarchies = mongoTemplate.find(query, MongoMessageHeirarchy.class, MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
-        
-        return messageHeirarchies;
-    }
+		int limit = mongoQueryVO.getNumberOfRecords();
+		int skip = mongoQueryVO.getPageNumber() * limit;
+
+		BasicQuery query = new BasicQuery(constructQuery(mongoQueryVO));
+		query.with(new Sort(Direction.DESC, "date"));
+		query.skip(skip);
+		query.limit(limit);
+
+		List<MongoMessageHeirarchy> messageHeirarchies = mongoTemplate.find(
+		        query, MongoMessageHeirarchy.class,
+		        MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
+
+		return messageHeirarchies;
+	}
 
 }

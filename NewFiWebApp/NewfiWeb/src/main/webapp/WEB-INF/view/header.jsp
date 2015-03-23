@@ -1,4 +1,4 @@
-<div id="overlay-loader" class="overlay-loader hide"></div>
+]<div id="overlay-loader" class="overlay-loader hide"></div>
 <div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">

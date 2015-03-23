@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.BaseRestException;
@@ -32,12 +34,24 @@ public class LoanRestService {
 
 	@Autowired
 	private UserProfileService userProfileService;
-	
+
 	@Autowired
 	private Utils utils;
 
+	@RequestMapping(value = "/create", method = RequestMethod.PUT)
+	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
+
+		LoanVO loanVO = new Gson().fromJson(loanVOStr, LoanVO.class);
+
+		loanVO = loanService.createLoan(loanVO);
+
+		return new Gson().toJson(RestUtil.wrapObjectForSuccess(loanVO));
+
+	}
+
 	@RequestMapping(value = "/user/{userID}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getLoansOfUser(@PathVariable Integer userID) {
+	public @ResponseBody CommonResponseVO getLoansOfUser(
+	        @PathVariable Integer userID) {
 
 		UserVO user = new UserVO();
 		user.setId(userID);
@@ -49,7 +63,8 @@ public class LoanRestService {
 	}
 
 	@RequestMapping(value = "/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getLoanByID(@PathVariable Integer loanID) {
+	public @ResponseBody CommonResponseVO getLoanByID(
+	        @PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
@@ -61,9 +76,10 @@ public class LoanRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO addToLoanTeam(@PathVariable Integer loanID,
-			@RequestParam(value = "userID") Integer userID) {
+	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO addToLoanTeam(
+	        @PathVariable Integer loanID,
+	        @RequestParam(value = "userID") Integer userID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
@@ -79,14 +95,15 @@ public class LoanRestService {
 		editLoanTeamVO.setLoanID(loanID);
 		editLoanTeamVO.setUser(user);
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(editLoanTeamVO);
+		        .wrapObjectForSuccess(editLoanTeamVO);
 
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.DELETE)
+	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)
 	public @ResponseBody CommonResponseVO removeFromLoanTeam(
-			@PathVariable Integer loanID, @RequestParam(value="userID") Integer userID) {
+	        @PathVariable Integer loanID,
+	        @RequestParam(value = "userID") Integer userID) {
 
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
@@ -99,13 +116,14 @@ public class LoanRestService {
 		editLoanTeamVO.setUserID(userID);
 		editLoanTeamVO.setLoanID(loanID);
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(editLoanTeamVO);
+		        .wrapObjectForSuccess(editLoanTeamVO);
 
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/{loanID}/team",method=RequestMethod.GET)
-	public @ResponseBody CommonResponseVO retreiveLoanTeam(@PathVariable Integer loanID) {
+	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO retreiveLoanTeam(
+	        @PathVariable Integer loanID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 		List<UserVO> team = loanService.retreiveLoanTeam(loan);
@@ -114,9 +132,10 @@ public class LoanRestService {
 		return responseVO;
 	}
 
-	//TODO-move this to User profile rest service
+	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveDashboard/{userID}")
-	public @ResponseBody CommonResponseVO retrieveDashboard(@PathVariable Integer userID) {
+	public @ResponseBody CommonResponseVO retrieveDashboard(
+	        @PathVariable Integer userID) {
 		UserVO user = new UserVO();
 		user.setId(userID);
 
@@ -125,35 +144,36 @@ public class LoanRestService {
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
 
-
-	//TODO-move this to User profile rest service
+	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/{loanID}/retrieveDashboard")
-	public @ResponseBody CommonResponseVO retrieveLoanForDashboard(@PathVariable Integer loanID) {
-		
-		User user=utils.getLoggedInUser();
-		if(user==null){
+	public @ResponseBody CommonResponseVO retrieveLoanForDashboard(
+	        @PathVariable Integer loanID) {
+
+		User user = utils.getLoggedInUser();
+		if (user == null) {
 			throw new BaseRestException();
-			//return RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in.");
+			// return RestUtil.wrapObjectForFailure(null, "403",
+			// "User Not Logged in.");
 		}
 		UserVO userVO = userProfileService.buildUserVO(user);
-		LoanVO loanVO=new LoanVO();
+		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 
-		LoanCustomerVO responseVO = loanService.retrieveDashboard(userVO,loanVO);
+		LoanCustomerVO responseVO = loanService.retrieveDashboard(userVO,
+		        loanVO);
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
 
-	
 	@RequestMapping(value = "/activeloan/get/{userID}")
-	public @ResponseBody CommonResponseVO geActivetLoanOfUser(@PathVariable Integer userID) {
+	public @ResponseBody CommonResponseVO geActivetLoanOfUser(
+	        @PathVariable Integer userID) {
 
 		UserVO user = new UserVO();
 		user.setId(userID);
 		LoanVO loansList = loanService.getActiveLoanOfUser(user);
 
-		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(loansList);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loansList);
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
