@@ -61,6 +61,9 @@ public interface LoanService
 
 
     public List<Loan> getAllLoans();
-
+    //TODO added for loan rest service
+	public LoanVO createLoan(LoanVO loanVO);
+	
+	public Loan completeLoanModel(LoanVO loanVO);
 
 }

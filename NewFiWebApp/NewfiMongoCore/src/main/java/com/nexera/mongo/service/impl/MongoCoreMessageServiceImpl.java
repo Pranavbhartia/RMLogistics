@@ -26,27 +26,28 @@ import com.nexera.mongo.service.MongoCoreMessageService;
 
 @Component
 public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
-	
+
 	@Autowired
 	private MongoMessageDAO messageDAO;
-	
+
 	@Autowired
 	private MongoMessageHeirarchyDAO heriarchyDAO;
-	
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(MongoCoreMessageServiceImpl.class);
 
 	/**
 	 * Saves a message into mongo and returns id
+	 * 
 	 * @param messagesVO
 	 * @return
 	 * @throws FatalException
 	 * @throws NonFatalException
 	 */
 	public String saveMessage(MongoMessagesVO messagesVO)
-			throws FatalException, NonFatalException {
+	        throws FatalException, NonFatalException {
 		String id = messageDAO.save(messagesVO);
- 
+
 		// If Parent ID is null, then it is a new message, and not part of a
 		// chain
 		if (messagesVO.getParentId() == null) {
@@ -56,22 +57,25 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			mh.setMessages(Arrays.asList(id));
 			mh.setMessageType(messagesVO.getMessageType());
 			mh.setUserList(messagesVO.getUserList());
+			mh.setLastMessage(id);
 			heriarchyDAO.save(mh);
 		} else {
 			// It is not a new message
 			// fetch the oldest hierarchy, add a new record containing this one
 			MongoMessageHeirarchy mh = heriarchyDAO
-					.findLatestByMessageId(messagesVO.getParentId());
+			        .findLatestByMessageId(messagesVO.getParentId());
 			if (mh == null) {
 				// This should never happen
 				throw new FatalException("Inconsistent Database state");
 			}
 			// Add the new ID to the end of the list
 			mh.getMessages().add(id);
-			//Null the id as it has to be a new record
+			// Null the id as it has to be a new record
 			mh.setId(null);
 			// Update the date
 			mh.setDate(new Date(System.currentTimeMillis()));
+			// Update the last message id field
+			mh.setLastMessage(id);
 			// Save the new record
 			heriarchyDAO.save(mh);
 		}
@@ -80,19 +84,19 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 
 	/**
 	 * Fetches messages and constructs hierarchy from mongo based on the query
+	 * 
 	 * @param mongoQueryVO
 	 * @return
 	 * @throws FatalException
 	 * @throws NonFatalException
 	 */
 	public MongoMessageHierarchyVO getMessages(MongoQueryVO mongoQueryVO)
-			throws FatalException, NonFatalException {
+	        throws FatalException, NonFatalException {
 		LOG.info("MongoCoreMessageServiceImpl : getMessages method called.");
-		
+
 		// First, find the ordered Heirarchy
-		List<MongoMessageHeirarchy> mhList = heriarchyDAO
-				.findBy(mongoQueryVO);
-		
+		List<MongoMessageHeirarchy> mhList = heriarchyDAO.findBy(mongoQueryVO);
+
 		LOG.info(" Message size retrieved : " + mhList.size());
 
 		Set<String> messageIds = new HashSet<String>();
@@ -104,8 +108,7 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			threadList.add(mids);
 		}
 		// Find all the messages
-		Map<String, MongoMessagesVO> idMap = messageDAO
-				.findMany(messageIds);
+		Map<String, MongoMessagesVO> idMap = messageDAO.findMany(messageIds);
 
 		// Construct the Hierarchy object
 		MongoMessageHierarchyVO mhvo = new MongoMessageHierarchyVO();
@@ -114,9 +117,8 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 		for (Entry<String, MongoMessagesVO> entry : idMap.entrySet()) {
 			mhvo.setMongoMessages(entry.getKey(), entry.getValue());
 		}
-		
+
 		LOG.info("MongoCoreMessageServiceImpl : end of method getMessages.");
 		return mhvo;
 	}
-
 }

@@ -1,5 +1,6 @@
 package com.nexera.core.utility;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
@@ -10,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -19,6 +21,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.PDFToImage;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.io.RandomAccessFile;
@@ -26,6 +29,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDCcitt;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
@@ -239,7 +244,6 @@ public class NexeraUtility {
 				img = new PDPixelMap(document, ImageIO.read(file));
 			} else if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
-
 			}
 
 			PDPageContentStream contentStream = new PDPageContentStream(
@@ -376,6 +380,44 @@ public class NexeraUtility {
 		        isAlphaPremultiplied, properties);
 		img.copyData(raster);
 		return result;
+	}
+	
+	
+	public String createPDFFromStream(InputStream inputStream) throws IOException, COSVisitorException {
+		PDDocument document = null;
+		String filePath = null;
+		try {
+			// create the PDF document object
+			document = new PDDocument();
+ 
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			String theString = writer.toString();
+			
+			
+			// create an empty page, add it to the document
+			PDPage page = new PDPage();
+			document.addPage(page);
+			
+			PDPageContentStream stream=new PDPageContentStream(document, page);
+		    stream.beginText();
+		    PDFont font = PDType1Font.HELVETICA_BOLD;
+		    stream.setFont( font, 12);
+		    stream.moveTextPositionByAmount( 100, 700 );  
+		    stream.setNonStrokingColor(Color.ORANGE);
+		    stream.drawString(theString);
+		    stream.endText();
+ 
+		    filePath = tomcatDirectoryPath()+File.separator+randomStringOfLength()+".pdf";
+			// save the document to the file stream.
+			document.save(filePath);
+		} finally {
+			if (document != null) {
+				document.close();
+			}
+			
+		}
+		return filePath;
 	}
 
 }
