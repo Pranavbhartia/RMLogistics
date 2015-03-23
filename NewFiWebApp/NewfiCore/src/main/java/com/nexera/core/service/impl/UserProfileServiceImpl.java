@@ -311,8 +311,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserVO createUser(UserVO userVO) {
 
-		Integer userID = (Integer) userProfileDao.saveInternalUser(this
-		        .parseUserModel(userVO));
+		Integer userID = (Integer) userProfileDao.saveInternalUser(this.parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
 			user = (User) userProfileDao.findInternalUser(userID);
@@ -398,5 +397,27 @@ public class UserProfileServiceImpl implements UserProfileService {
 		}
 		return userVO;
 	}
+	
+	/**
+	 * This method is use to create a recode of the user in the user table when the user as a shopper comes from the customer engagement path 
+	 * 
+	 */
+	@Override
+    public UserVO saveUser(UserVO userVO) {
+	  
+		User user = new User();
+		user.setFirstName(userVO.getFirstName());
+		user.setLastName(userVO.getLastName());
+		user.setEmailId(userVO.getEmailId());
+		user.setUsername(userVO.getEmailId());
+		
+		user = userProfileDao.saveUser(user);
+		UserVO userVOobj  = new UserVO();
+		userVOobj.setFirstName(user.getFirstName());
+		
+	    return userVOobj;
+    }
+	
+	
 
 }
