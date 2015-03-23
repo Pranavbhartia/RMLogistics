@@ -385,6 +385,7 @@ public class NexeraUtility {
 	
 	public String createPDFFromStream(InputStream inputStream) throws IOException, COSVisitorException {
 		PDDocument document = null;
+		String filePath = null;
 		try {
 			// create the PDF document object
 			document = new PDDocument();
@@ -407,7 +408,7 @@ public class NexeraUtility {
 		    stream.drawString(theString);
 		    stream.endText();
  
-		    String filePath = tomcatDirectoryPath()+File.separator+randomStringOfLength()+".pdf";
+		    filePath = tomcatDirectoryPath()+File.separator+randomStringOfLength()+".pdf";
 			// save the document to the file stream.
 			document.save(filePath);
 		} finally {
