@@ -344,7 +344,7 @@ function paintCustomerApplicationPageStep1a() {
     
 	appProgressBaar(1);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Address";
+    var quesHeaderTxt = "Home Address";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
