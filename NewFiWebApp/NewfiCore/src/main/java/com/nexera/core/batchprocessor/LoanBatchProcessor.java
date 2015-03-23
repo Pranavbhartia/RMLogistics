@@ -8,6 +8,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -28,7 +29,7 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	private LoanService loanService;
 
 	@Autowired
-	private ThreadManager threadManager;
+	private ApplicationContext applicationContext;
 
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
@@ -52,6 +53,8 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
 				        && (!loanStatus
 				                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
+					ThreadManager threadManager = applicationContext
+					        .getBean(ThreadManager.class);
 					threadManager.setLoan(loan);
 					taskExecutor.execute(threadManager);
 				}
