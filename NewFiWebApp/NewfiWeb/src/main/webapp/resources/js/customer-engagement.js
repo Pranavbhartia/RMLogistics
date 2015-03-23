@@ -341,13 +341,6 @@ function getTextQuestion(quesText, clickEvent, name) {
 		
 	});
 	
-	var span = $('<span>').attr({
-		"id":"errmsg"
-		
-	});
-	
-	inputBox.append(span);
-
 	optionContainer.append(inputBox);
 
 	var saveBtn = $('<div>').attr({
@@ -1141,7 +1134,7 @@ function paintApplyNow(){
 function saveUserAndRedirect(registration){
 	
 	//alert(JSON.stringify(registration));
-	
+	$('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/shopper/registration",
@@ -1153,7 +1146,7 @@ function saveUserAndRedirect(registration){
 		success : function(data) {
 			
 			//$('#overlay-loader').hide();
-			
+			$('#overlay-loader').hide();
 			//alert (data);
 			window.location.href = data;
 			//printMedianRate(data,container);
@@ -1277,8 +1270,9 @@ function paintNotifyForRatesAlerts(){
 		
 		registration.firstName = $('input[name="fname"]').val();
 		registration.lastName = $('input[name="lname"]').val();
-		registration.emailId = $('input[name="email"]').val();
-		
+		var dateVar = new Date();
+		var timezone = dateVar.getTimezoneOffset();
+		registration.emailId = $('input[name="email"]').val() + ":" + timezone;
 		saveUserAndNotifyRatesAlerts(registration);
 	});
 	
@@ -1301,7 +1295,7 @@ function paintNotifyForRatesAlerts(){
 function saveUserAndNotifyRatesAlerts(registration){
 	
 	//alert(JSON.stringify(registration));
-	
+	 $('#overlay-loader').show();
 	$.ajax({
 
 		url : "rest/shopper/registration",
@@ -1312,10 +1306,9 @@ function saveUserAndNotifyRatesAlerts(registration){
 		datatype : "application/json",
 		success : function(data) {
 			
-			//$('#overlay-loader').hide();
+			 $('#overlay-loader').hide();
 			
-			alert ("sucesss");
-			window.location.href = "http://localhost:8082/NewfiWeb/home.do";
+			window.location.href = data;
 			//printMedianRate(data,container);
 			
 		},

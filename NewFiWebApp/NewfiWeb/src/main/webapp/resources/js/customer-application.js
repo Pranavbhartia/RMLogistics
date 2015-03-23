@@ -533,7 +533,7 @@ function getQuestionContext(question,parentContainer){
 	            	contxt.drawQuestion();
 	            	ob.childContexts[option].push(contxt);
 	        	}
-	        	ob.container.append(childContainer);
+	        	ob.container.after(childContainer);
 	        },
 	        changeHandler:function(newValue,callback){
 	        	var ob=this;

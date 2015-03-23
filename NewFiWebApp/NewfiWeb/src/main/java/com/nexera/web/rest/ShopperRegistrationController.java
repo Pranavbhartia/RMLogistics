@@ -52,7 +52,7 @@ public class ShopperRegistrationController {
 		
 		authenticateUserAndSetSession(emailId, userVOObj.getPassword(),request);
 		
-		return "./home";
+		return "./home.do";
 	}
 
 

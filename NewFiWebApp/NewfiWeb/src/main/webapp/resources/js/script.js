@@ -590,16 +590,16 @@ function getRateProgramContainer() {
 		"class" : "cp-btn-cont"
 	}); 
 	
-	var rateLabel = $('<div>').attr({
-		"class" : "cp-rate-header-text"
-	}).html("Interest Rate");
-	var rateValue = $('<div>').attr({
-		"class" : "cp-rate-btn"
-	}).html("3.375%");
-	rateBtnContainer.append(rateLabel).append(rateValue);
+	var paymentlabel = $('<div>').attr({
+		"class" : "cp-est-header-text"
+	}).html("Closing Cost");
+	var paymentValue = $('<div>').attr({
+		"class" : "cp-est-cost-btn"
+	}).html("$ 8,185.75");
+	rateBtnContainer.append(paymentlabel).append(paymentValue);
 	rpCol1.append(rateBtnContainer);
 	
-	if(loanType == "refinance"){
+	/*if(loanType == "refinance"){
 		rateBtnContainer.addClass('margin-top30');
 	}
 	
@@ -616,7 +616,7 @@ function getRateProgramContainer() {
 		downPaymentBtnContainer.append(downPaymentlabel).append(downPaymentValue);
 		
 		rpCol1.append(downPaymentBtnContainer);
-	}
+	}*/
 	
 	var rpCol2 = $('<div>').attr({
 		"class" : "rate-program-container-col2 float-left"
@@ -631,16 +631,16 @@ function getRateProgramContainer() {
 	var paymentBtnContainer = $('<div>').attr({
 		"class" : "cp-btn-cont"
 	}); 
-	var paymentlabel = $('<div>').attr({
-		"class" : "cp-est-header-text"
-	}).html("Monthly Payment");
-	var paymentValue = $('<div>').attr({
-		"class" : "cp-est-cost-btn"
-	}).html("$ 8,185.75");
-	paymentBtnContainer.append(paymentlabel).append(paymentValue);
+	var rateLabel = $('<div>').attr({
+		"class" : "cp-rate-header-text"
+	}).html("Interest Rate");
+	var rateValue = $('<div>').attr({
+		"class" : "cp-rate-btn"
+	}).html("3.375%");
+	paymentBtnContainer.append(rateLabel).append(rateValue);
 	rpCol3.append(paymentBtnContainer);
 
-	if(loanType == "refinance"){
+	/*if(loanType == "refinance"){
 		paymentBtnContainer.addClass('margin-top30');
 	}
 	
@@ -657,7 +657,7 @@ function getRateProgramContainer() {
 		purchaseAmount.append(purchaselabel).append(purchaseValue);
 		
 		rpCol3.append(purchaseAmount);
-	}
+	}*/
 	
 	var mobileScreenCont = getSliderContainerForMobileScreen();
 	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(
