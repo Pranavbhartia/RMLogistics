@@ -1,5 +1,6 @@
 package com.nexera.core.helper.impl;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageVO;
+import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.MessageServiceHelper;
@@ -36,6 +38,12 @@ import com.nexera.core.service.MessageService;
 
 @Component
 public class MessageServiceHelperImpl implements MessageServiceHelper {
+
+	private static final String NEW_LINE_CHARACTER = "{0}\n > {1}";
+
+	private static final String ITEMS_REMOVED_MESSAGE = "{0}\n\nFollowing items were removed from the list";
+
+	private static final String ITEMS_ADDED_MESSAGE = "{0}\n\nFollowing items were added to the list";
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(MessageServiceHelperImpl.class);
@@ -73,7 +81,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	@Override
 	@Async
-	public void generateCommunicationLogMessage(int loanId, User loggedInUser,
+	public void generateNeedListModificationMessage(int loanId, User loggedInUser,
 	        List<Integer> addedList, List<Integer> removedList) {
 
 		LoanTeamListVO teamList = loanService
@@ -139,18 +147,21 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 		}
 		if(addedList!=null && !addedList.isEmpty()){
-			message = message+"\n\n"+ "Following items were added to the list";
+			message = MessageFormat.format(
+                    ITEMS_ADDED_MESSAGE, message);
 		}
 		for (Integer neededList : addedList) {
 	        String label = needListLookup.get(neededList);
-	        message = message+ "\n > " + label;
+	        message = MessageFormat.format(NEW_LINE_CHARACTER, message, label);
         }
 		if(removedList!=null && !removedList.isEmpty()){
-			message = message+"\n\n"+ "Following items were removed from the list";
+			message = MessageFormat.format(
+                    ITEMS_REMOVED_MESSAGE,
+                    message);
 		}
 		for (Integer neededList : removedList) {
 	        String label = needListLookup.get(neededList);
-	        message = message+ "\n > " + label;
+	        message = MessageFormat.format(NEW_LINE_CHARACTER, message, label);
         }
 		messageVO.setMessage(message);
 		messageVO.setOtherUsers(messageUserVOs);
@@ -170,5 +181,81 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		return needListLookup;
 
 	}
+	
+	@Override
+	@Async
+	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
+	        String messageId, String noteText, List<FileVO> fileUrls) {
+		/*
+		 * 1. Create messageVO object. 
+		 * 2. set senderUserId as the createdBy of the note. Permission will be all the users who are part of the loan team
+		 * 3. set messageId as parent messageId if present
+		 * 4. FileVO will contain the array of all the files
+		 * 5. noteText is the text/body of the message. If attachment are present, we will create a default text
+		 */
+		MessageVO messageVO = new MessageVO();
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		String message = CommunicationLogConstants.DOCUMENT_UPLOAD;
+		
+		setGlobalPermissionsToMessage(loanId,messageVO,loggedInUser,message);
+		if(fileUrls!=null && !fileUrls.isEmpty()){
+			messageVO.setMessage(noteText);
+		}
+		messageVO.setLinks(fileUrls);
+		messageVO.setParentId(messageId);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
+	    
+	}
+
+	private void setGlobalPermissionsToMessage(int loanId, MessageVO messageVO, User loggedInUser,String message) {
+
+	    
+		LoanTeamListVO teamList = loanService
+		        .getLoanTeamListForLoan(new LoanVO(loanId));
+		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
+		
+				List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+				for (LoanTeamVO loanTeamVO : loanTeamVos) {
+					UserVO userVo = loanTeamVO.getUser();
+					if (userVo.getId() != loggedInUser.getId()) {
+						MessageUserVO otherUser = messageVO.createNewUserVO();
+						otherUser.setUserID(userVo.getId());
+						otherUser.setUserName(userVo.getDisplayName());
+						otherUser.setImgUrl(userVo.getPhotoImageUrl());
+						try {
+							otherUser.setRoleName(userProfileDao
+							        .findUserRoleForMongo(userVo.getId()));
+						} catch (DatabaseException | NoRecordsFetchedException e) {
+							// THIS SHOULD NEVER HAPPEN
+							LOG.error("Trying to fetch a user who does not exist. ", e);
+						}
+						
+						messageUserVOs.add(otherUser);
+					}else{
+						message = message.replace(CommunicationLogConstants.USER, loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+					}
+
+				}
+				
+				MessageUserVO createdUserVO = messageVO.createNewUserVO();
+				createdUserVO.setUserID(loggedInUser.getId());
+				createdUserVO.setImgUrl(loggedInUser.getPhotoImageUrl());
+				createdUserVO.setUserName(loggedInUser.getFirstName() + " "
+				        + loggedInUser.getLastName());
+				try {
+					String roleName = userProfileDao.findUserRoleForMongo(loggedInUser
+					        .getId());
+					createdUserVO.setRoleName(roleName);
+				} catch (DatabaseException | NoRecordsFetchedException e) {
+					// THIS SHOULD NEVER HAPPEN
+					LOG.error("Trying to fetch a user who does not exist. ", e);
+				}
+				messageVO.setCreatedUser(createdUserVO);
+				messageVO.setMessage(message);
+				messageVO.setOtherUsers(messageUserVOs);
+				
+    }
 
 }
