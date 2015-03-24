@@ -1,32 +1,57 @@
 package com.nexera.core.service.impl;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.UserProfileService;
 
 @Component
 @Transactional
-public class UserProfileServiceImpl implements UserProfileService {
+public class UserProfileServiceImpl implements UserProfileService, InitializingBean {
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+	
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
+	
+	@Value("${NEW_USER_TEMPLATE_ID}")
+	private String newUserMailTemplateId; 
+	
+	private SecureRandom randomGenerator;
+	
+	private static final Logger LOG = LoggerFactory.getLogger(UserProfileServiceImpl.class);
+
 	
 
 	@Override
@@ -310,10 +335,11 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public UserVO createUser(UserVO userVO) {
-
-		Integer userID = (Integer) userProfileDao.saveInternalUser(this
-				.parseUserModel(userVO));
-		User user = null;
+		
+		User user = this.parseUserModel(userVO);
+		user.setStatus(true);
+		Integer userID = (Integer) userProfileDao.saveInternalUser(user);
+		user = null;
 		if (userID != null && userID > 0)
 			user = (User) userProfileDao.findInternalUser(userID);
 
@@ -379,6 +405,86 @@ public class UserProfileServiceImpl implements UserProfileService {
 		// TODO Auto-generated method stub
 		return this.buildUserVO(userProfileDao
 				.findInternalUser(userID));
+	}
+
+	@Override
+	public void disableUser(int userId) throws NoRecordsFetchedException {
+		
+		User user = userProfileDao.findByUserId(userId);
+		if( user == null){
+			throw new NoRecordsFetchedException("User not found in the user table");
+		}
+		
+		user.setStatus(false);
+		userProfileDao.update(user);
+	}
+	
+	@Override
+	public void enableUser(int userId) throws NoRecordsFetchedException {
+		
+		User user = userProfileDao.findByUserId(userId);
+		if( user == null){
+			throw new NoRecordsFetchedException("User not found in the user table");
+		}
+		
+		user.setStatus(true);
+		userProfileDao.update(user);
+	}
+	
+	private String generateRandomPassword(){
+		return new BigInteger( CommonConstants.RANDOM_PASSWORD_LENGTH * 5, randomGenerator).toString(32);
+	}
+	
+	private void sendNewUserEmail(User user) throws InvalidInputException, UndeliveredEmailException{
+		
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		
+		//We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[]{user.getFirstName() + " " + user.getLastName()});
+		substitutions.put("-username-", new String[]{user.getUsername()});
+		substitutions.put("-password-", new String[]{user.getPassword()});
+		
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays.asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("You have been subscribed to Nexera");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(newUserMailTemplateId);
+
+		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	@Override
+	public UserVO createNewUserAndSendMail(UserVO userVO) throws InvalidInputException, UndeliveredEmailException {
+		LOG.info("createNewUserAndSendMail called!");
+		LOG.debug("PArsing the VO");
+		User newUser = parseUserModel(userVO);
+		newUser.setStatus(true);
+		LOG.debug("Done parsing, Setting a new random password");
+		newUser.setPassword(generateRandomPassword());	
+		LOG.debug("Saving the user to the database");
+		int userID = userProfileDao.saveInternalUser(newUser);
+		LOG.debug("Saved, sending the email");
+		sendNewUserEmail(newUser);
+		newUser = null;
+		if (userID > 0)
+			newUser = (User) userProfileDao.findInternalUser(userID);
+		LOG.info("Returning the userVO");
+		return this.buildUserVO(newUser);
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		randomGenerator = new SecureRandom();
+	}
+
+	@Override
+	public void deleteUser(int userId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
