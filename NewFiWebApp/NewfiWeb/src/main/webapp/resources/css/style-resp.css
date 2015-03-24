@@ -295,6 +295,10 @@
 		border-top-width: 14px;
 		margin-left: -3px;
 	}
+	.loan-personal-info-wrapper {
+		padding-left: 10px;
+		padding-right: 5px;
+	}
 }
 
 
