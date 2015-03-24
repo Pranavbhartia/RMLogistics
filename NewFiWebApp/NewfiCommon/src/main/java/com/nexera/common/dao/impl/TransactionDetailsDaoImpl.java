@@ -33,7 +33,7 @@ public class TransactionDetailsDaoImpl extends GenericDaoImpl implements Transac
 			return loanApplicationFee;	
 		}catch (HibernateException hibernateException) {
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
+					"Exception caught in findByLoan() ",
 					hibernateException);
 		}
 	}
