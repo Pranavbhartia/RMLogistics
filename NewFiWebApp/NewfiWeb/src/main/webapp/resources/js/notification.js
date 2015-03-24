@@ -11,7 +11,8 @@ function getNotificationContext(loanId,userId){
 		existingWrapper:undefined,
 		alertWrapper:undefined,
 		headerText:"",
-		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
+		pushServerUrl:"/PushNotification/pushServlet/?task=notification"+newfiObject.user.userRole.id+"&taskId=",
+		enablePushnotification:false,
 		addToList:function(list,object){
 			var exist=false;
 			for(var i=0;i<list.length;i++){
@@ -45,7 +46,7 @@ function getNotificationContext(loanId,userId){
 			}
 		},
 		getNotificationUpdate:function(callback){
-			if(loanId!=0){
+			if(loanId!=0&&enablePushnotification){
 				var ob=this;
 				var data={};
 				data.userID=0;
@@ -61,9 +62,9 @@ function getNotificationContext(loanId,userId){
 						if(response.action=="new"){
 							var nwData=response.data;
 							var exist=false;
-							if(new Date().getTime()>=nwData.remindOn){
+							//if(new Date().getTime()>=nwData.remindOn){
 								exist=ob.addToList(ob.loanNotificationList,nwData);
-							}
+							//}
 							if(!exist){
 								ob.updateWrapper();
 								ob.updateLoanListNotificationCount();
@@ -107,7 +108,7 @@ function getNotificationContext(loanId,userId){
 			}
 		},
 		updateOtherClients:function(change,callback){
-			if(loanId!=0||change.loanId){
+			if((loanId!=0||change.loanId)&&enablePushnotification){
 				var ob=this;
 				var data={};
 				var lnId=ob.loanId!=0?ob.loanId:change.loanId;
@@ -362,7 +363,7 @@ function getNotificationContext(loanId,userId){
 					ob.updateOtherClients(changeData);
 					//end
 
-					if(new Date().getTime()>=data.remindOn)
+					//if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 					updateDefaultContext(data);
 					if(callback){
