@@ -346,7 +346,7 @@ function paintCustomerApplicationPageStep1a() {
     
 	appProgressBaar(1);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Home Address";
+    var quesHeaderTxt = "Residential Address";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -359,17 +359,17 @@ function paintCustomerApplicationPageStep1a() {
         value: ""
     }, */{
         type: "desc",
-        text: "State",
+        text: "Which State do you live in?",
         name: "state",
         value: ""
     }, {
         type: "desc",
-        text: "City",
+        text: "Which City do you belong?",
         name: "city",
         value: ""
     }, {
         type: "desc",
-        text: "Zip Code",
+        text: "What is your Zip Code?",
         name: "zipCode",
         value: ""
     }];
