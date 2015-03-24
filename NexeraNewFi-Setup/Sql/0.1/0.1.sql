@@ -102,3 +102,19 @@ ADD CONSTRAINT `fk_wfItemEx_linkedToWfItemExec`
   REFERENCES `newfi_schema`.`workflowitemexec` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+
+  
+ALTER TABLE `newfi_schema`.`loanappform`   
+  ADD COLUMN `loan_app_completion_status` INT(11) NULL AFTER `loan_manager_workflow`;‏
+
+
+‎15‎:‎03 
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `rate_locked` TINYINT(1) DEFAULT 0  NULL AFTER `loan_manager_workflow`;‏
+
+
+‎15‎:‎04 
+ALTER TABLE `newfi_schema`.`loan`   
+  DROP COLUMN `bank_connected`, 
+  ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0  NULL AFTER `rate_locked`;
