@@ -1,3 +1,6 @@
+SET FOREIGN_KEY_CHECKS=0;
+-- The above line is to avoid foreign key checks during import. This is required due to circular links. 
+-- Add all DML before this statement. This should be the first statement in this file.
 
 DELETE FROM workflowitemmaster WHERE parent_workflow_item_master IS NOT NULL;
 DELETE FROM workflowitemmaster WHERE parent_workflow_item_master IS  NULL;
@@ -40,4 +43,6 @@ UNLOCK TABLES;
 
 
 
-
+-- The below line is to avoid foreign key checks during import. This is required due to circular links. 
+-- Add all DML before this statement. This should be the last statement in this file.
+SET FOREIGN_KEY_CHECKS=1;
