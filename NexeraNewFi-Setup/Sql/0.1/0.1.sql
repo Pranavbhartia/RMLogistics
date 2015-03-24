@@ -92,3 +92,54 @@ ADD CONSTRAINT `fk_wfItemOnSuccess`
   
   ALTER table newfi_schema.uploadedfileslist
   add column totalpages int(5);
+  
+  CREATE TABLE `newfi_schema`.`titlecompanymaster` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NULL,
+  `address` VARCHAR(500) NULL,
+  `phone_number` VARCHAR(45) NULL,
+  `fax` VARCHAR(45) NULL,
+  `email_id` VARCHAR(100) NULL,
+  `primary_contact` VARCHAR(100) NULL,
+  `added_by_user` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_titleCompAddedBy_idx` (`added_by_user` ASC),
+  CONSTRAINT `fk_titleCompAddedBy`
+    FOREIGN KEY (`added_by_user`)
+    REFERENCES `newfi_schema`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+	CREATE TABLE `homeownersinsurancemaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `fax` varchar(45) DEFAULT NULL,
+  `email_id` varchar(100) DEFAULT NULL,
+  `primary_contact` varchar(100) DEFAULT NULL,
+  `added_by_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_homeOwnersInsurancepAddedBy_idx` (`added_by_user`),
+  CONSTRAINT `fk_homeOwnersInsurancepAddedBy_idx` FOREIGN KEY (`added_by_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ ALTER TABLE `newfi_schema`.`loandetails` 
+ADD COLUMN `home_owners_insurance` INT NULL AFTER `emi`,
+ADD COLUMN `title_company` INT NULL AFTER `home_owners_insurance`,
+ADD INDEX `fk_loanLinkedToTitleComp_idx` (`title_company` ASC),
+ADD INDEX `fk_loanLinkedToHomeOwnrIns_idx` (`home_owners_insurance` ASC);
+ALTER TABLE `newfi_schema`.`loandetails` 
+ADD CONSTRAINT `fk_loanLinkedToTitleComp`
+  FOREIGN KEY (`title_company`)
+  REFERENCES `newfi_schema`.`titlecompanymaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_loanLinkedToHomeOwnrIns`
+  FOREIGN KEY (`home_owners_insurance`)
+  REFERENCES `newfi_schema`.`homeownersinsurancemaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
