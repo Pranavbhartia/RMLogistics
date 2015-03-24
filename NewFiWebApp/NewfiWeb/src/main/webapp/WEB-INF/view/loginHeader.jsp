@@ -14,3 +14,6 @@
 		</div>
 	</div>
 </div>
+<div id="overlay-toast" class="overlay-toast-wrapper hide">
+	<div id="overlay-toast-txt" class="overlay-toast-txt"></div>
+</div>
