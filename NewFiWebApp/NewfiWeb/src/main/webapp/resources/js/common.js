@@ -4,7 +4,7 @@
 
 var overlayCount = 0;
 
-function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div){
+function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback){
 	if(isPagination===undefined){
 		showOverlay();
 	}else if(isPagination==true){
@@ -18,13 +18,15 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div)
 		data : data,
 		contentType: "application/json",
 		success : successCallBack,
-		complete:function(){
+		complete:function(response){
 			if(isPagination){
 				removePaginationScrollIcon(div);
 			}else{
 				hideOverlay();
 			}
-			
+			if(completeCallback){
+				completeCallback(response.responseJSON);
+			}
 		},
 		error : function(){
 			
