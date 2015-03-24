@@ -13,8 +13,8 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
-<!-- added for loan manager profile pic-->
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/new.css" rel="stylesheet">
 </head>
 
 <body>
@@ -31,6 +31,7 @@
 	<script>
 		var newfi = ${newfi};
 		$(document).ready(function() {
+		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			isAgentTypeDashboard = true;
 			paintAgentDashboard();
