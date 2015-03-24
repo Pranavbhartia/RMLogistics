@@ -31,7 +31,7 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> searchUsers(User user);
 
-	public Integer saveInternalUser(User user);
+	public Integer saveUserWithDetails(User user);
 
 	public User findInternalUser(Integer userID);
 
@@ -49,4 +49,6 @@ public interface UserProfileDao extends GenericDao {
 	public User saveUser(User user) throws DatabaseException;
 
 	public User authenticateUser(String userName, String password) throws NoRecordsFetchedException, DatabaseException;
+
+	public Integer saveCustomerDetails(User user);
 }

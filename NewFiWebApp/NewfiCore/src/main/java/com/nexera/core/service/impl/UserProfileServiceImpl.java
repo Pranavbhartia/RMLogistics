@@ -162,15 +162,18 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	private UserRole parseUserRoleModel(UserRoleVO roleVO) {
 
-		if (roleVO == null)
-			return null;
-
 		UserRole role = new UserRole();
-
-		role.setId(roleVO.getId());
-		role.setRoleCd(roleVO.getRoleCd());
-		role.setLabel(roleVO.getLabel());
-		role.setRoleDescription(roleVO.getRoleDescription());
+		
+		if (roleVO == null){
+			
+			role.setId(1);
+		}else{
+			
+			role.setId(roleVO.getId());
+			role.setRoleCd(roleVO.getRoleCd());
+			role.setLabel(roleVO.getLabel());
+			role.setRoleDescription(roleVO.getRoleDescription());
+		}
 
 		return role;
 
@@ -276,14 +279,39 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVO.setEmailId(user.getEmailId());
 		userVO.setPhoneNumber(user.getPhoneNumber());
 		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+		
+		userVO.setPassword(user.getPassword());
+		userVO.setUsername(user.getUsername());
+		userVO.setStatus(user.getStatus());
 
 		userVO.setUserRole(this.buildUserRoleVO(user.getUserRole()));
-
-		userVO.setInternalUserDetail(this.buildInternalUserDetailsVO(user
-		        .getInternalUserDetail()));
+		//userVO.setCustomerDetail(buildCustomerDetailVO(user.getCustomerDetail()));
+		userVO.setInternalUserDetail(this.buildInternalUserDetailsVO(user.getInternalUserDetail()));
 
 		return userVO;
 	}
+
+	public CustomerDetailVO buildCustomerDetailVO(CustomerDetail customerDetail) {
+		
+
+			if (customerDetail == null)
+				return null;
+
+			CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+
+			customerDetailVO.setId(customerDetail.getId());
+			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+			customerDetailVO.setSsn(customerDetail.getSsn());
+			customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
+			customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+			customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+			
+			return customerDetailVO;	
+    }
+
 
 	@Override
 	public User parseUserModel(UserVO userVO) {
@@ -295,15 +323,20 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userModel.setId(userVO.getId());
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
-		userModel.setUsername(userVO.getUsername());
+		userModel.setUsername(userVO.getEmailId());
+		userModel.setEmailId(userVO.getEmailId());
+		
+		userModel.setPassword("abc123");
+		userModel.setStatus(true);
+		
+		
 		userModel.setEmailId(userVO.getEmailId());
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
 		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
 
-		userModel.setInternalUserDetail(this
-		        .parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
+		userModel.setInternalUserDetail(this.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
 		return userModel;
 	}
@@ -311,7 +344,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserVO createUser(UserVO userVO) {
 
-		Integer userID = (Integer) userProfileDao.saveInternalUser(this.parseUserModel(userVO));
+		Integer userID = (Integer) userProfileDao.saveUserWithDetails(this.parseUserModel(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
 			user = (User) userProfileDao.findInternalUser(userID);
@@ -405,7 +438,17 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
     public UserVO saveUser(UserVO userVO) {
 	  
-		User user = new User();
+		// 1st create a entry in the customer details table 
+		// use that id to put in the user table .
+		
+		Integer userID = (Integer) userProfileDao.saveCustomerDetails(this.parseUserVO(userVO));
+		User user = null;
+		if (userID != null && userID > 0)
+			user = (User) userProfileDao.findInternalUser(userID);
+
+		return this.buildUserVO(user);
+		
+		/*User user = new User();
 		user.setFirstName(userVO.getFirstName());
 		user.setLastName(userVO.getLastName());
 	
@@ -426,9 +469,35 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userVOobj.setLastName(user.getLastName());
 		userVOobj.setPassword(user.getPassword());
 		
-	    return userVOobj;
+	    return userVOobj;*/
     }
 	
+	
+	public User parseUserVO(UserVO userVO) {
+
+		if (userVO == null)
+			return null;
+		User userModel = new User();
+
+		//userModel.setId(userVO.getId());
+		userModel.setFirstName(userVO.getFirstName());
+		userModel.setLastName(userVO.getLastName());
+		userModel.setUsername(userVO.getEmailId().split(":")[0]);
+		userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		
+		userModel.setPassword("abc123");
+		userModel.setStatus(true);
+
+		userModel.setPhoneNumber(userVO.getPhoneNumber());
+		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
+
+		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
+		userModel.setCustomerDetail(new CustomerDetail());
+		userModel.setInternalUserDetail(this.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
+
+		return userModel;
+	}
+
 	
 
 }

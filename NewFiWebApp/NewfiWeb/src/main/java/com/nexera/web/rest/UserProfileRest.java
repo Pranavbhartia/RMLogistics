@@ -183,7 +183,7 @@ public class UserProfileRest {
 	
 
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 

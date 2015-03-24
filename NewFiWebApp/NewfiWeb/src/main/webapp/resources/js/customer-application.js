@@ -1,5 +1,11 @@
-var appUserDetails = new Object();
 
+//var userObj = newfiObject.user;
+var appUserDetails = new Object();
+var user =  new Object();
+var customerDetail = new Object();
+var propertyTypeMaster = new Object();
+
+appUserDetails["user"] = user;
 var flag = 0;
 var applicationItemsList = [ {
 							    "text":"Home Information",
@@ -20,7 +26,7 @@ var applicationItemsList = [ {
 				             {
 				            	 "text":"My Credit",
 					             "onselect" : paintCustomerApplicationPageStep5
-					        },
+					         },
 ];
 
 function applicationStatusLeftPanel() {
@@ -66,6 +72,10 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintCustomerApplicationPage() {
     
+	user["id"] = newfi.user.id;
+	user["emailId"] = newfi.user.emailId;
+	user["firstName"] =newfi.user.firstName;
+	user["lastName"] = newfi.user.lastName;
 	
 	var topHeader = getCompletYourApplicationHeader();
 
@@ -378,12 +388,34 @@ function paintCustomerApplicationPageStep1a() {
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
+    }).html("Save & continue").on('click', function(event) {
     	
-    	appUserDetails["state"] = $('input[name="state"]').val();
-    	appUserDetails["city"] = $('input[name="city"]').val();
-    	appUserDetails["zipCode"] = $('input[name="zipCode"]').val();
-        paintCustomerApplicationPageStep1b();
+    	var inputState = $('input[name="state"]').val();
+    	//appUserDetails["state"] = inputState;
+    	
+    	var city = $('input[name="city"]').val();
+    	//appUserDetails["city"] = city;
+    	
+    	var zipCode = $('input[name="zipCode"]').val();
+    	//appUserDetails["zipCode"] = zipCode;
+    	
+    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
+        	
+
+    		customerDetail.addressCity = city;
+    		customerDetail.addressState = inputState;
+    		customerDetail.addressZipCode = zipCode;
+
+    		user.customerDetail = customerDetail;
+    		
+    		alert(JSON.stringify(appUserDetails));
+    		paintCustomerApplicationPageStep1b();
+        	        	
+        }else{
+        	showToastMessage("Please give answer of the questions");
+        }
+    	
+       ;
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
@@ -459,14 +491,37 @@ function paintCustomerApplicationPageStep1b() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
-    	appUserDetails["propertyType"] = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
-    	appUserDetails["residenceType"] = $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
-    	appUserDetails["taxesPaid"] = $('input[name="taxesPaid"]').val();
-    	appUserDetails["insuranceProvider"] = $('input[name="insuranceProvider"]').val();
-    	appUserDetails["insuranceCost"] = $('input[name="insuranceCost"]').val();
-    	appUserDetails["purchaseTime"] = $('input[name="purchaseTime"]').val();
+    	propertyType = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
+    	residenceType= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
+    	taxesPaid = $('input[name="taxesPaid"]').val();
+    	insuranceProvider = $('input[name="insuranceProvider"]').val();
+    	insuranceCost = $('input[name="insuranceCost"]').val();
+    	purchaseTime = $('input[name="purchaseTime"]').val();
     	
-        paintCustomerApplicationPageStep2();
+    	
+    	
+    	
+    	if(propertyType != undefined && propertyType != "" && residenceType != undefined && residenceType != ""  && taxesPaid != undefined && taxesPaid != ""  && insuranceProvider != undefined && insuranceProvider != "" && insuranceCost != undefined && insuranceCost != ""  && purchaseTime != undefined && purchaseTime != ""  ){
+    		
+    		propertyTypeMaster.propertyType = propertyType;
+        	propertyTypeMaster.residenceType = residenceType;
+        	propertyTypeMaster.taxesPaid = taxesPaid;
+        	propertyTypeMaster.insuranceProvider = insuranceProvider;
+        	propertyTypeMaster.insuranceCost = insuranceCost;
+        	propertyTypeMaster.purchaseTime = purchaseTime;
+        	propertyTypeMaster.homeWorthToday = "" ;
+        	  	
+        	appUserDetails.propertyTypeMaster = propertyTypeMaster;
+        	
+        	alert(JSON.stringify(appUserDetails));
+    		
+    		paintCustomerApplicationPageStep2();
+    	}else{
+    		showToastMessage("Please give answer of the questions");
+    	}
+    	
+    	
+        
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
@@ -757,22 +812,22 @@ function paintMyIncome() {
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintRefinanceEmployed,
-		"name" : name,
+		"name" : "employed",
 		"value" : 0
 	}, {
 		"text" : "Self-employed",
 		"onselect" : paintRefinanceSelfEmployed,
-		"name" : name,
+		"name" : "self-employed",
 		"value" : 1
 	}, {
 		"text" : "Social Security Income/Disability",
 		"onselect" : paintRefinanceDisability,
-		"name" : name,
+		"name" :"isDisability",
 		"value" : 2
 	}, {
 		"text" : "Pension/Retirement/401(k)",
 		"onselect" : paintRefinancePension,
-		"name" : name,
+		"name" : "ispensionOrRetirement",
 		"value" : 3
 	} ];
 	var quesCont = paintCustomerApplicationPageStep3(quesTxt, options, name);
@@ -783,6 +838,7 @@ function paintMyIncome() {
 
 function paintRefinanceEmployed(divId) {
 
+	//appUserDetails.employed ="true";
 	var quesTxt = "About how much do you make a year";
 	var quesCont = getMultiTextQuestion(quesTxt);
 	$('#ce-option_' + divId).toggle();
@@ -826,7 +882,7 @@ function getMultiTextQuestion(quesText) {
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
-	}).html("When Did You Start Wokring ?");
+	}).html("When Did You Start Working ?");
 
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
@@ -1064,8 +1120,10 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		}, function(event) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
+        		appUserDetails[name] = "false";
         	}else{
 	        	$(this).addClass('app-option-checked');
+	        	appUserDetails[name] = "true";
         	}
 			var key = event.data.name;
 			appUserDetails[key] = event.data.option.value;
@@ -1480,11 +1538,21 @@ function paintCustomerApplicationPageStep5() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
-    	appUserDetails["birthday"] = $('input[name="birthday"]').val();
-    	appUserDetails["ssn"] =  $('input[name="ssn"]').val();
-    	appUserDetails["phoneNumber"] =  $('input[name="phoneNumber"]').val();
+    	birthday = $('input[name="birthday"]').val();
+    	ssn =  $('input[name="ssn"]').val();
+    	phoneNumber =  $('input[name="phoneNumber"]').val();
     	
-    	applicationFormSumbit();
+    	
+    	if(birthday != undefined && birthday !="" && ssn != undefined && ssn !="" && phoneNumber != undefined && phoneNumber !=""){
+    		
+    		customerDetail.birthday= birthday;
+    		customerDetail.ssn = ssn;
+    		customerDetail.phoneNumber = phoneNumber;
+    		applicationFormSumbit();
+    	}else{
+    		showToastMessage("Please give the answers of the questions");
+    	}
+    	
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
@@ -1607,8 +1675,8 @@ function getMonthYearTextQuestion(question) {
 	 
 	 var yearInput = $('<input>').attr({
 	  "class" : "ce-input width-150",
-	  "name" : name,
-	  "value" : appUserDetails[name],
+	  "name" : question.name,
+	  //"value" : appUserDetails[name],
 	  "placeholder" : "YYYY"
 	 });
 
