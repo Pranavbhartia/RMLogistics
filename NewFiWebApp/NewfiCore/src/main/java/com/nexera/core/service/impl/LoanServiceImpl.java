@@ -7,7 +7,6 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -227,7 +226,48 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	
+	@Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO) {
 
+        // Get new prospect and lead loans this user has access to.
+	    List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 1);
+	    loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 2) );
+        
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
+
+        // Get new and in progress loans this user has access to.
+        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 3);
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 4) );
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
+
+        // Get declined , withdrawn and closed loans this user has access to.
+        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 5);
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 6) );
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 7) );
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+	
 	@Override
 	@Transactional(readOnly = true)
 	public LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO) {
