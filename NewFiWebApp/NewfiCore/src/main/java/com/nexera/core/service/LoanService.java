@@ -3,6 +3,7 @@ package com.nexera.core.service;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
@@ -75,5 +76,7 @@ public interface LoanService
 
 	List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
 			HomeOwnersInsuranceMasterVO homeOwnInsVO);
+	
+	public LoanNeedsList fetchByNeedId(Integer needId);
 
 }

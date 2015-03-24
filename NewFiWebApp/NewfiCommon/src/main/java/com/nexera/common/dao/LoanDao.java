@@ -5,6 +5,7 @@ import java.util.List;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
@@ -59,7 +60,7 @@ public interface LoanDao extends GenericDao {
 
 	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
 			HomeOwnersInsuranceMaster parseHomeOwnInsMaster);
-	
+	public LoanNeedsList fetchByNeedId(Integer needId);
 	
 
 }

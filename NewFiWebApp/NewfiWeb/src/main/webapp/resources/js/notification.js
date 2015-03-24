@@ -12,6 +12,7 @@ function getNotificationContext(loanId,userId){
 		alertWrapper:undefined,
 		headerText:"",
 		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
+		enablePushnotification:false,
 		addToList:function(list,object){
 			var exist=false;
 			for(var i=0;i<list.length;i++){
@@ -45,8 +46,8 @@ function getNotificationContext(loanId,userId){
 			}
 		},
 		getNotificationUpdate:function(callback){
-			if(loanId!=0){
-				var ob=this;
+			var ob=this;
+			if(ob.loanId!=0&&ob.enablePushnotification){
 				var data={};
 				data.userID=0;
 				data.loanID=ob.loanId;
@@ -61,13 +62,13 @@ function getNotificationContext(loanId,userId){
 						if(response.action=="new"){
 							var nwData=response.data;
 							var exist=false;
-							if(new Date().getTime()>=nwData.remindOn){
+							if(nwData.createdForID==newfiObject.user.id){
 								exist=ob.addToList(ob.loanNotificationList,nwData);
-							}
-							if(!exist){
-								ob.updateWrapper();
-								ob.updateLoanListNotificationCount();
-								updateDefaultContext(nwData);
+								if(!exist){
+									ob.updateWrapper();
+									ob.updateLoanListNotificationCount();
+									updateDefaultContext(nwData);
+								}
 							}
 						}else if(response.action=="remove"){
 							var notificationID=response.notificationID;
@@ -98,7 +99,7 @@ function getNotificationContext(loanId,userId){
 							if(existAry.length>0){
 								$("#"+notificationID).remove();
 							}
-							contxt.updateLoanListNotificationCount();
+							ob.updateLoanListNotificationCount();
 						}
 
 					}
@@ -107,8 +108,8 @@ function getNotificationContext(loanId,userId){
 			}
 		},
 		updateOtherClients:function(change,callback){
-			if(loanId!=0||change.loanId){
-				var ob=this;
+			var ob=this;
+			if((ob.loanId!=0||change.loanId)&&ob.enablePushnotification){
 				var data={};
 				var lnId=ob.loanId!=0?ob.loanId:change.loanId;
 				//code to call API to get Notification List for loan
@@ -362,7 +363,7 @@ function getNotificationContext(loanId,userId){
 					ob.updateOtherClients(changeData);
 					//end
 
-					if(new Date().getTime()>=data.remindOn)
+					//if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 					updateDefaultContext(data);
 					if(callback){

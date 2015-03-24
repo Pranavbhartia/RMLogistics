@@ -379,4 +379,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    return companyList;
 	}
 	
+	public LoanNeedsList fetchByNeedId(Integer needId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.createAlias("needsListMaster", "needType");
+		criteria.add(Restrictions.eq("needType.id", needId));
+		return (LoanNeedsList)criteria.uniqueResult();
+	}
+
+
+	
 }

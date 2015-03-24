@@ -12,6 +12,7 @@ package com.nexera.core.service.impl;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -252,6 +253,14 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 			}
 		}
 
+	}
+	
+	public InputStream getInputStreamFromFile(String fileUrl)
+			throws Exception {
+		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+".pdf");
+		 File initialFile = new File(filePth);
+		 InputStream targetStream = new FileInputStream(initialFile);
+		 return targetStream;
 	}
 	
 	public static long generateRandomString() {

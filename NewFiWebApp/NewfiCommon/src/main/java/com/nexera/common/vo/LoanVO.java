@@ -12,7 +12,7 @@ public class LoanVO implements Serializable {
 	private Date createdDate;
 	private Boolean deleted;
 	private String loanEmailId;
-	private Integer lqbFileId;
+	private String lqbFileId;
 	private Date modifiedDate;
 	private String name;
 	private String status;
@@ -30,7 +30,25 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
-	
+	private Boolean isRateLocked;
+	private Boolean isBankConnected;
+
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
+
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
@@ -90,11 +108,11 @@ public class LoanVO implements Serializable {
 		this.loanEmailId = loanEmailId;
 	}
 
-	public Integer getLqbFileId() {
+	public String getLqbFileId() {
 		return lqbFileId;
 	}
 
-	public void setLqbFileId(Integer lqbFileId) {
+	public void setLqbFileId(String lqbFileId) {
 		this.lqbFileId = lqbFileId;
 	}
 

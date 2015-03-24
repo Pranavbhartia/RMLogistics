@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.braintreegateway.test.VenmoSdk.Session;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
@@ -127,7 +129,8 @@ public class LoanServiceImpl implements LoanService {
 		loan.setLqbFileId(loanVO.getLqbFileId());
 		loan.setModifiedDate(loanVO.getModifiedDate());
 		loan.setName(loanVO.getName());
-
+		loan.setIsBankConnected(loanVO.getIsBankConnected());
+		loan.setIsRateLocked(loanVO.getIsRateLocked());
 		return loan;
 
 	}
@@ -159,6 +162,8 @@ public class LoanServiceImpl implements LoanService {
 			        .getId());
 		}
 
+		loanVo.setIsBankConnected(loan.getIsBankConnected());
+		loanVo.setIsRateLocked(loan.getIsRateLocked());
 		return loanVo;
 
 	}
@@ -505,7 +510,7 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> userList = loanVO.getLoanTeam();
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
-			User user=userProfileService.parseUserModel(userVO);
+			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
 
@@ -604,4 +609,10 @@ public class LoanServiceImpl implements LoanService {
 		
 		return companyMaster;
 	}
+	@Transactional(readOnly = true)
+	public LoanNeedsList fetchByNeedId(Integer needId) {
+		// TODO Auto-generated method stub
+		return loanDao.fetchByNeedId(needId);
+	}
+
 }
