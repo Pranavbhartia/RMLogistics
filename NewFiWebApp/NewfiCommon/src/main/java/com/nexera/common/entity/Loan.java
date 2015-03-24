@@ -43,6 +43,28 @@ public class Loan implements Serializable {
 	private List<TransactionDetails> transactionDetails;
 	private WorkflowExec customerWorkflow;
 	private WorkflowExec loanManagerWorkflow;
+	private Boolean isRateLocked;
+	private Boolean isBankConnected;
+
+	@Column(name = "rate_locked", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+	
+	@Column(name = "bank_connected", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
 
 	public Loan() {
 	}

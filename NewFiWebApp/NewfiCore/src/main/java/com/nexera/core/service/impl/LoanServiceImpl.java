@@ -123,7 +123,8 @@ public class LoanServiceImpl implements LoanService {
 		loan.setLqbFileId(loanVO.getLqbFileId());
 		loan.setModifiedDate(loanVO.getModifiedDate());
 		loan.setName(loanVO.getName());
-
+		loan.setIsBankConnected(loanVO.getIsBankConnected());
+		loan.setIsRateLocked(loanVO.getIsRateLocked());
 		return loan;
 
 	}
@@ -155,6 +156,8 @@ public class LoanServiceImpl implements LoanService {
 			        .getId());
 		}
 
+		loanVo.setIsBankConnected(loan.getIsBankConnected());
+		loanVo.setIsRateLocked(loan.getIsRateLocked());
 		return loanVo;
 
 	}
@@ -501,7 +504,7 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> userList = loanVO.getLoanTeam();
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
-			User user=userProfileService.parseUserModel(userVO);
+			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
 

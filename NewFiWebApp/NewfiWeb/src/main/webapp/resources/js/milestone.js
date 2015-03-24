@@ -465,22 +465,22 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 
-function paintNeedsInfo(itemToAppendTo,ob)
+function paintNeedsInfo(itemToAppendTo,workItem)
 {
 	rightLeftClass = "milestone-lc";
 	var txtRow1 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" + " milestone-plain-text",
 	});
-	var information=JSON.parse(ob.workItem.stateInfo);
+	var information=JSON.parse(workItem.stateInfo);
 	txtRow1.html(information.totalSubmittedItem + " out of " + information.neededItemRequired);
 	
 	itemToAppendTo.append(txtRow1);
-	if (information.totalSubmittedItem != information.neededItemRequired)
+	if (information.neededItemRequired ==0 || information.totalSubmittedItem != information.neededItemRequired)
 	{
 		txtRow1 = $('<div>').attr({
 			"class" : rightLeftClass + "-text",
-			"mileNotificationId" : ob.workItem.id,
-			"data-text" : ob.workItem.workflowItemType
+			"mileNotificationId" : workItem.id,
+			"data-text" : workItem.workflowItemType
 		});
 		txtRow1.html("Click here to upload more items");
 		txtRow1.bind("click", function(e) {
