@@ -489,8 +489,15 @@ function paintChildConversations(level,conversations){
 	for(var i=1; i<conversations.length; i++){
 		var data = conversations[i];
 		var conContainer = $('<div>').attr({
-			"class" : "clearfix conversation-container-child conversation-container-l"+i
+			"class" : "clearfix conversation-container-child"
 		});
+		
+		if(i <= 3){
+			conContainer.addClass("conversation-container-l"+i);
+		}else{
+			conContainer.addClass("conversation-container-l3");
+		}
+		
 		if(i%2==1){
 			conContainer.addClass("conversation-container-even-child");
 		}

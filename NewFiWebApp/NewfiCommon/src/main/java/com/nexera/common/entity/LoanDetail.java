@@ -1,6 +1,7 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -17,6 +18,8 @@ public class LoanDetail implements Serializable {
 	private Double emi;
 	private Double loanAmount;
 	private Double rate;
+	private HomeOwnersInsuranceMaster homeOwnersInsurance;
+	private TitleCompanyMaster titleCompany;
 
 	public LoanDetail() {
 	}
@@ -64,5 +67,28 @@ public class LoanDetail implements Serializable {
 	public void setRate(Double rate) {
 		this.rate = rate;
 	}
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="home_owners_insurance")
+	public HomeOwnersInsuranceMaster getHomeOwnersInsurance() {
+		return homeOwnersInsurance;
+	}
+
+	public void setHomeOwnersInsurance(HomeOwnersInsuranceMaster homeOwnersInsurance) {
+		this.homeOwnersInsurance = homeOwnersInsurance;
+	}
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="title_company")
+	public TitleCompanyMaster getTitleCompany() {
+		return titleCompany;
+	}
+
+	public void setTitleCompany(TitleCompanyMaster titleCompany) {
+		this.titleCompany = titleCompany;
+	}
+	
+	
+	
 
 }

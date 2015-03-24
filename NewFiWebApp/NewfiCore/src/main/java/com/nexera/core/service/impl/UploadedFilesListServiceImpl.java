@@ -20,8 +20,10 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.AssignedUserVO;
+import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
+import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -231,13 +233,17 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
 	}
 	
+	
+	
+	
 	@Override
-	public Boolean uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
+	public CheckUploadVO uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
 		String s3Path = null;
 		
 		LOG.info("File content type  : "+file.getContentType());
 		String localFilePath = null;
 		Boolean fileUpload = false;
+		CheckUploadVO checkVo = new CheckUploadVO();
 		try{
 			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
 				LOG.info("Received an image.converting to PDF");
@@ -247,11 +253,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				localFilePath = nexeraUtility.uploadFileToLocal(file);
 				fileUpload = true;
 			}
+			checkVo.setIsUploadSuccess(fileUpload);
 			if(fileUpload){
-				nexeraUtility.uploadFileToLocal(file);
+				
 				File serverFile = new File(localFilePath );
 				Integer savedRowId = addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
 				LOG.info("Added File document row : "+savedRowId);
+				checkVo.setUploadFileId(savedRowId);
 			}
 			
 		 }catch(Exception e){
@@ -260,7 +268,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
 		 
 		 LOG.info("The s3 path is : "+s3Path);
-		 return fileUpload;
+		 return checkVo;
 	}
+
+	@Override
+	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }
