@@ -121,7 +121,7 @@ ADD CONSTRAINT `fk_wfItemEx_linkedToWfItemExec`
     ON UPDATE NO ACTION);
 
 
-	CREATE TABLE `homeownersinsurancemaster` (
+  CREATE TABLE `homeownersinsurancemaster` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `company_name` varchar(100) DEFAULT NULL,
@@ -153,3 +153,17 @@ ADD CONSTRAINT `fk_loanLinkedToHomeOwnrIns`
   REFERENCES `newfi_schema`.`homeownersinsurancemaster` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `newfi_schema`.`loanappform`   
+  ADD COLUMN `loan_app_completion_status` INT(11) NULL AFTER `loan_manager_workflow`;‏
+
+
+‎ 
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `rate_locked` TINYINT(1) DEFAULT 0  NULL AFTER `loan_manager_workflow`;‏
+
+
+‎ 
+ALTER TABLE `newfi_schema`.`loan`   
+  DROP COLUMN `bank_connected`, 
+  ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0  NULL AFTER `rate_locked`;

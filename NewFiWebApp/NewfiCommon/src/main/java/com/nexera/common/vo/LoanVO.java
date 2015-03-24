@@ -30,7 +30,25 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
-	
+	private Boolean isRateLocked;
+	private Boolean isBankConnected;
+
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
+
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
