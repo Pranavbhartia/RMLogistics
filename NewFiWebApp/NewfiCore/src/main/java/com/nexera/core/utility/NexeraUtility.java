@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -41,10 +40,13 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.nexera.core.service.UploadedFilesListService;
+import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
@@ -52,6 +54,12 @@ import com.sun.media.jai.codec.ImageDecoder;
 @Component
 public class NexeraUtility {
 
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
+	
+	@Autowired
+	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+	
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
 
@@ -429,6 +437,13 @@ public class NexeraUtility {
 
 		}
 		return filePath;
+	}
+
+	public String getContentFromFile(Integer fileToGetContent) throws IOException, Exception {
+		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(fileToGetContent).getS3path();
+		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl.getInputStreamFromFile(s3pathOfFile));
+		String encodedText = new String(Base64.encodeBase64(bytes));
+		return encodedText;
 	}
 
 }

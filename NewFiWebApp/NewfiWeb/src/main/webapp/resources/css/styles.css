@@ -927,6 +927,7 @@ a,a:hover,a:visited {
 	height: 100px;
 	margin: 0 auto;
 	width: 80px;
+	position:relative;
 	background: url(../images/pdf.png) no-repeat center;
 }
 
@@ -3876,4 +3877,13 @@ input.calc-input {
 
 .loan-personal-info-wrapper {
 	padding-left: 15px;
+}
+
+.deactiveteIcon{
+	  position: absolute;
+	  top: -10px;
+	  right: -20px;
+	  height: 30px;
+	  width: 30px;
+	  background: url("../images/close_hr.png") no-repeat center;
 }

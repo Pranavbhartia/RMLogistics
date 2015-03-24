@@ -27,4 +27,6 @@ public interface NeedsListService {
 	
 	public int saveCustomNeed(NeedsListMaster need);
 
+	public NeedsListMaster fetchNeedListMasterUsingID(Integer needId);
+	
 }
