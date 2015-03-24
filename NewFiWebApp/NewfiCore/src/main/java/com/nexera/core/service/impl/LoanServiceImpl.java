@@ -11,11 +11,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.braintreegateway.test.VenmoSdk.Session;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
@@ -506,6 +508,13 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		return this.buildLoanVO(loan);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanNeedsList fetchByNeedId(Integer needId) {
+		// TODO Auto-generated method stub
+		return loanDao.fetchByNeedId(needId);
 	}
 
 }

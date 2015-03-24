@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,12 +24,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.FileAssignVO;
@@ -36,6 +41,7 @@ import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.UploadFileScreenVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
@@ -75,6 +81,18 @@ public class FileUploadRest {
 		return "true";
 	}
 	
+	@RequestMapping(value="/deactivate/file/{fileId}" , method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO deactivateFileUsingFileId(@PathVariable ("fileId") Integer fileId){
+		CommonResponseVO commonResponseVO = null;
+		try{
+			uploadedFilesListService.deactivateFileUsingFileId(fileId);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+		}catch(Exception e){
+			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
+		}
+		return commonResponseVO;
+	}
+	
 	
 	@RequestMapping(value="{loanId}/score/get" , method = RequestMethod.GET)
 	public @ResponseBody String getLoanNeedRequirementScore(@PathVariable ("loanId") Integer  loanId ){
@@ -105,6 +123,8 @@ public class FileUploadRest {
 			
 			uploadedFilesListService.deactivateFileUsingFileId(fileId);
 			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+			
+			
 		} catch (Exception e) {
 			LOG.error("Exception in file split with fileId "+fileId);
 			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
@@ -118,14 +138,32 @@ public class FileUploadRest {
 																, @PathVariable(value = "loanId") Integer loanId 
 																, @PathVariable(value = "userId") Integer userId
 																, @PathVariable(value = "assignedBy") Integer assignedBy){
-		
-		ObjectMapper mapper=new ObjectMapper();
-		TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
-		List<FileAssignVO> val = new ArrayList<FileAssignVO>();
 		CommonResponseVO commonResponseVO=null;
+		ObjectMapper mapper=new ObjectMapper();
 		try {
+			TypeReference<List<FileAssignVO>> typeRef=new TypeReference<List<FileAssignVO>>() {};
+			List<FileAssignVO> val = new ArrayList<FileAssignVO>();
 			val = mapper.readValue(fileAssignMent, typeRef);
 			Map<Integer ,List<Integer>> mapFileMappingToNeed = getmapFromFileAssignObj(val);
+			commonResponseVO = assignFileToNeeds(mapFileMappingToNeed ,loanId , userId , assignedBy );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
+		}
+		
+		
+	   return commonResponseVO;
+	}
+	
+	public CommonResponseVO assignFileToNeeds(  Map<Integer ,List<Integer>> mapFileMappingToNeed 
+			, Integer loanId 
+			, Integer userId
+			, Integer assignedBy){
+		
+		CommonResponseVO commonResponseVO = null;
+		try {
+			
 			
 		    for (Integer key : mapFileMappingToNeed.keySet()){
 		    		UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId(key);
@@ -135,17 +173,33 @@ public class FileUploadRest {
 		    		if(filesList != null){
 		    			fileIds.add(filesList.getId());
 		    		}
-		    		
+		    		Integer fileToGetContent = null;
 		    		if(fileIds.size()>1){
 		    				Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles(fileIds , loanId , userId , assignedBy);
 		    				LOG.info("new file pdf path :: "+newFileRowId);
 		    				uploadedFilesListService.updateFileInLoanNeedList(key, newFileRowId);
 		    				uploadedFilesListService.updateIsAssignedToTrue(newFileRowId);
+		    				fileToGetContent = newFileRowId;
 		    		}else{
 		    				uploadedFilesListService.updateFileInLoanNeedList(key, fileIds.get(0));
 		    				uploadedFilesListService.updateIsAssignedToTrue( fileIds.get(0));
+		    				fileToGetContent = fileIds.get(0);
 		    		}
 		    		
+		    		/*User user = getUserObject();
+		    		
+		    		LQBDocumentVO documentVO = new LQBDocumentVO();
+		    		documentVO.setDocumentType("application/pdf");
+		    		StringBuffer string = new StringBuffer();
+		    		string.append(needsListService.fetchNeedListMasterUsingID(key).getDescription());
+		    		string.append(" uploaded by : ");
+		    		
+		    		string.append(user.getFirstName()).append("-").append(user.getLastName());
+		    		documentVO.setNotes(string.toString());
+		    		documentVO.setsDataContent(nexeraUtility.getContentFromFile(fileToGetContent));
+		    		documentVO.setsLNm(loanService.getLoanByID(loanId).getLqbFileId().toString());
+		    		uploadedFilesListService.uploadDocumentInLandingQB(documentVO);
+		    		LOG.info("Assignment : uploadDocumentInLandingQB "+documentVO);*/
 		    }
 				
 			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
@@ -155,10 +209,10 @@ public class FileUploadRest {
 			e.printStackTrace();
 			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
 		} 
-	   return commonResponseVO;
+		
+		return commonResponseVO;
+		
 	}
-	
-	
 	
 	
 	public Map<Integer , List<Integer>> getmapFromFileAssignObj(List<FileAssignVO> fileAssignVO){
@@ -249,7 +303,18 @@ public class FileUploadRest {
 	public @ResponseBody String  filesUploadToS3System( @RequestParam(value =  "file") MultipartFile[] file 
 										, @RequestParam(value = "userID") Integer userID 
 										, @RequestParam(value =  "loanId") Integer loanId 
-										, @RequestParam(value =  "assignedBy") Integer assignedBy){
+										, @RequestParam(value =  "assignedBy") Integer assignedBy
+										){
+											return filesUploadToS3SystemAndAssign(file , userID , loanId , assignedBy , null);
+		
+	}
+	
+	@RequestMapping(value = "documentUploadWithNeed" , method = RequestMethod.POST  )
+	public @ResponseBody String  filesUploadToS3SystemAndAssign( @RequestParam(value =  "file") MultipartFile[] file 
+										, @RequestParam(value = "userID") Integer userID 
+										, @RequestParam(value =  "loanId") Integer loanId 
+										, @RequestParam(value =  "assignedBy") Integer assignedBy
+										, @RequestParam(value =  "needId") Integer needId){
 		
 		LOG.info("Checking for User Session : ");
 		
@@ -260,11 +325,29 @@ public class FileUploadRest {
 		}
 		
 		
-		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy);
+		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy+" and need id : "+needId);
 		List<String> unsupportedFile = new ArrayList<String>();
 		for (MultipartFile multipartFile : file) {
-			Boolean isFileUploaded = uploadedFilesListService.uploadFile(multipartFile, userID , loanId , assignedBy);
-			if(!isFileUploaded){
+			CheckUploadVO checkFileUploaded = uploadedFilesListService.uploadFile(multipartFile, userID , loanId , assignedBy);
+			
+			if(checkFileUploaded.getIsUploadSuccess()){
+				if(needId==null){
+					LOG.info("Needs is null");
+				}else{
+					LOG.info("Assigning needs");
+					List<FileAssignVO> list = new ArrayList<FileAssignVO>();
+					FileAssignVO fileAssignVO = new FileAssignVO();
+					fileAssignVO.setFileId(checkFileUploaded.getUploadFileId());
+					
+					LoanNeedsList loanNeedsList = loanService.fetchByNeedId(needId);
+					
+					fileAssignVO.setNeedListId(loanNeedsList.getId());
+					list.add(fileAssignVO);
+					
+					assignFileToNeeds(getmapFromFileAssignObj(list), loanId,userID , assignedBy);
+				}
+				
+			}else{
 				unsupportedFile.add( multipartFile.getOriginalFilename());
 			}
 			

@@ -1294,16 +1294,16 @@ function getNeededDocRow(desc, needId) {
 	var rowDesc = $('<div>').attr({
 		"class" : "needed-item-desc float-left"
 	}).html(desc);
-	var docUploadImage = $('<div>').attr({
-		"class" : "doc-uploaded-icn float-left"
-	});
+	var docUploadImage = $("<div>").attr({
+		"class" : "doc-uploaded-icn float-left" 
+		
+	}).data("needId",needId).on("click",uploadDocument);
 	row.append(leftImage).append(rowDesc);
 	var docRemoveImage = $('<div>').attr({
 		"class" : "hide float-left",
 		"id" : "needDoc" + needId
-
 	});
-	row.append(docRemoveImage);
+	row.append(docUploadImage).append(docRemoveImage);
 	return row;
 }
 
