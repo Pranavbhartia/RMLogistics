@@ -1,4 +1,7 @@
-﻿
+﻿SET FOREIGN_KEY_CHECKS=0;
+--The above line is to avoid foreign key checks during import. This is required due to circular links.
+--This should be the first line in the file.
+
 LOCK TABLES `userrole` WRITE;
 INSERT INTO `userrole` VALUES (4,'SYSTEM','System user','System User',NULL,'2014-12-12 00:00:00',0);
 UNLOCK TABLES;
@@ -120,4 +123,6 @@ INSERT INTO `needslistmaster` VALUES (1,'Credit/Liabilities','Divorce Decree/Set
 
 
 
-
+--The below line is to avoid foreign key checks during import. This is required due to circular links. 
+--Add all DML before this statement. Let this be the last statement in this file.
+SET FOREIGN_KEY_CHECKS=1;
