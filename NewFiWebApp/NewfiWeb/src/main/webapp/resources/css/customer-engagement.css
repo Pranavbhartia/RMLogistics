@@ -182,12 +182,22 @@
 }
 
 .ce-option-ques-wrapper {
-	position:relative;
-    border: 1px solid #dcdcdc;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 3px;
-    width: 500px;
+	position: relative;
+	border: 1px solid #cecece;
+	background: #fcfcfc;
+	margin: 10px 0 15px 30px;
+	padding: 10px;
+	border-radius: 3px;
+	width: 500px;
+}
+
+.ce-option-ques-wrapper .ce-input{
+	margin-top: 5px;
+	background: #fff;
+}
+
+.ce-option-ques-wrapper .ce-ques-wrapper{
+	padding: 10px 0 0px 14px;
 }
 
 .ce-option-ques-wrapper:after,.ce-option-ques-wrapper:before{
@@ -203,13 +213,13 @@
 
 .ce-option-ques-wrapper:after{
 	border-width: 12px;
-	border-bottom-color: #dcdcdc;
+	border-bottom-color: #cecece;
 	z-index: 0;
 }
 
 .ce-option-ques-wrapper:before{
 	border-width: 10px;
-	border-bottom-color: #fff;
+	border-bottom-color: #fcfcfc;
 	margin-left:2px;
 	z-index: 1;
 }
