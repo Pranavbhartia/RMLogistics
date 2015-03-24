@@ -99,7 +99,7 @@ function getNotificationContext(loanId,userId){
 							if(existAry.length>0){
 								$("#"+notificationID).remove();
 							}
-							contxt.updateLoanListNotificationCount();
+							ob.updateLoanListNotificationCount();
 						}
 
 					}
