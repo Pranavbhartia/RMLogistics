@@ -830,7 +830,7 @@ function paintBuyHomeSeeRates() {
 }
 
 function paintBuyHomeSeeTeaserRate() {
-    	active = 4;
+    active = 4;
 	homeProgressBaar(4);
 	var quesTxt = "Analyze & Adjust Your Numbers";
 	var container = $('<div>').attr({
@@ -855,11 +855,12 @@ function paintBuyHomeSeeTeaserRate() {
 		},
 		datatype : "application/json",
 		success : function(data) {
-           var teaserRate = data;
+          
+			$('#overlay-loader').hide();
+			//var teaserRate = data;
 			//paintteaserRate(data);
 			paintteaserRate(teaserRate);
 			//printMedianRate(teaserRate, container);
-			$('#overlay-loader').hide();
 		},
 		error : function() {
 			alert("error");

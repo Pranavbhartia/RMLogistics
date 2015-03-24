@@ -38,7 +38,7 @@ AgentViewSNEnum = {
 	3:"lock-rate",
 	4:"needs",
 	5:"progress"
-}
+};
 
 function initialize(newfi){
 	newfiObject = newfi;

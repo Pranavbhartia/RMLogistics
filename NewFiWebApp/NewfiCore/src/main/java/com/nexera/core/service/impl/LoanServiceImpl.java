@@ -346,8 +346,8 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
 			if (null != customerDetail.getDateOfBirth())
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-				        .getTime());
+				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime()
+				        );
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);

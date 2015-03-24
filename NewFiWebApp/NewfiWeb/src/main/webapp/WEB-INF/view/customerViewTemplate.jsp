@@ -114,6 +114,19 @@
 				initiateJcrop(this);}
 			});
 			
+			$(document).on('keypress','input[name="zipCode"]',function(e){
+				
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+			        //display error message
+			        showToastMessage("Enter correct zipcode");
+			          return false;
+			    }if($(this).val().length >= 6){
+			    	
+			    	 showToastMessage("Enter correct zipcode");
+			         return false;
+			    }
+			});
+			
 		});
 	</script>
 </body>

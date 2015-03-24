@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
 
@@ -46,6 +47,9 @@ public class ShopperRegistrationController {
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is"+registrationDetails);
 		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class); 
+		
+		
+		
 		String emailId = userVO.getEmailId();
 		//String password = userVO.getPassword();
 		UserVO userVOObj=   userProfileService.saveUser(userVO);

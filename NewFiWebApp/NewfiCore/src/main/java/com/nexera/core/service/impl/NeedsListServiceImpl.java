@@ -183,19 +183,19 @@ public class NeedsListServiceImpl implements NeedsListService {
 						needsList.get(MasterNeedsEnum.Homeowner_Insurance.getIndx()).setIsChecked(true);
 					}
 				}
-				if (loanAppForm.getEmployed()) {
+				if (loanAppForm.getIsEmployed()) {
 					// #17,#18,
 					needsList.get(MasterNeedsEnum.Paychecks_Most_Recent_30_Days.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.W2s_Previous_2_Years.getIndx()).setIsChecked(true);
 					
 				}
-				if (loanAppForm.getSsIncomeOrDisability()) {
+				if (loanAppForm.getIsssIncomeOrDisability()) {
 					// #19,#20,#21
 					needsList.get(MasterNeedsEnum.Social_Security_Award_Letter.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
 				}
-				if (loanAppForm.getSelfEmployed()) {
+				if (loanAppForm.getIsselfEmployed()) {
 					// #20,#21,#24,#25,#26
 					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
@@ -203,7 +203,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					needsList.get(MasterNeedsEnum.Year_to_date_Profit_Loss_Business.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.Year_to_date_Balance_Sheet_Business.getIndx()).setIsChecked(true);					
 				}
-				if (loanAppForm.getPensionOrRetirement()) {
+				if (loanAppForm.getIspensionOrRetirement()) {
 					// #20,#21
 					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
 					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
