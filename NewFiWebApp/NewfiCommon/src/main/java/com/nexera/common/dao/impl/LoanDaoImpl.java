@@ -156,7 +156,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        "Exception caught in getLoanAppForm() ",
 			        hibernateException);
 		}
 	}
