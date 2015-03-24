@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.HomeOwnersInsuranceMaster;
+import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
+import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -176,5 +180,32 @@ public class LoanRestService {
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loansList);
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
+	}
+	
+	@RequestMapping(value = "/searchTitleCompanyOrHomeOwnIns")
+	public @ResponseBody CommonResponseVO searchTitleCompany(
+			@RequestParam(required = false) String companyName,
+			@RequestParam(required = true) String code) {
+
+		String homeInsCode = "HOME_OWN_INS";
+		String titleCompanyCode = "TITLE_COMPANY";
+		if(companyName==null || companyName.trim().isEmpty())
+				companyName="";
+		else companyName=companyName.toLowerCase();
+		
+		if (homeInsCode.equals(code)) {
+			HomeOwnersInsuranceMasterVO ins = new HomeOwnersInsuranceMasterVO();
+			ins.setName(companyName);
+			List<HomeOwnersInsuranceMasterVO> companyList = loanService
+					.findHomeOwnInsByName(ins);
+			return RestUtil.wrapObjectForSuccess(companyList);
+		} else if (titleCompanyCode.equals(code)) {
+			TitleCompanyMasterVO titleCompany = new TitleCompanyMasterVO();
+			titleCompany.setName(companyName);
+			List<TitleCompanyMasterVO> companyList = loanService
+					.findTitleCompanyByName(titleCompany);
+			return RestUtil.wrapObjectForSuccess(companyList);
+		}
+		return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
 	}
 }

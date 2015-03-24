@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
+import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 
 
@@ -65,5 +67,13 @@ public interface LoanService
 	public LoanVO createLoan(LoanVO loanVO);
 	
 	public Loan completeLoanModel(LoanVO loanVO);
+
+
+	public List<TitleCompanyMasterVO> findTitleCompanyByName(
+			TitleCompanyMasterVO titleCompany);
+
+
+	List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
+			HomeOwnersInsuranceMasterVO homeOwnInsVO);
 
 }

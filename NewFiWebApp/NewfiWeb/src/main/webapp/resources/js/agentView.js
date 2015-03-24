@@ -1033,11 +1033,15 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 			function() {
 				var name = $('#add-member-input').val();
 				console.log("Name entered : " + name);
-				// TODO search and display name
+				var code = $('#add-memeber-user-type').attr("code");
 				var roleID = $('#add-memeber-user-type').attr("roleID");
 				var internalRoleID = $('#add-memeber-user-type').attr(
 						"internalRoleID");
-				searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+				var isSearchUserRoleBased=$('#add-memeber-user-type').attr("userRoleBased");
+				if(isSearchUserRoleBased=="true")
+					searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+				else if(isSearchUserRoleBased=="false")
+					searchUsersBasedOnCode(name, code);
 			});
 
 	var downArrow = $('<div>').attr({
@@ -1094,10 +1098,8 @@ function paintUserNameDropDown(values) {
 			var value = values[i];
 			var dropDownRow = $('<div>').attr({
 				"class" : "add-member-dropdown-row",
-				"userID" : value.id,
-				"role" : value.userRole.label,
-				"roleDescription" : value.userRole.roleDescription
-			}).html(value.firstName + " " + value.lastName).on('click',
+				"userID" : value.id
+			}).html(value.firstName + " " + (value.lastName==undefined?"":value.lastName)).on('click',
 					function(event) {
 						event.stopImmediatePropagation();
 						var userID = $(this).attr("userID");
@@ -1171,7 +1173,8 @@ function appendUserTypeDropDown() {
 		"internalRoleID" : 0,
 		"roleCd" : "Realtor",
 		"label" : "Realtor",
-		"roleDescription" : "Realtor"
+		"roleDescription" : "Realtor",
+		"userRoleBased" : "true"
 	} ];
 
 	if(newfiObject.user.userRole.roleCd=="INTERNAL")
@@ -1181,7 +1184,28 @@ function appendUserTypeDropDown() {
 			"id" : 3,
 			"internalRoleID" : internalRole.id,
 			"label" : internalRole.roleDescription,
+			"userRoleBased" : "true"
 		});
+	}
+	
+	// If the user is a borrower, allow to add a title company as well as home
+	// insurance option
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
+
+		var custOptions = [ {
+			"label" : "Title Company",
+			"roleDescription" : "TITLE COMPANY",
+			"code" : "TITLE_COMPANY",
+			"userRoleBased" : "false"
+		}, {
+			"label" : "Home Owner's Insurance",
+			"roleDescription" : "Home own ins",
+			"code" : "HOME_OWN_INS",
+			"userRoleBased" : "false"
+		} ];
+			for(j in custOptions)
+			userRoles.push(custOptions[j]);
+
 	}
 
 	for (var i = 0; i < userRoles.length; i++) {
@@ -1190,24 +1214,33 @@ function appendUserTypeDropDown() {
 			"class" : "add-member-dropdown-row",
 			"roleID" : userRole.id,
 			"internalRoleID" : userRole.internalRoleID,
-			"roleCD" : userRole.roleCD
+			"roleCD" : userRole.roleCD,
+			"code"	: userRole.code,
+			"userRoleBased":userRole.userRoleBased
 		}).html(userRole.label)
 				.on(
 						'click',
 						function(event) {
 							event.stopImmediatePropagation();
 							var roleIDCurr = $(this).attr("roleID");
+							var code = $(this).attr("code");
 							var roleIDPrev = $('#add-memeber-user-type').attr(
 									"roleID");
+							$('#add-memeber-user-type').attr("code",
+									code);
 							$('#add-memeber-user-type').attr("roleID",
 									roleIDCurr);
 							$('#add-memeber-user-type').attr("internalRoleID",
 									$(this).attr("internalRoleID"));
+							$('#add-memeber-user-type').attr("userRoleBased",
+									$(this).attr("userRoleBased"));
 							$('#add-memeber-user-type').html($(this).html());
 							hideUserTypeDropDown();
 						});
 		dropdownCont.append(dropDownRow);
 	}
+
+		
 
 	$('#add-memeber-user-type').append(dropdownCont);
 }
@@ -2191,6 +2224,40 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 
 	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam,true);
 
+}
+
+function searchUsersBasedOnCode(name, code) {
+
+	var restURL="rest/loan/searchTitleCompanyOrHomeOwnIns?";
+	if(code=="TITLE_COMPANY")
+		restURL += "code="+code;
+	else if(code="HOME_OWN_INS")
+		restURL += "code="+code;
+	else return;
+	
+	restURL+="&companyName="+name;
+	
+	ajaxRequest(restURL, "GET", "json", {}, onReturnSearchBasedOnCodeToAddToLoanTeam,true);
+
+}
+
+function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
+	var result=data.resultObject;
+	if(!result || result.length<1)
+		showUserNameDropDown([]);
+	
+	var adapterArray=[];
+	for(i in result){
+		var value=result[i];
+		adapterArray.push({
+
+			"class" : "add-member-dropdown-row",
+			"userID" : value.id	,
+			"firstName":value.name
+		});
+	}
+	
+	showUserNameDropDown(adapterArray)
 }
 
 function onReturnOfUserSearchToAddToLoanTeam(data) {

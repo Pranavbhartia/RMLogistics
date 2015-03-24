@@ -227,6 +227,7 @@ public class UserVO implements Serializable {
 		this.id = user.getId();
 		UserRoleVO roleVO = new UserRoleVO();
 		roleVO.setId(user.getUserRole().getId());
+		roleVO.setRoleCd(user.getUserRole().getRoleCd());
 		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
 
 		this.userRole = roleVO;
