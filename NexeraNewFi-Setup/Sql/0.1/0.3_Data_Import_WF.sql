@@ -1,6 +1,6 @@
 SET FOREIGN_KEY_CHECKS=0;
---The above line is to avoid foreign key checks during import. This is required due to circular links. 
---Add all DML before this statement. This should be the first statement in this file.
+-- The above line is to avoid foreign key checks during import. This is required due to circular links. 
+-- Add all DML before this statement. This should be the first statement in this file.
 --
 -- Dumping data for table `workflowtaskconfigmaster`
 --
@@ -37,6 +37,6 @@ UNLOCK TABLES;
 
 
 
---The below line is to avoid foreign key checks during import. This is required due to circular links. 
---Add all DML before this statement. This should be the last statement in this file.
+-- The below line is to avoid foreign key checks during import. This is required due to circular links. 
+-- Add all DML before this statement. This should be the last statement in this file.
 SET FOREIGN_KEY_CHECKS=1;
