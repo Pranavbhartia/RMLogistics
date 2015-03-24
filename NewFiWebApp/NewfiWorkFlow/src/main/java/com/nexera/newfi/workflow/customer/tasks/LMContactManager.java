@@ -47,6 +47,7 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 		userVo.setId(userId);
 		LoanVO loanVo=loanService.getActiveLoanOfUser(userVo);
 		int workflowId=loanVo.getLoanManagerWorkflowID();
+		//TODO In Engine trigger add a method to get execitem by type
 		List<WorkflowItemExec> list = engineTrigger
 		        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
 		for (WorkflowItemExec workflowItem : list){
