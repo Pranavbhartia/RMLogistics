@@ -3,30 +3,47 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.PropertyTypeMaster;
+import com.nexera.common.entity.RefinanceDetails;
 
 public class LoanAppFormVO implements Serializable {
+	
+
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean employed;
+	private Boolean isEmployed;
+	private String EmployedIncomePreTax;
+	private String EmployedAt;
+	private String EmployedSince;
 	private Boolean hoaDues;
 	private Boolean homeRecentlySold;
 	private Boolean homeToSell;
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
-	private Boolean pensionOrRetirement;
+	private Boolean ispensionOrRetirement;
+	private String monthlyPension;
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
-	private Boolean selfEmployed;
-	private Boolean ssIncomeOrDisability;
+	private Boolean isselfEmployed;
+	private String  selfEmployedIncome;
+	private Boolean isssIncomeOrDisability;
+	private String  ssDisabilityIncome;
+	private Boolean isSpouseOnLoan ;
+	private String	spouseName;
+	private Boolean paySecondMortgage;
+	
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
-	private LoanTypeMasterVO loanTypeMaster;
+	private GovernmentQuestionVO governmentquestion;
+	private RefinanceVO refinancedetails;
+	private LoanTypeMasterVO loanType;
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
-	private Boolean paySecondMortgage;
+	
+
 
 	public int getId() {
 		return id;
@@ -36,13 +53,7 @@ public class LoanAppFormVO implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getEmployed() {
-		return employed;
-	}
-
-	public void setEmployed(Boolean employed) {
-		this.employed = employed;
-	}
+	
 
 	public Boolean getHoaDues() {
 		return hoaDues;
@@ -84,14 +95,7 @@ public class LoanAppFormVO implements Serializable {
 		this.ownsOtherProperty = ownsOtherProperty;
 	}
 
-	public Boolean getPensionOrRetirement() {
-		return pensionOrRetirement;
-	}
-
-	public void setPensionOrRetirement(Boolean pensionOrRetirement) {
-		this.pensionOrRetirement = pensionOrRetirement;
-	}
-
+	
 	public Boolean getReceiveAlimonyChildSupport() {
 		return receiveAlimonyChildSupport;
 	}
@@ -116,21 +120,7 @@ public class LoanAppFormVO implements Serializable {
 		this.secondMortgage = secondMortgage;
 	}
 
-	public Boolean getSelfEmployed() {
-		return selfEmployed;
-	}
-
-	public void setSelfEmployed(Boolean selfEmployed) {
-		this.selfEmployed = selfEmployed;
-	}
-
-	public Boolean getSsIncomeOrDisability() {
-		return ssIncomeOrDisability;
-	}
-
-	public void setSsIncomeOrDisability(Boolean ssIncomeOrDisability) {
-		this.ssIncomeOrDisability = ssIncomeOrDisability;
-	}
+	
 
 	public UserVO getUser() {
 		return user;
@@ -148,12 +138,13 @@ public class LoanAppFormVO implements Serializable {
 		this.propertyTypeMaster = propertyTypeMaster;
 	}
 
-	public LoanTypeMasterVO getLoanTypeMaster() {
-		return loanTypeMaster;
+	
+	public LoanTypeMasterVO getLoanType() {
+		return loanType;
 	}
 
-	public void setLoanTypeMaster(LoanTypeMasterVO loanTypeMaster) {
-		this.loanTypeMaster = loanTypeMaster;
+	public void setLoanType(LoanTypeMasterVO loanType) {
+		this.loanType = loanType;
 	}
 
 	public LoanVO getLoan() {
@@ -173,12 +164,166 @@ public class LoanAppFormVO implements Serializable {
 		this.userEmploymentHistories = userEmploymentHistories;
 	}
 
+	
+	public Boolean getIsSpouseOnLoan() {
+		return isSpouseOnLoan;
+	}
+
+	public void setIsSpouseOnLoan(Boolean isSpouseOnLoan) {
+		this.isSpouseOnLoan = isSpouseOnLoan;
+	}
+
+	public String getSpouseName() {
+		return spouseName;
+	}
+
+	public void setSpouseName(String spouseName) {
+		this.spouseName = spouseName;
+	}
+	
+	public Boolean getIsEmployed() {
+		return isEmployed;
+	}
+
+	public void setIsEmployed(Boolean isEmployed) {
+		this.isEmployed = isEmployed;
+	}
+
+	public String getEmployedIncomePreTax() {
+		return EmployedIncomePreTax;
+	}
+
+	public void setEmployedIncomePreTax(String employedIncomePreTax) {
+		EmployedIncomePreTax = employedIncomePreTax;
+	}
+
+	public String getEmployedAt() {
+		return EmployedAt;
+	}
+
+	public void setEmployedAt(String employedAt) {
+		EmployedAt = employedAt;
+	}
+
+	public String getEmployedSince() {
+		return EmployedSince;
+	}
+
+	public void setEmployedSince(String employedSince) {
+		EmployedSince = employedSince;
+	}
+
+	public Boolean getIspensionOrRetirement() {
+		return ispensionOrRetirement;
+	}
+
+	public void setIspensionOrRetirement(Boolean ispensionOrRetirement) {
+		this.ispensionOrRetirement = ispensionOrRetirement;
+	}
+
+	public String getMonthlyPension() {
+		return monthlyPension;
+	}
+
+	public void setMonthlyPension(String monthlyPension) {
+		this.monthlyPension = monthlyPension;
+	}
+
+	public Boolean getIsselfEmployed() {
+		return isselfEmployed;
+	}
+
+	public void setIsselfEmployed(Boolean isselfEmployed) {
+		this.isselfEmployed = isselfEmployed;
+	}
+
+	public String getSelfEmployedIncome() {
+		return selfEmployedIncome;
+	}
+
+	public void setSelfEmployedIncome(String selfEmployedIncome) {
+		this.selfEmployedIncome = selfEmployedIncome;
+	}
+
+	public Boolean getIsssIncomeOrDisability() {
+		return isssIncomeOrDisability;
+	}
+
+	public void setIsssIncomeOrDisability(Boolean isssIncomeOrDisability) {
+		this.isssIncomeOrDisability = isssIncomeOrDisability;
+	}
+
+	public String getSsDisabilityIncome() {
+		return ssDisabilityIncome;
+	}
+
+	public void setSsDisabilityIncome(String ssDisabilityIncome) {
+		this.ssDisabilityIncome = ssDisabilityIncome;
+	}
+
+	public GovernmentQuestionVO getGovernmentquestion() {
+		return governmentquestion;
+	}
+
+	public void setGovernmentquestion(GovernmentQuestionVO governmentquestion) {
+		this.governmentquestion = governmentquestion;
+	}
+
+	public RefinanceVO getRefinancedetails() {
+		return refinancedetails;
+	}
+
+	public void setRefinancedetails(RefinanceVO refinancedetails) {
+		this.refinancedetails = refinancedetails;
+	}
+
 	public LoanAppForm convertToEntity() {
 
 		LoanAppForm loanAppForm = new LoanAppForm();
+		
+			
 		loanAppForm.setId(this.id);
-		loanAppForm.setEmployed(this.getEmployed());
-		loanAppForm.setHoaDues(this.getHoaDues());
+		
+		
+		
+		loanAppForm.setIsEmployed(this.isEmployed);
+		loanAppForm.setEmployedIncomePreTax(this.EmployedIncomePreTax);
+		loanAppForm.setEmployedAt(this.EmployedAt);
+		loanAppForm.setEmployedSince(this.EmployedSince);
+		loanAppForm.setHoaDues(this.hoaDues);
+		loanAppForm.setHomeRecentlySold(this.homeRecentlySold);
+		loanAppForm.setHomeToSell(this.homeToSell);
+		loanAppForm.setMaritalStatus(this.maritalStatus);
+		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
+		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
+		loanAppForm.setMonthlyPension(this.monthlyPension);
+		loanAppForm.setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
+		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
+		loanAppForm.setSecondMortgage(this.secondMortgage);
+		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
+		loanAppForm.setIsselfEmployed(this.isselfEmployed);
+		loanAppForm.setSelfEmployedIncome(this.selfEmployedIncome);
+		loanAppForm.setIsssIncomeOrDisability(this.isssIncomeOrDisability);
+		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
+		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
+		loanAppForm.setSpouseName(this.spouseName);
+		
+		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+		//propertyTypeMaster.setId(1);
+		
+		loanAppForm.setPropertyTypeMaster(propertyTypeMaster);
+		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
+		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
+
+		 loanAppForm.setUser(this.getUser().convertToEntity());
+
+		loanAppForm.setLoan(this.getLoan().convertToEntity());
+		
+		
+		
+		
+		
+		/*loanAppForm.setHoaDues(this.getHoaDues());
 		loanAppForm.setHomeRecentlySold(this.homeRecentlySold);
 
 		loanAppForm.setMaritalStatus(this.getMaritalStatus());
@@ -191,16 +336,54 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSsIncomeOrDisability(ssIncomeOrDisability);
 		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
 		loanAppForm.setHomeToSell(this.homeToSell);
-		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
-		propertyTypeMaster.setId(1);
-		loanAppForm.setPropertyTypeMaster(propertyTypeMaster);
+*/		
 
-		loanAppForm.setUser(this.getUser().convertToEntity());
-
-		loanAppForm.setLoan(this.getLoan().convertToEntity());
 
 		return loanAppForm;
 	}
+
+	public GovernmentQuestion parseVOtoEntity(GovernmentQuestionVO governmentQuestionVO){
+		
+		if(governmentQuestionVO == null)
+			return null;
+		
+		GovernmentQuestion governmentQuestion = new GovernmentQuestion();
+		governmentQuestion.setOutstandingJudgments(governmentQuestionVO.isOutstandingJudgments());
+		governmentQuestion.setBankrupt(governmentQuestionVO.isBankrupt());
+		governmentQuestion.setPropertyForeclosed(governmentQuestionVO.isPropertyForeclosed());
+		governmentQuestion.setLawsuit(governmentQuestionVO.isLawsuit());
+		governmentQuestion.setObligatedLoan(governmentQuestionVO.isObligatedLoan());
+		
+		governmentQuestion.setFederalDebt(governmentQuestionVO.isFederalDebt());
+		governmentQuestion.setObligatedToPayAlimony(governmentQuestionVO.isObligatedToPayAlimony());
+		governmentQuestion.setEndorser(governmentQuestionVO.isEndorser());
+		governmentQuestion.setUSCitizen(governmentQuestionVO.isUSCitizen());
+		governmentQuestion.setOccupyPrimaryResidence(governmentQuestionVO.isOccupyPrimaryResidence());
+		governmentQuestion.setOwnershipInterestInProperty(governmentQuestionVO.isOwnershipInterestInProperty());
+		
+		governmentQuestion.setEthnicity(governmentQuestionVO.getEthnicity());
+		governmentQuestion.setRace(governmentQuestionVO.getRace());
+		governmentQuestion.setSex(governmentQuestionVO.getSex());
+		
+		return governmentQuestion;
+		
+	}
+	
+	public RefinanceDetails parseVOtoEntityRefinance(RefinanceVO refinanceVO){
+		
+		if(refinanceVO == null)
+			return null;
+		RefinanceDetails refinanceDetails = new RefinanceDetails();
+		
+		refinanceDetails.setCurrentMortgageBalance(refinanceVO.getCurrentMortgageBalance());
+		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
+		refinanceDetails.setCurrentMortgagePayment(refinanceVO.getCurrentMortgagePayment());
+		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
+		
+		return refinanceDetails;
+		
+	}
+	
 
 	public Boolean getPaySecondMortgage() {
 		return paySecondMortgage;
@@ -213,7 +396,7 @@ public class LoanAppFormVO implements Serializable {
 	public LoanAppFormVO convertFromEntity(LoanAppForm loanAppEntity) {
 
 		LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-		loanAppFormVO.setEmployed(loanAppEntity.getEmployed());
+		//loanAppFormVO.setEmployed(loanAppEntity.getEmployed());
 		loanAppFormVO.setHoaDues(loanAppEntity.getHoaDues());
 		loanAppFormVO.setMaritalStatus(loanAppEntity.getMaritalStatus());
 		loanAppFormVO.setReceiveAlimonyChildSupport(loanAppEntity
