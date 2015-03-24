@@ -33,7 +33,7 @@
 		$(document).ready(function() {
 			initialize(newfi);
 			isAgentTypeDashboard = true;
-			paintAgentDashboard();
+			paintAgentDashboard('myloans');
 			retrieveState();
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();
