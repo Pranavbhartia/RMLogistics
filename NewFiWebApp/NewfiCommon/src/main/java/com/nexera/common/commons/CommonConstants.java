@@ -15,7 +15,7 @@ public interface CommonConstants {
 	/**
 	 * Default constants
 	 */
-	
+	public static final int RANDOM_PASSWORD_LENGTH = 8;
 	
 	/**
 	 * Entity status
@@ -49,5 +49,5 @@ public interface CommonConstants {
 	 */
 	public static final String SENDER_NAME = "NewFi Team";
 	public static final String SENDER_EMAIL_ID = "support@newfi.com";
-	public static final String EMAIL_FOOTER = "Thanks and Regards," + "\n" + "Newfi Team";
+	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>" + "Newfi Team";
 }
