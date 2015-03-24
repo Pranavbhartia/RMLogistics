@@ -48,6 +48,16 @@ public class LoanAppForm implements Serializable {
 	private List<UserEmploymentHistory> userEmploymentHistories;
 	private WorkflowExec customerWorkflow;
 	private WorkflowExec loanManagerWorkflow;
+	private int loanAppFormCompletionStatus;
+
+	@Column(name = "loan_app_completion_status")
+	public int getLoanAppFormCompletionStatus() {
+		return loanAppFormCompletionStatus;
+	}
+
+	public void setLoanAppFormCompletionStatus(int loanAppFormCompletionStatus) {
+		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
+	}
 
 	public LoanAppForm() {
 	}
@@ -61,8 +71,6 @@ public class LoanAppForm implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	
 
 	@Column(name = "hoa_dues", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")

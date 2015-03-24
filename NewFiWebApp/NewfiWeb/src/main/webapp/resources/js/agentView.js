@@ -1174,6 +1174,7 @@ function appendUserTypeDropDown() {
 		"roleDescription" : "Realtor"
 	} ];
 
+	if(newfiObject.user.userRole.roleCd=="INTERNAL")
 	for (i in newfiObject.internalUserRoleMasters) {
 		var internalRole = newfiObject.internalUserRoleMasters[i];
 		userRoles.push({

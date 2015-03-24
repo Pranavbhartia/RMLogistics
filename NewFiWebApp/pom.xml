@@ -14,7 +14,7 @@
 		<module>WorkflowEngine</module>
 		<module>NewfiWorkFlow</module>
 		<module>NewfiWeb</module>
-
+		<module>PushNotification</module>
 
 
 	</modules>
@@ -83,5 +83,5 @@
 			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
 		</repository>
 	</repositories>
-
+	
 </project>

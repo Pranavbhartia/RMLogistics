@@ -156,7 +156,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        "Exception caught in getLoanAppForm() ",
 			        hibernateException);
 		}
 	}
@@ -348,6 +348,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		List<LoanTypeMaster> loanTypeList = criteria.list();
 	    return loanTypeList;
     }
+
+	@Override
+	public LoanNeedsList fetchByNeedId(Integer needId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.createAlias("needsListMaster", "needType");
+		criteria.add(Restrictions.eq("needType.id", needId));
+		return (LoanNeedsList)criteria.uniqueResult();
+	}
 
 	
 

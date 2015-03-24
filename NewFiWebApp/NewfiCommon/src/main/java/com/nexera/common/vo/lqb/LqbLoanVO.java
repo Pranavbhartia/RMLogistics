@@ -1,11 +1,14 @@
 package com.nexera.common.vo.lqb;
 
+import java.util.Map;
+
+
 public class LqbLoanVO
 {
 
     private String sTicket;
 
-    private String sXmlData;
+    private Map<String, String> sXmlDataMap;
 
     private String sTemplateName;
 
@@ -19,7 +22,7 @@ public class LqbLoanVO
 
     private Integer format;
 
-    private String sXmlQuery;
+    private Map<String, String> sXmlQueryMap;
 
     private String IlpTemplateId;
 
@@ -43,24 +46,6 @@ public class LqbLoanVO
     public void setsTicket( String sTicket )
     {
         this.sTicket = sTicket;
-    }
-
-
-    /**
-     * @return the sXmlData
-     */
-    public String getsXmlData()
-    {
-        return sXmlData;
-    }
-
-
-    /**
-     * @param sXmlData the sXmlData to set
-     */
-    public void setsXmlData( String sXmlData )
-    {
-        this.sXmlData = sXmlData;
     }
 
 
@@ -115,24 +100,6 @@ public class LqbLoanVO
     public void setsDataContent( String sDataContent )
     {
         this.sDataContent = sDataContent;
-    }
-
-
-    /**
-     * @return the sXmlQuery
-     */
-    public String getsXmlQuery()
-    {
-        return sXmlQuery;
-    }
-
-
-    /**
-     * @param sXmlQuery the sXmlQuery to set
-     */
-    public void setsXmlQuery( String sXmlQuery )
-    {
-        this.sXmlQuery = sXmlQuery;
     }
 
 
@@ -241,6 +208,30 @@ public class LqbLoanVO
     public void setRequestedFee( Float requestedFee )
     {
         this.requestedFee = requestedFee;
+    }
+
+
+    public Map<String, String> getsXmlDataMap()
+    {
+        return sXmlDataMap;
+    }
+
+
+    public void setsXmlDataMap( Map<String, String> sXmlDataMap )
+    {
+        this.sXmlDataMap = sXmlDataMap;
+    }
+
+
+    public Map<String, String> getsXmlQueryMap()
+    {
+        return sXmlQueryMap;
+    }
+
+
+    public void setsXmlQueryMap( Map<String, String> sXmlQueryMap )
+    {
+        this.sXmlQueryMap = sXmlQueryMap;
     }
 
 

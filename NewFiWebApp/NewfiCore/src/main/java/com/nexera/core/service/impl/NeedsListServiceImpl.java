@@ -414,4 +414,10 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return neededItemScoreVO;
 	}
 
+	@Override
+	public NeedsListMaster fetchNeedListMasterUsingID(Integer needId) {
+		// TODO Auto-generated method stub
+		return (NeedsListMaster) needsDao.load(NeedsListMaster.class, needId);
+	}
+
 }

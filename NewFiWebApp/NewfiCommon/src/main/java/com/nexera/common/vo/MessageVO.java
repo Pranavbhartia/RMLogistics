@@ -100,8 +100,11 @@ public class MessageVO {
 
 	}
 
-	public class FileVO {
+	public static class FileVO {
 
+		public FileVO() {
+	        // TODO Auto-generated constructor stub
+        }
 		private String fileName;
 		private String url;
 

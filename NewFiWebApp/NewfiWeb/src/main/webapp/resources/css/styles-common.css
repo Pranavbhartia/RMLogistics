@@ -64,3 +64,18 @@
 .reg-email{
 	background-image:url(../images/email.png); 
 }
+
+.reg-btn-cont {
+	width: 300px;
+	margin: 0 auto;
+}
+
+.reg-radio-btn-wrapper {
+	margin: 10px 0;
+}
+
+input.reg-radio {
+	width: 14px;
+	height: 14px;
+	margin-right: 10px;
+}

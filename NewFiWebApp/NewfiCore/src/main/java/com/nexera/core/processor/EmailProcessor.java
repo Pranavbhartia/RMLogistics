@@ -148,20 +148,22 @@ public class EmailProcessor implements Runnable {
 					File file = null;
 					if (content.contains("pdf")) {
 						file = convertInputStreamToFile(inputStream, path);
-						Files.probeContentType(file.toPath());		
+						Files.probeContentType(file.toPath());
 					} else if (content.contains("jpg")
 					        || content.contains("png")
 					        || content.contains("tiff")
 					        || content.contains("tif")) {
-						/*file = nexeraUtility.filePathToMultipart(filePath);
-						file = nexeraUtility.convertImageToPDFDocument(multipartFile);*/
+						/*
+						 * file = nexeraUtility.filePathToMultipart(filePath);
+						 * file =
+						 * nexeraUtility.convertImageToPDFDocument(multipartFile
+						 * );
+						 */
 					} else {
 						// TODO invalid file format need to throw and log error
 						LOGGER.error("Invalid Format " + content);
 					}
 
-					
-				
 					LOGGER.debug("Uploading the file in the system ");
 					uploadedFileListService.uploadFile(nexeraUtility
 					        .filePathToMultipart(file.getAbsolutePath()),

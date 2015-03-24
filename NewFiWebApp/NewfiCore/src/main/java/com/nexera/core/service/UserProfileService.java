@@ -1,10 +1,12 @@
 package com.nexera.core.service;
 
 import java.util.List;
-
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -41,8 +43,17 @@ public interface UserProfileService {
 	public UserVO buildUserVO(User user);
 
 	public List<UserVO> buildUserVOList(List<User> team);
+	
+	public void disableUser(int userId) throws NoRecordsFetchedException;
+	
+	public void enableUser(int userId) throws NoRecordsFetchedException;
+
 
 	User parseUserModel(UserVO userVO);
+	
+	public UserVO createNewUserAndSendMail(UserVO userVO) throws InvalidInputException, UndeliveredEmailException;
+	
+	public void deleteUser(int userId);
 
 	public UserVO findUserByMail(String userMailAddress);
 

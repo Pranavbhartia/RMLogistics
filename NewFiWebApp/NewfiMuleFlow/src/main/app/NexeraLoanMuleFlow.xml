@@ -38,6 +38,16 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
 					doc:name="HTTP" responseTimeout="120000" />
 			</when>
+			<when
+				expression="#[message.outboundProperties.'opName'=='ListEdocsByLoanNumber']">
+				<cxf:jaxws-client operation="ListEdocsByLoanNumber"
+					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
+					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
+					doc:name="CXF" />
+				<https:outbound-endpoint exchange-pattern="request-response"
+					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
+					doc:name="HTTP" responseTimeout="120000" />
+			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Create']">
 				<cxf:jaxws-client operation="Create"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"

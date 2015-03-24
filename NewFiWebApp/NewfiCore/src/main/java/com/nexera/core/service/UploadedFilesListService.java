@@ -8,7 +8,9 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.UploadedFilesListVO;
+import com.nexera.common.vo.lqb.LQBDocumentVO;
 
 public interface UploadedFilesListService {
 	
@@ -36,7 +38,9 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
 
-	public Boolean uploadFile(MultipartFile file, Integer userId, Integer loanId,
+	public CheckUploadVO uploadFile(MultipartFile file, Integer userId, Integer loanId,
 			Integer assignedBy);
+
+	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 	
 }

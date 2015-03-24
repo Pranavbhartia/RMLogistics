@@ -1235,28 +1235,43 @@ function paintNotifyForRatesAlerts(){
 	// radio button 
 	
 	var regRatioContainer = $('<div>').attr({
-		"class":""
-		
+		"class":"reg-btn-cont"
 	});
 	
+	
+	var regRadioNotifyCont1 = $('<div>').attr({
+		"class" : "reg-radio-btn-wrapper"
+	});
 	
 	var regRadioNotify1 = $('<input>').attr({
 		"type":"radio",
 		"class":"reg-radio",
 		"name":"notifyme"
-		
-	}).html("Daily");
+	});
+	
+	var regRadioNotify1Txt = $('<span>').attr({
+		"class" : "reg-radio-txt"
+	}).html("Daily"); 
+	
+	regRadioNotifyCont1.append(regRadioNotify1).append(regRadioNotify1Txt);
+	
+	var regRadioNotifyCont2 = $('<div>').attr({
+		"class" : "reg-radio-btn-wrapper"
+	});
+	
 	var regRadioNotify2 = $('<input>').attr({
 		"type":"radio",
 		"class":"reg-radio",
 		"name":"notifyme"
-		
+	});
+	
+	var regRadioNotify2Txt = $('<span>').attr({
+		"class" : "reg-radio-txt"
 	}).html("Weekly");
 	
-	regRatioContainer.append(regRadioNotify1);
-	regRatioContainer.append(regRadioNotify2);
+	regRadioNotifyCont2.append(regRadioNotify2).append(regRadioNotify2Txt);
 	
-	
+	regRatioContainer.append(regRadioNotifyCont1).append(regRadioNotifyCont2);
 	
 	var regContainerGetStarted = $('<div>').attr({
 		"class":"reg-btn-wrapper clearfix"

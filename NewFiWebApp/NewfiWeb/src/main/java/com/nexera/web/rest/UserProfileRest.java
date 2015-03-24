@@ -2,20 +2,24 @@ package com.nexera.web.rest;
 
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
@@ -183,8 +187,7 @@ public class UserProfileRest {
 	
 
 
-	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-
+	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
@@ -193,6 +196,94 @@ public class UserProfileRest {
 		userVO = userProfileService.createUser(userVO);
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
 
+	}
+	
+	@RequestMapping(value = "/adduser", method = RequestMethod.POST)
+	public @ResponseBody String createNewUser(@RequestBody String userVOStr) {
+		
+		LOG.info("Adduser called to add user details : " + userVOStr);
+		UserVO userVO = null;
+		try{
+			userVO = new Gson().fromJson(userVOStr, UserVO.class);
+		}
+		catch(Exception e){
+			LOG.error("Error message : " + e.getMessage(),e);
+			e.printStackTrace();
+		}
+		LOG.debug("Parsed the json string");
+		if (userVO.getUsername() == null)
+			userVO.setUsername(userVO.getEmailId());
+		try {
+			LOG.debug("Creating the new user");
+			userVO = userProfileService.createNewUserAndSendMail(userVO);
+			LOG.debug("Created new user and email sent!");
+		}
+		catch ( Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error("Error message : " + e.getMessage(),e);
+			e.printStackTrace();
+		}
+		
+		LOG.info("Returning the json : " + new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO)));
+		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
+		
+
+	}
+	
+	@RequestMapping(value="/disable/{userId}", method = RequestMethod.GET)
+	public @ResponseBody String disableUser(@PathVariable Integer userId){
+		
+		LOG.info("Disabling user with user id : " + userId);
+		
+		JsonObject result = new JsonObject();
+		try {
+			userProfileService.disableUser(userId);
+			result.addProperty("success", 1);
+		}
+		catch (NoRecordsFetchedException e) {
+			LOG.error("disableUser : NoRecordsFetchedException thrown, message : " + e.getMessage());
+			e.printStackTrace();
+			result.addProperty("success", 0);
+			result.addProperty("message", "User not found in database");
+		}
+		catch (DatabaseException e) {
+			LOG.error("disableUser : DatabaseException thrown, message : " + e.getMessage());
+			e.printStackTrace();
+			result.addProperty("success", 0);
+			result.addProperty("message", "Technical issue has occurred!");		
+		}
+		
+		LOG.info("Returning the json" + result.toString());
+		return result.toString();
+		
+	}
+	
+	@RequestMapping(value="/enable/{userId}", method = RequestMethod.GET)
+	public @ResponseBody String enableUser(@PathVariable Integer userId){
+		
+		LOG.info("Enabling user with user id : " + userId);
+		
+		JsonObject result = new JsonObject();
+		try {
+			userProfileService.enableUser(userId);
+			result.addProperty("success", 1);
+		}
+		catch (NoRecordsFetchedException e) {
+			LOG.error("disableUser : NoRecordsFetchedException thrown, message : " + e.getMessage());
+			e.printStackTrace();
+			result.addProperty("success", 0);
+			result.addProperty("message", "User not found in database");
+		}
+		catch (DatabaseException e) {
+			LOG.error("disableUser : DatabaseException thrown, message : " + e.getMessage());
+			e.printStackTrace();
+			result.addProperty("success", 0);
+			result.addProperty("message", "Technical issue has occurred!");		
+		}
+		
+		LOG.info("Returning the json" + result.toString());
+		return result.toString();
+		
 	}
 	
 	/*@RequestMapping(value = "/findteaserate", method = RequestMethod.POST)

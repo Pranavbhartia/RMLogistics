@@ -3,6 +3,9 @@
  */
 package com.newfi.nexera.vo;
 
+import java.util.Map;
+
+
 /**
  * @author Utsav
  *
@@ -11,7 +14,7 @@ public class LoanVO
 {
     private String sTicket;
 
-    private String sXmlData;
+    private Map<String, String> sXmlDataMap;
 
     private String sTemplateName;
 
@@ -25,7 +28,7 @@ public class LoanVO
 
     private Integer format;
 
-    private String sXmlQuery;
+    private Map<String, String> sXmlQueryMap;
 
     private String IlpTemplateId;
 
@@ -49,24 +52,6 @@ public class LoanVO
     public void setsTicket( String sTicket )
     {
         this.sTicket = sTicket;
-    }
-
-
-    /**
-     * @return the sXmlData
-     */
-    public String getsXmlData()
-    {
-        return sXmlData;
-    }
-
-
-    /**
-     * @param sXmlData the sXmlData to set
-     */
-    public void setsXmlData( String sXmlData )
-    {
-        this.sXmlData = sXmlData;
     }
 
 
@@ -121,24 +106,6 @@ public class LoanVO
     public void setsDataContent( String sDataContent )
     {
         this.sDataContent = sDataContent;
-    }
-
-
-    /**
-     * @return the sXmlQuery
-     */
-    public String getsXmlQuery()
-    {
-        return sXmlQuery;
-    }
-
-
-    /**
-     * @param sXmlQuery the sXmlQuery to set
-     */
-    public void setsXmlQuery( String sXmlQuery )
-    {
-        this.sXmlQuery = sXmlQuery;
     }
 
 
@@ -247,6 +214,42 @@ public class LoanVO
     public void setRequestedFee( Float requestedFee )
     {
         this.requestedFee = requestedFee;
+    }
+
+
+    /**
+     * @return the sXmlDataMap
+     */
+    public Map<String, String> getsXmlDataMap()
+    {
+        return sXmlDataMap;
+    }
+
+
+    /**
+     * @param sXmlDataMap the sXmlDataMap to set
+     */
+    public void setsXmlDataMap( Map<String, String> sXmlDataMap )
+    {
+        this.sXmlDataMap = sXmlDataMap;
+    }
+
+
+    /**
+     * @return the sXmlQueryMap
+     */
+    public Map<String, String> getsXmlQueryMap()
+    {
+        return sXmlQueryMap;
+    }
+
+
+    /**
+     * @param sXmlQueryMap the sXmlQueryMap to set
+     */
+    public void setsXmlQueryMap( Map<String, String> sXmlQueryMap )
+    {
+        this.sXmlQueryMap = sXmlQueryMap;
     }
 
 }
