@@ -19,6 +19,8 @@ public class WebServiceOperations
 
     public static String OP_NAME_LOAN_CREATE_LEAD = "CreateLead";
 
+    public static String OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER = "ListEdocsByLoanNumber";
+
     public static String OP_NAME_LOAN_SAVE = "Save";
 
     public static String OP_NAME_LOAN_LOAD = "Load";
