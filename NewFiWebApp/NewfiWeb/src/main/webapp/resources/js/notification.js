@@ -11,7 +11,7 @@ function getNotificationContext(loanId,userId){
 		existingWrapper:undefined,
 		alertWrapper:undefined,
 		headerText:"",
-		pushServerUrl:"http://localhost:8080/PushNotification/pushServlet/?task=notification&taskId=",
+		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
 		addToList:function(list,object){
 			var exist=false;
 			for(var i=0;i<list.length;i++){
