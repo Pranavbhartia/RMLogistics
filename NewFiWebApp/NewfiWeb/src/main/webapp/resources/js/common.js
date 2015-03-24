@@ -25,7 +25,10 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 				hideOverlay();
 			}
 			if(completeCallback){
-				completeCallback(response.responseJSON);
+				var data={};
+				if(response.responseJSON)
+					data=response.responseJSON;
+				completeCallback(data);
 			}
 		},
 		error : function(){
