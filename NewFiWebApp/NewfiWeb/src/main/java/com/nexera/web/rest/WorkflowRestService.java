@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -284,7 +285,8 @@ public class WorkflowRestService {
 	}
 	
 	@RequestMapping ( value = "getupdatedstatus", method = RequestMethod.GET)
-    public @ResponseBody CommonResponseVO getUpdatedStatus(@RequestParam(value="items")String items)
+    public @ResponseBody CommonResponseVO getUpdatedStatus(@RequestParam(value="items")String items,
+    		@RequestParam(value="data",required=false)String data)
     {
         LOG.info( "getUpdatedStatus----" );
         CommonResponseVO response = null;
@@ -301,9 +303,16 @@ public class WorkflowRestService {
 			e1.printStackTrace();
 		}
         try {
+        	HashMap<String, Object> map=new HashMap<String,Object>();
+        	TypeReference<HashMap<String, Object>> typeRefList=new TypeReference<HashMap<String,Object>>(){};
+        	map=mapper.readValue(data, typeRefList);
         	HashMap<Integer, String> resultStatus=new HashMap<Integer,String>();
         	for(Integer workflowItemExecId: milestoneItems){
         		System.out.println(workflowItemExecId+"----------------------");
+        		map.put("workflowItemExecId", workflowItemExecId);
+        		StringWriter sw=new StringWriter();
+		    	mapper.writeValue(sw, map);
+        		workflowService.saveParamsInExecTable(workflowItemExecId, sw.toString());
         		String result=engineTrigger.checkStatus(workflowItemExecId);
         		if(result!=null)
         			resultStatus.put(workflowItemExecId, result);

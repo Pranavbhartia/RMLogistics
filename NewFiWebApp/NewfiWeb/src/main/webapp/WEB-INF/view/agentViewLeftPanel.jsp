@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="left-panel-wrapper float-left">
 	<div class="left-panel">
 	
@@ -6,7 +7,18 @@
 				<div id="myProfilePicture"></div>
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
-				<div class="lp-txt2">${userVO.userRole.roleDescription }</div>
+
+				<c:choose>
+					<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
+						<div class="lp-txt2">${userVO.internalUserDetail.internalUserRoleMasterVO.roleDescription }</div>
+					</c:when>
+
+					<c:otherwise>
+						<div class="lp-txt2">${userVO.userRole.roleDescription }</div>
+					</c:otherwise>
+				</c:choose>
+				
+				
 				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber }</div>
 			</div>
 		</div>

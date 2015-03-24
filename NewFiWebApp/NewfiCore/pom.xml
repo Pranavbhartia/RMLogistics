@@ -71,6 +71,21 @@
 			<version>${quartz.version}</version>
 		</dependency>
 
+		<!-- Java Mail API -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+
+		<!-- Parsing Html Dependency -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+
+
 		<!-- Test Artifacts -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -126,11 +141,6 @@
 			<version>1.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>net.tanesha.recaptcha4j</groupId>
-			<artifactId>recaptcha4j</artifactId>
-			<version>0.0.7</version>
-		</dependency>
 
 
 		<dependency>
@@ -258,8 +268,8 @@
 			<groupId>com.braintreepayments.gateway</groupId>
 			<artifactId>braintree-java</artifactId>
 			<version>2.40.0</version>
-		</dependency>	
-		
+		</dependency>
+
 		<!-- Sendgrid wrapper library -->
 		<dependency>
 			<groupId>com.sendgrid</groupId>
@@ -320,7 +330,7 @@
 			</build>
 		</profile>
 	</profiles>
- 
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>Codehaus</id>
@@ -329,6 +339,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
-		
+
 	</pluginRepositories>
 </project>

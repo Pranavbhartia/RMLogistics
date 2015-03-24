@@ -27,5 +27,7 @@ public class WebServiceOperations
 
     public static String OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT = "UploadPDFDocument";
 
+    public static String OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER = "ListEdocsByLoanNumber";
+
 
 }

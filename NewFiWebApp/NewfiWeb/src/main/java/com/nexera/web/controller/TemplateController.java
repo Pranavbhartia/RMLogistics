@@ -39,9 +39,6 @@ public class TemplateController extends DefaultController {
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
 
 	@Autowired
-	private UserProfileService userProfileService;
-
-	@Autowired
 	private NexeraUtility nexeraUtility;
 
 	private static final Logger LOG = LoggerFactory
@@ -84,7 +81,7 @@ public class TemplateController extends DefaultController {
 			if (UserRolesEnum.CUSTOMER.toString().equals(
 					user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req, user);
-				UserVO userVO = userProfileService.findUser(user.getId());
+				UserVO userVO = userProfileService.loadInternalUser(user.getId());
 				mav.addObject("user", userVO);
 				mav.setViewName(JspLookup.CUSTOMER_VIEW);
 			} else {

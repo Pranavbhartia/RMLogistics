@@ -1,107 +1,247 @@
 package com.nexera.common.vo.lqb;
 
-public class LqbLoanVO {
+public class LqbLoanVO
+{
 
-	private String sTicket;
+    private String sTicket;
 
-	private String sXmlData;
+    private String sXmlData;
 
-	private String sTemplateName;
+    private String sTemplateName;
 
-	private String sLoanNumber;
+    private String sLoanNumber;
 
-	private String sDataContent;
+    private String sDataContent;
 
-	private String format;
+    private String documentType;
 
-	private String sXmlQuery;
+    private String notes;
 
-	private String IlpTemplateId;
+    private Integer format;
 
-	private String requestedRate;
+    private String sXmlQuery;
 
-	private String requestedFee;
+    private String IlpTemplateId;
 
-	public String getsTicket() {
-		return sTicket;
-	}
+    private Float requestedRate;
 
-	public void setsTicket(String sTicket) {
-		this.sTicket = sTicket;
-	}
+    private Float requestedFee;
 
-	public String getsXmlData() {
-		return sXmlData;
-	}
 
-	public void setsXmlData(String sXmlData) {
-		this.sXmlData = sXmlData;
-	}
+    /**
+     * @return the sTicket
+     */
+    public String getsTicket()
+    {
+        return sTicket;
+    }
 
-	public String getsTemplateName() {
-		return sTemplateName;
-	}
 
-	public void setsTemplateName(String sTemplateName) {
-		this.sTemplateName = sTemplateName;
-	}
+    /**
+     * @param sTicket the sTicket to set
+     */
+    public void setsTicket( String sTicket )
+    {
+        this.sTicket = sTicket;
+    }
 
-	public String getsLoanNumber() {
-		return sLoanNumber;
-	}
 
-	public void setsLoanNumber(String sLoanNumber) {
-		this.sLoanNumber = sLoanNumber;
-	}
+    /**
+     * @return the sXmlData
+     */
+    public String getsXmlData()
+    {
+        return sXmlData;
+    }
 
-	public String getsDataContent() {
-		return sDataContent;
-	}
 
-	public void setsDataContent(String sDataContent) {
-		this.sDataContent = sDataContent;
-	}
+    /**
+     * @param sXmlData the sXmlData to set
+     */
+    public void setsXmlData( String sXmlData )
+    {
+        this.sXmlData = sXmlData;
+    }
 
-	public String getFormat() {
-		return format;
-	}
 
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    /**
+     * @return the sTemplateName
+     */
+    public String getsTemplateName()
+    {
+        return sTemplateName;
+    }
 
-	public String getsXmlQuery() {
-		return sXmlQuery;
-	}
 
-	public void setsXmlQuery(String sXmlQuery) {
-		this.sXmlQuery = sXmlQuery;
-	}
+    /**
+     * @param sTemplateName the sTemplateName to set
+     */
+    public void setsTemplateName( String sTemplateName )
+    {
+        this.sTemplateName = sTemplateName;
+    }
 
-	public String getIlpTemplateId() {
-		return IlpTemplateId;
-	}
 
-	public void setIlpTemplateId(String ilpTemplateId) {
-		IlpTemplateId = ilpTemplateId;
-	}
+    /**
+     * @return the sLoanNumber
+     */
+    public String getsLoanNumber()
+    {
+        return sLoanNumber;
+    }
 
-	public String getRequestedRate() {
-		return requestedRate;
-	}
 
-	public void setRequestedRate(String requestedRate) {
-		this.requestedRate = requestedRate;
-	}
+    /**
+     * @param sLoanNumber the sLoanNumber to set
+     */
+    public void setsLoanNumber( String sLoanNumber )
+    {
+        this.sLoanNumber = sLoanNumber;
+    }
 
-	public String getRequestedFee() {
-		return requestedFee;
-	}
 
-	public void setRequestedFee(String requestedFee) {
-		this.requestedFee = requestedFee;
-	}
-	
-	
+    /**
+     * @return the sDataContent
+     */
+    public String getsDataContent()
+    {
+        return sDataContent;
+    }
+
+
+    /**
+     * @param sDataContent the sDataContent to set
+     */
+    public void setsDataContent( String sDataContent )
+    {
+        this.sDataContent = sDataContent;
+    }
+
+
+    /**
+     * @return the sXmlQuery
+     */
+    public String getsXmlQuery()
+    {
+        return sXmlQuery;
+    }
+
+
+    /**
+     * @param sXmlQuery the sXmlQuery to set
+     */
+    public void setsXmlQuery( String sXmlQuery )
+    {
+        this.sXmlQuery = sXmlQuery;
+    }
+
+
+    /**
+     * @return the ilpTemplateId
+     */
+    public String getIlpTemplateId()
+    {
+        return IlpTemplateId;
+    }
+
+
+    /**
+     * @param ilpTemplateId the ilpTemplateId to set
+     */
+    public void setIlpTemplateId( String ilpTemplateId )
+    {
+        IlpTemplateId = ilpTemplateId;
+    }
+
+
+    /**
+     * @return the documentType
+     */
+    public String getDocumentType()
+    {
+        return documentType;
+    }
+
+
+    /**
+     * @param documentType the documentType to set
+     */
+    public void setDocumentType( String documentType )
+    {
+        this.documentType = documentType;
+    }
+
+
+    /**
+     * @return the notes
+     */
+    public String getNotes()
+    {
+        return notes;
+    }
+
+
+    /**
+     * @param notes the notes to set
+     */
+    public void setNotes( String notes )
+    {
+        this.notes = notes;
+    }
+
+
+    /**
+     * @return the format
+     */
+    public Integer getFormat()
+    {
+        return format;
+    }
+
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat( Integer format )
+    {
+        this.format = format;
+    }
+
+
+    /**
+     * @return the requestedRate
+     */
+    public Float getRequestedRate()
+    {
+        return requestedRate;
+    }
+
+
+    /**
+     * @param requestedRate the requestedRate to set
+     */
+    public void setRequestedRate( Float requestedRate )
+    {
+        this.requestedRate = requestedRate;
+    }
+
+
+    /**
+     * @return the requestedFee
+     */
+    public Float getRequestedFee()
+    {
+        return requestedFee;
+    }
+
+
+    /**
+     * @param requestedFee the requestedFee to set
+     */
+    public void setRequestedFee( Float requestedFee )
+    {
+        this.requestedFee = requestedFee;
+    }
+
 
 }

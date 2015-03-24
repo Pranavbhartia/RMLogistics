@@ -48,9 +48,6 @@ public class EngineTrigger {
 	WorkflowService workflowService;
 
 	@Autowired
-	WorkflowManager workflowManager;
-
-	@Autowired
 	private ApplicationContext applicationContext;
 
 	public Integer triggerWorkFlow(String workflowJsonString) {
@@ -142,6 +139,8 @@ public class EngineTrigger {
 				workflowItemExecution.setStatus(Status.STARTED.getStatus());
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+				WorkflowManager workflowManager = applicationContext
+				        .getBean(WorkflowManager.class);
 				workflowManager.setWorkflowItemExec(workflowItemExecution);
 				future = executorService.submit(workflowManager);
 
@@ -194,8 +193,11 @@ public class EngineTrigger {
 						LOGGER.debug("Updating the child workflow item execution status to started ");
 						childWorkflowItemExec.setStatus(Status.STARTED
 						        .getStatus());
+
 						workflowService
 						        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
+						WorkflowManager workflowManager = applicationContext
+						        .getBean(WorkflowManager.class);
 						workflowManager
 						        .setWorkflowItemExec(childWorkflowItemExec);
 						executorService.submit(workflowManager);
@@ -232,6 +234,8 @@ public class EngineTrigger {
 					workflowItemExecution.setStatus(Status.STARTED.getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+					WorkflowManager workflowManager = applicationContext
+					        .getBean(WorkflowManager.class);
 					workflowManager.setWorkflowItemExec(workflowItemExecution);
 					future = executorService.submit(workflowManager);
 

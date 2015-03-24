@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.User;
@@ -28,12 +29,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	}
 
 	@Override
-	public User getUserWithLoginName(String userName)
+	@Transactional(readOnly=true)
+	public User getUserWithLoginName(String userName,String password)
 			throws NoRecordsFetchedException,DatabaseException {
 
 		LOG.info("Fetching the user object from User Dao");
-		return userProfileDao.findByUserName(userName);
+		return userProfileDao.authenticateUser(userName,password);
 
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public User getUserWithLoginName(String username) throws NoRecordsFetchedException,DatabaseException{
+		LOG.info("Fetching the user object from User Dao");
+		return userProfileDao.findByUserName(username);
 	}
 
 }

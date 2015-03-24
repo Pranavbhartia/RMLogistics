@@ -37,6 +37,33 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	
+	@Override
+	public User authenticateUser(String userName, String password) throws NoRecordsFetchedException, DatabaseException {
+	    // TODO Auto-generated method stub
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(User.class);
+			criteria.add(Restrictions.eq("emailId", userName));
+			criteria.add(Restrictions.eq("password", password));
+			Object obj = criteria.uniqueResult();
+			if (obj == null) {
+				throw new NoRecordsFetchedException(
+				        DisplayMessageConstants.INVALID_USERNAME);
+			}
+			User user = (User) obj;
+			Hibernate.initialize(user.getUserRole());
+			return (User) obj;
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in authenticateUser() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in authenticateUser() ",
+			        hibernateException);
+		}
+	}
+	
+	@Override
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException {
 		try {
@@ -328,5 +355,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			imageVOs.add(findUserDetails(userId.intValue()));
 		}
 		return imageVOs;
+	}
+	
+	 public User saveUser(User user){
+		
+		 Session session = sessionFactory.getCurrentSession();
+		 session.save(user);
+		 return user;
 	}
 }

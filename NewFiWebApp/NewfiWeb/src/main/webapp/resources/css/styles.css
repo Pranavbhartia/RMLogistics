@@ -109,6 +109,7 @@ a,a:hover,a:visited {
 }
 
 .hdr-btn-item {
+	position: relative;
 	cursor: pointer;
 	line-height: 50px;
 	height: 50px;
@@ -121,7 +122,6 @@ a,a:hover,a:visited {
 }
 
 .btn-alarm {
-	position: relative;
 	background: url(../images/alram.png) no-repeat center;
 }
 
@@ -222,8 +222,10 @@ a,a:hover,a:visited {
 }
 
 .lp-item {
+	position:relative;
 	width: 211px;
-	margin-bottom: 1px;
+	margin: 1px 0;
+	box-shadow: 0px -1px 0px #fff inset;
 	border-bottom: 1px solid #dcdcdc;
 	cursor: pointer;
 }
@@ -622,6 +624,7 @@ a,a:hover,a:visited {
 }
 
 .cp-lock-btn {
+	display:inline-block;
 	background: #F37521;
 	color: #fff;
 	height: 45px;
@@ -731,10 +734,11 @@ a,a:hover,a:visited {
 }
 
 .complete-application-header {
-	line-height: 45px;
+	line-height: 55px;
 	background-color: #f5f9fc;
 	padding-left: 20px;
 	border-radius: 3px;
+	font-size: 22px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 	text-align: center;
@@ -822,15 +826,18 @@ a,a:hover,a:visited {
 }
 
 .submit-btn {
-	width: 100px;
-	margin: 15px auto;
+	width: 120px;
+	height: 40px;
 	line-height: 40px;
-	background-color: #F47521;
+	margin:15px auto;
+	font-size: 16px;
 	color: #fff;
+	background-color: #6c9f2e;
 	border-radius: 3px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	cursor: pointer;
+	font-family: 'opensanssemibold';
 }
 
 .save-app-btn {
@@ -1196,7 +1203,7 @@ a,a:hover,a:visited {
 	background-color: #fafcfe;
 }
 
-.conversation-container-l1 {
+.conversation-container-child {
 	padding-left: 95px;
 }
 
@@ -1270,16 +1277,13 @@ a,a:hover,a:visited {
 }
 
 .lp-right-arrow {
-	position: relative;
-	bottom: 38px;
-	left: 206px;
+	position: absolute;
+	bottom: 50%;
+	left: 100%;
 	width: 10px;
 	height: 23px;
+	margin-bottom:-10px;
 	background: url(../images/right-arrow.png) no-repeat center;
-}
-
-.lp-prof-arrow {
-	bottom: -12px;
 }
 
 /* Hide preview from dropzone*/
@@ -1343,7 +1347,7 @@ a,a:hover,a:visited {
 	margin-bottom: 10px;
 	padding-left: 20px;
 	padding-right: 10px;
-	background-color: #f2fcfe;
+	background-color: #EAF5FD;
 }
 
 .agent-customer-list-header-txt {
@@ -1911,9 +1915,9 @@ a,a:hover,a:visited {
 }
 
 .newfi-team-list-tr {
-	height: 40px;
+	min-height: 40px;
+	padding:10px;
 	padding-left: 5px;
-	line-height: 40px;
 	border-bottom: 1px #dcdcdc dashed;
 }
 
@@ -1931,19 +1935,18 @@ a,a:hover,a:visited {
 
 .newfi-team-list-tr-col4 {
 	width: 10%;
-	height: 40px;
+	height: 20px;
 }
 
 .newfi-team-list-tr-col5 {
 	width: 10%;
-	height: 40px;
+	height: 20px;
 }
 
 .user-del-icn {
 	width: 23px;
 	height: 23px;
 	margin: 0 auto;
-	margin-top: 9px;
 	background: url(../images/user_del.png) no-repeat center;
 	cursor: pointer;
 }
@@ -2385,13 +2388,13 @@ input.calc-input {
 
 .prof-form-row-desc {
 	width: 25%;
-	min-width: 110px;
+	min-width: 120px;
 	text-align: right;
-	padding-right: 28px;
+	padding-right: 20px;
 }
 
 .prof-form-input {
-	width: 225px;
+	width: 200px;
 	height: 40px;
 	line-height: 40px;
 	padding-left: 15px;
@@ -2401,13 +2404,21 @@ input.calc-input {
 	margin-right: 20px;
 }
 
+.prof-form-input.date-picker{
+	width: 150px;
+}
+
 .prof-form-input-select {
 	background: url(../images/arrow_down.png) no-repeat right center;
 	cursor: pointer;
 }
 
 .prof-form-input-sm {
-	width: 125px;
+	width: 100px;
+}
+
+.prof-form-input-m{
+	width: 150px;
 }
 
 .prof-form-input-lg {
@@ -2418,12 +2429,22 @@ input.calc-input {
 	width: 120px;
 	height: 40px;
 	line-height: 40px;
+	font-size: 16px;
 	color: #fff;
-	background-color: #F6914D;
+	background-color: #6c9f2e;
 	border-radius: 3px;
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	cursor: pointer;
+	font-family: 'opensanssemibold';
+}
+
+.upload-btn{
+	width:auto;
+	padding: 0 20px;
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
 }
 
 .prof-save-btn {
@@ -3284,7 +3305,7 @@ input.calc-input {
 
 .ms-team-member-th-col1,.ms-team-member-th-col2,.ms-team-member-tr-col1,.ms-team-member-tr-col2
 	{
-	width: 125px;
+	width: 50%;
 	padding: 0 5px;
 }
 
@@ -3803,4 +3824,44 @@ input.calc-input {
 	height: 12px;
 	content: " ";
 	background: #dcdcdc;
+}
+
+.overlay-popup-wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 350px;
+    height: 100px;
+    margin: auto;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    border-top: 3px solid #428bca;
+    z-index: 999;
+}
+
+.overlay-popup-txt {
+    font-size: 14px;
+    line-height: 30px;
+    margin-bottom: 10px;
+}
+
+.overlay-btn {
+    display: inline-block;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    background: #F47521;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.loan-personal-info-wrapper {
+	padding-left: 15px;
 }

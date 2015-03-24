@@ -38,7 +38,7 @@ public interface UserProfileService {
 	public UserRoleVO buildUserRoleVO(UserRole userRole);
 
 	public InternalUserDetailVO buildInternalUserDetailsVO(
-			InternalUserDetail internalUserDetail);
+	        InternalUserDetail internalUserDetail);
 
 	public UserVO buildUserVO(User user);
 
@@ -54,5 +54,9 @@ public interface UserProfileService {
 	public UserVO createNewUserAndSendMail(UserVO userVO) throws InvalidInputException, UndeliveredEmailException;
 	
 	public void deleteUser(int userId);
+
+	public UserVO findUserByMail(String userMailAddress);
+
+	public UserVO saveUser(UserVO userVO);
 
 }

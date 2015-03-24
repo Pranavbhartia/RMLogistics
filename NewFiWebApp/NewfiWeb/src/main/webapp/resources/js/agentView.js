@@ -513,13 +513,18 @@ function getSchedulerContainer(contxt,tempData){
 	var datePicker = $('<div>').attr({
 		"class" : "date-picker-cont float-left"
 	});
+	var dateToday = new Date();
 	var datePickerBox = $('<input>').attr({
 		"class" : "date-picker-input",
 		"placeholder" : "MM/DD/YYYY",
 		"id" : "sch-msg-date-picker"
 	}).datepicker({
 		orientation : "top auto",
-		autoclose : true
+		autoclose : true,
+    	startDate: dateToday
+	}).on('show', function(e) {
+	    var $popup = $('.datepicker');
+	    $popup.click(function () { return false; });
 	});
 	datePicker.append(datePickerBox);
 	var timerPicker = $('<div>').attr({
@@ -1308,11 +1313,29 @@ function getTeamListTableRow(user, loanID) {
 	userDelIcn.click(function() {
 		var userID = $(this).attr("userid");
 		var loanID = $(this).attr("loanid");
-		removeUserFromLoanTeam(userID, loanID);
+		confirmRemoveUser("Are you sure you want to delete the user?",userID, loanID);
 	});
 	trCol5.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
+}
+
+function confirmRemoveUser(textMessage, userID, loanID){
+	
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click',function(){
+			removeUserFromLoanTeam(userID, loanID);
+			$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-cancel').on('click',function(){
+		$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-popup').show();
 }
 
 $(document).on('click', '#ld-customer .loan-detail-link', function(event) {
@@ -1441,7 +1464,7 @@ function updateUserProfile() {
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
 	// JSON.stringify(userProfileJson),function(response){});
-
+	if($("#firstNameID").val()!=""&&$("#lastNameID").val()!=""&&$("#emailIdID").val()!=""){
 	$
 			.ajax({
 				url : "rest/userprofile/managerupdateprofile",
@@ -1462,7 +1485,9 @@ function updateUserProfile() {
 				}
 			});
 
-	showToastMessage("Succesfully updated");
+	showToastMessage("Succesfully updated");}else{
+	showToastMessage("Mandatory feilds cannot be empty");
+	}
 
 }
 
@@ -1483,6 +1508,12 @@ function hideCustomerEditProfilePopUp() {
 }
 
 function appendCustomerProfEditRow(labelTxt, value, id) {
+	
+	var span=$('<span>').attr({
+		
+		"class" : "mandatoryClass"
+	}).html("*").css("color","red");
+	
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -1491,6 +1522,10 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		"class" : "cust-prof-edit-label float-left"
 	}).html(labelTxt);
 
+	if(id=="firstNameID"||id=="lastNameID"||id=="emailIdID"){
+		label.append(span);
+		}
+	
 	var inputTag = $('<input>').attr({
 		"class" : "cust-prof-edit-input float-left",
 		"id" : id,

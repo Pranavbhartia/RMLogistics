@@ -11,7 +11,7 @@ var applicationItemsList = [ {
 		                    },
 	                        {
 								"text":"My Income",
-		                        "onselect" : paintRefinanceMyIncome
+		                        "onselect" : paintMyIncome
 		                    },
 			                {
 							    "text":"Government Questions",
@@ -96,13 +96,11 @@ function paintCustomerApplicationPage() {
 }
 
 
-function getQuestionsContainer(questions,target) {
+function getQuestionsContainer(questions) {
     var questionsContainer = $('<div>').attr({
         "class": "app-ques-container"
     });
-    if(target){
-    	target.parent().data("subContainer",questionsContainer);
-    }
+    
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
         var quesCont = getApplicationQuestion(question);
@@ -122,7 +120,68 @@ function getApplicationQuestion(question) {
     } else if (question.type == "yesno") {
         quesCont = getApplicationYesNoQues(question);
     }
+    else if (question.type == "yearMonth") {
+        quesCont = getMonthYearTextQuestion(question);
+    }
     return quesCont;
+}
+
+function getContextApplicationSelectQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont",
+        "name": contxt.name
+    });
+
+    var selectedOption = $('<div>').attr({
+        "class": "app-option-selected"
+    }).html("Select One").on('click', function() {
+        $(this).parent().find('.app-dropdown-cont').toggle();
+    });
+
+    var dropDownContainer = $('<div>').attr({
+        "class": "app-dropdown-cont hide"
+    });
+
+    for (var i = 0; i < contxt.options.length; i++) {
+        var option = contxt.options[i];
+        var optionCont = $('<div>').attr({
+                "class": "app-option-sel"
+            }).data({
+                "value": option.value
+            }).html(option.text);
+        
+        optionCont.bind('click',{"contxt":contxt,"value":option.text,"option":option},
+                function(event) {
+        	      
+                    $(this).closest('.app-options-cont').find(
+                        '.app-option-selected').html($(this).html());
+                    $(this).closest('.app-options-cont').find(
+                    '.app-option-selected').data("value",$(this).data("value"));
+                    $(this).closest('.app-dropdown-cont').toggle();
+                    var ctx=event.data.contxt;
+                	ctx.clickHandler(event.data.value);
+                	if(ctx.value!=event.data.value){
+        	        	ctx.value=event.data.value;
+        	        	var opt=event.data.option;
+        	        	if(opt.addQuestions){
+        	        		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
+        	        	}
+                	}
+                });
+        dropDownContainer.append(optionCont);
+    }
+
+    optionsContainer.append(selectedOption).append(dropDownContainer);
+
+    return container.append(quesTextCont).append(optionsContainer);
 }
 
 function getApplicationSelectQues(question) {
@@ -225,7 +284,6 @@ function getApplicationMultipleChoiceQues(question) {
         	if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         	}else{
-	        	$(this).parent().find('.app-option').removeClass('app-option-checked');
 	        	$(this).addClass('app-option-checked');
         	}
         });
@@ -235,7 +293,7 @@ function getApplicationMultipleChoiceQues(question) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 
-function getApplicationYesNoQues(question) {
+/*function getApplicationYesNoQues(question) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -280,7 +338,7 @@ function getApplicationYesNoQues(question) {
     }
 
     return container.append(quesTextCont).append(optionsContainer);
-}
+}*/
 
 
 
@@ -288,7 +346,7 @@ function paintCustomerApplicationPageStep1a() {
     
 	appProgressBaar(1);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Address";
+    var quesHeaderTxt = "Home Address";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -389,7 +447,7 @@ function paintCustomerApplicationPageStep1b() {
         name: "insuranceCost",
         value: ""
     }, {
-        type: "desc",
+        type: "yearMonth",
         text: "When did you purchase this property?",
         name: "purchaseTime",
         value: ""
@@ -419,8 +477,226 @@ function paintCustomerApplicationPageStep1b() {
     
     
 }
-
+function getQuestionContext(question,parentContainer){
+	var contxt={
+			type: question.type,
+	        text: question.text,
+	        name: question.name,
+	        options:question.options,
+	        container :undefined,
+	        childContainers:{},
+	        childContexts:{},
+	        value:question.selected,
+	        parentContainer:parentContainer,
+	        drawQuestion:function(callback){
+	        	var ob=this;
+	        	if (ob.type == "mcq") {
+	        		ob.container = getApplicationMultipleChoiceQues(ob);
+	            } else if (ob.type == "desc") {
+	            	ob.container = getContextApplicationTextQues(ob);
+	            } else if (ob.type == "select") {
+	            	ob.container = getContextApplicationSelectQues(ob);
+	            } else if (ob.type == "yesno") {
+	            	ob.container = getContextApplicationYesNoQues(ob);
+	            }
+	        	
+	        	parentContainer.append(ob.container);
+	        	
+	        },
+	        deleteContainer:function(callback){
+	        	
+	        },
+	        clickHandler:function(newValue,callback){
+	        	var ob=this;
+	        	if(ob.value!=""&&ob.value!=newValue){
+	        		if(ob.type=="yesno"){
+	        			for(var key in ob.childContainers){
+	        				var container=ob.childContainers[key];
+	        				container.remove();
+	        			}
+	        			ob.childContainers={};
+	        	        ob.childContexts={};
+	        		}
+	        	}
+	        },
+	        clearChildren:function(callback){
+	        	
+	        },
+	        drawChildQuestions:function(option,questions){
+	        	var ob=this;
+	        	var childContainer = $('<div>');
+	        	ob.childContainers[option]=childContainer;
+	        	ob.childContexts[option]=[];
+	        	for(var i=0;i<questions.length;i++){
+	        		var question=questions[i];
+	            	var contxt=getQuestionContext(question,childContainer);
+	            	contxt.drawQuestion();
+	            	ob.childContexts[option].push(contxt);
+	        	}
+	        	ob.container.after(childContainer);
+	        },
+	        changeHandler:function(newValue,callback){
+	        	var ob=this;
+	        	if(ob.value!=""&&ob.value!=newValue){
+	        		if(ob.type=="yesno"){
+	        			for(var key in ob.childContainers){
+	        				var container=ob.childContainers[key];
+	        				container.remove();
+	        			}
+	        			ob.childContainers={};
+	        	        ob.childContexts={};
+	        		}
+	        	}
+	        }
+	};
+	return contxt;
+}
+var quesContxts=[];
 function paintCustomerApplicationPageStep2() {
+	appProgressBaar(2); // this is to show the bubble status in the left panel
+	quesContxts = []; // when ever call the above function clean the array object
+	$('#app-right-panel').html('');
+    var quesHeaderTxt = "Who's on the Loan?";
+
+    var quesHeaderTextCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    }).html(quesHeaderTxt);
+    //TODO-try nested yesno question
+    var questions = [{
+        type: "yesno",
+        text: "Are you married?",
+        name: "isMarried",
+        options: [{
+            text: "Yes",
+            addQuestions:[{
+                type: "yesno",
+                text: "Is your spouse on the loan?",
+                name: "isSouseOnLoan",
+                options: [{
+                    text: "Yes",
+                    addQuestions:[{
+                        type: "desc",
+                        text: "What is your spouse name ?",
+                        name: "spouseName"
+                    }]
+                }, {
+                    text: "No"
+                }],
+                selected: ""
+            }]
+        }, {
+            text: "No"
+        }],
+        selected: ""
+    }];
+    
+    $('#app-right-panel').append(quesHeaderTextCont);
+   
+   
+    
+    for(var i=0;i<questions.length;i++){
+    	var question=questions[i];
+    	var contxt=getQuestionContext(question,$('#app-right-panel'));
+    	contxt.drawQuestion();
+    	
+    	quesContxts.push(contxt);
+    }
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "app-save-btn"
+    }).html("Save & continue").on('click', function() {
+        
+    	appUserDetails["isMarried"] = quesContxts[0].value;
+    	appUserDetails["isSouseOnLoan"]  = null;
+    	appUserDetails["spouseName"]  = null;
+    	
+    	if( quesContxts[0].childContexts.Yes !=  undefined){
+    		appUserDetails["isSouseOnLoan"]  = quesContxts[0].childContexts.Yes[0].value;
+    	}
+    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
+    	 appUserDetails["spouseName"]  = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+    	}
+
+    	//paintCustomerApplicationPageStep3();
+    	paintMyIncome();
+
+    });
+    $('#app-right-panel').append(saveAndContinueButton);
+    
+}
+
+function getContextApplicationYesNoQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont",
+        "name": contxt.name
+    });
+
+    for (var i = 0; i < contxt.options.length; i++) {
+        var option = contxt.options[i];
+        var optionCont = $('<div>').attr({
+            "class": "app-option-choice",
+            "isSelected" : "false"
+        }).html(option.text);
+        
+        optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
+        	$(this).parent().find('.app-option-choice').attr("isSelected","false");
+        	$(this).attr("isSelected","true");
+        	var ctx=event.data.contxt;
+        	ctx.clickHandler(event.data.value);
+        	if(ctx.value!=event.data.value){
+	        	ctx.value=event.data.value;
+	        	var opt=event.data.option;
+	        	if(opt.addQuestions){
+	        		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
+	        	}
+        	}
+        });
+       
+
+        optionsContainer.append(optionCont);
+    }
+
+    return container.append(quesTextCont).append(optionsContainer);
+}
+function getContextApplicationTextQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont"
+    });
+
+    var optionCont = $('<input>').attr({
+        "class": "app-input",
+        "name": contxt.name
+    }).bind("change",{"contxt":contxt},function(event){
+    	var ctx=event.data.contxt;
+    	ctx.value=$(this).val();
+    });
+
+    if (contxt.value != undefined) {
+        optionCont.val(contxt.value);
+    }
+
+    optionsContainer.append(optionCont);
+
+    return container.append(quesTextCont).append(optionsContainer);
+}
+
+
+/*function paintCustomerApplicationPageStep2() {
 	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Who's on the Loan?";
@@ -472,9 +748,9 @@ function paintCustomerApplicationPageStep2() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
 }
+*/
 
-
-function paintRefinanceMyIncome() {
+function paintMyIncome() {
 
 	appProgressBaar(3);
 	var quesTxt = "Select all that apply";
@@ -649,24 +925,6 @@ function paintRefinancePension(divId) {
 	$('#ce-option_' + divId).html(container);
 }
 
-function paintSpouseInLoan(){
-	
-	
-	    var questions = [{
-	        type: "yesno",
-	        text: "Is your spouse going to be on the loan?",
-	        name: "spouseInLoan",
-	        options: [{
-	            text: "Yes",
-	        }, {
-	            text: "No"
-	        }],
-	        selected: ""
-	    }];
-
-	    var questionsContainer = getQuestionsContainer(questions);
-        return questionsContainer;
-}
 
 function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 	var container = $('<div>').attr({
@@ -804,8 +1062,11 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
-			$('.ce-option-checkbox').removeClass("ce-option-checked");
-			$(this).addClass("ce-option-checked");
+			if($(this).hasClass('app-option-checked')){
+        		$(this).removeClass('app-option-checked');
+        	}else{
+	        	$(this).addClass('app-option-checked');
+        	}
 			var key = event.data.name;
 			appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
@@ -840,9 +1101,10 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 
 
 
-
+var quesDeclarationContxts =[];
 function paintCustomerApplicationPageStep4a() {
    
+	quesDeclarationContxts = [];
 	appProgressBaar(4);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Declaration Questions";
@@ -967,8 +1229,8 @@ function paintCustomerApplicationPageStep4a() {
             text: "Yes"
         }, {
             text: "No",
-            sub_questions: [{
-                type: "select",
+            addQuestions: [{
+                type: "yesno",
                 text: "Are you a permanent resident alien?",
                 name: "isPermanentResidentAlien",
                 options: [{
@@ -1002,10 +1264,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isOwnershipInterestInProperty",
         options: [{
             text: "Yes",
-            sub_questions: [{
+            addQuestions: [{
                 type: "select",
                 text: "What type of property did you own? Select the choice that fits best.",
-                name: "",
+                name: "yourPrimaryResidence",
                 options: [{
                     text: "Your Primary Residence",
                     value: "Your Primary Residence"
@@ -1022,7 +1284,7 @@ function paintCustomerApplicationPageStep4a() {
             {
                 type: "select",
                 text: "What was your status on the title of that property",
-                name: "",
+                name: "propertyStatus",
                 options: [{
                     text: "I was the sole title holder",
                     value: "I was the sole title holder"
@@ -1043,29 +1305,55 @@ function paintCustomerApplicationPageStep4a() {
     }
     ];
 
-    var questionsContainer = getQuestionsContainer(questions);
+   // var questionsContainer = getQuestionsContainer(questions);
+    
+    $('#app-right-panel').append(quesHeaderTextCont);
+   
+   
+    
+    for(var i=0;i<questions.length;i++){
+    	var question=questions[i];
+    	var contxt=getQuestionContext(question,$('#app-right-panel'));
+    	contxt.drawQuestion();
+    	
+    	quesDeclarationContxts.push(contxt);
+    }
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
-    	appUserDetails["isOutstandingJudgments"] =  $('.app-options-cont[name="isOutstandingJudgments"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isBankrupt"] =  $('.app-options-cont[name="isBankrupt"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isPropertyForeclosed"] =  $('.app-options-cont[name="isPropertyForeclosed"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isLawsuit"] =  $('.app-options-cont[name="isLawsuit"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isObligatedLoan"] =  $('.app-options-cont[name="isObligatedLoan"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isFederalDebt"] =  $('.app-options-cont[name="isFederalDebt"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isObligatedToPayAlimony"] =  $('.app-options-cont[name="isObligatedToPayAlimony"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isEndorser"] =  $('.app-options-cont[name="isEndorser"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isUSCitizen"] =  $('.app-options-cont[name="isUSCitizen"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isOccupyPrimaryResidence"] =  $('.app-options-cont[name="isOccupyPrimaryResidence"]').find('.app-option-choice[isselected="true"]').html();
-    	appUserDetails["isOwnershipInterestInProperty"] =  $('.app-options-cont[name="isOwnershipInterestInProperty"]').find('.app-option-choice[isselected="true"]').html();
+    	appUserDetails["isOutstandingJudgments"] =  quesDeclarationContxts[0].value;
+    	appUserDetails["isBankrupt"] =  quesDeclarationContxts[1].value;
+    	appUserDetails["isPropertyForeclosed"] =  quesDeclarationContxts[2].value;
+    	appUserDetails["isLawsuit"] =  quesDeclarationContxts[3].value;
+    	appUserDetails["isObligatedLoan"] =  quesDeclarationContxts[4].value;
+    	appUserDetails["isFederalDebt"] =  quesDeclarationContxts[5].value;
+    	appUserDetails["isObligatedToPayAlimony"] =  quesDeclarationContxts[6].value;
+    	appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
+    	appUserDetails["isEndorser"] =  quesDeclarationContxts[8].value;
+    	
+    	appUserDetails["isUSCitizen"] =  quesDeclarationContxts[9].value;
+    
+    	appUserDetails["isPermanentResidentAlien"] = null;
+    	if(quesDeclarationContxts[9].childContexts.No != undefined)
+    	appUserDetails["isPermanentResidentAlien"] = quesDeclarationContxts[9].childContexts.No[0].value;
+    	
+    	appUserDetails["isOccupyPrimaryResidence"] =  quesDeclarationContxts[10].value;
+    	appUserDetails["isOwnershipInterestInProperty"] =  quesDeclarationContxts[11].value;
+    	
+    	appUserDetails["yourPrimaryResidence"] = null;
+    	if(quesDeclarationContxts[11].childContexts.Yes != undefined)
+    	appUserDetails["yourPrimaryResidence"] = quesDeclarationContxts[11].childContexts.Yes[0].value;
+    	
+    	appUserDetails["propertyStatus"] =null;
+    	if(quesDeclarationContxts[11].childContexts.Yes != undefined)
+    	appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
     	
     	paintCustomerApplicationPageStep4b();
     });
 
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
-        .append(saveAndContinueButton);
+    $('#app-right-panel').append(saveAndContinueButton);
 }
 
 function paintCustomerApplicationPageStep4b(){
@@ -1076,8 +1364,20 @@ function paintCustomerApplicationPageStep4b(){
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt);
+    });
 
+	var options = [ {
+		"text" : "No thank you. Let’s move on",
+		"name" : name,
+		"value" : 0
+	}];
+	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
+
+	$('#app-right-panel').append(quesCont);
+    
+
+    
+    ///
     var questions = [{
         type: "select",
         text: "Ethnicity",
@@ -1230,3 +1530,92 @@ function putCurrencyFormat(name){
 		});		
     });
 }
+
+
+function paintGovernmentMonitoringQuestions(quesText, options, name) {
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+		
+	});
+
+	var quesTextCont = $('<div>').attr({
+		"class" : "app-ques-header-txt"
+	}).html(quesText);
+
+	var optionContainer = $('<div>').attr({
+		"class" : "ce-options-cont"
+	});
+
+	for (var i = 0; i < options.length; i++) {
+
+		var optionIncome = $('<div>').attr({
+			"class" : "hide ce-option-ques-wrapper"
+			//"id" : "ce-option_" + i
+		});
+
+		var option = $('<div>').attr({
+			"class" : "ce-option-checkbox",
+			"value" : options[i].value
+		}).html(options[i].text).bind('click', {
+			"option" : options[i],
+			"name" : name
+		}, function(event) {
+			if($(this).hasClass("ce-option-checked")){
+				$(this).removeClass("ce-option-checked");
+			}else{
+				$(this).addClass("ce-option-checked");
+			}
+			/*var key = event.data.name;
+			appUserDetails[key] = event.data.option.value;
+			event.data.option.onselect(event.data.option.value);*/
+			$(".app-ques-container").toggle(function() {
+				
+			});
+		});
+
+		optionContainer.append(option).append(optionIncome);
+	}
+
+	return container.append(quesTextCont).append(optionContainer);
+}
+
+
+
+function getMonthYearTextQuestion(question) {
+	 var container = $('<div>').attr({
+	  "class" : "ce-ques-wrapper"
+	 });
+
+	 var quesTextCont = $('<div>').attr({
+	  "class" : "app-ques-text"
+	 }).html(question.text);
+
+	 var optionContainer = $('<div>').attr({
+	  "class" : "ce-options-cont"
+	 });
+
+	 var monthDropDown = $('<select>').attr({
+	  "class" : "ce-input width-75",
+	  "name" : question.name
+	 });
+	 
+	 for(var i=1;i<=12;i++){
+	  
+	  var option = $("<option>").html(i);
+	  monthDropDown.append(option);
+	 }
+	 
+	 var yearInput = $('<input>').attr({
+	  "class" : "ce-input width-150",
+	  "name" : name,
+	  "value" : appUserDetails[name],
+	  "placeholder" : "YYYY"
+	 });
+
+	 optionContainer.append(monthDropDown).append(yearInput);
+
+
+	 return container.append(quesTextCont).append(optionContainer);
+	}
+
+
