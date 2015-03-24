@@ -75,7 +75,7 @@ public class RestInterceptor implements Callable
             inputParams[1] = restParameters.getLoanVO().getsTemplateName();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOAD ) ) {
             LOG.debug( "Operation Chosen Was Load " );
-            inputParams = new String[4];
+            inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
             inputParams[2] = restParameters.getLoanVO().getsXmlQuery();
@@ -100,6 +100,11 @@ public class RestInterceptor implements Callable
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
             inputParams[2] = restParameters.getLoanVO().getsDataContent();
             inputParams[3] = restParameters.getLoanVO().getFormat();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
+            LOG.debug( "Operation Chosen Was ListEDocsByLoanNumber " );
+            inputParams = new Object[2];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT ) ) {
             LOG.debug( "Operation Chosen Was UploadPDFDocument " );
 

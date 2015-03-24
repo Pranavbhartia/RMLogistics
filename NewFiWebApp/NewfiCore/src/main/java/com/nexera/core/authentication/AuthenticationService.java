@@ -14,7 +14,9 @@ public interface AuthenticationService {
 	
 	public void validateUser(User user, String password) throws InvalidInputException;
 
-	public User getUserWithLoginName(String userId) throws NoRecordsFetchedException,DatabaseException;
+	public User getUserWithLoginName(String userId,String password) throws NoRecordsFetchedException,DatabaseException;
+
+	public User getUserWithLoginName(String username) throws NoRecordsFetchedException, DatabaseException;
 
 	
 

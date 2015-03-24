@@ -24,7 +24,7 @@
     cursor: pointer;
 }
 .app-option-checked {
-	background: url(../images/check_box_checked.png) no-repeat left center;
+	background: url(../images/check_box_checked.png) no-repeat left center !important;
 }
 .app-ques-wrapper {
     margin: 10px 0;
@@ -115,4 +115,34 @@
 
 .app-option-choice[isSelected="true"] {
 	background: #F47521;
+}
+
+
+.width-75{
+ width: 75px !important;
+}
+
+.width-150{
+ width: 327px !important;
+}
+.cust-app-lp{
+	margin-top:65px;
+}
+
+.cust-app-lp .ce-app-lp-item-text{
+	line-height: 40px;
+}
+
+.cust-app-lp .ce-lp-item-icon{
+	width: 35px;
+	height: 52px;
+	line-height: 40px;
+	background-size: 35px;
+}
+
+.cust-app-lp .ce-lp-complete .ce-lp-item-icon:after{
+	width: 38px;
+	height: 45px;
+	background-size: 20px;
+
 }

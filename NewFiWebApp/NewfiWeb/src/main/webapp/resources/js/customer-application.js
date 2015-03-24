@@ -120,6 +120,9 @@ function getApplicationQuestion(question) {
     } else if (question.type == "yesno") {
         quesCont = getApplicationYesNoQues(question);
     }
+    else if (question.type == "yearMonth") {
+        quesCont = getMonthYearTextQuestion(question);
+    }
     return quesCont;
 }
 
@@ -281,7 +284,6 @@ function getApplicationMultipleChoiceQues(question) {
         	if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         	}else{
-	        	$(this).parent().find('.app-option').removeClass('app-option-checked');
 	        	$(this).addClass('app-option-checked');
         	}
         });
@@ -445,7 +447,7 @@ function paintCustomerApplicationPageStep1b() {
         name: "insuranceCost",
         value: ""
     }, {
-        type: "desc",
+        type: "yearMonth",
         text: "When did you purchase this property?",
         name: "purchaseTime",
         value: ""
@@ -531,7 +533,7 @@ function getQuestionContext(question,parentContainer){
 	            	contxt.drawQuestion();
 	            	ob.childContexts[option].push(contxt);
 	        	}
-	        	ob.container.append(childContainer);
+	        	ob.container.after(childContainer);
 	        },
 	        changeHandler:function(newValue,callback){
 	        	var ob=this;
@@ -1060,8 +1062,11 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
-			$('.ce-option-checkbox').removeClass("ce-option-checked");
-			$(this).addClass("ce-option-checked");
+			if($(this).hasClass('app-option-checked')){
+        		$(this).removeClass('app-option-checked');
+        	}else{
+	        	$(this).addClass('app-option-checked');
+        	}
 			var key = event.data.name;
 			appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
@@ -1363,7 +1368,6 @@ function paintCustomerApplicationPageStep4b(){
 
 	var options = [ {
 		"text" : "No thank you. Let’s move on",
-		"onselect" : hideMonitoringQuestions,
 		"name" : name,
 		"value" : 0
 	}];
@@ -1531,6 +1535,7 @@ function putCurrencyFormat(name){
 function paintGovernmentMonitoringQuestions(quesText, options, name) {
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
+		
 	});
 
 	var quesTextCont = $('<div>').attr({
@@ -1544,8 +1549,8 @@ function paintGovernmentMonitoringQuestions(quesText, options, name) {
 	for (var i = 0; i < options.length; i++) {
 
 		var optionIncome = $('<div>').attr({
-			"class" : "hide ce-option-ques-wrapper",
-			"id" : "ce-option_" + i
+			"class" : "hide ce-option-ques-wrapper"
+			//"id" : "ce-option_" + i
 		});
 
 		var option = $('<div>').attr({
@@ -1555,11 +1560,17 @@ function paintGovernmentMonitoringQuestions(quesText, options, name) {
 			"option" : options[i],
 			"name" : name
 		}, function(event) {
-			$('.ce-option-checkbox').removeClass("ce-option-checked");
-			$(this).addClass("ce-option-checked");
-			var key = event.data.name;
+			if($(this).hasClass("ce-option-checked")){
+				$(this).removeClass("ce-option-checked");
+			}else{
+				$(this).addClass("ce-option-checked");
+			}
+			/*var key = event.data.name;
 			appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value);
+			event.data.option.onselect(event.data.option.value);*/
+			$(".app-ques-container").toggle(function() {
+				
+			});
 		});
 
 		optionContainer.append(option).append(optionIncome);
@@ -1569,6 +1580,42 @@ function paintGovernmentMonitoringQuestions(quesText, options, name) {
 }
 
 
-function hideMonitoringQuestions(){
-	
-}
+
+function getMonthYearTextQuestion(question) {
+	 var container = $('<div>').attr({
+	  "class" : "ce-ques-wrapper"
+	 });
+
+	 var quesTextCont = $('<div>').attr({
+	  "class" : "app-ques-text"
+	 }).html(question.text);
+
+	 var optionContainer = $('<div>').attr({
+	  "class" : "ce-options-cont"
+	 });
+
+	 var monthDropDown = $('<select>').attr({
+	  "class" : "ce-input width-75",
+	  "name" : question.name
+	 });
+	 
+	 for(var i=1;i<=12;i++){
+	  
+	  var option = $("<option>").html(i);
+	  monthDropDown.append(option);
+	 }
+	 
+	 var yearInput = $('<input>').attr({
+	  "class" : "ce-input width-150",
+	  "name" : name,
+	  "value" : appUserDetails[name],
+	  "placeholder" : "YYYY"
+	 });
+
+	 optionContainer.append(monthDropDown).append(yearInput);
+
+
+	 return container.append(quesTextCont).append(optionContainer);
+	}
+
+
