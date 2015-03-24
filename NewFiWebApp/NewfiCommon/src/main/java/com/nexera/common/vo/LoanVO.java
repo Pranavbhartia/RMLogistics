@@ -12,7 +12,7 @@ public class LoanVO implements Serializable {
 	private Date createdDate;
 	private Boolean deleted;
 	private String loanEmailId;
-	private Integer lqbFileId;
+	private String lqbFileId;
 	private Date modifiedDate;
 	private String name;
 	private String status;
@@ -108,11 +108,11 @@ public class LoanVO implements Serializable {
 		this.loanEmailId = loanEmailId;
 	}
 
-	public Integer getLqbFileId() {
+	public String getLqbFileId() {
 		return lqbFileId;
 	}
 
-	public void setLqbFileId(Integer lqbFileId) {
+	public void setLqbFileId(String lqbFileId) {
 		this.lqbFileId = lqbFileId;
 	}
 

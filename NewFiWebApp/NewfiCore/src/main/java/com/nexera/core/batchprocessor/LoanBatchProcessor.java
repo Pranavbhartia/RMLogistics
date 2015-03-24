@@ -46,17 +46,20 @@ public class LoanBatchProcessor extends QuartzJobBean {
 			for (Loan loan : loanList) {
 				LoanProgressStatusMaster loanProgessStatus = loan
 				        .getLoanProgressStatus();
-				String loanStatus = loanProgessStatus.getLoanProgressStatus();
-				if ((!loanStatus
-				        .equalsIgnoreCase(LoanStatusMaster.STATUS_CLOSED))
-				        && (!loanStatus
-				                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
-				        && (!loanStatus
-				                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
-					ThreadManager threadManager = applicationContext
-					        .getBean(ThreadManager.class);
-					threadManager.setLoan(loan);
-					taskExecutor.execute(threadManager);
+				if (loanProgessStatus != null) {
+					String loanStatus = loanProgessStatus
+					        .getLoanProgressStatus();
+					if ((!loanStatus
+					        .equalsIgnoreCase(LoanStatusMaster.STATUS_CLOSED))
+					        && (!loanStatus
+					                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
+					        && (!loanStatus
+					                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
+						ThreadManager threadManager = applicationContext
+						        .getBean(ThreadManager.class);
+						threadManager.setLoan(loan);
+						taskExecutor.execute(threadManager);
+					}
 				}
 			}
 		}

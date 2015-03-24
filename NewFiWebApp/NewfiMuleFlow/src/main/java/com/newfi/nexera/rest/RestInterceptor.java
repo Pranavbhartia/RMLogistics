@@ -3,6 +3,8 @@
  */
 package com.newfi.nexera.rest;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -59,7 +61,7 @@ public class RestInterceptor implements Callable
     }
 
 
-    public Object[] getAllParameters( RestParameters restParameters )
+    public Object[] getAllParameters( RestParameters restParameters ) throws IOException
     {
         LOG.debug( "Inside method getAllParameters" );
         Object[] inputParams = null;
@@ -78,7 +80,11 @@ public class RestInterceptor implements Callable
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            inputParams[2] = restParameters.getLoanVO().getsXmlQuery();
+            String sXmlQueryDefault = Utils.readFileAsString( "lo_xmlquery_sample.xml" );
+            if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
+                sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
+            }
+            inputParams[2] = sXmlQueryDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOCK_LOAN_PROGRAM ) ) {
             LOG.debug( "Operation Chosen Was LockLoanProgram " );
@@ -92,7 +98,11 @@ public class RestInterceptor implements Callable
             LOG.debug( "Operation Chosen Was RunQuickPricer " );
             inputParams = new String[2];
             inputParams[0] = NewFiManager.userTicket;
-            inputParams[1] = restParameters.getLoanVO().getsXmlData();
+            String teaserRateDefault = Utils.readFileAsString( "teaserRate.xml" );
+
+            if ( restParameters.getLoanVO().getsXmlDataMap() != null )
+                teaserRateDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlDataMap(), teaserRateDefault );
+            inputParams[1] = teaserRateDefault;
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_SAVE ) ) {
             LOG.debug( "Operation Chosen Was Save " );
             inputParams = new Object[4];
