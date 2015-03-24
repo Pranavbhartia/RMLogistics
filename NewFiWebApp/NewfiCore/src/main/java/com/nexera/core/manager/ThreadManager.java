@@ -37,11 +37,21 @@ public class ThreadManager implements Runnable {
 		// TODO Remove this line
 		loan.setLqbFileId("D2015030087");
 		int format = 0;
+
+		LOGGER.debug("Invoking load service of lendinqb ");
 		JSONObject loadOperationObject = createLoadJsonObject(map,
 		        WebServiceOperations.OP_NAME_LOAN_LOAD, loan.getLqbFileId(),
 		        format);
 		JSONObject receivedResponse = lqbInvoker
 		        .invokeLqbService(loadOperationObject.toString());
+		// TODO Need to parse the received response
+		LOGGER.debug("Invoking listDocsByLoanNumber service of lendinqb ");
+		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
+		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
+		        loan.getLqbFileId());
+
+		JSONObject receivedResponseForDocs = lqbInvoker
+		        .invokeLqbService(getListOfDocs.toString());
 		LoanProgressStatusMaster loanProgressStatusMaster = loan
 		        .getLoanProgressStatus();
 		if (loanProgressStatusMaster.getLoanProgressStatus().equalsIgnoreCase(
@@ -70,6 +80,22 @@ public class ThreadManager implements Runnable {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_DATA_MAP,
 			        requestXMLMap);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
+	public JSONObject createListEDocsByLoanNumberObject(String opName,
+	        String lqbLoanId) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
