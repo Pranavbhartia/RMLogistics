@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<LOXmlFormat version="1.0">
+  <loan>
+    <field id="sLPurposeT" />
+    <field id="sPurchPrice" />
+    <field id="sApprVal" />
+    <field id="sLAmtCalc" />
+    <field id="sSpAddr" />
+    <field id="sSpCity" />
+    <field id="sSpState" />
+    <field id="sSpZip" />
+    <field id="sStatusT" />
+    <applicant>
+      <field id="aBFirstNm"/>
+      <field id="aBLastNm"/>
+      <field id="aBSsn"/>
+      <field id="aBHPhone"/>
+      <field id="aBCellphone"/>
+      <field id="aBAddr"/>
+      <field id="aBCity"/>
+      <field id="aBState"/>
+      <field id="aBZip"/>
+      <field id="aCFirstNm"/>
+      <field id="aCLastNm"/>
+      <field id="aCSsn"/>
+      <field id="aCCellphone"/>
+      <field id="aCHPhone"/>
+      <field id="aCAddr"/>
+      <field id="aCCity"/>
+      <field id="aCState"/>
+      <field id="aCZip"/>
+      
+      <collection id="aLiaCollection"/>
+    </applicant>
+    <collection id="sCondDataSet"/>    
+  </loan>
+
+</LOXmlFormat>
