@@ -1,15 +1,19 @@
 package com.nexera.core.utility;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -17,8 +21,10 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.PDFToImage;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.io.RandomAccessFile;
@@ -26,6 +32,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDCcitt;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
@@ -40,21 +48,22 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
+
 @Component
 public class NexeraUtility {
 
-	private  static final Logger LOGGER = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
 
-	private  final String OUTPUT_FILENAME_EXT = "jpg";
-	private  final String OUTPUT_PREFIX = "-outputPrefix";
-	private  final String END_PAGE = "-endPage";
+	private final String OUTPUT_FILENAME_EXT = "jpg";
+	private final String OUTPUT_PREFIX = "-outputPrefix";
+	private final String END_PAGE = "-endPage";
 
-	private  final String PAGE_NUMBER = "1";
-	private  final String START_PAGE = "-startPage";
+	private final String PAGE_NUMBER = "1";
+	private final String START_PAGE = "-startPage";
 
 	@SuppressWarnings("unchecked")
-	public  List<PDPage> splitPDFTOPages(File file) {
+	public List<PDPage> splitPDFTOPages(File file) {
 		PDDocument document = null;
 		List<PDPage> pdfPages = null;
 		// Create a Splitter object
@@ -69,7 +78,7 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
-	public  List<File> splitPDFPages(File file) {
+	public List<File> splitPDFPages(File file) {
 
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
@@ -100,12 +109,12 @@ public class NexeraUtility {
 		return newPdfpages;
 	}
 
-	public  String tomcatDirectoryPath() {
+	public String tomcatDirectoryPath() {
 		String rootPath = System.getProperty("catalina.home");
 		return rootPath + File.separator + "tmpFiles";
 	}
 
-	public  String uploadFileToLocal(MultipartFile file) {
+	public String uploadFileToLocal(MultipartFile file) {
 		String filePath = null;
 		if (!file.isEmpty()) {
 			try {
@@ -141,11 +150,11 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public  String joinPDDocuments(List<String> fileUrls)
-	        throws IOException, COSVisitorException {
+	public String joinPDDocuments(List<String> fileUrls) throws IOException,
+	        COSVisitorException {
 		PDFMergerUtility mergePDF = new PDFMergerUtility();
-		String newFilePath = this.tomcatDirectoryPath()
-		        + File.separator + randomStringOfLength() + ".pdf";
+		String newFilePath = this.tomcatDirectoryPath() + File.separator
+		        + randomStringOfLength() + ".pdf";
 
 		for (String fileUrl : fileUrls) {
 			LOGGER.info("Adding File with URL" + fileUrl);
@@ -156,7 +165,7 @@ public class NexeraUtility {
 		return newFilePath;
 	}
 
-	public  String randomStringOfLength() {
+	public String randomStringOfLength() {
 		Integer length = 10;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
@@ -167,8 +176,8 @@ public class NexeraUtility {
 		return buffer.substring(0, length);
 	}
 
-	public  String convertPDFToThumbnail(String pdfFile,
-	        String imageFilePath) throws Exception {
+	public String convertPDFToThumbnail(String pdfFile, String imageFilePath)
+	        throws Exception {
 
 		String[] args = new String[7];
 		args[0] = START_PAGE;
@@ -194,11 +203,11 @@ public class NexeraUtility {
 		}
 	}
 
-	private  String uuidString() {
+	private String uuidString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public  String convertImageToPDF(MultipartFile multipartFile) {
+	public String convertImageToPDF(MultipartFile multipartFile) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
 		try {
@@ -235,11 +244,12 @@ public class NexeraUtility {
 
 			if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
 				img = new PDJpeg(document, new FileInputStream(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase("image/png")) {
+			} else if (multipartFile.getContentType().equalsIgnoreCase(
+			        "image/png")) {
 				img = new PDPixelMap(document, ImageIO.read(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
+			} else if (multipartFile.getContentType().equalsIgnoreCase(
+			        "image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
-
 			}
 
 			PDPageContentStream contentStream = new PDPageContentStream(
@@ -271,24 +281,25 @@ public class NexeraUtility {
 
 	}
 
-	public  File multipartToFile(MultipartFile multipart)
+	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		File convFile = new File(multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
 	}
 
-	public  MultipartFile filePathToMultipart(String filePath)
+	public MultipartFile filePathToMultipart(String filePath)
 	        throws IOException {
 		File file = new File(filePath);
-		DiskFileItem fileItem = new DiskFileItem("file", "text/plain", false,
-		        file.getName(), (int) file.length(), file.getParentFile());
+		DiskFileItem fileItem = new DiskFileItem("file", "application/pdf",
+		        false, file.getName(), (int) file.length(),
+		        file.getParentFile());
 		fileItem.getOutputStream();
 		MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
 		return multipartFile;
 	}
 
-	public  String convertImageToPDFDocument(MultipartFile multipartFile) {
+	public String convertImageToPDFDocument(MultipartFile multipartFile) {
 
 		File file = null;
 		String filepath = null;
@@ -355,7 +366,7 @@ public class NexeraUtility {
 
 	}
 
-	public  BufferedImage convertRenderedImage(RenderedImage img) {
+	public BufferedImage convertRenderedImage(RenderedImage img) {
 		if (img instanceof BufferedImage) {
 			return (BufferedImage) img;
 		}
@@ -376,6 +387,48 @@ public class NexeraUtility {
 		        isAlphaPremultiplied, properties);
 		img.copyData(raster);
 		return result;
+	}
+
+	public String createPDFFromStream(InputStream inputStream)
+	        throws IOException, COSVisitorException {
+		PDDocument document = null;
+		String filePath = null;
+		try {
+			// create the PDF document object
+			document = new PDDocument();
+			InputStream input = (InputStream) inputStream;
+			BufferedReader bufferReader = new BufferedReader(
+			        new InputStreamReader(input));
+			String theString = "";
+			String line = "";
+			while ((line = bufferReader.readLine()) != null)
+				theString += line + "\r\n";
+
+			byte[] byteArray = theString.getBytes();
+			theString = new String(byteArray, "UTF-8");
+			PDPage page = new PDPage();
+			document.addPage(page);
+			PDPageContentStream stream = new PDPageContentStream(document, page);
+			stream.beginText();
+			PDFont font = PDType1Font.HELVETICA_BOLD;
+			stream.setFont(font, 12);
+			stream.moveTextPositionByAmount(100, 700);
+			stream.setNonStrokingColor(Color.ORANGE);
+			stream.drawString(theString);
+			stream.endText();
+
+			filePath = tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf";
+
+			// save the document to the file stream.
+			document.save(filePath);
+		} finally {
+			if (document != null) {
+				document.close();
+			}
+
+		}
+		return filePath;
 	}
 
 }

@@ -14,8 +14,9 @@ import java.util.List;
  * 
  */
 public class MongoMessageHeirarchy {
-	
+
 	private String id;
+	private String lastMessage;
 	private List<String> messages;
 	private List<String> roleList;
 	private List<Long> userList;
@@ -26,7 +27,7 @@ public class MongoMessageHeirarchy {
 	public MongoMessageHeirarchy() {
 
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -34,7 +35,7 @@ public class MongoMessageHeirarchy {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public List<String> getMessages() {
 		return messages;
 	}
@@ -81,6 +82,14 @@ public class MongoMessageHeirarchy {
 
 	public void setUserList(List<Long> userList) {
 		this.userList = userList;
+	}
+
+	public String getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 
 }

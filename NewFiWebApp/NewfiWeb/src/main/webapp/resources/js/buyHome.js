@@ -350,11 +350,55 @@ function paintRentOfYourHouse() {
 	active = 2;
 	homeProgressBaar(2);
 	var quesTxt = "How much do you pay each month for rent?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt,
-			paintHomeZipCode, "rentPerMonth");
+	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
 	$('#ce-refinance-cp').html(quesCont);
 }
 
+
+function paintloanamount(){
+	
+	var quesTxt = "What is the loan amount you are looking for?";
+	var quesCont = getBuyHomeTextQuestion(quesTxt, paintPreferTaxesInsurance , "loanAmount");
+	$('#ce-refinance-cp').html(quesCont);
+}
+
+
+function paintPreferTaxesInsurance(){
+	
+	var quesTxt = "Do you prefer to include Taxes and Insurance as part of your loan payment? ";
+	
+	var options = [ {
+		"text" : "Yes",
+		"onselect" : paintBuyHomeAnnualPropertyTaxes,
+		"name" : name,
+		"value" : 1
+	}, {
+		"text" : "No",
+		"onselect" : paintBuyHomeEstimatedPurchasePrice,
+		"name" : name,
+		"value" : 0
+	} ];
+
+	var quesCont = getMutipleChoiceQuestion(quesTxt, options, "preferTaxesInsurance");
+	$('#ce-refinance-cp').html(quesCont);
+
+}
+
+
+function paintBuyHomeAnnualPropertyTaxes(){
+	
+	var quesTxt = "Approximately what is your home worth today?";
+	var quesCont = getTextQuestion(quesTxt, paintBuyHomeEstimatedPurchasePrice,"annualPropertyTaxes");
+	$('#ce-refinance-cp').html(quesCont);
+}
+
+
+function paintBuyHomeEstimatedPurchasePrice(){
+	
+	var quesTxt = "What is the estimated purchase price?";
+	var quesCont = getTextQuestion(quesTxt, paintHomeZipCode,"estimatedPurchasePrice");
+	$('#ce-refinance-cp').html(quesCont);
+}
 
 
 function paintBuyHomeSellHome() {
@@ -719,7 +763,7 @@ function saleYourCurrentHome() {
 	active = 2;
 	homeProgressBaar(2);
 	var quesTxt = "What is the listing price of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt, paintHomeZipCode,"homeWorthToday");
+	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount,"homeWorthToday");
 	$('#ce-refinance-cp').html(quesCont);
 
 }
@@ -834,7 +878,7 @@ var loanDurationConform;
 var rateVOArrayObj;
 function paintteaserRate(teaserRate) {
 
-	teaserRate = JSON.parse(teaserRate);
+	//teaserRate = JSON.parse(teaserRate);
 
 	for ( var i in teaserRate) {
 
@@ -1017,6 +1061,19 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : name
+	}).on("load keydown", function(e){
+          
+		if(name != 'zipCode'){
+			$('input[name='+name+']').maskMoney({
+				thousands:',',
+				decimal:'.',
+				allowZero:true,
+				prefix: '$',
+			    precision:0,
+			    allowNegative:true
+			});
+		}
+		
 	});
 
 	optionContainer.append(inputBox);

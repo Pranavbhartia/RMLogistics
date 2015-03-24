@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +19,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -140,11 +142,26 @@ public class EmailProcessor implements Runnable {
 				        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
 					LOGGER.debug("This mail contains attachment ");
 					DataHandler dataHandler = bodyPart.getDataHandler();
+					String content = dataHandler.getContentType();
 					InputStream inputStream = dataHandler.getInputStream();
 					String path = nexeraUtility.tomcatDirectoryPath();
+					File file = null;
+					if (content.contains("pdf")) {
+						file = convertInputStreamToFile(inputStream, path);
+						Files.probeContentType(file.toPath());		
+					} else if (content.contains("jpg")
+					        || content.contains("png")
+					        || content.contains("tiff")
+					        || content.contains("tif")) {
+						/*file = nexeraUtility.filePathToMultipart(filePath);
+						file = nexeraUtility.convertImageToPDFDocument(multipartFile);*/
+					} else {
+						// TODO invalid file format need to throw and log error
+						LOGGER.error("Invalid Format " + content);
+					}
 
-					File file = convertInputStreamToFile(inputStream, path);
 					
+				
 					LOGGER.debug("Uploading the file in the system ");
 					uploadedFileListService.uploadFile(nexeraUtility
 					        .filePathToMultipart(file.getAbsolutePath()),

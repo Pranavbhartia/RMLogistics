@@ -11,6 +11,19 @@ function getNotificationContext(loanId,userId){
 		existingWrapper:undefined,
 		alertWrapper:undefined,
 		headerText:"",
+		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
+		addToList:function(list,object){
+			var exist=false;
+			for(var i=0;i<list.length;i++){
+				if(list[i].id==object.id){
+					exist=true;
+				}
+			}
+			if(!exist){
+				list.push(object);
+			}
+			return exist;
+		},
 		getNotificationForUser:function(callback){
 			if(userId!=0){
 				var ob=this;
@@ -28,6 +41,85 @@ function getNotificationContext(loanId,userId){
 						}
 					}
 					
+				});
+			}
+		},
+		getNotificationUpdate:function(callback){
+			if(loanId!=0){
+				var ob=this;
+				var data={};
+				data.userID=0;
+				data.loanID=ob.loanId;
+				//code to call API to get Notification List for loan
+				//http://localhost:8080/PushNotification/pushServlet/?task=notification&taskId=1
+				ajaxRequest(ob.pushServerUrl+ob.loanId,"GET","json",data,function(response){
+					
+				},false,undefined,function(response){
+					if(response.error){
+						showToastMessage(response.error.message);
+					}else{
+						if(response.action=="new"){
+							var nwData=response.data;
+							var exist=false;
+							if(new Date().getTime()>=nwData.remindOn){
+								exist=ob.addToList(ob.loanNotificationList,nwData);
+							}
+							if(!exist){
+								ob.updateWrapper();
+								ob.updateLoanListNotificationCount();
+								updateDefaultContext(nwData);
+							}
+						}else if(response.action=="remove"){
+							var notificationID=response.notificationID;
+							var id=response.id;
+							//ob.removeNotificationfromList(id);
+							var existAry=$("#"+notificationID);
+							if(existAry.length>0){
+								$("#"+notificationID).remove();
+							}
+							existAry=$("#"+"LNID"+id);
+							if(existAry.length>0){
+								$("#"+"LNID"+id).remove();
+							}
+							existAry=$("#"+"UNID"+id);
+							if(existAry.length>0){
+								$("#"+"UNID"+id).remove();
+							}
+							if(callback){
+								callback(ob);
+							}
+							removeNotificationFromAllContext(id);
+							ob.updateWrapper();
+						}else if(response.action=="snooze"){
+							var notificationID=response.notificationID;
+							var id=response.id;
+							ob.removeNotificationfromList(id);
+							var existAry=$("#"+notificationID);
+							if(existAry.length>0){
+								$("#"+notificationID).remove();
+							}
+							contxt.updateLoanListNotificationCount();
+						}
+
+					}
+					ob.getNotificationUpdate();
+				});
+			}
+		},
+		updateOtherClients:function(change,callback){
+			if(loanId!=0||change.loanId){
+				var ob=this;
+				var data={};
+				var lnId=ob.loanId!=0?ob.loanId:change.loanId;
+				//code to call API to get Notification List for loan
+				ajaxRequest(ob.pushServerUrl+lnId+"&data="+JSON.stringify(change),"POST","json",data,function(response){
+					if(response.error){
+						showToastMessage(response.error.message);
+					}else{
+						if(callback){
+							callback(ob);
+						}
+					}
 				});
 			}
 		},
@@ -139,6 +231,18 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Notification Dismissed");
+
+					//code for updating all other clients start
+					var notificationOb;
+					for(var i=0;i<ob.loanNotificationList.length;i++){
+						if(ob.loanNotificationList[i].id==id){
+							notificationOb=ob.loanNotificationList[i];
+						}
+					}
+					var changeData={"action":"remove","notificationID":notificationID,"id":id,"loanId":notificationOb.loanID};
+					ob.updateOtherClients(changeData);
+					//end
+
 					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
@@ -178,6 +282,18 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Success");
+
+					//code for updating all other clients start
+					var notificationOb;
+					for(var i=0;i<ob.loanNotificationList.length;i++){
+						if(ob.loanNotificationList[i].id==id){
+							notificationOb=ob.loanNotificationList[i];
+						}
+					}
+					var changeData={"action":"snooze","notificationID":notificationID,"id":id,"loanId":notificationOb.loanID};
+					ob.updateOtherClients(changeData);
+					//end
+
 					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
@@ -241,6 +357,11 @@ function getNotificationContext(loanId,userId){
 						data.id=response.resultObject.id;
 					data.dismissable=true;
 					
+					//code for updating all other clients start
+					var changeData={"action":"new","data":data};
+					ob.updateOtherClients(changeData);
+					//end
+
 					if(new Date().getTime()>=data.remindOn)
 						ob.loanNotificationList.push(data);
 					updateDefaultContext(data);
@@ -276,6 +397,8 @@ function getNotificationContext(loanId,userId){
 		}
 	};
 	//notificationContext.initContext();
+	if(notificationContext.loanId)
+		notificationContext.getNotificationUpdate();
 	return notificationContext;
 }
 function updateDefaultContext(notification){
