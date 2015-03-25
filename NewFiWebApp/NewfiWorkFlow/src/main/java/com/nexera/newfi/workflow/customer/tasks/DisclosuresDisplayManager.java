@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
-public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
+public class DisclosuresDisplayManager implements IWorkflowTaskExecutor{
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
