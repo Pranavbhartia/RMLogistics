@@ -85,4 +85,10 @@ public interface LoanService
 	
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
+
+	public TitleCompanyMasterVO addTitleCompany(TitleCompanyMasterVO vo);
+
+
+	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(HomeOwnersInsuranceMasterVO vo);
+
 }

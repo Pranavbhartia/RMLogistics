@@ -12,8 +12,10 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.TitleCompanyMasterVO;
 
 public interface LoanDao extends GenericDao {
 
@@ -64,6 +66,12 @@ public interface LoanDao extends GenericDao {
     List<Loan> retrieveLoanByProgressStatus( User parseUserModel, int loanProgressStatusId );
 
 	public LoanNeedsList fetchByNeedId(Integer needId);
+
+	public HomeOwnersInsuranceMaster addHomeOwnInsCompany(
+            HomeOwnersInsuranceMaster homeOwnInsMaster);
+
+	public TitleCompanyMaster addTitleCompany(
+            TitleCompanyMaster titleCompanyMaster);
 
 	
 
