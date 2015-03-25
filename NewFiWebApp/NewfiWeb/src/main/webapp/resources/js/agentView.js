@@ -55,7 +55,7 @@ function getAgentSecondaryLeftNavStep(step, text) {
 	return container.append(img).append(txt);
 }
 
-function paintAgentDashboard() {
+function paintAgentDashboard(loanType) {
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
@@ -63,7 +63,13 @@ function paintAgentDashboard() {
 		"class" : "rp-agent-dashboard float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
-	getDashboardRightPanel();
+	if(loanType == "workloans"){
+		getDashboardRightPanelForWorkLoans();
+	}else if(loanType == "myloans"){
+		getDashboardRightPanelForMyLoans();
+	}else if(loanType == "archivesloans"){
+		getDashboardRightPanelForArchivesLoans();
+	}
 	adjustAgentDashboardOnResize();
 	var contxt = getNotificationContext(0, newfiObject.user.id);
 	contxt.getLoanNotificationByType(function(ob) {
@@ -79,9 +85,32 @@ function paintAgentDashboardCallBack(data) {
 	adjustAgentDashboardOnResize();
 }
 
+//ajax call to get dashboard for my loans
 function getDashboardRightPanel() {
 	var userID = newfiObject.user.id;
-	ajaxRequest("rest/loan/retrieveDashboard/" + userID, "GET", "json", {},
+	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+
+//ajax call to get dashboard for work loans
+function getDashboardRightPanelForWorkLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForWorkLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+//ajax call to get dashboard for my loans
+function getDashboardRightPanelForMyLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+//ajax call to get dashboard for archive loans
+function getDashboardRightPanelForArchivesLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET", "json", {},
 			paintAgentDashboardRightPanel);
 }
 

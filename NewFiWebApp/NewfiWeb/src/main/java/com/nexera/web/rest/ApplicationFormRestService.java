@@ -22,13 +22,11 @@ public class ApplicationFormRestService {
 	private LoanAppFormService loanAppFormService;
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public @ResponseBody String createApplication(
-			@RequestBody String appFormData) {
+	public @ResponseBody String createApplication(@RequestBody String appFormData) {
 
 		Gson gson = new Gson();
 
-		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
-				LoanAppFormVO.class);
+		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 		
 		loanAppFormService.create(loaAppFormVO);
 

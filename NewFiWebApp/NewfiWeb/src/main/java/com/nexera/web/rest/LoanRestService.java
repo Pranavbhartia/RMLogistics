@@ -147,6 +147,42 @@ public class LoanRestService {
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
+	
+	// TODO-move this to User profile rest service
+    @RequestMapping(value = "/retrieveDashboardForWorkLoans/{userID}")
+    public @ResponseBody CommonResponseVO retrieveDashboardForWorkingLoan(
+            @PathVariable Integer userID) {
+        UserVO user = new UserVO();
+        user.setId(userID);
+
+        LoanDashboardVO responseVO = loanService.retrieveDashboardForWorkLoans(user);
+
+        return RestUtil.wrapObjectForSuccess(responseVO);
+    }
+    
+    // TODO-move this to User profile rest service
+    @RequestMapping(value = "/retrieveDashboardForMyLoans/{userID}")
+    public @ResponseBody CommonResponseVO retrieveDashboardForMyLoan(
+            @PathVariable Integer userID) {
+        UserVO user = new UserVO();
+        user.setId(userID);
+
+        LoanDashboardVO responseVO = loanService.retrieveDashboardForMyLoans(user);
+
+        return RestUtil.wrapObjectForSuccess(responseVO);
+    }
+    
+    // TODO-move this to User profile rest service
+    @RequestMapping(value = "/retrieveDashboardForArchiveLoans/{userID}")
+    public @ResponseBody CommonResponseVO retrieveDashboardForArchiveLoans(
+            @PathVariable Integer userID) {
+        UserVO user = new UserVO();
+        user.setId(userID);
+
+        LoanDashboardVO responseVO = loanService.retrieveDashboardForArchiveLoans(user);
+
+        return RestUtil.wrapObjectForSuccess(responseVO);
+    }
 
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/{loanID}/retrieveDashboard")

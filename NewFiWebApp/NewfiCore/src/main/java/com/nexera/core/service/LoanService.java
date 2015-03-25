@@ -39,7 +39,13 @@ public interface LoanService
     public LoanVO getActiveLoanOfUser( UserVO user );
 
 
-    LoanDashboardVO retrieveDashboard( UserVO user );
+    public LoanDashboardVO retrieveDashboard( UserVO user );
+    
+    public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO user);
+    
+    public LoanDashboardVO retrieveDashboardForMyLoans(UserVO user);
+    
+    public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
 
     LoanTeamListVO getLoanTeamListForLoan( LoanVO loan );

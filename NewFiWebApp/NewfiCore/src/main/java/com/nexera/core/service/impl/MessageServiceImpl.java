@@ -189,7 +189,10 @@ public class MessageServiceImpl implements MessageService {
 		createdUser.setUserID(nameImageVO.getUserID());
 		messageVO.setCreatedUser(createdUser);
 
-		messageVO.setLinks(convertMongoFileList(mongoMessagesVO.getLinks()));
+		if(mongoMessagesVO.getLinks()!=null&&mongoMessagesVO.getLinks().length!=0){
+			messageVO.setLinks(convertMongoFileList(mongoMessagesVO.getLinks()));	
+		}
+		
 		messageVO
 		        .setCreatedDate(utils
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
