@@ -273,14 +273,14 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	
 	@Override
 	@Async
-	public void generateWorkflowMessage(int loanId, User loggedInUser,
+	public void generateWorkflowMessage(int loanId,
 	        String noteText) {
-	    // TODO Auto-generated method stub
+
 		MessageVO messageVO = new MessageVO();
 		messageVO.setLoanId(loanId);
 		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
 		        System.currentTimeMillis())));
-		setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser, null);
+		setGlobalPermissionsToMessage(loanId, messageVO, null, null);
 		messageVO.setMessage(noteText);
 		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
 	}
