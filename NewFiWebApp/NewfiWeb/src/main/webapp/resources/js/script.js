@@ -565,7 +565,7 @@ function getNonEditableFormRow(desc, value, id) {
  * Functions for fix your rate module
  */
 function paintFixYourRatePage() {
-	var rateProgramWrapper = getRateProgramContainer();
+	var rateProgramWrapper = getLockRateProgramContainer();
 	var loanSummaryWrapper = getLoanSummaryWrapper();
 	var closingCostWrapper = getClosingCostSummaryContainer();
 	$('#center-panel-cont').append(rateProgramWrapper).append(

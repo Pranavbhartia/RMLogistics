@@ -351,11 +351,14 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		userModel.setUsername(userVO.getEmailId());
 		userModel.setEmailId(userVO.getEmailId());
 		
-		userModel.setPassword("abc123");
+		//userModel.setPassword("abc123");
 		userModel.setStatus(true);
 		
+		CustomerDetail customerDetail = new CustomerDetail();
+		customerDetail.setSubscriptionsStatus(2);		
+		userModel.setCustomerDetail(customerDetail);
 		
-		userModel.setEmailId(userVO.getEmailId());
+		//userModel.setEmailId(userVO.getEmailId());
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
@@ -598,7 +601,11 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
 		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
-		userModel.setCustomerDetail(new CustomerDetail());
+		
+		CustomerDetail customerDetail = new CustomerDetail();
+		customerDetail.setSubscriptionsStatus(2);
+		
+		userModel.setCustomerDetail(customerDetail);
 		userModel.setInternalUserDetail(this.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
 		return userModel;

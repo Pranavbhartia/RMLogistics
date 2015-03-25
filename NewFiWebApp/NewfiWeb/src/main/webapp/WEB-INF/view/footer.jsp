@@ -23,7 +23,7 @@
 <script src="resources/js/jquery.knob.js"></script>
 <script src="resources/js/customer-application.js"></script>
 <script src="resources/js/include/jquery-maskMoney.js"></script>
-
+<script src="resources/js/lockRate.js"></script>
 <div id="dialog" >
 </div>
 

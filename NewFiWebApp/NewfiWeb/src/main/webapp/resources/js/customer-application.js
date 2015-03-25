@@ -4,8 +4,22 @@ var appUserDetails = new Object();
 var user =  new Object();
 var customerDetail = new Object();
 var propertyTypeMaster = new Object();
+var governmentquestion = new Object();
+var refinancedetails = new Object();
+var loan = new Object();
+var loanType = new Object();
 
-appUserDetails["user"] = user;
+loan.id = 2;
+loanType.id=1;
+
+user.customerDetail = customerDetail;
+appUserDetails.user = user;
+appUserDetails.propertyTypeMaster = propertyTypeMaster;
+appUserDetails.governmentquestion = governmentquestion;
+appUserDetails.refinancedetails = refinancedetails;
+appUserDetails.loan = loan;
+appUserDetails.loanType = loanType;
+
 var flag = 0;
 var applicationItemsList = [ {
 							    "text":"Home Information",
@@ -72,10 +86,11 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintCustomerApplicationPage() {
     
-	user["id"] = newfi.user.id;
-	user["emailId"] = newfi.user.emailId;
-	user["firstName"] =newfi.user.firstName;
-	user["lastName"] = newfi.user.lastName;
+	user.id = newfi.user.id;
+	customerDetail.id = newfi.user.customerDetail.id;
+	//user["emailId"] = newfi.user.emailId;
+	//user["firstName"] =newfi.user.firstName;
+	//user["lastName"] = newfi.user.lastName;
 	
 	var topHeader = getCompletYourApplicationHeader();
 
@@ -408,14 +423,30 @@ function paintCustomerApplicationPageStep1a() {
 
     		user.customerDetail = customerDetail;
     		
-    		alert(JSON.stringify(appUserDetails));
-    		paintCustomerApplicationPageStep1b();
+    		//alert(JSON.stringify(appUserDetails));
+    		// save the detials in the customer details table,loan app form, propertydetails master,govemenrtQuestion,RefienceDetials
+    		/*$.ajax({
+    			url:"rest/application/applyloan",
+    			type:"POST",
+    			data:{"appFormData" : JSON.stringify(appUserDetails)},
+    			datatype : "application/json",
+    			success:function(data){
+    				alert("success");
+    				
+    			},
+    			error:function(erro){
+    				alert("success");
+    			}
+    			
+    		});*/
+    		
+    		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
+    		//paintCustomerApplicationPageStep1b();
         	        	
         }else{
         	showToastMessage("Please give answer of the questions");
         }
-    	
-       ;
+   	
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
@@ -436,16 +467,16 @@ function paintCustomerApplicationPageStep1b() {
         name: "propertyType",
         options: [{
             text: "Single Family Residence",
-            value: "Single Family Residence"
+            value: "0"
         }, {
             text: "Condo",
-            value: "Condo"
+            value: "1"
         }, {
             text: "Multi-Unit",
-            value: "Multi-Unit"
+            value: "2"
         }, {
             text: "Mobile/Manufactured",
-            value: "Mobile/Manufactured"
+            value: "3"
         }],
         selected: ""
     }, {
@@ -454,13 +485,13 @@ function paintCustomerApplicationPageStep1b() {
         name: "residenceType",
         options: [{
             text: "Primary Residence",
-            value: "Primary Residence"
+            value: "0"
         }, {
             text: "Vacation Home",
-            value: "Vacation Home"
+            value: "1"
         }, {
             text: "Investment Property",
-            value: "Investment Property"
+            value: "2"
         }],
         selected: ""
     }, {
@@ -491,31 +522,33 @@ function paintCustomerApplicationPageStep1b() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
-    	propertyType = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
-    	residenceType= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
-    	taxesPaid = $('input[name="taxesPaid"]').val();
-    	insuranceProvider = $('input[name="insuranceProvider"]').val();
-    	insuranceCost = $('input[name="insuranceCost"]').val();
-    	purchaseTime = $('input[name="purchaseTime"]').val();
+    	propertyTypeCd = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
+    	residenceTypeCd= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
+    	propertyTaxesPaid = $('input[name="taxesPaid"]').val();
+    	propertyInsuranceProvider = $('input[name="insuranceProvider"]').val();
+    	propertyInsuranceCost = $('input[name="insuranceCost"]').val();
+    	propertyPurchaseYear = $('input[name="purchaseTime"]').val();
+    	homeWorthToday = '$35,000';
     	
     	
     	
-    	
-    	if(propertyType != undefined && propertyType != "" && residenceType != undefined && residenceType != ""  && taxesPaid != undefined && taxesPaid != ""  && insuranceProvider != undefined && insuranceProvider != "" && insuranceCost != undefined && insuranceCost != ""  && purchaseTime != undefined && purchaseTime != ""  ){
+    	if(propertyTypeCd != undefined && propertyTypeCd != "" && residenceTypeCd != undefined && residenceTypeCd != ""  && propertyTaxesPaid != undefined && propertyTaxesPaid != ""  && propertyInsuranceProvider != undefined && propertyInsuranceProvider != "" && propertyInsuranceCost != undefined && propertyInsuranceCost != ""  && propertyPurchaseYear != undefined && propertyPurchaseYear != ""  ){
     		
-    		propertyTypeMaster.propertyType = propertyType;
-        	propertyTypeMaster.residenceType = residenceType;
-        	propertyTypeMaster.taxesPaid = taxesPaid;
-        	propertyTypeMaster.insuranceProvider = insuranceProvider;
-        	propertyTypeMaster.insuranceCost = insuranceCost;
-        	propertyTypeMaster.purchaseTime = purchaseTime;
-        	propertyTypeMaster.homeWorthToday = "" ;
+    		propertyTypeMaster.propertyTypeCd = propertyTypeCd;
+        	propertyTypeMaster.residenceTypeCd = residenceTypeCd;
+        	propertyTypeMaster.propertyTaxesPaid = propertyTaxesPaid;
+        	propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
+        	propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
+        	propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
+        	propertyTypeMaster.homeWorthToday = homeWorthToday ;
         	  	
         	appUserDetails.propertyTypeMaster = propertyTypeMaster;
         	
-        	alert(JSON.stringify(appUserDetails));
+        	//alert(JSON.stringify(appUserDetails));
+        	 saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
+        	
     		
-    		paintCustomerApplicationPageStep2();
+    		//paintCustomerApplicationPageStep2();
     	}else{
     		showToastMessage("Please give answer of the questions");
     	}
@@ -620,13 +653,13 @@ function paintCustomerApplicationPageStep2() {
     var questions = [{
         type: "yesno",
         text: "Are you married?",
-        name: "isMarried",
+        name: "maritalStatus",
         options: [{
             text: "Yes",
             addQuestions:[{
                 type: "yesno",
                 text: "Is your spouse on the loan?",
-                name: "isSouseOnLoan",
+                name: "isSpouseOnLoan",
                 options: [{
                     text: "Yes",
                     addQuestions:[{
@@ -660,20 +693,32 @@ function paintCustomerApplicationPageStep2() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
         
-    	appUserDetails["isMarried"] = quesContxts[0].value;
-    	appUserDetails["isSouseOnLoan"]  = null;
-    	appUserDetails["spouseName"]  = null;
+    	appUserDetails.maritalStatus = quesContxts[0].value;
     	
-    	if( quesContxts[0].childContexts.Yes !=  undefined){
-    		appUserDetails["isSouseOnLoan"]  = quesContxts[0].childContexts.Yes[0].value;
+    	if(quesContxts[0].value !="" && quesContxts[0].value !=undefined ){
+    	
+	    	if( quesContxts[0].childContexts.Yes !=  undefined){
+	    		if( quesContxts[0].childContexts.Yes[0].value =="Yes") 
+	    		appUserDetails.isSouseOnLoan =true;
+	    	}else{
+	    		appUserDetails.isSpouseOnLoan  = false;
+	    		appUserDetails.spouseName  = "false";
+	    	}
+	    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
+	    	 
+	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+	    	}else{
+	    		appUserDetails.spouseName  = false;
+	    	}
+	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
+	    	
+    	}else{
+    		showToastMessage("Please give the answers of the questions");
     	}
-    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
-    	 appUserDetails["spouseName"]  = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
-    	}
-
+         //alert(JSON.stringify(appUserDetails));
     	//paintCustomerApplicationPageStep3();
-    	paintMyIncome();
-
+    	
+    	
     });
     $('#app-right-panel').append(saveAndContinueButton);
     
@@ -751,59 +796,6 @@ function getContextApplicationTextQues(contxt) {
 }
 
 
-/*function paintCustomerApplicationPageStep2() {
-	appProgressBaar(2);
-	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Who's on the Loan?";
-
-    var quesHeaderTextCont = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt);
-    //TODO-try nested yesno question
-    var questions = [{
-        type: "yesno",
-        text: "Are you married?",
-        name: "isMarried",
-        options: [{
-            text: "Yes",
-            addQuestions:[{
-                type: "yesno",
-                text: "Is your spouse on the loan?",
-                name: "isSouseOnLoan",
-                options: [{
-                    text: "Yes",
-                    addQuestions:[{
-                        type: "text",
-                        text: "What is your spouse name ?",
-                        name: "spouseName"
-                    }]
-                }, {
-                    text: "No"
-                }],
-                selected: ""
-            }]
-        }, {
-            text: "No"
-        }],
-        selected: ""
-    }];
-
-    var questionsContainer = getQuestionsContainer(questions);
-    //var spouseInLoan = paintSpouseInLoan();
-    var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
-        
-    	appUserDetails["isMarried"] =  $('.app-options-cont[name="isMarried"]').find('.app-option-choice[isselected="true"]').html();
-
-    	//paintCustomerApplicationPageStep3();
-    	paintRefinanceMyIncome();
-
-    });
-
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
-}
-*/
 
 function paintMyIncome() {
 
@@ -812,17 +804,17 @@ function paintMyIncome() {
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintRefinanceEmployed,
-		"name" : "employed",
+		"name" : "isEmployed",
 		"value" : 0
 	}, {
 		"text" : "Self-employed",
 		"onselect" : paintRefinanceSelfEmployed,
-		"name" : "self-employed",
+		"name" : "isselfEmployed",
 		"value" : 1
 	}, {
 		"text" : "Social Security Income/Disability",
 		"onselect" : paintRefinanceDisability,
-		"name" :"isDisability",
+		"name" :"isssIncomeOrDisability",
 		"value" : 2
 	}, {
 		"text" : "Pension/Retirement/401(k)",
@@ -1009,87 +1001,12 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
-		appUserDetails[key] = $('input[name="' + key + '"]').val();
+		//appUserDetails[key] = $('input[name="' + key + '"]').val();
 		event.data.clickEvent();
 	});
 
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
-
-/*function paintCustomerApplicationPageStep3() {
-    $('#app-right-panel').html('');
-    var quesHeaderTxt = "My Income";
-
-    var quesHeaderTextCont = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt);
-
-    var questions = [{
-        type: "mcq",
-        text: "Select all that apply",
-        name: "purchaseTime",
-        options: [{
-            text: "Employee",
-            value: "Employee",
-            sub_questions: [{
-                type: "desc",
-                text: "About home much do you make a year before taxes?",
-                name: "",
-                value: ""
-            }, {
-                type: "desc",
-                text: "Where do you work?",
-                name: "",
-                value: ""
-            }, {
-                type: "desc",
-                text: "When did your start working there?",
-                name: "",
-                value: ""
-            }]
-        }, {
-            text: "Self-employed",
-            value: "Self-employed",
-            sub_questions: [{
-                type: "desc",
-                text: "How much do you make a year?",
-                name: "",
-                value: ""
-            }]
-        }, {
-            text: "Social Security/ Income Disability",
-            value: "Social Security/ Income Disability",
-            sub_questions: [{
-                type: "desc",
-                text: "About how much do you get monthly?",
-                name: "",
-                value: ""
-            }]
-        }, {
-            text: "Pension/Re/rement/401(k)",
-            value: "Pension/Re/rement/401(k)",
-            sub_questions: [{
-                type: "desc",
-                text: "About how much do you get monthly?",
-                name: "",
-                value: ""
-            }]
-        }],
-        selected: ""
-    }];
-
-    var questionsContainer = getQuestionsContainer(questions);
-
-    var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
-        paintCustomerApplicationPageStep4a();
-    });
-
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
-        .append(saveAndContinueButton);
-}*/
-
 
 function paintCustomerApplicationPageStep3(quesText, options, name) {
 	var container = $('<div>').attr({
@@ -1116,17 +1033,17 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
-			"name" : name
+			"name" : options[i].name
 		}, function(event) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
-        		appUserDetails[name] = "false";
+        		//appUserDetails[name] = false;
         	}else{
 	        	$(this).addClass('app-option-checked');
-	        	appUserDetails[name] = "true";
+	        	//appUserDetails[name] = true;
         	}
 			var key = event.data.name;
-			appUserDetails[key] = event.data.option.value;
+			//appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
 		});
 
@@ -1136,21 +1053,38 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
 	}).html("Save & Continue").bind('click',function() {
-				appUserDetails["beforeTax"] = $('input[name="beforeTax"]')
-						.val();
-				appUserDetails["workPlace"] = $('input[name="workPlace"]')
-						.val();
-				appUserDetails["startWorking"] = $(
-						'input[name="startWorking"]').val();
-				appUserDetails["selfEmployed"] = $(
-						'input[name="selfEmployed"]').val();
-				appUserDetails["disability"] = $(
-						'input[name="disability"]').val();
-				appUserDetails["pension"] = $('input[name="pension"]')
-						.val();
+		        
+		        EmployedIncomePreTax= $('input[name="beforeTax"]').val();
+		        EmployedAt = $('input[name="workPlace"]').val();
+		        EmployedSince = $('input[name="startWorking"]').val();
+				
+		        selfEmployedIncome = $('input[name="selfEmployed"]').val();
+		        
+		        ssDisabilityIncome = $('input[name="disability"]').val();
+				
+				monthlyPension = $('input[name="pension"]').val();
 
+				
+				
+				
+				appUserDetails.isEmployed =  true;
+				appUserDetails.EmployedIncomePreTax = EmployedIncomePreTax;
+				appUserDetails.EmployedAt = EmployedAt;
+				appUserDetails.EmployedSince = EmployedSince;
+				
+				appUserDetails.ispensionOrRetirement= true;
+				appUserDetails.monthlyPension =monthlyPension;
+				
+				appUserDetails.isselfEmployed = true;
+				appUserDetails.selfEmployedIncome =selfEmployedIncome;
+				
+				appUserDetails.isssIncomeOrDisability=true;
+				appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
+				
 				sessionStorage.refinaceData = JSON.stringify(appUserDetails);
-				paintCustomerApplicationPageStep4a();
+				
+				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
+				//paintCustomerApplicationPageStep4a();
 			});
 
 	return container.append(quesTextCont).append(optionContainer).append(
@@ -1180,7 +1114,7 @@ function paintCustomerApplicationPageStep4a() {
             value: "yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1189,10 +1123,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isBankrupt",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1201,10 +1135,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isPropertyForeclosed",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1213,10 +1147,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isLawsuit",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1225,10 +1159,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isObligatedLoan",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1237,10 +1171,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isFederalDebt",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1249,10 +1183,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isObligatedToPayAlimony",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1261,10 +1195,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isDownPaymentBorrowed",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1273,10 +1207,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isEndorser",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     }, {
@@ -1293,10 +1227,10 @@ function paintCustomerApplicationPageStep4a() {
                 name: "isPermanentResidentAlien",
                 options: [{
                     text: "Yes",
-                    value: "yes"
+                    value: "Yes"
                 }, {
                     text: "No",
-                    value: "no"
+                    value: "No"
                 }],
                 "selected": ""
             }]
@@ -1309,10 +1243,10 @@ function paintCustomerApplicationPageStep4a() {
         name: "isOccupyPrimaryResidence",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
-            value: "no"
+            value: "No"
         }],
         selected: ""
     },
@@ -1381,34 +1315,50 @@ function paintCustomerApplicationPageStep4a() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
-    	appUserDetails["isOutstandingJudgments"] =  quesDeclarationContxts[0].value;
-    	appUserDetails["isBankrupt"] =  quesDeclarationContxts[1].value;
-    	appUserDetails["isPropertyForeclosed"] =  quesDeclarationContxts[2].value;
-    	appUserDetails["isLawsuit"] =  quesDeclarationContxts[3].value;
-    	appUserDetails["isObligatedLoan"] =  quesDeclarationContxts[4].value;
-    	appUserDetails["isFederalDebt"] =  quesDeclarationContxts[5].value;
-    	appUserDetails["isObligatedToPayAlimony"] =  quesDeclarationContxts[6].value;
-    	appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
-    	appUserDetails["isEndorser"] =  quesDeclarationContxts[8].value;
+    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
+    	isBankrupt =  quesDeclarationContxts[1].value;
+    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
+    	isLawsuit =  quesDeclarationContxts[3].value;
+    	isObligatedLoan =  quesDeclarationContxts[4].value;
+    	isFederalDebt =  quesDeclarationContxts[5].value;
+    	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
+    	//appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
+    	isEndorser =  quesDeclarationContxts[8].value;
     	
-    	appUserDetails["isUSCitizen"] =  quesDeclarationContxts[9].value;
+    	isUSCitizen =  quesDeclarationContxts[9].value;
     
-    	appUserDetails["isPermanentResidentAlien"] = null;
-    	if(quesDeclarationContxts[9].childContexts.No != undefined)
-    	appUserDetails["isPermanentResidentAlien"] = quesDeclarationContxts[9].childContexts.No[0].value;
+    	//appUserDetails["isPermanentResidentAlien"] = null;
+    	//if(quesDeclarationContxts[9].childContexts.No != undefined)
+    		//isOccupyPrimaryResidence = quesDeclarationContxts[9].childContexts.No[0].value;
     	
-    	appUserDetails["isOccupyPrimaryResidence"] =  quesDeclarationContxts[10].value;
-    	appUserDetails["isOwnershipInterestInProperty"] =  quesDeclarationContxts[11].value;
+    	 isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
+    	 isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
-    	appUserDetails["yourPrimaryResidence"] = null;
-    	if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	appUserDetails["yourPrimaryResidence"] = quesDeclarationContxts[11].childContexts.Yes[0].value;
+    	//appUserDetails["yourPrimaryResidence"] = null;
+    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
+    	//appUserDetails["yourPrimaryResidence"] = quesDeclarationContxts[11].childContexts.Yes[0].value;
     	
-    	appUserDetails["propertyStatus"] =null;
-    	if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
+    	//appUserDetails["propertyStatus"] =null;
+    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
+    	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
+    	 
+    	 governmentquestion.isOutstandingJudgments = isOutstandingJudgments;
+    	 governmentquestion.isBankrupt = isBankrupt;
+    	 governmentquestion.isPropertyForeclosed = isPropertyForeclosed;
+    	 
+    	 governmentquestion.isLawsuit= isLawsuit;
+    	 governmentquestion.isObligatedLoan= isObligatedLoan;
+    	 governmentquestion.isFederalDebt = isFederalDebt;
+    	 governmentquestion.isObligatedToPayAlimony = isObligatedToPayAlimony;
+    	 
+    	 governmentquestion.isEndorser= isEndorser;
+    	 governmentquestion.isUSCitizen= isUSCitizen;
+    	 governmentquestion.isOccupyPrimaryResidence = isOccupyPrimaryResidence;
+    	 governmentquestion.isOwnershipInterestInProperty = isOwnershipInterestInProperty;
+    	 
+    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
     	
-    	paintCustomerApplicationPageStep4b();
+    	//paintCustomerApplicationPageStep4b();
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
@@ -1492,12 +1442,17 @@ function paintCustomerApplicationPageStep4b(){
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
-	    	appUserDetails["ethnicity"] =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
-	    	appUserDetails["race"] =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
-	    	appUserDetails["sex"] =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
+	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
+	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
+	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
 	    	
-	    	paintCustomerApplicationPageStep5();
+	    	governmentquestion.ethnicity = ethnicity;
+	    	governmentquestion.race = race;
+	    	governmentquestion.sex =sex;
+	    	
+	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
+	    	//paintCustomerApplicationPageStep5();
 	    });
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
@@ -1538,17 +1493,20 @@ function paintCustomerApplicationPageStep5() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
-    	birthday = $('input[name="birthday"]').val();
+    	dateOfBirth = $('input[name="birthday"]').val();
     	ssn =  $('input[name="ssn"]').val();
-    	phoneNumber =  $('input[name="phoneNumber"]').val();
+    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
     	
     	
-    	if(birthday != undefined && birthday !="" && ssn != undefined && ssn !="" && phoneNumber != undefined && phoneNumber !=""){
+    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !=""){
     		
-    		customerDetail.birthday= birthday;
+    		customerDetail.dateOfBirth= dateOfBirth;
     		customerDetail.ssn = ssn;
-    		customerDetail.phoneNumber = phoneNumber;
-    		applicationFormSumbit();
+    		customerDetail.secPhoneNumber = secPhoneNumber;
+    		//applicationFormSumbit();
+    		
+    		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit());
+    		
     	}else{
     		showToastMessage("Please give the answers of the questions");
     	}
@@ -1561,7 +1519,7 @@ function paintCustomerApplicationPageStep5() {
 
 function applicationFormSumbit(){
 	
-	alert(JSON.stringify(appUserDetails));
+	changeSecondaryLeftPanel(3);
 }
 
 
@@ -1687,3 +1645,20 @@ function getMonthYearTextQuestion(question) {
 	}
 
 
+function saveAndUpdateLoanAppForm(appUserDetails,callBack){
+	
+	$.ajax({
+		url:"rest/application/applyloan",
+		type:"POST",
+		data:{"appFormData" : JSON.stringify(appUserDetails)},
+		datatype : "application/json",
+		success:function(data){
+
+			callBack;
+		},
+		error:function(erro){
+			alert("success");
+		}
+		
+	});
+}
