@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
@@ -73,34 +74,32 @@ public class EmailProcessor implements Runnable {
 			Address[] toAddress = message.getAllRecipients();
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
-			// TODO remove this
-			fromAddressString = "test@gmail.com";
-			UserVO uploadedByUser = userProfileService
+			
+			User uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
 			String messageId = null;
 			String loanId = null;
 			if (toAddressString != null) {
-				// TODO remove this
-				loanId = "1";
-				/*
-				 * String[] toAddressArray = toAddressString.split("-"); if
-				 * (toAddressArray.length == 1) { LOGGER.debug(
-				 * "This is a new message, does not contain a message id");
-				 * loanId = toAddressArray[0]; } else if (toAddressArray.length
-				 * == 2) {
-				 * LOGGER.debug("This is a reply mail, must contain a message id"
-				 * ); messageId = toAddressArray[0]; loanId = toAddressArray[1];
-				 * }
-				 */
+				
+				
+				  String[] toAddressArray = toAddressString.split("-"); if
+				  (toAddressArray.length == 1) { LOGGER.debug(
+				  "This is a new message, does not contain a message id");
+				  loanId = toAddressArray[0]; } else if (toAddressArray.length
+				  == 2) {
+				  LOGGER.debug("This is a reply mail, must contain a message id"
+				  ); messageId = toAddressArray[0]; loanId = toAddressArray[1];
+				  }
+				 
 
 			}
 
 			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
 			String emailBody = getEmailBody(mimeMessage);
 			LOGGER.debug("Body of the email is " + emailBody);
-			extractAttachmentAndUploadEverything(String emailBody,loanVO, uploadedByUser,
-			        loanVO.getUser(), mimeMessage);
+			extractAttachmentAndUploadEverything(emailBody,loanVO, uploadedByUser,
+			        loanVO.getUser(), mimeMessage,messageId);
 		} catch (MessagingException e) {
 
 		}
@@ -134,8 +133,8 @@ public class EmailProcessor implements Runnable {
 	}
 
 	private void extractAttachmentAndUploadEverything(String emailBody,
-	        LoanVO loanVO, UserVO uploadedByUser, UserVO actualUser,
-	        MimeMessage mimeMessage) {
+	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
+	        MimeMessage mimeMessage,String messageId) {
 		try {
 
 			Multipart multipart = (Multipart) mimeMessage.getContent();
@@ -149,23 +148,7 @@ public class EmailProcessor implements Runnable {
 					DataHandler dataHandler = bodyPart.getDataHandler();
 					String content = dataHandler.getContentType();
 					InputStream inputStream = dataHandler.getInputStream();
-					/*
-					 * String path = nexeraUtility.tomcatDirectoryPath(); File
-					 * file = null; if (content.contains("pdf")) { file =
-					 * convertInputStreamToFile(inputStream, path);
-					 * Files.probeContentType(file.toPath()); } else if
-					 * (content.contains("jpg") || content.contains("png") ||
-					 * content.contains("tiff") || content.contains("tif")) {
-					 * 
-					 * file = nexeraUtility.filePathToMultipart(filePath); file
-					 * = nexeraUtility.convertImageToPDFDocument(multipartFile);
-					 * 
-					 * 
-					 * 
-					 * } else { // TODO invalid file format need to throw and
-					 * log error LOGGER.error("Invalid Format " + content); }
-					 */
-
+					
 					LOGGER.debug("Uploading the file in the system ");
 
 					CheckUploadVO checkUploadVO = null;
@@ -174,9 +157,9 @@ public class EmailProcessor implements Runnable {
 						        .uploadFileByEmail(inputStream, content,
 						                actualUser.getId(), loanVO.getId(),
 						                uploadedByUser.getId());
-						// messageServiceHelper.generateEmailDocumentMessage(loanVO.getId(),
-						// uploadedByUser, messageId, emailBody, fileUrls,
-						// successFlag);
+						 messageServiceHelper.generateEmailDocumentMessage(loanVO.getId(),
+						 uploadedByUser, messageId, emailBody, null,
+						 true);
 					} catch (COSVisitorException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
