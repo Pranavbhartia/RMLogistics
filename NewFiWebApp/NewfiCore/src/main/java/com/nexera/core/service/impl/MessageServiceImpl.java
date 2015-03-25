@@ -62,7 +62,7 @@ public class MessageServiceImpl implements MessageService {
 	private SendGridEmailService sendGridEmailService;
 
 	@Override
-	public String saveMessage(MessageVO messagesVO, String messageType)
+	public String saveMessage(MessageVO messagesVO, String messageType,boolean sendEmail)
 	        throws FatalException, NonFatalException {
 
 		MongoMessagesVO mongoMessagesVO = new MongoMessagesVO();
@@ -93,7 +93,10 @@ public class MessageServiceImpl implements MessageService {
 		/*
 		 * Invoke send Email service to notify the users about the take a note operation
 		 */
-		sendEmail(messagesVO,mongoMessageId);
+		if(sendEmail){
+			sendEmail(messagesVO,mongoMessageId);	
+		}
+		
 		return mongoMessageId;
 
 	}
