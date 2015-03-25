@@ -68,7 +68,7 @@ public class EmailProcessor implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.debug("Inside run method ");
-
+		boolean sendEmail = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			MimeMessage mimeMessage = new MimeMessage(mimeMsg);
@@ -76,10 +76,17 @@ public class EmailProcessor implements Runnable {
 			LOGGER.debug("Mail subject is " + subject);
 			Address[] fromAddress = message.getFrom();
 			Address[] toAddress = message.getAllRecipients();
-
+			if (toAddress.length > 1) {
+				LOGGER.debug("User is sending this message to multiple recepient ");
+				sendEmail = false;
+			} else {
+				sendEmail = true;
+			}
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
-			fromAddressString = fromAddressString.substring(fromAddressString.indexOf("<")+1, fromAddressString.indexOf(">")).trim();
+			fromAddressString = fromAddressString.substring(
+			        fromAddressString.indexOf("<") + 1,
+			        fromAddressString.indexOf(">")).trim();
 			User uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
@@ -110,7 +117,8 @@ public class EmailProcessor implements Runnable {
 			String emailBody = getEmailBody(mimeMessage);
 			LOGGER.debug("Body of the email is " + emailBody);
 			extractAttachmentAndUploadEverything(emailBody, loanVO,
-			        uploadedByUser, loanVO.getUser(), mimeMessage, messageId);
+			        uploadedByUser, loanVO.getUser(), mimeMessage, messageId,
+			        sendEmail);
 		} catch (MessagingException e) {
 
 		}
@@ -145,7 +153,7 @@ public class EmailProcessor implements Runnable {
 
 	private void extractAttachmentAndUploadEverything(String emailBody,
 	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
-	        MimeMessage mimeMessage, String messageId) {
+	        MimeMessage mimeMessage, String messageId, boolean sendEmail) {
 		try {
 			String successNoteText = "These files were ";
 			String failureNoteText = "These files were ";
@@ -209,7 +217,7 @@ public class EmailProcessor implements Runnable {
 				LOGGER.debug("Mail did not have any attachment ");
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
-				        null, true,false);
+				        null, true, sendEmail);
 
 			} else {
 				LOGGER.debug("Mail contains attachment ");
@@ -217,13 +225,13 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        successNoteText, fileVOList, true,false);
+					        successNoteText, fileVOList, true, sendEmail);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false,false);
+					        failureNoteText, null, false, sendEmail);
 				}
 			}
 		} catch (MessagingException me) {
