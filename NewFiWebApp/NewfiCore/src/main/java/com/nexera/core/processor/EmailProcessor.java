@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +33,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
@@ -144,7 +147,11 @@ public class EmailProcessor implements Runnable {
 	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
 	        MimeMessage mimeMessage, String messageId) {
 		try {
-
+			String successNoteText = "These files were ";
+			String failureNoteText = "These files were ";
+			List<CheckUploadVO> checkUploadSuccessList = new ArrayList<CheckUploadVO>();
+			List<FileVO> fileVOList = new ArrayList<FileVO>();
+			List<CheckUploadVO> checkUploadFailureList = new ArrayList<CheckUploadVO>();
 			Multipart multipart = (Multipart) mimeMessage.getContent();
 			for (int i = 0; i < multipart.getCount(); i++) {
 				BodyPart bodyPart = multipart.getBodyPart(i);
@@ -165,32 +172,60 @@ public class EmailProcessor implements Runnable {
 						        .uploadFileByEmail(inputStream, content,
 						                actualUser.getId(), loanVO.getId(),
 						                uploadedByUser.getId());
-						messageServiceHelper.generateEmailDocumentMessage(
-						        loanVO.getId(), uploadedByUser, messageId,
-						        emailBody, null, true);
+						if (checkUploadVO != null) {
+							if (checkUploadVO.getIsUploadSuccess()) {
+								FileVO fileVO = new FileVO();
+								fileVO.setFileName(checkUploadVO.getFileName());
+								fileVO.setUrl(checkUploadVO.getUuid());
+								fileVOList.add(fileVO);
+								checkUploadSuccessList.add(checkUploadVO);
+								successNoteText = successNoteText
+								        .concat(checkUploadVO.getFileName());
+							}
+
+							else {
+								checkUploadFailureList.add(checkUploadVO);
+								failureNoteText = failureNoteText
+								        .concat(checkUploadVO.getFileName());
+							}
+						}
+
+						successNoteText = successNoteText
+						        + " were successfully uploaded ";
+						failureNoteText = failureNoteText
+						        + " were not uploaded";
 					} catch (COSVisitorException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					LOGGER.info("Response in uploading documents by email : "
-					        + checkUploadVO);
-					/*
-					 * uploadedFileListService.uploadFile(nexeraUtility
-					 * .filePathToMultipart(file.getAbsolutePath()),
-					 * actualUser.getId(), loanVO.getId(), uploadedByUser
-					 * .getId());
-					 */
-					/*
-					 * if (file.exists()) { LOGGER.debug(
-					 * "Remove the temp file after uploading it into the system "
-					 * ); file.delete();
-					 * 
-					 * }
-					 */
+
 				}
 
 			}
 
+			if (!checkUploadSuccessList.isEmpty()
+			        && !checkUploadFailureList.isEmpty()) {
+
+				LOGGER.debug("Mail did not have any attachment ");
+				messageServiceHelper.generateEmailDocumentMessage(
+				        loanVO.getId(), uploadedByUser, messageId, emailBody,
+				        null, true);
+
+			} else {
+				LOGGER.debug("Mail contains attachment ");
+				if (!checkUploadSuccessList.isEmpty()) {
+					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        successNoteText, fileVOList, true);
+				}
+				if (!checkUploadFailureList.isEmpty()) {
+					LOGGER.debug("Mail contains attachment which were not uploaded ");
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        failureNoteText, null, false);
+				}
+			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
 		} catch (IOException e) {
