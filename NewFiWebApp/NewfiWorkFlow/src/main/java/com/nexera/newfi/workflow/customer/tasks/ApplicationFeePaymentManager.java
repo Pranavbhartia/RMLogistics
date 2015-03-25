@@ -2,9 +2,11 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import org.springframework.stereotype.Component;
+
 import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class ApplicationFeePaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
