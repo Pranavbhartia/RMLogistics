@@ -46,7 +46,8 @@ public class ThreadManager implements Runnable {
 		 * For every status and a value, there needs to be mapping in the loanmilestone table to be populated in the comments column.
 		 * 
 		 * 
-		 * Once the status updates are done.
+		 * Once the status updates are done. We need to invoke the WFItem.
+		 * Look up the WFIM, for the given status change what is the WFExecId,
 		 * 
 		 */
 		
