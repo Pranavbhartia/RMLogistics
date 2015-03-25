@@ -13,6 +13,7 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
+import com.nexera.newfi.workflow.tasks.ApplicationStatus;
 import com.nexera.newfi.workflow.tasks.UWStatusManager;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -25,7 +26,14 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 	private LoanService loanService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		//Do Nothing
+		String status = objectMap.get("status").toString();
+		if (status.equals(ApplicationStatus.appraisalOrdered)) {
+			return "2";
+		} else if (status.equals(ApplicationStatus.appraisalPending)) {
+			return "1";
+		}else if (status.equals(ApplicationStatus.appraisalReceived)) {
+			return "3";
+		}
 		return null;
 	}
 
