@@ -32,6 +32,28 @@ public class ThreadManager implements Runnable {
 
 	@Override
 	public void run() {
+		
+		
+		/*
+		 * 1. We get the loan status from LQB.
+		 * 
+		 * Once the status is retrieved, these are teh set of tasks to be done:
+		 * 
+		 * a. Loan milestone master contains all the status that is needed in the newFi System, essentially these are the 11 boxes we are showing in LM view
+		 * b. loanmilestone table contains the current status and the status history of a particular loan.
+		 * 
+		 * We will get the LQB status, this needs to be mapped to the loan milestone master table based on Hina's sheet
+		 * For every status and a value, there needs to be mapping in the loanmilestone table to be populated in the comments column.
+		 * 
+		 * 
+		 * Once the status updates are done.
+		 * 
+		 */
+		
+		
+		
+		
+		
 		LOGGER.debug("Inside method run ");
 		Map map = new HashMap<String, String>();
 		// TODO Remove this line

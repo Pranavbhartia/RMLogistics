@@ -15,6 +15,6 @@ public interface MessageServiceHelper {
 	        List<Integer> removedList);
 
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
-	        String messageId, String noteText, List<FileVO> fileUrls);
+	        String messageId, String noteText, List<FileVO> fileUrls,boolean successFlag);
 
 }
