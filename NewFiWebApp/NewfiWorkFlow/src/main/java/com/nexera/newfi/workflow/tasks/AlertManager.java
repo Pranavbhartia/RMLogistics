@@ -17,16 +17,8 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NotificationService notificationService;
 
-	@SuppressWarnings("unchecked")
 	public String execute(HashMap<String, Object> objectMap) {
-		HashMap<String, Object> notification = (HashMap<String, Object>) objectMap
-		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
-		ObjectMapper mapper = new ObjectMapper();
-		NotificationVO notificationVO = mapper.convertValue(notification,
-		        NotificationVO.class);
-
-		notificationService.createNotification(notificationVO);
-		return String.valueOf(notificationVO.getId());
+		return null;
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
@@ -40,9 +32,15 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+	public String invokeAction(HashMap<String, Object> objectMap) {
+		HashMap<String, Object> notification = (HashMap<String, Object>) objectMap
+		        .get(WorkflowDisplayConstants.NOTIFICATION_VO_KEY_NAME);
+		ObjectMapper mapper = new ObjectMapper();
+		NotificationVO notificationVO = mapper.convertValue(notification,
+		        NotificationVO.class);
+
+		notificationService.createNotification(notificationVO);
+		return String.valueOf(notificationVO.getId());
 	}
 	
 	

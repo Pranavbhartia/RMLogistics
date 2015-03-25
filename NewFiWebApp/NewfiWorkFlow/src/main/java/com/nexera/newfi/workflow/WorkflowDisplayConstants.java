@@ -18,5 +18,5 @@ public class WorkflowDisplayConstants {
 	
 	public static final String WORKFLOW_TASK_SUCCESS = "success";
 	public static final String WORKFLOW_TASK_STARTED = "started";
-	
+	public static final String EMAIL_RECPIENT_NAME = "Team";
 }
