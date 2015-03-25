@@ -13,7 +13,7 @@
     <applicant>
       <field id="aBFirstNm"/>
       <field id="aBLastNm"/>
-      <field id="aBSsn"/>
+      <field id="aBSsn">aBSsn</field>
       <field id="aBHPhone"/>
       <field id="aBCellphone"/>
       <field id="aBAddr"/>
@@ -22,7 +22,7 @@
       <field id="aBZip"/>
       <field id="aCFirstNm"/>
       <field id="aCLastNm"/>
-      <field id="aCSsn"/>
+      <field id="aCSsn">aCSsn</field>
       <field id="aCCellphone"/>
       <field id="aCHPhone"/>
       <field id="aCAddr"/>

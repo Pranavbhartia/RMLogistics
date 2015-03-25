@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -56,6 +57,9 @@ public class EmailProcessor implements Runnable {
 	@Autowired
 	UserProfileService userProfileService;
 
+	@Autowired
+	MessageServiceHelper messageServiceHelper;
+
 	@Override
 	public void run() {
 		LOGGER.debug("Inside run method ");
@@ -70,7 +74,7 @@ public class EmailProcessor implements Runnable {
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
 			// TODO remove this
-			fromAddressString = "rohit.patidar@raremile.com";
+			fromAddressString = "test@gmail.com";
 			UserVO uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
@@ -95,7 +99,7 @@ public class EmailProcessor implements Runnable {
 			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
 			String emailBody = getEmailBody(mimeMessage);
 			LOGGER.debug("Body of the email is " + emailBody);
-			extractAttachmentAndUpload(loanVO, uploadedByUser,
+			extractAttachmentAndUploadEverything(String emailBody,loanVO, uploadedByUser,
 			        loanVO.getUser(), mimeMessage);
 		} catch (MessagingException e) {
 
@@ -129,8 +133,9 @@ public class EmailProcessor implements Runnable {
 		return body;
 	}
 
-	private void extractAttachmentAndUpload(LoanVO loanVO,
-	        UserVO uploadedByUser, UserVO actualUser, MimeMessage mimeMessage) {
+	private void extractAttachmentAndUploadEverything(String emailBody,
+	        LoanVO loanVO, UserVO uploadedByUser, UserVO actualUser,
+	        MimeMessage mimeMessage) {
 		try {
 
 			Multipart multipart = (Multipart) mimeMessage.getContent();
@@ -144,45 +149,53 @@ public class EmailProcessor implements Runnable {
 					DataHandler dataHandler = bodyPart.getDataHandler();
 					String content = dataHandler.getContentType();
 					InputStream inputStream = dataHandler.getInputStream();
-					/*String path = nexeraUtility.tomcatDirectoryPath();
-					File file = null;
-					if (content.contains("pdf")) {
-						file = convertInputStreamToFile(inputStream, path);
-						Files.probeContentType(file.toPath());
-					} else if (content.contains("jpg")
-					        || content.contains("png")
-					        || content.contains("tiff")
-					        || content.contains("tif")) {
-
-						file = nexeraUtility.filePathToMultipart(filePath);
-						file = nexeraUtility.convertImageToPDFDocument(multipartFile);
-
-						
-
-					} else {
-						// TODO invalid file format need to throw and log error
-						LOGGER.error("Invalid Format " + content);
-					}*/
+					/*
+					 * String path = nexeraUtility.tomcatDirectoryPath(); File
+					 * file = null; if (content.contains("pdf")) { file =
+					 * convertInputStreamToFile(inputStream, path);
+					 * Files.probeContentType(file.toPath()); } else if
+					 * (content.contains("jpg") || content.contains("png") ||
+					 * content.contains("tiff") || content.contains("tif")) {
+					 * 
+					 * file = nexeraUtility.filePathToMultipart(filePath); file
+					 * = nexeraUtility.convertImageToPDFDocument(multipartFile);
+					 * 
+					 * 
+					 * 
+					 * } else { // TODO invalid file format need to throw and
+					 * log error LOGGER.error("Invalid Format " + content); }
+					 */
 
 					LOGGER.debug("Uploading the file in the system ");
-					
+
 					CheckUploadVO checkUploadVO = null;
 					try {
-						checkUploadVO = uploadedFileListService.uploadFileByEmail(inputStream , actualUser.getId() , loanVO.getId() ,uploadedByUser.getId() );
+						checkUploadVO = uploadedFileListService
+						        .uploadFileByEmail(inputStream, content,
+						                actualUser.getId(), loanVO.getId(),
+						                uploadedByUser.getId());
+						// messageServiceHelper.generateEmailDocumentMessage(loanVO.getId(),
+						// uploadedByUser, messageId, emailBody, fileUrls,
+						// successFlag);
 					} catch (COSVisitorException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					LOGGER.info("Response in uploading documents by email : "+checkUploadVO);
-					/*uploadedFileListService.uploadFile(nexeraUtility
-					        .filePathToMultipart(file.getAbsolutePath()),
-					        actualUser.getId(), loanVO.getId(), uploadedByUser
-					                .getId());*/
-					/*if (file.exists()) {
-						LOGGER.debug("Remove the temp file after uploading it into the system ");
-						file.delete();
-
-					}*/
+					LOGGER.info("Response in uploading documents by email : "
+					        + checkUploadVO);
+					/*
+					 * uploadedFileListService.uploadFile(nexeraUtility
+					 * .filePathToMultipart(file.getAbsolutePath()),
+					 * actualUser.getId(), loanVO.getId(), uploadedByUser
+					 * .getId());
+					 */
+					/*
+					 * if (file.exists()) { LOGGER.debug(
+					 * "Remove the temp file after uploading it into the system "
+					 * ); file.delete();
+					 * 
+					 * }
+					 */
 				}
 
 			}
