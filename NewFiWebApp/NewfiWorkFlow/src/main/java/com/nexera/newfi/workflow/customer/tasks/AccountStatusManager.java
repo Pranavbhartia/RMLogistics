@@ -24,4 +24,11 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 		return "3";
 	}
 
+	@Override
+	public String invokeAction(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

@@ -18,6 +18,11 @@ public class CheckUploadVO {
 	public void setUploadFileId(Integer uploadFileId) {
 		this.uploadFileId = uploadFileId;
 	}
+	@Override
+	public String toString() {
+		return "CheckUploadVO [isUploadSuccess=" + isUploadSuccess
+				+ ", uploadFileId=" + uploadFileId + "]";
+	}
 	
 	
 }

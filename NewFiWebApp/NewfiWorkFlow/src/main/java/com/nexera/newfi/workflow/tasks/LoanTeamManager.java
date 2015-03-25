@@ -24,17 +24,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	private UserProfileService userProfileService;
 
 	public String execute(HashMap<String, Object> objectMap) {
-		int loanID = Integer.parseInt(objectMap
-		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		LoanVO loanVO = new LoanVO();
-		loanVO.setId(loanID);
-		int userID = Integer.parseInt(objectMap
-		        .get(WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
-		UserVO userVO = new UserVO();
-		userVO.setId(userID);
-		loanService.addToLoanTeam(loanVO, userVO);
-		UserVO user=userProfileService.loadInternalUser(userID);
-		return new Gson().toJson(user);
+		return null;
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
@@ -51,6 +41,21 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String invokeAction(HashMap<String, Object> objectMap) {
+		int loanID = Integer.parseInt(objectMap
+		        .get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		LoanVO loanVO = new LoanVO();
+		loanVO.setId(loanID);
+		int userID = Integer.parseInt(objectMap
+		        .get(WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		UserVO userVO = new UserVO();
+		userVO.setId(userID);
+		loanService.addToLoanTeam(loanVO, userVO);
+		UserVO user=userProfileService.loadInternalUser(userID);
+		return new Gson().toJson(user);
 	}
 
 }

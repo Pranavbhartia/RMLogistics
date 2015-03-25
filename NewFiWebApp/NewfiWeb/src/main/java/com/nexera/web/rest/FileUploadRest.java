@@ -1,7 +1,6 @@
 package com.nexera.web.rest;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,15 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
-import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -416,5 +412,6 @@ public class FileUploadRest
         }
 
     }
+
 
 }

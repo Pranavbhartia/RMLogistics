@@ -1,23 +1,28 @@
 package com.nexera.newfi.workflow.customer.tasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.User;
-import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
+import com.nexera.newfi.workflow.WorkflowDisplayConstants;
+import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
-public class LockYourRateManager implements IWorkflowTaskExecutor {
+public class Application1003DisplayManager extends NexeraWorkflowTask implements IWorkflowTaskExecutor {
+
 	@Autowired
 	private LoanDao loanDao;
-	@Autowired
-	private EngineTrigger engineTrigger;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -30,22 +35,13 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
-		int userId=Integer.parseInt(inputMap.get("userId").toString());
-		User user=new User();
-		user.setId(userId);
-		Loan loan=loanDao.getActiveLoanOfUser(user);
-		if(loan.getIsRateLocked()){
-			int workflowItemExecId=Integer.parseInt(inputMap.get("workflowItemExecId").toString());
-			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-			return "3";
-		}
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 }

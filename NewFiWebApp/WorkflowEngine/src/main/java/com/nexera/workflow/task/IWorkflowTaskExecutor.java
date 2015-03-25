@@ -10,5 +10,6 @@ public interface IWorkflowTaskExecutor {
 	
 	public String checkStatus(HashMap<String, Object> inputMap);
 
+	public String invokeAction(HashMap<String, Object> inputMap);
 	
 }
