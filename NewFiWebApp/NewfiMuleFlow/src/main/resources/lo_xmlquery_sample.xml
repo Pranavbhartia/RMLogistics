@@ -1,0 +1,59 @@
+<LOXmlFormat version="1.0">
+  <loan>
+    <field id="sLPurposeT">1</field>
+    <field id="sPurchPrice">$300,000.00</field>
+    <field id="sApprVal">$300,000.00</field>
+    <collection id="sCondDataSet">
+      <record>
+        <field id="IsRequired">True</field>
+        <field id="Category">Prior Doc - Edit</field>
+        <field id="CondDesc">This is condition 1</field>
+        <field id="Notes">This is note.</field>
+        <field id="DoneDate">2/1/2006</field>
+      </record>
+      <record>
+        <field id="IsRequired">True</field>
+        <field id="Category">Prior Doc</field>
+        <field id="CondDesc">This is condition 2-NE</field>
+      </record>
+      <record>
+        <field id="IsRequired">False</field>
+        <field id="DoneDate">12/30/2004</field>
+        <field id="Category">Prior Doc</field>
+        <field id="CondDesc">This is condition 3</field>
+      </record>
+    </collection>
+    <applicant id="123456789">
+      <field id="aBFirstNm">First Name</field>
+      <field id="aBLastNm">Last Name</field>
+      <field id="aBSsn">123456789</field>
+      <field id="aAlimonyNm">THE X-WIFE</field>
+      <field id="aAlimonyPmt">100</field>
+      <field id="aJobRelated1ExpenseDesc">JOB Expense 1</field>
+      <field id="aJobRelated1Pmt">50</field>
+      <collection id="aLiaCollection">
+        <record>
+          <field id="DebtT">1</field>
+          <field id="ComNm">Bank Of America</field>
+          <field id="AccNum">234235908</field>
+          <field id="Bal">30000</field>
+          <field id="Pmt">200</field>
+        </record>
+        <record>
+          <field id="DebtT">1</field>
+          <field id="ComNm">Bank Of America Visa</field>
+          <field id="AccNum">2222234235908</field>
+          <field id="Bal">30000</field>
+          <field id="Pmt">200</field>
+        </record>
+        <record>
+          <field id="DebtT">1</field>
+          <field id="ComNm">Bank Of America</field>
+          <field id="AccNum">2awe34235908</field>
+          <field id="Bal">30000</field>
+          <field id="Pmt">200</field>
+        </record>        
+      </collection>
+    </applicant>
+  </loan>
+</LOXmlFormat>
