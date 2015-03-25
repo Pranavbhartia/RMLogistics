@@ -64,4 +64,10 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
+	@Override
+	public String invokeAction(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
