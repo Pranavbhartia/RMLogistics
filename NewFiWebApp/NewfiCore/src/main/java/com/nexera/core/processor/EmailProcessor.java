@@ -79,7 +79,7 @@ public class EmailProcessor implements Runnable {
 
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
-
+			fromAddressString = fromAddressString.substring(fromAddressString.indexOf("<")+1, fromAddressString.indexOf(">")).trim();
 			User uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
@@ -203,13 +203,13 @@ public class EmailProcessor implements Runnable {
 
 			}
 
-			if (!checkUploadSuccessList.isEmpty()
-			        && !checkUploadFailureList.isEmpty()) {
+			if (checkUploadSuccessList.isEmpty()
+			        && checkUploadFailureList.isEmpty()) {
 
 				LOGGER.debug("Mail did not have any attachment ");
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
-				        null, true);
+				        null, true,false);
 
 			} else {
 				LOGGER.debug("Mail contains attachment ");
@@ -217,13 +217,13 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        successNoteText, fileVOList, true);
+					        successNoteText, fileVOList, true,false);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false);
+					        failureNoteText, null, false,false);
 				}
 			}
 		} catch (MessagingException me) {

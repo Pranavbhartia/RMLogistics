@@ -184,7 +184,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag) {
+	        boolean successFlag,boolean sendEmail) {
 		/*
 		 * 1. Create messageVO object. 2. set senderUserId as the createdBy of
 		 * the note. Permission will be all the users who are part of the loan
@@ -207,7 +207,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		 * message accordingly
 		 */
 
-		if ((fileUrls != null && !fileUrls.isEmpty()) || !successFlag) {
+		if(fileUrls==null || fileUrls.isEmpty() || !successFlag){
 			messageVO.setMessage(noteText);
 		}
 		messageVO.setLinks(fileUrls);

@@ -15,7 +15,7 @@ public interface 	MessageServiceHelper {
 	        List<Integer> removedList);
 
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
-	        String messageId, String noteText, List<FileVO> fileUrls,boolean successFlag);
+	        String messageId, String noteText, List<FileVO> fileUrls,boolean successFlag, boolean sendEmail);
 	
 	public void generateWorkflowMessage(int loanId, String noteText);
 	
