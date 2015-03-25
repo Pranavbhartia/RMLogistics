@@ -267,5 +267,12 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setOtherUsers(messageUserVOs);
 
 	}
+	
+	@Override
+	public void generateWorkflowMessage(int loanId, User loggedInUser,
+	        String noteText) {
+	    // TODO Auto-generated method stub
+	    
+	}
 
 }
