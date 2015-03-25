@@ -626,6 +626,9 @@
 	.prof-form-row{
 		padding: 5px 0;
 	}
+	.upload-pic-desc {
+		line-height: 20px;
+	}
 }
 
 
