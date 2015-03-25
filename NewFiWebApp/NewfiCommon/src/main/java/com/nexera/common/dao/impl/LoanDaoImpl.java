@@ -19,6 +19,8 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
@@ -417,6 +419,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return (LoanNeedsList)criteria.uniqueResult();
 	}
 
-
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster){
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanMilestone.class);
+		criteria.add(Restrictions.eq("loan", loan));
+		criteria.add(Restrictions.eq("loanMilestoneMaster", loanMilestoneMaster));
+		List<LoanMilestone> milestones=criteria.list();
+		if(milestones.size()>0){
+			milestones.get(0);
+		}
+		return null;
+	}
 	
 }

@@ -24,6 +24,7 @@ public class CustomerDetail implements Serializable {
 	private Integer profileCompletionStatus;
 	private String secEmailId;
 	private String secPhoneNumber;
+	private Integer subscriptionsStatus;
 	
 
 	public CustomerDetail() {
@@ -110,6 +111,15 @@ public class CustomerDetail implements Serializable {
 
 	public void setSecPhoneNumber(String secPhoneNumber) {
 		this.secPhoneNumber = secPhoneNumber;
+	}
+
+	@Column(name = "subscriptionsStatus")
+	public Integer getSubscriptionsStatus() {
+		return subscriptionsStatus;
+	}
+
+	public void setSubscriptionsStatus(Integer subscriptionsStatus) {
+		this.subscriptionsStatus = subscriptionsStatus;
 	}
 
 	

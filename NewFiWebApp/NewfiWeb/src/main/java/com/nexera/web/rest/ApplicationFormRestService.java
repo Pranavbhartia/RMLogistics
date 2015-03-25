@@ -29,8 +29,8 @@ public class ApplicationFormRestService {
 	
 	
 	
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public @ResponseBody String createApplication(@RequestBody String appFormData) {
+	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
+	public @ResponseBody String createApplication(String appFormData) {
 
 		Gson gson = new Gson();
 
@@ -42,9 +42,7 @@ public class ApplicationFormRestService {
 			
 			
 			
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
-		
-				LoanAppFormVO.class);
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 
 			
 			System.out.println("loaAppFormVO.getId()"+loaAppFormVO.getId());

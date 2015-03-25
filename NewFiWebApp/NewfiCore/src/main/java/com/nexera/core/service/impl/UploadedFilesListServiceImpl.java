@@ -3,9 +3,12 @@ package com.nexera.core.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.slf4j.Logger;
@@ -34,24 +37,24 @@ import com.nexera.core.utility.NexeraUtility;
 @Transactional
 public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UploadedFilesListServiceImpl.class);
-	
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(UploadedFilesListServiceImpl.class);
+
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
-	
+
 	@Autowired
 	private NeedsListService needsListService;
-	
+
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
-	
+
 	@Autowired
 	private UserProfileService userProfileService;
-	
+
 	@Autowired
 	private NexeraUtility nexeraUtility;
-	
-	
+
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
 		// TODO Auto-generated method stub
@@ -59,28 +62,29 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public List<UploadedFilesListVO> fetchAll(Integer userId ,  Integer loanId) {
-		List<UploadedFilesList> filesLists = uploadedFilesListDao.fetchAll(userId , loanId);
+	public List<UploadedFilesListVO> fetchAll(Integer userId, Integer loanId) {
+		List<UploadedFilesList> filesLists = uploadedFilesListDao.fetchAll(
+		        userId, loanId);
 		return buildUpdateFileVoList(filesLists);
-		
+
 	}
 
-	
-	public  List<UploadedFilesListVO> buildUpdateFileVoList(List<UploadedFilesList> filesLists){
-		
+	public List<UploadedFilesListVO> buildUpdateFileVoList(
+	        List<UploadedFilesList> filesLists) {
+
 		List<UploadedFilesListVO> uploadedFilesListVOs = new ArrayList<UploadedFilesListVO>();
 		for (UploadedFilesList uploadedFilesList : filesLists) {
 			uploadedFilesListVOs.add(buildUpdateFileVo(uploadedFilesList));
 		}
 		return uploadedFilesListVOs;
 	}
-	
-	
-	public  UploadedFilesListVO buildUpdateFileVo(UploadedFilesList uploadedFilesList){
-		
-		if(uploadedFilesList == null)
+
+	public UploadedFilesListVO buildUpdateFileVo(
+	        UploadedFilesList uploadedFilesList) {
+
+		if (uploadedFilesList == null)
 			return null;
-		
+
 		UploadedFilesListVO filesListVO = new UploadedFilesListVO();
 		filesListVO.setId(uploadedFilesList.getId());
 		filesListVO.setIsActivate(uploadedFilesList.getIsActivate());
@@ -91,36 +95,37 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
 		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
 		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
-		
+
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
-		assignedUserVo.setUserRole(userProfileService.buildUserRoleVO(uploadedFilesList.getAssignedBy().getUserRole()));
-		
+		assignedUserVo.setUserRole(userProfileService
+		        .buildUserRoleVO(uploadedFilesList.getAssignedBy()
+		                .getUserRole()));
+
 		filesListVO.setAssignedByUser(assignedUserVo);
-		
-		
+
 		LoanVO loanVo = new LoanVO();
 		loanVo.setId(uploadedFilesList.getLoan().getId());
-		
+
 		filesListVO.setLoan(loanVo);
 		return filesListVO;
 	}
 
 	@Override
 	public void updateIsAssignedToTrue(Integer fileId) {
-			uploadedFilesListDao.updateIsAssignedToTrue(fileId);
+		uploadedFilesListDao.updateIsAssignedToTrue(fileId);
 	}
-	
+
 	@Override
 	public void updateIsAssignedToTrue(List<Integer> fileIds) {
 		for (Integer fileId : fileIds) {
 			uploadedFilesListDao.updateIsAssignedToTrue(fileId);
 		}
 	}
-	
+
 	@Override
-	public void updateFileInLoanNeedList( Integer needId , Integer fileId) {
-			uploadedFilesListDao.updateFileInLoanNeedList(needId, fileId);
+	public void updateFileInLoanNeedList(Integer needId, Integer fileId) {
+		uploadedFilesListDao.updateFileInLoanNeedList(needId, fileId);
 	}
 
 	@Override
@@ -132,13 +137,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public void deactivateFileUsingFileId(Integer fileId) {
 		uploadedFilesListDao.deactivateFileUsingFileId(fileId);
-		
+
 	}
 
-	
 	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
+		        .getAuthentication().getPrincipal();
 		if (principal instanceof User) {
 			return (User) principal;
 		} else {
@@ -146,71 +150,81 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 
 	}
-	
+
 	@Override
 	public List<String> downloadFileFromS3Service(List<Integer> fileIds) {
 		List<String> downloadFiles = new ArrayList<String>();
 		for (Integer fileId : fileIds) {
-			 UploadedFilesList uploadedFilesList = uploadedFilesListDao.fetchUsingFileId(fileId);
-			 try {
-				 
-				String fileName = s3FileUploadServiceImpl.downloadFile(uploadedFilesList.getS3path(),nexeraUtility.tomcatDirectoryPath()+File.separator+ uploadedFilesList.getFileName());
+			UploadedFilesList uploadedFilesList = uploadedFilesListDao
+			        .fetchUsingFileId(fileId);
+			try {
+
+				String fileName = s3FileUploadServiceImpl.downloadFile(
+				        uploadedFilesList.getS3path(),
+				        nexeraUtility.tomcatDirectoryPath() + File.separator
+				                + uploadedFilesList.getFileName());
 				downloadFiles.add(fileName);
-				LOG.info("s3 download returned  : "+fileName);
-			 } catch (Exception e) {
-				LOG.info("Excepttion in downloading file : "+e.getMessage());
-				
+				LOG.info("s3 download returned  : " + fileName);
+			} catch (Exception e) {
+				LOG.info("Excepttion in downloading file : " + e.getMessage());
+
 			}
 		}
 		return downloadFiles;
 	}
-	
-	public Integer mergeAndUploadFiles ( List<Integer> fileIds , Integer loanId , Integer userId , Integer assignedBy) throws IOException, COSVisitorException {
+
+	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
+	        Integer userId, Integer assignedBy) throws IOException,
+	        COSVisitorException {
 		List<String> filePaths = downloadFileFromS3Service(fileIds);
 		String newFilepath = null;
 		newFilepath = nexeraUtility.joinPDDocuments(filePaths);
-		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath) ,loanId  , userId , assignedBy);
+		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath),
+		        loanId, userId, assignedBy);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
 		return fileSavedId;
 	}
-	
-	public Integer addUploadedFilelistObejct(File file  , Integer loanId , Integer userId , Integer assignedBy){
-		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document" , "complete" );
-		LOG.info("File Path : "+file.getPath());
+
+	public Integer addUploadedFilelistObejct(File file, Integer loanId,
+	        Integer userId, Integer assignedBy) {
+		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document",
+		        "complete");
+		LOG.info("File Path : " + file.getPath());
 		String s3PathThumbNail = null;
 		String thumbPath = null;
 		try {
-			thumbPath = nexeraUtility.convertPDFToThumbnail(file.getPath(), nexeraUtility.tomcatDirectoryPath());
-			
+			thumbPath = nexeraUtility.convertPDFToThumbnail(file.getPath(),
+			        nexeraUtility.tomcatDirectoryPath());
+
 		} catch (Exception e) {
-			
-			LOG.error("Exception in s3PathThumbNail : "+e.getMessage());
+
+			LOG.error("Exception in s3PathThumbNail : " + e.getMessage());
 		}
-		
-		LOG.info("The thumbnail path for local  :  "+thumbPath);
-		if(thumbPath!= null){
-			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(thumbPath), "document" , "image" );
+
+		LOG.info("The thumbnail path for local  :  " + thumbPath);
+		if (thumbPath != null) {
+			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(
+			        thumbPath), "document", "image");
 		}
-		
-		LOG.info("The s3PathThumbNail path for   :  "+s3PathThumbNail);
-		
-		User user  = new User();
+
+		LOG.info("The s3PathThumbNail path for   :  " + s3PathThumbNail);
+
+		User user = new User();
 		user.setId(userId);
-		Loan loan  = new Loan();
+		Loan loan = new Loan();
 		loan.setId(loanId);
 		User assignByUser = new User();
 		assignByUser.setId(assignedBy);
-		
-		List<File> splittedFiles =  nexeraUtility.splitPDFPages(file);
-		
-		
+
+		List<File> splittedFiles = nexeraUtility.splitPDFPages(file);
+
 		UploadedFilesList uploadedFilesList = new UploadedFilesList();
 		uploadedFilesList.setIsActivate(true);
 		uploadedFilesList.setIsAssigned(false);
 		uploadedFilesList.setS3path(s3Path);
-		uploadedFilesList.setUploadedBy( user);
+		uploadedFilesList.setUploadedBy(user);
 		uploadedFilesList.setUploadedDate(new Date());
 		uploadedFilesList.setLoan(loan);
 		uploadedFilesList.setFileName(file.getName());
@@ -233,57 +247,75 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
 	}
-	
-	
-	
-	
+
 	@Override
-	public CheckUploadVO uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
+	public CheckUploadVO uploadFile(File file, String contentType,
+	        Integer userId, Integer loanId, Integer assignedBy) {
 		String s3Path = null;
-		
-		LOG.info("File content type  : "+file.getContentType());
+
+		LOG.info("File content type  : " + contentType);
 		String localFilePath = null;
 		Boolean fileUpload = false;
 		CheckUploadVO checkVo = new CheckUploadVO();
-		try{
-			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
+		try {
+			if (contentType.equalsIgnoreCase("image/png")
+			        || contentType.equalsIgnoreCase("image/jpeg")
+			        || contentType.equalsIgnoreCase("image/tiff")) {
 				LOG.info("Received an image.converting to PDF");
-				localFilePath = nexeraUtility.convertImageToPDF(file);
+				localFilePath = nexeraUtility.convertImageToPDF(file,
+				        contentType);
 				fileUpload = true;
-			}else if(file.getContentType().equalsIgnoreCase("application/pdf")){
+			} else if (contentType.equalsIgnoreCase("application/pdf")) {
 				localFilePath = nexeraUtility.uploadFileToLocal(file);
 				fileUpload = true;
 			}
 			checkVo.setIsUploadSuccess(fileUpload);
-			if(fileUpload){
-				
-				File serverFile = new File(localFilePath );
-				Integer savedRowId = addUploadedFilelistObejct(serverFile , loanId , userId , assignedBy);
-				LOG.info("Added File document row : "+savedRowId);
+			if (fileUpload) {
+
+				File serverFile = new File(localFilePath);
+				Integer savedRowId = addUploadedFilelistObejct(serverFile,
+				        loanId, userId, assignedBy);
+				LOG.info("Added File document row : " + savedRowId);
 				checkVo.setUploadFileId(savedRowId);
 			}
-			
-		 }catch(Exception e){
-			 LOG.info(" Exception uploading s3 :  "+e.getMessage());
-		 }
-		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
-		 
-		 LOG.info("The s3 path is : "+s3Path);
-		 return checkVo;
+
+		} catch (Exception e) {
+			LOG.info(" Exception uploading s3 :  " + e.getMessage());
+			return checkVo;
+		}
+		LOG.info("file.getOriginalFilename() : " + file.getName());
+
+		LOG.info("The s3 path is : " + s3Path);
+		return checkVo;
 	}
 
 	@Override
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public CheckUploadVO uploadFileByEmail(InputStream stream, Integer userId, Integer loanId , Integer assignedBy) throws IOException {
-		MultipartFile multipartFile = nexeraUtility.getMultipartFileFromInputStream(stream);
-		return  uploadFile(multipartFile, userId, loanId, assignedBy);
-		
-	}
+	public CheckUploadVO uploadFileByEmail(InputStream stream,
+	        String contentType, Integer userId, Integer loanId,
+	        Integer assignedBy) throws IOException, COSVisitorException {
+		File file = nexeraUtility.convertInputStreamToFile(stream);
+		CheckUploadVO checkUploadVO = null;
+		if (file != null) {
+			if (contentType.contains("application/pdf"))
+				contentType = "application/pdf";
+			else if (contentType.contains("image/jpeg"))
+				contentType = "image/jpeg";
+			else if (contentType.contains("image/png"))
+				contentType = "image/png";
+			else if (contentType.contains("image/tiff"))
+				contentType = "image/tiff";
 
-	
+			checkUploadVO = uploadFile(file, contentType, userId, loanId,
+			        assignedBy);
+			return checkUploadVO;
+		}
+
+		return checkUploadVO;
+	}
 }

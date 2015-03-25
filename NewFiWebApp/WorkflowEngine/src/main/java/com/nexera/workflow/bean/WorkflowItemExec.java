@@ -39,7 +39,8 @@ public class WorkflowItemExec implements Serializable {
 	private WorkflowItemExec parentWorkflowItemExec;
 	private String params;
 	private Boolean clickable;
-
+	private Integer displayOrder;
+	
 	public WorkflowItemExec() {
 	}
 
@@ -182,6 +183,14 @@ public class WorkflowItemExec implements Serializable {
 	 */
 	public void setParams(String params) {
 		this.params = params;
+	}
+	@Column(name = "display_order")
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 }
