@@ -168,5 +168,14 @@ ALTER TABLE `newfi_schema`.`loan`
   DROP COLUMN `bank_connected`, 
   ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0  NULL AFTER `rate_locked`;
 
-    Alter table `newfi_schema`.`loan` 
-   change `lqb_file_id` `lqb_file_id` varchar(255) NULL 
+ALTER TABLE `newfi_schema`.`loan` 
+   CHANGE `lqb_file_id` `lqb_file_id` varchar(255) NULL ;
+
+ALTER TABLE `newfi_schema`.`workflowitemexec`   
+  DROP COLUMN `display_order`, 
+  ADD COLUMN `display_order` INT(11) NOT NULL AFTER `parent_workflow_item_master`;
+
+ALTER TABLE `newfi_schema`.`workflowitemmaster`   
+  DROP COLUMN `display_order`, 
+  ADD COLUMN `display_order` INT(11) NOT NULL AFTER `clickable`;
+

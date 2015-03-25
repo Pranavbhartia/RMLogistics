@@ -39,8 +39,19 @@ public class WorkflowItemMaster implements Serializable
     private Date modifiedDate;
     private Boolean priority;
     private Boolean clickable;
-    
-    @Column ( name = "clickable", columnDefinition = "TINYINT")
+    private Integer displayOrder;
+    @Column ( name = "display_order")
+    public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
+
+	@Column ( name = "clickable", columnDefinition = "TINYINT")
     @Type ( type = "org.hibernate.type.NumericBooleanType")
     public Boolean getClickable() {
 		return clickable;
