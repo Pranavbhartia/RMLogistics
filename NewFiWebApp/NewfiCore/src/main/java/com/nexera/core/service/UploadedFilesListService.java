@@ -39,11 +39,12 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
 
-	public CheckUploadVO uploadFile(MultipartFile file, Integer userId, Integer loanId,
-			Integer assignedBy);
-
+	
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 
-	public CheckUploadVO uploadFileByEmail(InputStream stream , Integer userId , Integer loanId ,  Integer assignedBy) throws IOException;
+	public CheckUploadVO uploadFileByEmail(InputStream stream , Integer userId , Integer loanId ,  Integer assignedBy) throws IOException, COSVisitorException;
+
+	public CheckUploadVO uploadFile(File file, String contentType, Integer userId,
+			Integer loanId, Integer assignedBy);
 	
 }
