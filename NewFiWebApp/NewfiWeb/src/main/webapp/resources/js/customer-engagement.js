@@ -1246,7 +1246,8 @@ function paintNotifyForRatesAlerts(){
 	var regRadioNotify1 = $('<input>').attr({
 		"type":"radio",
 		"class":"reg-radio",
-		"name":"notifyme"
+		"name":"notifyme",
+		"value":0
 	});
 	
 	var regRadioNotify1Txt = $('<span>').attr({
@@ -1262,7 +1263,8 @@ function paintNotifyForRatesAlerts(){
 	var regRadioNotify2 = $('<input>').attr({
 		"type":"radio",
 		"class":"reg-radio",
-		"name":"notifyme"
+		"name":"notifyme",
+		"value":1
 	});
 	
 	var regRadioNotify2Txt = $('<span>').attr({
