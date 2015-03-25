@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
@@ -17,7 +18,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
-
+@Component
 public abstract class NexeraWorkflowTask {
 	@Autowired
 	public SendGridEmailService sendGridEmailService;
@@ -71,7 +72,7 @@ public abstract class NexeraWorkflowTask {
 		}
 	}
 	public void makeANote(int loanId,String message){
-		messageServiceHelper.generateWorkflowMessage(loanId, message);
+//		messageServiceHelper.generateWorkflowMessage(loanId, message);
 	}
 	
 }

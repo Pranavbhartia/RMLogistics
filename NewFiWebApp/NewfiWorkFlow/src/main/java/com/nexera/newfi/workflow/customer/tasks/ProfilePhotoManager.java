@@ -38,6 +38,7 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 		UserVO userVo=userProfileService.findUser(userId);
 		if(userVo.getPhotoImageUrl()!=null&&!userVo.getPhotoImageUrl().equals("")){
 			int workflowItemExecId=Integer.parseInt(inputMap.get("workflowItemExecId").toString());
+			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
 			return "3";
 		}

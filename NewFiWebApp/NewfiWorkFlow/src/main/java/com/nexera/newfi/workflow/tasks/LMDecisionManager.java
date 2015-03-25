@@ -2,8 +2,10 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
-import com.nexera.workflow.task.IWorkflowTaskExecutor;
+import org.springframework.stereotype.Component;
 
+import com.nexera.workflow.task.IWorkflowTaskExecutor;
+@Component
 public class LMDecisionManager 
 	implements IWorkflowTaskExecutor {
 

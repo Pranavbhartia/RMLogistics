@@ -2,9 +2,11 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.springframework.stereotype.Component;
+
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class DisclosuresManager extends NexeraWorkflowTask implements
 		IWorkflowTaskExecutor {
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.impl.LoanDaoImpl;
@@ -15,7 +16,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class UWStatusManager extends NexeraWorkflowTask implements
 		IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
