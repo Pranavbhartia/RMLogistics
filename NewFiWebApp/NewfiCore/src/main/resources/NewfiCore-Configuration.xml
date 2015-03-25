@@ -21,8 +21,8 @@
 		<property name="maxPoolSize" value="5" />
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
-	
-	
+
+
 	<bean id="emailTaskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="2" />
@@ -44,11 +44,11 @@
 			value="com.nexera.core.batchprocessor.EmailBatchProcessor" />
 		<property name="durability" value="true" />
 	</bean>
-	
-		<bean id="emailCronTrigger"
+
+	<bean id="emailCronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="emailJobDetail" />
-		<property name="cronExpression" value="0 0/59 * * * ?" />
+		<property name="cronExpression" value="0 0/3 * * * ?" />
 	</bean>
 
 
@@ -56,6 +56,7 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
 		<property name="cronExpression" value="0 0/59 * * * ?" />
+
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 
