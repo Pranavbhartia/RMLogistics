@@ -2,12 +2,14 @@ package com.nexera.common.dao;
 
 import java.util.List;
 
+import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanStatusMasterVO;
@@ -53,11 +55,16 @@ public interface LoanDao extends GenericDao {
 	public List<LoanTypeMaster> getLoanTypeMater(
 	        LoanTypeMasterVO loanTypeMaterVO);
 
+	public List<TitleCompanyMaster> findTitleCompanyByName(
+			TitleCompanyMaster titleCompany);
+
+	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
+			HomeOwnersInsuranceMaster parseHomeOwnInsMaster);
+	
     List<Loan> retrieveLoanByProgressStatus( User parseUserModel, int loanProgressStatusId );
 
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
-	
 	
 
 }
