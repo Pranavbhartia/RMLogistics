@@ -66,6 +66,11 @@ function saveParentMessage(){
 	
 	parentId = null;
 	var messageText = $("#textareaParent").val();
+	
+	if($.trim(messageText) == ""){
+		showToastMessage("Please enter some text!");
+		return false;
+	}
 	doSavemessageAjaxCall(messageText);
 	
 }
@@ -135,7 +140,10 @@ function setCurrentMessageReplyId(parentMessageId){
 }
 
 function setReplyToMessageObject(messageText){
-	
+	if(messageText == ""){
+		showToastMessage("Please enter some text!");
+		return false;
+	}
 	doSavemessageAjaxCall(messageText);
 }
 
