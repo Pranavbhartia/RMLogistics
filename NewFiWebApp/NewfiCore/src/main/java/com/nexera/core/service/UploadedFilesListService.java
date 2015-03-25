@@ -2,6 +2,7 @@ package com.nexera.core.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
@@ -42,5 +43,7 @@ public interface UploadedFilesListService {
 			Integer assignedBy);
 
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
+
+	public CheckUploadVO uploadFileByEmail(InputStream stream , Integer userId , Integer loanId ,  Integer assignedBy) throws IOException;
 	
 }

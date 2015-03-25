@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -296,9 +297,9 @@ public class NexeraUtility {
 		return convFile;
 	}
 
-	public MultipartFile filePathToMultipart(String filePath)
+	public MultipartFile filePathToMultipart(File  file)
 	        throws IOException {
-		File file = new File(filePath);
+		
 		DiskFileItem fileItem = new DiskFileItem("file", "application/pdf",
 		        false, file.getName(), (int) file.length(),
 		        file.getParentFile());
@@ -445,5 +446,37 @@ public class NexeraUtility {
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
+	
+	
+	public  File copyInputStreamToFile( InputStream in) throws IOException {
+		File file = null;
+		OutputStream out = null;
+		try {
+			file =  new File(tomcatDirectoryPath()+File.separator+randomStringOfLength()+".pdf");
+			out = new FileOutputStream(file);
+	        byte[] buf = new byte[1024];
+	        int len;
+	        while((len=in.read(buf))>0){
+	            out.write(buf,0,len);
+	        }
+	        out.close();
+	        in.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }finally{
+	    	  out.close();
+		      in.close();
+	    }
+		return file;
+	}
+	
+	
+	public MultipartFile  getMultipartFileFromInputStream(InputStream instream) throws IOException{
+		File file = copyInputStreamToFile(instream);
+		return filePathToMultipart(file);
+		
+	}
+	
+	
 
 }
