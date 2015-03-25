@@ -18,6 +18,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -165,7 +166,13 @@ public class EmailProcessor implements Runnable {
 
 					LOGGER.debug("Uploading the file in the system ");
 					
-					CheckUploadVO checkUploadVO = uploadedFileListService.uploadFileByEmail(inputStream , actualUser.getId() , loanVO.getId() ,uploadedByUser.getId() );
+					CheckUploadVO checkUploadVO = null;
+					try {
+						checkUploadVO = uploadedFileListService.uploadFileByEmail(inputStream , actualUser.getId() , loanVO.getId() ,uploadedByUser.getId() );
+					} catch (COSVisitorException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					LOGGER.info("Response in uploading documents by email : "+checkUploadVO);
 					/*uploadedFileListService.uploadFile(nexeraUtility
 					        .filePathToMultipart(file.getAbsolutePath()),

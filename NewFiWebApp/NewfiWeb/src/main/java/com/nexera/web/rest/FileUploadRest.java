@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -374,7 +375,13 @@ public class FileUploadRest
             + " and need id : " + needId );
         List<String> unsupportedFile = new ArrayList<String>();
         for ( MultipartFile multipartFile : file ) {
-            CheckUploadVO checkFileUploaded = uploadedFilesListService.uploadFile( multipartFile, userID, loanId, assignedBy );
+            CheckUploadVO checkFileUploaded = null;
+			try {
+				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) , multipartFile.getContentType(), userID, loanId, assignedBy );
+			} catch (IllegalStateException | IOException e) {
+				// TODO Auto-generated catch block
+				checkFileUploaded.setIsUploadSuccess(false);
+			}
 
             if ( checkFileUploaded.getIsUploadSuccess() ) {
                 if ( needId == null ) {

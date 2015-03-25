@@ -23,6 +23,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.PDFToImage;
@@ -123,11 +124,11 @@ public class NexeraUtility {
 		return rootPath + File.separator + "tmpFiles";
 	}
 
-	public String uploadFileToLocal(MultipartFile file) {
+	public String uploadFileToLocal(File file) {
 		String filePath = null;
-		if (!file.isEmpty()) {
+		
 			try {
-				byte[] bytes = file.getBytes();
+				byte[] bytes = FileUtils.readFileToByteArray(file);
 
 				// Creating the directory to store file
 
@@ -135,7 +136,7 @@ public class NexeraUtility {
 				if (!dir.exists())
 					dir.mkdirs();
 
-				String fileName = file.getOriginalFilename();
+				String fileName = file.getName();
 
 				filePath = dir.getAbsolutePath() + File.separator + fileName;
 				// Create the file on server
@@ -153,9 +154,7 @@ public class NexeraUtility {
 				        + e.getMessage());
 				return null;
 			}
-		} else {
-			return null;
-		}
+		
 		return filePath;
 	}
 
@@ -216,18 +215,17 @@ public class NexeraUtility {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public String convertImageToPDF(MultipartFile multipartFile) {
+	public String convertImageToPDF(File file , String contentType) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
 		try {
-			File file = multipartToFile(multipartFile);
-
+			
 			PDDocument document = new PDDocument();
 
 			// InputStream in = new FileInputStream(file);
 			// BufferedImage bimg = ImageIO.read(in);
 			float width, height;
-			if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
+			if (contentType.equalsIgnoreCase("image/tiff")) {
 				FileSeekableStream fss = new FileSeekableStream(file);
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
@@ -251,12 +249,12 @@ public class NexeraUtility {
 
 			PDXObjectImage img = null;
 
-			if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
+			if (contentType.equalsIgnoreCase("image/jpeg")) {
 				img = new PDJpeg(document, new FileInputStream(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase(
+			} else if (contentType.equalsIgnoreCase(
 			        "image/png")) {
 				img = new PDPixelMap(document, ImageIO.read(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase(
+			} else if (contentType.equalsIgnoreCase(
 			        "image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
 			}
@@ -477,6 +475,12 @@ public class NexeraUtility {
 		
 	}
 	
+	
+	public File convertInputStreamToFile(InputStream inputStream) throws COSVisitorException, IOException{
+		
+		String filePath = createPDFFromStream(inputStream);
+		return new File(filePath);
+	}
 	
 
 }
