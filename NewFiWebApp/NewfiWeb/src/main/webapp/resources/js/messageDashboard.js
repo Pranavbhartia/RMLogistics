@@ -308,7 +308,9 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageU
 		"class" : "assigned-agent-img"
 	});
 	
-	imgCont.css("background-image" , "url('"+imageUrl+"')");
+	if(imageUrl != undefined){
+		imgCont.css("background-image" , "url('"+imageUrl+"')");
+	}
 	
 	var onlineStatus = $('<div>').attr({
 		"class" : "assigned-agent-online-status"
@@ -369,9 +371,14 @@ function paintConversations(conversations){
 		});
 		
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
+			"class" : "conv-prof-image float-left"
 		});
+		
+		if(data.createdUser.imgUrl != undefined){
+			col1.attr({
+				"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
+			});
+		}
 		
 		var col2 = $('<div>').attr({
 			"class" : "float-left"
@@ -399,9 +406,15 @@ function paintConversations(conversations){
 			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
-				"id" : otherUserBinded[k].userID,
-				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+				"id" : otherUserBinded[k].userID
 			});
+			
+			if(otherUserBinded[k].imgUrl != undefined){
+				userImage.attr({
+					"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+				});
+			}
+			
 			if(otherUserBinded[k].userID == data.createdUser.userID)
 				userImage.hide();
 			col3.append(userImage);
@@ -506,10 +519,14 @@ function paintChildConversations(level,conversations){
 		});
 		
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url("+data.createdUser.imgUrl+")"
-			
+			"class" : "conv-prof-image float-left"
 		});
+		
+		if(data.createdUser.imgUrl != undefined){
+			col1.attr({
+				"style" :  "background-image:url("+data.createdUser.imgUrl+")"
+			});
+		}
 		
 		var col2 = $('<div>').attr({
 			"class" : "float-left"
