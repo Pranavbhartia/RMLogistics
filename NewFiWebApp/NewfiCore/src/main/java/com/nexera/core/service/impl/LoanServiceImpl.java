@@ -18,6 +18,8 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
@@ -655,5 +657,8 @@ public class LoanServiceImpl implements LoanService {
 		// TODO Auto-generated method stub
 		return loanDao.fetchByNeedId(needId);
 	}
-
+	@Transactional(readOnly = true)
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster) {
+		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
+	}
 }
