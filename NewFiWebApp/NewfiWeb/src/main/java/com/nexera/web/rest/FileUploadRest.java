@@ -355,6 +355,9 @@ public class FileUploadRest {
 		return new Gson().toJson(unsupportedFile);
 	} 
 	
+	
+	
+	
 	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
