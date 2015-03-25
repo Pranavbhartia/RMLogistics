@@ -6,6 +6,7 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 
 public interface UserProfileDao extends GenericDao {
@@ -45,10 +46,12 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<UserRoleNameImageVO> finUserDetailsList(List<Long> userList);
 
-	
 	public User saveUser(User user) throws DatabaseException;
 
-	public User authenticateUser(String userName, String password) throws NoRecordsFetchedException, DatabaseException;
+	public User authenticateUser(String userName, String password)
+	        throws NoRecordsFetchedException, DatabaseException;
 
 	public Integer saveCustomerDetails(User user);
+
+	public List<User> getEmailAddress(List<Integer> list);
 }

@@ -57,14 +57,14 @@ public class MongoServiceTest {
 		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
 		        null, "sample text", null,true);
 
-		List<FileVO> fileVos = new ArrayList<FileVO>();
-		FileVO e = new FileVO();
-		e.setFileName("TestDoc.pdf");
-		e.setUrl("http://www.google.com");
-		fileVos.add(e);
-		// Test with files
-		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
-		        null, "sample text", fileVos,true);
+//		List<FileVO> fileVos = new ArrayList<FileVO>();
+//		FileVO e = new FileVO();
+//		e.setFileName("TestDoc.pdf");
+//		e.setUrl("http://www.google.com");
+//		fileVos.add(e);
+//		// Test with files
+//		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
+//		        null, "sample text", fileVos,true);
 	}
 
 }
