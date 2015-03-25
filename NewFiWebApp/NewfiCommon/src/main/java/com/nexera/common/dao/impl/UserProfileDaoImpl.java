@@ -183,12 +183,20 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public Integer saveInternalUser(User user) {
+	public Integer saveUserWithDetails(User user) {
 		if (null != user.getInternalUserDetail()) {
 			this.save(user.getInternalUserDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-
+		if (null != user.getRealtorDetail()) {
+			this.save(user.getRealtorDetail());
+			sessionFactory.getCurrentSession().flush();
+		}
+		if (null != user.getCustomerDetail()) {
+			this.save(user.getCustomerDetail());
+			sessionFactory.getCurrentSession().flush();
+		}
+ 
 		return (Integer) this.save(user);
 	}
 
@@ -363,4 +371,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		 session.save(user);
 		 return user;
 	}
+	 
+	 @Override
+	public Integer saveCustomerDetails(User user) {
+		if (null != user.getCustomerDetail()) {
+			this.save(user.getCustomerDetail());
+			sessionFactory.getCurrentSession().flush();
+		}
+
+		return (Integer) this.save(user);
+	}
+	 
 }

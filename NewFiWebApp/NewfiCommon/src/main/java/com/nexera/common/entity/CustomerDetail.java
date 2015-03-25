@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -18,9 +20,11 @@ public class CustomerDetail implements Serializable {
 	private String addressState;
 	private String addressZipCode;
 	private Date dateOfBirth;
+	private String ssn;
 	private Integer profileCompletionStatus;
 	private String secEmailId;
 	private String secPhoneNumber;
+	
 
 	public CustomerDetail() {
 	}
@@ -72,6 +76,15 @@ public class CustomerDetail implements Serializable {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	@Column(name = "ssn")
+	public String getSsn() {
+		return ssn;
+	}
+
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
+
 	@Column(name = "profile_completion_status")
 	public Integer getProfileCompletionStatus() {
 		return profileCompletionStatus;
@@ -99,5 +112,6 @@ public class CustomerDetail implements Serializable {
 		this.secPhoneNumber = secPhoneNumber;
 	}
 
+	
 
 }

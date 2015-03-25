@@ -5,15 +5,28 @@ import java.util.Date;
 import java.util.List;
 
 public class PropertyTypeMasterVO implements Serializable {
+	
+
+	
+
 	private static final long serialVersionUID = 1L;
+	
 	private int id;
 	private String description;
 	private Date modifiedDate;
 	private String propertyTypeCd;
+	private String residenceTypeCd;
+	private String propertyTaxesPaid;
+	private String propertyInsuranceProvider;
+	private String propertyInsuranceCost;
+	private String propertyPurchaseYear;
+	private String homeWorthToday;
 	private List<LoanVO> loans;
 	private List<LoanAppFormVO> loanAppForms;
 	private List<LoanApplicationFeeMasterVO> loanApplicationFeeMasters;
 	private UserVO modifiedBy;
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -64,6 +77,41 @@ public class PropertyTypeMasterVO implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	
+	public String getResidenceTypeCd() {
+		return residenceTypeCd;
+	}
+	public void setResidenceTypeCd(String residenceTypeCd) {
+		this.residenceTypeCd = residenceTypeCd;
+	}
+	public String getPropertyTaxesPaid() {
+		return propertyTaxesPaid;
+	}
+	public void setPropertyTaxesPaid(String propertyTaxesPaid) {
+		this.propertyTaxesPaid = propertyTaxesPaid;
+	}
+	public String getPropertyInsuranceProvider() {
+		return propertyInsuranceProvider;
+	}
+	public void setPropertyInsuranceProvider(String propertyInsuranceProvider) {
+		this.propertyInsuranceProvider = propertyInsuranceProvider;
+	}
+	public String getPropertyInsuranceCost() {
+		return propertyInsuranceCost;
+	}
+	public void setPropertyInsuranceCost(String propertyInsuranceCost) {
+		this.propertyInsuranceCost = propertyInsuranceCost;
+	}
+	public String getPropertyPurchaseYear() {
+		return propertyPurchaseYear;
+	}
+	public void setPropertyPurchaseYear(String propertyPurchaseYear) {
+		this.propertyPurchaseYear = propertyPurchaseYear;
+	}
 
+	public String getHomeWorthToday() {
+		return homeWorthToday;
+	}
+	public void setHomeWorthToday(String homeWorthToday) {
+		this.homeWorthToday = homeWorthToday;
+	}
 }

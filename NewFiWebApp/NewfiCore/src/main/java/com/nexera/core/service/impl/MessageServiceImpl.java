@@ -22,6 +22,7 @@ import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
 import com.nexera.common.vo.MessageVO;
+import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
@@ -41,7 +42,7 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	Utils utils;
-	
+
 	@Autowired
 	MongoCoreMessageService mongoMessageService;
 
@@ -64,12 +65,33 @@ public class MessageServiceImpl implements MessageService {
 		userRoleList.add(messagesVO.getCreatedUser().getRoleName());
 		mongoMessagesVO.setUserList(userAccessList);
 		mongoMessagesVO.setRoleList(userRoleList);
+		List<FileVO> fileList = messagesVO.getLinks();
+		if (fileList != null && !fileList.isEmpty()) {
+			mongoMessagesVO.setLinks(convertToMongoFileList(fileList));
+		}
+
 		// TODO: Take care of GMT conversion
 		mongoMessagesVO.setCreatedDate(new Date(System.currentTimeMillis()));
 
 		LOG.debug("Saving Mongo message: " + mongoMessagesVO);
 		return mongoMessageService.saveMessage(mongoMessagesVO);
 
+	}
+
+	private com.nexera.common.vo.mongo.MongoMessagesVO.FileVO[] convertToMongoFileList(
+	        List<FileVO> fileList) {
+		// TODO Auto-generated method stub
+		com.nexera.common.vo.mongo.MongoMessagesVO.FileVO arrayOfFiles[] = new com.nexera.common.vo.mongo.MongoMessagesVO.FileVO[fileList
+		        .size()];
+		int i = 0;
+		for (FileVO fileVO : fileList) {
+			com.nexera.common.vo.mongo.MongoMessagesVO.FileVO file = new com.nexera.common.vo.mongo.MongoMessagesVO.FileVO();
+			file.setFileName(fileVO.getFileName());
+			file.setUrl(fileVO.getUrl());
+			arrayOfFiles[i] = file;
+			i = i + 1;
+		}
+		return arrayOfFiles;
 	}
 
 	private List<String> getUserRoles(List<MessageUserVO> otherUsers) {
@@ -127,12 +149,14 @@ public class MessageServiceImpl implements MessageService {
 				messageVOList.add(messageVO);
 			}
 			Collections.sort(messageVOList, new Comparator<MessageVO>() {
-				  public int compare(MessageVO o1, MessageVO o2) {
-				      if (o1.getSortOrderDate() == null || o2.getSortOrderDate() == null)
-				        return 0;
-				      return o2.getSortOrderDate().compareTo(o1.getSortOrderDate());
-				  }
-				});
+				public int compare(MessageVO o1, MessageVO o2) {
+					if (o1.getSortOrderDate() == null
+					        || o2.getSortOrderDate() == null)
+						return 0;
+					return o2.getSortOrderDate().compareTo(
+					        o1.getSortOrderDate());
+				}
+			});
 			messageVOMasterList.add(messageVOList);
 		}
 		MessageHierarchyVO hierarchyVO = new MessageHierarchyVO();
@@ -157,7 +181,7 @@ public class MessageServiceImpl implements MessageService {
 		List<UserRoleNameImageVO> nameImageVOs = new ArrayList<UserRoleNameImageVO>();
 		UserRoleNameImageVO nameImageVO = userProfileDao
 		        .findUserDetails(mongoMessagesVO.getCreatedBy().intValue());
-		
+
 		MessageUserVO createdUser = messageVO.createNewUserVO();
 		createdUser.setImgUrl(nameImageVO.getImgPath());
 		createdUser.setRoleName(nameImageVO.getUserRole());
@@ -165,6 +189,10 @@ public class MessageServiceImpl implements MessageService {
 		createdUser.setUserID(nameImageVO.getUserID());
 		messageVO.setCreatedUser(createdUser);
 
+		if(mongoMessagesVO.getLinks()!=null&&mongoMessagesVO.getLinks().length!=0){
+			messageVO.setLinks(convertMongoFileList(mongoMessagesVO.getLinks()));	
+		}
+		
 		messageVO
 		        .setCreatedDate(utils
 		                .getDateInUserLocaleFormatted(mongoMessagesVO
@@ -185,5 +213,17 @@ public class MessageServiceImpl implements MessageService {
 		}
 		messageVO.setOtherUsers(userVOs);
 		return messageVO;
+	}
+
+	private List<FileVO> convertMongoFileList(
+	        com.nexera.common.vo.mongo.MongoMessagesVO.FileVO[] links) {
+		List<FileVO> fileVOs = new ArrayList<MessageVO.FileVO>();
+		for (com.nexera.common.vo.mongo.MongoMessagesVO.FileVO fileVO : links) {
+			FileVO vo = new FileVO();
+			vo.setFileName(fileVO.getFileName());
+			vo.setUrl(fileVO.getUrl());
+			fileVOs.add(vo);
+		}
+		return fileVOs;
 	}
 }

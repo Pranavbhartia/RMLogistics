@@ -2,6 +2,7 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 public class ApplicationFeePaymentManager implements IWorkflowTaskExecutor {
@@ -23,5 +24,12 @@ public class ApplicationFeePaymentManager implements IWorkflowTaskExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String invokeAction(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

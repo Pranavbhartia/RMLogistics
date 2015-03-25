@@ -34,7 +34,7 @@
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			isAgentTypeDashboard = true;
-			paintAgentDashboard();
+			paintAgentDashboard('myloans');
 			retrieveState();
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();

@@ -1,13 +1,13 @@
 package com.nexera.common.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanAppFormDao;
 import com.nexera.common.entity.LoanAppForm;
-import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.User;
 
 @Component
@@ -29,6 +29,62 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		return loalAppForm;
 	}
 	
+	@Override
+    public LoanAppForm saveLoanAppFormWithDetails(LoanAppForm loanAppForm) {
+		
+		
+		
+		if (null != loanAppForm.getUser()) {
+			
+			if (null != loanAppForm.getUser().getCustomerDetail()){
+				System.out.println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
+				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				System.out.println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
+				sessionFactory.getCurrentSession().flush();
+			}
+			System.out.println("Before saveOrUpdate(loanAppForm.getUser()"+loanAppForm.getUser().getId());
+			//this.saveOrUpdate(loanAppForm.getUser());
+			System.out.println("After saveOrUpdate(loanAppForm.getUser()"+loanAppForm.getUser().getId());
+			//sessionFactory.getCurrentSession().flush();
+		}
+		if (null != loanAppForm.getGovernmentquestion()) {
+			System.out.println("Before saveOrUpdate(loanAppForm.getGovernmentquestion()"+loanAppForm.getGovernmentquestion().getId());
+			this.saveOrUpdate(loanAppForm.getGovernmentquestion());
+			System.out.println("After saveOrUpdate(loanAppForm.getGovernmentquestion()"+loanAppForm.getGovernmentquestion().getId());
+			sessionFactory.getCurrentSession().flush();
+		}
+		if (null != loanAppForm.getPropertyTypeMaster()) {
+			System.out.println("Before saveOrUpdate(loanAppForm.getPropertyTypeMaster()"+loanAppForm.getPropertyTypeMaster().getId());
+			this.saveOrUpdate(loanAppForm.getPropertyTypeMaster());
+			System.out.println("After saveOrUpdate(loanAppForm.getPropertyTypeMaster()"+loanAppForm.getPropertyTypeMaster().getId());
+			sessionFactory.getCurrentSession().flush();
+		}
+		if (null != loanAppForm.getRefinancedetails()) {
+			System.out.println("Before saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
+			this.saveOrUpdate(loanAppForm.getRefinancedetails());
+			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
+			sessionFactory.getCurrentSession().flush();
+		}
+ 
+		this.saveOrUpdate(loanAppForm);
+		
+		
+		
+		return  loanAppForm;
+    }
 	
+	
+	@Override
+    public LoanAppForm findLoanAppForm(Integer loanAppFormID) {
+		
+		LoanAppForm loanAppForm = (LoanAppForm) this.load(LoanAppForm.class, loanAppFormID);
+			if (loanAppForm != null) {
+				Hibernate.initialize(loanAppForm.getGovernmentquestion());
+				Hibernate.initialize(loanAppForm.getRefinancedetails());
+				Hibernate.initialize(loanAppForm.getPropertyTypeMaster());
+			}
+			return loanAppForm;
 
+	
+	}
 }

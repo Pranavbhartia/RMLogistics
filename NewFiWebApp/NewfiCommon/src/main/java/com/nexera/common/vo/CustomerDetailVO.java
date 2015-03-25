@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CustomerDetailVO implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String addressCity;
@@ -11,6 +12,7 @@ public class CustomerDetailVO implements Serializable {
 	private String addressZipCode;
 	private Long dateOfBirth;
 	private Integer profileCompletionStatus;
+	private String ssn;
 	private String secEmailId;
 	private String secPhoneNumber;
 	private UserVO user;
@@ -70,5 +72,13 @@ public class CustomerDetailVO implements Serializable {
 	public void setUser(UserVO user) {
 		this.user = user;
 	}
+	
+	public String getSsn() {
+		return ssn;
+	}
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
+	
 
 }

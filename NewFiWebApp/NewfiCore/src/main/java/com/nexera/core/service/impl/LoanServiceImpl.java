@@ -1,13 +1,13 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +15,19 @@ import com.braintreegateway.test.VenmoSdk.Session;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanDetailVO;
@@ -32,6 +35,7 @@ import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
+import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -227,7 +231,48 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	
+	@Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO) {
 
+        // Get new prospect and lead loans this user has access to.
+	    List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 1);
+	    loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 2) );
+        
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
+
+        // Get new and in progress loans this user has access to.
+        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 3);
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 4) );
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
+
+        // Get declined , withdrawn and closed loans this user has access to.
+        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 5);
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 6) );
+        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 7) );
+        LoanDashboardVO loanDashboardVO = this
+                .buildLoanDashboardVoFromLoanList(loanList);
+
+        return loanDashboardVO;
+    }
+	
 	@Override
 	@Transactional(readOnly = true)
 	public LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO) {
@@ -306,8 +351,8 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
 			if (null != customerDetail.getDateOfBirth())
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-				        .getTime());
+				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime()
+				        );
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
@@ -514,6 +559,97 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
+	public List<TitleCompanyMasterVO> findTitleCompanyByName(
+			TitleCompanyMasterVO titleCompanyVO) {
+		// TODO Auto-generated method stub
+		if (titleCompanyVO == null || titleCompanyVO.getName() == null)
+			return Collections.EMPTY_LIST;
+
+		return buildTitleCompanyMasterVO(loanDao
+				.findTitleCompanyByName(parseTitleCompanyMaster(titleCompanyVO)));
+	}
+
+	public List<TitleCompanyMasterVO> buildTitleCompanyMasterVO(
+			List<TitleCompanyMaster> masterList) {
+		if (masterList == null)
+			return null;
+		List<TitleCompanyMasterVO> companyMasterVOs = new ArrayList<TitleCompanyMasterVO>();
+		for (TitleCompanyMaster master : masterList) {
+			companyMasterVOs.add(buildTitleCompanyMasterVO(master));
+		}
+		return companyMasterVOs;
+	}
+
+	public TitleCompanyMasterVO buildTitleCompanyMasterVO(
+			TitleCompanyMaster master) {
+		if (master == null)
+			return null;
+		TitleCompanyMasterVO companyMasterVO = new TitleCompanyMasterVO();
+		companyMasterVO.setId(master.getId());
+		companyMasterVO.setName(master.getName());
+		companyMasterVO.setEmailID(master.getEmailID());
+
+		return companyMasterVO;
+
+	}
+	
+	public TitleCompanyMaster parseTitleCompanyMaster(TitleCompanyMasterVO vo){
+		if(vo==null) return null;
+		TitleCompanyMaster companyMaster=new TitleCompanyMaster();
+		companyMaster.setId(vo.getId());
+		companyMaster.setName(vo.getName());
+		companyMaster.setEmailID(vo.getEmailID());
+		
+		return companyMaster;
+	}
+	
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
+			HomeOwnersInsuranceMasterVO homeOwnInsVO) {
+		// TODO Auto-generated method stub
+		if (homeOwnInsVO == null || homeOwnInsVO.getName() == null)
+			return Collections.EMPTY_LIST;
+
+		return buildHomeOwnersInsuranceMasterVO(loanDao
+				.findHomeOwnInsByName(parseHomeOwnInsMaster(homeOwnInsVO)));
+	}
+
+	public List<HomeOwnersInsuranceMasterVO> buildHomeOwnersInsuranceMasterVO(
+			List<HomeOwnersInsuranceMaster> masterList) {
+		if (masterList == null)
+			return null;
+		List<HomeOwnersInsuranceMasterVO> companyMasterVOs = new ArrayList<HomeOwnersInsuranceMasterVO>();
+		for (HomeOwnersInsuranceMaster master : masterList) {
+			companyMasterVOs.add(buildHomeOwnersInsuranceMasterVO(master));
+		}
+		return companyMasterVOs;
+	}
+
+	public HomeOwnersInsuranceMasterVO buildHomeOwnersInsuranceMasterVO(
+			HomeOwnersInsuranceMaster master) {
+		if (master == null)
+			return null;
+		HomeOwnersInsuranceMasterVO companyMasterVO = new HomeOwnersInsuranceMasterVO();
+		companyMasterVO.setId(master.getId());
+		companyMasterVO.setName(master.getName());
+		companyMasterVO.setEmailID(master.getEmailID());
+
+		return companyMasterVO;
+
+	}
+	
+	public HomeOwnersInsuranceMaster parseHomeOwnInsMaster(HomeOwnersInsuranceMasterVO vo){
+		if(vo==null) return null;
+		HomeOwnersInsuranceMaster companyMaster=new HomeOwnersInsuranceMaster();
+		companyMaster.setId(vo.getId());
+		companyMaster.setName(vo.getName());
+		companyMaster.setEmailID(vo.getEmailID());
+		
+		return companyMaster;
+	}
 	@Transactional(readOnly = true)
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub

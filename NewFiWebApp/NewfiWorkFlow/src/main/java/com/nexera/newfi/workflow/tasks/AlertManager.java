@@ -38,6 +38,12 @@ public class AlertManager implements IWorkflowTaskExecutor {
 
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
+
+	@Override
+	public String invokeAction(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

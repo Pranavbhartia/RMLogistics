@@ -18,21 +18,31 @@ import java.util.List;
 public class LoanAppForm implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean employed;
+	private Boolean isEmployed;
+	private String EmployedIncomePreTax;
+	private String EmployedAt;
+	private String EmployedSince;
 	private Boolean hoaDues;
 	private Boolean homeRecentlySold;
 	private Boolean homeToSell;
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
-	private Boolean pensionOrRetirement;
+	private Boolean ispensionOrRetirement;
+	private String monthlyPension;
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
 	private Boolean paySecondMortgage;
-	private Boolean selfEmployed;
-	private Boolean ssIncomeOrDisability;
+	private Boolean isselfEmployed;
+	private String  selfEmployedIncome;
+	private Boolean isssIncomeOrDisability;
+	private String  ssDisabilityIncome;
+	private Boolean isSpouseOnLoan ;
+	private String	spouseName;
 	private User user;
 	private PropertyTypeMaster propertyTypeMaster;
+	private GovernmentQuestion governmentquestion;
+	private RefinanceDetails refinancedetails;
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
 	private List<UserEmploymentHistory> userEmploymentHistories;
@@ -62,17 +72,7 @@ public class LoanAppForm implements Serializable {
 		this.id = id;
 	}
 
-	@Column(columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getEmployed() {
-		return this.employed;
-	}
 	
-
-	public void setEmployed(Boolean employed) {
-		this.employed = employed;
-	}
-
 	@Column(name = "hoa_dues", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHoaDues() {
@@ -122,21 +122,13 @@ public class LoanAppForm implements Serializable {
 		this.ownsOtherProperty = ownsOtherProperty;
 	}
 
-	@Column(name = "pension_or_retirement", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getPensionOrRetirement() {
-		return this.pensionOrRetirement;
-	}
-
-	public void setPensionOrRetirement(Boolean pensionOrRetirement) {
-		this.pensionOrRetirement = pensionOrRetirement;
-	}
-
 	@Column(name = "receive_alimony_child_support", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getReceiveAlimonyChildSupport() {
-		return this.receiveAlimonyChildSupport;
+		return receiveAlimonyChildSupport;
 	}
+
+	
 
 	public void setReceiveAlimonyChildSupport(Boolean receiveAlimonyChildSupport) {
 		this.receiveAlimonyChildSupport = receiveAlimonyChildSupport;
@@ -172,25 +164,52 @@ public class LoanAppForm implements Serializable {
 		this.paySecondMortgage = paySecondMortgage;
 	}
 
-	@Column(name = "self_employed", columnDefinition = "TINYINT")
+	@Column(name = "isspouseOnLoan")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getSelfEmployed() {
-		return this.selfEmployed;
+	public Boolean getIsSpouseOnLoan() {
+		return isSpouseOnLoan;
 	}
 
-	public void setSelfEmployed(Boolean selfEmployed) {
-		this.selfEmployed = selfEmployed;
+	public void setIsSpouseOnLoan(Boolean isSpouseOnLoan) {
+		this.isSpouseOnLoan = isSpouseOnLoan;
 	}
 
-	@Column(name = "ss_income_or_disability", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getSsIncomeOrDisability() {
-		return this.ssIncomeOrDisability;
+	@Column(name = "spouse_name")
+	public String getSpouseName() {
+		return spouseName;
 	}
 
-	public void setSsIncomeOrDisability(Boolean ssIncomeOrDisability) {
-		this.ssIncomeOrDisability = ssIncomeOrDisability;
+	public void setSpouseName(String spouseName) {
+		this.spouseName = spouseName;
 	}
+	
+	
+	
+
+	// bi-directional many-to-one association to GovermentQuestions
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "gov_quest")
+	public GovernmentQuestion getGovernmentquestion() {
+		return governmentquestion;
+	}
+
+	public void setGovernmentquestion(GovernmentQuestion governmentquestion) {
+		this.governmentquestion = governmentquestion;
+	}
+
+	
+	// bi-directional many-to-one association to Refinace
+
+		@OneToOne(fetch = FetchType.LAZY)
+		@JoinColumn(name = "ref_detail")
+	public RefinanceDetails getRefinancedetails() {
+		return refinancedetails;
+	}
+
+	public void setRefinancedetails(RefinanceDetails refinancedetails) {
+		this.refinancedetails = refinancedetails;
+	}
+	
 
 	// bi-directional many-to-one association to User
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -235,6 +254,102 @@ public class LoanAppForm implements Serializable {
 	public void setLoan(Loan loan) {
 		this.loan = loan;
 	}
+
+	@Column(name = "isemployed", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsEmployed() {
+		return isEmployed;
+	}
+
+	public void setIsEmployed(Boolean isEmployed) {
+		this.isEmployed = isEmployed;
+	}
+
+	@Column(name = "EmployedIncomePreTax")
+	public String getEmployedIncomePreTax() {
+		return EmployedIncomePreTax;
+	}
+
+	public void setEmployedIncomePreTax(String employedIncomePreTax) {
+		EmployedIncomePreTax = employedIncomePreTax;
+	}
+
+	@Column(name = "EmployedAt")
+	public String getEmployedAt() {
+		return EmployedAt;
+	}
+
+	public void setEmployedAt(String employedAt) {
+		EmployedAt = employedAt;
+	}
+
+	@Column(name = "EmployedSince")
+	public String getEmployedSince() {
+		return EmployedSince;
+	}
+
+	public void setEmployedSince(String employedSince) {
+		EmployedSince = employedSince;
+	}
+
+	@Column(name = "ispensionOrRetirement", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIspensionOrRetirement() {
+		return ispensionOrRetirement;
+	}
+
+	public void setIspensionOrRetirement(Boolean ispensionOrRetirement) {
+		this.ispensionOrRetirement = ispensionOrRetirement;
+	}
+
+	@Column(name = "monthlyPension")
+	public String getMonthlyPension() {
+		return monthlyPension;
+	}
+
+	public void setMonthlyPension(String monthlyPension) {
+		this.monthlyPension = monthlyPension;
+	}
+
+	@Column(name = "isselfEmployed", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsselfEmployed() {
+		return isselfEmployed;
+	}
+
+	public void setIsselfEmployed(Boolean isselfEmployed) {
+		this.isselfEmployed = isselfEmployed;
+	}
+
+	@Column(name = "selfEmployedIncome")
+	public String getSelfEmployedIncome() {
+		return selfEmployedIncome;
+	}
+
+	public void setSelfEmployedIncome(String selfEmployedIncome) {
+		this.selfEmployedIncome = selfEmployedIncome;
+	}
+
+	@Column(name = "isssIncomeOrDisability", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsssIncomeOrDisability() {
+		return isssIncomeOrDisability;
+	}
+
+	public void setIsssIncomeOrDisability(Boolean isssIncomeOrDisability) {
+		this.isssIncomeOrDisability = isssIncomeOrDisability;
+	}
+
+	@Column(name = "ssDisabilityIncome")
+	public String getSsDisabilityIncome() {
+		return ssDisabilityIncome;
+	}
+
+	public void setSsDisabilityIncome(String ssDisabilityIncome) {
+		this.ssDisabilityIncome = ssDisabilityIncome;
+	}
+
+	
 
 	// bi-directional many-to-one association to UserEmploymentHistory
 	@OneToMany(mappedBy = "loanAppForm")
@@ -282,5 +397,6 @@ public class LoanAppForm implements Serializable {
 	public void setLoanManagerWorkflow(WorkflowExec loanManagerWorkflow) {
 		this.loanManagerWorkflow = loanManagerWorkflow;
 	}
-
+	
+	
 }

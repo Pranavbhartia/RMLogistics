@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -15,12 +16,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
@@ -156,7 +159,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        "Exception caught in getLoanAppForm() ",
 			        hibernateException);
 		}
 	}
@@ -200,6 +203,35 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        hibernateException);
 		}
 	}
+	
+	@Override
+    public List<Loan> retrieveLoanByProgressStatus(User parseUserModel , int loanProgressStatusId) {
+
+        try {
+            List<Loan> loanListForUser = new ArrayList<Loan>();
+            Session session = sessionFactory.getCurrentSession();
+            Criteria criteria = session.createCriteria(LoanTeam.class);
+            criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+            List<LoanTeam> loanTeamList = criteria.list();
+
+            if (loanTeamList != null) {
+                for (LoanTeam loanTeam : loanTeamList) {
+                    Hibernate.initialize(loanTeam.getLoan());
+                    Loan loan = loanTeam.getLoan();
+                    if(loan.getLoanProgressStatus().getId() == loanProgressStatusId)
+                        loanListForUser.add(loan);
+
+                }
+            }
+
+            return loanListForUser;
+        } catch (HibernateException hibernateException) {
+
+            throw new DatabaseException(
+                    "Exception caught in retrieveLoanForDashboard() ",
+                    hibernateException);
+        }
+    }
 
 	@Override
 	public Loan retrieveLoanForDashboard(User parseUserModel, Loan loan) {
@@ -350,6 +382,32 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
     }
 
 	@Override
+	public List<TitleCompanyMaster> findTitleCompanyByName(
+			TitleCompanyMaster titleCompany) {
+
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session
+				.createQuery("FROM TitleCompanyMaster where lower(name) like '%"
+						+ titleCompany.getName() + "%'");
+		@SuppressWarnings("unchecked")
+		List<TitleCompanyMaster> companyList = query.list();
+		//
+		
+		return companyList;
+	}
+	
+	@Override
+	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
+			HomeOwnersInsuranceMaster insurance) {
+
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session
+				.createQuery("FROM HomeOwnersInsuranceMaster where lower(name) like '%"
+						+ insurance.getName() + "%'");
+		List<HomeOwnersInsuranceMaster> companyList = query.list();
+	    return companyList;
+	}
+	
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
@@ -359,7 +417,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return (LoanNeedsList)criteria.uniqueResult();
 	}
 
-	
 
 	
 }
