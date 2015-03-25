@@ -48,6 +48,8 @@ public interface CommonConstants {
 	 * SendGrid constants
 	 */
 	public static final String SENDER_NAME = "NewFi Team";
+	
+	
 	public static final String SENDER_EMAIL_ID = "support@newfi.com";
 	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>" + "Newfi Team";
 	
@@ -59,4 +61,10 @@ public interface CommonConstants {
 	public static final String NOTE_SUBJECT = "NewFi - You have a new note";
 
 	public static final String ANONYMOUS_USER = "User name unavailable";
+	
+	/*
+	 * 
+	 */
+	public static final String SENDER_NAME_REGEX = SENDER_EMAIL_ID+" <";
+	public static final String SENDER_DOMAIN_REGEX = SENDER_DOMAIN+">";
 }
