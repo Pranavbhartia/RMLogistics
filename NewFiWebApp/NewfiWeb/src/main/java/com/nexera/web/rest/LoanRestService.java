@@ -81,25 +81,47 @@ public class LoanRestService {
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO addToLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID") Integer userID) {
+	        @RequestParam(value = "userID",required=false) Integer userID,
+	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
+	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
-		UserVO user = new UserVO();
-		user.setId(userID);
-		boolean result = loanService.addToLoanTeam(loan, user);
-		if (result) {
-			user = userProfileService.loadInternalUser(userID);
-		}
-		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
-		editLoanTeamVO.setOperationResult(result);
-		editLoanTeamVO.setUserID(userID);
-		editLoanTeamVO.setLoanID(loanID);
-		editLoanTeamVO.setUser(user);
-		CommonResponseVO responseVO = RestUtil
-		        .wrapObjectForSuccess(editLoanTeamVO);
+		if (userID != null && userID > 0) {
+			UserVO user = new UserVO();
+			user.setId(userID);
+			boolean result = loanService.addToLoanTeam(loan, user);
+			if (result) {
+				user = userProfileService.loadInternalUser(userID);
+			}
+			EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+			editLoanTeamVO.setOperationResult(result);
+			editLoanTeamVO.setUserID(userID);
+			editLoanTeamVO.setLoanID(loanID);
+			editLoanTeamVO.setUser(user);
+			CommonResponseVO responseVO = RestUtil
+			        .wrapObjectForSuccess(editLoanTeamVO);
 
-		return responseVO;
+			return responseVO;
+		} else if (titleCompanyID != null && titleCompanyID > 0) {
+			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
+			company.setId(titleCompanyID);
+			boolean result = loanService.addToLoanTeam(loan, company,
+			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+
+			return responseVO;
+		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
+			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
+			company.setId(homeOwnInsCompanyID);
+			boolean result = loanService.addToLoanTeam(loan, company,
+			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+
+			return responseVO;
+		} else
+			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+
 	}
 
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)

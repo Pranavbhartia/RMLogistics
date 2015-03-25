@@ -705,4 +705,21 @@ public class LoanServiceImpl implements LoanService {
 		        .parseTitleCompanyMaster(vo)));
 	}
 
+	@Override
+	@Transactional
+	public boolean addToLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy) {
+
+		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		        this.parseHomeOwnInsMaster(homeOwnersInsurance), userProfileService.parseUserModel(addedBy));
+	}
+
+	@Override
+	@Transactional
+	public boolean addToLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany, UserVO addedBy) {
+
+		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		        this.parseTitleCompanyMaster(titleCompany), userProfileService.parseUserModel(addedBy));
+	}
 }

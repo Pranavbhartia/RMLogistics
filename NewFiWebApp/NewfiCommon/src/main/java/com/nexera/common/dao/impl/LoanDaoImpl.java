@@ -19,6 +19,7 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
@@ -429,6 +430,51 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	        TitleCompanyMaster titleCompanyMaster) {
 		this.save(titleCompanyMaster);
 		return titleCompanyMaster;
+	}
+
+	@Override
+	public boolean addToLoanTeam(Loan loan,
+	        HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy) {
+
+		Loan loanFromDB = (Loan) this.load(Loan.class, loan.getId());
+		if (loanFromDB == null)
+			return false;
+
+		Hibernate.initialize(loanFromDB.getLoanDetail());
+
+		LoanDetail loanDetail = loanFromDB.getLoanDetail();
+		if (loanDetail == null) {
+			loanDetail = new LoanDetail();
+			this.save(loanDetail);
+			this.sessionFactory.getCurrentSession().flush();
+			loanFromDB.setLoanDetail(loanDetail);
+		}
+		loanDetail.setHomeOwnersInsurance(homeOwnersInsurance);
+		this.update(loanDetail);
+		return true;
+	}
+
+	@Override
+	public boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
+	        User addedBy) {
+
+		Loan loanFromDB = (Loan) this.load(Loan.class, loan.getId());
+		if (loanFromDB == null)
+			return false;
+
+		Hibernate.initialize(loanFromDB.getLoanDetail());
+
+		LoanDetail loanDetail = loanFromDB.getLoanDetail();
+		if (loanDetail == null) {
+			loanDetail = new LoanDetail();
+			this.save(loanDetail);
+			this.sessionFactory.getCurrentSession().flush();
+			loanFromDB.setLoanDetail(loanDetail);
+		}
+		loanDetail.setTitleCompany(titleCompany);
+		this.update(loanDetail);
+
+		return true;
 	}
 
 }

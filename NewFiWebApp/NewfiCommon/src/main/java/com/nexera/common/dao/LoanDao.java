@@ -73,6 +73,12 @@ public interface LoanDao extends GenericDao {
 	public TitleCompanyMaster addTitleCompany(
             TitleCompanyMaster titleCompanyMaster);
 
+	boolean addToLoanTeam(Loan loan,
+            HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy);
+
+	boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
+            User addedBy);
+
 	
 
 }

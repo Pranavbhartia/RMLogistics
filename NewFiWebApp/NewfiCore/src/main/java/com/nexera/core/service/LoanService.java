@@ -2,9 +2,12 @@ package com.nexera.core.service;
 
 import java.util.List;
 
+import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -90,5 +93,13 @@ public interface LoanService
 
 
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(HomeOwnersInsuranceMasterVO vo);
+
+
+	boolean addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
+            UserVO addedBy);
+
+
+	boolean addToLoanTeam(LoanVO loan,
+            HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
 
 }
