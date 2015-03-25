@@ -277,6 +277,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				        loanId, userId, assignedBy);
 				LOG.info("Added File document row : " + savedRowId);
 				checkVo.setUploadFileId(savedRowId);
+				
+				UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
+				
+				checkVo.setUuid(latestRow.getUuidFileId());
+				checkVo.setFileName(latestRow.getFileName());
 			}
 
 		} catch (Exception e) {
