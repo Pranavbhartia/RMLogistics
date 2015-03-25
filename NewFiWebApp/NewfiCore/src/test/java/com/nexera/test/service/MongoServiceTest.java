@@ -55,7 +55,7 @@ public class MongoServiceTest {
 		User loggedInUser = userProfileDao.findByUserId(1);
 		// Test no files
 		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
-		        null, "sample text", null);
+		        null, "sample text", null,true);
 
 		List<FileVO> fileVos = new ArrayList<FileVO>();
 		FileVO e = new FileVO();
@@ -64,7 +64,7 @@ public class MongoServiceTest {
 		fileVos.add(e);
 		// Test with files
 		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
-		        null, "sample text", fileVos);
+		        null, "sample text", fileVos,true);
 	}
 
 }
