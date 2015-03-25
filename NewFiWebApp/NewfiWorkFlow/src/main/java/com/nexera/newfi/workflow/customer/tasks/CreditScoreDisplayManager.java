@@ -3,13 +3,14 @@ package com.nexera.newfi.workflow.customer.tasks;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanAppFormDao;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 
 	@Autowired

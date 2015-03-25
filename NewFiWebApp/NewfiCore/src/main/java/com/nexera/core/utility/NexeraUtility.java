@@ -7,6 +7,7 @@ import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.PDFToImage;
@@ -57,10 +59,10 @@ public class NexeraUtility {
 
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
-	
+
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
-	
+
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
 
@@ -123,39 +125,36 @@ public class NexeraUtility {
 		return rootPath + File.separator + "tmpFiles";
 	}
 
-	public String uploadFileToLocal(MultipartFile file) {
+	public String uploadFileToLocal(File file) {
 		String filePath = null;
-		if (!file.isEmpty()) {
-			try {
-				byte[] bytes = file.getBytes();
 
-				// Creating the directory to store file
+		try {
+			byte[] bytes = FileUtils.readFileToByteArray(file);
 
-				File dir = new File(this.tomcatDirectoryPath());
-				if (!dir.exists())
-					dir.mkdirs();
+			// Creating the directory to store file
 
-				String fileName = file.getOriginalFilename();
+			File dir = new File(this.tomcatDirectoryPath());
+			if (!dir.exists())
+				dir.mkdirs();
 
-				filePath = dir.getAbsolutePath() + File.separator + fileName;
-				// Create the file on server
-				File serverFile = new File(filePath);
-				BufferedOutputStream stream = new BufferedOutputStream(
-				        new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
+			String fileName = file.getName();
 
-				LOGGER.info("Server File Location="
-				        + serverFile.getAbsolutePath());
+			filePath = dir.getAbsolutePath() + File.separator + fileName;
+			// Create the file on server
+			File serverFile = new File(filePath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+			        new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
 
-			} catch (Exception e) {
-				LOGGER.info("Exception in uploading file in local "
-				        + e.getMessage());
-				return null;
-			}
-		} else {
+			LOGGER.info("Server File Location=" + serverFile.getAbsolutePath());
+
+		} catch (Exception e) {
+			LOGGER.info("Exception in uploading file in local "
+			        + e.getMessage());
 			return null;
 		}
+
 		return filePath;
 	}
 
@@ -216,18 +215,17 @@ public class NexeraUtility {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public String convertImageToPDF(MultipartFile multipartFile) {
+	public String convertImageToPDF(File file, String contentType) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
 		try {
-			File file = multipartToFile(multipartFile);
 
 			PDDocument document = new PDDocument();
 
 			// InputStream in = new FileInputStream(file);
 			// BufferedImage bimg = ImageIO.read(in);
 			float width, height;
-			if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
+			if (contentType.equalsIgnoreCase("image/tiff")) {
 				FileSeekableStream fss = new FileSeekableStream(file);
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
@@ -251,13 +249,11 @@ public class NexeraUtility {
 
 			PDXObjectImage img = null;
 
-			if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
+			if (contentType.equalsIgnoreCase("image/jpeg")) {
 				img = new PDJpeg(document, new FileInputStream(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase(
-			        "image/png")) {
+			} else if (contentType.equalsIgnoreCase("image/png")) {
 				img = new PDPixelMap(document, ImageIO.read(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase(
-			        "image/tiff")) {
+			} else if (contentType.equalsIgnoreCase("image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
 			}
 
@@ -297,9 +293,8 @@ public class NexeraUtility {
 		return convFile;
 	}
 
-	public MultipartFile filePathToMultipart(File  file)
-	        throws IOException {
-		
+	public MultipartFile filePathToMultipart(File file) throws IOException {
+
 		DiskFileItem fileItem = new DiskFileItem("file", "application/pdf",
 		        false, file.getName(), (int) file.length(),
 		        file.getParentFile());
@@ -440,43 +435,102 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(Integer fileToGetContent) throws IOException, Exception {
-		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(fileToGetContent).getS3path();
-		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl.getInputStreamFromFile(s3pathOfFile));
+	public String getContentFromFile(Integer fileToGetContent)
+	        throws IOException, Exception {
+		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(
+		        fileToGetContent).getS3path();
+		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
+		        .getInputStreamFromFile(s3pathOfFile));
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
-	
-	
-	public  File copyInputStreamToFile( InputStream in) throws IOException {
+
+	public File copyInputStreamToFile(InputStream in) throws IOException {
 		File file = null;
 		OutputStream out = null;
 		try {
-			file =  new File(tomcatDirectoryPath()+File.separator+randomStringOfLength()+".pdf");
+			file = new File(tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf");
 			out = new FileOutputStream(file);
-	        byte[] buf = new byte[1024];
-	        int len;
-	        while((len=in.read(buf))>0){
-	            out.write(buf,0,len);
-	        }
-	        out.close();
-	        in.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }finally{
-	    	  out.close();
-		      in.close();
-	    }
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			out.close();
+			in.close();
+		}
 		return file;
 	}
-	
-	
-	public MultipartFile  getMultipartFileFromInputStream(InputStream instream) throws IOException{
+
+	public MultipartFile getMultipartFileFromInputStream(InputStream instream)
+	        throws IOException {
 		File file = copyInputStreamToFile(instream);
 		return filePathToMultipart(file);
-		
+
 	}
-	
-	
+
+	public byte[] convertInputStreamToByteArray(InputStream inputStream) {
+		byte[] buffer = new byte[8192];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		int bytesRead;
+		try {
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+		} catch (IOException e) {
+			// TODO call exception class
+		}
+		return baos.toByteArray();
+	}
+
+	public File convertInputStreamToFile(InputStream inputStream)
+	        throws COSVisitorException, IOException {
+
+		/*
+		 * String filePath = createPDFFromStream(inputStream); return new
+		 * File(filePath);
+		 */
+
+		OutputStream outputStream = null;
+		File file = null;
+		try {
+			file = new File(tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf");
+			if (file.createNewFile()) {
+				outputStream = new FileOutputStream(file);
+				byte[] bytes = convertInputStreamToByteArray(inputStream);
+				outputStream.write(bytes);
+				outputStream.flush();
+
+			}
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+
+				}
+			}
+			if (outputStream != null) {
+				try {
+					// outputStream.flush();
+					outputStream.close();
+				} catch (IOException e) {
+
+				}
+
+			}
+
+		}
+		return file;
+
+	}
 
 }

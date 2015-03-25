@@ -30,5 +30,6 @@ public interface GenericDao {
 	
 	public void saveAll(List data) throws DatabaseException;
 
+
 	
 }

@@ -69,7 +69,7 @@ public class CommunicationLogRestService {
 			MessageVO messageVO = new Gson().fromJson(messageVOString,
 			        MessageVO.class);
 			String messageId = messageService.saveMessage(messageVO,
-			        MessageTypeEnum.NOTE.toString());
+			        MessageTypeEnum.NOTE.toString(),Boolean.TRUE);
 			response.setResultObject(messageId);
 			LOG.info("saving communication complete.");
 		} catch (FatalException | NonFatalException e ) {

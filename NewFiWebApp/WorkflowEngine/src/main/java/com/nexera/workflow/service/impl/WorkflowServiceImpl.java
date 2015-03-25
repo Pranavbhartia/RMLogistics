@@ -101,6 +101,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		workflowItemExec.setStatus(Status.NOT_STARTED.getStatus());
 		workflowItemExec.setCreationDate(new Date());
 		workflowItemExec.setClickable(workflowItemMaster.getClickable());
+		workflowItemExec.setDisplayOrder(workflowItemMaster.getDisplayOrder());
 		int id = (Integer) workflowItemExecDao.save(workflowItemExec);
 		workflowItemExec.setId(id);
 		return workflowItemExec;

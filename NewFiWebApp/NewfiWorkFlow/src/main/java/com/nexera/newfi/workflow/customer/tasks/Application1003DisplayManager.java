@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
@@ -15,7 +16,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class Application1003DisplayManager extends NexeraWorkflowTask implements IWorkflowTaskExecutor {
 
 	@Autowired

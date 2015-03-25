@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +20,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -26,9 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -55,10 +62,13 @@ public class EmailProcessor implements Runnable {
 	@Autowired
 	UserProfileService userProfileService;
 
+	@Autowired
+	MessageServiceHelper messageServiceHelper;
+
 	@Override
 	public void run() {
 		LOGGER.debug("Inside run method ");
-
+		boolean sendEmail = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			MimeMessage mimeMessage = new MimeMessage(mimeMsg);
@@ -66,36 +76,49 @@ public class EmailProcessor implements Runnable {
 			LOGGER.debug("Mail subject is " + subject);
 			Address[] fromAddress = message.getFrom();
 			Address[] toAddress = message.getAllRecipients();
+			if (toAddress.length > 1) {
+				LOGGER.debug("User is sending this message to multiple recepient ");
+				sendEmail = false;
+			} else {
+				sendEmail = true;
+			}
 			LOGGER.debug("From Address is  " + fromAddress[0]);
 			String fromAddressString = fromAddress[0].toString();
-			// TODO remove this
-			fromAddressString = "rohit.patidar@raremile.com";
-			UserVO uploadedByUser = userProfileService
+			fromAddressString = fromAddressString.substring(
+			        fromAddressString.indexOf("<") + 1,
+			        fromAddressString.indexOf(">")).trim();
+			User uploadedByUser = userProfileService
 			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
 			String messageId = null;
 			String loanId = null;
 			if (toAddressString != null) {
-				// TODO remove this
-				loanId = "1";
-				/*
-				 * String[] toAddressArray = toAddressString.split("-"); if
-				 * (toAddressArray.length == 1) { LOGGER.debug(
-				 * "This is a new message, does not contain a message id");
-				 * loanId = toAddressArray[0]; } else if (toAddressArray.length
-				 * == 2) {
-				 * LOGGER.debug("This is a reply mail, must contain a message id"
-				 * ); messageId = toAddressArray[0]; loanId = toAddressArray[1];
-				 * }
-				 */
+
+				String[] toAddressArray = toAddressString.split("-");
+				if (toAddressArray.length == 1) {
+					LOGGER.debug("This is a new message, does not contain a message id");
+					loanId = toAddressArray[0];
+					loanId = loanId.replace(
+					        CommonConstants.SENDER_DOMAIN_REGEX, "");
+
+				} else if (toAddressArray.length == 2) {
+					LOGGER.debug("This is a reply mail, must contain a message id");
+					messageId = toAddressArray[0];
+					loanId = toAddressArray[1];
+					loanId = loanId.replace(
+					        CommonConstants.SENDER_DOMAIN_REGEX, "");
+					messageId = messageId.replace(
+					        CommonConstants.SENDER_NAME_REGEX, "");
+				}
 
 			}
 
 			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
 			String emailBody = getEmailBody(mimeMessage);
 			LOGGER.debug("Body of the email is " + emailBody);
-			extractAttachmentAndUpload(loanVO, uploadedByUser,
-			        loanVO.getUser(), mimeMessage);
+			extractAttachmentAndUploadEverything(emailBody, loanVO,
+			        uploadedByUser, loanVO.getUser(), mimeMessage, messageId,
+			        sendEmail);
 		} catch (MessagingException e) {
 
 		}
@@ -128,10 +151,15 @@ public class EmailProcessor implements Runnable {
 		return body;
 	}
 
-	private void extractAttachmentAndUpload(LoanVO loanVO,
-	        UserVO uploadedByUser, UserVO actualUser, MimeMessage mimeMessage) {
+	private void extractAttachmentAndUploadEverything(String emailBody,
+	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
+	        MimeMessage mimeMessage, String messageId, boolean sendEmail) {
 		try {
-
+			String successNoteText = "These files were ";
+			String failureNoteText = "These files were ";
+			List<CheckUploadVO> checkUploadSuccessList = new ArrayList<CheckUploadVO>();
+			List<FileVO> fileVOList = new ArrayList<FileVO>();
+			List<CheckUploadVO> checkUploadFailureList = new ArrayList<CheckUploadVO>();
 			Multipart multipart = (Multipart) mimeMessage.getContent();
 			for (int i = 0; i < multipart.getCount(); i++) {
 				BodyPart bodyPart = multipart.getBodyPart(i);
@@ -143,43 +171,69 @@ public class EmailProcessor implements Runnable {
 					DataHandler dataHandler = bodyPart.getDataHandler();
 					String content = dataHandler.getContentType();
 					InputStream inputStream = dataHandler.getInputStream();
-					/*String path = nexeraUtility.tomcatDirectoryPath();
-					File file = null;
-					if (content.contains("pdf")) {
-						file = convertInputStreamToFile(inputStream, path);
-						Files.probeContentType(file.toPath());
-					} else if (content.contains("jpg")
-					        || content.contains("png")
-					        || content.contains("tiff")
-					        || content.contains("tif")) {
-
-						file = nexeraUtility.filePathToMultipart(filePath);
-						file = nexeraUtility.convertImageToPDFDocument(multipartFile);
-
-						
-
-					} else {
-						// TODO invalid file format need to throw and log error
-						LOGGER.error("Invalid Format " + content);
-					}*/
 
 					LOGGER.debug("Uploading the file in the system ");
-					
-					CheckUploadVO checkUploadVO = uploadedFileListService.uploadFileByEmail(inputStream , actualUser.getId() , loanVO.getId() ,uploadedByUser.getId() );
-					LOGGER.info("Response in uploading documents by email : "+checkUploadVO);
-					/*uploadedFileListService.uploadFile(nexeraUtility
-					        .filePathToMultipart(file.getAbsolutePath()),
-					        actualUser.getId(), loanVO.getId(), uploadedByUser
-					                .getId());*/
-					/*if (file.exists()) {
-						LOGGER.debug("Remove the temp file after uploading it into the system ");
-						file.delete();
 
-					}*/
+					CheckUploadVO checkUploadVO = null;
+					try {
+						checkUploadVO = uploadedFileListService
+						        .uploadFileByEmail(inputStream, content,
+						                actualUser.getId(), loanVO.getId(),
+						                uploadedByUser.getId());
+						if (checkUploadVO != null) {
+							if (checkUploadVO.getIsUploadSuccess()) {
+								FileVO fileVO = new FileVO();
+								fileVO.setFileName(checkUploadVO.getFileName());
+								fileVO.setUrl(checkUploadVO.getUuid());
+								fileVOList.add(fileVO);
+								checkUploadSuccessList.add(checkUploadVO);
+								successNoteText = successNoteText
+								        .concat(checkUploadVO.getFileName());
+							}
+
+							else {
+								checkUploadFailureList.add(checkUploadVO);
+								failureNoteText = failureNoteText
+								        .concat(checkUploadVO.getFileName());
+							}
+						}
+
+						successNoteText = successNoteText
+						        + " were successfully uploaded ";
+						failureNoteText = failureNoteText
+						        + " were not uploaded";
+					} catch (COSVisitorException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 
 			}
 
+			if (checkUploadSuccessList.isEmpty()
+			        && checkUploadFailureList.isEmpty()) {
+
+				LOGGER.debug("Mail did not have any attachment ");
+				messageServiceHelper.generateEmailDocumentMessage(
+				        loanVO.getId(), uploadedByUser, messageId, emailBody,
+				        null, true, sendEmail);
+
+			} else {
+				LOGGER.debug("Mail contains attachment ");
+				if (!checkUploadSuccessList.isEmpty()) {
+					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        successNoteText, fileVOList, true, sendEmail);
+				}
+				if (!checkUploadFailureList.isEmpty()) {
+					LOGGER.debug("Mail contains attachment which were not uploaded ");
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        failureNoteText, null, false, sendEmail);
+				}
+			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
 		} catch (IOException e) {

@@ -52,9 +52,6 @@ public class EmailBatchProcessor extends QuartzJobBean {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
-	@Autowired
-	private EmailProcessor emailProcessor;
 
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
@@ -71,13 +68,14 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		try {
 			Session session = Session.getDefaultInstance(properties, null);
 			Store store = session.getStore(protocol);
-			store.connect(imapHost, username, password);
+			if (!store.isConnected())
+				store.connect(imapHost, username, password);
 			Folder inbox = store.getFolder(folderName);
-			inbox.open(Folder.READ_ONLY);
-			// inbox.open(Folder.READ_WRITE);
+			inbox.open(Folder.READ_WRITE);
 			fetchUnReadMails(inbox);
-			inbox.close(true);
-			store.close();
+			/*
+			 * inbox.close(true); store.close();
+			 */
 		} catch (NoSuchProviderException e) {
 			// TODO catch this exception a particular table
 		} catch (MessagingException e) {
@@ -94,16 +92,13 @@ public class EmailBatchProcessor extends QuartzJobBean {
 
 			LOGGER.debug("Total Number Of Unread Mails Are " + msg.length);
 			for (Message unreadMsg : msg) {
-				/*EmailProcessor emailProcessor = applicationContext
-				        .getBean(EmailProcessor.class);*/
+				EmailProcessor emailProcessor = applicationContext
+				        .getBean(EmailProcessor.class);
 				emailProcessor.setMessage(unreadMsg);
 				emailTaskExecutor.execute(emailProcessor);
-				// Uncomment to mark the mail as read after processing
-				/*
-				 * inbox.setFlags(new Message[] { unreadMsg }, new Flags(
-				 * Flags.Flag.SEEN), true);
-				 */
+
 			}
+
 			/*
 			 * emailTaskExecutor.shutdown(); try {
 			 * emailTaskExecutor.getThreadPoolExecutor().awaitTermination(

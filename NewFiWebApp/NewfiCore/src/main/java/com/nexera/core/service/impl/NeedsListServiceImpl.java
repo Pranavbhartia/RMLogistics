@@ -301,7 +301,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		} catch (Exception e) {
 			return 0;
 		}
-		messageServiceHelper.generateNeedListModificationMessage(loanId,utils.getLoggedInUser(),addedList,removedList);
+		messageServiceHelper.generateNeedListModificationMessage(loanId,utils.getLoggedInUser(),addedList,removedList,Boolean.TRUE);
 		return 1;
 	}
 
