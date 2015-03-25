@@ -72,6 +72,7 @@ public class LoanAppForm implements Serializable {
 		this.id = id;
 	}
 
+	
 	@Column(name = "hoa_dues", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHoaDues() {
@@ -184,8 +185,8 @@ public class LoanAppForm implements Serializable {
 	
 	
 	
-	
-	// bi-directional many-to-one association to User
+
+	// bi-directional many-to-one association to GovermentQuestions
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gov_quest")
 	public GovernmentQuestion getGovernmentquestion() {
@@ -197,7 +198,8 @@ public class LoanAppForm implements Serializable {
 	}
 
 	
-	// bi-directional many-to-one association to User
+	// bi-directional many-to-one association to Refinace
+
 		@OneToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "ref_detail")
 	public RefinanceDetails getRefinancedetails() {

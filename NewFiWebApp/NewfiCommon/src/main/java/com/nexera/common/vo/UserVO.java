@@ -3,6 +3,10 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -272,13 +276,6 @@ public class UserVO implements Serializable {
 
 	}
 
-	public User convertToEntity() {
-		User user = new User();
-
-		user.setId(this.id);
-
-		return user;
-
-	}
+	
 
 }

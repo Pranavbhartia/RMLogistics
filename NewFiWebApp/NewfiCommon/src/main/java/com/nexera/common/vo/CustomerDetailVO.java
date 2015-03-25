@@ -79,5 +79,6 @@ public class CustomerDetailVO implements Serializable {
 	public void setSsn(String ssn) {
 		this.ssn = ssn;
 	}
+	
 
 }

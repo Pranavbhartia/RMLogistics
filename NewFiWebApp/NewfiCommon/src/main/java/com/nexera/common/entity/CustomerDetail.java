@@ -24,6 +24,7 @@ public class CustomerDetail implements Serializable {
 	private Integer profileCompletionStatus;
 	private String secEmailId;
 	private String secPhoneNumber;
+	
 
 	public CustomerDetail() {
 	}
@@ -111,5 +112,6 @@ public class CustomerDetail implements Serializable {
 		this.secPhoneNumber = secPhoneNumber;
 	}
 
+	
 
 }

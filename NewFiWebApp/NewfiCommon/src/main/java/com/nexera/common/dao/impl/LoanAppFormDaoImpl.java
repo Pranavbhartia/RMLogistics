@@ -30,21 +30,47 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 	}
 	
 	@Override
-    public Integer saveLoanAppFormWithDetails(LoanAppForm loanAppForm) {
+    public LoanAppForm saveLoanAppFormWithDetails(LoanAppForm loanAppForm) {
+		
+		
+		
+		if (null != loanAppForm.getUser()) {
+			
+			if (null != loanAppForm.getUser().getCustomerDetail()){
+				System.out.println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
+				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				System.out.println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
+				sessionFactory.getCurrentSession().flush();
+			}
+			System.out.println("Before saveOrUpdate(loanAppForm.getUser()"+loanAppForm.getUser().getId());
+			//this.saveOrUpdate(loanAppForm.getUser());
+			System.out.println("After saveOrUpdate(loanAppForm.getUser()"+loanAppForm.getUser().getId());
+			//sessionFactory.getCurrentSession().flush();
+		}
 		if (null != loanAppForm.getGovernmentquestion()) {
-			this.save(loanAppForm.getGovernmentquestion());
+			System.out.println("Before saveOrUpdate(loanAppForm.getGovernmentquestion()"+loanAppForm.getGovernmentquestion().getId());
+			this.saveOrUpdate(loanAppForm.getGovernmentquestion());
+			System.out.println("After saveOrUpdate(loanAppForm.getGovernmentquestion()"+loanAppForm.getGovernmentquestion().getId());
 			sessionFactory.getCurrentSession().flush();
 		}
 		if (null != loanAppForm.getPropertyTypeMaster()) {
-			this.save(loanAppForm.getPropertyTypeMaster());
+			System.out.println("Before saveOrUpdate(loanAppForm.getPropertyTypeMaster()"+loanAppForm.getPropertyTypeMaster().getId());
+			this.saveOrUpdate(loanAppForm.getPropertyTypeMaster());
+			System.out.println("After saveOrUpdate(loanAppForm.getPropertyTypeMaster()"+loanAppForm.getPropertyTypeMaster().getId());
 			sessionFactory.getCurrentSession().flush();
 		}
 		if (null != loanAppForm.getRefinancedetails()) {
-			this.save(loanAppForm.getRefinancedetails());
+			System.out.println("Before saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
+			this.saveOrUpdate(loanAppForm.getRefinancedetails());
+			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
 			sessionFactory.getCurrentSession().flush();
 		}
  
-		return (Integer) this.save(loanAppForm);
+		this.saveOrUpdate(loanAppForm);
+		
+		
+		
+		return  loanAppForm;
     }
 	
 	
