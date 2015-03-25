@@ -212,7 +212,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		}
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
-		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
+		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString());
 
 	}
 
@@ -241,10 +241,13 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 				messageUserVOs.add(otherUser);
 			} else {
-				message = message.replace(
-				        CommunicationLogConstants.USER,
-				        loggedInUser.getFirstName() + " "
-				                + loggedInUser.getLastName());
+				if(message!=null){
+					message = message.replace(
+					        CommunicationLogConstants.USER,
+					        loggedInUser.getFirstName() + " "
+					                + loggedInUser.getLastName());	
+				}
+				
 			}
 
 		}
@@ -269,10 +272,17 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	}
 	
 	@Override
+	@Async
 	public void generateWorkflowMessage(int loanId, User loggedInUser,
 	        String noteText) {
 	    // TODO Auto-generated method stub
-	    
+		MessageVO messageVO = new MessageVO();
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser, null);
+		messageVO.setMessage(noteText);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
 	}
 
 }
