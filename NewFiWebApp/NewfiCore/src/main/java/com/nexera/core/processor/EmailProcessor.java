@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +18,6 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -28,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -144,7 +143,7 @@ public class EmailProcessor implements Runnable {
 					DataHandler dataHandler = bodyPart.getDataHandler();
 					String content = dataHandler.getContentType();
 					InputStream inputStream = dataHandler.getInputStream();
-					String path = nexeraUtility.tomcatDirectoryPath();
+					/*String path = nexeraUtility.tomcatDirectoryPath();
 					File file = null;
 					if (content.contains("pdf")) {
 						file = convertInputStreamToFile(inputStream, path);
@@ -153,27 +152,30 @@ public class EmailProcessor implements Runnable {
 					        || content.contains("png")
 					        || content.contains("tiff")
 					        || content.contains("tif")) {
-						/*
-						 * file = nexeraUtility.filePathToMultipart(filePath);
-						 * file =
-						 * nexeraUtility.convertImageToPDFDocument(multipartFile
-						 * );
-						 */
+
+						file = nexeraUtility.filePathToMultipart(filePath);
+						file = nexeraUtility.convertImageToPDFDocument(multipartFile);
+
+						
+
 					} else {
 						// TODO invalid file format need to throw and log error
 						LOGGER.error("Invalid Format " + content);
-					}
+					}*/
 
 					LOGGER.debug("Uploading the file in the system ");
-					uploadedFileListService.uploadFile(nexeraUtility
+					
+					CheckUploadVO checkUploadVO = uploadedFileListService.uploadFileByEmail(inputStream , actualUser.getId() , loanVO.getId() ,uploadedByUser.getId() );
+					LOGGER.info("Response in uploading documents by email : "+checkUploadVO);
+					/*uploadedFileListService.uploadFile(nexeraUtility
 					        .filePathToMultipart(file.getAbsolutePath()),
 					        actualUser.getId(), loanVO.getId(), uploadedByUser
-					                .getId());
-					if (file.exists()) {
+					                .getId());*/
+					/*if (file.exists()) {
 						LOGGER.debug("Remove the temp file after uploading it into the system ");
 						file.delete();
 
-					}
+					}*/
 				}
 
 			}

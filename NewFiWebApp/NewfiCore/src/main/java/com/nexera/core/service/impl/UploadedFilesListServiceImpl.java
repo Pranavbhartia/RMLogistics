@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -274,6 +275,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public CheckUploadVO uploadFileByEmail(InputStream stream, Integer userId, Integer loanId , Integer assignedBy) throws IOException {
+		MultipartFile multipartFile = nexeraUtility.getMultipartFileFromInputStream(stream);
+		return  uploadFile(multipartFile, userId, loanId, assignedBy);
 		
 	}
 

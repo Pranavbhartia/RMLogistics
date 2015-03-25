@@ -52,6 +52,9 @@ public class EmailBatchProcessor extends QuartzJobBean {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	@Autowired
+	private EmailProcessor emailProcessor;
 
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
@@ -91,8 +94,8 @@ public class EmailBatchProcessor extends QuartzJobBean {
 
 			LOGGER.debug("Total Number Of Unread Mails Are " + msg.length);
 			for (Message unreadMsg : msg) {
-				EmailProcessor emailProcessor = applicationContext
-				        .getBean(EmailProcessor.class);
+				/*EmailProcessor emailProcessor = applicationContext
+				        .getBean(EmailProcessor.class);*/
 				emailProcessor.setMessage(unreadMsg);
 				emailTaskExecutor.execute(emailProcessor);
 				// Uncomment to mark the mail as read after processing
