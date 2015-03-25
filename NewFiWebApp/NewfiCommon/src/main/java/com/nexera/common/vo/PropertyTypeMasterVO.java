@@ -7,6 +7,8 @@ import java.util.List;
 public class PropertyTypeMasterVO implements Serializable {
 	
 
+	
+
 	private static final long serialVersionUID = 1L;
 	
 	private int id;
@@ -19,7 +21,6 @@ public class PropertyTypeMasterVO implements Serializable {
 	private String propertyInsuranceCost;
 	private String propertyPurchaseYear;
 	private String homeWorthToday;
-	
 	private List<LoanVO> loans;
 	private List<LoanAppFormVO> loanAppForms;
 	private List<LoanApplicationFeeMasterVO> loanApplicationFeeMasters;

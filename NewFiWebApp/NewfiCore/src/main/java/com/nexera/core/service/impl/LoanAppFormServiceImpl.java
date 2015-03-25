@@ -34,12 +34,13 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	
 	@Override
 	@Transactional
-	public void create(LoanAppFormVO loaAppFormVO) {
-		Integer loanAppFormID = (Integer) loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
-		LoanAppForm loanAppForm = null;
+	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
+		LoanAppForm loanAppForm = loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
+		return loanAppForm;
+		/*LoanAppForm loanAppForm = null;
 		if (loanAppFormID != null && loanAppFormID > 0)
 			loanAppForm = loanAppFormDao.findLoanAppForm(loanAppFormID);
-
+*/
 		//return this.buildLoanAppFormVO(loanAppForm);
 	}
 }

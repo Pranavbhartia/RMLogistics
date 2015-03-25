@@ -1,12 +1,19 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.GovernmentQuestion;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.RefinanceDetails;
+import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserEmploymentHistory;
+import com.nexera.common.entity.WorkflowExec;
 
 public class LoanAppFormVO implements Serializable {
 	
@@ -34,12 +41,12 @@ public class LoanAppFormVO implements Serializable {
 	private Boolean isSpouseOnLoan ;
 	private String	spouseName;
 	private Boolean paySecondMortgage;
-	
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
 	private GovernmentQuestionVO governmentquestion;
 	private RefinanceVO refinancedetails;
 	private LoanTypeMasterVO loanType;
+	private LoanTypeMasterVO loanTypeMaster;
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
 	
@@ -281,7 +288,7 @@ public class LoanAppFormVO implements Serializable {
 
 		LoanAppForm loanAppForm = new LoanAppForm();
 		
-			
+
 		loanAppForm.setId(this.id);
 		
 		
@@ -308,14 +315,16 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
 		
-		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+	
+
 		//propertyTypeMaster.setId(1);
 		
-		loanAppForm.setPropertyTypeMaster(propertyTypeMaster);
+		loanAppForm.setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this.getPropertyTypeMaster()));
 		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
 		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
 
-		 loanAppForm.setUser(this.getUser().convertToEntity());
+			loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
+
 
 		loanAppForm.setLoan(this.getLoan().convertToEntity());
 		
@@ -323,21 +332,6 @@ public class LoanAppFormVO implements Serializable {
 		
 		
 		
-		/*loanAppForm.setHoaDues(this.getHoaDues());
-		loanAppForm.setHomeRecentlySold(this.homeRecentlySold);
-
-		loanAppForm.setMaritalStatus(this.getMaritalStatus());
-		loanAppForm.setOwnsOtherProperty(ownsOtherProperty);
-		loanAppForm.setPensionOrRetirement(pensionOrRetirement);
-		loanAppForm.setReceiveAlimonyChildSupport(receiveAlimonyChildSupport);
-		loanAppForm.setRentedOtherProperty(rentedOtherProperty);
-		loanAppForm.setSecondMortgage(secondMortgage);
-		loanAppForm.setSelfEmployed(selfEmployed);
-		loanAppForm.setSsIncomeOrDisability(ssIncomeOrDisability);
-		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
-		loanAppForm.setHomeToSell(this.homeToSell);
-*/		
-
 
 		return loanAppForm;
 	}
@@ -348,6 +342,8 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		
 		GovernmentQuestion governmentQuestion = new GovernmentQuestion();
+		System.out.println(governmentQuestionVO.getId());
+	    governmentQuestion.setId(governmentQuestionVO.getId());
 		governmentQuestion.setOutstandingJudgments(governmentQuestionVO.isOutstandingJudgments());
 		governmentQuestion.setBankrupt(governmentQuestionVO.isBankrupt());
 		governmentQuestion.setPropertyForeclosed(governmentQuestionVO.isPropertyForeclosed());
@@ -374,7 +370,8 @@ public class LoanAppFormVO implements Serializable {
 		if(refinanceVO == null)
 			return null;
 		RefinanceDetails refinanceDetails = new RefinanceDetails();
-		
+		System.out.println("refinanceVO.getId()"+refinanceVO.getId());
+		refinanceDetails.setId(refinanceVO.getId());
 		refinanceDetails.setCurrentMortgageBalance(refinanceVO.getCurrentMortgageBalance());
 		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
 		refinanceDetails.setCurrentMortgagePayment(refinanceVO.getCurrentMortgagePayment());
@@ -383,6 +380,77 @@ public class LoanAppFormVO implements Serializable {
 		return refinanceDetails;
 		
 	}
+	
+public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(PropertyTypeMasterVO propertyTypeMasterVO){
+		
+		if(propertyTypeMasterVO == null)
+			return null;
+		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+		
+		System.out.println("propertyTypeMasterVO.getId()"+propertyTypeMasterVO.getId());
+		propertyTypeMaster.setId(propertyTypeMasterVO.getId());
+		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO.getPropertyTypeCd());
+		propertyTypeMaster.setResidenceTypeCd(propertyTypeMasterVO.getResidenceTypeCd());
+		propertyTypeMaster.setPropertyTaxesPaid(propertyTypeMasterVO.getPropertyTaxesPaid());
+		propertyTypeMaster.setPropertyInsuranceProvider(propertyTypeMasterVO.getPropertyInsuranceProvider());
+		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO.getPropertyInsuranceCost());
+		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO.getPropertyPurchaseYear());
+		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO.getHomeWorthToday());
+		
+		
+		return propertyTypeMaster;
+		
+	}
+	
+
+
+public User parseVOtoEntityUser(UserVO userVO){
+	
+	if(userVO == null)
+		return null;
+	User user = new User();
+	
+	
+	
+	user.setId(userVO.getId());
+	user.setFirstName(userVO.getFirstName());
+	user.setLastName(userVO.getLastName());
+	user.setEmailId(userVO.getEmailId());
+	user.setUsername(userVO.getEmailId());
+	
+	if(userVO.getCustomerDetail() == null)
+		return user;
+	
+	user.setCustomerDetail(parseVOtoEntityCustomerDetails(userVO.getCustomerDetail()));
+	
+	return user;
+	
+}
+	
+	
+
+
+public CustomerDetail parseVOtoEntityCustomerDetails(CustomerDetailVO customerDetailVO){
+	
+	if(customerDetailVO == null)
+		return null;
+	CustomerDetail customerDetail = new CustomerDetail();
+	customerDetail.setAddressCity(customerDetailVO.getAddressCity());
+	customerDetail.setAddressState(customerDetailVO.getAddressState());
+	customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
+	if(customerDetailVO.getDateOfBirth() !=null)
+		customerDetail.setDateOfBirth(new Date(customerDetailVO.getDateOfBirth()));
+	
+	customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
+	customerDetail.setSsn(customerDetailVO.getSsn());
+System.out.println("customerDetail.setId(customerDetailVO.getId())"+customerDetailVO.getId());
+	customerDetail.setId(customerDetailVO.getId());
+	
+	
+	return customerDetail;
+	
+}
+
 	
 
 	public Boolean getPaySecondMortgage() {

@@ -1,10 +1,14 @@
 package com.nexera.common.vo;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.nexera.common.entity.GovernmentQuestion;
 
 public class GovernmentQuestionVO {
 
-	
+	private int id;
 	private boolean isOutstandingJudgments;
 	private boolean isBankrupt;
 	private boolean isPropertyForeclosed;
@@ -19,7 +23,14 @@ public class GovernmentQuestionVO {
 	private String ethnicity;
 	private String race;
 	private String sex;
+
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public boolean isOutstandingJudgments() {
 		return isOutstandingJudgments;
 	}
@@ -105,14 +116,6 @@ public class GovernmentQuestionVO {
 		this.sex = sex;
 	}
 	
-	public GovernmentQuestion convertToEntity() {
-		GovernmentQuestion governmentquestion = new GovernmentQuestion();
-
-		
-
-		return governmentquestion;
-
-	}
 	
 	
 	
