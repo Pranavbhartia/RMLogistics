@@ -123,7 +123,9 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		"class" : "assign",
 		"fileId" : listUploadedFiles.id,
 		"fileName" : listUploadedFiles.fileName,
-		"onchange" : "checkForSplitOption(this)"
+		"onchange" : ""
+	}).change(function(){
+		checkForSplitOption(this);
 	});
 
 	var assignOption = $("<option>").attr({
