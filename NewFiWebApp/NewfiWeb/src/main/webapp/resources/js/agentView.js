@@ -1710,7 +1710,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 
 		var header = $('<div>').attr({
 			"class" : "pop-up-header"
-		}).html("Create Title Company");
+		}).html("Create Home Owners Insurance Company");
 
 		var container = $('<div>').attr({
 			"id" : "create-hoi-company-container",
