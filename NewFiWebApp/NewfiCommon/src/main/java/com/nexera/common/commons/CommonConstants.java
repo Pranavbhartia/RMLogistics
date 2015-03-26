@@ -67,4 +67,6 @@ public interface CommonConstants {
 	 */
 	public static final String SENDER_NAME_REGEX = SENDER_NAME+" <";
 	public static final String SENDER_DOMAIN_REGEX = SENDER_DOMAIN+">";
+	
+	public static final Integer SYSTEM_USER_USERID = 1;
 }
