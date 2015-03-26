@@ -2,9 +2,8 @@ package com.nexera.core.manager;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.rmi.server.LoaderHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +21,20 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.entity.WorkflowExec;
+import com.nexera.common.entity.WorkflowItemExec;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.lqb.LoadResponseVO;
-import com.nexera.common.vo.lqb.LqbTeaserRateVo;
-import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.utility.LoadXMLHandler;
-import com.nexera.core.utility.LoanStatusMaster;
+import com.nexera.workflow.Constants.WorkflowConstants;
+import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.Milestones;
 
 @Component
 @Scope(value = "prototype")
@@ -42,8 +44,13 @@ public class ThreadManager implements Runnable {
 
 	private Loan loan;
 
+	private List<LoanMilestoneMaster> loanMilestoneMasterList;
+
 	@Autowired
 	LqbInvoker lqbInvoker;
+
+	@Autowired
+	EngineTrigger engineTrigger;
 
 	@Override
 	public void run() {
@@ -69,11 +76,7 @@ public class ThreadManager implements Runnable {
 		 */
 
 		LOGGER.debug("Inside method run ");
-
-		// TODO remove this hardcoded value
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("aBSsn", "4084311052");
-		map.put("aCSsn", "4084311052");
 		int format = 0;
 
 		LOGGER.debug("Invoking load service of lendinqb ");
@@ -85,43 +88,114 @@ public class ThreadManager implements Runnable {
 
 		String loadResponse = loadJSONResponse.getString("responseMessage");
 		loadResponse = removeBackSlashDelimiter(loadResponse);
-
+		int currentLoanStatus = -1;
+		Milestones milestones = null;
 		List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 		for (LoadResponseVO loadResponseVO : loadResponseList) {
 			String fieldId = loadResponseVO.getFieldId();
-			String fieldValue = loadResponseVO.getFieldValue();
-		}
-		// TODO Need to parse the received response
-		LOGGER.debug("Invoking listDocsByLoanNumber service of lendinqb ");
-		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
-		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
-		        loan.getLqbFileId());
+			if (fieldId.equalsIgnoreCase("sStatusT")) {
+				currentLoanStatus = Integer.parseInt(loadResponseVO
+				        .getFieldValue());
+			}
 
-		JSONObject receivedResponseForDocs = lqbInvoker
-		        .invokeLqbService(getListOfDocs.toString());
-		LoanProgressStatusMaster loanProgressStatusMaster = loan
-		        .getLoanProgressStatus();
-		if (loanProgressStatusMaster.getLoanProgressStatus().equalsIgnoreCase(
-		        LoanStatusMaster.STATUS_NEW_LOAN)) {
-			// TODO Invoke a lqb service
-		} else if (loanProgressStatusMaster.getLoanProgressStatus()
-		        .equalsIgnoreCase(LoanStatusMaster.STATUS_NEW_PROJECT)) {
-			// TODO Invoke a lqb service
-		} else if (loanProgressStatusMaster.getLoanProgressStatus()
-		        .equalsIgnoreCase(LoanStatusMaster.STATUS_LEAD)) {
-			// TODO Invoke a lqb service
-		} else if (loanProgressStatusMaster.getLoanProgressStatus()
-		        .equalsIgnoreCase(LoanStatusMaster.STATUS_IN_PROGRESS)) {
-			// TODO Invoke a lqb service
 		}
 
-	}
+		if (currentLoanStatus == -1) {
+			LOGGER.error("Invalid/No status received from LQB ");
+		} else {
+			String dateTime = getDataTimeField(currentLoanStatus,
+			        loadResponseList);
+			LOGGER.debug("Time for this status " + currentLoanStatus + " is "
+			        + dateTime);
+			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
+			if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
+				LOGGER.debug("These status are related to underwriting ");
+				milestones = Milestones.UW;
+				List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+				        .get(milestones);
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
+				LOGGER.debug("These status are related to appraisal ");
+				milestones = Milestones.APPRAISAL;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
+				LOGGER.debug("These status are related to QC ");
+				milestones = Milestones.QC;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
+				LOGGER.debug("These status are related to Loan Closure ");
+				milestones = Milestones.LOAN_CLOSURE;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+				LOGGER.debug("These status are related to 1003 ");
+				milestones = Milestones.App1003;
+
+			}
+
+			List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+			        .get(milestones);
+			List<WorkflowItemExec> itemToExecute = itemToExecute(
+			        workflowItemTypeList, workflowItemExecList);
+
+			for (WorkflowItemExec workflowItemExec : itemToExecute) {
+				LOGGER.debug("Putting the item in execution ");
+				engineTrigger.startWorkFlowItemExecution(workflowItemExec
+				        .getId());
+			}
+		}
+
+		/*
+		 * LOGGER.debug("Invoking listDocsByLoanNumber service of lendinqb ");
+		 * JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
+		 * WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
+		 * loan.getLqbFileId());
+		 * 
+		 * JSONObject receivedResponseForDocs = lqbInvoker
+		 * .invokeLqbService(getListOfDocs.toString());
+		 */}
 
 	public String removeBackSlashDelimiter(String string) {
 		if (string != null) {
 			string = string.replace("\\", "");
 		}
 		return string;
+	}
+
+	private List<WorkflowItemExec> itemToExecute(
+	        List<String> workflowItemtypeList,
+	        List<WorkflowItemExec> workflowItemExecList) {
+		List<WorkflowItemExec> itemToExecute = new ArrayList<WorkflowItemExec>();
+		for (WorkflowItemExec workflowItemExec : workflowItemExecList) {
+			for (String workflowItemType : workflowItemtypeList) {
+				if (workflowItemExec.getWorkflowItemMaster()
+				        .getWorkflowItemType()
+				        .equalsIgnoreCase(workflowItemType)) {
+					itemToExecute.add(workflowItemExec);
+				}
+			}
+		}
+		return itemToExecute;
 	}
 
 	public JSONObject createLoadJsonObject(Map<String, String> requestXMLMap,
@@ -141,6 +215,178 @@ public class ThreadManager implements Runnable {
 			throw new FatalException("Could not parse json " + e.getMessage());
 		}
 		return json;
+	}
+
+	private List<WorkflowItemExec> getWorkflowItemExecByLoan(Loan loan) {
+		List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
+		if (loan != null) {
+			WorkflowExec loanManagerWorkflowExec = loan
+			        .getLoanManagerWorkflow();
+			WorkflowExec customerWorkflowExec = loan.getCustomerWorkflow();
+			if (loanManagerWorkflowExec != null)
+				workflowItemExecList.addAll(loanManagerWorkflowExec
+				        .getWorkflowItems());
+			if (customerWorkflowExec != null)
+				workflowItemExecList.addAll(customerWorkflowExec
+				        .getWorkflowItems());
+		}
+		return workflowItemExecList;
+	}
+
+	private String getDataTimeField(int currentLoanStatus,
+	        List<LoadResponseVO> loadResponseVOList) {
+		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_OPEN) {
+			return getResponseBasedOnField(LoadConstants.LOAN_OPEN_TIME_FIELD,
+			        LoadConstants.LOAN_OPEN_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PROCESSING) {
+			return getResponseBasedOnField(
+			        LoadConstants.PRE_PROCESSING_TIME_FIELD_FIELD,
+			        LoadConstants.PRE_PROCESSING_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PROCESSING) {
+			return getResponseBasedOnField(LoadConstants.PROCESSING_TIME_FIELD,
+			        LoadConstants.PROCESSING_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK) {
+			return getResponseBasedOnField(
+			        LoadConstants.DOCUMENT_CHECK_TIME_FIELD,
+			        LoadConstants.DOCUMENT_CHECK_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED) {
+			return getResponseBasedOnField(
+			        LoadConstants.DOCUMENT_CHECK_FAILED_TIME_FIELD,
+			        LoadConstants.DOCUMENT_CHECK_FAILED_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_SUBMITTED_TIME_FIELD,
+			        LoadConstants.LOAN_SHIPPED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING) {
+			return getResponseBasedOnField(
+			        LoadConstants.PRE_UNDER_WRITTING_TIME_FIELD,
+			        LoadConstants.PRE_UNDER_WRITTING_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
+			return getResponseBasedOnField(
+			        LoadConstants.IN_UNDER_WRITTING_TIME_FIELD,
+			        LoadConstants.IN_UNDER_WRITTING_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED) {
+			return getResponseBasedOnField(
+			        LoadConstants.PRE_APPROVED_TIME_FIELD,
+			        LoadConstants.PRE_APPROVED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED) {
+			return getResponseBasedOnField(LoadConstants.APPROVED_TIME_FIELD,
+			        LoadConstants.APPROVED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW) {
+			return getResponseBasedOnField(
+			        LoadConstants.CONDITION_REVIEW_TIME_FIELD,
+			        LoadConstants.CONDITION_REVIEW_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING) {
+			return getResponseBasedOnField(
+			        LoadConstants.FINAL_UNDER_WRITTING_TIME_FIELD,
+			        LoadConstants.FINAL_UNDER_WRITTING_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC) {
+			return getResponseBasedOnField(LoadConstants.PRE_DOC_QC_TIME_FIELD,
+			        LoadConstants.PRE_DOC_QC_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
+			return getResponseBasedOnField(
+			        LoadConstants.CLEAR_TO_CLOSE_TIME_FIELD,
+			        LoadConstants.CLEAR_TO_CLOSE_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED) {
+			return getResponseBasedOnField(
+			        LoadConstants.DOCS_ORDERED_TIME_FIELD,
+			        LoadConstants.DOCS_ORDERED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN) {
+			return getResponseBasedOnField(LoadConstants.DOCS_DRAWN_TIME_FIELD,
+			        LoadConstants.DOCS_DRAWN_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT) {
+			return getResponseBasedOnField(LoadConstants.DOCS_OUT_TIME_FIELD,
+			        LoadConstants.DOCS_OUT_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK) {
+			return getResponseBasedOnField(LoadConstants.DOCS_BACK_TIME_FIELD,
+			        LoadConstants.DOCS_BACK_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDING_CONDITIONS) {
+			return getResponseBasedOnField(
+			        LoadConstants.FUNDING_CONDITIONS_TIME_FIELD,
+			        LoadConstants.FUNDED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDED) {
+			return getResponseBasedOnField(LoadConstants.FUNDED_TIME_FIELD,
+			        LoadConstants.FUNDED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_RECORDED) {
+			return getResponseBasedOnField(LoadConstants.RECORDED_TIME_FIELD,
+			        LoadConstants.RECORDED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
+			return getResponseBasedOnField(LoadConstants.FINAL_DOCS_TIME_FIELD,
+			        LoadConstants.FINAL_DOCS_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_CLOSED_TIME_FIELD,
+			        LoadConstants.LOAN_CLOSED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW) {
+			return getResponseBasedOnField(
+			        LoadConstants.SUBMITTED_FOR_PURCHASE_REVIEW_TIME_FIELD,
+			        LoadConstants.SUBMITTED_FOR_FINAL_PURCHASE_REVIEW_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW) {
+			return getResponseBasedOnField(
+			        LoadConstants.IN_PURCHASE_REVIEW_TIME_FIELD,
+			        LoadConstants.IN_PURCHASE_REVIEW_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
+			return getResponseBasedOnField(
+			        LoadConstants.PRE_PURCHASE_REVIEW_TIME_FIELD,
+			        LoadConstants.PRE_PURCHASE_REVIEW_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE) {
+			return getResponseBasedOnField(
+			        LoadConstants.CLEAR_TO_PURCHASE_REVIEW_TIME_FIELD,
+			        LoadConstants.CLEAR_TO_PURCHASE_REVIEW_DATE_FIELD,
+			        loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_PURCHASED_TIME_FIELD,
+			        LoadConstants.LOAN_PURCHASED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_SUSPENDED_TIME_FIELD,
+			        LoadConstants.LOAN_SUSPENDED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_DENIED_TIME_FIELD,
+			        LoadConstants.LOAN_DENIED_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_WITHDRAWN_TIME_FIELD,
+			        LoadConstants.LOAN_WITHDRAWN_DATE_FIELD, loadResponseVOList);
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED) {
+			return getResponseBasedOnField(
+			        LoadConstants.LOAN_ARCHIVED_TIME_FIELD,
+			        LoadConstants.LOAN_ARCHIVED_DATE_FIELD, loadResponseVOList);
+		}
+		return null;
+
+	}
+
+	private String getResponseBasedOnField(String timeField, String dateField,
+	        List<LoadResponseVO> loadResponseVOList) {
+		String date = "";
+		String time = "";
+		for (LoadResponseVO loadResponseVO : loadResponseVOList) {
+			if (loadResponseVO.getFieldId().equalsIgnoreCase(dateField)) {
+				date = loadResponseVO.getFieldValue();
+			}
+			if (loadResponseVO.getFieldId().equalsIgnoreCase(timeField)) {
+				time = loadResponseVO.getFieldValue();
+			}
+		}
+
+		if (time.equals(""))
+			time = date;
+		else {
+			if (!date.equals(""))
+				time = time.concat("-").concat(date);
+		}
+		return time;
 	}
 
 	public JSONObject createListEDocsByLoanNumberObject(String opName,
@@ -189,6 +435,15 @@ public class ThreadManager implements Runnable {
 
 	public void setLoan(Loan loan) {
 		this.loan = loan;
+	}
+
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		return loanMilestoneMasterList;
+	}
+
+	public void setLoanMilestoneMasterList(
+	        List<LoanMilestoneMaster> loanMilestoneMasterList) {
+		this.loanMilestoneMasterList = loanMilestoneMasterList;
 	}
 
 }

@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
 
@@ -28,7 +29,13 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		LoanAppForm loalAppForm=(LoanAppForm) criteria.uniqueResult();
 		return loalAppForm;
 	}
-	
+	public LoanAppForm findByLoan(Loan loan) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanAppForm.class);
+		criteria.add(Restrictions.eq("loan", loan));
+		LoanAppForm loalAppForm=(LoanAppForm) criteria.uniqueResult();
+		return loalAppForm;
+	}
 	@Override
     public LoanAppForm saveLoanAppFormWithDetails(LoanAppForm loanAppForm) {
 		

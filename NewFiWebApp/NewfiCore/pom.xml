@@ -71,6 +71,12 @@
 			<version>${quartz.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.nexera.newfi</groupId>
+			<artifactId>WorkflowEngine</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- Java Mail API -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -312,7 +318,7 @@
 		</plugins>
 	</build>
 
-	
+
 
 	<pluginRepositories>
 		<pluginRepository>

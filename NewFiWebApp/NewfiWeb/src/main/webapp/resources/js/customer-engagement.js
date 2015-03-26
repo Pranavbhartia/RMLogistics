@@ -473,8 +473,7 @@ function paintRefinanceLiveNow() {
 				refinanceTeaserRate["zipCode"] = $('input[name="zipCode"]').val();
 
 				paintRefinanceStartLiving();
-				sessionStorage.refinaceData = JSON
-						.stringify(refinanceTeaserRate);
+				sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
 
 			});
 

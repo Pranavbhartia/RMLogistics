@@ -6,6 +6,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
@@ -83,4 +84,7 @@ public interface LoanService {
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster);
+
+	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
+	        LoanTypeMaster loanTypeMaster);
 }
