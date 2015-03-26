@@ -1136,7 +1136,7 @@ function paintUserNameDropDown(values) {
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
-								if (newfiObject.userRole.roleCd == "CUSTOMER")
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
 									addUserToLoanTeam(userID,
 											newfiObject.user.defaultLoanId);
 								else

@@ -24,7 +24,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	private UserProfileService userProfileService;
 
 	public String execute(HashMap<String, Object> objectMap) {
-		return null;
+		return invokeAction(objectMap);
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {

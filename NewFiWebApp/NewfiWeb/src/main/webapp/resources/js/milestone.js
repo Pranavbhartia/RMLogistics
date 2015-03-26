@@ -712,7 +712,7 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 	var addNewMember = $('<div>').attr({
 		"class" : "milestone-rc-text showAnchor",
 		"data-text" : workItem.workflowItemType,
-		"mileNotificationId":workItem.milestoneID
+		"mileNotificationId":workItem.id
 	}).html("Click here to add a Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});
