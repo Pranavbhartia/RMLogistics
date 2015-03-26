@@ -1,6 +1,7 @@
 package com.nexera.common.commons;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -130,4 +131,9 @@ public class Utils {
 	        String jsonString = gson.toJson( map );
 	        return jsonString;
 	    }
+
+	public String generateMessageIdFromAddress(String mongoMessageId, int loanId) {
+	    
+	    return MessageFormat.format("{0}-{1}{2}", mongoMessageId, loanId, CommonConstants.SENDER_DOMAIN);
+    }
 }

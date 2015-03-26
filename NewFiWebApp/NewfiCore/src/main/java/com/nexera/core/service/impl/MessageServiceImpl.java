@@ -5,18 +5,24 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
+import com.nexera.common.entity.User;
+import com.nexera.common.enums.EmailRecipientTypeEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.MessageHierarchyVO;
@@ -25,10 +31,13 @@ import com.nexera.common.vo.MessageVO;
 import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.mongo.service.MongoCoreMessageService;
 
 @Component
@@ -45,9 +54,15 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	MongoCoreMessageService mongoMessageService;
+	
+	@Value("${NEW_NOTE_TEMPLATE}")
+	private String sendGridTemplateName;
+	
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	@Override
-	public String saveMessage(MessageVO messagesVO, String messageType)
+	public String saveMessage(MessageVO messagesVO, String messageType,boolean sendEmail)
 	        throws FatalException, NonFatalException {
 
 		MongoMessagesVO mongoMessagesVO = new MongoMessagesVO();
@@ -74,9 +89,75 @@ public class MessageServiceImpl implements MessageService {
 		mongoMessagesVO.setCreatedDate(new Date(System.currentTimeMillis()));
 
 		LOG.debug("Saving Mongo message: " + mongoMessagesVO);
-		return mongoMessageService.saveMessage(mongoMessagesVO);
+		String mongoMessageId= mongoMessageService.saveMessage(mongoMessagesVO);
+		/*
+		 * Invoke send Email service to notify the users about the take a note operation
+		 */
+		if(sendEmail){
+			sendEmail(messagesVO,mongoMessageId);	
+		}
+		
+		return mongoMessageId;
 
 	}
+
+	private void sendEmail(MessageVO messagesVO, String mongoMessageId) {
+	    
+		EmailVO emailVO = new EmailVO();
+		
+		//Set to address, it will be all the users to whom the message is targetted
+		List<User> users = userProfileDao.getEmailAddress(extractUserIds(messagesVO.getOtherUsers()));
+		if(users==null || users.isEmpty()){
+			LOG.warn("A message was created with no target users. Ignoring send email",messagesVO);
+			return;
+		}
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		for (User user : users) {
+	        EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+	        emailRecipientVO.setEmailID(user.getEmailId());
+	        emailRecipientVO.setRecipientName(user.getFirstName());
+	        emailRecipientVO.setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+	        recipients.add(emailRecipientVO);
+        }
+		emailVO.setRecipients(recipients );
+		
+		//Set the subject as New note taken in the system
+		emailVO.setSubject(CommonConstants.NOTE_SUBJECT);
+		
+		//Set reply to as the messageId of mongomessageId
+		emailVO.setSenderEmailId(utils.generateMessageIdFromAddress(mongoMessageId,messagesVO.getLoanId()));
+		emailVO.setSenderName(CommonConstants.SENDER_NAME);
+		
+		
+		//Set body as the message written. Prefix that this user has sent the message. Add it in the substitutions
+		emailVO.setBody(messagesVO.getMessage());
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		if(messagesVO.getCreatedUser()!=null){
+			substitutions.put("-name-", new String[]{messagesVO.getCreatedUser().getUserName()});	
+		}else{
+			substitutions.put("-name-", new String[]{CommonConstants.ANONYMOUS_USER});
+		}
+		
+		emailVO.setTokenMap(substitutions);
+		
+		
+		//Set template information
+		emailVO.setTemplateBased(Boolean.TRUE);
+		emailVO.setTemplateId(sendGridTemplateName);
+		
+		sendGridEmailService.sendAsyncMail(emailVO);
+		
+	    
+    }
+
+	private List<Integer> extractUserIds(List<MessageUserVO> otherUsers) {
+	    List<Integer> usrIds = new ArrayList<Integer>();
+	    for (MessageUserVO user : otherUsers) {
+	        usrIds.add(user.getUserID());
+        }
+	    return usrIds;
+	    		
+    }
 
 	private com.nexera.common.vo.mongo.MongoMessagesVO.FileVO[] convertToMongoFileList(
 	        List<FileVO> fileList) {

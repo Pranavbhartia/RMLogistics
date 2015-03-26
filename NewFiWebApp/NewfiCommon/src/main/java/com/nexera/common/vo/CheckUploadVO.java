@@ -4,6 +4,9 @@ public class CheckUploadVO {
 
 	private Boolean isUploadSuccess;
 	private Integer uploadFileId;
+	private String uuid;
+	private String fileName;
+	
 	
 	
 	public Boolean getIsUploadSuccess() {
@@ -22,6 +25,18 @@ public class CheckUploadVO {
 	public String toString() {
 		return "CheckUploadVO [isUploadSuccess=" + isUploadSuccess
 				+ ", uploadFileId=" + uploadFileId + "]";
+	}
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	
 	

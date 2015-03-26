@@ -25,6 +25,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.MessageVO.MessageUserVO;
 
 @Component
 @Transactional
@@ -37,10 +38,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	
 	@Override
-	public User authenticateUser(String userName, String password) throws NoRecordsFetchedException, DatabaseException {
-	    // TODO Auto-generated method stub
+	public User authenticateUser(String userName, String password)
+	        throws NoRecordsFetchedException, DatabaseException {
+		// TODO Auto-generated method stub
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(User.class);
@@ -62,7 +63,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			        hibernateException);
 		}
 	}
-	
+
 	@Override
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException {
@@ -196,7 +197,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			this.save(user.getCustomerDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
- 
+
 		return (Integer) this.save(user);
 	}
 
@@ -302,7 +303,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public String findUserRoleForMongo(Integer userID)
@@ -364,15 +365,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 		return imageVOs;
 	}
-	
-	 public User saveUser(User user){
-		
-		 Session session = sessionFactory.getCurrentSession();
-		 session.save(user);
-		 return user;
+
+	public User saveUser(User user) {
+
+		Session session = sessionFactory.getCurrentSession();
+		session.save(user);
+		return user;
 	}
-	 
-	 @Override
+
+	@Override
 	public Integer saveCustomerDetails(User user) {
 		if (null != user.getCustomerDetail()) {
 			this.save(user.getCustomerDetail());
@@ -381,5 +382,21 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		return (Integer) this.save(user);
 	}
-	 
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<User> getEmailAddress(List<Integer> list) {
+		List<User> emailIds = new ArrayList<User>();
+		
+		if (list != null && !list.isEmpty()) {
+			Session session = sessionFactory.getCurrentSession();
+			String hql = "from User where id in (:ids)";
+			Query qry = session.createQuery(hql);
+			qry.setParameterList("ids", list);
+			return qry.list();
+			
+		}
+		
+		return null;
+	}
 }

@@ -323,7 +323,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
 		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
 
-			loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
+		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
 
 
 		loanAppForm.setLoan(this.getLoan().convertToEntity());

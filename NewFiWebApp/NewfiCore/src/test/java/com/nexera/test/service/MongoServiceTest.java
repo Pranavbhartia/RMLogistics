@@ -55,16 +55,16 @@ public class MongoServiceTest {
 		User loggedInUser = userProfileDao.findByUserId(1);
 		// Test no files
 		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
-		        null, "sample text", null,true);
+		        null, "sample text", null,true,false);
 
-		List<FileVO> fileVos = new ArrayList<FileVO>();
-		FileVO e = new FileVO();
-		e.setFileName("TestDoc.pdf");
-		e.setUrl("http://www.google.com");
-		fileVos.add(e);
-		// Test with files
-		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
-		        null, "sample text", fileVos,true);
+//		List<FileVO> fileVos = new ArrayList<FileVO>();
+//		FileVO e = new FileVO();
+//		e.setFileName("TestDoc.pdf");
+//		e.setUrl("http://www.google.com");
+//		fileVos.add(e);
+//		// Test with files
+//		messageServiceHelper.generateEmailDocumentMessage(1, loggedInUser,
+//		        null, "sample text", fileVos,true);
 	}
 
 }

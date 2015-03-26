@@ -95,10 +95,16 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,Initializi
 		}
 
 		email.addTo(recipientEmailIdsList.toArray(new String[recipientEmailIdsList.size()]));
+		
 		email.setFrom(emailEntity.getSenderEmailId());
 		email.setFromName(emailEntity.getSenderName());
 		email.setSubject(emailEntity.getSubject());
-		email.setText(CommonConstants.EMAIL_FOOTER);
+		if(emailEntity.getBody()==null||emailEntity.getBody().isEmpty()){
+			email.setText(CommonConstants.EMAIL_FOOTER);	
+		}else{
+			email.setText(emailEntity.getBody());
+		}
+		
 		
 		for(Entry<String, String[]> entry : emailEntity.getTokenMap().entrySet()){
 			email.addSubstitution(entry.getKey(), entry.getValue());

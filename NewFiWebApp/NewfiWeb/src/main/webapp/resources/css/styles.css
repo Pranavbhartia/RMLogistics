@@ -155,7 +155,7 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background: url(../images/cus-icn.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -209,7 +209,7 @@ a,a:hover,a:visited {
 }
 
 .lp-talk-pic2 {
-	background: url(../images/photos1.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center;
 	background-size: cover;
 }
 
@@ -1109,7 +1109,7 @@ a,a:hover,a:visited {
 	height: 45px;
 	margin: 0 auto;
 	margin-bottom: 5px;
-	background: url(../images/photos1.png);
+	background: url(../images/person-placeholder.png);
 	background-color: #fff;
 	border-radius: 50%;
 	background-repeat: no-repeat;
@@ -1228,7 +1228,7 @@ a,a:hover,a:visited {
 	width: 45px;
 	height: 45px;
 	margin-right: 15px;
-	background: url(../images/cus-icn.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center;
 	border-radius: 50%;
 	background-size: cover;
 }
@@ -2407,15 +2407,52 @@ input.calc-input {
 	padding-right: 20px;
 }
 
+.upload-pic-desc{
+	line-height: 100px;
+}
+
+.upload-prof-pic-icn{
+	position:absolute;
+	bottom:0;
+	right:0;
+	width:33px;
+	height: 33px;
+	background: url(../images/upload-pic.png) no-repeat center;
+	cursor:pointer;
+	opacity:0.6;
+	z-index: 2;
+}
+
+.upload-prof-pic-icn:hover{
+	opacity:1.0;
+}
+
 .prof-form-input {
-	width: 200px;
+	width:100%;
 	height: 40px;
 	line-height: 40px;
 	padding-left: 15px;
 	background-color: #FAFAFA !important;
 	border: 1px #E2E2E2 solid;
 	border-radius: 3px;
-	margin-right: 20px;
+}
+
+.prof-form-input-cont{
+	width:200px;
+	margin-right: 15px;
+	float: left;
+}
+
+/*Error messages*/
+.err-msg{
+	line-height: 15px;
+	padding-top: 5px;
+	color: #dd4b39;
+	font-size: 13px;
+}
+
+.err-input{
+	border: 1px solid #dd4b39;  
 }
 
 .prof-form-input.date-picker{
@@ -2466,12 +2503,13 @@ input.calc-input {
 }
 
 .prof-pic-upload-placeholder {
+	position:relative;
 	width: 88px;
 	height: 88px;
 	margin-bottom: 10px;
 	background-repeat: no-repeat;
 	background-position: center;
-	background-image: url(../images/cus-icn-big.png);
+	background-image: url(../images/person-placeholder.png);
 	border-radius: 50%;
 	background-size: cover;
 }
@@ -3283,7 +3321,7 @@ input.calc-input {
 .ms-cust-prof-img {
 	width: 50px;
 	height: 50px;
-	background: url(../images/cus-icn.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center;
 	border-radius: 50%;
 }
 
@@ -3886,4 +3924,9 @@ input.calc-input {
 	  height: 30px;
 	  width: 30px;
 	  background: url("../images/close_hr.png") no-repeat center;
+}
+
+.mandatoryClass {
+	position: absolute;
+	color: #dd4b39;
 }
