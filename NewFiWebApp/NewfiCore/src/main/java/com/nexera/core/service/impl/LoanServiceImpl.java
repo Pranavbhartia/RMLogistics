@@ -173,6 +173,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
 		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		return loanVo;
 
 	}
