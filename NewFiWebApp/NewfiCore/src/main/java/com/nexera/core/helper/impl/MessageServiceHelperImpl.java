@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.CommunicationLogConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
@@ -280,7 +281,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setLoanId(loanId);
 		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
 		        System.currentTimeMillis())));
-		setGlobalPermissionsToMessage(loanId, messageVO, null, null);
+		setGlobalPermissionsToMessage(loanId, messageVO, userProfileDao.findByUserId(CommonConstants.SYSTEM_USER_USERID), null);
 		messageVO.setMessage(noteText);
 		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(),sendEmail);
 	}
