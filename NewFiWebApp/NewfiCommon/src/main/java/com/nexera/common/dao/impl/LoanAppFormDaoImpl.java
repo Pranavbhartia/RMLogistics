@@ -7,6 +7,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
 
@@ -87,4 +89,31 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 
 	
 	}
+	@Override
+    public LoanAppForm find(LoanAppForm loaAppForm) {
+	  
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanAppForm.class);
+		User user= loaAppForm.getUser();
+		Loan loan = loaAppForm.getLoan();
+		
+		criteria.add(Restrictions.eq("user", user));
+		criteria.add(Restrictions.eq("loan", loan));
+		LoanAppForm loanAppForm=(LoanAppForm) criteria.uniqueResult();
+		
+		Hibernate.initialize(loanAppForm.getGovernmentquestion());
+		Hibernate.initialize(loanAppForm.getRefinancedetails());
+		Hibernate.initialize(loanAppForm.getPropertyTypeMaster());
+		Hibernate.initialize(loanAppForm.getLoan());
+		Hibernate.initialize(loanAppForm.getUser());
+		User temp = loanAppForm.getUser();
+		
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail());
+		CustomerDetail cdTemp = loanAppForm.getUser().getCustomerDetail();
+		temp.setCustomerDetail(cdTemp);
+		loanAppForm.setUser(temp);
+		Hibernate.initialize(loanAppForm.getLoanTypeMaster());
+		
+		return loanAppForm;
+    }
 }

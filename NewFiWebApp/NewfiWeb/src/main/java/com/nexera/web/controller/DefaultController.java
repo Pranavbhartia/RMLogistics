@@ -25,11 +25,14 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.InternalUserRoleMaster;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MasterDataService;
 import com.nexera.core.service.UserProfileService;
@@ -48,6 +51,10 @@ public class DefaultController implements InitializingBean {
 	
 	@Autowired
 	protected UserProfileService userProfileService;
+	
+	
+	@Autowired
+	protected LoanAppFormService loanAppFormService;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DefaultController.class);
@@ -111,6 +118,13 @@ public class DefaultController implements InitializingBean {
 			if(null!=loanVO ){
 				userVO.setDefaultLoanId(loanVO.getId());
 				
+				LoanAppFormVO loanAppFormVO = new LoanAppFormVO ();
+				loanAppFormVO.setUser(userVO);
+				loanAppFormVO.setLoan(loanVO);
+				// find the loanAppForm object and get the loanAppFormCompletionStatus
+				loanAppFormVO = loanAppFormService.find(loanAppFormVO);
+				
+				int formCompletionStatus = loanAppFormVO.getLoanAppFormCompletionStatus();
 				LoanTeamListVO loanTeamListVO = loanService.getLoanTeamListForLoan(loanVO);
 				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
 				List<String> imageList = new ArrayList<String>();
@@ -119,13 +133,16 @@ public class DefaultController implements InitializingBean {
 				}
 	
 				model.addAttribute("loanTeamImage", imageList);
+				newfi.put("formCompletionStatus",formCompletionStatus);
+				newfi.put("loanAppFormid",loanAppFormVO.getId());
+				newfi.put("appUserDetails",gson.toJson(loanAppFormVO));
 			}
 				newfi.put("user", gson.toJson(userVO));
 			
 			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 

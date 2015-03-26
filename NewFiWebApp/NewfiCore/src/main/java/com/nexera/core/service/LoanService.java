@@ -83,4 +83,6 @@ public interface LoanService {
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster);
+
+	public LoanVO convertIntoLoanVO(Loan loan);
 }

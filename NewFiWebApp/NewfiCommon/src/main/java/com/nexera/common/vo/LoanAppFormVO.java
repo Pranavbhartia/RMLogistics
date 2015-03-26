@@ -324,7 +324,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
-		
+		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 	
 
 		//propertyTypeMaster.setId(1);

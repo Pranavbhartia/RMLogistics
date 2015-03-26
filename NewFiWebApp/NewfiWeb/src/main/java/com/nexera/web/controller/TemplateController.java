@@ -78,8 +78,7 @@ public class TemplateController extends DefaultController {
 
 			User user = getUserObject();
 
-			if (UserRolesEnum.CUSTOMER.toString().equals(
-					user.getUserRole().getRoleCd())) {
+			if (UserRolesEnum.CUSTOMER.toString().equals(user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req, user);
 				UserVO userVO = userProfileService.loadInternalUser(user.getId());
 				mav.addObject("user", userVO);

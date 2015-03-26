@@ -217,7 +217,7 @@ public class LoanAppForm implements Serializable {
 	
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user")
 	public User getUser() {
 		return user;

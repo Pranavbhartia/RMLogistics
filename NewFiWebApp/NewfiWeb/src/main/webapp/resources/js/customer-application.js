@@ -13,10 +13,13 @@ if (sessionStorage.loanAppFormData) {
 	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
 }
 
-loan.id = 2;
+//loan.id = 2;
 loanType.id=1;
 
 var applyLoanStatus = 0; 
+var formCompletionStatus = 1;
+
+appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 
 user.customerDetail = customerDetail;
 appUserDetails.user = user;
@@ -87,12 +90,18 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 
 function paintCustomerApplicationPage() {
-    
+	
+	appUserDetails = JSON.parse(newfi.appUserDetails);
+
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
-	//user["emailId"] = newfi.user.emailId;
-	//user["firstName"] =newfi.user.firstName;
-	//user["lastName"] = newfi.user.lastName;
+	
+	loan.id = newfi.user.defaultLoanId;
+	
+	formCompletionStatus = newfi.formCompletionStatus;
+	
+	appUserDetails.id = newfi.loanAppFormid; 
+
 	
 	var topHeader = getCompletYourApplicationHeader();
 
@@ -119,7 +128,10 @@ function paintCustomerApplicationPage() {
 
     $('#center-panel-cont').append(topHeader).append(container);
 
-    paintCustomerApplicationPageStep1a();
+   // paintCustomerApplicationPageStep1a();
+    
+     showLoanAppFormContainer(formCompletionStatus);
+    
 }
 
 
@@ -274,7 +286,8 @@ function getApplicationTextQues(question) {
 
     var optionCont = $('<input>').attr({
         "class": "app-input",
-        "name": question.name
+        "name": question.name,
+        "value":question.value
     });
 
     if (question.value != undefined) {
@@ -342,17 +355,17 @@ function paintCustomerApplicationPageStep1a() {
         type: "desc",
         text: "Which State do you live in?",
         name: "state",
-        value: ""
+        value: appUserDetails.user.customerDetail.addressState
     }, {
         type: "desc",
         text: "Which City do you belong?",
         name: "city",
-        value: ""
+        value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
         text: "What is your Zip Code?",
         name: "zipCode",
-        value: ""
+        value: appUserDetails.user.customerDetail.addressZipCode
     }];
 
     var questionsContainer = getQuestionsContainer(questions);
@@ -380,6 +393,7 @@ function paintCustomerApplicationPageStep1a() {
     		user.customerDetail = customerDetail;
     		
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+    		
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		//paintCustomerApplicationPageStep1b();
@@ -485,6 +499,7 @@ function paintCustomerApplicationPageStep1b() {
         	  	
         	appUserDetails.propertyTypeMaster = propertyTypeMaster;
         	
+        	appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
         	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
         	saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
         	
@@ -672,6 +687,7 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.spouseName  = "false";
 	    	}
 	    	
+	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
 	    	
@@ -1047,7 +1063,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-				
+				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
 				//paintCustomerApplicationPageStep4a();
 			});
@@ -1376,7 +1392,7 @@ function paintCustomerApplicationPageStep4a() {
  		 }
     	 
 
-    	 
+    	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
     	
@@ -1483,7 +1499,8 @@ function paintCustomerApplicationPageStep4b(){
 }
 
 function paintCustomerApplicationPageStep5() {
-    
+	
+	applyLoanStatus = 5;
 	appProgressBaar(5);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "My Income";
@@ -1528,6 +1545,8 @@ function paintCustomerApplicationPageStep5() {
     		customerDetail.secPhoneNumber = secPhoneNumber;
     		//applicationFormSumbit();
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+    		
+    		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit());
     		
     	}else{
@@ -1684,4 +1703,34 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 		}
 		
 	});
+}
+
+function showLoanAppFormContainer(formCompletionStatus){
+	
+	switch (formCompletionStatus) {
+    case 0:
+    	appProgressBaar(1);
+    	paintCustomerApplicationPageStep1a();
+        break;
+    case 1:
+    	appProgressBaar(2);
+		paintCustomerApplicationPageStep2();
+        break;
+    case 2:
+    	appProgressBaar(3);
+		paintMyIncome();
+        break;
+    case 3:
+    	appProgressBaar(4);
+		paintCustomerApplicationPageStep4a();
+        break;
+    case 4:
+    	appProgressBaar(5);
+    	paintCustomerApplicationPageStep5();
+        break;
+    default:
+    	appProgressBaar(1);
+	    paintCustomerApplicationPageStep1a();
+
+	}
 }

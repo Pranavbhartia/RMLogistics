@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
@@ -351,14 +353,13 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		userModel.setUsername(userVO.getEmailId());
 		userModel.setEmailId(userVO.getEmailId());
 		
-		//userModel.setPassword("abc123");
-		userModel.setStatus(true);
+		userModel.setPassword(userVO.getPassword());
+		userModel.setStatus(userVO.getStatus());
 		
 		CustomerDetail customerDetail = new CustomerDetail();
 		customerDetail.setSubscriptionsStatus(2);		
 		userModel.setCustomerDetail(customerDetail);
-		
-		//userModel.setEmailId(userVO.getEmailId());
+
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
 
@@ -555,28 +556,6 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 
 		return this.buildUserVO(user);
 		
-		/*User user = new User();
-		user.setFirstName(userVO.getFirstName());
-		user.setLastName(userVO.getLastName());
-	
-		user.setEmailId(userVO.getEmailId().split(":")[0]);
-		user.setUsername(userVO.getEmailId().split(":")[0]);
-		user.setPassword("123abc");
-		user.setStatus(true);
-		
-		UserRole userRole = new UserRole();
-		userRole.setId(1);
-		user.setUserRole(userRole);
-		
-		
-		user = userProfileDao.saveUser(user);
-		UserVO userVOobj  = new UserVO();
-		userVOobj.setFirstName(user.getFirstName());
-		userVOobj.setUsername(user.getUsername());
-		userVOobj.setLastName(user.getLastName());
-		userVOobj.setPassword(user.getPassword());
-		
-	    return userVOobj;*/
     }
 	
 	
@@ -609,6 +588,102 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		return userModel;
 	}
 
+	@Override
+    public UserVO convertTOUserVO(User user) {
+		
+		if (user == null)
+			return null;
+		UserVO userVO = new UserVO();
+
+		userVO.setId(user.getId());
+		userVO.setFirstName(user.getFirstName());
+		userVO.setLastName(user.getLastName());
+		userVO.setUsername(user.getEmailId());
+		userVO.setEmailId(user.getEmailId());		
+		userVO.setPassword(user.getPassword());
+		userVO.setStatus(user.getStatus());
+		userVO.setPhoneNumber(user.getPhoneNumber());
+		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+		
+		CustomerDetailVO customerDetailVO = convertTOCustomerDetailVO(user.getCustomerDetail());
+		
+		userVO.setCustomerDetail(customerDetailVO);
+
+		userVO.setUserRole(this.convertTOUserRoleVO(user.getUserRole()));
+
+		userVO.setInternalUserDetail(this.convertTOInternalUserDetailVO(user.getInternalUserDetail()));
+
+		return userVO;
+    }
+
+	private CustomerDetailVO convertTOCustomerDetailVO(CustomerDetail customerDetail){
+		
+		if(customerDetail == null)
+			return null;
+		
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		
+		customerDetailVO.setId(customerDetail.getId());
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		if(null!= customerDetail.getDateOfBirth())
+		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
+		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+		customerDetailVO.setSsn(customerDetail.getSsn());
+		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecEmailId());
+		customerDetailVO.setSubscriptionsStatus(customerDetail.getSubscriptionsStatus());
+		
+		return customerDetailVO;
+		
+	}
 	
+	private UserRoleVO convertTOUserRoleVO(UserRole userRole) {
+
+		UserRoleVO userRoleVO = new UserRoleVO();
+		
+		if (userRole == null){
+			
+			userRoleVO.setId(1);
+		}else{
+			
+			userRoleVO.setId(userRole.getId());
+			userRoleVO.setRoleCd(userRole.getRoleCd());
+			userRoleVO.setLabel(userRole.getLabel());
+			userRoleVO.setRoleDescription(userRole.getRoleDescription());
+		}
+
+		return userRoleVO;
+
+	}
+	
+	
+	private InternalUserDetailVO convertTOInternalUserDetailVO(InternalUserDetail internalUserDetail) {
+		// TODO Auto-generated method stub
+
+		if (internalUserDetail == null)
+			return null;
+
+		InternalUserDetailVO internalUserDetailVO = new InternalUserDetailVO();
+		
+		InternalUserRoleMasterVO internalUserRoleMasterVO =convertTOInternalUserRoleMasterVO(internalUserDetail.getInternaUserRoleMaster());
+		internalUserDetailVO.setInternalUserRoleMasterVO(internalUserRoleMasterVO);;
+
+		return internalUserDetailVO;
+	}
+	
+	private InternalUserRoleMasterVO convertTOInternalUserRoleMasterVO(InternalUserRoleMaster internalUserRoleMaster){
+		
+		if (internalUserRoleMaster == null)
+			return null;
+
+		InternalUserRoleMasterVO internalUserRoleMasterVO = new InternalUserRoleMasterVO();
+		internalUserRoleMasterVO.setId(internalUserRoleMaster.getId());
+		internalUserRoleMasterVO.setRoleName(internalUserRoleMaster.getRoleName());
+		internalUserRoleMasterVO.setRoleDescription(internalUserRoleMaster.getRoleDescription());
+
+		return internalUserRoleMasterVO;
+	}
 
 }

@@ -49,7 +49,7 @@ public interface UserProfileService {
 	public void enableUser(int userId) throws NoRecordsFetchedException;
 
 
-	User parseUserModel(UserVO userVO);
+	public User parseUserModel(UserVO userVO);
 	
 	public UserVO createNewUserAndSendMail(UserVO userVO) throws InvalidInputException, UndeliveredEmailException;
 	
@@ -58,5 +58,7 @@ public interface UserProfileService {
 	public User findUserByMail(String userMailAddress);
 
 	public UserVO saveUser(UserVO userVO);
+
+	public UserVO convertTOUserVO(User user);
 
 }
