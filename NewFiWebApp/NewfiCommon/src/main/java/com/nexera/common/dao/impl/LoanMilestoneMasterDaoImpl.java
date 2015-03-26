@@ -22,8 +22,8 @@ public class LoanMilestoneMasterDaoImpl extends GenericDaoImpl implements LoanMi
     public List<LoanMilestoneMaster> findByLoanType( LoanTypeMaster loanTypeMaster )
     {
         Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(Loan.class);
-        criteria.add(Restrictions.eq("loanTypeMaster", loanTypeMaster));
+        Criteria criteria = session.createCriteria( Loan.class );
+        criteria.add( Restrictions.eq( "loanType", loanTypeMaster ) );
 
         return criteria.list();
     }
