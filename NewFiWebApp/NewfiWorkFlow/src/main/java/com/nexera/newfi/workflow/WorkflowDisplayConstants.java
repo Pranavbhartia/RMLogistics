@@ -19,4 +19,8 @@ public class WorkflowDisplayConstants {
 	public static final String WORKFLOW_TASK_SUCCESS = "success";
 	public static final String WORKFLOW_TASK_STARTED = "started";
 	public static final String EMAIL_RECPIENT_NAME = "Team";
+
+	public static final String TITLE_COMPANY_ID = "titleCompanyID";
+
+	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsCompanyID";
 }

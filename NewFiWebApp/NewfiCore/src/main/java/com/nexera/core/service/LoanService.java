@@ -76,10 +76,10 @@ public interface LoanService {
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
 	        HomeOwnersInsuranceMasterVO vo);
 
-	boolean addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
+	TitleCompanyMasterVO addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
 	        UserVO addedBy);
 
-	boolean addToLoanTeam(LoanVO loan,
+	HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
@@ -87,4 +87,6 @@ public interface LoanService {
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
+
+	public void saveLoanMilestone(LoanMilestone loanMilestone);
 }

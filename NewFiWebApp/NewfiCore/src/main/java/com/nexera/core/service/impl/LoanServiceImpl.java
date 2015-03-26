@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
@@ -50,6 +51,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private LoanMilestoneDao loanMilestoneDao;
 
 	@Autowired
 	private LoanMilestoneMasterDao loanMilestoneMasterDao;
@@ -257,11 +261,9 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
-		// Get new and in progress loans this user has access to.
-		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 3);
-		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 4));
+		// Get all loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
+		        .parseUserModel(userVO));
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
@@ -561,12 +563,16 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
+		if(userList!=null){
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
 			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
-
+		}else{
+			
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);
+		}
 		return this.buildLoanVO(loan);
 	}
 
@@ -712,22 +718,28 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-	public boolean addToLoanTeam(LoanVO loan,
+	public HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy) {
 
-		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseHomeOwnInsMaster(homeOwnersInsurance),
 		        userProfileService.parseUserModel(addedBy));
+		return this
+		        .buildHomeOwnersInsuranceMasterVO((HomeOwnersInsuranceMaster) loanDao
+		                .load(HomeOwnersInsuranceMaster.class,
+		                        homeOwnersInsurance.getId()));
 	}
 
 	@Override
 	@Transactional
-	public boolean addToLoanTeam(LoanVO loan,
+	public TitleCompanyMasterVO addToLoanTeam(LoanVO loan,
 	        TitleCompanyMasterVO titleCompany, UserVO addedBy) {
 
-		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseTitleCompanyMaster(titleCompany),
 		        userProfileService.parseUserModel(addedBy));
+		return this.buildTitleCompanyMasterVO(((TitleCompanyMaster) loanDao
+		        .load(TitleCompanyMaster.class, titleCompany.getId())));
 	}
 
 	@Transactional(readOnly = true)
@@ -737,8 +749,15 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster) {
 		return loanMilestoneMasterDao.findByLoanType(loanTypeMaster);
+	}
+
+	@Override
+	@Transactional
+	public void saveLoanMilestone(LoanMilestone loanMilestone) {
+		loanMilestoneDao.saveOrUpdate(loanMilestone);
 	}
 }
