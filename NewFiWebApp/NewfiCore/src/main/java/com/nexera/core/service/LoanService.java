@@ -87,4 +87,6 @@ public interface LoanService {
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
+
+	public void saveLoanMilestone(LoanMilestone loanMilestone);
 }

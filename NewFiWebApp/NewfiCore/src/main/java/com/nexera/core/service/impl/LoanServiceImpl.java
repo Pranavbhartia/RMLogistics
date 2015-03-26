@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
@@ -50,6 +51,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private LoanMilestoneDao loanMilestoneDao;
 
 	@Autowired
 	private LoanMilestoneMasterDao loanMilestoneMasterDao;
@@ -559,12 +563,16 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
+		if(userList!=null){
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
 			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
-
+		}else{
+			
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);
+		}
 		return this.buildLoanVO(loan);
 	}
 
@@ -735,8 +743,15 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster) {
 		return loanMilestoneMasterDao.findByLoanType(loanTypeMaster);
+	}
+
+	@Override
+	@Transactional
+	public void saveLoanMilestone(LoanMilestone loanMilestone) {
+		loanMilestoneDao.saveOrUpdate(loanMilestone);
 	}
 }
