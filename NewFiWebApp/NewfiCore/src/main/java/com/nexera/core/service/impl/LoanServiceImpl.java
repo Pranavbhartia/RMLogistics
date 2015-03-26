@@ -561,12 +561,16 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
+		if(userList!=null){
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
 			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
-
+		}else{
+			
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);
+		}
 		return this.buildLoanVO(loan);
 	}
 
