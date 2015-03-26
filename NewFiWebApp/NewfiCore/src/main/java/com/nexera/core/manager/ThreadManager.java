@@ -2,7 +2,10 @@ package com.nexera.core.manager;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,6 +120,7 @@ public class ThreadManager implements Runnable {
 		} else {
 			String dateTime = getDataTimeField(currentLoanStatus,
 			        loadResponseList);
+			Date date = parseStringIntoDate(dateTime);
 			LOGGER.debug("Time for this status " + currentLoanStatus + " is "
 			        + dateTime);
 			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
@@ -198,39 +202,65 @@ public class ThreadManager implements Runnable {
 			}
 
 			LoanMilestoneMaster loanMilestoneMaster = null;
+			if (milestones != null) {
+				for (LoanMilestoneMaster loanMilestone : getLoanMilestoneMasterList()) {
 
-			for (LoanMilestoneMaster loanMilestone : getLoanMilestoneMasterList()) {
-				if (milestones != null) {
 					if (loanMilestone.getId() == milestones.getMilestoneID()) {
 						LOGGER.debug("Found LoanMilestone Master ");
 						loanMilestoneMaster = loanMilestone;
 						break;
-					}
-				} else {
-					LOGGER.error("Milestone mapping not found ");
-				}
-			}
-			LOGGER.debug("Saving/Updating LoanMileStone ");
-			LoanMilestone loanMilestone = new LoanMilestone();
-			loanMilestone.setLoan(loan);
-			loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
-			// TODO remove this
-			loanMilestone.setStatusUpdateTime(null);
-			loanMilestone.setStatus(String.valueOf(currentLoanStatus));
-			saveOrUpdateLoanMilestone(loanMilestone);
 
-			List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
-			        .get(milestones);
-			List<WorkflowItemExec> itemToExecute = itemToExecute(
-			        workflowItemTypeList, workflowItemExecList);
-			String params = Utils
-			        .convertMapToJson(getParamsBasedOnStatus(currentLoanStatus));
-			for (WorkflowItemExec workflowItemExec : itemToExecute) {
-				LOGGER.debug("Putting the item in execution ");
-				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-				        params);
-				engineTrigger.startWorkFlowItemExecution(workflowItemExec
-				        .getId());
+					}
+				}
+				LOGGER.debug("Saving/Updating LoanMileStone ");
+				boolean sameStatus = false;
+				List<LoanMilestone> loanMilestoneList = loanMilestoneMaster
+				        .getLoanMilestones();
+				LoanMilestone loanMilestone = null;
+				for (LoanMilestone loanMile : loanMilestoneList) {
+					if (loanMile.getLoan().getId() == loan.getId()) {
+						loanMilestone = loanMile;
+						break;
+					}
+				}
+				if (loanMilestone == null) {
+					loanMilestone = new LoanMilestone();
+					loanMilestone.setLoan(loan);
+					loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
+					loanMilestone.setStatusUpdateTime(date);
+					loanMilestone.setStatus(String.valueOf(currentLoanStatus));
+
+					saveLoanMilestone(loanMilestone);
+				} else {
+					LOGGER.debug("Milestone exist, need to update the status ");
+
+					if (Integer.valueOf(loanMilestone.getStatus()) == currentLoanStatus) {
+						sameStatus = true;
+					} else {
+						loanMilestone.setStatusUpdateTime(date);
+						loanMilestone.setStatus(String
+						        .valueOf(currentLoanStatus));
+						updateLoanMilestone(loanMilestone);
+					}
+				}
+
+				if (!sameStatus) {
+					LOGGER.debug("If status has changed then only proceed to call the class ");
+					List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+					        .get(milestones);
+					List<WorkflowItemExec> itemToExecute = itemToExecute(
+					        workflowItemTypeList, workflowItemExecList);
+					String params = Utils
+					        .convertMapToJson(getParamsBasedOnStatus(currentLoanStatus));
+					for (WorkflowItemExec workflowItemExec : itemToExecute) {
+						LOGGER.debug("Putting the item in execution ");
+						workflowService.saveParamsInExecTable(
+						        workflowItemExec.getId(), params);
+						engineTrigger
+						        .startWorkFlowItemExecution(workflowItemExec
+						                .getId());
+					}
+				}
 			}
 		}
 
@@ -249,6 +279,19 @@ public class ThreadManager implements Runnable {
 			string = string.replace("\\", "");
 		}
 		return string;
+	}
+
+	public Date parseStringIntoDate(String dateTime) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+		        "hh:mm a z-dd/MM/yyyy");
+		Date date = null;
+		try {
+			date = simpleDateFormat.parse(dateTime);
+		} catch (ParseException pe) {
+			LOGGER.error(pe.getMessage());
+		}
+		return date;
+
 	}
 
 	private List<WorkflowItemExec> itemToExecute(
@@ -381,9 +424,14 @@ public class ThreadManager implements Runnable {
 
 	}
 
-	private void saveOrUpdateLoanMilestone(LoanMilestone loanMilestone) {
-		LOGGER.debug("Inside method saveOrUpdateLoanMilestone ");
+	private void saveLoanMilestone(LoanMilestone loanMilestone) {
+		LOGGER.debug("Inside method saveLoanMilestone ");
 		loanService.saveLoanMilestone(loanMilestone);
+	}
+
+	private void updateLoanMilestone(LoanMilestone loanMilestone) {
+		LOGGER.debug("Inside method updateLoanMilestone ");
+		loanService.updateLoanMilestone(loanMilestone);
 	}
 
 	private String getDataTimeField(int currentLoanStatus,

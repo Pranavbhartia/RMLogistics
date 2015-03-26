@@ -86,11 +86,11 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getLoanByID(Integer loanID) {
 		return this.buildLoanVO((Loan) loanDao.getLoanWithDetails(loanID));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Loan fetchLoanById(Integer loanID) {
-		return  (Loan) loanDao.load(Loan.class, loanID);
+		return (Loan) loanDao.load(Loan.class, loanID);
 	}
 
 	@Override
@@ -571,14 +571,14 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
-		if(userList!=null){
-		userList.add(loanVO.getUser());
-		for (UserVO userVO : userList) {
-			User user = userProfileService.parseUserModel(userVO);
-			loanDao.addToLoanTeam(loan, user, null);
-		}
-		}else{
-			
+		if (userList != null) {
+			userList.add(loanVO.getUser());
+			for (UserVO userVO : userList) {
+				User user = userProfileService.parseUserModel(userVO);
+				loanDao.addToLoanTeam(loan, user, null);
+			}
+		} else {
+
 			loanDao.addToLoanTeam(loan, loan.getUser(), null);
 		}
 		return this.buildLoanVO(loan);
@@ -709,7 +709,6 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.fetchByNeedId(needId);
 	}
 
-
 	@Override
 	@Transactional
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
@@ -751,20 +750,16 @@ public class LoanServiceImpl implements LoanService {
 		        .load(TitleCompanyMaster.class, titleCompany.getId())));
 	}
 
-
 	@Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
 
-	
-	@Transactional(readOnly=true)
-	public List<Loan> getAllActiveLoan(){
+	@Transactional(readOnly = true)
+	public List<Loan> getAllActiveLoan() {
 		return loanDao.getAllActiveLoan();
 	}
-	
-
 
 	@Override
 	@Transactional(readOnly = true)
@@ -777,6 +772,13 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public void saveLoanMilestone(LoanMilestone loanMilestone) {
 		loanMilestoneDao.saveOrUpdate(loanMilestone);
+	}
+
+	@Override
+	@Transactional
+	public void updateLoanMilestone(LoanMilestone loanMilestone) {
+
+		loanMilestoneDao.update(loanMilestone);
 	}
 
 }
