@@ -14,7 +14,9 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.utility.LoanStatusMaster;
@@ -57,11 +59,19 @@ public class LoanBatchProcessor extends QuartzJobBean {
 					                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
 						ThreadManager threadManager = applicationContext
 						        .getBean(ThreadManager.class);
+						threadManager
+						        .setLoanMilestoneMasterList(getLoanMilestoneMasterByLoanType(loan));
 						threadManager.setLoan(loan);
 						taskExecutor.execute(threadManager);
 					}
 				}
 			}
 		}
+	}
+
+	private List<LoanMilestoneMaster> getLoanMilestoneMasterByLoanType(Loan loan) {
+		LOGGER.debug("Inside method getLoanMilestoneMasterByLoan ");
+		LoanTypeMaster loanTypeMaster = loan.getLoanType();
+		return loanService.getLoanMilestoneByLoanType(loanTypeMaster);
 	}
 }
