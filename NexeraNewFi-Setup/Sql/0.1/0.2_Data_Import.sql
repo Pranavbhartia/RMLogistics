@@ -1,4 +1,4 @@
-﻿SET FOREIGN_KEY_CHECKS=0;
+SET FOREIGN_KEY_CHECKS=0;
 -- The above line is to avoid foreign key checks during import. This is required due to circular links.
 -- This should be the first line in the file.
 
@@ -6,14 +6,11 @@ LOCK TABLES `userrole` WRITE;
 INSERT INTO `userrole` VALUES (4,'SYSTEM','System user','System User',NULL,'2014-12-12 00:00:00',0);
 UNLOCK TABLES;
 
-LOCK TABLES `user` WRITE;
-INSERT INTO `user` VALUES(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,4,NULL,NULL,NULL,NULL,NULL);
-UNLOCK TABLES;
 
 LOCK TABLES `userrole` WRITE;
-INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',4,'2014-12-12 00:00:00',1),
-(2,'REALTOR','Realtor','Realtor',4,'2014-12-12 00:00:00',1),
-(3,'INTERNAL','Internal','Internal User',4,'2014-12-12 00:00:00',1);
+INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',1,'2014-12-12 00:00:00',1),
+(2,'REALTOR','Realtor','Realtor',1,'2014-12-12 00:00:00',1),
+(3,'INTERNAL','Internal','Internal User',1,'2014-12-12 00:00:00',1);
 UNLOCK TABLES;
 
 
@@ -37,10 +34,11 @@ LOCK TABLES `user` WRITE;
 
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES 
-(1,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
+(1, 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4',null, 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',4,NULL,NULL),
+(2,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
 
-(2,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
-(3,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(3,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
+(4,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
 
 (5,'Test','Customer','customer@gmail.com','customer@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',2,NULL,NULL),
 (6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
@@ -122,9 +120,6 @@ VALUES (1,'Credit/Liabilities','Divorce Decree/Settlement Agreement','Do you pay
 
 
 
--- Insert system user account in the table
-
-INSERT INTO `newfi_schema`.`user` (`id`, `first_name`, `last_name`, `email_id`, `username`, `password`, `status`, `user_role`, `photo_image_url`) VALUES ('0', 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4', 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg');
 
 
 
