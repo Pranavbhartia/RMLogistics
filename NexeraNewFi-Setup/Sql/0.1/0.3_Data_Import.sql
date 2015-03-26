@@ -1,4 +1,4 @@
-﻿SET FOREIGN_KEY_CHECKS=0;
+SET FOREIGN_KEY_CHECKS=0;
 -- The above line is to avoid foreign key checks during import. This is required due to circular links.
 -- This should be the first line in the file.
 
@@ -6,14 +6,11 @@ LOCK TABLES `userrole` WRITE;
 INSERT INTO `userrole` VALUES (4,'SYSTEM','System user','System User',NULL,'2014-12-12 00:00:00',0);
 UNLOCK TABLES;
 
-LOCK TABLES `user` WRITE;
-INSERT INTO `user` VALUES(4,'Newfi','System','system@nexera.com','system@nexera.com','1234',1,4,NULL,NULL,NULL,NULL,NULL);
-UNLOCK TABLES;
 
 LOCK TABLES `userrole` WRITE;
-INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',4,'2014-12-12 00:00:00',1),
-(2,'REALTOR','Realtor','Realtor',4,'2014-12-12 00:00:00',1),
-(3,'INTERNAL','Internal','Internal User',4,'2014-12-12 00:00:00',1);
+INSERT INTO `userrole` VALUES (1,'CUSTOMER','Customer','Customer',1,'2014-12-12 00:00:00',1),
+(2,'REALTOR','Realtor','Realtor',1,'2014-12-12 00:00:00',1),
+(3,'INTERNAL','Internal','Internal User',1,'2014-12-12 00:00:00',1);
 UNLOCK TABLES;
 
 
@@ -37,16 +34,17 @@ LOCK TABLES `user` WRITE;
 
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES 
-(1,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
+(1, 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4',NULL, 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',4,NULL,NULL,1),
+(2,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL,0),
 
-(2,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
-(3,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(3,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1,0),
+(4,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0),
 
-(5,'Test','Customer','customer@gmail.com','customer@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',2,NULL,NULL),
-(6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(5,'Test','Customer','customer@gmail.com','customer@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',2,NULL,NULL,0),
+(6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0),
 
-(7,'Test','Customer','raremile@gmail.com','raremile@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',3,NULL,NULL),
-(8,'Loan','Manager2','loanmanager4@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2);
+(7,'Test','Customer','raremile@gmail.com','raremile@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',3,NULL,NULL,0),
+(8,'Loan','Manager2','loanmanager4@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0);
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -80,7 +78,7 @@ INSERT INTO `newfi_schema`.`propertytypemaster` (`id`, `property_type_cd`, `desc
 UNLOCK TABLES;
 
 INSERT INTO `newfi_schema`.`loan` (`id`,`user`,`name`,`loan_type`,`created_date`,`modified_date`,`loan_status`,`deleted`,`property_type`,`loan_email_id`,`lqb_file_id`,`current_milestone`,`loan_detail`,`loan_progress_status_master`,`customer_workflow`,`loan_manager_workflow`,`rate_locked`,`bank_connected`)
- VALUES (1,1,'Sample loan',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,0,0);
+ VALUES (1,2,'Sample loan',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,0,0);
                           
 
 INSERT INTO `newfi_schema`.`loan` (`id`,`user`,`name`,`loan_type`,`created_date`,`modified_date`,`loan_status`,`deleted`,`property_type`,`loan_email_id`,`lqb_file_id`,`current_milestone`,`loan_detail`,`loan_progress_status_master`,`customer_workflow`,`loan_manager_workflow`,`rate_locked`,`bank_connected`)
@@ -88,16 +86,16 @@ INSERT INTO `newfi_schema`.`loan` (`id`,`user`,`name`,`loan_type`,`created_date`
 INSERT INTO `newfi_schema`.`loan` (`id`,`user`,`name`,`loan_type`,`created_date`,`modified_date`,`loan_status`,`deleted`,`property_type`,`loan_email_id`,`lqb_file_id`,`current_milestone`,`loan_detail`,`loan_progress_status_master`,`customer_workflow`,`loan_manager_workflow`,`rate_locked`,`bank_connected`) 
 VALUES (3,7,'sample loan2',1,'2015-02-12 00:00:00','2015-02-12 00:00:00',1,0,NULL,NULL,NULL,NULL,NULL,7,NULL,NULL,0,0);
 
-insert  into `loanappform`(`id`,`user`,`loan`,`marital_status`,`second_mortgage`,`pay_sec_mortgage`,`home_to_sell`,`owns_other_property`,`rented_other_property`,`home_recently_sold`,`hoa_dues`,`receive_alimony_child_support`,`self_employed`,`ss_income_or_disability`,`pension_or_retirement`,`property_type`,`loan_type`,`customer_workflow`,`loan_manager_workflow`,`loan_app_completion_status`,`isspouseOnLoan`,`spouse_name`,`EmployedIncomePreTax`,`EmployedAt`,`EmployedSince`,`ispensionOrRetirement`,`monthlyPension`,`isselfEmployed`,`selfEmployedIncome`,`isssIncomeOrDisability`,`ssDisabilityIncome`,`gov_quest`,`ref_detail`,`isemployed`) values (1,1,1,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,5,2,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,7,3,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert  into `loanappform`(`id`,`user`,`loan`,`marital_status`,`second_mortgage`,`pay_sec_mortgage`,`home_to_sell`,`owns_other_property`,`rented_other_property`,`home_recently_sold`,`hoa_dues`,`receive_alimony_child_support`,`self_employed`,`ss_income_or_disability`,`pension_or_retirement`,`property_type`,`loan_type`,`customer_workflow`,`loan_manager_workflow`,`loan_app_completion_status`,`isspouseOnLoan`,`spouse_name`,`EmployedIncomePreTax`,`EmployedAt`,`EmployedSince`,`ispensionOrRetirement`,`monthlyPension`,`isselfEmployed`,`selfEmployedIncome`,`isssIncomeOrDisability`,`ssDisabilityIncome`,`gov_quest`,`ref_detail`,`isemployed`) values (1,2,1,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,5,2,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,7,3,'Divorced',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
 
 
 
 
 INSERT INTO `newfi_schema`.`loanteam` VALUES 
-(1,1,1,1,'2015-02-12 00:00:00',1,NULL),
+(1,1,3,1,'2015-02-12 00:00:00',1,NULL),
 (2,1,2,2,'2015-02-12 00:00:00',1,NULL),
-(3,1,3,1,'2015-02-27 15:52:22',1,NULL),
+(3,1,4,1,'2015-02-27 15:52:22',1,NULL),
 
 (4,2,5,1,'2015-02-12 00:00:00',1,NULL),
 (5,2,6,2,'2015-02-12 00:00:00',1,NULL),
@@ -122,9 +120,6 @@ VALUES (1,'Credit/Liabilities','Divorce Decree/Settlement Agreement','Do you pay
 
 
 
--- Insert system user account in the table
-
-INSERT INTO `newfi_schema`.`user` (`id`, `first_name`, `last_name`, `email_id`, `username`, `password`, `status`, `user_role`, `photo_image_url`) VALUES ('0', 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4', 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg');
 
 
 

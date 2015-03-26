@@ -41,15 +41,9 @@ public interface LoanService {
 
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
-	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
+	public List<Loan> getAllActiveLoan();
 
-	LoansProgressStatusVO getLoansProgressForUser(Integer i);
-
-	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
-
-	Loan parseLoanModel(LoanVO loanVO);
-
-	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+	public Loan fetchLoanById(Integer loanId);
 
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
 	        int loanManagerWFID);
@@ -76,8 +70,8 @@ public interface LoanService {
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
 	        HomeOwnersInsuranceMasterVO vo);
 
-	TitleCompanyMasterVO addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
-	        UserVO addedBy);
+	TitleCompanyMasterVO addToLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany, UserVO addedBy);
 
 	HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
@@ -89,4 +83,17 @@ public interface LoanService {
 	        LoanTypeMaster loanTypeMaster);
 
 	public void saveLoanMilestone(LoanMilestone loanMilestone);
+
+	LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO);
+
+	Loan parseLoanModel(LoanVO loanVO);
+
+	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+
+	LoansProgressStatusVO getLoansProgressForUser(Integer userId);
+
+	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
+	public void updateLoanMilestone(LoanMilestone loanMilestone);
+
 }
