@@ -184,9 +184,27 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(LoanTeam.class);
-			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
-			List<LoanTeam> loanTeamList = criteria.list();
+			List<User> userList=new ArrayList<User>();
+			Criteria criteriaForAdmin=session.createCriteria(User.class);
+			criteriaForAdmin.add(Restrictions.eq("id", parseUserModel.getId()));
+			userList=criteriaForAdmin.list();
+			
+			if(userList.get(0).getUserRole().getId()==4)
+					
+			{   
+								
+				criteriaForAdmin=session.createCriteria(Loan.class);
+											
+				
+				loanListForUser=criteriaForAdmin.list();				
+				
+				
+				return loanListForUser;
+			}
+						
+			Criteria criteriaForNonAdmin = session.createCriteria(LoanTeam.class);
+			criteriaForNonAdmin.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			List<LoanTeam> loanTeamList = criteriaForNonAdmin.list();
 
 			if (loanTeamList != null) {
 				for (LoanTeam loanTeam : loanTeamList) {

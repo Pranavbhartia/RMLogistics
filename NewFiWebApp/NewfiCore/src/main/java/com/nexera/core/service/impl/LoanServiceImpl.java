@@ -257,11 +257,9 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
-		// Get new and in progress loans this user has access to.
-		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 3);
-		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 4));
+		// Get all loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
+		        .parseUserModel(userVO));
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
