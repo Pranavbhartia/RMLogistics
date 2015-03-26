@@ -3,7 +3,7 @@ package com.nexera.common.commons;
 public class LoadConstants
 {
 
-    //Constants Related to Status Fields 
+    //Constants Related to Status Fields Of LendinQB
 
     public static Integer LQB_STATUS_LEAD_NEW = 12;
     public static Integer LQB_STATUS_LEAD_CANCELED = 15;
@@ -55,6 +55,7 @@ public class LoadConstants
     public static Integer LQB_STATUS_LOAN_ARCHIVED = 49;
     public static Integer LQB_STATUS_LOAN_OTHER = 18;
     public static Integer LQB_STATUS_LOAN_WEB_CONSUMER = 14;
+
 
     //Constants Related to Date Time Fields 
     public static String LEAD_DATE_FIELD = "sLeadD";
