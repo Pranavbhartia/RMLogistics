@@ -1036,7 +1036,7 @@ function appendMilestoneItem(workflowItem, childList) {
 		floatClass = "float-left";
 	}
 	var wrapper = $('<div>').attr({
-		"class" : rightLeftClass + " " + progressClass +" clearfix",
+		"class" : rightLeftClass + " " + progressClass,
 		"id":"WF"+workflowItem.id
 	});
 	wrapper.attr("WFparent",true);
