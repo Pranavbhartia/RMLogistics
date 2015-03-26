@@ -58,6 +58,7 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	        throws JobExecutionException {
 		LOGGER.debug("Code inside this will get triggered every 1 min ");
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		LOGGER.debug("Spring beans initialized for email Thread ");
 		configureEmail();
 
 	}
@@ -66,13 +67,23 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		Properties properties = new Properties();
 		properties.setProperty("mail.store.protocol", protocol);
 		try {
+			LOGGER.debug("Creating session for email with properties "+properties.getProperty("mail.store.protocol"));
 			Session session = Session.getDefaultInstance(properties, null);
 			Store store = session.getStore(protocol);
-			if (!store.isConnected())
+			LOGGER.debug("Checking if store is connected "+store.isConnected());
+			if (!store.isConnected()){
+				LOGGER.debug("Store not connected, connecting");
 				store.connect(imapHost, username, password);
+			}else{
+				LOGGER.debug("Store already connected, reading emails");
+			}
+				
+			LOGGER.debug("Reading emails");
 			Folder inbox = store.getFolder(folderName);
 			inbox.open(Folder.READ_WRITE);
+			LOGGER.debug("Opening Inbox in readWrite");
 			fetchUnReadMails(inbox);
+			
 			/*
 			 * inbox.close(true); store.close();
 			 */
