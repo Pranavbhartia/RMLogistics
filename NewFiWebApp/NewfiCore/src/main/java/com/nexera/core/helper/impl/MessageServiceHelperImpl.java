@@ -65,11 +65,11 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	@Override
 	@Async
-	public void saveMessage(MessageVO messagesVO, String messageType) {
+	public void saveMessage(MessageVO messagesVO, String messageType,boolean sendEmail) {
 		LOG.debug("Helper save message called");
 		String messageID;
 		try {
-			messageID = messageService.saveMessage(messagesVO, messageType);
+			messageID = messageService.saveMessage(messagesVO, messageType,sendEmail);
 			LOG.debug("Helper save message succeeded. With messageID: "
 			        + messageID);
 		} catch (FatalException | NonFatalException e) {
@@ -83,7 +83,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateNeedListModificationMessage(int loanId,
 	        User loggedInUser, List<Integer> addedList,
-	        List<Integer> removedList) {
+	        List<Integer> removedList,boolean sendEmail) {
 
 		LoanTeamListVO teamList = loanService
 		        .getLoanTeamListForLoan(new LoanVO(loanId));
@@ -163,7 +163,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		}
 		messageVO.setMessage(message);
 		messageVO.setOtherUsers(messageUserVOs);
-		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(),sendEmail);
 
 	}
 
@@ -184,7 +184,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag) {
+	        boolean successFlag,boolean sendEmail) {
 		/*
 		 * 1. Create messageVO object. 2. set senderUserId as the createdBy of
 		 * the note. Permission will be all the users who are part of the loan
@@ -207,12 +207,12 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		 * message accordingly
 		 */
 
-		if ((fileUrls != null && !fileUrls.isEmpty()) || !successFlag) {
+		if(fileUrls==null || fileUrls.isEmpty() || !successFlag){
 			messageVO.setMessage(noteText);
 		}
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
-		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString());
+		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(),false);
 
 	}
 
@@ -274,7 +274,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Override
 	@Async
 	public void generateWorkflowMessage(int loanId,
-	        String noteText) {
+	        String noteText,boolean sendEmail) {
 
 		MessageVO messageVO = new MessageVO();
 		messageVO.setLoanId(loanId);
@@ -282,7 +282,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		        System.currentTimeMillis())));
 		setGlobalPermissionsToMessage(loanId, messageVO, null, null);
 		messageVO.setMessage(noteText);
-		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString());
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(),sendEmail);
 	}
 
 }

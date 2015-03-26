@@ -55,7 +55,7 @@ public interface UserProfileService {
 	
 	public void deleteUser(int userId);
 
-	public UserVO findUserByMail(String userMailAddress);
+	public User findUserByMail(String userMailAddress);
 
 	public UserVO saveUser(UserVO userVO);
 

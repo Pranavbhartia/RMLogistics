@@ -80,7 +80,7 @@ public class RestInterceptor implements Callable
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            String sXmlQueryDefault = Utils.readFileAsString( "lo_xmlquery_sample.xml" );
+            String sXmlQueryDefault = Utils.readFileAsString( "lo_xmlquery_blank.xml" );
             if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
                 sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
             }

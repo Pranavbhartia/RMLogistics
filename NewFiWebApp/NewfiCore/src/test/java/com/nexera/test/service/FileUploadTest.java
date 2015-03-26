@@ -26,7 +26,7 @@ public class FileUploadTest {
         try {
 	        inputFile = new FileInputStream( "/apps/tmp/CCITT_1.tif");
 	        MockMultipartFile file = new MockMultipartFile("file", "NameOfTheFile", "multipart/form-data", inputFile);
-	        nexeraUtility.convertImageToPDF(file );
+	        //nexeraUtility.convertImageToPDF(file );
         } catch (Exception e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();

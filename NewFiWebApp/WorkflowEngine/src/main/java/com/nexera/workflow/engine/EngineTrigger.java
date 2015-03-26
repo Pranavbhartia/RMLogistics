@@ -276,6 +276,18 @@ public class EngineTrigger {
 		return null;
 	}
 
+	public String invokeActionMethod(int workflowItemExecId) {
+		LOGGER.debug("Inside method invokeActionMethod ");
+		WorkflowItemExec workflowItemExec = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		if (workflowItemExec != null) {
+			String output = reflectionExecuteMethod(workflowItemExec,
+			        WorkflowConstants.INVOKE_ACTION_METHOD);
+			return output;
+		}
+		return null;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String reflectionExecuteMethod(WorkflowItemExec workflowItemExec,
 	        String methodName) {

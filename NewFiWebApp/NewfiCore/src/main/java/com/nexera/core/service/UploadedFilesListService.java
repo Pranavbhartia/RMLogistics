@@ -14,24 +14,27 @@ import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 
 public interface UploadedFilesListService {
-	
-	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList); 
-	
-	public List<UploadedFilesListVO> fetchAll(Integer userId , Integer loanId);
-	
+
+	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList);
+
+	public List<UploadedFilesListVO> fetchAll(Integer userId, Integer loanId);
+
 	public void updateIsAssignedToTrue(Integer fileId);
 
 	public void updateFileInLoanNeedList(Integer needId, Integer fileId);
 
 	public String findFileNameFromId(Integer fileId);
-	
+
 	public void deactivateFileUsingFileId(Integer fileId);
 
 	public List<String> downloadFileFromS3Service(List<Integer> fileIds);
-	
-	public Integer mergeAndUploadFiles(List<Integer> fileIds , Integer loanId, Integer userId , Integer assignedBy) throws  IOException, COSVisitorException;
 
-	public Integer addUploadedFilelistObejct(File file, Integer loanId ,  Integer userId , Integer assignedBy);
+	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
+	        Integer userId, Integer assignedBy) throws IOException,
+	        COSVisitorException;
+
+	public Integer addUploadedFilelistObejct(File file, Integer loanId,
+	        Integer userId, Integer assignedBy);
 
 	void updateIsAssignedToTrue(List<Integer> fileIds);
 
@@ -39,12 +42,13 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
 
-	
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 
-	public CheckUploadVO uploadFileByEmail(InputStream stream , Integer userId , Integer loanId ,  Integer assignedBy) throws IOException, COSVisitorException;
+	public CheckUploadVO uploadFileByEmail(InputStream stream, String content,
+	        Integer userId, Integer loanId, Integer assignedBy)
+	        throws IOException, COSVisitorException;
 
-	public CheckUploadVO uploadFile(File file, String contentType, Integer userId,
-			Integer loanId, Integer assignedBy);
-	
+	public CheckUploadVO uploadFile(File file, String contentType,
+	        Integer userId, Integer loanId, Integer assignedBy);
+
 }

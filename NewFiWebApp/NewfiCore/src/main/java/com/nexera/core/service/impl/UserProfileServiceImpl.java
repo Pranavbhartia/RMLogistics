@@ -522,22 +522,20 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		
 	}
 
-	public UserVO findUserByMail(String userMailAddress) {
+	public User findUserByMail(String userMailAddress) {
 
 		User user = null;
-		UserVO userVO = null;
+		
 		try {
 			user = userProfileDao.findByUserName(userMailAddress);
-			if (user != null) {
-				userVO = buildUserVO(user);
-			}
+			
 
 		} catch (DatabaseException e) {
 
 		} catch (NoRecordsFetchedException e) {
 
 		}
-		return userVO;
+		return user;
 	}
 	
 	/**
