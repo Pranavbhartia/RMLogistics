@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -65,7 +68,16 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/adminModule.do", method = RequestMethod.GET)
+		public ModelAndView tempfunc(HttpServletRequest request,
+		        @RequestParam("userID") Integer userID) throws Exception {
 	
+			Map<String, Object> model = new HashMap<String, Object>();
+			model = loadDefaultValuesForSM(request, userID);
+	
+			return new ModelAndView("adminFunctions", model);
+	
+		}
 	
 	
 	
