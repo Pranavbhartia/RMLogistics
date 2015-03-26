@@ -42,7 +42,7 @@ public interface LoanService {
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
 	public List<Loan> getAllActiveLoan();
-	
+
 	public Loan fetchLoanById(Integer loanId);
 
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
@@ -70,8 +70,8 @@ public interface LoanService {
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
 	        HomeOwnersInsuranceMasterVO vo);
 
-	TitleCompanyMasterVO addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
-	        UserVO addedBy);
+	TitleCompanyMasterVO addToLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany, UserVO addedBy);
 
 	HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
@@ -93,5 +93,7 @@ public interface LoanService {
 	LoansProgressStatusVO getLoansProgressForUser(Integer userId);
 
 	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
+	public void updateLoanMilestone(LoanMilestone loanMilestone);
 
 }
