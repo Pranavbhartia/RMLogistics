@@ -859,14 +859,16 @@ function paintMilestoneCustomerProfileDetails() {
 	var custImg = $('<div>').attr({
 		"class" : "ms-cust-prof-img float-left"
 	});
-
+	if(newfiObject.user.photoImageUrl){
+		custImg.attr("style" , "background-image : url("+newfiObject.user.photoImageUrl+"); background-size: cover;");
+	}
 	var custTxtContainer = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-cont float-left"
 	});
 
 	var name = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-name"
-	}).html("jane doe");
+	}).html(newfiObject.user.firstName+" "+newfiObject.user.lastName);
 
 	var role = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-role"
@@ -874,7 +876,7 @@ function paintMilestoneCustomerProfileDetails() {
 
 	var contact = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-contact"
-	}).html("+1 (888) 555-1875");
+	}).html(newfiObject.user.phoneNumber);
 
 	custTxtContainer.append(name).append(role).append(contact);
 	container.append(custImg).append(custTxtContainer);
