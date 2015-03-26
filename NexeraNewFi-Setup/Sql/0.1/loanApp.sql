@@ -1,4 +1,4 @@
-CREATE TABLE `governmentquestion` (
+CREATE TABLE `newfi_schema`.`governmentquestion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `isOutstandingJudgments` tinyint(4) DEFAULT NULL,
   `isBankrupt` tinyint(4) DEFAULT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE `governmentquestion` (
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `refinancedetails` (
+CREATE TABLE `newfi_schema`.`refinancedetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `refinanceOption` varchar(45) DEFAULT NULL,
   `currentMortgageBalance` varchar(45) DEFAULT NULL,
