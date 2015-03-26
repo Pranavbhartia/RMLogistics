@@ -117,9 +117,9 @@ INSERT INTO `needslistmaster` VALUES (1,'Credit/Liabilities','Divorce Decree/Set
 
 
 
+-- Insert system user account in the table
 
-
-
+INSERT INTO `newfi_schema`.`user` (`id`, `first_name`, `last_name`, `email_id`, `username`, `password`, `status`, `user_role`, `photo_image_url`) VALUES ('0', 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4', 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg');
 
 
 
