@@ -254,9 +254,15 @@ var workFlowContext = {
 			return cssMap[wfItemType][status]
 		
 	},getItemToAppendTo: function(newLine,inline,workflowItem){
-		/*if(workflowItem.workflowItemType=="SYSTEM_EDU"){
+		if(workflowItem.workflowItemType=="CREDIT_SCORE"){
 			return inline;
-		}*/
+		}else if(workflowItem.workflowItemType=="AUS_STATUS"){
+			return inline;
+		}else if(workflowItem.workflowItemType=="QC_STATUS"){
+			return inline;
+		}else if(workflowItem.workflowItemType=="LOAN_MANAGER_DECISION"){
+			return inline;
+		}
 		return newLine;
 	}
 };
@@ -283,8 +289,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			var ob = this;
 			var data = {};
 			data.milestoneId=ob.mileStoneId;
-			var txtRow1 = $('<div>').attr({
-				"class" : rightLeftClass + "-text",
+			var floatClass="";
+			if(rightLeftClass.indexOf("rc")>=0){
+				floatClass="";
+			}else{
+				floatClass="float-right"
+			}
+			var txtRow1 = $('<span>').attr({
+				"class" : rightLeftClass + "-text "+floatClass,
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.workItem.workflowItemType
 			});
@@ -392,6 +404,10 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID = newfi.user.defaultLoanId;
+			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.userID=newfiObject.user.id;
+				data.loanID = newfi.user.defaultLoanId;
 			}
 			txtRow1.bind("click", function(e) {
 				milestoneChildEventHandler(e)
@@ -411,38 +427,41 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						}
 						else
 						{
-							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
-								var progressBarCont = $('<div>').attr({
-									"class" : "clearfix"
-								});
-								var floatClass="float-right";
-								if(rightLeftClass.indexOf("rc")>=0){
-									floatClass="float-left";
-								}
-								var progressBarTxt = $('<div>').attr({
-									"class" : "miestone-progress-bar-txt "+floatClass
-								}).html(ob.workItem.stateInfo+" %");
-
-								var progressBar = $('<div>').attr({
-									"class" : "miestone-progress-bar "+floatClass+" clearfix"
-								});
-
-								var progress = ob.workItem.stateInfo/10;
-								for (var i = 0; i < 10; i++) {
-									var progressGrid = $('<div>').attr({
-										"class" : "miestone-progress-grid float-left"
+							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"||ob.workItem.workflowItemType=="MANAGE_PROFILE"){
+								if(!ob.workItem.stateInfo)
+									ob.workItem.stateInfo=0;
+								if(ob.workItem.stateInfo>=0){
+									var progressBarCont = $('<div>').attr({
+										"class" : "clearfix"
 									});
-									if (progress == 0) {
-										progressGrid.addClass('miestone-progress-grid-incomplete');
-									} else {
-										progress--;
+									var floatClass="float-right";
+									if(rightLeftClass.indexOf("rc")>=0){
+										floatClass="float-left";
 									}
-									progressBar.append(progressGrid);
+									var progressBarTxt = $('<div>').attr({
+										"class" : "miestone-progress-bar-txt "+floatClass
+									}).html(ob.workItem.stateInfo+" %");
+
+									var progressBar = $('<div>').attr({
+										"class" : "miestone-progress-bar "+floatClass+" clearfix"
+									});
+
+									var progress = ob.workItem.stateInfo/10;
+									for (var i = 0; i < 10; i++) {
+										var progressGrid = $('<div>').attr({
+											"class" : "miestone-progress-grid float-left"
+										});
+										if (progress == 0) {
+											progressGrid.addClass('miestone-progress-grid-incomplete');
+										} else {
+											progress--;
+										}
+										progressBar.append(progressGrid);
+									}
+
+									progressBarCont.append(progressBar).append(progressBarTxt);
+									ob.stateInfoContainer.append(progressBarCont);
 								}
-
-								progressBarCont.append(progressBar).append(progressBarTxt);
-								ob.stateInfoContainer.append(progressBarCont);
-
 							}else
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
 							
@@ -1017,7 +1036,7 @@ function appendMilestoneItem(workflowItem, childList) {
 		floatClass = "float-left";
 	}
 	var wrapper = $('<div>').attr({
-		"class" : rightLeftClass + " " + progressClass,
+		"class" : rightLeftClass + " " + progressClass +" clearfix",
 		"id":"WF"+workflowItem.id
 	});
 	wrapper.attr("WFparent",true);
@@ -1069,7 +1088,7 @@ function appendMilestoneItem(workflowItem, childList) {
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
 			var childRow = $('<div>').attr({
-				"class" : rightLeftClass + "-text",
+				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id

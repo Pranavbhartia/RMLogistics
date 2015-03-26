@@ -6,104 +6,109 @@ import javax.persistence.*;
 
 import java.util.Date;
 
+
 /**
  * The persistent class for the loanmilestone database table.
  * 
  */
 @Entity
-@Table(name = "loanmilestone")
-@NamedQuery(name = "LoanMilestone.findAll", query = "SELECT l FROM LoanMilestone l")
-public class LoanMilestone implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private int id;
-	private byte[] comments;
-	private Date createdDate;
-	private Date endDate;
-	private Date startDate;
-	private String status;
-	private LoanMilestoneMaster loanMilestoneMaster;
-	private Loan loan;
+@Table ( name = "loanmilestone")
+@NamedQuery ( name = "LoanMilestone.findAll", query = "SELECT l FROM LoanMilestone l")
+public class LoanMilestone implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+    private int id;
+    private byte[] comments;
+    private Date statusUpdateTime;
+    private String status;
+    private LoanMilestoneMaster loanMilestoneMaster;
+    private Loan loan;
 
-	public LoanMilestone() {
-	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
-		return this.id;
-	}
+    public LoanMilestone()
+    {}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
-	@Lob
-	public byte[] getComments() {
-		return this.comments;
-	}
+    @Id
+    @GeneratedValue ( strategy = GenerationType.IDENTITY)
+    public int getId()
+    {
+        return this.id;
+    }
 
-	public void setComments(byte[] comments) {
-		this.comments = comments;
-	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date")
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+    public void setId( int id )
+    {
+        this.id = id;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "end_date")
-	public Date getEndDate() {
-		return this.endDate;
-	}
+    @Lob
+    public byte[] getComments()
+    {
+        return this.comments;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "start_date")
-	public Date getStartDate() {
-		return this.startDate;
-	}
+    public void setComments( byte[] comments )
+    {
+        this.comments = comments;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
 
-	public String getStatus() {
-		return this.status;
-	}
+    public String getStatus()
+    {
+        return this.status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
-	// bi-directional many-to-one association to LoanMilestoneMaster
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "milestone")
-	public LoanMilestoneMaster getLoanMilestoneMaster() {
-		return loanMilestoneMaster;
-	}
+    public void setStatus( String status )
+    {
+        this.status = status;
+    }
 
-	public void setLoanMilestoneMaster(LoanMilestoneMaster loanMilestoneMaster) {
-		this.loanMilestoneMaster = loanMilestoneMaster;
-	}
 
-	// bi-directional many-to-one association to Loan
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan")
-	public Loan getLoan() {
-		return loan;
-	}
+    // bi-directional many-to-one association to LoanMilestoneMaster
+    @ManyToOne ( fetch = FetchType.LAZY)
+    @JoinColumn ( name = "milestone")
+    public LoanMilestoneMaster getLoanMilestoneMaster()
+    {
+        return loanMilestoneMaster;
+    }
 
-	public void setLoan(Loan loan) {
-		this.loan = loan;
-	}
+
+    public void setLoanMilestoneMaster( LoanMilestoneMaster loanMilestoneMaster )
+    {
+        this.loanMilestoneMaster = loanMilestoneMaster;
+    }
+
+
+    // bi-directional many-to-one association to Loan
+    @ManyToOne ( fetch = FetchType.LAZY)
+    @JoinColumn ( name = "loan")
+    public Loan getLoan()
+    {
+        return loan;
+    }
+
+
+    public void setLoan( Loan loan )
+    {
+        this.loan = loan;
+    }
+
+
+    @Temporal ( TemporalType.TIMESTAMP)
+    @Column ( name = "status_update_time")
+    public Date getStatusUpdateTime()
+    {
+        return statusUpdateTime;
+    }
+
+
+    public void setStatusUpdateTime( Date statusUpdateTime )
+    {
+        this.statusUpdateTime = statusUpdateTime;
+    }
 
 }
