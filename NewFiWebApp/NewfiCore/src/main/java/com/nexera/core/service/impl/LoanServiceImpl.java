@@ -86,6 +86,12 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getLoanByID(Integer loanID) {
 		return this.buildLoanVO((Loan) loanDao.getLoanWithDetails(loanID));
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Loan fetchLoanById(Integer loanID) {
+		return  (Loan) loanDao.load(Loan.class, loanID);
+	}
 
 	@Override
 	@Transactional()
@@ -703,6 +709,7 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.fetchByNeedId(needId);
 	}
 
+
 	@Override
 	@Transactional
 	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
@@ -744,11 +751,20 @@ public class LoanServiceImpl implements LoanService {
 		        .load(TitleCompanyMaster.class, titleCompany.getId())));
 	}
 
+
 	@Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
+
+	
+	@Transactional(readOnly=true)
+	public List<Loan> getAllActiveLoan(){
+		return loanDao.getAllActiveLoan();
+	}
+	
+
 
 	@Override
 	@Transactional(readOnly = true)
@@ -762,4 +778,5 @@ public class LoanServiceImpl implements LoanService {
 	public void saveLoanMilestone(LoanMilestone loanMilestone) {
 		loanMilestoneDao.saveOrUpdate(loanMilestone);
 	}
+
 }

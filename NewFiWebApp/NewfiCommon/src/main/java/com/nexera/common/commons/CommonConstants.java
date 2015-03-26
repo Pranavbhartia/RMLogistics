@@ -15,18 +15,18 @@ public interface CommonConstants {
 	/**
 	 * Default constants
 	 */
-	public static final int RANDOM_PASSWORD_LENGTH = 8;
+	public static final Integer RANDOM_PASSWORD_LENGTH = 8;
 	
 	/**
 	 * Entity status
 	 */
 	//Inactive status of a user
-	int STATUS_INACTIVE = 0;
+	public static final Integer STATUS_INACTIVE = 0;
 	
 	//Active status of a user
-	int STATUS_ACTIVE = 1;
+	public static final Integer STATUS_ACTIVE = 1;
 
-	int PAGINATION_SIZE = 5;
+	public static final Integer PAGINATION_SIZE = 5;
 
 	public static final String DEFAULT_FROM_ADDRESS = "newfiportal";
 
@@ -38,7 +38,7 @@ public interface CommonConstants {
 	/**
 	 * Braintree constants
 	 */
-	public static final int SANDBOX_MODE_TRUE = 1;
+	public static final Integer SANDBOX_MODE_TRUE = 1;
 	public static final String SUCCESS_KEY = "success";
 	public static final String MESSAGE_KEY = "message";
 	public static final int SUCCESS = 1;

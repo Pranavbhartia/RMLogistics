@@ -41,15 +41,9 @@ public interface LoanService {
 
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
-	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
-
-	LoansProgressStatusVO getLoansProgressForUser(Integer i);
-
-	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
-
-	Loan parseLoanModel(LoanVO loanVO);
-
-	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+	public List<Loan> getAllActiveLoan();
+	
+	public Loan fetchLoanById(Integer loanId);
 
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
 	        int loanManagerWFID);
@@ -89,4 +83,15 @@ public interface LoanService {
 	        LoanTypeMaster loanTypeMaster);
 
 	public void saveLoanMilestone(LoanMilestone loanMilestone);
+
+	LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO);
+
+	Loan parseLoanModel(LoanVO loanVO);
+
+	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+
+	LoansProgressStatusVO getLoansProgressForUser(Integer userId);
+
+	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
 }

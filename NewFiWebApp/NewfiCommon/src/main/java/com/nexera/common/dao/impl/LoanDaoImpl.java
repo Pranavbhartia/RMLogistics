@@ -509,4 +509,17 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return null;
 	}
 	
+	
+	@Override
+	public List<Loan> getAllActiveLoan() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		/*criteria.add(Restrictions.eq("user", user));
+		
+		 * criteria.createAlias("loanStatus", "ls");
+		 * criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
+		 */
+		return criteria.list();
+	}
+	
 }
