@@ -8,7 +8,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanMilestoneMasterDao;
-import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 
@@ -22,8 +21,8 @@ public class LoanMilestoneMasterDaoImpl extends GenericDaoImpl implements LoanMi
     public List<LoanMilestoneMaster> findByLoanType( LoanTypeMaster loanTypeMaster )
     {
         Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria( Loan.class );
-        criteria.add( Restrictions.eq( "loanType", loanTypeMaster ) );
+        Criteria criteria = session.createCriteria( LoanMilestoneMaster.class );
+        criteria.add( Restrictions.eq( "loanTypeMaster", loanTypeMaster ) );
 
         return criteria.list();
     }

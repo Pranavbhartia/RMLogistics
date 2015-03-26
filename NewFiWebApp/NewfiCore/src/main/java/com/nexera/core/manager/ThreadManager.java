@@ -200,10 +200,14 @@ public class ThreadManager implements Runnable {
 			LoanMilestoneMaster loanMilestoneMaster = null;
 
 			for (LoanMilestoneMaster loanMilestone : getLoanMilestoneMasterList()) {
-				if (loanMilestone.getId() == milestones.getMilestoneID()) {
-					LOGGER.debug("Found LoanMilestone Master ");
-					loanMilestoneMaster = loanMilestone;
-					break;
+				if (milestones != null) {
+					if (loanMilestone.getId() == milestones.getMilestoneID()) {
+						LOGGER.debug("Found LoanMilestone Master ");
+						loanMilestoneMaster = loanMilestone;
+						break;
+					}
+				} else {
+					LOGGER.error("Milestone mapping not found ");
 				}
 			}
 			LOGGER.debug("Saving/Updating LoanMileStone ");
