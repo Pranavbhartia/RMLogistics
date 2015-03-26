@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
@@ -173,6 +174,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
 		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		return loanVo;
 
 	}
