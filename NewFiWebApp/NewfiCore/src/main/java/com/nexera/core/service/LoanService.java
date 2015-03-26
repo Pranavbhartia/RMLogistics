@@ -3,6 +3,7 @@ package com.nexera.core.service;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -83,4 +84,5 @@ public interface LoanService {
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster);
+
 }
