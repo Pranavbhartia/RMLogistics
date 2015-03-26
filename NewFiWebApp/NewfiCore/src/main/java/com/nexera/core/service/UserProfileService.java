@@ -58,6 +58,8 @@ public interface UserProfileService {
 	public User findUserByMail(String userMailAddress);
 
 	public UserVO saveUser(UserVO userVO);
+	
+	public List<User> fetchAllActiveUsers();
 
 	public UserVO convertTOUserVO(User user);
 

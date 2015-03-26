@@ -106,17 +106,17 @@ public class LoanRestService {
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
-			boolean result = loanService.addToLoanTeam(loan, company,
+			company = loanService.addToLoanTeam(loan, company,
 			        userProfileService.buildUserVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
 
 			return responseVO;
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
-			boolean result = loanService.addToLoanTeam(loan, company,
+			company = loanService.addToLoanTeam(loan, company,
 			        userProfileService.buildUserVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(result);
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
 
 			return responseVO;
 		} else

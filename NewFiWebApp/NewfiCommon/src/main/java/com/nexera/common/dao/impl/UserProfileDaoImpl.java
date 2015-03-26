@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
@@ -398,5 +399,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 		
 		return null;
+	}
+
+	@Override
+	public List<User> fetchAllActiveUsers() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("status",true));
+		criteria.add(Restrictions.eq("isProfileComplete",false));
+		return criteria.list();
 	}
 }

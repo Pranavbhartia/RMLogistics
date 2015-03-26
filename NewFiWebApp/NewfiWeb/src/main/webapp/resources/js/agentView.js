@@ -121,8 +121,16 @@ function paintAgentDashboardRightPanel(data) {
 	});
 	var leftCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-txt float-left uppercase"
-	}).html("customer list");
+	});
 
+	if(newfiObject.user.userRole.id=="4")
+	{
+		leftCon.html("loan list");
+	}
+	else if(newfiObject.user.userRole.id!="4"){
+		leftCon.html("customer list");
+	}
+	
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
 	});
@@ -278,9 +286,12 @@ function appendCustomers(elementId, customers) {
 		 */
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
-
-		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
-
+		var phone_num = "NA";
+		if (customer.phone_no!=null){
+			 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
+		}
+		
+		
 		var col2 = $('<div>').attr({
 			"class" : "leads-container-tc2 float-left"
 		}).html(phone_num);
@@ -799,12 +810,15 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
 	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
 			userObject.customerDetail.dateOfBirth));
+	selectedUserDetail.setSenderDomain=userObject.setSenderDomain;
 
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
 		selectedUserDetail.photoUrl = "./resources/images/cus-icn.png";
+	
+	
 }
 
 // This method is called on click of the view loan details secondary nav
@@ -975,7 +989,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	appendLoanDetailsRow("File Email",  selectedUserDetail.loanID+""+loanDetails.setSenderDomain);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
@@ -1441,7 +1455,7 @@ function appendCustomerEditProfilePopUp() {
 
 	var header = $('<div>').attr({
 		"class" : "pop-up-header"
-	}).html("User Profile - "+selectedUserDetail.userID);
+	}).html(selectedUserDetail.firstName+"  "+selectedUserDetail.lastName);
 
 	var container = $('<div>').attr({
 		"id" : "cus-prof-container",
@@ -1630,7 +1644,7 @@ function appendCustomerProfUploadPhotoRow() {
 
 	var uploadPhotoFileName = $('<div>').attr({
 		"class" : "cust-prof-upload-filename"
-	}).html("Jane-Profile.png");
+	});
 
 
 
@@ -1653,6 +1667,7 @@ function appendCustomerProfUploadPhotoRow() {
          "id":"uploadID",
 		 "onclick":"uploadeImage()"
 	}).html("upload");
+
 
 	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
 			inputHiddenDiv);

@@ -1,5 +1,4 @@
 package com.nexera.core.service.impl;
-
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -24,12 +23,10 @@ import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.exception.DatabaseException;
-import com.nexera.common.exception.FatalException;
-import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
@@ -672,6 +669,12 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 
 		return internalUserDetailVO;
 	}
+
+	public List<User> fetchAllActiveUsers() {
+		return userProfileDao.fetchAllActiveUsers();
+	}
+
+
 	
 	private InternalUserRoleMasterVO convertTOInternalUserRoleMasterVO(InternalUserRoleMaster internalUserRoleMaster){
 		

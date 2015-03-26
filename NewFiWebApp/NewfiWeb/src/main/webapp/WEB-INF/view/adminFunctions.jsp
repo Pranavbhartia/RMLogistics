@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nexera</title>
+<title>Nexera | Admin</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/font-awesome.min.css" rel="stylesheet">
@@ -28,13 +28,12 @@
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
-	<script>
+<script>
 		var newfi = ${newfi};
 		$(document).ready(function() {
-		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			isAgentTypeDashboard = true;
-			paintAgentDashboard('myloans');
+			paintAdminDashboard();
 			retrieveState();
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();
@@ -43,13 +42,12 @@
 			});
 			
 			//TODO added for loan profile page		
-
-             if(newfi.user.photoImageUrl == "" || newfi.user.photoImageUrl == null){
+             if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
 			}else{
 				
-				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfi.user.photoImageUrl+")","background-size": "cover"});
+				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
 				 
 			}
 			bindDataToPN();
@@ -89,6 +87,7 @@
 			
     
 		});
-	</script>
+	</script>	
 </body>
+	
 </html>

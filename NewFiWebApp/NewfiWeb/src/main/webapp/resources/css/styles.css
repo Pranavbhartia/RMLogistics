@@ -2071,6 +2071,7 @@ a,a:hover,a:visited {
 	width: 90px;
 	height: 20px;
 	line-height: 20px;
+	margin-top:25px;
 	text-align: center;
 	color: #fff;
 	background-color: #F6914D;
@@ -2846,8 +2847,8 @@ input.calc-input {
 }
 
 .milestone-lc-header,.milestone-rc-header {
-	margin: 0 -5px 10px -5px;
-	height: 30px;
+	margin: 10px -5px 5px -5px;
+	min-height: 30px;
 }
 
 .milestone-lc-header-txt,.milestone-rc-header-txt {

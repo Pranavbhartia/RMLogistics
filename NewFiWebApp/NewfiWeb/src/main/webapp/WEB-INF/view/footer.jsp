@@ -24,6 +24,7 @@
 <script src="resources/js/customer-application.js"></script>
 <script src="resources/js/include/jquery-maskMoney.js"></script>
 <script src="resources/js/lockRate.js"></script>
+<script src="resources/js/adminModule.js"></script>
 <div id="dialog" >
 </div>
 
