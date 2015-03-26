@@ -34,17 +34,17 @@ LOCK TABLES `user` WRITE;
 
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES 
-(1, 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4',null, 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',4,NULL,NULL),
-(2,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL),
+(1, 'System', 'Admin', 'support@loan.newfi.com', 'support@loan.newfi.com', '1234', '1', '4',NULL, 'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',4,NULL,NULL,1),
+(2,'Test','Customer','test@gmail.com','test@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',1,NULL,NULL,0),
 
-(3,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1),
-(4,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(3,'Loan','Manager','loanmanager@gmail.com','loanmanager@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,1,0),
+(4,'Loan','Manager2','loanmanager2@gmail.com','loanmanager2@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0),
 
 (5,'Test','Customer','customer@gmail.com','customer@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',2,NULL,NULL),
-(6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2),
+(6,'Loan','Manager2','loanmanager3@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0),
 
-(7,'Test','Customer','raremile@gmail.com','raremile@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',3,NULL,NULL),
-(8,'Loan','Manager2','loanmanager4@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2);
+(7,'Test','Customer','raremile@gmail.com','raremile@gmail.com','1234',1,1,'6507729312','https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/completeimages.jpg',3,NULL,NULL,0),
+(8,'Loan','Manager2','loanmanager4@gmail.com','loanmanager4@gmail.com','1234',1,3,NULL,NULL,NULL,NULL,2,0);
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
