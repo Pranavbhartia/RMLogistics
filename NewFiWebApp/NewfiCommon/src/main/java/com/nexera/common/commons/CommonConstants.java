@@ -50,7 +50,7 @@ public interface CommonConstants {
 	public static final String SENDER_NAME = "NewFi Team";
 	
 	
-	public static final String SENDER_EMAIL_ID = "support@newfi.com";
+	public static final String SENDER_EMAIL_ID = "support@loan.newfi.com";
 	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>" + "Newfi Team";
 	
 	public static final String SENDER_DOMAIN="@loan.newfi.com";
