@@ -179,3 +179,5 @@ ALTER TABLE `newfi_schema`.`workflowitemmaster`
   DROP COLUMN `display_order`, 
   ADD COLUMN `display_order` INT(11) NOT NULL AFTER `clickable`;
 
+Alter TABLE newfi_schema.user
+  Add COLUMN is_profile_complete TINYINT(4) DEFAULT 0;

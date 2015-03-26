@@ -144,12 +144,12 @@
 			<list>
 				<ref bean="complexJobDetail" />
 				<ref bean="emailJobDetail" />
-				<ref bean="checkUserprofile"/>
+				<!-- <ref bean="checkUserprofile"/>
 				<ref bean="checkLockUserRate"/>
 				<ref bean="checkLoanApplicationFee"/>
 				<ref bean="checkIsBankConnected"/>
 				<ref bean="checkApplicationProgress"/>
-				<ref bean="checkNeededItems"/>
+				<ref bean="checkNeededItems"/> -->
 			</list>
 		</property>
 
@@ -157,12 +157,12 @@
 			<list>
 				<ref bean="cronTrigger" />
 				<ref bean="emailCronTrigger" />
-				<ref bean="userProfileCronTrigger" />
+				<!-- <ref bean="userProfileCronTrigger" />
 				<ref bean="lockUserRateCronTrigger" />
 				<ref bean="applicationFeesCronTrigger" />
 				<ref bean="isBankConnectedCronTrigger" />
 				<ref bean="applicationProgressCronTrigger" />
-				<ref bean="neededDocumentCronTrigger" />
+				<ref bean="neededDocumentCronTrigger" /> -->
 			</list>
 		</property>
 	</bean>
