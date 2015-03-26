@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
@@ -607,6 +610,11 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		userModel.setInternalUserDetail(this.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
 		return userModel;
+	}
+
+	@Override
+	public List<User> fetchAllActiveUsers() {
+		return userProfileDao.fetchAllActiveUsers();
 	}
 
 	
