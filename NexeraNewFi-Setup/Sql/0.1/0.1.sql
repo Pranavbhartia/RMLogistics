@@ -137,6 +137,7 @@ ADD CONSTRAINT `fk_wfItemEx_linkedToWfItemExec`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+  
  ALTER TABLE `newfi_schema`.`loandetails` 
 ADD COLUMN `home_owners_insurance` INT NULL AFTER `emi`,
 ADD COLUMN `title_company` INT NULL AFTER `home_owners_insurance`,
@@ -154,28 +155,22 @@ ADD CONSTRAINT `fk_loanLinkedToHomeOwnrIns`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
-ALTER TABLE `newfi_schema`.`loanappform`   
-  ADD COLUMN `loan_app_completion_status` INT(11) NULL AFTER `loan_manager_workflow`;‏
 
-
-‎ 
-ALTER TABLE `newfi_schema`.`loan`   
-  ADD COLUMN `rate_locked` TINYINT(1) DEFAULT 0  NULL AFTER `loan_manager_workflow`;‏
-
-
-‎ 
-ALTER TABLE `newfi_schema`.`loan`   
-  DROP COLUMN `bank_connected`, 
-  ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0  NULL AFTER `rate_locked`;
-
-ALTER TABLE `newfi_schema`.`loan` 
-   CHANGE `lqb_file_id` `lqb_file_id` varchar(255) NULL ;
 
 ALTER TABLE `newfi_schema`.`workflowitemexec`   
-  DROP COLUMN `display_order`, 
   ADD COLUMN `display_order` INT(11) NOT NULL AFTER `parent_workflow_item_master`;
 
 ALTER TABLE `newfi_schema`.`workflowitemmaster`   
-  DROP COLUMN `display_order`, 
   ADD COLUMN `display_order` INT(11) NOT NULL AFTER `clickable`;
 
+ALTER TABLE `newfi_schema`.`loan` 
+   CHANGE `lqb_file_id` `lqb_file_id` varchar(255) NULL;
+
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0;
+
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `rate_locked` TINYINT(1) DEFAULT 0;
+  
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `loan_app_completion_status` INT(11) NULL;
