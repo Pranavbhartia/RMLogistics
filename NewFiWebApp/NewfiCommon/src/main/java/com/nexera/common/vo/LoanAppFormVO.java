@@ -46,10 +46,9 @@ public class LoanAppFormVO implements Serializable {
 	private GovernmentQuestionVO governmentquestion;
 	private RefinanceVO refinancedetails;
 	private LoanTypeMasterVO loanType;
-	private LoanTypeMasterVO loanTypeMaster;
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
-	
+	private Integer loanAppFormCompletionStatus;
 
 
 	public int getId() {
@@ -282,6 +281,17 @@ public class LoanAppFormVO implements Serializable {
 
 	public void setRefinancedetails(RefinanceVO refinancedetails) {
 		this.refinancedetails = refinancedetails;
+	}
+	
+	
+
+	
+	public Integer getLoanAppFormCompletionStatus() {
+		return loanAppFormCompletionStatus;
+	}
+
+	public void setLoanAppFormCompletionStatus(Integer loanAppFormCompletionStatus) {
+		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
 	}
 
 	public LoanAppForm convertToEntity() {

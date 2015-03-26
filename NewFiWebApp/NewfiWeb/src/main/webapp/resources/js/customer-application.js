@@ -380,7 +380,7 @@ function paintCustomerApplicationPageStep1a() {
     		user.customerDetail = customerDetail;
     		
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    		
+    		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		//paintCustomerApplicationPageStep1b();
         	        	
@@ -1680,7 +1680,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 			callBack;
 		},
 		error:function(erro){
-			alert("success");
+			alert("error");
 		}
 		
 	});
