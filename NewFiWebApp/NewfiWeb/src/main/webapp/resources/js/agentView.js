@@ -55,7 +55,7 @@ function getAgentSecondaryLeftNavStep(step, text) {
 	return container.append(img).append(txt);
 }
 
-function paintAgentDashboard() {
+function paintAgentDashboard(loanType) {
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
@@ -63,7 +63,13 @@ function paintAgentDashboard() {
 		"class" : "rp-agent-dashboard float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
-	getDashboardRightPanel();
+	if(loanType == "workloans"){
+		getDashboardRightPanelForWorkLoans();
+	}else if(loanType == "myloans"){
+		getDashboardRightPanelForMyLoans();
+	}else if(loanType == "archivesloans"){
+		getDashboardRightPanelForArchivesLoans();
+	}
 	adjustAgentDashboardOnResize();
 	var contxt = getNotificationContext(0, newfiObject.user.id);
 	contxt.getLoanNotificationByType(function(ob) {
@@ -79,9 +85,32 @@ function paintAgentDashboardCallBack(data) {
 	adjustAgentDashboardOnResize();
 }
 
+//ajax call to get dashboard for my loans
 function getDashboardRightPanel() {
 	var userID = newfiObject.user.id;
-	ajaxRequest("rest/loan/retrieveDashboard/" + userID, "GET", "json", {},
+	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+
+//ajax call to get dashboard for work loans
+function getDashboardRightPanelForWorkLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForWorkLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+//ajax call to get dashboard for my loans
+function getDashboardRightPanelForMyLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET", "json", {},
+			paintAgentDashboardRightPanel);
+}
+
+//ajax call to get dashboard for archive loans
+function getDashboardRightPanelForArchivesLoans() {
+	var userID = newfiObject.user.id;
+	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET", "json", {},
 			paintAgentDashboardRightPanel);
 }
 
@@ -93,14 +122,6 @@ function paintAgentDashboardRightPanel(data) {
 	var leftCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-txt float-left uppercase"
 	}).html("customer list");
-	
-	if(newfiObject.user.userRole.id=="4")
-	{
-
-	leftCon.html("loan list");
-	}
-else if(newfiObject.user.userRole.id!="4"){
-	leftCon.html("customer list");}
 
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
@@ -258,14 +279,7 @@ function appendCustomers(elementId, customers) {
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
 
-		if (customer.phone_no!=null)
-		{
-	 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
-		}
-	else
-		{
-		phone_num = "NA";
-		}
+		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
 
 		var col2 = $('<div>').attr({
 			"class" : "leads-container-tc2 float-left"
@@ -785,12 +799,15 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
 	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
 			userObject.customerDetail.dateOfBirth));
+	selectedUserDetail.setSenderDomain=userObject.setSenderDomain;
 
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
 		selectedUserDetail.photoUrl = "./resources/images/cus-icn.png";
+	
+	
 }
 
 // This method is called on click of the view loan details secondary nav
@@ -961,7 +978,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	appendLoanDetailsRow("File Email",  selectedUserDetail.loanID+""+loanDetails.setSenderDomain);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
@@ -1048,11 +1065,15 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 			function() {
 				var name = $('#add-member-input').val();
 				console.log("Name entered : " + name);
-				// TODO search and display name
+				var code = $('#add-memeber-user-type').attr("code");
 				var roleID = $('#add-memeber-user-type').attr("roleID");
 				var internalRoleID = $('#add-memeber-user-type').attr(
 						"internalRoleID");
-				searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+				var isSearchUserRoleBased=$('#add-memeber-user-type').attr("userRoleBased");
+				if(isSearchUserRoleBased=="true")
+					searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+				else if(isSearchUserRoleBased=="false")
+					searchUsersBasedOnCode(name, code);
 			});
 
 	var downArrow = $('<div>').attr({
@@ -1109,10 +1130,8 @@ function paintUserNameDropDown(values) {
 			var value = values[i];
 			var dropDownRow = $('<div>').attr({
 				"class" : "add-member-dropdown-row",
-				"userID" : value.id,
-				"role" : value.userRole.label,
-				"roleDescription" : value.userRole.roleDescription
-			}).html(value.firstName + " " + value.lastName).on('click',
+				"userID" : value.id
+			}).html(value.firstName + " " + (value.lastName==undefined?"":value.lastName)).on('click',
 					function(event) {
 						event.stopImmediatePropagation();
 						var userID = $(this).attr("userID");
@@ -1120,7 +1139,12 @@ function paintUserNameDropDown(values) {
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
-						addUserToLoanTeam(userID, selectedUserDetail.loanID);
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(userID,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(userID,
+											selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
 		}
@@ -1186,16 +1210,39 @@ function appendUserTypeDropDown() {
 		"internalRoleID" : 0,
 		"roleCd" : "Realtor",
 		"label" : "Realtor",
-		"roleDescription" : "Realtor"
+		"roleDescription" : "Realtor",
+		"userRoleBased" : "true"
 	} ];
 
+	if(newfiObject.user.userRole.roleCd=="INTERNAL")
 	for (i in newfiObject.internalUserRoleMasters) {
 		var internalRole = newfiObject.internalUserRoleMasters[i];
 		userRoles.push({
 			"id" : 3,
 			"internalRoleID" : internalRole.id,
 			"label" : internalRole.roleDescription,
+			"userRoleBased" : "true"
 		});
+	}
+	
+	// If the user is a borrower, allow to add a title company as well as home
+	// insurance option
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
+
+		var custOptions = [ {
+			"label" : "Title Company",
+			"roleDescription" : "TITLE COMPANY",
+			"code" : "TITLE_COMPANY",
+			"userRoleBased" : "false"
+		}, {
+			"label" : "Home Owner's Insurance",
+			"roleDescription" : "Home own ins",
+			"code" : "HOME_OWN_INS",
+			"userRoleBased" : "false"
+		} ];
+			for(j in custOptions)
+			userRoles.push(custOptions[j]);
+
 	}
 
 	for (var i = 0; i < userRoles.length; i++) {
@@ -1204,24 +1251,33 @@ function appendUserTypeDropDown() {
 			"class" : "add-member-dropdown-row",
 			"roleID" : userRole.id,
 			"internalRoleID" : userRole.internalRoleID,
-			"roleCD" : userRole.roleCD
+			"roleCD" : userRole.roleCD,
+			"code"	: userRole.code,
+			"userRoleBased":userRole.userRoleBased
 		}).html(userRole.label)
 				.on(
 						'click',
 						function(event) {
 							event.stopImmediatePropagation();
 							var roleIDCurr = $(this).attr("roleID");
+							var code = $(this).attr("code");
 							var roleIDPrev = $('#add-memeber-user-type').attr(
 									"roleID");
+							$('#add-memeber-user-type').attr("code",
+									code);
 							$('#add-memeber-user-type').attr("roleID",
 									roleIDCurr);
 							$('#add-memeber-user-type').attr("internalRoleID",
 									$(this).attr("internalRoleID"));
+							$('#add-memeber-user-type').attr("userRoleBased",
+									$(this).attr("userRoleBased"));
 							$('#add-memeber-user-type').html($(this).html());
 							hideUserTypeDropDown();
 						});
 		dropdownCont.append(dropDownRow);
 	}
+
+		
 
 	$('#add-memeber-user-type').append(dropdownCont);
 }
@@ -1388,7 +1444,7 @@ function appendCustomerEditProfilePopUp() {
 
 	var header = $('<div>').attr({
 		"class" : "pop-up-header"
-	}).html("User Profile - "+selectedUserDetail.userID);
+	}).html(selectedUserDetail.firstName+"  "+selectedUserDetail.lastName);
 
 	var container = $('<div>').attr({
 		"id" : "cus-prof-container",
@@ -1577,7 +1633,7 @@ function appendCustomerProfUploadPhotoRow() {
 
 	var uploadPhotoFileName = $('<div>').attr({
 		"class" : "cust-prof-upload-filename"
-	}).html("Jane-Profile.png");
+	});
 
 
 
@@ -1600,6 +1656,7 @@ function appendCustomerProfUploadPhotoRow() {
          "id":"uploadID",
 		 "onclick":"uploadeImage()"
 	}).html("upload");
+
 
 	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
 			inputHiddenDiv);
@@ -2651,6 +2708,40 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 
 	ajaxRequest(restURL, "GET", "json", {}, onReturnOfUserSearchToAddToLoanTeam,true);
 
+}
+
+function searchUsersBasedOnCode(name, code) {
+
+	var restURL="rest/loan/searchTitleCompanyOrHomeOwnIns?";
+	if(code=="TITLE_COMPANY")
+		restURL += "code="+code;
+	else if(code="HOME_OWN_INS")
+		restURL += "code="+code;
+	else return;
+	
+	restURL+="&companyName="+name;
+	
+	ajaxRequest(restURL, "GET", "json", {}, onReturnSearchBasedOnCodeToAddToLoanTeam,true);
+
+}
+
+function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
+	var result=data.resultObject;
+	if(!result || result.length<1)
+		showUserNameDropDown([]);
+	
+	var adapterArray=[];
+	for(i in result){
+		var value=result[i];
+		adapterArray.push({
+
+			"class" : "add-member-dropdown-row",
+			"userID" : value.id	,
+			"firstName":value.name
+		});
+	}
+	
+	showUserNameDropDown(adapterArray)
 }
 
 function onReturnOfUserSearchToAddToLoanTeam(data) {

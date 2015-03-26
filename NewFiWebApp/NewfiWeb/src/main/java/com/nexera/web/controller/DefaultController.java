@@ -24,8 +24,10 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -48,6 +50,8 @@ public class DefaultController implements InitializingBean {
 	
 	@Autowired
 	protected UserProfileService userProfileService;
+	@Autowired
+		private UserProfileDao userProfileDao;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DefaultController.class);
@@ -89,6 +93,37 @@ public class DefaultController implements InitializingBean {
 	 * @throws JSONException
 	 * @throws IOException
 	 */
+	public Map<String, Object> loadDefaultValuesForSM(
+				        HttpServletRequest request, Integer userID) {
+					JSONObject newfi = new JSONObject();
+					Gson gson = new Gson();
+					Locale locale = request.getLocale();
+					String suffix = locale.toString();
+					Map<String, String> localeText = languageMap.get(suffix);
+					Map<String, Object> model = new HashMap<String, Object>();
+					try {
+						if (localeText == null) {
+							localeText = loadLanguageMap(suffix);
+						}
+						User user = userProfileDao.findByUserId(userID);
+						UserVO userVO = userProfileService.buildUserVO(user);
+						List<InternalUserRoleMaster> internalUserRoleMasters = masterDataService
+						        .getInternalUserRoleMaster();
+						newfi.put("internalUserRoleMasters",
+						        gson.toJson(internalUserRoleMasters));
+			
+						gson = new Gson();
+						newfi.put("i18n", new JSONObject(localeText));
+						newfi.put("user", gson.toJson(userVO));
+			
+						model.put("newfi", newfi);
+						model.put("userVO", userVO);
+					} catch (Exception e) {
+						LOG.error("error in calling user mangement page" + e.getMessage());
+						throw new BaseRestException();
+					}
+					return model;
+				}
 	public User loadDefaultValuesForCustomer(Model model,
 	        HttpServletRequest req, User user) throws IOException {
 
