@@ -72,7 +72,7 @@ public abstract class NexeraWorkflowTask {
 		}
 	}
 	public void makeANote(int loanId,String message){
-//		messageServiceHelper.generateWorkflowMessage(loanId, message);
+		messageServiceHelper.generateWorkflowMessage(loanId, message,false);
 	}
 	
 }
