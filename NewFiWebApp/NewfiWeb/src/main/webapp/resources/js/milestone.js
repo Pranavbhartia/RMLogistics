@@ -253,6 +253,11 @@ var workFlowContext = {
 		if(cssMap[wfItemType] && cssMap[wfItemType][status])
 			return cssMap[wfItemType][status]
 		
+	},getItemToAppendTo: function(newLine,inline,workflowItem){
+		/*if(workflowItem.workflowItemType=="SYSTEM_EDU"){
+			return inline;
+		}*/
+		return newLine;
 	}
 };
 function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
@@ -261,7 +266,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		
 		mileStoneId : mileStoneId,
 		workItem : workItem,
-		
+		stateInfoContainer:undefined,
 		ajaxRequest : function(url, type, dataType, data, successCallBack) {
 			$.ajax({
 				url : url,
@@ -383,7 +388,15 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Closed On";
 				workItem.stateInfo = "Closed on.";
 						
+			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID = newfi.user.defaultLoanId;
 			}
+			txtRow1.bind("click", function(e) {
+				milestoneChildEventHandler(e)
+			});
+			ob.stateInfoContainer=txtRow1
+			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
 				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
@@ -397,19 +410,45 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						}
 						else
 						{
-							txtRow1.html(ob.workItem.stateInfo);
-							txtRow1.bind("click", function(e) {
-								milestoneChildEventHandler(e)
-							});
-							itemToAppendTo.append(txtRow1);
+							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
+								var progressBarCont = $('<div>').attr({
+									"class" : "clearfix"
+								});
+								var floatClass="float-right";
+								if(rightLeftClass.indexOf("rc")>=0){
+									floatClass="float-left";
+								}
+								var progressBarTxt = $('<div>').attr({
+									"class" : "miestone-progress-bar-txt "+floatClass
+								}).html(ob.workItem.stateInfo+" %");
+
+								var progressBar = $('<div>').attr({
+									"class" : "miestone-progress-bar "+floatClass+" clearfix"
+								});
+
+								var progress = ob.workItem.stateInfo/10;
+								for (var i = 0; i < 10; i++) {
+									var progressGrid = $('<div>').attr({
+										"class" : "miestone-progress-grid float-left"
+									});
+									if (progress == 0) {
+										progressGrid.addClass('miestone-progress-grid-incomplete');
+									} else {
+										progress--;
+									}
+									progressBar.append(progressGrid);
+								}
+
+								progressBarCont.append(progressBar).append(progressBarTxt);
+								ob.stateInfoContainer.append(progressBarCont);
+
+							}else
+								ob.stateInfoContainer.html(ob.workItem.stateInfo);
+							
 						}
 					});
 			}else{
-				txtRow1.html(ob.workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);
+				ob.stateInfoContainer.html(ob.workItem.stateInfo);
 			}	
 
 
@@ -1023,7 +1062,8 @@ function appendMilestoneItem(workflowItem, childList) {
 	header.append(headerTxt).append(headerIcn);
 
 	wrapper.append(rightBorder).append(header);
-	var WFContxt=appendInfoAction(rightLeftClass, wrapper, workflowItem);
+	var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,header,workflowItem);
+	var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, workflowItem);
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
@@ -1063,7 +1103,8 @@ function appendMilestoneItem(workflowItem, childList) {
 			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
-			var WFContxt=appendInfoAction(rightLeftClass, wrapper, childList[index]);
+			var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,childRow,childList[index]);
+			var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, childList[index]);
 			workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
 			
 		}
@@ -1076,7 +1117,7 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
 	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
-	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
+	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo);
 	
 	return mileStoneStepContext;
 }
