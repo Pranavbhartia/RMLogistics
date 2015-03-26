@@ -49,27 +49,19 @@ public interface LoanService
     
     public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
-
     LoanTeamListVO getLoanTeamListForLoan( LoanVO loan );
-
 
     LoansProgressStatusVO getLoansProgressForUser( Integer i );
 
-
     public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId );
-
 
     Loan parseLoanModel( LoanVO loanVO );
 
-
     LoanCustomerVO retrieveDashboard( UserVO userVO, LoanVO loanVO );
-
 
     public void saveWorkflowInfo( int loanID, int customerWorkflowID, int loanManagerWFID );
 
-
     public LoanVO findWorkflowInfoById( int loanID );
-
 
     public List<Loan> getAllLoans();
     //TODO added for loan rest service
@@ -77,10 +69,8 @@ public interface LoanService
 	
 	public Loan completeLoanModel(LoanVO loanVO);
 
-
 	public List<TitleCompanyMasterVO> findTitleCompanyByName(
 			TitleCompanyMasterVO titleCompany);
-
 
 	List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
 			HomeOwnersInsuranceMasterVO homeOwnInsVO);
@@ -88,4 +78,8 @@ public interface LoanService
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster) ;
+
+	public List<Loan> getAllActiveLoan();
+	
+	public Loan fetchLoanById(Integer loanId);
 }

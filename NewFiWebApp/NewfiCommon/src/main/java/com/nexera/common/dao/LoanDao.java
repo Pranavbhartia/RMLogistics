@@ -68,5 +68,7 @@ public interface LoanDao extends GenericDao {
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster);
+
+	public List<Loan> getAllActiveLoan();
 	
 }

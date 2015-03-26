@@ -282,6 +282,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				
 				checkVo.setUuid(latestRow.getUuidFileId());
 				checkVo.setFileName(latestRow.getFileName());
+				
+				if(serverFile.exists()){
+					serverFile.delete();
+				}
 			}
 
 		} catch (Exception e) {

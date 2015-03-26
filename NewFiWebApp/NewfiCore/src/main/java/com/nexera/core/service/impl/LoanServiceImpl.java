@@ -78,6 +78,12 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getLoanByID(Integer loanID) {
 		return this.buildLoanVO((Loan) loanDao.getLoanWithDetails(loanID));
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Loan fetchLoanById(Integer loanID) {
+		return  (Loan) loanDao.load(Loan.class, loanID);
+	}
 
 	@Override
 	@Transactional()
@@ -652,13 +658,21 @@ public class LoanServiceImpl implements LoanService {
 		
 		return companyMaster;
 	}
+	
 	@Transactional(readOnly = true)
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		return loanDao.fetchByNeedId(needId);
 	}
+	
 	@Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
+	
+	@Transactional(readOnly=true)
+	public List<Loan> getAllActiveLoan(){
+		return loanDao.getAllActiveLoan();
+	}
+	
 }

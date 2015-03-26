@@ -59,6 +59,8 @@ public class User implements Serializable, UserDetails {
 	private GrantedAuthority[] authorities;
 	private Locale userLocale;
 	private String minutesOffset;
+	private Boolean isProfileComplete;
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -319,6 +321,16 @@ public class User implements Serializable, UserDetails {
 
 	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
 		this.transactionDetails = transactionDetails;
+	}
+
+	@Column(name = "is_profile_complete", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsProfileComplete() {
+		return isProfileComplete;
+	}
+
+	public void setIsProfileComplete(Boolean isProfileComplete) {
+		this.isProfileComplete = isProfileComplete;
 	}
 
 }
