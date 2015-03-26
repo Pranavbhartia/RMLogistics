@@ -37,6 +37,9 @@ ALTER TABLE `newfi_schema`.`refinancedetails`
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 
 ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `ssn` VARCHAR(45) NULL AFTER `profile_completion_status`;
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
 ADD COLUMN `subscriptionsStatus` VARCHAR(20) NULL AFTER `ssn`;
 
 ALTER TABLE `newfi_schema`.`customerdetails` 
@@ -44,3 +47,30 @@ CHANGE COLUMN `subscriptionsStatus` `subscriptionsStatus` TINYINT(2) NULL DEFAUL
 
 ALTER TABLE `newfi_schema`.`customerdetails` 
 CHANGE COLUMN `subscriptionsStatus` `subscriptionsStatus` INT(11) NULL DEFAULT '0' ;
+
+ALTER TABLE `newfi_schema`.`loanappform` DROP COLUMN `employed`;
+ALTER TABLE `newfi_schema`.`loanappform` ADD COLUMN `isemployed` tinyint(4) DEFAULT NULL;
+ALTER TABLE `newfi_schema`.`loanappform` 
+  
+   ADD COLUMN `isspouseOnLoan` varchar(45) DEFAULT NULL,
+  ADD COLUMN `spouse_name` varchar(100) DEFAULT NULL,
+  ADD COLUMN `EmployedIncomePreTax` varchar(45) DEFAULT NULL,
+  ADD COLUMN  `EmployedAt` varchar(45) DEFAULT NULL,
+  ADD COLUMN `EmployedSince` varchar(45) DEFAULT NULL,
+  ADD COLUMN `ispensionOrRetirement` tinyint(4) DEFAULT NULL,
+  ADD COLUMN `monthlyPension` varchar(45) DEFAULT NULL,
+  ADD COLUMN `isselfEmployed` tinyint(4) DEFAULT NULL,
+  ADD COLUMN `selfEmployedIncome` varchar(45) DEFAULT NULL,
+  ADD COLUMN `isssIncomeOrDisability` tinyint(4) DEFAULT NULL,
+  ADD COLUMN `ssDisabilityIncome` varchar(45) DEFAULT NULL,
+  ADD COLUMN `gov_quest` int(11) DEFAULT NULL,
+  ADD COLUMN `ref_detail` int(11) DEFAULT NULL,
+  ADD INDEX `fk_loanAppFormLinkedToGovtQuest_idx` (`gov_quest`),
+  ADD INDEX `fk_loanAppFormLinkedToRefDetails_idx` (`ref_detail`),
+
+  ADD CONSTRAINT `fk_loanAppFormLinkedToGovtQuest` FOREIGN KEY (`gov_quest`) REFERENCES `governmentquestion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+
+  ADD CONSTRAINT `fk_loanAppFormLinkedToRefDetails` FOREIGN KEY (`ref_detail`) REFERENCES `refinancedetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+
