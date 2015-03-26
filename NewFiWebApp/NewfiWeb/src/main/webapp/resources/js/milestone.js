@@ -367,7 +367,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						
 			}
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;				
 				data.loanID = newfi.user.defaultLoanId;
 				callback = paintMilestoneTeamMemberTable;		
 			}
@@ -711,7 +712,7 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 	var addNewMember = $('<div>').attr({
 		"class" : "milestone-rc-text showAnchor",
 		"data-text" : workItem.workflowItemType,
-		"mileNotificationId":workItem.milestoneID
+		"mileNotificationId":workItem.id
 	}).html("Click here to add a Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});

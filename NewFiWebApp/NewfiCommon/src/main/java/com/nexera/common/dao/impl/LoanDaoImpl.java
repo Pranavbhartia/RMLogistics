@@ -19,6 +19,7 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -161,8 +162,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
-			        "Exception caught in getLoanAppForm() ",
-			        hibernateException);
+			        "Exception caught in getLoanAppForm() ", hibernateException);
 		}
 	}
 
@@ -205,35 +205,36 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        hibernateException);
 		}
 	}
-	
+
 	@Override
-    public List<Loan> retrieveLoanByProgressStatus(User parseUserModel , int loanProgressStatusId) {
+	public List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
+	        int loanProgressStatusId) {
 
-        try {
-            List<Loan> loanListForUser = new ArrayList<Loan>();
-            Session session = sessionFactory.getCurrentSession();
-            Criteria criteria = session.createCriteria(LoanTeam.class);
-            criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
-            List<LoanTeam> loanTeamList = criteria.list();
+		try {
+			List<Loan> loanListForUser = new ArrayList<Loan>();
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			List<LoanTeam> loanTeamList = criteria.list();
 
-            if (loanTeamList != null) {
-                for (LoanTeam loanTeam : loanTeamList) {
-                    Hibernate.initialize(loanTeam.getLoan());
-                    Loan loan = loanTeam.getLoan();
-                    if(loan.getLoanProgressStatus().getId() == loanProgressStatusId)
-                        loanListForUser.add(loan);
+			if (loanTeamList != null) {
+				for (LoanTeam loanTeam : loanTeamList) {
+					Hibernate.initialize(loanTeam.getLoan());
+					Loan loan = loanTeam.getLoan();
+					if (loan.getLoanProgressStatus().getId() == loanProgressStatusId)
+						loanListForUser.add(loan);
 
-                }
-            }
+				}
+			}
 
-            return loanListForUser;
-        } catch (HibernateException hibernateException) {
+			return loanListForUser;
+		} catch (HibernateException hibernateException) {
 
-            throw new DatabaseException(
-                    "Exception caught in retrieveLoanForDashboard() ",
-                    hibernateException);
-        }
-    }
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
+	}
 
 	@Override
 	public Loan retrieveLoanForDashboard(User parseUserModel, Loan loan) {
@@ -365,58 +366,117 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-    public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO) {
+	public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanStatusMaster.class);
 		criteria.add(Restrictions.eq("id", loanVO.getId()));
 		List<LoanStatusMaster> loanList = criteria.list();
-	    return loanList;
-    }
+		return loanList;
+	}
 
 	@Override
-    public List<LoanTypeMaster> getLoanTypeMater(
-            LoanTypeMasterVO loanTypeMaterVO) {
+	public List<LoanTypeMaster> getLoanTypeMater(
+	        LoanTypeMasterVO loanTypeMaterVO) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanTypeMaster.class);
 		criteria.add(Restrictions.eq("id", loanTypeMaterVO.getId()));
 		List<LoanTypeMaster> loanTypeList = criteria.list();
-	    return loanTypeList;
-    }
+		return loanTypeList;
+	}
 
 	@Override
 	public List<TitleCompanyMaster> findTitleCompanyByName(
-			TitleCompanyMaster titleCompany) {
+	        TitleCompanyMaster titleCompany) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session
-				.createQuery("FROM TitleCompanyMaster where lower(name) like '%"
-						+ titleCompany.getName() + "%'");
+		        .createQuery("FROM TitleCompanyMaster where lower(name) like '%"
+		                + titleCompany.getName() + "%'");
 		@SuppressWarnings("unchecked")
 		List<TitleCompanyMaster> companyList = query.list();
 		//
-		
+
 		return companyList;
 	}
-	
+
 	@Override
 	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
-			HomeOwnersInsuranceMaster insurance) {
+	        HomeOwnersInsuranceMaster insurance) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session
-				.createQuery("FROM HomeOwnersInsuranceMaster where lower(name) like '%"
-						+ insurance.getName() + "%'");
+		        .createQuery("FROM HomeOwnersInsuranceMaster where lower(name) like '%"
+		                + insurance.getName() + "%'");
 		List<HomeOwnersInsuranceMaster> companyList = query.list();
-	    return companyList;
+		return companyList;
 	}
-	
+
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanNeedsList.class);
 		criteria.createAlias("needsListMaster", "needType");
 		criteria.add(Restrictions.eq("needType.id", needId));
-		return (LoanNeedsList)criteria.uniqueResult();
+		return (LoanNeedsList) criteria.uniqueResult();
+	}
+
+	@Override
+	public HomeOwnersInsuranceMaster addHomeOwnInsCompany(
+	        HomeOwnersInsuranceMaster homeOwnInsMaster) {
+		this.save(homeOwnInsMaster);
+		return homeOwnInsMaster;
+	}
+
+	@Override
+	public TitleCompanyMaster addTitleCompany(
+	        TitleCompanyMaster titleCompanyMaster) {
+		this.save(titleCompanyMaster);
+		return titleCompanyMaster;
+	}
+
+	@Override
+	public boolean addToLoanTeam(Loan loan,
+	        HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy) {
+
+		Loan loanFromDB = (Loan) this.load(Loan.class, loan.getId());
+		if (loanFromDB == null)
+			return false;
+
+		Hibernate.initialize(loanFromDB.getLoanDetail());
+
+		LoanDetail loanDetail = loanFromDB.getLoanDetail();
+		if (loanDetail == null) {
+			loanDetail = new LoanDetail();
+			this.save(loanDetail);
+			this.sessionFactory.getCurrentSession().flush();
+			loanFromDB.setLoanDetail(loanDetail);
+		}
+		loanDetail.setHomeOwnersInsurance(homeOwnersInsurance);
+		this.update(loanDetail);
+		return true;
+	}
+
+	@Override
+	public boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
+	        User addedBy) {
+
+		Loan loanFromDB = (Loan) this.load(Loan.class, loan.getId());
+		if (loanFromDB == null)
+			return false;
+
+		Hibernate.initialize(loanFromDB.getLoanDetail());
+
+		LoanDetail loanDetail = loanFromDB.getLoanDetail();
+		if (loanDetail == null) {
+			loanDetail = new LoanDetail();
+			this.save(loanDetail);
+			this.sessionFactory.getCurrentSession().flush();
+			loanFromDB.setLoanDetail(loanDetail);
+		}
+		loanDetail.setTitleCompany(titleCompany);
+		this.update(loanDetail);
+
+		return true;
 	}
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster){

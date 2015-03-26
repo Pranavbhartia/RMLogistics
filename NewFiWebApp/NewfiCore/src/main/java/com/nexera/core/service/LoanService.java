@@ -16,76 +16,71 @@ import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 
+public interface LoanService {
 
-public interface LoanService
-{
+	public List<LoanVO> getLoansOfUser(UserVO user);
 
-    public List<LoanVO> getLoansOfUser( UserVO user );
+	public LoanVO getLoanByID(Integer loanID);
 
+	public boolean addToLoanTeam(LoanVO loan, UserVO user);
 
-    public LoanVO getLoanByID( Integer loanID );
+	public boolean removeFromLoanTeam(LoanVO loan, UserVO user);
 
+	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
-    public boolean addToLoanTeam( LoanVO loan, UserVO user );
+	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
 
+	public LoanVO getActiveLoanOfUser(UserVO user);
 
-    public boolean removeFromLoanTeam( LoanVO loan, UserVO user );
+	public LoanDashboardVO retrieveDashboard(UserVO user);
 
+	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO user);
 
-    public List<UserVO> retreiveLoanTeam( LoanVO loan );
+	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO user);
 
+	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
-    public List<LoanVO> retreiveLoansAsManager( UserVO loanManager );
+	LoanTeamListVO getLoanTeamListForLoan(LoanVO loan);
 
+	LoansProgressStatusVO getLoansProgressForUser(Integer i);
 
-    public LoanVO getActiveLoanOfUser( UserVO user );
+	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
+	Loan parseLoanModel(LoanVO loanVO);
 
-    public LoanDashboardVO retrieveDashboard( UserVO user );
-    
-    public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO user);
-    
-    public LoanDashboardVO retrieveDashboardForMyLoans(UserVO user);
-    
-    public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
+	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
 
+	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
+	        int loanManagerWFID);
 
-    LoanTeamListVO getLoanTeamListForLoan( LoanVO loan );
+	public LoanVO findWorkflowInfoById(int loanID);
 
+	public List<Loan> getAllLoans();
 
-    LoansProgressStatusVO getLoansProgressForUser( Integer i );
-
-
-    public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId );
-
-
-    Loan parseLoanModel( LoanVO loanVO );
-
-
-    LoanCustomerVO retrieveDashboard( UserVO userVO, LoanVO loanVO );
-
-
-    public void saveWorkflowInfo( int loanID, int customerWorkflowID, int loanManagerWFID );
-
-
-    public LoanVO findWorkflowInfoById( int loanID );
-
-
-    public List<Loan> getAllLoans();
-    //TODO added for loan rest service
+	// TODO added for loan rest service
 	public LoanVO createLoan(LoanVO loanVO);
-	
+
 	public Loan completeLoanModel(LoanVO loanVO);
 
-
 	public List<TitleCompanyMasterVO> findTitleCompanyByName(
-			TitleCompanyMasterVO titleCompany);
-
+	        TitleCompanyMasterVO titleCompany);
 
 	List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
-			HomeOwnersInsuranceMasterVO homeOwnInsVO);
-	
+	        HomeOwnersInsuranceMasterVO homeOwnInsVO);
+
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster) ;
+	public TitleCompanyMasterVO addTitleCompany(TitleCompanyMasterVO vo);
+
+	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
+	        HomeOwnersInsuranceMasterVO vo);
+
+	boolean addToLoanTeam(LoanVO loan, TitleCompanyMasterVO titleCompany,
+	        UserVO addedBy);
+
+	boolean addToLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
+
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+	        LoanMilestoneMaster loanMilestoneMaster);
 }

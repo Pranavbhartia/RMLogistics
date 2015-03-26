@@ -67,6 +67,18 @@ public interface LoanDao extends GenericDao {
 
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
+	public HomeOwnersInsuranceMaster addHomeOwnInsCompany(
+            HomeOwnersInsuranceMaster homeOwnInsMaster);
+
+	public TitleCompanyMaster addTitleCompany(
+            TitleCompanyMaster titleCompanyMaster);
+
+	boolean addToLoanTeam(Loan loan,
+            HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy);
+
+	boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
+            User addedBy);
+
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster);
 	
 }

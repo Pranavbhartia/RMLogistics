@@ -1136,7 +1136,12 @@ function paintUserNameDropDown(values) {
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
-						addUserToLoanTeam(userID, selectedUserDetail.loanID);
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(userID,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(userID,
+											selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
 		}
