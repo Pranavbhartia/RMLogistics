@@ -44,6 +44,7 @@ public class ApplicationFormRestService {
 			
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 
+			System.out.println(loaAppFormVO.toString());
 			
 			System.out.println("loaAppFormVO.getId()"+loaAppFormVO.getId());
 			System.out.println("loaAppFormVO.getUser().getId()"+loaAppFormVO.getUser().getId());
@@ -109,7 +110,9 @@ public class ApplicationFormRestService {
 			
 			System.out.println("Inside 4"+loaAppFormVO.getUser().getFirstName());
 			System.out.println("Inside 4.1"+loaAppFormVO.getUser().getCustomerDetail().getAddressCity());
+			
 			LoanAppForm loanAppForm = loanAppFormService.create(loaAppFormVO);
+			
 			System.out.println("loanAppForm.getId()"+loanAppForm.getId());
 			System.out.println("loanAppForm.getUser().getId()"+loanAppForm.getUser().getId());
 			System.out.println("loanAppForm.getUser().getCustomerDetail().getId()"+loanAppForm.getUser().getCustomerDetail().getId());

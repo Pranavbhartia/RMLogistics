@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
-import com.nexera.common.entity.HomeOwnersInsuranceMaster;
-import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
@@ -83,25 +81,47 @@ public class LoanRestService {
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO addToLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID") Integer userID) {
+	        @RequestParam(value = "userID",required=false) Integer userID,
+	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
+	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
-		UserVO user = new UserVO();
-		user.setId(userID);
-		boolean result = loanService.addToLoanTeam(loan, user);
-		if (result) {
-			user = userProfileService.loadInternalUser(userID);
-		}
-		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
-		editLoanTeamVO.setOperationResult(result);
-		editLoanTeamVO.setUserID(userID);
-		editLoanTeamVO.setLoanID(loanID);
-		editLoanTeamVO.setUser(user);
-		CommonResponseVO responseVO = RestUtil
-		        .wrapObjectForSuccess(editLoanTeamVO);
+		if (userID != null && userID > 0) {
+			UserVO user = new UserVO();
+			user.setId(userID);
+			boolean result = loanService.addToLoanTeam(loan, user);
+			if (result) {
+				user = userProfileService.loadInternalUser(userID);
+			}
+			EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+			editLoanTeamVO.setOperationResult(result);
+			editLoanTeamVO.setUserID(userID);
+			editLoanTeamVO.setLoanID(loanID);
+			editLoanTeamVO.setUser(user);
+			CommonResponseVO responseVO = RestUtil
+			        .wrapObjectForSuccess(editLoanTeamVO);
 
-		return responseVO;
+			return responseVO;
+		} else if (titleCompanyID != null && titleCompanyID > 0) {
+			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
+			company.setId(titleCompanyID);
+			company = loanService.addToLoanTeam(loan, company,
+			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
+
+			return responseVO;
+		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
+			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
+			company.setId(homeOwnInsCompanyID);
+			company = loanService.addToLoanTeam(loan, company,
+			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
+
+			return responseVO;
+		} else
+			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+
 	}
 
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)
@@ -147,42 +167,45 @@ public class LoanRestService {
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
-	
+
 	// TODO-move this to User profile rest service
-    @RequestMapping(value = "/retrieveDashboardForWorkLoans/{userID}")
-    public @ResponseBody CommonResponseVO retrieveDashboardForWorkingLoan(
-            @PathVariable Integer userID) {
-        UserVO user = new UserVO();
-        user.setId(userID);
+	@RequestMapping(value = "/retrieveDashboardForWorkLoans/{userID}")
+	public @ResponseBody CommonResponseVO retrieveDashboardForWorkingLoan(
+	        @PathVariable Integer userID) {
+		UserVO user = new UserVO();
+		user.setId(userID);
 
-        LoanDashboardVO responseVO = loanService.retrieveDashboardForWorkLoans(user);
+		LoanDashboardVO responseVO = loanService
+		        .retrieveDashboardForWorkLoans(user);
 
-        return RestUtil.wrapObjectForSuccess(responseVO);
-    }
-    
-    // TODO-move this to User profile rest service
-    @RequestMapping(value = "/retrieveDashboardForMyLoans/{userID}")
-    public @ResponseBody CommonResponseVO retrieveDashboardForMyLoan(
-            @PathVariable Integer userID) {
-        UserVO user = new UserVO();
-        user.setId(userID);
+		return RestUtil.wrapObjectForSuccess(responseVO);
+	}
 
-        LoanDashboardVO responseVO = loanService.retrieveDashboardForMyLoans(user);
+	// TODO-move this to User profile rest service
+	@RequestMapping(value = "/retrieveDashboardForMyLoans/{userID}")
+	public @ResponseBody CommonResponseVO retrieveDashboardForMyLoan(
+	        @PathVariable Integer userID) {
+		UserVO user = new UserVO();
+		user.setId(userID);
 
-        return RestUtil.wrapObjectForSuccess(responseVO);
-    }
-    
-    // TODO-move this to User profile rest service
-    @RequestMapping(value = "/retrieveDashboardForArchiveLoans/{userID}")
-    public @ResponseBody CommonResponseVO retrieveDashboardForArchiveLoans(
-            @PathVariable Integer userID) {
-        UserVO user = new UserVO();
-        user.setId(userID);
+		LoanDashboardVO responseVO = loanService
+		        .retrieveDashboardForMyLoans(user);
 
-        LoanDashboardVO responseVO = loanService.retrieveDashboardForArchiveLoans(user);
+		return RestUtil.wrapObjectForSuccess(responseVO);
+	}
 
-        return RestUtil.wrapObjectForSuccess(responseVO);
-    }
+	// TODO-move this to User profile rest service
+	@RequestMapping(value = "/retrieveDashboardForArchiveLoans/{userID}")
+	public @ResponseBody CommonResponseVO retrieveDashboardForArchiveLoans(
+	        @PathVariable Integer userID) {
+		UserVO user = new UserVO();
+		user.setId(userID);
+
+		LoanDashboardVO responseVO = loanService
+		        .retrieveDashboardForArchiveLoans(user);
+
+		return RestUtil.wrapObjectForSuccess(responseVO);
+	}
 
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/{loanID}/retrieveDashboard")
@@ -217,31 +240,55 @@ public class LoanRestService {
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
-	
+
 	@RequestMapping(value = "/searchTitleCompanyOrHomeOwnIns")
 	public @ResponseBody CommonResponseVO searchTitleCompany(
-			@RequestParam(required = false) String companyName,
-			@RequestParam(required = true) String code) {
+	        @RequestParam(required = false) String companyName,
+	        @RequestParam(required = true) String code) {
 
 		String homeInsCode = "HOME_OWN_INS";
 		String titleCompanyCode = "TITLE_COMPANY";
-		if(companyName==null || companyName.trim().isEmpty())
-				companyName="";
-		else companyName=companyName.toLowerCase();
-		
+		if (companyName == null || companyName.trim().isEmpty())
+			companyName = "";
+		else
+			companyName = companyName.toLowerCase();
+
 		if (homeInsCode.equals(code)) {
 			HomeOwnersInsuranceMasterVO ins = new HomeOwnersInsuranceMasterVO();
 			ins.setName(companyName);
 			List<HomeOwnersInsuranceMasterVO> companyList = loanService
-					.findHomeOwnInsByName(ins);
+			        .findHomeOwnInsByName(ins);
 			return RestUtil.wrapObjectForSuccess(companyList);
 		} else if (titleCompanyCode.equals(code)) {
 			TitleCompanyMasterVO titleCompany = new TitleCompanyMasterVO();
 			titleCompany.setName(companyName);
 			List<TitleCompanyMasterVO> companyList = loanService
-					.findTitleCompanyByName(titleCompany);
+			        .findTitleCompanyByName(titleCompany);
 			return RestUtil.wrapObjectForSuccess(companyList);
 		}
 		return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+	}
+
+	@RequestMapping(value = "/titleCompany", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO addTitleCompany(
+	        @RequestBody String titleCompanyStr) {
+
+		TitleCompanyMasterVO vo = new Gson().fromJson(titleCompanyStr,
+		        TitleCompanyMasterVO.class);
+
+		vo = loanService.addTitleCompany(vo);
+
+		return RestUtil.wrapObjectForSuccess(vo);
+	}
+
+	@RequestMapping(value = "/homeOwnersInsurance", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO addhomeOwnersInsurance(
+	        @RequestBody String homeOwnInsStr) {
+		HomeOwnersInsuranceMasterVO vo = new Gson().fromJson(homeOwnInsStr,
+		        HomeOwnersInsuranceMasterVO.class);
+
+		vo = loanService.addHomeOwnInsCompany(vo);
+
+		return RestUtil.wrapObjectForSuccess(vo);
 	}
 }

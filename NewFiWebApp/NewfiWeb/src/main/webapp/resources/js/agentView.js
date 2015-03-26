@@ -799,12 +799,15 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
 	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
 			userObject.customerDetail.dateOfBirth));
+	selectedUserDetail.setSenderDomain=userObject.setSenderDomain;
 
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
 		selectedUserDetail.photoUrl = "./resources/images/cus-icn.png";
+	
+	
 }
 
 // This method is called on click of the view loan details secondary nav
@@ -975,7 +978,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	appendLoanDetailsRow("File Email",  selectedUserDetail.loanID+""+loanDetails.setSenderDomain);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
@@ -1136,7 +1139,12 @@ function paintUserNameDropDown(values) {
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
-						addUserToLoanTeam(userID, selectedUserDetail.loanID);
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(userID,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(userID,
+											selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
 		}
@@ -1436,7 +1444,7 @@ function appendCustomerEditProfilePopUp() {
 
 	var header = $('<div>').attr({
 		"class" : "pop-up-header"
-	}).html("User Profile - "+selectedUserDetail.userID);
+	}).html(selectedUserDetail.firstName+"  "+selectedUserDetail.lastName);
 
 	var container = $('<div>').attr({
 		"id" : "cus-prof-container",
@@ -1625,7 +1633,7 @@ function appendCustomerProfUploadPhotoRow() {
 
 	var uploadPhotoFileName = $('<div>').attr({
 		"class" : "cust-prof-upload-filename"
-	}).html("Jane-Profile.png");
+	});
 
 
 
@@ -1648,6 +1656,7 @@ function appendCustomerProfUploadPhotoRow() {
          "id":"uploadID",
 		 "onclick":"uploadeImage()"
 	}).html("upload");
+
 
 	uploadPhotoRc.append(uploadPhotoFileName).append(uploadBtn).append(
 			inputHiddenDiv);

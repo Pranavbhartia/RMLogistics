@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.Loan;
 
 public class LoanVO implements Serializable {
@@ -32,6 +33,7 @@ public class LoanVO implements Serializable {
 	private List<UserVO> loanTeam;
 	private Boolean isRateLocked;
 	private Boolean isBankConnected;
+	private String setSenderDomain;
 
 	public Boolean getIsRateLocked() {
 		return isRateLocked;
@@ -261,5 +263,17 @@ public class LoanVO implements Serializable {
 		return loan;
 
 	}
+
+	public String getSetSenderDomain() {
+	    return setSenderDomain;
+    }
+
+	public void setSetSenderDomain(String setSenderDomain) {
+	    this.setSenderDomain = setSenderDomain;
+    }
+
+	
+
+	
 
 }

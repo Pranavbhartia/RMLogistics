@@ -3,7 +3,7 @@ package com.nexera.common.commons;
 public class LoadConstants
 {
 
-    //Constants Related to Status Fields 
+    //Constants Related to Status Fields Of LendinQB
 
     public static Integer LQB_STATUS_LEAD_NEW = 12;
     public static Integer LQB_STATUS_LEAD_CANCELED = 15;
@@ -56,6 +56,7 @@ public class LoadConstants
     public static Integer LQB_STATUS_LOAN_OTHER = 18;
     public static Integer LQB_STATUS_LOAN_WEB_CONSUMER = 14;
 
+
     //Constants Related to Date Time Fields 
     public static String LEAD_DATE_FIELD = "sLeadD";
     public static String LEAD_DATE_TIME = "sLeadDTime";
@@ -71,19 +72,19 @@ public class LoadConstants
     public static String REGISTERED_DATE_FIELD = "sSubmitD";
     public static String REGISTERED_TIME_FIELD = "sSubmitDTime";
     public static String PRE_PROCESSING_DATE_FIELD = "sPreProcessingD";
-    public static String PRE_PROCESSING_TIMEFIELD_FIELD = "sPreProcessingDTime";
+    public static String PRE_PROCESSING_TIME_FIELD_FIELD = "sPreProcessingDTime";
     public static String PROCESSING_DATE_FIELD = "sProcessingD";
     public static String PROCESSING_TIME_FIELD = "sProcessingDTime";
-    public static String DOCUEMNT_CHECK_DATE_FIELD = "sDocumentCheckD";
-    public static String DOCUEMNT_CHECK_TIME_FIELD = "sDocumentCheckDTime";
-    public static String DOCUEMNT_CHECK_FAILED_DATE_FIELD = "sDocumentCheckFailedD";
-    public static String DOCUEMNT_CHECK_FAILED_TIME_FIELD = "sDocumentCheckFailedDTime";
+    public static String DOCUMENT_CHECK_DATE_FIELD = "sDocumentCheckD";
+    public static String DOCUMENT_CHECK_TIME_FIELD = "sDocumentCheckDTime";
+    public static String DOCUMENT_CHECK_FAILED_DATE_FIELD = "sDocumentCheckFailedD";
+    public static String DOCUMENT_CHECK_FAILED_TIME_FIELD = "sDocumentCheckFailedDTime";
     public static String LOAN_SUBMITTED_DATE_FIELD = "sLoanSubmittedD";
     public static String LOAN_SUBMITTED_TIME_FIELD = "sLoanSubmittedDTime";
     public static String PRE_UNDER_WRITTING_DATE_FIELD = "sPreUnderwritingD";
     public static String PRE_UNDER_WRITTING_TIME_FIELD = "sPreUnderwritingDTime";
-    public static String IN_WRITTING_DATE_FIELD = "sUnderwritingD";
-    public static String IN_WRITTING_TIME_FIELD = "sUnderwritingDTime";
+    public static String IN_UNDER_WRITTING_DATE_FIELD = "sUnderwritingD";
+    public static String IN_UNDER_WRITTING_TIME_FIELD = "sUnderwritingDTime";
     public static String PRE_APPROVED_DATE_FIELD = "sPreApprovD";
     public static String PRE_APPROVED_TIME_FIELD = "sPreApprovDTime";
     public static String APPROVED_DATE_FIELD = "sApprovD";

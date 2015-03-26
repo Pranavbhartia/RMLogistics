@@ -1,5 +1,5 @@
 
-//var userObj = newfiObject.user;
+
 var appUserDetails = new Object();
 var user =  new Object();
 var customerDetail = new Object();
@@ -9,8 +9,14 @@ var refinancedetails = new Object();
 var loan = new Object();
 var loanType = new Object();
 
+if (sessionStorage.loanAppFormData) {
+	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
+}
+
 loan.id = 2;
 loanType.id=1;
+
+var applyLoanStatus = 0; 
 
 user.customerDetail = customerDetail;
 appUserDetails.user = user;
@@ -20,7 +26,6 @@ appUserDetails.refinancedetails = refinancedetails;
 appUserDetails.loan = loan;
 appUserDetails.loanType = loanType;
 
-var flag = 0;
 var applicationItemsList = [ {
 							    "text":"Home Information",
 	                            "onselect" : paintCustomerApplicationPageStep1a
@@ -63,11 +68,8 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 		"class" : "ce-lp-item clearfix",
 		"data-step" : stepNo,
 		"id" : "appProgressBaarId_" + stepNo
-	}).bind('click',{"option":itemTxt.onselect},function(event){
-		
-		event.data.option();
-	});;
-
+	});
+	
 	var leftIcon = $('<div>').attr({
 		"class" : "ce-lp-item-icon float-left",
 		"id" : "appStepNoId_" + stepNo
@@ -318,57 +320,11 @@ function getApplicationMultipleChoiceQues(question) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 
-/*function getApplicationYesNoQues(question) {
-    var container = $('<div>').attr({
-        "class": "app-ques-wrapper"
-    });
-
-    var quesTextCont = $('<div>').attr({
-        "class": "app-ques-text"
-    }).html(question.text);
-
-    var optionsContainer = $('<div>').attr({
-        "class": "app-options-cont",
-        "name": question.name
-    });
-
-    for (var i = 0; i < question.options.length; i++) {
-        var option = question.options[i];
-        var optionCont = $('<div>').attr({
-            "class": "app-option-choice",
-            "isSelected" : "false"
-        }).data({
-            value: option.value
-        }).html(option.text)
-        .on('click',function(){
-        	$(this).parent().find('.app-option-choice').attr("isSelected","false");
-        	$(this).attr("isSelected","true");
-        });
-
-        //TODO-add questions on select of option
-        //if (option.addQuestions != undefined && option.addQuestions.length > 0) {
-        	optionCont.data("addQuestions",option.addQuestions).on('click',function(event){
-        		if($(event.target).parent().data("subContainer")){
-        			var subContainer=$(event.target).parent().data("subContainer");
-        			subContainer.remove();
-        		}
-	        	if($(event.target).data("addQuestions")){	
-	        	container.append(getQuestionsContainer($(event.target).data("addQuestions"),$(event.target)));
-	        	}        	
-        	});
-            //var subQues = getApplicationQuestion(option.sub_question);
-       // }
-
-        optionsContainer.append(optionCont);
-    }
-
-    return container.append(quesTextCont).append(optionsContainer);
-}*/
-
 
 
 function paintCustomerApplicationPageStep1a() {
     
+	applyLoanStatus = 1;
 	appProgressBaar(1);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Residential Address";
@@ -423,22 +379,7 @@ function paintCustomerApplicationPageStep1a() {
 
     		user.customerDetail = customerDetail;
     		
-    		//alert(JSON.stringify(appUserDetails));
-    		// save the detials in the customer details table,loan app form, propertydetails master,govemenrtQuestion,RefienceDetials
-    		/*$.ajax({
-    			url:"rest/application/applyloan",
-    			type:"POST",
-    			data:{"appFormData" : JSON.stringify(appUserDetails)},
-    			datatype : "application/json",
-    			success:function(data){
-    				alert("success");
-    				
-    			},
-    			error:function(erro){
-    				alert("success");
-    			}
-    			
-    		});*/
+    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		//paintCustomerApplicationPageStep1b();
@@ -544,8 +485,8 @@ function paintCustomerApplicationPageStep1b() {
         	  	
         	appUserDetails.propertyTypeMaster = propertyTypeMaster;
         	
-        	//alert(JSON.stringify(appUserDetails));
-        	 saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
+        	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+        	saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
         	
     		
     		//paintCustomerApplicationPageStep2();
@@ -641,6 +582,8 @@ function getQuestionContext(question,parentContainer){
 }
 var quesContxts=[];
 function paintCustomerApplicationPageStep2() {
+	
+	applyLoanStatus =2;
 	appProgressBaar(2); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
@@ -693,23 +636,43 @@ function paintCustomerApplicationPageStep2() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
         
-    	appUserDetails.maritalStatus = quesContxts[0].value;
+    	maritalStatus = quesContxts[0].value;
     	
-    	if(quesContxts[0].value !="" && quesContxts[0].value !=undefined ){
+    	appUserDetails.maritalStatus =  maritalStatus;
     	
-	    	if( quesContxts[0].childContexts.Yes !=  undefined){
-	    		if( quesContxts[0].childContexts.Yes[0].value =="Yes") 
-	    		appUserDetails.isSouseOnLoan =true;
-	    	}else{
-	    		appUserDetails.isSpouseOnLoan  = false;
-	    		appUserDetails.spouseName  = "false";
-	    	}
+    	if(maritalStatus !="" && maritalStatus !=undefined ){
+    	
+    		 if(maritalStatus == "Yes"){
+    			 
+    			 if( quesContxts[0].childContexts.Yes !=  undefined){
+    		    		
+    		    		isSouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
+    		    		if( isSouseOnLoan =="Yes"){ 
+    		    			appUserDetails.isSouseOnLoan =true;
+    		    		}else{
+    		    			appUserDetails.isSouseOnLoan =false;
+    		    			appUserDetails.spouseName  = "false";
+    		    		}
+    		     }else{
+    		    	 showToastMessage("Please give the answers of the questions");
+    		    	 return false;
+    		     }
+    			 
+    		 }else{
+    			 appUserDetails.isSouseOnLoan =false;
+	    		 appUserDetails.spouseName  = "false";
+    		 }
+	    	
+	    	
+	    	// this is the condition when spouseName is in the loan
 	    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
 	    	 
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    	}else{
-	    		appUserDetails.spouseName  = false;
+	    		appUserDetails.spouseName  = "false";
 	    	}
+	    	
+	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
 	    	
     	}else{
@@ -799,6 +762,7 @@ function getContextApplicationTextQues(contxt) {
 
 function paintMyIncome() {
 
+	applyLoanStatus = 3;
 	appProgressBaar(3);
 	var quesTxt = "Select all that apply";
 	var options = [ {
@@ -1002,6 +966,7 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 	}, function(event) {
 		var key = event.data.name;
 		//appUserDetails[key] = $('input[name="' + key + '"]').val();
+		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 		event.data.clickEvent();
 	});
 
@@ -1081,7 +1046,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				appUserDetails.isssIncomeOrDisability=true;
 				appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
 				
-				sessionStorage.refinaceData = JSON.stringify(appUserDetails);
+				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 				
 				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
 				//paintCustomerApplicationPageStep4a();
@@ -1096,6 +1061,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 var quesDeclarationContxts =[];
 function paintCustomerApplicationPageStep4a() {
    
+	applyLoanStatus = 4;
 	quesDeclarationContxts = [];
 	appProgressBaar(4);
 	$('#app-right-panel').html('');
@@ -1111,7 +1077,7 @@ function paintCustomerApplicationPageStep4a() {
         name: "isOutstandingJudgments",
         options: [{
             text: "Yes",
-            value: "yes"
+            value: "Yes"
         }, {
             text: "No",
             value: "No"
@@ -1342,20 +1308,76 @@ function paintCustomerApplicationPageStep4a() {
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
     	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
     	 
-    	 governmentquestion.isOutstandingJudgments = isOutstandingJudgments;
-    	 governmentquestion.isBankrupt = isBankrupt;
-    	 governmentquestion.isPropertyForeclosed = isPropertyForeclosed;
     	 
-    	 governmentquestion.isLawsuit= isLawsuit;
-    	 governmentquestion.isObligatedLoan= isObligatedLoan;
-    	 governmentquestion.isFederalDebt = isFederalDebt;
-    	 governmentquestion.isObligatedToPayAlimony = isObligatedToPayAlimony;
+    	 if( isOutstandingJudgments =="Yes"){ 
+    		 governmentquestion.isOutstandingJudgments = true;
+ 		 }else{
+ 			governmentquestion.isOutstandingJudgments = false;
+ 		 }
     	 
-    	 governmentquestion.isEndorser= isEndorser;
-    	 governmentquestion.isUSCitizen= isUSCitizen;
-    	 governmentquestion.isOccupyPrimaryResidence = isOccupyPrimaryResidence;
-    	 governmentquestion.isOwnershipInterestInProperty = isOwnershipInterestInProperty;
+    	 if( isBankrupt =="Yes"){ 
+    		 governmentquestion.isBankrupt = true;
+ 		 }else{
+ 			governmentquestion.isBankrupt = false;
+ 		 }
     	 
+    	 if( isBankrupt =="Yes"){ 
+    		 governmentquestion.isPropertyForeclosed = true;
+ 		 }else{
+ 			governmentquestion.isPropertyForeclosed = false;
+ 		 }
+    	 
+    	 if( isBankrupt =="Yes"){ 
+    		 governmentquestion.isLawsuit = true;
+ 		 }else{
+ 			governmentquestion.isLawsuit = false;
+ 		 }
+
+    	 if( isObligatedLoan =="Yes"){ 
+    		 governmentquestion.isObligatedLoan = true;
+ 		 }else{
+ 			governmentquestion.isObligatedLoan = false;
+ 		 }
+    	 
+    	 if( isFederalDebt =="Yes"){ 
+    		 governmentquestion.isFederalDebt = true;
+ 		 }else{
+ 			governmentquestion.isFederalDebt = false;
+ 		 }
+
+    	 if( isObligatedToPayAlimony =="Yes"){ 
+    		 governmentquestion.isObligatedToPayAlimony = true;
+ 		 }else{
+ 			governmentquestion.isObligatedToPayAlimony = false;
+ 		 }
+    	 
+    	 if( isEndorser =="Yes"){ 
+    		 governmentquestion.isEndorser = true;
+ 		 }else{
+ 			governmentquestion.isEndorser = false;
+ 		 }
+
+    	 if( isUSCitizen =="Yes"){ 
+    		 governmentquestion.isUSCitizen = true;
+ 		 }else{
+ 			governmentquestion.isUSCitizen = false;
+ 		 }
+
+    	 if( isOccupyPrimaryResidence =="Yes"){ 
+    		 governmentquestion.isOccupyPrimaryResidence = true;
+ 		 }else{
+ 			governmentquestion.isOccupyPrimaryResidence = false;
+ 		 }
+    	 
+    	 if( isOwnershipInterestInProperty =="Yes"){ 
+    		 governmentquestion.isOwnershipInterestInProperty = true;
+ 		 }else{
+ 			governmentquestion.isOwnershipInterestInProperty = false;
+ 		 }
+    	 
+
+    	 
+    	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
     	
     	//paintCustomerApplicationPageStep4b();
@@ -1451,6 +1473,7 @@ function paintCustomerApplicationPageStep4b(){
 	    	governmentquestion.race = race;
 	    	governmentquestion.sex =sex;
 	    	
+	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
 	    	//paintCustomerApplicationPageStep5();
 	    });
@@ -1504,7 +1527,7 @@ function paintCustomerApplicationPageStep5() {
     		customerDetail.ssn = ssn;
     		customerDetail.secPhoneNumber = secPhoneNumber;
     		//applicationFormSumbit();
-    		
+    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit());
     		
     	}else{

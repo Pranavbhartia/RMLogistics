@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -43,4 +44,16 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 */
 		//return this.buildLoanAppFormVO(loanAppForm);
 	}
+	@Override
+	@Transactional
+	public LoanAppForm findByLoan(Loan loan){
+		return loanAppFormDao.findByLoan(loan);
+	}
+
+	@Override
+	@Transactional
+	public LoanAppForm findByuserID(int userid) {
+		return loanAppFormDao.findByuserID(userid);
+	}
+	
 }

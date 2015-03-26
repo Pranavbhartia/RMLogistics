@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.braintreegateway.test.VenmoSdk.Session;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanMilestoneDao;
+import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
@@ -50,6 +52,12 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private LoanMilestoneDao loanMilestoneDao;
+
+	@Autowired
+	private LoanMilestoneMasterDao loanMilestoneMasterDao;
 
 	@Autowired
 	private UserProfileService userProfileService;
@@ -172,6 +180,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
 		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		return loanVo;
 
 	}
@@ -239,48 +248,53 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
-	
+
 	@Override
-    @Transactional(readOnly = true)
-    public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO) {
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO) {
 
-        // Get new prospect and lead loans this user has access to.
-	    List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 1);
-	    loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 2) );
-        
-        LoanDashboardVO loanDashboardVO = this
-                .buildLoanDashboardVoFromLoanList(loanList);
+		// Get new prospect and lead loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), 1);
+		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), 2));
 
-        return loanDashboardVO;
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
 
-        // Get new and in progress loans this user has access to.
-        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 3);
-        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 4) );
-        LoanDashboardVO loanDashboardVO = this
-                .buildLoanDashboardVoFromLoanList(loanList);
+		return loanDashboardVO;
+	}
 
-        return loanDashboardVO;
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
-        // Get declined , withdrawn and closed loans this user has access to.
-        List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 5);
-        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 6) );
-        loanList.addAll( loanDao.retrieveLoanByProgressStatus(this.parseUserModel(userVO) , 7) );
-        LoanDashboardVO loanDashboardVO = this
-                .buildLoanDashboardVoFromLoanList(loanList);
+		// Get all loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
+		        .parseUserModel(userVO));
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
 
-        return loanDashboardVO;
-    }
-	
+		return loanDashboardVO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
+
+		// Get declined , withdrawn and closed loans this user has access to.
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), 5);
+		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), 6));
+		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), 7));
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO) {
@@ -359,8 +373,8 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
 			if (null != customerDetail.getDateOfBirth())
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime()
-				        );
+				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
+				        .getTime());
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
@@ -557,29 +571,33 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
+		if(userList!=null){
 		userList.add(loanVO.getUser());
 		for (UserVO userVO : userList) {
 			User user = userProfileService.parseUserModel(userVO);
 			loanDao.addToLoanTeam(loan, user, null);
 		}
-
+		}else{
+			
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);
+		}
 		return this.buildLoanVO(loan);
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<TitleCompanyMasterVO> findTitleCompanyByName(
-			TitleCompanyMasterVO titleCompanyVO) {
+	        TitleCompanyMasterVO titleCompanyVO) {
 		// TODO Auto-generated method stub
 		if (titleCompanyVO == null || titleCompanyVO.getName() == null)
 			return Collections.EMPTY_LIST;
 
 		return buildTitleCompanyMasterVO(loanDao
-				.findTitleCompanyByName(parseTitleCompanyMaster(titleCompanyVO)));
+		        .findTitleCompanyByName(parseTitleCompanyMaster(titleCompanyVO)));
 	}
 
 	public List<TitleCompanyMasterVO> buildTitleCompanyMasterVO(
-			List<TitleCompanyMaster> masterList) {
+	        List<TitleCompanyMaster> masterList) {
 		if (masterList == null)
 			return null;
 		List<TitleCompanyMasterVO> companyMasterVOs = new ArrayList<TitleCompanyMasterVO>();
@@ -590,43 +608,55 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	public TitleCompanyMasterVO buildTitleCompanyMasterVO(
-			TitleCompanyMaster master) {
+	        TitleCompanyMaster master) {
 		if (master == null)
 			return null;
 		TitleCompanyMasterVO companyMasterVO = new TitleCompanyMasterVO();
 		companyMasterVO.setId(master.getId());
 		companyMasterVO.setName(master.getName());
 		companyMasterVO.setEmailID(master.getEmailID());
+		companyMasterVO.setAddress(master.getAddress());
+		companyMasterVO.setAddedBy(userProfileService.buildUserVO(master
+		        .getAddedBy()));
+		companyMasterVO.setPhoneNumber(master.getPhoneNumber());
+		companyMasterVO.setPrimaryContact(master.getPrimaryContact());
+		companyMasterVO.setFax(master.getFax());
 
 		return companyMasterVO;
 
 	}
-	
-	public TitleCompanyMaster parseTitleCompanyMaster(TitleCompanyMasterVO vo){
-		if(vo==null) return null;
-		TitleCompanyMaster companyMaster=new TitleCompanyMaster();
+
+	public TitleCompanyMaster parseTitleCompanyMaster(TitleCompanyMasterVO vo) {
+		if (vo == null)
+			return null;
+		TitleCompanyMaster companyMaster = new TitleCompanyMaster();
 		companyMaster.setId(vo.getId());
 		companyMaster.setName(vo.getName());
 		companyMaster.setEmailID(vo.getEmailID());
-		
+		companyMaster.setAddress(vo.getAddress());
+		companyMaster.setAddedBy(userProfileService.parseUserModel(vo
+		        .getAddedBy()));
+		companyMaster.setPhoneNumber(vo.getPhoneNumber());
+		companyMaster.setPrimaryContact(vo.getPrimaryContact());
+		companyMaster.setFax(vo.getFax());
+
 		return companyMaster;
 	}
-	
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
-			HomeOwnersInsuranceMasterVO homeOwnInsVO) {
+	        HomeOwnersInsuranceMasterVO homeOwnInsVO) {
 		// TODO Auto-generated method stub
 		if (homeOwnInsVO == null || homeOwnInsVO.getName() == null)
 			return Collections.EMPTY_LIST;
 
 		return buildHomeOwnersInsuranceMasterVO(loanDao
-				.findHomeOwnInsByName(parseHomeOwnInsMaster(homeOwnInsVO)));
+		        .findHomeOwnInsByName(parseHomeOwnInsMaster(homeOwnInsVO)));
 	}
 
 	public List<HomeOwnersInsuranceMasterVO> buildHomeOwnersInsuranceMasterVO(
-			List<HomeOwnersInsuranceMaster> masterList) {
+	        List<HomeOwnersInsuranceMaster> masterList) {
 		if (masterList == null)
 			return null;
 		List<HomeOwnersInsuranceMasterVO> companyMasterVOs = new ArrayList<HomeOwnersInsuranceMasterVO>();
@@ -637,42 +667,116 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	public HomeOwnersInsuranceMasterVO buildHomeOwnersInsuranceMasterVO(
-			HomeOwnersInsuranceMaster master) {
+	        HomeOwnersInsuranceMaster master) {
 		if (master == null)
 			return null;
 		HomeOwnersInsuranceMasterVO companyMasterVO = new HomeOwnersInsuranceMasterVO();
 		companyMasterVO.setId(master.getId());
 		companyMasterVO.setName(master.getName());
 		companyMasterVO.setEmailID(master.getEmailID());
+		companyMasterVO.setAddress(master.getAddress());
+
+		companyMasterVO.setAddedBy(userProfileService.buildUserVO(master
+		        .getAddedBy()));
+		companyMasterVO.setPhoneNumber(master.getPhoneNumber());
+		companyMasterVO.setPrimaryContact(master.getPrimaryContact());
+		companyMasterVO.setFax(master.getFax());
 
 		return companyMasterVO;
 
 	}
-	
-	public HomeOwnersInsuranceMaster parseHomeOwnInsMaster(HomeOwnersInsuranceMasterVO vo){
-		if(vo==null) return null;
-		HomeOwnersInsuranceMaster companyMaster=new HomeOwnersInsuranceMaster();
+
+	public HomeOwnersInsuranceMaster parseHomeOwnInsMaster(
+	        HomeOwnersInsuranceMasterVO vo) {
+		if (vo == null)
+			return null;
+		HomeOwnersInsuranceMaster companyMaster = new HomeOwnersInsuranceMaster();
 		companyMaster.setId(vo.getId());
 		companyMaster.setName(vo.getName());
 		companyMaster.setEmailID(vo.getEmailID());
-		
+		companyMaster.setAddedBy(userProfileService.parseUserModel(vo
+		        .getAddedBy()));
+		companyMaster.setPhoneNumber(vo.getPhoneNumber());
+		companyMaster.setPrimaryContact(vo.getPrimaryContact());
+		companyMaster.setFax(vo.getFax());
+
 		return companyMaster;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		return loanDao.fetchByNeedId(needId);
 	}
-	
+
+
+	@Override
+	@Transactional
+	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
+	        HomeOwnersInsuranceMasterVO vo) {
+		return this.buildHomeOwnersInsuranceMasterVO(loanDao
+		        .addHomeOwnInsCompany(this.parseHomeOwnInsMaster(vo)));
+	}
+
+	@Override
+	@Transactional
+	public TitleCompanyMasterVO addTitleCompany(TitleCompanyMasterVO vo) {
+		return this.buildTitleCompanyMasterVO(loanDao.addTitleCompany(this
+		        .parseTitleCompanyMaster(vo)));
+	}
+
+	@Override
+	@Transactional
+	public HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy) {
+
+		loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		        this.parseHomeOwnInsMaster(homeOwnersInsurance),
+		        userProfileService.parseUserModel(addedBy));
+		return this
+		        .buildHomeOwnersInsuranceMasterVO((HomeOwnersInsuranceMaster) loanDao
+		                .load(HomeOwnersInsuranceMaster.class,
+		                        homeOwnersInsurance.getId()));
+	}
+
+	@Override
+	@Transactional
+	public TitleCompanyMasterVO addToLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany, UserVO addedBy) {
+
+		loanDao.addToLoanTeam(this.parseLoanModel(loan),
+		        this.parseTitleCompanyMaster(titleCompany),
+		        userProfileService.parseUserModel(addedBy));
+		return this.buildTitleCompanyMasterVO(((TitleCompanyMaster) loanDao
+		        .load(TitleCompanyMaster.class, titleCompany.getId())));
+	}
+
+
 	@Transactional(readOnly = true)
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster) {
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+	        LoanMilestoneMaster loanMilestoneMaster) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
+
 	
 	@Transactional(readOnly=true)
 	public List<Loan> getAllActiveLoan(){
 		return loanDao.getAllActiveLoan();
 	}
 	
+
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
+	        LoanTypeMaster loanTypeMaster) {
+		return loanMilestoneMasterDao.findByLoanType(loanTypeMaster);
+	}
+
+	@Override
+	@Transactional
+	public void saveLoanMilestone(LoanMilestone loanMilestone) {
+		loanMilestoneDao.saveOrUpdate(loanMilestone);
+	}
+
 }
