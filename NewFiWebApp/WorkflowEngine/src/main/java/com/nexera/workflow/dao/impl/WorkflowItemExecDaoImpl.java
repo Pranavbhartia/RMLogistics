@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class WorkflowItemExecDaoImpl extends GenericDaoImpl implements WorkflowI
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria( WorkflowItemExec.class );
         criteria.add( Restrictions.eq( "parentWorkflowItemExec", workflowItemExecution ) );
+        criteria.addOrder(Order.asc("displayOrder"));
         return criteria.list();
     }
 

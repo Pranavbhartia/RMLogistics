@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -51,9 +53,21 @@ public class ShopperRegistrationController {
 		
 		
 		String emailId = userVO.getEmailId();
-		//String password = userVO.getPassword();
-		UserVO userVOObj=   userProfileService.saveUser(userVO);
 		
+		userVO.setUsername(userVO.getEmailId().split(":")[0]);
+		userVO.setEmailId(userVO.getEmailId().split(":")[0]);
+		//String password = userVO.getPassword();
+		//UserVO userVOObj=   userProfileService.saveUser(userVO);
+		UserVO userVOObj = null;
+		try {
+			 userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+        } catch (InvalidInputException e) {
+	       
+	        e.printStackTrace();
+        } catch (UndeliveredEmailException e) {
+	       
+	        e.printStackTrace();
+        }
 		authenticateUserAndSetSession(emailId, userVOObj.getPassword(),request);
 		
 		return "./home.do";

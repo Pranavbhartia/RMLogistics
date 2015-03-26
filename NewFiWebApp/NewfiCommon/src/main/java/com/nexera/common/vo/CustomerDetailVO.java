@@ -1,7 +1,6 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class CustomerDetailVO implements Serializable {
 	
@@ -15,6 +14,8 @@ public class CustomerDetailVO implements Serializable {
 	private String ssn;
 	private String secEmailId;
 	private String secPhoneNumber;
+	private Integer subscriptionsStatus;
+	
 	private UserVO user;
 	public int getId() {
 		return id;
@@ -78,6 +79,12 @@ public class CustomerDetailVO implements Serializable {
 	}
 	public void setSsn(String ssn) {
 		this.ssn = ssn;
+	}
+	public Integer getSubscriptionsStatus() {
+		return subscriptionsStatus;
+	}
+	public void setSubscriptionsStatus(Integer subscriptionsStatus) {
+		this.subscriptionsStatus = subscriptionsStatus;
 	}
 	
 

@@ -11,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.braintreegateway.test.VenmoSdk.Session;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanDetail;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
@@ -711,7 +712,8 @@ public class LoanServiceImpl implements LoanService {
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy) {
 
 		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
-		        this.parseHomeOwnInsMaster(homeOwnersInsurance), userProfileService.parseUserModel(addedBy));
+		        this.parseHomeOwnInsMaster(homeOwnersInsurance),
+		        userProfileService.parseUserModel(addedBy));
 	}
 
 	@Override
@@ -720,6 +722,13 @@ public class LoanServiceImpl implements LoanService {
 	        TitleCompanyMasterVO titleCompany, UserVO addedBy) {
 
 		return loanDao.addToLoanTeam(this.parseLoanModel(loan),
-		        this.parseTitleCompanyMaster(titleCompany), userProfileService.parseUserModel(addedBy));
+		        this.parseTitleCompanyMaster(titleCompany),
+		        userProfileService.parseUserModel(addedBy));
+	}
+
+	@Transactional(readOnly = true)
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+	        LoanMilestoneMaster loanMilestoneMaster) {
+		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
 }

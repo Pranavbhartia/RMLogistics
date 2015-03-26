@@ -3,9 +3,12 @@ package com.nexera.core.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.slf4j.Logger;
@@ -238,19 +241,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 	
 	@Override
-	public CheckUploadVO uploadFile(MultipartFile file , Integer userId , Integer loanId , Integer assignedBy){
+	public CheckUploadVO uploadFile(File file , String contentType , Integer userId , Integer loanId , Integer assignedBy){
 		String s3Path = null;
 		
-		LOG.info("File content type  : "+file.getContentType());
+		LOG.info("File content type  : "+contentType);
 		String localFilePath = null;
 		Boolean fileUpload = false;
 		CheckUploadVO checkVo = new CheckUploadVO();
 		try{
-			if(file.getContentType().equalsIgnoreCase("image/png") || file.getContentType().equalsIgnoreCase("image/jpeg") || file.getContentType().equalsIgnoreCase("image/tiff")){
+			if(contentType.equalsIgnoreCase("image/png") || contentType.equalsIgnoreCase("image/jpeg") || contentType.equalsIgnoreCase("image/tiff")){
 				LOG.info("Received an image.converting to PDF");
-				localFilePath = nexeraUtility.convertImageToPDF(file);
+				localFilePath = nexeraUtility.convertImageToPDF(file , contentType);
 				fileUpload = true;
-			}else if(file.getContentType().equalsIgnoreCase("application/pdf")){
+			}else if(contentType.equalsIgnoreCase("application/pdf")){
 				localFilePath = nexeraUtility.uploadFileToLocal(file);
 				fileUpload = true;
 			}
@@ -265,8 +268,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			
 		 }catch(Exception e){
 			 LOG.info(" Exception uploading s3 :  "+e.getMessage());
+			 return checkVo;
 		 }
-		 LOG.info("file.getOriginalFilename() : "+file.getOriginalFilename());
+		 LOG.info("file.getOriginalFilename() : "+file.getName());
 		 
 		 LOG.info("The s3 path is : "+s3Path);
 		 return checkVo;
@@ -279,11 +283,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public CheckUploadVO uploadFileByEmail(InputStream stream, Integer userId, Integer loanId , Integer assignedBy) throws IOException {
-		MultipartFile multipartFile = nexeraUtility.getMultipartFileFromInputStream(stream);
-		return  uploadFile(multipartFile, userId, loanId, assignedBy);
+	public CheckUploadVO uploadFileByEmail(InputStream stream, Integer userId, Integer loanId , Integer assignedBy) throws IOException, COSVisitorException {
+		File file  =  nexeraUtility.convertInputStreamToFile(stream);
+		CheckUploadVO checkUploadVO = null;
+		if(file!= null){
+			String contentType = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(file);
+			checkUploadVO =   uploadFile(file , contentType, userId, loanId, assignedBy);
+			return checkUploadVO;
+		}
 		
+		return checkUploadVO;
 	}
+
+	
 
 	
 }
