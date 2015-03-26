@@ -1,10 +1,8 @@
-﻿CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `newfi_schema`;
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
 -- Host: 127.0.0.1    Database: newfi_schema
 -- ------------------------------------------------------
--- Server version 5.6.22
+-- Server version	5.6.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -39,15 +37,6 @@ CREATE TABLE `appsetting` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `appsetting`
---
-
-LOCK TABLES `appsetting` WRITE;
-/*!40000 ALTER TABLE `appsetting` DISABLE KEYS */;
-/*!40000 ALTER TABLE `appsetting` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `auditlog`
 --
 
@@ -68,13 +57,39 @@ CREATE TABLE `auditlog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `auditlog`
+-- Table structure for table `batchjobexecution`
 --
 
-LOCK TABLES `auditlog` WRITE;
-/*!40000 ALTER TABLE `auditlog` DISABLE KEYS */;
-/*!40000 ALTER TABLE `auditlog` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `batchjobexecution`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `batchjobexecution` (
+  `id` int(11) NOT NULL,
+  `batchjob_id` int(11) DEFAULT NULL,
+  `date_last_run_starttime` datetime DEFAULT NULL,
+  `date_last_run_endtime` datetime DEFAULT NULL,
+  `comments` mediumtext,
+  PRIMARY KEY (`id`),
+  KEY `fk_batchjob_id_idx` (`batchjob_id`),
+  CONSTRAINT `fk_batchjob_id` FOREIGN KEY (`batchjob_id`) REFERENCES `batchjobmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `batchjobmaster`
+--
+
+DROP TABLE IF EXISTS `batchjobmaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `batchjobmaster` (
+  `id` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `customerdetails`
@@ -92,18 +107,11 @@ CREATE TABLE `customerdetails` (
   `sec_email_id` varchar(100) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `profile_completion_status` int(11) DEFAULT NULL,
+  `ssn` varchar(45) DEFAULT NULL,
+  `subscriptionsStatus` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customerdetails`
---
-
-LOCK TABLES `customerdetails` WRITE;
-/*!40000 ALTER TABLE `customerdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customerdetails` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `emailtemplate`
@@ -127,13 +135,54 @@ CREATE TABLE `emailtemplate` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `emailtemplate`
+-- Table structure for table `governmentquestion`
 --
 
-LOCK TABLES `emailtemplate` WRITE;
-/*!40000 ALTER TABLE `emailtemplate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `emailtemplate` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `governmentquestion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `governmentquestion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `isOutstandingJudgments` tinyint(4) DEFAULT NULL,
+  `isBankrupt` tinyint(4) DEFAULT NULL,
+  `isPropertyForeclosed` tinyint(4) DEFAULT NULL,
+  `isLawsuit` tinyint(4) DEFAULT NULL,
+  `isObligatedLoan` tinyint(4) DEFAULT NULL,
+  `isFederalDebt` tinyint(4) DEFAULT NULL,
+  `isObligatedToPayAlimony` tinyint(4) DEFAULT NULL,
+  `isEndorser` tinyint(4) DEFAULT NULL,
+  `isUSCitizen` tinyint(4) DEFAULT NULL,
+  `isOccupyPrimaryResidence` tinyint(4) DEFAULT NULL,
+  `isOwnershipInterestInProperty` tinyint(4) DEFAULT NULL,
+  `ethnicity` varchar(10) DEFAULT NULL,
+  `race` varchar(20) DEFAULT NULL,
+  `sex` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `homeownersinsurancemaster`
+--
+
+DROP TABLE IF EXISTS `homeownersinsurancemaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `homeownersinsurancemaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `fax` varchar(45) DEFAULT NULL,
+  `email_id` varchar(100) DEFAULT NULL,
+  `primary_contact` varchar(100) DEFAULT NULL,
+  `added_by_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_homeOwnersInsurancepAddedBy_idx` (`added_by_user`),
+  CONSTRAINT `fk_homeOwnersInsurancepAddedBy_idx` FOREIGN KEY (`added_by_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `internaluserdetails`
@@ -155,8 +204,6 @@ CREATE TABLE `internaluserdetails` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
-
 --
 -- Table structure for table `internaluserrolemaster`
 --
@@ -171,7 +218,6 @@ CREATE TABLE `internaluserrolemaster` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `job`
@@ -193,15 +239,6 @@ CREATE TABLE `job` (
   CONSTRAINT `fk_jobLinkedToJobMaster` FOREIGN KEY (`job`) REFERENCES `jobmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `job`
---
-
-LOCK TABLES `job` WRITE;
-/*!40000 ALTER TABLE `job` DISABLE KEYS */;
-/*!40000 ALTER TABLE `job` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `jobmaster`
@@ -228,15 +265,6 @@ CREATE TABLE `jobmaster` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `jobmaster`
---
-
-LOCK TABLES `jobmaster` WRITE;
-/*!40000 ALTER TABLE `jobmaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jobmaster` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loan`
 --
 
@@ -254,10 +282,14 @@ CREATE TABLE `loan` (
   `deleted` tinyint(4) DEFAULT '0',
   `property_type` int(11) DEFAULT NULL,
   `loan_email_id` varchar(100) DEFAULT NULL,
-  `lqb_file_id` int(11) DEFAULT NULL,
+  `lqb_file_id` varchar(255) DEFAULT NULL,
   `current_milestone` int(11) DEFAULT NULL,
   `loan_detail` int(11) DEFAULT NULL,
   `loan_progress_status_master` int(11) DEFAULT NULL,
+  `customer_workflow` int(11) DEFAULT NULL,
+  `loan_manager_workflow` int(11) DEFAULT NULL,
+  `bank_connected` tinyint(1) DEFAULT '0',
+  `rate_locked` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_loanMappedToUser_idx` (`user`),
   KEY `FK_loanMappedToType_idx` (`loan_type`),
@@ -266,16 +298,19 @@ CREATE TABLE `loan` (
   KEY `fk_loanMappedToMilestoneCurr_idx` (`current_milestone`),
   KEY `fk_loanMappedToLoanDetail_idx` (`loan_detail`),
   KEY `fk_Loan_MappedToLoanProgressStatus` (`loan_progress_status_master`),
+  KEY `fk_lnCustWorkflow_idx` (`customer_workflow`),
+  KEY `fk_lnLMWorkflow_idx` (`loan_manager_workflow`),
   CONSTRAINT `FK_loanMappedToStatus` FOREIGN KEY (`loan_status`) REFERENCES `loanstatusmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanMappedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_Loan_MappedToLoanProgressStatus` FOREIGN KEY (`loan_progress_status_master`) REFERENCES `loanprogressstatusmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_Loan_PropertyType1` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_lnCustWorkflow` FOREIGN KEY (`customer_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_lnLMWorkflow` FOREIGN KEY (`loan_manager_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `loanappform`
@@ -297,25 +332,47 @@ CREATE TABLE `loanappform` (
   `home_recently_sold` tinyint(4) DEFAULT NULL,
   `hoa_dues` tinyint(4) DEFAULT NULL,
   `receive_alimony_child_support` tinyint(4) DEFAULT NULL,
-  `employed` tinyint(4) DEFAULT NULL,
   `self_employed` tinyint(4) DEFAULT NULL,
   `ss_income_or_disability` tinyint(4) DEFAULT NULL,
   `pension_or_retirement` tinyint(4) DEFAULT NULL,
   `property_type` int(11) DEFAULT NULL,
   `loan_type` int(11) DEFAULT NULL,
+  `customer_workflow` int(11) DEFAULT NULL,
+  `loan_manager_workflow` int(11) DEFAULT NULL,
+  `loan_app_completion_status` int(11) DEFAULT NULL,
+  `isemployed` tinyint(4) DEFAULT NULL,
+  `isspouseOnLoan` varchar(45) DEFAULT NULL,
+  `spouse_name` varchar(100) DEFAULT NULL,
+  `EmployedIncomePreTax` varchar(45) DEFAULT NULL,
+  `EmployedAt` varchar(45) DEFAULT NULL,
+  `EmployedSince` varchar(45) DEFAULT NULL,
+  `ispensionOrRetirement` tinyint(4) DEFAULT NULL,
+  `monthlyPension` varchar(45) DEFAULT NULL,
+  `isselfEmployed` tinyint(4) DEFAULT NULL,
+  `selfEmployedIncome` varchar(45) DEFAULT NULL,
+  `isssIncomeOrDisability` tinyint(4) DEFAULT NULL,
+  `ssDisabilityIncome` varchar(45) DEFAULT NULL,
+  `gov_quest` int(11) DEFAULT NULL,
+  `ref_detail` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_loanAppFormLinkedToUser_idx` (`user`),
   KEY `fk_loanAppFormLinkedToPropertyType_idx` (`property_type`),
   KEY `fk_loanAppFormLinkedToLoanType_idx` (`loan_type`),
   KEY `fk_LoanAppForm_Loan1_idx` (`loan`),
+  KEY `fk_lnFrmCustWorkflow_idx` (`customer_workflow`),
+  KEY `fk_lnFrmLMWorkflow_idx` (`loan_manager_workflow`),
+  KEY `fk_loanAppFormLinkedToGovtQuest_idx` (`gov_quest`),
+  KEY `fk_loanAppFormLinkedToRefDetails_idx` (`ref_detail`),
   CONSTRAINT `fk_LoanAppForm_Loan1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_lnFrmCustWorkflow` FOREIGN KEY (`customer_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_lnFrmLMWorkflow` FOREIGN KEY (`loan_manager_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanAppFormLinkedToGovtQuest` FOREIGN KEY (`gov_quest`) REFERENCES `governmentquestion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToLoanType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToPropertyType` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanAppFormLinkedToRefDetails` FOREIGN KEY (`ref_detail`) REFERENCES `refinancedetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `loanapplicationfee`
@@ -344,15 +401,6 @@ CREATE TABLE `loanapplicationfee` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loanapplicationfee`
---
-
-LOCK TABLES `loanapplicationfee` WRITE;
-/*!40000 ALTER TABLE `loanapplicationfee` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanapplicationfee` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loanapplicationfeemaster`
 --
 
@@ -376,15 +424,6 @@ CREATE TABLE `loanapplicationfeemaster` (
   CONSTRAINT `fk_loanAppFeeMasterProperty` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `loanapplicationfeemaster`
---
-
-LOCK TABLES `loanapplicationfeemaster` WRITE;
-/*!40000 ALTER TABLE `loanapplicationfeemaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanapplicationfeemaster` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `loancommunication`
@@ -412,15 +451,6 @@ CREATE TABLE `loancommunication` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loancommunication`
---
-
-LOCK TABLES `loancommunication` WRITE;
-/*!40000 ALTER TABLE `loancommunication` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loancommunication` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loancommunicationrecepeint`
 --
 
@@ -442,15 +472,6 @@ CREATE TABLE `loancommunicationrecepeint` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loancommunicationrecepeint`
---
-
-LOCK TABLES `loancommunicationrecepeint` WRITE;
-/*!40000 ALTER TABLE `loancommunicationrecepeint` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loancommunicationrecepeint` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loandetails`
 --
 
@@ -463,18 +484,15 @@ CREATE TABLE `loandetails` (
   `rate` double DEFAULT NULL,
   `down_payment` double DEFAULT NULL,
   `emi` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `home_owners_insurance` int(11) DEFAULT NULL,
+  `title_company` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_loanLinkedToTitleComp_idx` (`title_company`),
+  KEY `fk_loanLinkedToHomeOwnrIns_idx` (`home_owners_insurance`),
+  CONSTRAINT `fk_loanLinkedToHomeOwnrIns` FOREIGN KEY (`home_owners_insurance`) REFERENCES `homeownersinsurancemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loanLinkedToTitleComp` FOREIGN KEY (`title_company`) REFERENCES `titlecompanymaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `loandetails`
---
-
-LOCK TABLES `loandetails` WRITE;
-/*!40000 ALTER TABLE `loandetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loandetails` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `loanmilestone`
@@ -488,10 +506,8 @@ CREATE TABLE `loanmilestone` (
   `loan` int(11) DEFAULT NULL,
   `milestone` int(11) DEFAULT NULL,
   `comments` longblob,
-  `created_date` datetime DEFAULT NULL,
-  `start_date` datetime DEFAULT NULL,
-  `end_date` datetime DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
+  `status_update_time` datetime DEFAULT NULL,
+  `status` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_LoanMileStone_LoanMileStoneMaster1_idx` (`milestone`),
   KEY `fk_LoanMileStone_Loan1_idx` (`loan`),
@@ -499,15 +515,6 @@ CREATE TABLE `loanmilestone` (
   CONSTRAINT `fk_LoanMileStone_LoanMileStoneMaster1` FOREIGN KEY (`milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `loanmilestone`
---
-
-LOCK TABLES `loanmilestone` WRITE;
-/*!40000 ALTER TABLE `loanmilestone` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanmilestone` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `loanmilestonemaster`
@@ -525,17 +532,8 @@ CREATE TABLE `loanmilestonemaster` (
   PRIMARY KEY (`id`),
   KEY `fk_loanMilestoneLinkedToLoanType_idx` (`loan_type`),
   CONSTRAINT `fk_loanMilestoneLinkedToLoanType` FOREIGN KEY (`loan_type`) REFERENCES `loantypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `loanmilestonemaster`
---
-
-LOCK TABLES `loanmilestonemaster` WRITE;
-/*!40000 ALTER TABLE `loanmilestonemaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanmilestonemaster` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `loanneedslist`
@@ -565,15 +563,6 @@ CREATE TABLE `loanneedslist` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loanneedslist`
---
-
-LOCK TABLES `loanneedslist` WRITE;
-/*!40000 ALTER TABLE `loanneedslist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanneedslist` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loannotification`
 --
 
@@ -588,7 +577,7 @@ CREATE TABLE `loannotification` (
   `created_for` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
-  `is_read` tinyint(4) DEFAULT 0,
+  `is_read` tinyint(4) DEFAULT '0',
   `remind_on` datetime DEFAULT NULL,
   `priority` varchar(45) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -606,15 +595,6 @@ CREATE TABLE `loannotification` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loannotification`
---
-
-LOCK TABLES `loannotification` WRITE;
-/*!40000 ALTER TABLE `loannotification` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loannotification` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loanprogressstatusmaster`
 --
 
@@ -627,8 +607,6 @@ CREATE TABLE `loanprogressstatusmaster` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `loanrate`
@@ -654,15 +632,6 @@ CREATE TABLE `loanrate` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loanrate`
---
-
-LOCK TABLES `loanrate` WRITE;
-/*!40000 ALTER TABLE `loanrate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loanrate` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loansetting`
 --
 
@@ -685,15 +654,6 @@ CREATE TABLE `loansetting` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `loansetting`
---
-
-LOCK TABLES `loansetting` WRITE;
-/*!40000 ALTER TABLE `loansetting` DISABLE KEYS */;
-/*!40000 ALTER TABLE `loansetting` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loanstatusmaster`
 --
 
@@ -711,8 +671,6 @@ CREATE TABLE `loanstatusmaster` (
   CONSTRAINT `FK_loanStatusModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `loanteam`
@@ -736,9 +694,8 @@ CREATE TABLE `loanteam` (
   CONSTRAINT `FK_loanFileTeamAddedBy` FOREIGN KEY (`assigned_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanFileTeamLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanTeamLinkedToMember` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `loantypemaster`
@@ -756,10 +713,8 @@ CREATE TABLE `loantypemaster` (
   PRIMARY KEY (`id`),
   KEY `FK_loanTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_loanTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `needslistmaster`
@@ -783,7 +738,6 @@ CREATE TABLE `needslistmaster` (
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `propertytypemaster`
 --
@@ -797,12 +751,17 @@ CREATE TABLE `propertytypemaster` (
   `description` varchar(45) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
+  `homeWorthToday` varchar(255) DEFAULT NULL,
+  `propertyInsuranceCost` varchar(255) DEFAULT NULL,
+  `propertyInsuranceProvider` varchar(255) DEFAULT NULL,
+  `propertyPurchaseYear` varchar(255) DEFAULT NULL,
+  `property_tax` varchar(255) DEFAULT NULL,
+  `residence_type_cd` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_propertyTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_propertyTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `realtordetails`
@@ -820,13 +779,68 @@ CREATE TABLE `realtordetails` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `realtordetails`
+-- Table structure for table `refinancedetails`
 --
 
-LOCK TABLES `realtordetails` WRITE;
-/*!40000 ALTER TABLE `realtordetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `realtordetails` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `refinancedetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refinancedetails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `refinanceOption` varchar(45) DEFAULT NULL,
+  `currentMortgageBalance` varchar(45) DEFAULT NULL,
+  `currentMortgagePayment` varchar(45) DEFAULT NULL,
+  `includeTaxes` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `titlecompanymaster`
+--
+
+DROP TABLE IF EXISTS `titlecompanymaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `titlecompanymaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `fax` varchar(45) DEFAULT NULL,
+  `email_id` varchar(100) DEFAULT NULL,
+  `primary_contact` varchar(100) DEFAULT NULL,
+  `added_by_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_titleCompAddedBy_idx` (`added_by_user`),
+  CONSTRAINT `fk_titleCompAddedBy` FOREIGN KEY (`added_by_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `transactiondetails`
+--
+
+DROP TABLE IF EXISTS `transactiondetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `transactiondetails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `amount` float NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int(11) NOT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `transaction_id` varchar(255) DEFAULT NULL,
+  `loan_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_3c115a1f0d3b4d1bb82da58aa2d` (`loan_id`),
+  KEY `FK_cfe9963c757248a99e415c433f0` (`user_id`),
+  CONSTRAINT `FK_3c115a1f0d3b4d1bb82da58aa2d` FOREIGN KEY (`loan_id`) REFERENCES `loan` (`id`),
+  CONSTRAINT `FK_cfe9963c757248a99e415c433f0` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `uicomponent`
@@ -844,15 +858,6 @@ CREATE TABLE `uicomponent` (
   CONSTRAINT `fk_AppCompParent` FOREIGN KEY (`parent_component`) REFERENCES `uicomponent` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `uicomponent`
---
-
-LOCK TABLES `uicomponent` WRITE;
-/*!40000 ALTER TABLE `uicomponent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `uicomponent` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `uicomponentpermission`
@@ -877,15 +882,6 @@ CREATE TABLE `uicomponentpermission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `uicomponentpermission`
---
-
-LOCK TABLES `uicomponentpermission` WRITE;
-/*!40000 ALTER TABLE `uicomponentpermission` DISABLE KEYS */;
-/*!40000 ALTER TABLE `uicomponentpermission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `uploadedfileslist`
 --
 
@@ -901,6 +897,10 @@ CREATE TABLE `uploadedfileslist` (
   `is_activate` tinyint(4) DEFAULT NULL,
   `loan` int(11) DEFAULT NULL,
   `file_name` varchar(50) DEFAULT NULL,
+  `s3thumbnail` varchar(250) DEFAULT NULL,
+  `assigned_by` tinyint(4) DEFAULT NULL,
+  `uuidfileid` varchar(100) DEFAULT NULL,
+  `totalpages` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
   KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
@@ -908,8 +908,6 @@ CREATE TABLE `uploadedfileslist` (
   CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=5461;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `user`
@@ -932,6 +930,7 @@ CREATE TABLE `user` (
   `customer_detail` int(11) DEFAULT NULL,
   `realtor_detail` int(11) DEFAULT NULL,
   `internal_user_detail` int(11) DEFAULT NULL,
+  `is_profile_complete` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_userMapedToRole_idx` (`user_role`),
   KEY `fk_userMappedToCustDetail_idx` (`customer_detail`),
@@ -941,10 +940,8 @@ CREATE TABLE `user` (
   CONSTRAINT `fk_userMappedToCustDetail` FOREIGN KEY (`customer_detail`) REFERENCES `customerdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToInternalUsrDetail` FOREIGN KEY (`internal_user_detail`) REFERENCES `internaluserdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToRealtorDetail` FOREIGN KEY (`realtor_detail`) REFERENCES `realtordetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 --
 -- Table structure for table `useremail`
@@ -974,15 +971,6 @@ CREATE TABLE `useremail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `useremail`
---
-
-LOCK TABLES `useremail` WRITE;
-/*!40000 ALTER TABLE `useremail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `useremail` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `useremploymenthistory`
 --
 
@@ -1008,15 +996,6 @@ CREATE TABLE `useremploymenthistory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `useremploymenthistory`
---
-
-LOCK TABLES `useremploymenthistory` WRITE;
-/*!40000 ALTER TABLE `useremploymenthistory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `useremploymenthistory` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `userrole`
 --
 
@@ -1037,8 +1016,6 @@ CREATE TABLE `userrole` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
-
 --
 -- Table structure for table `workflowexec`
 --
@@ -1049,7 +1026,7 @@ DROP TABLE IF EXISTS `workflowexec`;
 CREATE TABLE `workflowexec` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `workflow_master` int(11) DEFAULT NULL,
-  `status` varchar(550) DEFAULT NULL,
+  `status` enum('0','1','2','3') DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   `last_updated_time` datetime DEFAULT NULL,
@@ -1061,18 +1038,11 @@ CREATE TABLE `workflowexec` (
   PRIMARY KEY (`id`),
   KEY `fk_workflowExMappedToWf_idx` (`workflow_master`),
   KEY `fk_wfExCreatedBy_idx` (`created_by`),
+  KEY `FK_39cc50c2ddeb47b686090e6ab75` (`current_executing_item`),
+  CONSTRAINT `FK_39cc50c2ddeb47b686090e6ab75` FOREIGN KEY (`current_executing_item`) REFERENCES `workflowitemexec` (`id`),
   CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `workflowexec`
---
-
-LOCK TABLES `workflowexec` WRITE;
-/*!40000 ALTER TABLE `workflowexec` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowexec` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `workflowitemexec`
@@ -1091,22 +1061,22 @@ CREATE TABLE `workflowitemexec` (
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
+  `parent_workflow_itemexec` int(11) DEFAULT NULL,
+  `params` text,
+  `clickable` tinyint(4) DEFAULT '1',
+  `parent_workflow_item_master` int(11) DEFAULT NULL,
+  `display_order` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_wfitemExMappedToItem_idx` (`workflow_item_master`),
   KEY `fk_wfItemExMappedToParent_idx` (`parent_workflow`),
+  KEY `fk_wfItem_linkedToWfItemExec_idx` (`parent_workflow_itemexec`),
+  KEY `fk_wfItemEx_linkedToWfItemExec_idx` (`parent_workflow_item_master`),
   CONSTRAINT `fk_wfItemExMappedToParent` FOREIGN KEY (`parent_workflow`) REFERENCES `workflowexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfItemEx_linkedToWfItemExec` FOREIGN KEY (`parent_workflow_item_master`) REFERENCES `workflowitemexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wfItem_linkedToWfItemExec` FOREIGN KEY (`parent_workflow_itemexec`) REFERENCES `workflowitemexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `workflowitemexec`
---
-
-LOCK TABLES `workflowitemexec` WRITE;
-/*!40000 ALTER TABLE `workflowitemexec` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowitemexec` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `workflowitemmaster`
@@ -1125,13 +1095,16 @@ CREATE TABLE `workflowitemmaster` (
   `created_by` int(11) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
-  `on_success` int(11) NOT NULL,
+  `on_success` int(11) DEFAULT NULL,
   `on_failure` int(11) DEFAULT NULL,
   `max_run_time` int(11) DEFAULT NULL,
   `start_delay` int(11) DEFAULT NULL,
   `is_last_task` tinyint(4) NOT NULL DEFAULT '0',
   `priority` tinyint(4) DEFAULT NULL,
   `parent_workflow_item_master` int(11) DEFAULT NULL,
+  `params` text,
+  `clickable` tinyint(4) DEFAULT '1',
+  `display_order` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_wfItemOnSuccess_idx` (`on_success`),
   KEY `fk_wfItemOnFailure_idx` (`on_failure`),
@@ -1143,17 +1116,8 @@ CREATE TABLE `workflowitemmaster` (
   CONSTRAINT `fk_wfItemMasterLinkedToTask` FOREIGN KEY (`workflow_task`) REFERENCES `workflowtaskconfigmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnFailure` FOREIGN KEY (`on_failure`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItemOnSuccess` FOREIGN KEY (`on_success`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `workflowitemmaster`
---
-
-LOCK TABLES `workflowitemmaster` WRITE;
-/*!40000 ALTER TABLE `workflowitemmaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowitemmaster` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `workflowmaster`
@@ -1175,17 +1139,8 @@ CREATE TABLE `workflowmaster` (
   PRIMARY KEY (`id`),
   KEY `fk_wfStartWithItem_idx` (`start_with`),
   CONSTRAINT `fk_wfStartWithItem` FOREIGN KEY (`start_with`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `workflowmaster`
---
-
-LOCK TABLES `workflowmaster` WRITE;
-/*!40000 ALTER TABLE `workflowmaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowmaster` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `workflowtaskconfigmaster`
@@ -1200,17 +1155,8 @@ CREATE TABLE `workflowtaskconfigmaster` (
   `description` varchar(200) DEFAULT NULL,
   `params` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `workflowtaskconfigmaster`
---
-
-LOCK TABLES `workflowtaskconfigmaster` WRITE;
-/*!40000 ALTER TABLE `workflowtaskconfigmaster` DISABLE KEYS */;
-/*!40000 ALTER TABLE `workflowtaskconfigmaster` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1221,4 +1167,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-02 13:37:56
+-- Dump completed on 2015-03-26 20:36:42
