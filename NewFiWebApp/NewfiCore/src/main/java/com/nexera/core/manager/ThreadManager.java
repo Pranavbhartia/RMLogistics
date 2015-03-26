@@ -25,12 +25,16 @@ import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.entity.WorkflowItemExec;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.utility.LoadXMLHandler;
+import com.nexera.workflow.Constants.WorkflowConstants;
+import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.Milestones;
 
 @Component
 @Scope(value = "prototype")
@@ -40,8 +44,13 @@ public class ThreadManager implements Runnable {
 
 	private Loan loan;
 
+	private List<LoanMilestoneMaster> loanMilestoneMasterList;
+
 	@Autowired
 	LqbInvoker lqbInvoker;
+
+	@Autowired
+	EngineTrigger engineTrigger;
 
 	@Override
 	public void run() {
@@ -67,11 +76,7 @@ public class ThreadManager implements Runnable {
 		 */
 
 		LOGGER.debug("Inside method run ");
-
-		// TODO remove this hardcoded value
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("aBSsn", "4084311052");
-		map.put("aCSsn", "4084311052");
 		int format = 0;
 
 		LOGGER.debug("Invoking load service of lendinqb ");
@@ -83,7 +88,8 @@ public class ThreadManager implements Runnable {
 
 		String loadResponse = loadJSONResponse.getString("responseMessage");
 		loadResponse = removeBackSlashDelimiter(loadResponse);
-		int currentLoanStatus = 0;
+		int currentLoanStatus = -1;
+		Milestones milestones = null;
 		List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 		for (LoadResponseVO loadResponseVO : loadResponseList) {
 			String fieldId = loadResponseVO.getFieldId();
@@ -92,6 +98,71 @@ public class ThreadManager implements Runnable {
 				        .getFieldValue());
 			}
 
+		}
+
+		if (currentLoanStatus == -1) {
+			LOGGER.error("Invalid/No status received from LQB ");
+		} else {
+			String dateTime = getDataTimeField(currentLoanStatus,
+			        loadResponseList);
+			LOGGER.debug("Time for this status " + currentLoanStatus + " is "
+			        + dateTime);
+			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
+			if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
+				LOGGER.debug("These status are related to underwriting ");
+				milestones = Milestones.UW;
+				List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+				        .get(milestones);
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
+				LOGGER.debug("These status are related to appraisal ");
+				milestones = Milestones.APPRAISAL;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
+				LOGGER.debug("These status are related to QC ");
+				milestones = Milestones.QC;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
+			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
+				LOGGER.debug("These status are related to Loan Closure ");
+				milestones = Milestones.LOAN_CLOSURE;
+
+			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+				LOGGER.debug("These status are related to 1003 ");
+				milestones = Milestones.App1003;
+
+			}
+
+			List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+			        .get(milestones);
+			List<WorkflowItemExec> itemToExecute = itemToExecute(
+			        workflowItemTypeList, workflowItemExecList);
+
+			for (WorkflowItemExec workflowItemExec : itemToExecute) {
+				LOGGER.debug("Putting the item in execution ");
+				engineTrigger.startWorkFlowItemExecution(workflowItemExec
+				        .getId());
+			}
 		}
 
 		/*
@@ -109,6 +180,22 @@ public class ThreadManager implements Runnable {
 			string = string.replace("\\", "");
 		}
 		return string;
+	}
+
+	private List<WorkflowItemExec> itemToExecute(
+	        List<String> workflowItemtypeList,
+	        List<WorkflowItemExec> workflowItemExecList) {
+		List<WorkflowItemExec> itemToExecute = new ArrayList<WorkflowItemExec>();
+		for (WorkflowItemExec workflowItemExec : workflowItemExecList) {
+			for (String workflowItemType : workflowItemtypeList) {
+				if (workflowItemExec.getWorkflowItemMaster()
+				        .getWorkflowItemType()
+				        .equalsIgnoreCase(workflowItemType)) {
+					itemToExecute.add(workflowItemExec);
+				}
+			}
+		}
+		return itemToExecute;
 	}
 
 	public JSONObject createLoadJsonObject(Map<String, String> requestXMLMap,
@@ -348,6 +435,15 @@ public class ThreadManager implements Runnable {
 
 	public void setLoan(Loan loan) {
 		this.loan = loan;
+	}
+
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		return loanMilestoneMasterList;
+	}
+
+	public void setLoanMilestoneMasterList(
+	        List<LoanMilestoneMaster> loanMilestoneMasterList) {
+		this.loanMilestoneMasterList = loanMilestoneMasterList;
 	}
 
 }

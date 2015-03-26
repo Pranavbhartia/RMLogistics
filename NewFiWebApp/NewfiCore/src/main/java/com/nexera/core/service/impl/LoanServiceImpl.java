@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
@@ -49,6 +50,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private LoanMilestoneMasterDao loanMilestoneMasterDao;
 
 	@Autowired
 	private UserProfileService userProfileService;
@@ -730,5 +734,11 @@ public class LoanServiceImpl implements LoanService {
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        LoanMilestoneMaster loanMilestoneMaster) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
+	}
+
+	@Override
+	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
+	        LoanTypeMaster loanTypeMaster) {
+		return loanMilestoneMasterDao.findByLoanType(loanTypeMaster);
 	}
 }
