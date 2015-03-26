@@ -88,6 +88,12 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public Loan fetchLoanById(Integer loanID) {
+		return (Loan) loanDao.load(Loan.class, loanID);
+	}
+
+	@Override
 	@Transactional()
 	public boolean addToLoanTeam(LoanVO loan, UserVO user) {
 
@@ -565,14 +571,14 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
-		if(userList!=null){
-		userList.add(loanVO.getUser());
-		for (UserVO userVO : userList) {
-			User user = userProfileService.parseUserModel(userVO);
-			loanDao.addToLoanTeam(loan, user, null);
-		}
-		}else{
-			
+		if (userList != null) {
+			userList.add(loanVO.getUser());
+			for (UserVO userVO : userList) {
+				User user = userProfileService.parseUserModel(userVO);
+				loanDao.addToLoanTeam(loan, user, null);
+			}
+		} else {
+
 			loanDao.addToLoanTeam(loan, loan.getUser(), null);
 		}
 		return this.buildLoanVO(loan);
@@ -750,6 +756,11 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
 	}
 
+	@Transactional(readOnly = true)
+	public List<Loan> getAllActiveLoan() {
+		return loanDao.getAllActiveLoan();
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
@@ -762,4 +773,12 @@ public class LoanServiceImpl implements LoanService {
 	public void saveLoanMilestone(LoanMilestone loanMilestone) {
 		loanMilestoneDao.saveOrUpdate(loanMilestone);
 	}
+
+	@Override
+	@Transactional
+	public void updateLoanMilestone(LoanMilestone loanMilestone) {
+
+		loanMilestoneDao.update(loanMilestone);
+	}
+
 }

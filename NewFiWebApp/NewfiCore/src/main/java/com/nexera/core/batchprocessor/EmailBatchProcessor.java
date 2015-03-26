@@ -1,6 +1,7 @@
 package com.nexera.core.batchprocessor;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
@@ -20,13 +21,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.nexera.common.exception.FatalException;
 import com.nexera.core.processor.EmailProcessor;
 
 @DisallowConcurrentExecution
+@Component
+@Scope(value = "prototype")
 public class EmailBatchProcessor extends QuartzJobBean {
 
 	private static final Logger LOGGER = LoggerFactory
@@ -58,28 +64,66 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	        throws JobExecutionException {
 		LOGGER.debug("Code inside this will get triggered every 1 min ");
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-		configureEmail();
+		LOGGER.debug("Spring beans initialized for email Thread ");
+		EmailBatchProcessor emailBatchProcessor = applicationContext
+		        .getBean(EmailBatchProcessor.class);
+		emailBatchProcessor.configureEmail();
 
 	}
 
 	public void configureEmail() {
 		Properties properties = new Properties();
 		properties.setProperty("mail.store.protocol", protocol);
+		Folder inbox = null;
+		Store store = null;
+		Session session = null;
 		try {
-			Session session = Session.getDefaultInstance(properties, null);
-			Store store = session.getStore(protocol);
-			if (!store.isConnected())
+			LOGGER.debug("Creating session for email with properties "
+			        + properties.getProperty("mail.store.protocol"));
+
+			session = Session.getDefaultInstance(properties, null);
+			store = session.getStore(protocol);
+			LOGGER.debug("Checking if store is connected "
+			        + store.isConnected());
+			if (!store.isConnected()) {
+				LOGGER.debug("Store not connected, connecting");
 				store.connect(imapHost, username, password);
-			Folder inbox = store.getFolder(folderName);
+			} else {
+				LOGGER.debug("Store already connected, reading emails");
+			}
+
+			LOGGER.debug("Reading emails");
+			inbox = store.getFolder(folderName);
 			inbox.open(Folder.READ_WRITE);
+			LOGGER.debug("Opening Inbox in readWrite");
 			fetchUnReadMails(inbox);
-			/*
-			 * inbox.close(true); store.close();
-			 */
+
 		} catch (NoSuchProviderException e) {
-			// TODO catch this exception a particular table
+			e.printStackTrace();
+			LOGGER.error("Exception Thrown " + e.getMessage());
 		} catch (MessagingException e) {
-			// TODO catch this exception a particular table
+			e.printStackTrace();
+			LOGGER.error("Exception Thrown " + e.getMessage());
+		} finally {
+
+			if (inbox != null) {
+				if (inbox.isOpen())
+					try {
+						inbox.close(true);
+					} catch (MessagingException e) {
+						e.printStackTrace();
+						LOGGER.error("Exception Thrown " + e.getMessage());
+					}
+			}
+			if (store != null) {
+				if (store.isConnected())
+					try {
+						store.close();
+					} catch (MessagingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
 		}
 
 	}
@@ -99,16 +143,17 @@ public class EmailBatchProcessor extends QuartzJobBean {
 
 			}
 
-			/*
-			 * emailTaskExecutor.shutdown(); try {
-			 * emailTaskExecutor.getThreadPoolExecutor().awaitTermination(
-			 * Long.MAX_VALUE, TimeUnit.NANOSECONDS); } catch
-			 * (InterruptedException e) {
-			 * LOGGER.error("Exception caught while terminating executor " +
-			 * e.getMessage()); throw new FatalException(
-			 * "Exception caught while terminating executor " + e.getMessage());
-			 * }
-			 */
+			emailTaskExecutor.shutdown();
+			try {
+				emailTaskExecutor.getThreadPoolExecutor().awaitTermination(
+				        Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			} catch (InterruptedException e) {
+				LOGGER.error("Exception caught while terminating executor "
+				        + e.getMessage());
+				throw new FatalException(
+				        "Exception caught while terminating executor "
+				                + e.getMessage());
+			}
 
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while reading mails " + e.getMessage());

@@ -80,5 +80,7 @@ public interface LoanDao extends GenericDao {
             User addedBy);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster);
+
+	public List<Loan> getAllActiveLoan();
 	
 }

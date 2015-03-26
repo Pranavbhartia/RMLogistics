@@ -54,4 +54,6 @@ public interface UserProfileDao extends GenericDao {
 	public Integer saveCustomerDetails(User user);
 
 	public List<User> getEmailAddress(List<Integer> list);
+
+	public List<User> fetchAllActiveUsers();
 }

@@ -121,8 +121,16 @@ function paintAgentDashboardRightPanel(data) {
 	});
 	var leftCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-txt float-left uppercase"
-	}).html("customer list");
+	});
 
+	if(newfiObject.user.userRole.id=="4")
+	{
+		leftCon.html("loan list");
+	}
+	else if(newfiObject.user.userRole.id!="4"){
+		leftCon.html("customer list");
+	}
+	
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
 	});
@@ -278,9 +286,12 @@ function appendCustomers(elementId, customers) {
 		 */
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
-
-		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
-
+		var phone_num = "NA";
+		if (customer.phone_no!=null){
+			 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
+		}
+		
+		
 		var col2 = $('<div>').attr({
 			"class" : "leads-container-tc2 float-left"
 		}).html(phone_num);
