@@ -4,8 +4,11 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DELETE FROM workflowitemmaster WHERE parent_workflow_item_master IS NOT NULL;
 DELETE FROM workflowitemmaster WHERE parent_workflow_item_master IS  NULL;
-DELETE FROM workflowmaster;
-DELETE FROM workflowtaskconfigmaster;
+DELETE FROM workflowmaster WHERE id>0;
+
+DELETE FROM workflowtaskconfigmaster where id>0;
+
+DELETE FROM loanmilestonemaster where id>0;
 
 insert  into `loanmilestonemaster`(`id`,`name`,`description`,`loan_type`,`milestone_validator`) values (1,'1003','1003 Completion',1,NULL),(2,'AUSUW','Automated Underwriting',1,NULL),(3,'QC','QC Decision',1,NULL),(4,'LM_DECISION','Underwriting',1,NULL),(5,'DISCLOSURE','Disclosure',1,NULL),(6,'APPRAISAL','Appraisal',1,NULL),(7,'UW','Underwriting',1,NULL),(8,'LOAN_CLOSURE','Loan Closure',1,NULL);
 
