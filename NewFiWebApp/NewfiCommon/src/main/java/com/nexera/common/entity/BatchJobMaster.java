@@ -59,7 +59,7 @@ public class BatchJobMaster implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Batchjobexecution
-	@OneToMany(mappedBy = "batchJobMaster")
+	@OneToMany(mappedBy = "batchJobMaster", fetch=FetchType.LAZY)
 	public List<BatchJobExecution> getBatchJobExecutions() {
 		return this.batchJobExecutions;
 	}
