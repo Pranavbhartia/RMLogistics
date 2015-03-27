@@ -90,7 +90,7 @@ public class EmailProcessor implements Runnable {
 				        fromAddressString.indexOf("<") + 1,
 				        fromAddressString.indexOf(">")).trim();
 			User uploadedByUser = userProfileService
-			        .findUserByMail(fromAddressString);
+			        .findUserByMail(fromAddressString); 
 			String toAddressString = toAddress[0].toString();
 			String messageId = null;
 			String loanId = null;
