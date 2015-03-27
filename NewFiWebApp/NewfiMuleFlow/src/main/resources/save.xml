@@ -1,8 +1,8 @@
 <LOXmlFormat version="1.0">
   <loan>
-    <field id="sLPurposeT">1</field>
-    <field id="sPurchPrice">$300,000.00</field>
-    <field id="sApprVal">$300,000.00</field>
+    <field id="sLPurposeT">loanPurpose</field>
+    <field id="sPurchPrice">loanPurchasePrice</field>
+    <field id="sApprVal">loanApprovedValue</field>
     <collection id="sCondDataSet">
       <record>
         <field id="IsRequired">True</field>
@@ -23,14 +23,14 @@
         <field id="CondDesc">This is condition 3</field>
       </record>
     </collection>
-    <applicant id="123456789">
-      <field id="aBFirstNm">First Name</field>
-      <field id="aBLastNm">Last Name</field>
-      <field id="aBSsn">123456789</field>
-      <field id="aAlimonyNm">THE X-WIFE</field>
-      <field id="aAlimonyPmt">100</field>
-      <field id="aJobRelated1ExpenseDesc">JOB Expense 1</field>
-      <field id="aJobRelated1Pmt">50</field>
+    <applicant id="applicantId">
+      <field id="aBFirstNm">firstName</field>
+      <field id="aBLastNm">lastName</field>
+      <field id="aBSsn">userSSNnumber</field>
+      <field id="aAlimonyNm">alimonyName</field>
+      <field id="aAlimonyPmt">alimonyPayment</field>
+      <field id="aJobRelated1ExpenseDesc">jobExpenses</field>
+      <field id="aJobRelated1Pmt">jobRelatedPayment</field>
       <collection id="aLiaCollection">
         <record>
           <field id="DebtT">1</field>
