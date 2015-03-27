@@ -71,35 +71,75 @@ public class EngineTrigger {
 				for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
 					LOGGER.debug("Initializing all workflow items ");
 					// TODO test this
-					if (!workflowService
-					        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
-						if (!workflowItemMaster
-						        .getChildWorkflowItemMasterList().isEmpty()) {
+					/*
+					 * if (!workflowService
+					 * .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
+					 */
+
+					if (!workflowItemMaster.getChildWorkflowItemMasterList()
+					        .isEmpty()) {
+						WorkflowItemExec workflowItemExec = workflowService
+						        .setWorkflowItemIntoExecution(workflowExec,
+						                workflowItemMaster, null);
+						for (WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
+						        .getChildWorkflowItemMasterList()) {
+							LOGGER.debug("In this case will add parent workflow item execution id ");
+							if (childworkflowItemMaster.getOnSuccess() != null) {
+								LOGGER.debug("It has a successs item ");
+								WorkflowItemMaster successItemMaster = childworkflowItemMaster
+								        .getOnSuccess();
+								WorkflowItemExec successWorkflowItemExec = workflowService
+								        .setWorkflowItemIntoExecution(
+								                workflowExec,
+								                successItemMaster,
+								                workflowItemExec);
+
+								WorkflowItemExec childItem = workflowService
+								        .setWorkflowItemIntoExecution(
+								                workflowExec,
+								                childworkflowItemMaster,
+								                workflowItemExec);
+								childItem
+								        .setOnSuccessItem(successWorkflowItemExec);
+								workflowService
+								        .updateWorkflowItemExecutionStatus(childItem);
+
+							}
+							if (!workflowService
+							        .checkIfOnSuccessOfAnotherItem(childworkflowItemMaster)) {
+								workflowService.setWorkflowItemIntoExecution(
+								        workflowExec, childworkflowItemMaster,
+								        workflowItemExec);
+							}
+						}
+
+					} else {
+						if (workflowItemMaster.getParentWorkflowItemMaster() == null) {
+							WorkflowItemExec successWorkflowItemExec = null;
+							if (workflowItemMaster.getOnSuccess() != null) {
+
+								WorkflowItemMaster successItemMaster = workflowItemMaster
+								        .getOnSuccess();
+								successWorkflowItemExec = workflowService
+								        .setWorkflowItemIntoExecution(
+								                workflowExec,
+								                successItemMaster, null);
+							}
 							WorkflowItemExec workflowItemExec = workflowService
 							        .setWorkflowItemIntoExecution(workflowExec,
 							                workflowItemMaster, null);
-							for (WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
-							        .getChildWorkflowItemMasterList()) {
-								LOGGER.debug("In this case will add parent workflow item execution id ");
-								if (!workflowService
-								        .checkIfOnSuccessOfAnotherItem(childworkflowItemMaster)) {
-									workflowService
-									        .setWorkflowItemIntoExecution(
-									                workflowExec,
-									                childworkflowItemMaster,
-									                workflowItemExec);
-								}
+							if (successWorkflowItemExec != null) {
+								workflowItemExec
+								        .setOnSuccessItem(successWorkflowItemExec);
+								workflowService
+								        .updateWorkflowItemExecutionStatus(workflowItemExec);
 							}
 
-						} else {
-							if (workflowItemMaster
-							        .getParentWorkflowItemMaster() == null)
-								workflowService.setWorkflowItemIntoExecution(
-								        workflowExec, workflowItemMaster, null);
 						}
 					}
-
 				}
+
+				/* } */
 				return workflowExec.getId();
 			}
 		}
@@ -118,7 +158,8 @@ public class EngineTrigger {
 			LOGGER.debug("Updating workflow master status if its not updated ");
 			WorkflowExec workflowExec = workflowItemExecution
 			        .getParentWorkflow();
-			if (!workflowExec.getStatus().equals(WorkItemStatus.STARTED.getStatus())) {
+			if (!workflowExec.getStatus().equals(
+			        WorkItemStatus.STARTED.getStatus())) {
 				workflowExec.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService.updateWorkflowExecStatus(workflowExec);
 			}
@@ -129,14 +170,15 @@ public class EngineTrigger {
 				if (parentWorkflowItemExec.getStatus().equalsIgnoreCase(
 				        WorkItemStatus.NOT_STARTED.getStatus())) {
 					LOGGER.debug("Updating the parent workflow item status to started ");
-					parentWorkflowItemExec
-					        .setStatus(WorkItemStatus.STARTED.getStatus());
+					parentWorkflowItemExec.setStatus(WorkItemStatus.STARTED
+					        .getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
 				}
 
 				LOGGER.debug("Updating workflow item execution status  to started");
-				workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
+				workflowItemExecution.setStatus(WorkItemStatus.STARTED
+				        .getStatus());
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				WorkflowManager workflowManager = applicationContext
@@ -184,7 +226,8 @@ public class EngineTrigger {
 					LOGGER.debug(" The item id belongs to parent "
 					        + workflowItemExecution);
 					LOGGER.debug("Updating the workflow item execution status to started ");
-					workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
+					workflowItemExecution.setStatus(WorkItemStatus.STARTED
+					        .getStatus());
 					// TODO decide what will happen to parent exec ?
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
@@ -223,15 +266,16 @@ public class EngineTrigger {
 					}
 					if (count == childWorkflowItemExecList.size()) {
 						LOGGER.debug("All child items are complete, Updating the parent ");
-						workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
-						        .getStatus());
+						workflowItemExecution
+						        .setStatus(WorkItemStatus.COMPLETED.getStatus());
 						workflowService
 						        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					}
 
 				} else {
 					LOGGER.debug("Independent execution");
-					workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
+					workflowItemExecution.setStatus(WorkItemStatus.STARTED
+					        .getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					WorkflowManager workflowManager = applicationContext
