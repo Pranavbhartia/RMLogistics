@@ -101,6 +101,8 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 			customerDetailVO.setSecPhoneNumber(customerDetail
 			        .getSecPhoneNumber());
 			customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+			customerDetailVO.setMobileAlertsPreference(customerDetail
+			        .getMobileAlertsPreference());
 			if (customerDetail.getDateOfBirth() != null) {
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
 				        .getTime());
