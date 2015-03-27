@@ -301,6 +301,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"data-text" : ob.workItem.workflowItemType
 			});
 			var ajaxURL = "";	
+			//need to move this logic to a different function
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
 				ajaxURL = "";
@@ -316,11 +317,11 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Click here to view application ";			
 			} 			
-			else if (ob.workItem.workflowItemType=="DISCLOSURE_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click to view Disclosures Status";			
-			}//
+			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
+				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				data.loanID=selectedUserDetail.loanID;				
+			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
 				ajaxURL = "";
@@ -356,11 +357,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;				
-			}
-			
-			//else return;
-			
-			else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS")
+			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";			
@@ -462,6 +459,23 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 									progressBarCont.append(progressBar).append(progressBarTxt);
 									ob.stateInfoContainer.append(progressBarCont);
 								}
+							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"){
+								if(ob.workItem.stateInfo){
+									var tempOb=JSON.parse(ob.workItem.stateInfo);
+									if(tempOb.url){
+										ob.stateInfoContainer.html(tempOb.status);
+										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
+											window.open(event.data.tempOb.url,"_blank")
+										})
+										/*var aTag = document.createElement('a');
+										aTag.setAttribute('href',tempOb.url);
+										aTag.innerHTML = tempOb.status;
+										$(aTag).attr("target","_blank");
+										ob.stateInfoContainer.html(aTag);*/
+									}
+								}
+
 							}else
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
 							
@@ -1071,14 +1085,16 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
-	event.stopPropagation();
+	
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
+		event.stopPropagation();
 		var data = {};
 		data.milestoneId = event.target.getAttribute("milenotificationid");
 		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if  ($(event.target).attr("data-text") == "TEAM_STATUS")
 		{
+		event.stopPropagation();
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
@@ -1088,6 +1104,7 @@ function milestoneChildEventHandler(event) {
 				event.target, data);
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
+		event.stopPropagation();
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
@@ -1097,13 +1114,16 @@ function milestoneChildEventHandler(event) {
 				event.target, data);
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
+	 	event.stopPropagation();
 		 $("#lp-step1").click();
 	}
 	
 	 else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
