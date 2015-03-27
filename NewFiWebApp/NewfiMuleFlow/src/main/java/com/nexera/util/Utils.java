@@ -59,7 +59,7 @@ public class Utils
     public static String readFileAsString( String fileName ) throws IOException
     {
         ClassLoader classLoader = Utils.class.getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream( File.separator + fileName );
+        InputStream inputStream = classLoader.getResourceAsStream( fileName );
         StringBuffer fileData = new StringBuffer();
         BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream ) );
         char[] buf = new char[1024];

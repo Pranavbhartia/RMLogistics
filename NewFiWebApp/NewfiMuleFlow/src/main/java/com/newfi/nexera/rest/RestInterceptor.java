@@ -80,7 +80,7 @@ public class RestInterceptor implements Callable
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            String sXmlQueryDefault = Utils.readFileAsString( "lo_xmlquery_blank.xml" );
+            String sXmlQueryDefault = Utils.readFileAsString( "load.xml" );
             if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
                 sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
             }
@@ -108,7 +108,10 @@ public class RestInterceptor implements Callable
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            inputParams[2] = restParameters.getLoanVO().getsDataContent();
+            String saveDefault = Utils.readFileAsString( "save.xml" );
+            if ( restParameters.getLoanVO().getsDataContentMap() != null )
+                saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
+            inputParams[2] = saveDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
             LOG.debug( "Operation Chosen Was ListEDocsByLoanNumber " );
