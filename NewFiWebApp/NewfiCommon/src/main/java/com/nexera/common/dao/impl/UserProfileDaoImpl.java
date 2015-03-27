@@ -186,19 +186,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public Integer saveUserWithDetails(User user) {
-		if (null != user.getInternalUserDetail()) {
+		if (null != user.getInternalUserDetail() && user.getUserRole().getId() == UserRolesEnum.INTERNAL.getRoleId()) {
 			this.save(user.getInternalUserDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-		if (null != user.getRealtorDetail()) {
+		if (null != user.getRealtorDetail() && user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
 			this.save(user.getRealtorDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-		if (null != user.getCustomerDetail()) {
+		if (null != user.getCustomerDetail() && user.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
 			this.save(user.getCustomerDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-
 		return (Integer) this.save(user);
 	}
 

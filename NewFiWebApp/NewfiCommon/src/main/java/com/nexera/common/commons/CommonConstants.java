@@ -28,12 +28,25 @@ public interface CommonConstants {
 
 	public static final Integer PAGINATION_SIZE = 5;
 
+	
+	/*
+	 * CSV constants
+	 */
+	public static final int CSV_COLUMN_LENGTH = 12;
+	public static final String ERROR_LINE_NUMBER = "lineNumber";
+	public static final String ERROR_CSV_LINE = "csvLine";
+	public static final String ERROR_MESSAGE = "message";
+	public static final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+	public static final String NAME_REGEX = "[a-zA-Z]+";
+
+	
 	public static final String DEFAULT_FROM_ADDRESS = "newfiportal";
 
 	public static final String MESSAGE_PROPERTIES_FILE = "displaymessage.properties";	
 	public static final String LABEL_PROPERTIES_FILE = "message.properties";
 	public static final String CONFIG_PROPERTIES_FILE = "config.properties";
 	public static final String DEFAULT_LOCALE="en_US";
+	public static final int DEFAULT_LOAN_ID = 0;
 	
 	/**
 	 * Braintree constants
