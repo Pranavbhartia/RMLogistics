@@ -181,8 +181,8 @@ var workFlowContext = {
 		var data={};
 		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
 		data.data={};
-		data.data.userId=newfiObject.user.id;
-		data.data.defaultLoanId=newfiObject.user.defaultLoanId;
+		data.data.userID=newfiObject.user.id;
+		data.data.loanID=ob.loanId;
 		data.data=JSON.stringify(data.data);
 		ajaxRequest("rest/workflow/getupdatedstatus", "GET", "json", data, function(response) {
 			if (response.error) {
