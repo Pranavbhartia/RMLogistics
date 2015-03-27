@@ -2,6 +2,13 @@ $(document).on('click',function(e){
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
 	}
+	if ($('#admin-create-user-popup').css("display") == "block") {
+		hideCreateUserPopup();
+	}
+});
+
+$(document).on('click', '#admin-create-user-popup', function(event) {
+	event.stopImmediatePropagation();
 });
 function paintAdminDashboard(){
 
@@ -40,19 +47,19 @@ function appendCustomersForUserManagement(customers){
 }
 
 
-function entryPointForUserViewForAdmin(loanID, viewName) {
+function entryPointForUserViewForAdmin(loanID) {
 
 		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
 				"json", undefined, function(response) {
 
-					entryPointAdminViewChangeNav(loanID,viewName);
+					entryPointAdminViewChangeNav(loanID);
 
 				});
 
 
 
 }
-function entryPointAdminViewChangeNav(loanID,viewName) {
+function entryPointAdminViewChangeNav(loanID) {
 
 	getLoanDetailsForAdmin(loanID);
 }
@@ -112,15 +119,17 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	var createUserButton=$('<div>').attr({
 	"class":"prof-cust-save-btn-admin-um float-right-admin",
 	"id":"create-user-id",
-
-	}).html("Create User");
+    
+	}).html("Create User").click(function(e){
+		showAddUserPopUp(e);
 
 	});	
 	var userNameSel = $('<div>').attr({
 		"id" : "add-member-sel"
 	});
-	createUserButton.append(userNameSel);	
-	container.append(createUserButton);
+	createUserButton.append(userNameSel); 
+	
+	container.append(createUserButton); 
 	container.append(userTypeCont);
 	wrapper.append(header).append(container);
 	if(clearParent){
@@ -129,11 +138,83 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	$('#'+parentElement).append(wrapper);
 
 	// function to append create user popup
-	appendCreateUserPopup();
+	appendAdminCreateUserPopup();
 	appendUserTypeDropDown();
 
 }
+function appendAdminCreateUserPopup(){
+var popUpWrapper = $('<div>').attr({
+		"id" : "admin-create-user-popup",
+		"class" : "pop-up-wrapper create-user-popup hide"
+	});
 
+	var header = $('<div>').attr({
+		"class" : "pop-up-header"
+	}).html("Create User");
+
+	var container = $('<div>').attr({
+		"id" : "create-user-container",
+		"class" : "pop-up-container clearfix"
+	});
+	popUpWrapper.append(header).append(container);
+	$('#add-member-sel').append(popUpWrapper);
+
+	appendCreateUserPopupFirstName();
+	appendCreateUserPopupLastName();
+	// TODO-decide what needs to be saved for internal users and realtors
+	// appendCreateUserPopupStreetAddr();
+	// appendCreateUserPopupCity();
+	// appendCreateUserPopupState();
+	// appendCreateUserPopupZip();
+	// appendCreateUserPopupDOB();
+	appendCreateUserPopupEmail();
+
+	// save button
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-cust-save-btn"
+	}).html("save").on(
+			'click',
+			function(event) {
+				event.stopImmediatePropagation();
+
+				var user = new Object();
+				user.emailId = $('#create-user-emailId').val();
+				user.firstName = $('#create-user-first-name').val();
+				user.lastName = $('#create-user-last-name').val();
+				console.log("Create user button clicked. User : "
+						+ JSON.stringify(user));
+
+				if (user.firstName == "") {
+					showToastMessage("First name cannot be empty");
+					return;
+				} else if (user.lastName == "") {
+					showToastMessage("Last name cannot be empty");
+					return;
+				} else if (user.emailId == "") {
+					showToastMessage("Email ID cannot be empty");
+					return;
+				}
+				user.userRole = {
+					id : $("#add-memeber-user-type").attr("roleid")
+				};
+				if ($("#add-memeber-user-type").attr("roleid") == "3") {
+					user.internalUserDetail = {
+						internalUserRoleMasterVO : {
+							id : $("#add-memeber-user-type").attr(
+									"internalroleid")
+						}
+					}
+				}
+				;
+				createUserAndAddToLoanTeam(user);
+
+			});
+
+	$('#admin-create-user-popup').append(saveBtn);
+
+
+
+}
 function appendNewfiTeamWrapperForAdmin(loanDetails) {
 	var team = loanDetails.loanTeam;
 	var loanID = loanDetails.id;
@@ -247,6 +328,7 @@ function getAdminTeamListTableRow(user, loanID) {
 	var labelActive=$('<label>').attr({			
 	"class":"admin-label-radio-active"
 	}).text("Active");
+	
 	var labelInActive=$('<label>').attr({			
 	"class":"admin-label-radio-in-active"
 	}).text("InActive");
@@ -254,17 +336,27 @@ function getAdminTeamListTableRow(user, loanID) {
 	var trCol4 = $('<div>').attr({
 		"class" : "admin-newfi-team-list-tr-col4 float-left"
 	});
-    trCol4.append("<input type='radio' class='radio-btn-admin-active' id='myRadio-active'>").append(labelActive);
-	
-	
+	var inputActive=$('<input>').attr({
+	"class":"radio-btn-admin-active",
+	"id":"myRadio-active",
+	"type":"radio"
+	});
+    trCol4.append(inputActive).append(labelActive);
 	var trCol5 = $('<div>').attr({
 		"class" : "admin-newfi-team-list-tr-col5 float-left"
 	});
-	trCol5.append("<input type='radio' class='radio-btn-admin-inactive' id='myRadio-inactive'>").append(labelInActive);
+    var inputInActive=$('<input>').attr({
+	"class":"radio-btn-admin-in-active",
+	"id":"myRadio-inactive",
+	"type":"radio"
+	});
+	trCol5.append(inputInActive).append(labelInActive);
 	
-    	var trCol6 = $('<div>').attr({
+    var trCol6 = $('<div>').attr({
 		"class" : "admin-newfi-team-list-tr-col6 float-left"
 	});
+	
+	
 	var userDelIcn = $('<div>').attr({
 		"class" : "user-del-icn",
 		"userid" : user.id,
@@ -281,6 +373,7 @@ function getAdminTeamListTableRow(user, loanID) {
 }
  $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
+ if(newfiObject.user.userRole.id=="3"){
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
@@ -383,7 +476,7 @@ function getAdminTeamListTableRow(user, loanID) {
 	$('#alert-settings-btn').append(alertWrapper);
 	
 	}
-	
+	}
 	
 });
 
@@ -408,10 +501,39 @@ function showSettingsPopup(){
 
 $('#alert-popup-wrapper-settings').show();
 }
-
+//TODO to load user mangement page
 function userManagement(){
 $('#right-panel').html('');
 	paintAdminDashboard();
 	
 }
+//TODO to search/filter users in the list
+$('#search-input-area-id').click(function(e){
 
+
+
+});
+
+//TODO to create a user
+$('#create-user-id').click(function(e){
+	alert("in create user function");
+	showAddUserPopUp(e);
+
+});
+
+//TODO to change the status of user active/inactive
+$("#myRadio-active").click(function(e){
+
+$("#myRadio-active").attr("checked",true);
+$("#myRadio-inactive").attr("checked",false);
+alert("staus of user is active");
+
+});
+
+$("#myRadio-inactive").click(function(e){
+
+$("#myRadio-inactive").attr("checked",true);
+$("#myRadio-active").attr("checked",false);
+alert("status of user is inactive");
+
+});
