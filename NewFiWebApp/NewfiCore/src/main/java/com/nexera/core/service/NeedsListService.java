@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
@@ -29,4 +31,5 @@ public interface NeedsListService {
 
 	public NeedsListMaster fetchNeedListMasterUsingID(Integer needId);
 	
+	public LoanNeedsList findNeedForLoan(Loan loan,NeedsListMaster needsListMaster);
 }
