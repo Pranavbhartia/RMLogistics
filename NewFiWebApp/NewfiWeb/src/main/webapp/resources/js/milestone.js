@@ -336,11 +336,6 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Click here to view Appraisal Status";
 			}
-			else if (ob.workItem.workflowItemType=="LOCK_RATE")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to lock rate";				
-			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
 				ajaxURL = "";
@@ -468,18 +463,22 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 								if(ob.workItem.stateInfo){
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
-										ob.stateInfoContainer.html(tempOb.status);
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
 											window.open(event.data.tempOb.url,"_blank")
 										})
-										/*var aTag = document.createElement('a');
-										aTag.setAttribute('href',tempOb.url);
-										aTag.innerHTML = tempOb.status;
-										$(aTag).attr("target","_blank");
-										ob.stateInfoContainer.html(aTag);*/
 									}
+									if(tempOb.status)
+										ob.stateInfoContainer.html(tempOb.status);
 								}
 
+							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
+								if(ob.workItem.stateInfo!="null"){
+									ob.stateInfoContainer.html(ob.workItem.stateInfo);
+								}else
+								{
+									ob.stateInfoContainer.html("Click here to lock rate");
+								}
 							}else
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
 							
