@@ -755,8 +755,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
-	        LoanMilestoneMaster loanMilestoneMaster) {
-		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
+	        String loanMilestoneMAsterName) {
+		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
 	}
 
 

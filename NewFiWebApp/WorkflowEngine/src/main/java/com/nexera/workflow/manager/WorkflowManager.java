@@ -16,11 +16,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.nexera.workflow.Constants.Status;
 import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.utils.Util;
@@ -61,7 +61,7 @@ public class WorkflowManager implements Callable<String> {
 		if (result.equalsIgnoreCase(WorkflowConstants.SUCCESS)) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setStatus(Status.COMPLETED.getStatus());
+			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED.getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			LOGGER.debug("Checking if it has an onSuccess item to execute ");
@@ -81,7 +81,7 @@ public class WorkflowManager implements Callable<String> {
 		} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setStatus(Status.COMPLETED.getStatus());
+			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED.getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			LOGGER.debug("Checking if it has an onFailure item to execute ");
@@ -100,7 +100,7 @@ public class WorkflowManager implements Callable<String> {
 			}
 
 		} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
-			workflowItemExecution.setStatus(Status.PENDING.getStatus());
+			workflowItemExecution.setStatus(WorkItemStatus.PENDING.getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 		}
