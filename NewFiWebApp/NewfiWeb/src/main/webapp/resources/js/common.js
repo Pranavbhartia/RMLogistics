@@ -4,7 +4,7 @@
 
 var overlayCount = 0;
 var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]\.[0-9]\.[0-9]\.[0-9]\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]+))$/;
-var zipcodeRegex = /^\d{5}([\-]?\d{4})?$/;
+var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback){
