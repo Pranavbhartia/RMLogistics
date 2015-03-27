@@ -38,6 +38,23 @@ public interface CommonConstants {
 	public static final String ERROR_MESSAGE = "message";
 	public static final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 	public static final String NAME_REGEX = "[a-zA-Z]+";
+	
+	/*
+	 * Csv cloumn constants
+	 */
+	public static final int FNAME_COLUMN = 0;
+	public static final int LNAME_COLUMN = 1;
+
+	public static final int EMAIL_COLUMN = 2;
+	public static final int ROLE_COLUMN = 3;
+	public static final int LICENSE_INFO_COLUMN = 4;
+	public static final int CITY_COLUMN = 5;
+	public static final int STATE_COLUMN = 6;
+	public static final int ZIPCODE_COLUMN = 7;
+	public static final int SECONDARY_PHONE_COLUMN = 8;
+	public static final int SECONDARY_EMAIL_COLUMN = 9;
+	public static final int DATE_OF_BIRTH_COLUMN = 10;
+	public static final int PROFILE_LINK_COLUMN = 11;
 
 	
 	public static final String DEFAULT_FROM_ADDRESS = "newfiportal";

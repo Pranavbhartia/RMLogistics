@@ -732,7 +732,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 	
 	private Date validateDate(String dateString){
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		Date date;
 		try {
 			date = formatter.parse(dateString);			
@@ -750,55 +750,55 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_COLUMN_LENGTH,DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}			
-		if(csvRow[0] == null || csvRow[0].isEmpty() || !validateName(csvRow[0])){
+		if(csvRow[CommonConstants.FNAME_COLUMN] == null || csvRow[CommonConstants.FNAME_COLUMN].isEmpty() || !validateName(csvRow[CommonConstants.FNAME_COLUMN])){
 			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_FIRST_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}
-		if(csvRow[1] == null || csvRow[1].isEmpty() || !validateName(csvRow[1])){
+		if(csvRow[CommonConstants.LNAME_COLUMN] == null || csvRow[CommonConstants.LNAME_COLUMN].isEmpty() || !validateName(csvRow[CommonConstants.LNAME_COLUMN])){
 			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_LAST_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}
-		if(csvRow[2] == null || csvRow[2].isEmpty() || !validateEmail(csvRow[2])){
+		if(csvRow[CommonConstants.EMAIL_COLUMN] == null || csvRow[CommonConstants.EMAIL_COLUMN].isEmpty() || !validateEmail(csvRow[CommonConstants.EMAIL_COLUMN])){
 			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_EMAIL_ID,DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}				
-		if(!csvRow[3].equals(UserRolesEnum.CUSTOMER.toString()) && !csvRow[3].equals(UserRolesEnum.LOANMANAGER.toString()) && !csvRow[3].equals(UserRolesEnum.REALTOR.toString()) ){
+		if(!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString()) && !csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString()) && !csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR.toString()) ){
 			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_ROLE_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}
-		if(csvRow[3].equals(UserRolesEnum.CUSTOMER.toString())){
-			if (csvRow[5] == null || csvRow[5].isEmpty()) {
+		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())){
+			if (csvRow[CommonConstants.CITY_COLUMN] == null || csvRow[CommonConstants.CITY_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_CITY,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-			if (csvRow[6] == null || csvRow[6].isEmpty()) {
+			if (csvRow[CommonConstants.STATE_COLUMN] == null || csvRow[CommonConstants.STATE_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_STATE,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-			if (csvRow[7] == null || csvRow[7].isEmpty()) {
+			if (csvRow[CommonConstants.ZIPCODE_COLUMN] == null || csvRow[CommonConstants.ZIPCODE_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_ZIPCODE,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-			if (csvRow[8] == null || csvRow[8].isEmpty()) {
+			if (csvRow[CommonConstants.SECONDARY_PHONE_COLUMN] == null || csvRow[CommonConstants.SECONDARY_PHONE_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_SECONDARY_PHONE_NUMBER,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;		
 			}
-			if (csvRow[9] == null || csvRow[9].isEmpty()) {
+			if (csvRow[CommonConstants.SECONDARY_EMAIL_COLUMN] == null || csvRow[CommonConstants.SECONDARY_EMAIL_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_SECONDARY_EMAIL,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-			if (csvRow[10] == null || csvRow[10].isEmpty() || validateDate(csvRow[10])== null) {
+			if (csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN] == null || csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN].isEmpty() || validateDate(csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN])== null) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_DATE_OF_BIRTH,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
 		}
 		
-		if(csvRow[3].equals(UserRolesEnum.REALTOR.toString())){
-			if (csvRow[4] == null || csvRow[4].isEmpty()) {
+		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR.toString())){
+			if (csvRow[CommonConstants.LICENSE_INFO_COLUMN] == null || csvRow[CommonConstants.LICENSE_INFO_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_LICENSE_INFO,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-			if (csvRow[11] == null || csvRow[11].isEmpty()) {
+			if (csvRow[CommonConstants.PROFILE_LINK_COLUMN] == null || csvRow[CommonConstants.PROFILE_LINK_COLUMN].isEmpty()) {
 				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_PROFILE_URL,DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
@@ -823,12 +823,12 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		UserVO userVO = new UserVO();
 		
 		userVO.setDefaultLoanId(CommonConstants.DEFAULT_LOAN_ID);
-		userVO.setFirstName(rowData[0]);
-		userVO.setLastName(rowData[1]);
-		userVO.setEmailId(rowData[2]);
+		userVO.setFirstName(rowData[CommonConstants.FNAME_COLUMN]);
+		userVO.setLastName(rowData[CommonConstants.LNAME_COLUMN]);
+		userVO.setEmailId(rowData[CommonConstants.EMAIL_COLUMN]);
 		
 		UserRoleVO userRoleVO = new UserRoleVO();
-		if(rowData[3].equals(UserRolesEnum.LOANMANAGER.toString())){
+		if(rowData[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString())){
 			
 			userRoleVO.setId(UserRolesEnum.INTERNAL.getRoleId());
 			userRoleVO.setRoleCd(UserRolesEnum.INTERNAL.toString());
@@ -839,17 +839,17 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 			internalUserDetailVO.getInternalUserRoleMasterVO().setId(UserRolesEnum.LOANMANAGER.getRoleId());
 			userVO.setInternalUserDetail(internalUserDetailVO);
 			
-		}else if (rowData[3].equals(UserRolesEnum.CUSTOMER.toString())) {
+		}else if (rowData[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())) {
 			userRoleVO.setId(UserRolesEnum.CUSTOMER.getRoleId());
 			userRoleVO.setRoleCd(UserRolesEnum.CUSTOMER.toString());
 			userVO.setUserRole(userRoleVO);
 			CustomerDetailVO customerDetail = new CustomerDetailVO();
-			customerDetail.setAddressCity(rowData[5]);
-			customerDetail.setAddressState(rowData[6]);
-			customerDetail.setAddressZipCode(rowData[7]);
-			customerDetail.setSecPhoneNumber(rowData[8]);
-			customerDetail.setSecEmailId(rowData[9]);
-			customerDetail.setDateOfBirth(validateDate(rowData[10]).getTime());
+			customerDetail.setAddressCity(rowData[CommonConstants.CITY_COLUMN]);
+			customerDetail.setAddressState(rowData[CommonConstants.STATE_COLUMN]);
+			customerDetail.setAddressZipCode(rowData[CommonConstants.ZIPCODE_COLUMN]);
+			customerDetail.setSecPhoneNumber(rowData[CommonConstants.SECONDARY_PHONE_COLUMN]);
+			customerDetail.setSecEmailId(rowData[CommonConstants.SECONDARY_EMAIL_COLUMN]);
+			customerDetail.setDateOfBirth(validateDate(rowData[CommonConstants.DATE_OF_BIRTH_COLUMN]).getTime());
 			userVO.setCustomerDetail(customerDetail);
 		}
 		else {
@@ -858,8 +858,8 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 			userVO.setUserRole(userRoleVO);
 			
 			RealtorDetailVO realtorDetailVO = new RealtorDetailVO();
-			realtorDetailVO.setLicenceInfo(rowData[4]);
-			realtorDetailVO.setProfileUrl(rowData[11]);
+			realtorDetailVO.setLicenceInfo(rowData[CommonConstants.LICENSE_INFO_COLUMN]);
+			realtorDetailVO.setProfileUrl(rowData[CommonConstants.PROFILE_LINK_COLUMN]);
 			userVO.setRealtorDetail(realtorDetailVO);
 		}		
 		
@@ -880,7 +880,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		for(String[] rowString : allRows){
 			String message = checkCsvLine(rowString);
 			if ( message == null) {
-				LOG.info(StringUtils.join(rowString,','));	
+//				LOG.info(StringUtils.join(rowString,','));	
 				buildUserVOAndCreateUser(rowString);
 			}
 			else {
