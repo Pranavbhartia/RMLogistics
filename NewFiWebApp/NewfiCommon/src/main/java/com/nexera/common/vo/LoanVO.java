@@ -1,10 +1,10 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.Loan;
 
 public class LoanVO implements Serializable {
@@ -31,26 +31,14 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
+	
+
 	private Boolean isRateLocked;
 	private Boolean isBankConnected;
 	private String setSenderDomain;
+	private BigDecimal lockedRate;
 
-	public Boolean getIsRateLocked() {
-		return isRateLocked;
-	}
-
-	public void setIsRateLocked(Boolean isRateLocked) {
-		this.isRateLocked = isRateLocked;
-	}
-
-	public Boolean getIsBankConnected() {
-		return isBankConnected;
-	}
-
-	public void setIsBankConnected(Boolean isBankConnected) {
-		this.isBankConnected = isBankConnected;
-	}
-
+	
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
@@ -272,7 +260,28 @@ public class LoanVO implements Serializable {
 	    this.setSenderDomain = setSenderDomain;
     }
 
-	
+	public BigDecimal getLockedRate() {
+		return lockedRate;
+	}
+
+	public void setLockedRate(BigDecimal lockedRate) {
+		this.lockedRate = lockedRate;
+	}
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
 
 	
 
