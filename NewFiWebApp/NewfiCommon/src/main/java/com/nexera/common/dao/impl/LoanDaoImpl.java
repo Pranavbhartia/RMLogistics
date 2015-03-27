@@ -32,6 +32,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.UserVO;
 
 @Component
 public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
@@ -184,27 +185,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
-			List<User> userList=new ArrayList<User>();
-			Criteria criteriaForAdmin=session.createCriteria(User.class);
-			criteriaForAdmin.add(Restrictions.eq("id", parseUserModel.getId()));
-			userList=criteriaForAdmin.list();
 			
-			if(userList.get(0).getUserRole().getId()==4)
-					
-			{   
-								
-				criteriaForAdmin=session.createCriteria(Loan.class);
-											
-				
-				loanListForUser=criteriaForAdmin.list();				
-				
-				
-				return loanListForUser;
-			}
 						
-			Criteria criteriaForNonAdmin = session.createCriteria(LoanTeam.class);
-			criteriaForNonAdmin.add(Restrictions.eq("user.id", parseUserModel.getId()));
-			List<LoanTeam> loanTeamList = criteriaForNonAdmin.list();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			List<LoanTeam> loanTeamList = criteria.list();
 
 			if (loanTeamList != null) {
 				for (LoanTeam loanTeam : loanTeamList) {
@@ -224,6 +209,31 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 	}
 
+	@Override
+	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel)
+	{
+		try
+		{			
+			List<Loan> loanListForUser = new ArrayList<Loan>();
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria=session.createCriteria(Loan.class);
+						
+			loanListForUser=criteria.list();			
+			
+			return loanListForUser;
+			
+		}
+		
+		catch (HibernateException hibernateException) {
+
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
+		
+		
+	}
+	
 	@Override
 	public List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
 	        int loanProgressStatusId) {
@@ -339,6 +349,21 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
      * 
      */
 	@Override
+	public String retrieveUserRole(UserVO userVO)
+	{
+		Session session = sessionFactory.getCurrentSession();
+		User user;
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", userVO.getId()));
+		user=(User) criteria.uniqueResult();
+		return user.getUserRole().getRoleCd();
+		
+	}
+	
+	@Override
+	
+	
+	
 	public List<Loan> getLoansForUser(Integer userID) {
 
 		Session session = sessionFactory.getCurrentSession();
