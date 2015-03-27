@@ -1,6 +1,10 @@
 package com.nexera.core.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+import com.google.gson.JsonObject;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -28,8 +32,6 @@ public interface UserProfileService {
 	public Integer managerUpdateUserProfile(UserVO userVO);
 
 	public Integer managerUpdateUCustomerDetails(UserVO userVO);
-
-	public UserVO createUser(UserVO userVO);
 
 	public List<UserVO> searchUsers(UserVO userVO);
 
@@ -62,5 +64,7 @@ public interface UserProfileService {
 	public List<User> fetchAllActiveUsers();
 
 	public UserVO convertTOUserVO(User user);
+
+	public JsonObject parseCsvAndAddUsers(MultipartFile file) throws FileNotFoundException, IOException, InvalidInputException, UndeliveredEmailException;
 
 }

@@ -1,7 +1,11 @@
 package com.nexera.web.rest;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nexera.common.entity.User;
@@ -193,7 +198,17 @@ public class UserProfileRest {
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
 		if (userVO.getUsername() == null)
 			userVO.setUsername(userVO.getEmailId());
-		userVO = userProfileService.createUser(userVO);
+		try {
+			userVO = userProfileService.createNewUserAndSendMail(userVO);
+		}
+		catch (InvalidInputException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (UndeliveredEmailException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
 
 	}
@@ -284,6 +299,36 @@ public class UserProfileRest {
 		LOG.info("Returning the json" + result.toString());
 		return result.toString();
 		
+	}
+	
+	@RequestMapping(value="/addusersfromcsv", method = RequestMethod.POST ,  headers = "Accept=*")
+	public @ResponseBody String registerUsersFromCsv(@RequestParam(value="file" , required = true) MultipartFile multipartFile , HttpServletRequest request , HttpServletResponse response){
+		LOG.info("File upload Rest service called");
+		JsonObject result = null;
+		try {
+			result = userProfileService.parseCsvAndAddUsers(multipartFile);
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InvalidInputException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (UndeliveredEmailException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return result.toString();
 	}
 	
 	/*@RequestMapping(value = "/findteaserate", method = RequestMethod.POST)
