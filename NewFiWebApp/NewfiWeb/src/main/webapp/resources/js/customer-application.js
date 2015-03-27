@@ -91,7 +91,7 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintCustomerApplicationPage() {
 	
-	appUserDetails = JSON.parse(newfi.appUserDetails);
+	//appUserDetails = JSON.parse(newfi.appUserDetails);
 
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;

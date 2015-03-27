@@ -116,7 +116,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 
 	private LoanAppFormVO convertTOLoanAppFormVOCore(LoanAppForm loanAppForm){
 		 
-		 
+		if(null == loanAppForm)
+			return null;
+		
 		 LoanAppFormVO loanAppFormVO = new  LoanAppFormVO ();
 		 
 		 loanAppFormVO.setId(loanAppForm.getId());
@@ -150,6 +152,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	 
 	 private PropertyTypeMasterVO convertTOPropertyTypeMasterVO(PropertyTypeMaster propertyTypeMaster){
 		 
+		 if(propertyTypeMaster == null){
+			 return null;
+		 }
+		 
 		 PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
 		 propertyTypeMasterVO.setId(propertyTypeMaster.getId());
 		 propertyTypeMasterVO.setDescription(propertyTypeMaster.getDescription());
@@ -169,6 +175,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	 
 	 private GovernmentQuestionVO convertTOGovernmentquestionVO(GovernmentQuestion governmentquestion) {
 	  
+		 if(null == governmentquestion)
+			 return null;
+		 
 		 GovernmentQuestionVO governmentQuestionVO = new GovernmentQuestionVO();
 		 
 		 governmentQuestionVO.setId(governmentquestion.getId());
