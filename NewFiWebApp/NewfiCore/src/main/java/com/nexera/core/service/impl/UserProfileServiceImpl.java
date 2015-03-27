@@ -1,13 +1,19 @@
 package com.nexera.core.service.impl;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,21 +21,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.multipart.MultipartFile;
+import au.com.bytecode.opencsv.CSVReader;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.DisplayMessageConstants;
+import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
@@ -44,11 +59,15 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 	@Autowired
 	private UserProfileDao userProfileDao;
 	
+	
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
 	
 	@Value("${NEW_USER_TEMPLATE_ID}")
 	private String newUserMailTemplateId; 
+	
+	@Autowired
+	private MessageUtils messageUtils;
 	
 	private SecureRandom randomGenerator;
 	
@@ -82,6 +101,8 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 			customerDetailVO.setSecPhoneNumber(customerDetail
 			        .getSecPhoneNumber());
 			customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+			customerDetailVO.setMobileAlertsPreference(customerDetail
+			        .getMobileAlertsPreference());
 			if (customerDetail.getDateOfBirth() != null) {
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
 				        .getTime());
@@ -189,8 +210,8 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		UserRole role = new UserRole();
 		
 		if (roleVO == null){
-			
-			role.setId(1);
+			role.setId(UserRolesEnum.CUSTOMER.getRoleId());
+			role.setRoleCd(UserRolesEnum.CUSTOMER.toString());
 		}else{
 			
 			role.setId(roleVO.getId());
@@ -353,14 +374,40 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		userModel.setPassword(userVO.getPassword());
 		userModel.setStatus(userVO.getStatus());
 		
+		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
 		CustomerDetail customerDetail = new CustomerDetail();
-		customerDetail.setSubscriptionsStatus(2);		
-		userModel.setCustomerDetail(customerDetail);
 
+		if(userVO.getCustomerDetail() == null){
+			if(userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()){
+				customerDetail.setSubscriptionsStatus(2);		
+				userModel.setCustomerDetail(customerDetail);
+			}
+		}
+		else {
+			customerDetail.setAddressCity(userVO.getCustomerDetail().getAddressCity());
+			customerDetail.setAddressState(userVO.getCustomerDetail().getAddressState());
+			customerDetail.setAddressZipCode(userVO.getCustomerDetail().getAddressZipCode());
+			customerDetail.setSecPhoneNumber(userVO.getCustomerDetail().getSecPhoneNumber());
+			customerDetail.setSecEmailId(userVO.getCustomerDetail().getSecEmailId());
+			customerDetail.setDateOfBirth(new Date(userVO.getCustomerDetail().getDateOfBirth()));
+			userModel.setCustomerDetail(customerDetail);
+		}
+		
+		RealtorDetail realtorDetail = new RealtorDetail();
+		if(userVO.getRealtorDetail() == null){
+			if(userModel.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()){
+				userModel.setRealtorDetail(realtorDetail);
+			}
+		}
+		else{
+			realtorDetail.setLicenceInfo(userVO.getRealtorDetail().getLicenceInfo());
+			realtorDetail.setProfileUrl(userVO.getRealtorDetail().getProfileUrl());
+			userModel.setRealtorDetail(realtorDetail);
+		}
+		
+		//userModel.setEmailId(userVO.getEmailId());
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
-
-		userModel.setUserRole(this.parseUserRoleModel(userVO.getUserRole()));
 
 		userModel.setInternalUserDetail(this.parseInternalUserDetailsModel(userVO.getInternalUserDetail()));
 
@@ -368,21 +415,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 	}
 
 	@Override
-	public UserVO createUser(UserVO userVO) {
-		
-		User user = this.parseUserModel(userVO);
-		user.setStatus(true);
-
-		Integer userID = (Integer) userProfileDao.saveUserWithDetails(this.parseUserModel(userVO));
-		if (userID != null && userID > 0)
-			user = (User) userProfileDao.findInternalUser(userID);
-
-		return this.buildUserVO(user);
-	}
-
-	@Override
-	public InternalUserDetailVO buildInternalUserDetailsVO(
-	        InternalUserDetail internalUserDetail) {
+	public InternalUserDetailVO buildInternalUserDetailsVO(InternalUserDetail internalUserDetail) {
 		// TODO Auto-generated method stub
 
 		if (internalUserDetail == null)
@@ -493,11 +526,11 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 	@Override
 	public UserVO createNewUserAndSendMail(UserVO userVO) throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
-		LOG.debug("PArsing the VO");
+		LOG.debug("Parsing the VO");		
 		User newUser = parseUserModel(userVO);
-		newUser.setStatus(true);
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());	
+		newUser.setStatus(true);
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
@@ -688,5 +721,178 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 
 		return internalUserRoleMasterVO;
 	}
+	
+	private boolean validateEmail(String emailId){		
+		boolean result = false;		
+		result = emailId.matches(CommonConstants.EMAIL_REGEX);		
+		return result;		
+	}
+	
+	private boolean validateName(String name) {
+	    return name.matches(CommonConstants.NAME_REGEX);
+	}
+	
+	private Date validateDate(String dateString){
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		Date date;
+		try {
+			date = formatter.parse(dateString);			
+		}
+		catch (ParseException e) {
+			date = null;
+		}
+		return date;
+	}
+	
+	private String checkCsvLine(String[] csvRow){
+		String message = null;
+		
+		if(csvRow.length != CommonConstants.CSV_COLUMN_LENGTH){
+			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_COLUMN_LENGTH,DisplayMessageType.ERROR_MESSAGE).toString();
+			return message;
+		}			
+		if(csvRow[CommonConstants.FNAME_COLUMN] == null || csvRow[CommonConstants.FNAME_COLUMN].isEmpty() || !validateName(csvRow[CommonConstants.FNAME_COLUMN])){
+			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_FIRST_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
+			return message;
+		}
+		if(csvRow[CommonConstants.LNAME_COLUMN] == null || csvRow[CommonConstants.LNAME_COLUMN].isEmpty() || !validateName(csvRow[CommonConstants.LNAME_COLUMN])){
+			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_LAST_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
+			return message;
+		}
+		if(csvRow[CommonConstants.EMAIL_COLUMN] == null || csvRow[CommonConstants.EMAIL_COLUMN].isEmpty() || !validateEmail(csvRow[CommonConstants.EMAIL_COLUMN])){
+			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_EMAIL_ID,DisplayMessageType.ERROR_MESSAGE).toString();
+			return message;
+		}				
+		if(!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString()) && !csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString()) && !csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR.toString()) ){
+			message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_ROLE_NAME,DisplayMessageType.ERROR_MESSAGE).toString();
+			return message;
+		}
+		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())){
+			if (csvRow[CommonConstants.CITY_COLUMN] == null || csvRow[CommonConstants.CITY_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_CITY,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			if (csvRow[CommonConstants.STATE_COLUMN] == null || csvRow[CommonConstants.STATE_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_STATE,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			if (csvRow[CommonConstants.ZIPCODE_COLUMN] == null || csvRow[CommonConstants.ZIPCODE_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_ZIPCODE,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			if (csvRow[CommonConstants.SECONDARY_PHONE_COLUMN] == null || csvRow[CommonConstants.SECONDARY_PHONE_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_SECONDARY_PHONE_NUMBER,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;		
+			}
+			if (csvRow[CommonConstants.SECONDARY_EMAIL_COLUMN] == null || csvRow[CommonConstants.SECONDARY_EMAIL_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_SECONDARY_EMAIL,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			if (csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN] == null || csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN].isEmpty() || validateDate(csvRow[CommonConstants.DATE_OF_BIRTH_COLUMN])== null) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_DATE_OF_BIRTH,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+		}
+		
+		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR.toString())){
+			if (csvRow[CommonConstants.LICENSE_INFO_COLUMN] == null || csvRow[CommonConstants.LICENSE_INFO_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_LICENSE_INFO,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			if (csvRow[CommonConstants.PROFILE_LINK_COLUMN] == null || csvRow[CommonConstants.PROFILE_LINK_COLUMN].isEmpty()) {
+				message = messageUtils.getDisplayMessage(DisplayMessageConstants.INVALID_PROFILE_URL,DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+		}		
+		
+		return message;
+	}
+	
+	private JsonObject buildErrorItem(int lineNumber,String[] csvRow,String message){
+		JsonObject errorObject = new JsonObject();
+		
+		errorObject.addProperty(CommonConstants.ERROR_LINE_NUMBER, lineNumber);
+		errorObject.addProperty(CommonConstants.ERROR_CSV_LINE, StringUtils.join(csvRow,','));
+		errorObject.addProperty(CommonConstants.ERROR_MESSAGE, message);
+		
+		return errorObject;
+		
+	}
+	
+	private void buildUserVOAndCreateUser(String[] rowData) throws InvalidInputException, UndeliveredEmailException{
+		
+		UserVO userVO = new UserVO();
+		
+		userVO.setDefaultLoanId(CommonConstants.DEFAULT_LOAN_ID);
+		userVO.setFirstName(rowData[CommonConstants.FNAME_COLUMN]);
+		userVO.setLastName(rowData[CommonConstants.LNAME_COLUMN]);
+		userVO.setEmailId(rowData[CommonConstants.EMAIL_COLUMN]);
+		
+		UserRoleVO userRoleVO = new UserRoleVO();
+		if(rowData[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString())){
+			
+			userRoleVO.setId(UserRolesEnum.INTERNAL.getRoleId());
+			userRoleVO.setRoleCd(UserRolesEnum.INTERNAL.toString());
+			userVO.setUserRole(userRoleVO);
+			
+			InternalUserDetailVO internalUserDetailVO = new InternalUserDetailVO();
+			internalUserDetailVO.setInternalUserRoleMasterVO(new InternalUserRoleMasterVO());
+			internalUserDetailVO.getInternalUserRoleMasterVO().setId(UserRolesEnum.LOANMANAGER.getRoleId());
+			userVO.setInternalUserDetail(internalUserDetailVO);
+			
+		}else if (rowData[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())) {
+			userRoleVO.setId(UserRolesEnum.CUSTOMER.getRoleId());
+			userRoleVO.setRoleCd(UserRolesEnum.CUSTOMER.toString());
+			userVO.setUserRole(userRoleVO);
+			CustomerDetailVO customerDetail = new CustomerDetailVO();
+			customerDetail.setAddressCity(rowData[CommonConstants.CITY_COLUMN]);
+			customerDetail.setAddressState(rowData[CommonConstants.STATE_COLUMN]);
+			customerDetail.setAddressZipCode(rowData[CommonConstants.ZIPCODE_COLUMN]);
+			customerDetail.setSecPhoneNumber(rowData[CommonConstants.SECONDARY_PHONE_COLUMN]);
+			customerDetail.setSecEmailId(rowData[CommonConstants.SECONDARY_EMAIL_COLUMN]);
+			customerDetail.setDateOfBirth(validateDate(rowData[CommonConstants.DATE_OF_BIRTH_COLUMN]).getTime());
+			userVO.setCustomerDetail(customerDetail);
+		}
+		else {
+			userRoleVO.setId(UserRolesEnum.REALTOR.getRoleId());
+			userRoleVO.setRoleCd(UserRolesEnum.REALTOR.toString());
+			userVO.setUserRole(userRoleVO);
+			
+			RealtorDetailVO realtorDetailVO = new RealtorDetailVO();
+			realtorDetailVO.setLicenceInfo(rowData[CommonConstants.LICENSE_INFO_COLUMN]);
+			realtorDetailVO.setProfileUrl(rowData[CommonConstants.PROFILE_LINK_COLUMN]);
+			userVO.setRealtorDetail(realtorDetailVO);
+		}		
+		
+		createNewUserAndSendMail(userVO);		
+	}
 
+	@Override
+	public JsonObject parseCsvAndAddUsers(MultipartFile file) throws IOException, InvalidInputException, UndeliveredEmailException{
+		
+		Reader reader = new InputStreamReader(file.getInputStream());
+		CSVReader csvReader = new CSVReader(reader,',');
+		int lineCounter=1;
+		
+		JsonObject errors = new JsonObject();
+		JsonArray errorList = new JsonArray();
+		
+		List<String[]> allRows = csvReader.readAll();
+		for(String[] rowString : allRows){
+			String message = checkCsvLine(rowString);
+			if ( message == null) {
+//				LOG.info(StringUtils.join(rowString,','));	
+				buildUserVOAndCreateUser(rowString);
+			}
+			else {
+				errorList.add(buildErrorItem(lineCounter, rowString, message));
+			}	
+			lineCounter += 1;
+		}
+		
+		csvReader.close();		
+		errors.add("errors", errorList);
+		return errors;
+	}
 }

@@ -21,18 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.nexera.common.exception.FatalException;
 import com.nexera.core.processor.EmailProcessor;
 
 @DisallowConcurrentExecution
-@Component
-@Scope(value = "prototype")
 public class EmailBatchProcessor extends QuartzJobBean {
 
 	private static final Logger LOGGER = LoggerFactory
@@ -53,7 +49,6 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	@Value("${email.folderName}")
 	private String folderName;
 
-	@Autowired
 	private ThreadPoolTaskExecutor emailTaskExecutor;
 
 	@Autowired
@@ -65,9 +60,7 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		LOGGER.debug("Code inside this will get triggered every 1 min ");
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		LOGGER.debug("Spring beans initialized for email Thread ");
-		EmailBatchProcessor emailBatchProcessor = applicationContext
-		        .getBean(EmailBatchProcessor.class);
-		emailBatchProcessor.configureEmail();
+		configureEmail();
 
 	}
 
@@ -120,7 +113,8 @@ public class EmailBatchProcessor extends QuartzJobBean {
 					try {
 						store.close();
 					} catch (MessagingException e) {
-						// TODO Auto-generated catch block
+						LOGGER.error("Unable to close the store "
+						        + e.getMessage());
 						e.printStackTrace();
 					}
 			}
@@ -129,7 +123,9 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	}
 
 	public void fetchUnReadMails(Folder inbox) {
+
 		LOGGER.debug("Fetching all unread mails ");
+		emailTaskExecutor = getTaskExecutor();
 		try {
 			FlagTerm flagTerm = new FlagTerm(new Flags(Flag.SEEN), false);
 			Message msg[] = inbox.search(flagTerm);
@@ -140,7 +136,8 @@ public class EmailBatchProcessor extends QuartzJobBean {
 				        .getBean(EmailProcessor.class);
 				emailProcessor.setMessage(unreadMsg);
 				emailTaskExecutor.execute(emailProcessor);
-
+				inbox.setFlags(new Message[] { unreadMsg }, new Flags(
+				        Flags.Flag.SEEN), true);
 			}
 
 			emailTaskExecutor.shutdown();
@@ -158,5 +155,14 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while reading mails " + e.getMessage());
 		}
+	}
+
+	private ThreadPoolTaskExecutor getTaskExecutor() {
+		emailTaskExecutor = new ThreadPoolTaskExecutor();
+		emailTaskExecutor.initialize();
+		emailTaskExecutor.setCorePoolSize(3);
+		emailTaskExecutor.setMaxPoolSize(10);
+		return emailTaskExecutor;
+
 	}
 }

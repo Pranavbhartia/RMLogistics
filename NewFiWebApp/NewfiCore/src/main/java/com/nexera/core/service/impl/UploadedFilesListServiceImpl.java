@@ -11,6 +11,9 @@ import java.util.List;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +22,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nexera.common.commons.WebServiceMethodParameters;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -54,6 +61,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private NexeraUtility nexeraUtility;
+	
+	@Autowired
+    private LqbInvoker lqbInvoker;
 
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
@@ -205,11 +215,18 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		LOG.info("The thumbnail path for local  :  " + thumbPath);
 		if (thumbPath != null) {
-			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(new File(
-			        thumbPath), "document", "image");
+			File thumbpath = new File(thumbPath);
+			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(thumbpath, "document", "image");
+			
+			if(thumbpath.exists()){
+				thumbpath.delete();
+			}
+			
 		}
 
 		LOG.info("The s3PathThumbNail path for   :  " + s3PathThumbNail);
+		
+		
 
 		User user = new User();
 		user.setId(userId);
@@ -218,7 +235,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		User assignByUser = new User();
 		assignByUser.setId(assignedBy);
 
-		List<File> splittedFiles = nexeraUtility.splitPDFPages(file);
+		List<PDPage> splittedFiles = nexeraUtility.splitPDFTOPages(file);
 
 		UploadedFilesList uploadedFilesList = new UploadedFilesList();
 		uploadedFilesList.setIsActivate(true);
@@ -301,8 +318,33 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
 		// TODO Auto-generated method stub
-
+		 if ( lqbDocumentVO != null ) {
+             JSONObject uploadObject = createUploadPdfDocumentJsonObject(
+                 WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT, lqbDocumentVO );
+             JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
+         }
 	}
+	
+	
+	public JSONObject createUploadPdfDocumentJsonObject( String opName, LQBDocumentVO documentVO )
+    {
+        JSONObject json = new JSONObject();
+        JSONObject jsonChild = new JSONObject();
+        try {
+            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLNm() );
+            jsonChild.put( WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE, documentVO.getDocumentType() );
+            jsonChild.put( WebServiceMethodParameters.PARAMETER_NOTES, documentVO.getNotes() );
+            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT, documentVO.getsDataContent() );
+
+            json.put( "opName", opName );
+            json.put( "loanVO", jsonChild );
+        } catch ( JSONException e ) {
+
+            throw new FatalException( "Could not parse json " + e.getMessage() );
+        }
+        return json;
+    }
+
 
 	@Override
 	public CheckUploadVO uploadFileByEmail(InputStream stream,

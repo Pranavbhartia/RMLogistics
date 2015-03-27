@@ -7,31 +7,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.newfi.workflow.tasks.ApplicationStatus;
-import com.nexera.newfi.workflow.tasks.UWStatusManager;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(AppraisalDisplayManager.class);
+			.getLogger(AppraisalDisplayManager.class);
 
 	@Autowired
 	private LoanService loanService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get("status").toString();
+		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+				.toString();
 		if (status.equals(ApplicationStatus.appraisalOrdered)) {
 			return "2";
 		} else if (status.equals(ApplicationStatus.appraisalPending)) {
 			return "1";
-		}else if (status.equals(ApplicationStatus.appraisalReceived)) {
+		} else if (status.equals(ApplicationStatus.appraisalReceived)) {
 			return "3";
 		}
 		return null;
@@ -39,12 +39,14 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try{
-			Loan loan=new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.APPRAISAL.getMilestoneKey());
+		try {
+			Loan loan = new Loan();
+			loan.setId(Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+					Milestones.APPRAISAL.getMilestoneKey());
 			return mileStone.getComments().toString();
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return "";
 		}

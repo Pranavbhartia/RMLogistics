@@ -7,26 +7,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.dao.LoanDao;
-import com.nexera.common.dao.impl.LoanDaoImpl;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class UWStatusManager extends NexeraWorkflowTask implements
 		IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(UWStatusManager.class);
+			.getLogger(UWStatusManager.class);
 
 	@Autowired
 	private LoanService loanService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get("status").toString();
+		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+				.toString();
 		String message = "";
 		if (status.equals(ApplicationStatus.inUnderwriting)) {
 			message = ApplicationStatus.inUnderwritingMessage;
@@ -40,7 +40,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		} else if (status.equals(ApplicationStatus.underwritingApproved)) {
 			message = ApplicationStatus.underwritingApprovedMessage;
 		}
-		//TODO add alert code here
+		// TODO add alert code here
 		if (!message.equals("")) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -53,12 +53,14 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try{
-			Loan loan=new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.UW.getMilestoneKey());
+		try {
+			Loan loan = new Loan();
+			loan.setId(Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+					Milestones.UW.getMilestoneKey());
 			return mileStone.getComments().toString();
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return "";
 		}
@@ -66,7 +68,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		
+
 		return null;
 	}
 

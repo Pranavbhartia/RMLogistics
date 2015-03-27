@@ -68,16 +68,7 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/adminModule.do", method = RequestMethod.GET)
-		public ModelAndView tempfunc(HttpServletRequest request,
-		        @RequestParam("userID") Integer userID) throws Exception {
-	
-			Map<String, Object> model = new HashMap<String, Object>();
-			model = loadDefaultValuesForSM(request, userID);
-	
-			return new ModelAndView("adminFunctions", model);
-	
-		}
+
 	
 	
 	

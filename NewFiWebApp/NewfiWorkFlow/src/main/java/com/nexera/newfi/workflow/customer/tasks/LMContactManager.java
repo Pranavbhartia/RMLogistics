@@ -1,6 +1,5 @@
 package com.nexera.newfi.workflow.customer.tasks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,19 +13,19 @@ import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-import com.nexera.workflow.vo.WorkflowItemExecVO;
+
 @Component
 public class LMContactManager implements IWorkflowTaskExecutor {
 
 	@Autowired
 	private LoanService loanService;
-	
+
 	@Autowired
 	private WorkflowService workflowService;
-	
+
 	@Autowired
 	private EngineTrigger engineTrigger;
-	
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
@@ -42,25 +41,28 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
-		int userId=Integer.parseInt(inputMap.get("userId").toString());
-		UserVO userVo=new UserVO();
+		int userId = Integer.parseInt(inputMap.get("userId").toString());
+		UserVO userVo = new UserVO();
 		userVo.setId(userId);
-		LoanVO loanVo=loanService.getActiveLoanOfUser(userVo);
-		int workflowId=loanVo.getLoanManagerWorkflowID();
-		//TODO In Engine trigger add a method to get execitem by type
+		LoanVO loanVo = loanService.getActiveLoanOfUser(userVo);
+		int workflowId = loanVo.getLoanManagerWorkflowID();
+		// TODO In Engine trigger add a method to get execitem by type
 		List<WorkflowItemExec> list = engineTrigger
-		        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
-		for (WorkflowItemExec workflowItem : list){
-			if(workflowItem.getWorkflowItemMaster().getWorkflowItemType().equals("INITIAL_CONTACT")){
-				if(workflowItem.getStatus().trim().equals("3")){
-					int workflowItemExecId=Integer.parseInt(inputMap.get("workflowItemExecId").toString());
-					engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
+				.getWorkflowItemExecByWorkflowMasterExec(workflowId);
+		for (WorkflowItemExec workflowItem : list) {
+			if (workflowItem.getWorkflowItemMaster().getWorkflowItemType()
+					.equals("INITIAL_CONTACT")) {
+				if (workflowItem.getStatus().trim().equals("3")) {
+					int workflowItemExecId = Integer.parseInt(inputMap.get(
+							"workflowItemExecId").toString());
+					engineTrigger.changeStateOfWorkflowItemExec(
+							workflowItemExecId, "3");
 					return "3";
-				}else
+				} else
 					break;
 			}
 		}
-		//TODO CHeck LM 
+		// TODO CHeck LM
 		return null;
 	}
 

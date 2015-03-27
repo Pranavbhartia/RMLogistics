@@ -43,8 +43,11 @@ public enum MasterNeedsEnum {
 	Driver_License_Passport (33,"Driver_License_Passport"),
 	Gift_Letter_from_Donor (34,"Gift_Letter_from_Donor"),
 	Current_Business_License (35,"Current_Business_License"),
-	Copy_of_Relocation_Agreement (36,"Copy_of_Relocation_Agreement");
-
+	Copy_of_Relocation_Agreement (36,"Copy_of_Relocation_Agreement"),
+	
+	System_Disclosure_Need(99,"System_Disclosure_Need")
+	;
+	
 
     private final int indx;
 

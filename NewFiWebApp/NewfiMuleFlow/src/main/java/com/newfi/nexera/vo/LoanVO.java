@@ -20,6 +20,8 @@ public class LoanVO
 
     private String sLoanNumber;
 
+    private Map<String, String> sDataContentMap;
+
     private String sDataContent;
 
     private String documentType;
@@ -88,24 +90,6 @@ public class LoanVO
     public void setsLoanNumber( String sLoanNumber )
     {
         this.sLoanNumber = sLoanNumber;
-    }
-
-
-    /**
-     * @return the sDataContent
-     */
-    public String getsDataContent()
-    {
-        return sDataContent;
-    }
-
-
-    /**
-     * @param sDataContent the sDataContent to set
-     */
-    public void setsDataContent( String sDataContent )
-    {
-        this.sDataContent = sDataContent;
     }
 
 
@@ -250,6 +234,42 @@ public class LoanVO
     public void setsXmlQueryMap( Map<String, String> sXmlQueryMap )
     {
         this.sXmlQueryMap = sXmlQueryMap;
+    }
+
+
+    /**
+     * @return the sDataContentMap
+     */
+    public Map<String, String> getsDataContentMap()
+    {
+        return sDataContentMap;
+    }
+
+
+    /**
+     * @param sDataContentMap the sDataContentMap to set
+     */
+    public void setsDataContentMap( Map<String, String> sDataContentMap )
+    {
+        this.sDataContentMap = sDataContentMap;
+    }
+
+
+    /**
+     * @return the sDataContent
+     */
+    public String getsDataContent()
+    {
+        return sDataContent;
+    }
+
+
+    /**
+     * @param sDataContent the sDataContent to set
+     */
+    public void setsDataContent( String sDataContent )
+    {
+        this.sDataContent = sDataContent;
     }
 
 }
