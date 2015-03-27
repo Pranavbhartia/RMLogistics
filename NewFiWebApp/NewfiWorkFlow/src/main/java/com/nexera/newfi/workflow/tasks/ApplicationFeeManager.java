@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.stereotype.Component;
 
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class ApplicationFeeManager implements IWorkflowTaskExecutor {
 

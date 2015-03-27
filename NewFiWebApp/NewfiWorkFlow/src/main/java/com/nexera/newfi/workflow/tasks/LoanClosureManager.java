@@ -9,21 +9,24 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
-public class LoanClosureManager extends NexeraWorkflowTask implements IWorkflowTaskExecutor {
+public class LoanClosureManager extends NexeraWorkflowTask implements
+		IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(UWStatusManager.class);
+			.getLogger(UWStatusManager.class);
 
 	@Autowired
 	private LoanService loanService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get("status").toString();
+		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+				.toString();
 		if (status.equals(ApplicationStatus.loanClosed)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -34,7 +37,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements IWorkflowT
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					ApplicationStatus.loanDeclinedMessage);
 			sendEmail(objectMap);
-		}else if (status.equals(ApplicationStatus.loanFunded)) {
+		} else if (status.equals(ApplicationStatus.loanFunded)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					ApplicationStatus.loanFundedMessage);
@@ -45,12 +48,14 @@ public class LoanClosureManager extends NexeraWorkflowTask implements IWorkflowT
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try{
-			Loan loan=new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.LOAN_CLOSURE.getMilestoneKey());
+		try {
+			Loan loan = new Loan();
+			loan.setId(Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+					Milestones.LOAN_CLOSURE.getMilestoneKey());
 			return mileStone.getComments().toString();
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return "";
 		}

@@ -1,28 +1,20 @@
 package com.nexera.newfi.workflow.tasks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.dao.LoanDao;
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanTeam;
-import com.nexera.common.vo.email.EmailRecipientVO;
-import com.nexera.common.vo.email.EmailVO;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class Application1003Manager extends NexeraWorkflowTask implements
 		IWorkflowTaskExecutor {
-	
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get("status").toString();
+		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+				.toString();
 		if (status.equals(ApplicationStatus.initiated)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -55,5 +47,4 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		return null;
 	}
 
-	
 }
