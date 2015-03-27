@@ -128,7 +128,7 @@ function showCustomerLoanPage(user) {
 	loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
 
 	$('#right-panel').append(loanDetailsMainContainer);
-	changeSecondaryLeftPanel(2);
+	changeSecondaryLeftPanel(1);
 	adjustCenterPanelWidth();
 	
 	//TODO: Invoke dynamic binder to listen to secondary navigation clicks
