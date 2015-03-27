@@ -113,7 +113,13 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	"class":"prof-cust-save-btn-admin-um float-right-admin",
 	"id":"create-user-id",
 
-	}).html("Create User");	
+	}).html("Create User");
+
+	});	
+	var userNameSel = $('<div>').attr({
+		"id" : "add-member-sel"
+	});
+	createUserButton.append(userNameSel);	
 	container.append(createUserButton);
 	container.append(userTypeCont);
 	wrapper.append(header).append(container);
@@ -123,7 +129,7 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	$('#'+parentElement).append(wrapper);
 
 	// function to append create user popup
-	
+	appendCreateUserPopup();
 	appendUserTypeDropDown();
 
 }
@@ -132,7 +138,7 @@ function appendNewfiTeamWrapperForAdmin(loanDetails) {
 	var team = loanDetails.loanTeam;
 	var loanID = loanDetails.id;
 	var wrapper = $('<div>').attr({
-		"class" : "newfi-team-wrapper"
+		"class" : "admin-newfi-team-wrapper"
 	});
 
 	var header = $('<div>').attr({
@@ -168,47 +174,55 @@ function appendNewfiTeamWrapperForAdmin(loanDetails) {
 
 }
 
-$('#create-user-id').click(function(e){
-alert("in create user function");
-showAddUserPopUp(e);
 
-});
 function getAdminTeamListTableHeader() {
 	var tableHeaderRow = $('<div>').attr({
-		"class" : "newfi-team-list-th clearfix"
+		"class" : "admin-newfi-team-list-th clearfix"
 	});
 
 	var thCol1 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col1 newfi-team-list-tr-col1 float-left"
+		"class" : "admin-newfi-team-list-th-col1  float-left"
 	}).html("User Name");
 
 	var thCol2 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col2 newfi-team-list-tr-col2 float-left"
+		"class" : "admin-newfi-team-list-th-col2  float-left"
 	}).html("User Type");
 
 	var thCol3 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col3 newfi-team-list-tr-col3 float-left"
-	}).html("Email");
-	
-	var thCol4 = $('<div>').attr({
-		"class" : "newfi-team-list-th-col4 newfi-team-list-tr-col4 float-left"
-	}).html("Email");
+		"class" : "admin-newfi-team-list-th-col3  float-left"
+	}).html("Email");	
 
-	return tableHeaderRow.append(thCol1).append(thCol2).append(thCol3);
+	var thCol4=$('<div>').attr({
+	
+	"class" : "admin-newfi-team-list-th-col4  float-left"
+	
+	}).html("Status");
+	
+	var thCol5=$('<div>').attr({
+	
+	"class" : "admin-newfi-team-list-th-col5  float-left"
+	
+	});
+	var thCol6=$('<div>').attr({
+	
+	"class" : "admin-newfi-team-list-th-col6  float-left"
+	
+	});
+	return tableHeaderRow.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
 }
 
 function getAdminTeamListTableRow(user, loanID) {
 	var tableRow = $('<div>').attr({
-		"class" : "newfi-team-list-tr clearfix",
+		"class" : "admin-newfi-team-list-tr clearfix",
 		"userid" : user.id
 	});
 
 	var trCol1 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col1 float-left"
+		"class" : "admin-newfi-team-list-tr-col1 float-left"
 	}).html(user.firstName + " " + user.lastName);
 
 	var trCol2 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col2 float-left"
+		"class" : "admin-newfi-team-list-tr-col2 float-left"
 	});
 
 	var userRoleStr = user.userRole.label;
@@ -227,19 +241,29 @@ function getAdminTeamListTableRow(user, loanID) {
 	trCol2.html(userRoleStr);
 
 	var trCol3 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col3 float-left"
+		"class" : "admin-newfi-team-list-tr-col3 float-left"
 	}).html(user.emailId);
 
+	var labelActive=$('<label>').attr({			
+	"class":"admin-label-radio-active"
+	}).text("Active");
+	var labelInActive=$('<label>').attr({			
+	"class":"admin-label-radio-in-active"
+	}).text("InActive");
+	
 	var trCol4 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col4 float-left"
+		"class" : "admin-newfi-team-list-tr-col4 float-left"
 	});
-    //trCol4.append("<input type='radio' class='radio-btn-admin' id='myRadio-active'>").html("Active");
+    trCol4.append("<input type='radio' class='radio-btn-admin-active' id='myRadio-active'>").append(labelActive);
+	
+	
 	var trCol5 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col5 float-left"
+		"class" : "admin-newfi-team-list-tr-col5 float-left"
 	});
-	//trCol5.append("<input type='radio' class='radio-btn-admin' id='myRadio-inactive'>").html("Inactive");
-    var trCol6 = $('<div>').attr({
-		"class" : "newfi-team-list-tr-col6 float-left"
+	trCol5.append("<input type='radio' class='radio-btn-admin-inactive' id='myRadio-inactive'>").append(labelInActive);
+	
+    	var trCol6 = $('<div>').attr({
+		"class" : "admin-newfi-team-list-tr-col6 float-left"
 	});
 	var userDelIcn = $('<div>').attr({
 		"class" : "user-del-icn",
@@ -251,9 +275,9 @@ function getAdminTeamListTableRow(user, loanID) {
 		var loanID = $(this).attr("loanid");
 		confirmRemoveUser("Are you sure you want to delete the user?",userID, loanID);
 	});
-	trCol5.append(userDelIcn);
+	trCol6.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
-			.append(trCol5);
+			.append(trCol5).append(trCol6);
 }
  $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
@@ -274,9 +298,7 @@ function getAdminTeamListTableRow(user, loanID) {
 	
 	});
 	 var icon=$('<i>').attr({
-	 "class":"settings-icon"
-	 
-	 
+	 "class":"settings-icon"	 	 
 	 });
 	 icondiv.append(icon);
 	var header = $('<div>').attr({
@@ -293,9 +315,9 @@ function getAdminTeamListTableRow(user, loanID) {
 		"id":"user-management"
 	});
 	var anchortag1=$('<a>').attr({
-	"id" : "user-mangement-id",
-	
-    "href":"adminModule.do?userID="+newfi.user.id	
+	"id" : "user-mangement-id",	
+    "href":"#",
+    "onclick":"userManagement()"	
 	});
     var userMangementRowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
@@ -386,3 +408,10 @@ function showSettingsPopup(){
 
 $('#alert-popup-wrapper-settings').show();
 }
+
+function userManagement(){
+$('#right-panel').html('');
+	paintAdminDashboard();
+	
+}
+
