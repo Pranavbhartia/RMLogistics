@@ -54,9 +54,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		try{
 			Loan loan=new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestoneMaster loanMilestoneMaster=new LoanMilestoneMaster();
-			loanMilestoneMaster.setId(Milestones.APPRAISAL.getMilestoneID());
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
+			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.APPRAISAL.getMilestoneKey());
 			return mileStone.getComments().toString();
 		}catch(Exception e){
 			LOG.error(e.getMessage());

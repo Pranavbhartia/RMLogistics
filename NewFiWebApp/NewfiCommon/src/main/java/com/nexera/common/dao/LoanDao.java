@@ -38,7 +38,7 @@ public interface LoanDao extends GenericDao {
 	public Loan getActiveLoanOfUser(User parseUserModel);
 
 	public List<Loan> retrieveLoanForDashboard(User parseUserModel);
-	
+
 	public List<LoanTeam> getLoanTeamList(Loan loan);
 
 	public List<Loan> getLoansForUser(Integer userId);
@@ -55,32 +55,34 @@ public interface LoanDao extends GenericDao {
 	public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO);
 
 	public List<LoanTypeMaster> getLoanTypeMater(
-	        LoanTypeMasterVO loanTypeMaterVO);
+			LoanTypeMasterVO loanTypeMaterVO);
 
 	public List<TitleCompanyMaster> findTitleCompanyByName(
 			TitleCompanyMaster titleCompany);
 
 	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
 			HomeOwnersInsuranceMaster parseHomeOwnInsMaster);
-	
-    List<Loan> retrieveLoanByProgressStatus( User parseUserModel, int loanProgressStatusId );
+
+	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
+			int loanProgressStatusId);
 
 	public LoanNeedsList fetchByNeedId(Integer needId);
 
 	public HomeOwnersInsuranceMaster addHomeOwnInsCompany(
-            HomeOwnersInsuranceMaster homeOwnInsMaster);
+			HomeOwnersInsuranceMaster homeOwnInsMaster);
 
 	public TitleCompanyMaster addTitleCompany(
-            TitleCompanyMaster titleCompanyMaster);
+			TitleCompanyMaster titleCompanyMaster);
 
 	boolean addToLoanTeam(Loan loan,
-            HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy);
+			HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy);
 
 	boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
-            User addedBy);
+			User addedBy);
 
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster);
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+			String loanMilestoneMAsterName);
 
 	public List<Loan> getAllActiveLoan();
-	
+
 }

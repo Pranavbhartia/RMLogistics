@@ -497,14 +497,17 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return true;
 	}
 
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,LoanMilestoneMaster loanMilestoneMaster){
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,String loanMilestoneMAsterName){
 		Session session = sessionFactory.getCurrentSession();
+		Criteria masterCriteria = session.createCriteria(LoanMilestoneMaster.class);
+		masterCriteria.add(Restrictions.eq("name", loanMilestoneMAsterName));
+		LoanMilestoneMaster loanMilestoneMaster=(LoanMilestoneMaster) masterCriteria.uniqueResult();
 		Criteria criteria = session.createCriteria(LoanMilestone.class);
 		criteria.add(Restrictions.eq("loan", loan));
 		criteria.add(Restrictions.eq("loanMilestoneMaster", loanMilestoneMaster));
 		List<LoanMilestone> milestones=criteria.list();
 		if(milestones.size()>0){
-			milestones.get(0);
+			return milestones.get(0);
 		}
 		return null;
 	}

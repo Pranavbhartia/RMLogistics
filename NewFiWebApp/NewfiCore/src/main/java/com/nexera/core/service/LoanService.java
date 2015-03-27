@@ -77,7 +77,7 @@ public interface LoanService {
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
-	        LoanMilestoneMaster loanMilestoneMaster);
+			String loanMilestoneMAsterName);
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
