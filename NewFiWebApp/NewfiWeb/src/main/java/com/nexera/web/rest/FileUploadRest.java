@@ -70,8 +70,7 @@ public class FileUploadRest
     @Autowired
     private LoanService loanService;
 
-    @Autowired
-    private LqbInvoker lqbInvoker;
+    
 
     @Autowired
     private UploadedFilesListService uploadedFilesListService;
@@ -213,17 +212,13 @@ public class FileUploadRest
                 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
                 documentVO.setNotes( stringBuf.toString() );
                 documentVO.setsDataContent( nexeraUtility.getContentFromFile( fileToGetContent ) );
-                documentVO.setsLNm( loanService.getLoanByID( loanId ).getLqbFileId().toString() );
+                documentVO.setsLNm( loanService.getLoanByID( loanId ).getLqbFileId() );
 
                 uploadedFilesListService.uploadDocumentInLandingQB( documentVO );
                 LOG.info( "Assignment : uploadDocumentInLandingQB " + documentVO );
             }
 
-            if ( documentVO != null ) {
-                JSONObject uploadObject = createUploadPdfDocumentJsonObject(
-                    WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT, documentVO );
-                JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
-            }
+           
             commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 
         } catch ( Exception e ) {
@@ -237,25 +232,7 @@ public class FileUploadRest
     }
 
 
-    public JSONObject createUploadPdfDocumentJsonObject( String opName, LQBDocumentVO documentVO )
-    {
-        JSONObject json = new JSONObject();
-        JSONObject jsonChild = new JSONObject();
-        try {
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLNm() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE, documentVO.getDocumentType() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_NOTES, documentVO.getNotes() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT, documentVO.getsDataContent() );
-
-            json.put( "opName", opName );
-            json.put( "loanVO", jsonChild );
-        } catch ( JSONException e ) {
-
-            throw new FatalException( "Could not parse json " + e.getMessage() );
-        }
-        return json;
-    }
-
+    
 
     public Map<Integer, List<Integer>> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
     {
