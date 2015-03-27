@@ -181,6 +181,7 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
 		loanVo.setIsRateLocked(loan.getIsRateLocked());
 		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
+		loanVo.setLockedRate(loan.getLockedRate());
 		return loanVo;
 
 	}
@@ -553,6 +554,7 @@ public class LoanServiceImpl implements LoanService {
 					loan.setLoanType(loanTypeMaster);
 				}
 			}
+			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
 			LOG.error("Error in parse loan model", e);
