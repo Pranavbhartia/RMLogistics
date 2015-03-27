@@ -1,8 +1,9 @@
 package com.nexera.workflow.enums;
 
 public enum Milestones {
-	App1003(1), AUSUW(2), QC(3), LM_DECISION(4), DISCLOSURE(5), APPRAISAL(6), UW(
-	        7), LOAN_CLOSURE(8);
+	App1003(1, "1003"), AUSUW(2, "AUSUW"), QC(3, "QC"), LM_DECISION(4,
+	        "LM_DECISION"), DISCLOSURE(5, "DISCLOSURE"), APPRAISAL(6,
+	        "APPRAISAL"), UW(7, "UW"), LOAN_CLOSURE(8, "LOAN_CLOSURE");
 
 	private int milestoneID;
 
@@ -12,8 +13,9 @@ public enum Milestones {
 		return milestoneKey;
 	}
 
-	private Milestones(int milestoneId) {
-		milestoneID = milestoneId;
+	private Milestones(int milestoneId, String milestoneKey) {
+		this.milestoneID = milestoneId;
+		this.milestoneKey = milestoneKey;
 	}
 
 	public Milestones getMileStone(int inputID) {
