@@ -57,9 +57,9 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		loanVO.setId(loanID);
 		// TODO-add way to add title company and home owners insurance as well
 		Integer userID = null, titleCompanyID = null, homeOwnInsCompanyID = null;
-		if (objectMap.containsKey(WorkflowDisplayConstants.USER_ID_KEY_NAME)){
-			Object userIDObj=objectMap.get(
-			        WorkflowDisplayConstants.USER_ID_KEY_NAME);
+		if (objectMap.containsKey(WorkflowDisplayConstants.USER_ID_KEY_NAME)) {
+			Object userIDObj = objectMap
+			        .get(WorkflowDisplayConstants.USER_ID_KEY_NAME);
 			userID = Integer.parseInt(userIDObj.toString());
 		}
 
@@ -67,7 +67,8 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			titleCompanyID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.TITLE_COMPANY_ID).toString());
 
-		if (objectMap.containsKey(WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID))
+		if (objectMap
+		        .containsKey(WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID))
 			homeOwnInsCompanyID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID).toString());
 

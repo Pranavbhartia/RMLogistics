@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 /**
@@ -25,7 +27,7 @@ public class CustomerDetail implements Serializable {
 	private String secEmailId;
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
-	
+	private Boolean mobileAlertsPreference;
 
 	public CustomerDetail() {
 	}
@@ -122,6 +124,14 @@ public class CustomerDetail implements Serializable {
 		this.subscriptionsStatus = subscriptionsStatus;
 	}
 
-	
+	@Column(name = "mobile_alert_preference", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getMobileAlertsPreference() {
+		return mobileAlertsPreference;
+	}
+
+	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
+		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
 
 }

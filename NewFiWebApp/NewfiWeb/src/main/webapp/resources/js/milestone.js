@@ -534,9 +534,8 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 	txtRow1.html(information.totalSubmittedItem + " out of " + information.neededItemRequired);
 	
 	itemToAppendTo.append(txtRow1);
-	if (information.neededItemRequired ==0 || information.totalSubmittedItem != information.neededItemRequired)
-	{
-		txtRow1 = $('<div>').attr({
+	
+	txtRow1 = $('<div>').attr({
 			"class" : rightLeftClass + "-text",
 			"mileNotificationId" : workItem.id,
 			"data-text" : workItem.workflowItemType
@@ -545,8 +544,7 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 		txtRow1.bind("click", function(e) {
 			milestoneChildEventHandler(e)
 		});
-		itemToAppendTo.append(txtRow1);
-	}
+		itemToAppendTo.append(txtRow1);	
 }
 function paintCustomerLoanProgressPage() {
 
@@ -639,78 +637,6 @@ function paintCustomerLoanProgressContainer() {
 	adjustBorderMilestoneContainer();
 }
 
-function appendMilestoneMyProfile() {
-	var wrapper = $('<div>').attr({
-		"class" : "milestone-lc m-in-progress"
-	});
-
-	var leftBorder = $('<div>').attr({
-		"class" : "milestone-lc-border"
-	});
-
-	var header = $('<div>').attr({
-		"class" : "milestone-lc-header clearfix"
-	});
-
-	var headerTxt = $('<div>').attr({
-		"class" : "milestone-lc-header-txt float-right"
-	}).html("My Profile");
-
-	header.append(headerTxt);
-
-	var progressBarCont = $('<div>').attr({
-		"class" : "clearfix"
-	});
-
-	var progressBarTxt = $('<div>').attr({
-		"class" : "miestone-progress-bar-txt float-right"
-	}).html("50 %");
-
-	var progressBar = $('<div>').attr({
-		"class" : "miestone-progress-bar float-right clearfix"
-	});
-
-	var progress = 5;
-	for (var i = 0; i < 10; i++) {
-		var progressGrid = $('<div>').attr({
-			"class" : "miestone-progress-grid float-left"
-		});
-		if (progress == 0) {
-			progressGrid.addClass('miestone-progress-grid-incomplete');
-		} else {
-			progress--;
-		}
-		progressBar.append(progressGrid);
-	}
-
-	progressBarCont.append(progressBar).append(progressBarTxt);
-	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).html("Account");
-
-	var txtRow2 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("Online Application");
-
-	var txtRow3 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("Photo");
-
-	var txtRow4 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("SMS Texting Preferences");
-
-	wrapper.append(leftBorder).append(header).append(progressBarCont).append(
-			txtRow1).append(txtRow2).append(txtRow3).append(txtRow4);
-
-	$('#loan-progress-milestone-wrapper').append(wrapper);
-}
 
 
 

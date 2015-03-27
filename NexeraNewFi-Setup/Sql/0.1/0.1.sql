@@ -183,3 +183,5 @@ alter table `newfi_schema`.`loanmilestone` drop column `start_date`, drop column
    change `created_date` `status_update_time` datetime NULL , 
    change `status` `status` varchar(300) character set utf8 collate utf8_general_ci NULL ;
 
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `mobile_alert_preference` TINYINT(1) NULL DEFAULT 0 AFTER `subscriptionsStatus`;
