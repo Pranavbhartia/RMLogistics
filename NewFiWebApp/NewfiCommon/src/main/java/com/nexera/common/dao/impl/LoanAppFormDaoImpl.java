@@ -106,6 +106,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		criteria.add(Restrictions.eq("loan", loan));
 		LoanAppForm loanAppForm=(LoanAppForm) criteria.uniqueResult();
 		
+		
 		Hibernate.initialize(loanAppForm.getGovernmentquestion());
 		Hibernate.initialize(loanAppForm.getRefinancedetails());
 		Hibernate.initialize(loanAppForm.getPropertyTypeMaster());

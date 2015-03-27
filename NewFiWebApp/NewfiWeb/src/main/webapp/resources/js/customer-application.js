@@ -101,10 +101,7 @@ function paintCustomerApplicationPage() {
 	
 	appUserDetails = JSON.parse(newfi.appUserDetails);
 	
-	
-	
-	
-	
+
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
 	
@@ -411,7 +408,7 @@ function paintCustomerApplicationPageStep1a() {
     		appUserDetails.user = user;
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		
-    		alert(JSON.stringify(appUserDetails));
+    		//alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		
         	        	
