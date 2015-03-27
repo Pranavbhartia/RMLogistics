@@ -19,13 +19,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
-import com.nexera.workflow.Constants.Status;
 import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.manager.CacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
@@ -118,8 +118,8 @@ public class EngineTrigger {
 			LOGGER.debug("Updating workflow master status if its not updated ");
 			WorkflowExec workflowExec = workflowItemExecution
 			        .getParentWorkflow();
-			if (!workflowExec.getStatus().equals(Status.STARTED.getStatus())) {
-				workflowExec.setStatus(Status.STARTED.getStatus());
+			if (!workflowExec.getStatus().equals(WorkItemStatus.STARTED.getStatus())) {
+				workflowExec.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService.updateWorkflowExecStatus(workflowExec);
 			}
 			if (workflowItemExecution.getParentWorkflowItemExec() != null) {
@@ -127,16 +127,16 @@ public class EngineTrigger {
 				WorkflowItemExec parentWorkflowItemExec = workflowItemExecution
 				        .getParentWorkflowItemExec();
 				if (parentWorkflowItemExec.getStatus().equalsIgnoreCase(
-				        Status.NOT_STARTED.getStatus())) {
+				        WorkItemStatus.NOT_STARTED.getStatus())) {
 					LOGGER.debug("Updating the parent workflow item status to started ");
 					parentWorkflowItemExec
-					        .setStatus(Status.STARTED.getStatus());
+					        .setStatus(WorkItemStatus.STARTED.getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
 				}
 
 				LOGGER.debug("Updating workflow item execution status  to started");
-				workflowItemExecution.setStatus(Status.STARTED.getStatus());
+				workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				WorkflowManager workflowManager = applicationContext
@@ -164,13 +164,13 @@ public class EngineTrigger {
 				int count = 0;
 				for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
 					if (childWorkflowItemExec.getStatus().equalsIgnoreCase(
-					        Status.COMPLETED.getStatus())) {
+					        WorkItemStatus.COMPLETED.getStatus())) {
 						count = count + 1;
 					}
 				}
 				if (count == childWorkflowItemExecList.size()) {
 					LOGGER.debug("All child items are complete, Updating the parent ");
-					parentEWorkflowItemExec.setStatus(Status.COMPLETED
+					parentEWorkflowItemExec.setStatus(WorkItemStatus.COMPLETED
 					        .getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(parentEWorkflowItemExec);
@@ -184,14 +184,14 @@ public class EngineTrigger {
 					LOGGER.debug(" The item id belongs to parent "
 					        + workflowItemExecution);
 					LOGGER.debug("Updating the workflow item execution status to started ");
-					workflowItemExecution.setStatus(Status.STARTED.getStatus());
+					workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
 					// TODO decide what will happen to parent exec ?
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
 						LOGGER.debug("Starting all child threads together ");
 						LOGGER.debug("Updating the child workflow item execution status to started ");
-						childWorkflowItemExec.setStatus(Status.STARTED
+						childWorkflowItemExec.setStatus(WorkItemStatus.STARTED
 						        .getStatus());
 
 						workflowService
@@ -217,13 +217,13 @@ public class EngineTrigger {
 					int count = 0;
 					for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
 						if (childWorkflowItemExec.getStatus().equalsIgnoreCase(
-						        Status.COMPLETED.getStatus())) {
+						        WorkItemStatus.COMPLETED.getStatus())) {
 							count = count + 1;
 						}
 					}
 					if (count == childWorkflowItemExecList.size()) {
 						LOGGER.debug("All child items are complete, Updating the parent ");
-						workflowItemExecution.setStatus(Status.COMPLETED
+						workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
 						        .getStatus());
 						workflowService
 						        .updateWorkflowItemExecutionStatus(workflowItemExecution);
@@ -231,7 +231,7 @@ public class EngineTrigger {
 
 				} else {
 					LOGGER.debug("Independent execution");
-					workflowItemExecution.setStatus(Status.STARTED.getStatus());
+					workflowItemExecution.setStatus(WorkItemStatus.STARTED.getStatus());
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					WorkflowManager workflowManager = applicationContext
