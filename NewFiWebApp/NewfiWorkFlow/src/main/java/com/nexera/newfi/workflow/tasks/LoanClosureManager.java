@@ -48,9 +48,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements IWorkflowT
 		try{
 			Loan loan=new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestoneMaster loanMilestoneMaster=new LoanMilestoneMaster();
-			loanMilestoneMaster.setId(Milestones.LOAN_CLOSURE.getMilestoneID());//TODO change ID using milestone
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, loanMilestoneMaster);
+			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.LOAN_CLOSURE.getMilestoneKey());
 			return mileStone.getComments().toString();
 		}catch(Exception e){
 			LOG.error(e.getMessage());
