@@ -198,3 +198,6 @@ ADD CONSTRAINT `fk_wfItem_successOfWfItemExec`
 
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `locked_rate` DECIMAL(7,2) NULL AFTER `rate_locked`;
+
+ALTER TABLE `newfi_schema`.`batchjobexecution` 
+   change `id` `id` int(11) NOT NULL AUTO_INCREMENT
