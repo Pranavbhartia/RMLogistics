@@ -53,7 +53,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> objectMap) {
-		
+		HashMap<String, Object> map=new HashMap<String, Object>();
 		Loan loan=new Loan();
 		loan.setId(Integer.parseInt(objectMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 		LoanMilestone loanMilestone=loanService.findLoanMileStoneByLoan(loan, Milestones.DISCLOSURE.getMilestoneKey());
@@ -64,26 +64,28 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			NeedsListMaster needsListMaster=new NeedsListMaster();
 			needsListMaster.setId(Integer.parseInt(MasterNeedsEnum.System_Disclosure_Need.getIndx()));
 			LoanNeedsList loanNeedsList =needsListService.findNeedForLoan(loan, needsListMaster);
-			HashMap<String, Object> map=new HashMap<String, Object>();
 			map.put(WorkflowDisplayConstants.STATUS_KEY, status);
-			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList.getUploadFileId().getS3path());//TODO check column path
-			ObjectMapper mapper=new ObjectMapper();
-			StringWriter sw=new StringWriter();
-			try {
-				mapper.writeValue(sw, map);
-			} catch (JsonGenerationException e) {
-				e.printStackTrace();
-				return null;
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}
-			sw.toString();
+			//TODO check column path
+			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList.getUploadFileId().getS3path());
+			
+		}else{
+			map.put(WorkflowDisplayConstants.STATUS_KEY, status);
 		}
-		return null;
+		ObjectMapper mapper=new ObjectMapper();
+		StringWriter sw=new StringWriter();
+		try {
+			mapper.writeValue(sw, map);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return sw.toString();
 	}
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
