@@ -103,5 +103,22 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 					hibernateException);
 		}
 	}
+	public LoanNeedsList findNeedForLoan(Loan loan,NeedsListMaster needsListMaster){
+		try{
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			criteria.add(Restrictions.eq("needsListMaster", needsListMaster));
+			List<LoanNeedsList> list=criteria.list();
+			if(list.size()>0)
+				return list.get(0);
+		}catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
+		return null;
+	}
 
 }

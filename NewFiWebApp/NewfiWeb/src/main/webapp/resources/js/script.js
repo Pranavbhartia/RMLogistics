@@ -128,7 +128,7 @@ function showCustomerLoanPage(user) {
 	loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
 
 	$('#right-panel').append(loanDetailsMainContainer);
-	changeSecondaryLeftPanel(2);
+	changeSecondaryLeftPanel(1);
 	adjustCenterPanelWidth();
 	
 	//TODO: Invoke dynamic binder to listen to secondary navigation clicks
@@ -666,7 +666,7 @@ function getRateProgramContainer() {
 	parentWrapper.append(rpHeader).append(rpContainer);
 	var applyNow = $('<div>').attr({
 		"class" : "cp-lock-btn"
-	}).html("Apply Now").bind('click',function(event){
+	}).html("Create Your Account").bind('click',function(event){
 		$('#ce-main-container').html('');
 		var applyNow = paintApplyNow();
 		$('#ce-main-container').html(applyNow);
@@ -674,7 +674,7 @@ function getRateProgramContainer() {
 	
 	var NotifyMe = $('<div>').attr({
 		"class" : "cp-lock-btn"
-	}).html("Notify Me").bind('click',function(event){
+	}).html("Email My Numbers").bind('click',function(event){
 		
 		$('#ce-main-container').html('');
 		var notifyForRatesAlerts = paintNotifyForRatesAlerts();

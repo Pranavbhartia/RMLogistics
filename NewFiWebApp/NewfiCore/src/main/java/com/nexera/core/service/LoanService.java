@@ -77,7 +77,10 @@ public interface LoanService {
 	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
 
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
-	        LoanMilestoneMaster loanMilestoneMaster);
+			String loanMilestoneMAsterName);
+
+
+	public LoanVO convertIntoLoanVO(Loan loan);
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
@@ -95,5 +98,6 @@ public interface LoanService {
 	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
 	public void updateLoanMilestone(LoanMilestone loanMilestone);
+
 
 }

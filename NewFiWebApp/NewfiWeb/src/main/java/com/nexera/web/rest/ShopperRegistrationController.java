@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanStatusMasterVO;
+import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.LoanAppFormService;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 
 @RestController
@@ -36,6 +41,12 @@ public class ShopperRegistrationController {
 	
 	@Autowired 
 	private UserDetailsService userDetailsSvc;
+	
+	@Autowired
+	private LoanService loanService;
+	
+	@Autowired
+	protected LoanAppFormService loanAppFormService;
 	
 	@Autowired
     protected AuthenticationManager authenticationManager;
@@ -59,8 +70,31 @@ public class ShopperRegistrationController {
 		//String password = userVO.getPassword();
 		//UserVO userVOObj=   userProfileService.saveUser(userVO);
 		UserVO userVOObj = null;
+		LoanVO loanVO = null;
 		try {
 			 userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+			 // insert a record in the loan table also
+			 loanVO  = new LoanVO();
+			 
+			 loanVO.setUser(userVOObj);
+			 LoanStatusMasterVO loanStatusMasterVO = new LoanStatusMasterVO();
+			 loanStatusMasterVO.setId(1);
+			 loanVO.setLoanStatus(loanStatusMasterVO);
+			 
+			 LoanTypeMasterVO  loanTypeMasterVO = new LoanTypeMasterVO();
+			 loanTypeMasterVO.setId(2);
+			 loanVO.setLoanType(loanTypeMasterVO);
+			 
+			 loanVO = loanService.createLoan(loanVO);
+			 
+			 // create a record in the loanAppForm table 
+			 
+			 LoanAppFormVO loanAppFormVO = new LoanAppFormVO ();
+		     loanAppFormVO.setUser(userVOObj);
+		     loanAppFormVO.setLoan(loanVO);
+		     loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			 loanAppFormService.create(loanAppFormVO);
+			 
         } catch (InvalidInputException e) {
 	       
 	        e.printStackTrace();

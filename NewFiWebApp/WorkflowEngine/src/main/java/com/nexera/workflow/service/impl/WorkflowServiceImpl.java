@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nexera.workflow.Constants.Status;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
@@ -18,6 +17,7 @@ import com.nexera.workflow.dao.WorkflowExecDao;
 import com.nexera.workflow.dao.WorkflowItemExecDao;
 import com.nexera.workflow.dao.WorkflowItemMasterDao;
 import com.nexera.workflow.dao.WorkflowMasterDao;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 
 @Component
@@ -73,7 +73,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		workflowExec.setActive(true);
 		workflowExec.setCreatedTime(new Date());
 		workflowExec.setWorkflowMaster(workflowMaster);
-		workflowExec.setStatus(Status.NOT_STARTED.getStatus());
+		workflowExec.setStatus(WorkItemStatus.NOT_STARTED.getStatus());
 		
 		int id = (Integer) workflowExecDao.save(workflowExec);
 		workflowExec.setId(id);
@@ -98,7 +98,7 @@ public class WorkflowServiceImpl implements WorkflowService
 			workflowItemExec.setParentWorkflowItemExec(parentWorkflowItemExec);
 		workflowItemExec.setWorkflowItemMaster(workflowItemMaster);
 		workflowItemExec.setParentWorkflow(parentWorkflow);
-		workflowItemExec.setStatus(Status.NOT_STARTED.getStatus());
+		workflowItemExec.setStatus(WorkItemStatus.NOT_STARTED.getStatus());
 		workflowItemExec.setCreationDate(new Date());
 		workflowItemExec.setClickable(workflowItemMaster.getClickable());
 		workflowItemExec.setDisplayOrder(workflowItemMaster.getDisplayOrder());

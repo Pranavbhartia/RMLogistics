@@ -9,7 +9,12 @@ public interface LoanAppFormService {
 	public void save(LoanAppFormVO loaAppFormVO);
 
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO);
+
+
+	public LoanAppFormVO find(LoanAppFormVO loanAppFormVO);
+
 	
 	public LoanAppForm findByLoan(Loan loan);
 	public LoanAppForm findByuserID(int userid);
+
 }

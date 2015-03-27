@@ -183,3 +183,18 @@ alter table `newfi_schema`.`loanmilestone` drop column `start_date`, drop column
    change `created_date` `status_update_time` datetime NULL , 
    change `status` `status` varchar(300) character set utf8 collate utf8_general_ci NULL ;
 
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `mobile_alert_preference` TINYINT(1) NULL DEFAULT 0 AFTER `subscriptionsStatus`;
+
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD COLUMN `on_success_item` INT(11) NULL AFTER `display_order`,
+ADD INDEX `fk_wfItem_successOfWfItemExec_idx` (`on_success_item` ASC);
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD CONSTRAINT `fk_wfItem_successOfWfItemExec`
+  FOREIGN KEY (`on_success_item`)
+  REFERENCES `newfi_schema`.`workflowitemexec` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `locked_rate` DECIMAL(7,2) NULL AFTER `rate_locked`;
