@@ -12,6 +12,10 @@ public interface LoanAppFormDao extends GenericDao {
 	
 	public LoanAppForm findLoanAppForm(Integer loanAppFormID);
 	
+
+	public LoanAppForm find(LoanAppForm loanAppForm);
+
 	public LoanAppForm findByLoan(Loan loan) ;
+
 
 }

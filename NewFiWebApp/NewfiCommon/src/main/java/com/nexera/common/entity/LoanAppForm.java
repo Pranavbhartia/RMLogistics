@@ -48,18 +48,23 @@ public class LoanAppForm implements Serializable {
 	private List<UserEmploymentHistory> userEmploymentHistories;
 	private WorkflowExec customerWorkflow;
 	private WorkflowExec loanManagerWorkflow;
-	private int loanAppFormCompletionStatus;
+	private Integer loanAppFormCompletionStatus;
+
+	
+
+	
+	
+
+	public LoanAppForm() {
+	}
 
 	@Column(name = "loan_app_completion_status")
-	public int getLoanAppFormCompletionStatus() {
+	public Integer getLoanAppFormCompletionStatus() {
 		return loanAppFormCompletionStatus;
 	}
 
-	public void setLoanAppFormCompletionStatus(int loanAppFormCompletionStatus) {
+	public void setLoanAppFormCompletionStatus(Integer loanAppFormCompletionStatus) {
 		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
-	}
-
-	public LoanAppForm() {
 	}
 
 	@Id
@@ -212,7 +217,7 @@ public class LoanAppForm implements Serializable {
 	
 
 	// bi-directional many-to-one association to User
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user")
 	public User getUser() {
 		return user;

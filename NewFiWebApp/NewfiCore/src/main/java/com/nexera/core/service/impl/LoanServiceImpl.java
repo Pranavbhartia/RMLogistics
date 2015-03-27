@@ -531,10 +531,10 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = new Loan();
 		try {
 			User user = userProfileService.parseUserModel(loanVO.getUser());
-			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO
-			        .getLoanStatus());
-			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO
-			        .getLoanType());
+			
+			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO.getLoanStatus());
+			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO.getLoanType());
+			
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -571,15 +571,18 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
-		if (userList != null) {
-			userList.add(loanVO.getUser());
-			for (UserVO userVO : userList) {
-				User user = userProfileService.parseUserModel(userVO);
-				loanDao.addToLoanTeam(loan, user, null);
-			}
-		} else {
 
-			loanDao.addToLoanTeam(loan, loan.getUser(), null);
+		if(userList!=null){
+		userList.add(loanVO.getUser());
+		
+		for (UserVO userVO : userList) {
+			User user = userProfileService.parseUserModel(userVO);
+			loanDao.addToLoanTeam(loan, user, null);
+		}
+		}else{
+			
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);	
+
 		}
 		return this.buildLoanVO(loan);
 	}
@@ -756,6 +759,39 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
 	}
 
+
+	@Override
+    public LoanVO convertIntoLoanVO(Loan loan) {
+		if (loan == null)
+			return null;
+
+		LoanVO loanVo = new LoanVO();
+		loanVo.setId(loan.getId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setDeleted(loan.getDeleted());
+		loanVo.setLoanEmailId(loan.getLoanEmailId());
+		loanVo.setLqbFileId(loan.getLqbFileId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setModifiedDate(loan.getModifiedDate());
+		loanVo.setName(loan.getName());
+		if (loan.getLoanStatus() != null)
+			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
+		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
+
+		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
+		if (loan.getCustomerWorkflow() != null) {
+			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
+		}
+		if (loan.getLoanManagerWorkflow() != null) {
+			loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow()
+			        .getId());
+		}
+
+		loanVo.setIsBankConnected(loan.getIsBankConnected());
+		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		return loanVo;
+    }
+
 	@Transactional(readOnly = true)
 	public List<Loan> getAllActiveLoan() {
 		return loanDao.getAllActiveLoan();
@@ -780,5 +816,6 @@ public class LoanServiceImpl implements LoanService {
 
 		loanMilestoneDao.update(loanMilestone);
 	}
+
 
 }
