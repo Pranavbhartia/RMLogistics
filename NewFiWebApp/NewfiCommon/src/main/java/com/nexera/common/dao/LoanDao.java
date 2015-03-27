@@ -16,6 +16,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.UserVO;
 
 public interface LoanDao extends GenericDao {
 
@@ -84,5 +85,9 @@ public interface LoanDao extends GenericDao {
 			String loanMilestoneMAsterName);
 
 	public List<Loan> getAllActiveLoan();
+
+	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel);
+
+	public String retrieveUserRole(UserVO userVO);
 
 }
