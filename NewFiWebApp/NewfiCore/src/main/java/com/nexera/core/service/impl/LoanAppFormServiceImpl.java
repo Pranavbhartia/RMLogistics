@@ -7,11 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
-<<<<<<< HEAD
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.GovernmentQuestion;
-=======
->>>>>>> upstream/master
+
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTypeMaster;
@@ -67,7 +65,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 */
 		//return this.buildLoanAppFormVO(loanAppForm);
 	}
-<<<<<<< HEAD
+
 	
 	@Override
 	@Transactional
@@ -220,7 +218,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			
 		    return loanTypeMasterVO;
 	    }
-=======
+
 	@Override
 	@Transactional
 	public LoanAppForm findByLoan(Loan loan){
@@ -232,8 +230,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	public LoanAppForm findByuserID(int userid) {
 		return loanAppFormDao.findByuserID(userid);
 	}
-	
->>>>>>> upstream/master
+
 }
 
 

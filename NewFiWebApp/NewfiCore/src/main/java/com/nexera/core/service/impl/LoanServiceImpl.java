@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
