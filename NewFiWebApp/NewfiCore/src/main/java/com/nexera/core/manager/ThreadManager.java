@@ -376,7 +376,7 @@ public class ThreadManager implements Runnable {
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
 
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED) {
-			map.put("loanId", loan.getId());
+			map.put("loanID", loan.getId());
 			map.put("status", "Appraisal Ordered");
 
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN) {
@@ -420,7 +420,7 @@ public class ThreadManager implements Runnable {
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED) {
 
 		}
-		return null;
+		return map;
 
 	}
 
