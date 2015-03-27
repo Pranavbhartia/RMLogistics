@@ -2,7 +2,7 @@
 var neededItemListObject;
 var currentUserAndLoanOnj = new Object();
 var doPagination = false;
-var loanType = "refinance";
+var loanTypeText = "refinance";
 
 
 function changeLeftPanel(primary) {
@@ -565,11 +565,11 @@ function getNonEditableFormRow(desc, value, id) {
  * Functions for fix your rate module
  */
 function paintFixYourRatePage() {
-	var rateProgramWrapper = getLockRateProgramContainer();
+	/*var rateProgramWrapper = getLockRateProgramContainer();
+	$('#center-panel-cont').append(rateProgramWrapper);*/
 	var loanSummaryWrapper = getLoanSummaryWrapper();
 	var closingCostWrapper = getClosingCostSummaryContainer();
-	$('#center-panel-cont').append(rateProgramWrapper).append(
-			loanSummaryWrapper).append(closingCostWrapper);
+	$('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 }
 
 function getRateProgramContainer() {
@@ -850,13 +850,16 @@ function getLoanSummaryWrapper() {
 	});
 	var header = getLoanSummaryHeader();
 	var container;
-	if(loanType == "refinance"){
+	if(loanTypeText == "refinance"){
 		container = getLoanSummaryContainerRefinance();
-	}else if(loanType == "purchase"){
+	}else if(loanTypeText == "purchase"){
 		container = getLoanSummaryContainerPurchase();
 	}
 	var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
-	parentWrapper.append(header).append(container).append(bottomText);
+	
+	var rateWrapper = getLoanSliderWrapper();
+	
+	parentWrapper.append(header).append(container).append(rateWrapper).append(bottomText);
 	return parentWrapper;
 }
 
@@ -884,7 +887,7 @@ function getLoanSummaryContainerPurchase() {
 	// add rows in left column
 	var lcRow1 = getLaonSummaryApplyBtnRow();
 	var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase");
-	var lcRow3 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
+	var lcRow3 = getLoanSummaryRow("Loan Program", "5 Years Fixed ARM");
 	var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
 	var lcRow5 = getLoanSummaryRow("Purchase Amount", "$ 473,000.000");
 	var lcRow6 = getLoanSummaryRow("Interest Rate", "3.375%");
@@ -921,30 +924,34 @@ function getLoanSummaryContainerRefinance() {
 		"class" : "loan-summary-lp float-left"
 	});
 	// add rows in left column
-	var lcRow1 = getLaonSummaryApplyBtnRow();
-	var lcRow2 = getLoanSummaryRow("Loan Type", "Refinance - No Cash Out");
-	var lcRow3 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
-	var lcRow4 = getLoanSummaryRow("Interest Rate", "3.375%");
-	var lcRow5 = getLoanSummaryRow("Loan Amount", "$ 373,000.000");
-	var lcRow6 = getLoanSummaryRow("ARP", "3.547%");
-	var lcRow7 = getLoanSummaryRow("Estimated<br/>Closing Cost", "$8,185.75");
+	var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - No Cash Out");
+	var lcRow2 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
+	var lcRow3 = getLoanSummaryRow("Interest Rate", "3.375%");
+	var lcRow4 = getLoanAmountRow("Loan Amount", "$ 373,000.000");
+	
+	var lcRow5 = getLoanSummaryRow("ARP", "3.547%");
+	var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", "$8,185.75");
 	leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(
-			lcRow5).append(lcRow6).append(lcRow7);
+			lcRow5).append(lcRow6);
 
 	var rightCol = $('<div>').attr({
 		"class" : "loan-summary-rp float-right"
 	});
 	// add rows in right column
-	var rcRow1 = getLoanSummaryRow("Monthly Payment", "");
-	var rcRow2 = getLoanSummaryRow("Principal Interest", "$ 1,649.20");
-	var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
-	rcRow3.addClass("no-border-bottom");
-	var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
-	var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
-	var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment",
+	var rcRow1 = getLoanSummaryRow("Principal Interest", "$ 1,649.20");
+	var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
+	rcRow2.addClass("no-border-bottom");
+	var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
+	var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
+	
+	var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
+	var rcRow6 = getLoanSummaryRow("Current Monthly Payment", "$ 1,649.20");
+	var rcRow7 = getLoanSummaryRow("Monthly Payment Difference", "$ 1,649.20");
+	
+	var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment",
 			"$ 1,649.02");
 	rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4)
-			.append(rcRow5).append(rcRow6);
+			.append(rcRow5).append(rcRow6).append(rcRow7).append(rcRow8);
 
 	container.append(leftCol).append(rightCol);
 	return container;
@@ -962,6 +969,70 @@ function getLaonSummaryApplyBtnRow() {
 	}).html("Apply");
 	container.append(col1).append(col2);
 	return container;
+}
+
+function getLoanAmountRow(desc, detail) {
+	var container = $('<div>').attr({
+		"class" : "loan-summary-row"
+	});
+	
+	var loanAmountCont = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	
+	var col1 = $('<div>').attr({
+		"class" : "loan-summary-col-desc float-left"
+	}).html(desc);
+	var col2 = $('<div>').attr({
+		"class" : "loan-summary-col-detail float-left"
+	}).html(detail);
+	
+	var dropdownarrow = $('<div>').attr({
+		"class" : "dropdown-arrow"
+	}).bind('click',function(){
+		$('#loan-amount-details').toggle();
+	});
+	
+	col2.append(dropdownarrow);
+	
+	loanAmountCont.append(col1).append(col2);
+	
+	
+	var loanAmountDetails = $('<div>').attr({
+		"id" : "loan-amount-details",
+		"class" : "loan-amount-details hide"
+	});
+	
+	var row1 = $('<div>').attr({
+		"class" : "loan-summary-sub-row clearfix"
+	});
+	
+	var col1row1 = $('<div>').attr({
+		"class" : "loan-summary-sub-col-desc float-left"
+	}).html("Current Loan Amount");
+	
+	var col2row1 = $('<div>').attr({
+		"class" : "loan-summary-sub-col-detail float-left"
+	}).html("$ 303,000.00");
+	
+	row1.append(col1row1).append(col2row1);
+	
+	var row2 = $('<div>').attr({
+		"class" : "loan-summary-sub-row clearfix"
+	});
+	
+	var col1row2 = $('<div>').attr({
+		"class" : "loan-summary-sub-col-desc float-left"
+	}).html("Cashout");
+	
+	var col2row2 = $('<div>').attr({
+		"class" : "loan-summary-sub-col-detail float-left"
+	}).html("$ 70,000.00");
+	
+	row2.append(col1row2).append(col2row2);
+	loanAmountDetails.append(row1).append(row2);
+	
+	return container.append(loanAmountCont).append(loanAmountDetails);
 }
 
 function getLoanSummaryRow(desc, detail) {
@@ -1515,4 +1586,173 @@ function dismissAlert(element){
 function entryPointCustomerViewChangeNav(viewName) {
 
 	changeSecondaryLeftPanel(viewName);
+}
+
+
+
+
+function getLoanSliderWrapper(){
+	var wrapper = $('<div>').attr({
+		"class" : "lock-rate-slider-wrapper"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "lock-rate-slider-header"
+	}).html("select loan program");
+	
+	var container = $('<div>').attr({
+		"class" : "lock-rate-slider-container"
+	});
+	
+	var tenureSlider = getYearSliderCont();
+	
+	var rateSlider = getRateSliderCont();
+	
+	container.append(tenureSlider).append(rateSlider);
+	
+	var rateBtn = $('<div>').attr({
+		"class" : "rate-btn"
+	}).html("Request Rate Lock");
+	
+	
+	return wrapper.append(header).append(container).append(rateBtn);
+}
+
+function getYearSliderCont() {
+	var wrapper = $('<div>').attr({
+		"class" : "slider-wrapper clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "slider-hdr-txt float-left"
+	}).html("Length of Loan");
+	
+	var silderCont = getYearSlider();
+	
+	return wrapper.append(headerTxt).append(silderCont);
+	
+}
+
+function getYearSlider(){
+	var container = $('<div>').attr({
+		"class" : "silder-cont yr-slider float-left"
+	});
+	
+	var yearValues = [{
+		"value" : "3",
+		"text" : "3 - year fixed arm"
+	},
+	{
+		"value" : "5",
+		"text" : "5 - year fixed arm"
+	},
+	{
+		"value" : "7",
+		"text" : "7 - year fixed arm"
+	},
+	{
+		"value" : "15",
+		"text" : "15 - year fixed arm"
+	},
+	{
+		"value" : "30",
+		"text" : "30 - year fixed arm"
+	}
+	];
+	
+	for(var i=0; i<yearValues.length; i++){
+		var leftOffset = i/(yearValues.length-1) * 100;
+		
+		var gridItemCont = $('<div>').attr({
+			"class" : "yr-grid-cont"
+		});
+		
+		var selectIcon = $('<div>').attr({
+			"class" : "yr-slider-icon"
+		}).css({
+			"left" : leftOffset + "%"
+		}).bind('click',function(){
+			if(!$(this).hasClass('yr-slider-icon-selected')){
+				$('.yr-grid-cont .yr-slider-icon').removeClass('yr-slider-icon-selected');
+				$(this).addClass('yr-slider-icon-selected');
+				$('.yr-grid-cont .yr-grid-item-selected').hide();
+				$('.yr-grid-cont .yr-grid-item').show();
+				$(this).parent().find('.yr-grid-item').hide();
+				$(this).parent().find('.yr-grid-item-selected').show();
+			}
+		});
+		
+		var gridItem = $('<div>').attr({
+			"class" : "yr-grid-item"
+		}).css({
+			"left" : leftOffset + "%"
+		}).html(yearValues[i].value + " Yr");
+		
+		var gridItemSelected = $('<div>').attr({
+			"class" : "yr-grid-item-selected hide"
+		}).css({
+			"left" : leftOffset + "%"
+		}).html(yearValues[i].text);
+		
+		gridItemCont.append(selectIcon).append(gridItem).append(gridItemSelected);
+		
+		container.append(gridItemCont);
+	}
+	
+	return container;
+}
+
+function getRateSliderCont() {
+	var wrapper = $('<div>').attr({
+		"class" : "slider-wrapper clearfix"
+	});
+	
+	var headerTxt = $('<div>').attr({
+		"class" : "slider-hdr-txt float-left"
+	}).html("Interest Rate");
+	
+	var rateArray = ["3.000","3.125","3.250","3.300","3.340"];
+	
+	var silderCont = getRatSlider(rateArray);
+	
+	return wrapper.append(headerTxt).append(silderCont);
+}
+
+function getRatSlider(gridArray) {
+	
+	var container = $('<div>').attr({
+		"class" : "silder-cont rt-slider float-left"
+	});
+	
+	var tsIcon = $('<div>').attr({
+		"id" : "tenure-slider",
+		"class" : "tenure-slider-icon"
+	}).slider({
+		orientation : "horizontal",
+		range : "min",
+		max : gridArray.length - 1,
+		value : gridArray[0],
+		change:function(event,ui){
+		}
+	});
+	
+	container.append(tsIcon);
+	
+	var gridItemCont = $('<div>').attr({
+		"class" : "rt-grid-cont"
+	});
+	
+	for(var i=0; i<gridArray.length; i++){
+		var leftOffset = i/(gridArray.length-1) * 100;
+		
+		var gridItem = $('<div>').attr({
+			"class" : "rt-grid-item"
+		}).css({
+			"left" : leftOffset + "%"
+		}).html(gridArray[i] + "%");
+		
+		gridItemCont.append(gridItem);
+	}
+	
+	return container.append(gridItemCont);
 }

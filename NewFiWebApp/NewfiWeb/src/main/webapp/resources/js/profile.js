@@ -93,11 +93,11 @@ function getLoanPersonalInfoContainer(user) {
 		"class" : "loan-personal-info-container"
 	});
 
-	var nameRow = getCustomerNameFormRow(user);
-	container.append(nameRow);
-
 	var uploadRow = getCustomerUploadPhotoRow(user);
 	container.append(uploadRow);
+	
+	var nameRow = getCustomerNameFormRow(user);
+	container.append(nameRow);
 
 	var DOBRow = getDOBRow(user);
 	container.append(DOBRow);
@@ -785,17 +785,50 @@ function getPhone2Row(user) {
  * Functions related to form validations
  */
 
+var isProfileFormValid = true;
+$(document).on('blur','#firstNameId',function(){
+	if(!validateFormField('firstNameId', true, "First name can not be empty", "","")){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#lastNameId',function(){
+	if(!validateFormField('lastNameId', true, "Last name can not be empty", "","")){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#secEmailId',function(){
+	if(!validateFormField('secEmailId', false, "", "Email Id not valid", emailRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#zipcodeId',function(){
+	if(!validateFormField("zipcodeId", false, "", "Zip Code not valid", zipcodeRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#priPhoneNumberId',function(){
+	if(!validateFormField("priPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#secPhoneNumberId',function(){
+	if(!validateFormField("secPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+		isProfileFormValid = false;
+	}
+});
+
 function validateProfileForm(){
 	
-	var isFormValid = true;
-	if(!validateFirstName('firstNameId')){
-		isFormValid = false;
-	}
-	if(!validateLastName('lastNameId')){
-		isFormValid = false;
-	}
+	isProfileFormValid = true;
 	
-	return isFormValid;
+	$('#profile-form input').trigger('blur');
+	
+	return isProfileFormValid;
 }
 
 function validateFirstName(elementId){
@@ -843,6 +876,36 @@ function validateEmail(elementId){
 		return true;
 	}
 }
+
+
+function validateFormField(elementId,isRequired,emptyErrorMessage,errorMessage,regEx){
+	var inputVal = $('#'+elementId).val();
+	
+	if(regEx == undefined ||regEx == ""){
+		regEx = /.*/;
+	}
+	
+	if(inputVal == undefined || inputVal == ""){
+		if(isRequired){
+			$('#'+elementId).next('.err-msg').html(emptyErrorMessage).show();
+			$('#'+elementId).addClass('err-input');
+			return false;
+		}else{
+			$('#'+elementId).next('.err-msg').hide();
+			$('#'+elementId).removeClass('err-input');
+			return true;
+		}
+	}else if(!regEx.test(inputVal.trim())){
+		$('#'+elementId).next('.err-msg').html(errorMessage).show();
+		$('#'+elementId).addClass('err-input');
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
 
 function validatePhone(elementId){
 	
