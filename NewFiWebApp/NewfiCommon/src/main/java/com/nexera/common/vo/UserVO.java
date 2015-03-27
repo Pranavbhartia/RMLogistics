@@ -270,7 +270,7 @@ public class UserVO implements Serializable {
 		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
 		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
 		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
-		
+		customerDetailVO.setMobileAlertsPreference(customerDetail.getMobileAlertsPreference());
 		return customerDetailVO;
 
 
