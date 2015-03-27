@@ -73,17 +73,10 @@
 	        }
 			
 			$(document).on('change', '#prof-image', function() {
-				
-				//alert($('#prof-image')[0].files[0].name);
-				//alert("hiii");
 				var fileName=$("#prof-image").val();
-				//console.log("fileName"+fileName);
 	            var status=validatePhotoExtention(fileName);
-	            //alert("status"+status);
-				if(status!=false){
-					
-				initiateJcrop(this);
-				
+				if(status!=false){				
+				initiateJcrop(this);				
 				}
 			});
 			
