@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,7 +45,7 @@ import com.nexera.web.rest.util.TeaserRateHandler;
 public class RateCalculatorRestService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RateCalculatorRestService.class);
-	
+	private String shopperCity;
 	
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 
@@ -57,15 +58,96 @@ public class RateCalculatorRestService {
 		LOG.info("teaserRateVO"+teaserRateVO.getCurrentMortgageBalance());
 		LOG.info("teaserRateVO"+teaserRateVO.getCreditscore());
 		
-		String requestXML = CreateXmlForTeaserRate(teaserRateVO);
-		LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
-		List<TeaserRateResponseVO> teaserRateResponseVO = invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
+		//String requestXML = CreateXmlForTeaserRate(teaserRateVO);
+		//LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
+		//List<TeaserRateResponseVO> teaserRateResponseVO = invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
+		JSONObject jsonObject = createMapforJson(teaserRateVO);
+		List<TeaserRateResponseVO> teaserRateResponseVO = invokeRest(CreateTeaserRateJson(jsonObject,"RunQuickPricer").toString());
+		
 		LOG.info("Json resonse returned to JSP is"+gson.toJson(teaserRateResponseVO));
 		return gson.toJson(teaserRateResponseVO);
 	}
 	
 	
-	public JSONObject  CreateTeaserRateJson(String requestXML,String opName){
+	
+	private JSONObject createMapforJson(TeaserRateVO teaserRateVO)
+	{
+		String loanAmount ;
+		String loanPurpose;
+		
+
+		if("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance()) && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())){
+			
+			loanAmount =  "280000";
+			LOG.info("setting hardcoded calue for loan amount ");
+		}
+		
+		
+		if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+			
+			loanAmount =  Integer.parseInt(teaserRateVO.getCashTakeOut()) +Integer.parseInt(teaserRateVO.getCurrentMortgageBalance())+"";
+			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
+		}else{
+			loanAmount = teaserRateVO.getCurrentMortgageBalance();
+		}
+		
+      if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "payOffMortgage".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+			
+	        loanPurpose = "1";
+			LOG.info("Inside loan purpose "+loanPurpose);
+		}else{
+			loanPurpose = "0";
+			LOG.info("Inside loan purpose "+loanPurpose);
+		}
+		
+      if("".equalsIgnoreCase(teaserRateVO.getHomeWorthToday())){
+    	  LOG.info("Setting hardcoded homeworth to 350000 ");
+    	  teaserRateVO.setHomeWorthToday("350000");
+      }
+      String stateFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+      
+      if("".equalsIgnoreCase(stateFromAPI)){
+    	  stateFromAPI ="CA";
+      }
+      
+      
+      
+      
+      
+		HashMap<String, String> hashmap = new HashMap();
+		hashmap.put("homeWorthToday", teaserRateVO.getHomeWorthToday());
+		hashmap.put("loanAmount", loanAmount);
+		hashmap.put("stateFromAPI", stateFromAPI);
+		hashmap.put("city", shopperCity);
+		hashmap.put("zipCode", teaserRateVO.getZipCode());
+		
+		JSONObject jsonObject = new JSONObject(hashmap);
+		return jsonObject;
+	}
+	
+	
+	
+	
+	public JSONObject  CreateTeaserRateJson(JSONObject jsonMapObject,String opName){
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put("sXmlDataMap",jsonMapObject);		
+			json.put("opName",opName );
+			
+			json.put("loanVO", jsonChild); 
+			
+			System.out.println("jsonMapObject"+json);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}  
+			return json;
+	}
+	
+	
+	
+	
+	/*public JSONObject  CreateTeaserRateJson(String requestXML,String opName){
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 		try {
@@ -77,10 +159,10 @@ public class RateCalculatorRestService {
 		}  
 			return json;
 	}
+	*/
 	
 	
-	
-	public String CreateXmlForTeaserRate(TeaserRateVO teaserRateVO)
+	/*public String CreateXmlForTeaserRate(TeaserRateVO teaserRateVO)
 	{
 		String loanAmount ;
 		String loanPurpose;
@@ -177,7 +259,7 @@ public class RateCalculatorRestService {
 		return xml;
 		
 	}
-	
+	*/
 	
 	String getStateUtlity(String zipCode){
 		String geoServiceAPI = "http://www.webservicex.net/uszip.asmx/GetInfoByZIP?USZip="+zipCode;
@@ -279,6 +361,7 @@ public class RateCalculatorRestService {
 				    		Element eElement = (Element) node;
 				    		System.out.println("State : " + eElement.getElementsByTagName("STATE").item(0).getTextContent());
 				    	state = eElement.getElementsByTagName("STATE").item(0).getTextContent();
+				    	shopperCity = eElement.getElementsByTagName("CITY").item(0).getTextContent();
 				    	}
 				    	
 				    }

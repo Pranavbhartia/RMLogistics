@@ -299,8 +299,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
 		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
 		loanAppForm.setMonthlyPension(this.monthlyPension);
-		loanAppForm
-		        .setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
+		loanAppForm.setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
 		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
 		loanAppForm.setSecondMortgage(this.secondMortgage);
 		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);

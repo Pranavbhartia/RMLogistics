@@ -162,9 +162,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 propertyTypeMasterVO.setModifiedDate(propertyTypeMaster.getModifiedDate());
 		 propertyTypeMasterVO.setPropertyTypeCd(propertyTypeMaster.getPropertyTypeCd());
 		 propertyTypeMasterVO.setResidenceTypeCd(propertyTypeMaster.getResidenceTypeCd());
-		 propertyTypeMasterVO.setPropertyTaxesPaid(propertyTypeMaster.getPropertyInsuranceProvider());
+		 propertyTypeMasterVO.setPropertyTaxesPaid(propertyTypeMaster.getPropertyTaxesPaid());
 		 propertyTypeMasterVO.setPropertyInsuranceProvider(propertyTypeMaster.getPropertyInsuranceProvider());
-		 propertyTypeMasterVO.setPropertyInsuranceCost(propertyTypeMaster.getPropertyPurchaseYear());
+		 propertyTypeMasterVO.setPropertyInsuranceCost(propertyTypeMaster.getPropertyInsuranceCost());
 		 propertyTypeMasterVO.setPropertyPurchaseYear(propertyTypeMaster.getPropertyPurchaseYear());
 		 propertyTypeMasterVO.setHomeWorthToday(propertyTypeMaster.getHomeWorthToday());
 		 

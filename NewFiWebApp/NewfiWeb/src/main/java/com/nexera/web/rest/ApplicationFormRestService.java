@@ -1,26 +1,35 @@
 package com.nexera.web.rest;
 
 import java.util.HashMap;
+import java.util.List;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
 @RequestMapping(value = "/application/")
 public class ApplicationFormRestService {
-
+	private static final Logger LOG = LoggerFactory.getLogger(ApplicationFormRestService.class);
 	@Autowired
 	private LoanAppFormService loanAppFormService;
 
@@ -153,4 +162,108 @@ public class ApplicationFormRestService {
 
 		return new Gson().toJson(responseVO);
 	}
+
+@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
+public @ResponseBody String createLoan(String appFormData) {
+	System.out.println("Inside createLoan");
+	Gson gson = new Gson();
+	LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+	String loanNumber = invokeRest(prepareCreateLoanJson("DIRECT-REFI-MASTER TEMPLATE").toString());
+	System.out.println("createLoanResponse is"+loanNumber);
+	if(!"".equalsIgnoreCase(loanNumber))
+		{
+		
+		String response = invokeRest(saveLoan(loanNumber,loaAppFormVO).toString());
+		System.out.println("Save Loan Response is "+response);
+		}
+	
+	return "Success";
+	
+}
+
+public JSONObject prepareCreateLoanJson(String templateName)
+{
+	JSONObject json = new JSONObject();
+	JSONObject jsonChild = new JSONObject();
+	try {
+		jsonChild.put("sTemplateName",templateName);		
+		json.put("opName","Create" );
+		
+		json.put("loanVO", jsonChild); 
+		
+		System.out.println("jsonMapObject"+json);
+	} catch (JSONException e) {
+		e.printStackTrace();
+	}  
+		return json;
+}
+
+private String invokeRest(String appFormData){
+	
+	LOG.info("Invoking rest Service with Input "+appFormData);
+	   try { 
+		    HttpHeaders headers = new HttpHeaders();
+	        HttpEntity request= new HttpEntity(appFormData, headers );
+	        RestTemplate restTemplate = new RestTemplate();
+	        String returnedResponse = restTemplate.postForObject( "http://localhost:8282/loanCall", request, String.class);
+	        JSONObject jsonObject = new JSONObject(returnedResponse);
+	        LOG.info("Response Returned from Rest Service is"+jsonObject.get("responseMessage").toString());
+	       // teaserRateList = parseLqbResponse(jsonObject.get("responseMessage").toString());
+	        return jsonObject.get("responseMessage").toString();    
+        
+	   } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error in post entity");
+            return "error";
+        }
+	   
+	   
+}
+
+private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
+{
+	HashMap<String, String> hashmap = new HashMap();
+	try {
+	hashmap.put("loanPurpose", "1");
+	hashmap.put("loanPurchasePrice", "$400,000.00");
+	hashmap.put("loanApprovedValue", "$400,000.00");
+	hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail().getSsn());
+	hashmap.put("firstName", loanAppFormVO.getUser().getFirstName());
+	hashmap.put("lastName",loanAppFormVO.getUser().getLastName());
+	hashmap.put("alimonyName", "NONE");
+	hashmap.put("alimonyPayment", "1000");
+	hashmap.put("jobExpenses", "100");
+	hashmap.put("jobRelatedPayment", loanAppFormVO.getEmployedIncomePreTax());
+	
+	
+	
+	JSONObject jsonObject = new JSONObject(hashmap);
+	
+	JSONObject json = new JSONObject();
+	JSONObject jsonChild = new JSONObject();
+	
+		jsonChild.put("sLoanNumber",loanNumber);
+		jsonChild.put("sDataContentMap",jsonObject);	
+		jsonChild.put("format","0");
+		
+		
+		json.put("opName","Save" );		
+		json.put("loanVO", jsonChild); 
+		
+		System.out.println("jsonMapObject Save operation"+json);
+		
+		return json;
+		
+		
+	} catch (JSONException e) {
+		e.printStackTrace();
+		return null;
+	}  
+	
+	
+	
+	
+}
+
+
 }
