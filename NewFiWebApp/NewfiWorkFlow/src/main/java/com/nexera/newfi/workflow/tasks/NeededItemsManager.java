@@ -24,14 +24,14 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		// Make a service call to get the number of needed items' assigned
 		// against the
 		NeededItemScoreVO neededItemScoreVO = needsListService
-		        .getNeededItemsScore(loanId);
+				.getNeededItemsScore(loanId);
 		StringBuffer strBuff = new StringBuffer();
 		strBuff.append(neededItemScoreVO.getTotalSubmittedItem() + " out of "
-		        + neededItemScoreVO.getNeededItemRequired());
+				+ neededItemScoreVO.getNeededItemRequired());
 		return new Gson().toJson(neededItemScoreVO);
 	}
 

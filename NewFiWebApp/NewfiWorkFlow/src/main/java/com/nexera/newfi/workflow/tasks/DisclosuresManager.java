@@ -20,29 +20,32 @@ import com.nexera.core.service.NeedsListService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class DisclosuresManager extends NexeraWorkflowTask implements
 		IWorkflowTaskExecutor {
 
 	@Autowired
 	private LoanService loanService;
-	
+
 	@Autowired
 	private NeedsListService needsListService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get("status").toString();
+		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+				.toString();
 		if (status.equals(ApplicationStatus.disclosureAvail)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					ApplicationStatus.disclosureAvailMessage);
 			sendEmail(objectMap);
-		}else if (status.equals(ApplicationStatus.disclosureViewed)) {
+		} else if (status.equals(ApplicationStatus.disclosureViewed)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					ApplicationStatus.disclosureViewedMessage);
 			sendEmail(objectMap);
-		}else if (status.equals(ApplicationStatus.disclosureSigned)) {
+		} else if (status.equals(ApplicationStatus.disclosureSigned)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					ApplicationStatus.disclosureSignedMessage);
@@ -53,26 +56,35 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> objectMap) {
-		HashMap<String, Object> map=new HashMap<String, Object>();
-		Loan loan=new Loan();
-		loan.setId(Integer.parseInt(objectMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-		LoanMilestone loanMilestone=loanService.findLoanMileStoneByLoan(loan, Milestones.DISCLOSURE.getMilestoneKey());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Loan loan = new Loan();
+		loan.setId(Integer.parseInt(objectMap.get(
+				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
+				Milestones.DISCLOSURE.getMilestoneKey());
 		String status = loanMilestone.getComments().toString();
-		//TODO check Status Mapping
-		//String DisplayStat="";
-		if (status.equals(ApplicationStatus.disclosureAvail)||status.equals(ApplicationStatus.disclosureViewed)||status.equals(ApplicationStatus.disclosureSigned)) {
-			NeedsListMaster needsListMaster=new NeedsListMaster();
-			needsListMaster.setId(Integer.parseInt(MasterNeedsEnum.System_Disclosure_Need.getIndx()));
-			LoanNeedsList loanNeedsList =needsListService.findNeedForLoan(loan, needsListMaster);
+		// TODO check Status Mapping
+		// String DisplayStat="";
+		if (status.equals(ApplicationStatus.disclosureAvail)
+				|| status.equals(ApplicationStatus.disclosureViewed)
+				|| status.equals(ApplicationStatus.disclosureSigned)) {
+			NeedsListMaster needsListMaster = new NeedsListMaster();
+			needsListMaster
+					.setId(Integer
+							.parseInt(MasterNeedsEnum.System_Disclosure_Need
+									.getIndx()));
+			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
+					loan, needsListMaster);
 			map.put(WorkflowDisplayConstants.STATUS_KEY, status);
-			//TODO check column path
-			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList.getUploadFileId().getS3path());
-			
-		}else{
+			// TODO check column path
+			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList
+					.getUploadFileId().getS3path());
+
+		} else {
 			map.put(WorkflowDisplayConstants.STATUS_KEY, status);
 		}
-		ObjectMapper mapper=new ObjectMapper();
-		StringWriter sw=new StringWriter();
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
@@ -87,6 +99,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		}
 		return sw.toString();
 	}
+
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub

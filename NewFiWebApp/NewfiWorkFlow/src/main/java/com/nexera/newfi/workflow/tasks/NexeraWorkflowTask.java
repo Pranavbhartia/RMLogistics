@@ -18,6 +18,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
+
 @Component
 public abstract class NexeraWorkflowTask {
 	@Autowired
@@ -27,7 +28,8 @@ public abstract class NexeraWorkflowTask {
 	@Autowired
 	private LoanDao loanDao;
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(NexeraWorkflowTask.class);
+			.getLogger(NexeraWorkflowTask.class);
+
 	public void sendEmail(HashMap<String, Object> objectMap) {
 		if (objectMap != null) {
 			Loan loan = new Loan();
@@ -39,8 +41,8 @@ public abstract class NexeraWorkflowTask {
 					.toString();
 			EmailVO emailEntity = new EmailVO();
 			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
-			String [] names=new String[1];
-			names[0]=WorkflowDisplayConstants.EMAIL_RECPIENT_NAME;
+			String[] names = new String[1];
+			names[0] = WorkflowDisplayConstants.EMAIL_RECPIENT_NAME;
 			for (LoanTeam teamMember : loanTeam) {
 				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
 				emailRecipientVO.setEmailID(teamMember.getUser().getEmailId());
@@ -48,8 +50,9 @@ public abstract class NexeraWorkflowTask {
 						.getFirstName()
 						+ " "
 						+ teamMember.getUser().getLastName());
-				if(loanTeam.size()==1){
-					names[0]=teamMember.getUser().getFirstName()+ " "+teamMember.getUser().getLastName();
+				if (loanTeam.size() == 1) {
+					names[0] = teamMember.getUser().getFirstName() + " "
+							+ teamMember.getUser().getLastName();
 				}
 				recipients.add(emailRecipientVO);
 			}
@@ -71,8 +74,9 @@ public abstract class NexeraWorkflowTask {
 
 		}
 	}
-	public void makeANote(int loanId,String message){
-		messageServiceHelper.generateWorkflowMessage(loanId, message,false);
+
+	public void makeANote(int loanId, String message) {
+		messageServiceHelper.generateWorkflowMessage(loanId, message, false);
 	}
-	
+
 }

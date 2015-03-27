@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.WorkflowDisplayConstants;
-import com.nexera.newfi.workflow.tasks.UWStatusManager;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(ClosureDisplayManager.class);
+			.getLogger(ClosureDisplayManager.class);
 
 	@Autowired
 	private LoanService loanService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
@@ -30,12 +30,14 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try{
-			Loan loan=new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone=loanService.findLoanMileStoneByLoan(loan, Milestones.LOAN_CLOSURE.getMilestoneKey());
+		try {
+			Loan loan = new Loan();
+			loan.setId(Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+					Milestones.LOAN_CLOSURE.getMilestoneKey());
 			return mileStone.getComments().toString();
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return "";
 		}

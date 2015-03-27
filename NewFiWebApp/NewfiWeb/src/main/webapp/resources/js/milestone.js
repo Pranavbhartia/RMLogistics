@@ -319,8 +319,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			} 			
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				data.loanID=selectedUserDetail.loanID;				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
+			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=ob.workItem.workflowItemType == "LOCK_YOUR_RATE"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
 			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
@@ -1120,6 +1124,12 @@ function milestoneChildEventHandler(event) {
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
 	 	event.stopPropagation();
 		 $("#lp-step1").click();
+	}else if ($(event.target).attr("data-text") == "LOCK_RATE") {
+	 	event.stopPropagation();
+		 window.location.hash="#loan/1/lock-rate"
+	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
+	 	event.stopPropagation();
+		window.location.hash="#myLoan/lock-my-rate"
 	}
 	
 	 else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {

@@ -25,7 +25,7 @@ public class WorkflowDisplayConstants {
 
 	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsCompanyID";
 	
-	public static final String STATUS_KEY="status";
+	public static final String STATUS_KEY = "status";
 	
 	public static final String RESPONSE_URL_KEY="url";
 	
