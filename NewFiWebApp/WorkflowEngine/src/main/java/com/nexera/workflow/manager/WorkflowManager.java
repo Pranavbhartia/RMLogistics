@@ -21,7 +21,6 @@ import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
-import com.nexera.workflow.exception.FatalException;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.utils.Util;
 
@@ -61,43 +60,37 @@ public class WorkflowManager implements Callable<String> {
 		if (result.equalsIgnoreCase(WorkflowConstants.SUCCESS)) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED.getStatus());
+			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
+			        .getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			LOGGER.debug("Checking if it has an onSuccess item to execute ");
-			if (workflowItemMaster.getOnSuccess() != null) {
-				WorkflowItemMaster successWorkflowItemMaster = workflowItemMaster
-				        .getOnSuccess();
-				WorkflowItemExec successWorkflowItemExec = workflowService
-				        .setWorkflowItemIntoExecution(workflowItemExecution
-				                .getParentWorkflow(),
-				                successWorkflowItemMaster,
-				                workflowItemExecution
-				                        .getParentWorkflowItemExec());
-				startWorkFlowItemExecution(successWorkflowItemExec);
+			if (workflowItemExecution.getOnSuccessItem() != null) {
+				startWorkFlowItemExecution(workflowItemExecution
+				        .getOnSuccessItem());
 
 			}
 
 		} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED.getStatus());
+			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
+			        .getStatus());
 			workflowService
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			LOGGER.debug("Checking if it has an onFailure item to execute ");
 			// TODO test this Might Have issues regarding parent of success
 			// workflow item
-			if (workflowItemMaster.getOnFailure() != null) {
-				WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster
-				        .getOnFailure();
-				WorkflowItemExec failureWorkflowItemExec = workflowService
-				        .setWorkflowItemIntoExecution(workflowItemExecution
-				                .getParentWorkflow(),
-				                failureWorkflowItemMaster,
-				                workflowItemExecution
-				                        .getParentWorkflowItemExec());
-				startWorkFlowItemExecution(failureWorkflowItemExec);
-			}
+			/*
+			 * if (workflowItemMaster.getOnFailure() != null) {
+			 * WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster
+			 * .getOnFailure(); WorkflowItemExec failureWorkflowItemExec =
+			 * workflowService
+			 * .setWorkflowItemIntoExecution(workflowItemExecution
+			 * .getParentWorkflow(), failureWorkflowItemMaster,
+			 * workflowItemExecution .getParentWorkflowItemExec());
+			 * startWorkFlowItemExecution(failureWorkflowItemExec); }
+			 */
 
 		} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
 			workflowItemExecution.setStatus(WorkItemStatus.PENDING.getStatus());
