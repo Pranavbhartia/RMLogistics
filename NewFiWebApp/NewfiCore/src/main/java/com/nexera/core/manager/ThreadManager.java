@@ -118,11 +118,6 @@ public class ThreadManager implements Runnable {
 		if (currentLoanStatus == -1) {
 			LOGGER.error("Invalid/No status received from LQB ");
 		} else {
-			String dateTime = getDataTimeField(currentLoanStatus,
-			        loadResponseList);
-			Date date = parseStringIntoDate(dateTime);
-			LOGGER.debug("Time for this status " + currentLoanStatus + " is "
-			        + dateTime);
 			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
 			if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
@@ -214,38 +209,34 @@ public class ThreadManager implements Runnable {
 				}
 				LOGGER.debug("Saving/Updating LoanMileStone ");
 				boolean sameStatus = false;
-				List<LoanMilestone> loanMilestoneList = loanMilestoneMaster
-				        .getLoanMilestones();
-				LoanMilestone loanMilestone = null;
-				for (LoanMilestone loanMile : loanMilestoneList) {
-					if (loanMile.getLoan().getId() == loan.getId()) {
-						loanMilestone = loanMile;
-						break;
-					}
-				}
+				LoanMilestone loanMilestone = getLoanMilestone(loan,
+				        loanMilestoneMaster);
 				if (loanMilestone == null) {
-					loanMilestone = new LoanMilestone();
-					loanMilestone.setLoan(loan);
-					loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
-					loanMilestone.setStatusUpdateTime(date);
-					loanMilestone.setStatus(String.valueOf(currentLoanStatus));
+					LOGGER.debug("This is a new entry of this milestone "
+					        + loanMilestoneMaster.getName());
+					putLoanMilestoneIntoExecution(currentLoanStatus,
+					        loadResponseList, loanMilestoneMaster);
 
-					saveLoanMilestone(loanMilestone);
 				} else {
 					LOGGER.debug("Milestone exist, need to update the status ");
-
-					if (Integer.valueOf(loanMilestone.getStatus()) == currentLoanStatus) {
-						sameStatus = true;
-					} else {
-						loanMilestone.setStatusUpdateTime(date);
-						loanMilestone.setStatus(String
-						        .valueOf(currentLoanStatus));
-						updateLoanMilestone(loanMilestone);
+					List<LoanMilestone> loanMilestoneList = loan
+					        .getLoanMilestones();
+					for (LoanMilestone loanMiles : loanMilestoneList) {
+						if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
+							sameStatus = true;
+						}
 					}
 				}
 
 				if (!sameStatus) {
+
 					LOGGER.debug("If status has changed then only proceed to call the class ");
+					putLoanMilestoneIntoExecution(currentLoanStatus,
+					        loadResponseList, loanMilestoneMaster);
+					checkIfAnyStatusIsMissed(currentLoanStatus,
+					        statusTrackingList, loadResponseList,
+					        loanMilestoneMaster);
+
 					List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
 					        .get(milestones);
 					List<WorkflowItemExec> itemToExecute = itemToExecute(
@@ -272,7 +263,58 @@ public class ThreadManager implements Runnable {
 		 * 
 		 * JSONObject receivedResponseForDocs = lqbInvoker
 		 * .invokeLqbService(getListOfDocs.toString());
-		 */}
+		 */
+	}
+
+	private void putLoanMilestoneIntoExecution(int currentLoanStatus,
+	        List<LoadResponseVO> loadResponseList,
+	        LoanMilestoneMaster loanMilestoneMaster) {
+
+		LoanMilestone loanMilestone = new LoanMilestone();
+		String dateTime = getDataTimeField(currentLoanStatus, loadResponseList);
+		Date date = null;
+		if (dateTime != null && !dateTime.equals(""))
+			date = parseStringIntoDate(dateTime);
+		loanMilestone.setLoan(loan);
+		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
+		loanMilestone.setStatusUpdateTime(date);
+		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
+		saveLoanMilestone(loanMilestone);
+
+	}
+
+	private LoanMilestone getLoanMilestone(Loan loan,
+	        LoanMilestoneMaster loanMilestoneMaster) {
+		return loanService.findLoanMileStoneByLoan(loan,
+		        loanMilestoneMaster.getName());
+	}
+
+	private int checkIfAnyStatusIsMissed(int currentStatus,
+	        List<Integer> statusTrackingList,
+	        List<LoadResponseVO> loadResponseVOList,
+	        LoanMilestoneMaster loanMilestoneMaster) {
+		List<LoanMilestone> loanMilestoneList = loan.getLoanMilestones();
+		int currentIndex = statusTrackingList.indexOf(currentStatus);
+		LOGGER.debug("Checking if previous state has an entry ");
+
+		int previousStatus = statusTrackingList.get(currentIndex - 1);
+		for (LoanMilestone loanMilestone : loanMilestoneList) {
+			if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
+				LOGGER.debug("No status has been missed hence breaking out of the loop");
+				break;
+			} else {
+				putLoanMilestoneIntoExecution(previousStatus,
+				        loadResponseVOList, loanMilestoneMaster);
+
+				LOGGER.debug("Recursively calling to see if multiple status has been missed ");
+				checkIfAnyStatusIsMissed(previousStatus, statusTrackingList,
+				        loadResponseVOList, loanMilestoneMaster);
+				break;
+			}
+		}
+
+		return 0;
+	}
 
 	public String removeBackSlashDelimiter(String string) {
 		if (string != null) {
@@ -424,14 +466,9 @@ public class ThreadManager implements Runnable {
 
 	}
 
-	private void saveLoanMilestone(LoanMilestone loanMilestone) {
+	private LoanMilestone saveLoanMilestone(LoanMilestone loanMilestone) {
 		LOGGER.debug("Inside method saveLoanMilestone ");
-		loanService.saveLoanMilestone(loanMilestone);
-	}
-
-	private void updateLoanMilestone(LoanMilestone loanMilestone) {
-		LOGGER.debug("Inside method updateLoanMilestone ");
-		loanService.updateLoanMilestone(loanMilestone);
+		return loanService.saveLoanMilestone(loanMilestone);
 	}
 
 	private String getDataTimeField(int currentLoanStatus,
@@ -581,11 +618,13 @@ public class ThreadManager implements Runnable {
 			}
 		}
 
-		if (time.equals(""))
+		if (time != null && time.equals(""))
 			time = date;
 		else {
-			if (!date.equals(""))
+
+			if (date != null && !date.equals(""))
 				time = time.concat("-").concat(date);
+
 		}
 		return time;
 	}

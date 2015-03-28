@@ -1,5 +1,6 @@
 package com.nexera.core.batchprocessor;
 
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +26,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.entity.BatchJobExecution;
+import com.nexera.common.entity.BatchJobMaster;
 import com.nexera.common.exception.FatalException;
 import com.nexera.core.processor.EmailProcessor;
+import com.nexera.core.service.BatchService;
 
 @DisallowConcurrentExecution
 public class EmailBatchProcessor extends QuartzJobBean {
@@ -54,13 +59,31 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	@Autowired
+	private BatchService batchService;
+
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
 	        throws JobExecutionException {
 		LOGGER.debug("Code inside this will get triggered every 1 min ");
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		LOGGER.debug("Spring beans initialized for email Thread ");
-		configureEmail();
+		BatchJobMaster batchJobMaster = getBatchJobMasterById(1);
+		if (batchJobMaster != null) {
+			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
+				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
+				configureEmail();
+				LOGGER.debug("Batch Job Completed, Updating the end time ");
+				updateBatchJobExecution(batchJobExecution);
+			} else
+				LOGGER.debug("Batch Job Cannot Execute ");
+		}
+
+	}
+
+	private void updateBatchJobExecution(BatchJobExecution batchJobExecution) {
+		batchJobExecution.setDateLastRunEndtime(new Date());
+		batchService.updateBatchJobExecution(batchJobExecution);
 
 	}
 
@@ -165,4 +188,20 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		return emailTaskExecutor;
 
 	}
+
+	private BatchJobExecution putBatchIntoExecution(
+	        BatchJobMaster batchJobMaster) {
+		BatchJobExecution batchJobExecution = new BatchJobExecution();
+		batchJobExecution.setBatchJobMaster(batchJobMaster);
+		batchJobExecution
+		        .setComments("Email Batch Processor Has Been Put Into Execution ");
+		batchJobExecution.setDateLastRunStartTime(new Date());
+		return batchService.putBatchIntoExecution(batchJobExecution);
+	}
+
+	private BatchJobMaster getBatchJobMasterById(int batchJobId) {
+		LOGGER.debug("Inside method getBatchJobMasterById ");
+		return batchService.getBatchJobMasterById(batchJobId);
+	}
+
 }

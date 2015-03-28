@@ -30,6 +30,7 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowExec;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
@@ -84,7 +85,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO getLoanByID(Integer loanID) {
-		return this.buildLoanVO((Loan) loanDao.getLoanWithDetails(loanID));
+		return this.buildLoanVO(loanDao.getLoanWithDetails(loanID));
 	}
 
 	@Override
@@ -271,6 +272,21 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
 		// Get all loans this user has access to.
+		String userRole=loanDao.retrieveUserRole(userVO);
+	
+		if(userRole.equals(UserRolesEnum.SYSTEM.name()))
+		{
+			
+			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
+			        .parseUserModel(userVO));
+			LoanDashboardVO loanDashboardVO = this
+			        .buildLoanDashboardVoFromLoanList(loanList);
+			
+			return loanDashboardVO;
+			
+		}
+			
+		
 		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
 		        .parseUserModel(userVO));
 		LoanDashboardVO loanDashboardVO = this
@@ -507,7 +523,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO findWorkflowInfoById(int loanID) {
-		Loan loan = (Loan) loanDao.getLoanWorkflowDetails(loanID);
+		Loan loan = loanDao.getLoanWorkflowDetails(loanID);
 		LoanVO loanVO = null;
 		if (loan != null) {
 			loanVO = this.buildLoanVO(loan);
@@ -532,10 +548,12 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = new Loan();
 		try {
 			User user = userProfileService.parseUserModel(loanVO.getUser());
-			
-			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO.getLoanStatus());
-			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO.getLoanType());
-			
+
+			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO
+			        .getLoanStatus());
+			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO
+			        .getLoanType());
+
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -574,16 +592,16 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
 
-		if(userList!=null){
-		userList.add(loanVO.getUser());
-		
-		for (UserVO userVO : userList) {
-			User user = userProfileService.parseUserModel(userVO);
-			loanDao.addToLoanTeam(loan, user, null);
-		}
-		}else{
-			
-			loanDao.addToLoanTeam(loan, loan.getUser(), null);	
+		if (userList != null) {
+			userList.add(loanVO.getUser());
+
+			for (UserVO userVO : userList) {
+				User user = userProfileService.parseUserModel(userVO);
+				loanDao.addToLoanTeam(loan, user, null);
+			}
+		} else {
+
+			loanDao.addToLoanTeam(loan, loan.getUser(), null);
 
 		}
 		return this.buildLoanVO(loan);
@@ -708,7 +726,8 @@ public class LoanServiceImpl implements LoanService {
 		return companyMaster;
 	}
 
-	@Transactional(readOnly = true)
+	@Override
+    @Transactional(readOnly = true)
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		return loanDao.fetchByNeedId(needId);
@@ -755,15 +774,15 @@ public class LoanServiceImpl implements LoanService {
 		        .load(TitleCompanyMaster.class, titleCompany.getId())));
 	}
 
-	@Transactional(readOnly = true)
+	@Override
+    @Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
 	}
 
-
 	@Override
-    public LoanVO convertIntoLoanVO(Loan loan) {
+	public LoanVO convertIntoLoanVO(Loan loan) {
 		if (loan == null)
 			return null;
 
@@ -792,9 +811,10 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
 		loanVo.setIsRateLocked(loan.getIsRateLocked());
 		return loanVo;
-    }
+	}
 
-	@Transactional(readOnly = true)
+	@Override
+    @Transactional(readOnly = true)
 	public List<Loan> getAllActiveLoan() {
 		return loanDao.getAllActiveLoan();
 	}
@@ -808,8 +828,10 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-	public void saveLoanMilestone(LoanMilestone loanMilestone) {
-		loanMilestoneDao.saveOrUpdate(loanMilestone);
+	public LoanMilestone saveLoanMilestone(LoanMilestone loanMilestone) {
+		int loanMilestoneId = (Integer) loanMilestoneDao.save(loanMilestone);
+		loanMilestone.setId(loanMilestoneId);
+		return loanMilestone;
 	}
 
 	@Override
@@ -818,6 +840,5 @@ public class LoanServiceImpl implements LoanService {
 
 		loanMilestoneDao.update(loanMilestone);
 	}
-
 
 }
