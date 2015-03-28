@@ -30,6 +30,7 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowExec;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
@@ -271,6 +272,21 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
 		// Get all loans this user has access to.
+		String userRole=loanDao.retrieveUserRole(userVO);
+	
+		if(userRole.equals(UserRolesEnum.SYSTEM.name()))
+		{
+			
+			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
+			        .parseUserModel(userVO));
+			LoanDashboardVO loanDashboardVO = this
+			        .buildLoanDashboardVoFromLoanList(loanList);
+			
+			return loanDashboardVO;
+			
+		}
+			
+		
 		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
 		        .parseUserModel(userVO));
 		LoanDashboardVO loanDashboardVO = this
