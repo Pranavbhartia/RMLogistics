@@ -349,14 +349,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
      * 
      */
 	@Override
-	public String retrieveUserRole(UserVO userVO)
+	public int retrieveUserRoleId(UserVO userVO)
 	{
 		Session session = sessionFactory.getCurrentSession();
 		User user;
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userVO.getId()));
 		user=(User) criteria.uniqueResult();
-		return user.getUserRole().getRoleCd();
+		return user.getUserRole().getId();
 		
 	}
 	

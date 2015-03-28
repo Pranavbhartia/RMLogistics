@@ -88,6 +88,6 @@ public interface LoanDao extends GenericDao {
 
 	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel);
 
-	public String retrieveUserRole(UserVO userVO);
+	public int retrieveUserRoleId(UserVO userVO);
 
 }
