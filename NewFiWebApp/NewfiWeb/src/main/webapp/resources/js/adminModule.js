@@ -1,3 +1,4 @@
+var userDescription="Sales Manager";
 $(document).on('click',function(e){
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -396,6 +397,7 @@ function getAdminTeamListTableRow(user, loanID) {
 }
  $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
+	if(userDescription==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription){
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
@@ -403,7 +405,7 @@ function getAdminTeamListTableRow(user, loanID) {
 			showSettingsPopup();
 		}
 	}else{		
-	if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Sales Manager"){
+
 	var alertWrapper = $('<div>').attr({
 		"id" : "alert-popup-wrapper-settings",
 		"class" : "alert-popup-wrapper-settings"
