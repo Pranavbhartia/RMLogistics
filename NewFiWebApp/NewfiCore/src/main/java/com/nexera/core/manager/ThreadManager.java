@@ -40,6 +40,7 @@ import com.nexera.common.entity.WorkflowItemExec;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
+import com.nexera.common.vo.WorkItemMilestoneInfo;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
@@ -117,18 +118,22 @@ public class ThreadManager implements Runnable {
 			}
 
 		}
-
+		LOSLoanStatus loanStatusID = null;
 		if (currentLoanStatus == -1) {
 			LOGGER.error("Invalid/No status received from LQB ");
 		} else {
-			LOSLoanStatus loanStatusID = LOSLoanStatus
-			        .getLOSStatus(currentLoanStatus);
+			loanStatusID = LOSLoanStatus.getLOSStatus(currentLoanStatus);
 			if (loanStatusID == null) {
 				LOGGER.error("Not a supported LQB status ");
 			}
 			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
 			milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP.get(
 			        loanStatusID).getMilestone();
+			WorkItemMilestoneInfo wItemMSInfo = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+			        .get(loanStatusID);
+			if (wItemMSInfo != null) {
+				statusTrackingList = wItemMSInfo.getStatusTrackingList();
+			}
 			if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
@@ -140,21 +145,6 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
 				LOGGER.debug("These status are related to underwriting ");
 
-				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCUMENT_CHECK);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_PRE_UNDERWRITING);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_IN_UNDERWRITING);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_PRE_APPROVED);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_APPROVED);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_CONDITION_REVIEW);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_FINAL_DOCS);
-
 			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
@@ -164,28 +154,11 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
 				LOGGER.debug("These status are related to appraisal ");
 
-				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_ORDERED);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_DRAWN);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_OUT);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_BACK);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS);
-
 			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
 				LOGGER.debug("These status are related to QC ");
-
-				statusTrackingList.add(LoadConstants.LQB_STATUS_PRE_DOC_QC);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE);
-				statusTrackingList
-				        .add(LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_PURCHASED);
 
 			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
@@ -194,16 +167,9 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
 				LOGGER.debug("These status are related to Loan Closure ");
 
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_SUSPENDED);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_DENIED);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_WITHDRAWN);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_ARCHIVED);
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_CLOSED);
-
 			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 				LOGGER.debug("These status are related to 1003 ");
 
-				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_SUBMITTED);
 			}
 
 			LoanMilestoneMaster loanMilestoneMaster = null;
@@ -219,6 +185,7 @@ public class ThreadManager implements Runnable {
 				}
 				LOGGER.debug("Saving/Updating LoanMileStone ");
 				boolean sameStatus = false;
+				boolean alreadyAdded = false;
 				LoanMilestone loanMilestone = getLoanMilestone(loan,
 				        loanMilestoneMaster);
 				if (loanMilestone == null) {
@@ -226,6 +193,7 @@ public class ThreadManager implements Runnable {
 					        + loanMilestoneMaster.getName());
 					putLoanMilestoneIntoExecution(currentLoanStatus,
 					        loadResponseList, loanMilestoneMaster);
+					alreadyAdded = true;
 
 				} else {
 					LOGGER.debug("Milestone exist, need to update the status ");
@@ -241,14 +209,19 @@ public class ThreadManager implements Runnable {
 				if (!sameStatus) {
 
 					LOGGER.debug("If status has changed then only proceed to call the class ");
-					putLoanMilestoneIntoExecution(currentLoanStatus,
-					        loadResponseList, loanMilestoneMaster);
+					if (!alreadyAdded) {
+						putLoanMilestoneIntoExecution(currentLoanStatus,
+						        loadResponseList, loanMilestoneMaster);
+					}
 					checkIfAnyStatusIsMissed(currentLoanStatus,
 					        statusTrackingList, loadResponseList,
 					        loanMilestoneMaster);
 
-					List<String> workflowItemTypeList = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
-					        .get(milestones);
+					List<String> workflowItemTypeList = new ArrayList<String>();
+					if (wItemMSInfo != null) {
+						workflowItemTypeList = wItemMSInfo.getWorkItems();
+					}
+
 					List<WorkflowItemExec> itemToExecute = itemToExecute(
 					        workflowItemTypeList, workflowItemExecList);
 					String params = Utils
