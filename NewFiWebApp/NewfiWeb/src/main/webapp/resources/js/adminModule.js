@@ -91,7 +91,7 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	}).data("additionalData",data);
 
 	var header = $('<div>').attr({
-		"class" : "add-team-mem-header clearfix",
+		"class" : "admin-add-team-mem-header clearfix",
 		"id":"admin-user-management-header"
 	}).html("Add User");
 
@@ -102,7 +102,7 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	header.append(rightHeaderIcon);
 
 	var container = $('<div>').attr({
-		"class" : "add-team-mem-container clearfix"
+		"class" : "admin-add-team-mem-container clearfix"
 	});
 
 	var userTypeCont = $('<div>').attr({
@@ -117,20 +117,22 @@ function appendAddUserWrapper(parentElement,clearParent,data) {
 	userTypeCont.append(userTypeSel);
 	
 	var createUserButton=$('<div>').attr({
-	"class":"prof-cust-save-btn-admin-um float-right-admin",
+	"class":"prof-cust-save-btn-admin-um float-left-admin",
 	"id":"create-user-id",
     
 	}).html("Create User").click(function(e){
 		showAddUserPopUp(e);
 
 	});	
+
 	var userNameSel = $('<div>').attr({
 		"id" : "add-member-sel"
 	});
 	createUserButton.append(userNameSel); 
 	
-	container.append(createUserButton); 
+
 	container.append(userTypeCont);
+	container.append(createUserButton); 
 	wrapper.append(header).append(container);
 	if(clearParent){
 		$('#'+parentElement).html("");
@@ -223,21 +225,42 @@ function appendNewfiTeamWrapperForAdmin(loanDetails) {
 	});
 
 	var header = $('<div>').attr({
-		"class" : "newfi-team-header"
+		"class" : "agent-wrapper-header agent-wrapper-header-active"
 	}).html("Newfi Team");
 
-	var searchLabel=$('<label>').attr({	
-	"class":"search-label-class float-right-admin"
-	}).html("Search");
+	var searchDiv=$('<div>').attr({
+    "class":"admin-search-icn float-right-admin",
+    "id":"searchText"
+    }).on('click', function() {
+
+	$(this).parent().find('.admin-search-input').show().focus();
+     if($('#search-id').val()!="" && $('#search-id').val()!=undefined){
+	 var val=$('#search-id').val();
+		alert(val);
+	$('#search-id').val('');
+	 	$(this).parent().find('.admin-search-input').hide();
+	 }     
 	
-	var serachInput=$('<input>').attr({
-	"class":"search-input-area float-right-admin",
-	"id":"search-input-area-id",
-	"name":"searchBox",
-	
+
 	});
-	header.append(serachInput);
-	header.append(searchLabel);
+	
+	var searchInputBox = $('<input>').attr({
+		"class" : "admin-search-input float-left hide",
+		"id":"search-id",
+		"placeholder":"search",
+		"name":"search"
+	}).on('keyup', function(e) {
+		if (e.which == 13) {
+			$(this).hide();
+			
+		}
+	
+	}).on('blur', function() {
+		$(this).hide();
+		
+	});
+	searchDiv.append(searchInputBox);
+	header.append(searchDiv);
 	var container = $('<div>').attr({
 		"class" : "newfi-team-container"
 	});
@@ -373,7 +396,6 @@ function getAdminTeamListTableRow(user, loanID) {
 }
  $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
- if(newfiObject.user.userRole.id=="4"){
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
@@ -381,7 +403,7 @@ function getAdminTeamListTableRow(user, loanID) {
 			showSettingsPopup();
 		}
 	}else{		
-	
+	if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Sales Manager"){
 	var alertWrapper = $('<div>').attr({
 		"id" : "alert-popup-wrapper-settings",
 		"class" : "alert-popup-wrapper-settings"
@@ -415,7 +437,7 @@ function getAdminTeamListTableRow(user, loanID) {
     var userMangementRowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
 			
-	}).html("User Management");
+	}).html("User Mangement");
 	
 	anchortag1.append(userMangementRowContent);
 	userMangementRow.append(anchortag1);
@@ -476,8 +498,8 @@ function getAdminTeamListTableRow(user, loanID) {
 	$('#alert-settings-btn').append(alertWrapper);
 	
 	}
-	}
 	
+	}
 });
 
 function appendAdminModuleDetails(){
@@ -516,7 +538,7 @@ $('#search-input-area-id').click(function(e){
 
 //TODO to create a user
 $('#create-user-id').click(function(e){
-	alert("in create user function");
+
 	showAddUserPopUp(e);
 
 });
