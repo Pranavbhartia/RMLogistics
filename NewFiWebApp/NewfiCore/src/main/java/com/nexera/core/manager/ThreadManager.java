@@ -30,20 +30,21 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.entity.WorkflowItemExec;
+import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.utility.LoadXMLHandler;
-import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.engine.EngineTrigger;
-import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.service.WorkflowService;
 
 @Component
@@ -120,7 +121,14 @@ public class ThreadManager implements Runnable {
 		if (currentLoanStatus == -1) {
 			LOGGER.error("Invalid/No status received from LQB ");
 		} else {
+			LOSLoanStatus loanStatusID = LOSLoanStatus
+			        .getLOSStatus(currentLoanStatus);
+			if (loanStatusID == null) {
+				LOGGER.error("Not a supported LQB status ");
+			}
 			List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
+			milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP.get(
+			        loanStatusID).getMilestone();
 			if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
@@ -131,7 +139,7 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
 				LOGGER.debug("These status are related to underwriting ");
-				milestones = Milestones.UW;
+
 				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCUMENT_CHECK);
 				statusTrackingList
 				        .add(LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED);
@@ -155,7 +163,7 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
 				LOGGER.debug("These status are related to appraisal ");
-				milestones = Milestones.APPRAISAL;
+
 				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_ORDERED);
 				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_DRAWN);
 				statusTrackingList.add(LoadConstants.LQB_STATUS_DOCS_OUT);
@@ -172,7 +180,7 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
 				LOGGER.debug("These status are related to QC ");
-				milestones = Milestones.QC;
+
 				statusTrackingList.add(LoadConstants.LQB_STATUS_PRE_DOC_QC);
 				statusTrackingList.add(LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE);
 				statusTrackingList
@@ -185,7 +193,7 @@ public class ThreadManager implements Runnable {
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
 			        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
 				LOGGER.debug("These status are related to Loan Closure ");
-				milestones = Milestones.LOAN_CLOSURE;
+
 				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_SUSPENDED);
 				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_DENIED);
 				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_WITHDRAWN);
@@ -194,7 +202,7 @@ public class ThreadManager implements Runnable {
 
 			} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 				LOGGER.debug("These status are related to 1003 ");
-				milestones = Milestones.App1003;
+
 				statusTrackingList.add(LoadConstants.LQB_STATUS_LOAN_SUBMITTED);
 			}
 

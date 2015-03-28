@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
-import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
