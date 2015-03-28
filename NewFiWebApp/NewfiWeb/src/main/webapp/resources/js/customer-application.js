@@ -1562,7 +1562,7 @@ function paintCustomerApplicationPageStep5() {
 	applyLoanStatus = 5;
 	appProgressBaar(5);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "My Income";
+    var quesHeaderTxt = "My Credit";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -1572,19 +1572,19 @@ function paintCustomerApplicationPageStep5() {
         type: "desc",
         text: "Birthday",
         name: "birthday",
-        value: ""
+        value: $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth))
     },
     {
         type: "desc",
         text: "Social Security Number",
         name: "ssn",
-        value: ""
+        value: appUserDetails.user.customerDetail.ssn
     },
     {
         type: "desc",
         text: "Phone Number",
         name: "phoneNumber",
-        value: ""
+        value: appUserDetails.user.customerDetail.secPhoneNumber
     }];
 
     var questionsContainer = getQuestionsContainer(questions);
@@ -1599,13 +1599,20 @@ function paintCustomerApplicationPageStep5() {
     	
     	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !=""){
     		
-    		customerDetail.dateOfBirth= dateOfBirth;
-    		customerDetail.ssn = ssn;
-    		customerDetail.secPhoneNumber = secPhoneNumber;
+    		//appUserDetails.customerDetail
+    		
+    		customerDetailTemp =  appUserDetails.user.customerDetail;
+    		customerDetailTemp.dateOfBirth= new Date(dateOfBirth).getTime();
+    		customerDetailTemp.ssn = ssn;
+    		customerDetailTemp.secPhoneNumber = secPhoneNumber;
     		//applicationFormSumbit();
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
+    		appUserDetails.user.customerDetail = customerDetailTemp;
+    		//alert(JSON.stringify(customerDetail));
     		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    		
+    ///alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
     		
     	}else{
@@ -1788,9 +1795,11 @@ function showLoanAppFormContainer(formCompletionStatus){
     	appProgressBaar(5);
     	paintCustomerApplicationPageStep5();
         break;
+    case 5:
+    	appProgressBaar(5);
+    	paintCustomerApplicationPageStep5();
     default:
-    	appProgressBaar(1);
-	    paintCustomerApplicationPageStep1a();
+    	
 
 	}
 }
