@@ -12,6 +12,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
+import com.nexera.common.vo.lqb.LQBResponseVO;
 
 public interface UploadedFilesListService {
 
@@ -42,7 +43,7 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
 
-	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 
 	public CheckUploadVO uploadFileByEmail(InputStream stream, String content,
 	        Integer userId, Integer loanId, Integer assignedBy)
@@ -51,6 +52,6 @@ public interface UploadedFilesListService {
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        Integer userId, Integer loanId, Integer assignedBy);
 
-	public void createLQBVO(Integer uploadFileId, Integer loanId);
+	public void createLQBVO(Integer userID , Integer uploadFileId, Integer loanId);
 
 }
