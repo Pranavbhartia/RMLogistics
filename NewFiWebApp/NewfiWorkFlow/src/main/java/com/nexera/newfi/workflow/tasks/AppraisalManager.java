@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.core.service.LoanService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
@@ -25,24 +26,25 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+		String status = objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 				.toString();
-		if (status.equals(ApplicationStatus.appraisalOrdered)) {
+		if (status.equals(LoanStatus.appraisalOrdered)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					ApplicationStatus.appraisalOrderedMessage);
+					LoanStatus.appraisalOrderedMessage);
 			sendEmail(objectMap);
 			return "2";
-		} else if (status.equals(ApplicationStatus.appraisalPending)) {
+		} else if (status.equals(LoanStatus.appraisalPending)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					ApplicationStatus.appraisalPendingMessage);
+					LoanStatus.appraisalPendingMessage);
 			sendEmail(objectMap);
 			return "1";
-		} else if (status.equals(ApplicationStatus.appraisalReceived)) {
+		} else if (status.equals(LoanStatus.appraisalReceived)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					ApplicationStatus.appraisalReceivedMessage);
+					LoanStatus.appraisalReceivedMessage);
 			sendEmail(objectMap);
 			return "3";
 		}
