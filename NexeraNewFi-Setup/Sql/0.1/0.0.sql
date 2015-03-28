@@ -888,25 +888,33 @@ CREATE TABLE `uicomponentpermission` (
 DROP TABLE IF EXISTS `uploadedfileslist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `uploadedfileslist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `s3path` varchar(255) DEFAULT NULL,
-  `uploaded_by` int(11) DEFAULT NULL,
-  `is_assigned` tinyint(4) DEFAULT NULL,
-  `uploaded_date` datetime DEFAULT NULL,
-  `is_activate` tinyint(4) DEFAULT NULL,
-  `loan` int(11) DEFAULT NULL,
-  `file_name` varchar(50) DEFAULT NULL,
-  `s3thumbnail` varchar(250) DEFAULT NULL,
-  `assigned_by` tinyint(4) DEFAULT NULL,
-  `uuidfileid` varchar(100) DEFAULT NULL,
-  `totalpages` int(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
-  KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
-  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=5461;
+CREATE TABLE newfi_schema.uploadedfileslist (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  s3path VARCHAR(255) DEFAULT NULL,
+  uploaded_by INT(11) DEFAULT NULL,
+  is_assigned TINYINT(4) DEFAULT NULL,
+  uploaded_date DATETIME DEFAULT NULL,
+  is_activate TINYINT(4) DEFAULT NULL,
+  loan INT(11) DEFAULT NULL,
+  file_name VARCHAR(50) DEFAULT NULL,
+  s3thumbnail VARCHAR(250) DEFAULT NULL,
+  assigned_by TINYINT(4) DEFAULT NULL,
+  uuidfileid VARCHAR(100) DEFAULT NULL,
+  totalpages INT(5) DEFAULT NULL,
+  lqb_file_id VARCHAR(200) DEFAULT NULL,
+  PRIMARY KEY (id),
+  INDEX fk_uploadedFilesMappedToLoan_idx (loan),
+  INDEX fk_uploadedFilesMappedToUploader_idx (uploaded_by),
+  CONSTRAINT fk_uploadedFilesMappedToLoan FOREIGN KEY (loan)
+    REFERENCES newfi_schema.loan(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fk_uploadedFilesMappedToUploader FOREIGN KEY (uploaded_by)
+    REFERENCES newfi_schema.user(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = INNODB
+AUTO_INCREMENT = 45
+AVG_ROW_LENGTH = 5461
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
