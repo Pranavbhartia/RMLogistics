@@ -373,7 +373,7 @@ function getAdminTeamListTableRow(user, loanID) {
 }
  $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
- if(newfiObject.user.userRole.id=="3"){
+ if(newfiObject.user.userRole.id=="4"){
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
@@ -415,7 +415,7 @@ function getAdminTeamListTableRow(user, loanID) {
     var userMangementRowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
 			
-	}).html("User Mangement");
+	}).html("User Management");
 	
 	anchortag1.append(userMangementRowContent);
 	userMangementRow.append(anchortag1);
