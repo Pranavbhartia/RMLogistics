@@ -156,6 +156,17 @@ public class LoanRestService {
 		return responseVO;
 	}
 
+	@RequestMapping(value = "/{loanID}/manager", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO retreiveLoanManagers(@PathVariable Integer loanID) {
+		LoanVO loan = new LoanVO();
+		loan.setId(loanID);
+		List<UserVO> team = loanService.retreiveLoanManagers(loan);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(team);
+
+		return responseVO;
+	}
+
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveDashboard/{userID}")
 	public @ResponseBody CommonResponseVO retrieveDashboard(

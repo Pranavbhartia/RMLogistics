@@ -125,6 +125,23 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public List<UserVO> retreiveLoanManagers(LoanVO loanVO) {
+		List<UserVO> managerList = new ArrayList<UserVO>();
+		List<UserVO> team = retreiveLoanTeam(loanVO);
+		for (UserVO user : team) {
+			if (null != user.getInternalUserDetail()) {
+				if (UserRolesEnum.LOANMANAGER.equalsName(user
+						.getInternalUserDetail().getInternalUserRoleMasterVO()
+						.getRoleName())) {
+					managerList.add(user);
+				}
+			}
+		}
+		return managerList;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager) {
 
 		User manager = this.parseUserModel(loanManager);
