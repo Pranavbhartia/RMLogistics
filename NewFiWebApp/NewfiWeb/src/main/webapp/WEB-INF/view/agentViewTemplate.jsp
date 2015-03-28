@@ -14,7 +14,7 @@
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
-<link href="resources/css/new.css" rel="stylesheet">
+<link href="resources/css/style-admin.css" rel="stylesheet">
 </head>
 
 <body>
