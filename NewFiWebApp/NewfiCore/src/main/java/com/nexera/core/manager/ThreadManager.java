@@ -279,23 +279,24 @@ public class ThreadManager implements Runnable {
 		List<LoanMilestone> loanMilestoneList = loan.getLoanMilestones();
 		int currentIndex = statusTrackingList.indexOf(currentStatus);
 		LOGGER.debug("Checking if previous state has an entry ");
+		if (currentIndex != 0) {
+			int previousStatus = statusTrackingList.get(currentIndex - 1);
+			for (LoanMilestone loanMilestone : loanMilestoneList) {
+				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
+					LOGGER.debug("No status has been missed hence breaking out of the loop");
+					break;
+				} else {
+					putLoanMilestoneIntoExecution(previousStatus,
+					        loadResponseVOList, loanMilestoneMaster);
 
-		int previousStatus = statusTrackingList.get(currentIndex - 1);
-		for (LoanMilestone loanMilestone : loanMilestoneList) {
-			if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
-				LOGGER.debug("No status has been missed hence breaking out of the loop");
-				break;
-			} else {
-				putLoanMilestoneIntoExecution(previousStatus,
-				        loadResponseVOList, loanMilestoneMaster);
-
-				LOGGER.debug("Recursively calling to see if multiple status has been missed ");
-				checkIfAnyStatusIsMissed(previousStatus, statusTrackingList,
-				        loadResponseVOList, loanMilestoneMaster);
-				break;
+					LOGGER.debug("Recursively calling to see if multiple status has been missed ");
+					checkIfAnyStatusIsMissed(previousStatus,
+					        statusTrackingList, loadResponseVOList,
+					        loanMilestoneMaster);
+					break;
+				}
 			}
 		}
-
 		return 0;
 	}
 
