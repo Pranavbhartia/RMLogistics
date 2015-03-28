@@ -29,6 +29,8 @@ public interface LoanService {
 
 	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
+	public List<UserVO> retreiveLoanManagers(LoanVO loanVO);
+
 	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
 
 	public LoanVO getActiveLoanOfUser(UserVO user);

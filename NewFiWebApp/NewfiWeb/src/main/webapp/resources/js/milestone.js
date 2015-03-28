@@ -7,6 +7,7 @@ var workFlowContext = {
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
+	dataContainer:{},
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
@@ -1129,9 +1130,7 @@ function milestoneChildEventHandler(event) {
 	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
 	 	event.stopPropagation();
 		window.location.hash="#myLoan/lock-my-rate"
-	}
-	
-	 else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+	}else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
 		showOverlay();
@@ -1152,6 +1151,26 @@ function milestoneChildEventHandler(event) {
 		            console.error("error : " + e);
 		        }
 		    });
+	}else if ($(event.target).attr("data-text") == "CONTACT_LOAN_MANAGER") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.dataContainer.managerList){
+	 		appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+	 	}else{
+	 		var data={}
+	 		ajaxRequest(
+				"rest/loan/"+workFlowContext.loanId+"/manager",
+				"GET",
+				"json",
+				data,
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						workFlowContext.dataContainer.managerList=response.resultObject;
+						appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+					}
+			},false);
+	 	}
 	}
 }
 
@@ -1188,7 +1207,7 @@ function appendLoanManagerPopup(element,loanManagerArray){
 			"class" : "lp-pic float-left"
 		});
 		
-		if(loanManagerObj.photoImageUrl != undefined || loanManagerObj.photoImageUrl != ""){
+		if(loanManagerObj.photoImageUrl != undefined && loanManagerObj.photoImageUrl != ""){
 			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
 		}
 		
