@@ -5,10 +5,10 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 

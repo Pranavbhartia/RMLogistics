@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component

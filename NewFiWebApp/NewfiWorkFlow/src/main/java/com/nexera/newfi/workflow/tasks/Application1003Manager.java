@@ -4,26 +4,27 @@ import java.util.HashMap;
 
 import org.springframework.stereotype.Component;
 
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
+import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class Application1003Manager extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
-				.toString();
-		if (status.equals(ApplicationStatus.initiated)) {
+		String status = objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
+		if (status.equals(LoanStatus.initiated)) {
 			makeANote(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					ApplicationStatus.initiatedMessage);
-		} else if (status.equals(ApplicationStatus.submitted)) {
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+			        LoanStatus.initiatedMessage);
+		} else if (status.equals(LoanStatus.submitted)) {
 			// TODO check if we get timestamp for take a note from LQB
 			makeANote(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					ApplicationStatus.submittedMessage);
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+			        LoanStatus.submittedMessage);
 			sendEmail(objectMap);
 		}
 		return null;

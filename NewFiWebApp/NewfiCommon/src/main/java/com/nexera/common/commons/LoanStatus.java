@@ -1,6 +1,6 @@
-package com.nexera.newfi.workflow.tasks;
+package com.nexera.common.commons;
 
-public interface ApplicationStatus {
+public interface LoanStatus {
 
 	String initiated = "customerInitiates";
 	String initiatedMessage = "Application Initiated";
@@ -28,6 +28,8 @@ public interface ApplicationStatus {
 	String approvedWithConditionsMessage = "Approved With Conditions";
 	String underwritingApproved = "Approved With Conditions";
 	String underwritingApprovedMessage = "Approved With Conditions";
+	String underwritingFailed = "UW Failed";
+	String underwritingFailedMessage = "UW Failed";
 	String loanClosed = "Loan Closed";
 	String loancClosedMessage = "Loan Closed";
 	String loanDeclined = "Loan Declined";
