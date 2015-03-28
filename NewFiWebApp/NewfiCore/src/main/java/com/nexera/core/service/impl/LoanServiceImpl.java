@@ -289,27 +289,27 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
 		// Get all loans this user has access to.
-		String userRole=loanDao.retrieveUserRole(userVO);
-	
-		if(userRole.equals(UserRolesEnum.SYSTEM.name()))
-		{
+				int userRoleId=loanDao.retrieveUserRoleId(userVO);
 			
-			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
-			        .parseUserModel(userVO));
-			LoanDashboardVO loanDashboardVO = this
-			        .buildLoanDashboardVoFromLoanList(loanList);
-			
-			return loanDashboardVO;
-			
-		}
-			
-		
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
-		        .parseUserModel(userVO));
-		LoanDashboardVO loanDashboardVO = this
-		        .buildLoanDashboardVoFromLoanList(loanList);
+				if(userRoleId==(UserRolesEnum.SYSTEM.getRoleId()))
+				{
+					
+					List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
+					        .parseUserModel(userVO));
+					LoanDashboardVO loanDashboardVO = this
+					        .buildLoanDashboardVoFromLoanList(loanList);
+					
+					return loanDashboardVO;
+					
+				}
+					
+				
+				List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
+				        .parseUserModel(userVO));
+				LoanDashboardVO loanDashboardVO = this
+				        .buildLoanDashboardVoFromLoanList(loanList);
 
-		return loanDashboardVO;
+				return loanDashboardVO;
 	}
 
 	@Override
