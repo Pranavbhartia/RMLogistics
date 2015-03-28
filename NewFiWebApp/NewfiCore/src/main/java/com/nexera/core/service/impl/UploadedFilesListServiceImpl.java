@@ -366,7 +366,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
     	 User user = getUserObject();
          LQBDocumentVO documentVO = new LQBDocumentVO();
          try {
-			documentVO.setDocumentType( "application/pdf" );
+			 documentVO.setDocumentType( "application/pdf" );
 			 StringBuffer stringBuf = new StringBuffer();
 			
 			 stringBuf.append( " uploaded by : " );
@@ -374,7 +374,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
 			 documentVO.setNotes( stringBuf.toString() );
 			 documentVO.setsDataContent( nexeraUtility.getContentFromFile( fileId ) );
-			 documentVO.setsLNm( loanService.getLoanByID( loanId ).getLqbFileId() );
+			 documentVO.setsLoanNumber( loanService.getLoanByID( loanId ).getLqbFileId() );
 
 			 uploadDocumentInLandingQB( documentVO );
 		}  catch (Exception e) {
@@ -391,7 +391,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
         JSONObject json = new JSONObject();
         JSONObject jsonChild = new JSONObject();
         try {
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLNm() );
+            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLoanNumber() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE, documentVO.getDocumentType() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_NOTES, documentVO.getNotes() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT, documentVO.getsDataContent() );

@@ -79,17 +79,19 @@ public class FileUploadController {
 		   UploadedFilesList uplList = uploadedFilesListService.fetchUsingFileUUID(uuid);
 		   if(isThumb.equals("0")){
 			   fileURL = uplList.getS3path();
+			   response.setContentType("application/pdf");
 		   }else{
 			   fileURL = uplList.getS3ThumbPath();
+			   response.setContentType("image/jpeg");
 		   }
 		   
 	       LOG.info("The s3path = "+fileURL);
 	      
 		  // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
-		   InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(fileURL);
+		   InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(fileURL , isThumb);
 
 		  
-		   response.setContentType("application/pdf");
+		  
 
 		   // get output stream of the response
 		   OutputStream outStream = response.getOutputStream();

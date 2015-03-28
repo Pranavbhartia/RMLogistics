@@ -255,11 +255,23 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	}
 	
-	public InputStream getInputStreamFromFile(String fileUrl)
+	public InputStream getInputStreamFromFile(String fileUrl , String isImage)
 			throws Exception {
-		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+".pdf");
+		
+		String extention = null;
+		if(isImage.equals("0")){
+			extention = ".pdf";
+		}else{
+			extention = ".jpeg";
+		}
+		
+		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+extention);
 		 File initialFile = new File(filePth);
 		 InputStream targetStream = new FileInputStream(initialFile);
+		 
+		 if(initialFile.exists()){
+			 initialFile.delete();
+		 }
 		 return targetStream;
 	}
 	
