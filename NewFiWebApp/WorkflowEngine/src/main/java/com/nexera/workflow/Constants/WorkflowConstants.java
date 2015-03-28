@@ -3,12 +3,6 @@
  */
 package com.nexera.workflow.Constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import com.nexera.workflow.enums.Milestones;
 
 /**
  * @author Utsav T
@@ -58,8 +52,7 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_CLOSURE_STATUS = "CLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_CLOSURE_DISPLAY = "VIEW_CLOSING";
 	public static final String WORKFLOW_ITEM_AUS_STATUS = "AUS_STATUS";
-	
-	
+
 	public static final String WORKFLOW_ITEM_APPRAISAL_STATUS = "APPRAISAL_STATUS";
 	public static final String WORKFLOW_ITEM_VIEW_APPRAISAL = "VIEW_APPRAISAL";
 
@@ -68,41 +61,6 @@ public class WorkflowConstants {
 
 	public static final String WORKFLOW_ITEM_1003_COMPLETE = "1003_COMPLETE";
 	public static final String WORKFLOW_ITEM_1003_DISPLAY = "1003_DISPLAY";
-	
-	 
-	
-	public static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();;
 
-	static {
-		MILESTONE_WF_ITEM_LOOKUP.put(
-		        Milestones.App1003,
-		        new ArrayList<String>(Arrays
-		                .asList(WORKFLOW_ITEM_1003_COMPLETE,
-		                        WORKFLOW_ITEM_1003_DISPLAY)));
-
-		MILESTONE_WF_ITEM_LOOKUP.put(Milestones.AUSUW, null);
-
-		MILESTONE_WF_ITEM_LOOKUP.put(
-		        Milestones.DISCLOSURE,
-		        new ArrayList<String>(Arrays.asList(
-		                WORKFLOW_ITEM_DISCLOSURE_STATUS,
-		                WORKFLOW_ITEM_DISCLOSURE_DISPLAY)));
-
-		MILESTONE_WF_ITEM_LOOKUP.put(
-		        Milestones.APPRAISAL,
-		        new ArrayList<String>(Arrays.asList(
-		                WORKFLOW_ITEM_APPRAISAL_STATUS,
-		                WORKFLOW_ITEM_VIEW_APPRAISAL)));
-		MILESTONE_WF_ITEM_LOOKUP.put(
-		        Milestones.UW,
-		        new ArrayList<String>(Arrays.asList(
-		        		WORKFLOW_ITEM_UW_STATUS,
-		                WORKFLOW_ITEM_VIEW_UW)));
-		MILESTONE_WF_ITEM_LOOKUP.put(
-		        Milestones.LOAN_CLOSURE,
-		        new ArrayList<String>(Arrays.asList(
-		        		WORKFLOW_ITEM_CLOSURE_STATUS,
-		        		WORKFLOW_ITEM_CLOSURE_DISPLAY)));
-	}
 
 }

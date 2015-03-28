@@ -17,9 +17,9 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.MasterNeedsEnum;
+import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
-import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
