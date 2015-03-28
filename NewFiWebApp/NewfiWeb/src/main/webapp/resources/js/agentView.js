@@ -121,8 +121,16 @@ function paintAgentDashboardRightPanel(data) {
 	});
 	var leftCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-txt float-left uppercase"
-	}).html("customer list");
+	});
 
+	if(newfiObject.user.userRole.id=="4")
+	{
+		leftCon.html("loan list");
+	}
+	else if(newfiObject.user.userRole.id!="4"){
+		leftCon.html("customer list");
+	}
+	
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
 	});
@@ -278,9 +286,12 @@ function appendCustomers(elementId, customers) {
 		 */
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
-
-		var phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
-
+		var phone_num = "NA";
+		if (customer.phone_no!=null){
+			 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
+		}
+		
+		
 		var col2 = $('<div>').attr({
 			"class" : "leads-container-tc2 float-left"
 		}).html(phone_num);
@@ -1754,6 +1765,452 @@ $(document).click(function() {
 		hideCreateUserPopup();
 	}
 });
+
+function getCreateHomeOwnInsCompanyContext(loanID){
+
+	var context=new Object();
+	context.loanID=loanID;
+	context.createTitleCompanyPopup=function(){
+		var popUpWrapper = $('<div>').attr({
+			"id" : "create-hoi-company-popup",
+			"class" : "pop-up-wrapper create-user-popup hide"
+		});
+
+		var header = $('<div>').attr({
+			"class" : "pop-up-header"
+		}).html("Create Home Owners Insurance Company");
+
+		var container = $('<div>').attr({
+			"id" : "create-hoi-company-container",
+			"class" : "pop-up-container clearfix"
+		});
+		popUpWrapper.append(header).append(container);
+		$('#add-member-sel').append(popUpWrapper);
+
+		
+		this.appendHoiCompanyName();
+		this.appendAddress();
+		this.appendPhoneNumber();
+		this.appendFaxNumber();
+		this.appendEmailId();
+		this.appendPrimaryContact();
+
+		// save button
+		var saveBtn = $('<div>').attr({
+			"class" : "prof-cust-save-btn"
+		}).html("save").on(
+				'click',
+				function(event) {
+					event.stopImmediatePropagation();
+
+					var company = new Object();
+					company.name=$('#create-hoic-name').val();
+					company.address=$('#create-hoic-address').val();
+					company.phoneNumber=$('#create-hoic-phone-number').val();
+					company.fax=$('#create-hoic-fax-number').val();
+					company.emailID=$('#create-hoic-email-id').val();
+					company.primaryContact=$('#create-hoic-primary-contact').val();
+					
+					this.company=company;
+					
+
+					if (company.name == "") {
+						showToastMessage("Company name cannot be empty");
+						return;
+					} else if (company.phoneNumber == "") {
+						showToastMessage("Phone number cannot be empty");
+						return;
+					}  else if (company.emailID == "") {
+						showToastMessage("Email address cannot be empty");
+						return;
+					} else if (user.emailId == "") {
+						showToastMessage("Email ID cannot be empty");
+						return;
+					}
+					console.log("Create company button clicked. User : "
+							+ JSON.stringify(company));
+					//TODO-write method to call add company
+					console.log("Adding company");
+
+				});
+
+		$('#create-hoi-company-popup').append(saveBtn);
+		
+	};
+
+	context.appendHoiCompanyName = function() {
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Name");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-name"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+
+	context.appendAddress = function() {
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Address");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-address"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+
+	context.appendPhoneNumber=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Phone Number");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-phone-number"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+	
+
+	context.appendFaxNumber=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Fax Number");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-fax-number"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+	
+
+	context.appendEmailId=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Email address");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-email-id"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+	
+
+	context.appendPrimaryContact=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Primary Contact");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-hoic-primary-contact"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-hoi-company-container').append(row);
+	}
+	
+	context.showCreateTitleCompanyPopup=function() {
+		var left = $('#center-panel-cont').offset().left;
+		var top = $('#add-member-sel').offset().top;
+		$('#create-hoic-name').val("");
+		$('#create-hoic-address').val("");
+		$('#create-hoic-phone-number').val("");
+		$('#create-hoic-fax-number').val("");
+		$('#create-hoic-email-address').val("");
+		$('#create-hoic-primary-contact').val("");
+		$('#create-hoi-company-popup').show();
+	}
+	
+	context.hideCreateTitleCompanyPopup=function() {
+		$('#create-hoi-company-popup').hide();
+	}
+	
+	context.addCompany=function(callback){
+		var ob = this;
+		var data = {};
+		
+		ob.ajaxRequest(
+						"rest/loan/homeOwnersInsurance/" + ob.company,
+						"GET",
+						"json",
+						data,
+						function(response) {
+							if (response.error) {
+								showToastMessage(response.error.message)
+							} else {
+								console.log("Home owners ins company added");
+								ob.response=response;
+								if(callback){
+									callback(ob);
+								}
+							}
+							
+						});
+	}
+	
+	context.addCompanyToTeamList=function(){
+		
+	}
+	
+	return context;
+
+}
+
+function getCreateTitleCompanyContext(loanID){
+	var context=new Object();
+	context.loanID=loanID;
+	context.createTitleCompanyPopup=function(){
+		var popUpWrapper = $('<div>').attr({
+			"id" : "create-title-company-popup",
+			"class" : "pop-up-wrapper create-user-popup hide"
+		});
+
+		var header = $('<div>').attr({
+			"class" : "pop-up-header"
+		}).html("Create Title Company");
+
+		var container = $('<div>').attr({
+			"id" : "create-title-company-container",
+			"class" : "pop-up-container clearfix"
+		});
+		popUpWrapper.append(header).append(container);
+		$('#add-member-sel').append(popUpWrapper);
+
+		
+		this.appendTitleCompanyName();
+		this.appendAddress();
+		this.appendPhoneNumber();
+		this.appendFaxNumber();
+		this.appendEmailId();
+		this.appendPrimaryContact();
+
+		// save button
+		var saveBtn = $('<div>').attr({
+			"class" : "prof-cust-save-btn"
+		}).html("save").on(
+				'click',
+				function(event) {
+					event.stopImmediatePropagation();
+
+					var company = new Object();
+					company.name=$('#create-tc-name').val();
+					company.address=$('#create-tc-address').val();
+					company.phoneNumber=$('#create-tc-phone-number').val();
+					company.fax=$('#create-tc-fax-number').val();
+					company.emailID=$('#create-tc-email-id').val();
+					company.primaryContact=$('#create-tc-primary-contact').val();
+					
+					this.company=company;
+					
+
+					if (company.name == "") {
+						showToastMessage("Company name cannot be empty");
+						return;
+					} else if (company.phoneNumber == "") {
+						showToastMessage("Phone number cannot be empty");
+						return;
+					}  else if (company.emailID == "") {
+						showToastMessage("Email address cannot be empty");
+						return;
+					} else if (user.emailId == "") {
+						showToastMessage("Email ID cannot be empty");
+						return;
+					}
+					console.log("Create company button clicked. User : "
+							+ JSON.stringify(company));
+					//TODO-write method to call add company
+					console.log("Adding company");
+
+				});
+
+		$('#create-title-company-popup').append(saveBtn);
+		
+	};
+
+	context.appendTitleCompanyName = function() {
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Name");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-name"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+
+	context.appendAddress = function() {
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Address");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-address"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+
+	context.appendPhoneNumber=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Phone Number");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-phone-number"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+	
+
+	context.appendFaxNumber=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Fax Number");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-fax-number"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+	
+
+	context.appendEmailId=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Email address");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-email-id"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+	
+
+	context.appendPrimaryContact=function(){
+
+		var row = $('<div>').attr({
+			"class" : "create-user-popup-cont clearfix float-left"
+		});
+		var label = $('<div>').attr({
+			"class" : "create-user-popup-label float-left"
+		}).html("Primary Contact");
+
+		var inputBox = $('<input>').attr({
+			"class" : "create-user-popup-input",
+			"id" : "create-tc-primary-contact"
+		}).val("");
+		row.append(label).append(inputBox);
+		$('#create-title-company-container').append(row);
+	}
+	
+	context.showCreateTitleCompanyPopup=function() {
+		var left = $('#center-panel-cont').offset().left;
+		var top = $('#add-member-sel').offset().top;
+		$('#create-tc-name').val("");
+		$('#create-tc-address').val("");
+		$('#create-tc-phone-number').val("");
+		$('#create-tc-fax-number').val("");
+		$('#create-tc-email-address').val("");
+		$('#create-tc-primary-contact').val("");
+		$('#create-title-company-popup').show();
+	}
+	
+	context.hideCreateTitleCompanyPopup=function() {
+		$('#create-title-company-popup').hide();
+	}
+	
+	context.addCompany=function(callback){
+		var ob = this;
+		var data = {};
+		
+		ob.ajaxRequest(
+						"rest/loan/titleCompany/" + ob.company,
+						"GET",
+						"json",
+						data,
+						function(response) {
+							if (response.error) {
+								showToastMessage(response.error.message)
+							} else {
+								console.log("Title company added");
+								ob.response=response;
+								if(callback){
+									callback(ob);
+								}
+							}
+							
+						});
+	}
+	
+	context.addCompanyToTeamList=function(){
+		
+	}
+	
+	return context;
+}
 
 function showCreateUserPopup() {
 	var leftPannelValue=$('#center-panel-cont').offset();
