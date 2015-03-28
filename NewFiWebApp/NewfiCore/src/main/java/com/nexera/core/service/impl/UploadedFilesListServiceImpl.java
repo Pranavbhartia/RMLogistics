@@ -11,12 +11,14 @@ import java.util.List;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +35,10 @@ import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -64,6 +68,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 	@Autowired
     private LqbInvoker lqbInvoker;
+	
+	@Autowired
+	private LoanService loanService;
 
 	@Override
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
@@ -197,8 +204,33 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return fileSavedId;
 	}
 
+	
+	
+	
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
 	        Integer userId, Integer assignedBy) {
+		
+		
+	/*
+	 * commenting code for password protection
+	 * 
+	 * 	UserVO userVo = userProfileService.findUser(userId);
+		PDDocument doc;
+		try {
+			doc = PDDocument.load(file);
+			if(doc.isEncrypted()){
+				doc.setAllSecurityToBeRemoved(true);
+				doc.encrypt(null,userVo.getEmailId() );
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			LOG.info("Error in encrypting file");
+			e1.printStackTrace();
+		}*/
+		
+		
+		
+		
 		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document",
 		        "complete");
 		LOG.info("File Path : " + file.getPath());
@@ -322,9 +354,37 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
              JSONObject uploadObject = createUploadPdfDocumentJsonObject(
                  WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT, lqbDocumentVO );
              JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
-         }
+             LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+		 }
 	}
 	
+	
+	
+
+    @Async
+    public void createLQBVO(Integer fileId , Integer loanId) {
+    	 User user = getUserObject();
+         LQBDocumentVO documentVO = new LQBDocumentVO();
+         try {
+			documentVO.setDocumentType( "application/pdf" );
+			 StringBuffer stringBuf = new StringBuffer();
+			
+			 stringBuf.append( " uploaded by : " );
+
+			 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
+			 documentVO.setNotes( stringBuf.toString() );
+			 documentVO.setsDataContent( nexeraUtility.getContentFromFile( fileId ) );
+			 documentVO.setsLNm( loanService.getLoanByID( loanId ).getLqbFileId() );
+
+			 uploadDocumentInLandingQB( documentVO );
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
+			// TODO save exception in error block
+		}
+         LOG.info( "Assignment : uploadDocumentInLandingQB " + documentVO );
+    }
+
 	
 	public JSONObject createUploadPdfDocumentJsonObject( String opName, LQBDocumentVO documentVO )
     {

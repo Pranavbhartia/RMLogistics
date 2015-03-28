@@ -11,8 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +28,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
-import com.nexera.common.commons.WebServiceMethodParameters;
-import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
@@ -44,8 +39,6 @@ import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.UploadFileScreenVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
-import com.nexera.common.vo.lqb.LQBDocumentVO;
-import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
@@ -180,7 +173,7 @@ public class FileUploadRest
 
         CommonResponseVO commonResponseVO = null;
         try {
-            LQBDocumentVO documentVO = null;
+
             for ( Integer key : mapFileMappingToNeed.keySet() ) {
                 UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId( key );
                 LOG.info( "fetchUploadedFromLoanNeedId returned : " + filesList );
@@ -202,20 +195,7 @@ public class FileUploadRest
                     fileToGetContent = fileIds.get( 0 );
                 }
 
-                User user = getUserObject();
-                documentVO = new LQBDocumentVO();
-                documentVO.setDocumentType( "application/pdf" );
-                StringBuffer stringBuf = new StringBuffer();
-                stringBuf.append( needsListService.fetchNeedListMasterUsingID( key ).getDescription() );
-                stringBuf.append( " uploaded by : " );
-
-                stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
-                documentVO.setNotes( stringBuf.toString() );
-                documentVO.setsDataContent( nexeraUtility.getContentFromFile( fileToGetContent ) );
-                documentVO.setsLNm( loanService.getLoanByID( loanId ).getLqbFileId() );
-
-                uploadedFilesListService.uploadDocumentInLandingQB( documentVO );
-                LOG.info( "Assignment : uploadDocumentInLandingQB " + documentVO );
+               
             }
 
            
@@ -230,9 +210,6 @@ public class FileUploadRest
         return commonResponseVO;
 
     }
-
-
-    
 
     public Map<Integer, List<Integer>> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
     {
@@ -376,11 +353,13 @@ public class FileUploadRest
 
                     assignFileToNeeds( getmapFromFileAssignObj( list ), loanId, userID, assignedBy );
                 }
-
+                
+                uploadedFilesListService.createLQBVO(checkFileUploaded.getUploadFileId() , loanId);
+				
             } else {
                 unsupportedFile.add( multipartFile.getOriginalFilename() );
             }
-
+            
         }
         return new Gson().toJson( unsupportedFile );
     }
