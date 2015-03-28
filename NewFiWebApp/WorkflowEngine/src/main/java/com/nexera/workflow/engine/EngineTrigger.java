@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -148,6 +147,7 @@ public class EngineTrigger {
 	}
 
 	public String startWorkFlowItemExecution(int workflowItemExecutionId) {
+		String result = null;
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
 		Future<String> future = null;
 		executorService = cacheManager.initializePool();
@@ -272,8 +272,9 @@ public class EngineTrigger {
 					}
 					if (count == childWorkflowItemExecList.size()) {
 						LOGGER.debug("All child items are complete ");
-						if (workflowItemExecution.getStatus().equalsIgnoreCase(
-						        WorkItemStatus.NOT_STARTED.getStatus())) {
+						if (!workflowItemExecution.getStatus()
+						        .equalsIgnoreCase(
+						                WorkItemStatus.COMPLETED.getStatus())) {
 							LOGGER.debug(" Triggering the parent");
 							WorkflowManager workflowManager = applicationContext
 							        .getBean(WorkflowManager.class);
@@ -315,21 +316,13 @@ public class EngineTrigger {
 						} catch (InterruptedException e) {
 							LOGGER.error("Exception caught while terminating executor "
 							        + e.getMessage());
-							throw new FatalException(
-							        "Exception caught while terminating executor "
-							                + e.getMessage());
 						}
 					}
 				}
 			}
 		}
-		try {
-			return future.get();
-		} catch (InterruptedException e) {
-			return "Exception Occured ";
-		} catch (ExecutionException e) {
-			return "Exception Occured ";
-		}
+		return "";
+
 	}
 
 	public String getRenderStateInfoOfItem(int workflowItemExecId) {

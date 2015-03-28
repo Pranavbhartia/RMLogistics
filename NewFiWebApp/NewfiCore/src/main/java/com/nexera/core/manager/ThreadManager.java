@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -201,7 +202,37 @@ public class ThreadManager implements Runnable {
 					        .getLoanMilestones();
 					for (LoanMilestone loanMiles : loanMilestoneList) {
 						if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
-							sameStatus = true;
+							alreadyAdded = true;
+							Date date = loanMiles.getStatusUpdateTime();
+							if (date != null) {
+								String currentDateString = getDataTimeField(
+								        currentLoanStatus, loadResponseList);
+								if (currentDateString != null) {
+									Date currentDate = parseStringIntoDate(currentDateString);
+									if (currentDate != null) {
+										currentDate = formatDateIntoUTC(currentDate);
+										if (date.compareTo(currentDate) == 0) {
+											sameStatus = true;
+										} else {
+											updateLoanMilestone(loanMilestone);
+										}
+									}
+								}
+
+							} else {
+								String currentDateString = getDataTimeField(
+								        currentLoanStatus, loadResponseList);
+								if (currentDateString != null) {
+									Date currentDate = parseStringIntoDate(currentDateString);
+									if (currentDate != null) {
+										currentDate = formatDateIntoUTC(currentDate);
+										if (currentDate != null) {
+											updateLoanMilestone(loanMilestone);
+										}
+									}
+								}
+							}
+
 						}
 					}
 				}
@@ -249,6 +280,10 @@ public class ThreadManager implements Runnable {
 		 */
 	}
 
+	private void updateLoanMilestone(LoanMilestone loanMilestone) {
+		loanService.updateLoanMilestone(loanMilestone);
+	}
+
 	private void putLoanMilestoneIntoExecution(int currentLoanStatus,
 	        List<LoadResponseVO> loadResponseList,
 	        LoanMilestoneMaster loanMilestoneMaster) {
@@ -258,6 +293,8 @@ public class ThreadManager implements Runnable {
 		Date date = null;
 		if (dateTime != null && !dateTime.equals(""))
 			date = parseStringIntoDate(dateTime);
+		if (dateTime != null && !dateTime.equals(""))
+			date = formatDateIntoUTC(date);
 		loanMilestone.setLoan(loan);
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);
@@ -279,23 +316,24 @@ public class ThreadManager implements Runnable {
 		List<LoanMilestone> loanMilestoneList = loan.getLoanMilestones();
 		int currentIndex = statusTrackingList.indexOf(currentStatus);
 		LOGGER.debug("Checking if previous state has an entry ");
+		if (currentIndex != 0) {
+			int previousStatus = statusTrackingList.get(currentIndex - 1);
+			for (LoanMilestone loanMilestone : loanMilestoneList) {
+				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
+					LOGGER.debug("No status has been missed hence breaking out of the loop");
+					break;
+				} else {
+					putLoanMilestoneIntoExecution(previousStatus,
+					        loadResponseVOList, loanMilestoneMaster);
 
-		int previousStatus = statusTrackingList.get(currentIndex - 1);
-		for (LoanMilestone loanMilestone : loanMilestoneList) {
-			if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
-				LOGGER.debug("No status has been missed hence breaking out of the loop");
-				break;
-			} else {
-				putLoanMilestoneIntoExecution(previousStatus,
-				        loadResponseVOList, loanMilestoneMaster);
-
-				LOGGER.debug("Recursively calling to see if multiple status has been missed ");
-				checkIfAnyStatusIsMissed(previousStatus, statusTrackingList,
-				        loadResponseVOList, loanMilestoneMaster);
-				break;
+					LOGGER.debug("Recursively calling to see if multiple status has been missed ");
+					checkIfAnyStatusIsMissed(previousStatus,
+					        statusTrackingList, loadResponseVOList,
+					        loanMilestoneMaster);
+					break;
+				}
 			}
 		}
-
 		return 0;
 	}
 
@@ -317,6 +355,17 @@ public class ThreadManager implements Runnable {
 		}
 		return date;
 
+	}
+
+	private Date formatDateIntoUTC(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+		        "hh:mm a z-dd/MM/yyyy");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR_OF_DAY, 5);
+		cal.add(Calendar.MINUTE, 30);
+		String formatedDate = simpleDateFormat.format(cal.getTime());
+		return parseStringIntoDate(formatedDate);
 	}
 
 	private List<WorkflowItemExec> itemToExecute(
