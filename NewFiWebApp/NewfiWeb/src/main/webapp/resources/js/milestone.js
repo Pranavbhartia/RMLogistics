@@ -1156,3 +1156,81 @@ function milestoneChildEventHandler(event) {
 }
 
 
+//Functions to view loan manager details in customer page
+
+function removeLoanManagerPopup(){
+	$('#loan-manager-popup').remove();
+}
+
+function appendLoanManagerPopup(element,loanManagerArray){
+	
+	removeLoanManagerPopup();
+	
+	var leftOffset = $(element).offset().left;
+	var topOffset = $(element).offset().top;
+	
+	var wrapper = $('<div>').attr({
+		"id" : "loan-manager-popup",
+		"class" : "loan-manager-popup"
+	}).css({
+		"left" : leftOffset,
+		"top" : topOffset
+	});
+	
+	for(var i=0;i<loanManagerArray.length;i++){
+		var loanManagerObj = loanManagerArray[i];
+		
+		var container = $('<div>').attr({
+			"class" : "loan-manager-popup-container clearfix"
+		});
+		
+		var profilePic = $('<div>').attr({
+			"class" : "lp-pic float-left"
+		});
+		
+		if(loanManagerObj.photoImageUrl != undefined || loanManagerObj.photoImageUrl != ""){
+			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
+		}
+		
+		var profileDetails = $('<div>').attr({
+			"class" : "lm-details-txt-col float-left"
+		});
+		
+		var name = $('<div>').attr({
+			"class" : "lp-txt1"
+		}).html(loanManagerObj.displayName);
+		
+		var emailId = $('<div>').attr({
+			"class" : "lp-txt2"
+		}).html(loanManagerObj.emailId);
+		
+		var phoneNumber = $('<div>').attr({
+			"class" : "lp-txt2"
+		});
+		
+		if(loanManagerObj.phoneNumber != undefined){
+			phoneNumber.html(formatPhoneNumberToUsFormat(loanManagerObj.phoneNumber));
+		}
+		
+		profileDetails.append(name).append(emailId).append(phoneNumber);
+		
+		container.append(profilePic).append(profileDetails);
+
+		wrapper.append(container);
+	}
+	
+		
+	$('body').append(wrapper);
+}
+
+$(document).resize(function(){
+	removeLoanManagerPopup();
+});
+
+$(document).on('click',function(){
+	removeLoanManagerPopup();
+});
+
+$(document).on('click','#loan-manager-popup',function(e){
+	e.stopPropagation();
+});
