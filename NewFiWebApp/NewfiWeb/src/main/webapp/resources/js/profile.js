@@ -108,7 +108,7 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
 
-
+ 
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateLMDetails()"
@@ -233,7 +233,9 @@ function getCustPersonalInfoContainer(user) {
 
 	var phone2Row = getPhone2Row(user);
 	formWrapper.append(phone2Row);
-
+    
+	var checkBox=getCheckStatus(user);
+	formWrapper.append(checkBox);
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateUserDetails()"
@@ -780,6 +782,46 @@ function getPhone2Row(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+ function getCheckStatus(user){
+var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Receive SMS Alert");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var checkBox = $('<input>').attr({
+		"class" : "ms-check-box-header",		
+		"id" : "alertSMSPreferenceID",
+		"type":"checkbox"
+	}).on("click",function(e){
+	if($(this).prop("checked") == true){
+            $(this).attr("data-checked",true);
+            }
+            else if($(this).prop("checked") == false){
+               $(this).attr("data-checked",false);
+            }
+	
+	});
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(checkBox).append(errMessage);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+
+
+}
 
 /**
  * Functions related to form validations
@@ -964,6 +1006,10 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	if($('#alertSMSPreferenceID').prop("checked") == true){
+	customerDetails.mobileAlertsPreference = true;}else{
+	customerDetails.mobileAlertsPreference = false;
+	}
 
 	userProfileJson.customerDetail = customerDetails;
 
