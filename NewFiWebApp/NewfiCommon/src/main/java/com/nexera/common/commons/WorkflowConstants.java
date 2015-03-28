@@ -217,106 +217,127 @@ public class WorkflowConstants {
 		        LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED)));
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FINAL_DOCS,
 		        new WorkItemMilestoneInfo(Milestones.UW,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.UW)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_FINAL_DOCS)));
 
 		// For Appraisal
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_OUT,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_OUT)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_BACK,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_BACK)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_IN_PURCHASE_REVIEW,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_IN_PURCHASE_REVIEW)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_PRE_PURCHASE_CONDITIONS,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.APPRAISAL),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.APPRAISAL)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_PRE_PURCHASE_CONDITIONS)));
 		// QC
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_DOC_QC,
 		        new WorkItemMilestoneInfo(Milestones.QC,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.QC),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.QC)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_PRE_DOC_QC)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
 		        new WorkItemMilestoneInfo(Milestones.QC,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.QC),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.QC)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE,
 		        new WorkItemMilestoneInfo(Milestones.QC,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.QC),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.QC)));
+		                        MILESTONE_ORDER_LOOKUP
+		                                .get(LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED,
 		        new WorkItemMilestoneInfo(Milestones.QC,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.QC),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.QC)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED)));
 
 		// Loan Closure
 
@@ -324,24 +345,29 @@ public class WorkflowConstants {
 		        LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.LOAN_CLOSURE)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.LOAN_CLOSURE)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.LOAN_CLOSURE)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.LOAN_CLOSURE)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_CLOSED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.LOAN_CLOSURE)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_CLOSED)));
 
 		// App1003
 
@@ -349,7 +375,8 @@ public class WorkflowConstants {
 		        LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
 		        new WorkItemMilestoneInfo(Milestones.App1003,
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.App1003),
-		                MILESTONE_ORDER_LOOKUP.get(Milestones.App1003)));
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
 	}
 
 }
