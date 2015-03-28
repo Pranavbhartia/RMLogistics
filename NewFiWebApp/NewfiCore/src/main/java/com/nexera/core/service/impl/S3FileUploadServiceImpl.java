@@ -137,7 +137,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				uniqueBucketName, key, file);
 
-		if(FilenameUtils.getExtension(file.getName()).equals("pdf")){
+		if(subfolderInBucket.equalsIgnoreCase("document")){
 			putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
 		}else{
 			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);

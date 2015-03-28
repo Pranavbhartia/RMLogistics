@@ -51,4 +51,6 @@ public interface UploadedFilesListService {
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        Integer userId, Integer loanId, Integer assignedBy);
 
+	public void createLQBVO(Integer uploadFileId, Integer loanId);
+
 }
