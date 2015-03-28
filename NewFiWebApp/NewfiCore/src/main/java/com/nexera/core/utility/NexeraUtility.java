@@ -435,12 +435,12 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(Integer fileToGetContent)
+	public String getContentFromFile(Integer fileId)
 	        throws IOException, Exception {
 		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(
-		        fileToGetContent).getS3path();
+				fileId).getS3path();
 		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
-		        .getInputStreamFromFile(s3pathOfFile));
+		        .getInputStreamFromFile(s3pathOfFile , String.valueOf(0)));
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
@@ -533,4 +533,7 @@ public class NexeraUtility {
 
 	}
 
+	
+	
+	
 }

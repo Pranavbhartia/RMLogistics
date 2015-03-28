@@ -3,31 +3,20 @@ package com.nexera.common.vo.lqb;
 public class LQBDocumentVO {
 
 	private String sTicket ;
-	private String  sLNm ;
+	private String  sLoanNumber ;
 	private String documentType;
 	private String notes;
 	private String sDataContent ;
 	
 	
 	
-	@Override
-	public String toString() {
-		return "LQBDocumentVO [sTicket=" + sTicket + ", sLNm=" + sLNm
-				+ ", documentType=" + documentType + ", notes=" + notes
-				+ ", sDataContent=" + sDataContent + "]";
-	}
 	public String getsTicket() {
 		return sTicket;
 	}
 	public void setsTicket(String sTicket) {
 		this.sTicket = sTicket;
 	}
-	public String getsLNm() {
-		return sLNm;
-	}
-	public void setsLNm(String sLNm) {
-		this.sLNm = sLNm;
-	}
+	
 	public String getDocumentType() {
 		return documentType;
 	}
@@ -45,6 +34,12 @@ public class LQBDocumentVO {
 	}
 	public void setsDataContent(String sDataContent) {
 		this.sDataContent = sDataContent;
+	}
+	public String getsLoanNumber() {
+		return sLoanNumber;
+	}
+	public void setsLoanNumber(String sLoanNumber) {
+		this.sLoanNumber = sLoanNumber;
 	}
 	
 }
