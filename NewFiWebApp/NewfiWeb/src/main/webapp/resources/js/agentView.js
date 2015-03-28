@@ -2213,13 +2213,25 @@ function getCreateTitleCompanyContext(loanID){
 }
 
 function showCreateUserPopup() {
-	var left = $('#center-panel-cont').offset().left;
-	var top = $('#add-member-sel').offset().top;
-	$('#create-user-first-name').val("");
+	var leftPannelValue=$('#center-panel-cont').offset();
+var topValue=$('#add-member-sel').offset();
+    if(leftPannelValue!=undefined  && topValue!=undefined){
+ 	var left = $('#center-panel-cont').offset().top;
+	var top = $('#add-member-sel').offset().left;
+		$('#create-user-first-name').val("");
 	$('#create-user-last-name').val("");
 	$('#create-user-emailId').val("");
 	$('#create-user-popup').show();
+	}else{
+	var left = $('#create-user-id').offset().top;
+	var top = $('#create-user-id').offset().left;
+	$('#create-user-first-name').val("");
+	$('#create-user-last-name').val("");
+	$('#create-user-emailId').val("");
+	$('#admin-create-user-popup').show();
+	}
 }
+
 
 function hideCreateUserPopup() {
 	$('#create-user-popup').hide();

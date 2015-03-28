@@ -1,3 +1,12 @@
+.admin-add-team-mem-header {
+	height: 45px;
+	line-height: 45px;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	background-color: #EAF5FD;
+	font-size: 14px;
+	font-family: 'opensanssemibold';
+}
 .alert-popup-wrapper-settings {
 	position: absolute;
 	right: -2px;
@@ -10,7 +19,23 @@
 	cursor: auto;
 	box-shadow: 0px 0px 5px #dcdcdc;
 }
-
+.admin-search-icn {
+	width: 18px;
+	height: 18px;
+	margin: 10px 40px;
+	background: url(../images/search_icon.png) no-repeat center;
+	cursor: pointer;
+}
+.admin-search-input {
+	width: 100px;
+	/* height: 25px; */
+	line-height: 17px;
+	border: none;
+	background: transparent;
+	/* margin-right: 500px; */
+	margin-left: -112px;
+	/* text-align: center; */
+}
 .alert-popup-wrapper-settings:before {
 	position: absolute;
 	top: -7px;
@@ -66,12 +91,14 @@ color: #428bca;
 	padding-bottom: 50px;
 	padding-top: 15px;
 	border-left: 1px #bebebe solid;
-	padding-left: 40px;
+	padding-left: 15px;
 }
 
 .search-input-area{
     height: 40px;
-	border: 1px solid #dcdcdc;
+	
+    border: 1px solid #dcdcdc;
+    display: none;
 }
 .search-label-class{
 font-family: 'opensanssemibold';
@@ -86,9 +113,9 @@ float:left;
 }
 
 .prof-cust-save-btn-admin-um {
-	width: 120px;
+	width: 100px;
 	height: 40px;
-	margin: 0 auto;
+	margin: 0px  right;
 	line-height: 40px;
 	text-align: center;
 	text-transform: uppercase;
@@ -96,8 +123,11 @@ float:left;
 	background-color: #F6914D;
 	border-radius: 3px;
 	cursor: pointer;
-	/* margin-left: 445px; */
-	/* margin-right: 275px; */
+	/* margin-left: -600px; */
+	/* margin-top: 20px; */
+	/* padding-left: 200px; */
+	/* margin-right: 524px; */
+	margin-left: -108px;
 }
 
 .add-member-input-admin-cont{
@@ -109,16 +139,16 @@ float:left;
 }
 .add-member-sel-admin{
 	position: relative;
-	width: 225px;
-	max-width: 100%;
+	width: 190px;
+	/* max-width: 100%; */
 	height: 40px;
 	padding-left: 20px;
-	border: 1px solid #dcdcdc;
+	/* border: 1px solid #dcdcdc; */
 	border-radius: 3px;
 	background: url(../images/arrow_down.png) no-repeat right center;
 	background-color: #FAFAFA;
 	font-family: 'opensanssemibold';
-	margin-right: 65px;
+	margin-right: 125px;
 }
 .admin-newfi-team-wrapper {
 
@@ -199,3 +229,79 @@ float:left;
 
 
 }
+
+#admin-create-user-popup.create-user-popup {
+	/* right: 0; */
+	top: 177px;
+	width: 780px;
+	padding: 10px;
+	/* right: 95px; */
+	left: 15px;
+}
+
+#admin-create-user-popup.create-user-popup:after {
+	bottom: 100%;
+	right: 60px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(66, 139, 202, 0);
+	border-bottom-color: #428bca;
+	border-width: 8px;
+	margin-left: -8px;
+}
+
+/* .create-user-popup-cont {
+	width: 50%;
+	height: 40px;
+	line-height: 40px;
+	margin: 10px 0;
+}
+
+.create-user-popup-input {
+	width: 225px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	border: 1px #dcdcdc solid;
+	border-radius: 3px;
+	background-color: #FAFAFA;
+}
+
+.create-user-popup-label {
+	width: 110px;
+	padding-right: 20px;
+	text-align: right;
+}
+
+.create-user-popup-addr {
+	width: 100%;
+}
+
+.create-user-popup-state {
+	width: 30%;
+}
+
+.create-user-popup-city {
+	width: 35%;
+}
+
+.create-user-popup-zip {
+	width: 35%;
+}
+
+.create-user-popup-input-sm {
+	width: 115px;
+}
+
+.create-user-popup-input-lg {
+	width: 605px;
+}
+
+.create-user-popup-input-vsm {
+	width: 75px;
+} */
+
