@@ -705,6 +705,10 @@ public class ThreadManager implements Runnable {
 
 		return null;
 	}
+	
+	
+	
+	
 
 	public Loan getLoan() {
 		return loan;
