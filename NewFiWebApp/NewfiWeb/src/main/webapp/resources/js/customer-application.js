@@ -1,33 +1,41 @@
 
 
 var appUserDetails = new Object();
+
+
 var user =  new Object();
 var customerDetail = new Object();
+user.customerDetail = customerDetail;
+
 var propertyTypeMaster = new Object();
 var governmentquestion = new Object();
 var refinancedetails = new Object();
 var loan = new Object();
 var loanType = new Object();
-
-if (sessionStorage.loanAppFormData) {
-	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
-}
-
-//loan.id = 2;
 loanType.id=1;
 
-var applyLoanStatus = 0; 
-var formCompletionStatus = 1;
-
-appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-
-user.customerDetail = customerDetail;
 appUserDetails.user = user;
 appUserDetails.propertyTypeMaster = propertyTypeMaster;
 appUserDetails.governmentquestion = governmentquestion;
 appUserDetails.refinancedetails = refinancedetails;
 appUserDetails.loan = loan;
 appUserDetails.loanType = loanType;
+
+
+if (sessionStorage.loanAppFormData) {
+	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
+}
+
+//loan.id = 2;
+//loanType.id=1;
+
+var applyLoanStatus = 0; 
+var formCompletionStatus = 1;
+
+appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+
+
+
 
 var applicationItemsList = [ {
 							    "text":"Home Information",
@@ -91,7 +99,8 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintCustomerApplicationPage() {
 	
-	//appUserDetails = JSON.parse(newfi.appUserDetails);
+	appUserDetails = JSON.parse(newfi.appUserDetails);
+	
 
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
@@ -169,7 +178,8 @@ function getContextApplicationSelectQues(contxt) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
-
+    contxt.container=container;
+    contxt.parentContainer.append(contxt.container);
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
@@ -390,13 +400,17 @@ function paintCustomerApplicationPageStep1a() {
     		customerDetail.addressState = inputState;
     		customerDetail.addressZipCode = zipCode;
 
+    		
     		user.customerDetail = customerDetail;
     		
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
+    		appUserDetails.user = user;
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
+    		
+    		//alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
-    		//paintCustomerApplicationPageStep1b();
+    		
         	        	
         }else{
         	showToastMessage("Please give answer of the questions");
@@ -453,22 +467,22 @@ function paintCustomerApplicationPageStep1b() {
         type: "desc",
         text: "How much is paid in property taxes every year?",
         name: "taxesPaid",
-        value: ""
+        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
     }, {
         type: "desc",
         text: "Who provides homeowners insurance?",
         name: "insuranceProvider",
-        value: ""
+        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }, {
         type: "desc",
         text: "How much does homeowners insurance cost per year?",
         name: "insuranceCost",
-        value: ""
+        value: appUserDetails.propertyTypeMaster.propertyInsuranceCost
     }, {
         type: "yearMonth",
         text: "When did you purchase this property?",
         name: "purchaseTime",
-        value: ""
+        value: appUserDetails.propertyTypeMaster.propertyPurchaseYear
     }];
 
     var questionsContainer = getQuestionsContainer(questions);
@@ -521,7 +535,7 @@ function paintCustomerApplicationPageStep1b() {
     
     
 }
-function getQuestionContext(question,parentContainer){
+function getQuestionContext(question,parentContainer,valueSet){
 	var contxt={
 			type: question.type,
 	        text: question.text,
@@ -532,6 +546,7 @@ function getQuestionContext(question,parentContainer){
 	        childContexts:{},
 	        value:question.selected,
 	        parentContainer:parentContainer,
+	        valueSet:valueSet,
 	        drawQuestion:function(callback){
 	        	var ob=this;
 	        	if (ob.type == "mcq") {
@@ -544,7 +559,7 @@ function getQuestionContext(question,parentContainer){
 	            	ob.container = getContextApplicationYesNoQues(ob);
 	            }
 	        	
-	        	parentContainer.append(ob.container);
+	        	//parentContainer.append(ob.container);
 	        	
 	        },
 	        deleteContainer:function(callback){
@@ -573,7 +588,7 @@ function getQuestionContext(question,parentContainer){
 	        	ob.childContexts[option]=[];
 	        	for(var i=0;i<questions.length;i++){
 	        		var question=questions[i];
-	            	var contxt=getQuestionContext(question,childContainer);
+	            	var contxt=getQuestionContext(question,childContainer,ob.valueSet);
 	            	contxt.drawQuestion();
 	            	ob.childContexts[option].push(contxt);
 	        	}
@@ -591,8 +606,24 @@ function getQuestionContext(question,parentContainer){
 	        	        ob.childContexts={};
 	        		}
 	        	}
+	        },mapValues:function(value){
+	        	if(value=="Yes"||value==true){
+	        		return "Yes";
+	        	}else if(value=="No"||value==false){
+	        		return "No";
+	        	}else
+	        		return value;
 	        }
 	};
+	
+	 if(valueSet){
+	     for(key in valueSet){
+	     	if(key==contxt.name){
+	     		contxt.value=contxt.mapValues(valueSet[key]);
+	         	break;
+	         }
+	     }
+	 }
 	return contxt;
 }
 var quesContxts=[];
@@ -642,7 +673,7 @@ function paintCustomerApplicationPageStep2() {
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'));
+    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails);
     	contxt.drawQuestion();
     	
     	quesContxts.push(contxt);
@@ -664,9 +695,12 @@ function paintCustomerApplicationPageStep2() {
     		    		isSouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
     		    		if( isSouseOnLoan =="Yes"){ 
     		    			appUserDetails.isSouseOnLoan =true;
+    		    		}else if(isSouseOnLoan =="No"){
+    		    			appUserDetails.isSouseOnLoan ="false";
+    		    			appUserDetails.spouseName  = false;
     		    		}else{
-    		    			appUserDetails.isSouseOnLoan =false;
-    		    			appUserDetails.spouseName  = "false";
+    		    			 showToastMessage("Please give the answers of the questions");
+    	    		    	 return false;
     		    		}
     		     }else{
     		    	 showToastMessage("Please give the answers of the questions");
@@ -681,7 +715,7 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	// this is the condition when spouseName is in the loan
 	    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
-	    	 
+	    		appUserDetails.isSouseOnLoan = true;
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    	}else{
 	    		appUserDetails.spouseName  = "false";
@@ -689,6 +723,7 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+	    	//alert(JSON.stringify(appUserDetails));
 	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
 	    	
     	}else{
@@ -707,7 +742,8 @@ function getContextApplicationYesNoQues(contxt) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
-
+    contxt.container=container;
+    contxt.parentContainer.append(contxt.container);
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
@@ -719,36 +755,49 @@ function getContextApplicationYesNoQues(contxt) {
 
     for (var i = 0; i < contxt.options.length; i++) {
         var option = contxt.options[i];
+        var sel="false";
+        if(contxt.value == option.text)
+        	sel="true";
         var optionCont = $('<div>').attr({
             "class": "app-option-choice",
-            "isSelected" : "false"
+            "isSelected" : sel
         }).html(option.text);
-        
+         
         optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
-        	$(this).parent().find('.app-option-choice').attr("isSelected","false");
-        	$(this).attr("isSelected","true");
         	var ctx=event.data.contxt;
-        	ctx.clickHandler(event.data.value);
-        	if(ctx.value!=event.data.value){
-	        	ctx.value=event.data.value;
-	        	var opt=event.data.option;
-	        	if(opt.addQuestions){
-	        		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
-	        	}
-        	}
+        	var opt=event.data.option;
+        	var val=event.data.value;
+        	optionClicked($(this),ctx,opt,val);
         });
-       
-
+        
         optionsContainer.append(optionCont);
+        
+        if(contxt.value==option.text){
+        	optionClicked(optionCont,contxt,option,option.text,true);
+        }
     }
 
     return container.append(quesTextCont).append(optionsContainer);
+}
+
+function optionClicked(element,ctx,option,value,skipCondition){
+	$(element).parent().find('.app-option-choice').attr("isSelected","false");
+	$(element).attr("isSelected","true");
+	ctx.clickHandler(value);
+	if(ctx.value!=value||skipCondition){
+    	ctx.value=value;
+    	var opt=option;
+    	if(opt.addQuestions){
+    		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
+    	}
+	}
 }
 function getContextApplicationTextQues(contxt) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
-
+    contxt.container=container;
+    contxt.parentContainer.append(contxt.container);
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
@@ -759,7 +808,8 @@ function getContextApplicationTextQues(contxt) {
 
     var optionCont = $('<input>').attr({
         "class": "app-input",
-        "name": contxt.name
+        "name": contxt.name,
+        "value":contxt.value
     }).bind("change",{"contxt":contxt},function(event){
     	var ctx=event.data.contxt;
     	ctx.value=$(this).val();
@@ -837,6 +887,7 @@ function getMultiTextQuestion(quesText) {
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "beforeTax",
+		"value" :appUserDetails.EmployedIncomePreTax
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -847,7 +898,8 @@ function getMultiTextQuestion(quesText) {
 
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
-		"name" : "workPlace"
+		"name" : "workPlace",
+		"value":appUserDetails.EmployedAt
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -858,7 +910,8 @@ function getMultiTextQuestion(quesText) {
 
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
-		"name" : "startWorking"
+		"name" : "startWorking",
+		"value" : appUserDetails.EmployedSince
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -887,7 +940,8 @@ function paintRefinanceSelfEmployed(divId) {
 
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
-		"name" : "selfEmployed"
+		"name" : "selfEmployed",
+		"value": appUserDetails.selfEmployedIncome
 	});
 
 	optionContainer.append(inputBox);
@@ -915,7 +969,8 @@ function paintRefinanceDisability(divId) {
 
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
-		"name" : "disability"
+		"name" : "disability",
+		"value": appUserDetails.ssDisabilityIncome
 	});
 
 	optionContainer.append(inputBox);
@@ -943,7 +998,8 @@ function paintRefinancePension(divId) {
 
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
-		"name" : "pension"
+		"name" : "pension",
+		"value": appUserDetails.monthlyPension
 	});
 
 	optionContainer.append(inputBox);
@@ -1287,7 +1343,7 @@ function paintCustomerApplicationPageStep4a() {
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'));
+    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.governmentquestion);
     	contxt.drawQuestion();
     	
     	quesDeclarationContxts.push(contxt);
@@ -1323,8 +1379,10 @@ function paintCustomerApplicationPageStep4a() {
     	//appUserDetails["propertyStatus"] =null;
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
     	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
+    	 //alert(isOutstandingJudgments);
+    	 delete appUserDetails.governmentquestion;
     	 
-    	 
+    	 governmentquestion = {};
     	 if( isOutstandingJudgments =="Yes"){ 
     		 governmentquestion.isOutstandingJudgments = true;
  		 }else{
@@ -1391,9 +1449,10 @@ function paintCustomerApplicationPageStep4a() {
  			governmentquestion.isOwnershipInterestInProperty = false;
  		 }
     	 
-
+    	 appUserDetails.governmentquestion =governmentquestion;
     	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+    	// alert(JSON.stringify(appUserDetails));
     	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
     	
     	//paintCustomerApplicationPageStep4b();
@@ -1547,7 +1606,7 @@ function paintCustomerApplicationPageStep5() {
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-    		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit());
+    		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
     		
     	}else{
     		showToastMessage("Please give the answers of the questions");
@@ -1561,6 +1620,7 @@ function paintCustomerApplicationPageStep5() {
 
 function applicationFormSumbit(){
 	
+	//createLoan();
 	changeSecondaryLeftPanel(3);
 }
 
@@ -1676,7 +1736,7 @@ function getMonthYearTextQuestion(question) {
 	 var yearInput = $('<input>').attr({
 	  "class" : "ce-input width-150",
 	  "name" : question.name,
-	  //"value" : appUserDetails[name],
+	  "value" : appUserDetails.propertyTypeMaster.propertyPurchaseYear,
 	  "placeholder" : "YYYY"
 	 });
 
@@ -1733,4 +1793,24 @@ function showLoanAppFormContainer(formCompletionStatus){
 	    paintCustomerApplicationPageStep1a();
 
 	}
+}
+
+
+function createLoan(appUserDetails,callBack)
+{
+//alert('inside create loan method');
+$.ajax({
+		url:"rest/application/createLoan",
+		type:"POST",
+		data:{"appFormData" : JSON.stringify(appUserDetails)},
+		datatype : "application/json",
+		success:function(data){
+
+			callBack;
+		},
+		error:function(erro){
+			alert("success");
+		}
+		
+	});
 }

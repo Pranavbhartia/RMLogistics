@@ -129,11 +129,8 @@ public class DefaultController implements InitializingBean {
 				// loanAppFormCompletionStatus
 				loanAppFormVO = loanAppFormService.find(loanAppFormVO);
 
-				int formCompletionStatus = loanAppFormVO
-				        .getLoanAppFormCompletionStatus() == null ? 0
-				        : loanAppFormVO.getLoanAppFormCompletionStatus();
-				LoanTeamListVO loanTeamListVO = loanService
-				        .getLoanTeamListForLoan(loanVO);
+				int formCompletionStatus = loanAppFormVO.getLoanAppFormCompletionStatus() == null ? 0: loanAppFormVO.getLoanAppFormCompletionStatus();
+				LoanTeamListVO loanTeamListVO = loanService.getLoanTeamListForLoan(loanVO);
 				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
 				List<String> imageList = new ArrayList<String>();
 				for (LoanTeamVO loanTeamVO : userList) {

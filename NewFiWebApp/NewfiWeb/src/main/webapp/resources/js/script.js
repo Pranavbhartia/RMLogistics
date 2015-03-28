@@ -659,9 +659,9 @@ function getRateProgramContainer() {
 		rpCol3.append(purchaseAmount);
 	}*/
 	
-	var mobileScreenCont = getSliderContainerForMobileScreen();
-	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(
-			mobileScreenCont);
+	//var mobileScreenCont = getSliderContainerForMobileScreen();
+	rpContainer.append(rpCol1).append(rpCol2).append(rpCol3);
+	//rpContainer.append(rpCol1).append(rpCol2).append(rpCol3).append(mobileScreenCont);
 	
 	parentWrapper.append(rpHeader).append(rpContainer);
 	var applyNow = $('<div>').attr({

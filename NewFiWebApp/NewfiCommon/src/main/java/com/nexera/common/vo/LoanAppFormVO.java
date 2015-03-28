@@ -299,8 +299,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
 		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
 		loanAppForm.setMonthlyPension(this.monthlyPension);
-		loanAppForm
-		        .setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
+		loanAppForm.setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
 		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
 		loanAppForm.setSecondMortgage(this.secondMortgage);
 		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
@@ -333,10 +332,11 @@ public class LoanAppFormVO implements Serializable {
 	public GovernmentQuestion parseVOtoEntity(
 	        GovernmentQuestionVO governmentQuestionVO) {
 
-		if (governmentQuestionVO == null)
-			return null;
-
 		GovernmentQuestion governmentQuestion = new GovernmentQuestion();
+		if (governmentQuestionVO == null)
+			return governmentQuestion;
+
+		//GovernmentQuestion governmentQuestion = new GovernmentQuestion();
 		System.out.println(governmentQuestionVO.getId());
 		governmentQuestion.setId(governmentQuestionVO.getId());
 		governmentQuestion.setOutstandingJudgments(governmentQuestionVO
@@ -368,9 +368,10 @@ public class LoanAppFormVO implements Serializable {
 
 	public RefinanceDetails parseVOtoEntityRefinance(RefinanceVO refinanceVO) {
 
-		if (refinanceVO == null)
-			return null;
 		RefinanceDetails refinanceDetails = new RefinanceDetails();
+		if (refinanceVO == null)
+			return refinanceDetails;
+		//RefinanceDetails refinanceDetails = new RefinanceDetails();
 		System.out.println("refinanceVO.getId()" + refinanceVO.getId());
 		refinanceDetails.setId(refinanceVO.getId());
 		refinanceDetails.setCurrentMortgageBalance(refinanceVO
@@ -387,9 +388,10 @@ public class LoanAppFormVO implements Serializable {
 	public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(
 	        PropertyTypeMasterVO propertyTypeMasterVO) {
 
-		if (propertyTypeMasterVO == null)
-			return null;
 		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+		if (propertyTypeMasterVO == null)
+			return propertyTypeMaster;
+		//PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 
 		System.out.println("propertyTypeMasterVO.getId()"
 		        + propertyTypeMasterVO.getId());
@@ -438,9 +440,10 @@ public class LoanAppFormVO implements Serializable {
 	public CustomerDetail parseVOtoEntityCustomerDetails(
 	        CustomerDetailVO customerDetailVO) {
 
-		if (customerDetailVO == null)
-			return null;
 		CustomerDetail customerDetail = new CustomerDetail();
+		if (customerDetailVO == null)
+			return customerDetail;
+		//CustomerDetail customerDetail = new CustomerDetail();
 		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
 		customerDetail.setAddressState(customerDetailVO.getAddressState());
 		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
