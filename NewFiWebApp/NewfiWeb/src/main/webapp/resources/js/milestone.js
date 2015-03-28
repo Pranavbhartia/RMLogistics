@@ -902,13 +902,17 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
 		var data={};
 		data.status="1";//since we will send only completed status from frontend
+		data["workflowItemExecId"]=wf.id;
+		data["loanID"]=workFlowContext.loanID;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}else{
-		var url="rest/workflow/execute/"+wf.id;
+		var url="rest/workflow/invokeaction/"+wf.id;
 		var data={};
 		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
 		data["EMAIL_RECIPIENT_NAME"]=selectedUserDetail.name;
+		data["loanID"]=workFlowContext.loanID;
+		data["workflowItemExecId"]=wf.id;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
 	/*if(callback){
