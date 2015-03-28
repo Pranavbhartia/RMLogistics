@@ -246,6 +246,30 @@ public class WorkflowRestService {
 		return response;
 	}
 
+	@RequestMapping(value = "invokeaction/{workflowItemId}", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO invokeWorkflowItem(@PathVariable int workflowItemId,
+			@RequestBody(required = false) String params) {
+		LOG.info("workflowItemId----" + workflowItemId);
+		CommonResponseVO response = null;
+		try {
+			// List<WorkflowItemExec> list =
+			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
+
+			workflowService.saveParamsInExecTable(workflowItemId, params);
+
+			String result = engineTrigger
+					.invokeActionMethod(workflowItemId);
+
+			response = RestUtil.wrapObjectForSuccess(result);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+					e.getMessage());
+		}
+		return response;
+	}
+
 	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getRenderStateInfoOfItem(
 	        @PathVariable int workflowId,

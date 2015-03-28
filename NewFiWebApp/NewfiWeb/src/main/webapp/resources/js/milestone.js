@@ -1094,7 +1094,7 @@ function milestoneChildEventHandler(event) {
 		event.stopPropagation();
 		var data = {};
 		data.milestoneId = event.target.getAttribute("milenotificationid");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if  ($(event.target).attr("data-text") == "TEAM_STATUS")
 		{
