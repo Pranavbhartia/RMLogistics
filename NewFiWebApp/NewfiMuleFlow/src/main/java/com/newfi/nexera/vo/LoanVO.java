@@ -3,6 +3,7 @@
  */
 package com.newfi.nexera.vo;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -34,9 +35,9 @@ public class LoanVO
 
     private String IlpTemplateId;
 
-    private Float requestedRate;
+    private BigDecimal requestedRate;
 
-    private Float requestedFee;
+    private BigDecimal requestedFee;
 
 
     /**
@@ -166,27 +167,9 @@ public class LoanVO
 
 
     /**
-     * @return the requestedRate
-     */
-    public Float getRequestedRate()
-    {
-        return requestedRate;
-    }
-
-
-    /**
-     * @param requestedRate the requestedRate to set
-     */
-    public void setRequestedRate( Float requestedRate )
-    {
-        this.requestedRate = requestedRate;
-    }
-
-
-    /**
      * @return the requestedFee
      */
-    public Float getRequestedFee()
+    public BigDecimal getRequestedFee()
     {
         return requestedFee;
     }
@@ -195,7 +178,7 @@ public class LoanVO
     /**
      * @param requestedFee the requestedFee to set
      */
-    public void setRequestedFee( Float requestedFee )
+    public void setRequestedFee( BigDecimal requestedFee )
     {
         this.requestedFee = requestedFee;
     }
@@ -270,6 +253,24 @@ public class LoanVO
     public void setsDataContent( String sDataContent )
     {
         this.sDataContent = sDataContent;
+    }
+
+
+    /**
+     * @return the requestedRate
+     */
+    public BigDecimal getRequestedRate()
+    {
+        return requestedRate;
+    }
+
+
+    /**
+     * @param requestedRate the requestedRate to set
+     */
+    public void setRequestedRate( BigDecimal requestedRate )
+    {
+        this.requestedRate = requestedRate;
     }
 
 }
