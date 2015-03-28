@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -57,8 +58,7 @@ import com.sun.media.jai.codec.ImageDecoder;
 @Component
 public class NexeraUtility {
 
-	@Autowired
-	private UploadedFilesListService uploadedFilesListService;
+	
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
@@ -435,10 +435,9 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(Integer fileId)
+	public String getContentFromFile(UploadedFilesList uploadedFilesList)
 	        throws IOException, Exception {
-		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(
-				fileId).getS3path();
+		String s3pathOfFile =uploadedFilesList.getS3path();
 		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
 		        .getInputStreamFromFile(s3pathOfFile , String.valueOf(0)));
 		String encodedText = new String(Base64.encodeBase64(bytes));
