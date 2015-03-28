@@ -4112,3 +4112,25 @@ input.calc-input {
   content: " ";
   background: #dcdcdc;
 }
+
+.loan-manager-popup {
+  position: absolute;
+  width: 250px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #cecece;
+  border-top: 3px solid #428bca;
+}
+
+.lm-details-txt-col{
+	margin-left:10px;
+}
+
+.loan-manager-popup-container{
+	border-bottom:1px solid #dcdcdc;
+	padding: 10px 0;
+}
+
+.loan-manager-popup-container:last-child{
+	border-bottom:none;
+}
