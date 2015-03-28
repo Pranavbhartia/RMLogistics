@@ -662,7 +662,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
 		customerDetailVO.setSsn(customerDetail.getSsn());
 		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
-		customerDetailVO.setSecPhoneNumber(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
 		customerDetailVO.setSubscriptionsStatus(customerDetail.getSubscriptionsStatus());
 		
 		return customerDetailVO;
