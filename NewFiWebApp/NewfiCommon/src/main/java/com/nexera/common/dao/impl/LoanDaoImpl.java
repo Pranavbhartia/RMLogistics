@@ -574,6 +574,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	        Loan loan) {
 		
 		LoanDetail detail=findLoanDetailOfLoan(loan);
+		if(detail==null)return null;
 		Hibernate.initialize(detail.getHomeOwnersInsurance());
 	    return detail.getHomeOwnersInsurance();
 	}
@@ -581,6 +582,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	@Override
 	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan) {
 		LoanDetail detail=findLoanDetailOfLoan(loan);
+		if(detail==null)return null;
 		Hibernate.initialize(detail.getTitleCompany());
 	    return detail.getTitleCompany();
 	}
@@ -589,6 +591,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	public boolean removeFromLoanTeam(Loan loan,
 	        HomeOwnersInsuranceMaster homeOwnIns) {
 		LoanDetail detail=this.findLoanDetailOfLoan(loan);
+		if(detail==null)return false;
 		detail.setHomeOwnersInsurance(null);
 		this.update(detail);
 		return true;
@@ -597,6 +600,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	@Override
 	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany) {
 		LoanDetail detail=this.findLoanDetailOfLoan(loan);
+		if(detail==null)return false;
 		detail.setTitleCompany(null);
 		this.update(detail);
 		return true;
