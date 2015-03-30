@@ -80,11 +80,21 @@ public class NexeraUtility {
 		// Create a Splitter object
 		try {
 			document = new PDDocument();
+			//TODO: Look at this warning
 			document = PDDocument.loadNonSeq(file, null);
 			return document.getDocumentCatalog().getAllPages();
 		} catch (IOException e) {
 			LOGGER.info("Exception in splitting pdf document : "
 			        + e.getMessage());
+		}finally{
+			if(document!=null){
+				try {
+	                document.close();
+                } catch (IOException e) {
+	                LOGGER.info("Unable to close the PDF document "
+	    			        + e.getMessage());
+                }
+			}
 		}
 		return pdfPages;
 	}
