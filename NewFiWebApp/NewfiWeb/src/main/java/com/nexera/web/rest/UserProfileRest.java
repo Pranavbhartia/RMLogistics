@@ -93,6 +93,10 @@ public class UserProfileRest {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
 
 			Integer userUpdateCount = userProfileService.updateUser(userVO);
+
+            UserVO user=userProfileService.findUser(userVO.getId());
+            if(userVO.getCustomerDetail()!=null){
+            userVO.getCustomerDetail().setProfileCompletionStatus(user.getCustomerDetail().getProfileCompletionStatus());}
 			Integer customerDetailsUpdateCount = userProfileService
 					.updateCustomerDetails(userVO);
 

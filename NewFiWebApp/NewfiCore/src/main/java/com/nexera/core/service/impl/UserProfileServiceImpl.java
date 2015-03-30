@@ -144,16 +144,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
 		CustomerDetail customerDetail = CustomerDetail.convertFromVOToEntity(customerDetailVO);
-
-		
-		if(userVO.getPhotoImageUrl()!=null && userVO.getPhotoImageUrl()!=""){
-			 customerDetail.setProfileCompletionStatus(customerDetailVO.getProfileCompletionStatus()+(100/3));
-			
+		if(userVO.getCustomerDetail().getMobileAlertsPreference()!=null){
+	       if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
+	    	   if(customerDetail.getProfileCompletionStatus()!=100)	    	 
+	    	   customerDetail.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus()+(100/4));
+	    	   
+	       }
 		}
-       if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
-    	   customerDetail.setProfileCompletionStatus(customerDetailVO.getProfileCompletionStatus()+(100/3));
-    	   
-       }
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
 		return customerDetailVOObj;

@@ -161,6 +161,9 @@ public class TemplateController extends DefaultController {
 			UserVO userVO = userProfileService.findUser(userid);
 			if (userVO.getUserRole().getId() == 1) {
 				if (userVO.getCustomerDetail() != null) {
+					Integer customerProfileStatus=userVO.getCustomerDetail().getProfileCompletionStatus()+Math.round(100/3)+1;
+                    userVO.getCustomerDetail().setProfileCompletionStatus(customerProfileStatus);
+                    if( userVO.getCustomerDetail().getProfileCompletionStatus()!=100)	 					
 					userProfileService.updateCustomerDetails(userVO);
 				}
 			}
