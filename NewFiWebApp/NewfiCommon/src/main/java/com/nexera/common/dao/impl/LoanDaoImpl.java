@@ -550,5 +550,55 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		 */
 		return criteria.list();
 	}
+
+	/**
+	 * Returns the loandetail entitiy linked to a loan.
+	 * @param loan
+	 * @return
+	 */
+	@Override
+	public LoanDetail findLoanDetailOfLoan(Loan loan) {
+
+		loan = (Loan) this.load(Loan.class, loan.getId());
+
+		if (loan == null)
+			return null;
+		Hibernate.initialize(loan.getLoanDetail());
+
+		return loan.getLoanDetail();
+		
+	}
 	
+	@Override
+	public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan(
+	        Loan loan) {
+		
+		LoanDetail detail=findLoanDetailOfLoan(loan);
+		Hibernate.initialize(detail.getHomeOwnersInsurance());
+	    return detail.getHomeOwnersInsurance();
+	}
+	
+	@Override
+	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan) {
+		LoanDetail detail=findLoanDetailOfLoan(loan);
+		Hibernate.initialize(detail.getTitleCompany());
+	    return detail.getTitleCompany();
+	}
+
+	@Override
+	public boolean removeFromLoanTeam(Loan loan,
+	        HomeOwnersInsuranceMaster homeOwnIns) {
+		LoanDetail detail=this.findLoanDetailOfLoan(loan);
+		detail.setHomeOwnersInsurance(null);
+		this.update(detail);
+		return true;
+	}
+
+	@Override
+	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany) {
+		LoanDetail detail=this.findLoanDetailOfLoan(loan);
+		detail.setTitleCompany(null);
+		this.update(detail);
+		return true;
+	}
 }
