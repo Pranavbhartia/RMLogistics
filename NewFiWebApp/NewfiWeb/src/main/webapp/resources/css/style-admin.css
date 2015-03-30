@@ -13,7 +13,6 @@
 	top: 44px;
 	background: #fff;
 	width: 175px;
-	/* min-height: 300px; */
 	color: #777;
 	border-radius: 3px;
 	cursor: auto;
@@ -27,14 +26,49 @@
 	cursor: pointer;
 }
 .admin-search-input {
-	width: 100px;
-	/* height: 25px; */
-	line-height: 17px;
+	width: 190px;
+	line-height: 28px;
 	border: none;
 	background: transparent;
-	/* margin-right: 500px; */
 	margin-left: -112px;
-	/* text-align: center; */
+
+}
+.admin-add-member-dropdown-cont{
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 40px;
+	max-height: 200px;
+	background-color: #fdfdfd;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	padding: 5px 0;
+	box-shadow: 0px 0px 5px #dcdcdc;
+}
+
+.admin-add-member-dropdown-row{
+    padding-left: 20px;
+	line-height: 30px;	
+    height: 30px;	
+    background-color: white;
+	cursor: pointer;
+    /* border-bottom: 1px solid #F5F5F5; */
+}
+.admin-label-class{
+	line-height: 40px;
+	padding-left: 107px;
+	padding-right: 40px;
+	font-family: 'OpenSans';
+
+}
+.admin-span-class{
+    font-family: 'openSans';
+
+
+    width: 10px;
+    height: 10px;
+    /* margin-right: 52px; */
+    padding-left: -17px;
 }
 .alert-popup-wrapper-settings:before {
 	position: absolute;
@@ -47,18 +81,12 @@
 }
 
 .admin-pop-up-header {
-	/* height: 32px; */
 	line-height: 32px;
-	/* margin: 0 10px 0 0; */
 	line-height: 32px;
 	padding-left: 13px;
-	/* text-align: center; */
 	font-family: 'opensanssemibold';
 	font-size: 12px;
-	/* background-color: #f2fcfe; */
-	/* background-color: rgba(0, 0, 255, 0.1); */
-	border-bottom: 1px solid #CECECE;
-	
+	border-bottom: 1px solid #CECECE;	
 	background: url(../images/Settings-Gear-light-gray.png) no-repeat right;
 	background-origin: content-box;
 	padding-right: 10px;
@@ -66,17 +94,14 @@
 
 
  .admin-module-row-content{
-height: 32px;	
-padding: 0px 0px 5px 15px;
-border-bottom: 1px solid #F5F5F5;
-line-height: 32px;
-/* text-align: center; */
-font-size: 12px;	
-/* background-color: #f2fcfe; */
+  height: 32px;	
+  padding: 0px 0px 5px 15px;
+  border-bottom: 1px solid #F5F5F5;
+  line-height: 32px;
+  font-size: 12px;	
  -webkit-box-shadow: 0 1px px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-    
-color: #428bca;
+ -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);    
+  color: #428bca;
 } 
 .add-user-mem-admin-wrapper {
 	padding-bottom: 20px;
@@ -95,45 +120,85 @@ color: #428bca;
 }
 
 .search-input-area{
-    height: 40px;
-	
-    border: 1px solid #dcdcdc;
-    display: none;
+   height: 40px;	
+   border: 1px solid #dcdcdc;
+   display: none;
 }
 .search-label-class{
-font-family: 'opensanssemibold';
-	font-size: 12px;
-padding-right: 10px;
+   font-family: 'opensanssemibold';
+   font-size: 12px;
+   padding-right: 10px;
+}
+.admin-btn-active{
+background: url(../images/toggle-2.png) no-repeat right;
+height: 20px;
+cursor: pointer;
+margin-right: 197px;
+border: 1px #d3d3d3 solid;
+width: 40px;
+border-radius: 20px;
+height: 18px;
+}
+.admin-upload-label{
+
+  line-height: 40px;
+  padding-left: 8px;
+  padding-right: 40px;
+  font-family: 'opensanssemibold';
+}
+.admin-btn-in-active{
+background: url(../images/toggle-1.png) no-repeat right;
+height: 20px;
+cursor: pointer;
+margin-right: 197px;
+border: 1px #d3d3d3 solid;
+width: 40px;
+border-radius: 20px;
+height: 18px;
 }
 
 .float-right-admin{
-float:right}
+    float:right;
+}
 .float-left-admin{
-float:left;
+    float:left;
 }
 
 .prof-cust-save-btn-admin-um {
 	width: 100px;
-	height: 40px;
+	height: 28px;
 	margin: 0px  right;
-	line-height: 40px;
+	line-height: 28px;
 	text-align: center;
 	text-transform: uppercase;
 	color: #fff;
 	background-color: #F6914D;
 	border-radius: 3px;
 	cursor: pointer;
-	/* margin-left: -600px; */
-	/* margin-top: 20px; */
-	/* padding-left: 200px; */
-	/* margin-right: 524px; */
-	margin-left: -108px;
+	margin-left: 26px;
+	margin-top: 7px;
+	padding-top: 0px;
+	/* position: relative; */
+}
+
+.prof-cust-upload-btn-admin-um {
+	width: 33px;
+	background: url(../images/upload-pic.png) no-repeat right;
+	margin: 0px  right;
+	line-height: 28px;
+	text-align: center;
+	text-transform: uppercase;	
+	border-radius: 3px;
+	cursor: pointer;
+	height: 33px;
+	margin-left: 141px;
+	margin-top: -36px;
 }
 
 .add-member-input-admin-cont{
-	width: 50%;
+	width: 35%;
 	line-height: 40px;
-	padding-left: 10px;
+	padding-left: 8px;
 	padding-right: 40px;
 	font-family: 'opensanssemibold';
 }
@@ -142,68 +207,72 @@ float:left;
 	width: 190px;
 	/* max-width: 100%; */
 	height: 40px;
-	padding-left: 20px;
-	/* border: 1px solid #dcdcdc; */
+	padding-left: 48px;
 	border-radius: 3px;
 	background: url(../images/arrow_down.png) no-repeat right center;
-	background-color: #FAFAFA;
 	font-family: 'opensanssemibold';
-	margin-right: 125px;
+	/* margin-right: 125px; */
+	border: 1px solid #dcdcdc;
 }
 .admin-newfi-team-wrapper {
-
-	margin-top: 20px;
+	margin-top: 20px;	
+	padding-left: 0px;
 }
-
-.admin-newfi-team-list-th {
-	
-	line-height: 40px;
-	padding-left: 5px;
+.admin-newfi-team-container{
+padding-left:0px;
+}
+.admin-newfi-team-list-th {	
+	line-height: 45px;
 	margin-top: 10px;
+	border-top: 1px #cecece dashed;
+	background-color: #fcfcfc;
 }
 
 .admin-newfi-team-list-th-col1,.admin-newfi-team-list-th-col2,.admin-newfi-team-list-th-col3,.admin-newfi-team-list-th-col4,.admin-newfi-team-list-th-col5
-	{
-	
-	font-family: 'opensanssemibold';
+{	
+	font-family: 'OpenSans';
+	font-weight: normal;
+	font-size: 13px;
 }
 .admin-newfi-team-list-th-col1{
-    margin-left: 0px;
+    margin-left: 15px;
 
 }
 .admin-newfi-team-list-th-col2{
-    margin-left: 101px;
+    margin-left: 104px;
 
 }
 .admin-newfi-team-list-th-col3{
-    margin-left: 93px;
+    margin-left: 118px;
 
 }
 .admin-newfi-team-list-th-col4{
-    margin-left: 251px;
+    margin-left: 220px;
 
 }
 .admin-newfi-team-list-th-col5{
     margin-left: 122px;
 
 }
-.admin-newfi-team-list-th-col6{
-
-}
-
 .admin-newfi-team-list-tr {
 	min-height: 40px;
 	padding:10px;
-	padding-left: 5px;
-	border-bottom: 1px #dcdcdc dashed;
+	padding-left: 15px;
+	border-top: 1px #dcdcdc dashed;
 }
-
+.admin-newfi-team-list-tr:nth-child(odd) {
+	min-height: 40px;
+	padding:10px;
+	padding-left: 15px;
+	border-top: 1px #dcdcdc dashed;
+	background: rgba(245, 249, 245, 0.22);
+}
 .admin-newfi-team-list-tr-col1 {
 	width: 19%;
 }
 
 .admin-newfi-team-list-tr-col2 {
-	width: 17%;
+	width: 20%;
 }
 
 .admin-newfi-team-list-tr-col3 {
@@ -211,18 +280,16 @@ float:left;
 }
 
 .admin-newfi-team-list-tr-col4 {
-	width: 9%;
+	width: 28%;
 	height: 24px;
 }
 
 .admin-newfi-team-list-tr-col5 {
-	width: 13%;
+	width: 6%;
 	height: 20px;
-	/* margin-left: 0px; */
 }
 .admin-newfi-team-list-tr-col6 {
 	width: 15%;
-	/* height: 20px; */
 }
 .admin-label-radio-active,.admin-label-radio-in-active{
     font-family: 'opensanssemibold';
@@ -231,12 +298,10 @@ float:left;
 }
 
 #admin-create-user-popup.create-user-popup {
-	/* right: 0; */
 	top: 177px;
 	width: 780px;
 	padding: 10px;
-	/* right: 95px; */
-	left: 15px;
+	left: 13px;
 }
 
 #admin-create-user-popup.create-user-popup:after {
