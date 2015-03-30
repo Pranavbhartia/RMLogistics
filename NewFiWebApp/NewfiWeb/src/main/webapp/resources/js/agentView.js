@@ -1160,10 +1160,37 @@ function paintUserNameDropDown(values) {
 			dropdownCont.append(dropDownRow);
 		}
 	}
+	
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
 		"class" : "add-member-dropdown-row"
-	}).html("Add New User").on('click',showAddUserPopUp);
+	}).html("Add New User").on('click',function(){
+		
+		var callback=showAddUserPopUp;
+		
+		var memberType=$('#add-memeber-user-type');
+		var userRoleBased=memberType.attr("userRoleBased")
+		var code=memberType.attr("code")
+		if(userRoleBased=="false")
+			{
+					if (code == "TITLE_COMPANY")
+						callback=function(){
+						var context=getCreateTitleCompanyContext(
+								newfiObject.user.defaultLoanId);
+						context.showCreateTitleCompanyPopup();
+						
+						
+					}
+					else if (code == "HOME_OWN_INS")
+						callback=function(){
+						var context=getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+						context.showCreateTitleCompanyPopup();
+					}
+						
+			}
+		callback(event);
+		
+	});
 	dropdownCont.append(addUserdropDownRow);
 }
 

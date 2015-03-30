@@ -1131,20 +1131,34 @@ function milestoneChildEventHandler(event) {
 		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createTitleCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
 		event.stopPropagation();
-		var teamTable = getMilestoneTeamMembeTable();
+		//var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = newfi.user.defaultLoanId;
 		appendMilestoneAddTeamMemberPopup(newfi.user.defaultLoanId,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createTitleCompanyPopup();
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
 	 	event.stopPropagation();
