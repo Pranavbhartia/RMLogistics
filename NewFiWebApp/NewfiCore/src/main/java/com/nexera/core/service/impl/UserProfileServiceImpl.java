@@ -227,6 +227,17 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		return role;
 
 	}
+	
+	@Override
+	public List<UserVO> getUsersList()
+		{
+			List<UserVO> userVOList=new ArrayList<UserVO>();
+			 userVOList= buildUserVOList(userProfileDao
+			        .getUsersList());
+			return userVOList;
+			
+		}
+	
 
 	@Override
 	public Integer competeUserProfile(UserVO userVO) {

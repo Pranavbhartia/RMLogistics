@@ -64,6 +64,8 @@ public interface UserProfileService {
 	public List<User> fetchAllActiveUsers();
 
 	public UserVO convertTOUserVO(User user);
+	
+	public List<UserVO> getUsersList();
 
 	public JsonObject parseCsvAndAddUsers(MultipartFile file) throws FileNotFoundException, IOException, InvalidInputException, UndeliveredEmailException;
 
