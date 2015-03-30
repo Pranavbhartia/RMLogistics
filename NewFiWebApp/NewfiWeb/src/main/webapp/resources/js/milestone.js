@@ -1178,7 +1178,7 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
-		url = "rest/payment/paymentpage.do";
+		url = "rest/payment/pay";
 		
 		 $.ajax({
 		        url : url,
