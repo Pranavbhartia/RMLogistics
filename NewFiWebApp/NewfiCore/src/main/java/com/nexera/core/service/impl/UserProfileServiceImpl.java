@@ -77,6 +77,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
 
+	//TODO --Rajeshwari
 	@Override
 	public UserVO findUser(Integer userid) {
 
@@ -142,25 +143,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer updateCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = new CustomerDetail();
+		CustomerDetail customerDetail = CustomerDetail.convertFromVOToEntity(customerDetailVO);
 
-		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
-		customerDetail.setAddressState(customerDetailVO.getAddressState());
-		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
-		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
-		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-		if (customerDetailVO.getDateOfBirth() != null) {
-			customerDetail.setDateOfBirth(new Date(customerDetailVO
-			        .getDateOfBirth()));
-		} else {
-			customerDetail.setDateOfBirth(null);
+		
+		if(userVO.getPhotoImageUrl()!=null && userVO.getPhotoImageUrl()!=""){
+			 customerDetail.setProfileCompletionStatus(customerDetailVO.getProfileCompletionStatus()+(100/3));
+			
 		}
-		customerDetail.setProfileCompletionStatus(customerDetailVO
-		        .getProfileCompletionStatus());
-		customerDetail.setMobileAlertsPreference(customerDetailVO
-		        .getMobileAlertsPreference());
-
+       if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
+    	   customerDetail.setProfileCompletionStatus(customerDetailVO.getProfileCompletionStatus()+(100/3));
+    	   
+       }
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
 		return customerDetailVOObj;
@@ -168,7 +161,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	public Integer updateUser(String s3ImagePath, Integer userid) {
-
+	
+        
 		Integer number = userProfileDao.updateUser(s3ImagePath, userid);
 		return number;
 	}
@@ -240,24 +234,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	public Integer completeCustomerDetails(UserVO userVO) {
 
-		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = new CustomerDetail();
-
-		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
-		customerDetail.setAddressState(customerDetailVO.getAddressState());
-		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
-		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
-		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-
-		if (customerDetailVO.getDateOfBirth() != null) {
-			customerDetail.setDateOfBirth(new Date(customerDetailVO
-			        .getDateOfBirth()));
-		} else {
-			customerDetail.setDateOfBirth(null);
-		}
-		customerDetail.setProfileCompletionStatus(customerDetailVO
-		        .getProfileCompletionStatus());
+		CustomerDetail customerDetail = CustomerDetail.convertFromVOToEntity(userVO.getCustomerDetail());
 
 		Integer rowCount = userProfileDao
 		        .completeCustomerDetails(customerDetail);
@@ -369,7 +346,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        .getSecEmailId());
 			customerDetail.setDateOfBirth(new Date(userVO.getCustomerDetail()
 			        .getDateOfBirth()));
+			customerDetail.setProfileCompletionStatus(userVO.getCustomerDetail().getProfileCompletionStatus());
 			userModel.setCustomerDetail(customerDetail);
+			
 		}
 
 		RealtorDetail realtorDetail = new RealtorDetail();
@@ -462,7 +441,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
+		
 		User newUser = parseUserModel(userVO);
+		if(newUser.getCustomerDetail()!=null){
+		newUser.getCustomerDetail().setProfileCompletionStatus(100/3);}
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);

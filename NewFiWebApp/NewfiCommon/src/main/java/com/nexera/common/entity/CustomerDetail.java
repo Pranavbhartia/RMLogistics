@@ -168,7 +168,7 @@ public class CustomerDetail implements Serializable {
 		return customerDetailVO;
 	}
 
-	public CustomerDetail convertFromVOToEntity(
+	public static CustomerDetail convertFromVOToEntity(
 	        final CustomerDetailVO inputEntity) {
 		CustomerDetail customerDetail = new CustomerDetail();
 		if (inputEntity != null) {
