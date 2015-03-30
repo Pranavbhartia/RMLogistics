@@ -129,7 +129,7 @@ public class LoanRestService {
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)
 	public @ResponseBody CommonResponseVO removeFromLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID") Integer userID,
+	        @RequestParam(value = "userID",required=false) Integer userID,
 	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
 	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
 
