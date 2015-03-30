@@ -12,7 +12,7 @@ public class WorkflowConstants {
 
 	public static final String POOL_SIZE = "pool.size";
 
-	public static final String SUCCESS = "success";
+	public static final String SUCCESS = "3";
 
 	public static final String FAILURE = "failure";
 
