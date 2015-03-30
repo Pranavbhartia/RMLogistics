@@ -31,5 +31,12 @@ public class WebServiceOperations
 
     public static String OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER = "ListEdocsByLoanNumber";
 
+    public static String OP_NAME_APP_VIEW_GET_PML_LOAN_URL = "GetPmlLoanUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_PML_PIPELINE_URL = "GetPmlPipelineUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_VIEW_DESKTOP_URL = "GetViewDesktopUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL = "GetViewLoanUrl";
 
 }
