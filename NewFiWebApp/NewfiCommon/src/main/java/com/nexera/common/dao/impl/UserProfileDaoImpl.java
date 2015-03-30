@@ -27,6 +27,7 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
+import com.nexera.common.vo.UserVO;
 
 @Component
 @Transactional
@@ -146,6 +147,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
+	@Override
+	public List<User> getUsersList()
+		{
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(User.class);
+					
+			return criteria.list();
+			
+			
+			
+		}
+	
 	@Override
 	public List<User> searchUsers(User user) {
 
