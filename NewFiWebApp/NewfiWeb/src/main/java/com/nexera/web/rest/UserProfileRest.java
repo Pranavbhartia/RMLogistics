@@ -161,6 +161,17 @@ public class UserProfileRest {
 		return new Gson().toJson(responseVO);
 		
 			}
+	
+	@RequestMapping(value = "/getUsersList", method = RequestMethod.GET)
+	public @ResponseBody String getUsersList()
+	{
+		UserVO userVO=new UserVO();
+		List<UserVO> userList=new ArrayList<UserVO>();
+		 userList =  userProfileService.getUsersList();
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
+		return new Gson().toJson(responseVO);
+		
+	}
 		
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.POST)
 	public @ResponseBody
