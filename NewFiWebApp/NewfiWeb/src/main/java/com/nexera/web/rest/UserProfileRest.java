@@ -3,9 +3,12 @@ package com.nexera.web.rest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nexera.common.entity.User;
@@ -138,6 +142,37 @@ public class UserProfileRest {
 		return new Gson().toJson(responseVO);
 	}
 
+	@RequestMapping(value = "/searchUserName", method = RequestMethod.GET)
+	public @ResponseBody String searchUsers(
+			@RequestParam(value = "name", required = false) String name)
+			{
+		
+		if (name == null)
+			name = "";
+
+		UserVO userVO=new UserVO();
+		userVO.setFirstName(name);
+		
+		userVO.setEmailId(name);
+		
+		List<UserVO> userList =  userProfileService.searchUsers(userVO);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
+
+		return new Gson().toJson(responseVO);
+		
+			}
+	
+	@RequestMapping(value = "/getUsersList", method = RequestMethod.GET)
+	public @ResponseBody String getUsersList()
+	{
+		UserVO userVO=new UserVO();
+		List<UserVO> userList=new ArrayList<UserVO>();
+		 userList =  userProfileService.getUsersList();
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(userList);
+		return new Gson().toJson(responseVO);
+		
+	}
+		
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.POST)
 	public @ResponseBody
 	CommonResponseVO completeProfile(String completeUserInfo) {

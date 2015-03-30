@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
@@ -80,11 +81,21 @@ public class NexeraUtility {
 		// Create a Splitter object
 		try {
 			document = new PDDocument();
+			//TODO: Look at this warning
 			document = PDDocument.loadNonSeq(file, null);
 			return document.getDocumentCatalog().getAllPages();
 		} catch (IOException e) {
 			LOGGER.info("Exception in splitting pdf document : "
 			        + e.getMessage());
+		}finally{
+			if(document!=null){
+				try {
+	                document.close();
+                } catch (IOException e) {
+	                LOGGER.info("Unable to close the PDF document "
+	    			        + e.getMessage());
+                }
+			}
 		}
 		return pdfPages;
 	}
@@ -532,6 +543,9 @@ public class NexeraUtility {
 
 	}
 
+	public Date convertToUTC(Date inputDate){
+		return null;
+	}
 	
 	
 	

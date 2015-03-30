@@ -158,6 +158,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
 		        .getProfileCompletionStatus());
+		customerDetail.setMobileAlertsPreference(customerDetailVO
+		        .getMobileAlertsPreference());
 
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -190,6 +192,33 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		return voList;
+	}
+
+	private UserRole parseUserRoleModel(UserRoleVO roleVO) {
+
+		UserRole role = new UserRole();
+
+		if (roleVO == null) {
+			role.setId(UserRolesEnum.CUSTOMER.getRoleId());
+			role.setRoleCd(UserRolesEnum.CUSTOMER.toString());
+		} else {
+
+			role.setId(roleVO.getId());
+			role.setRoleCd(roleVO.getRoleCd());
+			role.setLabel(roleVO.getLabel());
+			role.setRoleDescription(roleVO.getRoleDescription());
+		}
+
+		return role;
+
+	}
+
+	@Override
+	public List<UserVO> getUsersList() {
+		List<UserVO> userVOList = new ArrayList<UserVO>();
+		userVOList = buildUserVOList(userProfileDao.getUsersList());
+		return userVOList;
+
 	}
 
 	@Override
