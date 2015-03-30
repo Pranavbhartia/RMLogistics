@@ -43,6 +43,7 @@ public class WorkflowConstants
     public static final String WORKFLOW_ITEM_INITIAL_CONTACT = "INITIAL_CONTACT";
     public static final String WORKFLOW_ITEM_UW_STATUS = "UW_STATUS";
     public static final String WORKFLOW_ITEM_VIEW_UW = "VIEW_UW";
+	public static final String WORKFLOW_ITEM_MANAGE_TEAM = "MANAGE_TEAM";
 
     public static final String WORKFLOW_ITEM_TEAM_STATUS = "TEAM_STATUS";
     public static final String WORKFLOW_ITEM_SYSTEM_EDU = "SYSTEM_EDU";

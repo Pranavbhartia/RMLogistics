@@ -79,3 +79,29 @@ input.reg-radio {
 	height: 14px;
 	margin-right: 10px;
 }
+
+.soft-menu-icon{
+    width: 44px;
+    height: 50px;
+    margin-right: 20px;
+    background: url("../images/menu.png") no-repeat center;
+    cursor: pointer;
+}
+
+.soft-menu-wrapper{
+    display: none;
+    position: absolute;
+    top: 51px;
+    right: 10px;
+    width: 200px;
+    background: #428bca;
+    border-radius: 0 0 3px 3px;
+    color: #fff;
+}
+
+.soft-menu-hdr{
+  line-height: 37px;
+  margin-left: 15px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}

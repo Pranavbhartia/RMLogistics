@@ -1,4 +1,5 @@
 var userDescription="Sales Manager";
+//var userRoleCdForAdmin="SYSTEM"
 $(document).on('click',function(e){
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -13,7 +14,9 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 });
 $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
-	if(userDescription==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription){
+	if(userDescription==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+ //if(userRoleCdForAdmin==newfiObject.user.userRole.roleCd)	
+	{
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
@@ -119,6 +122,29 @@ $('#alert-settings-btn').click(function(e){
 	
 	}
 });
+
+
+function getSearchResultForAdmin(searchValue)
+{
+	$('#right-panel').html('');
+	var agentDashboardMainContainer = $('<div>').attr({
+		"id" : "admin-dashboard-container",
+		"class" : "rp-agent-dashboard-admin float-left-admin"
+	});
+	$('#right-panel').append(agentDashboardMainContainer);
+     getSearchResultDataForAdmin(searchValue);
+
+
+}
+
+function getSearchResultDataForAdmin(searchValue)
+{
+	
+	ajaxRequest("rest/userprofile/searchUserName?name="+searchValue,"GET", "json", {},
+			adminDashboardRightPanel);
+
+
+}
 
 
 //TODO to load user mangement page
@@ -514,8 +540,10 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 
 	$(this).parent().find('.admin-search-input').show().focus();
      if($('#search-id').val()!="" && $('#search-id').val()!=undefined){
-	 var val=$('#search-id').val();
-		alert(val);
+	 var searchValue=$('#search-id').val();
+		//alert(val);
+	 getSearchResultForAdmin(searchValue);
+	 
 	$('#search-id').val('');
 	 	$(this).parent().find('.admin-search-input').hide();
 	 }     

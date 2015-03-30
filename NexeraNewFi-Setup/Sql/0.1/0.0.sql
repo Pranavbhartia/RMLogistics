@@ -199,6 +199,8 @@ CREATE TABLE `internaluserdetails` (
   PRIMARY KEY (`id`),
   KEY `fk_internalUserManager_idx` (`manager`),
   KEY `fk_internalUserRole_idx` (`user_role`),
+    
+    
   CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_internalUserRole` FOREIGN KEY (`user_role`) REFERENCES `internaluserrolemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -1164,6 +1166,27 @@ CREATE TABLE `workflowtaskconfigmaster` (
   `params` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `statelookup`;
+CREATE TABLE `statelookup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `statecode` varchar(45) DEFAULT NULL,
+  `statename` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `zipcodelookup`;
+CREATE TABLE `zipcodelookup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `state_id` int(11) DEFAULT NULL,
+  `zipcode` varchar(45) DEFAULT NULL,
+  `countyname` varchar(45) DEFAULT NULL,
+  `cityname` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_state_lookup_idx` (`state_id`),
+  CONSTRAINT `fk_state_lookup` FOREIGN KEY (`state_id`) REFERENCES `statelookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=42512 DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
