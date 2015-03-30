@@ -15,22 +15,11 @@ var workFlowContext = {
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
-	ajaxRequest : function(url, type, dataType, data, successCallBack) {
-		$.ajax({
-			url : url,
-			type : type,
-			dataType : dataType,
-			data : data,
-			success : successCallBack,
-			error : function() {
-			}
-		});
-	},
 	getWorkflowID : function(callback) {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/details/" + ob.loanId,
 						"GET",
 						"json",
@@ -65,7 +54,7 @@ var workFlowContext = {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/create/" + ob.loanId,
 						"GET",
 						"json",
@@ -90,7 +79,7 @@ var workFlowContext = {
 		} else {
 			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 		}
-		ob.ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
@@ -274,18 +263,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		mileStoneId : mileStoneId,
 		workItem : workItem,
 		stateInfoContainer:undefined,
-		ajaxRequest : function(url, type, dataType, data, successCallBack) {
-			$.ajax({
-				url : url,
-				type : type,
-				dataType : dataType,
-				contentType: "application/json",
-				data : data,
-				success : successCallBack,
-				error : function() {
-				}
-			});
-		},
+	
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
@@ -412,7 +390,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			ob.stateInfoContainer=txtRow1
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
-				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
+				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
