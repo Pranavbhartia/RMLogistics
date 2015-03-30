@@ -1128,7 +1128,6 @@ function milestoneChildEventHandler(event) {
 	} else if  ($(event.target).attr("data-text") == "TEAM_STATUS")
 		{
 		event.stopPropagation();
-		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
 		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
