@@ -41,7 +41,7 @@ public class RestInterceptor implements Callable
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
         if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE ) ) {
-            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
         } else {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
         }
@@ -95,10 +95,10 @@ public class RestInterceptor implements Callable
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            String sDataContentQueryDefault = Utils.readFileAsString( "creditInfo.xml" );
-            if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
+            String sDataContentQueryDefault = Utils.readFileAsString( "loadCreditinfo.xml" );
+            /*if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
                 sDataContentQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), sDataContentQueryDefault );
-            }
+            }*/
             inputParams[2] = sDataContentQueryDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
 
