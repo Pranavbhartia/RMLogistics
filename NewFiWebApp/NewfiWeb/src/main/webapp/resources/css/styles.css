@@ -1397,6 +1397,19 @@ a,a:hover,a:visited {
 	background: url(../images/agent_lp_3.png) no-repeat 5px top;
 }
 
+.lp-item-active .lp-agent-item1 {
+	background: url(../images/agent_lp_active_1.png) no-repeat 5px center;
+}
+
+.lp-item-active .lp-agent-item2 {
+	background: url(../images/agent_lp_active_2.png) no-repeat 5px center;
+}
+
+.lp-item-active .lp-agent-item3 {
+	background: url(../images/agent_lp_active_3.png) no-repeat 5px top;
+}
+
+
 .lp-item-body-row {
 	height: 20px;
 	line-height: 20px;
