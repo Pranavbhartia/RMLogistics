@@ -701,13 +701,13 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 	appendTo.append(getMilestoneTeamMembeTable(userList,workItem));
 }
 
-function getMilestoneTeamMembeTable(userList,workItem) {
+function getMilestoneTeamMembeTable(input,workItem) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
 	});
 
-	
+	userList=input.users;
 	if(!userList ||  userList.length==0)
 		return;
 	
@@ -719,6 +719,7 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 		milestoneChildEventHandler(e)
 	});
 
+	
 	tableContainer.append(addNewMember);
 	
 	//team table header
@@ -737,10 +738,34 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 		}
 		tableContainer.append(getMilestoneTeamMembeTableRow(user));
 	}
+	var homwOwnInsurance=input.homeOwnInsCompany;
+	var titleCompany=input.titleCompany;
+	if(homwOwnInsurance!=null){
+		homwOwnInsurance.homeOwnInsID=homwOwnInsurance.id;
+		homwOwnInsurance.firstName=homwOwnInsurance.name;
+		homwOwnInsurance.emailId=homwOwnInsurance.emailID;
+		homwOwnInsurance.userRole={
+				label : "Home Owners Insurance"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance);
+		tableContainer.append(tableRow);
+	}
+	
+	if(titleCompany!=null){
+		titleCompany.titleCompanyID=titleCompany.id;
+		titleCompany.firstName=titleCompany.name;
+		titleCompany.emailId=titleCompany.emailID;
+		titleCompany.userRole={
+				label : "Title Company"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(titleCompany);
+		tableContainer.append(tableRow);
+	}
 	return tableContainer;
 }
 
 function getMilestoneTeamMembeTableRow(user){
+	if(user.lastName==undefined)user.lastName="";
 	var dispName = user.firstName+" "+user.lastName;
 	var userRole = user.userRole;
 	var roleLabel = userRole.label;

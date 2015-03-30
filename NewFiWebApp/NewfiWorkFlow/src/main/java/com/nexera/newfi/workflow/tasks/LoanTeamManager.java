@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
@@ -39,9 +40,9 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
-		List<UserVO> loanTeam = loanService.retreiveLoanTeam(loanVO);
+		ExtendedLoanTeamVO extendedLoanTeamVO = loanService.findExtendedLoanTeam(loanVO);
 		Gson gson = new Gson();
-		return gson.toJson(loanTeam);
+		return gson.toJson(extendedLoanTeamVO);
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
