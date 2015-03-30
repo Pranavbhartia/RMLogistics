@@ -90,6 +90,7 @@ public class FileUploadRest
     {
         CommonResponseVO commonResponseVO = null;
         try {
+        	//Update in DB
             uploadedFilesListService.deactivateFileUsingFileId( fileId );
             commonResponseVO = RestUtil.wrapObjectForSuccess( true );
         } catch ( Exception e ) {
@@ -121,15 +122,19 @@ public class FileUploadRest
         LOG.info( "File upload PDF split  service called" );
         LOG.info( "File upload   id " + fileId );
         CommonResponseVO commonResponseVO;
+        //Get information of the files that is saved in DB for this file ID.
         UploadedFilesList uploadedFilesList = uploadedFilesListService.fetchUsingFileId( fileId );
 
         try {
+        	//Pass the S3 path, to get the document from S3, and convert itto PDObject
             List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getS3path() );
             for ( File file : pdfPages ) {
+            	//Create a new row in DB and upload file to S3.
                 Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy );
                 LOG.info( "New file saved with id " + fileSavedId );
             }
 
+            //Deactive the old file, i.e the file which was split.
             uploadedFilesListService.deactivateFileUsingFileId( fileId );
             commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 
@@ -331,9 +336,10 @@ public class FileUploadRest
         for ( MultipartFile multipartFile : file ) {
             CheckUploadVO checkFileUploaded = null;
 			try {
+				//Upload the file locally and returns the response of file upload
 				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) , multipartFile.getContentType(), userID, loanId, assignedBy );
 			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
+				// If file conversion or saving fails, set upload status to false.
 				checkFileUploaded.setIsUploadSuccess(false);
 			}
 
@@ -342,6 +348,7 @@ public class FileUploadRest
                     LOG.info( "Needs is null" );
                 } else {
                     LOG.info( "Assigning needs" );
+                    //If the document was mapped with a need, then update the DB with corresponding need.
                     List<FileAssignVO> list = new ArrayList<FileAssignVO>();
                     FileAssignVO fileAssignVO = new FileAssignVO();
                     fileAssignVO.setFileId( checkFileUploaded.getUploadFileId() );
@@ -353,7 +360,7 @@ public class FileUploadRest
 
                     assignFileToNeeds( getmapFromFileAssignObj( list ), loanId, userID, assignedBy );
                 }
-                
+                //Send file to LQB
                 uploadedFilesListService.createLQBVO(userID , checkFileUploaded.getUploadFileId() , loanId);
 				
             } else {
