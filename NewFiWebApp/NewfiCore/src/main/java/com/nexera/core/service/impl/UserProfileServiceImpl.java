@@ -188,7 +188,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		List<UserVO> voList = new ArrayList<UserVO>();
 		for (User user : userList) {
-			voList.add(user.convertFromEntityToVO(user));
+			voList.add(User.convertFromEntityToVO(user));
 		}
 
 		return voList;

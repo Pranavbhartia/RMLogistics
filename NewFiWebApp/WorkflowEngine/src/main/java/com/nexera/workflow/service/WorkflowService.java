@@ -46,5 +46,9 @@ public interface WorkflowService
 	
     void saveParamsInExecTable(Integer milestoneID, String params);
 
+	WorkflowItemMaster getWorkflowByType(String workflowType);
+
+	public WorkflowItemExec getWorkflowItemExecByType(
+			WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster);
 
 }
