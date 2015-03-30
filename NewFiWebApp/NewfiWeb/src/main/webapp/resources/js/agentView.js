@@ -1141,20 +1141,29 @@ function paintUserNameDropDown(values) {
 			var value = values[i];
 			var dropDownRow = $('<div>').attr({
 				"class" : "add-member-dropdown-row",
-				"userID" : value.id
+				"userID" : value.id,
+				"homeOwnInsID":value.homeOwnInsID,
+				"titleCompanyID":value.titleCompanyID
 			}).html(value.firstName + " " + (value.lastName==undefined?"":value.lastName)).on('click',
 					function(event) {
 						event.stopImmediatePropagation();
 						var userID = $(this).attr("userID");
+						var homeOwnInsID=$(this).attr("homeOwnInsID");
+						var titleCompanyID=$(this).attr("titleCompanyID");
+						var input={
+								"userID":userID,
+								"homeOwnInsID":homeOwnInsID,
+								"titleCompanyID":titleCompanyID
+						};
 						console.log("User id : " + userID);
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
 								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-									addUserToLoanTeam(userID,
+									addUserToLoanTeam(input,
 											newfiObject.user.defaultLoanId);
 								else
-									addUserToLoanTeam(userID,
+									addUserToLoanTeam(input,
 											selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
@@ -1409,7 +1418,10 @@ function getTeamListTableHeader() {
 function getTeamListTableRow(user, loanID) {
 	var tableRow = $('<div>').attr({
 		"class" : "newfi-team-list-tr clearfix",
-		"userid" : user.id
+		"userid" : user.id,
+		"homeOwnInsID":user.homeOwnInsID,
+		"titleCompanyID":user.titleCompanyID
+		
 	});
 	if(user.lastName==undefined)
 		user.lastName="";
@@ -2794,15 +2806,18 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 	teamMemberRow.parent().parent().remove();
 }
 
-function addUserToLoanTeam(userID, loanID) {
+function addUserToLoanTeam(input, loanID) {
 	
 	var addData=$('.add-team-mem-wrapper').data('additionalData');
-	
+	var userID=input.userID==undefined?0:input.userID;
+	var homeOwnInsID=input.homeOwnInsID==undefined?0:input.homeOwnInsID;
+	var titleCompanyID=input.titleCompanyID==undefined?0:input.titleCompanyID;
+	input.loanID=loanID;
+	var queryString="userID="+userID+"&homeOwnInsCompanyID="+homeOwnInsID+"&titleCompanyID="+titleCompanyID;
 	if(addData && addData.OTHURL){
 		
-		addData.userID=userID;
 		ajaxRequest(addData.OTHURL, "POST",
-				"json", JSON.stringify(addData)  , function(data){
+				"json", JSON.stringify(input)  , function(data){
 			
 			
 			var user=JSON.parse(data.resultObject);
@@ -2817,13 +2832,16 @@ function addUserToLoanTeam(userID, loanID) {
 			}else
 				showToastMessage("User added to loan team.");
 				
+			var parentContainer=$("#WF"+addData.milestoneID);
+			clearStatusClass(parentContainer);
+			parentContainer.addClass("m-in-progress");
 			container.append(userTableRow);
 		});
 		return;
 	}
 	
 	
-	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "POST",
+	ajaxRequest("rest/loan/" + loanID + "/team?"+queryString, "POST",
 			"json", {}, onReturnOfAddUserToLoanTeam);
 }
 
@@ -2831,22 +2849,54 @@ function onReturnOfAddUserToLoanTeam(data) {
 
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
-	if (!result) {
-		showToastMessage("An error occurred, kindly contact admin.");
-		return;
-	}
+	
 
 	var loanID = editLoanTeamVO.loanID;
 	var userID = editLoanTeamVO.userID;
 
-	var existingDiv = $('.newfi-team-container').find(
-			'.newfi-team-list-tr[userid=' + userID + ']');
-	if (existingDiv != undefined && existingDiv.length > 0) {
+	var homeOwnInsID=editLoanTeamVO.homeOwnInsCompanyID;
+	var titleCompanyID=editLoanTeamVO.titleCompanyID
+
+	var teamMemberRow;
+	var userToAdd;
+	if (userID && userID > 0) {
+		if (!result) {
+			showToastMessage("An error occurred, kindly contact admin.");
+			return;
+		}
+		teamMemberRow = $(".newfi-team-list-tr[userid=" + userID + "]");
+		userToAdd = editLoanTeamVO.user;
+	} else if (homeOwnInsID && homeOwnInsID > 0) {
+		teamMemberRow = $(".newfi-team-list-tr[homeOwnInsID=" + homeOwnInsID
+				+ "]");
+
+		userToAdd = editLoanTeamVO.homeOwnInsCompany;
+		userToAdd.firstName=userToAdd.name;
+		userToAdd.emailId=userToAdd.emailID;
+		userToAdd.homeOwnInsID = editLoanTeamVO.homeOwnInsCompanyID;
+		userToAdd.userRole = {
+			label : "Home Owners Insurance"
+		};
+
+	} else if (titleCompanyID && titleCompanyID > 0) {
+		teamMemberRow = $(".newfi-team-list-tr[titleCompanyID="
+				+ titleCompanyID + "]");
+		userToAdd = editLoanTeamVO.titleCompany;
+		userToAdd.firstName=userToAdd.name;
+		userToAdd.emailId=userToAdd.emailID;
+		userToAdd.titleCompanyID = editLoanTeamVO.titleCompanyID;
+		userToAdd.userRole = {
+			label : "Title Company"
+		};
+		
+	}
+	
+	if (teamMemberRow != undefined && teamMemberRow.length > 0) {
 		showToastMessage("User already exists on the loan team.");
 		return;
 	}
 
-	var teamMemberRow = getTeamListTableRow(editLoanTeamVO.user, loanID);
+	var teamMemberRow = getTeamListTableRow(userToAdd, loanID);
 	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
 	showToastMessage("User added to loan team.");
 }
@@ -2866,19 +2916,27 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 function searchUsersBasedOnCode(name, code) {
 
 	var restURL="rest/loan/searchTitleCompanyOrHomeOwnIns?";
-	if(code=="TITLE_COMPANY")
+	var id;
+	if(code=="TITLE_COMPANY"){
 		restURL += "code="+code;
-	else if(code="HOME_OWN_INS")
+		id="titleCompanyID";
+	}
+	else if(code="HOME_OWN_INS"){
 		restURL += "code="+code;
+		id="homeOwnInsID";
+	}
 	else return;
 	
 	restURL+="&companyName="+name;
 	
-	ajaxRequest(restURL, "GET", "json", {}, onReturnSearchBasedOnCodeToAddToLoanTeam,true);
+	ajaxRequest(restURL, "GET", "json", {}, function(data){
+		
+		onReturnSearchBasedOnCodeToAddToLoanTeam(data,id);
+	},true);
 
 }
 
-function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
+function onReturnSearchBasedOnCodeToAddToLoanTeam(data,id) {
 	var result=data.resultObject;
 	if(!result || result.length<1)
 		showUserNameDropDown([]);
@@ -2886,12 +2944,13 @@ function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
 	var adapterArray=[];
 	for(i in result){
 		var value=result[i];
-		adapterArray.push({
+		var obj={
 
-			"class" : "add-member-dropdown-row",
-			"userID" : value.id	,
-			"firstName":value.name
-		});
+				"class" : "add-member-dropdown-row",
+				"firstName":value.name
+			};
+		obj[id]=value.id;
+		adapterArray.push(obj);
 	}
 	
 	showUserNameDropDown(adapterArray)
@@ -2915,7 +2974,13 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	hideMilestoneAddTeamMemberPopup();
 	$('#add-member-input').val("");
 
-	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
+	var input={userID:result.id};
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+		addUserToLoanTeam(input,
+				newfiObject.user.defaultLoanId);
+	else
+		addUserToLoanTeam(input,
+				selectedUserDetail.loanID);
 
 }
 

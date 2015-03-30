@@ -367,6 +367,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        .getSecPhoneNumber());
 			customerDetail.setSecEmailId(userVO.getCustomerDetail()
 			        .getSecEmailId());
+			if(userVO.getCustomerDetail()
+			        .getDateOfBirth()!=null)
 			customerDetail.setDateOfBirth(new Date(userVO.getCustomerDetail()
 			        .getDateOfBirth()));
 			userModel.setCustomerDetail(customerDetail);
