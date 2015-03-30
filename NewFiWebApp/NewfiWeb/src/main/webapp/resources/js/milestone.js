@@ -1140,7 +1140,7 @@ function milestoneChildEventHandler(event) {
 
 				
 		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
-		context.createTitleCompanyPopup();
+		context.createCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
 		event.stopPropagation();

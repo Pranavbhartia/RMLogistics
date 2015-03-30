@@ -1164,8 +1164,9 @@ function paintUserNameDropDown(values) {
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
 		"class" : "add-member-dropdown-row"
-	}).html("Add New User").on('click',function(){
+	}).html("Add New User").on('click',function(event){
 		
+		event.stopPropagation();
 		var callback=showAddUserPopUp;
 		
 		var memberType=$('#add-memeber-user-type');
@@ -1193,7 +1194,7 @@ function paintUserNameDropDown(values) {
 						else
 							context=getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
 						
-						context.showCreateTitleCompanyPopup();
+						context.showCreateCompanyPopup();
 					}
 						
 			}
@@ -1847,11 +1848,26 @@ $(document).click(function() {
 	}
 });
 
+$(document).click(function() {
+	if ($('#create-title-company-popup').css("display") == "block") {
+		getCreateTitleCompanyContext(0).hideCreateTitleCompanyPopup();
+	}
+});
+
+$(document).click(function() {
+	if ($('#create-hoi-company-popup').css("display") == "block") {
+		getCreateHomeOwnInsCompanyContext(0).hideCreateCompanyPopup();
+	}
+});
+
 function getCreateHomeOwnInsCompanyContext(loanID){
 
 	var context=new Object();
 	context.loanID=loanID;
-	context.createTitleCompanyPopup=function(){
+	context.createCompanyPopup=function(){
+		if($("#create-hoi-company-popup").length>0)
+			return;
+		
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-hoi-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
@@ -2024,7 +2040,11 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		$('#create-hoi-company-container').append(row);
 	}
 	
-	context.showCreateTitleCompanyPopup=function() {
+	context.showCreateCompanyPopup=function() {
+		
+		if($("#create-hoi-company-popup").length==0)
+			this.createCompanyPopup();
+		
 		var left = $('#center-panel-cont').offset().left;
 		var top = $('#add-member-sel').offset().top;
 		$('#create-hoic-name').val("");
@@ -2036,7 +2056,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		$('#create-hoi-company-popup').show();
 	}
 	
-	context.hideCreateTitleCompanyPopup=function() {
+	context.hideCreateCompanyPopup=function() {
 		$('#create-hoi-company-popup').hide();
 	}
 	
@@ -2076,6 +2096,10 @@ function getCreateTitleCompanyContext(loanID){
 	var context=new Object();
 	context.loanID=loanID;
 	context.createTitleCompanyPopup=function(){
+
+		if($("#create-title-company-popup").length>0)
+			return;
+		
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-title-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
@@ -2250,6 +2274,11 @@ function getCreateTitleCompanyContext(loanID){
 	}
 	
 	context.showCreateTitleCompanyPopup=function() {
+		
+		if($("#create-title-company-popup").length==0)
+			this.createTitleCompanyPopup();
+		
+		
 		var left = $('#center-panel-cont').offset().left;
 		var top = $('#add-member-sel').offset().top;
 		$('#create-tc-name').val("");
