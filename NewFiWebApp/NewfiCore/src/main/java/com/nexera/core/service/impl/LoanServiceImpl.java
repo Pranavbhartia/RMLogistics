@@ -123,14 +123,15 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.removeFromLoanTeam(this.parseLoanModel(loan),
 		        this.parseHomeOwnInsMaster(homeOwnersInsurance));
 	}
-	
+
 	@Override
 	@Transactional
 	public boolean removeFromLoanTeam(LoanVO loan,
 	        TitleCompanyMasterVO titleCompany) {
-	   return loanDao.removeFromLoanTeam(this.parseLoanModel(loan),
+		return loanDao.removeFromLoanTeam(this.parseLoanModel(loan),
 		        this.parseTitleCompanyMaster(titleCompany));
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
@@ -148,8 +149,8 @@ public class LoanServiceImpl implements LoanService {
 		for (UserVO user : team) {
 			if (null != user.getInternalUserDetail()) {
 				if (UserRolesEnum.LOANMANAGER.equalsName(user
-						.getInternalUserDetail().getInternalUserRoleMasterVO()
-						.getRoleName())) {
+				        .getInternalUserDetail().getInternalUserRoleMasterVO()
+				        .getRoleName())) {
 					managerList.add(user);
 				}
 			}
@@ -202,15 +203,17 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setName(loan.getName());
 		if (loan.getLoanStatus() != null)
 			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
+
+		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
+
 		List<UserVO> loanTeam = new ArrayList<UserVO>();
 		for (LoanTeam team : loan.getLoanTeam()) {
-			User user = team.getUser();
-			UserVO userVo = new UserVO();
-			userVo.setForView(user);
+			UserVO userVo = User.convertFromEntityToVO(team.getUser());
+			loanVo.setUser(userVo);
 			loanTeam.add(userVo);
 		}
 		loanVo.setLoanTeam(loanTeam);
+
 		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
 		if (loan.getCustomerWorkflow() != null) {
 			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
@@ -259,7 +262,7 @@ public class LoanServiceImpl implements LoanService {
 
 		LoanTeamVO loanTeamVO = new LoanTeamVO();
 		loanTeamVO.setId(loanTeam.getId());
-		loanTeamVO.setUser(userProfileService.buildUserVO(loanTeam.getUser()));
+		loanTeamVO.setUser(User.convertFromEntityToVO(loanTeam.getUser()));
 		loanTeamVO.setActive(loanTeam.getActive());
 		return loanTeamVO;
 
@@ -313,27 +316,25 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
 		// Get all loans this user has access to.
-				int userRoleId=loanDao.retrieveUserRoleId(userVO);
-			
-				if(userRoleId==(UserRolesEnum.SYSTEM.getRoleId()))
-				{
-					
-					List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
-					        .parseUserModel(userVO));
-					LoanDashboardVO loanDashboardVO = this
-					        .buildLoanDashboardVoFromLoanList(loanList);
-					
-					return loanDashboardVO;
-					
-				}
-					
-				
-				List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
-				        .parseUserModel(userVO));
-				LoanDashboardVO loanDashboardVO = this
-				        .buildLoanDashboardVoFromLoanList(loanList);
+		int userRoleId = loanDao.retrieveUserRoleId(userVO);
 
-				return loanDashboardVO;
+		if (userRoleId == (UserRolesEnum.SYSTEM.getRoleId())) {
+
+			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
+			        .parseUserModel(userVO));
+			LoanDashboardVO loanDashboardVO = this
+			        .buildLoanDashboardVoFromLoanList(loanList);
+
+			return loanDashboardVO;
+
+		}
+
+		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
+		        .parseUserModel(userVO));
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
 	}
 
 	@Override
@@ -701,7 +702,7 @@ public class LoanServiceImpl implements LoanService {
 		companyMasterVO.setName(master.getName());
 		companyMasterVO.setEmailID(master.getEmailID());
 		companyMasterVO.setAddress(master.getAddress());
-		companyMasterVO.setAddedBy(userProfileService.buildUserVO(master
+		companyMasterVO.setAddedBy(User.convertFromEntityToVO(master
 		        .getAddedBy()));
 		companyMasterVO.setPhoneNumber(master.getPhoneNumber());
 		companyMasterVO.setPrimaryContact(master.getPrimaryContact());
@@ -761,7 +762,7 @@ public class LoanServiceImpl implements LoanService {
 		companyMasterVO.setEmailID(master.getEmailID());
 		companyMasterVO.setAddress(master.getAddress());
 
-		companyMasterVO.setAddedBy(userProfileService.buildUserVO(master
+		companyMasterVO.setAddedBy(User.convertFromEntityToVO(master
 		        .getAddedBy()));
 		companyMasterVO.setPhoneNumber(master.getPhoneNumber());
 		companyMasterVO.setPrimaryContact(master.getPrimaryContact());
@@ -789,7 +790,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
 	public LoanNeedsList fetchByNeedId(Integer needId) {
 		// TODO Auto-generated method stub
 		return loanDao.fetchByNeedId(needId);
@@ -837,7 +838,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
@@ -859,7 +860,7 @@ public class LoanServiceImpl implements LoanService {
 		loanVo.setName(loan.getName());
 		if (loan.getLoanStatus() != null)
 			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
+		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
 
 		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
 		if (loan.getCustomerWorkflow() != null) {
@@ -876,7 +877,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
 	public List<Loan> getAllActiveLoan() {
 		return loanDao.getAllActiveLoan();
 	}
@@ -902,10 +903,10 @@ public class LoanServiceImpl implements LoanService {
 
 		loanMilestoneDao.update(loanMilestone);
 	}
-	
+
 	@Override
-	@Transactional(readOnly=true)
-	public ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO){
+	@Transactional(readOnly = true)
+	public ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO) {
 		ExtendedLoanTeamVO extendedLoanTeamVO = new ExtendedLoanTeamVO();
 		List<UserVO> team = this.retreiveLoanTeam(loanVO);
 		extendedLoanTeamVO.setUsers(team);

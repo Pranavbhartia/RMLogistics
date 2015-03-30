@@ -6,7 +6,6 @@ package com.nexera.web.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,7 @@ public class NotificationRestService {
 		if ( loggedInUser== null)
 			return RestUtil.wrapObjectForFailure(null, "403", "Not logged in.");
 
-		userVO = userProfileService.buildUserVO(loggedInUser);
+		userVO = User.convertFromEntityToVO(loggedInUser);
 		
 		if (loanID != null) {
 			loanVO = new LoanVO();
