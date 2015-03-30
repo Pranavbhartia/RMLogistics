@@ -243,6 +243,7 @@
 	}
 	.milestone-lc{
 		padding-left:20px;
+        padding-bottom: 30px;
 		padding-right: 0; 
 	}
 	.milestone-lc-text {
@@ -299,6 +300,73 @@
 		padding-left: 10px;
 		padding-right: 5px;
 	}
+	.milestone-lc .float-right,
+	.milestone-lr .float-right{
+		float: left;
+	}
+	.prof-form-input-cont{
+		width: 140px;
+	}
+	.silder-cont{
+		width: 90%;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt{
+		margin-right: 0px;
+		width: 100%;
+	}
+	.rt-slider {
+	    width: 95%;
+	}
+	.lock-rate-slider-container{
+		padding: 10px;
+	}
+    .header-btns-wrapper{
+        display: none;
+    }
+    .cust-app-lp{
+        display: none;
+    }
+    .cust-app-rp{
+        margin-left: 0;
+        width: 100% !important;
+    }
+    .ce-ques-option{
+        width: 100%;
+        margin: 10px auto;
+        height: 50px;
+        line-height: 50px;
+        font-size: 28px;
+    }
+    .ce-rate-icon {
+      height: 150px;
+      margin-top: 10px;
+      background-size: 150px;
+    }
+    .ce-ques-text {
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .ce-title {
+      font-size: 30px;
+      padding: 0 10px;
+    }
+    .ce-ques-wrapper{
+        width: 100%;
+    }
+    .ce-ques-options-container{
+        padding: 0 10px;
+    }
+    .rt-grid-item:last-child {
+        margin-left: -18px;
+    }
+
+    .rt-grid-item:last-child:after {
+        left: 18px;
+    }
+    .slider-wrapper {
+      margin: 10px 0 25px 0;
+    }
 }
 
 
@@ -314,6 +382,9 @@
 	.file-upload-text-mobile{
 		display: none;
 	}
+    .soft-menu-wrapper,.soft-menu-icon{
+        display: none !important;
+    }
 }
 
 
@@ -432,6 +503,33 @@
 	.ms-team-member-th,.ms-team-member-tr{	
 		width: 195px;
 	}
+	.prof-form-input-cont{
+		width: 175px;
+	}
+    .silder-cont{
+		width: 90%;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt{
+		margin-right: 0px;
+		width: 100%;
+	}
+	.rt-slider {
+	    width: 95%;
+	}
+	.lock-rate-slider-container{
+		padding: 10px;
+	}
+    .loan-summary-last-row .loan-summary-col-detail{
+        padding: 5px 10px;
+    }
+    .cust-app-lp{
+        display: none;
+    }
+    .cust-app-rp{
+        margin-left: 0;
+        width: 100% !important;
+    }
 }
 
 
@@ -481,6 +579,21 @@
 	.add-member-input-cont {
 		padding-right: 10px;
 	}
+	.lock-rate-slider-container{
+		padding: 10px 20px;
+	}
+	.slider-hdr-txt{
+		margin-right: 20px;
+	}
+	.silder-cont{
+		width: 460px;
+	}
+    .cust-app-rp{
+        margin-left: 10px;
+    }
+    .app-input{
+        width: 340px;
+    }
 }
 
 
@@ -495,6 +608,9 @@
 	.rp-agent-dashboard{
 		width:939px !important;
 	}
+    .cust-app-rp{
+        width: 534px !important;
+    }
 }
 
 
@@ -629,6 +745,17 @@
 	.upload-pic-desc {
 		line-height: 20px;
 	}
+	.yr-grid-item-selected,.yr-grid-item{
+		font-size:10px;
+        width: 50px;
+        margin-left: -17px;
+	}
+    .loan-summary-last-row .loan-summary-col-detail{
+        padding: 5px 10px;
+    }
+    .yr-grid-cont:first-child .yr-grid-item-selected {
+      margin-left: -9px;
+    }
 }
 
 

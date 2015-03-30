@@ -19,13 +19,13 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/datepicker.css" rel="stylesheet">
 <link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
-
+<link href="resources/css/style-resp.css" rel="stylesheet">
+    
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
 
@@ -69,8 +69,18 @@
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
+                adjustCustomerApplicationPageOnResize();
 			});
 
+            function adjustCustomerApplicationPageOnResize(){
+                if(window.innerWidth > 992 || window.innerWidth <= 1199){
+                    //Calcute application right panel width
+                    var appRightPanel = $('#app-right-panel');
+                    var parentWidth  = appRightPanel.parent().width();
+                    appRightPanel.width(parentWidth - 290);
+                }
+            }
+            
 						
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
