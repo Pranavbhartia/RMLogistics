@@ -109,7 +109,7 @@ public class LoanRestService {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
-			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			        User.convertFromEntityToVO(utils.getLoggedInUser()));
 			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
 
 			return responseVO;
@@ -117,7 +117,7 @@ public class LoanRestService {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
-			        userProfileService.buildUserVO(utils.getLoggedInUser()));
+			        User.convertFromEntityToVO(utils.getLoggedInUser()));
 			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
 
 			return responseVO;
@@ -263,7 +263,7 @@ public class LoanRestService {
 			// return RestUtil.wrapObjectForFailure(null, "403",
 			// "User Not Logged in.");
 		}
-		UserVO userVO = userProfileService.buildUserVO(user);
+		UserVO userVO = User.convertFromEntityToVO(user);
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 

@@ -115,4 +115,6 @@ public class CustomerDetailVO implements Serializable {
 		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
 
+
+
 }

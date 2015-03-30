@@ -2,9 +2,21 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 
 /**
  * The persistent class for the internaluserdetails database table.
@@ -52,7 +64,7 @@ public class InternalUserDetail implements Serializable {
 	}
 
 	public void setInternaUserRoleMaster(
-			InternalUserRoleMaster internaUserRoleMaster) {
+	        InternalUserRoleMaster internaUserRoleMaster) {
 		this.internaUserRoleMaster = internaUserRoleMaster;
 	}
 
@@ -65,6 +77,58 @@ public class InternalUserDetail implements Serializable {
 
 	public void setManager(User manager) {
 		this.manager = manager;
+	}
+
+	public static InternalUserDetailVO convertFromEntityToVO(
+	        InternalUserDetail internalUserDetail) {
+
+		if (internalUserDetail == null)
+			return null;
+
+		InternalUserDetailVO detailVO = new InternalUserDetailVO();
+		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
+		        .getInternaUserRoleMaster()));
+
+		return detailVO;
+	}
+
+	public static InternalUserDetail convertFromVOToEntity(
+	        InternalUserDetailVO internalUserDetailVO) {
+		// TODO Auto-generated method stub
+
+		if (internalUserDetailVO == null)
+			return null;
+
+		InternalUserDetail detail = new InternalUserDetail();
+		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
+		        .getInternalUserRoleMasterVO()));
+
+		return detail;
+	}
+
+	private static InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
+	        InternalUserRoleMaster internal) {
+		if (internal == null)
+			return null;
+
+		InternalUserRoleMasterVO masterVO = new InternalUserRoleMasterVO();
+		masterVO.setId(internal.getId());
+		masterVO.setRoleName(internal.getRoleName());
+		masterVO.setRoleDescription(internal.getRoleDescription());
+
+		return masterVO;
+	}
+
+	private static InternalUserRoleMaster parseInternalUserRoleMasterModel(
+	        InternalUserRoleMasterVO internalVO) {
+		if (internalVO == null)
+			return null;
+
+		InternalUserRoleMaster master = new InternalUserRoleMaster();
+		master.setId(internalVO.getId());
+		master.setRoleDescription(internalVO.getRoleDescription());
+
+		return master;
 	}
 
 }
