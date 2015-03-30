@@ -117,7 +117,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference WHERE customerdetail.id = :id";
 		Query query = (Query) session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
@@ -127,6 +127,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
+		query.setParameter("mobileAlertsPreference", customerDetail.getMobileAlertsPreference());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -149,8 +150,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
-		        + user.getFirstName() + "%'";
+		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '"
+		        + user.getFirstName() + "%' or email_id like '"+user.getEmailId()+"%'";
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
@@ -173,17 +174,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		query.setMaxResults(MAX_RESULTS);
 		List<User> userList = query.list();
-
-		for (User userObj : userList) {
-			Hibernate.initialize(user.getInternalUserDetail());
-			if (userObj.getInternalUserDetail() != null)
-				Hibernate.initialize(userObj.getInternalUserDetail()
-				        .getInternaUserRoleMaster());
-		}
+		
 
 		return userList;
 	}
-
 	@Override
 	public Integer saveUserWithDetails(User user) {
 		if (null != user.getInternalUserDetail() && user.getUserRole() != null && user.getUserRole().getId() == UserRolesEnum.INTERNAL.getRoleId()) {

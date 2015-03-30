@@ -354,7 +354,7 @@ public class FileUploadRest
                     assignFileToNeeds( getmapFromFileAssignObj( list ), loanId, userID, assignedBy );
                 }
                 
-                uploadedFilesListService.createLQBVO(checkFileUploaded.getUploadFileId() , loanId);
+                uploadedFilesListService.createLQBVO(userID , checkFileUploaded.getUploadFileId() , loanId);
 				
             } else {
                 unsupportedFile.add( multipartFile.getOriginalFilename() );

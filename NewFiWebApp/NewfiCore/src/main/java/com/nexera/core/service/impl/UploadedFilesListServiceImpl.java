@@ -3,12 +3,16 @@ package com.nexera.core.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -23,7 +27,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
@@ -37,12 +44,15 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
+import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.LQBXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
+import com.nexera.workflow.utils.Util;
 
 @Component
 @Transactional
@@ -348,35 +358,63 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public void uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
+		LQBResponseVO lqbResponseVO = null;
 		// TODO Auto-generated method stub
 		 if ( lqbDocumentVO != null ) {
              JSONObject uploadObject = createUploadPdfDocumentJsonObject(
                  WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT, lqbDocumentVO );
-             JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
-             LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+            JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
+            LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+            
+            
+            
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+     		try {
+
+     			// get a new instance of parser
+     			SAXParser sp = spf.newSAXParser();
+     			LQBXMLHandler handler = new LQBXMLHandler();
+     			// parse the file and also register this class for call backs
+     			sp.parse(new InputSource(new StringReader(receivedResponse.getString("responseMessage"))), handler);
+     			lqbResponseVO = handler.getLqbResponseVO();
+     			LOG.info(" parsed lqbResponseVO : "+lqbResponseVO.getResult());
+     		} catch (SAXException se) {
+     			se.printStackTrace();
+     		} catch (ParserConfigurationException pce) {
+     			pce.printStackTrace();
+     		} catch (IOException ie) {
+     			ie.printStackTrace();
+     		}
+             
 		 }
+		return lqbResponseVO;
 	}
 	
 	
 	
 
-    @Async
-    public void createLQBVO(Integer fileId , Integer loanId) {
-    	 User user = getUserObject();
+    
+    public void createLQBVO(Integer usrId , Integer fileId , Integer loanId) {
+    	 UserVO user = userProfileService.findUser(usrId); 
          LQBDocumentVO documentVO = new LQBDocumentVO();
          try {
-			 documentVO.setDocumentType( "application/pdf" );
+			 documentVO.setDocumentType( "APPRAISAL DOCUMENT" );
 			 StringBuffer stringBuf = new StringBuffer();
 			
 			 stringBuf.append( " uploaded by : " );
 
 			 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
 			 documentVO.setNotes( stringBuf.toString() );
-			 documentVO.setsDataContent( nexeraUtility.getContentFromFile( fileId ) );
+			 documentVO.setsDataContent( nexeraUtility.getContentFromFile( uploadedFilesListDao.fetchUsingFileId(fileId) ) );
 			 documentVO.setsLoanNumber( loanService.getLoanByID( loanId ).getLqbFileId() );
 
-			 uploadDocumentInLandingQB( documentVO );
+			 LQBResponseVO lqbResponseVO = uploadDocumentInLandingQB( documentVO );
+			 if(lqbResponseVO.getResult().equalsIgnoreCase("OK")){
+				 String lqbDocumentId = "ae52da11-fbde-4057-83d4-28eecb6c9847";
+				 updateLQBDocumentInUploadNeededFile(lqbDocumentId , fileId);
+			 }
+			
 		}  catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
@@ -386,6 +424,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
     }
 
 	
+	private void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
+			Integer rowId) {
+		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId ,rowId );
+		
+	}
+
 	public JSONObject createUploadPdfDocumentJsonObject( String opName, LQBDocumentVO documentVO )
     {
         JSONObject json = new JSONObject();

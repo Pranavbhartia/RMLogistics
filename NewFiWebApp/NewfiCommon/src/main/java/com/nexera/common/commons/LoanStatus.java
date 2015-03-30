@@ -36,4 +36,5 @@ public interface LoanStatus {
 	String loanDeclinedMessage = "Loan Declined";
 	String loanFunded = "Loan Declined";
 	String loanFundedMessage = "Loan Funded";
+	String sysEduMessage = "System Education Message";
 }

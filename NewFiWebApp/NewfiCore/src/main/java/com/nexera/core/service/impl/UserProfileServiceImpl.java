@@ -158,6 +158,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
 		        .getProfileCompletionStatus());
+		customerDetail.setMobileAlertsPreference(customerDetailVO.getMobileAlertsPreference());
 
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);

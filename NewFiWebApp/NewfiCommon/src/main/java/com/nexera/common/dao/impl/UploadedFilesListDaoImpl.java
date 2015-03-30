@@ -103,6 +103,18 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements Uploaded
 		UploadedFilesList filesList = (UploadedFilesList) criteria.uniqueResult();
 		return filesList;
 	}
+
+	@Override
+	public void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
+			Integer rowId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		UploadedFilesList uploadedFilesList = (UploadedFilesList) session.load(UploadedFilesList.class, rowId);
+		uploadedFilesList.setLqbFileID(lqbDocumentId);
+		session.update(uploadedFilesList);
+	}
+	
+	
 	
 	
 }
