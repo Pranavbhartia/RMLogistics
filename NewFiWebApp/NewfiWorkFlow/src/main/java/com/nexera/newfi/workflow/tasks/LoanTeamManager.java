@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -74,27 +75,38 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			        WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID).toString());
 
 		// return new Gson().toJson(user);
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
+		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		if (userID != null && userID > 0) {
-			UserVO userVO = new UserVO();
-			userVO.setId(userID);
-			loanService.addToLoanTeam(loanVO, userVO);
-			UserVO user = userProfileService.loadInternalUser(userID);
-
-			return new Gson().toJson(user);
+			UserVO user = new UserVO();
+			user.setId(userID);
+			boolean result = loanService.addToLoanTeam(loanVO, user);
+			if (result) {
+				user = userProfileService.loadInternalUser(userID);
+			}
+			editLoanTeamVO.setOperationResult(result);
+			editLoanTeamVO.setUser(user);
+			
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
-
-			return new Gson().toJson(company);
+			editLoanTeamVO.setTitleCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
-			return new Gson().toJson(company);
+			editLoanTeamVO.setHomeOwnInsCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else
 			return "Bad request";
+		
+		return new Gson().toJson(editLoanTeamVO);
 	}
 }

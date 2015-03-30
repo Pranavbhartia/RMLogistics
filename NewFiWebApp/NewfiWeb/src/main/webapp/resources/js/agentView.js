@@ -2821,21 +2821,8 @@ function addUserToLoanTeam(input, loanID) {
 			
 			
 			var user=JSON.parse(data.resultObject);
-			var userID=user.id;
-			var userTableRow=getMilestoneTeamMembeTableRow(user);
-			var container=$( ".ms-team-member-table");
-			var existingDiv = $('.ms-team-member-table').find(
-					'.ms-team-member-tr[userid=' + userID + ']');
-			if (existingDiv != undefined && existingDiv.length > 0) {
-				showToastMessage("User already exists on the loan team.");
-				return;
-			}else
-				showToastMessage("User added to loan team.");
-				
-			var parentContainer=$("#WF"+addData.milestoneID);
-			clearStatusClass(parentContainer);
-			parentContainer.addClass("m-in-progress");
-			container.append(userTableRow);
+			data.resultObject=user;
+			onReturnOfAddUserToLoanTeam(data);
 		});
 		return;
 	}
@@ -2898,7 +2885,23 @@ function onReturnOfAddUserToLoanTeam(data) {
 
 	var teamMemberRow = getTeamListTableRow(userToAdd, loanID);
 	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
-	showToastMessage("User added to loan team.");
+	
+	//for milestone
+	var addData=$('.add-team-mem-wrapper').data('additionalData');
+	var container=$( ".ms-team-member-table");
+	var existingDiv = $('.ms-team-member-table').find(
+			'.ms-team-member-tr[userid=' + userID + ']');
+	if (existingDiv != undefined && existingDiv.length > 0) {
+		showToastMessage("User already exists on the loan team.");
+		return;
+	}
+	
+		showToastMessage("User added to loan team.");
+		
+	var parentContainer=$("#WF"+addData.milestoneID);
+	clearStatusClass(parentContainer);
+	parentContainer.addClass("m-in-progress");
+	container.append(getMilestoneTeamMembeTableRow(userToAdd));
 }
 
 function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
