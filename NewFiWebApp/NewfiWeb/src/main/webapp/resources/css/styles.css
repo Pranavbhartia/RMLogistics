@@ -215,6 +215,8 @@ a,a:hover,a:visited {
 .lp-talk-pic2 {
 	background: url(../images/person-placeholder.png) no-repeat center;
 	background-size: cover;
+    background-color: #fff;
+    border: 1px solid #fff;
 }
 
 .lp-talk-pic3 {
@@ -3145,7 +3147,7 @@ input.calc-input {
 	position: absolute;
 	height: 100%;
 	right: -2px;
-	top: 32px;
+	top: 49px;
 	z-index: 9;
 	border-right: 3px #ebebeb solid;
 }
@@ -3154,7 +3156,7 @@ input.calc-input {
 	position: absolute;
 	height: 100%;
 	left: -3px;
-	top: 32px;
+	top: 49px;
 	z-index: 9;
 	border-left: 3px #ebebeb solid;
 }

@@ -8,11 +8,10 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
 </head>
-
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
@@ -32,6 +31,22 @@
 	<script>
 		$(document).ready(function() {
 			
+            
+            $(document).on('click','.soft-menu-icon',function(e){
+                e.stopPropagation();
+                $('.soft-menu-wrapper').slideToggle();
+            });
+
+            $(document).on('click','.soft-menu-wrapper',function(e){
+                e.stopPropagation();
+            });
+
+            $(document).on('click',function(e){
+                if($('.soft-menu-wrapper').css("display") == "block"){
+                    $('.soft-menu-wrapper').slideToggle();
+                }
+            });
+            
 			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){
 				$('input[name="currentMortgageBalance"]').maskMoney({
 					thousands:',',
