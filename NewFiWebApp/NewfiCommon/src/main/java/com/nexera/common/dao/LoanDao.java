@@ -5,8 +5,8 @@ import java.util.List;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
@@ -29,6 +29,11 @@ public interface LoanDao extends GenericDao {
 	public boolean addToLoanTeam(Loan loan, User user, User addedBy);
 
 	public boolean removeFromLoanTeam(Loan loan, User user);
+
+	public boolean removeFromLoanTeam(Loan loan,
+	        HomeOwnersInsuranceMaster homeOwnIns);
+
+	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany);
 
 	public List<User> retreiveLoanTeam(Loan loan);
 
@@ -89,5 +94,12 @@ public interface LoanDao extends GenericDao {
 	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel);
 
 	public int retrieveUserRoleId(UserVO userVO);
+
+	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan);
+
+	public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan(
+            Loan loan);
+
+	LoanDetail findLoanDetailOfLoan(Loan loan);
 
 }

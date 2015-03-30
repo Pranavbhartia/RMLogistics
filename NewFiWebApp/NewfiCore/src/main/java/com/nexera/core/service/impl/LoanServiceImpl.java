@@ -32,6 +32,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -114,6 +115,22 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.removeFromLoanTeam(loanModel, userModel);
 	}
 
+	@Override
+	@Transactional
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance) {
+
+		return loanDao.removeFromLoanTeam(this.parseLoanModel(loan),
+		        this.parseHomeOwnInsMaster(homeOwnersInsurance));
+	}
+	
+	@Override
+	@Transactional
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany) {
+	   return loanDao.removeFromLoanTeam(this.parseLoanModel(loan),
+		        this.parseTitleCompanyMaster(titleCompany));
+	}
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserVO> retreiveLoanTeam(LoanVO loanVO) {
@@ -636,6 +653,27 @@ public class LoanServiceImpl implements LoanService {
 		        .findTitleCompanyByName(parseTitleCompanyMaster(titleCompanyVO)));
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public TitleCompanyMasterVO findTitleCompanyOfLoan(LoanVO loan) {
+
+		return this.buildTitleCompanyMasterVO(loanDao
+		        .findTitleCompanyOfLoan(this.parseLoanModel(loan)));
+
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public HomeOwnersInsuranceMasterVO findHomeOwnersInsuranceCompanyOfLoan(
+	        LoanVO loan) {
+
+		return this
+		        .buildHomeOwnersInsuranceMasterVO(loanDao
+		                .findHomeOwnersInsuranceCompanyOfLoan(this
+		                        .parseLoanModel(loan)));
+
+	}
+
 	public List<TitleCompanyMasterVO> buildTitleCompanyMasterVO(
 	        List<TitleCompanyMaster> masterList) {
 		if (masterList == null)
@@ -856,6 +894,21 @@ public class LoanServiceImpl implements LoanService {
 	public void updateLoanMilestone(LoanMilestone loanMilestone) {
 
 		loanMilestoneDao.update(loanMilestone);
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO){
+		ExtendedLoanTeamVO extendedLoanTeamVO = new ExtendedLoanTeamVO();
+		List<UserVO> team = this.retreiveLoanTeam(loanVO);
+		extendedLoanTeamVO.setUsers(team);
+		TitleCompanyMasterVO titleCompanyMaster = this
+		        .findTitleCompanyOfLoan(loanVO);
+		extendedLoanTeamVO.setTitleCompany(titleCompanyMaster);
+		HomeOwnersInsuranceMasterVO homeOwnersInsuranceMaster = this
+		        .findHomeOwnersInsuranceCompanyOfLoan(loanVO);
+		extendedLoanTeamVO.setHomeOwnInsCompany(homeOwnersInsuranceMaster);
+		return extendedLoanTeamVO;
 	}
 
 }
