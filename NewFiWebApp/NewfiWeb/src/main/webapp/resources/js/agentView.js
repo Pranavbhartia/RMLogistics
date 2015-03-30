@@ -1172,18 +1172,27 @@ function paintUserNameDropDown(values) {
 		var userRoleBased=memberType.attr("userRoleBased")
 		var code=memberType.attr("code")
 		if(userRoleBased=="false")
-			{
-					if (code == "TITLE_COMPANY")
-						callback=function(){
-						var context=getCreateTitleCompanyContext(
-								newfiObject.user.defaultLoanId);
-						context.showCreateTitleCompanyPopup();
+ 			{
+							if (code == "TITLE_COMPANY")
+								callback = function() {
+									var context;
+									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+										context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
+									else
+										context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
+
+									context.showCreateTitleCompanyPopup();
 						
 						
 					}
 					else if (code == "HOME_OWN_INS")
 						callback=function(){
-						var context=getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+						var context;
+						if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+							context=getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+						else
+							context=getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
+						
 						context.showCreateTitleCompanyPopup();
 					}
 						
@@ -1263,9 +1272,8 @@ function appendUserTypeDropDown() {
 		});
 	}
 	
-	// If the user is a borrower, allow to add a title company as well as home
+	// Allow to add a title company as well as home
 	// insurance option
-	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
 
 		var custOptions = [ {
 			"label" : "Title Company",
@@ -1281,7 +1289,6 @@ function appendUserTypeDropDown() {
 			for(j in custOptions)
 			userRoles.push(custOptions[j]);
 
-	}
 
 	for (var i = 0; i < userRoles.length; i++) {
 		var userRole = userRoles[i];
