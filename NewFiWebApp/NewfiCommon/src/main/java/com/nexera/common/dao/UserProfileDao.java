@@ -8,6 +8,7 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.UserVO;
 
 public interface UserProfileDao extends GenericDao {
 
@@ -56,4 +57,6 @@ public interface UserProfileDao extends GenericDao {
 	public List<User> getEmailAddress(List<Integer> list);
 
 	public List<User> fetchAllActiveUsers();
+	
+	public List<User> getUsersList();
 }

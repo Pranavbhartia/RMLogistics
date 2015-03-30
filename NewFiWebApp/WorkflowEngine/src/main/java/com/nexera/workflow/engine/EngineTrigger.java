@@ -237,7 +237,7 @@ public class EngineTrigger {
 						LOGGER.debug("Updating the child workflow item execution status to started ");
 						if (!childWorkflowItemExec.getStatus()
 						        .equalsIgnoreCase(
-						                WorkItemStatus.STARTED.getStatus())) {
+						                WorkItemStatus.COMPLETED.getStatus())) {
 							childWorkflowItemExec
 							        .setStatus(WorkItemStatus.STARTED
 							                .getStatus());
@@ -275,6 +275,7 @@ public class EngineTrigger {
 						if (!workflowItemExecution.getStatus()
 						        .equalsIgnoreCase(
 						                WorkItemStatus.COMPLETED.getStatus())) {
+							executorService = cacheManager.initializePool();
 							LOGGER.debug(" Triggering the parent");
 							WorkflowManager workflowManager = applicationContext
 							        .getBean(WorkflowManager.class);

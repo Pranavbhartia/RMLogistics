@@ -911,7 +911,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
 		data["EMAIL_RECIPIENT_NAME"]=selectedUserDetail.name;
-		data["loanID"]=workFlowContext.loanID;
+		data["loanID"]=workFlowContext.loanId;
 		data["workflowItemExecId"]=wf.id;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}

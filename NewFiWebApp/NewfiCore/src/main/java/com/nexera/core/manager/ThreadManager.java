@@ -5,12 +5,12 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -186,7 +186,7 @@ public class ThreadManager implements Runnable {
 				}
 				LOGGER.debug("Saving/Updating LoanMileStone ");
 				boolean sameStatus = false;
-				boolean alreadyAdded = false;
+				boolean newStatus = false;
 				LoanMilestone loanMilestone = getLoanMilestone(loan,
 				        loanMilestoneMaster);
 				if (loanMilestone == null) {
@@ -194,7 +194,7 @@ public class ThreadManager implements Runnable {
 					        + loanMilestoneMaster.getName());
 					putLoanMilestoneIntoExecution(currentLoanStatus,
 					        loadResponseList, loanMilestoneMaster);
-					alreadyAdded = true;
+					newStatus = false;
 
 				} else {
 					LOGGER.debug("Milestone exist, need to update the status ");
@@ -202,7 +202,7 @@ public class ThreadManager implements Runnable {
 					        .getLoanMilestones();
 					for (LoanMilestone loanMiles : loanMilestoneList) {
 						if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
-							alreadyAdded = true;
+							newStatus = false;
 							Date date = loanMiles.getStatusUpdateTime();
 							if (date != null) {
 								String currentDateString = getDataTimeField(
@@ -240,7 +240,8 @@ public class ThreadManager implements Runnable {
 				if (!sameStatus) {
 
 					LOGGER.debug("If status has changed then only proceed to call the class ");
-					if (!alreadyAdded) {
+					if (newStatus) {
+						LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
 						putLoanMilestoneIntoExecution(currentLoanStatus,
 						        loadResponseList, loanMilestoneMaster);
 					}
@@ -346,7 +347,7 @@ public class ThreadManager implements Runnable {
 
 	public Date parseStringIntoDate(String dateTime) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		        "hh:mm a z-dd/MM/yyyy");
+		        "hh:mm a z-MM/dd/yyyy");
 		Date date = null;
 		try {
 			date = simpleDateFormat.parse(dateTime);
@@ -359,12 +360,9 @@ public class ThreadManager implements Runnable {
 
 	private Date formatDateIntoUTC(Date date) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		        "hh:mm a z-dd/MM/yyyy");
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.HOUR_OF_DAY, 5);
-		cal.add(Calendar.MINUTE, 30);
-		String formatedDate = simpleDateFormat.format(cal.getTime());
+		        "hh:mm a z-MM/dd/yyyy");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String formatedDate = simpleDateFormat.format(date);
 		return parseStringIntoDate(formatedDate);
 	}
 
@@ -705,10 +703,6 @@ public class ThreadManager implements Runnable {
 
 		return null;
 	}
-	
-	
-	
-	
 
 	public Loan getLoan() {
 		return loan;

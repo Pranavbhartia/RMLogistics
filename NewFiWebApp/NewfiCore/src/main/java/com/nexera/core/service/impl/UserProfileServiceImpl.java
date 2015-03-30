@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import au.com.bytecode.opencsv.CSVReader;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
@@ -35,12 +38,12 @@ import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.enums.DisplayMessageType;
-import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
@@ -155,6 +158,7 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		}
 		customerDetail.setProfileCompletionStatus(customerDetailVO
 		        .getProfileCompletionStatus());
+		customerDetail.setMobileAlertsPreference(customerDetailVO.getMobileAlertsPreference());
 
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -223,6 +227,17 @@ public class UserProfileServiceImpl implements UserProfileService, InitializingB
 		return role;
 
 	}
+	
+	@Override
+	public List<UserVO> getUsersList()
+		{
+			List<UserVO> userVOList=new ArrayList<UserVO>();
+			 userVOList= buildUserVOList(userProfileDao
+			        .getUsersList());
+			return userVOList;
+			
+		}
+	
 
 	@Override
 	public Integer competeUserProfile(UserVO userVO) {

@@ -203,7 +203,14 @@ public class LoanServiceImpl implements LoanService {
 		if (loan.getLoanStatus() != null)
 			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
 		loanVo.setUser(userProfileService.buildUserVO(loan.getUser()));
-
+		List<UserVO> loanTeam = new ArrayList<UserVO>();
+		for (LoanTeam team : loan.getLoanTeam()) {
+			User user = team.getUser();
+			UserVO userVo = new UserVO();
+			userVo.setForView(user);
+			loanTeam.add(userVo);
+		}
+		loanVo.setLoanTeam(loanTeam);
 		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
 		if (loan.getCustomerWorkflow() != null) {
 			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
