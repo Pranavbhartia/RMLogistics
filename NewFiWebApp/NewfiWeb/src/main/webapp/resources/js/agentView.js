@@ -2039,7 +2039,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		
 		ob.ajaxRequest(
 						"rest/loan/homeOwnersInsurance/" + ob.company,
-						"GET",
+						"POST",
 						"json",
 						data,
 						function(response) {
@@ -2051,6 +2051,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
+								addCompanyToTeamList();
 							}
 							
 						});
@@ -2128,6 +2129,7 @@ function getCreateTitleCompanyContext(loanID){
 							+ JSON.stringify(company));
 					//TODO-write method to call add company
 					console.log("Adding company");
+					this.addCompany();
 
 				});
 
@@ -2262,7 +2264,7 @@ function getCreateTitleCompanyContext(loanID){
 		
 		ob.ajaxRequest(
 						"rest/loan/titleCompany/" + ob.company,
-						"GET",
+						"POST",
 						"json",
 						data,
 						function(response) {
@@ -2274,6 +2276,7 @@ function getCreateTitleCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
+								this.addCompanyToTeamList();
 							}
 							
 						});
