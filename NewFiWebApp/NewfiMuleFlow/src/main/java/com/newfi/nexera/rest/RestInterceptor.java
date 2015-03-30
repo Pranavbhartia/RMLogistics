@@ -40,7 +40,11 @@ public class RestInterceptor implements Callable
         String payload = message.getPayloadAsString();
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
-        message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE ) ) {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
+        } else {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        }
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
             NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
@@ -86,6 +90,18 @@ public class RestInterceptor implements Callable
             }
             inputParams[2] = sXmlQueryDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE ) ) {
+            LOG.debug( "Operation Chosen Was CreditScore " );
+            inputParams = new Object[4];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+            String sDataContentQueryDefault = Utils.readFileAsString( "creditInfo.xml" );
+            if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
+                sDataContentQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), sDataContentQueryDefault );
+            }
+            inputParams[2] = sDataContentQueryDefault;
+            inputParams[3] = restParameters.getLoanVO().getFormat();
+
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOCK_LOAN_PROGRAM ) ) {
             LOG.debug( "Operation Chosen Was LockLoanProgram " );
             inputParams = new Object[5];

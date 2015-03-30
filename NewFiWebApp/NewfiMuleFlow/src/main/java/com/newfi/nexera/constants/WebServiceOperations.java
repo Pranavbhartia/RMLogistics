@@ -23,6 +23,8 @@ public class WebServiceOperations
 
     public static String OP_NAME_LOAN_LOAD = "Load";
 
+    public static String OP_NAME_GET_CREDIT_SCORE = "CreditScore";
+
     public static String OP_NAME_LOAN_LOCK_LOAN_PROGRAM = "LockLoanProgram";
 
     public static String OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT = "UploadPDFDocument";
