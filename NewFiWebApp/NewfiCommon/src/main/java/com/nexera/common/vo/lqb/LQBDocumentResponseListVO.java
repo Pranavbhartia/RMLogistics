@@ -1,15 +1,17 @@
 package com.nexera.common.vo.lqb;
 
+import java.util.List;
+
 
 public class LQBDocumentResponseListVO {
 
-	private LQBedocVO vBedocVO;
+	private List<LQBedocVO> vBedocVO;
 
-	public LQBedocVO getvBedocVO() {
+	public List<LQBedocVO> getvBedocVO() {
 		return vBedocVO;
 	}
 
-	public void setvBedocVO(LQBedocVO vBedocVO) {
+	public void setvBedocVO(List<LQBedocVO> vBedocVO) {
 		this.vBedocVO = vBedocVO;
 	}
 

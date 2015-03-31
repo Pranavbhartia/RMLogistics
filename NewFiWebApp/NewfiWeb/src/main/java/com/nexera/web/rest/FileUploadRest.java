@@ -130,7 +130,7 @@ public class FileUploadRest
             List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getS3path() );
             for ( File file : pdfPages ) {
             	//Create a new row in DB and upload file to S3.
-                Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy );
+                Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
                 LOG.info( "New file saved with id " + fileSavedId );
             }
 
@@ -336,8 +336,10 @@ public class FileUploadRest
         for ( MultipartFile multipartFile : file ) {
             CheckUploadVO checkFileUploaded = null;
 			try {
+				
+				byte[] bytes = multipartFile.getBytes();
 				//Upload the file locally and returns the response of file upload
-				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) , multipartFile.getContentType(), userID, loanId, assignedBy );
+				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) , multipartFile.getContentType(),bytes,  userID, loanId, assignedBy );
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to false.
 				checkFileUploaded.setIsUploadSuccess(false);
@@ -360,8 +362,7 @@ public class FileUploadRest
 
                     assignFileToNeeds( getmapFromFileAssignObj( list ), loanId, userID, assignedBy );
                 }
-                //Send file to LQB
-                uploadedFilesListService.createLQBVO(userID , checkFileUploaded.getUploadFileId() , loanId);
+                
 				
             } else {
                 unsupportedFile.add( multipartFile.getOriginalFilename() );
