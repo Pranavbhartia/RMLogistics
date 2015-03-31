@@ -2,7 +2,6 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +27,12 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneLoanTeamVO;
-import com.nexera.common.vo.MilestoneNotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
-import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
@@ -86,29 +84,6 @@ public class WorkflowRestService {
 			LoanVO loanVO = loanService.findWorkflowInfoById(loanID);
 			LOG.debug("Putting loan manager workflow into execution ");
 			response = RestUtil.wrapObjectForSuccess(loanVO);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-			        e.getMessage());
-		}
-		return response;
-	}
-
-	@RequestMapping(value = "/milestone/alert", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
-	        @RequestBody String milestoneNotificationStr) {
-		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
-		CommonResponseVO response = null;
-		try {
-			Gson gson = new Gson();
-			MilestoneNotificationVO milestoneNoticationVO = gson.fromJson(
-			        milestoneNotificationStr, MilestoneNotificationVO.class);
-			LOG.info("workflowItem ID" + milestoneNoticationVO.getMilestoneId());
-			String stateInfo = "";// Make a call to Workflow Engine which will
-			// call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -192,20 +167,10 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-
-			List<WorkflowItemExec> list = engineTrigger
-			        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
-			List<WorkflowItemExecVO> volist = new ArrayList<WorkflowItemExecVO>();
-
-			for (WorkflowItemExec workflowItem : list)
-
-			{
-				WorkflowItemExecVO workflowItemVO = new WorkflowItemExecVO();
-				volist.add(workflowItemVO.convertToVO(workflowItem));
-			}
-			// List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
+			List<WorkflowItemExecVO> volist = workflowCoreService
+			        .getWorkflowItems(workflowId);
 			response = RestUtil.wrapObjectForSuccess(volist);
-			LOG.debug("Response" + list.size());
+			LOG.debug("Response" + volist.size());
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
@@ -221,8 +186,6 @@ public class WorkflowRestService {
 		LOG.info("workflowItemId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
-			// List<WorkflowItemExec> list =
-			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
 
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 
@@ -245,13 +208,8 @@ public class WorkflowRestService {
 		LOG.info("workflowItemId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
-			// List<WorkflowItemExec> list =
-			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
-
 			workflowService.saveParamsInExecTable(workflowItemId, params);
-
 			String result = engineTrigger.invokeActionMethod(workflowItemId);
-
 			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -270,7 +228,7 @@ public class WorkflowRestService {
 		case "2":
 			return "";
 		default:
-			return "";
+			return status;
 		}
 	}
 
@@ -300,9 +258,11 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-			String status = "3";
-			String stat = params;
-			engineTrigger.changeStateOfWorkflowItemExec(workflowId, status);
+
+			WorkflowItemExecVO wfExec = new WorkflowItemExecVO();
+			wfExec.setId(workflowId);
+			wfExec.setStatus(WorkItemStatus.STARTED.getStatus());
+			workflowCoreService.changeWorkItemState(wfExec);
 			response = RestUtil.wrapObjectForSuccess("Success");
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

@@ -39,14 +39,14 @@ public class WorkflowItemMaster implements Serializable {
 	private Integer startDelay;
 	private WorkflowTaskConfigMaster task;
 	private String workflowItemType;
-	private List<WorkflowItemExec> workflowItems;
+	
 	private Integer createdBy;
 	private Integer modifiedBy;
 	private Integer displayTurnAroundOrder;
 	private WorkflowItemMaster onSuccess;
 	private List<WorkflowItemMaster> listOnSuccess;
 	private WorkflowItemMaster onFailure;
-	private WorkflowMaster parentWorkflowMaster;
+	
 	private WorkflowItemMaster parentWorkflowItemMaster;
 	private List<WorkflowItemMaster> childWorkflowItemMasterList;
 
@@ -150,30 +150,7 @@ public class WorkflowItemMaster implements Serializable {
 		this.workflowItemType = workflowItemType;
 	}
 
-	// bi-directional many-to-one association to WorkflowItem
-	@OneToMany(mappedBy = "workflowItemMaster")
-	public List<WorkflowItemExec> getWorkflowItems() {
-		return this.workflowItems;
-	}
-
-	public void setWorkflowItems(List<WorkflowItemExec> workflowItems) {
-
-		this.workflowItems = workflowItems;
-	}
-
-	public WorkflowItemExec addWorkflowItem(WorkflowItemExec workflowitem) {
-		getWorkflowItems().add(workflowitem);
-		workflowitem.setWorkflowItemMaster(this);
-
-		return workflowitem;
-	}
-
-	public WorkflowItemExec removeWorkflowItem(WorkflowItemExec workflowitem) {
-		getWorkflowItems().remove(workflowitem);
-		workflowitem.setWorkflowItemMaster(null);
-
-		return workflowitem;
-	}
+	
 
 	// bi-directional many-to-one association to WorkflowItemMaster
 	@OneToMany(mappedBy = "onSuccess")
@@ -241,15 +218,7 @@ public class WorkflowItemMaster implements Serializable {
 		this.onSuccess = onSuccess;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "workflow_master")
-	public WorkflowMaster getParentWorkflowMaster() {
-		return parentWorkflowMaster;
-	}
-
-	public void setParentWorkflowMaster(WorkflowMaster parentWorkflowMaster) {
-		this.parentWorkflowMaster = parentWorkflowMaster;
-	}
+	
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_workflow_item_master")

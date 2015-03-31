@@ -38,8 +38,6 @@ public class MileStoneTurnAroundTimeDaoImpl extends GenericDaoImpl implements
 		// return aroundTimes;
 		return criteria.list();
 	}
-	
-	
 
 	@Override
 	public void saveOrUpdateMileStoneTurnAroundTime(
@@ -49,14 +47,14 @@ public class MileStoneTurnAroundTimeDaoImpl extends GenericDaoImpl implements
 		}
 	}
 
-
-
 	@Override
 	public MileStoneTurnAroundTime loadByWorkItem(Integer workflowItemMasterId) {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(MileStoneTurnAroundTime.class);
+		Criteria criteria = session
+				.createCriteria(MileStoneTurnAroundTime.class);
 
-		criteria.add(Restrictions.eq("workflowItemMaster.id", workflowItemMasterId));
+		criteria.add(Restrictions.eq("workflowItemMaster.id",
+				workflowItemMasterId));
 		return (MileStoneTurnAroundTime) criteria.uniqueResult();
 	}
 

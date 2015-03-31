@@ -66,7 +66,6 @@ public class NotificationServiceImpl implements NotificationService {
 	@Transactional
 	@Async
 	public NotificationVO createNotificationAsync(NotificationVO notificationVO) {
-
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
@@ -196,12 +195,21 @@ public class NotificationServiceImpl implements NotificationService {
 		} else
 			model.setPriority(loanNotification.getPriority());
 		if (loanNotification.getRemindOn() != null)
-			model.setRemindOn(utils.getUserDateInGMT(new Date(loanNotification
+			if (loanNotification.getTimeOffset() != null) {
+				model.setRemindOn(utils.getSystemDateInGMT(new Date(
+						loanNotification.getRemindOn())));
+			} else
+				model.setRemindOn(utils.getUserDateInGMT(new Date(
+						loanNotification
 			        .getRemindOn())));
 		if (loanNotification.getCreatedDate() == null) {
-			model.setCreatedDate(new Date());
+			model.setCreatedDate(utils.getSystemDateInGMT(new Date()));
 		} else {
-			model.setCreatedDate(utils.getUserDateInGMT(new Date(
+			if (loanNotification.getTimeOffset() != null) {
+				model.setCreatedDate(utils.getSystemDateInGMT(new Date(
+						loanNotification.getCreatedDate())));
+			} else
+				model.setCreatedDate(utils.getUserDateInGMT(new Date(
 			        loanNotification.getCreatedDate())));
 		}
 		if (loanNotification.getNotificationType() == null) {
@@ -244,7 +252,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public NotificationVO updateNotification(NotificationVO notificationVO) {
 		return buildNotificationVO(notificationDao
-		        .updateNotification(parseNotificationModel(notificationVO)));
+				.updateNotification(parseNotificationModel(notificationVO)));
 	}
 
 	/*
@@ -257,11 +265,20 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public List<NotificationVO> findNotificationTypeListForUser(int userId,
 	        String type) {
-		// TODO Auto-generated method stub
 		User user = new User();
 		user.setId(userId);
 		List<NotificationVO> notList = buildNotificationVOList(notificationDao
 		        .findNotificationTypeListForUser(user, type));
+		return notList;
+	}
+
+	@Override
+	public List<NotificationVO> findNotificationTypeListForLoan(int loanId,
+			String type, Boolean isRead) {
+		Loan loan = new Loan();
+		loan.setId(loanId);
+		List<NotificationVO> notList = buildNotificationVOList(notificationDao
+				.findNotificationTypeListForLoan(loan, type, isRead));
 		return notList;
 	}
 

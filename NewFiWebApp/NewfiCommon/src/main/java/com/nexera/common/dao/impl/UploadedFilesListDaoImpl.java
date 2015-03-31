@@ -144,4 +144,13 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements Uploaded
     }
 
 
+    @Override
+    public void remove( UploadedFilesList uploadedFileList )
+    {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete( uploadedFileList );
+        session.flush();
+
+    }
+
 }

@@ -39,4 +39,7 @@ public interface UploadedFilesListDao
 
     public List<UploadedFilesList> fetchFilesBasedOnTimeStamp( Loan loan, Date timeBeforeCallMade );
 
+
+    public void remove( UploadedFilesList uploadedFileList );
+
 }
