@@ -3,16 +3,19 @@ package com.nexera.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.springframework.web.multipart.MultipartFile;
+import org.json.JSONObject;
 
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
+import com.nexera.common.vo.lqb.LQBedocVO;
 
 public interface UploadedFilesListService {
 
@@ -35,7 +38,8 @@ public interface UploadedFilesListService {
 	        COSVisitorException;
 
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
-	        Integer userId, Integer assignedBy , String lqbDocumentID , String uuidValue);
+	        Integer userId, Integer assignedBy, String lqbDocumentID,
+	        String uuidValue);
 
 	void updateIsAssignedToTrue(List<Integer> fileIds);
 
@@ -49,15 +53,21 @@ public interface UploadedFilesListService {
 	        Integer userId, Integer loanId, Integer assignedBy)
 	        throws IOException, COSVisitorException, Exception;
 
-	public CheckUploadVO uploadFile(File file, String contentType, byte[] bytes,
-	        Integer userId, Integer loanId, Integer assignedBy);
+	public CheckUploadVO uploadFile(File file, String contentType,
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy);
 
-	public LQBResponseVO createLQBVO(Integer userID , byte[] bytes, Integer loanId , String createLQBVO);
-	
+	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
+	        Integer loanId, String createLQBVO);
+
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO);
-	
+
 	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber);
-	
-	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId);
+
+	public String fetchDocumentIDByUUID(LQBResponseVO lqbResponseVO, String uuId);
+
+	public LQBResponseVO parseLQBXMLResponse(JSONObject receivedResponse);
+
+	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
+	        Date timeBeforeCallMade);
 
 }

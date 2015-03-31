@@ -39,7 +39,7 @@ public class LoanVO
 
     private BigDecimal requestedFee;
 
-    private String guid;
+    private String docId;
 
 
     /**
@@ -277,20 +277,20 @@ public class LoanVO
 
 
     /**
-     * @return the guid
+     * @return the docId
      */
-    public String getGuid()
+    public String getDocId()
     {
-        return guid;
+        return docId;
     }
 
 
     /**
-     * @param guid the guid to set
+     * @param docId the docId to set
      */
-    public void setGuid( String guid )
+    public void setDocId( String docId )
     {
-        this.guid = guid;
+        this.docId = docId;
     }
 
 }
