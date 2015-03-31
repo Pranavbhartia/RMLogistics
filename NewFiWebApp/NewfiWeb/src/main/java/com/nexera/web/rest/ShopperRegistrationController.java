@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +81,8 @@ public class ShopperRegistrationController {
 			 LoanStatusMasterVO loanStatusMasterVO = new LoanStatusMasterVO();
 			 loanStatusMasterVO.setId(1);
 			 loanVO.setLoanStatus(loanStatusMasterVO);
+			 loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
+			 loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
 			 
 			 LoanTypeMasterVO  loanTypeMasterVO = new LoanTypeMasterVO();
 			 loanTypeMasterVO.setId(2);

@@ -49,6 +49,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			Criteria criteria = session.createCriteria(User.class);
 			criteria.add(Restrictions.eq("emailId", userName));
 			criteria.add(Restrictions.eq("password", password));
+			criteria.add(Restrictions.eq("password", password));
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
 				throw new NoRecordsFetchedException(
