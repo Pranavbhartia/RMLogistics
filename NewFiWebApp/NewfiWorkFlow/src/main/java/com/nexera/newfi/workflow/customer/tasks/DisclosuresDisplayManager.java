@@ -57,13 +57,15 @@ public class DisclosuresDisplayManager implements IWorkflowTaskExecutor {
 			                        .getIndx()));
 			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
 			        loan, needsListMaster);
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME, status);
+			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+					status);
 			// TODO check column path
 			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList
 			        .getUploadFileId().getS3path());
 
 		} else {
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME, status);
+			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+					status);
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();

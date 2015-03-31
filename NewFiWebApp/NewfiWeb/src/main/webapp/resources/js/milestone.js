@@ -346,11 +346,6 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
 			}
-			else if (ob.workItem.workflowItemType=="CREDIT_SCORE")
-			{				
-				ajaxURL = "";
-				ob.workItem.stateInfo = "EQ-646 | TU-686 | EX-685";
-			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "";
@@ -395,10 +390,11 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
 				data.loanID=selectedUserDetail.loanID;
 				callback = paintMilestoneTeamMemberTable;				
-			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS")
+			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";			
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID=workFlowContext.loanId;
+				//ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
 			}
 			
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
@@ -517,6 +513,19 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 								}else
 								{
 									ob.stateInfoContainer.html("Click here to lock rate");
+								}
+							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
+								ob.workItem.workflowItemType=="CREDIT_SCORE"){
+								if(ob.workItem.stateInfo){
+									var tempOb=JSON.parse(ob.workItem.stateInfo);
+									if(tempOb.url){
+										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
+											window.open(event.data.tempOb.url,"_blank")
+										})
+
+									}
+									if(tempOb.status)
+										ob.stateInfoContainer.html(" "+tempOb.status);
 								}
 							}else
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
