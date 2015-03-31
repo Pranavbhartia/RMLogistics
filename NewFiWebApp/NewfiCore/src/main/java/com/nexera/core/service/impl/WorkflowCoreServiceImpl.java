@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.WorkflowConstants;
@@ -19,7 +20,8 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 	LoanService loanService;
 
 	@Override
-	public void createWorkflow(WorkflowVO workflowVO) {
+	
+	public void createWorkflow(WorkflowVO workflowVO) throws Exception{
 		Gson gson = new Gson();
 		workflowVO
 		        .setWorkflowType(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE);

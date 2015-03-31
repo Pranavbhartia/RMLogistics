@@ -62,9 +62,7 @@ public class LoanServiceImpl implements LoanService {
 	@Autowired
 	private LoanMilestoneMasterDao loanMilestoneMasterDao;
 	
-	@Autowired
-	WorkflowCoreService workflowCoreService;
-
+	
 	@Autowired
 	private UserProfileService userProfileService;
 
@@ -595,7 +593,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 		//Invoking the workflow activities to trigger
-		workflowCoreService.createWorkflow(new WorkflowVO(loanId));
+		loan.setId(loanId);
 		return Loan.convertFromEntityToVO(loan);
 	}
 

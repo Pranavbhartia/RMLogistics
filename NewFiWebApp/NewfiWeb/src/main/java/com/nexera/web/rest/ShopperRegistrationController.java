@@ -21,18 +21,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanAppFormVO;
-import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.vo.WorkflowVO;
 
 @RestController
 @RequestMapping(value = "/shopper")
@@ -52,6 +52,10 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	protected AuthenticationManager authenticationManager;
+	
+	@Autowired
+	WorkflowCoreService workflowCoreService;
+
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(ShopperRegistrationController.class);
@@ -90,7 +94,7 @@ public class ShopperRegistrationController {
 		
 
 			loanVO = loanService.createLoan(loanVO);
-
+			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
@@ -105,7 +109,10 @@ public class ShopperRegistrationController {
 		} catch (UndeliveredEmailException e) {
 
 			e.printStackTrace();
-		}
+		} catch (Exception e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        }
 		authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
 
 		return "./home.do";
