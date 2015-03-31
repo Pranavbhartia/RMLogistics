@@ -163,8 +163,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '"
-		        + user.getFirstName() + "%' or email_id like '"+user.getEmailId()+"%'";
+		String searchQuery = "FROM User where ";
+		
+		if(user.getEmailId()!=null)
+			searchQuery += " email_id like '"+user.getEmailId()+"%' or ";
+		
+		searchQuery+=" lower(concat( first_name,',',last_name) ) like '"
+		        + user.getFirstName() +"'";
+		
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}

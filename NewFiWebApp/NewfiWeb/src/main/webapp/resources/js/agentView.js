@@ -1128,15 +1128,19 @@ function appendUserNameDropDown() {
 }
 
 function showUserNameDropDown(namesList) {
+	var hideAddUserOption=false;
 	$('#add-username-dropdown-cont').show();
-	paintUserNameDropDown(namesList);
+	var internalRole=$('#add-memeber-user-type').attr("internalroleid");
+	if(internalRole && internalRole=="1")
+		hideAddUserOption=true;
+	paintUserNameDropDown(namesList,hideAddUserOption);
 }
 
 function hideUserNameDropDown() {
 	$('#add-username-dropdown-cont').hide();
 }
 
-function paintUserNameDropDown(values) {
+function paintUserNameDropDown(values,hideAddUser) {
 	var dropdownCont = $('#add-username-dropdown-cont');
 	dropdownCont.html('');
 
@@ -1214,6 +1218,7 @@ function paintUserNameDropDown(values) {
 		callback(event);
 		
 	});
+	if(!hideAddUser)
 	dropdownCont.append(addUserdropDownRow);
 }
 
@@ -2901,11 +2906,12 @@ function onReturnOfAddUserToLoanTeam(data) {
 	}
 	
 		showToastMessage("User added to loan team.");
-		
+	if(addData!=undefined){	
 	var parentContainer=$("#WF"+addData.milestoneID);
 	clearStatusClass(parentContainer);
 	parentContainer.addClass("m-in-progress");
 	container.append(getMilestoneTeamMembeTableRow(userToAdd));
+	}
 }
 
 function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
