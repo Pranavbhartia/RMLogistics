@@ -50,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -446,15 +447,21 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(UploadedFilesList uploadedFilesList)
+	public String getContentFromFile(byte[] bytes)
 	        throws IOException, Exception {
-		String s3pathOfFile =uploadedFilesList.getS3path();
-		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
-		        .getInputStreamFromFile(s3pathOfFile , String.valueOf(0)));
+		
+		
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
 
+	public byte[] getContentFromStream(InputStream stream) throws IOException, Exception {
+		
+		byte[] bytes = IOUtils.toByteArray(stream);
+		return bytes;
+	}
+	
+	
 	public File copyInputStreamToFile(InputStream in) throws IOException {
 		File file = null;
 		OutputStream out = null;
@@ -547,6 +554,16 @@ public class NexeraUtility {
 		return null;
 	}
 	
+	
+	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
+		
+		StringBuffer stringBuf = new StringBuffer();
+		stringBuf.append("UUID : ").append(uuId);
+		stringBuf.append( " uploaded by : " );
+		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
+		 
+		return stringBuf.toString();
+	}
 	
 	
 }

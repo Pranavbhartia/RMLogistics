@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
@@ -19,11 +18,9 @@ import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
@@ -36,7 +33,6 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
-import com.nexera.common.vo.LoanDetailVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -80,13 +76,13 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getActiveLoanOfUser(UserVO user) {
 
 		Loan loan = loanDao.getActiveLoanOfUser(this.parseUserModel(user));
-		return this.buildLoanVO(loan);
+		return Loan.convertFromEntityToVO(loan);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO getLoanByID(Integer loanID) {
-		return this.buildLoanVO(loanDao.getLoanWithDetails(loanID));
+		return Loan.convertFromEntityToVO(loanDao.getLoanWithDetails(loanID));
 	}
 
 	@Override
@@ -187,50 +183,6 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
-	private LoanVO buildLoanVO(Loan loan) {
-
-		if (loan == null)
-			return null;
-
-		LoanVO loanVo = new LoanVO();
-		loanVo.setId(loan.getId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setDeleted(loan.getDeleted());
-		loanVo.setLoanEmailId(loan.getLoanEmailId());
-		loanVo.setLqbFileId(loan.getLqbFileId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setModifiedDate(loan.getModifiedDate());
-		loanVo.setName(loan.getName());
-		if (loan.getLoanStatus() != null)
-			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-
-		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
-
-		List<UserVO> loanTeam = new ArrayList<UserVO>();
-		for (LoanTeam team : loan.getLoanTeam()) {
-			UserVO userVo = User.convertFromEntityToVO(team.getUser());
-			loanVo.setUser(userVo);
-			loanTeam.add(userVo);
-		}
-		loanVo.setLoanTeam(loanTeam);
-
-		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
-		if (loan.getCustomerWorkflow() != null) {
-			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
-		}
-		if (loan.getLoanManagerWorkflow() != null) {
-			loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow()
-			        .getId());
-		}
-
-		loanVo.setIsBankConnected(loan.getIsBankConnected());
-		loanVo.setIsRateLocked(loan.getIsRateLocked());
-		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
-		loanVo.setLockedRate(loan.getLockedRate());
-		return loanVo;
-
-	}
-
 	private List<LoanVO> buildLoanVOList(List<Loan> loanList) {
 
 		if (loanList == null)
@@ -238,7 +190,7 @@ public class LoanServiceImpl implements LoanService {
 
 		List<LoanVO> voList = new ArrayList<LoanVO>();
 		for (Loan loan : loanList) {
-			voList.add(this.buildLoanVO(loan));
+			voList.add(Loan.convertFromEntityToVO(loan));
 		}
 
 		return voList;
@@ -265,20 +217,6 @@ public class LoanServiceImpl implements LoanService {
 		loanTeamVO.setUser(User.convertFromEntityToVO(loanTeam.getUser()));
 		loanTeamVO.setActive(loanTeam.getActive());
 		return loanTeamVO;
-
-	}
-
-	private LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
-		if (detail == null)
-			return null;
-
-		LoanDetailVO detailVO = new LoanDetailVO();
-		detailVO.setId(detail.getId());
-		detailVO.setDownPayment(detail.getDownPayment());
-		detailVO.setLoanAmount(detail.getLoanAmount());
-		detailVO.setRate(detail.getRate());
-
-		return detailVO;
 
 	}
 
@@ -568,7 +506,7 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = loanDao.getLoanWorkflowDetails(loanID);
 		LoanVO loanVO = null;
 		if (loan != null) {
-			loanVO = this.buildLoanVO(loan);
+			loanVO = Loan.convertFromEntityToVO(loan);
 			return loanVO;
 		}
 		return loanVO;
@@ -589,13 +527,11 @@ public class LoanServiceImpl implements LoanService {
 			return null;
 		Loan loan = new Loan();
 		try {
-			User user = userProfileService.parseUserModel(loanVO.getUser());
+			User user = User.convertFromVOToEntity(loanVO.getUser());
 
-			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO
-			        .getLoanStatus());
-			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO
-			        .getLoanType());
-
+			
+			//TODO: Get the status from loanVO, set it in UI based on selection
+			
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -604,16 +540,7 @@ public class LoanServiceImpl implements LoanService {
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			if (list != null) {
-				for (LoanStatusMaster loanStatusMaster : list) {
-					loan.setLoanStatus(loanStatusMaster);
-				}
-			}
-			if (loanTypeList != null) {
-				for (LoanTypeMaster loanTypeMaster : loanTypeList) {
-					loan.setLoanType(loanTypeMaster);
-				}
-			}
+			
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -631,6 +558,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loan = completeLoanModel(loanVO);
 
+		
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
 
@@ -638,7 +566,7 @@ public class LoanServiceImpl implements LoanService {
 			userList.add(loanVO.getUser());
 
 			for (UserVO userVO : userList) {
-				User user = userProfileService.parseUserModel(userVO);
+				User user = User.convertFromVOToEntity(userVO);
 				loanDao.addToLoanTeam(loan, user, null);
 			}
 		} else {
@@ -646,7 +574,7 @@ public class LoanServiceImpl implements LoanService {
 			loanDao.addToLoanTeam(loan, loan.getUser(), null);
 
 		}
-		return this.buildLoanVO(loan);
+		return Loan.convertFromEntityToVO(loan);
 	}
 
 	@Override
@@ -720,8 +648,7 @@ public class LoanServiceImpl implements LoanService {
 		companyMaster.setName(vo.getName());
 		companyMaster.setEmailID(vo.getEmailID());
 		companyMaster.setAddress(vo.getAddress());
-		companyMaster.setAddedBy(userProfileService.parseUserModel(vo
-		        .getAddedBy()));
+		companyMaster.setAddedBy(User.convertFromVOToEntity(vo.getAddedBy()));
 		companyMaster.setPhoneNumber(vo.getPhoneNumber());
 		companyMaster.setPrimaryContact(vo.getPrimaryContact());
 		companyMaster.setFax(vo.getFax());
@@ -780,8 +707,7 @@ public class LoanServiceImpl implements LoanService {
 		companyMaster.setId(vo.getId());
 		companyMaster.setName(vo.getName());
 		companyMaster.setEmailID(vo.getEmailID());
-		companyMaster.setAddedBy(userProfileService.parseUserModel(vo
-		        .getAddedBy()));
+		companyMaster.setAddedBy(User.convertFromVOToEntity(vo.getAddedBy()));
 		companyMaster.setPhoneNumber(vo.getPhoneNumber());
 		companyMaster.setPrimaryContact(vo.getPrimaryContact());
 		companyMaster.setFax(vo.getFax());
@@ -818,7 +744,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseHomeOwnInsMaster(homeOwnersInsurance),
-		        userProfileService.parseUserModel(addedBy));
+		        User.convertFromVOToEntity(addedBy));
 		return this
 		        .buildHomeOwnersInsuranceMasterVO((HomeOwnersInsuranceMaster) loanDao
 		                .load(HomeOwnersInsuranceMaster.class,
@@ -832,7 +758,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseTitleCompanyMaster(titleCompany),
-		        userProfileService.parseUserModel(addedBy));
+		        User.convertFromVOToEntity(addedBy));
 		return this.buildTitleCompanyMasterVO(((TitleCompanyMaster) loanDao
 		        .load(TitleCompanyMaster.class, titleCompany.getId())));
 	}
@@ -842,38 +768,6 @@ public class LoanServiceImpl implements LoanService {
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
-	}
-
-	@Override
-	public LoanVO convertIntoLoanVO(Loan loan) {
-		if (loan == null)
-			return null;
-
-		LoanVO loanVo = new LoanVO();
-		loanVo.setId(loan.getId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setDeleted(loan.getDeleted());
-		loanVo.setLoanEmailId(loan.getLoanEmailId());
-		loanVo.setLqbFileId(loan.getLqbFileId());
-		loanVo.setCreatedDate(loan.getCreatedDate());
-		loanVo.setModifiedDate(loan.getModifiedDate());
-		loanVo.setName(loan.getName());
-		if (loan.getLoanStatus() != null)
-			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
-		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
-
-		loanVo.setLoanDetail(this.buildLoanDetailVO(loan.getLoanDetail()));
-		if (loan.getCustomerWorkflow() != null) {
-			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
-		}
-		if (loan.getLoanManagerWorkflow() != null) {
-			loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow()
-			        .getId());
-		}
-
-		loanVo.setIsBankConnected(loan.getIsBankConnected());
-		loanVo.setIsRateLocked(loan.getIsRateLocked());
-		return loanVo;
 	}
 
 	@Override

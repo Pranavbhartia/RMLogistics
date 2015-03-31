@@ -8,13 +8,11 @@ import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.UserVO;
 
@@ -57,8 +55,7 @@ public interface LoanDao extends GenericDao {
 
 	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
 
-	// TODO added for loan rest
-	public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO);
+	
 
 	public List<LoanTypeMaster> getLoanTypeMater(
 			LoanTypeMasterVO loanTypeMaterVO);

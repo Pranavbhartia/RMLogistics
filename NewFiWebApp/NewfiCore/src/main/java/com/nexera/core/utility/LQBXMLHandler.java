@@ -16,18 +16,14 @@ import com.nexera.common.vo.lqb.LQBedocVO;
 public class LQBXMLHandler extends DefaultHandler {
 
 	private LQBResponseVO lqbResponseVO = null;
+	
 	public LQBResponseVO getLqbResponseVO() {
 		return lqbResponseVO;
 	}
 
-
-	public void setLqbResponseVO(LQBResponseVO lqbResponseVO) {
-		this.lqbResponseVO = lqbResponseVO;
-	}
-
 	private LQBDocumentResponseListVO listVO  = null;
 	private LQBedocVO lqBedocVO  = null;
-	
+	private List<LQBedocVO> listDocumentListVO = null;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LQBXMLHandler.class);
 
@@ -42,21 +38,20 @@ public class LQBXMLHandler extends DefaultHandler {
 		}
 		
 		if("list".equals(qName)){
-			List<LQBDocumentResponseListVO> listDocumentListVO = new ArrayList<LQBDocumentResponseListVO>();
+			listDocumentListVO = new ArrayList<LQBedocVO>();
 			listVO = new LQBDocumentResponseListVO();
+		}
+		
+		if("edoc".equals(qName)){
 			lqBedocVO = new LQBedocVO();
-			if("edoc".equals(qName)){
-				lqBedocVO.setApplication(attributes.getValue("application"));
-				lqBedocVO.setCreated_date(attributes.getValue("created_date"));
-				lqBedocVO.setDescription(attributes.getValue("description"));
-				lqBedocVO.setDoc_status(attributes.getValue("doc_status"));
-				lqBedocVO.setDoc_type(attributes.getValue("doc_type"));
-				lqBedocVO.setDocid(attributes.getValue("docid"));
-				lqBedocVO.setFolder_name(attributes.getValue("folder_name"));
-			}
 			
-			listDocumentListVO.add(listVO);
-			lqbResponseVO.setDocumentResponseListVOs(listDocumentListVO);
+			lqBedocVO.setApplication(attributes.getValue("application"));
+			lqBedocVO.setCreated_date(attributes.getValue("created_date"));
+			lqBedocVO.setDescription(attributes.getValue("description"));
+			lqBedocVO.setDoc_status(attributes.getValue("doc_status"));
+			lqBedocVO.setDoc_type(attributes.getValue("doc_type"));
+			lqBedocVO.setDocid(attributes.getValue("docid"));
+			lqBedocVO.setFolder_name(attributes.getValue("folder_name"));
 		}
 		
 	}
@@ -69,8 +64,14 @@ public class LQBXMLHandler extends DefaultHandler {
 		
 		
 		if("list".equals(qName)){
-			listVO.setvBedocVO(lqBedocVO);
+			listVO.setvBedocVO(listDocumentListVO);
+			lqbResponseVO.setDocumentResponseListVOs(listVO);
 		}
+		
+		if("edoc".equals(qName)){
+			listDocumentListVO.add(lqBedocVO);
+		}
+		
 		
 	}
 	

@@ -57,7 +57,7 @@ public class WorkflowManager implements Callable<String> {
 		        .getWorkflowItemMaster();
 		String result = executeMethod(workflowItemMaster);
 
-		if (result.equalsIgnoreCase(WorkflowConstants.SUCCESS)) {
+		if (result.equalsIgnoreCase(WorkItemStatus.COMPLETED.getStatus())) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
 			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED

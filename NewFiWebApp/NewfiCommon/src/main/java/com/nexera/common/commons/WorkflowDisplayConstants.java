@@ -12,6 +12,7 @@ public class WorkflowDisplayConstants {
 	public static final String USER_ID_KEY_NAME = "userID";
 	public static final String WORKITEM_ID_KEY_NAME = "workflowItemExecId";
 	public static final String WORKITEM_STATUS_KEY_NAME = "workflowItemstatus";
+	public static final String WORKFLOW_RENDERSTATE_STATUS_KEY = "status";
 	public static final String NOTIFICATION_VO_KEY_NAME = "notificationVo";
 	public static final String EMAIL_TEMPLATE_KEY_NAME = "EMAIL_TEMPLATE_NAME";	
 	public static final String EMAIL_RECIPIENT_KEY_NAME = "EMAIL_RECIPIENT";
@@ -24,7 +25,7 @@ public class WorkflowDisplayConstants {
 
 	public static final String TITLE_COMPANY_ID = "titleCompanyID";
 
-	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsCompanyID";
+	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsID";
 	
 	
 

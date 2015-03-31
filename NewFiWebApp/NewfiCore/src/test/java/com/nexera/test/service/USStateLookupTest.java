@@ -22,7 +22,14 @@ public class USStateLookupTest {
 	
 	@Test
 	public void test() {
+		
+		/*
+		 * TODO: Uncomment if you want to populate the state and zip codes in ur local DB. It takes a while though
+		 */
+		
 		try {
+			
+			usStateLookup.saveStatesInDB();
 			usZipLookup.saveZipCodeInDB();
         } catch (NonFatalException e) {
 	        // TODO Auto-generated catch block

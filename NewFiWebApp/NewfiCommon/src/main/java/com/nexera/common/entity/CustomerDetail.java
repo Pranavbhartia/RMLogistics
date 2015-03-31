@@ -171,6 +171,8 @@ public class CustomerDetail implements Serializable {
 	public static CustomerDetail convertFromVOToEntity(
 	        final CustomerDetailVO inputEntity) {
 		CustomerDetail customerDetail = new CustomerDetail();
+
+		customerDetail.setSubscriptionsStatus(2);
 		if (inputEntity != null) {
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
 			inputEntity.setAddressState(inputEntity.getAddressState());
@@ -180,8 +182,9 @@ public class CustomerDetail implements Serializable {
 				        .getDateOfBirth()));
 			}
 			customerDetail.setId(inputEntity.getId());
-			customerDetail.setProfileCompletionStatus(inputEntity
-			        .getProfileCompletionStatus());
+			customerDetail.setId(inputEntity.getId());
+			customerDetail.setSubscriptionsStatus(inputEntity
+			        .getSubscriptionsStatus());
 			customerDetail.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetail.setMobileAlertsPreference(inputEntity
