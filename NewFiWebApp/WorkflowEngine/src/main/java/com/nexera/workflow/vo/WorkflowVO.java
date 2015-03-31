@@ -9,7 +9,18 @@ package com.nexera.workflow.vo;
  */
 public class WorkflowVO
 {
-    private String workflowType;
+
+	private Integer loanID;
+
+	public Integer getLoanID() {
+		return loanID;
+	}
+
+	public void setLoanID(Integer loanID) {
+		this.loanID = loanID;
+	}
+
+	private String workflowType;
 
 
     /**
