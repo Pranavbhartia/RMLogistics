@@ -26,9 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -59,6 +61,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
+
+	@Autowired
+	private UserProfileDao userProfileDao;
 
 	@Autowired
 	private NeedsListService needsListService;
@@ -555,6 +560,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
@@ -566,15 +572,57 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		        .fetchFilesBasedOnTimeStamp(loan, modifiedDate);
 		if (edocsList.size() > uploadedFileList.size()) {
 			LOG.debug("LQB Doc List Is Larger. Hence We need to check whether we need to insert the record ");
-			for (UploadedFilesList uploadFile : uploadedFileList) {
+			for (LQBedocVO edoc : edocsList) {
+				for (UploadedFilesList uploadFile : uploadedFileList) {
+					String uuidDetails = edoc.getDescription();
+					String[] uuidArray = uuidDetails.split(":");
+					String uuid = uuidArray[1];
+					if (!uuid.equalsIgnoreCase(uploadFile.getUuidFileId())) {
+						LOG.debug("This uuid does not exist hence adding this record from LQB in database ");
+						UploadedFilesList fileUpload = new UploadedFilesList();
+						fileUpload.setFileName(edoc.getDoc_type() + ".pdf");
+						User user = userProfileDao
+						        .findByUserId(CommonConstants.SYSTEM_USER_USERID);
+						fileUpload.setAssignedBy(user);
+						fileUpload.setUploadedBy(loan.getUser());
+						fileUpload.setIsActivate(true);
+						fileUpload.setIsAssigned(false);
+						fileUpload.setLoan(loan);
+						fileUpload.setLqbFileID(edoc.getDocid());
+						fileUpload.setUploadedDate(new Date());
+						fileUpload.setUuidFileId(uuid);
+						// TODO hardcoded for now
+						fileUpload.setTotalPages(2);
 
+						int fileUploadId = uploadedFilesListDao
+						        .saveUploadedFile(fileUpload);
+						fileUpload.setId(fileUploadId);
+
+					}
+
+				}
 			}
 		} else if (edocsList.size() < uploadedFileList.size()) {
 			LOG.debug("LQB Doc List is smaller. hence we might need to remove some file from database");
+			for (UploadedFilesList uploadFile : uploadedFileList) {
+				for (LQBedocVO edoc : edocsList) {
+					String uuidDetails = edoc.getDescription();
+					String[] uuidArray = uuidDetails.split(":");
+					String uuid = uuidArray[1];
+					if (!uuid.equalsIgnoreCase(uploadFile.getUuidFileId())) {
+						LOG.debug("This uuid does not exist hence adding this record from LQB in database ");
+						UploadedFilesList fileToDelete = uploadedFilesListDao
+						        .fetchUsingFileUUID(uuid);
+						if (uploadedFileList != null) {
+							uploadedFilesListDao.remove(fileToDelete);
+						}
+					}
+				}
+			}
+
 		} else {
 			LOG.debug("No Changes ");
 		}
 
 	}
-
 }
