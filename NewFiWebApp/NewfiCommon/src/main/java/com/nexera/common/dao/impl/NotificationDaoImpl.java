@@ -17,7 +17,6 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -198,6 +197,30 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		}catch (HibernateException hibernateException) {
 //			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
 //					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
+	}
+
+	@Override
+	public List<Notification> findNotificationTypeListForLoan(Loan loan,
+			String type, Boolean isRead) {
+		// TODO Auto-generated method stub
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Notification.class);
+			criteria.add(Restrictions.eq("loan", loan));
+			criteria.add(Restrictions.eq("notificationType", type));
+			if (isRead != null)
+				criteria.add(Restrictions.or(Restrictions.eq("read", false),
+						Restrictions.isNull("read")));
+			List<Notification> notifications = (List<Notification>) criteria
+					.list();
+			return notifications;
+		} catch (HibernateException hibernateException) {
+			// LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			// hibernateException);
 			throw new DatabaseException(
 					"Exception caught in fetchUsersBySimilarEmailId() ",
 					hibernateException);
