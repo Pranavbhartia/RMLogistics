@@ -1,12 +1,21 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
-import java.util.Date;
+import com.nexera.common.vo.CustomerDetailVO;
 
 /**
  * The persistent class for the customerdetails database table.
@@ -132,6 +141,56 @@ public class CustomerDetail implements Serializable {
 
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
+
+	public static CustomerDetailVO convertFromEntityToVO(
+	        final CustomerDetail inputEntity) {
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		if (inputEntity != null) {
+			customerDetailVO.setAddressCity(inputEntity.getAddressCity());
+			customerDetailVO.setAddressState(inputEntity.getAddressState());
+			customerDetailVO.setAddressZipCode(inputEntity.getAddressZipCode());
+			if (null != inputEntity.getDateOfBirth()) {
+				customerDetailVO.setDateOfBirth(inputEntity.getDateOfBirth()
+				        .getTime());
+			} else {
+				// if the date of birth id null then ??
+				customerDetailVO.setDateOfBirth(0l);
+			}
+			customerDetailVO.setId(inputEntity.getId());
+			customerDetailVO.setProfileCompletionStatus(inputEntity
+			        .getProfileCompletionStatus());
+			customerDetailVO.setSecEmailId(inputEntity.getSecEmailId());
+			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
+			customerDetailVO.setMobileAlertsPreference(inputEntity
+			        .getMobileAlertsPreference());
+		}
+		return customerDetailVO;
+	}
+
+	public static CustomerDetail convertFromVOToEntity(
+	        final CustomerDetailVO inputEntity) {
+		CustomerDetail customerDetail = new CustomerDetail();
+
+		customerDetail.setSubscriptionsStatus(2);
+		if (inputEntity != null) {
+			customerDetail.setAddressCity(inputEntity.getAddressCity());
+			inputEntity.setAddressState(inputEntity.getAddressState());
+			customerDetail.setAddressZipCode(inputEntity.getAddressZipCode());
+			if (null != inputEntity.getDateOfBirth()) {
+				customerDetail.setDateOfBirth(new Date(inputEntity
+				        .getDateOfBirth()));
+			}
+			customerDetail.setId(inputEntity.getId());
+			customerDetail.setId(inputEntity.getId());
+			customerDetail.setSubscriptionsStatus(inputEntity
+			        .getSubscriptionsStatus());
+			customerDetail.setSecEmailId(inputEntity.getSecEmailId());
+			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
+			customerDetail.setMobileAlertsPreference(inputEntity
+			        .getMobileAlertsPreference());
+		}
+		return customerDetail;
 	}
 
 }

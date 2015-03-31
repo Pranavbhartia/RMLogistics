@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowMaster;
 import com.nexera.workflow.dao.WorkflowMasterDao;
 
@@ -33,6 +36,26 @@ public class WorkflowMasterDaoImpl extends GenericDaoImpl implements WorkflowMas
         WorkflowMaster workflowMaster = (WorkflowMaster) criteria.uniqueResult();
         return workflowMaster;
     }
+    @Override
+	public WorkflowItemMaster getWorkflowByType(String workflowType)
+       {
+           LOGGER.debug( "Inside method findWorkflowByType " );
+           Session session = sessionFactory.getCurrentSession();
+   		Criteria criteria = session.createCriteria(WorkflowItemMaster.class);
+		criteria.add(Restrictions.eq("workflowItemType", workflowType));
+   		WorkflowItemMaster workflowMaster = (WorkflowItemMaster) criteria
+   				.uniqueResult();
+           return workflowMaster;
+       }
 
+   	@Override
+   	public WorkflowItemExec getWorkflowItemExecByType(
+   			WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
+   		Session session = sessionFactory.getCurrentSession();
+   		Criteria criteria = session.createCriteria(WorkflowItemExec.class);
+   		criteria.add(Restrictions.eq("parentWorkflow", workflowExec));
+   		criteria.add(Restrictions.eq("workflowItemMaster", workflowItemMaster));
+   		return (WorkflowItemExec) criteria.uniqueResult();
+   	}
 
 }

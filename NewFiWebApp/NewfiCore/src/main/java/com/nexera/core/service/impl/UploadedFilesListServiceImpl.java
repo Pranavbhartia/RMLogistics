@@ -22,17 +22,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+
 import com.google.gson.JsonObject;
+
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
@@ -71,10 +73,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private NexeraUtility nexeraUtility;
-	
+
 	@Autowired
-    private LqbInvoker lqbInvoker;
-	
+	private LqbInvoker lqbInvoker;
+
 	@Autowired
 	private LoanService loanService;
 
@@ -121,8 +123,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
-		assignedUserVo.setUserRole(userProfileService
-		        .buildUserRoleVO(uploadedFilesList.getAssignedBy()
+		assignedUserVo.setUserRole(UserRole
+		        .convertFromEntityToVO(uploadedFilesList.getAssignedBy()
 		                .getUserRole()));
 
 		filesListVO.setAssignedByUser(assignedUserVo);
@@ -211,9 +213,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return fileSavedId;
 	}
 
-	
-	
-	
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
 	        Integer userId, Integer assignedBy , String lqbDocumentID , String uuidValue) {
 		
@@ -240,6 +239,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		//Upload file to S3, get S3 URL.
 		/*String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document",
 		        "complete");*/
+
+		
 		LOG.info("File Path : " + file.getPath());
 		String s3PathThumbNail = null;
 		String thumbPath = null;
@@ -257,17 +258,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		if (thumbPath != null) {
 			//Upload thumbnail to S3
 			File thumbpath = new File(thumbPath);
-			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(thumbpath, "document", "image");
-			
-			if(thumbpath.exists()){
+			s3PathThumbNail = s3FileUploadServiceImpl.uploadToS3(thumbpath,
+			        "document", "image");
+
+			if (thumbpath.exists()) {
 				thumbpath.delete();
 			}
-			
+
 		}
 
 		LOG.info("The s3PathThumbNail path for   :  " + s3PathThumbNail);
-		
-		
 
 		//Create entry for Uploaded file object and save in DB against the user.
 		User user = new User();
@@ -360,13 +360,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				        loanId, userId, assignedBy , lqbDocumentId , uuidValue);
 				LOG.info("Added File document row : " + savedRowId);
 				checkVo.setUploadFileId(savedRowId);
-				
+
 				UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
-				
+
 				checkVo.setUuid(latestRow.getUuidFileId());
 				checkVo.setFileName(latestRow.getFileName());
-				
-				if(serverFile.exists()){
+
+				if (serverFile.exists()) {
 					serverFile.delete();
 				}
 			}
@@ -391,6 +391,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
 		LQBResponseVO lqbResponseVO = null;
 		// TODO Auto-generated method stub
+
 		 if ( lqbDocumentVO != null ) {
              JSONObject uploadObject = createUploadPdfDocumentJsonObject(
                  WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT, lqbDocumentVO );
@@ -400,11 +401,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
             lqbResponseVO =  parseLQBXMLResponse(receivedResponse);
              
 		 }
+
 		return lqbResponseVO;
 	}
-	
-	
-	
+
 
     
     public LQBResponseVO createLQBVO(Integer usrId , byte[] bytes , Integer loanId , String uuidValue) {
@@ -429,40 +429,45 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			 
 			
 		}  catch (Exception e) {
+
 			// TODO Auto-generated catch block
 			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
 			// TODO save exception in error block
 		}
+
          LOG.info( "Assignment : uploadDocumentInLandingQB " + documentVO );
-		return lqbResponseVO;
+		 return lqbResponseVO;
     }
 
-	
+
 	private void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
-			Integer rowId) {
-		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId ,rowId );
-		
+	        Integer rowId) {
+		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId,
+		        rowId);
 	}
 
-	public JSONObject createUploadPdfDocumentJsonObject( String opName, LQBDocumentVO documentVO )
-    {
-        JSONObject json = new JSONObject();
-        JSONObject jsonChild = new JSONObject();
-        try {
-        	jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLoanNumber() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE, documentVO.getDocumentType() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_NOTES, documentVO.getNotes() );
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT, documentVO.getsDataContent() );
+	public JSONObject createUploadPdfDocumentJsonObject(String opName,
+	        LQBDocumentVO documentVO) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        documentVO.getsLoanNumber());
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE,
+			        documentVO.getDocumentType());
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_NOTES,
+			        documentVO.getNotes());
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT,
+			        documentVO.getsDataContent());
 
-            json.put( "opName", opName );
-            json.put( "loanVO", jsonChild );
-        } catch ( JSONException e ) {
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
 
-            throw new FatalException( "Could not parse json " + e.getMessage() );
-        }
-        return json;
-    }
-
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
 
 	@Override
 	public CheckUploadVO uploadFileByEmail(InputStream stream,

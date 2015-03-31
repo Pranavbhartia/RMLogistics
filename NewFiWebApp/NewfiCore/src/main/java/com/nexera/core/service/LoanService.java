@@ -8,6 +8,7 @@ import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -26,6 +27,12 @@ public interface LoanService {
 	public boolean addToLoanTeam(LoanVO loan, UserVO user);
 
 	public boolean removeFromLoanTeam(LoanVO loan, UserVO user);
+
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany);
+
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance);
 
 	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
@@ -81,7 +88,7 @@ public interface LoanService {
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName);
 
-	public LoanVO convertIntoLoanVO(Loan loan);
+
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
@@ -99,5 +106,11 @@ public interface LoanService {
 	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
 	public void updateLoanMilestone(LoanMilestone loanMilestone);
+
+	TitleCompanyMasterVO findTitleCompanyOfLoan(LoanVO loan);
+
+	HomeOwnersInsuranceMasterVO findHomeOwnersInsuranceCompanyOfLoan(LoanVO loan);
+
+	ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO);
 
 }

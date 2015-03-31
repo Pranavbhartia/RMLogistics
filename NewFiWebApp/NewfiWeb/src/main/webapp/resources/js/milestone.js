@@ -15,22 +15,11 @@ var workFlowContext = {
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
-	ajaxRequest : function(url, type, dataType, data, successCallBack) {
-		$.ajax({
-			url : url,
-			type : type,
-			dataType : dataType,
-			data : data,
-			success : successCallBack,
-			error : function() {
-			}
-		});
-	},
 	getWorkflowID : function(callback) {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/details/" + ob.loanId,
 						"GET",
 						"json",
@@ -65,7 +54,7 @@ var workFlowContext = {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/create/" + ob.loanId,
 						"GET",
 						"json",
@@ -90,7 +79,7 @@ var workFlowContext = {
 		} else {
 			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 		}
-		ob.ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
@@ -128,6 +117,16 @@ var workFlowContext = {
 			}
 		}
 		ob.mileStoneStepsStructured=finalList;
+	},
+	getStructuredParent:function(parentId){
+		var ob=this;
+		for(var i=0;i<ob.mileStoneStepsStructured.length;i++){
+			var parent=ob.mileStoneStepsStructured[i];
+			if(parent.id==parentId){
+				return ob.mileStoneStepsStructured[i];
+			}
+		}
+		return null;
 	},
 	checkIfChild : function(workflowItem) {
 		var ob = this;
@@ -189,7 +188,12 @@ var workFlowContext = {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
-				ob.mileStoneSteps = response.resultObject;
+				for(var key in response.resultObject){
+					if(response.resultObject[key]!=""){
+						var contxt=workFlowContext.mileStoneContextList[key];
+						contxt.updateMilestoneView(response.resultObject[key]);
+					}
+				}
 			}
 			if (callback) {
 				callback(ob);
@@ -199,7 +203,10 @@ var workFlowContext = {
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			ob.getMileStoneSteps(role, function(ob) {
-				ob.renderMileStoneSteps();
+				ob.renderMileStoneSteps(function(){
+					ob.structureParentChild();
+					ob.fetchLatestStatus();
+				});
 			});
 		});
 
@@ -224,7 +231,7 @@ var workFlowContext = {
 		PROFILE_INFO : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		"1003_COMPLETE" : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
-		CREDIT_SCORE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		CREDIT_SCORE : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-application-fee"	},
 		AUS_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		QC_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
@@ -244,12 +251,12 @@ var workFlowContext = {
 		CONNECT_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		CONTACT_LOAN_MANAGER : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		MANAGE_CREDIT_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		MANAGE_TEAM : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		MANAGE_TEAM : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-application-fee"	},
 		MANAGE_APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		LOCK_YOUR_RATE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		VIEW_APPRAISAL : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		LOCK_YOUR_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-application-fee"	},
+		VIEW_APPRAISAL : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-application-fee"	},
 		VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		VIEW_CLOSING : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	}
+		VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-application-fee"	}
 		}
 		if(cssMap[wfItemType] && cssMap[wfItemType][status])
 			return cssMap[wfItemType][status]
@@ -274,17 +281,48 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		mileStoneId : mileStoneId,
 		workItem : workItem,
 		stateInfoContainer:undefined,
-		ajaxRequest : function(url, type, dataType, data, successCallBack) {
-			$.ajax({
-				url : url,
-				type : type,
-				dataType : dataType,
-				contentType: "application/json",
-				data : data,
-				success : successCallBack,
-				error : function() {
+		updateMilestoneView:function(status,callback){
+			var ob=this;
+			ob.workItem.status=status;
+			var container=$("#WF"+ob.workItem.id);
+			var parentChk=container.attr("WFparent");
+			var childChk=container.attr("WFchild");
+			if(parentChk){
+				changeContainerClassBasedOnStatus(container,status);
+				var parentCheckBox=$(container).find(".ms-check-box-header");
+				parentCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parent=getStructuredParent(ob.workItem.id);
+				for(var i=0;i<parent.childList.length;i++){
+					var childid=parent.childList[i].id;
+					var cntxt=workFlowContext.mileStoneContextList[childid];
+					if(cntxt.workItem.status!="3"){
+						cntxt.updateMilestoneView(status);
+					}
 				}
-			});
+			}else{
+				var childCheckBox=$(container).find(".ms-check-box");
+				childCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parentid=ob.workItem.parentWorkflowItemExec.id;
+				var parentContainer=$("#WF"+parentid);
+				var childs=parentContainer.find("div."+getContainerLftRghtClass(parentContainer)+"-text");
+				var childsChecked=true;
+				for(var i=0;i<childs.length;i++){
+					var child=childs[i];
+					var childCheckbox=$(child).find(".ms-check-box");
+					if($(childCheckbox).attr("data-checked")=="unchecked"){
+						childsChecked=false;
+					}
+				}
+				if(childsChecked){
+					var parentCheckBox=parentContainer.find(".ms-check-box-header");
+					$(parentCheckBox).attr("data-checked","checked");
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-complete");
+				}else{
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-in-progress");
+				}
+			}
 		},
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
@@ -412,7 +450,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			ob.stateInfoContainer=txtRow1
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
-				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
+				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
@@ -701,13 +739,13 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 	appendTo.append(getMilestoneTeamMembeTable(userList,workItem));
 }
 
-function getMilestoneTeamMembeTable(userList,workItem) {
+function getMilestoneTeamMembeTable(input,workItem) {
 
 	var tableContainer = $('<div>').attr({
 		"class" : "ms-team-member-table"
 	});
 
-	
+	userList=input.users;
 	if(!userList ||  userList.length==0)
 		return;
 	
@@ -719,6 +757,7 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 		milestoneChildEventHandler(e)
 	});
 
+	
 	tableContainer.append(addNewMember);
 	
 	//team table header
@@ -737,10 +776,34 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 		}
 		tableContainer.append(getMilestoneTeamMembeTableRow(user));
 	}
+	var homwOwnInsurance=input.homeOwnInsCompany;
+	var titleCompany=input.titleCompany;
+	if(homwOwnInsurance!=null){
+		homwOwnInsurance.homeOwnInsID=homwOwnInsurance.id;
+		homwOwnInsurance.firstName=homwOwnInsurance.name;
+		homwOwnInsurance.emailId=homwOwnInsurance.emailID;
+		homwOwnInsurance.userRole={
+				label : "Home Owners Insurance"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance);
+		tableContainer.append(tableRow);
+	}
+	
+	if(titleCompany!=null){
+		titleCompany.titleCompanyID=titleCompany.id;
+		titleCompany.firstName=titleCompany.name;
+		titleCompany.emailId=titleCompany.emailID;
+		titleCompany.userRole={
+				label : "Title Company"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(titleCompany);
+		tableContainer.append(tableRow);
+	}
 	return tableContainer;
 }
 
 function getMilestoneTeamMembeTableRow(user){
+	if(user.lastName==undefined)user.lastName="";
 	var dispName = user.firstName+" "+user.lastName;
 	var userRole = user.userRole;
 	var roleLabel = userRole.label;
@@ -970,6 +1033,28 @@ function getStatusClass(workflowItem){
 			return "checked";
 	}
 }
+function getParentStatusClass(status){
+	switch(status){
+		case "0":
+			return "m-not-started";
+		case "1":
+			return "m-in-progress";
+		case "2":
+			return "m-in-progress";
+		case "3":
+			return "m-complete";
+	}
+}
+function getContainerLftRghtClass(container){
+	if(container.hasClass("milestone-lc"))
+		return "milestone-lc";
+	else if(container.hasClass("milestone-rc"))
+		return "milestone-rc";
+}
+function changeContainerClassBasedOnStatus(container,status){
+	clearStatusClass(container);
+	parentContainer.addClass(getParentStatusClass(status));
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -1103,23 +1188,36 @@ function milestoneChildEventHandler(event) {
 	} else if  ($(event.target).attr("data-text") == "TEAM_STATUS")
 		{
 		event.stopPropagation();
-		var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createTitleCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
 		event.stopPropagation();
-		var teamTable = getMilestoneTeamMembeTable();
+		//var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = newfi.user.defaultLoanId;
 		appendMilestoneAddTeamMemberPopup(newfi.user.defaultLoanId,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createTitleCompanyPopup();
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
 	 	event.stopPropagation();
@@ -1139,7 +1237,7 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
-		url = "rest/payment/paymentpage.do";
+		url = "rest/payment/pay";
 		
 		 $.ajax({
 		        url : url,

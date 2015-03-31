@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
 
@@ -189,7 +190,8 @@ public class WorkflowExec implements Serializable
 
 
     // bi-directional many-to-one association to WorkflowItem
-    @OneToMany ( mappedBy = "parentWorkflow")
+	@OneToMany(mappedBy = "parentWorkflow")
+	@OrderBy(clause = "displayOrder asc")
     public List<WorkflowItemExec> getWorkflowItems()
     {
         return this.workflowItems;
