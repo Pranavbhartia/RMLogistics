@@ -2,6 +2,7 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,10 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.vo.LoanDetailVO;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 
 /**
  * The persistent class for the loan database table.
@@ -601,5 +606,58 @@ public class Loan implements Serializable
 	}
 
 
+
+	public static LoanVO convertFromEntityToVO(Loan loan) {
+		if (loan == null)
+			return null;
+
+		LoanVO loanVo = new LoanVO();
+		loanVo.setId(loan.getId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setDeleted(loan.getDeleted());
+		loanVo.setLoanEmailId(loan.getLoanEmailId());
+		loanVo.setLqbFileId(loan.getLqbFileId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setModifiedDate(loan.getModifiedDate());
+		loanVo.setName(loan.getName());
+		if (loan.getLoanStatus() != null)
+			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
+		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
+		List<UserVO> loanTeam = new ArrayList<UserVO>();
+		for (LoanTeam team : loan.getLoanTeam()) {
+			UserVO userVo = User.convertFromEntityToVO(team.getUser());
+			loanVo.setUser(userVo);
+			loanTeam.add(userVo);
+		}
+		loanVo.setLoanTeam(loanTeam);
+		loanVo.setLoanDetail(buildLoanDetailVO(loan.getLoanDetail()));
+		if (loan.getCustomerWorkflow() != null) {
+			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow().getId());
+		}
+		if (loan.getLoanManagerWorkflow() != null) {
+			loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow()
+			        .getId());
+		}
+
+		loanVo.setIsBankConnected(loan.getIsBankConnected());
+		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
+		loanVo.setLockedRate(loan.getLockedRate());
+		return loanVo;
+	}
+
+	private static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
+		if (detail == null)
+			return null;
+
+		LoanDetailVO detailVO = new LoanDetailVO();
+		detailVO.setId(detail.getId());
+		detailVO.setDownPayment(detail.getDownPayment());
+		detailVO.setLoanAmount(detail.getLoanAmount());
+		detailVO.setRate(detail.getRate());
+
+		return detailVO;
+
+	}
 
 }
