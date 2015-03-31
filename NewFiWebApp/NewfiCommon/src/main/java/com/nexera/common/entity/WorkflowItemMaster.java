@@ -42,6 +42,7 @@ public class WorkflowItemMaster implements Serializable {
 	private List<WorkflowItemExec> workflowItems;
 	private Integer createdBy;
 	private Integer modifiedBy;
+	private Integer displayTurnAroundOrder;
 	private WorkflowItemMaster onSuccess;
 	private List<WorkflowItemMaster> listOnSuccess;
 	private WorkflowItemMaster onFailure;
@@ -50,6 +51,10 @@ public class WorkflowItemMaster implements Serializable {
 	private List<WorkflowItemMaster> childWorkflowItemMasterList;
 
 	public WorkflowItemMaster() {
+	}
+
+	public WorkflowItemMaster(Integer id) {
+		this.id = id;
 	}
 
 	@Id
@@ -257,7 +262,7 @@ public class WorkflowItemMaster implements Serializable {
 		this.parentWorkflowItemMaster = parentWorkflowItemMaster;
 	}
 
-	@OneToMany(mappedBy="parentWorkflowItemMaster",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "parentWorkflowItemMaster", fetch = FetchType.LAZY)
 	public List<WorkflowItemMaster> getChildWorkflowItemMasterList() {
 		return childWorkflowItemMasterList;
 	}
@@ -266,7 +271,14 @@ public class WorkflowItemMaster implements Serializable {
 			List<WorkflowItemMaster> childWorkflowItemMasterList) {
 		this.childWorkflowItemMasterList = childWorkflowItemMasterList;
 	}
-	
-	
+
+	@Column(name = "display_turn_order")
+	public Integer getDisplayTurnAroundOrder() {
+		return displayTurnAroundOrder;
+	}
+
+	public void setDisplayTurnAroundOrder(Integer displayTurnAroundOrder) {
+		this.displayTurnAroundOrder = displayTurnAroundOrder;
+	}
 
 }
