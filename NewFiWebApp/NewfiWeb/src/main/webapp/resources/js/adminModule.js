@@ -71,12 +71,13 @@ $('#alert-settings-btn').click(function(e){
 	});
 	var anchortag2=$('<a>').attr({
 	"id" : "loan-detail-id",
-    "href":""	
+	"href":"#turn_around_times_container",
+   	"onclick":"turnAroundTime()"	
 	});
     var loanDetailRowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
 			
-	}).html("Loan Details");
+	}).html("Turn Around Details");
 	anchortag2.append(loanDetailRowContent);
 	loanDetailRow.append(anchortag2);
 	container.append(loanDetailRow);

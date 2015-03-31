@@ -74,3 +74,4 @@ ALTER TABLE `newfi_schema`.`loanappform`
 
 
 
+alter table workflowitemmaster add column display_turn_order int(11) default -1;
