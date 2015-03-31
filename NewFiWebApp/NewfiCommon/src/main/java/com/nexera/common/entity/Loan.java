@@ -60,7 +60,7 @@ public class Loan implements Serializable {
 	private List<LoanSetting> loanSettings;
 	private List<LoanTeam> loanTeam;
 	private List<TransactionDetails> transactionDetails;
-
+	private List<UploadedFilesList> uploadedFileList;
 	private Integer customerWorkflow;
 	private Integer loanManagerWorkflow;
 	private Boolean isRateLocked;
@@ -428,8 +428,6 @@ public class Loan implements Serializable {
 		return loanTeam;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_workflow")
 	public Integer getCustomerWorkflow() {
 		return customerWorkflow;
 	}
@@ -438,8 +436,6 @@ public class Loan implements Serializable {
 		this.customerWorkflow = customerWorkflow;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan_manager_workflow")
 	public Integer getLoanManagerWorkflow() {
 		return loanManagerWorkflow;
 	}
@@ -506,6 +502,15 @@ public class Loan implements Serializable {
 
 		return detailVO;
 
+	}
+
+	@OneToMany(mappedBy = "loan")
+	public List<UploadedFilesList> getUploadedFileList() {
+		return uploadedFileList;
+	}
+
+	public void setUploadedFileList(List<UploadedFilesList> uploadedFileList) {
+		this.uploadedFileList = uploadedFileList;
 	}
 
 }

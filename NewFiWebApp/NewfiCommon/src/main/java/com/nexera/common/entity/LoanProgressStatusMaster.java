@@ -11,6 +11,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+
 /**
  * 
  * @author rohit
@@ -26,8 +28,15 @@ public class LoanProgressStatusMaster
     private String loanProgressStatus;
     private List<Loan> loans;
     
+    public LoanProgressStatusMaster() {
+	    // TODO Auto-generated constructor stub
+    }
     
-    @Id
+    public LoanProgressStatusMaster(LoanProgressStatusMasterEnum newLoan) {
+	    // TODO Auto-generated constructor stub
+    	this.id=newLoan.getStatusId();
+    }
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId()
     {

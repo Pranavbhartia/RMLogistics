@@ -19,7 +19,7 @@ public class LoanVO implements Serializable {
 	private String status;
 	private UserVO user;
 	private LoanTypeMasterVO loanType;
-	private LoanStatusMasterVO loanStatus;
+	
 	private PropertyTypeMasterVO propertyType;
 	private LoanMilestoneMasterVO currentLoanMilestone;
 	private List<LoanAppFormVO> loanAppForms;
@@ -137,13 +137,6 @@ public class LoanVO implements Serializable {
 		this.loanType = loanType;
 	}
 
-	public LoanStatusMasterVO getLoanStatus() {
-		return loanStatus;
-	}
-
-	public void setLoanStatus(LoanStatusMasterVO loanStatus) {
-		this.loanStatus = loanStatus;
-	}
 
 	public PropertyTypeMasterVO getPropertyType() {
 		return propertyType;

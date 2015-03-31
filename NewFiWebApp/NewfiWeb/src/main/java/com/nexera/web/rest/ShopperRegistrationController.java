@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -38,91 +40,93 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	private UserProfileService userProfileService;
-	
-	@Autowired 
+
+	@Autowired
 	private UserDetailsService userDetailsSvc;
-	
+
 	@Autowired
 	private LoanService loanService;
-	
+
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
-	
+
 	@Autowired
-    protected AuthenticationManager authenticationManager;
-	
-	private static final Logger LOG = LoggerFactory.getLogger(ShopperRegistrationController.class);
-	
-	
+	protected AuthenticationManager authenticationManager;
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(ShopperRegistrationController.class);
+
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public @ResponseBody String shopperRegistration(String registrationDetails,HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
+	public @ResponseBody String shopperRegistration(String registrationDetails,
+	        HttpServletRequest request, HttpServletResponse response)
+	        throws IOException {
+
 		Gson gson = new Gson();
-		LOG.info("registrationDetails - inout xml is"+registrationDetails);
-		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class); 
-		
-		
-		
+		LOG.info("registrationDetails - inout xml is" + registrationDetails);
+		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class);
+
 		String emailId = userVO.getEmailId();
-		
+
 		userVO.setUsername(userVO.getEmailId().split(":")[0]);
 		userVO.setEmailId(userVO.getEmailId().split(":")[0]);
-		//String password = userVO.getPassword();
-		//UserVO userVOObj=   userProfileService.saveUser(userVO);
+		// String password = userVO.getPassword();
+		// UserVO userVOObj= userProfileService.saveUser(userVO);
 		UserVO userVOObj = null;
 		LoanVO loanVO = null;
 		try {
-			 userVOObj = userProfileService.createNewUserAndSendMail(userVO);
-			 // insert a record in the loan table also
-			 loanVO  = new LoanVO();
-			 
-			 loanVO.setUser(userVOObj);
-			 LoanStatusMasterVO loanStatusMasterVO = new LoanStatusMasterVO();
-			 loanStatusMasterVO.setId(1);
-			 loanVO.setLoanStatus(loanStatusMasterVO);
-			 
-			 LoanTypeMasterVO  loanTypeMasterVO = new LoanTypeMasterVO();
-			 loanTypeMasterVO.setId(2);
-			 loanVO.setLoanType(loanTypeMasterVO);
-			 
-			 loanVO = loanService.createLoan(loanVO);
-			 
-			 // create a record in the loanAppForm table 
-			 
-			 LoanAppFormVO loanAppFormVO = new LoanAppFormVO ();
-		     loanAppFormVO.setUser(userVOObj);
-		     loanAppFormVO.setLoan(loanVO);
-		     loanAppFormVO.setLoanAppFormCompletionStatus(0);
-			 loanAppFormService.create(loanAppFormVO);
-			 
-        } catch (InvalidInputException e) {
-	       
-	        e.printStackTrace();
-        } catch (UndeliveredEmailException e) {
-	       
-	        e.printStackTrace();
-        }
-		authenticateUserAndSetSession(emailId, userVOObj.getPassword(),request);
+			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+			// insert a record in the loan table also
+			loanVO = new LoanVO();
+
+			loanVO.setUser(userVOObj);
+
+			loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
+			loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
+
+			// Currently hardcoding to refinance, this has to come from UI
+			// TODO: Add LoanTypeMaster dynamically based on option selected
+			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+
 		
+
+			loanVO = loanService.createLoan(loanVO);
+
+			// create a record in the loanAppForm table
+
+			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+			loanAppFormVO.setUser(userVOObj);
+			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			loanAppFormService.create(loanAppFormVO);
+
+		} catch (InvalidInputException e) {
+
+			e.printStackTrace();
+		} catch (UndeliveredEmailException e) {
+
+			e.printStackTrace();
+		}
+		authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
+
 		return "./home.do";
 	}
 
+	private void authenticateUserAndSetSession(String emailId, String password,
+	        HttpServletRequest request) {
 
-	private void authenticateUserAndSetSession(String emailId, String password,HttpServletRequest request) {
-	    
-		    //String username = userVO.getUsername();
-	        //String password = userVO.getPassword();
-	        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(emailId, password);
+		// String username = userVO.getUsername();
+		// String password = userVO.getPassword();
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+		        emailId, password);
 
-	        // generate session if one doesn't exist
-	        //request.getSession();
+		// generate session if one doesn't exist
+		// request.getSession();
 
-	        token.setDetails(new WebAuthenticationDetails(request));
-	        Authentication authenticatedUser = authenticationManager.authenticate(token);
+		token.setDetails(new WebAuthenticationDetails(request));
+		Authentication authenticatedUser = authenticationManager
+		        .authenticate(token);
 
-	        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-	    }
-		      	
-	    
- }
-	
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+	}
+
+}

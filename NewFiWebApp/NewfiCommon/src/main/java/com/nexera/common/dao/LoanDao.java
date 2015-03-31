@@ -99,4 +99,6 @@ public interface LoanDao extends GenericDao {
 
 	LoanDetail findLoanDetailOfLoan(Loan loan);
 
+	public void updateLoanEmail(int loanId, String generateLoanEmail);
+
 }

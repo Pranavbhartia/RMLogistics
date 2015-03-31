@@ -49,6 +49,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			Criteria criteria = session.createCriteria(User.class);
 			criteria.add(Restrictions.eq("emailId", userName));
 			criteria.add(Restrictions.eq("password", password));
+			criteria.add(Restrictions.eq("password", password));
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
 				throw new NoRecordsFetchedException(
@@ -163,8 +164,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '"
-		        + user.getFirstName() + "%' or email_id like '"+user.getEmailId()+"%'";
+		String searchQuery = "FROM User where ";
+		
+		if(user.getEmailId()!=null)
+			searchQuery += " email_id like '%"+user.getEmailId()+"%' or ";
+		
+		if(user.getFirstName()!=null)
+			user.setFirstName(user.getFirstName().toLowerCase());
+		else
+			user.setFirstName("");
+		searchQuery+=" lower(concat( first_name,',',last_name) ) like '%"
+		        + user.getFirstName() +"%'";
+		
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
