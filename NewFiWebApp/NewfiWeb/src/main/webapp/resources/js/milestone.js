@@ -1,5 +1,6 @@
 //Function to paint to loan progress page
 var countOfTasks = 0;
+var LOAN_MANAGER="Loan Manager";
 var workFlowContext = {
 	init : function(loanId) {
 		this.countOfTasks = 0;
@@ -291,7 +292,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				changeContainerClassBasedOnStatus(container,status);
 				var parentCheckBox=$(container).find(".ms-check-box-header");
 				parentCheckBox.attr("data-checked", getStatusClass(ob.workItem));
-				var parent=getStructuredParent(ob.workItem.id);
+				var parent=workFlowContext.getStructuredParent(ob.workItem.id);
 				for(var i=0;i<parent.childList.length;i++){
 					var childid=parent.childList[i].id;
 					var cntxt=workFlowContext.mileStoneContextList[childid];
@@ -1062,7 +1063,7 @@ function getContainerLftRghtClass(container){
 }
 function changeContainerClassBasedOnStatus(container,status){
 	clearStatusClass(container);
-	parentContainer.addClass(getParentStatusClass(status));
+	container.addClass(getParentStatusClass(status));
 }
 function appendMilestoneItem(workflowItem, childList) {
 
@@ -1131,12 +1132,17 @@ function appendMilestoneItem(workflowItem, childList) {
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
+			
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id
 			}).html(childList[index].displayContent);
+			if(childList[index].workflowItemType == "QC_STATUS"  && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == LOAN_MANAGER)
+			{
+				continue;
+			}
 			childRow.attr("WFchild",true);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
@@ -1209,7 +1215,7 @@ function milestoneChildEventHandler(event) {
 
 				
 		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
-		context.createTitleCompanyPopup();
+		context.createCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
 		event.stopPropagation();

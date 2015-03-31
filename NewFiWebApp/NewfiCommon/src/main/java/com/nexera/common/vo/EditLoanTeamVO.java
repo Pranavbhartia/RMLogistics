@@ -7,6 +7,8 @@ public class EditLoanTeamVO {
 	private Integer homeOwnInsCompanyID;
 	private Integer loanID;
 	private UserVO user;
+	private HomeOwnersInsuranceMasterVO homeOwnInsCompany;
+	private TitleCompanyMasterVO titleCompany;
 
 	public Boolean getOperationResult() {
 		return operationResult;
@@ -54,6 +56,22 @@ public class EditLoanTeamVO {
 
 	public void setHomeOwnInsCompanyID(Integer homeOwnInsCompanyID) {
 		this.homeOwnInsCompanyID = homeOwnInsCompanyID;
+	}
+
+	public HomeOwnersInsuranceMasterVO getHomeOwnInsCompany() {
+		return homeOwnInsCompany;
+	}
+
+	public void setHomeOwnInsCompany(HomeOwnersInsuranceMasterVO homeOwnInsCompany) {
+		this.homeOwnInsCompany = homeOwnInsCompany;
+	}
+
+	public TitleCompanyMasterVO getTitleCompany() {
+		return titleCompany;
+	}
+
+	public void setTitleCompany(TitleCompanyMasterVO titleCompany) {
+		this.titleCompany = titleCompany;
 	}
 
 }

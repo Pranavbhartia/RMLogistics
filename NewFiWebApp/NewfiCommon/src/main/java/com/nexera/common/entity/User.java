@@ -348,6 +348,7 @@ public class User implements Serializable, UserDetails {
 			userVO.setLastName(user.getLastName());
 			userVO.setPhoneNumber(user.getPhoneNumber());
 			userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+			userVO.setPassword(user.getPassword());
 			userVO.setId(user.getId());
 			userVO.setUserRole(UserRole.convertFromEntityToVO(user
 			        .getUserRole()));
@@ -374,10 +375,13 @@ public class User implements Serializable, UserDetails {
 		userModel.setId(userVO.getId());
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
-		userModel.setUsername(userVO.getEmailId().split(":")[0]);
-		userModel.setEmailId(userVO.getEmailId().split(":")[0]);
 
-		userModel.setPassword("abc123");
+		if (userVO.getEmailId() != null) {
+			userModel.setUsername(userVO.getEmailId().split(":")[0]);
+			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		}
+		//userModel.setPassword(userVO.getPassword());
+
 		userModel.setStatus(true);
 
 		userModel.setPhoneNumber(userVO.getPhoneNumber());

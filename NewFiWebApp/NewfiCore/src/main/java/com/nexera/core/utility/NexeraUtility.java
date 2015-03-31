@@ -50,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -553,6 +554,16 @@ public class NexeraUtility {
 		return null;
 	}
 	
+	
+	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
+		
+		StringBuffer stringBuf = new StringBuffer();
+		stringBuf.append("UUID : ").append(uuId);
+		stringBuf.append( " uploaded by : " );
+		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
+		 
+		return stringBuf.toString();
+	}
 	
 	
 }

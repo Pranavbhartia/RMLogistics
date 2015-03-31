@@ -136,4 +136,7 @@ public class Utils {
 	    
 	    return MessageFormat.format("{0}-{1}{2}", mongoMessageId, loanId, CommonConstants.SENDER_DOMAIN);
     }
+	public String generateLoanEmail(int loanId){
+		return loanId+CommonConstants.SENDER_DOMAIN;
+	}
 }

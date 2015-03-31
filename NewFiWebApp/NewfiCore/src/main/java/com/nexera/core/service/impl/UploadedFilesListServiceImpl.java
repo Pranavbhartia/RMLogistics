@@ -25,9 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-import com.google.gson.JsonObject;
-
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
@@ -373,6 +370,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		} catch (Exception e) {
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
+			e.printStackTrace();
 			return checkVo;
 		}
 		LOG.info("file.getOriginalFilename() : " + file.getName());
@@ -414,13 +412,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
          try {
         	 //TODO: Hard coded value. Get it from DB.
 			 documentVO.setDocumentType( "APPRAISAL DOCUMENT" );
-			 StringBuffer stringBuf = new StringBuffer();
-			 stringBuf.append(uuidValue);
-			 stringBuf.append( " uploaded by : " );
-
-			 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
+			 
 			 //TODO: Add logic to uniquely identify the file
-			 documentVO.setNotes( stringBuf.toString() );
+			 documentVO.setNotes( nexeraUtility.getUUIDBasedNoteForLQBDocument(uuidValue ,user ) );
 			 //TODO: Change logic to receive hte file path / file contents from invoker. We already have the stream.
 			 documentVO.setsDataContent( nexeraUtility.getContentFromFile(bytes) );
 			 documentVO.setsLoanNumber( loanService.getLoanByID( loanId ).getLqbFileId() );

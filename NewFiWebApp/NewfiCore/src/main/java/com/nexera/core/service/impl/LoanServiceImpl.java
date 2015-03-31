@@ -21,12 +21,15 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowExec;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
@@ -529,9 +532,12 @@ public class LoanServiceImpl implements LoanService {
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
 
-			
-			//TODO: Get the status from loanVO, set it in UI based on selection
-			
+			loan.setLoanProgressStatus(new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.NEW_LOAN));
+			// TODO: Get the status from loanVO, set it in UI based on
+			// selection. Currently hard coding to refinance
+			loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.REF));
+
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -540,7 +546,28 @@ public class LoanServiceImpl implements LoanService {
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			
+
+			List<UserVO> userList = loanVO.getLoanTeam();
+			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
+			// Check if loan team is null. If yes, add customer to the loan team
+			if (userList == null || userList.isEmpty()) {
+				LoanTeam e = new LoanTeam();
+				loanTeam.add(e);
+				e.setUser(user);
+				e.setLoan(loan);
+			} else {
+				// If loan team contains other users, then add those users to
+				// the team automatically.
+				for (UserVO userVO : userList) {
+					LoanTeam team = new LoanTeam();
+					User userTeam = User.convertFromVOToEntity(userVO);
+					team.setUser(userTeam);
+					team.setLoan(loan);
+				}
+			}
+
+			loan.setLoanTeam(loanTeam);
+
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -555,25 +582,12 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO createLoan(LoanVO loanVO) {
 
 		Loan loan = null;
-
+		// TODO: Also pass the LQBId
 		loan = completeLoanModel(loanVO);
 
-		
-		loanDao.save(loan);
-		List<UserVO> userList = loanVO.getLoanTeam();
+		int loanId = (int) loanDao.save(loan);
 
-		if (userList != null) {
-			userList.add(loanVO.getUser());
-
-			for (UserVO userVO : userList) {
-				User user = User.convertFromVOToEntity(userVO);
-				loanDao.addToLoanTeam(loan, user, null);
-			}
-		} else {
-
-			loanDao.addToLoanTeam(loan, loan.getUser(), null);
-
-		}
+		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 		return Loan.convertFromEntityToVO(loan);
 	}
 

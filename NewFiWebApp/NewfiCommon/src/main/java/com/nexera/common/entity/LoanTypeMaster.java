@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.nexera.common.enums.LoanTypeMasterEnum;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class LoanTypeMaster implements Serializable {
 
 	public LoanTypeMaster() {
 	}
+
+	public LoanTypeMaster(LoanTypeMasterEnum ref) {
+	    this.id = ref.getStatusId();
+    }
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

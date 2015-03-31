@@ -174,7 +174,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		 * criteria.createAlias("loanStatus", "ls");
 		 * criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
 		 */
-		return (Loan) criteria.uniqueResult();
+		Loan loan = (Loan) criteria.uniqueResult();
+		return loan;
 	}
 
 	@Override
@@ -183,8 +184,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
-			
-						
+
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 			List<LoanTeam> loanTeamList = criteria.list();
@@ -208,30 +208,27 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel)
-	{
-		try
-		{			
+	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel) {
+		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
-			Criteria criteria=session.createCriteria(Loan.class);
-						
-			loanListForUser=criteria.list();			
-			
+			Criteria criteria = session.createCriteria(Loan.class);
+
+			loanListForUser = criteria.list();
+
 			return loanListForUser;
-			
+
 		}
-		
+
 		catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
 			        "Exception caught in retrieveLoanForDashboard() ",
 			        hibernateException);
 		}
-		
-		
+
 	}
-	
+
 	@Override
 	public List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
 	        int loanProgressStatusId) {
@@ -300,7 +297,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Hibernate.initialize(loan.getLoanDetail());
 			Hibernate.initialize(loan.getLoanRates());
 			Hibernate.initialize(loan.getUser());
-			
+
 			Hibernate.initialize(loan.getLoanType());
 			Hibernate.initialize(loan.getLoanTeam());
 		}
@@ -348,21 +345,17 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
      * 
      */
 	@Override
-	public int retrieveUserRoleId(UserVO userVO)
-	{
+	public int retrieveUserRoleId(UserVO userVO) {
 		Session session = sessionFactory.getCurrentSession();
 		User user;
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userVO.getId()));
-		user=(User) criteria.uniqueResult();
+		user = (User) criteria.uniqueResult();
 		return user.getUserRole().getId();
-		
+
 	}
-	
+
 	@Override
-	
-	
-	
 	public List<Loan> getLoansForUser(Integer userID) {
 
 		Session session = sessionFactory.getCurrentSession();
@@ -407,7 +400,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return result;
 	}
 
-	
 	@Override
 	public List<LoanTypeMaster> getLoanTypeMater(
 	        LoanTypeMasterVO loanTypeMaterVO) {
@@ -513,28 +505,32 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return true;
 	}
 
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,String loanMilestoneMAsterName){
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+	        String loanMilestoneMAsterName) {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria masterCriteria = session.createCriteria(LoanMilestoneMaster.class);
+		Criteria masterCriteria = session
+		        .createCriteria(LoanMilestoneMaster.class);
 		masterCriteria.add(Restrictions.eq("name", loanMilestoneMAsterName));
-		LoanMilestoneMaster loanMilestoneMaster=(LoanMilestoneMaster) masterCriteria.uniqueResult();
+		LoanMilestoneMaster loanMilestoneMaster = (LoanMilestoneMaster) masterCriteria
+		        .uniqueResult();
 		Criteria criteria = session.createCriteria(LoanMilestone.class);
 		criteria.add(Restrictions.eq("loan", loan));
-		criteria.add(Restrictions.eq("loanMilestoneMaster", loanMilestoneMaster));
-		List<LoanMilestone> milestones=criteria.list();
-		if(milestones.size()>0){
+		criteria.add(Restrictions
+		        .eq("loanMilestoneMaster", loanMilestoneMaster));
+		List<LoanMilestone> milestones = criteria.list();
+		if (milestones.size() > 0) {
 			return milestones.get(0);
 		}
 		return null;
 	}
-	
-	
+
 	@Override
 	public List<Loan> getAllActiveLoan() {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Loan.class);
-		/*criteria.add(Restrictions.eq("user", user));
-		
+		/*
+		 * criteria.add(Restrictions.eq("user", user));
+		 * 
 		 * criteria.createAlias("loanStatus", "ls");
 		 * criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
 		 */
@@ -543,6 +539,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	/**
 	 * Returns the loandetail entitiy linked to a loan.
+	 * 
 	 * @param loan
 	 * @return
 	 */
@@ -556,32 +553,35 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Hibernate.initialize(loan.getLoanDetail());
 
 		return loan.getLoanDetail();
-		
+
 	}
-	
+
 	@Override
 	public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan(
 	        Loan loan) {
-		
-		LoanDetail detail=findLoanDetailOfLoan(loan);
-		if(detail==null)return null;
+
+		LoanDetail detail = findLoanDetailOfLoan(loan);
+		if (detail == null)
+			return null;
 		Hibernate.initialize(detail.getHomeOwnersInsurance());
-	    return detail.getHomeOwnersInsurance();
+		return detail.getHomeOwnersInsurance();
 	}
-	
+
 	@Override
 	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan) {
-		LoanDetail detail=findLoanDetailOfLoan(loan);
-		if(detail==null)return null;
+		LoanDetail detail = findLoanDetailOfLoan(loan);
+		if (detail == null)
+			return null;
 		Hibernate.initialize(detail.getTitleCompany());
-	    return detail.getTitleCompany();
+		return detail.getTitleCompany();
 	}
 
 	@Override
 	public boolean removeFromLoanTeam(Loan loan,
 	        HomeOwnersInsuranceMaster homeOwnIns) {
-		LoanDetail detail=this.findLoanDetailOfLoan(loan);
-		if(detail==null)return false;
+		LoanDetail detail = this.findLoanDetailOfLoan(loan);
+		if (detail == null)
+			return false;
 		detail.setHomeOwnersInsurance(null);
 		this.update(detail);
 		return true;
@@ -589,10 +589,22 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
 	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany) {
-		LoanDetail detail=this.findLoanDetailOfLoan(loan);
-		if(detail==null)return false;
+		LoanDetail detail = this.findLoanDetailOfLoan(loan);
+		if (detail == null)
+			return false;
 		detail.setTitleCompany(null);
 		this.update(detail);
 		return true;
+	}
+
+	@Override
+	public void updateLoanEmail(int loanId, String generateLoanEmail) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.loanEmailId = :EMAIL WHERE loan.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("EMAIL", generateLoanEmail);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+
 	}
 }
