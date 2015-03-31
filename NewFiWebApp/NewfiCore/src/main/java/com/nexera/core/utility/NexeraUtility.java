@@ -445,15 +445,21 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(UploadedFilesList uploadedFilesList)
+	public String getContentFromFile(byte[] bytes)
 	        throws IOException, Exception {
-		String s3pathOfFile =uploadedFilesList.getS3path();
-		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
-		        .getInputStreamFromFile(s3pathOfFile , String.valueOf(0)));
+		
+		
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
 
+	public byte[] getContentFromStream(InputStream stream) throws IOException, Exception {
+		
+		byte[] bytes = IOUtils.toByteArray(stream);
+		return bytes;
+	}
+	
+	
 	public File copyInputStreamToFile(InputStream in) throws IOException {
 		File file = null;
 		OutputStream out = null;

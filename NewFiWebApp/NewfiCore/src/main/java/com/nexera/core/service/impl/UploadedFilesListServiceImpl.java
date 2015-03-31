@@ -4,25 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.nexera.common.commons.Utils;
+import com.google.gson.JsonObject;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
@@ -45,6 +41,7 @@ import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
+import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
@@ -52,7 +49,6 @@ import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.LQBXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
-import com.nexera.workflow.utils.Util;
 
 @Component
 @Transactional
@@ -208,7 +204,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		String newFilepath = null;
 		newFilepath = nexeraUtility.joinPDDocuments(filePaths);
 		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath),
-		        loanId, userId, assignedBy);
+		        loanId, userId, assignedBy , null , null);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
@@ -219,7 +215,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 	
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
-	        Integer userId, Integer assignedBy) {
+	        Integer userId, Integer assignedBy , String lqbDocumentID , String uuidValue) {
 		
 		
 	/*
@@ -242,8 +238,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		
 		
 		//Upload file to S3, get S3 URL.
-		String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document",
-		        "complete");
+		/*String s3Path = s3FileUploadServiceImpl.uploadToS3(file, "document",
+		        "complete");*/
 		LOG.info("File Path : " + file.getPath());
 		String s3PathThumbNail = null;
 		String thumbPath = null;
@@ -287,15 +283,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		UploadedFilesList uploadedFilesList = new UploadedFilesList();
 		uploadedFilesList.setIsActivate(true);
 		uploadedFilesList.setIsAssigned(false);
-		uploadedFilesList.setS3path(s3Path);
+		
 		uploadedFilesList.setUploadedBy(user);
 		uploadedFilesList.setUploadedDate(new Date());
 		uploadedFilesList.setLoan(loan);
 		uploadedFilesList.setFileName(file.getName());
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		uploadedFilesList.setAssignedBy(assignByUser);
-		uploadedFilesList.setUuidFileId(nexeraUtility.randomStringOfLength());
+		uploadedFilesList.setUuidFileId(uuidValue);
 		uploadedFilesList.setTotalPages(splittedFiles.size());
+		uploadedFilesList.setLqbFileID(lqbDocumentID);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}
@@ -313,11 +310,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public CheckUploadVO uploadFile(File file, String contentType,
+	public CheckUploadVO uploadFile(File file, String contentType,byte[] bytes , 
 	        Integer userId, Integer loanId, Integer assignedBy) {
 		String s3Path = null;
-
+		
 		LOG.info("File content type  : " + contentType);
+		String lqbDocumentId = null;
 		String localFilePath = null;
 		Boolean fileUpload = false;
 		CheckUploadVO checkVo = new CheckUploadVO();
@@ -334,14 +332,32 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				localFilePath = nexeraUtility.uploadFileToLocal(file);
 				fileUpload = true;
 			}
+			
+			
 			//Upload succesfull
 			checkVo.setIsUploadSuccess(fileUpload);
 			if (fileUpload) {
+				
+				String uuidValue  = nexeraUtility.randomStringOfLength();
+				
+				//Send file to LQB
+				LQBResponseVO  lqbResponseVO = createLQBVO(userId, bytes, loanId , uuidValue);
+				if(lqbResponseVO.getResult().equalsIgnoreCase("OK")){
+					 //TODO: Write logic to call LQB service to get the document ID.
+					// lqbDocumentId = "ae52da11-fbde-4057-83d4-28eecb6c9847";
+					 LQBResponseVO responseVO = getAllDocumentsFromLQBByUUID(loanService.getLoanByID( loanId ).getLqbFileId());
+					 
+					 lqbDocumentId = fetchDocumentIDByUUID(responseVO , uuidValue);
+					 
+					 //updateLQBDocumentInUploadNeededFile(lqbDocumentId , fileId);
+					
+				 }
+				
 
 				File serverFile = new File(localFilePath);
 				//Upload the file to S3. Insert in to File table 
 				Integer savedRowId = addUploadedFilelistObejct(serverFile,
-				        loanId, userId, assignedBy);
+				        loanId, userId, assignedBy , lqbDocumentId , uuidValue);
 				LOG.info("Added File document row : " + savedRowId);
 				checkVo.setUploadFileId(savedRowId);
 				
@@ -365,6 +381,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return checkVo;
 	}
 
+	
+	
+	
+	
+	
+	
 	@Override
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO) {
 		LQBResponseVO lqbResponseVO = null;
@@ -375,25 +397,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
             JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
             LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
             
-            
-            
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-     		try {
-
-     			// get a new instance of parser
-     			SAXParser sp = spf.newSAXParser();
-     			LQBXMLHandler handler = new LQBXMLHandler();
-     			// parse the file and also register this class for call backs
-     			sp.parse(new InputSource(new StringReader(receivedResponse.getString("responseMessage"))), handler);
-     			lqbResponseVO = handler.getLqbResponseVO();
-     			LOG.info(" parsed lqbResponseVO : "+lqbResponseVO.getResult());
-     		} catch (SAXException se) {
-     			se.printStackTrace();
-     		} catch (ParserConfigurationException pce) {
-     			pce.printStackTrace();
-     		} catch (IOException ie) {
-     			ie.printStackTrace();
-     		}
+            lqbResponseVO =  parseLQBXMLResponse(receivedResponse);
              
 		 }
 		return lqbResponseVO;
@@ -403,29 +407,26 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	
 
     
-    public void createLQBVO(Integer usrId , Integer fileId , Integer loanId) {
+    public LQBResponseVO createLQBVO(Integer usrId , byte[] bytes , Integer loanId , String uuidValue) {
     	 UserVO user = userProfileService.findUser(usrId); 
          LQBDocumentVO documentVO = new LQBDocumentVO();
+         LQBResponseVO lqbResponseVO = null;
          try {
         	 //TODO: Hard coded value. Get it from DB.
 			 documentVO.setDocumentType( "APPRAISAL DOCUMENT" );
 			 StringBuffer stringBuf = new StringBuffer();
-			
+			 stringBuf.append(uuidValue);
 			 stringBuf.append( " uploaded by : " );
 
 			 stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
 			 //TODO: Add logic to uniquely identify the file
 			 documentVO.setNotes( stringBuf.toString() );
 			 //TODO: Change logic to receive hte file path / file contents from invoker. We already have the stream.
-			 documentVO.setsDataContent( nexeraUtility.getContentFromFile( uploadedFilesListDao.fetchUsingFileId(fileId) ) );
+			 documentVO.setsDataContent( nexeraUtility.getContentFromFile(bytes) );
 			 documentVO.setsLoanNumber( loanService.getLoanByID( loanId ).getLqbFileId() );
 
-			 LQBResponseVO lqbResponseVO = uploadDocumentInLandingQB( documentVO );
-			 if(lqbResponseVO.getResult().equalsIgnoreCase("OK")){
-				 //TODO: Write logic to call LQB service to get the document ID.
-				 String lqbDocumentId = "ae52da11-fbde-4057-83d4-28eecb6c9847";
-				 updateLQBDocumentInUploadNeededFile(lqbDocumentId , fileId);
-			 }
+			 lqbResponseVO = uploadDocumentInLandingQB( documentVO );
+			 
 			
 		}  catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -433,6 +434,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			// TODO save exception in error block
 		}
          LOG.info( "Assignment : uploadDocumentInLandingQB " + documentVO );
+		return lqbResponseVO;
     }
 
 	
@@ -447,7 +449,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
         JSONObject json = new JSONObject();
         JSONObject jsonChild = new JSONObject();
         try {
-            jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLoanNumber() );
+        	jsonChild.put( WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER, documentVO.getsLoanNumber() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE, documentVO.getDocumentType() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_NOTES, documentVO.getNotes() );
             jsonChild.put( WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT, documentVO.getsDataContent() );
@@ -465,7 +467,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public CheckUploadVO uploadFileByEmail(InputStream stream,
 	        String contentType, Integer userId, Integer loanId,
-	        Integer assignedBy) throws IOException, COSVisitorException {
+	        Integer assignedBy) throws Exception {
 		File file = nexeraUtility.convertInputStreamToFile(stream);
 		CheckUploadVO checkUploadVO = null;
 		if (file != null) {
@@ -478,11 +480,75 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			else if (contentType.contains("image/tiff"))
 				contentType = "image/tiff";
 
-			checkUploadVO = uploadFile(file, contentType, userId, loanId,
+			checkUploadVO = uploadFile(file, contentType, nexeraUtility.getContentFromStream(stream) ,userId, loanId,
 			        assignedBy);
 			return checkUploadVO;
 		}
 
 		return checkUploadVO;
 	}
+
+	@Override
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO) {
+		LQBResponseVO lqbResponseVO = null;
+		if(lqbDocumentVO != null){
+			JSONObject uploadObject = createUploadPdfDocumentJsonObject(
+	                 WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER, lqbDocumentVO );
+	        JSONObject receivedResponse = lqbInvoker.invokeLqbService( uploadObject.toString() );
+	        LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+	        lqbResponseVO =  parseLQBXMLResponse(receivedResponse);
+		}
+		
+		return lqbResponseVO;
+	}
+
+	@Override
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber) {
+		
+		LQBDocumentVO lqbDocumentVO = new LQBDocumentVO();
+		lqbDocumentVO.setsLoanNumber(loanNumber);
+		return fetchLQBDocument(lqbDocumentVO);
+		
+	}
+	
+	
+	
+	private LQBResponseVO parseLQBXMLResponse(JSONObject receivedResponse){
+		LQBResponseVO lqbResponseVO = null;
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+   		try {
+
+   			// get a new instance of parser
+   			SAXParser sp = spf.newSAXParser();
+   			LQBXMLHandler handler = new LQBXMLHandler();
+   			// parse the file and also register this class for call backs
+   			sp.parse(new InputSource(new StringReader(receivedResponse.getString("responseMessage"))), handler);
+   			lqbResponseVO = handler.getLqbResponseVO();
+   			LOG.info(" parsed lqbResponseVO : "+lqbResponseVO.getResult());
+   		} catch (SAXException se) {
+   			se.printStackTrace();
+   		} catch (ParserConfigurationException pce) {
+   			pce.printStackTrace();
+   		} catch (IOException ie) {
+   			ie.printStackTrace();
+   		}
+		return lqbResponseVO;
+	}
+	
+	
+	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId){
+		
+		if(lqbResponseVO == null){
+			return null;
+		}else{
+			List<LQBedocVO> lqBedocVOs = lqbResponseVO.getDocumentResponseListVOs().getvBedocVO();
+			for (LQBedocVO lqBedocVO : lqBedocVOs) {
+				if(lqBedocVO.getDescription().startsWith(uuId)){
+					return lqBedocVO.getDocid();
+				}
+			}
+		}
+		return null;
+	}
+	
 }

@@ -1,11 +1,10 @@
 package com.nexera.common.vo.lqb;
 
-import java.util.List;
 
 public class LQBResponseVO {
 
 	private String result ;
-	private List<LQBDocumentResponseListVO> documentResponseListVOs;
+	private LQBDocumentResponseListVO documentResponseListVOs;
 
 	public String getResult() {
 		return result;
@@ -15,12 +14,13 @@ public class LQBResponseVO {
 		this.result = result;
 	}
 
-	public List<LQBDocumentResponseListVO> getDocumentResponseListVOs() {
+	public LQBDocumentResponseListVO getDocumentResponseListVOs() {
 		return documentResponseListVOs;
 	}
 
-	public void setDocumentResponseListVOs(List<LQBDocumentResponseListVO> documentResponseListVOs) {
+	public void setDocumentResponseListVOs(LQBDocumentResponseListVO documentResponseListVOs) {
 		this.documentResponseListVOs = documentResponseListVOs;
 	}
-	
+
+
 }

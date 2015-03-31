@@ -35,7 +35,7 @@ public interface UploadedFilesListService {
 	        COSVisitorException;
 
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
-	        Integer userId, Integer assignedBy);
+	        Integer userId, Integer assignedBy , String lqbDocumentID , String uuidValue);
 
 	void updateIsAssignedToTrue(List<Integer> fileIds);
 
@@ -47,11 +47,17 @@ public interface UploadedFilesListService {
 
 	public CheckUploadVO uploadFileByEmail(InputStream stream, String content,
 	        Integer userId, Integer loanId, Integer assignedBy)
-	        throws IOException, COSVisitorException;
+	        throws IOException, COSVisitorException, Exception;
 
-	public CheckUploadVO uploadFile(File file, String contentType,
+	public CheckUploadVO uploadFile(File file, String contentType, byte[] bytes,
 	        Integer userId, Integer loanId, Integer assignedBy);
 
-	public void createLQBVO(Integer userID , Integer uploadFileId, Integer loanId);
+	public LQBResponseVO createLQBVO(Integer userID , byte[] bytes, Integer loanId , String createLQBVO);
+	
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO);
+	
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber);
+	
+	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId);
 
 }
