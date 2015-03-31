@@ -146,7 +146,7 @@ public class RestInterceptor implements Callable
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID ) ) {
             LOG.debug( "Operation Chosen Was UploadPDFDocument " );
 
-            inputParams = new String[5];
+            inputParams = new String[2];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getGuid();
 
