@@ -143,6 +143,13 @@ public class RestInterceptor implements Callable
             inputParams[2] = restParameters.getLoanVO().getDocumentType();
             inputParams[3] = restParameters.getLoanVO().getNotes();
             inputParams[4] = restParameters.getLoanVO().getsDataContent();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID ) ) {
+            LOG.debug( "Operation Chosen Was UploadPDFDocument " );
+
+            inputParams = new String[5];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getGuid();
+
         }
         return inputParams;
     }

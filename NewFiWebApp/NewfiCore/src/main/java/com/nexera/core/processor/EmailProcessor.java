@@ -90,7 +90,7 @@ public class EmailProcessor implements Runnable {
 				        fromAddressString.indexOf("<") + 1,
 				        fromAddressString.indexOf(">")).trim();
 			User uploadedByUser = userProfileService
-			        .findUserByMail(fromAddressString); 
+			        .findUserByMail(fromAddressString);
 			String toAddressString = toAddress[0].toString();
 			String messageId = null;
 			String loanId = null;
@@ -118,9 +118,19 @@ public class EmailProcessor implements Runnable {
 			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
 			String emailBody = getEmailBody(mimeMessage);
 			LOGGER.debug("Body of the email is " + emailBody);
-			extractAttachmentAndUploadEverything(emailBody, loanVO,
-			        uploadedByUser, loanVO.getUser(), mimeMessage, messageId,
-			        sendEmail);
+			if (loanVO != null) {
+				if (uploadedByUser != null) {
+
+					extractAttachmentAndUploadEverything(emailBody, loanVO,
+					        uploadedByUser, loanVO.getUser(), mimeMessage,
+					        messageId, sendEmail);
+
+				} else {
+					LOGGER.error("user who uploaded not found in database");
+				}
+			} else {
+				LOGGER.error("Not a valid loan entry ");
+			}
 		} catch (MessagingException e) {
 
 		}

@@ -39,6 +39,8 @@ public class LoanVO
 
     private BigDecimal requestedFee;
 
+    private String guid;
+
 
     /**
      * @return the sTicket
@@ -271,6 +273,24 @@ public class LoanVO
     public void setRequestedRate( BigDecimal requestedRate )
     {
         this.requestedRate = requestedRate;
+    }
+
+
+    /**
+     * @return the guid
+     */
+    public String getGuid()
+    {
+        return guid;
+    }
+
+
+    /**
+     * @param guid the guid to set
+     */
+    public void setGuid( String guid )
+    {
+        this.guid = guid;
     }
 
 }
