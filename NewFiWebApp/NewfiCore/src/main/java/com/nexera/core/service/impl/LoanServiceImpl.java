@@ -532,11 +532,12 @@ public class LoanServiceImpl implements LoanService {
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
 
+			// Always, the loan state will be new Loan
 			loan.setLoanProgressStatus(new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.NEW_LOAN));
-			// TODO: Get the status from loanVO, set it in UI based on
-			// selection. Currently hard coding to refinance
-			loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.REF));
+
+			loan.setLoanType(LoanTypeMaster.convertVoToEntity(loanVO
+			        .getLoanType()));
 
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
