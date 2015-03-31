@@ -2,6 +2,8 @@ package com.nexera.common.vo;
 
 import java.io.Serializable;
 
+import com.nexera.common.entity.CustomerDetail;
+
 public class CustomerDetailVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -115,6 +117,32 @@ public class CustomerDetailVO implements Serializable {
 		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
 
+	public static CustomerDetailVO convertFromEntityToVO(
+	        CustomerDetail customerDetail) {
+
+		if (customerDetail == null)
+			return null;
+
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+
+		customerDetailVO.setId(customerDetail.getId());
+		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+		customerDetailVO.setAddressState(customerDetail.getAddressState());
+		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
+		if (null != customerDetail.getDateOfBirth())
+			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
+			        .getTime());
+		customerDetailVO.setProfileCompletionStatus(customerDetail
+		        .getProfileCompletionStatus());
+		customerDetailVO.setSsn(customerDetail.getSsn());
+		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
+		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
+		customerDetailVO.setSubscriptionsStatus(customerDetail
+		        .getSubscriptionsStatus());
+
+		return customerDetailVO;
+
+	}
 
 
 }

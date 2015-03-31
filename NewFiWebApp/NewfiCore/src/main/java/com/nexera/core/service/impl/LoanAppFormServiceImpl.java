@@ -1,29 +1,22 @@
 package com.nexera.core.service.impl;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
-import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.GovernmentQuestion;
-
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.GovernmentQuestionVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
-import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.RefinanceVO;
-import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -86,7 +79,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			 return null;
 		 
 		 LoanAppForm loanAppForm = new LoanAppForm ();
-		 loanAppForm.setUser(userProfileService.parseUserModel(loaAppFormVO.getUser()));
+		loanAppForm.setUser(User.convertFromVOToEntity(loaAppFormVO.getUser()));
 		 loanAppForm.setLoan(loanService.parseLoanModel(loaAppFormVO.getLoan()));
 		 
 		 return loanAppForm;
@@ -101,8 +94,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 LoanAppFormVO loanAppFormVO = convertTOLoanAppFormVOCore(loanAppForm);
 		 
 		 
-		 loanAppFormVO.setUser(userProfileService.convertTOUserVO(loanAppForm.getUser()));
-		 loanAppFormVO.setLoan(loanService.convertIntoLoanVO(loanAppForm.getLoan()));
+		loanAppFormVO
+		        .setUser(User.convertFromEntityToVO(loanAppForm.getUser()));
+		loanAppFormVO
+		        .setLoan(Loan.convertFromEntityToVO(loanAppForm.getLoan()));
 		 loanAppFormVO.setPropertyTypeMaster(convertTOPropertyTypeMasterVO(loanAppForm.getPropertyTypeMaster()));
 		 
 		 loanAppFormVO.setGovernmentquestion(convertTOGovernmentquestionVO(loanAppForm.getGovernmentquestion()));
