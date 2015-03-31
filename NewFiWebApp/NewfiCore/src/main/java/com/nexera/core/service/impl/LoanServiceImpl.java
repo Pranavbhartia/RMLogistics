@@ -21,7 +21,6 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
@@ -530,11 +529,9 @@ public class LoanServiceImpl implements LoanService {
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
 
-			List<LoanStatusMaster> list = loanDao.getLoanStatusMaster(loanVO
-			        .getLoanStatus());
-			List<LoanTypeMaster> loanTypeList = loanDao.getLoanTypeMater(loanVO
-			        .getLoanType());
-
+			
+			//TODO: Get the status from loanVO, set it in UI based on selection
+			
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -543,16 +540,7 @@ public class LoanServiceImpl implements LoanService {
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			if (list != null) {
-				for (LoanStatusMaster loanStatusMaster : list) {
-					loan.setLoanStatus(loanStatusMaster);
-				}
-			}
-			if (loanTypeList != null) {
-				for (LoanTypeMaster loanTypeMaster : loanTypeList) {
-					loan.setLoanType(loanTypeMaster);
-				}
-			}
+			
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -570,6 +558,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loan = completeLoanModel(loanVO);
 
+		
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
 

@@ -23,14 +23,12 @@ import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
-import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.UserVO;
 
@@ -302,7 +300,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Hibernate.initialize(loan.getLoanDetail());
 			Hibernate.initialize(loan.getLoanRates());
 			Hibernate.initialize(loan.getUser());
-			Hibernate.initialize(loan.getLoanStatus());
+			
 			Hibernate.initialize(loan.getLoanType());
 			Hibernate.initialize(loan.getLoanTeam());
 		}
@@ -409,15 +407,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return result;
 	}
 
-	@Override
-	public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO) {
-		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(LoanStatusMaster.class);
-		criteria.add(Restrictions.eq("id", loanVO.getId()));
-		List<LoanStatusMaster> loanList = criteria.list();
-		return loanList;
-	}
-
+	
 	@Override
 	public List<LoanTypeMaster> getLoanTypeMater(
 	        LoanTypeMasterVO loanTypeMaterVO) {

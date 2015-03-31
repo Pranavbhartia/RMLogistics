@@ -48,7 +48,7 @@ public class Loan implements Serializable
     private User user;
     private LoanTypeMaster loanType;
     private LoanProgressStatusMaster loanProgressStatus;
-    private LoanStatusMaster loanStatus;
+    
     private PropertyTypeMaster propertyType;
     private LoanMilestoneMaster currentLoanMilestone;
     private List<LoanAppForm> loanAppForms;
@@ -225,19 +225,7 @@ public class Loan implements Serializable
     }
 
 
-    // bi-directional many-to-one association to LoanStatusMaster
-    @ManyToOne ( fetch = FetchType.LAZY)
-    @JoinColumn ( name = "loan_status")
-    public LoanStatusMaster getLoanStatus()
-    {
-        return loanStatus;
-    }
-
-
-    public void setLoanStatus( LoanStatusMaster loanStatus )
-    {
-        this.loanStatus = loanStatus;
-    }
+   
 
 
     // bi-directional many-to-one association to PropertyTypeMaster
@@ -620,8 +608,7 @@ public class Loan implements Serializable
 		loanVo.setCreatedDate(loan.getCreatedDate());
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setName(loan.getName());
-		if (loan.getLoanStatus() != null)
-			loanVo.setStatus(loan.getLoanStatus().getLoanStatusCd());
+		
 		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
 		List<UserVO> loanTeam = new ArrayList<UserVO>();
 		for (LoanTeam team : loan.getLoanTeam()) {
