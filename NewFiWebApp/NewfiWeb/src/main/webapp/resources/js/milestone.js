@@ -118,6 +118,16 @@ var workFlowContext = {
 		}
 		ob.mileStoneStepsStructured=finalList;
 	},
+	getStructuredParent:function(parentId){
+		var ob=this;
+		for(var i=0;i<ob.mileStoneStepsStructured.length;i++){
+			var parent=ob.mileStoneStepsStructured[i];
+			if(parent.id==parentId){
+				return ob.mileStoneStepsStructured[i];
+			}
+		}
+		return null;
+	},
 	checkIfChild : function(workflowItem) {
 		var ob = this;
 		if (workflowItem.parentWorkflowItemExec != null)
@@ -178,7 +188,12 @@ var workFlowContext = {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
-				ob.mileStoneSteps = response.resultObject;
+				for(var key in response.resultObject){
+					if(response.resultObject[key]!=""){
+						var contxt=workFlowContext.mileStoneContextList[key];
+						contxt.updateMilestoneView(response.resultObject[key]);
+					}
+				}
 			}
 			if (callback) {
 				callback(ob);
@@ -188,7 +203,10 @@ var workFlowContext = {
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			ob.getMileStoneSteps(role, function(ob) {
-				ob.renderMileStoneSteps();
+				ob.renderMileStoneSteps(function(){
+					ob.structureParentChild();
+					ob.fetchLatestStatus();
+				});
 			});
 		});
 
@@ -263,7 +281,49 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		mileStoneId : mileStoneId,
 		workItem : workItem,
 		stateInfoContainer:undefined,
-	
+		updateMilestoneView:function(status,callback){
+			var ob=this;
+			ob.workItem.status=status;
+			var container=$("#WF"+ob.workItem.id);
+			var parentChk=container.attr("WFparent");
+			var childChk=container.attr("WFchild");
+			if(parentChk){
+				changeContainerClassBasedOnStatus(container,status);
+				var parentCheckBox=$(container).find(".ms-check-box-header");
+				parentCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parent=getStructuredParent(ob.workItem.id);
+				for(var i=0;i<parent.childList.length;i++){
+					var childid=parent.childList[i].id;
+					var cntxt=workFlowContext.mileStoneContextList[childid];
+					if(cntxt.workItem.status!="3"){
+						cntxt.updateMilestoneView(status);
+					}
+				}
+			}else{
+				var childCheckBox=$(container).find(".ms-check-box");
+				childCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parentid=ob.workItem.parentWorkflowItemExec.id;
+				var parentContainer=$("#WF"+parentid);
+				var childs=parentContainer.find("div."+getContainerLftRghtClass(parentContainer)+"-text");
+				var childsChecked=true;
+				for(var i=0;i<childs.length;i++){
+					var child=childs[i];
+					var childCheckbox=$(child).find(".ms-check-box");
+					if($(childCheckbox).attr("data-checked")=="unchecked"){
+						childsChecked=false;
+					}
+				}
+				if(childsChecked){
+					var parentCheckBox=parentContainer.find(".ms-check-box-header");
+					$(parentCheckBox).attr("data-checked","checked");
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-complete");
+				}else{
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-in-progress");
+				}
+			}
+		},
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
@@ -972,6 +1032,28 @@ function getStatusClass(workflowItem){
 		case "3":
 			return "checked";
 	}
+}
+function getParentStatusClass(status){
+	switch(status){
+		case "0":
+			return "m-not-started";
+		case "1":
+			return "m-in-progress";
+		case "2":
+			return "m-in-progress";
+		case "3":
+			return "m-complete";
+	}
+}
+function getContainerLftRghtClass(container){
+	if(container.hasClass("milestone-lc"))
+		return "milestone-lc";
+	else if(container.hasClass("milestone-rc"))
+		return "milestone-rc";
+}
+function changeContainerClassBasedOnStatus(container,status){
+	clearStatusClass(container);
+	parentContainer.addClass(getParentStatusClass(status));
 }
 function appendMilestoneItem(workflowItem, childList) {
 
