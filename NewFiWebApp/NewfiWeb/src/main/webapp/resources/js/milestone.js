@@ -1,5 +1,6 @@
 //Function to paint to loan progress page
 var countOfTasks = 0;
+var LOAN_MANAGER="Loan Manager";
 var workFlowContext = {
 	init : function(loanId) {
 		this.countOfTasks = 0;
@@ -1131,12 +1132,17 @@ function appendMilestoneItem(workflowItem, childList) {
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
+			
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id
 			}).html(childList[index].displayContent);
+			if(childList[index].workflowItemType == "QC_STATUS"  && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == LOAN_MANAGER)
+			{
+				continue;
+			}
 			childRow.attr("WFchild",true);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
