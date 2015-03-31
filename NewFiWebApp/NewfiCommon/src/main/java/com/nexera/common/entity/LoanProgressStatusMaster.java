@@ -28,6 +28,9 @@ public class LoanProgressStatusMaster
     private String loanProgressStatus;
     private List<Loan> loans;
     
+    public LoanProgressStatusMaster() {
+	    // TODO Auto-generated constructor stub
+    }
     
     public LoanProgressStatusMaster(LoanProgressStatusMasterEnum newLoan) {
 	    // TODO Auto-generated constructor stub
