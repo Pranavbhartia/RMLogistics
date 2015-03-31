@@ -27,7 +27,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
 		</component>
-
+		<message-properties-transformer>
+			<add-message-property key="http.version" value="HTTP/1.0" />
+		</message-properties-transformer>
 		<choice doc:name="Choice">
 			<when expression="#[message.outboundProperties.'opName'=='RunQuickPricer']">
 				<cxf:jaxws-client operation="RunQuickPricer"
@@ -102,7 +104,8 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
 					doc:name="HTTP" responseTimeout="120000" />
 			</when>
-			<when expression="#[message.outboundProperties.'opName'=='DownloadEdocsPdfById']">
+			<when
+				expression="#[message.outboundProperties.'opName'=='DownloadEdocsPdfById']">
 				<cxf:jaxws-client operation="DownloadEdocsPdfById"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"

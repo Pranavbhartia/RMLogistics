@@ -29,6 +29,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="appViewRestInterceptor" />
 		</component>
+		<message-properties-transformer>
+			<add-message-property key="http.version" value="HTTP/1.0" />
+		</message-properties-transformer>
 		<choice doc:name="Choice">
 			<when expression="#[message.outboundProperties.'opName'=='GetPmlLoanUrl']">
 				<cxf:jaxws-client operation="GetPmlPipelineUrl"
