@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.nexera.workflow.Constants.WorkflowConstants;
@@ -49,6 +50,7 @@ public class EngineTrigger {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	@Transactional
 	public Integer triggerWorkFlow(String workflowJsonString) {
 		LOGGER.debug("Triggering a workflow ");
 		WorkflowMaster workflowMaster = null;
@@ -69,11 +71,10 @@ public class EngineTrigger {
 				        .getWorkflowItemMasterListByWorkflowMaster(workflowMaster);
 				for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
 					LOGGER.debug("Initializing all workflow items ");
-					// TODO test this
-					/*
-					 * if (!workflowService
-					 * .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
-					 */
+					if (workflowService
+					        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
+						continue;
+					}
 
 					if (!workflowItemMaster.getChildWorkflowItemMasterList()
 					        .isEmpty()) {
