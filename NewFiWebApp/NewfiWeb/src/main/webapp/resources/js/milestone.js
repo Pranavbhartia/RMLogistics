@@ -291,7 +291,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				changeContainerClassBasedOnStatus(container,status);
 				var parentCheckBox=$(container).find(".ms-check-box-header");
 				parentCheckBox.attr("data-checked", getStatusClass(ob.workItem));
-				var parent=getStructuredParent(ob.workItem.id);
+				var parent=workFlowContext.getStructuredParent(ob.workItem.id);
 				for(var i=0;i<parent.childList.length;i++){
 					var childid=parent.childList[i].id;
 					var cntxt=workFlowContext.mileStoneContextList[childid];
@@ -1062,7 +1062,7 @@ function getContainerLftRghtClass(container){
 }
 function changeContainerClassBasedOnStatus(container,status){
 	clearStatusClass(container);
-	parentContainer.addClass(getParentStatusClass(status));
+	container.addClass(getParentStatusClass(status));
 }
 function appendMilestoneItem(workflowItem, childList) {
 
