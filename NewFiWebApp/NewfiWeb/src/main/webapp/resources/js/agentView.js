@@ -1177,6 +1177,12 @@ function paintUserNameDropDown(values,hideAddUser) {
 			dropdownCont.append(dropDownRow);
 		}
 	}
+	else if(hideAddUser){
+		var dropDownRow = $('<div>').attr({
+			"class" : "add-member-dropdown-row"
+		}).html("No results found.");
+		dropdownCont.append(dropDownRow);
+	}
 	
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
