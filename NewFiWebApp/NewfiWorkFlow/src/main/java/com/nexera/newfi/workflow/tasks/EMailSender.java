@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
@@ -70,7 +71,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 			makeANote(loanId, LoanStatus.sysEduMessage);
 
 		}
-		return WorkflowDisplayConstants.WORKFLOW_TASK_SUCCESS;
+		return WorkflowConstants.SUCCESS;
 	}
 
 	public Object[] getParamsForExecute() {
