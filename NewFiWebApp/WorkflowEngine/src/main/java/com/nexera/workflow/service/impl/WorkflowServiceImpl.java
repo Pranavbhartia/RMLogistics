@@ -234,5 +234,16 @@ public class WorkflowServiceImpl implements WorkflowService
 
 	}
 
+	@Transactional
+	public WorkflowItemMaster getWorkflowByType(String workflowType) {
+		return workflowMasterDao.getWorkflowByType(workflowType);
+	}
+
+	@Transactional
+	public WorkflowItemExec getWorkflowItemExecByType(
+			WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
+		return workflowMasterDao.getWorkflowItemExecByType(workflowExec,
+				workflowItemMaster);
+	}
 
 }
