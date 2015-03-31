@@ -89,6 +89,11 @@ public class LoanRestService {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
+		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		if (userID != null && userID > 0) {
 			UserVO user = new UserVO();
 			user.setId(userID);
@@ -96,33 +101,31 @@ public class LoanRestService {
 			if (result) {
 				user = userProfileService.loadInternalUser(userID);
 			}
-			EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
 			editLoanTeamVO.setOperationResult(result);
-			editLoanTeamVO.setUserID(userID);
-			editLoanTeamVO.setLoanID(loanID);
 			editLoanTeamVO.setUser(user);
-			CommonResponseVO responseVO = RestUtil
-			        .wrapObjectForSuccess(editLoanTeamVO);
-
-			return responseVO;
+			
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
-
-			return responseVO;
+			editLoanTeamVO.setTitleCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
-
-			return responseVO;
+			editLoanTeamVO.setHomeOwnInsCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else
 			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+		
+		
+		CommonResponseVO responseVO = RestUtil
+		        .wrapObjectForSuccess(editLoanTeamVO);
+
+		return responseVO;
 
 	}
 

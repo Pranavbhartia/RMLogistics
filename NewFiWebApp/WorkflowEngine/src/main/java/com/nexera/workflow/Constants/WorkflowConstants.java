@@ -3,7 +3,6 @@
  */
 package com.nexera.workflow.Constants;
 
-
 /**
  * @author Utsav T
  */
@@ -12,7 +11,7 @@ public class WorkflowConstants {
 
 	public static final String POOL_SIZE = "pool.size";
 
-	public static final String SUCCESS = "3";
+	public static final String SUCCESS = "success";
 
 	public static final String FAILURE = "failure";
 
@@ -61,6 +60,5 @@ public class WorkflowConstants {
 
 	public static final String WORKFLOW_ITEM_1003_COMPLETE = "1003_COMPLETE";
 	public static final String WORKFLOW_ITEM_1003_DISPLAY = "1003_DISPLAY";
-
 
 }

@@ -261,7 +261,7 @@ public class WorkflowRestService {
 			String result = engineTrigger
 					.invokeActionMethod(workflowItemId);
 
-			response = RestUtil.wrapObjectForSuccess(result);
+			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
@@ -270,6 +270,18 @@ public class WorkflowRestService {
 		return response;
 	}
 
+	private String mapStatus(String status){
+		switch(status){
+		case "3":
+			return "success";
+		case "success":
+			return "success";
+		case "2":
+			return "";
+		default : 
+			return "";
+		}
+	}
 	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getRenderStateInfoOfItem(
 	        @PathVariable int workflowId,
