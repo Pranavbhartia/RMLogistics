@@ -27,9 +27,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
-import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
@@ -61,7 +59,7 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanMilestoneMasterDao loanMilestoneMasterDao;
-	
+
 	@Autowired
 	WorkflowCoreService workflowCoreService;
 
@@ -492,19 +490,10 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
 
 		Hibernate.initialize(loan.getCustomerWorkflow());
-		WorkflowExec wFItem = loan.getCustomerWorkflow();
-		if (loan.getCustomerWorkflow() == null) {
-			wFItem = new WorkflowExec();
-		}
-		wFItem.setId(customerWorkflowID);
-		loan.setCustomerWorkflow(wFItem);
-		Hibernate.initialize(loan.getLoanManagerWorkflow());
-		WorkflowExec wFItem1 = loan.getLoanManagerWorkflow();
-		if (wFItem1 == null) {
-			wFItem1 = new WorkflowExec();
-		}
-		wFItem1.setId(loanManagerWFID);
-		loan.setLoanManagerWorkflow(wFItem1);
+
+		loan.setCustomerWorkflow(customerWorkflowID);
+
+		loan.setLoanManagerWorkflow(loanManagerWFID);
 		loanDao.save(loan);
 	}
 
@@ -594,7 +583,7 @@ public class LoanServiceImpl implements LoanService {
 		int loanId = (int) loanDao.save(loan);
 
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
-		//Invoking the workflow activities to trigger
+		// Invoking the workflow activities to trigger
 		workflowCoreService.createWorkflow(new WorkflowVO(loanId));
 		return Loan.convertFromEntityToVO(loan);
 	}
