@@ -37,6 +37,9 @@ public class CheckUserProfileBatch  extends QuartzJobBean{
 			if(profilePicture != null){
 				//change status of user's profile pic in locan progress
 				LOGGER.info("updating user with id : "+user.getId());
+				//mark work flow as complete 
+				
+				
 			}
 			
 		}

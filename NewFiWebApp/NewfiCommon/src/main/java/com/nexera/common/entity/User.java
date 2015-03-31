@@ -24,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.UserVO;
 
 /**
@@ -364,15 +365,13 @@ public class User implements Serializable, UserDetails {
 		return userVO;
 	}
 
-
-
 	public static User convertFromVOToEntity(UserVO userVO) {
 
 		if (userVO == null)
 			return null;
 		User userModel = new User();
 
-		// userModel.setId(userVO.getId());
+		userModel.setId(userVO.getId());
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
 		userModel.setUsername(userVO.getEmailId().split(":")[0]);
@@ -386,14 +385,21 @@ public class User implements Serializable, UserDetails {
 
 		userModel.setUserRole(UserRole.convertFromVOToEntity(userVO
 		        .getUserRole()));
-		CustomerDetail customerDetail = new CustomerDetail();
-		customerDetail.setSubscriptionsStatus(2);
-
-		userModel.setCustomerDetail(customerDetail);
+		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		        .getRoleId()) {
+			
+			userModel.setCustomerDetail(CustomerDetail
+			        .convertFromVOToEntity(userVO.getCustomerDetail()));
+		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
+		if (userModel.getUserRole().getId() == UserRolesEnum.REALTOR
+		        .getRoleId()) {
+			userModel.setRealtorDetail(RealtorDetail
+			        .convertFromVOToEntity(userVO.getRealtorDetail()));
+		}
+
 		return userModel;
 	}
-
 
 }

@@ -214,7 +214,7 @@ public class EmailProcessor implements Runnable {
 						        + " were successfully uploaded ";
 						failureNoteText = failureNoteText
 						        + " were not uploaded";
-					} catch (COSVisitorException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

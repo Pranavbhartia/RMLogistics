@@ -35,7 +35,6 @@ import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
-import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.DisplayMessageType;
@@ -94,27 +93,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()));
 
 		CustomerDetail customerDetail = user.getCustomerDetail();
-		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		if (customerDetail != null) {
-			customerDetailVO.setId(customerDetail.getId());
-			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-			customerDetailVO.setAddressState(customerDetail.getAddressState());
-			customerDetailVO.setAddressZipCode(customerDetail
-			        .getAddressZipCode());
-			customerDetailVO.setSecPhoneNumber(customerDetail
-			        .getSecPhoneNumber());
-			customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
-			customerDetailVO.setMobileAlertsPreference(customerDetail
-			        .getMobileAlertsPreference());
-			if (customerDetail.getDateOfBirth() != null) {
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-				        .getTime());
-			}
-
-			customerDetailVO.setProfileCompletionStatus(customerDetail
-			        .getProfileCompletionStatus());
-
-		}
+		CustomerDetailVO customerDetailVO = CustomerDetail
+		        .convertFromEntityToVO(customerDetail);
 
 		userVO.setCustomerDetail(customerDetailVO);
 
@@ -124,14 +104,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	public Integer updateUser(UserVO userVO) {
 
-		User user = new User();
-
-		user.setId(userVO.getId());
-		user.setFirstName(userVO.getFirstName());
-		user.setLastName(userVO.getLastName());
-		user.setEmailId(userVO.getEmailId());
-		user.setPhoneNumber(userVO.getPhoneNumber());
-		user.setPhotoImageUrl(userVO.getPhotoImageUrl());
+		User user = User.convertFromVOToEntity(userVO);
 
 		Integer userVOObj = userProfileDao.updateUser(user);
 
@@ -142,24 +115,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer updateCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = new CustomerDetail();
 
-		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
-		customerDetail.setAddressState(customerDetailVO.getAddressState());
-		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
-		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
-		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-		if (customerDetailVO.getDateOfBirth() != null) {
-			customerDetail.setDateOfBirth(new Date(customerDetailVO
-			        .getDateOfBirth()));
-		} else {
-			customerDetail.setDateOfBirth(null);
-		}
-		customerDetail.setProfileCompletionStatus(customerDetailVO
-		        .getProfileCompletionStatus());
-		customerDetail.setMobileAlertsPreference(customerDetailVO
-		        .getMobileAlertsPreference());
+		CustomerDetail customerDetail = CustomerDetail
+		        .convertFromVOToEntity(customerDetailVO);
 
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -175,8 +133,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	public List<UserVO> searchUsers(UserVO userVO) {
 
-		return this.buildUserVOList(userProfileDao
-		        .searchUsers(parseUserModel(userVO)));
+		return this.buildUserVOList(userProfileDao.searchUsers(User
+		        .convertFromVOToEntity(userVO)));
 
 	}
 
@@ -192,25 +150,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		return voList;
-	}
-
-	private UserRole parseUserRoleModel(UserRoleVO roleVO) {
-
-		UserRole role = new UserRole();
-
-		if (roleVO == null) {
-			role.setId(UserRolesEnum.CUSTOMER.getRoleId());
-			role.setRoleCd(UserRolesEnum.CUSTOMER.toString());
-		} else {
-
-			role.setId(roleVO.getId());
-			role.setRoleCd(roleVO.getRoleCd());
-			role.setLabel(roleVO.getLabel());
-			role.setRoleDescription(roleVO.getRoleDescription());
-		}
-
-		return role;
-
 	}
 
 	@Override
@@ -241,23 +180,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer completeCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = new CustomerDetail();
 
-		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
-		customerDetail.setAddressState(customerDetailVO.getAddressState());
-		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
-		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
-		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-
-		if (customerDetailVO.getDateOfBirth() != null) {
-			customerDetail.setDateOfBirth(new Date(customerDetailVO
-			        .getDateOfBirth()));
-		} else {
-			customerDetail.setDateOfBirth(null);
-		}
-		customerDetail.setProfileCompletionStatus(customerDetailVO
-		        .getProfileCompletionStatus());
+		CustomerDetail customerDetail = CustomerDetail
+		        .convertFromVOToEntity(customerDetailVO);
 
 		Integer rowCount = userProfileDao
 		        .completeCustomerDetails(customerDetail);
@@ -266,17 +191,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	public Integer managerUpdateUserProfile(UserVO userVO) {
-
 		User user = new User();
-
 		user.setId(userVO.getId());
 		user.setFirstName(userVO.getFirstName());
 		user.setLastName(userVO.getLastName());
 		user.setEmailId(userVO.getEmailId());
 		user.setPhoneNumber(userVO.getPhoneNumber());
-
 		Integer rowCount = userProfileDao.managerUpdateUserProfile(user);
-
 		return rowCount;
 	}
 
@@ -284,121 +205,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer managerUpdateUCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = new CustomerDetail();
-
-		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
-		customerDetail.setAddressState(customerDetailVO.getAddressState());
-		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
-		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
-		customerDetail.setSecEmailId(customerDetailVO.getSecEmailId());
-
-		if (customerDetailVO.getDateOfBirth() != null) {
-			customerDetail.setDateOfBirth(new Date(customerDetailVO
-			        .getDateOfBirth()));
-		} else {
-			customerDetail.setDateOfBirth(null);
-		}
-		customerDetail.setProfileCompletionStatus(customerDetailVO
-		        .getProfileCompletionStatus());
+		CustomerDetail customerDetail = CustomerDetail
+		        .convertFromVOToEntity(customerDetailVO);
 
 		Integer rowCount = userProfileDao
 		        .managerUpdateUCustomerDetails(customerDetail);
 		return rowCount;
 	}
 
-	public CustomerDetailVO buildCustomerDetailVO(CustomerDetail customerDetail) {
-
-		if (customerDetail == null)
-			return null;
-
-		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-
-		customerDetailVO.setId(customerDetail.getId());
-		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-		customerDetailVO.setAddressState(customerDetail.getAddressState());
-		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
-		customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-		        .getTime());
-		customerDetailVO.setSsn(customerDetail.getSsn());
-		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
-		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
-		customerDetailVO.setProfileCompletionStatus(customerDetail
-		        .getProfileCompletionStatus());
-
-		return customerDetailVO;
-	}
-
-	@Override
-	public User parseUserModel(UserVO userVO) {
-
-		if (userVO == null)
-			return null;
-		User userModel = new User();
-
-		userModel.setId(userVO.getId());
-		userModel.setFirstName(userVO.getFirstName());
-		userModel.setLastName(userVO.getLastName());
-		userModel.setUsername(userVO.getEmailId());
-		userModel.setEmailId(userVO.getEmailId());
-
-		userModel.setPassword(userVO.getPassword());
-		userModel.setStatus(userVO.getStatus());
-
-		userModel.setUserRole(UserRole.convertFromVOToEntity(userVO
-		        .getUserRole()));
-
-		CustomerDetail customerDetail = new CustomerDetail();
-
-		if (userVO.getCustomerDetail() == null) {
-			if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
-			        .getRoleId()) {
-				customerDetail.setSubscriptionsStatus(2);
-				userModel.setCustomerDetail(customerDetail);
-			}
-		} else {
-			customerDetail.setAddressCity(userVO.getCustomerDetail()
-			        .getAddressCity());
-			customerDetail.setAddressState(userVO.getCustomerDetail()
-			        .getAddressState());
-			customerDetail.setAddressZipCode(userVO.getCustomerDetail()
-			        .getAddressZipCode());
-			customerDetail.setSecPhoneNumber(userVO.getCustomerDetail()
-			        .getSecPhoneNumber());
-			customerDetail.setSecEmailId(userVO.getCustomerDetail()
-			        .getSecEmailId());
-			customerDetail.setDateOfBirth(new Date(userVO.getCustomerDetail()
-			        .getDateOfBirth()));
-			userModel.setCustomerDetail(customerDetail);
-		}
-
-		RealtorDetail realtorDetail = new RealtorDetail();
-		if (userVO.getRealtorDetail() == null) {
-			if (userModel.getUserRole().getId() == UserRolesEnum.REALTOR
-			        .getRoleId()) {
-				userModel.setRealtorDetail(realtorDetail);
-			}
-		} else {
-			realtorDetail.setLicenceInfo(userVO.getRealtorDetail()
-			        .getLicenceInfo());
-			realtorDetail.setProfileUrl(userVO.getRealtorDetail()
-			        .getProfileUrl());
-			userModel.setRealtorDetail(realtorDetail);
-		}
-
-		// userModel.setEmailId(userVO.getEmailId());
-		userModel.setPhoneNumber(userVO.getPhoneNumber());
-		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
-
-		userModel.setInternalUserDetail(InternalUserDetail
-		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
-		return userModel;
-	}
-
 	@Override
 	public UserVO loadInternalUser(Integer userID) {
 		User user = userProfileDao.findInternalUser(userID);
-		return user.convertFromEntityToVO(user);
+		return User.convertFromEntityToVO(user);
 	}
 
 	@Override
@@ -462,7 +280,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
-		User newUser = parseUserModel(userVO);
+		User newUser = User.convertFromVOToEntity(userVO);
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);
@@ -527,63 +345,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	@Override
-	public UserVO convertTOUserVO(User user) {
-
-		if (user == null)
-			return null;
-		UserVO userVO = new UserVO();
-
-		userVO.setId(user.getId());
-		userVO.setFirstName(user.getFirstName());
-		userVO.setLastName(user.getLastName());
-		userVO.setUsername(user.getEmailId());
-		userVO.setEmailId(user.getEmailId());
-		userVO.setPassword(user.getPassword());
-		userVO.setStatus(user.getStatus());
-		userVO.setPhoneNumber(user.getPhoneNumber());
-		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-
-		CustomerDetailVO customerDetailVO = convertTOCustomerDetailVO(user
-		        .getCustomerDetail());
-
-		userVO.setCustomerDetail(customerDetailVO);
-
-		userVO.setUserRole(this.convertTOUserRoleVO(user.getUserRole()));
-
-		userVO.setInternalUserDetail(this.convertTOInternalUserDetailVO(user
-		        .getInternalUserDetail()));
-
-		return userVO;
-	}
-
-	private CustomerDetailVO convertTOCustomerDetailVO(
-	        CustomerDetail customerDetail) {
-
-		if (customerDetail == null)
-			return null;
-
-		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-
-		customerDetailVO.setId(customerDetail.getId());
-		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-		customerDetailVO.setAddressState(customerDetail.getAddressState());
-		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
-		if (null != customerDetail.getDateOfBirth())
-			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-			        .getTime());
-		customerDetailVO.setProfileCompletionStatus(customerDetail
-		        .getProfileCompletionStatus());
-		customerDetailVO.setSsn(customerDetail.getSsn());
-		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
-		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
-		customerDetailVO.setSubscriptionsStatus(customerDetail
-		        .getSubscriptionsStatus());
-
-		return customerDetailVO;
-
-	}
-
 	private UserRoleVO convertTOUserRoleVO(UserRole userRole) {
 
 		UserRoleVO userRoleVO = new UserRoleVO();
@@ -605,18 +366,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private InternalUserDetailVO convertTOInternalUserDetailVO(
 	        InternalUserDetail internalUserDetail) {
-		// TODO Auto-generated method stub
-
-		if (internalUserDetail == null)
-			return null;
-
 		InternalUserDetailVO internalUserDetailVO = new InternalUserDetailVO();
+		if (internalUserDetail == null)
+			return internalUserDetailVO;
 
 		InternalUserRoleMasterVO internalUserRoleMasterVO = convertTOInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster());
 		internalUserDetailVO
 		        .setInternalUserRoleMasterVO(internalUserRoleMasterVO);
-		;
 
 		return internalUserDetailVO;
 	}

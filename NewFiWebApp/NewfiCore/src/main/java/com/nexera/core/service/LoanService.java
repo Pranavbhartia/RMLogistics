@@ -88,7 +88,7 @@ public interface LoanService {
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName);
 
-	public LoanVO convertIntoLoanVO(Loan loan);
+
 
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
