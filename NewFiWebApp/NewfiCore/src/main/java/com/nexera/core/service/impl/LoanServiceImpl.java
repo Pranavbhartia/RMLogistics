@@ -44,6 +44,8 @@ import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -59,6 +61,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanMilestoneMasterDao loanMilestoneMasterDao;
+	
+	@Autowired
+	WorkflowCoreService workflowCoreService;
 
 	@Autowired
 	private UserProfileService userProfileService;
@@ -589,6 +594,8 @@ public class LoanServiceImpl implements LoanService {
 		int loanId = (int) loanDao.save(loan);
 
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
+		//Invoking the workflow activities to trigger
+		workflowCoreService.createWorkflow(new WorkflowVO(loanId));
 		return Loan.convertFromEntityToVO(loan);
 	}
 
