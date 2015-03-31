@@ -10,6 +10,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -51,7 +52,8 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
-		ExtendedLoanTeamVO extendedLoanTeamVO = loanService.findExtendedLoanTeam(loanVO);
+		ExtendedLoanTeamVO extendedLoanTeamVO = loanService
+		        .findExtendedLoanTeam(loanVO);
 		Gson gson = new Gson();
 		return gson.toJson(extendedLoanTeamVO);
 	}
@@ -67,7 +69,6 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
-		// TODO-add way to add title company and home owners insurance as well
 		Integer userID = null, titleCompanyID = null, homeOwnInsCompanyID = null;
 		if (objectMap.containsKey(WorkflowDisplayConstants.USER_ID_KEY_NAME)) {
 			Object userIDObj = objectMap
@@ -85,29 +86,41 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			        WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID).toString());
 
 		// return new Gson().toJson(user);
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
+		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		if (userID != null && userID > 0) {
-			UserVO userVO = new UserVO();
-			userVO.setId(userID);
-			loanService.addToLoanTeam(loanVO, userVO);
-			UserVO user = userProfileService.loadInternalUser(userID);
+			UserVO user = new UserVO();
+			user.setId(userID);
+			boolean result = loanService.addToLoanTeam(loanVO, user);
+			if (result) {
+				user = userProfileService.loadInternalUser(userID);
+			}
+			editLoanTeamVO.setOperationResult(result);
+			editLoanTeamVO.setUser(user);
 			changeState(loanID);
-			return new Gson().toJson(user);
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
+			editLoanTeamVO.setTitleCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
-			return new Gson().toJson(company);
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
+			editLoanTeamVO.setHomeOwnInsCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
-			return new Gson().toJson(company);
 		} else
 			return "Bad request";
+
+		return new Gson().toJson(editLoanTeamVO);
 	}
 
 	private void changeState(int loanID) {
@@ -115,20 +128,20 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		WorkflowExec workflowExec = new WorkflowExec();
 		workflowExec.setId(loanVO.getLoanManagerWorkflowID());
 		WorkflowItemMaster workflowItemMaster = workflowService
-				.getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_TEAM_STATUS);
+		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_TEAM_STATUS);
 		WorkflowItemExec workflowitemexec = workflowService
-				.getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
 
 		workflowExec.setId(loanVO.getCustomerWorkflowID());
 		WorkflowItemMaster custWorkflowItemMaster = workflowService
-				.getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_MANAGE_TEAM);
+		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_MANAGE_TEAM);
 		WorkflowItemExec custWorkflowitemexec = workflowService
-				.getWorkflowItemExecByType(workflowExec, custWorkflowItemMaster);
+		        .getWorkflowItemExecByType(workflowExec, custWorkflowItemMaster);
 		engineTrigger.changeStateOfWorkflowItemExec(
-				custWorkflowitemexec.getId(),
-				WorkItemStatus.STARTED.getStatus());
+		        custWorkflowitemexec.getId(),
+		        WorkItemStatus.STARTED.getStatus());
 		engineTrigger.changeStateOfWorkflowItemExec(workflowitemexec.getId(),
-				WorkItemStatus.STARTED.getStatus());
+		        WorkItemStatus.STARTED.getStatus());
 
 	}
 }
