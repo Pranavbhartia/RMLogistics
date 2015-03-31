@@ -99,6 +99,11 @@ public class WorkflowConstants
         LOSLoanStatus.LQB_STATUS_LOAN_CLOSED.getLosStatusID() ) );
     private static final List<Integer> APP_1003_LIST = new ArrayList<Integer>(
         Arrays.asList( LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID() ) );
+
+	public static final int SYSTEM_USER = 1;
+	public static final String SYS_EDU_NOTIFICATION_TYPE = "SYS_EDU";
+	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
+
     static {
 
         MILESTONE_WF_ITEM_LOOKUP.put( Milestones.App1003,

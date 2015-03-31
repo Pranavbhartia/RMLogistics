@@ -228,7 +228,7 @@ public class WorkflowRestService {
 		case "2":
 			return "";
 		default:
-			return "";
+			return status;
 		}
 	}
 
