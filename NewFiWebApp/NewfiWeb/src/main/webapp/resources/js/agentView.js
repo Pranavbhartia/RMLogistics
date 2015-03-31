@@ -58,16 +58,20 @@ function getAgentSecondaryLeftNavStep(step, text) {
 function paintAgentDashboard(loanType) {
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
+    $('.lp-item').removeClass('lp-item-active');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "agent-dashboard-container",
 		"class" : "rp-agent-dashboard float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
 	if(loanType == "workloans"){
+        $('#lp-work-on-loan').addClass('lp-item-active');
 		getDashboardRightPanelForWorkLoans();
 	}else if(loanType == "myloans"){
+        $('#lp-my-loans').addClass('lp-item-active');
 		getDashboardRightPanelForMyLoans();
 	}else if(loanType == "archivesloans"){
+        $('#lp-my-archives').addClass('lp-item-active');
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();

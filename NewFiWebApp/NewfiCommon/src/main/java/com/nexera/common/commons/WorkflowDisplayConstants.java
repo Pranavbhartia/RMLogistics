@@ -24,7 +24,7 @@ public class WorkflowDisplayConstants {
 
 	public static final String TITLE_COMPANY_ID = "titleCompanyID";
 
-	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsCompanyID";
+	public static final String HOME_OWN_INS_COMP_ID = "homeOwnInsID";
 	
 	
 
