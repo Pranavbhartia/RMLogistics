@@ -42,17 +42,23 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notification.class);
+		
+		
+		
 		if (user.getUserRole() == null)
 			user = userProfileDao.findInternalUser(user.getId());
 
 		Criterion loanRest = Restrictions.eq("loan", loan);
 		Criterion userRest = Restrictions.eq("createdFor", user);
-
+		//If no roles are assinged, notification to be displayed to all
+		Criterion noRolesAssigned = Restrictions.and(
+		        Restrictions.isNull("createdFor"),
+		        Restrictions.isNull("visibleToUserRoles"));
 		if (loan != null) {
 			criteria.add(loanRest);
 
 		}
-
+		Criterion userRoleBased=null;
 		if (user != null) {
 
 			if (user.getUserRole() != null) {
@@ -63,22 +69,22 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 							.getRoleCd());
 					switch (roleEnum) {
 					case CUSTOMER:
-						criteria.add(userRest);
+						userRoleBased=userRest;
 						break;
 
 					case REALTOR:
-						criteria.add(Restrictions.or(userRest, Restrictions
+						userRoleBased=Restrictions.or(userRest, Restrictions
 								.and(Restrictions.isNull("createdFor"),
 										Restrictions.ilike(
 												"visibleToUserRoles",
 												"%"
 														+ UserRolesEnum.REALTOR
 																.toString()
-														+ "%"))));
+														+ "%")));
 						break;
 
 					case INTERNAL:
-						criteria.add(Restrictions.or(
+						userRoleBased=Restrictions.or(
 								userRest,
 								Restrictions.and(
 										Restrictions.isNull("createdFor"),
@@ -98,17 +104,23 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 																				+ user.getInternalUserDetail()
 																						.getInternaUserRoleMaster()
 																						.getRoleName()
-																				+ "%"))))));
+																				+ "%")))));
 						break;
 
 					default:
-						criteria.add(userRest);
+						userRoleBased=userRest;
 						break;
 					}
 
 				}
+				
 			} else
-				criteria.add(userRest);
+				userRoleBased=userRest;
+		}
+		if(userRoleBased!=null)
+			criteria.add(Restrictions.or(noRolesAssigned,userRoleBased));
+		else{
+			criteria.add(noRolesAssigned);
 		}
 
 		// Fetch only unread notifications
@@ -126,8 +138,12 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		criteria.addOrder(Order.desc("createdDate"));
 		
 		criteria.add(reminder);
+		
+		List<Notification> notifications=criteria.list();
 
-		return criteria.list();
+		
+		
+		return notifications;
 	}
 
 	/*
