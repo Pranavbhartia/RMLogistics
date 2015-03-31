@@ -26,7 +26,6 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.WorkflowExec;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
@@ -59,6 +58,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private UserProfileService userProfileService;
+
+
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
@@ -484,19 +485,11 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
 
 		Hibernate.initialize(loan.getCustomerWorkflow());
-		WorkflowExec wFItem = loan.getCustomerWorkflow();
-		if (loan.getCustomerWorkflow() == null) {
-			wFItem = new WorkflowExec();
-		}
-		wFItem.setId(customerWorkflowID);
-		loan.setCustomerWorkflow(wFItem);
+
+		loan.setCustomerWorkflow(customerWorkflowID);
 		Hibernate.initialize(loan.getLoanManagerWorkflow());
-		WorkflowExec wFItem1 = loan.getLoanManagerWorkflow();
-		if (wFItem1 == null) {
-			wFItem1 = new WorkflowExec();
-		}
-		wFItem1.setId(loanManagerWFID);
-		loan.setLoanManagerWorkflow(wFItem1);
+
+		loan.setLoanManagerWorkflow(loanManagerWFID);
 		loanDao.save(loan);
 	}
 
@@ -529,9 +522,8 @@ public class LoanServiceImpl implements LoanService {
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
 
-			
-			//TODO: Get the status from loanVO, set it in UI based on selection
-			
+			// TODO: Get the status from loanVO, set it in UI based on selection
+
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -540,7 +532,7 @@ public class LoanServiceImpl implements LoanService {
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			
+
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -558,7 +550,6 @@ public class LoanServiceImpl implements LoanService {
 
 		loan = completeLoanModel(loanVO);
 
-		
 		loanDao.save(loan);
 		List<UserVO> userList = loanVO.getLoanTeam();
 

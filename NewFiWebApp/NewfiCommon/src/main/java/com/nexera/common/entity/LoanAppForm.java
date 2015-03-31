@@ -1,12 +1,22 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-
-import java.util.List;
 
 /**
  * The persistent class for the loanappform database table.
@@ -34,11 +44,11 @@ public class LoanAppForm implements Serializable {
 	private Boolean secondMortgage;
 	private Boolean paySecondMortgage;
 	private Boolean isselfEmployed;
-	private String  selfEmployedIncome;
+	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
-	private String  ssDisabilityIncome;
-	private Boolean isSpouseOnLoan ;
-	private String	spouseName;
+	private String ssDisabilityIncome;
+	private Boolean isSpouseOnLoan;
+	private String spouseName;
 	private User user;
 	private PropertyTypeMaster propertyTypeMaster;
 	private GovernmentQuestion governmentquestion;
@@ -46,14 +56,8 @@ public class LoanAppForm implements Serializable {
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
 	private List<UserEmploymentHistory> userEmploymentHistories;
-	private WorkflowExec customerWorkflow;
-	private WorkflowExec loanManagerWorkflow;
+
 	private Integer loanAppFormCompletionStatus;
-
-	
-
-	
-	
 
 	public LoanAppForm() {
 	}
@@ -63,7 +67,8 @@ public class LoanAppForm implements Serializable {
 		return loanAppFormCompletionStatus;
 	}
 
-	public void setLoanAppFormCompletionStatus(Integer loanAppFormCompletionStatus) {
+	public void setLoanAppFormCompletionStatus(
+	        Integer loanAppFormCompletionStatus) {
 		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
 	}
 
@@ -77,7 +82,6 @@ public class LoanAppForm implements Serializable {
 		this.id = id;
 	}
 
-	
 	@Column(name = "hoa_dues", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getHoaDues() {
@@ -133,8 +137,6 @@ public class LoanAppForm implements Serializable {
 		return receiveAlimonyChildSupport;
 	}
 
-	
-
 	public void setReceiveAlimonyChildSupport(Boolean receiveAlimonyChildSupport) {
 		this.receiveAlimonyChildSupport = receiveAlimonyChildSupport;
 	}
@@ -187,9 +189,6 @@ public class LoanAppForm implements Serializable {
 	public void setSpouseName(String spouseName) {
 		this.spouseName = spouseName;
 	}
-	
-	
-	
 
 	// bi-directional many-to-one association to GovermentQuestions
 	@OneToOne(fetch = FetchType.LAZY)
@@ -202,11 +201,10 @@ public class LoanAppForm implements Serializable {
 		this.governmentquestion = governmentquestion;
 	}
 
-	
 	// bi-directional many-to-one association to Refinace
 
-		@OneToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "ref_detail")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_detail")
 	public RefinanceDetails getRefinancedetails() {
 		return refinancedetails;
 	}
@@ -214,7 +212,6 @@ public class LoanAppForm implements Serializable {
 	public void setRefinancedetails(RefinanceDetails refinancedetails) {
 		this.refinancedetails = refinancedetails;
 	}
-	
 
 	// bi-directional many-to-one association to User
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -354,8 +351,6 @@ public class LoanAppForm implements Serializable {
 		this.ssDisabilityIncome = ssDisabilityIncome;
 	}
 
-	
-
 	// bi-directional many-to-one association to UserEmploymentHistory
 	@OneToMany(mappedBy = "loanAppForm")
 	public List<UserEmploymentHistory> getUserEmploymentHistories() {
@@ -363,12 +358,12 @@ public class LoanAppForm implements Serializable {
 	}
 
 	public void setUserEmploymentHistories(
-			List<UserEmploymentHistory> userEmploymentHistories) {
+	        List<UserEmploymentHistory> userEmploymentHistories) {
 		this.userEmploymentHistories = userEmploymentHistories;
 	}
 
 	public UserEmploymentHistory addUserEmploymentHistory(
-			UserEmploymentHistory userEmploymentHistory) {
+	        UserEmploymentHistory userEmploymentHistory) {
 		getUserEmploymentHistories().add(userEmploymentHistory);
 		userEmploymentHistory.setLoanAppForm(this);
 
@@ -376,32 +371,11 @@ public class LoanAppForm implements Serializable {
 	}
 
 	public UserEmploymentHistory removeUserEmploymentHistory(
-			UserEmploymentHistory userEmploymentHistory) {
+	        UserEmploymentHistory userEmploymentHistory) {
 		getUserEmploymentHistories().remove(userEmploymentHistory);
 		userEmploymentHistory.setLoanAppForm(null);
 
 		return userEmploymentHistory;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_workflow")
-	public WorkflowExec getCustomerWorkflow() {
-		return customerWorkflow;
-	}
-
-	public void setCustomerWorkflow(WorkflowExec customerWorkflow) {
-		this.customerWorkflow = customerWorkflow;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan_manager_workflow")
-	public WorkflowExec getLoanManagerWorkflow() {
-		return loanManagerWorkflow;
-	}
-
-	public void setLoanManagerWorkflow(WorkflowExec loanManagerWorkflow) {
-		this.loanManagerWorkflow = loanManagerWorkflow;
-	}
-	
-	
 }
