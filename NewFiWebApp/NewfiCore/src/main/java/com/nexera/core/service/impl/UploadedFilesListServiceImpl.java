@@ -334,7 +334,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 
 			// Upload succesfull
-			checkVo.setIsUploadSuccess(fileUpload);
+
 			if (fileUpload) {
 
 				String uuidValue = nexeraUtility.randomStringOfLength();
@@ -376,8 +376,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		} catch (Exception e) {
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
 			e.printStackTrace();
+			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		}
+		checkVo.setIsUploadSuccess(fileUpload);
 		LOG.info("file.getOriginalFilename() : " + file.getName());
 
 		LOG.info("The s3 path is : " + s3Path);
@@ -430,7 +432,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			// TODO Auto-generated catch block
 			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
-			// TODO save exception in error block
+			throw new FatalException("LendinQB Exception");
 		}
 
 		LOG.info("Assignment : uploadDocumentInLandingQB " + documentVO);
