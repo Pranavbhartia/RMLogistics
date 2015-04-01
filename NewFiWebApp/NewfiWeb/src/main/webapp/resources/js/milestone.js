@@ -199,7 +199,7 @@ var workFlowContext = {
 			if (callback) {
 				callback(ob);
 			}
-		});
+		},false);
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
@@ -974,7 +974,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	if(parentChk){
 		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
 		var data={};
-		data.status="1";//since we will send only completed status from frontend
+		data.status="3";//since we will send only completed status from frontend
 		data["workflowItemExecId"]=wf.id;
 		data["loanID"]=workFlowContext.loanID;
 		updateMileStoneElementState(url,data,callback,targetData)

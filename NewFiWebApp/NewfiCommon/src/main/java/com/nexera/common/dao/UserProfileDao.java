@@ -59,4 +59,6 @@ public interface UserProfileDao extends GenericDao {
 	public List<User> fetchAllActiveUsers();
 	
 	public List<User> getUsersList();
+
+	public List<User> getLoanManagerForState(String stateName);
 }

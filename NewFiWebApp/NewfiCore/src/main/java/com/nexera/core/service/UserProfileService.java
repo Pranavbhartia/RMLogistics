@@ -44,7 +44,7 @@ public interface UserProfileService {
 	public UserVO createNewUserAndSendMail(UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	public void deleteUser(int userId);
+	public void deleteUser(UserVO userVO);
 
 	public User findUserByMail(String userMailAddress);
 
@@ -58,6 +58,6 @@ public interface UserProfileService {
 
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
 	        throws FileNotFoundException, IOException, InvalidInputException,
-	        UndeliveredEmailException;
+	        UndeliveredEmailException, NoRecordsFetchedException;
 
 }

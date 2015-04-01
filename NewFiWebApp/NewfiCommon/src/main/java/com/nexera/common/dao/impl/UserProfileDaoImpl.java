@@ -1,6 +1,7 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -9,6 +10,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,18 +18,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
-import com.nexera.common.vo.MessageVO.MessageUserVO;
-import com.nexera.common.vo.UserVO;
 
 @Component
 @Transactional
@@ -129,7 +133,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
-		query.setParameter("mobileAlertsPreference", customerDetail.getMobileAlertsPreference());
+		query.setParameter("mobileAlertsPreference",
+		        customerDetail.getMobileAlertsPreference());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -149,33 +154,30 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public List<User> getUsersList()
-		{
-			Session session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(User.class);
-					
-			return criteria.list();
-			
-			
-			
-		}
-	
+	public List<User> getUsersList() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		return criteria.list();
+
+	}
+
 	@Override
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
 		String searchQuery = "FROM User where ";
-		
-		if(user.getEmailId()!=null)
-			searchQuery += " email_id like '%"+user.getEmailId()+"%' or ";
-		
-		if(user.getFirstName()!=null)
+
+		if (user.getEmailId() != null)
+			searchQuery += " email_id like '%" + user.getEmailId() + "%' or ";
+
+		if (user.getFirstName() != null)
 			user.setFirstName(user.getFirstName().toLowerCase());
 		else
 			user.setFirstName("");
-		searchQuery+=" lower(concat( first_name,',',last_name) ) like '%"
-		        + user.getFirstName() +"%'";
-		
+		searchQuery += " lower(concat( first_name,',',last_name) ) like '%"
+		        + user.getFirstName() + "%'";
+
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
@@ -198,21 +200,30 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		query.setMaxResults(MAX_RESULTS);
 		List<User> userList = query.list();
-		
 
 		return userList;
 	}
+
 	@Override
 	public Integer saveUserWithDetails(User user) {
-		if (null != user.getInternalUserDetail() && user.getUserRole() != null && user.getUserRole().getId() == UserRolesEnum.INTERNAL.getRoleId()) {
+		if (null != user.getInternalUserDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
+		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-		if (null != user.getRealtorDetail() && user.getUserRole() != null && user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+		if (null != user.getRealtorDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
+		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
-		if (null != user.getCustomerDetail() && user.getUserRole() != null && user.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
+		if (null != user.getCustomerDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		                .getRoleId()) {
 			this.save(user.getCustomerDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
@@ -402,19 +413,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public List<User> getEmailAddress(List<Integer> list) {
 		List<User> emailIds = new ArrayList<User>();
-		
+
 		if (list != null && !list.isEmpty()) {
 			Session session = sessionFactory.getCurrentSession();
 			String hql = "from User where id in (:ids)";
 			Query qry = session.createQuery(hql);
 			qry.setParameterList("ids", list);
 			return qry.list();
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -422,8 +433,70 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public List<User> fetchAllActiveUsers() {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("status",true));
-		criteria.add(Restrictions.eq("isProfileComplete",false));
+		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("isProfileComplete", false));
 		return criteria.list();
+	}
+
+	@Override
+	public List<User> getLoanManagerForState(String stateName) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria criteria = session.createCriteria(StateLookup.class);
+		criteria.add(Restrictions.eq("statecode", stateName));
+		try {
+			StateLookup lookup = (StateLookup) criteria.uniqueResult();
+
+			criteria = session.createCriteria(InternalUserStateMapping.class);
+			criteria.add(Restrictions.eq("stateLookup", lookup));
+			List<InternalUserStateMapping> list = criteria.list();
+
+			if (list == null || list.isEmpty()) {
+				// No users found for this state
+				return Collections.EMPTY_LIST;
+			}
+			// Check amongst the users who is free
+
+			List<User> users = new ArrayList<User>();
+			for (InternalUserStateMapping internalUserStateMapping : list) {
+				User user = internalUserStateMapping.getUser();
+				if (user.getInternalUserDetail().getActiveInternal()) {
+					criteria = session.createCriteria(Loan.class);
+					// Incorrect, this should look at loan team and not user
+					criteria.add(Restrictions.eq("user", user));
+					Criterion criteria2 = Restrictions.eq("loanProgressStatus",
+					        new LoanProgressStatusMaster(
+					                LoanProgressStatusMasterEnum.IN_PROGRESS));
+					Criterion criteria3 = Restrictions.eq("loanProgressStatus",
+					        new LoanProgressStatusMaster(
+					                LoanProgressStatusMasterEnum.NEW_LOAN));
+
+					criteria.add(Restrictions.disjunction().add(criteria2)
+					        .add(criteria3));
+					List<Loan> loanList = criteria.list();
+					user.setLoans(loanList);
+					users.add(user);
+				}
+
+			}
+			return users;
+		} catch (HibernateException exception) {
+			LOG.warn("State not present in system: " + stateName);
+			return Collections.EMPTY_LIST;
+		}
+
+		//
+		// criteria = session.createCriteria(User.class);
+		// // Criteria criteria = session.createCriteria(User.class);
+		// criteria.add(Restrictions.eq("status", true));
+		// UserRole role = new UserRole(UserRolesEnum.INTERNAL);
+		// criteria.add(Restrictions.eq("userRole", role));
+		// criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		// criteria.add(Restrictions
+		// .eq("internaUserRoleMaster", new InternalUserRoleMaster(
+		// InternalUserRolesEum.LM.getRoleId())));
+		// InternalUserStateMapping internalUserStateMapping
+		// // criteria.add(Restrictions.in("internalUserStateMappings", values)
+
 	}
 }

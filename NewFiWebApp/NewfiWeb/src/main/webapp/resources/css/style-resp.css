@@ -321,7 +321,7 @@
 	.lock-rate-slider-container{
 		padding: 10px;
 	}
-    .header-btns-wrapper{
+    .reg-header-btns-wrapper{
         display: none;
     }
     .cust-app-lp{
@@ -366,6 +366,24 @@
     }
     .slider-wrapper {
       margin: 10px 0 25px 0;
+    }
+    .assigned-agent-cont-wrapper{
+        min-width: 80px;
+    }
+    .assigned-agent-cont-lc {
+        width: 60px;
+        float: none;
+        margin: 0 auto;
+        margin-top: 5px;
+    }
+    .assigned-agent-cont-rc{
+        display: none;
+    }
+    .milestone-header-bar{
+    	display: none;
+    }
+    .agent-message-dashboard{
+    	padding-left: 5px;
     }
 }
 
@@ -529,6 +547,9 @@
     .cust-app-rp{
         margin-left: 0;
         width: 100% !important;
+    }
+    .milestone-header-bar{
+    	display: none;
     }
 }
 
@@ -754,7 +775,38 @@
         padding: 5px 10px;
     }
     .yr-grid-cont:first-child .yr-grid-item-selected {
-      margin-left: -9px;
+        margin-left: -9px;
+    }
+    .av-loan-details-container{
+        padding: 0;
+    }
+    .av-loan-details-row {
+        height: 30px;
+        line-height: 20px;
+        padding: 5px 0;
+    }
+    .av-loan-details-row-lc{
+        width: 50%;
+    }
+    .av-loan-details-row-rc{
+        width: 50%;
+        padding-left: 10px;
+    }
+    .app-options-cont,.app-input{
+        width: 100%;
+    }
+    .complete-application-header{
+        min-height: 45px;
+        padding: 5px 0;
+        line-height: 35px;
+        padding-left: 0;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .app-ques-header-txt{
+        font-size: 24px;
+        line-height: 40px;
+        margin-bottom: 15px;
     }
 }
 

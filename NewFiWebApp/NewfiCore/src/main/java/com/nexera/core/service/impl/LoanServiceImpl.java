@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -15,6 +16,8 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
+import com.nexera.common.dao.LoanNeedListDao;
+import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
@@ -23,10 +26,12 @@ import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.LoanTurnAroundTime;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
@@ -36,14 +41,15 @@ import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
+import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.core.service.WorkflowCoreService;
-import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -55,6 +61,9 @@ public class LoanServiceImpl implements LoanService {
 	private Utils utils;
 
 	@Autowired
+	private LoanNeedListDao loanNeedListDao;
+
+	@Autowired
 	private LoanMilestoneDao loanMilestoneDao;
 
 	@Autowired
@@ -63,6 +72,13 @@ public class LoanServiceImpl implements LoanService {
 	@Autowired
 	private UserProfileService userProfileService;
 
+
+	@Autowired
+	private MileStoneTurnAroundTimeService aroundTimeService;
+
+	@Autowired
+	private LoanTurnAroundTimeDao loanTurnAroundTimeDao;
+	
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
 
@@ -581,7 +597,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
-		//Invoking the workflow activities to trigger
+		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		return Loan.convertFromEntityToVO(loan);
 	}
@@ -822,4 +838,54 @@ public class LoanServiceImpl implements LoanService {
 		return extendedLoanTeamVO;
 	}
 
+	@Override
+	@Transactional(readOnly=true)
+	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
+	        Integer workFlowItemId) {
+		LoanTurnAroundTime aroundTime=loanTurnAroundTimeDao.
+				loadLoanTurnAroundByLoanAndWorkitem(loanId,workFlowItemId);
+		if(aroundTime!=null){
+			LoanTurnAroundTimeVO aroundTimeVO=new LoanTurnAroundTimeVO();
+			aroundTimeVO.setHours(aroundTime.getHours());
+			aroundTimeVO.setLoanId(loanId);
+			aroundTimeVO.setWorkItemMasterId(workFlowItemId);
+			return aroundTimeVO;
+		}
+		else
+			return null;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanNeedsList fetchLoanNeedByFileId(
+	        UploadedFilesList uploadedFileList) {
+		return loanDao.fetchLoanNeedsByFileId(uploadedFileList);
+	}
+
+	@Override
+	public void updateLoanNeedList(LoanNeedsList loanNeedList) {
+		loanNeedListDao.update(loanNeedList);
+
+	}
+	@Override
+	@Transactional
+	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId) {
+		List<MileStoneTurnAroundTimeVO> aroundTimeVOs=aroundTimeService.loadAllMileStoneTurnAround();
+		List<LoanTurnAroundTime> turnAroundTimes=new ArrayList<LoanTurnAroundTime>();
+		LoanTurnAroundTime  aroundTime=null;
+		for (MileStoneTurnAroundTimeVO mileStoneTurnAroundTimeVO : aroundTimeVOs) {
+			if(mileStoneTurnAroundTimeVO.getHours()!=null){
+				aroundTime=new LoanTurnAroundTime();
+				aroundTime.setCreatedDate(new Date());
+				aroundTime.setHours(mileStoneTurnAroundTimeVO.getHours());
+				aroundTime.setLoan(new Loan(loanId));
+				aroundTime.setWorkflowItemMaster(
+						new WorkflowItemMaster(
+								mileStoneTurnAroundTimeVO.getWorkflowItemMasterId()));
+				turnAroundTimes.add(aroundTime);
+			}
+		}
+		
+		loanTurnAroundTimeDao.saveAllLoanTurnAroundTimeForLoan(turnAroundTimes);		
+	}
 }

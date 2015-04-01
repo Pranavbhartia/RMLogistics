@@ -1178,6 +1178,33 @@ CREATE TABLE `workflowtaskconfigmaster` (
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+-- Table structure for table `internaluserstatemapping`
+--
+
+DROP TABLE IF EXISTS `internaluserstatemapping`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE `newfi_schema`.`internaluserstatemapping` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `state_id` INT NULL,
+  `user_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_internaluser_mapping_idx` (`user_id` ASC),
+  CONSTRAINT `fk_state_user_mapping`
+    FOREIGN KEY (`state_id`)
+    REFERENCES `newfi_schema`.`statelookup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_internaluser_mapping`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `newfi_schema`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
 --
 -- Table structure for table `zipcodelookup`
 --
@@ -1195,6 +1222,30 @@ CREATE TABLE `zipcodelookup` (
   KEY `fk_state_lookup_idx` (`state_id`),
   CONSTRAINT `fk_state_lookup` FOREIGN KEY (`state_id`) REFERENCES `statelookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=42203 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `milestoneturnaroundtime`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE `milestoneturnaroundtime` 
+  ( 
+     `id`               INT(11) NOT NULL auto_increment, 
+     `workflow_item_id` INT(11) NOT NULL, 
+     `hours`            INT(11) DEFAULT NULL, 
+     `created_by`       INT(11) NOT NULL, 
+     `modified_by`      INT(11) NOT NULL, 
+     `created_date`     DATETIME DEFAULT NULL, 
+     `modified_date`    DATETIME DEFAULT NULL, 
+     PRIMARY KEY (`id`), 
+     CONSTRAINT `fk_milestoneturnaroundtime` FOREIGN KEY (`workflow_item_id`) 
+     REFERENCES `workflowitemmaster` (`id`) ON DELETE no action ON UPDATE no 
+     action, 
+     CONSTRAINT `fk_milestoneturnaroundtimeuserid` FOREIGN KEY (`created_by`) 
+     REFERENCES `user` (`id`) ON DELETE no action ON UPDATE no action, 
+     CONSTRAINT `fk_milestoneturnaroundtimemodified_by` FOREIGN KEY ( 
+     `modified_by`) REFERENCES `user` (`id`) ON DELETE no action ON UPDATE no 
+     action 
+  ) engine=innodb DEFAULT charset=utf8; 
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

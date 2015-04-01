@@ -32,7 +32,7 @@ public interface CommonConstants {
 	/*
 	 * CSV constants
 	 */
-	public static final int CSV_COLUMN_LENGTH = 12;
+	public static final int CSV_COLUMN_LENGTH = 13;
 	public static final String ERROR_LINE_NUMBER = "lineNumber";
 	public static final String ERROR_CSV_LINE = "csvLine";
 	public static final String ERROR_MESSAGE = "message";
@@ -55,6 +55,8 @@ public interface CommonConstants {
 	public static final int SECONDARY_EMAIL_COLUMN = 9;
 	public static final int DATE_OF_BIRTH_COLUMN = 10;
 	public static final int PROFILE_LINK_COLUMN = 11;
+	public static final int STATE_CODE_COLUMN = 12;
+	public static final String STATE_CODE_STRING_SEPARATOR = ",";
 
 	
 	public static final String DEFAULT_FROM_ADDRESS = "newfiportal";

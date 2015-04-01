@@ -56,6 +56,7 @@ public class User implements Serializable, UserDetails {
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
 	private List<TransactionDetails> transactionDetails;
+	private List<InternalUserStateMapping> internalUserStateMappings;
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
@@ -113,7 +114,8 @@ public class User implements Serializable, UserDetails {
 		this.lastName = lastName;
 	}
 
-	public String getPassword() {
+	@Override
+    public String getPassword() {
 		return this.password;
 	}
 
@@ -139,7 +141,8 @@ public class User implements Serializable, UserDetails {
 		this.photoImageUrl = photoImageUrl;
 	}
 
-	public String getUsername() {
+	@Override
+    public String getUsername() {
 		return this.username;
 	}
 
@@ -218,6 +221,11 @@ public class User implements Serializable, UserDetails {
 		return userEmails;
 	}
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	public List<InternalUserStateMapping> getInternalUserStateMappings() {
+		return internalUserStateMappings;
+	}
+
 	public void setUserEmails(List<UserEmail> userEmails) {
 		this.userEmails = userEmails;
 	}
@@ -245,7 +253,8 @@ public class User implements Serializable, UserDetails {
 		this.id = userId;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
@@ -254,7 +263,8 @@ public class User implements Serializable, UserDetails {
 		this.accountNonExpired = accountNonExpired;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
@@ -263,7 +273,8 @@ public class User implements Serializable, UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
@@ -272,7 +283,8 @@ public class User implements Serializable, UserDetails {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -376,11 +388,14 @@ public class User implements Serializable, UserDetails {
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
 
-		if (userVO.getEmailId() != null) {
-			userModel.setUsername(userVO.getEmailId().split(":")[0]);
-			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
-		}
-		//userModel.setPassword(userVO.getPassword());
+		userModel.setUsername(userVO.getEmailId());
+		userModel.setEmailId(userVO.getEmailId());
+
+		// if (userVO.getEmailId() != null) {
+		// userModel.setUsername(userVO.getEmailId().split(":")[0]);
+		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		// }
+		// userModel.setPassword(userVO.getPassword());
 
 		userModel.setStatus(true);
 
@@ -391,7 +406,7 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			
+
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
 		}
@@ -404,6 +419,11 @@ public class User implements Serializable, UserDetails {
 		}
 
 		return userModel;
+	}
+
+	public void setInternalUserStateMappings(
+	        List<InternalUserStateMapping> internalUserStateMappings) {
+		this.internalUserStateMappings = internalUserStateMappings;
 	}
 
 }

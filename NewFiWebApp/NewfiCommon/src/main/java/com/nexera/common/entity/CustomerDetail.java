@@ -175,7 +175,7 @@ public class CustomerDetail implements Serializable {
 		customerDetail.setSubscriptionsStatus(2);
 		if (inputEntity != null) {
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
-			inputEntity.setAddressState(inputEntity.getAddressState());
+			customerDetail.setAddressState(inputEntity.getAddressState());
 			customerDetail.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
 				customerDetail.setDateOfBirth(new Date(inputEntity
@@ -189,6 +189,8 @@ public class CustomerDetail implements Serializable {
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
+			if(null!=inputEntity.getProfileCompletionStatus()){
+			customerDetail.setProfileCompletionStatus(inputEntity.getProfileCompletionStatus());}
 		}
 		return customerDetail;
 	}

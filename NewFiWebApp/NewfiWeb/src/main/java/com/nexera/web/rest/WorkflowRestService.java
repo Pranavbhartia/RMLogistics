@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
@@ -32,8 +33,8 @@ import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.engine.EngineTrigger;
-import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
+import com.nexera.workflow.utils.Util;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
 
@@ -258,10 +259,10 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-
+			Map<String, Object> map = Util.convertJsonToMap(params);
 			WorkflowItemExecVO wfExec = new WorkflowItemExecVO();
 			wfExec.setId(workflowId);
-			wfExec.setStatus(WorkItemStatus.STARTED.getStatus());
+			wfExec.setStatus(map.get("status").toString());
 			workflowCoreService.changeWorkItemState(wfExec);
 			response = RestUtil.wrapObjectForSuccess("Success");
 		} catch (Exception e) {
@@ -300,7 +301,8 @@ public class WorkflowRestService {
 			for (Integer workflowItemExecId : milestoneItems) {
 				System.out.println(workflowItemExecId
 				        + "----------------------");
-				map.put("workflowItemExecId", workflowItemExecId);
+				map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+						workflowItemExecId);
 				StringWriter sw = new StringWriter();
 				mapper.writeValue(sw, map);
 				workflowService.saveParamsInExecTable(workflowItemExecId,

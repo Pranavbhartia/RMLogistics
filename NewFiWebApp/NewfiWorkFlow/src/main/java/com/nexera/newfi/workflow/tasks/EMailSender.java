@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
@@ -83,7 +86,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 			makeANote(loanId, LoanStatus.sysEduMessage);
 
 		}
-		return WorkflowConstants.SUCCESS;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	public Object[] getParamsForExecute() {
@@ -128,7 +131,12 @@ public class EMailSender extends NexeraWorkflowTask implements
 					WorkItemStatus.COMPLETED.getStatus())) {
 				long noOfDays = (workflowitemexec.getEndTime().getTime() - new Date()
 						.getTime()) / (1000 * 60 * 60 * 24);
-				long turnaroundTime=70;
+
+				LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
+						.retrieveTurnAroundTimeByLoan(loanId, sysEduMilestone
+								.getParentWorkflowItemExec().getId());
+				long turnaroundTime = loanTurnAroundTimeVO.getHours();
+
 				if (noOfDays > turnaroundTime) {
 					List<NotificationVO> notificationList = notificationService
 							.findNotificationTypeListForLoan(loanId,
@@ -138,7 +146,12 @@ public class EMailSender extends NexeraWorkflowTask implements
 						NotificationVO notificationVO = new NotificationVO(
 								loanId, notificationType,
 								WorkflowConstants.SYS_EDU_NOTIFICATION_CONTENT);
-						notificationService.createNotification(notificationVO);
+						List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
+						userRoles.add(UserRolesEnum.INTERNAL);
+						List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
+						internalUserRoles.add(InternalUserRolesEum.LM);
+						notificationService.createRoleBasedNotification(
+								notificationVO, userRoles, internalUserRoles);
 					}
 				}
 			}
