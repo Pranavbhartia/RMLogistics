@@ -56,6 +56,7 @@ public class User implements Serializable, UserDetails {
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
 	private List<TransactionDetails> transactionDetails;
+	private List<InternalUserStateMapping> internalUserStateMappings;
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
@@ -216,6 +217,11 @@ public class User implements Serializable, UserDetails {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	public List<UserEmail> getUserEmails() {
 		return userEmails;
+	}
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	public List<InternalUserStateMapping> getInternalUserStateMappings() {
+		return internalUserStateMappings;
 	}
 
 	public void setUserEmails(List<UserEmail> userEmails) {
@@ -380,7 +386,7 @@ public class User implements Serializable, UserDetails {
 			userModel.setUsername(userVO.getEmailId().split(":")[0]);
 			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
 		}
-		//userModel.setPassword(userVO.getPassword());
+		// userModel.setPassword(userVO.getPassword());
 
 		userModel.setStatus(true);
 
@@ -391,7 +397,7 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			
+
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
 		}
