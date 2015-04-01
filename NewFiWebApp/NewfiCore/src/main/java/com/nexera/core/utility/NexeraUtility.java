@@ -54,6 +54,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
@@ -165,7 +166,7 @@ public class NexeraUtility {
 		} catch (Exception e) {
 			LOGGER.info("Exception in uploading file in local "
 			        + e.getMessage());
-			return null;
+			throw new FatalException("Cannot upload file to tomcat directory");
 		}
 
 		return filePath;
@@ -294,6 +295,7 @@ public class NexeraUtility {
 		} catch (Exception e) {
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 			e.printStackTrace();
+			throw new FatalException("Cannot convert image to PDF");
 		}
 		return filepath;
 
@@ -559,8 +561,8 @@ public class NexeraUtility {
 	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
 		
 		StringBuffer stringBuf = new StringBuffer();
-		stringBuf.append("UUID : ").append(uuId);
-		stringBuf.append( " uploaded by : " );
+		stringBuf.append("UUID:").append(uuId);
+		stringBuf.append( " UploadedBy:" );
 		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
 		 
 		return stringBuf.toString();
