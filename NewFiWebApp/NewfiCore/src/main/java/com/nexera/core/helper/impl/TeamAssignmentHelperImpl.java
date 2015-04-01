@@ -1,7 +1,5 @@
 package com.nexera.core.helper.impl;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +27,15 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 
 		List<User> userList = userProfileDao.getLoanManagerForState(stateName);
 		if (!userList.isEmpty()) {
-			Collections.sort(userList, new Comparator<User>() {
-				public int compare(User o1, User o2) {
-					if (o1.getSortOrderDate() == null
-					        || o2.getSortOrderDate() == null)
-						return 0;
-					return o2.getSortOrderDate().compareTo(
-					        o1.getSortOrderDate());
-				}
-			});
+			// Collections.sort(userList, new Comparator<User>() {
+			// public int compare(User o1, User o2) {
+			// if (o1.getlo() == null
+			// || o2.getSortOrderDate() == null)
+			// return 0;
+			// return o2.getSortOrderDate().compareTo(
+			// o1.getSortOrderDate());
+			// }
+			// });
 		}
 
 		/*
