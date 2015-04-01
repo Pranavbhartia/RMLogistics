@@ -11,6 +11,8 @@
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
+<link href="resources/css/customer-application.css" rel="stylesheet">
+
 </head>
 
 <body>
