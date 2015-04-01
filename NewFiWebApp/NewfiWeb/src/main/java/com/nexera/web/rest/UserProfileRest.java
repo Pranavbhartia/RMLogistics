@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -97,6 +98,9 @@ public class UserProfileRest {
             UserVO user=userProfileService.findUser(userVO.getId());
             if(userVO.getCustomerDetail()!=null){
             userVO.getCustomerDetail().setProfileCompletionStatus(user.getCustomerDetail().getProfileCompletionStatus());}
+            if(user.getPhotoImageUrl()!=null){
+            	userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+            }
 			Integer customerDetailsUpdateCount = userProfileService
 					.updateCustomerDetails(userVO);
 
@@ -339,11 +343,35 @@ public class UserProfileRest {
 		return result.toString();
 		
 	}
+	/*@RequestMapping(value="/deleteUser/{userId}", method = RequestMethod.GET)
+	public @ResponseBody String deleteUser(@PathVariable Integer userId){
+		
+		LOG.info("Enabling user with user id : " + userId);
+		
+		JsonObject result = new JsonObject();
+		try {
+			UserVO userVO=userProfileService.findUser(userId);
+			userProfileService.deleteUser(userVO);
+			result.addProperty("success", 1);
+		}
+		catch (DatabaseException e) {
+			LOG.error("disableUser : DatabaseException thrown, message : " + e.getMessage());
+			e.printStackTrace();
+			result.addProperty("success", 0);
+			result.addProperty("message", "Technical issue has occurred!");		
+		}
+		
+		LOG.info("Returning the json" + result.toString());
+		return result.toString();
+		
+	}*/
 	
 	@RequestMapping(value="/addusersfromcsv", method = RequestMethod.POST ,  headers = "Accept=*")
 	public @ResponseBody String registerUsersFromCsv(@RequestParam(value="file" , required = true) MultipartFile multipartFile , HttpServletRequest request , HttpServletResponse response){
 		LOG.info("File upload Rest service called");
 		JsonObject result = null;
+		 /*MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request; 
+		 MultipartFile multipartFile1 = multipartRequest.getFile("file");*/
 		try {
 			result = userProfileService.parseCsvAndAddUsers(multipartFile);
 		}

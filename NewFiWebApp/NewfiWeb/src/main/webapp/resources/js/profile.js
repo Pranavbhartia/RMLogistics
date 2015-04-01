@@ -797,20 +797,27 @@ var row = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
 	
-	var checkBox = $('<input>').attr({
-		"class" : "ms-check-box-header",		
-		"id" : "alertSMSPreferenceID",
-		"type":"checkbox"
+	var checkBox = $('<div>').attr({
+		"class" : "admin-doc-checkbox doc-checkbox float-left",		
+		"id" : "alertSMSPreferenceID",		
+		"value":user.customerDetail.mobileAlertsPreference,
+
 	}).on("click",function(e){
-	if($(this).prop("checked") == true){
-            $(this).attr("data-checked",true);
+	if($(this).prop("checked")){
+		    checkBox.addClass('doc-checked');
+	
             }
-            else if($(this).prop("checked") == false){
-               $(this).attr("data-checked",false);
+            else if($(this).prop("checked")){
+            	checkBox.addClass('doc-unchecked');
             }
 	
 	});
 	
+	if(user.customerDetail.mobileAlertsPreference){
+		checkBox.addClass('doc-checked');
+	}else{
+		checkBox.addClass('doc-unchecked');
+	}
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1006,10 +1013,13 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('#alertSMSPreferenceID').prop("checked") == true){
-	customerDetails.mobileAlertsPreference = true;}else{
-	customerDetails.mobileAlertsPreference = false;
-	}
+	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
+		
+		customerDetails.mobileAlertsPreference = true;}else{
+			
+		customerDetails.mobileAlertsPreference = false;
+		}
+
 
 	userProfileJson.customerDetail = customerDetails;
 
