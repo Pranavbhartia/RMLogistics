@@ -7,9 +7,12 @@ import java.util.List;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
+import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 
 public class LoanAppFormVO implements Serializable {
 
@@ -45,7 +48,8 @@ public class LoanAppFormVO implements Serializable {
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
 	private Integer loanAppFormCompletionStatus;
 
-
+	private PurchaseDetailsVO purchaseDetails;
+	
 	public int getId() {
 		return id;
 	}
@@ -272,8 +276,19 @@ public class LoanAppFormVO implements Serializable {
 	}
 	
 	
+	
 
 	
+	
+
+	public PurchaseDetailsVO getPurchaseDetails() {
+		return purchaseDetails;
+	}
+
+	public void setPurchaseDetails(PurchaseDetailsVO purchaseDetails) {
+		this.purchaseDetails = purchaseDetails;
+	}
+
 	public Integer getLoanAppFormCompletionStatus() {
 		return loanAppFormCompletionStatus;
 	}
@@ -311,23 +326,67 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 
+		
+		
+		//System.out.println(this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"));
+		if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF")){
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REF));
+		}
+		else if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("PUR")){
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
+		}
+		else{ 
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REFCO));
+		}
 
-		// propertyTypeMaster.setId(1);
+		
+		
+		if(null != this.getUser().getCustomerEnagagement() && null != this.getPropertyTypeMaster()){
+			
+			this.getPropertyTypeMaster().setPropertyTaxesPaid(this.getUser().getCustomerEnagagement().getPropertyTaxesPaid());		
+		}
+		
+		loanAppForm.setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this.getPropertyTypeMaster()));
+		
+		
+		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
+		
+		if(null != this.getUser().getCustomerEnagagement() && null!= this.getRefinancedetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"))
+		this.getRefinancedetails().setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
 
-		loanAppForm
-		        .setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this
-		                .getPropertyTypeMaster()));
-		loanAppForm.setGovernmentquestion(parseVOtoEntity(this
-		        .getGovernmentquestion()));
-		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this
-		        .getRefinancedetails()));
+		
+		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
+		
+		// Purchase Details 
+		if (null!= this.getPurchaseDetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("purchase"))
+		this.getPurchaseDetails().setLivingSituation(this.getUser().getCustomerEnagagement().getLivingSituation());
+		
+		loanAppForm.setPurchaseDetails(parseVOtoEntityPurchaseDetails(this.getPurchaseDetails()));
+		
 
 		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
 
 		loanAppForm.setLoan(this.getLoan().convertToEntity());
+		
+		/* save data in the purchase table */
+		
+		
 
 		return loanAppForm;
 	}
+
+
+
+	private PurchaseDetails parseVOtoEntityPurchaseDetails(PurchaseDetailsVO purchaseDetailsVO) {
+	
+		PurchaseDetails purchaseDetails = new PurchaseDetails();
+		if(purchaseDetailsVO == null)
+			return purchaseDetails;
+		
+		purchaseDetails.setLivingSituation(purchaseDetailsVO.getLivingSituation());
+		
+		return purchaseDetails;
+    }
 
 	public GovernmentQuestion parseVOtoEntity(
 	        GovernmentQuestionVO governmentQuestionVO) {
@@ -374,42 +433,35 @@ public class LoanAppFormVO implements Serializable {
 		//RefinanceDetails refinanceDetails = new RefinanceDetails();
 		System.out.println("refinanceVO.getId()" + refinanceVO.getId());
 		refinanceDetails.setId(refinanceVO.getId());
-		refinanceDetails.setCurrentMortgageBalance(refinanceVO
-		        .getCurrentMortgageBalance());
-		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
-		refinanceDetails.setCurrentMortgagePayment(refinanceVO
-		        .getCurrentMortgagePayment());
+		refinanceDetails.setCurrentMortgageBalance(refinanceVO.getCurrentMortgageBalance());
+		refinanceDetails.setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
+		refinanceDetails.setCurrentMortgagePayment(refinanceVO.getCurrentMortgagePayment());
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
+		refinanceDetails.setSecondMortageBalance(refinanceVO.getSecondMortageBalance());
+		refinanceDetails.setCashTakeOut(refinanceVO.getCashTakeOut());
+		refinanceVO.setMortgageyearsleft(refinanceVO.getMortgageyearsleft());
 
 		return refinanceDetails;
 
 	}
 
-	public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(
-	        PropertyTypeMasterVO propertyTypeMasterVO) {
+	public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(PropertyTypeMasterVO propertyTypeMasterVO) {
 
 		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 		if (propertyTypeMasterVO == null)
 			return propertyTypeMaster;
 		//PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 
-		System.out.println("propertyTypeMasterVO.getId()"
-		        + propertyTypeMasterVO.getId());
+		System.out.println("propertyTypeMasterVO.getId()"+ propertyTypeMasterVO.getId());
+		
 		propertyTypeMaster.setId(propertyTypeMasterVO.getId());
-		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO
-		        .getPropertyTypeCd());
-		propertyTypeMaster.setResidenceTypeCd(propertyTypeMasterVO
-		        .getResidenceTypeCd());
-		propertyTypeMaster.setPropertyTaxesPaid(propertyTypeMasterVO
-		        .getPropertyTaxesPaid());
-		propertyTypeMaster.setPropertyInsuranceProvider(propertyTypeMasterVO
-		        .getPropertyInsuranceProvider());
-		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO
-		        .getPropertyInsuranceCost());
-		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO
-		        .getPropertyPurchaseYear());
-		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO
-		        .getHomeWorthToday());
+		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO.getPropertyTypeCd());
+		propertyTypeMaster.setResidenceTypeCd(propertyTypeMasterVO.getResidenceTypeCd());
+		propertyTypeMaster.setPropertyTaxesPaid(propertyTypeMasterVO.getPropertyTaxesPaid());
+		propertyTypeMaster.setPropertyInsuranceProvider(propertyTypeMasterVO.getPropertyInsuranceProvider());
+		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO.getPropertyInsuranceCost());
+		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO.getPropertyPurchaseYear());
+		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO.getHomeWorthToday());
 
 		return propertyTypeMaster;
 

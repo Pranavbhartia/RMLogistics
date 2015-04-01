@@ -4143,6 +4143,19 @@ input.calc-input {
   background: #dcdcdc;
 }
 
+.rate-btn-alertRate {
+
+    width: 200px;
+    text-align: center;
+    border-radius: 3px;
+    margin: 0 auto;
+    cursor:pointer;
+    background: url(../images/Mail-icon.png) no-repeat 24px center;
+    background-size: 28px;
+    line-height: 31px;
+    margin-top: 6px;
+}
+
 .loan-manager-popup {
   position: absolute;
   width: 250px;
@@ -4163,6 +4176,7 @@ input.calc-input {
 
 .loan-manager-popup-container:last-child{
 	border-bottom:none;
+
 }
 
 .state-dropdown-wrapper {
@@ -4206,4 +4220,5 @@ input.calc-input {
 
 .admin-doc-checkbox {
 	margin-top: 10px;
+
 }

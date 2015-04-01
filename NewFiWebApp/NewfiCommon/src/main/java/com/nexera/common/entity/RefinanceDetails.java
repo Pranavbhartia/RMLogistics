@@ -26,6 +26,11 @@ public class RefinanceDetails implements Serializable{
 	private String currentMortgageBalance;
 	private String currentMortgagePayment;
 	private boolean includeTaxes;
+	private String secondMortageBalance;
+	private String mortgageyearsleft;
+	private String cashTakeOut;
+	
+	
 	private List<LoanAppForm> loanAppForms;
 	
 	
@@ -77,7 +82,42 @@ public class RefinanceDetails implements Serializable{
 	}
 	
 	
-	// bi-directional many-to-one association to LoanAppForm
+	
+	
+	@Column(name = "secondMortageBalance")
+	public String getSecondMortageBalance() {
+		return secondMortageBalance;
+	}
+
+
+	public void setSecondMortageBalance(String secondMortageBalance) {
+		this.secondMortageBalance = secondMortageBalance;
+	}
+
+
+	@Column(name = "mortgageyearsleft")
+	public String getMortgageyearsleft() {
+		return mortgageyearsleft;
+	}
+
+
+	public void setMortgageyearsleft(String mortgageyearsleft) {
+		this.mortgageyearsleft = mortgageyearsleft;
+	}
+
+	@Column(name = "cashTakeOut")
+	public String getCashTakeOut() {
+		return cashTakeOut;
+	}
+
+
+	public void setCashTakeOut(String cashTakeOut) {
+		this.cashTakeOut = cashTakeOut;
+	}
+
+
+
+			// bi-directional many-to-one association to LoanAppForm
 			@OneToMany(mappedBy = "refinancedetails")
 			public List<LoanAppForm> getLoanappforms() {
 				return this.loanAppForms;

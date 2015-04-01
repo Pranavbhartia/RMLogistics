@@ -25,6 +25,7 @@
 <script src="resources/js/include/jquery-maskMoney.js"></script>
 <script src="resources/js/lockRate.js"></script>
 <script src="resources/js/adminModule.js"></script>
+<script src="resources/js/customer-buyHome-app.js"></script>
 <script src="resources/js/turnaround.js"></script>
 <div id="dialog" >
 </div>

@@ -1,11 +1,6 @@
 package com.nexera.common.vo;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 import com.nexera.common.entity.RefinanceDetails;
-import com.nexera.common.entity.User;
 
 public class RefinanceVO {
 
@@ -14,6 +9,10 @@ public class RefinanceVO {
 	private String currentMortgageBalance;
 	private String currentMortgagePayment;
 	private boolean includeTaxes;
+	private String secondMortageBalance;
+	private String mortgageyearsleft;
+	private String cashTakeOut;
+	
 	
 	
 	public int getId() {
@@ -47,8 +46,24 @@ public class RefinanceVO {
 		this.includeTaxes = includeTaxes;
 	}
 	
-
-	
+	public String getSecondMortageBalance() {
+		return secondMortageBalance;
+	}
+	public void setSecondMortageBalance(String secondMortageBalance) {
+		this.secondMortageBalance = secondMortageBalance;
+	}
+	public String getMortgageyearsleft() {
+		return mortgageyearsleft;
+	}
+	public void setMortgageyearsleft(String mortgageyearsleft) {
+		this.mortgageyearsleft = mortgageyearsleft;
+	}
+	public String getCashTakeOut() {
+		return cashTakeOut;
+	}
+	public void setCashTakeOut(String cashTakeOut) {
+		this.cashTakeOut = cashTakeOut;
+	}
 	public RefinanceDetails convertToEntity() {
 		RefinanceDetails refinance = new RefinanceDetails();
 
