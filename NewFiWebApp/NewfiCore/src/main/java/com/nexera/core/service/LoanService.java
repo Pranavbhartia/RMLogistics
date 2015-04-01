@@ -12,8 +12,8 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
-import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
@@ -89,8 +89,6 @@ public interface LoanService {
 	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
 	        String loanMilestoneMAsterName);
 
-
-
 	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
 	        LoanTypeMaster loanTypeMaster);
 
@@ -113,7 +111,12 @@ public interface LoanService {
 	HomeOwnersInsuranceMasterVO findHomeOwnersInsuranceCompanyOfLoan(LoanVO loan);
 
 	ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO);
-	
+
 	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
-			Integer workFlowItemId);
+	        Integer workFlowItemId);
+
+	public LoanNeedsList fetchLoanNeedByFileId(
+	        UploadedFilesList uploadedFileList);
+
+	public void updateLoanNeedList(LoanNeedsList loanNeedList);
 }
