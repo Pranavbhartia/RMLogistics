@@ -86,7 +86,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 			makeANote(loanId, LoanStatus.sysEduMessage);
 
 		}
-		return WorkflowConstants.SUCCESS;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	public Object[] getParamsForExecute() {
