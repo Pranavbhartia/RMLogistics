@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component

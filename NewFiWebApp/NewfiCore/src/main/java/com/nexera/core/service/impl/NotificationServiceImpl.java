@@ -42,11 +42,11 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
-			UserVO userVO) {
+	        UserVO userVO) {
 
 		List<NotificationVO> notList = buildNotificationVOList(notificationDao
-				.findActiveNotifications(loanService.parseLoanModel(loanVO),
-						userProfileService.parseUserModel(userVO)));
+		        .findActiveNotifications(loanService.parseLoanModel(loanVO),
+		                User.convertFromVOToEntity(userVO)));
 
 		return notList;
 	}
@@ -66,7 +66,6 @@ public class NotificationServiceImpl implements NotificationService {
 	@Transactional
 	@Async
 	public NotificationVO createNotificationAsync(NotificationVO notificationVO) {
-
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
@@ -77,8 +76,8 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional
 	public NotificationVO createRoleBasedNotification(
-			NotificationVO notificationVO, List<UserRolesEnum> userRoles,
-			List<InternalUserRolesEum> internalUserRoles) {
+	        NotificationVO notificationVO, List<UserRolesEnum> userRoles,
+	        List<InternalUserRolesEum> internalUserRoles) {
 
 		Notification notification = parseNotificationModel(notificationVO);
 
@@ -95,15 +94,15 @@ public class NotificationServiceImpl implements NotificationService {
 		if (internalUserRoles != null && internalUserRoles.size() > 0) {
 
 			notification.setVisibleToUserRoles(UserRolesEnum.INTERNAL
-					.toString());
+			        .toString());
 			StringBuilder internalUserRolesVisible = new StringBuilder("");
 			for (InternalUserRolesEum rolesEnumInternal : internalUserRoles) {
 				internalUserRolesVisible.append(rolesEnumInternal.toString()
-						+ ",");
+				        + ",");
 			}
 
 			notification.setVisibleToInternalUserRoles(internalUserRolesVisible
-					.toString());
+			        .toString());
 		}
 
 		Integer id = (Integer) notificationDao.save(notification);
@@ -129,21 +128,21 @@ public class NotificationServiceImpl implements NotificationService {
 
 		if (notification.getCreatedDate() != null)
 			vo.setCreatedDate(utils.getDateInUserLocale(
-					notification.getCreatedDate()).getTime());
+			        notification.getCreatedDate()).getTime());
 		vo.setRead(notification.getRead());
 		vo.setDismissable(notification.getDismissable());
 		vo.setTitle(notification.getTitle());
 		vo.setPriority(notification.getPriority());
 		if (notification.getRemindOn() != null)
 			vo.setRemindOn(utils
-					.getDateInUserLocale(notification.getRemindOn()).getTime());
+			        .getDateInUserLocale(notification.getRemindOn()).getTime());
 		vo.setNotificationType(notification.getNotificationType());
 
 		return vo;
 	}
 
 	private List<NotificationVO> buildNotificationVOList(
-			List<Notification> loanNotifications) {
+	        List<Notification> loanNotifications) {
 
 		if (loanNotifications == null)
 			return null;
@@ -175,45 +174,54 @@ public class NotificationServiceImpl implements NotificationService {
 			createdFor.setId(loanNotification.getCreatedForID());
 			model.setCreatedFor(createdFor);
 		}
-		
-		if(loanNotification.getLoanID()!=null){
-			Loan loan=new Loan();
+
+		if (loanNotification.getLoanID() != null) {
+			Loan loan = new Loan();
 			loan.setId(loanNotification.getLoanID());
 			model.setLoan(loan);
 		}
-		if(loanNotification.getRead()!=null){
+		if (loanNotification.getRead() != null) {
 			model.setRead(loanNotification.getRead());
-		}else{
+		} else {
 			model.setRead(false);
 		}
-		if(loanNotification.getDismissable()==null){
+		if (loanNotification.getDismissable() == null) {
 			model.setDismissable(true);
-		}else
+		} else
 			model.setDismissable(loanNotification.getDismissable());
 		model.setTitle(loanNotification.getTitle());
-		if(loanNotification.getPriority()==null){
+		if (loanNotification.getPriority() == null) {
 			model.setPriority("HIGH");
-		}else
+		} else
 			model.setPriority(loanNotification.getPriority());
 		if (loanNotification.getRemindOn() != null)
-			model.setRemindOn(utils.getUserDateInGMT(new Date(
-					loanNotification.getRemindOn())));
-		if(loanNotification.getCreatedDate()==null){
-			model.setCreatedDate(new Date());
-		}else{
-			model.setCreatedDate(utils.getUserDateInGMT(new Date(
-					loanNotification.getCreatedDate())));
+			if (loanNotification.getTimeOffset() != null) {
+				model.setRemindOn(utils.getSystemDateInGMT(new Date(
+						loanNotification.getRemindOn())));
+			} else
+				model.setRemindOn(utils.getUserDateInGMT(new Date(
+						loanNotification
+			        .getRemindOn())));
+		if (loanNotification.getCreatedDate() == null) {
+			model.setCreatedDate(utils.getSystemDateInGMT(new Date()));
+		} else {
+			if (loanNotification.getTimeOffset() != null) {
+				model.setCreatedDate(utils.getSystemDateInGMT(new Date(
+						loanNotification.getCreatedDate())));
+			} else
+				model.setCreatedDate(utils.getUserDateInGMT(new Date(
+			        loanNotification.getCreatedDate())));
 		}
-		if(loanNotification.getNotificationType()==null){
+		if (loanNotification.getNotificationType() == null) {
 			model.setNotificationType("Sample");
-		}else
+		} else
 			model.setNotificationType(loanNotification.getNotificationType());
 
 		return model;
 	}
 
 	private List<Notification> parseNotificationModelList(
-			List<NotificationVO> loanNotifications) {
+	        List<NotificationVO> loanNotifications) {
 
 		if (loanNotifications == null)
 			return null;
@@ -247,16 +255,30 @@ public class NotificationServiceImpl implements NotificationService {
 				.updateNotification(parseNotificationModel(notificationVO)));
 	}
 
-	/* (non-Javadoc)
-	 * @see com.nexera.core.service.NotificationService#findNotificationTypeListForUser(com.nexera.common.vo.UserVO)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.nexera.core.service.NotificationService#findNotificationTypeListForUser
+	 * (com.nexera.common.vo.UserVO)
 	 */
 	@Override
-	public List<NotificationVO> findNotificationTypeListForUser(int userId,String type) {
-		// TODO Auto-generated method stub
-		User user=new User();
+	public List<NotificationVO> findNotificationTypeListForUser(int userId,
+	        String type) {
+		User user = new User();
 		user.setId(userId);
 		List<NotificationVO> notList = buildNotificationVOList(notificationDao
-				.findNotificationTypeListForUser(user,type));
+		        .findNotificationTypeListForUser(user, type));
+		return notList;
+	}
+
+	@Override
+	public List<NotificationVO> findNotificationTypeListForLoan(int loanId,
+			String type, Boolean isRead) {
+		Loan loan = new Loan();
+		loan.setId(loanId);
+		List<NotificationVO> notList = buildNotificationVOList(notificationDao
+				.findNotificationTypeListForLoan(loan, type, isRead));
 		return notList;
 	}
 

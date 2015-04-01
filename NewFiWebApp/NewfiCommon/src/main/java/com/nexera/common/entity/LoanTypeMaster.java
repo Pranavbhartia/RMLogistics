@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.vo.LoanTypeMasterVO;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +31,10 @@ public class LoanTypeMaster implements Serializable {
 
 	public LoanTypeMaster() {
 	}
+
+	public LoanTypeMaster(LoanTypeMasterEnum ref) {
+	    this.id = ref.getStatusId();
+    }
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -179,4 +186,31 @@ public class LoanTypeMaster implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
+	public static LoanTypeMasterVO  convertEntityToVO(LoanTypeMaster master){
+		if(master==null){
+			return null;
+		}
+		LoanTypeMasterVO loanTypeMasterVO = new LoanTypeMasterVO();
+		loanTypeMasterVO.setId(master.getId());
+		loanTypeMasterVO.setDescription(master.getDescription());
+		loanTypeMasterVO.setLoanTypeCd(master.getLoanTypeCd());
+		
+		return loanTypeMasterVO;
+	}
+	
+	public static LoanTypeMaster  convertVoToEntity(LoanTypeMasterVO vo){
+		if(vo==null){
+			return null;
+		}
+		LoanTypeMaster loanTypeMaster = new LoanTypeMaster();
+		loanTypeMaster.setId(vo.getId());
+		loanTypeMaster.setDescription(vo.getDescription());
+		loanTypeMaster.setLoanTypeCd(vo.getLoanTypeCd());
+		
+		
+		return loanTypeMaster;
+
+		
+	}
+	
 }

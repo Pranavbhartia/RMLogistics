@@ -5,16 +5,14 @@ import java.util.List;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.vo.LoanStatusMasterVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.UserVO;
 
@@ -29,6 +27,11 @@ public interface LoanDao extends GenericDao {
 	public boolean addToLoanTeam(Loan loan, User user, User addedBy);
 
 	public boolean removeFromLoanTeam(Loan loan, User user);
+
+	public boolean removeFromLoanTeam(Loan loan,
+	        HomeOwnersInsuranceMaster homeOwnIns);
+
+	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany);
 
 	public List<User> retreiveLoanTeam(Loan loan);
 
@@ -52,8 +55,7 @@ public interface LoanDao extends GenericDao {
 
 	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
 
-	// TODO added for loan rest
-	public List<LoanStatusMaster> getLoanStatusMaster(LoanStatusMasterVO loanVO);
+	
 
 	public List<LoanTypeMaster> getLoanTypeMater(
 			LoanTypeMasterVO loanTypeMaterVO);
@@ -88,6 +90,15 @@ public interface LoanDao extends GenericDao {
 
 	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel);
 
-	public String retrieveUserRole(UserVO userVO);
+	public int retrieveUserRoleId(UserVO userVO);
+
+	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan);
+
+	public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan(
+            Loan loan);
+
+	LoanDetail findLoanDetailOfLoan(Loan loan);
+
+	public void updateLoanEmail(int loanId, String generateLoanEmail);
 
 }

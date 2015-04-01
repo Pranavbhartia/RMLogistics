@@ -3,8 +3,12 @@ package com.nexera.common.vo;
 public class EditLoanTeamVO {
 	private Boolean operationResult;
 	private Integer userID;
+	private Integer titleCompanyID;
+	private Integer homeOwnInsCompanyID;
 	private Integer loanID;
 	private UserVO user;
+	private HomeOwnersInsuranceMasterVO homeOwnInsCompany;
+	private TitleCompanyMasterVO titleCompany;
 
 	public Boolean getOperationResult() {
 		return operationResult;
@@ -36,6 +40,38 @@ public class EditLoanTeamVO {
 
 	public void setUser(UserVO user) {
 		this.user = user;
+	}
+
+	public Integer getTitleCompanyID() {
+		return titleCompanyID;
+	}
+
+	public void setTitleCompanyID(Integer titleCompanyID) {
+		this.titleCompanyID = titleCompanyID;
+	}
+
+	public Integer getHomeOwnInsCompanyID() {
+		return homeOwnInsCompanyID;
+	}
+
+	public void setHomeOwnInsCompanyID(Integer homeOwnInsCompanyID) {
+		this.homeOwnInsCompanyID = homeOwnInsCompanyID;
+	}
+
+	public HomeOwnersInsuranceMasterVO getHomeOwnInsCompany() {
+		return homeOwnInsCompany;
+	}
+
+	public void setHomeOwnInsCompany(HomeOwnersInsuranceMasterVO homeOwnInsCompany) {
+		this.homeOwnInsCompany = homeOwnInsCompany;
+	}
+
+	public TitleCompanyMasterVO getTitleCompany() {
+		return titleCompany;
+	}
+
+	public void setTitleCompany(TitleCompanyMasterVO titleCompany) {
+		this.titleCompany = titleCompany;
 	}
 
 }

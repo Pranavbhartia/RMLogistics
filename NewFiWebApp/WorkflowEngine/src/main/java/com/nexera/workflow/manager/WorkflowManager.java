@@ -5,6 +5,7 @@ package com.nexera.workflow.manager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -57,9 +58,10 @@ public class WorkflowManager implements Callable<String> {
 		        .getWorkflowItemMaster();
 		String result = executeMethod(workflowItemMaster);
 
-		if (result.equalsIgnoreCase(WorkflowConstants.SUCCESS)) {
+		if (result.equalsIgnoreCase(WorkItemStatus.COMPLETED.getStatus())) {
 
 			LOGGER.debug("Updating workflowitem master to completed ");
+			workflowItemExecution.setEndTime(new Date());
 			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
 			        .getStatus());
 			workflowService

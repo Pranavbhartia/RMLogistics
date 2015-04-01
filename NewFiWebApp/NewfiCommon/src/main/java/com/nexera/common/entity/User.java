@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,10 +18,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.UserVO;
 
 /**
  * The persistent class for the user database table.
@@ -60,7 +65,6 @@ public class User implements Serializable, UserDetails {
 	private Locale userLocale;
 	private String minutesOffset;
 	private Boolean isProfileComplete;
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -220,7 +224,7 @@ public class User implements Serializable, UserDetails {
 
 	// Spring security related methods
 	public User(String emailId, String password, String firstName,
-			String lastName) {
+	        String lastName) {
 		super();
 		this.emailId = emailId;
 		this.password = password;
@@ -229,7 +233,7 @@ public class User implements Serializable, UserDetails {
 		// TODO: This is currently hard coded, we need to determine this based
 		// on the user type
 		this.authorities = new GrantedAuthority[] { new GrantedAuthorityImpl(
-				"ROLE_CUSTOMER") };
+		        "ROLE_CUSTOMER") };
 	}
 
 	public User() {
@@ -238,7 +242,7 @@ public class User implements Serializable, UserDetails {
 
 	public User(Integer userId) {
 		// TODO Auto-generated constructor stub
-		this.id=userId;
+		this.id = userId;
 	}
 
 	@Transient
@@ -276,10 +280,12 @@ public class User implements Serializable, UserDetails {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
 	@Transient
 	public String getMinutesOffset() {
 		return minutesOffset;
 	}
+
 	public void setMinutesOffset(String minutesOffset) {
 		this.minutesOffset = minutesOffset;
 	}
@@ -293,11 +299,12 @@ public class User implements Serializable, UserDetails {
 	public void setAuthorities(GrantedAuthority[] authorities) {
 		this.authorities = authorities;
 	}
-	
+
 	@Transient
 	public Locale getUserLocale() {
 		return userLocale;
 	}
+
 	public void setUserLocale(Locale userLocale) {
 		this.userLocale = userLocale;
 	}
@@ -312,14 +319,15 @@ public class User implements Serializable, UserDetails {
 	public void setUserRole(UserRole userRole) {
 		this.userRole = userRole;
 	}
-	
+
 	// bi-directional many-to-one association to LoanAppForm
 	@OneToMany(mappedBy = "user")
 	public List<TransactionDetails> getTransactionDetails() {
 		return this.transactionDetails;
 	}
 
-	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
+	public void setTransactionDetails(
+	        List<TransactionDetails> transactionDetails) {
 		this.transactionDetails = transactionDetails;
 	}
 
@@ -331,6 +339,71 @@ public class User implements Serializable, UserDetails {
 
 	public void setIsProfileComplete(Boolean isProfileComplete) {
 		this.isProfileComplete = isProfileComplete;
+	}
+
+	public static UserVO convertFromEntityToVO(final User user) {
+		UserVO userVO = new UserVO();
+		if (user != null) {
+			userVO.setFirstName(user.getFirstName());
+			userVO.setLastName(user.getLastName());
+			userVO.setPhoneNumber(user.getPhoneNumber());
+			userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+			userVO.setPassword(user.getPassword());
+			userVO.setId(user.getId());
+			userVO.setUserRole(UserRole.convertFromEntityToVO(user
+			        .getUserRole()));
+			userVO.setEmailId(user.getEmailId());
+			userVO.setDisplayName(user.firstName + " " + user.lastName);
+			userVO.setEmailId(user.getEmailId());
+			userVO.setDisplayName(user.getFirstName() + " "
+			        + user.getLastName());
+			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
+			        .getCustomerDetail()));
+			userVO.setInternalUserDetail(InternalUserDetail
+			        .convertFromEntityToVO(user.getInternalUserDetail()));
+
+		}
+		return userVO;
+	}
+
+	public static User convertFromVOToEntity(UserVO userVO) {
+
+		if (userVO == null)
+			return null;
+		User userModel = new User();
+
+		userModel.setId(userVO.getId());
+		userModel.setFirstName(userVO.getFirstName());
+		userModel.setLastName(userVO.getLastName());
+
+		if (userVO.getEmailId() != null) {
+			userModel.setUsername(userVO.getEmailId().split(":")[0]);
+			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		}
+		//userModel.setPassword(userVO.getPassword());
+
+		userModel.setStatus(true);
+
+		userModel.setPhoneNumber(userVO.getPhoneNumber());
+		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
+
+		userModel.setUserRole(UserRole.convertFromVOToEntity(userVO
+		        .getUserRole()));
+		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		        .getRoleId()) {
+			
+			userModel.setCustomerDetail(CustomerDetail
+			        .convertFromVOToEntity(userVO.getCustomerDetail()));
+		}
+		userModel.setInternalUserDetail(InternalUserDetail
+		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
+		if (userModel.getUserRole().getId() == UserRolesEnum.REALTOR
+		        .getRoleId()) {
+			userModel.setRealtorDetail(RealtorDetail
+			        .convertFromVOToEntity(userVO.getRealtorDetail()));
+		}
+
+		return userModel;
 	}
 
 }

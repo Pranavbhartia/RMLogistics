@@ -2,7 +2,6 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +27,12 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneLoanTeamVO;
-import com.nexera.common.vo.MilestoneNotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
-import com.nexera.workflow.Constants.WorkflowConstants;
-import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
@@ -50,6 +48,8 @@ public class WorkflowRestService {
 	private LoanService loanService;
 	@Autowired
 	private NeedsListService needsListService;
+	@Autowired
+	private WorkflowCoreService workflowCoreService;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(WorkflowRestService.class);
 
@@ -61,17 +61,8 @@ public class WorkflowRestService {
 		try {
 			WorkflowVO workflowVO = new WorkflowVO();
 			LOG.debug("Putting loan manager workflow into execution ");
-			workflowVO
-			        .setWorkflowType(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE);
-			Gson gson = new Gson();
-			int loanManagerWFID = engineTrigger.triggerWorkFlow(gson
-			        .toJson(workflowVO));
-			LOG.debug("Putting customer workflow into execution ");
-			workflowVO
-			        .setWorkflowType(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE);
-			int customerWFID = engineTrigger.triggerWorkFlow(gson
-			        .toJson(workflowVO));
-			loanService.saveWorkflowInfo(loanID, customerWFID, loanManagerWFID);
+			workflowVO.setLoanID(loanID);
+			workflowCoreService.createWorkflow(workflowVO);
 			String successMessage = "The Loan " + loanID
 			        + " has been put into execution ";
 			response = RestUtil.wrapObjectForSuccess(successMessage);
@@ -93,30 +84,6 @@ public class WorkflowRestService {
 			LoanVO loanVO = loanService.findWorkflowInfoById(loanID);
 			LOG.debug("Putting loan manager workflow into execution ");
 			response = RestUtil.wrapObjectForSuccess(loanVO);
-			LOG.debug("Response" + response);
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			response = RestUtil.wrapObjectForFailure(null, "500",
-			        e.getMessage());
-		}
-		return response;
-	}
-
-	
-	@RequestMapping(value = "/milestone/alert", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getWorkflowItemStateInfo(
-	        @RequestBody String milestoneNotificationStr) {
-		LOG.info("milestoneNotificationStr----" + milestoneNotificationStr);
-		CommonResponseVO response = null;
-		try {
-			Gson gson = new Gson();
-			MilestoneNotificationVO milestoneNoticationVO = gson.fromJson(
-			        milestoneNotificationStr, MilestoneNotificationVO.class);
-			LOG.info("workflowItem ID" + milestoneNoticationVO.getMilestoneId());
-			String stateInfo = "";// Make a call to Workflow Engine which will
-			// call the renderStateInfo
-			// to the work flow engine pass the loanId.. as Object[]..
-			response = RestUtil.wrapObjectForSuccess(stateInfo);
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -200,20 +167,10 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-
-			List<WorkflowItemExec> list = engineTrigger
-			        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
-			List<WorkflowItemExecVO> volist = new ArrayList<WorkflowItemExecVO>();
-
-			for (WorkflowItemExec workflowItem : list)
-
-			{
-				WorkflowItemExecVO workflowItemVO = new WorkflowItemExecVO();
-				volist.add(workflowItemVO.convertToVO(workflowItem));
-			}
-			// List<WorkflowItemExecVO> list = prepareTestListForLoanManager();
+			List<WorkflowItemExecVO> volist = workflowCoreService
+			        .getWorkflowItems(workflowId);
 			response = RestUtil.wrapObjectForSuccess(volist);
-			LOG.debug("Response" + list.size());
+			LOG.debug("Response" + volist.size());
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
@@ -229,8 +186,6 @@ public class WorkflowRestService {
 		LOG.info("workflowItemId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
-			// List<WorkflowItemExec> list =
-			// workflowService.getWorkflowItemListByParentWorkflowExecItem(workflowId);
 
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 
@@ -246,6 +201,37 @@ public class WorkflowRestService {
 		return response;
 	}
 
+	@RequestMapping(value = "invokeaction/{workflowItemId}", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO invokeWorkflowItem(
+	        @PathVariable int workflowItemId,
+	        @RequestBody(required = false) String params) {
+		LOG.info("workflowItemId----" + workflowItemId);
+		CommonResponseVO response = null;
+		try {
+			workflowService.saveParamsInExecTable(workflowItemId, params);
+			String result = engineTrigger.invokeActionMethod(workflowItemId);
+			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+
+	private String mapStatus(String status) {
+		switch (status) {
+		case "3":
+			return "success";
+		case "success":
+			return "success";
+		case "2":
+			return "";
+		default:
+			return status;
+		}
+	}
+
 	@RequestMapping(value = "renderstate/{workflowId}", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getRenderStateInfoOfItem(
 	        @PathVariable int workflowId,
@@ -253,7 +239,7 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-			
+
 			workflowService.saveParamsInExecTable(workflowId, params);
 			String result = engineTrigger.getRenderStateInfoOfItem(workflowId);
 			response = RestUtil.wrapObjectForSuccess(result);
@@ -272,9 +258,11 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-			String status = "3";
-			String stat = params;
-			engineTrigger.changeStateOfWorkflowItemExec(workflowId, status);
+
+			WorkflowItemExecVO wfExec = new WorkflowItemExecVO();
+			wfExec.setId(workflowId);
+			wfExec.setStatus(WorkItemStatus.STARTED.getStatus());
+			workflowCoreService.changeWorkItemState(wfExec);
 			response = RestUtil.wrapObjectForSuccess("Success");
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -283,15 +271,16 @@ public class WorkflowRestService {
 		}
 		return response;
 	}
-	
-	@RequestMapping ( value = "getupdatedstatus", method = RequestMethod.GET)
-    public @ResponseBody CommonResponseVO getUpdatedStatus(@RequestParam(value="items")String items,
-    		@RequestParam(value="data",required=false)String data)
-    {
-        LOG.info( "getUpdatedStatus----" );
-        CommonResponseVO response = null;
-        ObjectMapper mapper=new ObjectMapper();
-        TypeReference<List<Integer>> typeRef=new TypeReference<List<Integer>>() {};
+
+	@RequestMapping(value = "getupdatedstatus", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getUpdatedStatus(
+	        @RequestParam(value = "items") String items,
+	        @RequestParam(value = "data", required = false) String data) {
+		LOG.info("getUpdatedStatus----");
+		CommonResponseVO response = null;
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<List<Integer>> typeRef = new TypeReference<List<Integer>>() {
+		};
 		List<Integer> milestoneItems = null;
 		try {
 			milestoneItems = mapper.readValue(items, typeRef);
@@ -302,29 +291,32 @@ public class WorkflowRestService {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-        try {
-        	HashMap<String, Object> map=new HashMap<String,Object>();
-        	TypeReference<HashMap<String, Object>> typeRefList=new TypeReference<HashMap<String,Object>>(){};
-        	map=mapper.readValue(data, typeRefList);
-        	HashMap<Integer, String> resultStatus=new HashMap<Integer,String>();
-        	for(Integer workflowItemExecId: milestoneItems){
-        		System.out.println(workflowItemExecId+"----------------------");
-        		map.put("workflowItemExecId", workflowItemExecId);
-        		StringWriter sw=new StringWriter();
-		    	mapper.writeValue(sw, map);
-        		workflowService.saveParamsInExecTable(workflowItemExecId, sw.toString());
-        		String result=engineTrigger.checkStatus(workflowItemExecId);
-        		if(result!=null)
-        			resultStatus.put(workflowItemExecId, result);
-        	}
-        	
-            response = RestUtil.wrapObjectForSuccess( resultStatus );
-        } catch ( Exception e ) {
-            LOG.error( e.getMessage() );
-            response = RestUtil.wrapObjectForFailure( null, "500", e.getMessage() );
-        }
-        return response;
-    }
-	
+		try {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			TypeReference<HashMap<String, Object>> typeRefList = new TypeReference<HashMap<String, Object>>() {
+			};
+			map = mapper.readValue(data, typeRefList);
+			HashMap<Integer, String> resultStatus = new HashMap<Integer, String>();
+			for (Integer workflowItemExecId : milestoneItems) {
+				System.out.println(workflowItemExecId
+				        + "----------------------");
+				map.put("workflowItemExecId", workflowItemExecId);
+				StringWriter sw = new StringWriter();
+				mapper.writeValue(sw, map);
+				workflowService.saveParamsInExecTable(workflowItemExecId,
+				        sw.toString());
+				String result = engineTrigger.checkStatus(workflowItemExecId);
+				if (result != null)
+					resultStatus.put(workflowItemExecId, result);
+			}
+
+			response = RestUtil.wrapObjectForSuccess(resultStatus);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
 
 }

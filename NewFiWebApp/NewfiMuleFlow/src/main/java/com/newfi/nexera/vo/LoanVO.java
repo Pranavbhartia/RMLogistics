@@ -39,6 +39,8 @@ public class LoanVO
 
     private BigDecimal requestedFee;
 
+    private String docId;
+
 
     /**
      * @return the sTicket
@@ -271,6 +273,24 @@ public class LoanVO
     public void setRequestedRate( BigDecimal requestedRate )
     {
         this.requestedRate = requestedRate;
+    }
+
+
+    /**
+     * @return the docId
+     */
+    public String getDocId()
+    {
+        return docId;
+    }
+
+
+    /**
+     * @param docId the docId to set
+     */
+    public void setDocId( String docId )
+    {
+        this.docId = docId;
     }
 
 }

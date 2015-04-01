@@ -7,11 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
-import com.nexera.workflow.enums.Milestones;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -25,20 +26,21 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get(WorkflowDisplayConstants.STATUS_KEY)
+		String status = objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 				.toString();
 		String message = "";
-		if (status.equals(ApplicationStatus.inUnderwriting)) {
-			message = ApplicationStatus.inUnderwritingMessage;
+		if (status.equals(LoanStatus.inUnderwriting)) {
+			message = LoanStatus.inUnderwritingMessage;
 		} else if (status
-				.equals(ApplicationStatus.underwritingObservationsReceived)) {
-			message = ApplicationStatus.underwritingObservationsReceivedMessage;
-		} else if (status.equals(ApplicationStatus.underwritingSubmitted)) {
-			message = ApplicationStatus.underwritingSubmittedMessage;
-		} else if (status.equals(ApplicationStatus.approvedWithConditions)) {
-			message = ApplicationStatus.approvedWithConditionsMessage;
-		} else if (status.equals(ApplicationStatus.underwritingApproved)) {
-			message = ApplicationStatus.underwritingApprovedMessage;
+				.equals(LoanStatus.underwritingObservationsReceived)) {
+			message = LoanStatus.underwritingObservationsReceivedMessage;
+		} else if (status.equals(LoanStatus.underwritingSubmitted)) {
+			message = LoanStatus.underwritingSubmittedMessage;
+		} else if (status.equals(LoanStatus.approvedWithConditions)) {
+			message = LoanStatus.approvedWithConditionsMessage;
+		} else if (status.equals(LoanStatus.underwritingApproved)) {
+			message = LoanStatus.underwritingApprovedMessage;
 		}
 		// TODO add alert code here
 		if (!message.equals("")) {

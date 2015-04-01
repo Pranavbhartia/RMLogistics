@@ -199,6 +199,8 @@ CREATE TABLE `internaluserdetails` (
   PRIMARY KEY (`id`),
   KEY `fk_internalUserManager_idx` (`manager`),
   KEY `fk_internalUserRole_idx` (`user_role`),
+    
+    
   CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_internalUserRole` FOREIGN KEY (`user_role`) REFERENCES `internaluserrolemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -888,25 +890,33 @@ CREATE TABLE `uicomponentpermission` (
 DROP TABLE IF EXISTS `uploadedfileslist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `uploadedfileslist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `s3path` varchar(255) DEFAULT NULL,
-  `uploaded_by` int(11) DEFAULT NULL,
-  `is_assigned` tinyint(4) DEFAULT NULL,
-  `uploaded_date` datetime DEFAULT NULL,
-  `is_activate` tinyint(4) DEFAULT NULL,
-  `loan` int(11) DEFAULT NULL,
-  `file_name` varchar(50) DEFAULT NULL,
-  `s3thumbnail` varchar(250) DEFAULT NULL,
-  `assigned_by` tinyint(4) DEFAULT NULL,
-  `uuidfileid` varchar(100) DEFAULT NULL,
-  `totalpages` int(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_uploadedFilesMappedToLoan_idx` (`loan`),
-  KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
-  CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=5461;
+CREATE TABLE newfi_schema.uploadedfileslist (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  s3path VARCHAR(255) DEFAULT NULL,
+  uploaded_by INT(11) DEFAULT NULL,
+  is_assigned TINYINT(4) DEFAULT NULL,
+  uploaded_date DATETIME DEFAULT NULL,
+  is_activate TINYINT(4) DEFAULT NULL,
+  loan INT(11) DEFAULT NULL,
+  file_name VARCHAR(50) DEFAULT NULL,
+  s3thumbnail VARCHAR(250) DEFAULT NULL,
+  assigned_by TINYINT(4) DEFAULT NULL,
+  uuidfileid VARCHAR(100) DEFAULT NULL,
+  totalpages INT(5) DEFAULT NULL,
+  lqb_file_id VARCHAR(200) DEFAULT NULL,
+  PRIMARY KEY (id),
+  INDEX fk_uploadedFilesMappedToLoan_idx (loan),
+  INDEX fk_uploadedFilesMappedToUploader_idx (uploaded_by),
+  CONSTRAINT fk_uploadedFilesMappedToLoan FOREIGN KEY (loan)
+    REFERENCES newfi_schema.loan(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT fk_uploadedFilesMappedToUploader FOREIGN KEY (uploaded_by)
+    REFERENCES newfi_schema.user(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+ENGINE = INNODB
+AUTO_INCREMENT = 45
+AVG_ROW_LENGTH = 5461
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1156,6 +1166,27 @@ CREATE TABLE `workflowtaskconfigmaster` (
   `params` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `statelookup`;
+CREATE TABLE `statelookup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `statecode` varchar(45) DEFAULT NULL,
+  `statename` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `zipcodelookup`;
+CREATE TABLE `zipcodelookup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `state_id` int(11) DEFAULT NULL,
+  `zipcode` varchar(45) DEFAULT NULL,
+  `countyname` varchar(45) DEFAULT NULL,
+  `cityname` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_state_lookup_idx` (`state_id`),
+  CONSTRAINT `fk_state_lookup` FOREIGN KEY (`state_id`) REFERENCES `statelookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=42512 DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1168,3 +1199,7 @@ CREATE TABLE `workflowtaskconfigmaster` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2015-03-26 20:36:42
+
+-- 2015-03-31 create statement for milestoneturnaroundtime
+CREATE TABLE `milestoneturnaroundtime` (`id` int(11) NOT NULL AUTO_INCREMENT,  `workflow_item_id` int(11) NOT NULL,`hours` int(11) DEFAULT NULL,`created_by` int(11) NOT NULL,`modified_by` int(11) NOT NULL, `created_date` datetime DEFAULT NULL, `modified_date` datetime DEFAULT NULL,  PRIMARY KEY (`id`),CONSTRAINT `FK_milestoneturnaroundtime` FOREIGN KEY (`workflow_item_id`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,CONSTRAINT `FK_milestoneturnaroundtimeuserId` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,CONSTRAINT `FK_milestoneturnaroundtimemodified_by` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

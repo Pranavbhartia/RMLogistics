@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.NeedsListService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component

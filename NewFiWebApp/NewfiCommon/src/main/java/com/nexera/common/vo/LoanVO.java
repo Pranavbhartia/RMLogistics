@@ -19,7 +19,7 @@ public class LoanVO implements Serializable {
 	private String status;
 	private UserVO user;
 	private LoanTypeMasterVO loanType;
-	private LoanStatusMasterVO loanStatus;
+	
 	private PropertyTypeMasterVO propertyType;
 	private LoanMilestoneMasterVO currentLoanMilestone;
 	private List<LoanAppFormVO> loanAppForms;
@@ -31,14 +31,13 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
-	
+	private ExtendedLoanTeamVO extendedLoanTeam;
 
 	private Boolean isRateLocked;
 	private Boolean isBankConnected;
 	private String setSenderDomain;
 	private BigDecimal lockedRate;
 
-	
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
@@ -59,12 +58,12 @@ public class LoanVO implements Serializable {
 	}
 
 	public LoanVO(int loanId) {
-	    this.id = loanId;
-    }
+		this.id = loanId;
+	}
 
 	public LoanVO() {
-	    // TODO Auto-generated constructor stub
-    }
+		// TODO Auto-generated constructor stub
+	}
 
 	public int getId() {
 		return id;
@@ -138,13 +137,6 @@ public class LoanVO implements Serializable {
 		this.loanType = loanType;
 	}
 
-	public LoanStatusMasterVO getLoanStatus() {
-		return loanStatus;
-	}
-
-	public void setLoanStatus(LoanStatusMasterVO loanStatus) {
-		this.loanStatus = loanStatus;
-	}
 
 	public PropertyTypeMasterVO getPropertyType() {
 		return propertyType;
@@ -159,7 +151,7 @@ public class LoanVO implements Serializable {
 	}
 
 	public void setCurrentLoanMilestone(
-			LoanMilestoneMasterVO currentLoanMilestone) {
+	        LoanMilestoneMasterVO currentLoanMilestone) {
 		this.currentLoanMilestone = currentLoanMilestone;
 	}
 
@@ -176,7 +168,7 @@ public class LoanVO implements Serializable {
 	}
 
 	public void setLoanApplicationFees(
-			List<LoanApplicationFeeVO> loanApplicationFees) {
+	        List<LoanApplicationFeeVO> loanApplicationFees) {
 		this.loanApplicationFees = loanApplicationFees;
 	}
 
@@ -253,12 +245,12 @@ public class LoanVO implements Serializable {
 	}
 
 	public String getSetSenderDomain() {
-	    return setSenderDomain;
-    }
+		return setSenderDomain;
+	}
 
 	public void setSetSenderDomain(String setSenderDomain) {
-	    this.setSenderDomain = setSenderDomain;
-    }
+		this.setSenderDomain = setSenderDomain;
+	}
 
 	public BigDecimal getLockedRate() {
 		return lockedRate;
@@ -267,6 +259,7 @@ public class LoanVO implements Serializable {
 	public void setLockedRate(BigDecimal lockedRate) {
 		this.lockedRate = lockedRate;
 	}
+
 	public Boolean getIsRateLocked() {
 		return isRateLocked;
 	}
@@ -283,6 +276,12 @@ public class LoanVO implements Serializable {
 		this.isBankConnected = isBankConnected;
 	}
 
-	
+	public ExtendedLoanTeamVO getExtendedLoanTeam() {
+		return extendedLoanTeam;
+	}
+
+	public void setExtendedLoanTeam(ExtendedLoanTeamVO extendedLoanTeam) {
+		this.extendedLoanTeam = extendedLoanTeam;
+	}
 
 }

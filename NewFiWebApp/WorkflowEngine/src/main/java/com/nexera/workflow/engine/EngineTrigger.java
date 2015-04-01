@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.nexera.workflow.Constants.WorkflowConstants;
@@ -50,6 +50,7 @@ public class EngineTrigger {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	@Transactional
 	public Integer triggerWorkFlow(String workflowJsonString) {
 		LOGGER.debug("Triggering a workflow ");
 		WorkflowMaster workflowMaster = null;
@@ -70,11 +71,10 @@ public class EngineTrigger {
 				        .getWorkflowItemMasterListByWorkflowMaster(workflowMaster);
 				for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
 					LOGGER.debug("Initializing all workflow items ");
-					// TODO test this
-					/*
-					 * if (!workflowService
-					 * .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
-					 */
+					if (workflowService
+					        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
+						continue;
+					}
 
 					if (!workflowItemMaster.getChildWorkflowItemMasterList()
 					        .isEmpty()) {
@@ -148,6 +148,7 @@ public class EngineTrigger {
 	}
 
 	public String startWorkFlowItemExecution(int workflowItemExecutionId) {
+		String result = null;
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
 		Future<String> future = null;
 		executorService = cacheManager.initializePool();
@@ -158,8 +159,8 @@ public class EngineTrigger {
 			LOGGER.debug("Updating workflow master status if its not updated ");
 			WorkflowExec workflowExec = workflowItemExecution
 			        .getParentWorkflow();
-			if (!workflowExec.getStatus().equals(
-			        WorkItemStatus.STARTED.getStatus())) {
+			if (workflowExec.getStatus().equals(
+			        WorkItemStatus.NOT_STARTED.getStatus())) {
 				workflowExec.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService.updateWorkflowExecStatus(workflowExec);
 			}
@@ -177,27 +178,29 @@ public class EngineTrigger {
 				}
 
 				LOGGER.debug("Updating workflow item execution status  to started");
-				workflowItemExecution.setStatus(WorkItemStatus.STARTED
-				        .getStatus());
-				workflowService
-				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
-				WorkflowManager workflowManager = applicationContext
-				        .getBean(WorkflowManager.class);
-				workflowManager.setWorkflowItemExec(workflowItemExecution);
-				future = executorService.submit(workflowManager);
+				if (workflowItemExecution.getStatus().equalsIgnoreCase(
+				        WorkItemStatus.NOT_STARTED.getStatus())) {
+					workflowItemExecution.setStatus(WorkItemStatus.STARTED
+					        .getStatus());
+					workflowService
+					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+					WorkflowManager workflowManager = applicationContext
+					        .getBean(WorkflowManager.class);
+					workflowManager.setWorkflowItemExec(workflowItemExecution);
+					future = executorService.submit(workflowManager);
 
-				executorService.shutdown();
-				try {
-					executorService.awaitTermination(Long.MAX_VALUE,
-					        TimeUnit.NANOSECONDS);
-				} catch (InterruptedException e) {
-					LOGGER.error("Exception caught while terminating executor "
-					        + e.getMessage());
-					throw new FatalException(
-					        "Exception caught while terminating executor "
-					                + e.getMessage());
+					executorService.shutdown();
+					try {
+						executorService.awaitTermination(Long.MAX_VALUE,
+						        TimeUnit.NANOSECONDS);
+					} catch (InterruptedException e) {
+						LOGGER.error("Exception caught while terminating executor "
+						        + e.getMessage());
+						throw new FatalException(
+						        "Exception caught while terminating executor "
+						                + e.getMessage());
+					}
 				}
-
 				LOGGER.debug("Checking whether the parents all workflow items are executed ");
 				WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution
 				        .getParentWorkflowItemExec();
@@ -228,22 +231,26 @@ public class EngineTrigger {
 					LOGGER.debug("Updating the workflow item execution status to started ");
 					workflowItemExecution.setStatus(WorkItemStatus.STARTED
 					        .getStatus());
-					// TODO decide what will happen to parent exec ?
 					workflowService
 					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 					for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
 						LOGGER.debug("Starting all child threads together ");
 						LOGGER.debug("Updating the child workflow item execution status to started ");
-						childWorkflowItemExec.setStatus(WorkItemStatus.STARTED
-						        .getStatus());
+						if (!childWorkflowItemExec.getStatus()
+						        .equalsIgnoreCase(
+						                WorkItemStatus.COMPLETED.getStatus())) {
+							childWorkflowItemExec
+							        .setStatus(WorkItemStatus.STARTED
+							                .getStatus());
 
-						workflowService
-						        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
-						WorkflowManager workflowManager = applicationContext
-						        .getBean(WorkflowManager.class);
-						workflowManager
-						        .setWorkflowItemExec(childWorkflowItemExec);
-						executorService.submit(workflowManager);
+							workflowService
+							        .updateWorkflowItemExecutionStatus(childWorkflowItemExec);
+							WorkflowManager workflowManager = applicationContext
+							        .getBean(WorkflowManager.class);
+							workflowManager
+							        .setWorkflowItemExec(childWorkflowItemExec);
+							executorService.submit(workflowManager);
+						}
 					}
 					executorService.shutdown();
 					try {
@@ -265,35 +272,59 @@ public class EngineTrigger {
 						}
 					}
 					if (count == childWorkflowItemExecList.size()) {
-						LOGGER.debug("All child items are complete, Updating the parent ");
-						workflowItemExecution
-						        .setStatus(WorkItemStatus.COMPLETED.getStatus());
-						workflowService
-						        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+						LOGGER.debug("All child items are complete ");
+						if (!workflowItemExecution.getStatus()
+						        .equalsIgnoreCase(
+						                WorkItemStatus.COMPLETED.getStatus())) {
+							executorService = cacheManager.initializePool();
+							LOGGER.debug(" Triggering the parent");
+							WorkflowManager workflowManager = applicationContext
+							        .getBean(WorkflowManager.class);
+							workflowManager
+							        .setWorkflowItemExec(workflowItemExecution);
+							future = executorService.submit(workflowManager);
+							executorService.shutdown();
+							try {
+								executorService.awaitTermination(
+								        Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+							} catch (InterruptedException e) {
+								LOGGER.error("Exception caught while terminating executor "
+								        + e.getMessage());
+								throw new FatalException(
+								        "Exception caught while terminating executor "
+								                + e.getMessage());
+							}
+						}
+
 					}
 
 				} else {
 					LOGGER.debug("Independent execution");
-					workflowItemExecution.setStatus(WorkItemStatus.STARTED
-					        .getStatus());
-					workflowService
-					        .updateWorkflowItemExecutionStatus(workflowItemExecution);
-					WorkflowManager workflowManager = applicationContext
-					        .getBean(WorkflowManager.class);
-					workflowManager.setWorkflowItemExec(workflowItemExecution);
-					future = executorService.submit(workflowManager);
-
+					if (!workflowItemExecution.getStatus().equalsIgnoreCase(
+					        WorkItemStatus.STARTED.getStatus())) {
+						workflowItemExecution.setStatus(WorkItemStatus.STARTED
+						        .getStatus());
+						workflowService
+						        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+						WorkflowManager workflowManager = applicationContext
+						        .getBean(WorkflowManager.class);
+						workflowManager
+						        .setWorkflowItemExec(workflowItemExecution);
+						future = executorService.submit(workflowManager);
+						executorService.shutdown();
+						try {
+							executorService.awaitTermination(Long.MAX_VALUE,
+							        TimeUnit.NANOSECONDS);
+						} catch (InterruptedException e) {
+							LOGGER.error("Exception caught while terminating executor "
+							        + e.getMessage());
+						}
+					}
 				}
 			}
 		}
-		try {
-			return future.get();
-		} catch (InterruptedException e) {
-			return "Exception Occured ";
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			return "Exception Occured ";
-		}
+		return "";
+
 	}
 
 	public String getRenderStateInfoOfItem(int workflowItemExecId) {

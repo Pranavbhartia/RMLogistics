@@ -137,7 +137,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				uniqueBucketName, key, file);
 
-		if(FilenameUtils.getExtension(file.getName()).equals("pdf")){
+		if(subfolderInBucket.equalsIgnoreCase("document")){
 			putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
 		}else{
 			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
@@ -255,11 +255,23 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	}
 	
-	public InputStream getInputStreamFromFile(String fileUrl)
+	public InputStream getInputStreamFromFile(String fileUrl , String isImage)
 			throws Exception {
-		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+".pdf");
+		
+		String extention = null;
+		if(isImage.equals("0")){
+			extention = ".pdf";
+		}else{
+			extention = ".jpeg";
+		}
+		
+		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+extention);
 		 File initialFile = new File(filePth);
 		 InputStream targetStream = new FileInputStream(initialFile);
+		 
+		 if(initialFile.exists()){
+			 initialFile.delete();
+		 }
 		 return targetStream;
 	}
 	

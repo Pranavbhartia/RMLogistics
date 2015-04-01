@@ -27,6 +27,7 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
+import com.nexera.common.vo.UserVO;
 
 @Component
 @Transactional
@@ -47,6 +48,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(User.class);
 			criteria.add(Restrictions.eq("emailId", userName));
+			criteria.add(Restrictions.eq("password", password));
 			criteria.add(Restrictions.eq("password", password));
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
@@ -117,7 +119,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference WHERE customerdetail.id = :id";
 		Query query = (Query) session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
@@ -127,6 +129,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
+		query.setParameter("mobileAlertsPreference", customerDetail.getMobileAlertsPreference());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -146,11 +149,33 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	public List<User> getUsersList()
+		{
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(User.class);
+					
+			return criteria.list();
+			
+			
+			
+		}
+	
+	@Override
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
-		        + user.getFirstName() + "%'";
+		String searchQuery = "FROM User where ";
+		
+		if(user.getEmailId()!=null)
+			searchQuery += " email_id like '%"+user.getEmailId()+"%' or ";
+		
+		if(user.getFirstName()!=null)
+			user.setFirstName(user.getFirstName().toLowerCase());
+		else
+			user.setFirstName("");
+		searchQuery+=" lower(concat( first_name,',',last_name) ) like '%"
+		        + user.getFirstName() +"%'";
+		
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
@@ -173,17 +198,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		query.setMaxResults(MAX_RESULTS);
 		List<User> userList = query.list();
-
-		for (User userObj : userList) {
-			Hibernate.initialize(user.getInternalUserDetail());
-			if (userObj.getInternalUserDetail() != null)
-				Hibernate.initialize(userObj.getInternalUserDetail()
-				        .getInternaUserRoleMaster());
-		}
+		
 
 		return userList;
 	}
-
 	@Override
 	public Integer saveUserWithDetails(User user) {
 		if (null != user.getInternalUserDetail() && user.getUserRole() != null && user.getUserRole().getId() == UserRolesEnum.INTERNAL.getRoleId()) {

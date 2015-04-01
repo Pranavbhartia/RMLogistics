@@ -2,13 +2,20 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanAppForm;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class CreditScoreManager implements IWorkflowTaskExecutor {
 
+	@Autowired
+	private IWorkflowService iWorkflowService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
@@ -17,8 +24,28 @@ public class CreditScoreManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Loan loan = new Loan();
+		loan.setId(Integer.parseInt(inputMap.get(
+				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		LoanAppForm loanAppForm = iWorkflowService.getLoanAppFormDetails(loan);
+		// TO Remove------ start
+		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+				"EQ-?? | TU-?? | EX-??");
+		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+				"http://www.lendingqb.com/");
+		// TO Remove------ end
+		
+		// TODO confirm where credit score and url will be stored
+		/*if (loanAppForm.getCreditStatus() != null
+				&& !loanAppForm.getCreditStatus().trim().equals("")) {
+			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+					loanAppForm.getCreditStatus());
+			// TODO check column path
+			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+					loanAppForm.getCreditStatusUrl());
+		}*/
+		return iWorkflowService.getJsonStringOfMap(map);
 	}
 
 	@Override

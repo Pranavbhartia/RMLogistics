@@ -5,10 +5,11 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.newfi.workflow.WorkflowDisplayConstants;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -43,9 +44,9 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
-			engineTrigger
-					.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-			return "3";
+			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
+					WorkItemStatus.COMPLETED.getStatus());
+			return WorkItemStatus.COMPLETED.getStatus();
 		}
 		return null;
 	}

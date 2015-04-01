@@ -2,6 +2,7 @@ package com.nexera.web.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
@@ -70,16 +72,26 @@ public class FileUploadController {
 	
 	
 	@RequestMapping(value = "/readFileAsStream.do" , method = RequestMethod.GET) 
-	public void doDownload(HttpServletRequest request, HttpServletResponse response , @RequestParam ("s3FileId") String  s3FileId) throws Exception {
-	       String s3FileURL = uploadedFilesListService.fetchUsingFileUUID(s3FileId).getS3path();
-	       LOG.info("The s3path = "+s3FileURL);
-	       String localFilePath = nexeraUtility.tomcatDirectoryPath()+File.separator+nexeraUtility.randomStringOfLength()+".pdf";
-	       
-		   File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
-		   FileInputStream inputStream = new FileInputStream(downloadFile);
+	public void doDownload(HttpServletRequest request, HttpServletResponse response 
+				, @RequestParam ("uuid") String  uuid , @RequestParam ("isThumb") String   isThumb) throws Exception {
+	      
+		   String fileURL = null;
+		   UploadedFilesList uplList = uploadedFilesListService.fetchUsingFileUUID(uuid);
+		   if(isThumb.equals("0")){
+			   fileURL = uplList.getS3path();
+			   response.setContentType("application/pdf");
+		   }else{
+			   fileURL = uplList.getS3ThumbPath();
+			   response.setContentType("image/jpeg");
+		   }
+		   
+	       LOG.info("The s3path = "+fileURL);
+	      
+		  // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
+		   InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(fileURL , isThumb);
 
 		  
-		   response.setContentType("application/pdf");
+		  
 
 		   // get output stream of the response
 		   OutputStream outStream = response.getOutputStream();

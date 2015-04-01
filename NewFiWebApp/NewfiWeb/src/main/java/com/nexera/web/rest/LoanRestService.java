@@ -17,6 +17,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
+import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -71,6 +72,7 @@ public class LoanRestService {
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
 			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
+			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
 		}
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
@@ -87,6 +89,11 @@ public class LoanRestService {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
+		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
+		editLoanTeamVO.setUserID(userID);
+		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
+		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		if (userID != null && userID > 0) {
 			UserVO user = new UserVO();
 			user.setId(userID);
@@ -94,51 +101,69 @@ public class LoanRestService {
 			if (result) {
 				user = userProfileService.loadInternalUser(userID);
 			}
-			EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
 			editLoanTeamVO.setOperationResult(result);
-			editLoanTeamVO.setUserID(userID);
-			editLoanTeamVO.setLoanID(loanID);
 			editLoanTeamVO.setUser(user);
-			CommonResponseVO responseVO = RestUtil
-			        .wrapObjectForSuccess(editLoanTeamVO);
-
-			return responseVO;
+			
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
-			        userProfileService.buildUserVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
-
-			return responseVO;
+			        User.convertFromEntityToVO(utils.getLoggedInUser()));
+			editLoanTeamVO.setTitleCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loan, company,
-			        userProfileService.buildUserVO(utils.getLoggedInUser()));
-			CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(company);
-
-			return responseVO;
+			        User.convertFromEntityToVO(utils.getLoggedInUser()));
+			editLoanTeamVO.setHomeOwnInsCompany(company);
+			editLoanTeamVO.setOperationResult(true);
 		} else
 			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+		
+		
+		CommonResponseVO responseVO = RestUtil
+		        .wrapObjectForSuccess(editLoanTeamVO);
+
+		return responseVO;
 
 	}
 
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)
 	public @ResponseBody CommonResponseVO removeFromLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID") Integer userID) {
+	        @RequestParam(value = "userID",required=false) Integer userID,
+	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
+	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
 
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
-
-		UserVO user = new UserVO();
-		user.setId(userID);
-		boolean result = loanService.removeFromLoanTeam(loan, user);
+		
 		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
-		editLoanTeamVO.setOperationResult(result);
 		editLoanTeamVO.setUserID(userID);
 		editLoanTeamVO.setLoanID(loanID);
+		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
+		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
+		if (userID != null && userID > 0) {
+			UserVO user = new UserVO();
+			user.setId(userID);
+			boolean result = loanService.removeFromLoanTeam(loan, user);
+			editLoanTeamVO.setOperationResult(result);
+
+		} else if (titleCompanyID != null && titleCompanyID > 0) {
+			TitleCompanyMasterVO companyMaster = new TitleCompanyMasterVO();
+			companyMaster.setId(titleCompanyID);
+			boolean result = loanService
+			        .removeFromLoanTeam(loan, companyMaster);
+			editLoanTeamVO.setOperationResult(result);
+		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
+			HomeOwnersInsuranceMasterVO companyMaster = new HomeOwnersInsuranceMasterVO();
+			companyMaster.setId(homeOwnInsCompanyID);
+			boolean result = loanService
+			        .removeFromLoanTeam(loan, companyMaster);
+			editLoanTeamVO.setOperationResult(result);
+		}
+
 		CommonResponseVO responseVO = RestUtil
 		        .wrapObjectForSuccess(editLoanTeamVO);
 
@@ -151,6 +176,29 @@ public class LoanRestService {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 		List<UserVO> team = loanService.retreiveLoanTeam(loan);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(team);
+
+		return responseVO;
+	}
+
+	@RequestMapping(value = "/{loanID}/extendedTeam", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO retreiveExtendedLoanTeam(
+	        @PathVariable Integer loanID) {
+		LoanVO loan = new LoanVO();
+		loan.setId(loanID);
+		ExtendedLoanTeamVO extendedLoanTeamVO = loanService.findExtendedLoanTeam(loan);
+		CommonResponseVO responseVO = RestUtil
+		        .wrapObjectForSuccess(extendedLoanTeamVO);
+
+		return responseVO;
+	}
+
+	@RequestMapping(value = "/{loanID}/manager", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO retreiveLoanManagers(@PathVariable Integer loanID) {
+		LoanVO loan = new LoanVO();
+		loan.setId(loanID);
+		List<UserVO> team = loanService.retreiveLoanManagers(loan);
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(team);
 
 		return responseVO;
@@ -218,7 +266,7 @@ public class LoanRestService {
 			// return RestUtil.wrapObjectForFailure(null, "403",
 			// "User Not Logged in.");
 		}
-		UserVO userVO = userProfileService.buildUserVO(user);
+		UserVO userVO = User.convertFromEntityToVO(user);
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 

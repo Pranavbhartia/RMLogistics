@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
@@ -48,6 +49,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -57,8 +60,7 @@ import com.sun.media.jai.codec.ImageDecoder;
 @Component
 public class NexeraUtility {
 
-	@Autowired
-	private UploadedFilesListService uploadedFilesListService;
+	
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
@@ -80,11 +82,21 @@ public class NexeraUtility {
 		// Create a Splitter object
 		try {
 			document = new PDDocument();
+			//TODO: Look at this warning
 			document = PDDocument.loadNonSeq(file, null);
 			return document.getDocumentCatalog().getAllPages();
 		} catch (IOException e) {
 			LOGGER.info("Exception in splitting pdf document : "
 			        + e.getMessage());
+		}finally{
+			if(document!=null){
+				try {
+	                document.close();
+                } catch (IOException e) {
+	                LOGGER.info("Unable to close the PDF document "
+	    			        + e.getMessage());
+                }
+			}
 		}
 		return pdfPages;
 	}
@@ -435,16 +447,21 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(Integer fileToGetContent)
+	public String getContentFromFile(byte[] bytes)
 	        throws IOException, Exception {
-		String s3pathOfFile = uploadedFilesListService.fetchUsingFileId(
-		        fileToGetContent).getS3path();
-		byte[] bytes = IOUtils.toByteArray(s3FileUploadServiceImpl
-		        .getInputStreamFromFile(s3pathOfFile));
+		
+		
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
 
+	public byte[] getContentFromStream(InputStream stream) throws IOException, Exception {
+		
+		byte[] bytes = IOUtils.toByteArray(stream);
+		return bytes;
+	}
+	
+	
 	public File copyInputStreamToFile(InputStream in) throws IOException {
 		File file = null;
 		OutputStream out = null;
@@ -533,4 +550,20 @@ public class NexeraUtility {
 
 	}
 
+	public Date convertToUTC(Date inputDate){
+		return null;
+	}
+	
+	
+	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
+		
+		StringBuffer stringBuf = new StringBuffer();
+		stringBuf.append("UUID : ").append(uuId);
+		stringBuf.append( " uploaded by : " );
+		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
+		 
+		return stringBuf.toString();
+	}
+	
+	
 }

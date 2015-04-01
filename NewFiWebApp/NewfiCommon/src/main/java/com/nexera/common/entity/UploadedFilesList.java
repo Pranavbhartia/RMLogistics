@@ -30,6 +30,8 @@ public class UploadedFilesList implements Serializable {
 	private User assignedBy;
 	private String uuidFileId;
 	private Integer totalPages;
+	private String lqbFileID;
+	
 	
 	public UploadedFilesList() {
 	}
@@ -152,4 +154,14 @@ public class UploadedFilesList implements Serializable {
 		this.totalPages = totalPages;
 	}
 
+	@Column(name = "lqb_file_id")
+	public String getLqbFileID() {
+		return lqbFileID;
+	}
+
+	public void setLqbFileID(String lqbFileID) {
+		this.lqbFileID = lqbFileID;
+	}
+
+	
 }

@@ -215,6 +215,8 @@ a,a:hover,a:visited {
 .lp-talk-pic2 {
 	background: url(../images/person-placeholder.png) no-repeat center;
 	background-size: cover;
+    background-color: #fff;
+    border: 1px solid #fff;
 }
 
 .lp-talk-pic3 {
@@ -1394,6 +1396,19 @@ a,a:hover,a:visited {
 .lp-agent-item3 {
 	background: url(../images/agent_lp_3.png) no-repeat 5px top;
 }
+
+.lp-item-active .lp-agent-item1 {
+	background: url(../images/agent_lp_active_1.png) no-repeat 5px center;
+}
+
+.lp-item-active .lp-agent-item2 {
+	background: url(../images/agent_lp_active_2.png) no-repeat 5px center;
+}
+
+.lp-item-active .lp-agent-item3 {
+	background: url(../images/agent_lp_active_3.png) no-repeat 5px top;
+}
+
 
 .lp-item-body-row {
 	height: 20px;
@@ -3145,7 +3160,7 @@ input.calc-input {
 	position: absolute;
 	height: 100%;
 	right: -2px;
-	top: 32px;
+	top: 49px;
 	z-index: 9;
 	border-right: 3px #ebebeb solid;
 }
@@ -3154,7 +3169,7 @@ input.calc-input {
 	position: absolute;
 	height: 100%;
 	left: -3px;
-	top: 32px;
+	top: 49px;
 	z-index: 9;
 	border-left: 3px #ebebeb solid;
 }
@@ -4113,7 +4128,6 @@ input.calc-input {
   background: #dcdcdc;
 }
 
-
 .rate-btn-alertRate {
 
     width: 200px;
@@ -4125,4 +4139,27 @@ input.calc-input {
     background-size: 28px;
     line-height: 31px;
     margin-top: 6px;
+}
+
+.loan-manager-popup {
+  position: absolute;
+  width: 250px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #cecece;
+  border-top: 3px solid #428bca;
+}
+
+.lm-details-txt-col{
+	margin-left:10px;
+}
+
+.loan-manager-popup-container{
+	border-bottom:1px solid #dcdcdc;
+	padding: 10px 0;
+}
+
+.loan-manager-popup-container:last-child{
+	border-bottom:none;
+
 }

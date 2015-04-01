@@ -300,7 +300,9 @@
 		    <groupId>net.sf.opencsv</groupId>
 		    <artifactId>opencsv</artifactId>
 		    <version>2.3</version>
-		</dependency>
+		    <scope>compile</scope>
+		</dependency> 
+		
 	</dependencies>
 
 	<build>
