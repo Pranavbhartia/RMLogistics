@@ -29,6 +29,7 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_FIRST_NAME = "INVALID_FIRST_NAME";
 	public static final String INVALID_LAST_NAME = "INVALID_LAST_NAME";
 	public static final String INVALID_EMAIL_ID = "INVALID_EMAIL_ID";
+	public static final String EMAIL_ALREADY_EXISTS = "EMAIL_ALREADY_EXISTS";
 	public static final String INVALID_ROLE_NAME = "INVALID_ROLE_NAME";
 	public static final String INVALID_CITY = "INVALID_CITY";
 	public static final String INVALID_STATE = "INVALID_STATE";
@@ -38,6 +39,8 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_DATE_OF_BIRTH = "INVALID_DATE_OF_BIRTH";
 	public static final String INVALID_LICENSE_INFO = "INVALID_LICENSE_INFO";
 	public static final String INVALID_PROFILE_URL = "INVALID_PROFILE_URL";
+	public static final String INVALID_STATE_CODE_LIST_LENGTH = "INVALID_STATE_CODE_LIST_LENGTH";
+	public static final String INVALID_STATE_CODE = "INVALID_STATE_CODE";
 
 
 
