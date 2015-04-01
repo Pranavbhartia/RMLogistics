@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
@@ -28,6 +31,8 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	private EngineTrigger engineTrigger;
 	@Autowired
 	WorkflowService workflowService;
+	@Autowired
+	private NotificationService notificationService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
@@ -60,7 +65,6 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 				workflowExec.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService.updateWorkflowExecStatus(workflowExec);
 			}
-			// TODO check prev status
 			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
 					.getStatus());
 			workflowService
@@ -99,8 +103,25 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 				}
 
 			}
+			// Dismiss any SYS_EDU_NOTIFICATION_TYPE notification
+			dismissSystemEduNotification(inputMap);
 		}
 		return "success";
+	}
+
+	private void dismissSystemEduNotification(HashMap<String, Object> objectMap) {
+		String notificationType = WorkflowConstants.SYS_EDU_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		List<NotificationVO> notificationList = notificationService
+				.findNotificationTypeListForLoan(loanId, notificationType, true);
+		for(NotificationVO notificationVO:notificationList){
+			notificationService.dismissNotification(notificationVO.getId());
+		}
+	}
+
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		return null;
 	}
 
 }
