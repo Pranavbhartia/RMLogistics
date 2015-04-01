@@ -53,7 +53,6 @@ import com.nexera.core.utility.LQBXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
 
 @Component
-@Transactional
 public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	private static final Logger LOG = LoggerFactory
@@ -84,12 +83,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	private LoanService loanService;
 
 	@Override
+	@Transactional
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.saveUploadedFile(uploadedFilesList);
 	}
 
 	@Override
+	@Transactional
 	public List<UploadedFilesListVO> fetchAll(Integer userId, Integer loanId) {
 		List<UploadedFilesList> filesLists = uploadedFilesListDao.fetchAll(
 		        userId, loanId);
@@ -140,11 +141,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateIsAssignedToTrue(Integer fileId) {
 		uploadedFilesListDao.updateIsAssignedToTrue(fileId);
 	}
 
 	@Override
+	@Transactional
 	public void updateIsAssignedToTrue(List<Integer> fileIds) {
 		for (Integer fileId : fileIds) {
 			uploadedFilesListDao.updateIsAssignedToTrue(fileId);
@@ -152,17 +155,20 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateFileInLoanNeedList(Integer needId, Integer fileId) {
 		uploadedFilesListDao.updateFileInLoanNeedList(needId, fileId);
 	}
 
 	@Override
+	@Transactional
 	public String findFileNameFromId(Integer fileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.findFileNameFromId(fileId);
 	}
 
 	@Override
+	@Transactional
 	public void deactivateFileUsingFileId(Integer fileId) {
 		uploadedFilesListDao.deactivateFileUsingFileId(fileId);
 		// TODO: Delete file reference from S3.
@@ -181,6 +187,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public List<String> downloadFileFromS3Service(List<Integer> fileIds) {
 		List<String> downloadFiles = new ArrayList<String>();
 		for (Integer fileId : fileIds) {
@@ -218,6 +225,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
 	        Integer userId, Integer assignedBy, String lqbDocumentID,
 	        String uuidValue) {
@@ -297,12 +305,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public UploadedFilesList fetchUsingFileId(Integer fileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileId(fileId);
 	}
 
 	@Override
+	@Transactional
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
@@ -439,6 +449,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return lqbResponseVO;
 	}
 
+	@Transactional
 	private void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
 	        Integer rowId) {
 		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId,
@@ -580,6 +591,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void getFileContentFromLQBUsingUUID(String uuId) {
 		UploadedFilesList filesList = uploadedFilesListDao.fetchUsingFileUUID(uuId);
 		String lqbDocID = filesList.getLqbFileID();
@@ -592,6 +604,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 	
 	
+	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
