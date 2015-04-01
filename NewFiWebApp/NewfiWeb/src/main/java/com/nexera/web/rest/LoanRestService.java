@@ -21,6 +21,7 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
@@ -339,4 +340,23 @@ public class LoanRestService {
 
 		return RestUtil.wrapObjectForSuccess(vo);
 	}
+	@RequestMapping(value = "/loanTurnAroundTime/{loanId}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO addLoanTurnArounTime(
+	        @PathVariable  Integer loanId) {
+		 loanService.saveAllLoanTurnAroundTimeForLoan(loanId);
+		 CommonResponseVO commonResponseVO=new CommonResponseVO();
+		 return RestUtil.wrapObjectForSuccess(commonResponseVO);
+	}
+	
+	@RequestMapping(value = "/TurnAroundTime/{loanId}/{workFlowItemId}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO retrieveLoanTurnArounTime(
+	        @PathVariable  Integer loanId
+	        ,@PathVariable  Integer workFlowItemId) {
+		 LoanTurnAroundTimeVO aroundTimeVO= loanService.
+				 retrieveTurnAroundTimeByLoan(loanId,workFlowItemId);
+		 CommonResponseVO commonResponseVO=new CommonResponseVO();
+		 commonResponseVO.setResultObject(aroundTimeVO);
+		 return RestUtil.wrapObjectForSuccess(commonResponseVO);
+	}
+	
 }
