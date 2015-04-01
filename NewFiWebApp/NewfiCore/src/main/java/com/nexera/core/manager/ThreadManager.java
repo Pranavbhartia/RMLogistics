@@ -233,6 +233,8 @@ public class ThreadManager implements Runnable {
 														updateLoanMilestone(loanMilestone);
 													}
 												}
+											} else {
+												sameStatus = true;
 											}
 										}
 
@@ -250,9 +252,11 @@ public class ThreadManager implements Runnable {
 									        loadResponseList,
 									        loanMilestoneMaster);
 								}
-								checkIfAnyStatusIsMissed(currentLoanStatus,
-								        statusTrackingList, loadResponseList,
-								        loanMilestoneMaster);
+								if (statusTrackingList != null)
+									checkIfAnyStatusIsMissed(currentLoanStatus,
+									        statusTrackingList,
+									        loadResponseList,
+									        loanMilestoneMaster);
 
 								List<String> workflowItemTypeList = new ArrayList<String>();
 								if (wItemMSInfo != null) {
@@ -336,7 +340,7 @@ public class ThreadManager implements Runnable {
 		Date date = null;
 		if (dateTime != null && !dateTime.equals(""))
 			date = parseStringIntoDate(dateTime);
-		if (dateTime != null && !dateTime.equals(""))
+		if (date != null && !dateTime.equals(""))
 			date = formatDateIntoUTC(date);
 		loanMilestone.setLoan(loan);
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
@@ -417,7 +421,8 @@ public class ThreadManager implements Runnable {
 				if (workflowItemExec.getWorkflowItemMaster()
 				        .getWorkflowItemType()
 				        .equalsIgnoreCase(workflowItemType)) {
-					itemToExecute.add(workflowItemExec);
+					if (workflowItemExec != null)
+						itemToExecute.add(workflowItemExec);
 				}
 			}
 		}
@@ -473,68 +478,16 @@ public class ThreadManager implements Runnable {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
 		String wfItemStatus = null;
-		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_OPEN) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PROCESSING) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PROCESSING) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK) {
+		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        "08986e4b-8407-4b44-9000-50c104db899c");
+		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
 			wfItemStatus = LoanStatus.inUnderwriting;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED) {
-			wfItemStatus = LoanStatus.underwritingFailed;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
-		        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
-			wfItemStatus = LoanStatus.inUnderwriting;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
-		        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED) {
-			wfItemStatus = LoanStatus.underwritingApproved;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW) {
-			wfItemStatus = LoanStatus.approvedWithConditionsMessage;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING) {
-			wfItemStatus = LoanStatus.underwritingApproved;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC) {
-
+			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
 
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED) {
-			wfItemStatus = LoanStatus.appraisalOrdered;
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDING_CONDITIONS) {
-
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDED) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_RECORDED) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW) {
-			wfItemStatus = LoanStatus.appraisalOrdered;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW) {
-			wfItemStatus = LoanStatus.appraisalOrdered;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
-			wfItemStatus = LoanStatus.appraisalOrdered;
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE) {
-
-		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
 
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED) {
 
