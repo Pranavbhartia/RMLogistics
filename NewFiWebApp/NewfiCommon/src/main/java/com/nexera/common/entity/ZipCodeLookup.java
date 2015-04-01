@@ -79,7 +79,6 @@ public class ZipCodeLookup implements Serializable {
 	public void setCityname(String cityname) {
 		this.cityname = cityname;
 	}
-
 	public static ZipCodeLookupVO converToVo(ZipCodeLookup model) {
 		if (model == null)
 			return null;
