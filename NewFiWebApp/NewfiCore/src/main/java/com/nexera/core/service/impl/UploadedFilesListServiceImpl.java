@@ -668,7 +668,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 
 		for (UploadedFilesList uploadFile : uploadedFileList) {
-			if (!uuidEdocList.contains(uploadFile.getUuidFileId())) {
+			if (uuidEdocList.contains(uploadFile.getUuidFileId())) {
+				continue;
+			} else {
 				LOG.debug("This uuid does not exist in the lqb list, hence removing this from newfi database ");
 				UploadedFilesList fileToDelete = uploadedFilesListDao
 				        .fetchUsingFileUUID(uploadFile.getUuidFileId());

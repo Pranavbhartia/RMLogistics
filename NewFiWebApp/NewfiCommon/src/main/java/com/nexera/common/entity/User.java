@@ -114,7 +114,8 @@ public class User implements Serializable, UserDetails {
 		this.lastName = lastName;
 	}
 
-	public String getPassword() {
+	@Override
+    public String getPassword() {
 		return this.password;
 	}
 
@@ -140,7 +141,8 @@ public class User implements Serializable, UserDetails {
 		this.photoImageUrl = photoImageUrl;
 	}
 
-	public String getUsername() {
+	@Override
+    public String getUsername() {
 		return this.username;
 	}
 
@@ -251,7 +253,8 @@ public class User implements Serializable, UserDetails {
 		this.id = userId;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
@@ -260,7 +263,8 @@ public class User implements Serializable, UserDetails {
 		this.accountNonExpired = accountNonExpired;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
@@ -269,7 +273,8 @@ public class User implements Serializable, UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
@@ -278,7 +283,8 @@ public class User implements Serializable, UserDetails {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 
-	@Transient
+	@Override
+    @Transient
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -381,16 +387,15 @@ public class User implements Serializable, UserDetails {
 		userModel.setId(userVO.getId());
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
-		
+
 		userModel.setUsername(userVO.getEmailId());
 		userModel.setEmailId(userVO.getEmailId());
-		
-//		if (userVO.getEmailId() != null) {
-//			userModel.setUsername(userVO.getEmailId().split(":")[0]);
-//			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
-//		}
-		//userModel.setPassword(userVO.getPassword());
 
+		// if (userVO.getEmailId() != null) {
+		// userModel.setUsername(userVO.getEmailId().split(":")[0]);
+		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		// }
+		// userModel.setPassword(userVO.getPassword());
 
 		userModel.setStatus(true);
 
@@ -414,6 +419,11 @@ public class User implements Serializable, UserDetails {
 		}
 
 		return userModel;
+	}
+
+	public void setInternalUserStateMappings(
+	        List<InternalUserStateMapping> internalUserStateMappings) {
+		this.internalUserStateMappings = internalUserStateMappings;
 	}
 
 }
