@@ -304,11 +304,10 @@ function getMessageDashboardWrapper() {
 }
 
 function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageUrl){
-    
-    var wrapper = $('<div>').attr({
+	var wrapper = $('<div>').attr({
         "class" : "assigned-agent-cont-wrapper"
     });
-    
+
 	var container = $('<div>').attr({
 		"class" : "assigned-agent-container clearfix float-left",
 		"data-agent" : agentName,
