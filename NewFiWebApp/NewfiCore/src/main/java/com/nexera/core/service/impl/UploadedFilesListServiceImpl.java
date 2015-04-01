@@ -479,16 +479,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return json;
 	}
-	
-	
+
 	public JSONObject createFetchPdfDocumentJsonObject(String opName,
 	        LQBDocumentVO documentVO) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 		try {
-			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_DOCUMENT_ID,
+			jsonChild.put(
+			        WebServiceMethodParameters.PARAMETER_S_XML_DOCUMENT_ID,
 			        documentVO.getsLoanNumber());
-			
+
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
@@ -594,17 +594,22 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public void getFileContentFromLQBUsingUUID(String uuId) {
-		UploadedFilesList filesList = uploadedFilesListDao.fetchUsingFileUUID(uuId);
+		UploadedFilesList filesList = uploadedFilesListDao
+		        .fetchUsingFileUUID(uuId);
 		String lqbDocID = filesList.getLqbFileID();
-		
+
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		documentVO.setsLoanNumber(lqbDocID);
-		JSONObject jsonObject = createFetchPdfDocumentJsonObject(WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID , documentVO);
-		JSONObject receivedResponse = lqbInvoker.invokeLqbService( jsonObject.toString() );
-	    LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
+		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
+		        documentVO);
+		JSONObject receivedResponse = lqbInvoker.invokeLqbService(jsonObject
+		        .toString());
+		LOG.info(" receivedResponse while uploading LQB Document : "
+		        + receivedResponse);
 	}
-	
-	
+
+	@Override
 	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
@@ -658,7 +663,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				int fileUploadId = uploadedFilesListDao
 				        .saveUploadedFile(fileUpload);
 				fileUpload.setId(fileUploadId);
-
 			}
 
 		}
