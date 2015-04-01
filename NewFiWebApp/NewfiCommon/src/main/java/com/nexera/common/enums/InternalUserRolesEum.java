@@ -2,15 +2,21 @@ package com.nexera.common.enums;
 
 public enum InternalUserRolesEum {
 	
-	    LM ("Loan Manager"),
-	    SM ("Sales Manager"),
-	    PC ("Processor");
+	    LM ("Loan Manager",1),
+	    SM ("Sales Manager",2),
+	    PC ("Processor",3);
 
 	    private final String name;       
-
-	    private InternalUserRolesEum(String s) {
+	    private final int roleId;
+	    
+	    private InternalUserRolesEum(String s,int id) {
 	        name = s;
+	        roleId=id;
 	    }
+	    
+	    public int getRoleId() {
+	        return roleId;
+        }
 
 	    public boolean equalsName(String otherName){
 	        return (otherName == null)? false:name.equals(otherName);

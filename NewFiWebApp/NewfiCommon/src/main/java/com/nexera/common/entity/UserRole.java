@@ -45,6 +45,10 @@ public class UserRole implements Serializable {
 	public UserRole() {
 	}
 
+	public UserRole(UserRolesEnum internal) {
+	    this.id = internal.getRoleId();
+    }
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
