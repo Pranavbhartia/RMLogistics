@@ -12,6 +12,7 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanMileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
@@ -112,5 +113,7 @@ public interface LoanService {
 	HomeOwnersInsuranceMasterVO findHomeOwnersInsuranceCompanyOfLoan(LoanVO loan);
 
 	ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO);
-
+	
+	public LoanMileStoneTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
+			Integer workFlowItemId);
 }

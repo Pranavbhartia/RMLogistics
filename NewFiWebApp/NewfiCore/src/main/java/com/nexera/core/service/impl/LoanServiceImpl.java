@@ -34,6 +34,7 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanMileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -822,4 +823,14 @@ public class LoanServiceImpl implements LoanService {
 		return extendedLoanTeamVO;
 	}
 
+	@Override
+	public LoanMileStoneTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
+			Integer workFlowItemId) {
+		//TODO Change hard value to new value
+		LoanMileStoneTurnAroundTimeVO aroundTimeVO=new LoanMileStoneTurnAroundTimeVO();
+		aroundTimeVO.setHours(12);
+		aroundTimeVO.setLoanId(loanId);
+		aroundTimeVO.setWorkItemMasterId(workFlowItemId);
+		return aroundTimeVO;
+	}
 }
