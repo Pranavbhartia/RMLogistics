@@ -179,10 +179,7 @@ public class WorkflowConstants
             LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING,
             new WorkItemMilestoneInfo( Milestones.UW, MILESTONE_WF_ITEM_LOOKUP.get( Milestones.UW ), MILESTONE_ORDER_LOOKUP
                 .get( LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING ) ) );
-        LQB_STATUS_MILESTONE_LOOKUP.put(
-            LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING,
-            new WorkItemMilestoneInfo( Milestones.UW, MILESTONE_WF_ITEM_LOOKUP.get( Milestones.UW ), MILESTONE_ORDER_LOOKUP
-                .get( LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING ) ) );
+
         LQB_STATUS_MILESTONE_LOOKUP.put(
             LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING,
             new WorkItemMilestoneInfo( Milestones.UW, MILESTONE_WF_ITEM_LOOKUP.get( Milestones.UW ), MILESTONE_ORDER_LOOKUP
