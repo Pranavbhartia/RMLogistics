@@ -1,5 +1,12 @@
+var stateList = [];
+var currentStateId = 0;
+var currentZipcodeLookUp = [];
+
 
 function showCustomerProfilePage() {
+	
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -34,7 +41,6 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
-
 
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
@@ -219,12 +225,12 @@ function getCustPersonalInfoContainer(user) {
 	 * container.append(streetAddrRow);
 	 */
 
-	var cityRow = getCityRow(user);
-	formWrapper.append(cityRow);
-
 	var stateRow = getStateRow(user);
 	formWrapper.append(stateRow);
 
+	var cityRow = getCityRow(user);
+	formWrapper.append(cityRow);
+	
 	var zipRow = getZipRow(user);
 	formWrapper.append(zipRow);
 
@@ -591,6 +597,12 @@ function getSecEmailRow(user) {
  * return row.append(rowCol1).append(rowCol2); }
  */
 
+var a=["hello","hi","hello"];
+
+var unique=a.filter(function(itm,i,a){
+    return i==a.indexOf(itm);
+});
+
 function getCityRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -610,6 +622,18 @@ function getCityRow(user) {
 		"class" : "prof-form-input",
 		"value" : user.customerDetail.addressCity,
 		"id" : "cityId"
+	}).bind('keydown',function(){
+		
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -622,7 +646,28 @@ function getCityRow(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+function initializeCityLookup(searchData){
+	$('#cityId').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus : function(event, ui) {
+			/*$("#cityId").val(ui.item.label);
+			return false;*/
+		},
+		select : function(event, ui) {
+			/*$("#cityId").val(ui.item.label);
+			return false;*/
+		},
+		open : function() {
+			
+		}
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
+}
+
 function getStateRow(user) {
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -633,12 +678,91 @@ function getStateRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var stateInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-sm",
-		"value" : user.customerDetail.addressState,
-		"id" : "stateId"
+		"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
+		"id" : "stateId",
+		"readonly" : "readonly"
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+				appendStateDropDown('state-dropdown-wrapper');
+			}else{
+				toggleStateDropDown();
+			}
+		}else{
+			toggleStateDropDown();
+		}
 	});
-	rowCol2.append(stateInput);
+	
+	if(user.customerDetail.addressState){
+		stateInput.val(user.customerDetail.addressState);
+		var stateCode = user.customerDetail.addressState.toUpperCase();
+		
+		var stateId = findStateIdForStateCode(stateCode);
+		ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+	}
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dro;pdown-wrapper",
+		"class" : "state-dropdown-wrapper hide"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+function zipCodeLookUpListCallBack(response) {
+	if(response.error == null){
+		currentZipcodeLookUp = response.resultObject;
+	}
+}
+
+function appendStateDropDown(elementToApeendTo) {
+	
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	
+	for(var i=0; i<stateList.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row"
+		}).html(stateList[i].stateCode)
+		.bind('click',function(e){
+			e.stopPropagation();
+			$('#stateId').val($(this).html());
+			currentZipcodeLookUp = [];
+			$('#cityId').val('');
+			$('#zipcodeId').val('');
+			var stateCode = $(this).html();
+			
+			var stateId = findStateIdForStateCode(stateCode);
+			ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+			toggleStateDropDown();
+		});
+		
+		parentToAppendTo.append(stateRow);
+	}
+	toggleStateDropDown();
+}
+
+function findStateIdForStateCode(stateCode) {
+	
+	for(var i=0; i<stateList.length; i++){
+		if(stateList[i].stateCode == stateCode){
+			return stateList[i].id;
+		}
+	}
+	
+	return 0;
+}
+
+function toggleStateDropDown() {
+	$('#state-dropdown-wrapper').slideToggle();
+}
+
+
+function stateListCallBack(response) {
+	if(response.error == null){
+		stateList = response.resultObject;
+	}
 }
 
 function getZipRow(user) {
@@ -660,6 +784,18 @@ function getZipRow(user) {
 		"class" : "prof-form-input prof-form-input-sm",
 		"value" : user.customerDetail.addressZipCode,
 		"id" : "zipcodeId"
+	}).bind('keydown',function(){
+		
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+
+		initializeZipcodeLookup(searchData);
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -670,6 +806,26 @@ function getZipRow(user) {
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+function initializeZipcodeLookup(searchData){
+	$('#zipcodeId').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+		},
+		select : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+		},
+		open : function() {
+			
+		}
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getPhone1Row(user) {
@@ -797,20 +953,27 @@ var row = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
 	
-	var checkBox = $('<input>').attr({
-		"class" : "ms-check-box-header",		
-		"id" : "alertSMSPreferenceID",
-		"type":"checkbox"
+	var checkBox = $('<div>').attr({
+		"class" : "admin-doc-checkbox doc-checkbox float-left",		
+		"id" : "alertSMSPreferenceID",		
+		"value":user.customerDetail.mobileAlertsPreference,
+
 	}).on("click",function(e){
-	if($(this).prop("checked") == true){
-            $(this).attr("data-checked",true);
+	if($(this).prop("checked")){
+		    checkBox.addClass('doc-checked');
+	
             }
-            else if($(this).prop("checked") == false){
-               $(this).attr("data-checked",false);
+            else if($(this).prop("checked")){
+            	checkBox.addClass('doc-unchecked');
             }
 	
 	});
 	
+	if(user.customerDetail.mobileAlertsPreference){
+		checkBox.addClass('doc-checked');
+	}else{
+		checkBox.addClass('doc-unchecked');
+	}
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1006,10 +1169,13 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('#alertSMSPreferenceID').prop("checked") == true){
-	customerDetails.mobileAlertsPreference = true;}else{
-	customerDetails.mobileAlertsPreference = false;
-	}
+	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
+		
+		customerDetails.mobileAlertsPreference = true;}else{
+			
+		customerDetails.mobileAlertsPreference = false;
+		}
+
 
 	userProfileJson.customerDetail = customerDetails;
 

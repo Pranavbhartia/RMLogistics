@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.UserVO;
@@ -165,6 +166,10 @@ public class TemplateController extends DefaultController {
                     userVO.getCustomerDetail().setProfileCompletionStatus(customerProfileStatus);
                     if( userVO.getCustomerDetail().getProfileCompletionStatus()!=100)	 					
 					userProfileService.updateCustomerDetails(userVO);
+				}else{
+					User user=User.convertFromVOToEntity(userVO);
+					if(user.getCustomerDetail()!=null)
+					user.getCustomerDetail().setProfileCompletionStatus(200/3);
 				}
 			}
 

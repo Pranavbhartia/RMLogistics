@@ -32,6 +32,8 @@ public class WebServiceMethodParameters
     public static String PARAMETER_FORMAT = "format";
 
     public static String PARAMETER_S_XML_QUERY_MAP = "sXmlQueryMap";
+    
+    public static String PARAMETER_S_XML_DOCUMENT_ID = "docId";
 
 
 }

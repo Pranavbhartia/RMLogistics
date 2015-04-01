@@ -56,40 +56,44 @@ public class LoanBatchProcessor extends QuartzJobBean {
 			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
 				taskExecutor = getTaskExecutor();
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
-				List<Loan> loanList = loanService.getAllLoans();
-				if (loanList != null) {
-					for (Loan loan : loanList) {
-						LoanProgressStatusMaster loanProgessStatus = loan
-						        .getLoanProgressStatus();
-						if (loanProgessStatus != null) {
-							String loanStatus = loanProgessStatus
+				try {
+					List<Loan> loanList = loanService.getAllLoans();
+					if (loanList != null) {
+						for (Loan loan : loanList) {
+							LoanProgressStatusMaster loanProgessStatus = loan
 							        .getLoanProgressStatus();
-							if ((!loanStatus
-							        .equalsIgnoreCase(LoanStatusMaster.STATUS_CLOSED))
-							        && (!loanStatus
-							                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
-							        && (!loanStatus
-							                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
-								ThreadManager threadManager = applicationContext
-								        .getBean(ThreadManager.class);
-								threadManager
-								        .setLoanMilestoneMasterList(getLoanMilestoneMasterByLoanType(loan));
-								threadManager.setLoan(loan);
-								taskExecutor.execute(threadManager);
+							if (loanProgessStatus != null) {
+								String loanStatus = loanProgessStatus
+								        .getLoanProgressStatus();
+								if ((!loanStatus
+								        .equalsIgnoreCase(LoanStatusMaster.STATUS_CLOSED))
+								        && (!loanStatus
+								                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
+								        && (!loanStatus
+								                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
+									ThreadManager threadManager = applicationContext
+									        .getBean(ThreadManager.class);
+									threadManager
+									        .setLoanMilestoneMasterList(getLoanMilestoneMasterByLoanType(loan));
+									threadManager.setLoan(loan);
+									taskExecutor.execute(threadManager);
+								}
 							}
 						}
+						taskExecutor.shutdown();
+						try {
+							taskExecutor.getThreadPoolExecutor()
+							        .awaitTermination(Long.MAX_VALUE,
+							                TimeUnit.NANOSECONDS);
+						} catch (InterruptedException e) {
+							LOGGER.error("Exception caught while terminating executor "
+							        + e.getMessage());
+							throw new FatalException(
+							        "Exception caught while terminating executor "
+							                + e.getMessage());
+						}
 					}
-					taskExecutor.shutdown();
-					try {
-						taskExecutor.getThreadPoolExecutor().awaitTermination(
-						        Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-					} catch (InterruptedException e) {
-						LOGGER.error("Exception caught while terminating executor "
-						        + e.getMessage());
-						throw new FatalException(
-						        "Exception caught while terminating executor "
-						                + e.getMessage());
-					}
+				} finally {
 					LOGGER.debug("Updating the end time for this batch job ");
 					updateBatchJobExecution(batchJobExecution);
 

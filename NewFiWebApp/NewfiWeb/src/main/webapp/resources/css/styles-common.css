@@ -105,3 +105,7 @@ input.reg-radio {
   margin-bottom: 6px;
   font-size: 14px;
 }
+
+.reg-header-btns-wrapper{
+    color: #fff;
+}

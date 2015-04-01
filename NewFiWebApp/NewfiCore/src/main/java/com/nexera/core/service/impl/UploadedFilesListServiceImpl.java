@@ -32,6 +32,7 @@ import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -53,7 +54,6 @@ import com.nexera.core.utility.LQBXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
 
 @Component
-@Transactional
 public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	private static final Logger LOG = LoggerFactory
@@ -84,12 +84,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	private LoanService loanService;
 
 	@Override
+	@Transactional
 	public Integer saveUploadedFile(UploadedFilesList uploadedFilesList) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.saveUploadedFile(uploadedFilesList);
 	}
 
 	@Override
+	@Transactional
 	public List<UploadedFilesListVO> fetchAll(Integer userId, Integer loanId) {
 		List<UploadedFilesList> filesLists = uploadedFilesListDao.fetchAll(
 		        userId, loanId);
@@ -140,11 +142,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateIsAssignedToTrue(Integer fileId) {
 		uploadedFilesListDao.updateIsAssignedToTrue(fileId);
 	}
 
 	@Override
+	@Transactional
 	public void updateIsAssignedToTrue(List<Integer> fileIds) {
 		for (Integer fileId : fileIds) {
 			uploadedFilesListDao.updateIsAssignedToTrue(fileId);
@@ -152,17 +156,20 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateFileInLoanNeedList(Integer needId, Integer fileId) {
 		uploadedFilesListDao.updateFileInLoanNeedList(needId, fileId);
 	}
 
 	@Override
+	@Transactional
 	public String findFileNameFromId(Integer fileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.findFileNameFromId(fileId);
 	}
 
 	@Override
+	@Transactional
 	public void deactivateFileUsingFileId(Integer fileId) {
 		uploadedFilesListDao.deactivateFileUsingFileId(fileId);
 		// TODO: Delete file reference from S3.
@@ -181,6 +188,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public List<String> downloadFileFromS3Service(List<Integer> fileIds) {
 		List<String> downloadFiles = new ArrayList<String>();
 		for (Integer fileId : fileIds) {
@@ -218,6 +226,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
 	        Integer userId, Integer assignedBy, String lqbDocumentID,
 	        String uuidValue) {
@@ -297,12 +306,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public UploadedFilesList fetchUsingFileId(Integer fileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileId(fileId);
 	}
 
 	@Override
+	@Transactional
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId) {
 		// TODO Auto-generated method stub
 		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
@@ -334,7 +345,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 
 			// Upload succesfull
-			checkVo.setIsUploadSuccess(fileUpload);
+
 			if (fileUpload) {
 
 				String uuidValue = nexeraUtility.randomStringOfLength();
@@ -376,8 +387,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		} catch (Exception e) {
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
 			e.printStackTrace();
+			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		}
+		checkVo.setIsUploadSuccess(fileUpload);
 		LOG.info("file.getOriginalFilename() : " + file.getName());
 
 		LOG.info("The s3 path is : " + s3Path);
@@ -430,13 +443,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			// TODO Auto-generated catch block
 			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
-			// TODO save exception in error block
+			throw new FatalException("LendinQB Exception");
 		}
 
 		LOG.info("Assignment : uploadDocumentInLandingQB " + documentVO);
 		return lqbResponseVO;
 	}
 
+	@Transactional
 	private void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
 	        Integer rowId) {
 		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId,
@@ -457,6 +471,24 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT,
 			        documentVO.getsDataContent());
 
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+	
+	
+	public JSONObject createFetchPdfDocumentJsonObject(String opName,
+	        LQBDocumentVO documentVO) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_DOCUMENT_ID,
+			        documentVO.getsLoanNumber());
+			
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
@@ -561,6 +593,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
+	public void getFileContentFromLQBUsingUUID(String uuId) {
+		UploadedFilesList filesList = uploadedFilesListDao.fetchUsingFileUUID(uuId);
+		String lqbDocID = filesList.getLqbFileID();
+		
+		LQBDocumentVO documentVO = new LQBDocumentVO();
+		documentVO.setsLoanNumber(lqbDocID);
+		JSONObject jsonObject = createFetchPdfDocumentJsonObject(WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID , documentVO);
+		JSONObject receivedResponse = lqbInvoker.invokeLqbService( jsonObject.toString() );
+	    LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+	}
+	
+	
+	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
@@ -570,59 +615,71 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Date modifiedDate = cal.getTime();
 		List<UploadedFilesList> uploadedFileList = uploadedFilesListDao
 		        .fetchFilesBasedOnTimeStamp(loan, modifiedDate);
-		if (edocsList.size() > uploadedFileList.size()) {
-			LOG.debug("LQB Doc List Is Larger. Hence We need to check whether we need to insert the record ");
-			for (LQBedocVO edoc : edocsList) {
-				for (UploadedFilesList uploadFile : uploadedFileList) {
-					String uuidDetails = edoc.getDescription();
-					String[] uuidArray = uuidDetails.split(":");
-					String uuid = uuidArray[1];
-					if (!uuid.equalsIgnoreCase(uploadFile.getUuidFileId())) {
-						LOG.debug("This uuid does not exist hence adding this record from LQB in database ");
-						UploadedFilesList fileUpload = new UploadedFilesList();
-						fileUpload.setFileName(edoc.getDoc_type() + ".pdf");
-						User user = userProfileDao
-						        .findByUserId(CommonConstants.SYSTEM_USER_USERID);
-						fileUpload.setAssignedBy(user);
-						fileUpload.setUploadedBy(loan.getUser());
-						fileUpload.setIsActivate(true);
-						fileUpload.setIsAssigned(false);
-						fileUpload.setLoan(loan);
-						fileUpload.setLqbFileID(edoc.getDocid());
-						fileUpload.setUploadedDate(new Date());
-						fileUpload.setUuidFileId(uuid);
-						// TODO hardcoded for now
-						fileUpload.setTotalPages(2);
 
-						int fileUploadId = uploadedFilesListDao
-						        .saveUploadedFile(fileUpload);
-						fileUpload.setId(fileUploadId);
-
-					}
-
-				}
+		LOG.debug("No Changes ");
+		List<String> uploadFileUUIDList = new ArrayList<String>();
+		List<String> uuidEdocList = new ArrayList<String>();
+		for (UploadedFilesList uploadFiles : uploadedFileList) {
+			uploadFileUUIDList.add(uploadFiles.getUuidFileId());
+		}
+		for (LQBedocVO edoc : edocsList) {
+			String uuidDetails = edoc.getDescription();
+			// TODO need to change
+			String[] uuidArray = uuidDetails.split(" ");
+			String uuid = uuidArray[0];
+			if (uuid != null) {
+				uuidEdocList.add(uuid);
 			}
-		} else if (edocsList.size() < uploadedFileList.size()) {
-			LOG.debug("LQB Doc List is smaller. hence we might need to remove some file from database");
-			for (UploadedFilesList uploadFile : uploadedFileList) {
-				for (LQBedocVO edoc : edocsList) {
-					String uuidDetails = edoc.getDescription();
-					String[] uuidArray = uuidDetails.split(":");
-					String uuid = uuidArray[1];
-					if (!uuid.equalsIgnoreCase(uploadFile.getUuidFileId())) {
-						LOG.debug("This uuid does not exist hence adding this record from LQB in database ");
-						UploadedFilesList fileToDelete = uploadedFilesListDao
-						        .fetchUsingFileUUID(uuid);
-						if (uploadedFileList != null) {
-							uploadedFilesListDao.remove(fileToDelete);
-						}
-					}
-				}
-			}
-
-		} else {
-			LOG.debug("No Changes ");
 		}
 
+		for (LQBedocVO edoc : edocsList) {
+
+			String uuidDetails = edoc.getDescription();
+			String[] uuidArray = uuidDetails.split(" ");
+			String uuid = uuidArray[0];
+			if (!uploadFileUUIDList.contains(uuid)) {
+
+				LOG.debug("This uuid does not exist hence adding this record in newfi database ");
+				UploadedFilesList fileUpload = new UploadedFilesList();
+				fileUpload.setFileName(edoc.getDoc_type() + ".pdf");
+				User user = userProfileDao
+				        .findByUserId(CommonConstants.SYSTEM_USER_USERID);
+				fileUpload.setAssignedBy(user);
+				fileUpload.setUploadedBy(loan.getUser());
+				fileUpload.setIsActivate(true);
+				fileUpload.setIsAssigned(false);
+				fileUpload.setLoan(loan);
+				fileUpload.setLqbFileID(edoc.getDocid());
+				fileUpload.setUploadedDate(new Date());
+				fileUpload.setUuidFileId(uuid);
+				// TODO hardcoded for now
+				fileUpload.setTotalPages(2);
+
+				int fileUploadId = uploadedFilesListDao
+				        .saveUploadedFile(fileUpload);
+				fileUpload.setId(fileUploadId);
+
+			}
+
+		}
+
+		for (UploadedFilesList uploadFile : uploadedFileList) {
+			if (!uuidEdocList.contains(uploadFile.getUuidFileId())) {
+				LOG.debug("This uuid does not exist in the lqb list, hence removing this from newfi database ");
+				UploadedFilesList fileToDelete = uploadedFilesListDao
+				        .fetchUsingFileUUID(uploadFile.getUuidFileId());
+				if (uploadedFileList != null) {
+					LoanNeedsList loanNeedList = loanService
+					        .fetchLoanNeedByFileId(fileToDelete);
+					if (loanNeedList != null) {
+						loanNeedList.setUploadFileId(null);
+						loanService.updateLoanNeedList(loanNeedList);
+					}
+					uploadedFilesListDao.remove(fileToDelete);
+				}
+			}
+
+		}
 	}
+
 }

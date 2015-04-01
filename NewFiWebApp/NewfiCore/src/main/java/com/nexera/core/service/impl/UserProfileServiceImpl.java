@@ -123,10 +123,27 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer updateCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-
-		CustomerDetail customerDetail = CustomerDetail
-		        .convertFromVOToEntity(customerDetailVO);
-
+		CustomerDetail customerDetail = CustomerDetail.convertFromVOToEntity(customerDetailVO);
+		if(customerDetail.getProfileCompletionStatus()!=null){
+		if(userVO.getCustomerDetail().getMobileAlertsPreference()!=null){
+	       if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
+	    	   if(customerDetail.getProfileCompletionStatus()!=100)
+	    		   customerDetail.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus()+(100/3));   
+	    	   
+	       }
+		}
+		}else{
+			if(userVO.getPhotoImageUrl()==null){
+				customerDetail.setProfileCompletionStatus(100/3);
+				if(userVO.getPhoneNumber()!=null && userVO.getCustomerDetail().getMobileAlertsPreference())
+					customerDetail.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus()+(100/3));
+			}else if(userVO.getPhoneNumber()!=null && userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhotoImageUrl()!=null ){
+				customerDetail.setProfileCompletionStatus(100);
+			}else if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
+				customerDetail.setProfileCompletionStatus(200/3);
+			}
+			
+		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
 		return customerDetailVOObj;
@@ -290,6 +307,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 		
 		User newUser = User.convertFromVOToEntity(userVO);
+		if(newUser.getCustomerDetail()!=null){
+		newUser.getCustomerDetail().setProfileCompletionStatus(100/3);}
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);
@@ -317,8 +336,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	public void deleteUser(int userId) {
-		// TODO Auto-generated method stub
+	public void deleteUser(UserVO userVO) {
+		
+		//userProfileDao.deleteUser(userVO);
 
 	}
 

@@ -72,9 +72,13 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		if (batchJobMaster != null) {
 			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
-				configureEmail();
-				LOGGER.debug("Batch Job Completed, Updating the end time ");
-				updateBatchJobExecution(batchJobExecution);
+				try {
+					configureEmail();
+				} finally {
+					LOGGER.debug("Batch Job Completed, Updating the end time ");
+					updateBatchJobExecution(batchJobExecution);
+				}
+
 			} else
 				LOGGER.debug("Batch Job Cannot Execute ");
 		}

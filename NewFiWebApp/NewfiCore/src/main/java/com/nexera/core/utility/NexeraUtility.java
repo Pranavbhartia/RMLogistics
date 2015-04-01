@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -53,6 +54,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
@@ -164,7 +166,7 @@ public class NexeraUtility {
 		} catch (Exception e) {
 			LOGGER.info("Exception in uploading file in local "
 			        + e.getMessage());
-			return null;
+			throw new FatalException("Cannot upload file to tomcat directory");
 		}
 
 		return filePath;
@@ -293,6 +295,7 @@ public class NexeraUtility {
 		} catch (Exception e) {
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 			e.printStackTrace();
+			throw new FatalException("Cannot convert image to PDF");
 		}
 		return filepath;
 
@@ -558,12 +561,33 @@ public class NexeraUtility {
 	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
 		
 		StringBuffer stringBuf = new StringBuffer();
-		stringBuf.append("UUID : ").append(uuId);
-		stringBuf.append( " uploaded by : " );
+		stringBuf.append("UUID:").append(uuId);
+		stringBuf.append( " UploadedBy:" );
 		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
 		 
 		return stringBuf.toString();
 	}
 	
+	
+	public void getStreamForThumbnailFromS3Path(HttpServletResponse response , String s3Path) throws Exception{
+		 response.setContentType("image/jpeg");
+		 LOGGER.info("The s3path = "+s3Path);
+	      
+		 // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
+		 InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(s3Path , String.valueOf(1));
+    	 // get output stream of the response
+		 OutputStream outStream = response.getOutputStream();
+
+		 byte[] buffer = new byte[2048];
+		 int bytesRead = -1;
+
+		 // write bytes read from the input stream into the output stream
+		 while ((bytesRead = inputStream.read(buffer)) != -1) {
+		       outStream.write(buffer, 0, bytesRead);
+		 }
+
+		 inputStream.close();
+		 outStream.close();
+	}
 	
 }

@@ -3,7 +3,8 @@ package com.nexera.common.enums;
 public enum Milestones {
 	App1003(1, "1003"), AUSUW(2, "AUSUW"), QC(3, "QC"), LM_DECISION(4,
 	        "LM_DECISION"), DISCLOSURE(5, "DISCLOSURE"), APPRAISAL(6,
-	        "APPRAISAL"), UW(7, "UW"), LOAN_CLOSURE(8, "LOAN_CLOSURE");
+	        "APPRAISAL"), UW(7, "UW"), LOAN_CLOSURE(8, "LOAN_CLOSURE"), OTHER(
+	        9, "OTHER");
 
 	private int milestoneID;
 
