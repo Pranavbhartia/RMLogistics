@@ -189,6 +189,8 @@ public class CustomerDetail implements Serializable {
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
+			if(null!=inputEntity.getProfileCompletionStatus()){
+			customerDetail.setProfileCompletionStatus(inputEntity.getProfileCompletionStatus());}
 		}
 		return customerDetail;
 	}
