@@ -2,7 +2,7 @@ package com.nexera.common.vo;
 
 import java.io.Serializable;
 
-public class LoanMileStoneTurnAroundTimeVO implements Serializable {
+public class LoanTurnAroundTimeVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer loanId;
 	private Integer workItemMasterId;

@@ -1,3 +1,24 @@
+
+CREATE TABLE `milestoneturnaroundtime` 
+  ( 
+     `id`               INT(11) NOT NULL auto_increment, 
+     `workflow_item_id` INT(11) NOT NULL, 
+     `hours`            INT(11) DEFAULT NULL, 
+     `created_by`       INT(11) NOT NULL, 
+     `modified_by`      INT(11) NOT NULL, 
+     `created_date`     DATETIME DEFAULT NULL, 
+     `modified_date`    DATETIME DEFAULT NULL, 
+     PRIMARY KEY (`id`), 
+     CONSTRAINT `fk_milestoneturnaroundtime` FOREIGN KEY (`workflow_item_id`) 
+     REFERENCES `workflowitemmaster` (`id`) ON DELETE no action ON UPDATE no 
+     action, 
+     CONSTRAINT `fk_milestoneturnaroundtimeuserid` FOREIGN KEY (`created_by`) 
+     REFERENCES `user` (`id`) ON DELETE no action ON UPDATE no action, 
+     CONSTRAINT `fk_milestoneturnaroundtimemodified_by` FOREIGN KEY ( 
+     `modified_by`) REFERENCES `user` (`id`) ON DELETE no action ON UPDATE no 
+     action 
+  ) engine=innodb DEFAULT charset=utf8; 
+
 alter table workflowitemmaster add column display_turn_order int(11) default -1;
 
  update workflowitemmaster set created_date="2015-02-28 14:15:00", modified_date="2015-02-28 14:15:00" where id in(1,2,3,4);
