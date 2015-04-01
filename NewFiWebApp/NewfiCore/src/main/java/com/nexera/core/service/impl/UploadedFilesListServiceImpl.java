@@ -7,7 +7,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -618,30 +620,28 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		cal.setTime(timeBeforeCallMade);
 		cal.add(Calendar.MINUTE, -5);
 		Date modifiedDate = cal.getTime();
-		List<UploadedFilesList> uploadedFileList = uploadedFilesListDao
-		        .fetchFilesBasedOnTimeStamp(loan, modifiedDate);
-
-		LOG.debug("No Changes ");
+		List<UploadedFilesList> uploadList = loan.getUploadedFileList();
+		List<UploadedFilesList> timeModifiedUploadedList = new ArrayList<UploadedFilesList>();
 		List<String> uploadFileUUIDList = new ArrayList<String>();
+
 		List<String> uuidEdocList = new ArrayList<String>();
-		for (UploadedFilesList uploadFiles : uploadedFileList) {
+		for (UploadedFilesList uploadFiles : uploadList) {
 			uploadFileUUIDList.add(uploadFiles.getUuidFileId());
 		}
+		for (UploadedFilesList uploadFiles : uploadList) {
+			if (uploadFiles.getUploadedDate().compareTo(modifiedDate) < 0)
+				timeModifiedUploadedList.add(uploadFiles);
+		}
+
 		for (LQBedocVO edoc : edocsList) {
 			String uuidDetails = edoc.getDescription();
-			// TODO need to change
-			String[] uuidArray = uuidDetails.split(" ");
-			String uuid = uuidArray[0];
-			if (uuid != null) {
-				uuidEdocList.add(uuid);
-			}
+			uuidEdocList.add(fetchUUID(uuidDetails));
 		}
 
 		for (LQBedocVO edoc : edocsList) {
 
 			String uuidDetails = edoc.getDescription();
-			String[] uuidArray = uuidDetails.split(" ");
-			String uuid = uuidArray[0];
+			String uuid = fetchUUID(uuidDetails);
 			if (!uploadFileUUIDList.contains(uuid)) {
 
 				LOG.debug("This uuid does not exist hence adding this record in newfi database ");
@@ -667,14 +667,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		}
 
-		for (UploadedFilesList uploadFile : uploadedFileList) {
-			if (uuidEdocList.contains(uploadFile.getUuidFileId())) {
-				continue;
-			} else {
+		for (UploadedFilesList uploadFile : timeModifiedUploadedList) {
+			if (!uuidEdocList.contains(uploadFile.getUuidFileId())) {
 				LOG.debug("This uuid does not exist in the lqb list, hence removing this from newfi database ");
 				UploadedFilesList fileToDelete = uploadedFilesListDao
 				        .fetchUsingFileUUID(uploadFile.getUuidFileId());
-				if (uploadedFileList != null) {
+				if (fileToDelete != null) {
 					LoanNeedsList loanNeedList = loanService
 					        .fetchLoanNeedByFileId(fileToDelete);
 					if (loanNeedList != null) {
@@ -686,6 +684,17 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 
 		}
+	}
+
+	private String fetchUUID(String uuidString) {
+		String keyValuePair[] = uuidString.split(" ");
+		Map<String, String> map = new HashMap<String, String>();
+		for (String pair : keyValuePair) {
+			String[] entry = pair.split(":");
+			map.put(entry[0].trim(), entry[1].trim());
+		}
+		return map.get("UUID");
+
 	}
 
 }
