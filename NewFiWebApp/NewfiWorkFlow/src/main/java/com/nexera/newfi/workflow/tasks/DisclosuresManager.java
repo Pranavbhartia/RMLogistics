@@ -47,26 +47,26 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		int loanId=Integer.parseInt(objectMap.get(
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String message="";
-		String status = "";
+		String returnStatus = "";
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message=LoanStatus.disclosureAvailMessage;
 			flag = true;
-			status = WorkItemStatus.STARTED.getStatus();
+			returnStatus = WorkItemStatus.STARTED.getStatus();
 		} else if (status.equals(LoanStatus.disclosureViewed)) {
 			message=LoanStatus.disclosureViewedMessage;
 			flag = true;
-			status = WorkItemStatus.STARTED.getStatus();
+			returnStatus = WorkItemStatus.STARTED.getStatus();
 		} else if (status.equals(LoanStatus.disclosureSigned)) {
 			message = LoanStatus.disclosureSignedMessage;
 			flag = true;
-			status = WorkItemStatus.COMPLETED.getStatus();
+			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
 		if (flag) {
 			makeANote(loanId, message);
 			sendEmail(objectMap);
 			// Dismiss any DISCLOSURE_AVAIL_NOTIFICATION_TYPE alerts
 			dismissDisclosureDueAlerts(objectMap);
-			return status;
+			return returnStatus;
 		}
 		return null;
 	}
