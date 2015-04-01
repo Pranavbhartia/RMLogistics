@@ -15,4 +15,7 @@ public interface NotificationDao extends GenericDao {
 	Notification updateNotification(Notification notificationModel);
 	
 	List<Notification> findNotificationTypeListForUser(User user,String type);
+
+	List<Notification> findNotificationTypeListForLoan(Loan loan, String type,
+			Boolean isRead);
 }

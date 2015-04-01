@@ -1199,3 +1199,7 @@ CREATE TABLE `zipcodelookup` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2015-03-26 20:36:42
+
+-- 2015-03-31 create statement for milestoneturnaroundtime
+CREATE TABLE `milestoneturnaroundtime` (`id` int(11) NOT NULL AUTO_INCREMENT,  `workflow_item_id` int(11) NOT NULL,`hours` int(11) DEFAULT NULL,`created_by` int(11) NOT NULL,`modified_by` int(11) NOT NULL, `created_date` datetime DEFAULT NULL, `modified_date` datetime DEFAULT NULL,  PRIMARY KEY (`id`),CONSTRAINT `FK_milestoneturnaroundtime` FOREIGN KEY (`workflow_item_id`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,CONSTRAINT `FK_milestoneturnaroundtimeuserId` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,CONSTRAINT `FK_milestoneturnaroundtimemodified_by` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

@@ -36,16 +36,20 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
-import com.nexera.common.entity.WorkflowExec;
-import com.nexera.common.entity.WorkflowItemExec;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
+import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
+import com.nexera.common.vo.lqb.LQBResponseVO;
+import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.utility.LoadXMLHandler;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.service.WorkflowService;
 
@@ -70,6 +74,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	EngineTrigger engineTrigger;
+
+	@Autowired
+	UploadedFilesListService uploadedFileListService;
 
 	@Override
 	public void run() {
@@ -269,16 +276,35 @@ public class ThreadManager implements Runnable {
 				}
 			}
 		}
+	}
 
-		/*
-		 * LOGGER.debug("Invoking listDocsByLoanNumber service of lendinqb ");
-		 * JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
-		 * WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
-		 * loan.getLqbFileId());
-		 * 
-		 * JSONObject receivedResponseForDocs = lqbInvoker
-		 * .invokeLqbService(getListOfDocs.toString());
-		 */
+	private void fetchDocsForThisLoan(Loan loan) {
+
+		LOGGER.debug("Invoking listDocsByLoanNumber service of lendinqb ");
+
+		Date timeBeforeCallMade = new Date();
+		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
+		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
+		        loan.getLqbFileId());
+
+		JSONObject receivedResponseForDocs = lqbInvoker
+		        .invokeLqbService(getListOfDocs.toString());
+		LQBResponseVO lqbResponseVO = uploadedFileListService
+		        .parseLQBXMLResponse(receivedResponseForDocs);
+		if (lqbResponseVO != null) {
+			LOGGER.debug("Response received for this loan " + loan.getId());
+			if (lqbResponseVO.getResult().equalsIgnoreCase("Ok")) {
+				LQBDocumentResponseListVO lqbDocumentResponseListVO = lqbResponseVO
+				        .getDocumentResponseListVOs();
+				if (lqbDocumentResponseListVO != null) {
+					List<LQBedocVO> edocsList = lqbDocumentResponseListVO
+					        .getvBedocVO();
+					uploadedFileListService.updateUploadedDocument(edocsList,
+					        loan, timeBeforeCallMade);
+				}
+			}
+		}
+
 	}
 
 	private void updateLoanMilestone(LoanMilestone loanMilestone) {
@@ -404,15 +430,22 @@ public class ThreadManager implements Runnable {
 	private List<WorkflowItemExec> getWorkflowItemExecByLoan(Loan loan) {
 		List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
 		if (loan != null) {
-			WorkflowExec loanManagerWorkflowExec = loan
-			        .getLoanManagerWorkflow();
-			WorkflowExec customerWorkflowExec = loan.getCustomerWorkflow();
-			if (loanManagerWorkflowExec != null)
+
+			Integer loanWFID = loan.getLoanManagerWorkflow();
+			WorkflowExec loanManagerWorkflowExec = workflowService
+			        .getWorkflowExecFromId(loanWFID);
+
+			Integer custWFID = loan.getCustomerWorkflow();
+			WorkflowExec customerWorkflowExec = workflowService
+			        .getWorkflowExecFromId(custWFID);
+			if (loanManagerWorkflowExec != null) {
 				workflowItemExecList.addAll(loanManagerWorkflowExec
 				        .getWorkflowItems());
-			if (customerWorkflowExec != null)
+			}
+			if (customerWorkflowExec != null) {
 				workflowItemExecList.addAll(customerWorkflowExec
 				        .getWorkflowItems());
+			}
 		}
 		return workflowItemExecList;
 	}

@@ -1128,15 +1128,19 @@ function appendUserNameDropDown() {
 }
 
 function showUserNameDropDown(namesList) {
+	var hideAddUserOption=false;
 	$('#add-username-dropdown-cont').show();
-	paintUserNameDropDown(namesList);
+	var internalRole=$('#add-memeber-user-type').attr("internalroleid");
+	if(internalRole && internalRole=="1")
+		hideAddUserOption=true;
+	paintUserNameDropDown(namesList,hideAddUserOption);
 }
 
 function hideUserNameDropDown() {
 	$('#add-username-dropdown-cont').hide();
 }
 
-function paintUserNameDropDown(values) {
+function paintUserNameDropDown(values,hideAddUser) {
 	var dropdownCont = $('#add-username-dropdown-cont');
 	dropdownCont.html('');
 
@@ -1145,56 +1149,82 @@ function paintUserNameDropDown(values) {
 			var value = values[i];
 			var dropDownRow = $('<div>').attr({
 				"class" : "add-member-dropdown-row",
-				"userID" : value.id
+				"userID" : value.id,
+				"homeOwnInsID":value.homeOwnInsID,
+				"titleCompanyID":value.titleCompanyID
 			}).html(value.firstName + " " + (value.lastName==undefined?"":value.lastName)).on('click',
 					function(event) {
 						event.stopImmediatePropagation();
 						var userID = $(this).attr("userID");
+						var homeOwnInsID=$(this).attr("homeOwnInsID");
+						var titleCompanyID=$(this).attr("titleCompanyID");
+						var input={
+								"userID":userID,
+								"homeOwnInsID":homeOwnInsID,
+								"titleCompanyID":titleCompanyID
+						};
 						console.log("User id : " + userID);
 						hideUserNameDropDown();
 						hideMilestoneAddTeamMemberPopup();	//For milestone view
 						$('#add-member-input').val("");
 								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-									addUserToLoanTeam(userID,
+									addUserToLoanTeam(input,
 											newfiObject.user.defaultLoanId);
 								else
-									addUserToLoanTeam(userID,
+									addUserToLoanTeam(input,
 											selectedUserDetail.loanID);
 					});
 			dropdownCont.append(dropDownRow);
 		}
 	}
+	else if(hideAddUser){
+		var dropDownRow = $('<div>').attr({
+			"class" : "add-member-dropdown-row"
+		}).html("No results found.");
+		dropdownCont.append(dropDownRow);
+	}
 	
 	var addUserdropDownRow = $('<div>').attr({
 		"id" : "add-member-user",
 		"class" : "add-member-dropdown-row"
-	}).html("Add New User").on('click',function(){
+	}).html("Add New User").on('click',function(event){
 		
+		event.stopPropagation();
 		var callback=showAddUserPopUp;
 		
 		var memberType=$('#add-memeber-user-type');
 		var userRoleBased=memberType.attr("userRoleBased")
 		var code=memberType.attr("code")
 		if(userRoleBased=="false")
-			{
-					if (code == "TITLE_COMPANY")
-						callback=function(){
-						var context=getCreateTitleCompanyContext(
-								newfiObject.user.defaultLoanId);
-						context.showCreateTitleCompanyPopup();
+ 			{
+							if (code == "TITLE_COMPANY")
+								callback = function() {
+									var context;
+									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+										context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
+									else
+										context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
+
+									context.showCreateTitleCompanyPopup();
 						
 						
 					}
 					else if (code == "HOME_OWN_INS")
 						callback=function(){
-						var context=getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
-						context.showCreateTitleCompanyPopup();
+						var context;
+						if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+							context=getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+						else
+							context=getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
+						
+						context.showCreateCompanyPopup();
 					}
 						
 			}
 		callback(event);
 		
 	});
+	if(!hideAddUser)
 	dropdownCont.append(addUserdropDownRow);
 }
 
@@ -1267,9 +1297,8 @@ function appendUserTypeDropDown() {
 		});
 	}
 	
-	// If the user is a borrower, allow to add a title company as well as home
+	// Allow to add a title company as well as home
 	// insurance option
-	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
 
 		var custOptions = [ {
 			"label" : "Title Company",
@@ -1285,7 +1314,6 @@ function appendUserTypeDropDown() {
 			for(j in custOptions)
 			userRoles.push(custOptions[j]);
 
-	}
 
 	for (var i = 0; i < userRoles.length; i++) {
 		var userRole = userRoles[i];
@@ -1405,7 +1433,10 @@ function getTeamListTableHeader() {
 function getTeamListTableRow(user, loanID) {
 	var tableRow = $('<div>').attr({
 		"class" : "newfi-team-list-tr clearfix",
-		"userid" : user.id
+		"userid" : user.id,
+		"homeOwnInsID":user.homeOwnInsID,
+		"titleCompanyID":user.titleCompanyID
+		
 	});
 	if(user.lastName==undefined)
 		user.lastName="";
@@ -1844,11 +1875,26 @@ $(document).click(function() {
 	}
 });
 
+$(document).click(function() {
+	if ($('#create-title-company-popup').css("display") == "block") {
+		getCreateTitleCompanyContext(0).hideCreateTitleCompanyPopup();
+	}
+});
+
+$(document).click(function() {
+	if ($('#create-hoi-company-popup').css("display") == "block") {
+		getCreateHomeOwnInsCompanyContext(0).hideCreateCompanyPopup();
+	}
+});
+
 function getCreateHomeOwnInsCompanyContext(loanID){
 
 	var context=new Object();
 	context.loanID=loanID;
-	context.createTitleCompanyPopup=function(){
+	context.createCompanyPopup=function(){
+		if($("#create-hoi-company-popup").length>0)
+			return;
+		
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-hoi-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
@@ -2021,7 +2067,11 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		$('#create-hoi-company-container').append(row);
 	}
 	
-	context.showCreateTitleCompanyPopup=function() {
+	context.showCreateCompanyPopup=function() {
+		
+		if($("#create-hoi-company-popup").length==0)
+			this.createCompanyPopup();
+		
 		var left = $('#center-panel-cont').offset().left;
 		var top = $('#add-member-sel').offset().top;
 		$('#create-hoic-name').val("");
@@ -2033,7 +2083,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		$('#create-hoi-company-popup').show();
 	}
 	
-	context.hideCreateTitleCompanyPopup=function() {
+	context.hideCreateCompanyPopup=function() {
 		$('#create-hoi-company-popup').hide();
 	}
 	
@@ -2073,6 +2123,10 @@ function getCreateTitleCompanyContext(loanID){
 	var context=new Object();
 	context.loanID=loanID;
 	context.createTitleCompanyPopup=function(){
+
+		if($("#create-title-company-popup").length>0)
+			return;
+		
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-title-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
@@ -2247,6 +2301,11 @@ function getCreateTitleCompanyContext(loanID){
 	}
 	
 	context.showCreateTitleCompanyPopup=function() {
+		
+		if($("#create-title-company-popup").length==0)
+			this.createTitleCompanyPopup();
+		
+		
 		var left = $('#center-panel-cont').offset().left;
 		var top = $('#add-member-sel').offset().top;
 		$('#create-tc-name').val("");
@@ -2762,36 +2821,29 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 	teamMemberRow.parent().parent().remove();
 }
 
-function addUserToLoanTeam(userID, loanID) {
+function addUserToLoanTeam(input, loanID) {
 	
 	var addData=$('.add-team-mem-wrapper').data('additionalData');
-	
+	var userID=input.userID==undefined?0:input.userID;
+	var homeOwnInsID=input.homeOwnInsID==undefined?0:input.homeOwnInsID;
+	var titleCompanyID=input.titleCompanyID==undefined?0:input.titleCompanyID;
+	input.loanID=loanID;
+	var queryString="userID="+userID+"&homeOwnInsCompanyID="+homeOwnInsID+"&titleCompanyID="+titleCompanyID;
 	if(addData && addData.OTHURL){
 		
-		addData.userID=userID;
 		ajaxRequest(addData.OTHURL, "POST",
-				"json", JSON.stringify(addData)  , function(data){
+				"json", JSON.stringify(input)  , function(data){
 			
 			
 			var user=JSON.parse(data.resultObject);
-			var userID=user.id;
-			var userTableRow=getMilestoneTeamMembeTableRow(user);
-			var container=$( ".ms-team-member-table");
-			var existingDiv = $('.ms-team-member-table').find(
-					'.ms-team-member-tr[userid=' + userID + ']');
-			if (existingDiv != undefined && existingDiv.length > 0) {
-				showToastMessage("User already exists on the loan team.");
-				return;
-			}else
-				showToastMessage("User added to loan team.");
-				
-			container.append(userTableRow);
+			data.resultObject=user;
+			onReturnOfAddUserToLoanTeam(data);
 		});
 		return;
 	}
 	
 	
-	ajaxRequest("rest/loan/" + loanID + "/team?userID=" + userID, "POST",
+	ajaxRequest("rest/loan/" + loanID + "/team?"+queryString, "POST",
 			"json", {}, onReturnOfAddUserToLoanTeam);
 }
 
@@ -2799,24 +2851,73 @@ function onReturnOfAddUserToLoanTeam(data) {
 
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
-	if (!result) {
-		showToastMessage("An error occurred, kindly contact admin.");
-		return;
-	}
+	
 
 	var loanID = editLoanTeamVO.loanID;
 	var userID = editLoanTeamVO.userID;
 
-	var existingDiv = $('.newfi-team-container').find(
-			'.newfi-team-list-tr[userid=' + userID + ']');
-	if (existingDiv != undefined && existingDiv.length > 0) {
+	var homeOwnInsID=editLoanTeamVO.homeOwnInsCompanyID;
+	var titleCompanyID=editLoanTeamVO.titleCompanyID
+
+	var teamMemberRow;
+	var userToAdd;
+	if (userID && userID > 0) {
+		if (!result) {
+			showToastMessage("An error occurred, kindly contact admin.");
+			return;
+		}
+		teamMemberRow = $(".newfi-team-list-tr[userid=" + userID + "]");
+		userToAdd = editLoanTeamVO.user;
+	} else if (homeOwnInsID && homeOwnInsID > 0) {
+		teamMemberRow = $(".newfi-team-list-tr[homeOwnInsID=" + homeOwnInsID
+				+ "]");
+
+		userToAdd = editLoanTeamVO.homeOwnInsCompany;
+		userToAdd.firstName=userToAdd.name;
+		userToAdd.emailId=userToAdd.emailID;
+		userToAdd.homeOwnInsID = editLoanTeamVO.homeOwnInsCompanyID;
+		userToAdd.userRole = {
+			label : "Home Owners Insurance"
+		};
+
+	} else if (titleCompanyID && titleCompanyID > 0) {
+		teamMemberRow = $(".newfi-team-list-tr[titleCompanyID="
+				+ titleCompanyID + "]");
+		userToAdd = editLoanTeamVO.titleCompany;
+		userToAdd.firstName=userToAdd.name;
+		userToAdd.emailId=userToAdd.emailID;
+		userToAdd.titleCompanyID = editLoanTeamVO.titleCompanyID;
+		userToAdd.userRole = {
+			label : "Title Company"
+		};
+		
+	}
+	
+	if (teamMemberRow != undefined && teamMemberRow.length > 0) {
 		showToastMessage("User already exists on the loan team.");
 		return;
 	}
 
-	var teamMemberRow = getTeamListTableRow(editLoanTeamVO.user, loanID);
+	var teamMemberRow = getTeamListTableRow(userToAdd, loanID);
 	var teamContainer = $(".newfi-team-container").append(teamMemberRow);
-	showToastMessage("User added to loan team.");
+	
+	//for milestone
+	var addData=$('.add-team-mem-wrapper').data('additionalData');
+	var container=$( ".ms-team-member-table");
+	var existingDiv = $('.ms-team-member-table').find(
+			'.ms-team-member-tr[userid=' + userID + ']');
+	if (existingDiv != undefined && existingDiv.length > 0) {
+		showToastMessage("User already exists on the loan team.");
+		return;
+	}
+	
+		showToastMessage("User added to loan team.");
+	if(addData!=undefined){	
+	var parentContainer=$("#WF"+addData.milestoneID);
+	clearStatusClass(parentContainer);
+	parentContainer.addClass("m-in-progress");
+	container.append(getMilestoneTeamMembeTableRow(userToAdd));
+	}
 }
 
 function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
@@ -2834,19 +2935,27 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 function searchUsersBasedOnCode(name, code) {
 
 	var restURL="rest/loan/searchTitleCompanyOrHomeOwnIns?";
-	if(code=="TITLE_COMPANY")
+	var id;
+	if(code=="TITLE_COMPANY"){
 		restURL += "code="+code;
-	else if(code="HOME_OWN_INS")
+		id="titleCompanyID";
+	}
+	else if(code="HOME_OWN_INS"){
 		restURL += "code="+code;
+		id="homeOwnInsID";
+	}
 	else return;
 	
 	restURL+="&companyName="+name;
 	
-	ajaxRequest(restURL, "GET", "json", {}, onReturnSearchBasedOnCodeToAddToLoanTeam,true);
+	ajaxRequest(restURL, "GET", "json", {}, function(data){
+		
+		onReturnSearchBasedOnCodeToAddToLoanTeam(data,id);
+	},true);
 
 }
 
-function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
+function onReturnSearchBasedOnCodeToAddToLoanTeam(data,id) {
 	var result=data.resultObject;
 	if(!result || result.length<1)
 		showUserNameDropDown([]);
@@ -2854,12 +2963,13 @@ function onReturnSearchBasedOnCodeToAddToLoanTeam(data) {
 	var adapterArray=[];
 	for(i in result){
 		var value=result[i];
-		adapterArray.push({
+		var obj={
 
-			"class" : "add-member-dropdown-row",
-			"userID" : value.id	,
-			"firstName":value.name
-		});
+				"class" : "add-member-dropdown-row",
+				"firstName":value.name
+			};
+		obj[id]=value.id;
+		adapterArray.push(obj);
 	}
 	
 	showUserNameDropDown(adapterArray)
@@ -2883,7 +2993,13 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	hideMilestoneAddTeamMemberPopup();
 	$('#add-member-input').val("");
 
-	addUserToLoanTeam(result.id, selectedUserDetail.loanID);
+	var input={userID:result.id};
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+		addUserToLoanTeam(input,
+				newfiObject.user.defaultLoanId);
+	else
+		addUserToLoanTeam(input,
+				selectedUserDetail.loanID);
 
 }
 

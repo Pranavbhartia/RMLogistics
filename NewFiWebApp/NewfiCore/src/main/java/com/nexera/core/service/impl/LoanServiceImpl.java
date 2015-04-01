@@ -21,18 +21,20 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.WorkflowExec;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -41,6 +43,8 @@ import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -484,19 +488,10 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
 
 		Hibernate.initialize(loan.getCustomerWorkflow());
-		WorkflowExec wFItem = loan.getCustomerWorkflow();
-		if (loan.getCustomerWorkflow() == null) {
-			wFItem = new WorkflowExec();
-		}
-		wFItem.setId(customerWorkflowID);
-		loan.setCustomerWorkflow(wFItem);
-		Hibernate.initialize(loan.getLoanManagerWorkflow());
-		WorkflowExec wFItem1 = loan.getLoanManagerWorkflow();
-		if (wFItem1 == null) {
-			wFItem1 = new WorkflowExec();
-		}
-		wFItem1.setId(loanManagerWFID);
-		loan.setLoanManagerWorkflow(wFItem1);
+
+		loan.setCustomerWorkflow(customerWorkflowID);
+
+		loan.setLoanManagerWorkflow(loanManagerWFID);
 		loanDao.save(loan);
 	}
 
@@ -529,9 +524,13 @@ public class LoanServiceImpl implements LoanService {
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
 
-			
-			//TODO: Get the status from loanVO, set it in UI based on selection
-			
+			// Always, the loan state will be new Loan
+			loan.setLoanProgressStatus(new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.NEW_LOAN));
+
+			loan.setLoanType(LoanTypeMaster.convertVoToEntity(loanVO
+			        .getLoanType()));
+
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
 			loan.setCreatedDate(loanVO.getCreatedDate());
@@ -540,7 +539,28 @@ public class LoanServiceImpl implements LoanService {
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			
+
+			List<UserVO> userList = loanVO.getLoanTeam();
+			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
+			// Check if loan team is null. If yes, add customer to the loan team
+			if (userList == null || userList.isEmpty()) {
+				LoanTeam e = new LoanTeam();
+				loanTeam.add(e);
+				e.setUser(user);
+				e.setLoan(loan);
+			} else {
+				// If loan team contains other users, then add those users to
+				// the team automatically.
+				for (UserVO userVO : userList) {
+					LoanTeam team = new LoanTeam();
+					User userTeam = User.convertFromVOToEntity(userVO);
+					team.setUser(userTeam);
+					team.setLoan(loan);
+				}
+			}
+
+			loan.setLoanTeam(loanTeam);
+
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -555,25 +575,15 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO createLoan(LoanVO loanVO) {
 
 		Loan loan = null;
-
+		// TODO: Also pass the LQBId
 		loan = completeLoanModel(loanVO);
 
-		
-		loanDao.save(loan);
-		List<UserVO> userList = loanVO.getLoanTeam();
+		int loanId = (int) loanDao.save(loan);
 
-		if (userList != null) {
-			userList.add(loanVO.getUser());
+		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
-			for (UserVO userVO : userList) {
-				User user = User.convertFromVOToEntity(userVO);
-				loanDao.addToLoanTeam(loan, user, null);
-			}
-		} else {
-
-			loanDao.addToLoanTeam(loan, loan.getUser(), null);
-
-		}
+		//Invoking the workflow activities to trigger
+		loan.setId(loanId);
 		return Loan.convertFromEntityToVO(loan);
 	}
 
@@ -813,4 +823,14 @@ public class LoanServiceImpl implements LoanService {
 		return extendedLoanTeamVO;
 	}
 
+	@Override
+	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
+			Integer workFlowItemId) {
+		//TODO Change hard value to new value
+		LoanTurnAroundTimeVO aroundTimeVO=new LoanTurnAroundTimeVO();
+		aroundTimeVO.setHours(12);
+		aroundTimeVO.setLoanId(loanId);
+		aroundTimeVO.setWorkItemMasterId(workFlowItemId);
+		return aroundTimeVO;
+	}
 }
