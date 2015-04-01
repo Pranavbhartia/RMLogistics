@@ -103,6 +103,8 @@ public class WorkflowConstants
 	public static final int SYSTEM_USER = 1;
 	public static final String SYS_EDU_NOTIFICATION_TYPE = "SYS_EDU";
 	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
+	public static final String DISCLOSURE_AVAIL_NOTIFICATION_TYPE = "DISCLOSURE_AVAIL";
+	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are due in {72:elapsed} hrs.";
 
     static {
 

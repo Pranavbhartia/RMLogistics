@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
@@ -300,7 +301,8 @@ public class WorkflowRestService {
 			for (Integer workflowItemExecId : milestoneItems) {
 				System.out.println(workflowItemExecId
 				        + "----------------------");
-				map.put("workflowItemExecId", workflowItemExecId);
+				map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+						workflowItemExecId);
 				StringWriter sw = new StringWriter();
 				mapper.writeValue(sw, map);
 				workflowService.saveParamsInExecTable(workflowItemExecId,
