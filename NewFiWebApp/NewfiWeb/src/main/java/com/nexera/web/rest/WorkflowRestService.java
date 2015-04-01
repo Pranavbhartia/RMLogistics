@@ -32,8 +32,8 @@ import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.engine.EngineTrigger;
-import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
+import com.nexera.workflow.utils.Util;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
 
@@ -258,10 +258,10 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-
+			Map<String, Object> map = Util.convertJsonToMap(params);
 			WorkflowItemExecVO wfExec = new WorkflowItemExecVO();
 			wfExec.setId(workflowId);
-			wfExec.setStatus(WorkItemStatus.STARTED.getStatus());
+			wfExec.setStatus(map.get("status").toString());
 			workflowCoreService.changeWorkItemState(wfExec);
 			response = RestUtil.wrapObjectForSuccess("Success");
 		} catch (Exception e) {
