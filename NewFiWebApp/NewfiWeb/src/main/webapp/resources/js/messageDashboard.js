@@ -304,6 +304,11 @@ function getMessageDashboardWrapper() {
 }
 
 function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageUrl){
+    
+    var wrapper = $('<div>').attr({
+        "class" : "assigned-agent-cont-wrapper"
+    });
+    
 	var container = $('<div>').attr({
 		"class" : "assigned-agent-container clearfix float-left",
 		"data-agent" : agentName,
@@ -344,7 +349,7 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageU
 	rightCol.append(name).append(role).append(contact);
 	container.append(rightCol);
 	
-	return container;
+	return wrapper.append(container);
 }
 
 
@@ -632,8 +637,9 @@ $(document).on('click','.assigned-agent-container',function(){
 //Click event on remove person from conversation using remove icon
 $(document).on('click','.message-recipient-remove-icn',function(){
 	var agent = $(this).parent().attr("data-agent");
+    var agentId = $(this).parent().attr("agentId");
 	//$(this).parent().remove();
-	$('.assigned-agent-container[data-agent="'+agent+'"]').addClass('assigned-agent-unselect');
+	$('.assigned-agent-container[agentId="'+agentId+'"]').addClass('assigned-agent-unselect');
 	removeOtherUserObject( $(this).parent().attr("agentId"));
 	paintMessageRecipients();
 });

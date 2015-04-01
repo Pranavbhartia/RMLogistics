@@ -1,6 +1,8 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import com.nexera.common.vo.ZipCodeLookupVO;
 
 /**
  * The persistent class for the zipcodelookup database table.
@@ -75,6 +79,32 @@ public class ZipCodeLookup implements Serializable {
 	public void setCityname(String cityname) {
 		this.cityname = cityname;
 	}
+
+	public static ZipCodeLookupVO converToVo(ZipCodeLookup model) {
+		if (model == null)
+			return null;
+
+		ZipCodeLookupVO vo = new ZipCodeLookupVO();
+		vo.setCityName(model.getCityname());
+		vo.setCountyName(model.getCountyname());
+		vo.setId(model.getId());
+		vo.setZipcode(model.getZipcode());
+
+		return vo;
+
+	}
 	
+	public static List<ZipCodeLookupVO> convertToVo(List<ZipCodeLookup> modelList){
+		
+		if(modelList==null || modelList.isEmpty())
+		return null;
+		List<ZipCodeLookupVO> voList=new ArrayList<ZipCodeLookupVO>();
+		
+		for(ZipCodeLookup model:modelList){
+			voList.add(ZipCodeLookup.converToVo(model));
+		}
+		return voList;
+		
+	}
 
 }

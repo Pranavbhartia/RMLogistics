@@ -1,6 +1,8 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.nexera.common.vo.StateLookupVO;
 
 /**
  * The persistent class for the statelookup database table.
@@ -65,5 +69,27 @@ public class StateLookup implements Serializable {
 	    this.codeLookups = codeLookups;
     }
 	
+	public static StateLookupVO convertToVo(StateLookup model){
+		if(model==null) return null;
+		StateLookupVO vo=new StateLookupVO();
+		vo.setId(model.getId());
+		vo.setStateCode(model.getStatecode());
+		vo.setStateName(model.getStatename());
+		
+		return vo;
+		
+		
+	}
+	
+	public static List<StateLookupVO> convertToVo(List<StateLookup> modelList) {
+		if (modelList == null || modelList.isEmpty())
+			return Collections.EMPTY_LIST;
+		List<StateLookupVO> list = new ArrayList<StateLookupVO>();
+		for (StateLookup model : modelList) {
+			list.add(StateLookup.convertToVo(model));
+
+		}
+		return list;
+	}
 
 }
