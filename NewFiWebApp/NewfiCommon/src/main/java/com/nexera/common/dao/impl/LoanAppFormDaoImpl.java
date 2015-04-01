@@ -71,6 +71,11 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			this.saveOrUpdate(loanAppForm.getRefinancedetails());
 			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
 			sessionFactory.getCurrentSession().flush();
+		}if (null != loanAppForm.getPurchaseDetails()) {
+			System.out.println("Before saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getPurchaseDetails().getId());
+			this.saveOrUpdate(loanAppForm.getPurchaseDetails());
+			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getPurchaseDetails().getId());
+			sessionFactory.getCurrentSession().flush();
 		}
  
 		this.saveOrUpdate(loanAppForm);

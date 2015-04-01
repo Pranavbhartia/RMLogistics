@@ -370,6 +370,8 @@ function paintSelectLoanTypeQuestion() {
 }
 
 function paintRefinanceMainContainer() {
+	
+	refinanceTeaserRate.loanType = "REF";
 	$('#ce-main-container').html('');
 	var wrapper = $('<div>').attr({
 		"class" : "ce-refinance-wrapper clearfix"
@@ -447,7 +449,7 @@ function paintRefinanceQuest1() {
 	var options = [ {
 		"text" : "Lower My Monthly Payment",
 		"onselect" : paintRefinanceStep2,
-		"value" : "lowerMonthlyPayment"
+		"value" : "REFLMP"
 	}, {
 		"text" : "Pay Off My Mortgage Faster",
 		"onselect" : paintRefinanceStep1a,
@@ -830,8 +832,8 @@ function paintRefinanceStep3() {
 		
 		  refinanceTeaserRate.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();
 		  
-		  refinanceTeaserRate.isIncludeTaxes = $('input[name="annualPropertyTaxes"]').val();
-		  refinanceTeaserRate.annualPropertyTaxes = quesContxts[1].value;
+		  refinanceTeaserRate.isIncludeTaxes = quesContxts[1].value; 
+		  refinanceTeaserRate.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
 		  refinanceTeaserRate.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
 		  
 		  paintRefinanceHomeWorthToday();
@@ -1183,47 +1185,14 @@ function paintRefinanceSeeRates() {
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
-	//var rateProgramWrapper = getRateProgramContainer();
-	
-	
-	//$('#ce-refinance-cp').html();
-	//var loanSummaryWrapper = getLoanSummaryWrapper();
-	//var closingCostWrapper = getClosingCostSummaryContainer();
-
-	//container.append(quesTextCont).append(rateProgramWrapper).append(
-		//	loanSummaryWrapper).append(closingCostWrapper);
-	//container.append(quesTextCont).append(rateProgramWrapper);
 	
 	alert(JSON.stringify(refinanceTeaserRate));
 	container.append(quesTextCont);
 	
 	$('#ce-refinance-cp').html(container);
 	
-	paintFixYourRatePageCEP();
+	paintFixYourRatePageCEP(JSON.stringify(refinanceTeaserRate));
 	
-	//$('#overlay-loader').show();
-	/*$.ajax({
-
-		url : "rest/calculator/findteaseratevalue",
-		type : "POST",
-		data : {
-			"teaseRate" : JSON.stringify(refinanceTeaserRate)
-		},
-		datatype : "application/json",
-		success : function(data) {
-			
-			$('#overlay-loader').hide();
-			
-			//paintteaserRate(teaserRate);
-			//printMedianRate(data,container);
-			paintFixYourRatePage();
-		},
-		error : function() {
-			alert("error");
-			$('#overlay-loader').hide();
-		}
-
-	});*/
 }
 
 
@@ -1314,8 +1283,10 @@ function teaserFixYourRatePage() {
 }
 
 
-function paintApplyNow(){
+function paintApplyNow(refinanceTeaserRate){
 	
+	alert(JSON.stringify(refinanceTeaserRate));
+	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
 	var registration = new Object ();
 	var parentWrapper = $('<div>').attr({
 		"class" : "container-row row clearfix"
@@ -1394,7 +1365,14 @@ function paintApplyNow(){
 		var timezone = dateVar.getTimezoneOffset();
 		registration.emailId = $('input[name="email"]').val() + ":" + timezone;
 		
+		customerEnagagement  = {};
 		
+		customerEnagagement.loanType = refinanceTeaserRate.loanType;
+		customerEnagagement.refinanceOption = refinanceTeaserRate.refinanceOption;
+		customerEnagagement.propertyTaxesPaid = refinanceTeaserRate.propertyTaxesPaid;
+		customerEnagagement.livingSituation=buyHomeTeaserRate.livingSituation;
+		
+		registration.customerEnagagement = customerEnagagement;
 		
 		saveUserAndRedirect(registration);
 	});
@@ -1448,7 +1426,7 @@ function saveUserAndRedirect(registration){
 
 
 
-function paintNotifyForRatesAlerts(){
+/*function paintNotifyForRatesAlerts(){
 	
 	var registration = new Object ();
 	var parentWrapper = $('<div>').attr({
@@ -1618,17 +1596,25 @@ function saveUserAndNotifyRatesAlerts(registration){
 	});
 	
 }
+*/
 
-
-function paintFixYourRatePageCEP() {
+function paintFixYourRatePageCEP(refinanceTeaserRate) {
 	/*var rateProgramWrapper = getLockRateProgramContainer();
 	$('#center-panel-cont').append(rateProgramWrapper);*/
-	var loanSummaryWrapper = getLoanSummaryWrapperCEP();
+	
+	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
+	//var loanTypeText = refinanceTeaserRate.loanType; 
+	var loanSummaryWrapper = getLoanSummaryWrapperCEP(refinanceTeaserRate);
 
 	$('#ce-refinance-cp').append(loanSummaryWrapper);
 }
 
-function getLoanSummaryWrapperCEP() {
+
+function getLoanSummaryWrapperCEP(refinanceTeaserRate) {
+	
+	var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
+	loanTypeText = refinanceTeaserRate.loanType;
+	
 	var parentWrapper = $('<div>').attr({
 		"class" : "loan-summary-wrapper"
 	});
@@ -1640,7 +1626,7 @@ function getLoanSummaryWrapperCEP() {
 		container = getLoanSummaryContainerPurchaseCEP();
 	}
 	
-	var rateWrapper = getLoanSliderWrapperCEP();
+	var rateWrapper = getLoanSliderWrapperCEP(refinanceTeaserRate);
 	
 	var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
 	
@@ -1746,7 +1732,9 @@ function getLoanSummaryContainerPurchaseCEP() {
 }
 
 
-function getLoanSliderWrapperCEP(){
+function getLoanSliderWrapperCEP(refinanceTeaserRate){
+	
+	//alert(JSON.stringify(refinanceTeaserRate));
 	var wrapper = $('<div>').attr({
 		"class" : "lock-rate-slider-wrapper"
 	});
@@ -1769,7 +1757,7 @@ function getLoanSliderWrapperCEP(){
 		"class" : "rate-btn"
 	}).html("Create Your Account").on('click',function(){
 		
-		var mainContainer = paintApplyNow();
+		var mainContainer = paintApplyNow(refinanceTeaserRate);
 		
 		$('#ce-main-container').html(mainContainer);
 	});
@@ -1778,7 +1766,7 @@ function getLoanSliderWrapperCEP(){
 		"class" : "rate-btn-alertRate"
 	}).html("Email My Number").on('click',function(){
 		
-		var mainContainer = paintApplyNow();
+		var mainContainer = paintApplyNow(refinanceTeaserRate);
 		
 		$('#ce-main-container').html(mainContainer);
 	});

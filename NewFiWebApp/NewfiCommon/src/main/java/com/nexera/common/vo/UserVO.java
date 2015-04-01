@@ -31,7 +31,9 @@ public class UserVO implements Serializable {
 	private List<NotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
-
+	
+    private CustomerEnagagement  customerEnagagement ;
+    
 	public UserVO() {
 
 	}
@@ -189,6 +191,17 @@ public class UserVO implements Serializable {
 
 	public void setUserEmails(List<UserEmailVO> userEmails) {
 		this.userEmails = userEmails;
+	}
+	
+	
+
+	
+	public CustomerEnagagement getCustomerEnagagement() {
+		return customerEnagagement;
+	}
+
+	public void setCustomerEnagagement(CustomerEnagagement customerEnagagement) {
+		this.customerEnagagement = customerEnagagement;
 	}
 
 	@Override

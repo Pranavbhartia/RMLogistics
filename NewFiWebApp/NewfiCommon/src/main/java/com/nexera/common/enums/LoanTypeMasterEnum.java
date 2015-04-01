@@ -1,8 +1,7 @@
 package com.nexera.common.enums;
 
 public enum LoanTypeMasterEnum {
-	PUR("PUR", 1),  REF("REF", 2), REFCO(
-	        "REFCO", 3);
+	PUR("PUR", 1),  REF("REF", 2), REFCO("REFCO", 3), REFLMP("REFLMP", 4);
 
 	private final String statusName;
 	private final int statusId;

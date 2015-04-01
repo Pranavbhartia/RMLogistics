@@ -6,6 +6,9 @@ var purchase = false;
 var user =  new Object();
 var customerDetail = new Object();
 user.customerDetail = customerDetail;
+var customerEnagagement = new Object();
+
+
 
 var propertyTypeMaster = new Object();
 var governmentquestion = new Object();
@@ -118,6 +121,8 @@ function paintCustomerApplicationPage() {
 
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
+	
+	user.customerEnagagement = customerEnagagement;
 	
 	loan.id = newfi.user.defaultLoanId;
 	
@@ -357,7 +362,7 @@ function getApplicationMultipleChoiceQues(question) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 
-
+//TODO-try nested yesno question
 
 function paintCustomerApplicationPageStep1a() {
     
@@ -399,13 +404,9 @@ function paintCustomerApplicationPageStep1a() {
     }).html("Save & continue").on('click', function(event) {
     	
     	var inputState = $('input[name="state"]').val();
-    	//appUserDetails["state"] = inputState;
-    	
     	var city = $('input[name="city"]').val();
-    	//appUserDetails["city"] = city;
-    	
     	var zipCode = $('input[name="zipCode"]').val();
-    	//appUserDetails["zipCode"] = zipCode;
+   
     	
     	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
         	
@@ -417,7 +418,6 @@ function paintCustomerApplicationPageStep1a() {
     		
     		user.customerDetail = customerDetail;
     		
-    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		appUserDetails.user = user;
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
@@ -435,6 +435,8 @@ function paintCustomerApplicationPageStep1a() {
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
         .append(saveAndContinueButton);
 }
+
+//TODO-try nested yesno question
 
 function paintCustomerApplicationPageStep1b() {
     $('#app-right-panel').html('');
@@ -551,7 +553,7 @@ function paintCustomerApplicationPageStep1b() {
 }
 
 
-
+//TODO-try nested yesno question
 
 function paintSecondPropertyStep(){
 
@@ -595,9 +597,17 @@ $('#app-right-panel').html("");
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		
-		   appUserDetails.isSecondaryMortgage = quesContxts[0].value;
-		   appUserDetails.secondaryMortgageBalance = $('input[name="secondaryMortgageBalance"]').val();
-		  
+		   isSecondaryMortgage = quesContxts[0].value;
+		   if(isSecondaryMortgage =='Yes')
+			   appUserDetails.secondMortgage = true;
+		   else{
+			   appUserDetails.secondMortgage = false;
+		   }
+		   
+		   
+		   refinancedetails.secondMortageBalance = $('input[name="secondaryMortgageBalance"]').val();
+		   
+		   appUserDetails.refinancedetails = refinancedetails;
 		  
 		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
 		
@@ -708,6 +718,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 
 var quesContxts=[];
 
+//TODO-try nested yesno question
 function paintCustomerApplicationPageStep2() {
 	
 	applyLoanStatus =2;
@@ -719,7 +730,7 @@ function paintCustomerApplicationPageStep2() {
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
-    //TODO-try nested yesno question
+   
     var questions = [{
         type: "yesno",
         text: "Are you married?",
@@ -2314,7 +2325,9 @@ function showLoanAppFormContainer(formCompletionStatus){
 
 
 function paintSelectLoanTypeQuestion() {
-    console.log("Inside paintSelectLoanTypeQuestion ");
+    
+
+	console.log("Inside paintSelectLoanTypeQuestion ");
 	stages = 0;
 	//$('#ce-main-container').html('');
     $('#app-right-panel').html('');
@@ -2343,7 +2356,11 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
 		
-		appUserDetails.chooseLoanType = "Refinance";
+		customerEnagagement.loanType = "REF";
+				
+		user.customerEnagagement = customerEnagagement;
+				
+		appUserDetails.user = user;
 		
 		paintRefinanceMainContainer();
 	});
@@ -2399,7 +2416,7 @@ function paintRefinanceQuest1() {
 	var options = [ {
 		"text" : "Lower My Monthly Payment",
 		"onselect" : paintRefinanceStep2,
-		"value" : "lowerMonthlyPayment"
+		"value" : "REFLMP"
 	}, {
 		"text" : "Pay Off My Mortgage Faster",
 		"onselect" : paintRefinanceStep1a,
@@ -2836,7 +2853,11 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 			var key = event.data.name;
 
 		//	refinanceTeaserRate[key] = event.data.option.value;
-			appUserDetails[key] = event.data.option.value;
+			
+			customerEnagagement[key] = event.data.option.value;			
+			user.customerEnagagement = customerEnagagement;					
+			appUserDetails.user = user;	
+			
 			event.data.option.onselect();
 		});
 		optionContainer.append(option);

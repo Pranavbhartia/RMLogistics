@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.CustomerEnagagement;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -69,6 +70,7 @@ public class ShopperRegistrationController {
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class);
 
+		CustomerEnagagement customerEnagagement = userVO.getCustomerEnagagement(); 
 		String emailId = userVO.getEmailId();
 
 		userVO.setUsername(userVO.getEmailId().split(":")[0]);
@@ -98,9 +100,15 @@ public class ShopperRegistrationController {
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+			userVOObj.setCustomerEnagagement(customerEnagagement);
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			
+			if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+				loanAppFormVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			}
+			
 			loanAppFormService.create(loanAppFormVO);
 
 		} catch (InvalidInputException e) {

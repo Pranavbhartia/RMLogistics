@@ -1148,7 +1148,7 @@ function paintFixYourRatePage() {
 
 
 
-function getRateProgramContainer() {
+function getRateProgramContainer(refinanceTeaserRate) {
 
 	var parentWrapper = $('<div>').attr({
 
@@ -1340,7 +1340,7 @@ function getRateProgramContainer() {
 
 		$('#ce-main-container').html('');
 
-		var applyNow = paintApplyNow();
+		var applyNow = paintApplyNow(refinanceTeaserRate);
 
 		$('#ce-main-container').html(applyNow);
 

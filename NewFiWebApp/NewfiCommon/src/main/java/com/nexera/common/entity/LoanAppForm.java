@@ -58,6 +58,8 @@ public class LoanAppForm implements Serializable {
 	private List<UserEmploymentHistory> userEmploymentHistories;
 
 	private Integer loanAppFormCompletionStatus;
+	
+	private PurchaseDetails purchaseDetails;
 
 	public LoanAppForm() {
 	}
@@ -360,6 +362,17 @@ public class LoanAppForm implements Serializable {
 	public void setUserEmploymentHistories(
 	        List<UserEmploymentHistory> userEmploymentHistories) {
 		this.userEmploymentHistories = userEmploymentHistories;
+	}
+	
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "purchasedetails")
+	public PurchaseDetails getPurchaseDetails() {
+		return purchaseDetails;
+	}
+
+	public void setPurchaseDetails(PurchaseDetails purchaseDetails) {
+		this.purchaseDetails = purchaseDetails;
 	}
 
 	public UserEmploymentHistory addUserEmploymentHistory(

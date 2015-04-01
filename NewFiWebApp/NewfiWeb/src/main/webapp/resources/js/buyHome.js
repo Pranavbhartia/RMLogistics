@@ -46,6 +46,7 @@ function getbuyHomeLeftPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintBuyHomeContainer() {
 
+	refinanceTeaserRate.loanType = "purchase";
 	$('#ce-main-container').html('');
 	var wrapper = $('<div>').attr({
 		"class" : "ce-refinance-wrapper clearfix"
@@ -71,15 +72,14 @@ function paintBuyHomeQuest() {
 	var options = [ {
 		"text" : "I am currently renting",
 		"onselect" : paintRentOfYourHouse,
-		"value" : 0
+		"value" : "renting"
 	}, {
 		"text" : "I am a home owner",
 		"onselect" : saleYourCurrentHome,
-		"value" : 1
+		"value" : "homeOwner"
 	} ];
 
-	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,
-			"livingSituation");
+	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,"livingSituation");
 	$('#ce-refinance-cp').html(quesCont);
 	/*
 	 * $("#progressBaarId_1").addClass('ce-lp-in-progress');
@@ -349,6 +349,8 @@ function paintPlanToBuyYourHouse() {
 function paintRentOfYourHouse() {
 	active = 2;
 	homeProgressBaar(2);
+	refinanceTeaserRate.livingSituation = 'renting';
+	
 	var quesTxt = "How much do you pay each month for rent?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
 	$('#ce-refinance-cp').html(quesCont);
@@ -901,7 +903,7 @@ function paintBuyHomeSeeTeaserRate() {
 		"class" : "ce-rp-ques-text"
 	}).html(quesTxt);
 
-	var rateProgramWrapper = getRateProgramContainer();
+	var rateProgramWrapper = getRateProgramContainer(refinanceTeaserRate);
 
 	container.append(quesTextCont).append(rateProgramWrapper);
 	$('#ce-refinance-cp').html(container);
@@ -911,7 +913,7 @@ function paintBuyHomeSeeTeaserRate() {
 		url : "rest/calculator/findteaseratevalue",
 		type : "POST",
 		data : {
-			"teaseRate" : JSON.stringify(buyHomeTeaserRate)
+			"teaseRate" : JSON.stringify(refinanceTeaserRate)
 		},
 		datatype : "application/json",
 		success : function(data) {
@@ -973,7 +975,7 @@ function sortYear(tenureYear) {
 	var sortedTenureYear = [];
 	sortedTenureYear = tenureYear;
 	sortedTenureYear.sort(function(a, b) {
-		return a - b
+		return a - b;
 	});
 	return sortedTenureYear;
 }
@@ -1146,7 +1148,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
-		buyHomeTeaserRate[key] = $('input[name="' + key + '"]').val();
+		refinanceTeaserRate[key] = $('input[name="' + key + '"]').val();
 		event.data.clickEvent();
 	});
 
