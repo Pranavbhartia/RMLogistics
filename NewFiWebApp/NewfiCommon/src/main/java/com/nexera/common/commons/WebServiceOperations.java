@@ -28,6 +28,8 @@ public class WebServiceOperations
     public static String OP_NAME_LOAN_LOCK_LOAN_PROGRAM = "LockLoanProgram";
 
     public static String OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT = "UploadPDFDocument";
+    
+    public static String OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID  = "DownloadEdocsPdfById";
 
 
 }

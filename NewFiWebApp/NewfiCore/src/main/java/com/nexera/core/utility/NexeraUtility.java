@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -565,5 +566,26 @@ public class NexeraUtility {
 		return stringBuf.toString();
 	}
 	
+	
+	public void getStreamForThumbnailFromS3Path(HttpServletResponse response , String s3Path) throws Exception{
+		 response.setContentType("image/jpeg");
+		 LOGGER.info("The s3path = "+s3Path);
+	      
+		 // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
+		 InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(s3Path , String.valueOf(1));
+    	 // get output stream of the response
+		 OutputStream outStream = response.getOutputStream();
+
+		 byte[] buffer = new byte[2048];
+		 int bytesRead = -1;
+
+		 // write bytes read from the input stream into the output stream
+		 while ((bytesRead = inputStream.read(buffer)) != -1) {
+		       outStream.write(buffer, 0, bytesRead);
+		 }
+
+		 inputStream.close();
+		 outStream.close();
+	}
 	
 }

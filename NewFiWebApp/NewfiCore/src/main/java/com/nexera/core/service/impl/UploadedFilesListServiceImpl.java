@@ -462,6 +462,24 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return json;
 	}
+	
+	
+	public JSONObject createFetchPdfDocumentJsonObject(String opName,
+	        LQBDocumentVO documentVO) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_DOCUMENT_ID,
+			        documentVO.getsLoanNumber());
+			
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
 
 	@Override
 	public CheckUploadVO uploadFileByEmail(InputStream stream,
@@ -507,7 +525,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		LQBDocumentVO lqbDocumentVO = new LQBDocumentVO();
 		lqbDocumentVO.setsLoanNumber(loanNumber);
 		return fetchLQBDocument(lqbDocumentVO);
-		
 	}
 	
 	
@@ -549,5 +566,20 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return null;
 	}
+
+	@Override
+	public void getFileContentFromLQBUsingUUID(String uuId) {
+		UploadedFilesList filesList = uploadedFilesListDao.fetchUsingFileUUID(uuId);
+		String lqbDocID = filesList.getLqbFileID();
+		
+		LQBDocumentVO documentVO = new LQBDocumentVO();
+		documentVO.setsLoanNumber(lqbDocID);
+		JSONObject jsonObject = createFetchPdfDocumentJsonObject(WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID , documentVO);
+		JSONObject receivedResponse = lqbInvoker.invokeLqbService( jsonObject.toString() );
+	    LOG.info(" receivedResponse while uploading LQB Document : "+receivedResponse);
+	}
+	
+	
+	
 	
 }

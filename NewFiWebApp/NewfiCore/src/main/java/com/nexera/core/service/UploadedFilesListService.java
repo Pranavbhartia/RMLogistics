@@ -59,5 +59,7 @@ public interface UploadedFilesListService {
 	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber);
 	
 	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId);
+	
+	public void getFileContentFromLQBUsingUUID(String uuId);
 
 }

@@ -40,36 +40,6 @@ public class FileUploadController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
 	
-	/*@RequestMapping(value = "documentUpload.do" , method = RequestMethod.POST  )
-	public @ResponseBody String  filesUploadToS3System( @RequestParam("file") MultipartFile[] file 
-										, @RequestParam("userID") Integer userID 
-										, @RequestParam("loanId") Integer loanId 
-										, @RequestParam("assignedBy") Integer assignedBy){
-		
-		LOG.info("Checking for User Session : ");
-		
-		User user=utils.getLoggedInUser();
-		if(user==null){
-			
-			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "403", "User Not Logged in."));
-		}
-		
-		
-		LOG.info("in document upload  wuth user id "+userID + " and loanId :"+loanId+" and assignedBy : "+assignedBy);
-		List<String> unsupportedFile = new ArrayList<String>();
-		for (MultipartFile multipartFile : file) {
-			Boolean isFileUploaded = uploadFile(multipartFile, userID , loanId , assignedBy);
-			if(!isFileUploaded){
-				unsupportedFile.add( multipartFile.getOriginalFilename());
-			}
-			
-		}
-		return new Gson().toJson(unsupportedFile);
-	} */
-	
-	
-	
-	
 	
 	@RequestMapping(value = "/readFileAsStream.do" , method = RequestMethod.GET) 
 	public void doDownload(HttpServletRequest request, HttpServletResponse response 
@@ -80,32 +50,14 @@ public class FileUploadController {
 		   if(isThumb.equals("0")){
 			   fileURL = uplList.getS3path();
 			   response.setContentType("application/pdf");
+			   uploadedFilesListService.getFileContentFromLQBUsingUUID(uuid);
+			   
 		   }else{
 			   fileURL = uplList.getS3ThumbPath();
-			   response.setContentType("image/jpeg");
+			   nexeraUtility.getStreamForThumbnailFromS3Path(response, fileURL);
 		   }
 		   
-	       LOG.info("The s3path = "+fileURL);
 	      
-		  // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
-		   InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(fileURL , isThumb);
-
-		  
-		  
-
-		   // get output stream of the response
-		   OutputStream outStream = response.getOutputStream();
-
-		   byte[] buffer = new byte[2048];
-		   int bytesRead = -1;
-
-		   // write bytes read from the input stream into the output stream
-		   while ((bytesRead = inputStream.read(buffer)) != -1) {
-		       outStream.write(buffer, 0, bytesRead);
-		   }
-
-		   inputStream.close();
-		   outStream.close();
 	}
 	
 	
