@@ -35,3 +35,20 @@ alter table workflowitemmaster add column display_turn_order int(11) default -1;
  update workflowitemmaster set display_turn_order=11 where id=35;
  update workflowitemmaster set display_turn_order=12 where id=36;
 
+
+
+CREATE TABLE `loanturnaroundtime` 
+  ( 
+     `id`               INT(11) NOT NULL auto_increment, 
+     `workflow_item_id` INT(11) NOT NULL, 
+     `loan_id` INT(11) NOT NULL, 
+     `hours`            INT(11) DEFAULT NULL,
+     `created_date`     DATETIME DEFAULT NULL, 
+     PRIMARY KEY (`id`), 
+     CONSTRAINT `fk_loanturnaroundtimeitemid` FOREIGN KEY (`workflow_item_id`) 
+     REFERENCES `workflowitemmaster` (`id`) ON DELETE no action ON UPDATE no 
+     action, 
+     CONSTRAINT `fk_loanturnaroundtimeloan` FOREIGN KEY (`loan_id`) 
+     REFERENCES `loan` (`id`) ON DELETE no action ON UPDATE no action,
+     CONSTRAINT `unique_contrt` UNIQUE(`workflow_item_id`,`loan_id`)
+  ) engine=innodb DEFAULT charset=utf8; 

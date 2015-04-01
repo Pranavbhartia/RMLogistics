@@ -90,6 +90,10 @@ public class Loan implements Serializable {
 	public Loan() {
 	}
 
+	public Loan(Integer id) {
+		this.id=id;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {

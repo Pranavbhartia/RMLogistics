@@ -119,4 +119,6 @@ public interface LoanService {
 	        UploadedFilesList uploadedFileList);
 
 	public void updateLoanNeedList(LoanNeedsList loanNeedList);
+	
+	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId);
 }
