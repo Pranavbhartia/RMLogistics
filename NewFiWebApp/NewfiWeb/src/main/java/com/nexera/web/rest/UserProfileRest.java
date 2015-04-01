@@ -343,7 +343,7 @@ public class UserProfileRest {
 		return result.toString();
 		
 	}
-	@RequestMapping(value="/deleteUser/{userId}", method = RequestMethod.GET)
+	/*@RequestMapping(value="/deleteUser/{userId}", method = RequestMethod.GET)
 	public @ResponseBody String deleteUser(@PathVariable Integer userId){
 		
 		LOG.info("Enabling user with user id : " + userId);
@@ -364,16 +364,16 @@ public class UserProfileRest {
 		LOG.info("Returning the json" + result.toString());
 		return result.toString();
 		
-	}
+	}*/
 	
 	@RequestMapping(value="/addusersfromcsv", method = RequestMethod.POST ,  headers = "Accept=*")
 	public @ResponseBody String registerUsersFromCsv(@RequestParam(value="file" , required = true) MultipartFile multipartFile , HttpServletRequest request , HttpServletResponse response){
 		LOG.info("File upload Rest service called");
 		JsonObject result = null;
-		 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request; 
-		 MultipartFile multipartFile1 = multipartRequest.getFile("file");
+		 /*MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request; 
+		 MultipartFile multipartFile1 = multipartRequest.getFile("file");*/
 		try {
-			result = userProfileService.parseCsvAndAddUsers(multipartFile1);
+			result = userProfileService.parseCsvAndAddUsers(multipartFile);
 		}
 		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

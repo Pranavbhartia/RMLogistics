@@ -804,11 +804,11 @@ var row = $('<div>').attr({
 
 	}).on("click",function(e){
 	if($(this).prop("checked")){
-            $(this).attr("data-checked",true);
+		    checkBox.addClass('doc-checked');
 	
             }
             else if($(this).prop("checked")){
-             $(this).attr("data-checked",false);
+            	checkBox.addClass('doc-unchecked');
             }
 	
 	});
