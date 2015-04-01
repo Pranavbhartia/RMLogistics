@@ -15,6 +15,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
+import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
@@ -34,17 +35,15 @@ import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
-import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.core.service.WorkflowCoreService;
-import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -54,6 +53,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private LoanNeedListDao loanNeedListDao;
 
 	@Autowired
 	private LoanMilestoneDao loanMilestoneDao;
@@ -582,7 +584,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
-		//Invoking the workflow activities to trigger
+		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		return Loan.convertFromEntityToVO(loan);
 	}
@@ -825,12 +827,25 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
-			Integer workFlowItemId) {
-		//TODO Change hard value to new value
-		LoanTurnAroundTimeVO aroundTimeVO=new LoanTurnAroundTimeVO();
+	        Integer workFlowItemId) {
+		// TODO Change hard value to new value
+		LoanTurnAroundTimeVO aroundTimeVO = new LoanTurnAroundTimeVO();
 		aroundTimeVO.setHours(12);
 		aroundTimeVO.setLoanId(loanId);
 		aroundTimeVO.setWorkItemMasterId(workFlowItemId);
 		return aroundTimeVO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanNeedsList fetchLoanNeedByFileId(
+	        UploadedFilesList uploadedFileList) {
+		return loanDao.fetchLoanNeedsByFileId(uploadedFileList);
+	}
+
+	@Override
+	public void updateLoanNeedList(LoanNeedsList loanNeedList) {
+		loanNeedListDao.update(loanNeedList);
+
 	}
 }
