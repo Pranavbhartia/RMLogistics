@@ -381,12 +381,16 @@ public class User implements Serializable, UserDetails {
 		userModel.setId(userVO.getId());
 		userModel.setFirstName(userVO.getFirstName());
 		userModel.setLastName(userVO.getLastName());
+		
+		userModel.setUsername(userVO.getEmailId());
+		userModel.setEmailId(userVO.getEmailId());
+		
+//		if (userVO.getEmailId() != null) {
+//			userModel.setUsername(userVO.getEmailId().split(":")[0]);
+//			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+//		}
+		//userModel.setPassword(userVO.getPassword());
 
-		if (userVO.getEmailId() != null) {
-			userModel.setUsername(userVO.getEmailId().split(":")[0]);
-			userModel.setEmailId(userVO.getEmailId().split(":")[0]);
-		}
-		// userModel.setPassword(userVO.getPassword());
 
 		userModel.setStatus(true);
 

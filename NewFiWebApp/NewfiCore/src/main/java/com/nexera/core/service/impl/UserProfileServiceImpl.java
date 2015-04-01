@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +23,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import au.com.bytecode.opencsv.CSVReader;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.MessageUtils;
+import com.nexera.common.dao.InternalUserStateMappingDao;
+import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
+import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.DisplayMessageType;
@@ -62,6 +63,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+	
+	@Autowired
+	private InternalUserStateMappingDao internalUserStateMappingDao;
+	
+	@Autowired
+	private StateLookupDao stateLookupDao;
 
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
@@ -309,6 +316,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
 		sendNewUserEmail(newUser);
+		
+		//We set password to null so that it isnt sent back to the front end 
+		newUser.setPassword(null);
+		
 		newUser = null;
 		if (userID > 0) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
@@ -441,6 +452,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		return date;
 	}
+	
+	private boolean checkStateCode(String stateCode){
+		boolean status = false;
+		
+		try {
+			stateLookupDao.findStateLookupByStateCode(stateCode);
+			status = true;
+		}
+		catch (NoRecordsFetchedException e) {
+			status = false;
+		}		
+		return status;	
+	}
 
 	private String checkCsvLine(String[] csvRow) {
 		String message = null;
@@ -475,8 +499,20 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
 		}
-		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER
-		        .toString())
+		else {
+			//Check for user with same email id
+			try {
+				User existingUser = userProfileDao.findByUserName(csvRow[CommonConstants.EMAIL_COLUMN]);
+				message = messageUtils.getDisplayMessage(
+				        DisplayMessageConstants.EMAIL_ALREADY_EXISTS,
+				        DisplayMessageType.ERROR_MESSAGE).toString();
+				return message;
+			}
+			catch (NoRecordsFetchedException e) {
+				//User doesnt exist in database. So we can go ahead and add the user.
+			}
+		}
+		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
 		                .equals(UserRolesEnum.LOANMANAGER.toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
@@ -550,6 +586,30 @@ public class UserProfileServiceImpl implements UserProfileService,
 				return message;
 			}
 		}
+		
+		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString())){
+			if( csvRow[CommonConstants.STATE_CODE_COLUMN]!= null && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()){
+				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN].split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
+				if (stateCodes.length <= 0) {
+					message = messageUtils.getDisplayMessage(
+					        DisplayMessageConstants.INVALID_STATE_CODE_LIST_LENGTH,
+					        DisplayMessageType.ERROR_MESSAGE).toString();
+					return message;					
+				}
+				
+				int counter = 1;
+				for(String stateCode : stateCodes){
+					if(!checkStateCode(stateCode)){
+						message = messageUtils.getDisplayMessage(
+						        DisplayMessageConstants.INVALID_STATE_CODE,
+						        DisplayMessageType.ERROR_MESSAGE).toString() + counter;
+						return message;
+					}
+					counter+=1;
+				}
+				
+			}
+		}
 
 		return message;
 	}
@@ -567,7 +627,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	private void buildUserVOAndCreateUser(String[] rowData)
+	private UserVO buildUserVOAndCreateUser(String[] rowData)
 	        throws InvalidInputException, UndeliveredEmailException {
 
 		UserVO userVO = new UserVO();
@@ -623,13 +683,31 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setRealtorDetail(realtorDetailVO);
 		}
 
-		createNewUserAndSendMail(userVO);
+		UserVO createdUserVo = createNewUserAndSendMail(userVO);
+		return createdUserVo;
+	}
+	
+	private void createUserStateMapping(UserVO userVO,String stateCodes) throws NoRecordsFetchedException{
+		
+		
+		String[] stateCodesList = stateCodes.split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
+		
+		InternalUserStateMapping internalUserStateMapping;
+		User user = userProfileDao.findByUserId(userVO.getId());
+		
+		for(String stateCode : stateCodesList){
+			internalUserStateMapping = new InternalUserStateMapping();			
+			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setUser(user);
+			internalUserStateMappingDao.save(internalUserStateMapping);			
+		}
+		
 	}
 
 	@Override
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
 	        throws IOException, InvalidInputException,
-	        UndeliveredEmailException {
+	        UndeliveredEmailException, NoRecordsFetchedException {
 
 		Reader reader = new InputStreamReader(file.getInputStream());
 		CSVReader csvReader = new CSVReader(reader, ',');
@@ -643,7 +721,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			String message = checkCsvLine(rowString);
 			if (message == null) {
 				// LOG.info(StringUtils.join(rowString,','));
-				buildUserVOAndCreateUser(rowString);
+				if(rowString[CommonConstants.STATE_CODE_COLUMN].isEmpty()){
+					buildUserVOAndCreateUser(rowString);
+				}
+				else{
+					createUserStateMapping(buildUserVOAndCreateUser(rowString),rowString[CommonConstants.STATE_CODE_COLUMN]);
+				}
 			} else {
 				errorList.add(buildErrorItem(lineCounter, rowString, message));
 			}
