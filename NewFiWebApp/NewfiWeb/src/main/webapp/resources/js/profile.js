@@ -5,7 +5,7 @@ var currentZipcodeLookUp = [];
 
 function showCustomerProfilePage() {
 	
-	ajaxRequest("rest/state/", "GET", "json", "", stateListCallBack);
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
@@ -699,7 +699,7 @@ function getStateRow(user) {
 		var stateCode = user.customerDetail.addressState.toUpperCase();
 		
 		var stateId = findStateIdForStateCode(stateCode);
-		ajaxRequest("rest/state/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+		ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
@@ -734,7 +734,7 @@ function appendStateDropDown(elementToApeendTo) {
 			var stateCode = $(this).html();
 			
 			var stateId = findStateIdForStateCode(stateCode);
-			ajaxRequest("rest/state/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+			ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 			toggleStateDropDown();
 		});
 		

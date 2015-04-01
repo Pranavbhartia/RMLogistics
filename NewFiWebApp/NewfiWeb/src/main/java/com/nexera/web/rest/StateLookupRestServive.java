@@ -19,7 +19,7 @@ import com.nexera.core.service.StateLookupService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
-@RequestMapping(value = "/state/")
+@RequestMapping(value = "/states/")
 public class StateLookupRestServive {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(StateLookupRestServive.class);
