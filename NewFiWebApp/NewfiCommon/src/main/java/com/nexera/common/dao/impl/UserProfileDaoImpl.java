@@ -10,7 +10,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -53,7 +52,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			Criteria criteria = session.createCriteria(User.class);
 			criteria.add(Restrictions.eq("emailId", userName));
 			criteria.add(Restrictions.eq("password", password));
-			criteria.add(Restrictions.eq("password", password));
+
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
 				throw new NoRecordsFetchedException(
@@ -449,33 +448,37 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 			criteria = session.createCriteria(InternalUserStateMapping.class);
 			criteria.add(Restrictions.eq("stateLookup", lookup));
-			List<InternalUserStateMapping> list = criteria.list();
+			List<InternalUserStateMapping> internalUsers = criteria.list();
 
-			if (list == null || list.isEmpty()) {
+			if (internalUsers == null || internalUsers.isEmpty()) {
 				// No users found for this state
 				return Collections.EMPTY_LIST;
 			}
 			// Check amongst the users who is free
 
 			List<User> users = new ArrayList<User>();
-			for (InternalUserStateMapping internalUserStateMapping : list) {
-				User user = internalUserStateMapping.getUser();
-				if (user.getInternalUserDetail().getActiveInternal()) {
-					criteria = session.createCriteria(Loan.class);
-					// Incorrect, this should look at loan team and not user
-					criteria.add(Restrictions.eq("user", user));
-					Criterion criteria2 = Restrictions.eq("loanProgressStatus",
-					        new LoanProgressStatusMaster(
-					                LoanProgressStatusMasterEnum.IN_PROGRESS));
-					Criterion criteria3 = Restrictions.eq("loanProgressStatus",
-					        new LoanProgressStatusMaster(
-					                LoanProgressStatusMasterEnum.NEW_LOAN));
 
-					criteria.add(Restrictions.disjunction().add(criteria2)
-					        .add(criteria3));
-					List<Loan> loanList = criteria.list();
-					user.setLoans(loanList);
-					users.add(user);
+			for (InternalUserStateMapping internalUser : internalUsers) {
+				User user = internalUser.getUser();
+				if (user.getInternalUserDetail().getActiveInternal()) {
+
+					criteria = session.createCriteria(LoanTeam.class);
+					criteria.add(Restrictions.eq("user.id", user.getId()));
+					List<LoanTeam> loanTeamList = criteria.list();
+					List<Loan> activeLoanList = new ArrayList<Loan>();
+					user.setLoans(activeLoanList);
+					for (LoanTeam loanTeam : loanTeamList) {
+						if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
+						        .getStatusId()
+						        || loanTeam.getLoan().getLoanProgressStatus()
+						                .getId() == LoanProgressStatusMasterEnum.NEW_LOAN
+						                .getStatusId()) {
+							user.getLoans().add(loanTeam.getLoan());
+							users.add(user);
+
+						}
+					}
+
 				}
 
 			}
@@ -484,19 +487,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			LOG.warn("State not present in system: " + stateName);
 			return Collections.EMPTY_LIST;
 		}
-
-		//
-		// criteria = session.createCriteria(User.class);
-		// // Criteria criteria = session.createCriteria(User.class);
-		// criteria.add(Restrictions.eq("status", true));
-		// UserRole role = new UserRole(UserRolesEnum.INTERNAL);
-		// criteria.add(Restrictions.eq("userRole", role));
-		// criteria.add(Restrictions.isNotNull("internalUserDetail"));
-		// criteria.add(Restrictions
-		// .eq("internaUserRoleMaster", new InternalUserRoleMaster(
-		// InternalUserRolesEum.LM.getRoleId())));
-		// InternalUserStateMapping internalUserStateMapping
-		// // criteria.add(Restrictions.in("internalUserStateMappings", values)
 
 	}
 }
