@@ -1374,7 +1374,53 @@ function paintApplyNow(refinanceTeaserRate){
 		
 		registration.customerEnagagement = customerEnagagement;
 		
-		saveUserAndRedirect(registration);
+		
+		
+		
+		// New Code added for saving form data 
+		var appUserDetails  = new Object();
+		var refinancedetails = new Object();
+		var propertyTypeMaster = new Object();
+        var user = new Object();
+		
+		
+		//appUserDetails.loanType = refinanceTeaserRate.loanType;
+		user.firstName=registration.firstName;
+		user.lastName=registration.lastName;
+		user.emailId= registration.emailId;
+		refinancedetails.refinanceOption = refinanceTeaserRate.refinanceOption;
+		refinancedetails.currentMortgageBalance = refinanceTeaserRate.currentMortgageBalance;
+		refinancedetails.currentMortgagePayment = refinanceTeaserRate.currentMortgagePayment;
+		refinancedetails.isIncludeTaxes = refinanceTeaserRate.isIncludeTaxes;
+		propertyTypeMaster.propertyTaxesPaid=refinanceTeaserRate.propertyTaxesPaid;
+		propertyTypeMaster.annualHomeownersInsurance=refinanceTeaserRate.annualHomeownersInsurance;
+		propertyTypeMaster.homeWorthToday=refinanceTeaserRate.homeWorthToday;
+		propertyTypeMaster.homeZipCode=refinanceTeaserRate.zipCode;
+		appUserDetails.user=user;
+		appUserDetails.refinancedetails = refinancedetails;
+		appUserDetails.propertyTypeMaster = propertyTypeMaster;
+		appUserDetails.livingSituation=buyHomeTeaserRate.livingSituation;
+
+
+
+alert('hey');
+		alert(JSON.stringify(appUserDetails));
+		console.log(JSON.stringify(appUserDetails));
+		
+		//saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
+		saveUserAndRedirect(appUserDetails);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//saveUserAndRedirect(registration);
 	});
 	
 	regContainerGetStarted.append(regGetStarted);
@@ -1388,6 +1434,10 @@ function paintApplyNow(refinanceTeaserRate){
 	return parentWrapper.append(regMainContainer);
 		
 }
+
+
+
+
 
 function saveUserAndRedirect(registration){
 	
@@ -1407,6 +1457,8 @@ function saveUserAndRedirect(registration){
 			$('#overlay-loader').hide();
 			//alert (data);
 			window.location.href = data;
+			
+			
 			//printMedianRate(data,container);
 			
 		},
@@ -1419,6 +1471,30 @@ function saveUserAndRedirect(registration){
 	});
 	
 }
+
+
+
+function saveAndUpdateLoanAppForm(appUserDetails)
+{
+$.ajax({
+		url:"rest/application/applyloan",
+		type:"POST",
+		data:{"appFormData" : JSON.stringify(appUserDetails)},
+		datatype : "application/json",
+		success:function(data){
+		alert('inside appFormData');
+
+			window.location.href = data;
+		},
+		error:function(erro){
+			alert("error");
+		}
+		
+	});
+
+
+}
+
 
 
 

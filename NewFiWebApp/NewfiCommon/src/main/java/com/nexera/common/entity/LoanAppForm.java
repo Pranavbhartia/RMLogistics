@@ -49,9 +49,11 @@ public class LoanAppForm implements Serializable {
 	private String ssDisabilityIncome;
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
+	private String monthlyRent;
 	private User user;
 	private PropertyTypeMaster propertyTypeMaster;
 	private GovernmentQuestion governmentquestion;
+	private SpouseGovernmentQuestions spousegovernmentquestions;
 	private RefinanceDetails refinancedetails;
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
@@ -123,6 +125,18 @@ public class LoanAppForm implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
+	@Column(name = "monthlyRent")
+	public String getMonthlyRent() {
+		return monthlyRent;
+	}
+
+	public void setMonthlyRent(String monthlyRent) {
+		this.monthlyRent = monthlyRent;
+	}
+
+	
+	
+	
 	@Column(name = "owns_other_property", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getOwnsOtherProperty() {
@@ -204,6 +218,18 @@ public class LoanAppForm implements Serializable {
 	}
 
 	// bi-directional many-to-one association to Refinace
+
+	// bi-directional many-to-one association to GovermentQuestions
+		@OneToOne(fetch = FetchType.LAZY)
+		@JoinColumn(name = "spousegov_quest")
+	public SpouseGovernmentQuestions getSpousegovernmentquestions() {
+		return spousegovernmentquestions;
+	}
+
+	public void setSpousegovernmentquestions(
+			SpouseGovernmentQuestions spousegovernmentquestions) {
+		this.spousegovernmentquestions = spousegovernmentquestions;
+	}
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_detail")
