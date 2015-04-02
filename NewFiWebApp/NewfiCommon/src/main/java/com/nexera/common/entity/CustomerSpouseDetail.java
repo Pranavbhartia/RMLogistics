@@ -25,7 +25,7 @@ import org.hibernate.annotations.Type;
 @NamedQuery(name = "CustomerSpouseDetail.findAll", query = "SELECT c FROM CustomerSpouseDetail c")
 public class CustomerSpouseDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Date spouseDateOfBirth;
 	private String spouseSsn;
 	private String spouseSecPhoneNumber;
@@ -42,15 +42,20 @@ public class CustomerSpouseDetail implements Serializable {
 	public CustomerSpouseDetail() {
 	}
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
-		return this.id;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setId(int id) {
+
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "spousedateOfBirth")

@@ -8,7 +8,12 @@ import javax.persistence.Column;
 
 import org.hibernate.annotations.Type;
 
+import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.CustomerEmploymentIncome;
+import com.nexera.common.entity.CustomerOtherAccountDetails;
+import com.nexera.common.entity.CustomerRetirementAccountDetails;
+import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTypeMaster;
@@ -339,49 +344,51 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setMonthlyRent(this.getMonthlyRent());
 		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
-
+		loanAppForm.setMonthlyRent(this.monthlyRent);
 		
 		
 		
 		//System.out.println(this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"));
-		if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF")){
+		//if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF")){
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REF));
-		}
-		else if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("PUR")){
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
-		}
-		else{ 
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REFCO));
-		}
+		//}
+		//else if(null!= this.getUser().getCustomerEnagagement() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("PUR")){
+			//loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
+		//}
+		//else{ 
+			//loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REFCO));
+	//	}
 
 		
 		
-		if(null != this.getUser().getCustomerEnagagement() && null != this.getPropertyTypeMaster()){
+		//if(null != this.getUser().getCustomerEnagagement() && null != this.getPropertyTypeMaster()){
 			
-			this.getPropertyTypeMaster().setPropertyTaxesPaid(this.getUser().getCustomerEnagagement().getPropertyTaxesPaid());		
-		}
+			//this.getPropertyTypeMaster().setPropertyTaxesPaid(this.getUser().getCustomerEnagagement().getPropertyTaxesPaid());		
+		//}
 		
 		loanAppForm.setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this.getPropertyTypeMaster()));
 		
 		
 		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
 		
-		if(null != this.getUser().getCustomerEnagagement() && null!= this.getRefinancedetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"))
-		this.getRefinancedetails().setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
+		//if(null != this.getUser().getCustomerEnagagement() && null!= this.getRefinancedetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"))
+		//this.getRefinancedetails().setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
 
 		
 		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
 		
 		// Purchase Details 
-		if (null!= this.getPurchaseDetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("purchase"))
-		this.getPurchaseDetails().setLivingSituation(this.getUser().getCustomerEnagagement().getLivingSituation());
+		//if (null!= this.getPurchaseDetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("purchase"))
+		//this.getPurchaseDetails().setLivingSituation(this.getUser().getCustomerEnagagement().getLivingSituation());
 		
 		loanAppForm.setPurchaseDetails(parseVOtoEntityPurchaseDetails(this.getPurchaseDetails()));
 		
 
 		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
 
-//		loanAppForm.setLoan(this.getLoan().convertToEntity());
+     	loanAppForm.setLoan(this.getLoan().convertToEntity());
+     	
+     
 		
 		/* save data in the purchase table */
 		
@@ -398,7 +405,15 @@ public class LoanAppFormVO implements Serializable {
 		if(purchaseDetailsVO == null)
 			return purchaseDetails;
 		
+		purchaseDetails.setId(purchaseDetailsVO.getId());
 		purchaseDetails.setLivingSituation(purchaseDetailsVO.getLivingSituation());
+		purchaseDetails.setBuyhomeZipPri(purchaseDetailsVO.getBuyhomeZipPri());
+		purchaseDetails.setBuyhomeZipSec(purchaseDetailsVO.getBuyhomeZipSec());
+		purchaseDetails.setBuyhomeZipTri(purchaseDetailsVO.getBuyhomeZipTri());
+		purchaseDetails.setEstimatedPrice(purchaseDetailsVO.getEstimatedPrice());
+		purchaseDetails.setHousePrice(purchaseDetailsVO.getHousePrice());
+		purchaseDetails.setLoanAmount(purchaseDetailsVO.getLoanAmount());
+		
 		
 		return purchaseDetails;
     }
@@ -497,8 +512,7 @@ public class LoanAppFormVO implements Serializable {
 		if (userVO.getCustomerDetail() == null)
 			return user;
 
-		user.setCustomerDetail(parseVOtoEntityCustomerDetails(userVO
-		        .getCustomerDetail()));
+		user.setCustomerDetail(parseVOtoEntityCustomerDetails(userVO.getCustomerDetail()));
 
 		return user;
 
@@ -536,13 +550,90 @@ public class LoanAppFormVO implements Serializable {
 		customerDetail.setLivingSince(customerDetailVO.getLivingSince()) ;
 		
 		
+		customerDetail.setCustomerSpouseDetail(parseVOtoEntityCustomerSpouseDetail(customerDetailVO.getCustomerSpouseDetail()));
+		customerDetail.setCustomerEmploymentIncome(parseVOtoEntityCustomerEmploymentIncome(customerDetailVO.getCustomerEmploymentIncome()));
+		customerDetail.setCustomerBankAccountDetails(parseVOtoEntityCustomerBankAccountDetails(customerDetailVO.getCustomerBankAccountDetails()));
+		customerDetail.setCustomerRetirementAccountDetails(parseVOtoEntityCustomerRetirementAccountDetails(customerDetailVO.getCustomerRetirementAccountDetails()));
+		customerDetail.setCustomerOtherAccountDetails(parseVOtoEntityCustomerOtherAccountDetails(customerDetailVO.getCustomerOtherAccountDetails()));
 		
-		
-		
-
 		return customerDetail;
 
 	}
+
+	private CustomerOtherAccountDetails parseVOtoEntityCustomerOtherAccountDetails(
+            CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO) {
+	    
+		CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails (); 
+		if(null == customerOtherAccountDetailsVO)
+			return customerOtherAccountDetails;
+		
+		customerOtherAccountDetails.setId(customerOtherAccountDetailsVO.getId());
+		customerOtherAccountDetails.setAccountSubType(customerOtherAccountDetailsVO.getAccountSubType());
+		customerOtherAccountDetails.setCurrentaccountbalance(customerOtherAccountDetailsVO.getCurrentAccountBalance());
+		customerOtherAccountDetails.setAmountfornewhome(customerOtherAccountDetailsVO.getAmountForNewHome());
+		
+	    return customerOtherAccountDetails;
+    }
+
+	private CustomerRetirementAccountDetails parseVOtoEntityCustomerRetirementAccountDetails(
+            CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO) {
+	    
+		CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
+		if(null == customerRetirementAccountDetailsVO)
+			return customerRetirementAccountDetails;
+		
+		customerRetirementAccountDetails.setId(customerRetirementAccountDetailsVO.getId());
+		customerRetirementAccountDetails.setAccountSubType(customerRetirementAccountDetailsVO.getAccountSubType());
+		customerRetirementAccountDetails.setCurrentaccountbalance(customerRetirementAccountDetailsVO.getCurrentAccountBalance());
+		customerRetirementAccountDetails.setAmountfornewhome(customerRetirementAccountDetailsVO.getAmountForNewHome());
+		
+	    return customerRetirementAccountDetails;
+    }
+
+	private CustomerBankAccountDetails parseVOtoEntityCustomerBankAccountDetails(
+            CustomerBankAccountDetailsVO customerBankAccountDetailsVO) {
+	
+		CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
+		if(null == customerBankAccountDetailsVO)
+			return customerBankAccountDetails;
+		
+		customerBankAccountDetails.setId(customerBankAccountDetailsVO.getId());
+		customerBankAccountDetails.setAccountSubType(customerBankAccountDetailsVO.getAccountSubType());
+		customerBankAccountDetails.setAmountfornewhome(customerBankAccountDetailsVO.getAmountForNewHome());
+		customerBankAccountDetails.setCurrentaccountbalance(customerBankAccountDetailsVO.getCurrentAccountBalance());
+		
+		
+	    return customerBankAccountDetails;
+    }
+
+	private CustomerEmploymentIncome parseVOtoEntityCustomerEmploymentIncome(
+            CustomerEmploymentIncomeVO customerEmploymentIncomeVO) {
+	    
+		CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
+		if(null == customerEmploymentIncomeVO)
+			return customerEmploymentIncome;
+		
+		customerEmploymentIncome.setId(customerEmploymentIncomeVO.getId());
+		customerEmploymentIncome.setEmployedAt(customerEmploymentIncomeVO.getEmployedAt());
+		customerEmploymentIncome.setEmployedIncomePreTax(customerEmploymentIncomeVO.getEmployedIncomePreTax());
+		customerEmploymentIncome.setEmployedSince(customerEmploymentIncomeVO.getEmployedSince());
+		
+	    return customerEmploymentIncome;
+    }
+
+	private CustomerSpouseDetail parseVOtoEntityCustomerSpouseDetail(
+            CustomerSpouseDetailVO customerSpouseDetailVO) {
+
+		CustomerSpouseDetail customerSpouseDetail = new CustomerSpouseDetail ();
+		if(null== customerSpouseDetailVO)
+			return customerSpouseDetail;
+		
+		customerSpouseDetail.setId(customerSpouseDetailVO.getId());
+		customerSpouseDetail.setSpouseName(customerSpouseDetailVO.getSpouseName());
+		
+		
+	    return customerSpouseDetail;
+    }
 
 	public Boolean getPaySecondMortgage() {
 		return paySecondMortgage;

@@ -10,12 +10,14 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
+import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.GovernmentQuestionVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
+import com.nexera.common.vo.PurchaseDetailsVO;
 import com.nexera.common.vo.RefinanceVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
@@ -103,11 +105,32 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setGovernmentquestion(convertTOGovernmentquestionVO(loanAppForm.getGovernmentquestion()));
 		 loanAppFormVO.setRefinancedetails(convertTORefinancedetailsVO(loanAppForm.getRefinancedetails()));
 		 loanAppFormVO.setLoanType(convertTOLoanTypeVO(loanAppForm.getLoanTypeMaster()));
+		 loanAppFormVO.setPurchaseDetails(convertTOPurchaseDetails(loanAppForm.getPurchaseDetails()));
 		 
 		 return loanAppFormVO;
 		 
 	 }
 
+
+	private PurchaseDetailsVO convertTOPurchaseDetails( PurchaseDetails purchaseDetails) {
+	
+		if(purchaseDetails == null){
+			 return null;
+		 }
+		PurchaseDetailsVO  purchaseDetailsVO= new PurchaseDetailsVO ();
+		purchaseDetailsVO.setId(purchaseDetails.getId());
+		purchaseDetailsVO.setBuyhomeZipPri(purchaseDetails.getBuyhomeZipPri());
+		purchaseDetailsVO.setBuyhomeZipSec(purchaseDetails.getBuyhomeZipSec());
+		purchaseDetailsVO.setBuyhomeZipTri(purchaseDetails.getBuyhomeZipTri());
+		purchaseDetailsVO.setEstimatedPrice(purchaseDetails.getEstimatedPrice());
+		purchaseDetailsVO.setHousePrice(purchaseDetails.getHousePrice());
+		purchaseDetailsVO.setLivingSituation(purchaseDetails.getLivingSituation());
+		purchaseDetailsVO.setLoanAmount(purchaseDetails.getLoanAmount());
+		purchaseDetailsVO.setTaxAndInsuranceInLoanAmt(purchaseDetails.isTaxAndInsuranceInLoanAmt());
+		
+		
+	    return purchaseDetailsVO;
+    }
 
 	private LoanAppFormVO convertTOLoanAppFormVOCore(LoanAppForm loanAppForm){
 		 
