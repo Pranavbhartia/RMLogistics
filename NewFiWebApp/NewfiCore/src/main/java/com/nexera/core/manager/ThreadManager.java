@@ -346,7 +346,7 @@ public class ThreadManager implements Runnable {
 		for (LQBedocVO edoc : edocsList) {
 
 			String documentType = edoc.getDoc_type();
-			if (!documentType.equalsIgnoreCase("INITIAL DISCLOSURE")) {
+			if (documentType.equalsIgnoreCase("INITIAL  DISCLOSURES")) {
 				LOGGER.debug("Disclosure has been received ");
 
 				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
@@ -356,7 +356,7 @@ public class ThreadManager implements Runnable {
 						assignNeedToLoan(loan,
 						        needsListMasterDisclosureAvailable);
 				}
-				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED);
 				if (needsListMasterDisclosureSigned != null) {
 					if (!checkIfAlreadAssigned(loan,
 					        needsListMasterDisclosureSigned))

@@ -639,6 +639,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
@@ -776,13 +777,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	public String fetchUUID(String uuidString) {
-		String keyValuePair[] = uuidString.split(" ");
-		Map<String, String> map = new HashMap<String, String>();
-		for (String pair : keyValuePair) {
-			String[] entry = pair.split(":");
-			map.put(entry[0].trim(), entry[1].trim());
+		if (uuidString != null) {
+			if (uuidString.contains("UUID")) {
+				String keyValuePair[] = uuidString.split(" ");
+				Map<String, String> map = new HashMap<String, String>();
+				for (String pair : keyValuePair) {
+					String[] entry = pair.split(":");
+					map.put(entry[0].trim(), entry[1].trim());
+				}
+				return map.get("UUID");
+
+			}
 		}
-		return map.get("UUID");
+		return null;
 
 	}
 
