@@ -284,6 +284,12 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		leftContainer.append(createdNeededList("Other", needType));
 		hasNeeds = true;
 	}
+	
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.System;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("System", needType));
+		hasNeeds = true;
+	}
 
 	if (!hasNeeds) {
 		var incomeDocCont = $('<div>').attr({
