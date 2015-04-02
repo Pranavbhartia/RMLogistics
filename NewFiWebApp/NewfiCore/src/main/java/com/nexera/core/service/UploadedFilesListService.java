@@ -59,9 +59,9 @@ public interface UploadedFilesListService {
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
 	        Integer loanId, String createLQBVO);
 
-	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO);
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO) throws IOException;
 
-	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber);
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber) throws IOException;
 
 	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId);
 	
