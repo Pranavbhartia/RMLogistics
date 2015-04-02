@@ -2,6 +2,7 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,6 +61,15 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			message = LoanStatus.disclosureSignedMessage;
 			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
+
+			// Have to add need for appraisal
+			NeedsListMaster appraisalMasterNeed = needsListService
+					.fetchNeedListMasterByType(MasterNeedsEnum.Appraisal_Report
+							.getIdentifier());
+			List<NeedsListMaster> masterNeedsList = new ArrayList<NeedsListMaster>();
+			masterNeedsList.add(appraisalMasterNeed);
+			needsListService.saveMasterNeedsForLoan(loanId, masterNeedsList);
+
 		}
 		if (flag) {
 			makeANote(loanId, message);

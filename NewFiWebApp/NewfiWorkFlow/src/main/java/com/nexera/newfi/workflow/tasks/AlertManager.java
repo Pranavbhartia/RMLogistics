@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
@@ -15,7 +16,8 @@ import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
-public class AlertManager implements IWorkflowTaskExecutor {
+public class AlertManager extends NexeraWorkflowTask implements
+		IWorkflowTaskExecutor {
 
 	@Autowired
 	NotificationService notificationService;
@@ -23,7 +25,13 @@ public class AlertManager implements IWorkflowTaskExecutor {
 	private EngineTrigger engineTrigger;
 
 	public String execute(HashMap<String, Object> objectMap) {
-		return null;
+
+		makeANote(
+				Integer.parseInt(objectMap.get(
+						WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+				LoanStatus.initialContactMadeMessage);
+		sendEmail(objectMap);
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
@@ -33,6 +41,7 @@ public class AlertManager implements IWorkflowTaskExecutor {
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanId=Integer.parseInt(inputMap.get("loanID").toString());
+		String status = null;
 		List<NotificationVO> notificationList=notificationService.findNotificationTypeListForLoan(loanId,  WorkflowDisplayConstants.CUSTOM_NOTIFICATION, null);
 		if (notificationList.size() > 0) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
@@ -40,9 +49,9 @@ public class AlertManager implements IWorkflowTaskExecutor {
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 					WorkItemStatus.PENDING.getStatus());
-			return WorkItemStatus.PENDING.getStatus();
+			status = WorkItemStatus.PENDING.getStatus();
 		}
-		return null;
+		return status;
 	}
 
 	@Override

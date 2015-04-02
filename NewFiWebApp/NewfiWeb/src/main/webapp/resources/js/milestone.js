@@ -972,7 +972,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	targetData.parentChk=parentChk;
 	targetData.childChk=childChk;
 	if(parentChk){
-		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
+		var url="rest/workflow/execute/"+wf.id;
 		var data={};
 		data.status="3";//since we will send only completed status from frontend
 		data["workflowItemExecId"]=wf.id;
@@ -1069,7 +1069,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
 	var floatClass = "float-right";
-	if(workflowItem.status!=3)
+	if(workflowItem.status!=3||workflowItem.workflowItemType=="NEEDS_STATUS"||workflowItem.workflowItemType=="VIEW_NEEDS")//force status checking for needed list
 		workFlowContext.itemsStatesToBeFetched.push(workflowItem.id);
 	var progressClass = getProgressStatusClass(workflowItem.status);
 	var rightLeftClass = "milestone-lc";

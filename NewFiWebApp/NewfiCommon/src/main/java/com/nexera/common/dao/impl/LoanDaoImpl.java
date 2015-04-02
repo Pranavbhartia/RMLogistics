@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -549,10 +550,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao
         criteria.add( Restrictions.eq( "loan", loan ) );
         criteria.add( Restrictions.eq( "loanMilestoneMaster", loanMilestoneMaster ) );
         List<LoanMilestone> milestones = criteria.list();
-        if ( milestones.size() > 0 ) {
-            return milestones.get( 0 );
-        }
-        return null;
+		criteria.addOrder(Order.desc("id"));
+		LoanMilestone latestMS = null;
+		if (milestones.size() > 0) {
+			latestMS = milestones.get(0);
+		}
+		return latestMS;
     }
 
 

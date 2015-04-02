@@ -1,40 +1,27 @@
 package com.nexera.common.commons;
 
 public interface LoanStatus {
-
-	String initiated = "customerInitiates";
-	String initiatedMessage = "Application Initiated";
-	String submitted = "applicationSubmitted";
-	String submittedMessage = "1003 submitted";
-	String disclosureAvail = "available";
-	String disclosureAvailMessage = "Disclosures are available";
-	String disclosureViewed = "Viewed";
-	String disclosureViewedMessage = "Disclosures Viewed";
-	String disclosureSigned = "Signed";
-	String disclosureSignedMessage = "Disclosures Signed";
-	String appraisalOrdered = "Appraisal Ordered";
-	String appraisalOrderedMessage = "Appraisal Ordered";
-	String appraisalPending = "Appraisal Pending";
-	String appraisalPendingMessage = "Appraisal Pending";
-	String appraisalReceived = "Appraisal Received";
-	String appraisalReceivedMessage = "Appraisal Received";
-	String inUnderwriting = "In Underwriting";
 	String inUnderwritingMessage = "In Underwriting";
-	String underwritingObservationsReceived = "Underwriting observations Received";
-	String underwritingObservationsReceivedMessage = "Underwriting observations Received";
-	String underwritingSubmitted = "Underwriting Submitted";
-	String underwritingSubmittedMessage = "Underwriting Submitted";
-	String approvedWithConditions = "Approved With Conditions";
-	String approvedWithConditionsMessage = "Approved With Conditions";
-	String underwritingApproved = "Approved With Conditions";
-	String underwritingApprovedMessage = "Approved With Conditions";
-	String underwritingFailed = "UW Failed";
-	String underwritingFailedMessage = "UW Failed";
-	String loanClosed = "Loan Closed";
-	String loancClosedMessage = "Loan Closed";
-	String loanDeclined = "Loan Declined";
-	String loanDeclinedMessage = "Loan Declined";
-	String loanFunded = "Loan Declined";
-	String loanFundedMessage = "Loan Funded";
+	String underwritingClearToCloseMessage = "Approved With Conditions";
+	String initialContactMadeMessage = "Initial Contack Made";
+	String submittedMessage = "1003 submitted";
+	String appraisalReceivedMessage = "Appraisal Received";
+	String creditScoreMessage = "Credit information received";
+	String disclosureAvailMessage = "Disclosures are available";
+	String disclosureViewedMessage = "Disclosures Viewed";
+	String disclosureSignedMessage = "Disclosures Signed";
 	String sysEduMessage = "System Education Message";
+	String loancClosedMessage = "Loan Closed";
+	String loanDeclinedMessage = "Loan Declined";
+	String loanFundedMessage = "Loan Funded";
+	String disclosureAvail = "available";
+	String disclosureViewed = "Viewed";
+	String disclosureSigned = "Signed";
+	String teamMemberAddedMessage = "New Team Member Added";
+	String titleCompanyAddedMessage = "New Title Company Added";
+	String HMInsCompanyAddedMessage = "New Home Owner Insurance Company Added";
+
+	String loanSuspendedMessage = "Loan Suspended";
+
+	String loanArchivedMessage = "Loan Archived";
 }

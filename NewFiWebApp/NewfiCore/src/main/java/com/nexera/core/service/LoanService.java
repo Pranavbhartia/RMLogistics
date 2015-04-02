@@ -121,4 +121,9 @@ public interface LoanService {
 	public void updateLoanNeedList(LoanNeedsList loanNeedList);
 	
 	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId);
+
+	public void assignNeedsToLoan(LoanNeedsList loanNeedsList);
+
+	public LoanNeedsList findLoanNeedsListByFile(
+	        UploadedFilesList uploadedFileList);
 }

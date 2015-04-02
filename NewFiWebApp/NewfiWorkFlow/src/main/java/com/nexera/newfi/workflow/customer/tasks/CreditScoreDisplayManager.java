@@ -10,6 +10,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -21,8 +22,8 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 	private IWorkflowService iWorkflowService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
-		return null;
+		// Do Nothing
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override

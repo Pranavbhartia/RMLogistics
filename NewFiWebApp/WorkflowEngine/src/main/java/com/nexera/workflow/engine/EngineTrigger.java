@@ -301,7 +301,7 @@ public class EngineTrigger {
 				} else {
 					LOGGER.debug("Independent execution");
 					if (!workflowItemExecution.getStatus().equalsIgnoreCase(
-					        WorkItemStatus.STARTED.getStatus())) {
+					        WorkItemStatus.COMPLETED.getStatus())) {
 						workflowItemExecution.setStatus(WorkItemStatus.STARTED
 						        .getStatus());
 						workflowService

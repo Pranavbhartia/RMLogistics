@@ -52,6 +52,10 @@ public class LQBXMLHandler extends DefaultHandler {
 			lqBedocVO.setDoc_type(attributes.getValue("doc_type"));
 			lqBedocVO.setDocid(attributes.getValue("docid"));
 			lqBedocVO.setFolder_name(attributes.getValue("folder_name"));
+			
+			
+		    listDocumentListVO.add(lqBedocVO);
+		
 		}
 		
 	}
@@ -68,9 +72,7 @@ public class LQBXMLHandler extends DefaultHandler {
 			lqbResponseVO.setDocumentResponseListVOs(listVO);
 		}
 		
-		if("edoc".equals(qName)){
-			listDocumentListVO.add(lqBedocVO);
-		}
+		
 		
 		
 	}

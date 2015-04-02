@@ -10,6 +10,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -37,7 +38,6 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
 		int userId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO user = new UserVO();
@@ -46,9 +46,9 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		if (loan.getIsRateLocked()) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-			engineTrigger
-					.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-			return "3";
+			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
+					WorkItemStatus.COMPLETED.getStatus());
+			return WorkItemStatus.COMPLETED.getStatus();
 		}
 		return null;
 	}

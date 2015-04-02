@@ -159,11 +159,15 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #fff;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
 	background-size: cover;
+}
+
+.lp-item-active .lp-pic{
+	border:1px solid #fff;
 }
 
 .lp-pic-wrapper,.lp-talk-wrapper,.lp-loan-wrapper,.lp-alert-wrapper {
@@ -215,8 +219,8 @@ a,a:hover,a:visited {
 .lp-talk-pic2 {
 	background: url(../images/person-placeholder.png) no-repeat center;
 	background-size: cover;
-    background-color: #fff;
-    border: 1px solid #fff;
+	background-color: #f2f2f2;
+	border: 1px solid #d4d4d4;
 }
 
 .lp-talk-pic3 {
@@ -324,7 +328,8 @@ a,a:hover,a:visited {
 	text-align: center;
 	font-size: 10px;
 	padding: 0 5px;
-	margin-top: 11px;
+	margin-top: 8px;
+	line-height: 13px;
 }
 
 .lp-t2-img {
@@ -332,6 +337,7 @@ a,a:hover,a:visited {
 	top: 6px;
 	width: 100px;
 	height: 40px;
+	margin-top: 1px;
 }
 
 .lp-t2-img0 {
@@ -359,7 +365,6 @@ a,a:hover,a:visited {
 }
 
 .t2-active {
-	margin-top: -6px;
 	color: #fff;
 	background-color: #428bca;
 	overflow: visible;
@@ -1286,7 +1291,8 @@ a,a:hover,a:visited {
 	width: 45px;
 	height: 45px;
 	margin-right: 15px;
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #f2f2f2;
+	border: 1px solid #D4D4D4;
 	border-radius: 50%;
 	background-size: cover;
 }
@@ -1959,6 +1965,7 @@ a,a:hover,a:visited {
 	border-radius: 0 0 3px 3px;
 	padding: 5px 0;
 	overflow-y: auto;
+	z-index: 1;
 }
 
 .add-member-dropdown-row {
@@ -2474,6 +2481,7 @@ input.calc-input {
 
 .prof-form-row-desc {
 	width: 25%;
+	height:40px;
 	min-width: 120px;
 	text-align: right;
 	padding-right: 20px;
@@ -2487,11 +2495,14 @@ input.calc-input {
 	position:absolute;
 	bottom:0;
 	right:0;
-	width:33px;
-	height: 33px;
-	background: url(../images/upload-pic.png) no-repeat center;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	background: url(../images/upload-pic.png) no-repeat center #fff;
+	background-size: cover;
 	cursor:pointer;
-	opacity:0.6;
+	opacity:0.8;
 	z-index: 2;
 }
 
@@ -2751,12 +2762,20 @@ input.calc-input {
 	white-space: nowrap;
 }
 
-.ui-autocomplete>li {
+.ui-state-focus{
+	border: none !important;
+}
+
+.ui-menu-item {
 	padding-left: 20px;
 	line-height: 30px;
 	height: 30px;
 	background-color: #fdfdfd;
 	cursor: pointer;
+}
+
+.ui-menu .ui-menu-item{
+	padding-left: 20px;
 }
 
 .overlay-loader {
@@ -2899,9 +2918,10 @@ input.calc-input {
 }
 
 .milestone-lc-text,.milestone-rc-text {
-	line-height: 22px;
+	line-height: 15px;
 	color: #428bca;
 	margin-bottom: 2px;
+	padding-top: 2px;
 }
 
 .milestone-lc-text {
@@ -3373,6 +3393,8 @@ input.calc-input {
 
 .m-step-complete .milestone-header-step-text {
 	color: #7AB10D;
+	background: url(../images/tick_green.png) no-repeat center;
+	font-size: 0;
 }
 
 .m-step-in-progress .milestone-header-step-text {
@@ -4176,7 +4198,6 @@ input.calc-input {
 
 .loan-manager-popup-container:last-child{
 	border-bottom:none;
-
 }
 
 .state-dropdown-wrapper {
@@ -4185,7 +4206,6 @@ input.calc-input {
     margin-top: 1px;
     width: 100%;
     max-height: 120px;
-    overflow: auto;
     background: #fafafa;
     z-index: 222;
     border: 1px solid #cecece;
@@ -4220,5 +4240,18 @@ input.calc-input {
 
 .admin-doc-checkbox {
 	margin-top: 10px;
+}
 
+.cust-sms-ch {
+	padding-left: 5px;
+}
+
+.radio-btn{
+	width:16px;
+	height:16px;
+	background: url(../images/circle.png) no-repeat center;
+}
+
+.radio-btn-selected{
+	background: url(../images/circle-blue.png) no-repeat center;
 }

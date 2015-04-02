@@ -27,7 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -36,6 +35,9 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
@@ -46,7 +48,9 @@ import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -77,6 +81,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	UploadedFilesListService uploadedFileListService;
+
+	@Autowired
+	NeedsListService needsListService;
 
 	@Override
 	public void run() {
@@ -191,7 +198,7 @@ public class ThreadManager implements Runnable {
 							if (loanMilestone == null) {
 								LOGGER.debug("This is a new entry of this milestone "
 								        + loanMilestoneMaster.getName());
-								putLoanMilestoneIntoExecution(
+								putLoanMilestoneIntoExecution(loanStatusID,
 								        currentLoanStatus, loadResponseList,
 								        loanMilestoneMaster);
 								newStatus = false;
@@ -232,6 +239,8 @@ public class ThreadManager implements Runnable {
 													if (currentDate != null) {
 														updateLoanMilestone(loanMilestone);
 													}
+												} else {
+													sameStatus = true;
 												}
 											} else {
 												sameStatus = true;
@@ -247,7 +256,7 @@ public class ThreadManager implements Runnable {
 								LOGGER.debug("If status has changed then only proceed to call the class ");
 								if (newStatus) {
 									LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
-									putLoanMilestoneIntoExecution(
+									putLoanMilestoneIntoExecution(loanStatusID,
 									        currentLoanStatus,
 									        loadResponseList,
 									        loanMilestoneMaster);
@@ -267,10 +276,13 @@ public class ThreadManager implements Runnable {
 								List<WorkflowItemExec> itemToExecute = itemToExecute(
 								        workflowItemTypeList,
 								        workflowItemExecList);
-								String params = Utils
-								        .convertMapToJson(getParamsBasedOnStatus(currentLoanStatus));
+
 								for (WorkflowItemExec workflowItemExec : itemToExecute) {
 									LOGGER.debug("Putting the item in execution ");
+									String params = Utils
+									        .convertMapToJson(getParamsBasedOnStatus(
+									                currentLoanStatus,
+									                workflowItemExec.getId()));
 									workflowService.saveParamsInExecTable(
 									        workflowItemExec.getId(), params);
 									engineTrigger
@@ -319,6 +331,8 @@ public class ThreadManager implements Runnable {
 							        .getvBedocVO();
 							uploadedFileListService.updateUploadedDocument(
 							        edocsList, loan, timeBeforeCallMade);
+
+							checkWhetherDisclosureReceived(loan, edocsList);
 						}
 					}
 				}
@@ -327,12 +341,68 @@ public class ThreadManager implements Runnable {
 
 	}
 
+	private void checkWhetherDisclosureReceived(Loan loan,
+	        List<LQBedocVO> edocsList) {
+		LOGGER.debug("Inside method checkWhetherDisclosuredReceived");
+		for (LQBedocVO edoc : edocsList) {
+
+			String documentType = edoc.getDoc_type();
+			if (!documentType.equalsIgnoreCase("INITIAL DISCLOSURE")) {
+				LOGGER.debug("Disclosure has been received ");
+				String uuid = uploadedFileListService.fetchUUID(edoc
+				        .getDescription());
+				UploadedFilesList uploadedFile = uploadedFileListService
+				        .fetchUsingFileUUID(uuid);
+
+				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				if (needsListMasterDisclosureAvailable != null) {
+					assignNeedToLoan(loan, needsListMasterDisclosureAvailable,
+					        uploadedFile);
+				}
+				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				if (needsListMasterDisclosureSigned != null) {
+					assignNeedToLoan(loan, needsListMasterDisclosureSigned,
+					        null);
+
+				}
+			}
+		}
+	}
+
+	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster,
+	        UploadedFilesList uploadedFile) {
+		LOGGER.debug("Found a Need, Assigning it to a loan ");
+		LoanNeedsList loanNeedsList = new LoanNeedsList();
+		loanNeedsList.setLoan(loan);
+		loanNeedsList.setNeedsListMaster(needsListMaster);
+		if (uploadedFile != null)
+			loanNeedsList.setUploadFileId(uploadedFile);
+		loanNeedsList.setMandatory(false);
+		loanNeedsList.setSystemAction(true);
+		if (findLoanNeedsListByFile(uploadedFile) == null) {
+			LOGGER.debug("Inserting because this is new file and is not assigned ");
+			loanService.assignNeedsToLoan(loanNeedsList);
+		}
+
+	}
+
+	private LoanNeedsList findLoanNeedsListByFile(
+	        UploadedFilesList uploadedFileList) {
+		LOGGER.debug("Check whether loan needs list exist for this document ");
+		return loanService.findLoanNeedsListByFile(uploadedFileList);
+	}
+
+	private NeedsListMaster getNeedsListMasterByType(String needsListType) {
+		LOGGER.debug("Inside method getNeedsListMasterByType ");
+		return needsListService.fetchNeedListMasterByType(needsListType);
+	}
+
 	private void updateLoanMilestone(LoanMilestone loanMilestone) {
 		loanService.updateLoanMilestone(loanMilestone);
 	}
 
-	private void putLoanMilestoneIntoExecution(int currentLoanStatus,
-	        List<LoadResponseVO> loadResponseList,
+	private void putLoanMilestoneIntoExecution(LOSLoanStatus loanStatus,
+	        int currentLoanStatus, List<LoadResponseVO> loadResponseList,
 	        LoanMilestoneMaster loanMilestoneMaster) {
 
 		LoanMilestone loanMilestone = new LoanMilestone();
@@ -346,6 +416,7 @@ public class ThreadManager implements Runnable {
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);
 		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
+		loanMilestone.setComments(loanStatus.getDisplayStatus().getBytes());
 		saveLoanMilestone(loanMilestone);
 
 	}
@@ -365,12 +436,14 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Checking if previous state has an entry ");
 		if (currentIndex != 0) {
 			int previousStatus = statusTrackingList.get(currentIndex - 1);
+			LOSLoanStatus loanStatusID = LOSLoanStatus
+			        .getLOSStatus(previousStatus);
 			for (LoanMilestone loanMilestone : loanMilestoneList) {
 				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
 					LOGGER.debug("No status has been missed hence breaking out of the loop");
 					break;
 				} else {
-					putLoanMilestoneIntoExecution(previousStatus,
+					putLoanMilestoneIntoExecution(loanStatusID, previousStatus,
 					        loadResponseVOList, loanMilestoneMaster);
 
 					LOGGER.debug("Recursively calling to see if multiple status has been missed ");
@@ -474,15 +547,17 @@ public class ThreadManager implements Runnable {
 		return workflowItemExecList;
 	}
 
-	private Map<String, Object> getParamsBasedOnStatus(int currentLoanStatus) {
+	private Map<String, Object> getParamsBasedOnStatus(int currentLoanStatus,
+	        int workflowItemExecId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-		String wfItemStatus = null;
+		map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+		        workflowItemExecId);
 		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
-			wfItemStatus = LoanStatus.inUnderwriting;
+
 			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
@@ -498,10 +573,10 @@ public class ThreadManager implements Runnable {
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED) {
 
 		}
-		if (wfItemStatus != null) {
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-			        wfItemStatus);
-		}
+
+		map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+		        currentLoanStatus);
+
 		return map;
 
 	}

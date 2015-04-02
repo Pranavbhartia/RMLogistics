@@ -33,6 +33,10 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 					data=response.responseJSON;
 				completeCallback(data);
 			}
+			adjustCenterPanelWidth();
+			adjustRightPanelOnResize();
+            adjustCustomerApplicationPageOnResize();
+            adjustAgentDashboardOnResize();
 		},
 		error : function(){
 			

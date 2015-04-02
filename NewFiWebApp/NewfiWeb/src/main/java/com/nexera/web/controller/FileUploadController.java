@@ -1,10 +1,5 @@
 package com.nexera.web.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,38 +22,38 @@ public class FileUploadController {
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
-	
+
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
-	
+
 	@Autowired
 	private NexeraUtility nexeraUtility;
-	
+
 	@Autowired
 	private Utils utils;
-	
-	
-	private static final Logger LOG = LoggerFactory.getLogger(FileUploadController.class);
-	
-	
-	@RequestMapping(value = "/readFileAsStream.do" , method = RequestMethod.GET) 
-	public void doDownload(HttpServletRequest request, HttpServletResponse response 
-				, @RequestParam ("uuid") String  uuid , @RequestParam ("isThumb") String   isThumb) throws Exception {
-	      
-		   String fileURL = null;
-		   UploadedFilesList uplList = uploadedFilesListService.fetchUsingFileUUID(uuid);
-		   if(isThumb.equals("0")){
-			   fileURL = uplList.getS3path();
-			   response.setContentType("application/pdf");
-			   uploadedFilesListService.getFileContentFromLQBUsingUUID(uuid);
-			   
-		   }else{
-			   fileURL = uplList.getS3ThumbPath();
-			   nexeraUtility.getStreamForThumbnailFromS3Path(response, fileURL);
-		   }
-		   
-	      
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(FileUploadController.class);
+
+	@RequestMapping(value = "/readFileAsStream.do", method = RequestMethod.GET)
+	public void doDownload(HttpServletRequest request,
+	        HttpServletResponse response, @RequestParam("uuid") String uuid,
+	        @RequestParam("isThumb") String isThumb) throws Exception {
+
+		String fileURL = null;
+		UploadedFilesList uplList = uploadedFilesListService
+		        .fetchUsingFileUUID(uuid);
+		if (isThumb.equals("0")) {
+			fileURL = uplList.getS3path();
+			response.setContentType("application/pdf");
+			uploadedFilesListService.getFileContentFromLQBUsingUUID(response,
+			        uuid);
+
+		} else {
+			fileURL = uplList.getS3ThumbPath();
+			nexeraUtility.getStreamForThumbnailFromS3Path(response, fileURL);
+		}
+
 	}
-	
-	
+
 }

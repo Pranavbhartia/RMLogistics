@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.json.JSONObject;
 
@@ -59,18 +61,22 @@ public interface UploadedFilesListService {
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
 	        Integer loanId, String createLQBVO);
 
-	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO);
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
+	        throws IOException;
 
-	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber);
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber)
+	        throws IOException;
 
-	public String fetchDocumentIDByUUID (LQBResponseVO lqbResponseVO, String uuId);
-	
-	public void getFileContentFromLQBUsingUUID(String uuId);
+	public String fetchDocumentIDByUUID(LQBResponseVO lqbResponseVO, String uuId);
 
 	public LQBResponseVO parseLQBXMLResponse(JSONObject receivedResponse);
 
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade);
 
+	public String fetchUUID(String uuidString);
+
+	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
+	        String uuid);
 
 }
