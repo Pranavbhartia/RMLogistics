@@ -38,7 +38,7 @@ public class LqbInvoker {
 		return jsonObject;
 	}
 
-	public JSONObject invokeRestSpringParseStream(String formData)
+	public InputStream invokeRestSpringParseStream(String formData)
 	        throws IOException {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -68,7 +68,7 @@ public class LqbInvoker {
 		// }
 		//
 		// JSONObject jsonObject = new JSONObject(builder);
-		return jsonObject;
+		return content;
 	}
 
 }

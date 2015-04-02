@@ -3,6 +3,7 @@ package com.nexera.core.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -612,9 +613,22 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
 		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
 		        documentVO);
+		InputStream inputStream = null;
 		try {
-			receivedResponse = lqbInvoker
+			inputStream = lqbInvoker
 			        .invokeRestSpringParseStream(jsonObject.toString());
+			OutputStream outStream = response.getOutputStream();
+
+			byte[] buffer = new byte[2048];
+			int bytesRead = -1;
+
+			// write bytes read from the input stream into the output stream
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+
+			inputStream.close();
+			outStream.close();
 		} catch (Exception e) {
 			LOG.info("Exception File servlet");
 			e.printStackTrace();
