@@ -456,37 +456,71 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 			// Check amongst the users who is free
 
-			List<User> users = new ArrayList<User>();
+			List<User> availableUsers = new ArrayList<User>();
 
 			for (InternalUserStateMapping internalUser : internalUsers) {
-				User user = internalUser.getUser();
-				if (user.getInternalUserDetail().getActiveInternal()) {
-
-					criteria = session.createCriteria(LoanTeam.class);
-					criteria.add(Restrictions.eq("user.id", user.getId()));
-					List<LoanTeam> loanTeamList = criteria.list();
-					List<Loan> activeLoanList = new ArrayList<Loan>();
-					user.setLoans(activeLoanList);
-					for (LoanTeam loanTeam : loanTeamList) {
-						if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
-						        .getStatusId()
-						        || loanTeam.getLoan().getLoanProgressStatus()
-						                .getId() == LoanProgressStatusMasterEnum.NEW_LOAN
-						                .getStatusId()) {
-							user.getLoans().add(loanTeam.getLoan());
-							users.add(user);
-
-						}
-					}
-
-				}
+				addIfUserIsEligible(internalUser.getUser(), availableUsers);
 
 			}
-			return users;
+			return availableUsers;
 		} catch (HibernateException exception) {
 			LOG.warn("State not present in system: " + stateName);
 			return Collections.EMPTY_LIST;
 		}
 
+	}
+
+	@Override
+	public List<User> getLoanManagerWithLeastWork() {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+
+		try {
+			List<User> users = criteria.list();
+			List<User> availableUsers = new ArrayList<User>();
+			for (User user : users) {
+				addIfUserIsEligible(user, availableUsers);
+			}
+			return availableUsers;
+		} catch (HibernateException exception) {
+			exception.printStackTrace();
+			LOG.error("Exception, but not expected", exception);
+			LOG.warn("No users available ");
+			return Collections.EMPTY_LIST;
+		}
+
+	}
+
+	private void addIfUserIsEligible(User user, List<User> availableUsers) {
+		if (user.getInternalUserDetail().getActiveInternal()) {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			List<LoanTeam> loanTeamList = criteria.list();
+			List<Loan> activeLoanList = new ArrayList<Loan>();
+			user.setLoans(activeLoanList);
+
+			if (loanTeamList == null || loanTeamList.isEmpty()) {
+				// This means that the user is not part of any team. Hence has
+				// no work
+				availableUsers.add(user);
+			}
+			for (LoanTeam loanTeam : loanTeamList) {
+				if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
+				        .getStatusId()
+				        || loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.NEW_LOAN
+				                .getStatusId()) {
+					// It does not matter if the user is assigned a loan which
+					// is not active. Hence, for computation, we are considering
+					// only those loans which he is currently working on
+					user.getLoans().add(loanTeam.getLoan());
+					availableUsers.add(user);
+
+				}
+			}
+
+		}
 	}
 }
