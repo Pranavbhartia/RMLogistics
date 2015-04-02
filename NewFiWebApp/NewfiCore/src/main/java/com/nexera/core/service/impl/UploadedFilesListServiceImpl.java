@@ -213,6 +213,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
@@ -322,6 +323,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy) {
 		String s3Path = null;
@@ -585,7 +587,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			List<LQBedocVO> lqBedocVOs = lqbResponseVO
 			        .getDocumentResponseListVOs().getvBedocVO();
 			for (LQBedocVO lqBedocVO : lqBedocVOs) {
-				if (lqBedocVO.getDescription().startsWith(uuId)) {
+				if (uuId.equals(fetchUUID(lqBedocVO.getDescription()))) {
 					return lqBedocVO.getDocid();
 				}
 			}
