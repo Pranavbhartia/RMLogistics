@@ -31,7 +31,14 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String completedStatus = null;
-		if (status.equals(String
+		if (status.equals(String.valueOf(LOSLoanStatus.LQB_STATUS_FUNDED
+		        .getLosStatusID()))) {
+			makeANote(Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+			        LoanStatus.loanFundedMessage);
+			sendEmail(objectMap);
+			completedStatus = WorkItemStatus.COMPLETED.getStatus();
+		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED
 		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
