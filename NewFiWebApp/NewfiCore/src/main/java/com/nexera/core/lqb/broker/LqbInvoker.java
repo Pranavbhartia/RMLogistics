@@ -4,6 +4,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +25,10 @@ public class LqbInvoker {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
+		((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory())
+		        .setConnectTimeout(1000 * 30);
+		((HttpComponentsClientHttpRequestFactory) restTemplate
+		        .getRequestFactory()).setReadTimeout(300 * 1000);
 		String returnedUser = restTemplate.postForObject(muleUrl, request,
 		        String.class);
 		JSONObject jsonObject = new JSONObject(returnedUser);
