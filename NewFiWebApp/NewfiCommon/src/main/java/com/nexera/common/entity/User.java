@@ -115,7 +115,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    public String getPassword() {
+	public String getPassword() {
 		return this.password;
 	}
 
@@ -142,7 +142,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    public String getUsername() {
+	public String getUsername() {
 		return this.username;
 	}
 
@@ -254,7 +254,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    @Transient
+	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
@@ -264,7 +264,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    @Transient
+	@Transient
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
@@ -274,7 +274,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    @Transient
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
@@ -284,7 +284,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Override
-    @Transient
+	@Transient
 	public boolean isEnabled() {
 		return enabled;
 	}

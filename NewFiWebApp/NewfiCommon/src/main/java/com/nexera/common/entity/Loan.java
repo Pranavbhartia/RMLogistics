@@ -91,7 +91,7 @@ public class Loan implements Serializable {
 	}
 
 	public Loan(Integer id) {
-		this.id=id;
+		this.id = id;
 	}
 
 	@Id
@@ -432,6 +432,7 @@ public class Loan implements Serializable {
 		return loanTeam;
 	}
 
+	@Column(name = "customer_workflow")
 	public Integer getCustomerWorkflow() {
 		return customerWorkflow;
 	}
@@ -440,6 +441,7 @@ public class Loan implements Serializable {
 		this.customerWorkflow = customerWorkflow;
 	}
 
+	@Column(name = "loan_manager_workflow")
 	public Integer getLoanManagerWorkflow() {
 		return loanManagerWorkflow;
 	}

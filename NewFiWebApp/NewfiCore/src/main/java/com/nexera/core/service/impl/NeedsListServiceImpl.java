@@ -424,4 +424,37 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return needsDao.findNeedForLoan(loan,needsListMaster);
 	}
 
+	public void saveMasterNeedsForLoan(int loanId,
+			List<NeedsListMaster> masterNeeds) {
+		for (NeedsListMaster masterNeed : masterNeeds) {
+			NeedsListMaster existingNeed = needsDao
+					.findNeedsListMasterByLabel(masterNeed
+					.getLabel());
+			if(existingNeed==null){
+				Integer id = (Integer) needsDao.save(masterNeed);
+
+				masterNeed.setId(id);
+			}else{
+				masterNeed = existingNeed;
+			}
+			
+			LoanNeedsList need = new LoanNeedsList();
+			Loan loan = new Loan();
+			loan.setId(loanId);
+			need.setLoan(loan);
+			need.setNeedsListMaster(masterNeed);
+			need.setDeleted(false);
+			need.setSystemAction(true);
+			need.setActive(true);
+			need.setComments("");
+			need.setMandatory(true);
+			need.setSystemAction(true);
+			LoanNeedsList loanNeedsList = needsDao.findLoanNeedByMaster(loan,
+					masterNeed);
+			if (loanNeedsList == null) {
+				needsDao.save(need);
+			}
+		}
+	}
+
 }
