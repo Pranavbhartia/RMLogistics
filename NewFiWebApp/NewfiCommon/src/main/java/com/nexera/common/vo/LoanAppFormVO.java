@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
+import org.hibernate.annotations.Type;
+
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.LoanAppForm;
@@ -38,6 +42,7 @@ public class LoanAppFormVO implements Serializable {
 	private String ssDisabilityIncome;
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
+	private String monthlyRent;
 	private Boolean paySecondMortgage;
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
@@ -267,6 +272,14 @@ public class LoanAppFormVO implements Serializable {
 		this.governmentquestion = governmentquestion;
 	}
 
+	public String getMonthlyRent() {
+		return monthlyRent;
+	}
+
+	public void setMonthlyRent(String monthlyRent) {
+		this.monthlyRent = monthlyRent;
+	}
+
 	public RefinanceVO getRefinancedetails() {
 		return refinancedetails;
 	}
@@ -324,8 +337,10 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
+		loanAppForm.setMonthlyRent(this.getMonthlyRent());
 		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 
+		
 		
 		
 		//System.out.println(this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"));
@@ -366,7 +381,7 @@ public class LoanAppFormVO implements Serializable {
 
 		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
 
-		loanAppForm.setLoan(this.getLoan().convertToEntity());
+//		loanAppForm.setLoan(this.getLoan().convertToEntity());
 		
 		/* save data in the purchase table */
 		
@@ -434,7 +449,7 @@ public class LoanAppFormVO implements Serializable {
 		System.out.println("refinanceVO.getId()" + refinanceVO.getId());
 		refinanceDetails.setId(refinanceVO.getId());
 		refinanceDetails.setCurrentMortgageBalance(refinanceVO.getCurrentMortgageBalance());
-		refinanceDetails.setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
+		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
 		refinanceDetails.setCurrentMortgagePayment(refinanceVO.getCurrentMortgagePayment());
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
 		refinanceDetails.setSecondMortageBalance(refinanceVO.getSecondMortageBalance());
@@ -462,7 +477,7 @@ public class LoanAppFormVO implements Serializable {
 		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO.getPropertyInsuranceCost());
 		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO.getPropertyPurchaseYear());
 		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO.getHomeWorthToday());
-
+		propertyTypeMaster.setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
 		return propertyTypeMaster;
 
 	}
@@ -510,6 +525,20 @@ public class LoanAppFormVO implements Serializable {
 		customerDetail.setId(customerDetailVO.getId());
 		customerDetail.setMobileAlertsPreference(customerDetailVO
 		        .getMobileAlertsPreference());
+		
+		
+		customerDetail.setIsselfEmployed(customerDetailVO.getIsselfEmployed()) ;
+	    customerDetail.setSelfEmployedIncome(customerDetailVO.getSelfEmployedIncome()); 
+		customerDetail.setIsssIncomeOrDisability(customerDetailVO.getIsssIncomeOrDisability());  	
+		customerDetail.setSsDisabilityIncome(customerDetailVO.getSsDisabilityIncome()) ;
+		customerDetail.setIspensionOrRetirement(customerDetailVO.getIspensionOrRetirement()) ;
+		customerDetail.setMonthlyPension(customerDetailVO.getMonthlyPension()) ;
+		customerDetail.setLivingSince(customerDetailVO.getLivingSince()) ;
+		
+		
+		
+		
+		
 
 		return customerDetail;
 

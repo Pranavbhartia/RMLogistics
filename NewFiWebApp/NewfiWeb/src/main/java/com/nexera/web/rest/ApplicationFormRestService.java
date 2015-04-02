@@ -1,7 +1,6 @@
 package com.nexera.web.rest;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -22,7 +21,6 @@ import com.google.gson.Gson;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
-import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -39,7 +37,7 @@ public class ApplicationFormRestService {
 	
 	
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
-	public @ResponseBody String createApplication(String appFormData) {
+	public @ResponseBody String createApplication(@RequestBody String appFormData) {
 
 		Gson gson = new Gson();
 
@@ -49,7 +47,7 @@ public class ApplicationFormRestService {
 		try{ 
 			
 			
-			
+			System.out.println("appFormData is"+appFormData);
 			
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 
