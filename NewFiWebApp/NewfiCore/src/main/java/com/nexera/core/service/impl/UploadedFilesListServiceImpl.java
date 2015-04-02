@@ -621,7 +621,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
@@ -629,58 +628,49 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		cal.setTime(timeBeforeCallMade);
 		cal.add(Calendar.MINUTE, -5);
 		Date modifiedDate = cal.getTime();
-		List<UploadedFilesList> uploadList = loan.getUploadedFileList();
+
 		List<UploadedFilesList> timeModifiedUploadedList = new ArrayList<UploadedFilesList>();
-		List<String> uploadFileUUIDList = new ArrayList<String>();
 
-		List<String> uuidEdocList = new ArrayList<String>();
-		for (UploadedFilesList uploadFiles : uploadList) {
-			uploadFileUUIDList.add(uploadFiles.getUuidFileId());
-		}
-		for (UploadedFilesList uploadFiles : uploadList) {
-			if (uploadFiles.getUploadedDate().compareTo(modifiedDate) < 0)
-				timeModifiedUploadedList.add(uploadFiles);
-		}
+		List<String> uploadFileUUIDList = getFileUUIDList(loan
+		        .getUploadedFileList());
+		List<String> uuidEdocList = getEdocsUUIDList(edocsList);
+		List<String> docIdList = getEdocsDocList(edocsList);
 
-		for (LQBedocVO edoc : edocsList) {
-			String uuidDetails = edoc.getDescription();
-			uuidEdocList.add(fetchUUID(uuidDetails));
+		for (UploadedFilesList uploadFiles : loan.getUploadedFileList()) {
+			if (loan.getUploadedFileList() != null) {
+				if (uploadFiles.getUploadedDate().compareTo(modifiedDate) < 0)
+					timeModifiedUploadedList.add(uploadFiles);
+			}
 		}
 
 		for (LQBedocVO edoc : edocsList) {
 
 			String uuidDetails = edoc.getDescription();
 			String uuid = fetchUUID(uuidDetails);
-			if (!uploadFileUUIDList.contains(uuid)) {
-
-				LOG.debug("This uuid does not exist hence adding this record in newfi database ");
-				UploadedFilesList fileUpload = new UploadedFilesList();
-				fileUpload.setFileName(edoc.getDoc_type() + ".pdf");
-				User user = userProfileDao
-				        .findByUserId(CommonConstants.SYSTEM_USER_USERID);
-				fileUpload.setAssignedBy(user);
-				fileUpload.setUploadedBy(loan.getUser());
-				fileUpload.setIsActivate(true);
-				fileUpload.setIsAssigned(false);
-				fileUpload.setLoan(loan);
-				fileUpload.setLqbFileID(edoc.getDocid());
-				fileUpload.setUploadedDate(new Date());
-				fileUpload.setUuidFileId(uuid);
-				// TODO hardcoded for now
-				fileUpload.setTotalPages(2);
-
-				int fileUploadId = uploadedFilesListDao
-				        .saveUploadedFile(fileUpload);
-				fileUpload.setId(fileUploadId);
+			if (uuid != null) {
+				if (!uploadFileUUIDList.contains(uuid)) {
+					insertFileIntoNewFi(edoc, loan, uuid);
+				}
+			} else {
+				LOG.debug("This file might have been manually entered in LQB by loan manager ");
+				LOG.debug("Checking on the basis of LQB file id whether the file exist or not ");
+				String lqbFileId = edoc.getDocid();
+				if (getUploadedFileByLQBFieldId(lqbFileId) == null) {
+					LOG.debug("Inserting this manually entered doc by Loan Manager in Newfi");
+					insertFileIntoNewFi(edoc, loan, null);
+				}
 			}
 
 		}
 
-		for (UploadedFilesList uploadFile : timeModifiedUploadedList) {
-			if (!uuidEdocList.contains(uploadFile.getUuidFileId())) {
-				LOG.debug("This uuid does not exist in the lqb list, hence removing this from newfi database ");
+		List<UploadedFilesList> filesToDelete = filesToDeleteList(
+		        timeModifiedUploadedList, uuidEdocList);
+
+		for (UploadedFilesList file : filesToDelete) {
+			if (!docIdList.contains(file.getLqbFileID())) {
+				LOG.debug("Can delete the file, lqbfileid also doesnt exist ");
 				UploadedFilesList fileToDelete = uploadedFilesListDao
-				        .fetchUsingFileUUID(uploadFile.getUuidFileId());
+				        .fetchUsingFileUUID(file.getUuidFileId());
 				if (fileToDelete != null) {
 					LoanNeedsList loanNeedList = loanService
 					        .fetchLoanNeedByFileId(fileToDelete);
@@ -691,8 +681,80 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					uploadedFilesListDao.remove(fileToDelete);
 				}
 			}
-
 		}
+	}
+
+	private List<UploadedFilesList> filesToDeleteList(
+	        List<UploadedFilesList> list, List<String> uuidEdocList) {
+		List<UploadedFilesList> filesToDelete = new ArrayList<UploadedFilesList>();
+		for (UploadedFilesList uploadFile : list) {
+			if (!uuidEdocList.contains(uploadFile.getUuidFileId())) {
+				{
+					LOG.debug("Checking whether the file exist with LQB File Id ");
+					filesToDelete.add(uploadFile);
+
+				}
+			}
+		}
+		return filesToDelete;
+	}
+
+	private List<String> getFileUUIDList(List<UploadedFilesList> uploadList) {
+
+		List<String> uploadFileUUIDList = new ArrayList<String>();
+		if (uploadList != null) {
+			for (UploadedFilesList uploadFiles : uploadList) {
+				uploadFileUUIDList.add(uploadFiles.getUuidFileId());
+			}
+		}
+		return uploadFileUUIDList;
+	}
+
+	private List<String> getEdocsUUIDList(List<LQBedocVO> lqbedocVOList) {
+		List<String> edocList = new ArrayList<String>();
+		for (LQBedocVO edoc : lqbedocVOList) {
+			String uuidDetails = edoc.getDescription();
+			String uuid = fetchUUID(uuidDetails);
+			if (uuid != null)
+				edocList.add(uuid);
+		}
+		return edocList;
+	}
+
+	private List<String> getEdocsDocList(List<LQBedocVO> lqbedocVOList) {
+		List<String> edocList = new ArrayList<String>();
+		for (LQBedocVO edoc : lqbedocVOList) {
+			edocList.add(edoc.getDocid());
+		}
+		return edocList;
+	}
+
+	@Transactional
+	public UploadedFilesList getUploadedFileByLQBFieldId(String lqbfieldId) {
+		return uploadedFilesListDao.fetchUsingFileLQBFieldId(lqbfieldId);
+	}
+
+	@Transactional
+	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid) {
+		LOG.debug("This uuid does not exist hence adding this record in newfi database ");
+		UploadedFilesList fileUpload = new UploadedFilesList();
+		fileUpload.setFileName(edoc.getDoc_type() + ".pdf");
+		User user = userProfileDao
+		        .findByUserId(CommonConstants.SYSTEM_USER_USERID);
+		fileUpload.setAssignedBy(user);
+		fileUpload.setUploadedBy(loan.getUser());
+		fileUpload.setIsActivate(true);
+		fileUpload.setIsAssigned(false);
+		fileUpload.setLoan(loan);
+		fileUpload.setLqbFileID(edoc.getDocid());
+		fileUpload.setUploadedDate(new Date());
+		if (uuid != null)
+			fileUpload.setUuidFileId(uuid);
+
+		fileUpload.setTotalPages(2);
+
+		int fileUploadId = uploadedFilesListDao.saveUploadedFile(fileUpload);
+		fileUpload.setId(fileUploadId);
 	}
 
 	@Override
