@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -528,7 +529,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO) throws IOException {
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
+	        throws IOException {
 		LQBResponseVO lqbResponseVO = null;
 		if (lqbDocumentVO != null) {
 			JSONObject uploadObject = createUploadPdfDocumentJsonObject(
@@ -545,7 +547,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber) throws IOException {
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber)
+	        throws IOException {
 
 		LQBDocumentVO lqbDocumentVO = new LQBDocumentVO();
 		lqbDocumentVO.setsLoanNumber(loanNumber);
@@ -597,25 +600,26 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
-	public void getFileContentFromLQBUsingUUID(String uuId) {
+	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
+	        String uuId) {
 		UploadedFilesList filesList = uploadedFilesListDao
 		        .fetchUsingFileUUID(uuId);
 		String lqbDocID = filesList.getLqbFileID();
 
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		documentVO.setsLoanNumber(lqbDocID);
-		JSONObject receivedResponse  = null;
+		JSONObject receivedResponse = null;
 		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
 		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
 		        documentVO);
-		try{
-			receivedResponse = lqbInvoker.invokeRestSpringParseStream(jsonObject
-			        .toString());
-		}catch(Exception e){
+		try {
+			receivedResponse = lqbInvoker
+			        .invokeRestSpringParseStream(jsonObject.toString());
+		} catch (Exception e) {
 			LOG.info("Exception File servlet");
 			e.printStackTrace();
 		}
-		
+
 		LOG.info(" receivedResponse while uploading LQB Document : "
 		        + receivedResponse);
 	}

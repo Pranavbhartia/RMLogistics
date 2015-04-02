@@ -516,6 +516,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 					// It does not matter if the user is assigned a loan which
 					// is not active. Hence, for computation, we are considering
 					// only those loans which he is currently working on
+
+					// Additional check, if the loan is created today
 					user.getLoans().add(loanTeam.getLoan());
 					availableUsers.add(user);
 
@@ -526,7 +528,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor, String stateName) {
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
+	        String stateName) {
 		User user = findByUserId(realtor.getId());
 		User defaultLoanManager = user.getRealtorDetail()
 		        .getDefaultLoanManager();
