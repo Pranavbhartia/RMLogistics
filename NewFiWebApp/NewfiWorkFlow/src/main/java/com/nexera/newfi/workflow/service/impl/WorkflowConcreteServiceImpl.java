@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
@@ -33,7 +38,8 @@ import com.nexera.workflow.service.WorkflowService;
 
 @Component
 public class WorkflowConcreteServiceImpl implements IWorkflowService {
-
+	private static final Logger LOG = LoggerFactory
+			.getLogger(WorkflowConcreteServiceImpl.class);
 	@Autowired
 	private LoanAppFormService loanAppFormService;
 	@Autowired
@@ -126,5 +132,35 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		}
 
 		return null;
+	}
+
+	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
+			String comments) {
+		String status = null;
+		try {
+			Loan loan = new Loan(loanId);
+			LoanMilestone mileStone = new LoanMilestone();
+			mileStone.setLoan(loan);
+			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
+			loanMilestoneMaster.setId(masterMileStoneId);
+			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
+			mileStone.setComments(comments.getBytes());
+			loanService.saveLoanMilestone(mileStone);
+			status = WorkItemStatus.COMPLETED.getStatus();
+			return status;
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return status;
+		}
+	}
+
+	public String getNexeraMilestoneComments(int loanId, Milestones milestone) {
+		String comments=null;
+		Loan loan = new Loan(loanId);
+		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+				milestone.getMilestoneKey());
+		if (mileStone != null)
+			comments=mileStone.getComments().toString();
+		return comments;
 	}
 }
