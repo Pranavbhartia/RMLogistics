@@ -20,4 +20,8 @@ public interface NeedsDao extends GenericDao {
 	
 	public LoanNeedsList findNeedForLoan(Loan loan,NeedsListMaster needsListMaster);
 
+	public NeedsListMaster findNeedsListMasterByLabel(String label);
+
+	public LoanNeedsList findLoanNeedByMaster(Loan loan,
+			NeedsListMaster needListMaster);
 }

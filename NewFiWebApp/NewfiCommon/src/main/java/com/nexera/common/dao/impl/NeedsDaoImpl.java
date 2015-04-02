@@ -121,4 +121,43 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		return null;
 	}
 
+	public NeedsListMaster findNeedsListMasterByLabel(String label) {
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(NeedsListMaster.class);
+			criteria.add(Restrictions.eq("label", label));
+			List<NeedsListMaster> list = criteria.list();
+			if (list.size() > 0)
+				return list.get(0);
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
+		return null;
+	}
+
+	public LoanNeedsList findLoanNeedByMaster(Loan loan,
+			NeedsListMaster needListMaster) {
+		LoanNeedsList loanNeedsList = null;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			criteria.add(Restrictions.eq("loan", loan));
+			criteria.add(Restrictions.eq("needsListMaster", needListMaster));
+			List<LoanNeedsList> list = criteria.list();
+			if (list.size() > 0)
+				loanNeedsList = list.get(0);
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+			throw new DatabaseException(
+					"Exception caught in fetchUsersBySimilarEmailId() ",
+					hibernateException);
+		}
+		return loanNeedsList;
+	}
+
 }
