@@ -129,12 +129,13 @@ public class WorkflowManager implements Callable<String> {
 				}
 
 			} else {
-				params.putAll(systemParamMap);
+
 				if (workflowItemExec.getParams() != null) {
 					String jsonParamString = workflowItemExec.getParams();
 					itemParamMap = Util.convertJsonToMap(jsonParamString);
 					params.putAll(itemParamMap);
 				}
+				params.putAll(systemParamMap);
 
 			}
 

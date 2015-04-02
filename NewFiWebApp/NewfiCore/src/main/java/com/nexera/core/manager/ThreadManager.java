@@ -266,10 +266,13 @@ public class ThreadManager implements Runnable {
 								List<WorkflowItemExec> itemToExecute = itemToExecute(
 								        workflowItemTypeList,
 								        workflowItemExecList);
-								String params = Utils
-								        .convertMapToJson(getParamsBasedOnStatus(currentLoanStatus));
+
 								for (WorkflowItemExec workflowItemExec : itemToExecute) {
 									LOGGER.debug("Putting the item in execution ");
+									String params = Utils
+									        .convertMapToJson(getParamsBasedOnStatus(
+									                currentLoanStatus,
+									                workflowItemExec.getId()));
 									workflowService.saveParamsInExecTable(
 									        workflowItemExec.getId(), params);
 									engineTrigger
@@ -473,10 +476,12 @@ public class ThreadManager implements Runnable {
 		return workflowItemExecList;
 	}
 
-	private Map<String, Object> getParamsBasedOnStatus(int currentLoanStatus) {
+	private Map<String, Object> getParamsBasedOnStatus(int currentLoanStatus,
+	        int workflowItemExecId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-
+		map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+		        workflowItemExecId);
 		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        "08986e4b-8407-4b44-9000-50c104db899c");
