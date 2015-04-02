@@ -45,7 +45,8 @@ public enum MasterNeedsEnum {
 	Current_Business_License (35,"Current_Business_License"),
 	Copy_of_Relocation_Agreement (36,"Copy_of_Relocation_Agreement"),
 	
-	System_Disclosure_Need(99,"System_Disclosure_Need")
+	System_Disclosure_Need(99, "System_Disclosure_Need"),
+	Appraisal_Report(100, "Appraisals Report")
 	;
 	
 

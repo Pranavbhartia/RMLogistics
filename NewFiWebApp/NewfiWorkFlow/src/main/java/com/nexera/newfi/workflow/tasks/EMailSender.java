@@ -1,7 +1,6 @@
 package com.nexera.newfi.workflow.tasks;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,20 +13,15 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.enums.InternalUserRolesEum;
-import com.nexera.common.enums.UserRolesEnum;
-import com.nexera.common.vo.LoanTurnAroundTimeVO;
+import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.SendGridEmailService;
-import com.nexera.workflow.bean.WorkflowExec;
-import com.nexera.workflow.bean.WorkflowItemExec;
-import com.nexera.workflow.bean.WorkflowItemMaster;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -45,7 +39,8 @@ public class EMailSender extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private LoanService loanService;
-
+	@Autowired
+	private IWorkflowService iWorkflowService;
 	// private SendEmailService sendEmailService;
 
 	public String execute(HashMap<String, Object> objectMap) {
@@ -116,54 +111,12 @@ public class EMailSender extends NexeraWorkflowTask implements
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		WorkflowItemExec sysEduMilestone = workflowService
-				.getWorkflowExecById(workflowItemExecutionId);
-		if (sysEduMilestone.getStatus().equals(
-				WorkItemStatus.NOT_STARTED.getStatus())) {
-			LoanVO loanVO = loanService.getLoanByID(loanId);
-			WorkflowExec workflowExec = new WorkflowExec();
-			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
-			WorkflowItemMaster workflowItemMaster = workflowService
-					.getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT);
-			WorkflowItemExec workflowitemexec = workflowService
-					.getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-			if (workflowitemexec.getStatus().equals(
-					WorkItemStatus.COMPLETED.getStatus())) {
-				long noOfDays = (workflowitemexec.getEndTime().getTime() - new Date()
-						.getTime()) / (1000 * 60 * 60 * 24);
-
-				LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
-						.retrieveTurnAroundTimeByLoan(loanId, sysEduMilestone
-								.getParentWorkflowItemExec().getId());
-				long turnaroundTime = loanTurnAroundTimeVO.getHours();
-
-				if (noOfDays > turnaroundTime) {
-					List<NotificationVO> notificationList = notificationService
-							.findNotificationTypeListForLoan(loanId,
-									notificationType, null);
-					if (notificationList.size() == 0
-							|| notificationList.get(0).getRead() == true) {
-						NotificationVO notificationVO = new NotificationVO(
-								loanId, notificationType,
-								WorkflowConstants.SYS_EDU_NOTIFICATION_CONTENT);
-						List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
-						userRoles.add(UserRolesEnum.INTERNAL);
-						List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
-						internalUserRoles.add(InternalUserRolesEum.LM);
-						notificationService.createRoleBasedNotification(
-								notificationVO, userRoles, internalUserRoles);
-					}
-				}
-			}
-		} else {
-			List<NotificationVO> notificationList = notificationService
-					.findNotificationTypeListForLoan(loanId, notificationType,
-							true);
-			for (NotificationVO notificationVO : notificationList) {
-				notificationService.dismissNotification(notificationVO.getId());
-			}
-		}
-
+		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT;
+		String notificationReminderContent = WorkflowConstants.SYS_EDU_NOTIFICATION_CONTENT;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+				notificationType, loanId, workflowItemExecutionId,
+				prevMilestoneKey, notificationReminderContent);
+		iWorkflowService.updateLMReminder(createReminderVo);
 		return null;
 	}
 }

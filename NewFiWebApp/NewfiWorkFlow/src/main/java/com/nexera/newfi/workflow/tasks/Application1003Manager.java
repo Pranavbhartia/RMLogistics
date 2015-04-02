@@ -11,10 +11,12 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
@@ -32,20 +34,17 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
-		if (status.equals(LoanStatus.initiated)) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.initiatedMessage);
-		} else if (status.equals(LoanStatus.submitted)) {
-			// TODO check if we get timestamp for take a note from LQB
+		String returnStatus = null;
+		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
+				.getLosStatusID() + "")) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.submittedMessage);
 			sendEmail(objectMap);
-			// TODO check if this is the right place to call this
 			createAlertForDisclosureDue(objectMap);
+			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
-		return null;
+		return returnStatus;
 	}
 
 	private void createAlertForDisclosureDue(HashMap<String, Object> objectMap) {
