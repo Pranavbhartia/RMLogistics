@@ -37,7 +37,6 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
-import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
@@ -349,47 +348,44 @@ public class ThreadManager implements Runnable {
 			String documentType = edoc.getDoc_type();
 			if (!documentType.equalsIgnoreCase("INITIAL DISCLOSURE")) {
 				LOGGER.debug("Disclosure has been received ");
-				String uuid = uploadedFileListService.fetchUUID(edoc
-				        .getDescription());
-				UploadedFilesList uploadedFile = uploadedFileListService
-				        .fetchUsingFileUUID(uuid);
 
 				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
 				if (needsListMasterDisclosureAvailable != null) {
-					assignNeedToLoan(loan, needsListMasterDisclosureAvailable,
-					        uploadedFile);
+					if (!checkIfAlreadAssigned(loan,
+					        needsListMasterDisclosureAvailable))
+						assignNeedToLoan(loan,
+						        needsListMasterDisclosureAvailable);
 				}
 				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
 				if (needsListMasterDisclosureSigned != null) {
-					assignNeedToLoan(loan, needsListMasterDisclosureSigned,
-					        null);
+					if (!checkIfAlreadAssigned(loan,
+					        needsListMasterDisclosureSigned))
+						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 
 				}
 			}
 		}
 	}
 
-	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster,
-	        UploadedFilesList uploadedFile) {
+	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster) {
 		LOGGER.debug("Found a Need, Assigning it to a loan ");
 		LoanNeedsList loanNeedsList = new LoanNeedsList();
 		loanNeedsList.setLoan(loan);
 		loanNeedsList.setNeedsListMaster(needsListMaster);
-		if (uploadedFile != null)
-			loanNeedsList.setUploadFileId(uploadedFile);
+
 		loanNeedsList.setMandatory(false);
 		loanNeedsList.setSystemAction(true);
-		if (findLoanNeedsListByFile(uploadedFile) == null) {
-			LOGGER.debug("Inserting because this is new file and is not assigned ");
-			loanService.assignNeedsToLoan(loanNeedsList);
-		}
+		loanService.assignNeedsToLoan(loanNeedsList);
 
 	}
 
-	private LoanNeedsList findLoanNeedsListByFile(
-	        UploadedFilesList uploadedFileList) {
+	private Boolean checkIfAlreadAssigned(Loan loan,
+	        NeedsListMaster needsListMaster) {
 		LOGGER.debug("Check whether loan needs list exist for this document ");
-		return loanService.findLoanNeedsListByFile(uploadedFileList);
+		if (loanService.findLoanNeedsList(loan, needsListMaster) != null)
+			return true;
+		else
+			return false;
 	}
 
 	private NeedsListMaster getNeedsListMasterByType(String needsListType) {
