@@ -159,11 +159,15 @@ a,a:hover,a:visited {
 }
 
 .lp-pic {
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #fff;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
 	background-size: cover;
+}
+
+.lp-item-active .lp-pic{
+	border:1px solid #fff;
 }
 
 .lp-pic-wrapper,.lp-talk-wrapper,.lp-loan-wrapper,.lp-alert-wrapper {
@@ -215,8 +219,8 @@ a,a:hover,a:visited {
 .lp-talk-pic2 {
 	background: url(../images/person-placeholder.png) no-repeat center;
 	background-size: cover;
-    background-color: #fff;
-    border: 1px solid #fff;
+	background-color: #f2f2f2;
+	border: 1px solid #d4d4d4;
 }
 
 .lp-talk-pic3 {
@@ -324,7 +328,8 @@ a,a:hover,a:visited {
 	text-align: center;
 	font-size: 10px;
 	padding: 0 5px;
-	margin-top: 11px;
+	margin-top: 8px;
+	line-height: 13px;
 }
 
 .lp-t2-img {
@@ -332,6 +337,7 @@ a,a:hover,a:visited {
 	top: 6px;
 	width: 100px;
 	height: 40px;
+	margin-top: 1px;
 }
 
 .lp-t2-img0 {
@@ -359,7 +365,6 @@ a,a:hover,a:visited {
 }
 
 .t2-active {
-	margin-top: -6px;
 	color: #fff;
 	background-color: #428bca;
 	overflow: visible;
@@ -1286,7 +1291,8 @@ a,a:hover,a:visited {
 	width: 45px;
 	height: 45px;
 	margin-right: 15px;
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #f2f2f2;
+	border: 1px solid #D4D4D4;
 	border-radius: 50%;
 	background-size: cover;
 }
@@ -2496,7 +2502,7 @@ input.calc-input {
 	background: url(../images/upload-pic.png) no-repeat center #fff;
 	background-size: cover;
 	cursor:pointer;
-	opacity:0.6;
+	opacity:0.8;
 	z-index: 2;
 }
 
@@ -2756,12 +2762,20 @@ input.calc-input {
 	white-space: nowrap;
 }
 
-.ui-autocomplete>li {
+.ui-state-focus{
+	border: none !important;
+}
+
+.ui-menu-item {
 	padding-left: 20px;
 	line-height: 30px;
 	height: 30px;
 	background-color: #fdfdfd;
 	cursor: pointer;
+}
+
+.ui-menu .ui-menu-item{
+	padding-left: 20px;
 }
 
 .overlay-loader {
@@ -4192,7 +4206,7 @@ input.calc-input {
     margin-top: 1px;
     width: 100%;
     max-height: 120px;
-    overflow: auto;
+    overflow: hidden;
     background: #fafafa;
     z-index: 222;
     border: 1px solid #cecece;
@@ -4231,4 +4245,14 @@ input.calc-input {
 
 .cust-sms-ch {
 	padding-left: 5px;
+}
+
+.radio-btn{
+	width:16px;
+	height:16px;
+	background: url(../images/circle.png) no-repeat center;
+}
+
+.radio-btn-selected{
+	background: url(../images/circle-blue.png) no-repeat center;
 }
