@@ -44,7 +44,7 @@ public interface UserProfileService {
 	public UserVO createNewUserAndSendMail(UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	public void deleteUser(UserVO userVO);
+	public String deleteUser(UserVO userVO);
 
 	public User findUserByMail(String userMailAddress);
 

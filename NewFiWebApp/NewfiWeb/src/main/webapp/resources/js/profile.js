@@ -829,6 +829,9 @@ function initializeZipcodeLookup(searchData){
 }
 
 function getPhone1Row(user) {
+	var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -836,6 +839,10 @@ function getPhone1Row(user) {
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
+	if(user.customerDetail.mobileAlertsPreference){
+	rowCol1.append(span);
+	}
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -944,6 +951,10 @@ var row = $('<div>').attr({
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
+	}).html("");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
 	}).html("Receive SMS Alert");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
@@ -956,15 +967,18 @@ var row = $('<div>').attr({
 	var checkBox = $('<div>').attr({
 		"class" : "admin-doc-checkbox doc-checkbox float-left",		
 		"id" : "alertSMSPreferenceID",		
-		"value":user.customerDetail.mobileAlertsPreference,
+		
 
 	}).on("click",function(e){
 	if($(this).prop("checked")){
+		
 		    checkBox.addClass('doc-checked');
-	
+	        
             }
             else if($(this).prop("checked")){
+				
             	checkBox.addClass('doc-unchecked');
+			
             }
 	
 	});
@@ -974,11 +988,9 @@ var row = $('<div>').attr({
 	}else{
 		checkBox.addClass('doc-unchecked');
 	}
-	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
-	});
+
 	
-	inputCont.append(checkBox).append(errMessage);
+	inputCont.append(checkBox).append(rowColtext);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
@@ -1169,10 +1181,12 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
-		
-		customerDetails.mobileAlertsPreference = true;}else{
-			
+	if($('.admin-doc-checkbox').hasClass('doc-checked')){
+		console.log("in if");
+		customerDetails.mobileAlertsPreference = true;
+		}
+	else {
+			console.log("in else");
 		customerDetails.mobileAlertsPreference = false;
 		}
 
@@ -1183,7 +1197,7 @@ function updateUserDetails() {
 	
   
 
-    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
+    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
     if(phoneStatus!=false){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",

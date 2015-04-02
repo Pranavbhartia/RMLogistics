@@ -660,4 +660,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao
         criteria.add( Restrictions.eq( "uploadFileId", uploadFileList ) );
         return (LoanNeedsList) criteria.uniqueResult();
     }
+
+
+	@Override
+    public List<Loan> loanListBasedOnUser(User user) {
+		 Session session = sessionFactory.getCurrentSession();
+		 Criteria criteria = session.createCriteria( LoanTeam.class );
+		  criteria.add( Restrictions.eq( "user.id", user.getId() ) );
+	     List<Loan> loanList = criteria.list();
+	        return loanList;
+	  
+    }
 }

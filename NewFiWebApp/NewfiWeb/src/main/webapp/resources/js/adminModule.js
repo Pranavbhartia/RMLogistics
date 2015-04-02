@@ -231,7 +231,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 	
 	var spanLabel=$('<span>').attr({
-	"class":"admin-span-class",
+	"class":"admin-span-class float-left",
 	
 	
 	}).html("Please Select");
@@ -247,16 +247,35 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 	});	
 
+	var form=$('<form>').attr({
+	"id":"upload-form-admin",
+    "action":"rest/userprofile/addusersfromcsv",
+    "method":"post",
+	"enctype":"multipart/form-data"
+		
+		
+	});
+	var inputFile=$('<input>').attr({
+	"class":"input-file-admin",
+	"type":"file",
+	"name":"file",
+	"id":"file",
+	"onchange":"$('#upload-form-admin').submit();"
+	
+	}); 
 	var uploadCSV=$('<div>').attr({
 	"class":"prof-cust-upload-btn-admin-um float-left-admin",
 	"id":"upload-csv-id", 
-	"type":"file",
-	"name":"file"
 
-	}).click(function(e){
-	$(this).submit();
+	}).on("click",function(e){
+		
+	
+
 		
 	});
+    
+	uploadCSV.append(inputFile);
+	form.append(uploadCSV);
 	
 	var label=$('<label>').attr({
 	
@@ -276,7 +295,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	container.append(createUserButton); 
 	container.append(label);
 
-	container.append(uploadText).append(uploadCSV);
+	container.append(uploadText).append(form);
 	wrapper.append(header).append(container);
 	if(clearParent){
 		$('#'+parentElement).html("");
@@ -454,22 +473,16 @@ ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 function appendDataToNewfiTeamWrapperForAdmin(data){
 $('#admin-add-usertype-dropdown-cont').hide();
    var users = data.resultObject;
-	var wrapper = $('<div>').attr({
-		"class" : "admin-newfi-team-wrapper"
-	});
-	var container = $('<div>').attr({
-		"class" : "admin-newfi-team-container"
-	});
-
-
+   var existingDiv = $('.admin-newfi-team-container').find(
+			'.admin-newfi-team-list-tr[userid=' + users.id + ']');
+	if (existingDiv != undefined && existingDiv.length > 0) {
+		showToastMessage("User already exists on the loan team.");
+		return;
+	}
    var tableRow = getAdminTeamListTableRow(users);
-   container.append(tableRow);
- 
-
-	wrapper.append(container);
-	$('#admin-newfi-team-container').append(wrapper);
-	showToastMessage("User Created successfully");
-
+   var teamContainer = $(".admin-newfi-team-container").append(tableRow);
+	showToastMessage("User added to loan team.");
+	
 }
 function appendAdminCreateUserPopupFirstName(){
 var row = $('<div>').attr({
@@ -553,24 +566,16 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 	});
 	
 	var searchInputBox = $('<input>').attr({
-		"class" : "admin-search-input float-left hide",
+		"class" : "admin-search-input float-right",
 		"id":"search-id",
-		"placeholder":"search",
-		"name":"search"
-	}).on('keyup', function(e) {
-		if (e.which == 13) {
-			$(this).hide();
-			
-		}
-	
-	}).on('blur', function() {
-		$(this).hide();
-		
+		"placeholder":"Search User",
+		"name":"search User"
 	});
 	searchDiv.append(searchInputBox);
 	header.append(searchDiv);
 	var container = $('<div>').attr({
-		"class" : "admin-newfi-team-container"
+		"class" : "admin-newfi-team-container",
+		"id":"admin-newfi-team-container-id"
 	});
 
 	var tableHeader = getAdminTeamListTableHeader();
@@ -665,9 +670,10 @@ var userRoleStr;
 	
 	var trCol4 = $('<div>').attr({
 		"class" : "admin-newfi-team-list-tr-col4 float-left",
-		"value":user.status,
+		"userID":user.id
 		
 	});
+	if(user.userRole.id==3){
 	if(user.status==true){
 	console.log("status of user",user.status);
 	trCol4.append(inputActive);
@@ -678,17 +684,28 @@ var userRoleStr;
 	trCol4.append(inputInActive);
  
 	}
-	
+	}
     inputActive.click(function(){
-/* 	 $('.admin-btn-active').hide();
-	 $('.admin-btn-in-active').show();  	 */
-	 alert("Status changed from active to inactive");
+     ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},
+			"");
+
+	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
+	teamMemberRow.empty();
+	teamMemberRow.append(inputInActive);
+
+	
+	 //alert("Status changed from active to inactive");
+
 	});
 	
 	inputInActive.click(function(){
-/* 		$('.admin-btn-in-active').hide();
-	$('.admin-btn-active').show();  */
-	alert("Status changed from inactive to active");
+    ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
+			"");
+	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
+	teamMemberRow.empty();
+	teamMemberRow.append(inputActive);
+	//alert("Status changed from inactive to active");
+
 	
 	});
 	
@@ -704,15 +721,40 @@ var userRoleStr;
 
 	userDelIcn.click(function() {
 		var userID = $(this).attr("userid");
-		//var loanID = $(this).attr("loanid");
-		//confirmRemoveUser("Are you sure you want to delete the user?",userID, loanID);
+
+    RemoveUserFromUserListAdmin("Are you sure you want to delete the user?",userID);
 	});
 	trCol5.append(userDelIcn);
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
 }
 
+function RemoveUserFromUserListAdmin(textMessage,userID){
+$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click',function(){
+			removeUserFromList(userID);
+			$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-cancel').on('click',function(){
+		$('#overlay-popup').hide();
+	});
+	
+	$('#overlay-popup').show();
+}
+function removeUserFromList(userID){
 
+ 
+ //TODO to call a method to delete users
+  ajaxRequest("rest/userprofile/deleteUser/"+userID,"GET", "json", {},
+			"");
+
+  var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + user.id + "]").remove();
+
+}
 function appendAdminModuleDetails(){
 
 var row = $('<div>').attr({
@@ -736,19 +778,4 @@ $('#alert-popup-wrapper-settings').show();
 }
 
 
-//TODO to change the status of user active/inactive
-$("#myRadio-active").click(function(e){
 
-$("#myRadio-active").attr("checked",true);
-$("#myRadio-inactive").attr("checked",false);
-alert("staus of user is active");
-
-});
-
-$("#myRadio-inactive").click(function(e){
-
-$("#myRadio-inactive").attr("checked",true);
-$("#myRadio-active").attr("checked",false);
-alert("status of user is inactive");
-
-});
