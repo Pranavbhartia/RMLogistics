@@ -40,7 +40,8 @@ public class RestInterceptor implements Callable
         String payload = message.getPayloadAsString();
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
-        if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE ) ) {
+        if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION ) ) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
         } else {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
@@ -99,6 +100,15 @@ public class RestInterceptor implements Callable
             /*if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
                 sDataContentQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), sDataContentQueryDefault );
             }*/
+            inputParams[2] = sDataContentQueryDefault;
+            inputParams[3] = restParameters.getLoanVO().getFormat();
+
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION ) ) {
+            LOG.debug( "Operation Chosen Was UnderwritingCondition " );
+            inputParams = new Object[4];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+            String sDataContentQueryDefault = Utils.readFileAsString( "underwritingCondition.xml" );
             inputParams[2] = sDataContentQueryDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
 
