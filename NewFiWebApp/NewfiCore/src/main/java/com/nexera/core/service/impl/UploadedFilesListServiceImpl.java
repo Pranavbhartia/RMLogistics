@@ -695,7 +695,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 	}
 
-	private String fetchUUID(String uuidString) {
+	@Override
+	public String fetchUUID(String uuidString) {
 		String keyValuePair[] = uuidString.split(" ");
 		Map<String, String> map = new HashMap<String, String>();
 		for (String pair : keyValuePair) {

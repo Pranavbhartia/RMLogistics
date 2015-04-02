@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -25,7 +25,7 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get(
+		/*String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 				.toString();
 		if (status.equals(LoanStatus.appraisalOrdered)) {
@@ -34,8 +34,8 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 			return "1";
 		} else if (status.equals(LoanStatus.appraisalReceived)) {
 			return "3";
-		}
-		return null;
+		}*/
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override

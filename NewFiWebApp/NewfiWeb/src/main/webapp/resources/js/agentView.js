@@ -1043,7 +1043,7 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 	}).html("Add Team Member");
 
 	var rightHeaderIcon = $('<div>').attr({
-		"class" : "header-down-icn float-right"
+		"class" : "float-right"
 	});
 
 	header.append(rightHeaderIcon);
@@ -1082,6 +1082,10 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 				console.log("Name entered : " + name);
 				var code = $('#add-memeber-user-type').attr("code");
 				var roleID = $('#add-memeber-user-type').attr("roleID");
+				if(roleID == undefined){
+					showToastMessage("Please select a user type");
+					return false;
+				}
 				var internalRoleID = $('#add-memeber-user-type').attr(
 						"internalRoleID");
 				var isSearchUserRoleBased=$('#add-memeber-user-type').attr("userRoleBased");
@@ -1093,12 +1097,26 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 
 	var downArrow = $('<div>').attr({
 		"class" : "add-member-down-arrow float-right"
-	}).on('click', function() {
-		
+	}).on('click', function(e) {
+		e.stopPropagation();
 		if ($('#add-username-dropdown-cont').css("display") == "block") {
 			hideUserNameDropDown();
 		} else {
-			showUserNameDropDown();
+			var name = "";
+			console.log("Name entered : " + name);
+			var code = $('#add-memeber-user-type').attr("code");
+			var roleID = $('#add-memeber-user-type').attr("roleID");
+			if(roleID == undefined){
+				showToastMessage("Please select a user type");
+				return false;
+			}
+			var internalRoleID = $('#add-memeber-user-type').attr(
+					"internalRoleID");
+			var isSearchUserRoleBased=$('#add-memeber-user-type').attr("userRoleBased");
+			if(isSearchUserRoleBased=="true")
+				searchUsersBasedOnNameAndRole(name, roleID, internalRoleID);
+			else if(isSearchUserRoleBased=="false")
+				searchUsersBasedOnCode(name, code);
 		}
 	});
 

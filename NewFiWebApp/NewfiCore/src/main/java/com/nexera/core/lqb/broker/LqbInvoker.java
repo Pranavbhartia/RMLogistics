@@ -6,21 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-
-
-
-import java.util.Map;
-
-import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import com.nexera.workflow.utils.Util;
 
 @Component
 public class LqbInvoker {
@@ -38,7 +29,7 @@ public class LqbInvoker {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
-		
+
 		String returnedUser = restTemplate.postForObject(muleUrl, request,
 		        String.class);
 		JSONObject jsonObject = new JSONObject(returnedUser);

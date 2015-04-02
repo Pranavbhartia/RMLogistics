@@ -9,15 +9,22 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 
 public interface NeedsDao extends GenericDao {
 
-	public List<LoanNeedsList> getLoanNeedsList(int loanId) throws NoRecordsFetchedException ;
+	public List<LoanNeedsList> getLoanNeedsList(int loanId)
+	        throws NoRecordsFetchedException;
+
 	public void deleteLoanNeeds(int loanId);
+
 	public void deleteLoanNeed(LoanNeedsList need);
 
 	public Integer getLoanNeedListIdByFileId(Integer fileId);
-	
 
-	public List<NeedsListMaster> getMasterNeedsList(Boolean isCustom);	
-	
-	public LoanNeedsList findNeedForLoan(Loan loan,NeedsListMaster needsListMaster);
+	public List<NeedsListMaster> getMasterNeedsList(Boolean isCustom);
 
+	public LoanNeedsList findNeedForLoan(Loan loan,
+	        NeedsListMaster needsListMaster);
+
+	public NeedsListMaster findNeedsListMasterByLabel(String label);
+
+	public LoanNeedsList findLoanNeedByMaster(Loan loan,
+	        NeedsListMaster needListMaster);
 }

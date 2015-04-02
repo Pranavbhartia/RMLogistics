@@ -35,6 +35,9 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
@@ -45,7 +48,9 @@ import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -76,6 +81,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	UploadedFilesListService uploadedFileListService;
+
+	@Autowired
+	NeedsListService needsListService;
 
 	@Override
 	public void run() {
@@ -321,12 +329,70 @@ public class ThreadManager implements Runnable {
 							        .getvBedocVO();
 							uploadedFileListService.updateUploadedDocument(
 							        edocsList, loan, timeBeforeCallMade);
+
+							checkWhetherDisclosureReceived(loan, edocsList);
 						}
 					}
 				}
 			}
 		}
 
+	}
+
+	private void checkWhetherDisclosureReceived(Loan loan,
+	        List<LQBedocVO> edocsList) {
+		LOGGER.debug("Inside method checkWhetherDisclosuredReceived");
+		for (LQBedocVO edoc : edocsList) {
+
+			String documentType = edoc.getDoc_type();
+			if (!documentType.equalsIgnoreCase("INITIAL DISCLOSURE")) {
+				LOGGER.debug("Disclosure has been received ");
+				String uuid = uploadedFileListService.fetchUUID(edoc
+				        .getDescription());
+				UploadedFilesList uploadedFile = uploadedFileListService
+				        .fetchUsingFileUUID(uuid);
+
+				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				if (needsListMasterDisclosureAvailable != null) {
+					assignNeedToLoan(loan, needsListMasterDisclosureAvailable,
+					        uploadedFile);
+				}
+				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				if (needsListMasterDisclosureSigned != null) {
+					assignNeedToLoan(loan, needsListMasterDisclosureSigned,
+					        null);
+
+				}
+			}
+		}
+	}
+
+	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster,
+	        UploadedFilesList uploadedFile) {
+		LOGGER.debug("Found a Need, Assigning it to a loan ");
+		LoanNeedsList loanNeedsList = new LoanNeedsList();
+		loanNeedsList.setLoan(loan);
+		loanNeedsList.setNeedsListMaster(needsListMaster);
+		if (uploadedFile != null)
+			loanNeedsList.setUploadFileId(uploadedFile);
+		loanNeedsList.setMandatory(false);
+		loanNeedsList.setSystemAction(true);
+		if (findLoanNeedsListByFile(uploadedFile) == null) {
+			LOGGER.debug("Inserting because this is new file and is not assigned ");
+			loanService.assignNeedsToLoan(loanNeedsList);
+		}
+
+	}
+
+	private LoanNeedsList findLoanNeedsListByFile(
+	        UploadedFilesList uploadedFileList) {
+		LOGGER.debug("Check whether loan needs list exist for this document ");
+		return loanService.findLoanNeedsListByFile(uploadedFileList);
+	}
+
+	private NeedsListMaster getNeedsListMasterByType(String needsListType) {
+		LOGGER.debug("Inside method getNeedsListMasterByType ");
+		return needsListService.fetchNeedListMasterByType(needsListType);
 	}
 
 	private void updateLoanMilestone(LoanMilestone loanMilestone) {
