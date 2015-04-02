@@ -22,7 +22,7 @@ import javax.persistence.Table;
 public class CustomerBankAccountDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String accountSubType;
 	private String   currentaccountbalance;
 	private String   amountfornewhome;
@@ -33,18 +33,22 @@ public class CustomerBankAccountDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
-		return this.id;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	
 	
 	@Column(name = "AccountSubType")
 	public String getAccountSubType() {
 		return accountSubType;
 	}
+	
+
 	public void setAccountSubType(String accountSubType) {
 		this.accountSubType = accountSubType;
 	}
