@@ -26,6 +26,9 @@ public class PropertyTypeMaster implements Serializable {
 	private String propertyInsuranceCost;
 	private String propertyPurchaseYear;
 	private String homeWorthToday;
+	private String homeZipCode;
+	
+
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFeeMaster> loanApplicationFeeMasters;
@@ -71,6 +74,16 @@ public class PropertyTypeMaster implements Serializable {
 		this.propertyTypeCd = propertyTypeCd;
 	}
 
+	@Column(name = "homeZipCode")
+	public String getHomeZipCode() {
+		return homeZipCode;
+	}
+
+	public void setHomeZipCode(String homeZipCode) {
+		this.homeZipCode = homeZipCode;
+	}
+	
+	
 	@Column(name = "residence_type_cd")
 	public String getResidenceTypeCd() {
 		return residenceTypeCd;

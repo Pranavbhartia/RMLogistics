@@ -68,9 +68,13 @@ public class ShopperRegistrationController {
 
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
-		UserVO userVO = gson.fromJson(registrationDetails, UserVO.class);
-
-		CustomerEnagagement customerEnagagement = userVO.getCustomerEnagagement(); 
+		try {
+		LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,LoanAppFormVO.class);
+		LOG.info("calling 1234 "+loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+		LOG.info("calling 1234 "+loaAppFormVO.getUser().getFirstName());
+		UserVO userVO = loaAppFormVO.getUser();
+		LOG.info("calling 1234  "+userVO.getEmailId());
+	//	CustomerEnagagement customerEnagagement = userVO.getCustomerEnagagement(); 
 		String emailId = userVO.getEmailId();
 
 		userVO.setUsername(userVO.getEmailId().split(":")[0]);
@@ -79,7 +83,8 @@ public class ShopperRegistrationController {
 		// UserVO userVOObj= userProfileService.saveUser(userVO);
 		UserVO userVOObj = null;
 		LoanVO loanVO = null;
-		try {
+		
+			LOG.info("calling createNewUserAndSendMail"+userVO.getEmailId());
 			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
 			// insert a record in the loan table also
 			loanVO = new LoanVO();
@@ -100,16 +105,19 @@ public class ShopperRegistrationController {
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-			userVOObj.setCustomerEnagagement(customerEnagagement);
+		//	userVOObj.setCustomerEnagagement(customerEnagagement);
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
+			loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
 			
-			if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
-				loanAppFormVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-			}
-			
+		//	if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+			//	loanAppFormVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+		//	}
+LOG.info("loanAppFormService.create(loanAppFormVO)");
 			loanAppFormService.create(loanAppFormVO);
+			authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
 
 		} catch (InvalidInputException e) {
 
@@ -121,8 +129,7 @@ public class ShopperRegistrationController {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
         }
-		authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
-
+		
 		return "./home.do";
 	}
 

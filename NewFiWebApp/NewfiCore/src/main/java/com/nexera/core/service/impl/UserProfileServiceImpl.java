@@ -318,9 +318,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		sendNewUserEmail(newUser);
 		
 		//We set password to null so that it isnt sent back to the front end 
-		newUser.setPassword(null);
+		//newUser.setPassword(null);
 		
-		newUser = null;
+	//	newUser = null;
 		if (userID > 0) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}

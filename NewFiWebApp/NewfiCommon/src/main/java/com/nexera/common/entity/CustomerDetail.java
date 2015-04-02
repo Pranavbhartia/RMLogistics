@@ -37,7 +37,19 @@ public class CustomerDetail implements Serializable {
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
 	private Boolean mobileAlertsPreference;
-
+	private Boolean isselfEmployed;
+	private String selfEmployedIncome;
+	private Boolean isssIncomeOrDisability;
+	private String ssDisabilityIncome;
+	private Boolean ispensionOrRetirement;
+	private String monthlyPension;
+	private String livingSince;
+	
+	
+	
+	
+	
+	
 	public CustomerDetail() {
 	}
 
@@ -141,6 +153,76 @@ public class CustomerDetail implements Serializable {
 
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
+
+	
+	@Column(name = "isselfEmployed", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsselfEmployed() {
+		return isselfEmployed;
+	}
+
+	public void setIsselfEmployed(Boolean isselfEmployed) {
+		this.isselfEmployed = isselfEmployed;
+	}
+
+	@Column(name = "selfEmployedIncome")
+	public String getSelfEmployedIncome() {
+		return selfEmployedIncome;
+	}
+
+	public void setSelfEmployedIncome(String selfEmployedIncome) {
+		this.selfEmployedIncome = selfEmployedIncome;
+	}
+
+	
+	@Column(name = "isssIncomeOrDisability", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsssIncomeOrDisability() {
+		return isssIncomeOrDisability;
+	}
+
+	public void setIsssIncomeOrDisability(Boolean isssIncomeOrDisability) {
+		this.isssIncomeOrDisability = isssIncomeOrDisability;
+	}
+
+	@Column(name = "ssDisabilityIncome")
+	public String getSsDisabilityIncome() {
+		return ssDisabilityIncome;
+	}
+
+	public void setSsDisabilityIncome(String ssDisabilityIncome) {
+		this.ssDisabilityIncome = ssDisabilityIncome;
+	}
+
+	
+	@Column(name = "ispensionOrRetirement", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIspensionOrRetirement() {
+		return ispensionOrRetirement;
+	}
+
+	public void setIspensionOrRetirement(Boolean ispensionOrRetirement) {
+		this.ispensionOrRetirement = ispensionOrRetirement;
+	}
+	
+	
+	@Column(name = "monthlyPension")
+	public String getMonthlyPension() {
+		return monthlyPension;
+	}
+
+	public void setMonthlyPension(String monthlyPension) {
+		this.monthlyPension = monthlyPension;
+	}
+
+	@Column(name = "livingSince")
+	public String getLivingSince() {
+		return livingSince;
+	}
+
+	public void setLivingSince(String livingSince) {
+		this.livingSince = livingSince;
 	}
 
 	public static CustomerDetailVO convertFromEntityToVO(

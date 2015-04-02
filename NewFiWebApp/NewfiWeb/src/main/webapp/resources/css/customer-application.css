@@ -34,9 +34,9 @@
 }
 .app-ques-header-txt {
     font-family: 'opensanssemibold';
-    font-size: 28px;
-	line-height: 45px;
-	margin-bottom: 25px;
+    font-size: 24px;
+	line-height: 40px;
+	margin-bottom: 15px;
 }
 .app-input {
     width: 400px;
@@ -126,7 +126,7 @@
  width: 327px !important;
 }
 .cust-app-lp{
-	margin-top:65px;
+	margin-top:51px;
 }
 
 .cust-app-lp .ce-app-lp-item-text{

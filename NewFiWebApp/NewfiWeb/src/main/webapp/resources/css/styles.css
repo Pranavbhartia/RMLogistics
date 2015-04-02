@@ -1959,6 +1959,7 @@ a,a:hover,a:visited {
 	border-radius: 0 0 3px 3px;
 	padding: 5px 0;
 	overflow-y: auto;
+	z-index: 1;
 }
 
 .add-member-dropdown-row {
@@ -2474,6 +2475,7 @@ input.calc-input {
 
 .prof-form-row-desc {
 	width: 25%;
+	height:40px;
 	min-width: 120px;
 	text-align: right;
 	padding-right: 20px;
@@ -2487,9 +2489,12 @@ input.calc-input {
 	position:absolute;
 	bottom:0;
 	right:0;
-	width:33px;
-	height: 33px;
-	background: url(../images/upload-pic.png) no-repeat center;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	background: url(../images/upload-pic.png) no-repeat center #fff;
+	background-size: cover;
 	cursor:pointer;
 	opacity:0.6;
 	z-index: 2;
@@ -2899,9 +2904,10 @@ input.calc-input {
 }
 
 .milestone-lc-text,.milestone-rc-text {
-	line-height: 22px;
+	line-height: 15px;
 	color: #428bca;
 	margin-bottom: 2px;
+	padding-top: 2px;
 }
 
 .milestone-lc-text {
@@ -3373,6 +3379,8 @@ input.calc-input {
 
 .m-step-complete .milestone-header-step-text {
 	color: #7AB10D;
+	background: url(../images/tick_green.png) no-repeat center;
+	font-size: 0;
 }
 
 .m-step-in-progress .milestone-header-step-text {
@@ -4176,7 +4184,6 @@ input.calc-input {
 
 .loan-manager-popup-container:last-child{
 	border-bottom:none;
-
 }
 
 .state-dropdown-wrapper {
@@ -4220,5 +4227,8 @@ input.calc-input {
 
 .admin-doc-checkbox {
 	margin-top: 10px;
+}
 
+.cust-sms-ch {
+	padding-left: 5px;
 }
