@@ -27,7 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -477,12 +476,12 @@ public class ThreadManager implements Runnable {
 	private Map<String, Object> getParamsBasedOnStatus(int currentLoanStatus) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-		String wfItemStatus = null;
+
 		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
-			wfItemStatus = LoanStatus.inUnderwriting;
+
 			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
@@ -498,10 +497,10 @@ public class ThreadManager implements Runnable {
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED) {
 
 		}
-		if (wfItemStatus != null) {
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-			        wfItemStatus);
-		}
+
+		map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+		        currentLoanStatus);
+
 		return map;
 
 	}

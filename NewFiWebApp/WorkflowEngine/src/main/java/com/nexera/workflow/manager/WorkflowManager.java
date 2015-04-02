@@ -43,6 +43,8 @@ public class WorkflowManager implements Callable<String> {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	Map<String, Object> params = new HashMap<String, Object>();
+
 	/**
       * 
       */
@@ -107,7 +109,6 @@ public class WorkflowManager implements Callable<String> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String executeMethod(WorkflowItemMaster workflowItemMaster) {
 
-		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> itemParamMap;
 		Map<String, Object> systemParamMap;
 		String result = null;
