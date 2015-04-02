@@ -213,6 +213,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
@@ -322,6 +323,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy) {
 		String s3Path = null;
@@ -526,7 +528,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO) {
+	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO) throws IOException {
 		LQBResponseVO lqbResponseVO = null;
 		if (lqbDocumentVO != null) {
 			JSONObject uploadObject = createUploadPdfDocumentJsonObject(
@@ -543,7 +545,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber) {
+	public LQBResponseVO getAllDocumentsFromLQBByUUID(String loanNumber) throws IOException {
 
 		LQBDocumentVO lqbDocumentVO = new LQBDocumentVO();
 		lqbDocumentVO.setsLoanNumber(loanNumber);
@@ -585,7 +587,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			List<LQBedocVO> lqBedocVOs = lqbResponseVO
 			        .getDocumentResponseListVOs().getvBedocVO();
 			for (LQBedocVO lqBedocVO : lqBedocVOs) {
-				if (lqBedocVO.getDescription().startsWith(uuId)) {
+				if (uuId.equals(fetchUUID(lqBedocVO.getDescription()))) {
 					return lqBedocVO.getDocid();
 				}
 			}
@@ -602,11 +604,18 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		documentVO.setsLoanNumber(lqbDocID);
+		JSONObject receivedResponse  = null;
 		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
 		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
 		        documentVO);
-		JSONObject receivedResponse = lqbInvoker.invokeLqbService(jsonObject
-		        .toString());
+		try{
+			receivedResponse = lqbInvoker.invokeRestSpringParseStream(jsonObject
+			        .toString());
+		}catch(Exception e){
+			LOG.info("Exception File servlet");
+			e.printStackTrace();
+		}
+		
 		LOG.info(" receivedResponse while uploading LQB Document : "
 		        + receivedResponse);
 	}
