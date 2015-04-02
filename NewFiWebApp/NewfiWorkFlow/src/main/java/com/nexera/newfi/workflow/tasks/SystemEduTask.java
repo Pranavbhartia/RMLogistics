@@ -35,19 +35,19 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	private NotificationService notificationService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
@@ -106,7 +106,7 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 			// Dismiss any SYS_EDU_NOTIFICATION_TYPE notification
 			dismissSystemEduNotification(inputMap);
 		}
-		return "success";
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	private void dismissSystemEduNotification(HashMap<String, Object> objectMap) {

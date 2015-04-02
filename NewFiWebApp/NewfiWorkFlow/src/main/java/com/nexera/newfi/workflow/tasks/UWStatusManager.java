@@ -11,8 +11,10 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -30,18 +32,19 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 				.toString();
 		String message = "";
-		if (status.equals(LoanStatus.inUnderwriting)) {
+		String milestoneStatus = null;
+
+		if (status.equals(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING
+				.getLosStatusID() + "")) {
 			message = LoanStatus.inUnderwritingMessage;
-		} else if (status
-				.equals(LoanStatus.underwritingObservationsReceived)) {
-			message = LoanStatus.underwritingObservationsReceivedMessage;
-		} else if (status.equals(LoanStatus.underwritingSubmitted)) {
-			message = LoanStatus.underwritingSubmittedMessage;
-		} else if (status.equals(LoanStatus.approvedWithConditions)) {
+			milestoneStatus = WorkItemStatus.STARTED.getStatus();
+		} else if (status.equals(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE
+				.getLosStatusID() + "")) {
+			message = LoanStatus.underwritingClearToCloseMessage;
+			milestoneStatus = WorkItemStatus.COMPLETED.getStatus();
+		}/*else if (status.equals(LoanStatus.approvedWithConditions)) {
 			message = LoanStatus.approvedWithConditionsMessage;
-		} else if (status.equals(LoanStatus.underwritingApproved)) {
-			message = LoanStatus.underwritingApprovedMessage;
-		}
+		} */
 		// TODO add alert code here
 		if (!message.equals("")) {
 			makeANote(Integer.parseInt(objectMap.get(
@@ -50,7 +53,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 			sendEmail(objectMap);
 		}
 
-		return null;
+		return milestoneStatus;
 	}
 
 	@Override

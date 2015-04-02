@@ -659,11 +659,12 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			
+			$('.ui-autocomplete').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('.ui-autocomplete').perfectScrollbar('update');
 		}
-	});/*.autocomplete("instance")._renderItem = function(ul, item) {
-		return $("<li>").append(item.label).appendTo(ul);
-	}*/
+	});
 }
 
 function getStateRow(user) {
@@ -684,7 +685,7 @@ function getStateRow(user) {
 	}).bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
-			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+			if($('#state-dropdown-wrapper').has('.state-dropdown-row').size() <= 0){
 				appendStateDropDown('state-dropdown-wrapper');
 			}else{
 				toggleStateDropDown();
@@ -703,7 +704,7 @@ function getStateRow(user) {
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
-		"id" : "state-dro;pdown-wrapper",
+		"id" : "state-dropdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
 	
@@ -741,6 +742,9 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
+	$('#state-dropdown-wrapper').perfectScrollbar({
+		suppressScrollX : true
+	});
 }
 
 function findStateIdForStateCode(stateCode) {
@@ -821,11 +825,12 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			
+			$('.ui-autocomplete').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('.ui-autocomplete').perfectScrollbar('update');
 		}
-	});/*.autocomplete("instance")._renderItem = function(ul, item) {
-		return $("<li>").append(item.label).appendTo(ul);
-	}*/
+	});
 }
 
 function getPhone1Row(user) {
