@@ -31,6 +31,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.UserVO;
 
 @Component
 @Transactional
@@ -522,5 +523,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 
 		}
+	}
+
+	@Override
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor, String stateName) {
+		User user = findByUserId(realtor.getId());
+		User defaultLoanManager = user.getRealtorDetail()
+		        .getDefaultLoanManager();
+
+		return User.convertFromEntityToVO(defaultLoanManager);
 	}
 }
