@@ -542,6 +542,9 @@
     .app-input{
         width: 340px;
     }
+    .needed-items-lc {
+	  	width: 70%;
+	}
 }
 
 
