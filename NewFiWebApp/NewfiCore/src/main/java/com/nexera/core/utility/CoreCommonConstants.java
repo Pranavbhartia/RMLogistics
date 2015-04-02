@@ -16,7 +16,7 @@ public interface CoreCommonConstants {
 	// Disclosures related constants
 	public static String DOCUMENT_TYPE_INITIAL_DISCLOSURES = "INITIAL_DISCLOSURES";
 
-	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE = "DISCLOSURES_AVAILABILE";
+	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE = "Disclosure Available";
 
-	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED = "DISCLOSURES_SIGNED";
+	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED = "Signed Disclosure";
 }
