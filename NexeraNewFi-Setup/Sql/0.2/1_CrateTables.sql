@@ -1122,6 +1122,7 @@ CREATE TABLE `workflowitemmaster` (
   `is_last_task` tinyint(4) NOT NULL DEFAULT '0',
   `priority` tinyint(4) DEFAULT NULL,
   `parent_workflow_item_master` int(11) DEFAULT NULL,
+    `display_turn_order` int(11) default -1,
   `params` text,
   `clickable` tinyint(4) DEFAULT '1',
   `display_order` int(11) NOT NULL,
@@ -1246,6 +1247,23 @@ CREATE TABLE `milestoneturnaroundtime`
      `modified_by`) REFERENCES `user` (`id`) ON DELETE no action ON UPDATE no 
      action 
   ) engine=innodb DEFAULT charset=utf8; 
+
+CREATE TABLE `loanturnaroundtime` 
+  ( 
+     `id`               INT(11) NOT NULL auto_increment, 
+     `workflow_item_id` INT(11) NOT NULL, 
+     `loan_id` INT(11) NOT NULL, 
+     `hours`            INT(11) DEFAULT NULL,
+     `created_date`     DATETIME DEFAULT NULL, 
+     PRIMARY KEY (`id`), 
+     CONSTRAINT `fk_loanturnaroundtimeitemid` FOREIGN KEY (`workflow_item_id`) 
+     REFERENCES `workflowitemmaster` (`id`) ON DELETE no action ON UPDATE no 
+     action, 
+     CONSTRAINT `fk_loanturnaroundtimeloan` FOREIGN KEY (`loan_id`) 
+     REFERENCES `loan` (`id`) ON DELETE no action ON UPDATE no action,
+     CONSTRAINT `unique_contrt` UNIQUE(`workflow_item_id`,`loan_id`)
+  ) engine=innodb DEFAULT charset=utf8; 
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
