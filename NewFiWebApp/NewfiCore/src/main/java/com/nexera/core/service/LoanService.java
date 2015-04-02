@@ -7,6 +7,7 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
@@ -119,11 +120,11 @@ public interface LoanService {
 	        UploadedFilesList uploadedFileList);
 
 	public void updateLoanNeedList(LoanNeedsList loanNeedList);
-	
+
 	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId);
 
 	public void assignNeedsToLoan(LoanNeedsList loanNeedsList);
 
-	public LoanNeedsList findLoanNeedsListByFile(
-	        UploadedFilesList uploadedFileList);
+	public LoanNeedsList findLoanNeedsList(Loan loan,
+	        NeedsListMaster needsListMaster);
 }

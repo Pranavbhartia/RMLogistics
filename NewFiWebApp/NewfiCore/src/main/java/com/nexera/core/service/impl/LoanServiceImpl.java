@@ -28,6 +28,7 @@ import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTurnAroundTime;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -897,8 +898,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-	public LoanNeedsList findLoanNeedsListByFile(
-	        UploadedFilesList uploadedFileList) {
-		return loanNeedListDao.findLoanNeedsListByFile(uploadedFileList);
+	public LoanNeedsList findLoanNeedsList(Loan loan,
+	        NeedsListMaster needsListMaster) {
+		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
 	}
 }

@@ -615,8 +615,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		        documentVO);
 		InputStream inputStream = null;
 		try {
-			inputStream = lqbInvoker
-			        .invokeRestSpringParseStream(jsonObject.toString());
+			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
+			        .toString());
 			OutputStream outStream = response.getOutputStream();
 
 			byte[] buffer = new byte[2048];
@@ -770,8 +770,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			fileUpload.setUuidFileId(uuid);
 
 		fileUpload.setTotalPages(2);
-
-		int fileUploadId = uploadedFilesListDao.saveUploadedFile(fileUpload);
+		int fileUploadId = saveUploadedFile(fileUpload);
 		fileUpload.setId(fileUploadId);
 	}
 
