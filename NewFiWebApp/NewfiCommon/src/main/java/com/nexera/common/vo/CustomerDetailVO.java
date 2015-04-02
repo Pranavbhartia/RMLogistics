@@ -18,6 +18,13 @@ public class CustomerDetailVO implements Serializable {
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
 	private Boolean mobileAlertsPreference;
+	private Boolean isselfEmployed;
+	private String selfEmployedIncome;
+	private Boolean isssIncomeOrDisability;
+	private String ssDisabilityIncome;
+	private Boolean ispensionOrRetirement;
+	private String monthlyPension;
+	private String livingSince;
 
 	private UserVO user;
 
@@ -115,6 +122,62 @@ public class CustomerDetailVO implements Serializable {
 
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
+
+	public Boolean getIsselfEmployed() {
+		return isselfEmployed;
+	}
+
+	public void setIsselfEmployed(Boolean isselfEmployed) {
+		this.isselfEmployed = isselfEmployed;
+	}
+
+	public String getSelfEmployedIncome() {
+		return selfEmployedIncome;
+	}
+
+	public void setSelfEmployedIncome(String selfEmployedIncome) {
+		this.selfEmployedIncome = selfEmployedIncome;
+	}
+
+	public Boolean getIsssIncomeOrDisability() {
+		return isssIncomeOrDisability;
+	}
+
+	public void setIsssIncomeOrDisability(Boolean isssIncomeOrDisability) {
+		this.isssIncomeOrDisability = isssIncomeOrDisability;
+	}
+
+	public String getSsDisabilityIncome() {
+		return ssDisabilityIncome;
+	}
+
+	public void setSsDisabilityIncome(String ssDisabilityIncome) {
+		this.ssDisabilityIncome = ssDisabilityIncome;
+	}
+
+	public Boolean getIspensionOrRetirement() {
+		return ispensionOrRetirement;
+	}
+
+	public void setIspensionOrRetirement(Boolean ispensionOrRetirement) {
+		this.ispensionOrRetirement = ispensionOrRetirement;
+	}
+
+	public String getMonthlyPension() {
+		return monthlyPension;
+	}
+
+	public void setMonthlyPension(String monthlyPension) {
+		this.monthlyPension = monthlyPension;
+	}
+
+	public String getLivingSince() {
+		return livingSince;
+	}
+
+	public void setLivingSince(String livingSince) {
+		this.livingSince = livingSince;
 	}
 
 	public static CustomerDetailVO convertFromEntityToVO(

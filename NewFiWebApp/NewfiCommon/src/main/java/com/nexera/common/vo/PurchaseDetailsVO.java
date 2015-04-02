@@ -1,7 +1,9 @@
 package com.nexera.common.vo;
 
-public class PurchaseDetailsVO {
+import java.io.Serializable;
 
+public class PurchaseDetailsVO implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String livingSituation;
 	private String  housePrice;

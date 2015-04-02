@@ -21,6 +21,7 @@ public class PropertyTypeMasterVO implements Serializable {
 	private String propertyInsuranceCost;
 	private String propertyPurchaseYear;
 	private String homeWorthToday;
+	private String homeZipCode;
 	private List<LoanVO> loans;
 	private List<LoanAppFormVO> loanAppForms;
 	private List<LoanApplicationFeeMasterVO> loanApplicationFeeMasters;
@@ -76,6 +77,15 @@ public class PropertyTypeMasterVO implements Serializable {
 	public void setModifiedBy(UserVO modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+	
+	
+	public String getHomeZipCode() {
+		return homeZipCode;
+	}
+	public void setHomeZipCode(String homeZipCode) {
+		this.homeZipCode = homeZipCode;
+	}
+	
 	
 	public String getResidenceTypeCd() {
 		return residenceTypeCd;
