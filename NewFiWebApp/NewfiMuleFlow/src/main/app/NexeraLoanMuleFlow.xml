@@ -27,7 +27,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
 		</component>
-		<message-properties-transformer>
+		<message-properties-transformer doc:name="Message Properties">
 			<add-message-property key="http.version" value="HTTP/1.0" />
 		</message-properties-transformer>
 		<choice doc:name="Choice">
