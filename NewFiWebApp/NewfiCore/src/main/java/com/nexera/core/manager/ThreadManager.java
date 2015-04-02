@@ -198,7 +198,7 @@ public class ThreadManager implements Runnable {
 							if (loanMilestone == null) {
 								LOGGER.debug("This is a new entry of this milestone "
 								        + loanMilestoneMaster.getName());
-								putLoanMilestoneIntoExecution(
+								putLoanMilestoneIntoExecution(loanStatusID,
 								        currentLoanStatus, loadResponseList,
 								        loanMilestoneMaster);
 								newStatus = false;
@@ -239,6 +239,8 @@ public class ThreadManager implements Runnable {
 													if (currentDate != null) {
 														updateLoanMilestone(loanMilestone);
 													}
+												} else {
+													sameStatus = true;
 												}
 											} else {
 												sameStatus = true;
@@ -254,7 +256,7 @@ public class ThreadManager implements Runnable {
 								LOGGER.debug("If status has changed then only proceed to call the class ");
 								if (newStatus) {
 									LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
-									putLoanMilestoneIntoExecution(
+									putLoanMilestoneIntoExecution(loanStatusID,
 									        currentLoanStatus,
 									        loadResponseList,
 									        loanMilestoneMaster);
@@ -399,8 +401,8 @@ public class ThreadManager implements Runnable {
 		loanService.updateLoanMilestone(loanMilestone);
 	}
 
-	private void putLoanMilestoneIntoExecution(int currentLoanStatus,
-	        List<LoadResponseVO> loadResponseList,
+	private void putLoanMilestoneIntoExecution(LOSLoanStatus loanStatus,
+	        int currentLoanStatus, List<LoadResponseVO> loadResponseList,
 	        LoanMilestoneMaster loanMilestoneMaster) {
 
 		LoanMilestone loanMilestone = new LoanMilestone();
@@ -414,6 +416,7 @@ public class ThreadManager implements Runnable {
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);
 		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
+		loanMilestone.setComments(loanStatus.getDisplayStatus().getBytes());
 		saveLoanMilestone(loanMilestone);
 
 	}
@@ -433,12 +436,14 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Checking if previous state has an entry ");
 		if (currentIndex != 0) {
 			int previousStatus = statusTrackingList.get(currentIndex - 1);
+			LOSLoanStatus loanStatusID = LOSLoanStatus
+			        .getLOSStatus(previousStatus);
 			for (LoanMilestone loanMilestone : loanMilestoneList) {
 				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
 					LOGGER.debug("No status has been missed hence breaking out of the loop");
 					break;
 				} else {
-					putLoanMilestoneIntoExecution(previousStatus,
+					putLoanMilestoneIntoExecution(loanStatusID, previousStatus,
 					        loadResponseVOList, loanMilestoneMaster);
 
 					LOGGER.debug("Recursively calling to see if multiple status has been missed ");
