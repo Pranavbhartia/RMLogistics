@@ -72,13 +72,12 @@ public class LoanServiceImpl implements LoanService {
 	@Autowired
 	private UserProfileService userProfileService;
 
-
 	@Autowired
 	private MileStoneTurnAroundTimeService aroundTimeService;
 
 	@Autowired
 	private LoanTurnAroundTimeDao loanTurnAroundTimeDao;
-	
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
 
@@ -839,19 +838,18 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
 	        Integer workFlowItemId) {
-		LoanTurnAroundTime aroundTime=loanTurnAroundTimeDao.
-				loadLoanTurnAroundByLoanAndWorkitem(loanId,workFlowItemId);
-		if(aroundTime!=null){
-			LoanTurnAroundTimeVO aroundTimeVO=new LoanTurnAroundTimeVO();
+		LoanTurnAroundTime aroundTime = loanTurnAroundTimeDao
+		        .loadLoanTurnAroundByLoanAndWorkitem(loanId, workFlowItemId);
+		if (aroundTime != null) {
+			LoanTurnAroundTimeVO aroundTimeVO = new LoanTurnAroundTimeVO();
 			aroundTimeVO.setHours(aroundTime.getHours());
 			aroundTimeVO.setLoanId(loanId);
 			aroundTimeVO.setWorkItemMasterId(workFlowItemId);
 			return aroundTimeVO;
-		}
-		else
+		} else
 			return null;
 	}
 
@@ -867,25 +865,40 @@ public class LoanServiceImpl implements LoanService {
 		loanNeedListDao.update(loanNeedList);
 
 	}
+
 	@Override
 	@Transactional
 	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId) {
-		List<MileStoneTurnAroundTimeVO> aroundTimeVOs=aroundTimeService.loadAllMileStoneTurnAround();
-		List<LoanTurnAroundTime> turnAroundTimes=new ArrayList<LoanTurnAroundTime>();
-		LoanTurnAroundTime  aroundTime=null;
+		List<MileStoneTurnAroundTimeVO> aroundTimeVOs = aroundTimeService
+		        .loadAllMileStoneTurnAround();
+		List<LoanTurnAroundTime> turnAroundTimes = new ArrayList<LoanTurnAroundTime>();
+		LoanTurnAroundTime aroundTime = null;
 		for (MileStoneTurnAroundTimeVO mileStoneTurnAroundTimeVO : aroundTimeVOs) {
-			if(mileStoneTurnAroundTimeVO.getHours()!=null){
-				aroundTime=new LoanTurnAroundTime();
+			if (mileStoneTurnAroundTimeVO.getHours() != null) {
+				aroundTime = new LoanTurnAroundTime();
 				aroundTime.setCreatedDate(new Date());
 				aroundTime.setHours(mileStoneTurnAroundTimeVO.getHours());
 				aroundTime.setLoan(new Loan(loanId));
-				aroundTime.setWorkflowItemMaster(
-						new WorkflowItemMaster(
-								mileStoneTurnAroundTimeVO.getWorkflowItemMasterId()));
+				aroundTime.setWorkflowItemMaster(new WorkflowItemMaster(
+				        mileStoneTurnAroundTimeVO.getWorkflowItemMasterId()));
 				turnAroundTimes.add(aroundTime);
 			}
 		}
-		
-		loanTurnAroundTimeDao.saveAllLoanTurnAroundTimeForLoan(turnAroundTimes);		
+
+		loanTurnAroundTimeDao.saveAllLoanTurnAroundTimeForLoan(turnAroundTimes);
+	}
+
+	@Override
+	@Transactional
+	public void assignNeedsToLoan(LoanNeedsList loanNeedsList) {
+		loanNeedListDao.saveOrUpdate(loanNeedsList);
+
+	}
+
+	@Override
+	@Transactional
+	public LoanNeedsList findLoanNeedsListByFile(
+	        UploadedFilesList uploadedFileList) {
+		return loanNeedListDao.findLoanNeedsListByFile(uploadedFileList);
 	}
 }
