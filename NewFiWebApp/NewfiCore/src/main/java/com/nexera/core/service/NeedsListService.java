@@ -32,4 +32,7 @@ public interface NeedsListService {
 	public NeedsListMaster fetchNeedListMasterUsingID(Integer needId);
 	
 	public LoanNeedsList findNeedForLoan(Loan loan,NeedsListMaster needsListMaster);
+
+	public void saveMasterNeedsForLoan(int loanId,
+			List<NeedsListMaster> masterNeeds);
 }
