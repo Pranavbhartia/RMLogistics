@@ -31,11 +31,14 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		 * has least number of loans operating with loan inprogress status and
 		 * is active
 		 */
+		List<User> userList = null;
+		if (stateName != null && !stateName.isEmpty()) {
+			userList = userProfileDao.getLoanManagerForState(stateName);
 
-		List<User> userList = userProfileDao.getLoanManagerForState(stateName);
+			if (userList != null && !userList.isEmpty()) {
+				return pickTheChosenOne(userList);
+			}
 
-		if (!userList.isEmpty()) {
-			return pickTheChosenOne(userList);
 		}
 
 		/*
@@ -70,7 +73,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 	}
 
 	@Override
-	public List<UserVO> getDefaultLoanManagerForRealtorUrl(UserVO realtor,
+	public UserVO getDefaultLoanManagerForRealtorUrl(UserVO realtor,
 	        String stateName) {
 
 		/*
@@ -79,20 +82,16 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		 * available, return random
 		 */
 
-		return null;
+		if (stateName == null || stateName.isEmpty()) {
+			return this.getDefaultLoanManager(null);
+		}
+		UserVO userVO = userProfileDao.getDefaultLoanManagerForRealtor(realtor,
+		        stateName);
+		if (userVO == null || userVO.getId() == 0) {
+			// The realtor does not have default loan manager. Hence return the
+			// one with least work
+			return this.getDefaultLoanManager(stateName);
+		}
+		return userVO;
 	}
-
-	@Override
-	public List<UserVO> getDefaultLoanManagerForLoanManagerUrl(
-	        UserVO loanManager, String stateName) {
-
-		/*
-		 * Assign this loan manager to the team. IF the loan manager does not
-		 * operate in the state, then add another one from the state if any
-		 * available.
-		 */
-
-		return null;
-	}
-
 }

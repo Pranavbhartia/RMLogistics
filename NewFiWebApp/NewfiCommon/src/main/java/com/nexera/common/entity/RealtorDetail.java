@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -24,6 +27,7 @@ public class RealtorDetail implements Serializable {
 	private Integer id;
 	private String licenceInfo;
 	private String profileUrl;
+	private User defaultLoanManager;
 
 	public RealtorDetail() {
 	}
@@ -54,6 +58,16 @@ public class RealtorDetail implements Serializable {
 
 	public void setProfileUrl(String profileUrl) {
 		this.profileUrl = profileUrl;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "loanmanager_id")
+	public User getDefaultLoanManager() {
+		return defaultLoanManager;
+	}
+
+	public void setDefaultLoanManager(User defaultLoanManager) {
+		this.defaultLoanManager = defaultLoanManager;
 	}
 
 	public static RealtorDetailVO convertFromEntityToVO(
