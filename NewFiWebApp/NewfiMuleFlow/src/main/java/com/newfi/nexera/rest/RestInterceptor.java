@@ -55,7 +55,7 @@ public class RestInterceptor implements Callable
             long currentTime = System.currentTimeMillis();
             long differenceInMilliSeconds = currentTime - generationTime;
             long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
-            if ( differenceInHours >= 4 ) {
+            if ( differenceInHours >= 3 ) {
                 LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
                 NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
