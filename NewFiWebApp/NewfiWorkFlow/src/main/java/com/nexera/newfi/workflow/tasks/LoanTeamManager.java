@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -27,7 +28,8 @@ import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
-public class LoanTeamManager implements IWorkflowTaskExecutor {
+public class LoanTeamManager extends NexeraWorkflowTask implements
+		IWorkflowTaskExecutor {
 
 	@Autowired
 	LoanService loanService;
@@ -43,7 +45,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	private Utils utils;
 
 	public String execute(HashMap<String, Object> objectMap) {
-		return invokeAction(objectMap);
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
@@ -59,7 +61,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
-
+		// DO nothing
 		return null;
 	}
 
@@ -91,6 +93,7 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 		editLoanTeamVO.setLoanID(loanID);
 		editLoanTeamVO.setHomeOwnInsCompanyID(homeOwnInsCompanyID);
 		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
+		String message = null;
 		if (userID != null && userID > 0) {
 			UserVO user = new UserVO();
 			user.setId(userID);
@@ -101,6 +104,12 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			editLoanTeamVO.setOperationResult(result);
 			editLoanTeamVO.setUser(user);
 			changeState(loanID);
+			message = LoanStatus.teamMemberAddedMessage
+					+ " Name : "
+					+ user.getDisplayName()
+					+ " Role : "
+					+ user.getUserRole()
+							.getRoleDescription();
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
@@ -109,6 +118,9 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			editLoanTeamVO.setTitleCompany(company);
 			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
+			message = LoanStatus.titleCompanyAddedMessage
+					+ " Name : "
+					+ company.getName();
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
@@ -117,9 +129,12 @@ public class LoanTeamManager implements IWorkflowTaskExecutor {
 			editLoanTeamVO.setHomeOwnInsCompany(company);
 			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
+			message = LoanStatus.HMInsCompanyAddedMessage + " Name : "
+					+ company.getName();
 		} else
 			return "Bad request";
-
+		if (message != null)
+			makeANote(loanID, message);
 		return new Gson().toJson(editLoanTeamVO);
 	}
 
