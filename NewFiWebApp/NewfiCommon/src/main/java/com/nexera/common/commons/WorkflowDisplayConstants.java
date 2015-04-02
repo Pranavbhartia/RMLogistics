@@ -31,6 +31,6 @@ public class WorkflowDisplayConstants {
 	public static final String EMAIL_TEMPLATE_URL_KEY = "url";
 	public static final String RESPONSE_URL_KEY="url";
 	
-	
+	public static final String WORKFLOW_LM_DECISION = "decision";
 	
 }
