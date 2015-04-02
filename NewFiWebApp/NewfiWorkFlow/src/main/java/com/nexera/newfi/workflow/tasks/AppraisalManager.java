@@ -13,6 +13,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -26,7 +27,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		String status = objectMap.get(
+		/*String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 				.toString();
 		if (status.equals(LoanStatus.appraisalOrdered)) {
@@ -34,21 +35,22 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					LoanStatus.appraisalOrderedMessage);
 			sendEmail(objectMap);
-			return "2";
+			return WorkItemStatus.STARTED.getStatus();
 		} else if (status.equals(LoanStatus.appraisalPending)) {
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					LoanStatus.appraisalPendingMessage);
 			sendEmail(objectMap);
-			return "1";
-		} else if (status.equals(LoanStatus.appraisalReceived)) {
+			return WorkItemStatus.PENDING.getStatus();
+		} else if (status.equals(LoanStatus.appraisalReceived)) {*/
 			makeANote(Integer.parseInt(objectMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 					LoanStatus.appraisalReceivedMessage);
 			sendEmail(objectMap);
-			return "3";
-		}
-		return null;
+			return WorkItemStatus.COMPLETED.getStatus();
+		/*
+		 * } return null;
+		 */
 	}
 
 	@Override
