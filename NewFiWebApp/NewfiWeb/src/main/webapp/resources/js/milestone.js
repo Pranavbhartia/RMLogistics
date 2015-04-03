@@ -381,10 +381,10 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Closing Status";
 			}
-			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS"||ob.workItem.workflowItemType=="VIEW_NEEDS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				callback =paintNeedsInfo;			
+				callback =paintNeedsInfo;
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
@@ -1235,7 +1235,7 @@ function milestoneChildEventHandler(event) {
 		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
 		context.createTitleCompanyPopup();
 	}
-	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS"||$(event.target).attr("data-text") == "VIEW_NEEDS") {
 	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
