@@ -3,6 +3,7 @@ package com.nexera.workflow.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +22,22 @@ import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 
 @Component
+public class WorkflowServiceImpl implements WorkflowService {
 
-public class WorkflowServiceImpl implements WorkflowService
-{
+	@Autowired
+	WorkflowMasterDao workflowMasterDao;
 
-    @Autowired
-    WorkflowMasterDao workflowMasterDao;
+	@Autowired
+	WorkflowExecDao workflowExecDao;
 
-    @Autowired
-    WorkflowExecDao workflowExecDao;
+	@Autowired
+	WorkflowItemExecDao workflowItemExecDao;
 
-    @Autowired
-    WorkflowItemExecDao workflowItemExecDao;
+	@Autowired
+	WorkflowItemMasterDao workflowItemMasterDao;
 
-    @Autowired
-    WorkflowItemMasterDao workflowItemMasterDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( WorkflowServiceImpl.class );
-
-
-    
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(WorkflowServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -74,7 +71,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		workflowExec.setCreatedTime(new Date());
 		workflowExec.setWorkflowMaster(workflowMaster);
 		workflowExec.setStatus(WorkItemStatus.NOT_STARTED.getStatus());
-		
+
 		int id = (Integer) workflowExecDao.save(workflowExec);
 		workflowExec.setId(id);
 		return workflowExec;
@@ -135,6 +132,7 @@ public class WorkflowServiceImpl implements WorkflowService
 		LOGGER.debug("Inside method getWorkflowExecById ");
 		WorkflowItemExec workflowItemExec = (WorkflowItemExec) workflowItemExecDao
 		        .load(WorkflowItemExec.class, workflowexecId);
+		Hibernate.initialize(workflowItemExec.getOnSuccessItem());
 		return workflowItemExec;
 	}
 
@@ -234,16 +232,18 @@ public class WorkflowServiceImpl implements WorkflowService
 
 	}
 
-	@Transactional
+	@Override
+    @Transactional
 	public WorkflowItemMaster getWorkflowByType(String workflowType) {
 		return workflowMasterDao.getWorkflowByType(workflowType);
 	}
 
-	@Transactional
+	@Override
+    @Transactional
 	public WorkflowItemExec getWorkflowItemExecByType(
-			WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
+	        WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
 		return workflowMasterDao.getWorkflowItemExecByType(workflowExec,
-				workflowItemMaster);
+		        workflowItemMaster);
 	}
 
 }
