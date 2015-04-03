@@ -727,7 +727,7 @@ DROP TABLE IF EXISTS `needslistmaster`;
 CREATE TABLE `needslistmaster` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `need_category` varchar(45) DEFAULT NULL,
-  `label` varchar(100) DEFAULT NULL,
+  `label` varchar(500) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,

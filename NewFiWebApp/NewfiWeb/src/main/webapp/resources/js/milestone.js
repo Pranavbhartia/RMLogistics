@@ -1069,7 +1069,7 @@ function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
 	var floatClass = "float-right";
-	if(workflowItem.status!=3||workflowItem.workflowItemType=="NEEDS_STATUS")//force status checking for needed list
+	if(workflowItem.status!=3||workflowItem.workflowItemType=="NEEDS_STATUS"||workflowItem.workflowItemType=="VIEW_NEEDS")//force status checking for needed list
 		workFlowContext.itemsStatesToBeFetched.push(workflowItem.id);
 	var progressClass = getProgressStatusClass(workflowItem.status);
 	var rightLeftClass = "milestone-lc";

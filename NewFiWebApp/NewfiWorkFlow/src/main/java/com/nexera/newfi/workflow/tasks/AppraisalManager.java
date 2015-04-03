@@ -13,7 +13,9 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.enums.WorkItemStatus;
+import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -24,44 +26,36 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 
 	@Autowired
 	private LoanService loanService;
-
+	@Autowired
+	private WorkflowService workflowService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		/*String status = objectMap.get(
-		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
-				.toString();
-		if (status.equals(LoanStatus.appraisalOrdered)) {
-			makeANote(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					LoanStatus.appraisalOrderedMessage);
-			sendEmail(objectMap);
-			return WorkItemStatus.STARTED.getStatus();
-		} else if (status.equals(LoanStatus.appraisalPending)) {
-			makeANote(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					LoanStatus.appraisalPendingMessage);
-			sendEmail(objectMap);
-			return WorkItemStatus.PENDING.getStatus();
-		} else if (status.equals(LoanStatus.appraisalReceived)) {*/
-			makeANote(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-					LoanStatus.appraisalReceivedMessage);
-			sendEmail(objectMap);
-			return WorkItemStatus.COMPLETED.getStatus();
-		/*
-		 * } return null;
-		 */
+		makeANote(
+				Integer.parseInt(objectMap.get(
+						WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+				LoanStatus.appraisalReceivedMessage);
+		sendEmail(objectMap);
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		try {
+			String status=null;
+			int workflowItemExecutionId = Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			WorkflowItemExec currMilestone = workflowService
+					.getWorkflowExecById(workflowItemExecutionId);
+			if(!currMilestone.getStatus().equals(WorkItemStatus.NOT_STARTED.getStatus()))
+				status = "Pending";
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
 					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 					Milestones.APPRAISAL.getMilestoneKey());
-			return mileStone.getComments().toString();
+			if (mileStone != null)
+				status = mileStone.getComments().toString();
+			return status;
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			return "";
@@ -70,13 +64,13 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 

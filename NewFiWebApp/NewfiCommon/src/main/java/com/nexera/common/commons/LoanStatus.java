@@ -21,7 +21,7 @@ public interface LoanStatus {
 	String titleCompanyAddedMessage = "New Title Company Added";
 	String HMInsCompanyAddedMessage = "New Home Owner Insurance Company Added";
 
-	String loanClosed = "Loan Closed";
-	String loanDeclined = "Loan Declined";
-	String loanFunded = "Loan Declined";
+	String loanSuspendedMessage = "Loan Suspended";
+
+	String loanArchivedMessage = "Loan Archived";
 }

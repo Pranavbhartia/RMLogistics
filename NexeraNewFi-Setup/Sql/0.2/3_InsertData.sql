@@ -171,3 +171,99 @@ CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 
 ALTER TABLE `newfi_schema`.`customeremploymentincome` 
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+
+ALTER TABLE `newfi_schema`.`customerspousedetails` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `customersSpouse` INT(11) NULL AFTER `livingSince`,
+ADD INDEX `fk_customerDetailsLinkedToCustomerSpouseDetails_idx` (`customersSpouse` ASC);
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD CONSTRAINT `fk_customerDetailsLinkedToCustomerSpouseDetails`
+  FOREIGN KEY (`customersSpouse`)
+  REFERENCES `newfi_schema`.`customerspousedetails` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  INSERT INTO `newfi_schema`.`customerdetails` (`customerspousedetails`) VALUES ('1');
+  
+  INSERT INTO `newfi_schema`.`customerspousedetails` (`id`) VALUES ('1');
+  
+  ALTER TABLE `newfi_schema`.`customerdetails` 
+DROP FOREIGN KEY `fk_customerDetailsLinkedToCustomerSpouseDetails`;
+ALTER TABLE `newfi_schema`.`customerdetails` 
+DROP COLUMN `customersSpouse`,
+DROP INDEX `fk_customerDetailsLinkedToCustomerSpouseDetails_idx` ;
+
+UPDATE `newfi_schema`.`customerspousedetails` SET `isssIncomeOrDisability`='0', `ssDisabilityIncome`='0' WHERE `id`='1';
+UPDATE `newfi_schema`.`customerspousedetails` SET `isselfEmployed`='0' WHERE `id`='1';
+
+
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `customerEmploymentIncome` INT(11) NULL AFTER `customerspousedetails`,
+ADD INDEX `fk_CustomerDetailLinkedToCustomerEmplIncome_idx` (`customerEmploymentIncome` ASC);
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD CONSTRAINT `fk_CustomerDetailLinkedToCustomerEmplIncome`
+  FOREIGN KEY (`customerEmploymentIncome`)
+  REFERENCES `newfi_schema`.`customeremploymentincome` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  
+  INSERT INTO `newfi_schema`.`customeremploymentincome` (`id`, `EmployedAt`) VALUES ('1', 'Nexera');
+ALTER TABLE `newfi_schema`.`customerbankaccountdetails` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `customerBankAccountDetails` INT(11) NULL AFTER `customerEmploymentIncome`,
+ADD INDEX `fk_CustomerDetailLinkedToCustomerBankAccount_idx` (`customerBankAccountDetails` ASC);
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD CONSTRAINT `fk_CustomerDetailLinkedToCustomerBankAccount`
+  FOREIGN KEY (`customerBankAccountDetails`)
+  REFERENCES `newfi_schema`.`customerbankaccountdetails` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  
+  INSERT INTO `newfi_schema`.`customerbankaccountdetails` (`id`) VALUES ('1');
+  
+ALTER TABLE `newfi_schema`.`customerretirementaccountdetails` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `newfi_schema`.`customerotheraccountdetails` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `customer_retirement_ac_details` INT(11) NULL AFTER `customerBankAccountDetails`,
+ADD INDEX `fk_CustomerDetailLinkedToCustomerRetirementAcDetails_idx` (`customer_retirement_ac_details` ASC);
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD CONSTRAINT `fk_CustomerDetailLinkedToCustomerRetirementAcDetails`
+  FOREIGN KEY (`customer_retirement_ac_details`)
+  REFERENCES `newfi_schema`.`customerretirementaccountdetails` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  
+  ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `customer_other_ac_details` INT(11) NULL AFTER `customer_retirement_ac_details`;
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD INDEX `fk_CustomerDetailLinkedToCustomerOtherAcDetails_idx` (`customer_other_ac_details` ASC);
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD CONSTRAINT `fk_CustomerDetailLinkedToCustomerOtherAcDetails`
+  FOREIGN KEY (`customer_other_ac_details`)
+  REFERENCES `newfi_schema`.`customerotheraccountdetails` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  INSERT INTO `newfi_schema`.`customerotheraccountdetails` (`id`) VALUES ('1');
+
+  INSERT INTO `newfi_schema`.`customerretirementaccountdetails` (`id`) VALUES ('1');
+UPDATE `newfi_schema`.`customerdetails` SET `customer_retirement_ac_details`='1', `customer_other_ac_details`='1' WHERE `id`='41';
+
+
+
+

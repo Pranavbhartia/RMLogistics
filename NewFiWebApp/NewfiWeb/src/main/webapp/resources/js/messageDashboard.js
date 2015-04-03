@@ -33,6 +33,7 @@ function showAgentMessageDashboard() {
 }
 
 function paintConversationPagination(response){
+	
 	var conversations = response.resultObject.messageVOs;
 	paintConversations(conversations);
 }
@@ -172,7 +173,15 @@ function paintCommunicationLog(response){
 	var conversationHistoryWrapper = getConversationHistoryWrapper();
 	$('#conv-main-container').append(msgDashboardWrapper).append(conversationHistoryWrapper);
 	$('#conv-container').html('');
-	var baseUrl = "resources/images/";
+	
+	if(response.error != undefined && response.error.code == 500){
+		showDialogPopup("Connection issue" , "Not able to connect.Please try again after some time" ,
+				function(){
+					location.reload();
+					return false;
+				});
+		return false;
+	}
 	
 	
 	var conversations = response.resultObject.messageVOs;

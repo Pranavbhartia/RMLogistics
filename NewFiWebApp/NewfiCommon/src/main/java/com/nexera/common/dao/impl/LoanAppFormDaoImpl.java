@@ -44,10 +44,39 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		if (null != loanAppForm.getUser()) {
 			
 			if (null != loanAppForm.getUser().getCustomerDetail()){
+				
+				if (null != loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail()) {
+					System.out.println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail()"+loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail());
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail());
+					System.out.println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail()"+loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail());
+					sessionFactory.getCurrentSession().flush();
+				}
+				if (null != loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome()) {
+					System.out.println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome()"+loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome());
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome());
+					System.out.println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome()"+loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome());
+					sessionFactory.getCurrentSession().flush();
+				}
+				if (null != loanAppForm.getUser().getCustomerDetail().getCustomerBankAccountDetails()) {
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerBankAccountDetails());
+					sessionFactory.getCurrentSession().flush();
+				}
+				if (null != loanAppForm.getUser().getCustomerDetail().getCustomerRetirementAccountDetails()) {
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerOtherAccountDetails());
+					sessionFactory.getCurrentSession().flush();
+				}
+				if (null != loanAppForm.getUser().getCustomerDetail().getCustomerBankAccountDetails()) {
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerBankAccountDetails());
+					sessionFactory.getCurrentSession().flush();
+				}
+				
+				
 				System.out.println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
 				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
 				System.out.println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"+loanAppForm.getUser().getCustomerDetail().getId());
 				sessionFactory.getCurrentSession().flush();
+				
+				
 			}
 			System.out.println("Before saveOrUpdate(loanAppForm.getUser()"+loanAppForm.getUser().getId());
 			//this.saveOrUpdate(loanAppForm.getUser());
@@ -72,11 +101,12 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getRefinancedetails().getId());
 			sessionFactory.getCurrentSession().flush();
 		}if (null != loanAppForm.getPurchaseDetails()) {
-			System.out.println("Before saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getPurchaseDetails().getId());
+			System.out.println("Before saveOrUpdate(loanAppForm.getPurchaseDetails()"+loanAppForm.getPurchaseDetails().getId());
 			this.saveOrUpdate(loanAppForm.getPurchaseDetails());
-			System.out.println("After saveOrUpdate(loanAppForm.getRefinancedetails()"+loanAppForm.getPurchaseDetails().getId());
+			System.out.println("After saveOrUpdate(loanAppForm.getPurchaseDetails()"+loanAppForm.getPurchaseDetails().getId());
 			sessionFactory.getCurrentSession().flush();
 		}
+		
  
 		this.saveOrUpdate(loanAppForm);
 		
@@ -115,6 +145,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(loanAppForm.getGovernmentquestion());
 		Hibernate.initialize(loanAppForm.getRefinancedetails());
 		Hibernate.initialize(loanAppForm.getPropertyTypeMaster());
+		Hibernate.initialize(loanAppForm.getPurchaseDetails());
+		
 		Hibernate.initialize(loanAppForm.getLoan());
 		Hibernate.initialize(loanAppForm.getUser());
 		User temp = loanAppForm.getUser();
@@ -124,6 +156,12 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		temp.setCustomerDetail(cdTemp);
 		loanAppForm.setUser(temp);
 		Hibernate.initialize(loanAppForm.getLoanTypeMaster());
+		
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail().getCustomerSpouseDetail());
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome());
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail().getCustomerBankAccountDetails());
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail().getCustomerRetirementAccountDetails());
+		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail().getCustomerOtherAccountDetails());
 		
 		return loanAppForm;
     }

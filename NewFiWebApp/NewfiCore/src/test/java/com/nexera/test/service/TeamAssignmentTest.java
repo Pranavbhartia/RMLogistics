@@ -24,12 +24,10 @@ public class TeamAssignmentTest {
 
 	@Test
 	public void testGetDefaultLoanManagerForRealtorUrl() {
-		// fail("Not yet implemented");
+		UserVO realtor = new UserVO();
+		realtor.setId(12);
+		UserVO userVO = teamAssignmentHelper
+		        .getDefaultLoanManagerForRealtorUrl(realtor, "RI");
+		System.out.println("Loan manager will be: " + userVO);
 	}
-
-	@Test
-	public void testGetDefaultLoanManagerForLoanManagerUrl() {
-		// fail("Not yet implemented");
-	}
-
 }
