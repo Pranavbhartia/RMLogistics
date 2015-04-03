@@ -614,4 +614,15 @@ LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
 
 		return User.convertFromEntityToVO(users.get(0));
 	}
+
+	@Override
+	public void updateLoginTime(Date date, int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.lastLoginDate=:DATE WHERE usr.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("ID", userId);
+		query.setTimestamp("DATE", date);
+		int result = query.executeUpdate();
+
+	}
 }

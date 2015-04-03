@@ -52,8 +52,6 @@ public interface UserProfileService {
 
 	public List<User> fetchAllActiveUsers();
 
-
-
 	public List<UserVO> getUsersList();
 
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
