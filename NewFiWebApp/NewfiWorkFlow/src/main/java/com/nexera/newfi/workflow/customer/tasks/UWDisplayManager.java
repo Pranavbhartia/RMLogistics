@@ -30,12 +30,6 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String checkStatus(HashMap<String, Object> inputMap) {
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
@@ -47,6 +41,12 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 			LOG.error(e.getMessage());
 			return "";
 		}
+	}
+
+	@Override
+	public String checkStatus(HashMap<String, Object> inputMap) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
