@@ -1,6 +1,7 @@
 var userDescription="Sales Manager";
 //var userRoleCdForAdmin="SYSTEM"
 $(document).on('click',function(e){
+	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
 	}
@@ -130,7 +131,7 @@ function getSearchResultForAdmin(searchValue)
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "admin-dashboard-container",
-		"class" : "rp-agent-dashboard-admin float-left-admin"
+		"class" : "rp-agent-dashboard-admin lp-item float-left-admin"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
      getSearchResultDataForAdmin(searchValue);
@@ -151,6 +152,7 @@ function getSearchResultDataForAdmin(searchValue)
 //TODO to load user mangement page
 function userManagement(){
 $('#right-panel').html('');
+
 	paintAdminDashboard();
 	
 }
@@ -164,6 +166,7 @@ $('.lp-right-arrow').remove();
 		"class" : "rp-agent-dashboard-admin float-left-admin"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
+	bindDataToAdminPN();
     getAdminDashboardRightPanel();
 
 

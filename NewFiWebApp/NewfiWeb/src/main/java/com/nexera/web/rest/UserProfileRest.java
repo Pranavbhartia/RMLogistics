@@ -27,10 +27,12 @@ import com.google.gson.JsonObject;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanTeamListVO;
@@ -350,28 +352,31 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.GET)
-	public @ResponseBody String deleteUser(@PathVariable Integer userId) {
+	public @ResponseBody CommonResponseVO deleteUser(
+	        @PathVariable Integer userId) {
 
 		LOG.info("Delete user with user id : " + userId);
+		CommonResponseVO response = new CommonResponseVO();
 
-		JsonObject result = new JsonObject();
-		String status;
 		try {
 			UserVO userVO = userProfileService.findUser(userId);
 
-			status = userProfileService.deleteUser(userVO);
-			result.addProperty("Message", status);
+			userProfileService.deleteUser(userVO);
+			response.setResultObject(userVO);
 
-		} catch (DatabaseException e) {
-			LOG.error("disableUser : DatabaseException thrown, message : "
-			        + e.getMessage());
-			e.printStackTrace();
-			result.addProperty("success", 0);
-			result.addProperty("message", "Error while functioning.Please try again later");
-		}
+		} catch (InputValidationException e) {
+			LOG.error("error and message is : " + e.getMessage());
+			ErrorVO error = new ErrorVO();
+			error.setMessage(e.getMessage());
+			response.setError(error);
 
-		LOG.info("Returning the json" + result.toString());
-		return result.toString();
+		} catch (Exception e) {
+			LOG.error("error and message is : " + e.getMessage());
+			ErrorVO error = new ErrorVO();
+			error.setMessage(e.getMessage());
+			response.setError(error);
+        }
+		return response;
 
 	}
 

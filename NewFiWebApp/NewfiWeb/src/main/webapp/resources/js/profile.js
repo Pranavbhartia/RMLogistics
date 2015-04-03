@@ -659,12 +659,11 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getStateRow(user) {
@@ -685,7 +684,7 @@ function getStateRow(user) {
 	}).bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
-			if($('#state-dropdown-wrapper').has('.state-dropdown-row').size() <= 0){
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
 				appendStateDropDown('state-dropdown-wrapper');
 			}else{
 				toggleStateDropDown();
@@ -704,7 +703,7 @@ function getStateRow(user) {
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
-		"id" : "state-dropdown-wrapper",
+		"id" : "state-dro;pdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
 	
@@ -742,9 +741,6 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
-	$('#state-dropdown-wrapper').perfectScrollbar({
-		suppressScrollX : true
-	});
 }
 
 function findStateIdForStateCode(stateCode) {
@@ -825,12 +821,11 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getPhone1Row(user) {
@@ -972,18 +967,15 @@ var row = $('<div>').attr({
 	var checkBox = $('<div>').attr({
 		"class" : "admin-doc-checkbox doc-checkbox float-left",		
 		"id" : "alertSMSPreferenceID",		
-		
+		"value":user.customerDetail.mobileAlertsPreference,
 
 	}).on("click",function(e){
 	if($(this).prop("checked")){
-		
 		    checkBox.addClass('doc-checked');
-	        
+	
             }
             else if($(this).prop("checked")){
-				
             	checkBox.addClass('doc-unchecked');
-			
             }
 	
 	});
@@ -1186,12 +1178,10 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('.admin-doc-checkbox').hasClass('doc-checked')){
-		console.log("in if");
-		customerDetails.mobileAlertsPreference = true;
-		}
-	else {
-			console.log("in else");
+	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
+		
+		customerDetails.mobileAlertsPreference = true;}else{
+			
 		customerDetails.mobileAlertsPreference = false;
 		}
 
