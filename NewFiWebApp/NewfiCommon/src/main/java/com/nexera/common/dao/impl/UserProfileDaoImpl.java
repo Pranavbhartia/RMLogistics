@@ -106,7 +106,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userId));
-		return (User) criteria.uniqueResult();
+		User user = (User) criteria.uniqueResult();
+		Hibernate.initialize(user.getInternalUserDetail());
+		return user;
 	}
 
 	@Override
@@ -616,4 +618,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		int result = query.executeUpdate();
 
 	}
+		@Override
+	public Integer updateInternalUserDetail(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.activeInternal = :activeInternal WHERE internalusr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("activeInternal", user.getInternalUserDetail()
+		        .getActiveInternal());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
+
+}
+
 }

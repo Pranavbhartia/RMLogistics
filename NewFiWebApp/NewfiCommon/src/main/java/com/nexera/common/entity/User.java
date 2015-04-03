@@ -402,6 +402,9 @@ public class User implements Serializable, UserDetails {
 			userVO.setEmailId(user.getEmailId());
 			userVO.setDisplayName(user.getFirstName() + " "
 			        + user.getLastName());
+			if(user.getStatus()!=null){
+				userVO.setStatus(user.getStatus());
+			}
 			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail

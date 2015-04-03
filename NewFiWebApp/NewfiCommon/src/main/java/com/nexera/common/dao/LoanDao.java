@@ -126,5 +126,12 @@ public interface LoanDao extends GenericDao
 
 
     public LoanNeedsList fetchLoanNeedsByFileId( UploadedFilesList uploadedFileList );
+    
+    public List<LoanTeam> getLoanListBasedOnUser(User user);
+
+
+	public boolean checkLoanDependency(User user);
+    
+
 
 }
