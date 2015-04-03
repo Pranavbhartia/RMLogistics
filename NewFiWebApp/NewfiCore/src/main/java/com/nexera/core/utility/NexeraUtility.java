@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -51,6 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -574,7 +577,7 @@ public class NexeraUtility {
 		 LOGGER.info("The s3path = "+s3Path);
 	      
 		 // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
-		 InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(s3Path , String.valueOf(1));
+		 InputStream inputStream = getInputStreamFromFile(s3Path , String.valueOf(1));
     	 // get output stream of the response
 		 OutputStream outStream = response.getOutputStream();
 
@@ -589,5 +592,37 @@ public class NexeraUtility {
 		 inputStream.close();
 		 outStream.close();
 	}
+	
+	public InputStream getInputStreamFromFile(String fileUrl , String isImage) throws Exception
+			 {
+		
+		/*String extention = null;
+		if(isImage.equals("0")){
+			extention = ".pdf";
+		}else{
+			extention = ".jpeg";
+		}
+		
+		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+extention);
+		 File initialFile = new File(filePth);*/
+		 InputStream input = null;
+		try {
+			input = new URL(fileUrl).openStream();
+		} catch ( IOException e) {
+			// TODO Auto-generated catch block
+			throw new NonFatalException("Exception in reading thumbnail");
+			
+		}finally{
+			try {
+				input.close();
+			} catch (IOException e) {
+				LOGGER.info("exception in closing document");
+			}
+		}
+		 
+		
+		 return input;
+	}
+	
 	
 }

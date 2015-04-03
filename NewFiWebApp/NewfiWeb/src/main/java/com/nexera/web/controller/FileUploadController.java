@@ -48,7 +48,7 @@ public class FileUploadController {
 			response.setContentType("application/pdf");
 			uploadedFilesListService.getFileContentFromLQBUsingUUID(response,
 			        uuid);
-
+			
 		} else {
 			fileURL = uplList.getS3ThumbPath();
 			nexeraUtility.getStreamForThumbnailFromS3Path(response, fileURL);
