@@ -618,7 +618,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		int result = query.executeUpdate();
 
 	}
-		@Override
+
+	@Override
 	public Integer updateInternalUserDetail(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE InternalUserDetail internalusr set internalusr.activeInternal = :activeInternal WHERE internalusr.id = :id";
@@ -630,7 +631,5 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		LOG.info("updated Successfully");
 		return result;
 	}
-
-}
 
 }

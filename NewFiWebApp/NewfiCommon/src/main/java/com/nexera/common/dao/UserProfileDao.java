@@ -68,4 +68,8 @@ public interface UserProfileDao extends GenericDao {
 	        String stateName);
 
 	Integer updateInternalUserDetail(User user);
+
+	UserVO getDefaultSalesManager();
+
+	void updateLoginTime(Date date, int userId);
 }
