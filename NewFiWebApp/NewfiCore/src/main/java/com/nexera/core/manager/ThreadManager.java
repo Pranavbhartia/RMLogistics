@@ -270,10 +270,13 @@ public class ThreadManager implements Runnable {
 									        loadResponseList,
 									        loanMilestoneMaster);
 
-								List<String> workflowItemTypeList = new ArrayList<String>();
+								List<String> workflowItemTypeList = null;
 								if (wItemMSInfo != null) {
 									workflowItemTypeList = wItemMSInfo
 									        .getWorkItems();
+									if (workflowItemTypeList == null) {
+										workflowItemTypeList = new ArrayList<String>();
+									}
 								}
 
 								List<WorkflowItemExec> itemToExecute = itemToExecute(
