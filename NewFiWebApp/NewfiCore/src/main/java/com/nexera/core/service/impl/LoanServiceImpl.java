@@ -582,14 +582,17 @@ public class LoanServiceImpl implements LoanService {
 
 			// If loan team contains other users, then add those users to
 			// the team automatically.
-			for (UserVO userVO : userList) {
-				// If the user is not already added to the team
-				if (userVO.getId() != defaultLanManager.getId()
-				        && userVO.getId() != e.getId()) {
-					LoanTeam team = new LoanTeam();
-					User userTeam = User.convertFromVOToEntity(userVO);
-					team.setUser(userTeam);
-					team.setLoan(loan);
+			if (userList != null) {
+				for (UserVO userVO : userList) {
+					// If the user is not already added to the team
+					if (userVO.getId() != defaultLanManager.getId()
+					        && userVO.getId() != e.getId()) {
+						LoanTeam team = new LoanTeam();
+						User userTeam = User.convertFromVOToEntity(userVO);
+						team.setUser(userTeam);
+						team.setLoan(loan);
+					}
+
 				}
 
 			}

@@ -591,8 +591,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        InternalUserRolesEum.SM.getRoleId()));
 		List<User> users = criteria.list();
 		if (users == null || users.isEmpty()) {
-			LOG.error("This cannot happen, there has to be a sales manager in the system");
+			LOG.error("This cannot happen, there has to be a sales manager in the system ");
+			// TODO: Write to error table and email
 			return null;
+
 		}
 		if (users.size() > 1) {
 			LOG.warn("There are more than one sales manager in the system, which is not handled. Checking if user name contains pat, and returning that user. IF not found, then returning the first instance");
