@@ -404,19 +404,24 @@ public class User implements Serializable, UserDetails {
 			userVO.setEmailId(user.getEmailId());
 			userVO.setDisplayName(user.getFirstName() + " "
 			        + user.getLastName());
-			if(user.getStatus()!=null){
+			if (user.getStatus() != null) {
 				userVO.setStatus(user.getStatus());
 			}
 			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
-			List<InternalUserStateMappingVO> internalUserStateMappingVOs=new ArrayList<InternalUserStateMappingVO>();
-			for (InternalUserStateMapping internalUserStateMapping : user.getInternalUserStateMappings()) {
-				internalUserStateMappingVOs.add(InternalUserStateMapping.convertFromEntityToVO(internalUserStateMapping));
+			List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
+			if (user.getInternalUserStateMappings() != null) {
+				for (InternalUserStateMapping internalUserStateMapping : user
+				        .getInternalUserStateMappings()) {
+					internalUserStateMappingVOs.add(InternalUserStateMapping
+					        .convertFromEntityToVO(internalUserStateMapping));
+				}
+
 			}
-			
-			userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);	
+
+			userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 		}
 		return userVO;
 	}
