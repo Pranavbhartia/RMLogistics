@@ -161,6 +161,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public List<User> getUsersList() {
+
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 
@@ -175,13 +176,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		String searchQuery = "FROM User where ";
 
 		if (user.getEmailId() != null)
-			searchQuery += " email_id like '%" + user.getEmailId() + "%' or ";
+			searchQuery += " email_id like '" + user.getEmailId() + "%' ";
 
 		if (user.getFirstName() != null)
+
 			user.setFirstName(user.getFirstName().toLowerCase());
 		else
 			user.setFirstName("");
-		searchQuery += " lower(concat( first_name,',',last_name) ) like '%"
+		searchQuery += " or lower(concat( first_name,',',last_name) ) like '"
 		        + user.getFirstName() + "%'";
 
 		if (user.getUserRole() != null) {
@@ -531,6 +533,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 						todaysLoanCount++;
 						user.setTodaysLoansCount(todaysLoanCount);
 					}
+
 					user.getLoans().add(loanTeam.getLoan());
 
 				}

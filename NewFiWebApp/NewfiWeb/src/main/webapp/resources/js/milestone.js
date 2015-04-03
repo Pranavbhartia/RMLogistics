@@ -758,9 +758,12 @@ function getMilestoneTeamMembeTable(input,workItem) {
 	userList=input.users;
 	if(!userList ||  userList.length==0)
 		return;
-	
+	var clas="milestone-lc-text";
+	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
+	if(rightClassCheck)
+		clas="milestone-rc-text";
 	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text showAnchor",
+		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
 	}).html("Click here to add a Team Member").bind("click", function(e) {
