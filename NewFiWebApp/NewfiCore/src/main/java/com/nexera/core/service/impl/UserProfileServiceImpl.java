@@ -43,9 +43,11 @@ import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
@@ -54,13 +56,20 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.service.LoanAppFormService;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 @Transactional
@@ -89,6 +98,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private MessageUtils messageUtils;
 
 	private SecureRandom randomGenerator;
+
+	@Autowired
+	private LoanService loanService;
+
+	@Autowired
+	WorkflowCoreService workflowCoreService;
+
+	@Autowired
+	protected LoanAppFormService loanAppFormService;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
@@ -815,4 +833,65 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return errors;
 	}
 
+	@Override
+	@Transactional
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)
+	        throws FatalException {
+
+		try {
+			// CustomerEnagagement customerEnagagement =
+			// userVO.getCustomerEnagagement();
+			UserVO userVO = loaAppFormVO.getUser();
+			String emailId = userVO.getEmailId();
+
+			userVO.setUsername(userVO.getEmailId().split(":")[0]);
+			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
+			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			// String password = userVO.getPassword();
+			// UserVO userVOObj= userProfileService.saveUser(userVO);
+			UserVO userVOObj = null;
+			LoanVO loanVO = null;
+
+			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
+			userVOObj = this.createNewUserAndSendMail(userVO);
+			// insert a record in the loan table also
+			loanVO = new LoanVO();
+
+			loanVO.setUser(userVOObj);
+
+			loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
+			loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
+
+			// Currently hardcoding to refinance, this has to come from UI
+			// TODO: Add LoanTypeMaster dynamically based on option selected
+			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+
+			loanVO = loanService.createLoan(loanVO);
+			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+			// create a record in the loanAppForm table
+
+			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+			// userVOObj.setCustomerEnagagement(customerEnagagement);
+			loanAppFormVO.setUser(userVOObj);
+			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
+			        .getPropertyTypeMaster());
+			loanAppFormVO.setRefinancedetails(loaAppFormVO
+			        .getRefinancedetails());
+
+			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+			// loanAppFormVO.setLoanType(new
+			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			// }
+			LOG.info("loanAppFormService.create(loanAppFormVO)");
+			loanAppFormService.create(loanAppFormVO);
+
+			return userVOObj;
+		} catch (Exception e) {
+			LOG.error("User registration failed. Generating an alert"
+			        + loaAppFormVO);
+			throw new FatalException("Error in User registration", e);
+		}
+	}
 }
