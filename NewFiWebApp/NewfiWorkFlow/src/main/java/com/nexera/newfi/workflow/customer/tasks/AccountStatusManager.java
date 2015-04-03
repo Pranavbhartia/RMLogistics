@@ -34,10 +34,9 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-				WorkItemStatus.COMPLETED.getStatus());
+		        WorkItemStatus.COMPLETED.getStatus());
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
