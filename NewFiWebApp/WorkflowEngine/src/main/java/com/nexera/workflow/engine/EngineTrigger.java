@@ -4,8 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +52,11 @@ public class EngineTrigger {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	public static Set<WorkflowItemMaster> customerWorkflowItemMasterSet = new HashSet<WorkflowItemMaster>();
+	public static Set<WorkflowItemMaster> loanManagerWorkflowItemMasterSet = new HashSet<WorkflowItemMaster>();
+	public static WorkflowExec customerWorkflowExec;
+	public static WorkflowExec loanManagerWorkflowExec;
+
 	@Transactional
 	public Integer triggerWorkFlow(String workflowJsonString) {
 		LOGGER.debug("Triggering a workflow ");
@@ -66,11 +73,18 @@ public class EngineTrigger {
 				        + workflowMaster.getWorkflowType());
 				WorkflowExec workflowExec = workflowService
 				        .setWorkflowIntoExecution(workflowMaster);
+				if (workflowMaster.getWorkflowType().equalsIgnoreCase(
+				        WorkflowConstants.CUSTOMER_WORKFLOW_TYPE)) {
+					customerWorkflowExec = workflowExec;
+				} else {
+					loanManagerWorkflowExec = workflowExec;
+				}
 				LOGGER.debug("Workflow has been put into execution , Getting all items associated with workflow ");
 				List<WorkflowItemMaster> workflowItemMasterList = workflowService
 				        .getWorkflowItemMasterListByWorkflowMaster(workflowMaster);
 				for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
 					LOGGER.debug("Initializing all workflow items ");
+					WorkflowItemExec workflowItemExec = null;
 					if (workflowService
 					        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
 						continue;
@@ -78,7 +92,7 @@ public class EngineTrigger {
 
 					if (!workflowItemMaster.getChildWorkflowItemMasterList()
 					        .isEmpty()) {
-						WorkflowItemExec workflowItemExec = workflowService
+						workflowItemExec = workflowService
 						        .setWorkflowItemIntoExecution(workflowExec,
 						                workflowItemMaster, null);
 						for (WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
@@ -86,23 +100,60 @@ public class EngineTrigger {
 							LOGGER.debug("In this case will add parent workflow item execution id ");
 							if (childworkflowItemMaster.getOnSuccess() != null) {
 								LOGGER.debug("It has a successs item ");
+								WorkflowItemExec successWorkflowItemExec = null;
 								WorkflowItemMaster successItemMaster = childworkflowItemMaster
 								        .getOnSuccess();
-								WorkflowItemExec successWorkflowItemExec = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                successItemMaster,
-								                workflowItemExec);
+								if (checkWhetherItBelongsToThisWorkflow(
+								        successItemMaster, workflowMaster)) {
+									successWorkflowItemExec = workflowService
+									        .setWorkflowItemIntoExecution(
+									                workflowExec,
+									                successItemMaster, null);
+								} else {
+									if (successItemMaster
+									        .getParentWorkflowMaster()
+									        .getWorkflowType()
+									        .equalsIgnoreCase(
+									                WorkflowConstants.CUSTOMER_WORKFLOW_TYPE)) {
+										for (WorkflowItemMaster workflowItemSuccess : customerWorkflowItemMasterSet) {
+											if (successItemMaster.getId() == workflowItemSuccess
+											        .getId()) {
+												if (successWorkflowItemExec == null)
+													successWorkflowItemExec = workflowService
+													        .setWorkflowItemIntoExecution(
+													                customerWorkflowExec,
+													                successItemMaster,
+													                null);
+											}
+										}
 
-								WorkflowItemExec childItem = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                childworkflowItemMaster,
-								                workflowItemExec);
-								childItem
-								        .setOnSuccessItem(successWorkflowItemExec);
-								workflowService
-								        .updateWorkflowItemExecutionStatus(childItem);
+									} else {
+										for (WorkflowItemMaster workflowItemSuccess : loanManagerWorkflowItemMasterSet) {
+											if (successItemMaster.getId() == workflowItemSuccess
+											        .getId()) {
+												if (successWorkflowItemExec == null)
+													successWorkflowItemExec = workflowService
+													        .setWorkflowItemIntoExecution(
+													                loanManagerWorkflowExec,
+													                successItemMaster,
+													                null);
+											}
+										}
+
+									}
+								}
+								if (successWorkflowItemExec == null) {
+									LOGGER.debug("It had a success , hence not adding again ");
+									WorkflowItemExec childItem = workflowService
+									        .setWorkflowItemIntoExecution(
+									                workflowExec,
+									                childworkflowItemMaster,
+									                workflowItemExec);
+									childItem
+									        .setOnSuccessItem(successWorkflowItemExec);
+									workflowService
+									        .updateWorkflowItemExecutionStatus(childItem);
+								}
 
 							}
 							if (!workflowService
@@ -120,12 +171,47 @@ public class EngineTrigger {
 
 								WorkflowItemMaster successItemMaster = workflowItemMaster
 								        .getOnSuccess();
-								successWorkflowItemExec = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                successItemMaster, null);
+								if (checkWhetherItBelongsToThisWorkflow(
+								        successItemMaster, workflowMaster)) {
+									successWorkflowItemExec = workflowService
+									        .setWorkflowItemIntoExecution(
+									                workflowExec,
+									                successItemMaster, null);
+								} else {
+									if (successItemMaster
+									        .getParentWorkflowMaster()
+									        .getWorkflowType()
+									        .equalsIgnoreCase(
+									                WorkflowConstants.CUSTOMER_WORKFLOW_TYPE)) {
+										for (WorkflowItemMaster workflowItemSuccess : customerWorkflowItemMasterSet) {
+											if (successItemMaster.getId() == workflowItemSuccess
+											        .getId()) {
+												if (successWorkflowItemExec == null)
+													successWorkflowItemExec = workflowService
+													        .setWorkflowItemIntoExecution(
+													                customerWorkflowExec,
+													                successItemMaster,
+													                null);
+											}
+										}
+
+									} else {
+										for (WorkflowItemMaster workflowItemSuccess : loanManagerWorkflowItemMasterSet) {
+											if (successItemMaster.getId() == workflowItemSuccess
+											        .getId()) {
+												if (successWorkflowItemExec == null)
+													successWorkflowItemExec = workflowService
+													        .setWorkflowItemIntoExecution(
+													                loanManagerWorkflowExec,
+													                successItemMaster,
+													                null);
+											}
+										}
+
+									}
+								}
 							}
-							WorkflowItemExec workflowItemExec = workflowService
+							workflowItemExec = workflowService
 							        .setWorkflowItemIntoExecution(workflowExec,
 							                workflowItemMaster, null);
 							if (successWorkflowItemExec != null) {
@@ -137,6 +223,7 @@ public class EngineTrigger {
 
 						}
 					}
+
 				}
 
 				/* } */
@@ -145,6 +232,27 @@ public class EngineTrigger {
 		}
 		return 0;
 
+	}
+
+	private boolean checkWhetherItBelongsToThisWorkflow(
+	        WorkflowItemMaster workflowItemMaster, WorkflowMaster workflowMaster) {
+
+		if (workflowItemMaster.getParentWorkflowMaster().getWorkflowType()
+		        .equalsIgnoreCase(workflowMaster.getWorkflowType())) {
+			return true;
+		} else {
+			if (workflowItemMaster
+			        .getParentWorkflowMaster()
+			        .getWorkflowType()
+			        .equalsIgnoreCase(
+			                WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE)) {
+				loanManagerWorkflowItemMasterSet.add(workflowItemMaster);
+				return false;
+			} else {
+				customerWorkflowItemMasterSet.add(workflowItemMaster);
+				return false;
+			}
+		}
 	}
 
 	public String startWorkFlowItemExecution(int workflowItemExecutionId) {

@@ -88,6 +88,10 @@ public class InternalUserDetail implements Serializable {
 			return null;
 
 		InternalUserDetailVO detailVO = new InternalUserDetailVO();
+		detailVO.setId(internalUserDetail.getId());
+		if (internalUserDetail != null) {
+			detailVO.setActiveInternal(internalUserDetail.getActiveInternal());
+		}
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster()));
 
@@ -104,7 +108,10 @@ public class InternalUserDetail implements Serializable {
 		InternalUserDetail detail = new InternalUserDetail();
 		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
 		        .getInternalUserRoleMasterVO()));
-
+		detail.setId(internalUserDetailVO.getId());
+		if (internalUserDetailVO.getActiveInternal() != null) {
+			detail.setActiveInternal(internalUserDetailVO.getActiveInternal());
+		}
 		return detail;
 	}
 

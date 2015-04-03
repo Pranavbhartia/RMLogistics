@@ -11,6 +11,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 
 public interface UserProfileService {
@@ -44,7 +45,7 @@ public interface UserProfileService {
 	public UserVO createNewUserAndSendMail(UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	public void deleteUser(UserVO userVO);
+	public void deleteUser(UserVO userVO) throws Exception;
 
 	public User findUserByMail(String userMailAddress);
 
@@ -57,5 +58,7 @@ public interface UserProfileService {
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
 	        throws FileNotFoundException, IOException, InvalidInputException,
 	        UndeliveredEmailException, NoRecordsFetchedException;
+
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO);
 
 }

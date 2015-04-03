@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -255,25 +256,6 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	}
 	
-	public InputStream getInputStreamFromFile(String fileUrl , String isImage)
-			throws Exception {
-		
-		String extention = null;
-		if(isImage.equals("0")){
-			extention = ".pdf";
-		}else{
-			extention = ".jpeg";
-		}
-		
-		 String filePth = downloadFile(fileUrl, nexeraUtility.tomcatDirectoryPath()+File.separator+ nexeraUtility.randomStringOfLength()+extention);
-		 File initialFile = new File(filePth);
-		 InputStream targetStream = new FileInputStream(initialFile);
-		 
-		 if(initialFile.exists()){
-			 initialFile.delete();
-		 }
-		 return targetStream;
-	}
 	
 	public static long generateRandomString() {
 		// TODO Auto-generated method stub

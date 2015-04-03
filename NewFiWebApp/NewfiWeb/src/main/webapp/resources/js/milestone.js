@@ -143,7 +143,13 @@ var workFlowContext = {
 		var childList = [];
 		workFlowContext.itemsStatesToBeFetched=[];
 		workFlowContext.mileStoneContextList={};
-		for (var i = 0; i < workItemExecList.length; i++) {
+
+		for (var i = 0; i < ob.mileStoneStepsStructured.length; i++) {
+			var parentWorkItem=ob.mileStoneStepsStructured[i];
+			appendMilestoneItem(parentWorkItem, parentWorkItem.childList);
+		}
+
+		/*for (var i = 0; i < workItemExecList.length; i++) {
 			var currentWorkItem = workItemExecList[i];
 			if (i == 0) {
 				parentWorkItem = currentWorkItem;
@@ -170,7 +176,7 @@ var workFlowContext = {
 			appendMilestoneItem(parentWorkItem, childList);
 		} else if (childList.length == 0) {
 			appendMilestoneItem(parentWorkItem);
-		}
+		}*/
 		countOfTasks=0;
 		adjustBorderMilestoneContainer();
 		if (callback) {
@@ -204,8 +210,8 @@ var workFlowContext = {
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			ob.getMileStoneSteps(role, function(ob) {
+				ob.structureParentChild();
 				ob.renderMileStoneSteps(function(){
-					ob.structureParentChild();
 					ob.fetchLatestStatus();
 				});
 			});
@@ -340,7 +346,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.workItem.workflowItemType
 			});
-			var ajaxURL = "";	
+			var ajaxURL = "";
+			data.loanID=workFlowContext.loanId;
 			//need to move this logic to a different function
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
@@ -355,21 +362,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
 			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=ob.workItem.workflowItemType == "LOCK_YOUR_RATE"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
 			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Pending";
-			}
-			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to view Appraisal Status";
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -381,21 +381,17 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Closing Status";
 			}
-			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS"||ob.workItem.workflowItemType=="VIEW_NEEDS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=selectedUserDetail.loanID;
-				callback =paintNeedsInfo;			
+				callback =paintNeedsInfo;
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				data.loanID=selectedUserDetail.loanID;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=workFlowContext.loanId;
-				//ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
 			}
 			
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
@@ -409,15 +405,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Click here to lock your rate";
 						
 			}
-			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL")
+			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Not ordered";
-						
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				/*ob.workItem.stateInfo = "Not ordered";*/
 			}
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;				
+				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;
 				data.loanID = newfi.user.defaultLoanId;
 				callback = paintMilestoneTeamMemberTable;		
 			}
@@ -1240,7 +1235,7 @@ function milestoneChildEventHandler(event) {
 		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
 		context.createTitleCompanyPopup();
 	}
-	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS"||$(event.target).attr("data-text") == "VIEW_NEEDS") {
 	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
