@@ -46,6 +46,7 @@ public class ShopperRegistrationController {
 		try {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
 			        LoanAppFormVO.class);
+			String emailId = loaAppFormVO.getUser().getEmailId();
 			LOG.info("calling 1234 "
 			        + loaAppFormVO.getRefinancedetails()
 			                .getCurrentMortgageBalance());
@@ -53,8 +54,7 @@ public class ShopperRegistrationController {
 
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
 			LOG.info("User succesfully created" + user);
-			authenticateUserAndSetSession(loaAppFormVO.getUser().getEmailId(),
-			        user.getPassword(), request);
+			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
