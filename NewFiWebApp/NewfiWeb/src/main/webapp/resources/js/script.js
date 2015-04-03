@@ -3284,7 +3284,21 @@ function getYearSlider(){
 
 		"value" : "3",
 
-		"text" : "3 - year fixed arm"
+		"text" : "3 - year fixed arm",
+		"rateVO": [
+                   {
+                       "teaserRate": "3.000",
+                       "closingCost": "0"
+                   },
+                   {
+                       "teaserRate": "2.875",
+                       "closingCost": "$1,782.62"
+                   },
+                   {
+                       "teaserRate": "2.750",
+                       "closingCost": "$3,512.43"
+                   }
+               ]
 
 	},
 
@@ -3292,7 +3306,21 @@ function getYearSlider(){
 
 		"value" : "5",
 
-		"text" : "5 - year fixed arm"
+		"text" : "5 - year fixed arm",
+		"rateVO": [
+                   {
+                       "teaserRate": "3.000",
+                       "closingCost": "0"
+                   },
+                   {
+                       "teaserRate": "2.875",
+                       "closingCost": "$1,782.62"
+                   },
+                   {
+                       "teaserRate": "2.750",
+                       "closingCost": "$3,512.43"
+                   }
+               ]
 
 	},
 
@@ -3300,7 +3328,21 @@ function getYearSlider(){
 
 		"value" : "7",
 
-		"text" : "7 - year fixed arm"
+		"text" : "7 - year fixed arm",
+		"rateVO": [
+                   {
+                       "teaserRate": "3.000",
+                       "closingCost": "0"
+                   },
+                   {
+                       "teaserRate": "2.875",
+                       "closingCost": "$1,782.62"
+                   },
+                   {
+                       "teaserRate": "2.750",
+                       "closingCost": "$3,512.43"
+                   }
+               ]
 
 	},
 
@@ -3308,7 +3350,21 @@ function getYearSlider(){
 
 		"value" : "15",
 
-		"text" : "15 - year fixed arm"
+		"text" : "15 - year fixed arm",
+		"rateVO": [
+                   {
+                       "teaserRate": "3.000",
+                       "closingCost": "0"
+                   },
+                   {
+                       "teaserRate": "2.875",
+                       "closingCost": "$1,782.62"
+                   },
+                   {
+                       "teaserRate": "2.750",
+                       "closingCost": "$3,512.43"
+                   }
+               ]
 
 	},
 
@@ -3316,7 +3372,21 @@ function getYearSlider(){
 
 		"value" : "30",
 
-		"text" : "30 - year fixed arm"
+		"text" : "30 - year fixed arm",
+		"rateVO": [
+                   {
+                       "teaserRate": "3.000",
+                       "closingCost": "0"
+                   },
+                   {
+                       "teaserRate": "2.875",
+                       "closingCost": "$1,782.62"
+                   },
+                   {
+                       "teaserRate": "2.750",
+                       "closingCost": "$3,512.43"
+                   }
+               ]
 
 	}
 
@@ -3346,7 +3416,7 @@ function getYearSlider(){
 
 			"left" : leftOffset + "%"
 
-		}).bind('click',function(){
+		}).bind('click',{"ratesArray" : yearValues[i].rateVO},function(event){
 
 			if(!$(this).hasClass('yr-slider-icon-selected')){
 
@@ -3361,6 +3431,11 @@ function getYearSlider(){
 				$(this).parent().find('.yr-grid-item').hide();
 
 				$(this).parent().find('.yr-grid-item-selected').show();
+				
+				$('#rate-slider-cont').find('.rt-slider').remove();
+				
+				var rateSlider = getRatSlider(event.data.ratesArray);
+				$('#rate-slider-cont').append(rateSlider);
 
 			}
 
@@ -3411,12 +3486,9 @@ function getYearSlider(){
 function getRateSliderCont() {
 
 	var wrapper = $('<div>').attr({
-
+		"id" : "rate-slider-cont",
 		"class" : "slider-wrapper clearfix"
-
 	});
-
-	
 
 	var headerTxt = $('<div>').attr({
 
@@ -3426,7 +3498,24 @@ function getRateSliderCont() {
 
 	
 
-	var rateArray = ["3.000","3.125","3.250","3.300","3.340"];
+	var rateArray = [
+                     {
+                         "teaserRate": "3.625",
+                         "closingCost": "0"
+                     },
+                     {
+                         "teaserRate": "3.500",
+                         "closingCost": "$1,155.53"
+                     },
+                     {
+                         "teaserRate": "3.375",
+                         "closingCost": "$3,658.15"
+                     },
+                     {
+                         "teaserRate": "3.250",
+                         "closingCost": "$6,166.37"
+                     }
+                 ];
 
 	
 
@@ -3442,7 +3531,12 @@ function getRateSliderCont() {
 
 function getRatSlider(gridArray) {
 
+		
+	var rateArray = [];
 	
+	for(var i=0; i<gridArray.length;i++){
+		rateArray[i] = gridArray[i].teaserRate;
+	}
 
 	var container = $('<div>').attr({
 
@@ -3464,9 +3558,9 @@ function getRatSlider(gridArray) {
 
 		range : "min",
 
-		max : gridArray.length - 1,
+		max : rateArray.length - 1,
 
-		value : gridArray[0],
+		value : rateArray[0],
 
 		change:function(event,ui){
 
@@ -3502,7 +3596,7 @@ function getRatSlider(gridArray) {
 
 			"left" : leftOffset + "%"
 
-		}).html(gridArray[i] + "%");
+		}).html(gridArray[i].teaserRate + "%");
 
 		
 
