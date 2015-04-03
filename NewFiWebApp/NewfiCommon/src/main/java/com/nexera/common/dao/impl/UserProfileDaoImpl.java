@@ -220,11 +220,23 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			this.save(user.getRealtorDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
+		
+LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
+		
 		if (null != user.getCustomerDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		                .getRoleId()) {
-			this.save(user.getCustomerDetail());
+			
+			
+		//	if(user.getCustomerDetail().getCustomerBankAccountDetails() != null){
+				
+			//this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
+			//}
+				//	this.save(user.getCustomerDetail().getCustomerEmploymentIncome());		
+		     	//	this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
+				//	this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());			
+		  this.save(user.getCustomerDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
