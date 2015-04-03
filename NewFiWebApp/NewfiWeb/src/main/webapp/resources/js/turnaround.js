@@ -185,7 +185,7 @@ function turnAroundTime() {
 		}).val(value);
 		var hour = $('<div>').attr({
 			"class" : "create-turn-around-label-hours float-left"
-		}).html("hours");
+		}).html("hrs");
 		row.append(label).append(inputBox).append(hour);
 		if (appendDiv == "customer")
 			$('#customer_milestones').append(row);
