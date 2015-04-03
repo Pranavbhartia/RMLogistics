@@ -334,7 +334,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// newUser.setPassword(null);
 
 		// newUser = null;
-		if (userID > 0) {
+		if (userID > 0
+		        && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		                .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}
 		LOG.info("Returning the userVO");

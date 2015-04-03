@@ -22,12 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.CustomerEnagagement;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
@@ -53,10 +54,9 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	protected AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	WorkflowCoreService workflowCoreService;
-
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(ShopperRegistrationController.class);
@@ -69,22 +69,27 @@ public class ShopperRegistrationController {
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
-		LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,LoanAppFormVO.class);
-		LOG.info("calling 1234 "+loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
-		LOG.info("calling 1234 "+loaAppFormVO.getUser().getFirstName());
-		UserVO userVO = loaAppFormVO.getUser();
-		LOG.info("calling 1234  "+userVO.getEmailId());
-	//	CustomerEnagagement customerEnagagement = userVO.getCustomerEnagagement(); 
-		String emailId = userVO.getEmailId();
+			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
+			        LoanAppFormVO.class);
+			LOG.info("calling 1234 "
+			        + loaAppFormVO.getRefinancedetails()
+			                .getCurrentMortgageBalance());
+			LOG.info("calling 1234 " + loaAppFormVO.getUser().getFirstName());
+			UserVO userVO = loaAppFormVO.getUser();
+			LOG.info("calling 1234  " + userVO.getEmailId());
+			// CustomerEnagagement customerEnagagement =
+			// userVO.getCustomerEnagagement();
+			String emailId = userVO.getEmailId();
 
-		userVO.setUsername(userVO.getEmailId().split(":")[0]);
-		userVO.setEmailId(userVO.getEmailId().split(":")[0]);
-		// String password = userVO.getPassword();
-		// UserVO userVOObj= userProfileService.saveUser(userVO);
-		UserVO userVOObj = null;
-		LoanVO loanVO = null;
-		
-			LOG.info("calling createNewUserAndSendMail"+userVO.getEmailId());
+			userVO.setUsername(userVO.getEmailId().split(":")[0]);
+			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
+			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			// String password = userVO.getPassword();
+			// UserVO userVOObj= userProfileService.saveUser(userVO);
+			UserVO userVOObj = null;
+			LoanVO loanVO = null;
+
+			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
 			// insert a record in the loan table also
 			loanVO = new LoanVO();
@@ -98,26 +103,28 @@ public class ShopperRegistrationController {
 			// TODO: Add LoanTypeMaster dynamically based on option selected
 			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 
-		
-
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-		//	userVOObj.setCustomerEnagagement(customerEnagagement);
+			// userVOObj.setCustomerEnagagement(customerEnagagement);
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
-			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
-			loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
-			
-		//	if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
-			//	loanAppFormVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-		//	}
-LOG.info("loanAppFormService.create(loanAppFormVO)");
+			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
+			        .getPropertyTypeMaster());
+			loanAppFormVO.setRefinancedetails(loaAppFormVO
+			        .getRefinancedetails());
+
+			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+			// loanAppFormVO.setLoanType(new
+			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			// }
+			LOG.info("loanAppFormService.create(loanAppFormVO)");
 			loanAppFormService.create(loanAppFormVO);
-			authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
+			authenticateUserAndSetSession(emailId, userVOObj.getPassword(),
+			        request);
 
 		} catch (InvalidInputException e) {
 
@@ -126,10 +133,10 @@ LOG.info("loanAppFormService.create(loanAppFormVO)");
 
 			e.printStackTrace();
 		} catch (Exception e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-        }
-		
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return "./home.do";
 	}
 
