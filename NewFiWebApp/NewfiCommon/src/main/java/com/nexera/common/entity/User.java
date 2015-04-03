@@ -357,6 +357,7 @@ public class User implements Serializable, UserDetails {
 		UserVO userVO = new UserVO();
 		if (user != null) {
 			userVO.setFirstName(user.getFirstName());
+			userVO.setStatus(user.getStatus());
 			userVO.setLastName(user.getLastName());
 			userVO.setPhoneNumber(user.getPhoneNumber());
 			userVO.setPhotoImageUrl(user.getPhotoImageUrl());
