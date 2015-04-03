@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
@@ -26,7 +25,7 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 	LoanService loanService;
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Transactional
 	public void createWorkflow(WorkflowVO workflowVO) throws Exception {
 		Gson gson = new Gson();
 
