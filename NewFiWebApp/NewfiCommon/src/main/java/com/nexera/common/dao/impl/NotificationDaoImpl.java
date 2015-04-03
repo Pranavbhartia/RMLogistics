@@ -25,7 +25,7 @@ import com.nexera.common.exception.DatabaseException;
 
 @Component
 public class NotificationDaoImpl extends GenericDaoImpl implements
-		NotificationDao {
+        NotificationDao {
 
 	@Autowired
 	private UserProfileDao userProfileDao;
@@ -36,20 +36,18 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 	@Override
 	public List<Notification> findActiveNotifications(Loan loan, User user) {
 
-		if(user==null)
+		if (user == null)
 			return null;
-		
+
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notification.class);
-		
-		
-		
-		if (user.getUserRole() == null)
+
+		if (user.getUserRole() == null || user.getUserRole().getId() == 0)
 			user = userProfileDao.findInternalUser(user.getId());
 
 		Criterion loanRest = Restrictions.eq("loan", loan);
 		Criterion userRest = Restrictions.eq("createdFor", user);
-		//If no roles are assinged, notification to be displayed to all
+		// If no roles are assinged, notification to be displayed to all
 		Criterion noRolesAssigned = Restrictions.and(
 		        Restrictions.isNull("createdFor"),
 		        Restrictions.isNull("visibleToUserRoles"));
@@ -57,7 +55,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 			criteria.add(loanRest);
 
 		}
-		Criterion userRoleBased=null;
+		Criterion userRoleBased = null;
 		if (user != null) {
 
 			if (user.getUserRole() != null) {
@@ -65,60 +63,61 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 				if (role != null) {
 
 					UserRolesEnum roleEnum = UserRolesEnum.valueOf(role
-							.getRoleCd());
+					        .getRoleCd());
 					switch (roleEnum) {
 					case CUSTOMER:
-						userRoleBased=userRest;
+						userRoleBased = userRest;
 						break;
 
 					case REALTOR:
-						userRoleBased=Restrictions.or(userRest, Restrictions
-								.and(Restrictions.isNull("createdFor"),
-										Restrictions.ilike(
-												"visibleToUserRoles",
-												"%"
-														+ UserRolesEnum.REALTOR
-																.toString()
-														+ "%")));
+						userRoleBased = Restrictions.or(userRest, Restrictions
+						        .and(Restrictions.isNull("createdFor"),
+						                Restrictions.ilike(
+						                        "visibleToUserRoles",
+						                        "%"
+						                                + UserRolesEnum.REALTOR
+						                                        .toString()
+						                                + "%")));
 						break;
 
 					case INTERNAL:
-						userRoleBased=Restrictions.or(
-								userRest,
-								Restrictions.and(
-										Restrictions.isNull("createdFor"),
-										Restrictions.and(
-												Restrictions
-														.ilike("visibleToUserRoles",
-																"%"
-																		+ UserRolesEnum.INTERNAL
-																				.toString()
-																		+ "%"),
-												Restrictions.or(
-														Restrictions
-																.isNull("visibleToInternalUserRoles"),
-														Restrictions
-																.ilike("visibleToInternalUserRoles",
-																		"%"
-																				+ user.getInternalUserDetail()
-																						.getInternaUserRoleMaster()
-																						.getRoleName()
-																				+ "%")))));
+						userRoleBased = Restrictions
+						        .or(userRest,
+						                Restrictions.and(
+						                        Restrictions
+						                                .isNull("createdFor"),
+						                        Restrictions.and(
+						                                Restrictions
+						                                        .ilike("visibleToUserRoles",
+						                                                "%"
+						                                                        + UserRolesEnum.INTERNAL
+						                                                                .toString()
+						                                                        + "%"),
+						                                Restrictions.or(
+						                                        Restrictions
+						                                                .isNull("visibleToInternalUserRoles"),
+						                                        Restrictions
+						                                                .ilike("visibleToInternalUserRoles",
+						                                                        "%"
+						                                                                + user.getInternalUserDetail()
+						                                                                        .getInternaUserRoleMaster()
+						                                                                        .getRoleName()
+						                                                                + "%")))));
 						break;
 
 					default:
-						userRoleBased=userRest;
+						userRoleBased = userRest;
 						break;
 					}
 
 				}
-				
+
 			} else
-				userRoleBased=userRest;
+				userRoleBased = userRest;
 		}
-		if(userRoleBased!=null)
-			criteria.add(Restrictions.or(noRolesAssigned,userRoleBased));
-		else{
+		if (userRoleBased != null)
+			criteria.add(Restrictions.or(noRolesAssigned, userRoleBased));
+		else {
 			criteria.add(noRolesAssigned);
 		}
 
@@ -128,20 +127,18 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		Criterion remindOnIsNull = Restrictions.isNull("remindOn");
 		Criterion remindOnIsNotNull = Restrictions.isNotNull("remindOn");
 		Criterion remindDateReached = Restrictions.le("remindOn",
-				utils.getDateInUserLocale(new Date()));
+		        utils.getDateInUserLocale(new Date()));
 
 		Criterion reminder = Restrictions.or(remindOnIsNull,
-				Restrictions.and(remindOnIsNotNull, remindDateReached));
+		        Restrictions.and(remindOnIsNotNull, remindDateReached));
 
 		criteria.addOrder(Order.desc("remindOn"));
 		criteria.addOrder(Order.desc("createdDate"));
-		
-		criteria.add(reminder);
-		
-		List<Notification> notifications=criteria.list();
 
-		
-		
+		criteria.add(reminder);
+
+		List<Notification> notifications = criteria.list();
+
 		return notifications;
 	}
 
@@ -180,32 +177,39 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 			return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.nexera.common.dao.NotificationDao#fincNotificationTypeListForUser(com.nexera.common.entity.User)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.nexera.common.dao.NotificationDao#fincNotificationTypeListForUser
+	 * (com.nexera.common.entity.User)
 	 */
 	@Override
-	public List<Notification> findNotificationTypeListForUser(User user,String type) {
+	public List<Notification> findNotificationTypeListForUser(User user,
+	        String type) {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(Notification.class);
 			criteria.add(Restrictions.eq("createdFor", user));
 			criteria.add(Restrictions.eq("notificationType", type));
-			criteria.add(Restrictions.or(Restrictions.eq("read", false),Restrictions.isNull("read")));
-			List<Notification> notifications=(List<Notification>)criteria.list();
-			return notifications;	
-		}catch (HibernateException hibernateException) {
-//			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
-//					hibernateException);
+			criteria.add(Restrictions.or(Restrictions.eq("read", false),
+			        Restrictions.isNull("read")));
+			List<Notification> notifications = (List<Notification>) criteria
+			        .list();
+			return notifications;
+		} catch (HibernateException hibernateException) {
+			// LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			// hibernateException);
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
 	}
 
 	@Override
 	public List<Notification> findNotificationTypeListForLoan(Loan loan,
-			String type, Boolean isRead) {
+	        String type, Boolean isRead) {
 		// TODO Auto-generated method stub
 		try {
 			Session session = sessionFactory.getCurrentSession();
@@ -214,16 +218,16 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 			criteria.add(Restrictions.eq("notificationType", type));
 			if (isRead != null)
 				criteria.add(Restrictions.or(Restrictions.eq("read", false),
-						Restrictions.isNull("read")));
+				        Restrictions.isNull("read")));
 			List<Notification> notifications = (List<Notification>) criteria
-					.list();
+			        .list();
 			return notifications;
 		} catch (HibernateException hibernateException) {
 			// LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
 			// hibernateException);
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
 	}
 }

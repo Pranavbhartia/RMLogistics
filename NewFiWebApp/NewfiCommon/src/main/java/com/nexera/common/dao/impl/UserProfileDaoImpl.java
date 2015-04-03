@@ -304,7 +304,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public User findInternalUser(Integer userID) {
-		User user = (User) this.load(User.class, userID);
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", userID));
+		User user = (User) criteria.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());
 			System.out.println("Test  : loadInternalUser");
