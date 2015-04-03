@@ -40,6 +40,7 @@ import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -55,6 +56,9 @@ public class UserProfileRest {
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
 
+	@Autowired
+	private InternalUserStateMappingService internalUserStateMappingService;
+	
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
 
@@ -109,6 +113,10 @@ public class UserProfileRest {
 			if (user.getPhotoImageUrl() != null) {
 				userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 			}
+            if(userVO.getInternalUserStateMappingVOs()!=null){
+            	internalUserStateMappingService.saveOrUpdateUserStates(
+            		userVO.getInternalUserStateMappingVOs());
+            }
 			Integer customerDetailsUpdateCount = userProfileService
 			        .updateCustomerDetails(userVO);
 

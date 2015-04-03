@@ -108,6 +108,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		criteria.add(Restrictions.eq("id", userId));
 		User user = (User) criteria.uniqueResult();
 		Hibernate.initialize(user.getInternalUserDetail());
+		Hibernate.initialize(user.getInternalUserStateMappings());
 		return user;
 	}
 

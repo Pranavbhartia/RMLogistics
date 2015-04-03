@@ -1,8 +1,9 @@
 var stateList = [];
 var currentStateId = 0;
 var currentZipcodeLookUp = [];
-
-
+var internalUserStates = new Object();
+var states=[];
+//var userStates=[];
 function showCustomerProfilePage() {
 	
 	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -41,7 +42,7 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
-
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -113,7 +114,20 @@ function getLoanPersonalInfoContainer(user) {
 
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
+	
+	var stateRow = getManagerStateRow(user);
+	container.append(stateRow);
+ 	userStateMappingVOs=user.internalUserStateMappingVOs;
 
+	states.length = 0;
+	internalUserStates.length=0;
+	for(var i=0;i<userStateMappingVOs.length;i++) {
+			states.push(userStateMappingVOs[i].stateId.toString());
+			internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+        }
+	var stateTextRow = getStateTextRow();
+	container.append(stateTextRow);
+	
  
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
@@ -140,6 +154,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
+	var internalUserState=[];
+	//for(var i=0;i<internalUserStates.length;i++){
+	for(var key in internalUserStates){
+		if(internalUserStates[key]!=0)
+			internalUserState.push(internalUserStates[key]);
+	}
+	userProfileJson.internalUserStateMappingVOs = internalUserState;
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -156,7 +177,7 @@ function updateLMDetails() {
 
 			$("#profileNameId").text($("#firstNameId").val());
 			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
-
+			showLoanManagerProfilePage();
 		},
 		error : function(error) {
 			showToastMessage("Mandatory Fileds should not be empty");
@@ -711,6 +732,39 @@ function getStateRow(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+
+function getManagerStateRow(user) {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("State");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var stateInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
+		"id" : "stateId"
+	}).bind('click',function(e){
+		e.stopPropagation();
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+				appendManagerStateDropDown('state-dropdown-wrapper');
+			}else{
+				toggleStateDropDown();
+			}
+	});
+	
+	
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dropdown-wrapper",
+		"class" : "state-dropdown-wrapper"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
+	return row.append(rowCol1).append(rowCol2);
+}
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
 		currentZipcodeLookUp = response.resultObject;
@@ -743,6 +797,51 @@ function appendStateDropDown(elementToApeendTo) {
 	toggleStateDropDown();
 }
 
+function appendManagerStateDropDown(elementToApeendTo) {
+
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	for(var i=0; i<stateList.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row clearfix",
+			"id" : stateList[i].id,
+			"name":  stateList[i].stateName
+		});
+		var checkBox = $('<input>').attr({
+				"class" : "float-left",
+				"id": "checkBox_"+stateList[i].id,
+				"type":"checkbox"
+		});
+		if(states.indexOf((stateList[i].id).toString())>-1){
+			$(checkBox).attr('checked',true);
+		}
+		var textRow = $('<div>').attr({
+			"class" : "float-left",
+			"id" : "stateName_"+stateList[i].id
+		}).html(stateList[i].stateName);
+			stateRow.append(checkBox).append(textRow);
+			stateRow.bind('click',function(e){
+				e.stopPropagation();
+				var internalUserStateMappingVO=new Object();
+				internalUserStateMappingVO.userId=$("#userid").val();
+				internalUserStateMappingVO.stateId=this.id;
+				if($("#checkBox_"+this.id).is(":checked")){
+					internalUserStateMappingVO.isChecked=true;		
+//		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}else{
+					internalUserStateMappingVO=internalUserStates[this.id];
+					internalUserStateMappingVO.isChecked=false;
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}
+				
+				$('#stateId').val(this.name);
+				toggleStateDropDown();
+			});
+		
+		parentToAppendTo.append(stateRow);
+	}
+	toggleStateDropDown();
+}
 function findStateIdForStateCode(stateCode) {
 	
 	for(var i=0; i<stateList.length; i++){
@@ -754,6 +853,16 @@ function findStateIdForStateCode(stateCode) {
 	return 0;
 }
 
+function findStateNameForStateId(stateId) {
+	
+	for(var i=0; i<stateList.length; i++){
+		if(stateList[i].id == stateId){
+			return stateList[i].stateName;
+		}
+	}
+	
+	return 0;
+}
 function toggleStateDropDown() {
 	$('#state-dropdown-wrapper').slideToggle();
 }
@@ -1451,3 +1560,38 @@ function saveEditUserProfile(user){
 }
 
 
+function getStateTextRow() {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	});
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	
+	
+	var emailHtmlText="";	
+	for(var key in internalUserStates){
+
+		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
+			emailHtmlText+="<div class=\"prof-form-input-textarea-block float-left\">"+findStateNameForStateId(internalUserStates[key].stateId)+"</div>";
+		}
+	}
+	var emailInput = $('<div>').attr({
+		"class" : "prof-form-input-textarea clearfix",
+		"id" : "inputTextarea"
+ 	}).html(emailHtmlText);
+
+	inputCont.append(emailInput);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}
