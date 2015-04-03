@@ -1,8 +1,11 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -26,6 +29,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -40,6 +44,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileDaoImpl.class);
+
+	private static String GMT = "GMT";
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -508,6 +514,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 				// no work
 				availableUsers.add(user);
 			}
+			int todaysLoanCount = 0;
 			for (LoanTeam loanTeam : loanTeamList) {
 				if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
 				        .getStatusId()
@@ -518,13 +525,37 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 					// only those loans which he is currently working on
 
 					// Additional check, if the loan is created today
+					if (loanWasCreatedToday(loanTeam.getLoan().getId(),
+					        loanTeam.getLoan().getCreatedDate())) {
+						todaysLoanCount = user.getTodaysLoansCount();
+						todaysLoanCount++;
+						user.setTodaysLoansCount(todaysLoanCount);
+					}
 					user.getLoans().add(loanTeam.getLoan());
-					availableUsers.add(user);
 
 				}
 			}
+			availableUsers.add(user);
 
 		}
+	}
+
+	private boolean loanWasCreatedToday(int loanId, Date createdDate) {
+		// TODO Auto-generated method stub
+		if (createdDate == null) {
+			// TODO: Cannot happen
+			LOG.warn("There is a lone without created date: " + loanId);
+			return false;
+		}
+		Calendar today = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		today.setTime(new Date(System.currentTimeMillis()));
+		Calendar loanCreated = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		loanCreated.setTime(createdDate);
+		return (today.get(Calendar.ERA) == loanCreated.get(Calendar.ERA)
+		        && today.get(Calendar.YEAR) == loanCreated.get(Calendar.YEAR) && today
+		            .get(Calendar.DAY_OF_YEAR) == loanCreated
+		        .get(Calendar.DAY_OF_YEAR));
+
 	}
 
 	@Override
@@ -535,5 +566,37 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        .getDefaultLoanManager();
 
 		return User.convertFromEntityToVO(defaultLoanManager);
+	}
+
+	@Override
+	public UserVO getDefaultSalesManager() {
+		// This is a temporary method only to meet an absurd requirement of
+		// assigning all loans to Pat.
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		criteria.createAlias("internalUserDetail", "userDetail");
+		criteria.createAlias("userDetail.internaUserRoleMaster", "role");
+		criteria.add(Restrictions.eq("role.id",
+		        InternalUserRolesEum.SM.getRoleId()));
+		List<User> users = criteria.list();
+		if (users == null || users.isEmpty()) {
+			LOG.error("This cannot happen, there has to be a sales manager in the system");
+			return null;
+		}
+		if (users.size() > 1) {
+			LOG.warn("There are more than one sales manager in the system, which is not handled. Checking if user name contains pat, and returning that user. IF not found, then returning the first instance");
+			for (User user : users) {
+				if (user.getFirstName().contains("pat")) {
+					return User.convertFromEntityToVO(user);
+				}
+
+			}
+
+		}
+
+		return User.convertFromEntityToVO(users.get(0));
 	}
 }
