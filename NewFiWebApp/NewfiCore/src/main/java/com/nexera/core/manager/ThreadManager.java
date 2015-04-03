@@ -37,7 +37,6 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
-import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
@@ -46,12 +45,14 @@ import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
+import com.nexera.common.vo.lqb.UnderwritingConditionResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.LoadXMLHandler;
+import com.nexera.core.utility.UnderwritingXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
@@ -101,10 +102,11 @@ public class ThreadManager implements Runnable {
 		JSONObject loadJSONResponse = lqbInvoker
 		        .invokeLqbService(loadOperationObject.toString());
 		if (loadJSONResponse != null) {
-			if (!loadJSONResponse.isNull("responseMessage")) {
+			if (!loadJSONResponse
+			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
 
 				String loadResponse = loadJSONResponse
-				        .getString("responseMessage");
+				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
 				loadResponse = removeBackSlashDelimiter(loadResponse);
 				int currentLoanStatus = -1;
 				Milestones milestones = null;
@@ -112,7 +114,8 @@ public class ThreadManager implements Runnable {
 				if (loadResponseList != null) {
 					for (LoadResponseVO loadResponseVO : loadResponseList) {
 						String fieldId = loadResponseVO.getFieldId();
-						if (fieldId.equalsIgnoreCase("sStatusT")) {
+						if (fieldId
+						        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_LOAN_STATUS)) {
 							currentLoanStatus = Integer.parseInt(loadResponseVO
 							        .getFieldValue());
 						}
@@ -303,6 +306,52 @@ public class ThreadManager implements Runnable {
 		}
 		LOGGER.debug("Fetching Docs for this loan ");
 		fetchDocsForThisLoan(loan);
+
+		LOGGER.debug("Fetching underwriting conditions for this loan ");
+		invokeUnderwritingCondition(loan, format);
+
+	}
+
+	private void invokeUnderwritingCondition(Loan loan, int format) {
+		LOGGER.debug("Invoking UnderwritingCondition service of lendinqb ");
+		JSONObject underWritingConditionJSONObject = createUnderWritingConditionJSONObject(
+
+		WebServiceOperations.OP_NAME_UNDERWRITING_CONDITION,
+		        loan.getLqbFileId(), format);
+		LOGGER.debug("Invoking LQB service to fetch Loan status ");
+		JSONObject underWritingJSONResponse = lqbInvoker
+		        .invokeLqbService(underWritingConditionJSONObject.toString());
+		if (underWritingJSONResponse != null) {
+			if (!underWritingJSONResponse
+			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+				String underwritingRespone = underWritingJSONResponse
+				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+				List<UnderwritingConditionResponseVO> underWritingResponseList = parseUnderwritingResponse(underwritingRespone
+				        .toString());
+
+				List<NeedsListMaster> conditionDescriptionList = new ArrayList<NeedsListMaster>();
+				for (UnderwritingConditionResponseVO underwritingConditionResponseVO : underWritingResponseList) {
+					if (underwritingConditionResponseVO
+					        .getFieldId()
+					        .equalsIgnoreCase(
+					                CoreCommonConstants.SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION)) {
+						NeedsListMaster needsListMaster = new NeedsListMaster();
+						needsListMaster.setNeedCategory("System");
+						needsListMaster
+						        .setLabel(underwritingConditionResponseVO
+						                .getFieldValue());
+						needsListMaster
+						        .setDescription(underwritingConditionResponseVO
+						                .getFieldValue());
+						needsListMaster.setIsCustom(false);
+						conditionDescriptionList.add(needsListMaster);
+					}
+				}
+
+				needsListService.saveMasterNeedsForLoan(loan.getId(),
+				        conditionDescriptionList);
+			}
+		}
 	}
 
 	private void fetchDocsForThisLoan(Loan loan) {
@@ -317,7 +366,8 @@ public class ThreadManager implements Runnable {
 		JSONObject receivedResponseForDocs = lqbInvoker
 		        .invokeLqbService(getListOfDocs.toString());
 		if (receivedResponseForDocs != null) {
-			if (!receivedResponseForDocs.isNull("responseMessage")) {
+			if (!receivedResponseForDocs
+			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
 				LQBResponseVO lqbResponseVO = uploadedFileListService
 				        .parseLQBXMLResponse(receivedResponseForDocs);
 				if (lqbResponseVO != null) {
@@ -347,49 +397,47 @@ public class ThreadManager implements Runnable {
 		for (LQBedocVO edoc : edocsList) {
 
 			String documentType = edoc.getDoc_type();
-			if (!documentType.equalsIgnoreCase("INITIAL DISCLOSURE")) {
+			if (documentType
+			        .equalsIgnoreCase(CoreCommonConstants.DOCUMENT_TYPE_INITIAL_DISCLOSURES)) {
 				LOGGER.debug("Disclosure has been received ");
-				String uuid = uploadedFileListService.fetchUUID(edoc
-				        .getDescription());
-				UploadedFilesList uploadedFile = uploadedFileListService
-				        .fetchUsingFileUUID(uuid);
 
 				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
 				if (needsListMasterDisclosureAvailable != null) {
-					assignNeedToLoan(loan, needsListMasterDisclosureAvailable,
-					        uploadedFile);
+					if (!checkIfAlreadAssigned(loan,
+					        needsListMasterDisclosureAvailable))
+						assignNeedToLoan(loan,
+						        needsListMasterDisclosureAvailable);
 				}
-				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
+				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED);
 				if (needsListMasterDisclosureSigned != null) {
-					assignNeedToLoan(loan, needsListMasterDisclosureSigned,
-					        null);
+					if (!checkIfAlreadAssigned(loan,
+					        needsListMasterDisclosureSigned))
+						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 
 				}
 			}
 		}
 	}
 
-	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster,
-	        UploadedFilesList uploadedFile) {
+	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster) {
 		LOGGER.debug("Found a Need, Assigning it to a loan ");
 		LoanNeedsList loanNeedsList = new LoanNeedsList();
 		loanNeedsList.setLoan(loan);
 		loanNeedsList.setNeedsListMaster(needsListMaster);
-		if (uploadedFile != null)
-			loanNeedsList.setUploadFileId(uploadedFile);
+
 		loanNeedsList.setMandatory(false);
 		loanNeedsList.setSystemAction(true);
-		if (findLoanNeedsListByFile(uploadedFile) == null) {
-			LOGGER.debug("Inserting because this is new file and is not assigned ");
-			loanService.assignNeedsToLoan(loanNeedsList);
-		}
+		loanService.assignNeedsToLoan(loanNeedsList);
 
 	}
 
-	private LoanNeedsList findLoanNeedsListByFile(
-	        UploadedFilesList uploadedFileList) {
+	private Boolean checkIfAlreadAssigned(Loan loan,
+	        NeedsListMaster needsListMaster) {
 		LOGGER.debug("Check whether loan needs list exist for this document ");
-		return loanService.findLoanNeedsListByFile(uploadedFileList);
+		if (loanService.findLoanNeedsList(loan, needsListMaster) != null)
+			return true;
+		else
+			return false;
 	}
 
 	private NeedsListMaster getNeedsListMasterByType(String needsListType) {
@@ -512,6 +560,24 @@ public class ThreadManager implements Runnable {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_QUERY_MAP,
 			        requestXMLMap);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
+	public JSONObject createUnderWritingConditionJSONObject(String opName,
+	        String lqbLoanId, int format) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
+
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
@@ -772,6 +838,32 @@ public class ThreadManager implements Runnable {
 			// parse the file and also register this class for call backs
 			sp.parse(new InputSource(new StringReader(loadResponse)), handler);
 			return handler.getLoadResponseVOList();
+
+		} catch (SAXException se) {
+			se.printStackTrace();
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private List<UnderwritingConditionResponseVO> parseUnderwritingResponse(
+	        String underWritingResponse) {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+			UnderwritingXMLHandler handler = new UnderwritingXMLHandler();
+			// parse the file and also register this class for call backs
+			sp.parse(new InputSource(new StringReader(underWritingResponse)),
+			        handler);
+			return handler.getUnderWriConditionResponseList();
 
 		} catch (SAXException se) {
 			se.printStackTrace();

@@ -615,8 +615,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		        documentVO);
 		InputStream inputStream = null;
 		try {
-			inputStream = lqbInvoker
-			        .invokeRestSpringParseStream(jsonObject.toString());
+			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
+			        .toString());
 			OutputStream outStream = response.getOutputStream();
 
 			byte[] buffer = new byte[2048];
@@ -639,6 +639,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
 
@@ -770,20 +771,25 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			fileUpload.setUuidFileId(uuid);
 
 		fileUpload.setTotalPages(2);
-
-		int fileUploadId = uploadedFilesListDao.saveUploadedFile(fileUpload);
+		int fileUploadId = saveUploadedFile(fileUpload);
 		fileUpload.setId(fileUploadId);
 	}
 
 	@Override
 	public String fetchUUID(String uuidString) {
-		String keyValuePair[] = uuidString.split(" ");
-		Map<String, String> map = new HashMap<String, String>();
-		for (String pair : keyValuePair) {
-			String[] entry = pair.split(":");
-			map.put(entry[0].trim(), entry[1].trim());
+		if (uuidString != null) {
+			if (uuidString.contains("UUID")) {
+				String keyValuePair[] = uuidString.split(" ");
+				Map<String, String> map = new HashMap<String, String>();
+				for (String pair : keyValuePair) {
+					String[] entry = pair.split(":");
+					map.put(entry[0].trim(), entry[1].trim());
+				}
+				return map.get("UUID");
+
+			}
 		}
-		return map.get("UUID");
+		return null;
 
 	}
 

@@ -305,8 +305,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
+		LOG.info("userVO in Userprofile before covert"+userVO.getCustomerDetail());
+		
 		
 		User newUser = User.convertFromVOToEntity(userVO);
+		LOG.info("userVO in Userprofile after covert"+userVO.getCustomerDetail());
+		
+		
 		if(newUser.getCustomerDetail()!=null){
 		newUser.getCustomerDetail().setProfileCompletionStatus(100/3);}
 		LOG.debug("Done parsing, Setting a new random password");
@@ -324,8 +329,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (userID > 0) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}
-		LOG.info("Returning the userVO");
-
+		LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
+		
 		return User.convertFromEntityToVO(newUser);
 
 	}

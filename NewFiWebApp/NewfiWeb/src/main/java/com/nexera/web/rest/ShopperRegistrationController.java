@@ -85,6 +85,10 @@ public class ShopperRegistrationController {
 		LoanVO loanVO = null;
 		
 			LOG.info("calling createNewUserAndSendMail"+userVO.getEmailId());
+			
+			LOG.info("userVO in Shopper"+userVO.getCustomerDetail());
+			LOG.info("userVO in Shopper"+userVO.getCustomerDetail().getCustomerBankAccountDetails());
+			LOG.info("userVO in Shopper"+userVO.getCustomerDetail().getCustomerEmploymentIncome());
 			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
 			// insert a record in the loan table also
 			loanVO = new LoanVO();
@@ -106,6 +110,8 @@ public class ShopperRegistrationController {
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
 		//	userVOObj.setCustomerEnagagement(customerEnagagement);
+			LOG.info("userVOObj.getCustomerDetail().getCustomerSpouseDetail()"+userVOObj.getCustomerDetail().getCustomerSpouseDetail());
+			
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
