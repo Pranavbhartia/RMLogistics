@@ -592,7 +592,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 
 function paintNeedsInfo(itemToAppendTo,workItem)
 {
-	rightLeftClass = "milestone-lc";
+	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
 	var txtRow1 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" + " milestone-plain-text",
 	});
@@ -750,18 +750,21 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 }
 
 function getMilestoneTeamMembeTable(input,workItem) {
-
+	var clas="milestone-lc-text";
+	var floatCls="float-right";
+	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
+	if(rightClassCheck){
+		clas="milestone-rc-text";
+		floatCls="float-left"
+	}
 	var tableContainer = $('<div>').attr({
-		"class" : "ms-team-member-table"
+		"class" : floatCls+" ms-team-member-table"
 	});
 
 	userList=input.users;
 	if(!userList ||  userList.length==0)
 		return;
-	var clas="milestone-lc-text";
-	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
-	if(rightClassCheck)
-		clas="milestone-rc-text";
+	
 	var addNewMember = $('<div>').attr({
 		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
