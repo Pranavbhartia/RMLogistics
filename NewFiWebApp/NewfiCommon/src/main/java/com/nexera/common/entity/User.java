@@ -353,6 +353,17 @@ public class User implements Serializable, UserDetails {
 		this.isProfileComplete = isProfileComplete;
 	}
 
+	private int todaysLoansCount;
+
+	@Transient
+	public int getTodaysLoansCount() {
+		return todaysLoansCount;
+	}
+
+	public void setTodaysLoansCount(int todaysLoansCount) {
+		this.todaysLoansCount = todaysLoansCount;
+	}
+
 	public static UserVO convertFromEntityToVO(final User user) {
 		UserVO userVO = new UserVO();
 		if (user != null) {

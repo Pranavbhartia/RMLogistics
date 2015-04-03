@@ -63,5 +63,8 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> getLoanManagerWithLeastWork();
 
-	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor, String stateName);
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
+	        String stateName);
+
+	public UserVO getDefaultSalesManager();
 }
