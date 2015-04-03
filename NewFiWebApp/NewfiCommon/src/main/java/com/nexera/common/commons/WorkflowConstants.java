@@ -64,7 +64,7 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_1003_COMPLETE = "1003_COMPLETE";
 	public static final String WORKFLOW_ITEM_1003_DISPLAY = "1003_DISPLAY";
 
-	public static final String WORKFLOW_CUST_ITEM_NEEDS_STATUS = "USER_NEEDS_STATUS";
+	public static final String WORKFLOW_CUST_ITEM_NEEDS_STATUS = "VIEW_NEEDS";
 	public static final HashMap<LOSLoanStatus, WorkItemMilestoneInfo> LQB_STATUS_MILESTONE_LOOKUP = new HashMap<LOSLoanStatus, WorkItemMilestoneInfo>();;
 
 	private static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();;
