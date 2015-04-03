@@ -29,6 +29,8 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.UserVO;
@@ -666,12 +668,70 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao
 
 
 	@Override
-    public List<Loan> loanListBasedOnUser(User user) {
-		 Session session = sessionFactory.getCurrentSession();
-		 Criteria criteria = session.createCriteria( LoanTeam.class );
-		  criteria.add( Restrictions.eq( "user.id", user.getId() ) );
-	     List<Loan> loanList = criteria.list();
-	        return loanList;
-	  
-    }
+	public List<LoanTeam> getLoanListBasedOnUser(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanTeam.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		List<LoanTeam> loanList = criteria.list();
+		return loanList;
+
+	}
+
+	@Override
+
+	public boolean checkLoanDependency(User user) {
+
+		/*
+		 * 1.Get all loan teams this user is part of. 2.Check for each loan if
+		 * the status of the loan is active 3. If the status is active, check if
+		 * for all the loans there is at least one other internal Loan manager
+		 * included in the team. The included team member should be active and
+		 * should not be deleted
+		 */
+
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria criteria = session.createCriteria(LoanTeam.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		List<LoanTeam> loanList = criteria.list();
+		if (loanList == null || loanList.isEmpty()) {
+			return false;
+		}
+		for (LoanTeam loanTeam : loanList) {
+			Hibernate.initialize(loanTeam.getLoan());
+			Hibernate.initialize(loanTeam.getUser());
+			Loan loan = loanTeam.getLoan();
+
+			if (loan.getLoanProgressStatus().getLoanProgressStatus().equals(
+			     LoanProgressStatusMasterEnum.IN_PROGRESS.toString())
+			        || loan.getLoanProgressStatus().getLoanProgressStatus().equals(
+			                LoanProgressStatusMasterEnum.NEW_LOAN.toString())) {
+				
+				// Loan is active
+				List<LoanTeam> activeTeamList = loan.getLoanTeam();
+				boolean otherUserPresent = false;
+				for (LoanTeam activeTeam : activeTeamList) {
+					if (activeTeam.getUser().getInternalUserDetail() != null) {
+						if (activeTeam.getUser().getInternalUserDetail()
+						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LOANMANAGER
+						        .getRoleId()) {
+							if (activeTeam.getUser().getId() != user.getId()
+							        && activeTeam.getUser().getStatus()
+							        && activeTeam.getUser()
+							                .getInternalUserDetail()
+							                .getActiveInternal()) {
+								otherUserPresent = true;
+							}
+						}
+					}
+				}
+				if (!otherUserPresent) {
+					return false;
+				}
+				// Check if there are any other loan manager in this loan
+			}
+
+		}
+		return true;
+	}
 }

@@ -38,7 +38,6 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
-import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.DisplayMessageType;
@@ -131,24 +130,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference()
 				        && userVO.getPhoneNumber() != null) {
-					if (customerDetail.getProfileCompletionStatus() != 100) {
+					if (customerDetail.getProfileCompletionStatus() != 100)
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
 						                .getProfileCompletionStatus()
 						                + (100 / 3));
-					}
 
-				} else if (!userVO.getCustomerDetail()
-				        .getMobileAlertsPreference()) {
-					customerDetail.setMobileAlertsPreference(userVO
-					        .getCustomerDetail().getMobileAlertsPreference());
-					
-					if (customerDetail.getProfileCompletionStatus() == 100) {
-						customerDetail.setProfileCompletionStatus(customerDetail
-						        .getProfileCompletionStatus() - (100 / 3));
-					} else {
-						customerDetail.setProfileCompletionStatus(200 / 3);
-					}
 				}
 			}
 		} else {
@@ -166,17 +153,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			} else if (userVO.getCustomerDetail().getMobileAlertsPreference()
 			        && userVO.getPhoneNumber() != null) {
 				customerDetail.setProfileCompletionStatus(200 / 3);
-			} else if (!userVO.getCustomerDetail().getMobileAlertsPreference()
-			        && userVO.getPhotoImageUrl() != null
-			        && userVO.getPhoneNumber() != null) {
-				customerDetail.setMobileAlertsPreference(userVO
-				        .getCustomerDetail().getMobileAlertsPreference());
-				if (customerDetail.getProfileCompletionStatus() == 100) {
-					customerDetail.setProfileCompletionStatus(customerDetail
-					        .getProfileCompletionStatus() - (100 / 3));
-				} else {
-					customerDetail.setProfileCompletionStatus(200 / 3);
-				}
 			}
 
 		}
@@ -783,4 +759,5 @@ public class UserProfileServiceImpl implements UserProfileService,
 		errors.add("errors", errorList);
 		return errors;
 	}
+
 }

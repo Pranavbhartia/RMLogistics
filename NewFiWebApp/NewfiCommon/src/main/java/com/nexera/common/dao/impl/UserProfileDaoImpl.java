@@ -1,8 +1,11 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -10,7 +13,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
-import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -42,6 +44,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileDaoImpl.class);
+
+	private static String GMT = "GMT";
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -157,10 +161,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public List<User> getUsersList() {
-		
-		Session session=sessionFactory.getCurrentSession();
-		Criteria criteria=session.createCriteria(User.class);
-						
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
 		return criteria.list();
 
 	}
@@ -175,13 +179,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			searchQuery += " email_id like '" + user.getEmailId() + "%' ";
 
 		if (user.getFirstName() != null)
-			
+
 			user.setFirstName(user.getFirstName().toLowerCase());
 		else
 			user.setFirstName("");
 		searchQuery += " or lower(concat( first_name,',',last_name) ) like '"
 		        + user.getFirstName() + "%'";
-		
+
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
 		}
@@ -300,7 +304,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public User findInternalUser(Integer userID) {
-		User user = (User) this.load(User.class, userID);
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", userID));
+		User user = (User) criteria.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());
 			System.out.println("Test  : loadInternalUser");
@@ -512,6 +519,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 				// no work
 				availableUsers.add(user);
 			}
+			int todaysLoanCount = 0;
 			for (LoanTeam loanTeam : loanTeamList) {
 				if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
 				        .getStatusId()
@@ -520,21 +528,92 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 					// It does not matter if the user is assigned a loan which
 					// is not active. Hence, for computation, we are considering
 					// only those loans which he is currently working on
+
+					// Additional check, if the loan is created today
+					if (loanWasCreatedToday(loanTeam.getLoan().getId(),
+					        loanTeam.getLoan().getCreatedDate())) {
+						todaysLoanCount = user.getTodaysLoansCount();
+						todaysLoanCount++;
+						user.setTodaysLoansCount(todaysLoanCount);
+					}
+
 					user.getLoans().add(loanTeam.getLoan());
-					availableUsers.add(user);
 
 				}
 			}
+			availableUsers.add(user);
 
 		}
 	}
 
+	private boolean loanWasCreatedToday(int loanId, Date createdDate) {
+		// TODO Auto-generated method stub
+		if (createdDate == null) {
+			// TODO: Cannot happen
+			LOG.warn("There is a lone without created date: " + loanId);
+			return false;
+		}
+		Calendar today = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		today.setTime(new Date(System.currentTimeMillis()));
+		Calendar loanCreated = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		loanCreated.setTime(createdDate);
+		return (today.get(Calendar.ERA) == loanCreated.get(Calendar.ERA)
+		        && today.get(Calendar.YEAR) == loanCreated.get(Calendar.YEAR) && today
+		            .get(Calendar.DAY_OF_YEAR) == loanCreated
+		        .get(Calendar.DAY_OF_YEAR));
+
+	}
+
 	@Override
-	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor, String stateName) {
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
+	        String stateName) {
 		User user = findByUserId(realtor.getId());
 		User defaultLoanManager = user.getRealtorDetail()
 		        .getDefaultLoanManager();
 
 		return User.convertFromEntityToVO(defaultLoanManager);
+	}
+
+	@Override
+	public UserVO getDefaultSalesManager() {
+		// This is a temporary method only to meet an absurd requirement of
+		// assigning all loans to Pat.
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		criteria.createAlias("internalUserDetail", "userDetail");
+		criteria.createAlias("userDetail.internaUserRoleMaster", "role");
+		criteria.add(Restrictions.eq("role.id",
+		        InternalUserRolesEum.SM.getRoleId()));
+		List<User> users = criteria.list();
+		if (users == null || users.isEmpty()) {
+			LOG.error("This cannot happen, there has to be a sales manager in the system");
+			return null;
+		}
+		if (users.size() > 1) {
+			LOG.warn("There are more than one sales manager in the system, which is not handled. Checking if user name contains pat, and returning that user. IF not found, then returning the first instance");
+			for (User user : users) {
+				if (user.getFirstName().contains("pat")) {
+					return User.convertFromEntityToVO(user);
+				}
+
+			}
+
+		}
+
+		return User.convertFromEntityToVO(users.get(0));
+	}
+
+	@Override
+	public void updateLoginTime(Date date, int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.lastLoginDate=:DATE WHERE usr.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("ID", userId);
+		query.setTimestamp("DATE", date);
+		int result = query.executeUpdate();
+
 	}
 }

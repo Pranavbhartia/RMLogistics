@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.User;
@@ -24,6 +25,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 	        .getLogger(TeamAssignmentHelperImpl.class);
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserVO getDefaultLoanManager(String stateName) {
 
 		/*
@@ -42,16 +44,16 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		}
 
 		/*
-		 * If there is none available, then remove the state criteria and return
-		 * the loan manager.
+		 * If there is none available, assign to Sales Manager.
 		 */
-		userList = null;
-		userList = userProfileDao.getLoanManagerWithLeastWork();
-		if (!userList.isEmpty()) {
-			return pickTheChosenOne(userList);
-		}
-		// This cannot happen.
-		return null;
+
+		return userProfileDao.getDefaultSalesManager();
+
+		// userList = userProfileDao.getLoanManagerWithLeastWork();
+		// if (!userList.isEmpty()) {
+		// return pickTheChosenOne(userList);
+		// }
+
 	}
 
 	private UserVO pickTheChosenOne(List<User> userList) {
@@ -59,10 +61,9 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		LOG.debug("Sorting by assending order of loan size and returning the one with least work");
 		Collections.sort(userList, new Comparator<User>() {
 			public int compare(User o1, User o2) {
-				if (o1.getLoans() == null || o2.getLoans() == null)
-					return 0;
-				return Integer.compare(o1.getLoans().size(), o2.getLoans()
-				        .size());
+
+				return Integer.compare(o1.getTodaysLoansCount(),
+				        o2.getTodaysLoansCount());
 			}
 		});
 		// Now we have a sorted list return the
@@ -73,6 +74,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserVO getDefaultLoanManagerForRealtorUrl(UserVO realtor,
 	        String stateName) {
 
@@ -82,9 +84,6 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		 * available, return random
 		 */
 
-		if (stateName == null || stateName.isEmpty()) {
-			return this.getDefaultLoanManager(null);
-		}
 		UserVO userVO = userProfileDao.getDefaultLoanManagerForRealtor(realtor,
 		        stateName);
 		if (userVO == null || userVO.getId() == 0) {
