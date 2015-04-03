@@ -37,13 +37,7 @@ public class NewFiDocsResponseProcessor implements Callable
         MuleMessage message = eventContext.getMessage();
         String payload = message.getPayloadAsString();
         byte[] base64encodedPayload = Base64.encodeBase64( payload.getBytes() );
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setResponseCode( "200" );
-        responseVO.setStatus( "0" );
-        responseVO.setResponseMessage( base64encodedPayload );
-        String jsonString = gson.toJson( responseVO );
-        jsonString = removeUTFCharacters( jsonString );
-        message.setPayload( jsonString );
+        message.setPayload( base64encodedPayload );
         return message;
     }
 
