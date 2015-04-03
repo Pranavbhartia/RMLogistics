@@ -17,7 +17,7 @@ import javax.persistence.Table;
 */
 
 @Entity
-@Table(name = "CustomerSpouseBankAccountDetails")
+@Table(name = "customerspousebankaccountdetails")
 @NamedQuery(name = "CustomerSpouseBankAccountDetails.findAll", query = "SELECT csba FROM CustomerSpouseBankAccountDetails csba")
 public class CustomerSpouseBankAccountDetails implements Serializable {
 
@@ -41,7 +41,7 @@ public class CustomerSpouseBankAccountDetails implements Serializable {
 		this.id = id;
 	}
 	
-	@Column(name = "AccountSubType")
+	@Column(name = "account_sub_type")
 	public String getAccountSubType() {
 		return accountSubType;
 	}
@@ -49,7 +49,7 @@ public class CustomerSpouseBankAccountDetails implements Serializable {
 		this.accountSubType = accountSubType;
 	}
 	
-	@Column(name = "currentaccountbalance")
+	@Column(name = "current_account_balance")
 	public String getCurrentaccountbalance() {
 		return currentaccountbalance;
 	}
@@ -57,7 +57,7 @@ public class CustomerSpouseBankAccountDetails implements Serializable {
 		this.currentaccountbalance = currentaccountbalance;
 	}
 	
-	@Column(name = "amountfornewhome")
+	@Column(name = "amount_for_new_home")
 	public String getAmountfornewhome() {
 		return amountfornewhome;
 	}

@@ -45,7 +45,7 @@ public class CustomerEmploymentIncome implements Serializable{
 	
 	
 	
-	@Column(name = "EmployedIncomePreTax")
+	@Column(name = "employed_income_pre_tax")
 	public String getEmployedIncomePreTax() {
 		return employedIncomePreTax;
 	}
@@ -55,7 +55,7 @@ public class CustomerEmploymentIncome implements Serializable{
 	public void setEmployedIncomePreTax(String employedIncomePreTax) {
 		this.employedIncomePreTax = employedIncomePreTax;
 	}
-	@Column(name = "EmployedAt")
+	@Column(name = "employed_at")
 	public String getEmployedAt() {
 		return employedAt;
 	}
@@ -66,7 +66,7 @@ public class CustomerEmploymentIncome implements Serializable{
 	}
 	
 	
-	@Column(name = "EmployedSince")
+	@Column(name = "employed_since")
 	public String getEmployedSince() {
 		return employedSince;
 	}

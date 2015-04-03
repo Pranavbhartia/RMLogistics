@@ -32,7 +32,7 @@ public class CustomerSpouseDetail implements Serializable {
 	private String spouseName;
 	private boolean isSelfEmployed;
 	private boolean isssIncomeOrDisability;
-	private boolean ispensionOrRetirement;
+	private boolean is_pension_or_retirement;
 	private String selfEmployedIncome;
 	private String ssDisabilityIncome;
 	private String monthlyPension;
@@ -58,7 +58,7 @@ public class CustomerSpouseDetail implements Serializable {
 
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "spousedateOfBirth")
+	@Column(name = "spouse_date_of_birth")
 	public Date getSpouseDateOfBirth() {
 		return spouseDateOfBirth;
 	}
@@ -67,7 +67,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.spouseDateOfBirth = spouseDateOfBirth;
 	}
 
-	@Column(name = "spouseSsn")
+	@Column(name = "spouse_ssn")
 	public String getSpouseSsn() {
 		return spouseSsn;
 	}
@@ -76,7 +76,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.spouseSsn = spouseSsn;
 	}
 
-	@Column(name = "spouseSecPhoneNumber")
+	@Column(name = "spouse_sec_phone_number")
 	public String getSpouseSecPhoneNumber() {
 		return spouseSecPhoneNumber;
 	}
@@ -85,7 +85,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.spouseSecPhoneNumber = spouseSecPhoneNumber;
 	}
 
-	@Column(name = "spouseName")
+	@Column(name = "spouse_name")
 	public String getSpouseName() {
 		return spouseName;
 	}
@@ -94,7 +94,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.spouseName = spouseName;
 	}
 
-	@Column(name = "isSelfEmployed", columnDefinition = "TINYINT")
+	@Column(name = "is_self_employed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public boolean isSelfEmployed() {
 		return isSelfEmployed;
@@ -104,7 +104,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.isSelfEmployed = isSelfEmployed;
 	}
 
-	@Column(name = "isssIncomeOrDisability", columnDefinition = "TINYINT")
+	@Column(name = "is_ssincome_or_disability", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public boolean isIsssIncomeOrDisability() {
 		return isssIncomeOrDisability;
@@ -114,17 +114,17 @@ public class CustomerSpouseDetail implements Serializable {
 		this.isssIncomeOrDisability = isssIncomeOrDisability;
 	}
 
-	@Column(name = "ispensionOrRetirement", columnDefinition = "TINYINT")
+	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public boolean isIspensionOrRetirement() {
-		return ispensionOrRetirement;
+		return is_pension_or_retirement;
 	}
 
-	public void setIspensionOrRetirement(boolean ispensionOrRetirement) {
-		this.ispensionOrRetirement = ispensionOrRetirement;
+	public void setIspensionOrRetirement(boolean is_pension_or_retirement) {
+		this.is_pension_or_retirement = is_pension_or_retirement;
 	}
 
-	@Column(name = "selfEmployedIncome")
+	@Column(name = "self_employed_income")
 	public String getSelfEmployedIncome() {
 		return selfEmployedIncome;
 	}
@@ -133,7 +133,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.selfEmployedIncome = selfEmployedIncome;
 	}
 
-	@Column(name = "ssDisabilityIncome")
+	@Column(name = "ss_disability_income")
 	public String getSsDisabilityIncome() {
 		return ssDisabilityIncome;
 	}
@@ -142,7 +142,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.ssDisabilityIncome = ssDisabilityIncome;
 	}
 
-	@Column(name = "monthlyPension")
+	@Column(name = "monthly_pension")
 	public String getMonthlyPension() {
 		return monthlyPension;
 	}

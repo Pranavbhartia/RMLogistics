@@ -17,7 +17,7 @@ import javax.persistence.Table;
 */
 
 @Entity
-@Table(name = "CustomerOtherAccountDetails")
+@Table(name = "customerotheraccountdetails")
 @NamedQuery(name = "CustomerOtherAccountDetails.findAll", query = "SELECT coa FROM CustomerOtherAccountDetails coa")
 public class CustomerOtherAccountDetails implements Serializable {
 
@@ -42,7 +42,7 @@ public class CustomerOtherAccountDetails implements Serializable {
 	}
 	
 	
-	@Column(name = "AccountSubType")
+	@Column(name = "account_sub_type")
 	public String getAccountSubType() {
 		return accountSubType;
 	}
@@ -52,7 +52,7 @@ public class CustomerOtherAccountDetails implements Serializable {
 		this.accountSubType = accountSubType;
 	}
 	
-	@Column(name = "currentaccountbalance")
+	@Column(name = "current_account_balance")
 	public String getCurrentaccountbalance() {
 		return currentaccountbalance;
 	}
@@ -60,7 +60,7 @@ public class CustomerOtherAccountDetails implements Serializable {
 		this.currentaccountbalance = currentaccountbalance;
 	}
 	
-	@Column(name = "amountfornewhome")
+	@Column(name = "amount_for_new_home")
 	public String getAmountfornewhome() {
 		return amountfornewhome;
 	}
