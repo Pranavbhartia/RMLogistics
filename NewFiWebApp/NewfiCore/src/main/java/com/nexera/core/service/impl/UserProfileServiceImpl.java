@@ -363,7 +363,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-		sendNewUserEmail(newUser);
+		try {
+			sendNewUserEmail(newUser);
+		} catch (InvalidInputException | UndeliveredEmailException e) {
+			// TODO: Need to handle this and try a resend, since password will
+			// not be stored
+			LOG.error("Error sending email, proceeding with the email flow");
+		}
 
 		// We set password to null so that it isnt sent back to the front end
 		// newUser.setPassword(null);

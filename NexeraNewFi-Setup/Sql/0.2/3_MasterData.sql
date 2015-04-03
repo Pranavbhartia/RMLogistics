@@ -169,6 +169,18 @@ INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support@
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Dumping data for table `internaluserdetails`
+--
+
+LOCK TABLES `internaluserdetails` WRITE;
+/*!40000 ALTER TABLE `internaluserdetails` DISABLE KEYS */;
+INSERT INTO `internaluserdetails` VALUES (1,2,1,2);
+/*!40000 ALTER TABLE `internaluserdetails` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 --
 -- Dumping data for table `userrole`
 --

@@ -575,6 +575,7 @@ public class LoanServiceImpl implements LoanService {
 			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
 			LoanTeam defaultLanManager = new LoanTeam();
+			LOG.debug("default Loan manager is: " + defaultUser);
 			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
 			defaultLanManager.setLoan(loan);
 			loanTeam.add(defaultLanManager);
