@@ -18,11 +18,11 @@ public class TeamAssignmentTest {
 
 	@Test
 	public void testGetDefaultLoanManager() {
-		UserVO userVO = teamAssignmentHelper.getDefaultLoanManager("AB");
+		UserVO userVO = teamAssignmentHelper.getDefaultLoanManager("RI");
 		System.out.println("Loan manager will be: " + userVO);
 	}
 
-	@Test
+	// @Test
 	public void testGetDefaultLoanManagerForRealtorUrl() {
 		UserVO realtor = new UserVO();
 		realtor.setId(12);
