@@ -30,8 +30,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.dao.InternalUserStateMappingDao;
+import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
@@ -41,8 +43,11 @@ import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.GenericErrorCode;
+import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -64,6 +69,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+
+	@Autowired
+	private LoanDao loanDao;
 
 	@Autowired
 	private InternalUserStateMappingDao internalUserStateMappingDao;
@@ -89,25 +97,27 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public UserVO findUser(Integer userid) {
 
 		User user = userProfileDao.findByUserId(userid);
+		UserVO userListVO = User.convertFromEntityToVO(user);
+		/*
+		 * UserVO userVO = new UserVO();
+		 * 
+		 * userVO.setId(user.getId()); userVO.setFirstName(user.getFirstName());
+		 * userVO.setLastName(user.getLastName());
+		 * userVO.setEmailId(user.getEmailId());
+		 * userVO.setPhoneNumber(user.getPhoneNumber());
+		 * userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+		 * 
+		 * userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()))
+		 * ;
+		 * 
+		 * CustomerDetail customerDetail = user.getCustomerDetail();
+		 * CustomerDetailVO customerDetailVO = CustomerDetail
+		 * .convertFromEntityToVO(customerDetail);
+		 * 
+		 * userVO.setCustomerDetail(customerDetailVO);
+		 */
 
-		UserVO userVO = new UserVO();
-
-		userVO.setId(user.getId());
-		userVO.setFirstName(user.getFirstName());
-		userVO.setLastName(user.getLastName());
-		userVO.setEmailId(user.getEmailId());
-		userVO.setPhoneNumber(user.getPhoneNumber());
-		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-
-		userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()));
-
-		CustomerDetail customerDetail = user.getCustomerDetail();
-		CustomerDetailVO customerDetailVO = CustomerDetail
-		        .convertFromEntityToVO(customerDetail);
-
-		userVO.setCustomerDetail(customerDetailVO);
-
-		return userVO;
+		return userListVO;
 	}
 
 	@Override
@@ -130,12 +140,26 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference()
 				        && userVO.getPhoneNumber() != null) {
-					if (customerDetail.getProfileCompletionStatus() != 100)
+					if (customerDetail.getProfileCompletionStatus() != 100) {
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
 						                .getProfileCompletionStatus()
 						                + (100 / 3));
+					}
 
+				} else if (!userVO.getCustomerDetail()
+				        .getMobileAlertsPreference()) {
+					customerDetail.setMobileAlertsPreference(userVO
+					        .getCustomerDetail().getMobileAlertsPreference());
+
+					if (customerDetail.getProfileCompletionStatus() == 100) {
+						customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                - (100 / 3));
+					} else {
+						customerDetail.setProfileCompletionStatus(200 / 3);
+					}
 				}
 			}
 		} else {
@@ -153,6 +177,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 			} else if (userVO.getCustomerDetail().getMobileAlertsPreference()
 			        && userVO.getPhoneNumber() != null) {
 				customerDetail.setProfileCompletionStatus(200 / 3);
+			} else if (!userVO.getCustomerDetail().getMobileAlertsPreference()
+			        && userVO.getPhotoImageUrl() != null
+			        && userVO.getPhoneNumber() != null) {
+				customerDetail.setMobileAlertsPreference(userVO
+				        .getCustomerDetail().getMobileAlertsPreference());
+				if (customerDetail.getProfileCompletionStatus() == 100) {
+					customerDetail.setProfileCompletionStatus(customerDetail
+					        .getProfileCompletionStatus() - (100 / 3));
+				} else {
+					customerDetail.setProfileCompletionStatus(200 / 3);
+				}
 			}
 
 		}
@@ -348,10 +383,23 @@ public class UserProfileServiceImpl implements UserProfileService,
 		randomGenerator = new SecureRandom();
 	}
 
+	@SuppressWarnings("unused")
 	@Override
-	public void deleteUser(UserVO userVO) {
+	@Transactional
+	public void deleteUser(UserVO userVO) throws Exception {
 
-		// userProfileDao.deleteUser(userVO);
+		User user = User.convertFromVOToEntity(userVO);
+		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
+		if (canUserBeDeleted) {
+			user.getInternalUserDetail().setActiveInternal(false);
+			Integer count = userProfileDao.updateInternalUserDetail(user);
+
+		} else {
+			throw new InputValidationException(new GenericErrorCode(
+			        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR);
+		}
 
 	}
 

@@ -659,12 +659,11 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getStateRow(user) {
@@ -685,7 +684,7 @@ function getStateRow(user) {
 	}).bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
-			if($('#state-dropdown-wrapper').has('.state-dropdown-row').size() <= 0){
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
 				appendStateDropDown('state-dropdown-wrapper');
 			}else{
 				toggleStateDropDown();
@@ -704,7 +703,7 @@ function getStateRow(user) {
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
-		"id" : "state-dropdown-wrapper",
+		"id" : "state-dro;pdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
 	
@@ -742,9 +741,6 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
-	$('#state-dropdown-wrapper').perfectScrollbar({
-		suppressScrollX : true
-	});
 }
 
 function findStateIdForStateCode(stateCode) {
@@ -825,15 +821,17 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getPhone1Row(user) {
+	var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -841,6 +839,10 @@ function getPhone1Row(user) {
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
+	if(user.customerDetail.mobileAlertsPreference){
+	rowCol1.append(span);
+	}
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -949,6 +951,10 @@ var row = $('<div>').attr({
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
+	}).html("");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
 	}).html("Receive SMS Alert");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
@@ -979,11 +985,9 @@ var row = $('<div>').attr({
 	}else{
 		checkBox.addClass('doc-unchecked');
 	}
-	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
-	});
+
 	
-	inputCont.append(checkBox).append(errMessage);
+	inputCont.append(checkBox).append(rowColtext);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
@@ -1188,7 +1192,7 @@ function updateUserDetails() {
 	
   
 
-    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
+    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
     if(phoneStatus!=false){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
