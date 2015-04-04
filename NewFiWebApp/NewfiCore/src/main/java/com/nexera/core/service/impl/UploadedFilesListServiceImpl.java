@@ -3,7 +3,6 @@ package com.nexera.core.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -617,25 +616,24 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		try {
 			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
 			        .toString());
-			
+
 			File file = nexeraUtility.convertInputStreamToFile(inputStream);
-			
-			/*OutputStream outStream = response.getOutputStream();
-		
 
-			byte[] buffer = new byte[2048];
-			int length = -1;
-
-			// write bytes read from the input stream into the output stream
-			while ((length = inputStream.read(buffer))>0) {
-				outStream.write(buffer, 0, length);
-			}
-			outStream.flush();
-
-			inputStream.close();
-			outStream.close();
-			response.setContentLength(buffer.length);
-			response.setHeader("Content-Disposition","attachment; filename=\"download.pdf\"");*/
+			/*
+			 * OutputStream outStream = response.getOutputStream();
+			 * 
+			 * 
+			 * byte[] buffer = new byte[2048]; int length = -1;
+			 * 
+			 * // write bytes read from the input stream into the output stream
+			 * while ((length = inputStream.read(buffer))>0) {
+			 * outStream.write(buffer, 0, length); } outStream.flush();
+			 * 
+			 * inputStream.close(); outStream.close();
+			 * response.setContentLength(buffer.length);
+			 * response.setHeader("Content-Disposition"
+			 * ,"attachment; filename=\"download.pdf\"");
+			 */
 		} catch (Exception e) {
 			LOG.info("Exception File servlet");
 			e.printStackTrace();
