@@ -1012,10 +1012,20 @@ function getPhone1RowLM(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function phoneNumberValidation(phoneNo){
+function phoneNumberValidation(phoneNo,customerStatus){
 
 var regex = /^\d{10}$/;   
-	if (!regex.test(phoneNo)) {
+if(customerStatus){
+	if(phoneNo==null || phoneNo==""){
+	showToastMessage("Phone field cannot be empty");
+	return false;
+	}else if(!regex.test(phoneNo)) {
+		showToastMessage("Invalid phone number");
+		validationFails = true;
+		return false
+	}
+}
+if (!regex.test(phoneNo)) {
 		showToastMessage("Invalid phone number");
 		validationFails = true;
 		return false
@@ -1060,43 +1070,49 @@ var row = $('<div>').attr({
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("");
+	}).html("Receive SMS Alert");
 	
 	var rowColtext = $('<div>').attr({
 		"class" : "cust-sms-ch float-left"
-	}).html("Receive SMS Alert");
+	}).html("Yes");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+	var rowColtext2 = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("No");
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
 	
-	var checkBox = $('<div>').attr({
-		"class" : "admin-doc-checkbox doc-checkbox float-left",		
-		"id" : "alertSMSPreferenceID",		
-		"value":user.customerDetail.mobileAlertsPreference,
+	var radioYesButton = $('<div>').attr({
+		"class" : "cust-radio-btn-yes radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDYes",		
+		
 
-	}).on("click",function(e){
-	if($(this).prop("checked")){
-		    checkBox.addClass('doc-checked');
+	}).bind('click',function(e){
+			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+			
+	});
 	
-            }
-            else if($(this).prop("checked")){
-            	checkBox.addClass('doc-unchecked');
-            }
-	
+	var radioNoButton = $('<div>').attr({
+		"class" : "cust-radio-btn-no radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDNo"
+	}).bind('click',function(e){
+		
+			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
 	});
 	
 	if(user.customerDetail.mobileAlertsPreference){
-		checkBox.addClass('doc-checked');
+		radioYesButton.addClass('radio-btn-selected');
 	}else{
-		checkBox.addClass('doc-unchecked');
+		radioNoButton.addClass('radio-btn-selected');
 	}
 
 	
-	inputCont.append(checkBox).append(rowColtext);
+	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
@@ -1287,17 +1303,16 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
-		
-		customerDetails.mobileAlertsPreference = true;}else{
-			
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		customerDetails.mobileAlertsPreference = true;	
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
 		customerDetails.mobileAlertsPreference = false;
 		}
 
 
 	userProfileJson.customerDetail = customerDetails;
 
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),customerDetails.mobileAlertsPreference);
 	
   
 
