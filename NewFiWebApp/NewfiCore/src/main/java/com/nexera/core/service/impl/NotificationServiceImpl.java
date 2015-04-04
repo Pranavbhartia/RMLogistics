@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	private Utils utils;
-
+	private boolean pushNotificationFlag = true;
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
@@ -58,6 +58,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
+		// TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}
@@ -107,6 +108,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
+		notificationVO.setVisibleToInternalUserRoles(notification
+				.getVisibleToInternalUserRoles());
+		notificationVO.setVisibleToUserRoles(notification
+				.getVisibleToUserRoles());
+		
+		// TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}
@@ -137,7 +144,9 @@ public class NotificationServiceImpl implements NotificationService {
 			vo.setRemindOn(utils
 			        .getDateInUserLocale(notification.getRemindOn()).getTime());
 		vo.setNotificationType(notification.getNotificationType());
-
+		vo.setVisibleToUserRoles(notification.getVisibleToUserRoles());
+		vo.setVisibleToInternalUserRoles(notification
+				.getVisibleToInternalUserRoles());
 		return vo;
 	}
 

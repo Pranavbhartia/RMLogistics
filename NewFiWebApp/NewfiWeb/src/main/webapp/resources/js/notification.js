@@ -56,13 +56,16 @@ function getNotificationContext(loanId,userId){
 				ajaxRequest(ob.pushServerUrl+ob.loanId,"GET","json",data,function(response){
 					
 				},false,undefined,function(response){
+					ob.getNotificationUpdate();
 					if(response.error){
 						showToastMessage(response.error.message);
 					}else{
 						if(response.action=="new"){
 							var nwData=response.data;
 							var exist=false;
-							if(nwData.createdForID==newfiObject.user.id){
+							//Removed Code 
+							//if(nwData.createdForID==newfiObject.user.id||(!nwData.createdForID||nwData.createdForID==0))
+							if(checkNotificationApplicable(nwData)){
 								exist=ob.addToList(ob.loanNotificationList,nwData);
 								if(!exist){
 									ob.updateWrapper();
@@ -103,7 +106,6 @@ function getNotificationContext(loanId,userId){
 						}
 
 					}
-					ob.getNotificationUpdate();
 				});
 			}
 		},
@@ -364,8 +366,9 @@ function getNotificationContext(loanId,userId){
 					//end
 
 					//if(new Date().getTime()>=data.remindOn)
-						ob.loanNotificationList.push(data);
-					updateDefaultContext(data);
+					var exist=ob.addToList(ob.loanNotificationList,data);
+					if(!exist)
+						updateDefaultContext(data);
 					if(callback){
 						callback(ob);
 					}
@@ -401,6 +404,29 @@ function getNotificationContext(loanId,userId){
 	if(notificationContext.loanId)
 		notificationContext.getNotificationUpdate();
 	return notificationContext;
+}
+function checkNotificationApplicable(notification){
+	if(notification.createdForID==newfiObject.user.id){
+		return true;
+	}else{
+		if(!notification.createdForID){
+			if(newfiObject.user.internalUserDetail){
+				if(notification.visibleToInternalUserRoles.indexOf(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName)>=0)
+				return true;
+			}else{
+				if(notification.visibleToUserRoles.indexOf(newfiObject.user.userRole.roleCd)>=0)
+				return true;
+			}
+		}else
+			return false;
+	}
+}
+function getUserRoleKey(){
+	if(newfiObject.user.internalUserDetail){
+		return newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName;
+	}else{
+		return newfiObject.user.userRole.roleCd;
+	}
 }
 function updateDefaultContext(notification){
 	var contxt=getContext("notification");
