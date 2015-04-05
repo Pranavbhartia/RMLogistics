@@ -341,4 +341,90 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		}
 	}
 
+	@Override
+	@Async
+	public void generatePrivateMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail) {
+		MessageVO messageVO = new MessageVO();
+
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null);
+
+		messageVO.setMessage(noteText);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), true);
+
+	}
+
+	private void setOnlyInternalUsersAccess(int loanId, MessageVO messageVO,
+	        User createdByUser, String message) {
+
+		LoanTeamListVO teamList = loanService
+		        .getLoanTeamListForLoan(new LoanVO(loanId));
+		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
+
+		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+		for (LoanTeamVO loanTeamVO : loanTeamVos) {
+			UserVO userVo = loanTeamVO.getUser();
+			if (isInternalUser(userVo)) {
+				if (userVo.getId() != createdByUser.getId()) {
+					MessageUserVO otherUser = messageVO.createNewUserVO();
+					otherUser.setUserID(userVo.getId());
+					otherUser.setUserName(userVo.getDisplayName());
+					otherUser.setImgUrl(userVo.getPhotoImageUrl());
+					try {
+						otherUser.setRoleName(userProfileDao
+						        .findUserRoleForMongo(userVo.getId()));
+					} catch (DatabaseException | NoRecordsFetchedException e) {
+						// THIS SHOULD NEVER HAPPEN
+						LOG.error(
+						        "Trying to fetch a user who does not exist. ",
+						        e);
+					}
+
+					messageUserVOs.add(otherUser);
+				}
+
+			}
+
+		}
+
+		MessageUserVO createdUserVO = messageVO.createNewUserVO();
+		createdUserVO.setUserID(createdByUser.getId());
+		createdUserVO.setImgUrl(createdByUser.getPhotoImageUrl());
+		createdUserVO.setUserName(createdByUser.getFirstName() + " "
+		        + createdByUser.getLastName());
+		try {
+			String roleName = userProfileDao.findUserRoleForMongo(createdByUser
+			        .getId());
+			createdUserVO.setRoleName(roleName);
+		} catch (DatabaseException | NoRecordsFetchedException e) {
+			// THIS SHOULD NEVER HAPPEN
+			LOG.error("Trying to fetch a user who does not exist. ", e);
+		}
+		messageVO.setCreatedUser(createdUserVO);
+		messageVO.setMessage(message);
+		messageVO.setOtherUsers(messageUserVOs);
+
+	}
+
+	private boolean isInternalUser(UserVO userVo) {
+		// TODO Auto-generated method stub
+		String roleCode = userVo.getUserRole().getRoleCd();
+		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(roleCode);
+		switch (rolesEnum) {
+		case CUSTOMER:
+			return false;
+		case REALTOR:
+			return false;
+		case SYSTEM:
+			return true;
+		default:
+			return true;
+
+		}
+
+	}
+
 }

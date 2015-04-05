@@ -22,6 +22,9 @@ public interface MessageServiceHelper {
 	public void generateWorkflowMessage(int loanId, String noteText,
 	        boolean sendEmail);
 
+	public void generatePrivateMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail);
+
 	public void checkIfUserFirstLogin(User user);
 
 	void generateWelcomeNote(User loggedInUser, int loanId);
