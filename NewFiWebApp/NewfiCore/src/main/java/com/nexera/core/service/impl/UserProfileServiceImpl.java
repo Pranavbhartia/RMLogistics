@@ -160,8 +160,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("Checking if the user is a customer");
 		if (userVO.getUserRole().getId() == 1) {
 			LOG.info("Checking for customer profile status of customers");
-			if (customerDetail.getProfileCompletionStatus() != null
-			        || customerDetail.getProfileCompletionStatus() != 0) {
+			if (customerDetail.getProfileCompletionStatus() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
 					if (userVO.getCustomerDetail().getMobileAlertsPreference()
 					        && userVO.getPhoneNumber() != null) {
@@ -224,7 +223,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 				}
 
 			}
-
+			if (customerDetail.getProfileCompletionStatus() > ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+				customerDetail
+				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+			}
 		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -396,6 +398,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);
+		if (newUser.getInternalUserDetail() != null) {
+			if (newUser.getInternalUserDetail().getInternaUserRoleMaster()
+			        .getId() == 1)
+				newUser.getInternalUserDetail().setManager(newUser);
+			newUser.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.ACTIVE);
+		}
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
@@ -435,7 +444,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
 		if (canUserBeDeleted) {
-			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.DELETED);
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.DELETED);
 			Integer count = userProfileDao.updateInternalUserDetail(user);
 
 		} else {

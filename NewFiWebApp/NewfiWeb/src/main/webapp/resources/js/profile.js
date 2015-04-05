@@ -1093,6 +1093,7 @@ var row = $('<div>').attr({
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');
+			validatePhone('priPhoneNumberId');
 			
 	});
 	
@@ -1311,13 +1312,19 @@ function updateUserDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
+    
+    //var phoneStatus=validatePhone("priPhoneNumberId");
+	var phoneStatus;
+	if(customerDetails.mobileAlertsPreference){
+	 phoneStatus=validatePhone("priPhoneNumberId");	
+	}else if(!customerDetails.mobileAlertsPreference){
 
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),customerDetails.mobileAlertsPreference);
-	
+	  phoneStatus=true;	
+	}
   
 
     if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
-    if(phoneStatus!=false){
+    if(phoneStatus){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
