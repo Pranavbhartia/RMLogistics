@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 			</when>
 
 		</choice>
-		<object-to-string-transformer doc:name="Object to String" />
+		<!-- <object-to-string-transformer doc:name="Object to String" /> -->
 		<component doc:name="Java">
 			<spring-object bean="newFiDocsResponseProcessor" />
 		</component>
