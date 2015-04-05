@@ -117,7 +117,7 @@ public class WorkflowConstants {
 	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_TYPE = "DISCLOSURE_AVAIL";
 	// TODO DYNAMIC content
-	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are due in {72:elapsed} hrs.";
+	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are due in {\"72\":\"elapsed\"} hrs.";
 	public static final String CREDIT_SCORE_NOTIFICATION_TYPE = "CREDIT_SCORE";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	static {

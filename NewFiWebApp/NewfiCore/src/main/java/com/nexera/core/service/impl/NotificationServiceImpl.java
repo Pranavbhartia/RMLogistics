@@ -22,6 +22,7 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.GenerateDynamicString;
 
 @Component
 @Transactional
@@ -36,6 +37,8 @@ public class NotificationServiceImpl implements NotificationService {
 	@Autowired
 	private LoanService loanService;
 
+	@Autowired
+	private GenerateDynamicString generateDynamicString;
 	@Autowired
 	private Utils utils;
 	private boolean pushNotificationFlag = true;
@@ -125,7 +128,8 @@ public class NotificationServiceImpl implements NotificationService {
 		NotificationVO vo = new NotificationVO();
 		vo.setId(notification.getId());
 		if (notification.getContent() != null)
-			vo.setContent(new String(notification.getContent()));
+			vo.setContent(generateDynamicString.generate(new String(
+					notification.getContent()), notification.getCreatedDate()));
 		if (notification.getCreatedBy() != null)
 			vo.setCreatedByID(notification.getCreatedBy().getId());
 		if (notification.getCreatedFor() != null)
