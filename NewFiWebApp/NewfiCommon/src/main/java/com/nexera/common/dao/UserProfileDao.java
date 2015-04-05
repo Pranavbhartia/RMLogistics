@@ -67,7 +67,9 @@ public interface UserProfileDao extends GenericDao {
 	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
 	        String stateName);
 
-	public UserVO getDefaultSalesManager();
+	Integer updateInternalUserDetail(User user);
 
-	public void updateLoginTime(Date date, int id);
+	UserVO getDefaultSalesManager();
+
+	void updateLoginTime(Date date, int userId);
 }

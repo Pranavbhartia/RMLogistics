@@ -48,6 +48,7 @@ import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.UserProfileService;
@@ -78,6 +79,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanTurnAroundTimeDao loanTurnAroundTimeDao;
+
+	@Autowired
+	private TeamAssignmentHelper assignmentHelper;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
@@ -557,21 +561,40 @@ public class LoanServiceImpl implements LoanService {
 
 			List<UserVO> userList = loanVO.getLoanTeam();
 			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
-			// Check if loan team is null. If yes, add customer to the loan team
-			if (userList == null || userList.isEmpty()) {
-				LoanTeam e = new LoanTeam();
-				loanTeam.add(e);
-				e.setUser(user);
-				e.setLoan(loan);
-			} else {
-				// If loan team contains other users, then add those users to
-				// the team automatically.
+			// Add customer by default to the loan team
+
+			LoanTeam e = new LoanTeam();
+			e.setUser(user);
+			e.setLoan(loan);
+			loanTeam.add(e);
+
+			/*
+			 * TODO: Get the state from the loan app form and pass it to the
+			 * method below
+			 */
+			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
+
+			LoanTeam defaultLanManager = new LoanTeam();
+			LOG.debug("default Loan manager is: " + defaultUser);
+			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
+			defaultLanManager.setLoan(loan);
+			loanTeam.add(defaultLanManager);
+
+			// If loan team contains other users, then add those users to
+			// the team automatically.
+			if (userList != null) {
 				for (UserVO userVO : userList) {
-					LoanTeam team = new LoanTeam();
-					User userTeam = User.convertFromVOToEntity(userVO);
-					team.setUser(userTeam);
-					team.setLoan(loan);
+					// If the user is not already added to the team
+					if (userVO.getId() != defaultLanManager.getId()
+					        && userVO.getId() != e.getId()) {
+						LoanTeam team = new LoanTeam();
+						User userTeam = User.convertFromVOToEntity(userVO);
+						team.setUser(userTeam);
+						team.setLoan(loan);
+					}
+
 				}
+
 			}
 
 			loan.setLoanTeam(loanTeam);

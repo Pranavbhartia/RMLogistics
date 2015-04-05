@@ -1,8 +1,9 @@
 var stateList = [];
 var currentStateId = 0;
 var currentZipcodeLookUp = [];
-
-
+var internalUserStates = new Object();
+var states=[];
+//var userStates=[];
 function showCustomerProfilePage() {
 	
 	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -41,7 +42,7 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
-
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -113,7 +114,20 @@ function getLoanPersonalInfoContainer(user) {
 
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
+	
+	var stateRow = getManagerStateRow(user);
+	container.append(stateRow);
+ 	userStateMappingVOs=user.internalUserStateMappingVOs;
 
+	states.length = 0;
+	internalUserStates.length=0;
+	for(var i=0;i<userStateMappingVOs.length;i++) {
+			states.push(userStateMappingVOs[i].stateId.toString());
+			internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+        }
+	var stateTextRow = getStateTextRow();
+	container.append(stateTextRow);
+	
  
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
@@ -140,6 +154,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
+	var internalUserState=[];
+	//for(var i=0;i<internalUserStates.length;i++){
+	for(var key in internalUserStates){
+		if(internalUserStates[key]!=0)
+			internalUserState.push(internalUserStates[key]);
+	}
+	userProfileJson.internalUserStateMappingVOs = internalUserState;
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -156,7 +177,7 @@ function updateLMDetails() {
 
 			$("#profileNameId").text($("#firstNameId").val());
 			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
-
+			showLoanManagerProfilePage();
 		},
 		error : function(error) {
 			showToastMessage("Mandatory Fileds should not be empty");
@@ -659,12 +680,11 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getStateRow(user) {
@@ -685,7 +705,7 @@ function getStateRow(user) {
 	}).bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
-			if($('#state-dropdown-wrapper').has('.state-dropdown-row').size() <= 0){
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
 				appendStateDropDown('state-dropdown-wrapper');
 			}else{
 				toggleStateDropDown();
@@ -704,7 +724,7 @@ function getStateRow(user) {
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
-		"id" : "state-dropdown-wrapper",
+		"id" : "state-dro;pdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
 	
@@ -712,6 +732,39 @@ function getStateRow(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
+
+function getManagerStateRow(user) {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("State");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var stateInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
+		"id" : "stateId"
+	}).bind('click',function(e){
+		e.stopPropagation();
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+				appendManagerStateDropDown('state-dropdown-wrapper');
+			}else{
+				toggleStateDropDown();
+			}
+	});
+	
+	
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dropdown-wrapper",
+		"class" : "state-dropdown-wrapper"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
+	return row.append(rowCol1).append(rowCol2);
+}
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
 		currentZipcodeLookUp = response.resultObject;
@@ -742,11 +795,53 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
-	$('#state-dropdown-wrapper').perfectScrollbar({
-		suppressScrollX : true
-	});
 }
 
+function appendManagerStateDropDown(elementToApeendTo) {
+
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	for(var i=0; i<stateList.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row clearfix",
+			"id" : stateList[i].id,
+			"name":  stateList[i].stateName
+		});
+		var checkBox = $('<input>').attr({
+				"class" : "float-left",
+				"id": "checkBox_"+stateList[i].id,
+				"type":"checkbox"
+		});
+		if(states.indexOf((stateList[i].id).toString())>-1){
+			$(checkBox).attr('checked',true);
+		}
+		var textRow = $('<div>').attr({
+			"class" : "float-left",
+			"id" : "stateName_"+stateList[i].id
+		}).html(stateList[i].stateName);
+			stateRow.append(checkBox).append(textRow);
+			stateRow.bind('click',function(e){
+				e.stopPropagation();
+				var internalUserStateMappingVO=new Object();
+				internalUserStateMappingVO.userId=$("#userid").val();
+				internalUserStateMappingVO.stateId=this.id;
+				if($("#checkBox_"+this.id).is(":checked")){
+					internalUserStateMappingVO.isChecked=true;		
+//		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}else{
+					internalUserStateMappingVO=internalUserStates[this.id];
+					internalUserStateMappingVO.isChecked=false;
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}
+				
+				$('#stateId').val(this.name);
+				toggleStateDropDown();
+			});
+		
+		parentToAppendTo.append(stateRow);
+	}
+	toggleStateDropDown();
+}
 function findStateIdForStateCode(stateCode) {
 	
 	for(var i=0; i<stateList.length; i++){
@@ -758,6 +853,16 @@ function findStateIdForStateCode(stateCode) {
 	return 0;
 }
 
+function findStateNameForStateId(stateId) {
+	
+	for(var i=0; i<stateList.length; i++){
+		if(stateList[i].id == stateId){
+			return stateList[i].stateName;
+		}
+	}
+	
+	return 0;
+}
 function toggleStateDropDown() {
 	$('#state-dropdown-wrapper').slideToggle();
 }
@@ -825,15 +930,17 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
-	});
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
 }
 
 function getPhone1Row(user) {
+	var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -841,6 +948,10 @@ function getPhone1Row(user) {
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
+	if(user.customerDetail.mobileAlertsPreference){
+	rowCol1.append(span);
+	}
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -901,10 +1012,20 @@ function getPhone1RowLM(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function phoneNumberValidation(phoneNo){
+function phoneNumberValidation(phoneNo,customerStatus){
 
 var regex = /^\d{10}$/;   
-	if (!regex.test(phoneNo)) {
+if(customerStatus){
+	if(phoneNo==null || phoneNo==""){
+	showToastMessage("Phone field cannot be empty");
+	return false;
+	}else if(!regex.test(phoneNo)) {
+		showToastMessage("Invalid phone number");
+		validationFails = true;
+		return false
+	}
+}
+if (!regex.test(phoneNo)) {
 		showToastMessage("Invalid phone number");
 		validationFails = true;
 		return false
@@ -950,40 +1071,48 @@ var row = $('<div>').attr({
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Receive SMS Alert");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("Yes");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+	var rowColtext2 = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("No");
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
 	
-	var checkBox = $('<div>').attr({
-		"class" : "admin-doc-checkbox doc-checkbox float-left",		
-		"id" : "alertSMSPreferenceID",		
-		"value":user.customerDetail.mobileAlertsPreference,
+	var radioYesButton = $('<div>').attr({
+		"class" : "cust-radio-btn-yes radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDYes",		
+		
 
-	}).on("click",function(e){
-	if($(this).prop("checked")){
-		    checkBox.addClass('doc-checked');
+	}).bind('click',function(e){
+			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+			
+	});
 	
-            }
-            else if($(this).prop("checked")){
-            	checkBox.addClass('doc-unchecked');
-            }
-	
+	var radioNoButton = $('<div>').attr({
+		"class" : "cust-radio-btn-no radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDNo"
+	}).bind('click',function(e){
+		
+			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
 	});
 	
 	if(user.customerDetail.mobileAlertsPreference){
-		checkBox.addClass('doc-checked');
+		radioYesButton.addClass('radio-btn-selected');
 	}else{
-		checkBox.addClass('doc-unchecked');
+		radioNoButton.addClass('radio-btn-selected');
 	}
-	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
-	});
+
 	
-	inputCont.append(checkBox).append(errMessage);
+	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
@@ -1174,21 +1303,20 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
-	if($('.admin-doc-checkbox doc-checkbox float-left doc-checked')){
-		
-		customerDetails.mobileAlertsPreference = true;}else{
-			
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		customerDetails.mobileAlertsPreference = true;	
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
 		customerDetails.mobileAlertsPreference = false;
 		}
 
 
 	userProfileJson.customerDetail = customerDetails;
 
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
+    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),customerDetails.mobileAlertsPreference);
 	
   
 
-    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
+    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
     if(phoneStatus!=false){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
@@ -1447,3 +1575,38 @@ function saveEditUserProfile(user){
 }
 
 
+function getStateTextRow() {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	});
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	
+	
+	var emailHtmlText="";	
+	for(var key in internalUserStates){
+
+		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
+			emailHtmlText+="<div class=\"prof-form-input-textarea-block float-left\">"+findStateNameForStateId(internalUserStates[key].stateId)+"</div>";
+		}
+	}
+	var emailInput = $('<div>').attr({
+		"class" : "prof-form-input-textarea clearfix",
+		"id" : "inputTextarea"
+ 	}).html(emailHtmlText);
+
+	inputCont.append(emailInput);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}

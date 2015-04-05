@@ -42,8 +42,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notification.class);
 
-		if (user.getUserRole() == null || user.getUserRole().getId() == 0)
-			user = userProfileDao.findInternalUser(user.getId());
+		user = userProfileDao.findInternalUser(user.getId());
 
 		Criterion loanRest = Restrictions.eq("loan", loan);
 		Criterion userRest = Restrictions.eq("createdFor", user);

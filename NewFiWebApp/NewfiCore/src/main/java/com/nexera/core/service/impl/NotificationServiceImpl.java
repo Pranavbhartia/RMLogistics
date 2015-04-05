@@ -22,6 +22,7 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.GenerateDynamicString;
 
 @Component
 @Transactional
@@ -37,8 +38,10 @@ public class NotificationServiceImpl implements NotificationService {
 	private LoanService loanService;
 
 	@Autowired
+	private GenerateDynamicString generateDynamicString;
+	@Autowired
 	private Utils utils;
-
+	private boolean pushNotificationFlag = true;
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
@@ -58,6 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
+		// TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}
@@ -107,6 +111,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
+		notificationVO.setVisibleToInternalUserRoles(notification
+				.getVisibleToInternalUserRoles());
+		notificationVO.setVisibleToUserRoles(notification
+				.getVisibleToUserRoles());
+		
+		// TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}
@@ -118,7 +128,8 @@ public class NotificationServiceImpl implements NotificationService {
 		NotificationVO vo = new NotificationVO();
 		vo.setId(notification.getId());
 		if (notification.getContent() != null)
-			vo.setContent(new String(notification.getContent()));
+			vo.setContent(generateDynamicString.generate(new String(
+					notification.getContent()), notification.getCreatedDate()));
 		if (notification.getCreatedBy() != null)
 			vo.setCreatedByID(notification.getCreatedBy().getId());
 		if (notification.getCreatedFor() != null)
@@ -137,7 +148,9 @@ public class NotificationServiceImpl implements NotificationService {
 			vo.setRemindOn(utils
 			        .getDateInUserLocale(notification.getRemindOn()).getTime());
 		vo.setNotificationType(notification.getNotificationType());
-
+		vo.setVisibleToUserRoles(notification.getVisibleToUserRoles());
+		vo.setVisibleToInternalUserRoles(notification
+				.getVisibleToInternalUserRoles());
 		return vo;
 	}
 

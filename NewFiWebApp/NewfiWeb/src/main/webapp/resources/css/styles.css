@@ -4244,6 +4244,7 @@ input.calc-input {
 
 .cust-sms-ch {
 	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .radio-btn{
@@ -4300,4 +4301,27 @@ input.calc-input {
 	background-color: #F47521;
 	border-radius:3px;
 	cursor: pointer;
+}
+
+.prof-form-input-statedropdown {
+	width: 200px;
+}
+
+.prof-form-input-textarea {
+	line-height: 30px;
+	background-color: #FAFAFA !important;
+	border: 1px #E2E2E2 solid;
+	border-radius: 3px;
+	width: 300px;
+}
+
+.prof-form-input-textarea-block {
+	height: 30px;
+	line-height: 30px;
+	background-color: #FFF !important;
+	border: 1px #E2E2E2 solid;
+	border-radius: 3px;
+	margin: 3px;
+	width: 130px;
+	padding-left: 10px;
 }

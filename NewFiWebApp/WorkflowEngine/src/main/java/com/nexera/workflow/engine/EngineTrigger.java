@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
 import com.nexera.workflow.Constants.WorkflowConstants;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -31,7 +30,6 @@ import com.nexera.workflow.manager.CacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.utils.Util;
-import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 @Scope(value = "prototype")
@@ -50,100 +48,337 @@ public class EngineTrigger {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	@Transactional
-	public Integer triggerWorkFlow(String workflowJsonString) {
-		LOGGER.debug("Triggering a workflow ");
-		WorkflowMaster workflowMaster = null;
-		Gson gson = new Gson();
-		WorkflowVO workflowVO = gson.fromJson(workflowJsonString,
-		        WorkflowVO.class);
-		if (workflowVO != null) {
-			String workflowType = workflowVO.getWorkflowType();
-			workflowMaster = workflowService
-			        .getWorkFlowByWorkFlowType(workflowType);
-			if (workflowMaster != null) {
-				LOGGER.debug("Workflow found for this workflowtype "
-				        + workflowMaster.getWorkflowType());
-				WorkflowExec workflowExec = workflowService
-				        .setWorkflowIntoExecution(workflowMaster);
-				LOGGER.debug("Workflow has been put into execution , Getting all items associated with workflow ");
-				List<WorkflowItemMaster> workflowItemMasterList = workflowService
-				        .getWorkflowItemMasterListByWorkflowMaster(workflowMaster);
-				for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
-					LOGGER.debug("Initializing all workflow items ");
-					if (workflowService
-					        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
-						continue;
-					}
+	private WorkflowExec loanManagerWorkflowExec;
 
+	private WorkflowExec customerWorkflowExec;
+
+	Map<WorkflowItemMaster, WorkflowItemExec> customerMap = new HashMap<WorkflowItemMaster, WorkflowItemExec>();
+
+	Map<WorkflowItemMaster, WorkflowItemExec> loanManagerMap = new HashMap<WorkflowItemMaster, WorkflowItemExec>();
+
+	@Transactional
+	public Map<String, Integer> triggerWorkFlow() {
+		LOGGER.debug("Triggering a workflow ");
+		Map<String, Integer> workflowMap = new HashMap<String, Integer>();
+		WorkflowMaster customerWorkflowMaster = workflowService
+		        .getWorkFlowByWorkFlowType(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE);
+		WorkflowMaster loanManagerWorkflowMaster = workflowService
+		        .getWorkFlowByWorkFlowType(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE);
+
+		customerWorkflowExec = workflowService
+		        .setWorkflowIntoExecution(customerWorkflowMaster);
+
+		loanManagerWorkflowExec = workflowService
+		        .setWorkflowIntoExecution(loanManagerWorkflowMaster);
+
+		LOGGER.debug("Trigger Customer Workflow ");
+		workflowMap.put(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE,
+		        triggerWorkflow(customerWorkflowExec, customerWorkflowMaster));
+
+		LOGGER.debug("Trigger Loan Manager Workflow ");
+		workflowMap.put(
+		        WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE,
+		        triggerWorkflow(loanManagerWorkflowExec,
+		                loanManagerWorkflowMaster));
+
+		customerMap.clear();
+		loanManagerMap.clear();
+
+		return workflowMap;
+	}
+
+	public Integer triggerWorkflow(WorkflowExec workflowExec,
+	        WorkflowMaster workflowMaster) {
+		LOGGER.debug("Setting workflow master into execution ");
+
+		List<WorkflowItemMaster> workflowItemMasterList = workflowMaster
+		        .getWorkflowItemMasterList();
+		if (workflowItemMasterList != null) {
+			for (WorkflowItemMaster workflowItemMaster : workflowItemMasterList) {
+				if (workflowService
+				        .checkIfOnSuccessOfAnotherItem(workflowItemMaster)) {
+					addWorkflowItemInItsCorrespondingMap(workflowMaster,
+					        workflowItemMaster, null);
+					LOGGER.debug("Check to avoid duplicate entries ");
+					continue;
+				} else {
 					if (!workflowItemMaster.getChildWorkflowItemMasterList()
 					        .isEmpty()) {
-						WorkflowItemExec workflowItemExec = workflowService
-						        .setWorkflowItemIntoExecution(workflowExec,
-						                workflowItemMaster, null);
-						for (WorkflowItemMaster childworkflowItemMaster : workflowItemMaster
+						LOGGER.debug("Putting the parent into exeuction first ");
+						WorkflowItemExec parentWorkflowItemExec = putGeneralWorkflowItemIntoExecution(
+						        workflowExec, workflowItemMaster);
+						for (WorkflowItemMaster childItemMaster : workflowItemMaster
 						        .getChildWorkflowItemMasterList()) {
-							LOGGER.debug("In this case will add parent workflow item execution id ");
-							if (childworkflowItemMaster.getOnSuccess() != null) {
-								LOGGER.debug("It has a successs item ");
-								WorkflowItemMaster successItemMaster = childworkflowItemMaster
-								        .getOnSuccess();
-								WorkflowItemExec successWorkflowItemExec = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                successItemMaster,
-								                workflowItemExec);
+							if (workflowService
+							        .checkIfOnSuccessOfAnotherItem(childItemMaster)) {
+								LOGGER.debug("Checking whether it is an on success of another item, to avoid duplicates ");
+								addWorkflowItemInItsCorrespondingMap(
+								        workflowMaster, childItemMaster,
+								        parentWorkflowItemExec);
+								continue;
+							} else {
+								LOGGER.debug("First Checking Whether it has an on success item or not ");
+								if (childItemMaster.getOnSuccess() != null) {
+									WorkflowItemMaster successItem = childItemMaster
+									        .getOnSuccess();
+									WorkflowItemExec successWorkflowItemExec = null;
+									if (checkWhetherItBelongsToThisWorkflow(
+									        workflowMaster, successItem,
+									        parentWorkflowItemExec)) {
+										LOGGER.debug("Both Success and its triggerer resides in the same workflow ");
+										successWorkflowItemExec = putChildWorkflowItemIntoExecution(
+										        workflowExec, successItem,
+										        parentWorkflowItemExec);
+										LOGGER.debug("Adding the trigger into execution ");
+										WorkflowItemExec triggererItem = putChildWorkflowItemIntoExecution(
+										        workflowExec, childItemMaster,
+										        parentWorkflowItemExec);
+										LOGGER.debug("Setting its on sucess item  ");
+										triggererItem
+										        .setOnSuccessItem(successWorkflowItemExec);
+										workflowService
+										        .updateWorkflowItemExecutionStatus(triggererItem);
 
-								WorkflowItemExec childItem = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                childworkflowItemMaster,
-								                workflowItemExec);
-								childItem
-								        .setOnSuccessItem(successWorkflowItemExec);
-								workflowService
-								        .updateWorkflowItemExecutionStatus(childItem);
+									} else {
 
-							}
-							if (!workflowService
-							        .checkIfOnSuccessOfAnotherItem(childworkflowItemMaster)) {
-								workflowService.setWorkflowItemIntoExecution(
-								        workflowExec, childworkflowItemMaster,
-								        workflowItemExec);
+										LOGGER.debug("Add workflow item in its corresponding map ");
+										addWorkflowItemInItsCorrespondingMap(
+										        workflowMaster, successItem,
+										        parentWorkflowItemExec);
+										LOGGER.debug("Success and its associate resides in different workflow ");
+										if (successItem
+										        .getParentWorkflowMaster()
+										        .getWorkflowType()
+										        .equalsIgnoreCase(
+										                WorkflowConstants.CUSTOMER_WORKFLOW_TYPE)) {
+											for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : customerMap
+											        .entrySet()) {
+												WorkflowItemMaster workflowItem = entry
+												        .getKey();
+												if (workflowItem.getId() == successItem
+												        .getId()) {
+													LOGGER.debug("This workflowitem resides in the map, setting it into execution now ");
+													if (customerWorkflowExec != null) {
+														successWorkflowItemExec = putChildWorkflowItemIntoExecution(
+														        customerWorkflowExec,
+														        successItem,
+														        entry.getValue());
+													} else {
+														LOGGER.error("Customer workflow not intiated");
+													}
+													LOGGER.debug("Adding the trigger into execution ");
+													WorkflowItemExec triggererItem = putChildWorkflowItemIntoExecution(
+													        workflowExec,
+													        childItemMaster,
+													        parentWorkflowItemExec);
+													LOGGER.debug("Setting its on sucess item  ");
+													triggererItem
+													        .setOnSuccessItem(successWorkflowItemExec);
+													workflowService
+													        .updateWorkflowItemExecutionStatus(triggererItem);
+												}
+											}
+										} else {
+											for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : loanManagerMap
+											        .entrySet()) {
+												WorkflowItemMaster workflowItem = entry
+												        .getKey();
+												if (workflowItem.getId() == successItem
+												        .getId()) {
+													LOGGER.debug("This workflowitem resides in the map, setting it into execution now ");
+													if (loanManagerWorkflowExec != null) {
+														successWorkflowItemExec = putChildWorkflowItemIntoExecution(
+														        loanManagerWorkflowExec,
+														        successItem,
+														        entry.getValue());
+													} else {
+														LOGGER.error("Loan Manager workflow not intiated ");
+
+													}
+
+													LOGGER.debug("Adding the trigger into execution ");
+													WorkflowItemExec triggererItem = putChildWorkflowItemIntoExecution(
+													        workflowExec,
+													        childItemMaster,
+													        parentWorkflowItemExec);
+													LOGGER.debug("Setting its on sucess item  ");
+													triggererItem
+													        .setOnSuccessItem(successWorkflowItemExec);
+													workflowService
+													        .updateWorkflowItemExecutionStatus(triggererItem);
+												}
+											}
+										}
+									}
+
+								} else {
+									LOGGER.debug("Doesnt Have a Success Workflow Item associated, hence putting the item into execution ");
+									putChildWorkflowItemIntoExecution(
+									        workflowExec, childItemMaster,
+									        parentWorkflowItemExec);
+								}
 							}
 						}
 
 					} else {
 						if (workflowItemMaster.getParentWorkflowItemMaster() == null) {
-							WorkflowItemExec successWorkflowItemExec = null;
+							LOGGER.debug("Add only if it doesnt have a parent, this is to avoid duplicate copies of child items");
 							if (workflowItemMaster.getOnSuccess() != null) {
-
-								WorkflowItemMaster successItemMaster = workflowItemMaster
+								WorkflowItemMaster successItem = workflowItemMaster
 								        .getOnSuccess();
-								successWorkflowItemExec = workflowService
-								        .setWorkflowItemIntoExecution(
-								                workflowExec,
-								                successItemMaster, null);
-							}
-							WorkflowItemExec workflowItemExec = workflowService
-							        .setWorkflowItemIntoExecution(workflowExec,
-							                workflowItemMaster, null);
-							if (successWorkflowItemExec != null) {
-								workflowItemExec
-								        .setOnSuccessItem(successWorkflowItemExec);
-								workflowService
-								        .updateWorkflowItemExecutionStatus(workflowItemExec);
-							}
+								WorkflowItemExec successWorkflowItemExec = null;
+								if (checkWhetherItBelongsToThisWorkflow(
+								        workflowMaster, successItem, null)) {
+									LOGGER.debug("Both Success and its triggerer resides in the same workflow ");
+									putGeneralWorkflowItemIntoExecution(
+									        workflowExec, workflowItemMaster);
+								} else {
 
+									LOGGER.debug("Adding workflowitem in its respective map ");
+									addWorkflowItemInItsCorrespondingMap(
+									        workflowMaster, workflowItemMaster,
+									        null);
+									LOGGER.debug("Success and its associate resides in different workflow ");
+									if (successItem
+									        .getParentWorkflowMaster()
+									        .getWorkflowType()
+									        .equalsIgnoreCase(
+									                WorkflowConstants.CUSTOMER_WORKFLOW_TYPE)) {
+										for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : customerMap
+										        .entrySet()) {
+											WorkflowItemMaster workflowItem = entry
+											        .getKey();
+											if (workflowItem.getId() == successItem
+											        .getId()) {
+												LOGGER.debug("This workflowitem resides in the map, setting it into execution now ");
+												if (customerWorkflowExec != null) {
+													successWorkflowItemExec = putChildWorkflowItemIntoExecution(
+													        customerWorkflowExec,
+													        successItem,
+													        entry.getValue());
+												} else {
+													LOGGER.error("Customer workflow not intiated, adding back customer ");
+
+												}
+												LOGGER.debug("Adding the trigger into execution ");
+												WorkflowItemExec triggererItem = putGeneralWorkflowItemIntoExecution(
+												        workflowExec,
+												        workflowItemMaster);
+												LOGGER.debug("Setting its on sucess item  ");
+												triggererItem
+												        .setOnSuccessItem(successWorkflowItemExec);
+												workflowService
+												        .updateWorkflowItemExecutionStatus(triggererItem);
+											}
+										}
+									} else {
+										for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : loanManagerMap
+										        .entrySet()) {
+											WorkflowItemMaster workflowItem = entry
+											        .getKey();
+											if (workflowItem.getId() == successItem
+											        .getId()) {
+												LOGGER.debug("This workflowitem resides in the map, setting it into execution now ");
+												if (customerWorkflowExec != null) {
+													successWorkflowItemExec = putChildWorkflowItemIntoExecution(
+													        customerWorkflowExec,
+													        successItem,
+													        entry.getValue());
+												} else {
+													LOGGER.error("Loan Manager workflow not intiated");
+
+												}
+												LOGGER.debug("Adding the trigger into execution ");
+												WorkflowItemExec triggererItem = putGeneralWorkflowItemIntoExecution(
+												        workflowExec,
+												        workflowItemMaster);
+												LOGGER.debug("Setting its on sucess item  ");
+												triggererItem
+												        .setOnSuccessItem(successWorkflowItemExec);
+												workflowService
+												        .updateWorkflowItemExecutionStatus(triggererItem);
+											}
+										}
+									}
+								}
+							} else {
+								putGeneralWorkflowItemIntoExecution(
+								        workflowExec, workflowItemMaster);
+							}
 						}
 					}
 				}
-
-				/* } */
-				return workflowExec.getId();
 			}
 		}
-		return 0;
+		return workflowExec.getId();
+	}
+
+	public WorkflowItemExec putGeneralWorkflowItemIntoExecution(
+	        WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
+		return workflowService.setWorkflowItemIntoExecution(workflowExec,
+		        workflowItemMaster, null);
+	}
+
+	public WorkflowItemExec putChildWorkflowItemIntoExecution(
+	        WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster,
+	        WorkflowItemExec parentWorkflowItemExec) {
+		return workflowService.setWorkflowItemIntoExecution(workflowExec,
+		        workflowItemMaster, parentWorkflowItemExec);
+
+	}
+
+	public Integer triggerLoanManagerWorkflow(WorkflowMaster workflowMaster) {
+		LOGGER.debug("Setting workflow master into execution ");
+		WorkflowExec workflowExec = workflowService
+		        .setWorkflowIntoExecution(workflowMaster);
+		return workflowExec.getId();
+	}
+
+	private boolean checkWhetherItBelongsToThisWorkflow(
+
+	WorkflowMaster workflowMaster, WorkflowItemMaster workflowItemMaster,
+	        WorkflowItemExec parentWorkflowItemExec) {
+
+		if (workflowItemMaster.getParentWorkflowMaster().getWorkflowType()
+		        .equalsIgnoreCase(workflowMaster.getWorkflowType())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void addWorkflowItemInItsCorrespondingMap(
+	        WorkflowMaster workflowMaster,
+	        WorkflowItemMaster workflowItemMaster,
+	        WorkflowItemExec parentWorkflowItemExec) {
+		int count = 0;
+		if (workflowItemMaster.getParentWorkflowMaster().getWorkflowType()
+		        .equalsIgnoreCase(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE)) {
+			for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : loanManagerMap
+			        .entrySet()) {
+				WorkflowItemMaster workflowItem = entry.getKey();
+				if (workflowItem.getId() == workflowItemMaster.getId()) {
+					count = 1;
+				}
+			}
+			if (count == 0) {
+				loanManagerMap.put(workflowItemMaster, parentWorkflowItemExec);
+			}
+
+		} else {
+
+			for (Map.Entry<WorkflowItemMaster, WorkflowItemExec> entry : customerMap
+			        .entrySet()) {
+				WorkflowItemMaster workflowItem = entry.getKey();
+				if (workflowItem.getId() == workflowItemMaster.getId()) {
+					count = 1;
+				}
+			}
+			if (count == 0) {
+				customerMap.put(workflowItemMaster, parentWorkflowItemExec);
+			}
+
+		}
 
 	}
 
