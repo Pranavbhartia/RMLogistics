@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
+import com.nexera.common.commons.ProfileCompletionStatus;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -161,15 +162,23 @@ public class TemplateController extends DefaultController {
 
 			UserVO userVO = userProfileService.findUser(userid);
 			if (userVO.getUserRole().getId() == 1) {
-				if (userVO.getCustomerDetail() != null) {
-					Integer customerProfileStatus=userVO.getCustomerDetail().getProfileCompletionStatus()+Math.round(100/3)+1;
-                    userVO.getCustomerDetail().setProfileCompletionStatus(customerProfileStatus);
-                    if( userVO.getCustomerDetail().getProfileCompletionStatus()!=100)	 					
+				if (userVO.getCustomerDetail().getProfileCompletionStatus() != null) {
+
+					if (userVO.getCustomerDetail().getProfileCompletionStatus() <= 100) {
+
+						userProfileService.updateCustomerDetails(userVO);
+					}
+
+				} else {
+
+					if (userVO.getCustomerDetail().getMobileAlertsPreference() == null) {
+						userVO.getCustomerDetail().setMobileAlertsPreference(
+						        false);
+					} else {
+						userVO.getCustomerDetail().setMobileAlertsPreference(
+						        true);
+					}
 					userProfileService.updateCustomerDetails(userVO);
-				}else{
-					User user=User.convertFromVOToEntity(userVO);
-					if(user.getCustomerDetail()!=null)
-					user.getCustomerDetail().setProfileCompletionStatus(200/3);
 				}
 			}
 

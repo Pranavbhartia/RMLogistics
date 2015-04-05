@@ -32,6 +32,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
+import com.nexera.common.commons.ProfileCompletionStatus;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -151,61 +152,76 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	public Integer updateCustomerDetails(UserVO userVO) {
 
+		LOG.info("To update the users");
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
 		CustomerDetail customerDetail = CustomerDetail
 		        .convertFromVOToEntity(customerDetailVO);
-		if (customerDetail.getProfileCompletionStatus() != null) {
-			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
-				if (userVO.getCustomerDetail().getMobileAlertsPreference()
-				        && userVO.getPhoneNumber() != null) {
-					if (customerDetail.getProfileCompletionStatus() != 100) {
+		LOG.info("Checking if the user is a customer");
+		if (userVO.getUserRole().getId() == 1) {
+			LOG.info("Checking for customer profile status of customers");
+			if (customerDetail.getProfileCompletionStatus() != null
+			        || customerDetail.getProfileCompletionStatus() != 0) {
+				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+					if (userVO.getCustomerDetail().getMobileAlertsPreference()
+					        && userVO.getPhoneNumber() != null) {
+						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus()
+							                + ProfileCompletionStatus.ON_CREATE);
+						}
+
+					} else if (!userVO.getCustomerDetail()
+					        .getMobileAlertsPreference()) {
+						customerDetail.setMobileAlertsPreference(userVO
+						        .getCustomerDetail()
+						        .getMobileAlertsPreference());
+
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus()
+							                - ProfileCompletionStatus.ON_CREATE);
+						} else {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						}
+					}
+				}
+			} else {
+				if (userVO.getPhotoImageUrl() == null) {
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
+					if (userVO.getPhoneNumber() != null
+					        && userVO.getCustomerDetail()
+					                .getMobileAlertsPreference())
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
 						                .getProfileCompletionStatus()
-						                + (100 / 3));
-					}
-
+						                + ProfileCompletionStatus.ON_CREATE);
+				} else if (userVO.getPhoneNumber() != null
+				        && userVO.getCustomerDetail()
+				                .getMobileAlertsPreference()
+				        && userVO.getPhotoImageUrl() != null) {
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
 				} else if (!userVO.getCustomerDetail()
-				        .getMobileAlertsPreference()) {
+				        .getMobileAlertsPreference()
+				        && userVO.getPhotoImageUrl() != null
+				        && userVO.getPhoneNumber() != null) {
 					customerDetail.setMobileAlertsPreference(userVO
 					        .getCustomerDetail().getMobileAlertsPreference());
-
-					if (customerDetail.getProfileCompletionStatus() == 100) {
+					if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
 						                .getProfileCompletionStatus()
-						                - (100 / 3));
+						                - ProfileCompletionStatus.ON_CREATE);
 					} else {
-						customerDetail.setProfileCompletionStatus(200 / 3);
+						customerDetail
+						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 					}
 				}
-			}
-		} else {
-			if (userVO.getPhotoImageUrl() == null) {
-				customerDetail.setProfileCompletionStatus(100 / 3);
-				if (userVO.getPhoneNumber() != null
-				        && userVO.getCustomerDetail()
-				                .getMobileAlertsPreference())
-					customerDetail.setProfileCompletionStatus(customerDetail
-					        .getProfileCompletionStatus() + (100 / 3));
-			} else if (userVO.getPhoneNumber() != null
-			        && userVO.getCustomerDetail().getMobileAlertsPreference()
-			        && userVO.getPhotoImageUrl() != null) {
-				customerDetail.setProfileCompletionStatus(100);
-			} else if (userVO.getCustomerDetail().getMobileAlertsPreference()
-			        && userVO.getPhoneNumber() != null) {
-				customerDetail.setProfileCompletionStatus(200 / 3);
-			} else if (!userVO.getCustomerDetail().getMobileAlertsPreference()
-			        && userVO.getPhotoImageUrl() != null
-			        && userVO.getPhoneNumber() != null) {
-				customerDetail.setMobileAlertsPreference(userVO
-				        .getCustomerDetail().getMobileAlertsPreference());
-				if (customerDetail.getProfileCompletionStatus() == 100) {
-					customerDetail.setProfileCompletionStatus(customerDetail
-					        .getProfileCompletionStatus() - (100 / 3));
-				} else {
-					customerDetail.setProfileCompletionStatus(200 / 3);
-				}
+
 			}
 
 		}
@@ -373,7 +389,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		User newUser = User.convertFromVOToEntity(userVO);
 		if (newUser.getCustomerDetail() != null) {
-			newUser.getCustomerDetail().setProfileCompletionStatus(100 / 3);
+			newUser.getCustomerDetail().setProfileCompletionStatus(
+			        ProfileCompletionStatus.ON_CREATE);
 		}
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
