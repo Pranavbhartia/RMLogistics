@@ -19,6 +19,8 @@ public class NotificationVO implements Serializable {
 	private Integer loanID;
 	private Integer createdForID;
 	private Integer timeOffset;
+	private String visibleToUserRoles;
+	private String visibleToInternalUserRoles;
 
 	public NotificationVO() {
 	}
@@ -109,6 +111,18 @@ public class NotificationVO implements Serializable {
 	}
 	public void setTimeOffset(Integer timeOffset) {
 		this.timeOffset = timeOffset;
+	}
+	public String getVisibleToUserRoles() {
+		return visibleToUserRoles;
+	}
+	public void setVisibleToUserRoles(String visibleToUserRoles) {
+		this.visibleToUserRoles = visibleToUserRoles;
+	}
+	public String getVisibleToInternalUserRoles() {
+		return visibleToInternalUserRoles;
+	}
+	public void setVisibleToInternalUserRoles(String visibleToInternalUserRoles) {
+		this.visibleToInternalUserRoles = visibleToInternalUserRoles;
 	}
 
 }

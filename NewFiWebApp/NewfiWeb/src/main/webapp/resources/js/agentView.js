@@ -615,6 +615,7 @@ function getSchedulerContainer(contxt,tempData){
 			data.createdForID=newfiObject.user.id;
 			data.loanID=contxt.loanId;
 			data.notificationType="NOTIFICATION";
+			data.dismissable=true;
 			if(tempData){
 				var wrapperData={};
 				for(key in tempData){
