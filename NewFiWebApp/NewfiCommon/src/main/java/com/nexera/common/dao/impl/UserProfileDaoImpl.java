@@ -29,6 +29,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
@@ -512,7 +513,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	private void addIfUserIsEligible(User user, List<User> availableUsers) {
-		if (user.getInternalUserDetail().getActiveInternal()) {
+		if (user.getInternalUserDetail().getActiveInternal()==ActiveInternalEnum.ACTIVE) {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			criteria.add(Restrictions.eq("user.id", user.getId()));
