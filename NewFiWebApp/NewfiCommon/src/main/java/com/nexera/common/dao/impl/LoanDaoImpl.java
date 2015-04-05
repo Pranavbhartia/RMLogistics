@@ -29,6 +29,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -692,7 +693,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 							        && activeTeam.getUser().getStatus()
 							        && activeTeam.getUser()
 							                .getInternalUserDetail()
-							                .getActiveInternal()) {
+							                .getActiveInternal()==ActiveInternalEnum.ACTIVE) {
 								otherUserPresent = true;
 							}
 						}

@@ -43,6 +43,7 @@ import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.ServiceCodes;
@@ -434,7 +435,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
 		if (canUserBeDeleted) {
-			user.getInternalUserDetail().setActiveInternal(false);
+			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.DELETED);
 			Integer count = userProfileDao.updateInternalUserDetail(user);
 
 		} else {
