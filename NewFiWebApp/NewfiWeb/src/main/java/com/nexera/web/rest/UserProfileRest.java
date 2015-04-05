@@ -106,6 +106,7 @@ public class UserProfileRest {
 			Integer userUpdateCount = userProfileService.updateUser(userVO);
 
 			UserVO user = userProfileService.findUser(userVO.getId());
+			userVO.setUserRole(user.getUserRole());
 			if (userVO.getCustomerDetail() != null) {
 				userVO.getCustomerDetail().setProfileCompletionStatus(
 				        user.getCustomerDetail().getProfileCompletionStatus());

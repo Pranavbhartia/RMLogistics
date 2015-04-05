@@ -4,15 +4,6 @@
 var isAgentTypeDashboard;
 var docData = [];
 
-function adjustAgentDashboardOnResize() {
-	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
-		var leftPanelWidth = $('.left-panel').width();
-		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
-		$('.rp-agent-dashboard').width(centerPanelWidth);
-	}
-	adjustCustomerNameWidth();
-}
-
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
 	var statusIcnWidth = $('.onl-status-icn').width();

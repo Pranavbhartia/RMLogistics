@@ -81,6 +81,9 @@ public class EngineTrigger {
 		        triggerWorkflow(loanManagerWorkflowExec,
 		                loanManagerWorkflowMaster));
 
+		customerMap.clear();
+		loanManagerMap.clear();
+
 		return workflowMap;
 	}
 

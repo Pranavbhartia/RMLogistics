@@ -2,6 +2,9 @@
 	<loan>
 		<field id="sLPurposeT">loanPurpose</field>
 		<field id="sPurchPrice">loanPurchasePrice</field>
+		<field id="sProdRLckdDays ">ProdLckdDays</field>
+		<field id="sLAmtCalc">loanAmount</field>
+		<field id="sSpState">PropertyState</field>
 		<field id="sApprVal">loanApprovedValue</field>
 		<collection id="sCondDataSet">
 			<record>
@@ -28,6 +31,9 @@
 				password="PASSWORD" equifax="equifaxStatus" experian="experianStatus"
 				transunion="transunionStatus" />
 			<field id="aBFirstNm">firstName</field>
+			<field id="aBMidNm">middleName</field>
+			<field id="aBDob">dateOfBirth</field>
+			<field id="aBBaseI">baseIncome</field>
 			<field id="aBLastNm">lastName</field>
 			<field id="aBAddr">applicantAddress</field>
 			<field id="aBSsn">userSSNnumber</field>
