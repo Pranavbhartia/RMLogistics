@@ -166,7 +166,7 @@ $('.lp-right-arrow').remove();
 		"class" : "rp-agent-dashboard-admin float-left-admin"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
-	bindDataToAdminPN();
+	//bindDataToAdminPN();
     getAdminDashboardRightPanel();
 
 
