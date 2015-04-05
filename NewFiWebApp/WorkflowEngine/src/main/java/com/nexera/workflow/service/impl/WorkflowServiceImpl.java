@@ -233,17 +233,30 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public WorkflowItemMaster getWorkflowByType(String workflowType) {
 		return workflowMasterDao.getWorkflowByType(workflowType);
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public WorkflowItemExec getWorkflowItemExecByType(
 	        WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster) {
 		return workflowMasterDao.getWorkflowItemExecByType(workflowExec,
 		        workflowItemMaster);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.nexera.workflow.service.WorkflowService#getAllWorkflows()
+	 */
+	@Override
+	public List<WorkflowMaster> getAllWorkflows() {
+		@SuppressWarnings("unchecked")
+		List<WorkflowMaster> workflowMasterList = workflowItemMasterDao
+		        .loadAll(WorkflowMaster.class);
+		return workflowMasterList;
 	}
 
 }
