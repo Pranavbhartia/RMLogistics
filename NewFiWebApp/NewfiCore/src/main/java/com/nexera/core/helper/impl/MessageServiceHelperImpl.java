@@ -350,7 +350,24 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setLoanId(loanId);
 		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
 		        System.currentTimeMillis())));
-		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null);
+		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null,
+		        Boolean.FALSE);
+
+		messageVO.setMessage(noteText);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), sendEmail);
+
+	}
+
+	@Override
+	@Async
+	public void generateManagerMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail) {
+		MessageVO messageVO = new MessageVO();
+
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null, true);
 
 		messageVO.setMessage(noteText);
 		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), true);
@@ -358,7 +375,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	}
 
 	private void setOnlyInternalUsersAccess(int loanId, MessageVO messageVO,
-	        User createdByUser, String message) {
+	        User createdByUser, String message, boolean managerOnly) {
 
 		LoanTeamListVO teamList = loanService
 		        .getLoanTeamListForLoan(new LoanVO(loanId));
@@ -367,7 +384,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
 		for (LoanTeamVO loanTeamVO : loanTeamVos) {
 			UserVO userVo = loanTeamVO.getUser();
-			if (isInternalUser(userVo)) {
+			if (isInternalUser(userVo, managerOnly)) {
 				if (userVo.getId() != createdByUser.getId()) {
 					MessageUserVO otherUser = messageVO.createNewUserVO();
 					otherUser.setUserID(userVo.getId());
@@ -409,7 +426,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	}
 
-	private boolean isInternalUser(UserVO userVo) {
+	private boolean isInternalUser(UserVO userVo, boolean managerOnly) {
 		// TODO Auto-generated method stub
 		String roleCode = userVo.getUserRole().getRoleCd();
 		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(roleCode);
@@ -421,10 +438,21 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		case SYSTEM:
 			return true;
 		default:
-			return true;
+
+			if (!managerOnly) {
+				// If manager only flag is not set, means th message is visible
+				// to all internal users
+				return true;
+			} else {
+				// This means only admins and sales manager wil have access,
+				// others will not
+				if (userVo.getInternalUserDetail().getId() == UserRolesEnum.SM
+				        .getRoleId())
+					return true;
+				return false;
+			}
 
 		}
 
 	}
-
 }

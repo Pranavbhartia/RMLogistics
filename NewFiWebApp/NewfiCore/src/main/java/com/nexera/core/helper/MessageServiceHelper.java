@@ -28,4 +28,7 @@ public interface MessageServiceHelper {
 	public void checkIfUserFirstLogin(User user);
 
 	void generateWelcomeNote(User loggedInUser, int loanId);
+
+	void generateManagerMessage(int loanId, String noteText, User createdBy,
+	        boolean sendEmail);
 }
