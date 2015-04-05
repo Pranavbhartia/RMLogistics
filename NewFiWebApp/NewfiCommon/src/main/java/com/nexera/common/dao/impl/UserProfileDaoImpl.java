@@ -192,6 +192,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
+			session.save(user.getUserRole());
 		}
 		if (user.getInternalUserDetail() != null
 		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
@@ -223,21 +224,21 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getRealtorDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
 		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getCustomerDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		                .getRoleId()) {
 			this.save(user.getCustomerDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
 	}
