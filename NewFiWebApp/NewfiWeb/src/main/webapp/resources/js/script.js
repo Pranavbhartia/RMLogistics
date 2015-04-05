@@ -88,34 +88,6 @@ function appendCustPersonalInfoWrapper(user) {
 
 
 
-function adjustCenterPanelWidth() {
-
-	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
-
-		var leftPanelWidth = $('.left-panel').width();
-
-		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-
-		var centerPanelWidth = $(window).width()
-
-				- (leftPanelWidth + leftPanelTab2Width) - 35;
-
-		$('.center-panel').width(centerPanelWidth);
-
-	} else if (window.innerWidth < 768) {
-
-		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-
-		var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 20;
-
-		$('.center-panel').width(centerPanelWidth);
-
-	}
-
-}
-
-
-
 function getCustomerSecondaryLeftNav() {
 
 	var leftTab2Wrapper = $('<div>').attr({
