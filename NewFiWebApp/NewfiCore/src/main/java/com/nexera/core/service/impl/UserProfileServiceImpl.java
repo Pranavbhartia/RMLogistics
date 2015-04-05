@@ -337,8 +337,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		user.setStatus(false);
-		userProfileDao.update(user);
+		if(user.getInternalUserDetail()!=null){
+			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.INACTIVE);
+			userProfileDao.update(user.getInternalUserDetail());
+		}
 	}
 
 	@Override
@@ -350,8 +352,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		user.setStatus(true);
-		userProfileDao.update(user);
+		if(user.getInternalUserDetail()!=null){
+			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.ACTIVE);
+			userProfileDao.update(user.getInternalUserDetail());
+		}
 	}
 
 	private String generateRandomPassword() {

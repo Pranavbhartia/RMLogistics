@@ -1,5 +1,8 @@
 var userDescription="Sales Manager";
-//var userRoleCdForAdmin="SYSTEM"
+var loanManagerID=1;
+var statusActive="ACTIVE";
+var statusInActive="INACTIVE";
+var statusDelete="DELETED";
 $(document).on('click',function(e){
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
@@ -165,13 +168,19 @@ $('.lp-right-arrow').remove();
 		"id" : "admin-dashboard-container",
 		"class" : "rp-agent-dashboard-admin float-left-admin"
 	});
+	
+	var agentDashboardErrorContainer = $('<div>').attr({
+		"id" : "admin-error-container",
+		"class" : "admin-error-container float-left-admin"
+	});
+	$('#right-panel').append(agentDashboardErrorContainer);
 	$('#right-panel').append(agentDashboardMainContainer);
 	//bindDataToAdminPN();
     getAdminDashboardRightPanel();
 
 
 }
-//TODO to delete and change to rest which retrieves all users(only write onefunction to retreive all users)
+
 function getAdminDashboardRightPanel() {
 
 	ajaxRequest("rest/userprofile/getUsersList", "GET", "json", {},
@@ -197,7 +206,7 @@ function paintAdminUserPage(data) {
 
 function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	var wrapper = $('<div>').attr({
-		"class" : "add-team-mem-wrapper"
+		"class" : "admin-add-team-mem-wrapper"
 	}).data("additionalData",data);
 
 	var header = $('<div>').attr({
@@ -256,7 +265,37 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
     "method":"post",
 	"enctype":"multipart/form-data"
 		
-		
+	}).submit(function(event){
+		var formData = new FormData();
+		var file=$("#file").prop("files")[0];
+		console.log("file",file);
+		formData.append("file",file);
+		var formURL = $(this).attr("action");
+		$.ajax({
+			url :formURL,
+			type : "POST",
+			contentType : false,
+			processData : false,
+			enctype:"multipart/form-data",
+			cache : false,
+			data : formData,
+			success:function(data){
+			
+		    if(data!=null){
+				for(var i=0;i<=data.legth;i++){
+					var row=displayErrorMessage(data[i]);
+					$("#admin-error-container").append(row);
+				}
+             
+
+
+			}
+			},
+			error:function(e){
+				alert("error");
+			}
+			
+		});
 	});
 	var inputFile=$('<input>').attr({
 	"class":"input-file-admin",
@@ -311,6 +350,17 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 }
 
+function displayErrorMessage(data){
+	if($('.rp-agent-dashboard-admin')!=undefined || $('.rp-agent-dashboard-admin')!=""){
+
+    var tableRow = $('<div>').attr({
+		"class" : "admin-error-list-list-tr clearfix",
+		
+	}).html("Error in line"+data.lineNumber+"and message:"+data.message);
+	return tableRow;
+	
+}
+}
 function appendAdminUserTypeDropDown(){
 var dropdownCont = $('<div>').attr({
 		"id" : "admin-add-usertype-dropdown-cont",
@@ -442,6 +492,17 @@ var popUpWrapper = $('<div>').attr({
 					showToastMessage("Email ID cannot be empty");
 					return;
 				}
+				if(user.emailId!="")
+				{var validationStatus=emailValidation(user.emailId);
+			      if(validationStatus){
+					  $('#admin-create-user-emailId').val('');
+				  $('#admin-create-user-emailId').addClass('err-input').focus();
+				  return;
+				  }else{
+					  $('#admin-create-user-emailId').removeClass('err-input');
+				  }
+			      
+			     }
 				user.userRole = {
 					id : $("#admin-add-memeber-user-type").attr("roleid")
 				};
@@ -467,6 +528,9 @@ var popUpWrapper = $('<div>').attr({
 
 //TODO function to create single user 
 function createUserFromAdmin(user){
+if ($('#admin-create-user-popup').css("display") == "block") {
+		$('#admin-create-user-popup').hide();
+	}
 ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 			appendDataToNewfiTeamWrapperForAdmin);
 
@@ -474,7 +538,7 @@ ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 
 }
 function appendDataToNewfiTeamWrapperForAdmin(data){
-$('#admin-add-usertype-dropdown-cont').hide();
+
    var users = data.resultObject;
    var existingDiv = $('.admin-newfi-team-container').find(
 			'.admin-newfi-team-list-tr[userid=' + users.id + ']');
@@ -484,6 +548,10 @@ $('#admin-add-usertype-dropdown-cont').hide();
 	}
    var tableRow = getAdminTeamListTableRow(users);
    var teamContainer = $(".admin-newfi-team-container").append(tableRow);
+   $('#admin-create-user-emailId').val('');
+   $('#admin-create-user-first-name').val('');
+   $('#admin-create-user-last-name').val('');
+   $("#admin-add-memeber-user-type").val('');
 	showToastMessage("User added to loan team.");
 	
 }
@@ -529,7 +597,7 @@ function appendAdminCreateUserPopupEmail(){
 	}).html("Email");
 	var inputBox = $('<input>').attr({
 		"class" : "create-user-popup-input",
-		"id" : "admin-create-user-emailId",
+		"id" : "admin-create-user-emailId"
 		
 	}).val("");
 	row.append(label).append(inputBox);
@@ -677,39 +745,30 @@ var userRoleStr;
 		
 	});
 	if(user.userRole.id==3){
-	if(user.status==true){
+	if(user.internalUserDetail.internalUserRoleMasterVO.id==1){
+	if(user.internalUserDetail.activeInternal==statusActive){
 	console.log("status of user",user.status);
 	trCol4.append(inputActive);
 
 	
-	}else{
+	}else if(user.internalUserDetail.activeInternal==statusInActive){
 	console.log("status of user in",user.status);
 	trCol4.append(inputInActive);
- 
+	}
 	}
 	}
     inputActive.click(function(){
-     ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},
-			"");
-
+     ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},"");
 	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
 	teamMemberRow.empty();
 	teamMemberRow.append(inputInActive);
-
-	
-	 //alert("Status changed from active to inactive");
-
-	});
-	
+	});	
 	inputInActive.click(function(){
     ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
 			"");
 	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
 	teamMemberRow.empty();
-	teamMemberRow.append(inputActive);
-	//alert("Status changed from inactive to active");
-
-	
+	teamMemberRow.append(inputActive);	
 	});
 	
 	var trCol5 = $('<div>').attr({
@@ -727,7 +786,11 @@ var userRoleStr;
 
     RemoveUserFromUserListAdmin("Are you sure you want to delete the user?",userID);
 	});
-	trCol5.append(userDelIcn);
+	if(user.userRole.id==3){
+		if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
+		trCol5.append(userDelIcn);}
+	}
+	
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
 }
@@ -749,14 +812,22 @@ $('#overlay-confirm').off();
 	$('#overlay-popup').show();
 }
 function removeUserFromList(userID){
-
- 
  //TODO to call a method to delete users
   ajaxRequest("rest/userprofile/deleteUser/"+userID,"GET", "json", {},
-			"");
+			displayResponseData);
 
-  var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + user.id + "]").remove();
-
+ 
+}
+function displayResponseData(data){
+	if(data.error==null){		
+  // var tableRow = getAdminTeamListTableRow(data.resultObject);  
+   var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
+   teamMemberRow.remove();
+   showToastMessage("Loan manger deleted successfully");
+  // tableRow.empty(teamMemberRow); 
+	}else{
+		showToastMessage("Cannot Delete the Loan manger");
+	}
 }
 function appendAdminModuleDetails(){
 
