@@ -389,6 +389,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		case REALTOR:
 			userVO.setUserRole(UserRolesEnum.REALTOR.toString());
 			break;
+		case SYSTEM:
+			userVO.setUserRole(UserRolesEnum.SYSTEM.toString());
+			break;
 		default:
 			userVO.setUserRole(user.getInternalUserDetail()
 			        .getInternaUserRoleMaster().getRoleDescription());
