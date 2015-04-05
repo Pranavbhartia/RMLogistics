@@ -2,12 +2,12 @@ package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.WorkflowCoreService;
@@ -27,18 +27,11 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 	@Override
 	@Transactional
 	public void createWorkflow(WorkflowVO workflowVO) throws Exception {
-		Gson gson = new Gson();
+		Map<String, Integer> map = engineTrigger.triggerWorkFlow();
 
-		workflowVO.setWorkflowType(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE);
-		int customerWFID = engineTrigger.triggerWorkFlow(gson
-		        .toJson(workflowVO));
-
-		workflowVO
-		        .setWorkflowType(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE);
-		int loanManagerWFID = engineTrigger.triggerWorkFlow(gson
-		        .toJson(workflowVO));
-		loanService.saveWorkflowInfo(workflowVO.getLoanID(), customerWFID,
-		        loanManagerWFID);
+		loanService.saveWorkflowInfo(workflowVO.getLoanID(),
+		        map.get(WorkflowConstants.CUSTOMER_WORKFLOW_TYPE),
+		        map.get(WorkflowConstants.LOAN_MANAGER_WORKFLOW_TYPE));
 
 	}
 
