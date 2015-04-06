@@ -24,4 +24,6 @@ public interface LoanStatus {
 	String loanSuspendedMessage = "Loan Suspended";
 
 	String loanArchivedMessage = "Loan Archived";
+
+	String LM_Decision_Note_Message = "LM Decision Note Message";
 }

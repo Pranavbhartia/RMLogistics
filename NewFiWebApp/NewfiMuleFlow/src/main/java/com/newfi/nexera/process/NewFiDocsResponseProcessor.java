@@ -6,14 +6,10 @@ package com.newfi.nexera.process;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
-
-import com.google.gson.Gson;
-import com.newfi.nexera.vo.ResponseVO;
 
 
 /**
@@ -33,17 +29,10 @@ public class NewFiDocsResponseProcessor implements Callable
     public Object onCall( MuleEventContext eventContext ) throws Exception
     {
         LOG.debug( "Inside method onCall" );
-        Gson gson = new Gson();
+
         MuleMessage message = eventContext.getMessage();
-        String payload = message.getPayloadAsString();
-        byte[] base64encodedPayload = Base64.encodeBase64( payload.getBytes() );
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setResponseCode( "200" );
-        responseVO.setStatus( "0" );
-        responseVO.setResponseMessage( base64encodedPayload );
-        String jsonString = gson.toJson( responseVO );
-        jsonString = removeUTFCharacters( jsonString );
-        message.setPayload( jsonString );
+        byte[] pay = (byte[]) message.getPayload();
+        message.setPayload( pay );
         return message;
     }
 

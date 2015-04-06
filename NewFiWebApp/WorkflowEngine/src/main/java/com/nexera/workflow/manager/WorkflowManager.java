@@ -56,9 +56,10 @@ public class WorkflowManager implements Callable<String> {
 	        WorkflowItemExec workflowItemExecution) {
 
 		LOGGER.debug("Updating workflow master status if its not updated ");
+		int workflowId = workflowItemExecution.getId();
 		WorkflowItemMaster workflowItemMaster = workflowItemExecution
 		        .getWorkflowItemMaster();
-		String result = executeMethod(workflowItemMaster);
+		String result = executeMethod(workflowItemMaster, workflowItemExecution);
 
 		if (result.equalsIgnoreCase(WorkItemStatus.COMPLETED.getStatus())) {
 
@@ -70,8 +71,9 @@ public class WorkflowManager implements Callable<String> {
 			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			LOGGER.debug("Checking if it has an onSuccess item to execute ");
 			if (workflowItemExecution.getOnSuccessItem() != null) {
-				startWorkFlowItemExecution(workflowItemExecution
-				        .getOnSuccessItem());
+				WorkflowItemExec succesItem = workflowItemExecution
+				        .getOnSuccessItem();
+				startWorkFlowItemExecution(succesItem);
 
 			}
 
@@ -107,7 +109,8 @@ public class WorkflowManager implements Callable<String> {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String executeMethod(WorkflowItemMaster workflowItemMaster) {
+	private String executeMethod(WorkflowItemMaster workflowItemMaster,
+	        WorkflowItemExec workflowItemExec) {
 
 		Map<String, Object> itemParamMap;
 		Map<String, Object> systemParamMap;

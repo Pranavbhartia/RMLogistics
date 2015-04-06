@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 */
 
 @Entity
-@Table(name = "CustomerSpouseRetirementAccountDetails")
+@Table(name = "customerspouseretirementaccountdetails")
 @NamedQuery(name = "CustomerSpouseRetirementAccountDetails.findAll", query = "SELECT coa FROM CustomerSpouseRetirementAccountDetails coa")
 public class CustomerSpouseRetirementAccountDetails implements Serializable {
 
@@ -26,6 +28,7 @@ public class CustomerSpouseRetirementAccountDetails implements Serializable {
 	private String accountSubType;
 	private String   currentaccountbalance;
 	private String   amountfornewhome;
+	private LoanAppForm loanAppForms;
 	
 	
 	public CustomerSpouseRetirementAccountDetails() {
@@ -41,7 +44,7 @@ public class CustomerSpouseRetirementAccountDetails implements Serializable {
 		this.id = id;
 	}
 	
-	@Column(name = "AccountSubType")
+	@Column(name = "account_sub_type")
 	public String getAccountSubType() {
 		return accountSubType;
 	}
@@ -49,7 +52,7 @@ public class CustomerSpouseRetirementAccountDetails implements Serializable {
 		this.accountSubType = accountSubType;
 	}
 	
-	@Column(name = "currentaccountbalance")
+	@Column(name = "current_account_balance")
 	public String getCurrentaccountbalance() {
 		return currentaccountbalance;
 	}
@@ -57,7 +60,7 @@ public class CustomerSpouseRetirementAccountDetails implements Serializable {
 		this.currentaccountbalance = currentaccountbalance;
 	}
 	
-	@Column(name = "amountfornewhome")
+	@Column(name = "amount_for_new_home")
 	public String getAmountfornewhome() {
 		return amountfornewhome;
 	}
@@ -65,7 +68,16 @@ public class CustomerSpouseRetirementAccountDetails implements Serializable {
 		this.amountfornewhome = amountfornewhome;
 	}
 	
-	
+	@ManyToOne
+    @JoinColumn(name="loanapp_formid")
+	public LoanAppForm getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(LoanAppForm loanAppForms) {
+		this.loanAppForms = loanAppForms;
+	}
 	
 	
 }

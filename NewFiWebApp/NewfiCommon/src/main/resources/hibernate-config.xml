@@ -42,7 +42,7 @@
 		</property>
 	</bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven />
 
 	<!-- Transaction Manager being used for hibernate transactions -->
 	<bean id="transactionManager"

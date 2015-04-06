@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,6 +27,7 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UserVO;
 
 /**
@@ -66,6 +69,8 @@ public class User implements Serializable, UserDetails {
 	private Locale userLocale;
 	private String minutesOffset;
 	private Boolean isProfileComplete;
+	private Date createdDate;
+	private Date lastLoginDate;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -130,6 +135,24 @@ public class User implements Serializable, UserDetails {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	@Column(name = "created_on")
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Column(name = "login_time")
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
 	}
 
 	@Column(name = "photo_image_url")
@@ -381,11 +404,24 @@ public class User implements Serializable, UserDetails {
 			userVO.setEmailId(user.getEmailId());
 			userVO.setDisplayName(user.getFirstName() + " "
 			        + user.getLastName());
+			if (user.getStatus() != null) {
+				userVO.setStatus(user.getStatus());
+			}
 			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
+			List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
+			if (user.getInternalUserStateMappings() != null) {
+				for (InternalUserStateMapping internalUserStateMapping : user
+				        .getInternalUserStateMappings()) {
+					internalUserStateMappingVOs.add(InternalUserStateMapping
+					        .convertFromEntityToVO(internalUserStateMapping));
+				}
 
+			}
+
+			userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 		}
 		return userVO;
 	}
@@ -418,9 +454,10 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-
+			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
+			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));

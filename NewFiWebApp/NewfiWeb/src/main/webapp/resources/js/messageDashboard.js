@@ -38,14 +38,6 @@ function paintConversationPagination(response){
 	paintConversations(conversations);
 }
 
-function adjustRightPanelOnResize() {
-	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
-		var leftPanelWidth = $('.left-panel').width();
-		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
-		$('.right-panel-messageDashboard').width(centerPanelWidth);
-	}
-}
-
 function setCurrentUserObject(){
 	if(selectedUserDetail==null){
 		currentUserAndLoanOnj.userId = newfiObject.user.id;

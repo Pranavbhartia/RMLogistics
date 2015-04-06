@@ -617,18 +617,25 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		try {
 			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
 			        .toString());
+
+			// File file = nexeraUtility.convertInputStreamToFile(inputStream);
+
 			OutputStream outStream = response.getOutputStream();
 
 			byte[] buffer = new byte[2048];
-			int bytesRead = -1;
+			int length = -1;
 
-			// write bytes read from the input stream into the output stream
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				outStream.write(buffer, 0, bytesRead);
+			while ((length = inputStream.read(buffer)) > 0) {
+				outStream.write(buffer, 0, length);
 			}
+			outStream.flush();
 
 			inputStream.close();
 			outStream.close();
+			response.setContentLength(buffer.length);
+			response.setHeader("Content-Disposition",
+			        "attachment; filename=\"download.pdf\"");
+
 		} catch (Exception e) {
 			LOG.info("Exception File servlet");
 			e.printStackTrace();

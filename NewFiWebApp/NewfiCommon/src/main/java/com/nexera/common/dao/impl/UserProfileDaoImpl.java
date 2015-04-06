@@ -29,6 +29,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
@@ -106,7 +107,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userId));
-		return (User) criteria.uniqueResult();
+		User user = (User) criteria.uniqueResult();
+		Hibernate.initialize(user.getInternalUserDetail());
+		Hibernate.initialize(user.getInternalUserStateMappings());
+		return user;
 	}
 
 	@Override
@@ -188,6 +192,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
+			session.save(user.getUserRole());
 		}
 		if (user.getInternalUserDetail() != null
 		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
@@ -219,21 +224,34 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getRealtorDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
 		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
+		
+LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
+		
 		if (null != user.getCustomerDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		                .getRoleId()) {
+			
+			
+		//	if(user.getCustomerDetail().getCustomerBankAccountDetails() != null){
+				
+			//this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
+			//}
+				//	this.save(user.getCustomerDetail().getCustomerEmploymentIncome());		
+		     	//	this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
+				//	this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());			
+		LOG.info("Inside User Profile Dao user.getCustomerDetail()"+user.getCustomerDetail().getId());
 			this.save(user.getCustomerDetail());
-			sessionFactory.getCurrentSession().flush();
+			//sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
 	}
@@ -304,7 +322,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public User findInternalUser(Integer userID) {
-		User user = (User) this.load(User.class, userID);
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", userID));
+		User user = (User) criteria.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());
 			System.out.println("Test  : loadInternalUser");
@@ -382,6 +403,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			break;
 		case REALTOR:
 			userVO.setUserRole(UserRolesEnum.REALTOR.toString());
+			break;
+		case SYSTEM:
+			userVO.setUserRole(UserRolesEnum.SYSTEM.toString());
 			break;
 		default:
 			userVO.setUserRole(user.getInternalUserDetail()
@@ -503,7 +527,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	private void addIfUserIsEligible(User user, List<User> availableUsers) {
-		if (user.getInternalUserDetail().getActiveInternal()) {
+		if (user.getInternalUserDetail().getActiveInternal()==ActiveInternalEnum.ACTIVE) {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			criteria.add(Restrictions.eq("user.id", user.getId()));
@@ -586,8 +610,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        InternalUserRolesEum.SM.getRoleId()));
 		List<User> users = criteria.list();
 		if (users == null || users.isEmpty()) {
-			LOG.error("This cannot happen, there has to be a sales manager in the system");
+			LOG.error("This cannot happen, there has to be a sales manager in the system ");
+			// TODO: Write to error table and email
 			return null;
+
 		}
 		if (users.size() > 1) {
 			LOG.warn("There are more than one sales manager in the system, which is not handled. Checking if user name contains pat, and returning that user. IF not found, then returning the first instance");
@@ -602,4 +628,29 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		return User.convertFromEntityToVO(users.get(0));
 	}
+
+	@Override
+	public void updateLoginTime(Date date, int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.lastLoginDate=:DATE WHERE usr.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("ID", userId);
+		query.setTimestamp("DATE", date);
+		int result = query.executeUpdate();
+
+	}
+
+	@Override
+	public Integer updateInternalUserDetail(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.activeInternal = :activeInternal WHERE internalusr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("activeInternal", user.getInternalUserDetail()
+		        .getActiveInternal());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
+
 }

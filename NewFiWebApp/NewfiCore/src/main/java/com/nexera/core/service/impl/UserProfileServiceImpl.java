@@ -1,4 +1,3 @@
-
 package com.nexera.core.service.impl;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,38 +23,55 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import au.com.bytecode.opencsv.CSVReader;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
+import com.nexera.common.commons.ProfileCompletionStatus;
 import com.nexera.common.dao.InternalUserStateMappingDao;
+import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
-import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
+import com.nexera.common.exception.GenericErrorCode;
+import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.service.LoanAppFormService;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 @Transactional
@@ -63,10 +80,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private UserProfileDao userProfileDao;
-	
+
+	@Autowired
+	private LoanDao loanDao;
+
 	@Autowired
 	private InternalUserStateMappingDao internalUserStateMappingDao;
-	
+
 	@Autowired
 	private StateLookupDao stateLookupDao;
 
@@ -81,6 +101,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private SecureRandom randomGenerator;
 
+	@Autowired
+	private LoanService loanService;
+
+	@Autowired
+	WorkflowCoreService workflowCoreService;
+
+	@Autowired
+	protected LoanAppFormService loanAppFormService;
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
 
@@ -88,25 +117,27 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public UserVO findUser(Integer userid) {
 
 		User user = userProfileDao.findByUserId(userid);
+		UserVO userListVO = User.convertFromEntityToVO(user);
+		/*
+		 * UserVO userVO = new UserVO();
+		 * 
+		 * userVO.setId(user.getId()); userVO.setFirstName(user.getFirstName());
+		 * userVO.setLastName(user.getLastName());
+		 * userVO.setEmailId(user.getEmailId());
+		 * userVO.setPhoneNumber(user.getPhoneNumber());
+		 * userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+		 * 
+		 * userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()))
+		 * ;
+		 * 
+		 * CustomerDetail customerDetail = user.getCustomerDetail();
+		 * CustomerDetailVO customerDetailVO = CustomerDetail
+		 * .convertFromEntityToVO(customerDetail);
+		 * 
+		 * userVO.setCustomerDetail(customerDetailVO);
+		 */
 
-		UserVO userVO = new UserVO();
-
-		userVO.setId(user.getId());
-		userVO.setFirstName(user.getFirstName());
-		userVO.setLastName(user.getLastName());
-		userVO.setEmailId(user.getEmailId());
-		userVO.setPhoneNumber(user.getPhoneNumber());
-		userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-
-		userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()));
-
-		CustomerDetail customerDetail = user.getCustomerDetail();
-		CustomerDetailVO customerDetailVO = CustomerDetail
-		        .convertFromEntityToVO(customerDetail);
-
-		userVO.setCustomerDetail(customerDetailVO);
-
-		return userVO;
+		return userListVO;
 	}
 
 	@Override
@@ -122,27 +153,80 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	public Integer updateCustomerDetails(UserVO userVO) {
 
+		LOG.info("To update the users");
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
-		CustomerDetail customerDetail = CustomerDetail.convertFromVOToEntity(customerDetailVO);
-		if(customerDetail.getProfileCompletionStatus()!=null){
-		if(userVO.getCustomerDetail().getMobileAlertsPreference()!=null){
-	       if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
-	    	   if(customerDetail.getProfileCompletionStatus()!=100)
-	    		   customerDetail.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus()+(100/3));   
-	    	   
-	       }
-		}
-		}else{
-			if(userVO.getPhotoImageUrl()==null){
-				customerDetail.setProfileCompletionStatus(100/3);
-				if(userVO.getPhoneNumber()!=null && userVO.getCustomerDetail().getMobileAlertsPreference())
-					customerDetail.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus()+(100/3));
-			}else if(userVO.getPhoneNumber()!=null && userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhotoImageUrl()!=null ){
-				customerDetail.setProfileCompletionStatus(100);
-			}else if(userVO.getCustomerDetail().getMobileAlertsPreference() && userVO.getPhoneNumber()!=null){
-				customerDetail.setProfileCompletionStatus(200/3);
+		CustomerDetail customerDetail = CustomerDetail
+		        .convertFromVOToEntity(customerDetailVO);
+		LOG.info("Checking if the user is a customer");
+		if (userVO.getUserRole().getId() == 1) {
+			LOG.info("Checking for customer profile status of customers");
+			if (customerDetail.getProfileCompletionStatus() != null) {
+				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+					if (userVO.getCustomerDetail().getMobileAlertsPreference()
+					        && userVO.getPhoneNumber() != null) {
+						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus()
+							                + ProfileCompletionStatus.ON_CREATE);
+						}
+
+					} else if (!userVO.getCustomerDetail()
+					        .getMobileAlertsPreference()) {
+						customerDetail.setMobileAlertsPreference(userVO
+						        .getCustomerDetail()
+						        .getMobileAlertsPreference());
+
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus()
+							                - ProfileCompletionStatus.ON_CREATE);
+						} else {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						}
+					}
+				}
+			} else {
+				if (userVO.getPhotoImageUrl() == null) {
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
+					if (userVO.getPhoneNumber() != null
+					        && userVO.getCustomerDetail()
+					                .getMobileAlertsPreference())
+						customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                + ProfileCompletionStatus.ON_CREATE);
+				} else if (userVO.getPhoneNumber() != null
+				        && userVO.getCustomerDetail()
+				                .getMobileAlertsPreference()
+				        && userVO.getPhotoImageUrl() != null) {
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+				} else if (!userVO.getCustomerDetail()
+				        .getMobileAlertsPreference()
+				        && userVO.getPhotoImageUrl() != null
+				        && userVO.getPhoneNumber() != null) {
+					customerDetail.setMobileAlertsPreference(userVO
+					        .getCustomerDetail().getMobileAlertsPreference());
+					if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+						customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                - ProfileCompletionStatus.ON_CREATE);
+					} else {
+						customerDetail
+						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+					}
+				}
+
 			}
-			
+			if (customerDetail.getProfileCompletionStatus() > ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+				customerDetail
+				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+			}
 		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -253,8 +337,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		user.setStatus(false);
-		userProfileDao.update(user);
+		if (user.getInternalUserDetail() != null) {
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.INACTIVE);
+			userProfileDao.update(user.getInternalUserDetail());
+		}
 	}
 
 	@Override
@@ -266,8 +353,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		user.setStatus(true);
-		userProfileDao.update(user);
+		if (user.getInternalUserDetail() != null) {
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.ACTIVE);
+			userProfileDao.update(user.getInternalUserDetail());
+		}
 	}
 
 	private String generateRandomPassword() {
@@ -305,26 +395,45 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
-		
+
 		User newUser = User.convertFromVOToEntity(userVO);
-		if(newUser.getCustomerDetail()!=null){
-		newUser.getCustomerDetail().setProfileCompletionStatus(100/3);}
+		if (newUser.getCustomerDetail() != null) {
+			newUser.getCustomerDetail().setProfileCompletionStatus(
+			        ProfileCompletionStatus.ON_CREATE);
+		}
+
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);
+		if (newUser.getInternalUserDetail() != null) {
+			if (newUser.getInternalUserDetail().getInternaUserRoleMaster()
+			        .getId() == 1)
+				newUser.getInternalUserDetail().setManager(newUser);
+			newUser.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.ACTIVE);
+		}
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-		sendNewUserEmail(newUser);
-		
-		//We set password to null so that it isnt sent back to the front end 
-		//newUser.setPassword(null);
-		
-	//	newUser = null;
-		if (userID > 0) {
+		// sendNewUserEmail(newUser);
+		try {
+			sendNewUserEmail(newUser);
+		} catch (InvalidInputException | UndeliveredEmailException e) {
+			// TODO: Need to handle this and try a resend, since password will
+			// not be stored
+			LOG.error("Error sending email, proceeding with the email flow");
+		}
+
+		// We set password to null so that it isnt sent back to the front end
+		// newUser.setPassword(null);
+
+		// newUser = null;
+		if (userID > 0
+		        && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		                .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}
-		LOG.info("Returning the userVO");
+		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
 
 		return User.convertFromEntityToVO(newUser);
 
@@ -335,10 +444,24 @@ public class UserProfileServiceImpl implements UserProfileService,
 		randomGenerator = new SecureRandom();
 	}
 
+	@SuppressWarnings("unused")
 	@Override
-	public void deleteUser(UserVO userVO) {
-		
-		//userProfileDao.deleteUser(userVO);
+	@Transactional
+	public void deleteUser(UserVO userVO) throws Exception {
+
+		User user = User.convertFromVOToEntity(userVO);
+		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
+		if (canUserBeDeleted) {
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.DELETED);
+			Integer count = userProfileDao.updateInternalUserDetail(user);
+
+		} else {
+			throw new InputValidationException(new GenericErrorCode(
+			        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR);
+		}
 
 	}
 
@@ -452,18 +575,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		return date;
 	}
-	
-	private boolean checkStateCode(String stateCode){
+
+	private boolean checkStateCode(String stateCode) {
 		boolean status = false;
-		
+
 		try {
 			stateLookupDao.findStateLookupByStateCode(stateCode);
 			status = true;
-		}
-		catch (NoRecordsFetchedException e) {
+		} catch (NoRecordsFetchedException e) {
 			status = false;
-		}		
-		return status;	
+		}
+		return status;
 	}
 
 	private String checkCsvLine(String[] csvRow) {
@@ -498,21 +620,22 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        DisplayMessageConstants.INVALID_EMAIL_ID,
 			        DisplayMessageType.ERROR_MESSAGE).toString();
 			return message;
-		}
-		else {
-			//Check for user with same email id
+		} else {
+			// Check for user with same email id
 			try {
-				User existingUser = userProfileDao.findByUserName(csvRow[CommonConstants.EMAIL_COLUMN]);
+				User existingUser = userProfileDao
+				        .findByUserName(csvRow[CommonConstants.EMAIL_COLUMN]);
 				message = messageUtils.getDisplayMessage(
 				        DisplayMessageConstants.EMAIL_ALREADY_EXISTS,
 				        DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
-			}
-			catch (NoRecordsFetchedException e) {
-				//User doesnt exist in database. So we can go ahead and add the user.
+			} catch (NoRecordsFetchedException e) {
+				// User doesnt exist in database. So we can go ahead and add the
+				// user.
 			}
 		}
-		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER.toString())
+		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER
+		        .toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
 		                .equals(UserRolesEnum.LOANMANAGER.toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
@@ -586,28 +709,34 @@ public class UserProfileServiceImpl implements UserProfileService,
 				return message;
 			}
 		}
-		
-		if(csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LOANMANAGER.toString())){
-			if( csvRow[CommonConstants.STATE_CODE_COLUMN]!= null && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()){
-				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN].split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
+
+		if (csvRow[CommonConstants.ROLE_COLUMN]
+		        .equals(UserRolesEnum.LOANMANAGER.toString())) {
+			if (csvRow[CommonConstants.STATE_CODE_COLUMN] != null
+			        && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
+				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN]
+				        .split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
 				if (stateCodes.length <= 0) {
-					message = messageUtils.getDisplayMessage(
-					        DisplayMessageConstants.INVALID_STATE_CODE_LIST_LENGTH,
-					        DisplayMessageType.ERROR_MESSAGE).toString();
-					return message;					
+					message = messageUtils
+					        .getDisplayMessage(
+					                DisplayMessageConstants.INVALID_STATE_CODE_LIST_LENGTH,
+					                DisplayMessageType.ERROR_MESSAGE)
+					        .toString();
+					return message;
 				}
-				
+
 				int counter = 1;
-				for(String stateCode : stateCodes){
-					if(!checkStateCode(stateCode)){
+				for (String stateCode : stateCodes) {
+					if (!checkStateCode(stateCode)) {
 						message = messageUtils.getDisplayMessage(
 						        DisplayMessageConstants.INVALID_STATE_CODE,
-						        DisplayMessageType.ERROR_MESSAGE).toString() + counter;
+						        DisplayMessageType.ERROR_MESSAGE).toString()
+						        + counter;
 						return message;
 					}
-					counter+=1;
+					counter += 1;
 				}
-				
+
 			}
 		}
 
@@ -686,22 +815,24 @@ public class UserProfileServiceImpl implements UserProfileService,
 		UserVO createdUserVo = createNewUserAndSendMail(userVO);
 		return createdUserVo;
 	}
-	
-	private void createUserStateMapping(UserVO userVO,String stateCodes) throws NoRecordsFetchedException{
-		
-		
-		String[] stateCodesList = stateCodes.split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
-		
+
+	private void createUserStateMapping(UserVO userVO, String stateCodes)
+	        throws NoRecordsFetchedException {
+
+		String[] stateCodesList = stateCodes
+		        .split(CommonConstants.STATE_CODE_STRING_SEPARATOR);
+
 		InternalUserStateMapping internalUserStateMapping;
 		User user = userProfileDao.findByUserId(userVO.getId());
-		
-		for(String stateCode : stateCodesList){
-			internalUserStateMapping = new InternalUserStateMapping();			
-			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
+
+		for (String stateCode : stateCodesList) {
+			internalUserStateMapping = new InternalUserStateMapping();
+			internalUserStateMapping.setStateLookup(stateLookupDao
+			        .findStateLookupByStateCode(stateCode));
 			internalUserStateMapping.setUser(user);
-			internalUserStateMappingDao.save(internalUserStateMapping);			
+			internalUserStateMappingDao.save(internalUserStateMapping);
 		}
-		
+
 	}
 
 	@Override
@@ -721,11 +852,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			String message = checkCsvLine(rowString);
 			if (message == null) {
 				// LOG.info(StringUtils.join(rowString,','));
-				if(rowString[CommonConstants.STATE_CODE_COLUMN].isEmpty()){
+				if (rowString[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
 					buildUserVOAndCreateUser(rowString);
-				}
-				else{
-					createUserStateMapping(buildUserVOAndCreateUser(rowString),rowString[CommonConstants.STATE_CODE_COLUMN]);
+				} else {
+					createUserStateMapping(buildUserVOAndCreateUser(rowString),
+					        rowString[CommonConstants.STATE_CODE_COLUMN]);
 				}
 			} else {
 				errorList.add(buildErrorItem(lineCounter, rowString, message));
@@ -737,5 +868,72 @@ public class UserProfileServiceImpl implements UserProfileService,
 		errors.add("errors", errorList);
 		return errors;
 	}
-}
 
+	@Override
+	@Transactional
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)
+	        throws FatalException {
+
+		try {
+			// CustomerEnagagement customerEnagagement =
+			// userVO.getCustomerEnagagement();
+			UserVO userVO = loaAppFormVO.getUser();
+
+			userVO.setUsername(userVO.getEmailId().split(":")[0]);
+			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
+			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			// String password = userVO.getPassword();
+			// UserVO userVOObj= userProfileService.saveUser(userVO);
+			UserVO userVOObj = null;
+			LoanVO loanVO = null;
+
+			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
+			userVOObj = this.createNewUserAndSendMail(userVO);
+			// insert a record in the loan table also
+			loanVO = new LoanVO();
+
+			loanVO.setUser(userVOObj);
+
+			loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
+			loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
+
+			// Currently hardcoding to refinance, this has to come from UI
+			// TODO: Add LoanTypeMaster dynamically based on option selected
+			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+
+			loanVO = loanService.createLoan(loanVO);
+			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+			userVOObj.setDefaultLoanId(loanVO.getId());
+			// create a record in the loanAppForm table
+
+			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+			// userVOObj.setCustomerEnagagement(customerEnagagement);
+			loanAppFormVO.setUser(userVOObj);
+			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
+			        .getPropertyTypeMaster());
+			loanAppFormVO.setRefinancedetails(loaAppFormVO
+			        .getRefinancedetails());
+
+			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+			// loanAppFormVO.setLoanType(new
+			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			// }
+			LOG.info("loanAppFormService.create(loanAppFormVO)");
+			loanAppFormService.create(loanAppFormVO);
+
+			return userVOObj;
+		} catch (Exception e) {
+			LOG.error("User registration failed. Generating an alert"
+			        + loaAppFormVO);
+			throw new FatalException("Error in User registration", e);
+		}
+	}
+
+	@Override
+	public void crateWorkflowItems(int defaultLoanId) throws Exception {
+		// TODO Auto-generated method stub
+		workflowCoreService.createWorkflow(new WorkflowVO(defaultLoanId));
+	}
+}

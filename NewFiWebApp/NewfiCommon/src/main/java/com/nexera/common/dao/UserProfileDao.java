@@ -1,5 +1,6 @@
 package com.nexera.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.nexera.common.entity.CustomerDetail;
@@ -66,5 +67,9 @@ public interface UserProfileDao extends GenericDao {
 	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
 	        String stateName);
 
-	public UserVO getDefaultSalesManager();
+	Integer updateInternalUserDetail(User user);
+
+	UserVO getDefaultSalesManager();
+
+	void updateLoginTime(Date date, int userId);
 }

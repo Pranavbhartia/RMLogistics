@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 */
 
 @Entity
-@Table(name = "CustomerRetirementAccountDetails")
+@Table(name = "customerretirementaccountdetails")
 @NamedQuery(name = "CustomerRetirementAccountDetails.findAll", query = "SELECT cra FROM CustomerRetirementAccountDetails cra")
 public class CustomerRetirementAccountDetails implements Serializable {
 
@@ -26,6 +28,7 @@ public class CustomerRetirementAccountDetails implements Serializable {
 	private String accountSubType;
 	private String   currentaccountbalance;
 	private String   amountfornewhome;
+	private LoanAppForm loanAppForms;
 	
 	
 	public CustomerRetirementAccountDetails() {
@@ -43,7 +46,7 @@ public class CustomerRetirementAccountDetails implements Serializable {
 	
 	
 	
-	@Column(name = "AccountSubType")
+	@Column(name = "account_sub_type")
 	public String getAccountSubType() {
 		return accountSubType;
 	}
@@ -53,7 +56,7 @@ public class CustomerRetirementAccountDetails implements Serializable {
 		this.accountSubType = accountSubType;
 	}
 	
-	@Column(name = "currentaccountbalance")
+	@Column(name = "current_account_balance")
 	public String getCurrentaccountbalance() {
 		return currentaccountbalance;
 	}
@@ -61,7 +64,7 @@ public class CustomerRetirementAccountDetails implements Serializable {
 		this.currentaccountbalance = currentaccountbalance;
 	}
 	
-	@Column(name = "amountfornewhome")
+	@Column(name = "amount_for_new_home")
 	public String getAmountfornewhome() {
 		return amountfornewhome;
 	}
@@ -70,6 +73,16 @@ public class CustomerRetirementAccountDetails implements Serializable {
 	}
 	
 	
+	@ManyToOne
+    @JoinColumn(name="loanapp_formid")
+	public LoanAppForm getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(LoanAppForm loanAppForms) {
+		this.loanAppForms = loanAppForms;
+	}
 	
 	
 }

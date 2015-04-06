@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -50,9 +51,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
-import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -61,8 +61,6 @@ import com.sun.media.jai.codec.ImageDecoder;
 
 @Component
 public class NexeraUtility {
-
-	
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
@@ -84,20 +82,20 @@ public class NexeraUtility {
 		// Create a Splitter object
 		try {
 			document = new PDDocument();
-			//TODO: Look at this warning
+			// TODO: Look at this warning
 			document = PDDocument.loadNonSeq(file, null);
 			return document.getDocumentCatalog().getAllPages();
 		} catch (IOException e) {
 			LOGGER.info("Exception in splitting pdf document : "
 			        + e.getMessage());
-		}finally{
-			if(document!=null){
+		} finally {
+			if (document != null) {
 				try {
-	                document.close();
-                } catch (IOException e) {
-	                LOGGER.info("Unable to close the PDF document "
-	    			        + e.getMessage());
-                }
+					document.close();
+				} catch (IOException e) {
+					LOGGER.info("Unable to close the PDF document "
+					        + e.getMessage());
+				}
 			}
 		}
 		return pdfPages;
@@ -415,7 +413,7 @@ public class NexeraUtility {
 		try {
 			// create the PDF document object
 			document = new PDDocument();
-			InputStream input = (InputStream) inputStream;
+			InputStream input = inputStream;
 			BufferedReader bufferReader = new BufferedReader(
 			        new InputStreamReader(input));
 			String theString = "";
@@ -450,21 +448,20 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String getContentFromFile(byte[] bytes)
-	        throws IOException, Exception {
-		
-		
+	public String getContentFromFile(byte[] bytes) throws IOException,
+	        Exception {
+
 		String encodedText = new String(Base64.encodeBase64(bytes));
 		return encodedText;
 	}
 
-	public byte[] getContentFromStream(InputStream stream) throws IOException, Exception {
-		
+	public byte[] getContentFromStream(InputStream stream) throws IOException,
+	        Exception {
+
 		byte[] bytes = IOUtils.toByteArray(stream);
 		return bytes;
 	}
-	
-	
+
 	public File copyInputStreamToFile(InputStream in) throws IOException {
 		File file = null;
 		OutputStream out = null;
@@ -513,11 +510,6 @@ public class NexeraUtility {
 	public File convertInputStreamToFile(InputStream inputStream)
 	        throws COSVisitorException, IOException {
 
-		/*
-		 * String filePath = createPDFFromStream(inputStream); return new
-		 * File(filePath);
-		 */
-
 		OutputStream outputStream = null;
 		File file = null;
 		try {
@@ -553,41 +545,74 @@ public class NexeraUtility {
 
 	}
 
-	public Date convertToUTC(Date inputDate){
+	public Date convertToUTC(Date inputDate) {
 		return null;
 	}
-	
-	
-	public String getUUIDBasedNoteForLQBDocument(String uuId , UserVO user){
-		
+
+	public String getUUIDBasedNoteForLQBDocument(String uuId, UserVO user) {
+
 		StringBuffer stringBuf = new StringBuffer();
 		stringBuf.append("UUID:").append(uuId);
-		stringBuf.append( " UploadedBy:" );
-		stringBuf.append( user.getFirstName() ).append( "-" ).append( user.getLastName() );
-		 
+		stringBuf.append(" UploadedBy:");
+		stringBuf.append(user.getFirstName()).append("-")
+		        .append(user.getLastName());
+
 		return stringBuf.toString();
 	}
-	
-	
-	public void getStreamForThumbnailFromS3Path(HttpServletResponse response , String s3Path) throws Exception{
-		 response.setContentType("image/jpeg");
-		 LOGGER.info("The s3path = "+s3Path);
-	      
-		 // File downloadFile = new File(s3FileUploadServiceImpl.downloadFile(s3FileURL , localFilePath));
-		 InputStream inputStream = s3FileUploadServiceImpl.getInputStreamFromFile(s3Path , String.valueOf(1));
-    	 // get output stream of the response
-		 OutputStream outStream = response.getOutputStream();
 
-		 byte[] buffer = new byte[2048];
-		 int bytesRead = -1;
+	public void getStreamForThumbnailFromS3Path(HttpServletResponse response,
+	        String s3Path) throws Exception {
+		response.setContentType("image/jpeg");
+		LOGGER.info("The s3path = " + s3Path);
 
-		 // write bytes read from the input stream into the output stream
-		 while ((bytesRead = inputStream.read(buffer)) != -1) {
-		       outStream.write(buffer, 0, bytesRead);
-		 }
+		// File downloadFile = new
+		// File(s3FileUploadServiceImpl.downloadFile(s3FileURL ,
+		// localFilePath));
+		InputStream inputStream = getInputStreamFromFile(s3Path,
+		        String.valueOf(1));
+		// get output stream of the response
+		OutputStream outStream = response.getOutputStream();
 
-		 inputStream.close();
-		 outStream.close();
+		byte[] buffer = new byte[2048];
+		int bytesRead = -1;
+
+		// write bytes read from the input stream into the output stream
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			outStream.write(buffer, 0, bytesRead);
+		}
+
+		inputStream.close();
+		outStream.close();
 	}
-	
+
+	public InputStream getInputStreamFromFile(String fileUrl, String isImage)
+	        throws Exception {
+
+		/*
+		 * String extention = null; if(isImage.equals("0")){ extention = ".pdf";
+		 * }else{ extention = ".jpeg"; }
+		 * 
+		 * String filePth = downloadFile(fileUrl,
+		 * nexeraUtility.tomcatDirectoryPath()+File.separator+
+		 * nexeraUtility.randomStringOfLength()+extention); File initialFile =
+		 * new File(filePth);
+		 */
+		InputStream input = null;
+		try {
+			input = new URL(fileUrl).openStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new NonFatalException("Exception in reading thumbnail");
+
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				LOGGER.info("exception in closing document");
+			}
+		}
+
+		return input;
+	}
+
 }

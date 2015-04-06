@@ -66,11 +66,13 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	@Override
 	@Async
-	public void saveMessage(MessageVO messagesVO, String messageType,boolean sendEmail) {
+	public void saveMessage(MessageVO messagesVO, String messageType,
+	        boolean sendEmail) {
 		LOG.debug("Helper save message called");
 		String messageID;
 		try {
-			messageID = messageService.saveMessage(messagesVO, messageType,sendEmail);
+			messageID = messageService.saveMessage(messagesVO, messageType,
+			        sendEmail);
 			LOG.debug("Helper save message succeeded. With messageID: "
 			        + messageID);
 		} catch (FatalException | NonFatalException e) {
@@ -84,7 +86,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateNeedListModificationMessage(int loanId,
 	        User loggedInUser, List<Integer> addedList,
-	        List<Integer> removedList,boolean sendEmail) {
+	        List<Integer> removedList, boolean sendEmail) {
 
 		LoanTeamListVO teamList = loanService
 		        .getLoanTeamListForLoan(new LoanVO(loanId));
@@ -164,7 +166,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		}
 		messageVO.setMessage(message);
 		messageVO.setOtherUsers(messageUserVOs);
-		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(),sendEmail);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), sendEmail);
 
 	}
 
@@ -185,7 +187,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag,boolean sendEmail) {
+	        boolean successFlag, boolean sendEmail) {
 		/*
 		 * 1. Create messageVO object. 2. set senderUserId as the createdBy of
 		 * the note. Permission will be all the users who are part of the loan
@@ -208,12 +210,12 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		 * message accordingly
 		 */
 
-		if(fileUrls==null || fileUrls.isEmpty() || !successFlag){
+		if (fileUrls == null || fileUrls.isEmpty() || !successFlag) {
 			messageVO.setMessage(noteText);
 		}
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
-		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(),false);
+		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(), false);
 
 	}
 
@@ -242,13 +244,13 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 				messageUserVOs.add(otherUser);
 			} else {
-				if(message!=null){
+				if (message != null) {
 					message = message.replace(
 					        CommunicationLogConstants.USER,
 					        loggedInUser.getFirstName() + " "
-					                + loggedInUser.getLastName());	
+					                + loggedInUser.getLastName());
 				}
-				
+
 			}
 
 		}
@@ -271,19 +273,186 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setOtherUsers(messageUserVOs);
 
 	}
-	
+
 	@Override
 	@Async
-	public void generateWorkflowMessage(int loanId,
-	        String noteText,boolean sendEmail) {
+	public void generateWorkflowMessage(int loanId, String noteText,
+	        boolean sendEmail) {
 
 		MessageVO messageVO = new MessageVO();
 		messageVO.setLoanId(loanId);
 		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
 		        System.currentTimeMillis())));
-		setGlobalPermissionsToMessage(loanId, messageVO, userProfileDao.findByUserId(CommonConstants.SYSTEM_USER_USERID), null);
+		setGlobalPermissionsToMessage(
+		        loanId,
+		        messageVO,
+		        userProfileDao.findByUserId(CommonConstants.SYSTEM_USER_USERID),
+		        null);
 		messageVO.setMessage(noteText);
-		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(),sendEmail);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), sendEmail);
 	}
 
+	@Override
+	public void generateWelcomeNote(User loggedInUser, int loanId) {
+
+		MessageVO messageVO = new MessageVO();
+
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setGlobalPermissionsToMessage(
+		        loanId,
+		        messageVO,
+		        userProfileDao.findByUserId(CommonConstants.SYSTEM_USER_USERID),
+		        null);
+		String message = CommunicationLogConstants.WELCOME_USER;
+		message = message.replace(CommunicationLogConstants.USER,
+		        loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+		messageVO.setMessage(message);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), true);
+	}
+
+	@Override
+	@Async
+	public void checkIfUserFirstLogin(User loggedInUser) {
+		// Since this is an async method, we catch generic exception and log the
+		// error
+		try {
+			User user = userProfileDao.findByUserId(loggedInUser.getId());
+			if (user.getUserRole().getId() != UserRolesEnum.CUSTOMER
+			        .getRoleId()) {
+				// If the logged in user is customer generate a note, else
+				// ignore
+				return;
+			}
+
+			Date loginDate = user.getLastLoginDate();
+			if (loginDate == null) {
+				LoanVO loanVO = loanService.getActiveLoanOfUser(User
+				        .convertFromEntityToVO(loggedInUser));
+				this.generateWelcomeNote(loggedInUser, loanVO.getId());
+			}
+			userProfileDao.updateLoginTime(
+			        new Date(System.currentTimeMillis()), user.getId());
+		} catch (Exception ex) {
+			LOG.error(
+			        "There was an error in async method checkIfUserFirstLogin ",
+			        ex);
+		}
+	}
+
+	@Override
+	@Async
+	public void generatePrivateMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail) {
+		MessageVO messageVO = new MessageVO();
+
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null,
+		        Boolean.FALSE);
+
+		messageVO.setMessage(noteText);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), sendEmail);
+
+	}
+
+	@Override
+	@Async
+	public void generateManagerMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail) {
+		MessageVO messageVO = new MessageVO();
+
+		messageVO.setLoanId(loanId);
+		messageVO.setCreatedDate(utils.getDateInUserLocaleFormatted(new Date(
+		        System.currentTimeMillis())));
+		setOnlyInternalUsersAccess(loanId, messageVO, createdBy, null, true);
+
+		messageVO.setMessage(noteText);
+		this.saveMessage(messageVO, MessageTypeEnum.NOTE.toString(), true);
+
+	}
+
+	private void setOnlyInternalUsersAccess(int loanId, MessageVO messageVO,
+	        User createdByUser, String message, boolean managerOnly) {
+
+		LoanTeamListVO teamList = loanService
+		        .getLoanTeamListForLoan(new LoanVO(loanId));
+		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
+
+		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+		for (LoanTeamVO loanTeamVO : loanTeamVos) {
+			UserVO userVo = loanTeamVO.getUser();
+			if (isInternalUser(userVo, managerOnly)) {
+				if (userVo.getId() != createdByUser.getId()) {
+					MessageUserVO otherUser = messageVO.createNewUserVO();
+					otherUser.setUserID(userVo.getId());
+					otherUser.setUserName(userVo.getDisplayName());
+					otherUser.setImgUrl(userVo.getPhotoImageUrl());
+					try {
+						otherUser.setRoleName(userProfileDao
+						        .findUserRoleForMongo(userVo.getId()));
+					} catch (DatabaseException | NoRecordsFetchedException e) {
+						// THIS SHOULD NEVER HAPPEN
+						LOG.error(
+						        "Trying to fetch a user who does not exist. ",
+						        e);
+					}
+
+					messageUserVOs.add(otherUser);
+				}
+
+			}
+
+		}
+
+		MessageUserVO createdUserVO = messageVO.createNewUserVO();
+		createdUserVO.setUserID(createdByUser.getId());
+		createdUserVO.setImgUrl(createdByUser.getPhotoImageUrl());
+		createdUserVO.setUserName(createdByUser.getFirstName() + " "
+		        + createdByUser.getLastName());
+		try {
+			String roleName = userProfileDao.findUserRoleForMongo(createdByUser
+			        .getId());
+			createdUserVO.setRoleName(roleName);
+		} catch (DatabaseException | NoRecordsFetchedException e) {
+			// THIS SHOULD NEVER HAPPEN
+			LOG.error("Trying to fetch a user who does not exist. ", e);
+		}
+		messageVO.setCreatedUser(createdUserVO);
+		messageVO.setMessage(message);
+		messageVO.setOtherUsers(messageUserVOs);
+
+	}
+
+	private boolean isInternalUser(UserVO userVo, boolean managerOnly) {
+		// TODO Auto-generated method stub
+		String roleCode = userVo.getUserRole().getRoleCd();
+		UserRolesEnum rolesEnum = UserRolesEnum.valueOf(roleCode);
+		switch (rolesEnum) {
+		case CUSTOMER:
+			return false;
+		case REALTOR:
+			return false;
+		case SYSTEM:
+			return true;
+		default:
+
+			if (!managerOnly) {
+				// If manager only flag is not set, means th message is visible
+				// to all internal users
+				return true;
+			} else {
+				// This means only admins and sales manager wil have access,
+				// others will not
+				if (userVo.getInternalUserDetail().getId() == UserRolesEnum.SM
+				        .getRoleId())
+					return true;
+				return false;
+			}
+
+		}
+
+	}
 }
