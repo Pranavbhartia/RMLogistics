@@ -114,7 +114,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 	quesContxts = [];
 	
 	applyLoanStatus = 1;
-	appProgressBaar(1);
+	appProgressBaar(2);
 	
 	$('#app-right-panel').html('');
 	
@@ -256,7 +256,7 @@ $('#app-right-panel').html("");
                                  "addQuestions": [
                                      {
                                          "type": "desc",
-                                         "text": "You can add upto three locations",
+                                         "text": "Please provide zipcode of desired location",
                                          "name": "buyhomeZipPri",
                                          "value": ""
                                      }
@@ -291,7 +291,7 @@ $('#app-right-panel').html("");
 		 // appUserDetails.buyHome = buyHome;
 		  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
 		  appUserDetails.purchaseDetails = purchaseDetails;
-		 alert(JSON.stringify(appUserDetails));
+		 //alert(JSON.stringify(appUserDetails));
 		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
 		
 	      });
@@ -308,7 +308,7 @@ $('#app-right-panel').html("");
 function paintSpouseSaleOfCurrentHome() {
     
 	applyLoanStatus = 1;
-	appProgressBaar(1);
+	//appProgressBaar(1);
 	//$('#app-right-panel').html('');
 	
 	if(appUserDetails.isSellYourhome == "Yes"){
@@ -542,7 +542,7 @@ function paintSpouseSaleOfCurrentHome() {
 function paintSaleOfCurrentHome() {
     
 	applyLoanStatus = 1;
-	appProgressBaar(1);
+	
 	//$('#app-right-panel').html('');
    
 	if(appUserDetails.isSellYourhome == "Yes"){
@@ -608,7 +608,7 @@ var quesHeaderTxt31 = "Bank Accounts";
         value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
     }, {
         type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
+        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.",
         name: "bankAccountUsefornewhome",
         value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }];

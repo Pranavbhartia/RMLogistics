@@ -200,15 +200,18 @@ var teaserRate = [
                       "rateVO": [
                           {
                               "teaserRate": "3.000",
-                              "closingCost": "0"
+                              "closingCost": "0",
+                              "APR":"1"
                           },
                           {
                               "teaserRate": "2.875",
-                              "closingCost": "$1,782.62"
+                              "closingCost": "$1,782.62",
+                              "APR":"2"
                           },
                           {
                               "teaserRate": "2.750",
-                              "closingCost": "$3,512.43"
+                              "closingCost": "$3,512.43",
+                              "APR":"3"
                           }
                       ]
                   },
@@ -217,19 +220,23 @@ var teaserRate = [
                       "rateVO": [
                           {
                               "teaserRate": "3.625",
-                              "closingCost": "0"
+                              "closingCost": "0",
+                              "APR":"1"
                           },
                           {
                               "teaserRate": "3.500",
-                              "closingCost": "$1,155.53"
+                              "closingCost": "$1,155.53",
+                              "APR":"2"
                           },
                           {
                               "teaserRate": "3.375",
-                              "closingCost": "$3,658.15"
+                              "closingCost": "$3,658.15",
+                              "APR":"3"
                           },
                           {
                               "teaserRate": "3.250",
-                              "closingCost": "$6,166.37"
+                              "closingCost": "$6,166.37",
+                              "APR":"4"
                           }
                       ]
                   },
@@ -238,19 +245,23 @@ var teaserRate = [
                       "rateVO": [
                           {
                               "teaserRate": "3.875",
-                              "closingCost": "0"
+                              "closingCost": "0",
+                              "APR":"1"
                           },
                           {
                               "teaserRate": "3.750",
-                              "closingCost": "$493.10"
+                              "closingCost": "$493.10",
+                              "APR":"2"
                           },
                           {
                               "teaserRate": "3.625",
-                              "closingCost": "$2,872.52"
+                              "closingCost": "$2,872.52",
+                              "APR":"3"
                           },
                           {
                               "teaserRate": "3.500",
-                              "closingCost": "$5,660.73"
+                              "closingCost": "$5,660.73",
+                              "APR":"4"
                           }
                       ]
                   },
@@ -259,27 +270,33 @@ var teaserRate = [
                       "rateVO": [
                           {
                               "teaserRate": "3.125",
-                              "closingCost": "0"
+                              "closingCost": "0",
+                              "APR":"1"
                           },
                           {
                               "teaserRate": "3.000",
-                              "closingCost": "$425.20"
+                              "closingCost": "$425.20",
+                              "APR":"2"
                           },
                           {
                               "teaserRate": "2.875",
-                              "closingCost": "$1,443.82"
+                              "closingCost": "$1,443.82",
+                              "APR":"3"
                           },
                           {
                               "teaserRate": "2.750",
-                              "closingCost": "$2,456.83"
+                              "closingCost": "$2,456.83",
+                              "APR":"4"
                           },
                           {
                               "teaserRate": "2.625",
-                              "closingCost": "$3,472.65"
+                              "closingCost": "$3,472.65",
+                              "APR":"5"
                           },
                           {
                               "teaserRate": "2.500",
-                              "closingCost": "$4,796.47"
+                              "closingCost": "$4,796.47",
+                              "APR":"6"
                           }
                       ]
                   },
@@ -288,27 +305,33 @@ var teaserRate = [
                       "rateVO": [
                           {
                               "teaserRate": "3.250",
-                              "closingCost": "0"
+                              "closingCost": "0",
+                              "APR":"1"
                           },
                           {
                               "teaserRate": "3.125",
-                              "closingCost": "$347.38"
+                              "closingCost": "$347.38",
+                              "APR":"2"
                           },
                           {
                               "teaserRate": "3.000",
-                              "closingCost": "$1,643.20"
+                              "closingCost": "$1,643.20",
+                              "APR":"3"
                           },
                           {
                               "teaserRate": "2.875",
-                              "closingCost": "$2,950.22"
+                              "closingCost": "$2,950.22",
+                              "APR":"4"
                           },
                           {
                               "teaserRate": "2.750",
-                              "closingCost": "$4,262.83"
+                              "closingCost": "$4,262.83",
+                              "APR":"5"
                           },
                           {
                               "teaserRate": "2.625",
-                              "closingCost": "$5,569.85"
+                              "closingCost": "$5,569.85",
+                              "APR":"6"
                           }
                       ]
                   }
@@ -1186,12 +1209,36 @@ function paintRefinanceSeeRates() {
 	}).html(quesTxt);
 
 	
-	alert(JSON.stringify(refinanceTeaserRate));
+	//alert(JSON.stringify(refinanceTeaserRate));
 	container.append(quesTextCont);
 	
 	$('#ce-refinance-cp').html(container);
+	$('#overlay-loader').show();
+	$.ajax({
+
+		url : "rest/calculator/findteaseratevalue",
+		type : "POST",
+		data : {
+			"teaseRate" : JSON.stringify(refinanceTeaserRate)
+		},
+		datatype : "application/json",
+		success : function(data) {
+          
+			$('#overlay-loader').hide();
+			//var teaserRate = data;
+			//paintteaserRate(data);
+			//paintteaserRate(teaserRate);
+			paintFixYourRatePageCEP(teaserRate,refinanceTeaserRate);
+		},
+		error : function() {
+			alert("error");
+			$('#overlay-loader').hide();
+		}
+
+	});
+
 	
-	paintFixYourRatePageCEP(JSON.stringify(refinanceTeaserRate));
+	//paintFixYourRatePageCEP(refinanceTeaserRate);
 	
 }
 
@@ -1272,7 +1319,7 @@ function progressBaar(num) {
 	}
 }
 
-function teaserFixYourRatePage() {
+/*function teaserFixYourRatePage() {
 	$('#ce-refinance-cp').html('');
 	var rateProgramWrapper = getRateProgramContainer();
 	//var loanSummaryWrapper = getLoanSummaryWrapper();
@@ -1280,12 +1327,12 @@ function teaserFixYourRatePage() {
 	//$('#ce-refinance-cp').append(rateProgramWrapper).append(loanSummaryWrapper)
 	//		.append(closingCostWrapper);
 	$('#ce-refinance-cp').append(rateProgramWrapper);
-}
+}*/
 
 
 function paintApplyNow(refinanceTeaserRate){
 	
-	alert(JSON.stringify(refinanceTeaserRate));
+	//alert(JSON.stringify(refinanceTeaserRate));
 	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
 	var registration = new Object ();
 	var parentWrapper = $('<div>').attr({
@@ -1403,8 +1450,8 @@ function paintApplyNow(refinanceTeaserRate){
 
 
 
-alert('hey');
-		alert(JSON.stringify(appUserDetails));
+        //alert('hey');
+		//alert(JSON.stringify(appUserDetails));
 		console.log(JSON.stringify(appUserDetails));
 		
 		//saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
@@ -1674,39 +1721,48 @@ function saveUserAndNotifyRatesAlerts(registration){
 }
 */
 
-function paintFixYourRatePageCEP(refinanceTeaserRate) {
-	/*var rateProgramWrapper = getLockRateProgramContainer();
-	$('#center-panel-cont').append(rateProgramWrapper);*/
+function paintFixYourRatePageCEP(teaserRate,refinanceTeaserRate) {
 	
+	
+	/*var rateProgramWrapper = getLockRateProgramContainer();
+	$('#center-panel-cont').append(rateProgramWrapper);
+	*/
 	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
 	//var loanTypeText = refinanceTeaserRate.loanType; 
-	var loanSummaryWrapper = getLoanSummaryWrapperCEP(refinanceTeaserRate);
+	var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate,refinanceTeaserRate);
 
 	$('#ce-refinance-cp').append(loanSummaryWrapper);
 }
 
 
-function getLoanSummaryWrapperCEP(refinanceTeaserRate) {
+function getLoanSummaryWrapperCEP(teaserRate,refinanceTeaserRate) {
 	
-	var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
-	loanTypeText = refinanceTeaserRate.loanType;
+	var loanSummaryWrapper = getLoanSummaryWrapperTeaserRate(teaserRate,refinanceTeaserRate);
+	//var closingCostWrapper = getClosingCostSummaryContainer();
+
+	//$('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+	
+	
+	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
+	//loanTypeText = refinanceTeaserRate.loanType;
 	
 	var parentWrapper = $('<div>').attr({
 		"class" : "loan-summary-wrapper"
 	});
-	var header = getLoanSummaryHeaderCEP();
-	var container;
+	
+	/*var container;
 	if(loanTypeText == "refinance"){
 		container = getLoanSummaryContainerRefinanceCEP();
 	}else if(loanTypeText == "purchase"){
 		container = getLoanSummaryContainerPurchaseCEP();
 	}
-	
-	var rateWrapper = getLoanSliderWrapperCEP(refinanceTeaserRate);
+	*/
+	var rateWrapper = getLoanSliderWrapperCEP(teaserRate,refinanceTeaserRate);
 	
 	var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
 	
-	parentWrapper.append(header).append(container).append(rateWrapper).append(bottomText);
+	//parentWrapper.append(container).append(loanSummaryWrapper).append(closingCostWrapper).append(rateWrapper).append(bottomText);
+	parentWrapper.append(loanSummaryWrapper).append(rateWrapper).append(bottomText);
 	return parentWrapper;
 }
 
@@ -1726,7 +1782,7 @@ function getLoanSummaryHeaderCEP() {
 }
 
 
-function getLoanSummaryContainerRefinanceCEP() {
+/*function getLoanSummaryContainerRefinanceCEP() {
 	var container = $('<div>').attr({
 		"class" : "loan-summary-container clearfix"
 	});
@@ -1766,9 +1822,9 @@ function getLoanSummaryContainerRefinanceCEP() {
 	container.append(leftCol).append(rightCol);
 	return container;
 }
+*/
 
-
-function getLoanSummaryContainerPurchaseCEP() {
+/*function getLoanSummaryContainerPurchaseCEP() {
 	var container = $('<div>').attr({
 		"class" : "loan-summary-container clearfix"
 	});
@@ -1805,10 +1861,10 @@ function getLoanSummaryContainerPurchaseCEP() {
 
 	container.append(leftCol).append(rightCol);
 	return container;
-}
+}*/
 
 
-function getLoanSliderWrapperCEP(refinanceTeaserRate){
+function getLoanSliderWrapperCEP(teaserRate,refinanceTeaserRate){
 	
 	//alert(JSON.stringify(refinanceTeaserRate));
 	var wrapper = $('<div>').attr({
@@ -1823,9 +1879,9 @@ function getLoanSliderWrapperCEP(refinanceTeaserRate){
 		"class" : "lock-rate-slider-container"
 	});
 	
-	var tenureSlider = getYearSliderCont();
+	var tenureSlider = getYearSliderContCEP1(teaserRate);
 	
-	var rateSlider = getRateSliderCont();
+	var rateSlider = getRateSliderContCEP(teaserRate);
 	
 	container.append(tenureSlider).append(rateSlider);
 	
@@ -1849,4 +1905,560 @@ function getLoanSliderWrapperCEP(refinanceTeaserRate){
 	
 	
 	return wrapper.append(header).append(container).append(rateBtn1).append(rateBtn2);;
+}
+
+
+function getYearSliderContCEP1(teaserRate) {
+
+	var wrapper = $('<div>').attr({
+		"class" : "slider-wrapper clearfix"
+	});
+
+	var headerTxt = $('<div>').attr({
+		"class" : "slider-hdr-txt float-left"
+	}).html("Length of Loan");
+
+	
+	var silderCont = getYearSliderCEP(teaserRate);	
+	return wrapper.append(headerTxt).append(silderCont);
+
+}
+
+
+function getYearSliderCEP(LQBResponse){
+
+	var container = $('<div>').attr({
+
+		"class" : "silder-cont yr-slider float-left"
+
+	});
+
+	var yearValues = [];
+
+		for (var i in LQBResponse) {
+
+		    loanDurationConform = LQBResponse[i].loanDuration;
+		    year = loanDurationConform.split(" ")[0];
+
+		    if (year.indexOf("/") > 0) {
+		        year = year.split("/")[0];
+		    }
+		    temp = {};
+		    temp.value = year;
+		    temp.text = year + " - year fixed arm",
+		    temp.rateVO = LQBResponse[i].rateVO;
+		    yearValues.push(temp);
+		}
+		yearValues.sort(function (a, b) {
+		    return parseFloat(a.value) - parseFloat(b.value);
+		});
+		
+		
+
+	for(var i=0; i<yearValues.length; i++){
+
+		var leftOffset = i/(yearValues.length-1) * 100;
+		var gridItemCont = $('<div>').attr({
+
+			"class" : "yr-grid-cont"
+
+		});
+
+		var selectIcon = $('<div>').attr({
+
+			"class" : "yr-slider-icon"
+
+		}).css({
+
+			"left" : leftOffset + "%"
+
+		}).bind('click',{"ratesArray" : yearValues[i].rateVO},function(event){
+
+			if(!$(this).hasClass('yr-slider-icon-selected')){
+
+				$('.yr-grid-cont .yr-slider-icon').removeClass('yr-slider-icon-selected');
+
+				$(this).addClass('yr-slider-icon-selected');
+
+				$('.yr-grid-cont .yr-grid-item-selected').hide();
+
+				$('.yr-grid-cont .yr-grid-item').show();
+
+				$(this).parent().find('.yr-grid-item').hide();
+
+				$(this).parent().find('.yr-grid-item-selected').show();
+				
+				$('#rate-slider-cont').find('.rt-slider').remove();
+				
+				var rateSlider = getRatSliderCEP(event.data.ratesArray);
+				$('#rate-slider-cont').append(rateSlider);
+				
+				index =  parseInt(event.data.ratesArray.length / 2);	
+				$('#aprid').html(event.data.ratesArray[index].APR);
+				$('#closingCostId').html(event.data.ratesArray[index].closingCost);
+				$('#teaserRateId').html(event.data.ratesArray[index].teaserRate);
+
+			}
+
+		});
+
+		var gridItem = $('<div>').attr({
+
+			"class" : "yr-grid-item"
+
+		}).css({
+
+			"left" : leftOffset + "%"
+
+		}).html(yearValues[i].value + " Yr");
+
+		
+
+		var gridItemSelected = $('<div>').attr({
+
+			"class" : "yr-grid-item-selected hide"
+
+		}).css({
+
+			"left" : leftOffset + "%"
+
+		}).html(yearValues[i].text);
+
+		
+
+		gridItemCont.append(selectIcon).append(gridItem).append(gridItemSelected);
+
+		//Static code to select year by default
+		if(i == 0){
+			selectIcon.addClass('yr-slider-icon-selected');
+			gridItem.hide();
+			gridItemSelected.show();
+		}
+		
+
+		container.append(gridItemCont);
+
+	}
+
+	
+
+	return container;
+
+}
+
+
+function getRateSliderContCEP(LQBResponse) {
+
+	var wrapper = $('<div>').attr({
+		"id" : "rate-slider-cont",
+		"class" : "slider-wrapper clearfix"
+	});
+
+	var headerTxt = $('<div>').attr({
+
+		"class" : "slider-hdr-txt float-left"
+
+	}).html("Interest Rate");
+
+	
+	var yearValues = [];
+
+	for (var i in LQBResponse) {
+
+	    loanDurationConform = LQBResponse[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    temp = {};
+	    temp.value = year;
+	    temp.text = year + " - year fixed arm",
+	    temp.rateVO = LQBResponse[i].rateVO;
+	    yearValues.push(temp);
+	}
+	yearValues.sort(function (a, b) {
+	    return parseFloat(a.value) - parseFloat(b.value);
+	});
+	
+	
+
+	var rateArray = yearValues[0].rateVO; 
+
+	index = parseInt(rateArray.length / 2);	
+	var silderCont = getRatSliderCEP(rateArray);
+
+	/*$('#aprid').html(rateArray[index].APR);
+	$('#closingCostId').html(rateArray[index].closingCost);*/
+
+	return wrapper.append(headerTxt).append(silderCont);
+
+}
+
+function getRatSliderCEP(gridArray) {
+
+	
+	var rateArray = [];
+	
+	for(var i=0; i<gridArray.length;i++){
+		rateArray[i] = gridArray[i].teaserRate;
+	}
+	
+	index = parseInt(rateArray.length / 2);	
+
+	var container = $('<div>').attr({
+
+		"class" : "silder-cont rt-slider float-left"
+
+	});
+
+	
+
+	var tsIcon = $('<div>').attr({
+
+		"id" : "tenure-slider",
+
+		"class" : "tenure-slider-icon"
+
+	}).slider({
+
+		orientation : "horizontal",
+
+		range : "min",
+
+		max : rateArray.length - 1,
+
+		value : index,
+
+		change:function(event,ui){
+
+			//alert(ui.);
+			$('#aprid').html(gridArray[ui.value].APR);
+			$('#closingCostId').html(gridArray[ui.value].closingCost);
+			$('#teaserRateId').html(gridArray[ui.value].teaserRate);
+		}
+
+	});
+
+	
+
+	container.append(tsIcon);
+
+	
+
+	var gridItemCont = $('<div>').attr({
+
+		"class" : "rt-grid-cont"
+
+	});
+
+	
+
+	for(var i=0; i<gridArray.length; i++){
+
+		var leftOffset = i/(gridArray.length-1) * 100;
+
+		
+
+		var gridItem = $('<div>').attr({
+
+			"class" : "rt-grid-item"
+
+		}).css({
+
+			"left" : leftOffset + "%"
+
+		}).html(gridArray[i].teaserRate + "%");
+
+		
+
+		gridItemCont.append(gridItem);
+
+	}
+
+	
+
+	return container.append(gridItemCont);
+
+}
+
+function getLoanSummaryWrapperTeaserRate(teaserRate, refinanceTeaserRate) {
+
+	
+	 var customerInputData = refinanceTeaserRate;
+	 loanTypeText = customerInputData.loanType;
+	
+	
+	var parentWrapper = $('<div>').attr({
+
+		"class" : "loan-summary-wrapper"
+
+	});
+
+	var header = getLoanSummaryHeaderCEP();
+
+	var container;
+
+	if(loanTypeText == "REF"){
+
+		container = getLoanSummaryContainerRefinanceCEP(teaserRate,customerInputData);
+
+	}else if(loanTypeText == "purchase"){
+
+		container = getLoanSummaryContainerPurchaseCEP();
+
+	}
+
+	//var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
+
+	
+
+	//var rateWrapper = getLoanSliderWrapper();
+
+	
+
+	parentWrapper.append(header).append(container);
+
+	return parentWrapper;
+
+}
+
+function getLoanSummaryHeaderCEP() {
+
+	var headerCont = $('<div>').attr({
+
+		"class" : "loan-summary-header clearfix"
+
+	});
+
+	var col1 = $('<div>').attr({
+
+		"class" : "loan-summary-header-col1 float-left uppercase"
+
+	}).html('MY LOAN SUMMARY');
+
+	var col2 = $('<div>').attr({
+
+		"class" : "loan-summary-header-col2 float-left"
+
+	}).html("Rates as of 1/16/2015 8:13:52 AM");
+
+	headerCont.append(col1).append(col2);
+
+	return headerCont;
+
+}
+
+
+function getLoanSummaryContainerRefinanceCEP(teaserRate,customerInputData) {
+
+	var yearValues = modifiedLQBJsonRes(teaserRate);
+	var rateVO = yearValues[0].rateVO;
+	var index = parseInt(yearValues[0].rateVO.length / 2); 
+	
+	
+	var container = $('<div>').attr({
+
+		"class" : "loan-summary-container clearfix"
+
+	});
+
+	var leftCol = $('<div>').attr({
+
+		"class" : "loan-summary-lp float-left"
+
+	});
+
+	// add rows in left column
+	
+	if(customerInputData.refinanceOption =="REFLMP")
+		refinanceOpt = "Lower My Monthly Payment";
+	if(customerInputData.refinanceOption =="REFMF")
+		refinanceOpt = "Pay Off My Mortgage Faster";
+	if(customerInputData.refinanceOption =="REFCO")
+		refinanceOpt = "Take Cash Out of My Home";
+	
+
+	var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - "+refinanceOpt);
+
+	var lcRow2 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
+
+	var lcRow3 = getLoanSummaryRow("Interest Rate",rateVO[index].teaserRate,"teaserRateId");
+
+	var lcRow4 = getLoanAmountRow("Loan Amount", customerInputData.currentMortgageBalance);
+
+	
+
+	var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR,"aprid");
+
+	var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",rateVO[index].closingCost ,"closingCostId");
+
+	leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(
+
+			lcRow5).append(lcRow6);
+
+
+
+	var rightCol = $('<div>').attr({
+
+		"class" : "loan-summary-rp float-right"
+
+	});
+
+	// add rows in right column
+
+	var rcRow1 = getLoanSummaryRow("Principal Interest", "$ 1,649.20");
+
+	var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
+
+	rcRow2.addClass("no-border-bottom");
+
+	var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
+
+	var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
+
+	
+
+	var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
+
+	var rcRow6 = getLoanSummaryRow("Current Monthly Payment", "$ 1,649.20");
+
+	var rcRow7 = getLoanSummaryRow("Monthly Payment Difference", "$ 1,649.20");
+
+	
+
+	var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment",
+
+			"$ 1,649.02");
+
+	rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4)
+
+			.append(rcRow5).append(rcRow6).append(rcRow7).append(rcRow8);
+
+
+
+	container.append(leftCol).append(rightCol);
+
+	return container;
+
+}
+
+
+function getLoanSummaryContainerPurchaseCEP() {
+
+	var container = $('<div>').attr({
+
+		"class" : "loan-summary-container clearfix"
+
+	});
+
+	var leftCol = $('<div>').attr({
+
+		"class" : "loan-summary-lp float-left"
+
+	});
+
+	// add rows in left column
+
+	var lcRow1 = getLaonSummaryApplyBtnRow();
+
+	var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase");
+
+	var lcRow3 = getLoanSummaryRow("Loan Program", "5 Years Fixed ARM");
+
+	var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
+
+	var lcRow5 = getLoanSummaryRow("Purchase Amount", "$ 473,000.000");
+
+	var lcRow6 = getLoanSummaryRow("Interest Rate", "3.375%");
+
+	var lcRow7 = getLoanSummaryRow("Loan Amount", "$ 373,000.000");
+
+	var lcRow8 = getLoanSummaryRow("ARP", "3.547%");
+
+	var lcRow9 = getLoanSummaryRow("Estimated<br/>Closing Cost", "$8,185.75");
+
+	leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(
+
+			lcRow5).append(lcRow6).append(lcRow7).append(lcRow8).append(lcRow9);
+
+
+
+	var rightCol = $('<div>').attr({
+
+		"class" : "loan-summary-rp float-right"
+
+	});
+
+	// add rows in right column
+
+	var rcRow1 = getLoanSummaryRow("Monthly Payment", "");
+
+	var rcRow2 = getLoanSummaryRow("Principal Interest", "$ 1,649.20");
+
+	var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
+
+	rcRow3.addClass("no-border-bottom");
+
+	var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
+
+	var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
+
+	var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment",
+
+			"$ 1,649.02");
+
+	rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4)
+
+			.append(rcRow5).append(rcRow6);
+
+
+
+	container.append(leftCol).append(rightCol);
+
+	return container;
+
+}
+
+
+function getYearSliderContCEP() {
+
+	var wrapper = $('<div>').attr({
+		"class" : "slider-wrapper clearfix"
+	});
+
+	var headerTxt = $('<div>').attr({
+		"class" : "slider-hdr-txt float-left"
+	}).html("Length of Loan");
+
+	var silderCont = getYearSlider();
+
+	return wrapper.append(headerTxt).append(silderCont);
+
+}
+
+function modifiedLQBJsonRes(LQBResponse){
+	
+	var yearValues = [];
+
+	for (var i in LQBResponse) {
+
+	    loanDurationConform = LQBResponse[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    temp = {};
+	    temp.value = year;
+	    temp.text = year + " - year fixed arm",
+	    temp.rateVO = LQBResponse[i].rateVO;
+	    yearValues.push(temp);
+	}
+	yearValues.sort(function (a, b) {
+	    return parseFloat(a.value) - parseFloat(b.value);
+	});
+	
+	return yearValues;
+	
 }

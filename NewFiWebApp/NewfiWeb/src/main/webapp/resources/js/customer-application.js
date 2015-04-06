@@ -29,7 +29,7 @@ var propertyTypeMaster = new Object();
 var governmentquestion = new Object();
 var refinancedetails = new Object();
 var loan = new Object();
-//var loanType = new Object();
+var loanType = new Object();
 //loanType.id=1;
 
 spouseGovernmentquestion = new Object();
@@ -39,7 +39,8 @@ appUserDetails.propertyTypeMaster = propertyTypeMaster;
 appUserDetails.governmentquestion = governmentquestion;
 appUserDetails.refinancedetails = refinancedetails;
 appUserDetails.loan = loan;
-//appUserDetails.loanType = loanType;
+appUserDetails.loanType = loanType;
+
 appUserDetails.spouseGovernmentquestion = spouseGovernmentquestion;
 
 
@@ -64,10 +65,10 @@ var applicationItemsList = [
 							    "text":"My Priority",
 	                            "onselect" : ""
 	                        },
-	                        {
+	                        /*{
 							    "text":"My Money",
 	                            "onselect" : ""
-	                        },
+	                        },*/
 	                        {
 							    "text":"Home Information",
 	                            "onselect" : paintCustomerApplicationPageStep1a
@@ -137,15 +138,25 @@ function paintCustomerApplicationPage() {
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
 	
-	customerSpouseDetail.id = newfi.user.customerDetail.customerSpouseDetail.id;
-	customerEmploymentIncome.id = newfi.user.customerDetail.customerEmploymentIncome.id;
-	customerBankAccountDetails.id = newfi.user.customerDetail.customerBankAccountDetails.id;
-	customerRetirementAccountDetails.id = newfi.user.customerDetail.customerRetirementAccountDetails.id;
-	customerOtherAccountDetails.id = newfi.user.customerDetail.customerOtherAccountDetails.id;
+	 if(newfi.user.customerDetail.customerSpouseDetail != null){
+		 customerSpouseDetail.id = newfi.user.customerDetail.customerSpouseDetail.id;
+	 }
+	 if(newfi.user.customerDetail.customerEmploymentIncome !=null){
+	 customerEmploymentIncome.id = newfi.user.customerDetail.customerEmploymentIncome.id;
+	 }
+	 if(newfi.user.customerDetail.customerBankAccountDetails != null){
+	 customerBankAccountDetails.id = newfi.user.customerDetail.customerBankAccountDetails.id;
+	 }
+	 if(newfi.user.customerDetail.customerRetirementAccountDetails != null){
+	 customerRetirementAccountDetails.id = newfi.user.customerDetail.customerRetirementAccountDetails.id;
+	 }
+	 if(newfi.user.customerDetail.customerOtherAccountDetails !=null){
+	 customerOtherAccountDetails.id = newfi.user.customerDetail.customerOtherAccountDetails.id;
+	 }
 	
-	user.customerEnagagement = customerEnagagement;
-	user.customerEmploymentIncome = customerEmploymentIncome;
-	user.customerBankAccountDetails = customerBankAccountDetails;
+	//user.customerEnagagement = customerEnagagement;
+	/*user.customerEmploymentIncome = customerEmploymentIncome;
+	user.customerBankAccountDetails = customerBankAccountDetails;*/
 	
 	
 	loan.id = newfi.user.defaultLoanId;
@@ -182,7 +193,9 @@ function paintCustomerApplicationPage() {
 
    // paintCustomerApplicationPageStep1a();
     
-     showLoanAppFormContainer(formCompletionStatus);
+    // showLoanAppFormContainer(formCompletionStatus);
+    
+    paintSelectLoanTypeQuestion();
     
 }
 
@@ -336,17 +349,39 @@ function getApplicationTextQues(question) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+    
+    var requird = $('<span>').attr({
+    	"style":"color:red",
+    	
+    }).html("*");
 
     var optionCont = $('<input>').attr({
         "class": "app-input",
         "name": question.name,
         "value":question.value
-    });
+    }).on("load keydown", function(e){
+          
+		if(question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri'  && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'){
+			$('input[name='+question.name+']').maskMoney({
+				thousands:',',
+				decimal:'.',
+				allowZero:true,
+				prefix: '$',
+			    precision:0,
+			    allowNegative:true
+			});
+		}
+		if(question.name == 'ssn'){
+			$('input[name="ssn"]').attr('type', 'password');
+		}
+		
+	});
 
     if (question.value != undefined) {
         optionCont.val(question.value);
     }
 
+    quesTextCont.append(requird);
     optionsContainer.append(optionCont);
 
     return container.append(quesTextCont).append(optionsContainer);
@@ -391,7 +426,7 @@ function getApplicationMultipleChoiceQues(question) {
 function paintCustomerApplicationPageStep1a() {
     
 	applyLoanStatus = 1;
-	appProgressBaar(1);
+	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Residential Address";
 
@@ -746,7 +781,7 @@ var quesContxts=[];
 function paintCustomerApplicationPageStep2() {
 	
 	applyLoanStatus =2;
-	appProgressBaar(2); // this is to show the bubble status in the left panel
+	appProgressBaar(3); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Who's on the Loan?";
@@ -965,7 +1000,7 @@ function getContextApplicationTextQues(contxt) {
 function paintMyIncome() {
 
 	applyLoanStatus = 3;
-	appProgressBaar(3);
+	appProgressBaar(4);
 	var quesTxt = "Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1178,8 +1213,8 @@ function paintRefinancePension(divId) {
 function paintMySpouseIncome() {
 
 	applyLoanStatus = 3;
-	appProgressBaar(3);
-	var quesTxt = "Select all that apply";
+	//appProgressBaar(3);
+	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintSpouseRefinanceEmployed,
@@ -1645,7 +1680,7 @@ function paintCustomerApplicationPageStep4a() {
    
 	applyLoanStatus = 4;
 	quesDeclarationContxts = [];
-	appProgressBaar(4);
+	appProgressBaar(5);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Declaration Questions";
 
@@ -1986,7 +2021,7 @@ function paintCustomerApplicationPageStep4b(){
 		"name" : name,
 		"value" : 0
 	}];
-	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
+	var quesCont = paintIgnoreQuestions(quesHeaderTxt, options, name);
 
 	$('#app-right-panel').append(quesCont);
     
@@ -2078,7 +2113,7 @@ function paintCustomerApplicationPageStep4b(){
 function paintCustomerApplicationPageStep5() {
 	
 	applyLoanStatus = 5;
-	appProgressBaar(5);
+	appProgressBaar(6);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "My Credit";
 
@@ -2086,11 +2121,15 @@ function paintCustomerApplicationPageStep5() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
+    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth));
+    if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
+    	dob="";
+    
     var questions = [{
         type: "desc",
         text: "Birthday",
         name: "birthday",
-        value: $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth))
+        value: dob
     },
     {
         type: "desc",
@@ -2146,13 +2185,188 @@ function paintCustomerApplicationPageStep5() {
 function applicationFormSumbit(){
 	
 	//createLoan();
-	changeSecondaryLeftPanel(3);
+	saveUserAndLockRate(appUserDetails);
+	
+}
+
+
+var tempdata = 		[
+                 {
+                     "loanDuration": "15 YR FIXED CONFORMING",
+                     "rateVO": [
+                         {
+                             "teaserRate": "3.000",
+                             "closingCost": "0",
+							  "APR":"1",
+                         },
+                         {
+                             "teaserRate": "2.875",
+                             "closingCost": "$1,782.62",
+							  "APR":"2",
+                         },
+                         {
+                             "teaserRate": "2.750",
+                             "closingCost": "$3,512.43",
+                             "APR":"3",
+                         }
+                     ]
+                 },
+                 {
+                     "loanDuration": "20 YR FIXED CONFORMING",
+                     "rateVO": [
+                         {
+                             "teaserRate": "3.625",
+                             "closingCost": "0",
+                             "APR":"1",
+                         },
+                         {
+                             "teaserRate": "3.500",
+                             "closingCost": "$1,155.53",
+                             "APR":"2",
+                         },
+                         {
+                             "teaserRate": "3.375",
+                             "closingCost": "$3,658.15",
+                             "APR":"3",
+                         },
+                         {
+                             "teaserRate": "3.250",
+                             "closingCost": "$6,166.37",
+                             "APR":"4",
+                         }
+                     ]
+                 },
+                 {
+                     "loanDuration": "30 YR FIXED CONFORMING",
+                     "rateVO": [
+                         {
+                             "teaserRate": "3.875",
+                             "closingCost": "0",
+                             "APR":"1",
+                         },
+                         {
+                             "teaserRate": "3.750",
+                             "closingCost": "$493.10",
+                             "APR":"2",
+                         },
+                         {
+                             "teaserRate": "3.625",
+                             "closingCost": "$2,872.52",
+                             "APR":"3",
+                         },
+                         {
+                             "teaserRate": "3.500",
+                             "closingCost": "$5,660.73",
+                             "APR":"4",
+                         }
+                     ]
+                 },
+                 {
+                     "loanDuration": "5/1 1 YR LIBOR CONFORMING  2/2/5 30 YR ARM",
+                     "rateVO": [
+                         {
+                             "teaserRate": "3.125",
+                             "closingCost": "0",
+                             "APR":"1",
+                         },
+                         {
+                             "teaserRate": "3.000",
+                             "closingCost": "$425.20",
+                             "APR":"2",
+                         },
+                         {
+                             "teaserRate": "2.875",
+                             "closingCost": "$1,443.82",
+                             "APR":"3",
+                         },
+                         {
+                             "teaserRate": "2.750",
+                             "closingCost": "$2,456.83",
+                             "APR":"4",
+                         },
+                         {
+                             "teaserRate": "2.625",
+                             "closingCost": "$3,472.65",
+                             "APR":"5",
+                         },
+                         {
+                             "teaserRate": "2.500",
+                             "closingCost": "$4,796.47",
+                             "APR":"6",
+                         }
+                     ]
+                 },
+                 {
+                     "loanDuration": "7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM",
+                     "rateVO": [
+                         {
+                             "teaserRate": "3.250",
+                             "closingCost": "0",
+                             "APR":"1",
+                         },
+                         {
+                             "teaserRate": "3.125",
+                             "closingCost": "$347.38",
+                             "APR":"2",
+                         },
+                         {
+                             "teaserRate": "3.000",
+                             "closingCost": "$1,643.20",
+                             "APR":"3",
+                         },
+                         {
+                             "teaserRate": "2.875",
+                             "closingCost": "$2,950.22",
+                             "APR":"4",
+                         },
+                         {
+                             "teaserRate": "2.750",
+                             "closingCost": "$4,262.83",
+                             "APR":"5",
+                         },
+                         {
+                             "teaserRate": "2.625",
+                             "closingCost": "$5,569.85",
+                             "APR":"6",
+                         }
+                     ]
+                 }
+             ];
+
+function saveUserAndLockRate(appUserDetails){
+	
+	//alert(JSON.stringify(registration));
+	$.ajax({
+
+		url : "rest/calculator/findteaseratevalue",
+		type : "POST",
+		data : {
+			"teaseRate" : JSON.stringify(appUserDetails)
+		},
+		datatype : "application/json",
+		success : function(data) {
+          
+			$('#overlay-loader').hide();
+			
+			//TO:DO pass the data (json)which is coming from the controller
+			
+			//paintLockRate(data,appUserDetails);
+			paintLockRate(tempdata,appUserDetails);
+		},
+		error : function() {
+			alert("error");
+			$('#overlay-loader').hide();
+		}
+
+	});
+
+	
 }
 
 
 function appProgressBaar(num){
 	
-	var count = 5;
+	var count = 6;
 	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
 	$('#appStepNoId_' + num).html(num);
@@ -2185,7 +2399,7 @@ function putCurrencyFormat(name){
 }
 
 
-function paintGovernmentMonitoringQuestions(quesText, options, name) {
+function paintIgnoreQuestions(quesText, options, name) {
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 		
@@ -2376,7 +2590,7 @@ function showLoanAppFormContainer(formCompletionStatus){
 
 function paintSelectLoanTypeQuestion() {
     
-
+	appProgressBaar(1);
 	console.log("Inside paintSelectLoanTypeQuestion ");
 	stages = 0;
 	//$('#ce-main-container').html('');
@@ -2406,10 +2620,8 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
 		
-		//customerEnagagement.loanType = "REF";
-				
-		//user.customerEnagagement = customerEnagagement;
-		loanType = 	"REF";
+	
+		loanType.loanTypeCd = "REF";
 		appUserDetails.loanType= loanType;
 		
 		paintRefinanceMainContainer();
@@ -2419,7 +2631,8 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
 		
-		appUserDetails.loanType = "buyHome";
+		loanType.loanTypeCd = "PUR";
+		appUserDetails.loanType= loanType;
 		
 		paintBuyHomeContainer();
 	});
@@ -2929,7 +3142,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
    
 	applyLoanStatus = 4;
 	quesDeclarationContxts = [];
-	appProgressBaar(4);
+	
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Spouse Declaration Questions";
 
@@ -3369,9 +3582,18 @@ $.ajax({
 
 			callBack;
 		},
-		error:function(erro){
-			alert("success");
+		error:function(error){
+			alert("error");
 		}
 		
 	});
+}
+
+
+function paintLockRate(lqbData,appUserDetails){
+	
+	//console.log("lqbData..."+JSON.stringify(lqbData));
+	//console.log("appUserDetails..."+JSON.stringify(appUserDetails));
+	
+	paintFixYourRatePage1(lqbData,appUserDetails);
 }

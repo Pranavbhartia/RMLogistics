@@ -88,34 +88,6 @@ function appendCustPersonalInfoWrapper(user) {
 
 
 
-function adjustCenterPanelWidth() {
-
-	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
-
-		var leftPanelWidth = $('.left-panel').width();
-
-		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-
-		var centerPanelWidth = $(window).width()
-
-				- (leftPanelWidth + leftPanelTab2Width) - 35;
-
-		$('.center-panel').width(centerPanelWidth);
-
-	} else if (window.innerWidth < 768) {
-
-		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
-
-		var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 20;
-
-		$('.center-panel').width(centerPanelWidth);
-
-	}
-
-}
-
-
-
 function getCustomerSecondaryLeftNav() {
 
 	var leftTab2Wrapper = $('<div>').attr({
@@ -260,7 +232,7 @@ function showCustomerLoanPage(user) {
 
 	changeSecondaryLeftPanel(1);
 
-	adjustCenterPanelWidth();
+	//adjustCenterPanelWidth();
 
 	
 
@@ -1134,11 +1106,12 @@ function getNonEditableFormRow(desc, value, id) {
 
 function paintFixYourRatePage() {
 
+
 	/*var rateProgramWrapper = getLockRateProgramContainer();
 
 	$('#center-panel-cont').append(rateProgramWrapper);*/
 
-	var loanSummaryWrapper = getLoanSummaryWrapper();
+	var loanSummaryWrapper = getLoanSummaryWrapper(lqbData,appUserDetails);
 
 	var closingCostWrapper = getClosingCostSummaryContainer();
 
@@ -1146,7 +1119,21 @@ function paintFixYourRatePage() {
 
 }
 
+function paintFixYourRatePage1(lqbData,appUserDetails) {
 
+	//var rateProgramWrapper = getLockRateProgramContainer();
+
+	//$('#center-panel-cont').append(rateProgramWrapper);
+	$('#center-panel-cont').html("");
+	var loanSummaryWrapper = getLoanSummaryWrapper(lqbData,appUserDetails);
+
+	var closingCostWrapper = getClosingCostSummaryContainer(lqbData);
+
+	$('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+
+}
+
+/*
 
 function getRateProgramContainer(refinanceTeaserRate) {
 
@@ -1202,7 +1189,7 @@ function getRateProgramContainer(refinanceTeaserRate) {
 
 	
 
-	/*if(loanType == "refinance"){
+	if(loanType == "refinance"){
 
 		rateBtnContainer.addClass('margin-top30');
 
@@ -1236,7 +1223,7 @@ function getRateProgramContainer(refinanceTeaserRate) {
 
 		rpCol1.append(downPaymentBtnContainer);
 
-	}*/
+	}
 
 	
 
@@ -1284,7 +1271,7 @@ function getRateProgramContainer(refinanceTeaserRate) {
 
 
 
-	/*if(loanType == "refinance"){
+	if(loanType == "refinance"){
 
 		paymentBtnContainer.addClass('margin-top30');
 
@@ -1318,7 +1305,7 @@ function getRateProgramContainer(refinanceTeaserRate) {
 
 		rpCol3.append(purchaseAmount);
 
-	}*/
+	}
 
 	
 
@@ -1370,7 +1357,7 @@ function getRateProgramContainer(refinanceTeaserRate) {
 
 	return parentWrapper;
 
-}
+}*/
 
 
 
@@ -1692,8 +1679,11 @@ function getSliderContainerForMobileScreen() {
 
 
 
-function getLoanSummaryWrapper() {
+function getLoanSummaryWrapper(lqbData,appUserDetails) {
 
+	loanTypeText = appUserDetails.loanType.loanTypeCd; 
+	
+	
 	var parentWrapper = $('<div>').attr({
 
 		"class" : "loan-summary-wrapper"
@@ -1704,9 +1694,9 @@ function getLoanSummaryWrapper() {
 
 	var container;
 
-	if(loanTypeText == "refinance"){
+	if(loanTypeText == "REF"){
 
-		container = getLoanSummaryContainerRefinance();
+		container = getLoanSummaryContainerRefinance(lqbData,appUserDetails);
 
 	}else if(loanTypeText == "purchase"){
 
@@ -1718,7 +1708,7 @@ function getLoanSummaryWrapper() {
 
 	
 
-	var rateWrapper = getLoanSliderWrapper();
+	var rateWrapper = getLoanSliderWrapper(lqbData);
 
 	
 
@@ -1836,8 +1826,12 @@ function getLoanSummaryContainerPurchase() {
 
 
 
-function getLoanSummaryContainerRefinance() {
+function getLoanSummaryContainerRefinance(lqbData,appUserDetails) {
 
+	var yearValues = modifiedLQBJsonResponse(lqbData);
+	var rateVO = yearValues[0].rateVO;
+	var index = parseInt(yearValues[0].rateVO.length / 2); 
+	
 	var container = $('<div>').attr({
 
 		"class" : "loan-summary-container clearfix"
@@ -1856,15 +1850,15 @@ function getLoanSummaryContainerRefinance() {
 
 	var lcRow2 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
 
-	var lcRow3 = getLoanSummaryRow("Interest Rate", "3.375%");
+	var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate,"lockInterestRate");
 
-	var lcRow4 = getLoanAmountRow("Loan Amount", "$ 373,000.000");
+	var lcRow4 = getLoanAmountRow("Loan Amount", appUserDetails.currentMortgagePayment,"lockloanAmountid");
 
 	
 
-	var lcRow5 = getLoanSummaryRow("ARP", "3.547%");
+	var lcRow5 = getLoanSummaryRow("ARP", rateVO[index].APR,"lockrateaprid");
 
-	var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", "$8,185.75");
+	var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", rateVO[index].closingCost,"lockClosingCost");
 
 	leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(
 
@@ -1946,7 +1940,7 @@ function getLaonSummaryApplyBtnRow() {
 
 
 
-function getLoanAmountRow(desc, detail) {
+function getLoanAmountRow(desc, detail,id) {
 
 	var container = $('<div>').attr({
 
@@ -1972,7 +1966,8 @@ function getLoanAmountRow(desc, detail) {
 
 	var col2 = $('<div>').attr({
 
-		"class" : "loan-summary-col-detail float-left"
+		"class" : "loan-summary-col-detail float-left",
+		"id":id
 
 	}).html(detail);
 
@@ -2074,7 +2069,7 @@ function getLoanAmountRow(desc, detail) {
 
 
 
-function getLoanSummaryRow(desc, detail) {
+function getLoanSummaryRow(desc, detail ,id) {
 
 	var container = $('<div>').attr({
 
@@ -2090,7 +2085,8 @@ function getLoanSummaryRow(desc, detail) {
 
 	var col2 = $('<div>').attr({
 
-		"class" : "loan-summary-col-detail float-left"
+		"class" : "loan-summary-col-detail float-left",
+		"id":id
 
 	}).html(detail);
 
@@ -2130,7 +2126,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail) {
 
 
 
-function getLoanSummaryLastRow(desc, detail) {
+function getLoanSummaryLastRow(desc, detail,id) {
 
 	var container = $('<div>').attr({
 
@@ -2146,7 +2142,8 @@ function getLoanSummaryLastRow(desc, detail) {
 
 	var col2 = $('<div>').attr({
 
-		"class" : "loan-summary-col-detail float-left"
+		"class" : "loan-summary-col-detail float-left",
+		"id":id
 
 	}).html(detail);
 
@@ -3186,7 +3183,7 @@ function entryPointCustomerViewChangeNav(viewName) {
 
 
 
-function getLoanSliderWrapper(){
+function getLoanSliderWrapper(lqbData){
 
 	var wrapper = $('<div>').attr({
 
@@ -3212,11 +3209,11 @@ function getLoanSliderWrapper(){
 
 	
 
-	var tenureSlider = getYearSliderCont();
+	var tenureSlider = getYearSliderCont(lqbData);
 
 	
 
-	var rateSlider = getRateSliderCont();
+	var rateSlider = getRateSliderCont(lqbData);
 
 	
 
@@ -3240,7 +3237,7 @@ function getLoanSliderWrapper(){
 
 
 
-function getYearSliderCont() {
+function getYearSliderCont(lqbData) {
 
 	var wrapper = $('<div>').attr({
 
@@ -3258,7 +3255,7 @@ function getYearSliderCont() {
 
 	
 
-	var silderCont = getYearSlider();
+	var silderCont = getYearSlider(lqbData);
 
 	
 
@@ -3270,7 +3267,7 @@ function getYearSliderCont() {
 
 
 
-function getYearSlider(){
+function getYearSlider(LQBResponse){
 
 	var container = $('<div>').attr({
 
@@ -3280,127 +3277,87 @@ function getYearSlider(){
 
 	
 
-	var yearValues = [{
+	var yearValues = [];
 
-		"value" : "3",
+	for (var i in LQBResponse) {
 
-		"text" : "3 - year fixed arm"
+	    loanDurationConform = LQBResponse[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
 
-	},
-
-	{
-
-		"value" : "5",
-
-		"text" : "5 - year fixed arm"
-
-	},
-
-	{
-
-		"value" : "7",
-
-		"text" : "7 - year fixed arm"
-
-	},
-
-	{
-
-		"value" : "15",
-
-		"text" : "15 - year fixed arm"
-
-	},
-
-	{
-
-		"value" : "30",
-
-		"text" : "30 - year fixed arm"
-
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    temp = {};
+	    temp.value = year;
+	    temp.text = year + " - year fixed arm",
+	    temp.rateVO = LQBResponse[i].rateVO;
+	    yearValues.push(temp);
 	}
-
-	];
-
+	yearValues.sort(function (a, b) {
+	    return parseFloat(a.value) - parseFloat(b.value);
+	});
+	
 	
 
 	for(var i=0; i<yearValues.length; i++){
 
 		var leftOffset = i/(yearValues.length-1) * 100;
-
-		
-
 		var gridItemCont = $('<div>').attr({
-
 			"class" : "yr-grid-cont"
-
 		});
-
-		
 
 		var selectIcon = $('<div>').attr({
-
 			"class" : "yr-slider-icon"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
-		}).bind('click',function(){
-
+		}).bind('click',{"ratesArray" : yearValues[i].rateVO},function(event){
 			if(!$(this).hasClass('yr-slider-icon-selected')){
-
+				
 				$('.yr-grid-cont .yr-slider-icon').removeClass('yr-slider-icon-selected');
-
 				$(this).addClass('yr-slider-icon-selected');
-
 				$('.yr-grid-cont .yr-grid-item-selected').hide();
-
 				$('.yr-grid-cont .yr-grid-item').show();
-
 				$(this).parent().find('.yr-grid-item').hide();
-
 				$(this).parent().find('.yr-grid-item-selected').show();
-
+				
+				$('#rate-slider-cont').find('.rt-slider').remove();
+				var rateSlider = getRatSlider(event.data.ratesArray);
+				$('#rate-slider-cont').append(rateSlider);
+				
+				index =  parseInt(event.data.ratesArray.length / 2);	
+				
+				$('#lockrateaprid').html(event.data.ratesArray[index].APR);
+				$('#lockClosingCost').html(event.data.ratesArray[index].closingCost);
+				$('#lockInterestRate').html(event.data.ratesArray[index].teaserRate);
 			}
-
 		});
 
-		
-
 		var gridItem = $('<div>').attr({
-
 			"class" : "yr-grid-item"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
 		}).html(yearValues[i].value + " Yr");
 
-		
-
 		var gridItemSelected = $('<div>').attr({
-
 			"class" : "yr-grid-item-selected hide"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
 		}).html(yearValues[i].text);
 
-		
-
 		gridItemCont.append(selectIcon).append(gridItem).append(gridItemSelected);
-
 		
+		
+		//Static code to select year by default
+		if(i == 0){
+			selectIcon.addClass('yr-slider-icon-selected');
+			gridItem.hide();
+			gridItemSelected.show();
+		}
 
 		container.append(gridItemCont);
 
 	}
 
-	
 
 	return container;
 
@@ -3408,15 +3365,12 @@ function getYearSlider(){
 
 
 
-function getRateSliderCont() {
+function getRateSliderCont(LQBResponse) {
 
 	var wrapper = $('<div>').attr({
-
+		"id" : "rate-slider-cont",
 		"class" : "slider-wrapper clearfix"
-
 	});
-
-	
 
 	var headerTxt = $('<div>').attr({
 
@@ -3426,10 +3380,29 @@ function getRateSliderCont() {
 
 	
 
-	var rateArray = ["3.000","3.125","3.250","3.300","3.340"];
+	var yearValues = [];
 
+	for (var i in LQBResponse) {
+
+	    loanDurationConform = LQBResponse[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    temp = {};
+	    temp.value = year;
+	    temp.text = year + " - year fixed arm",
+	    temp.rateVO = LQBResponse[i].rateVO;
+	    yearValues.push(temp);
+	}
+	yearValues.sort(function (a, b) {
+	    return parseFloat(a.value) - parseFloat(b.value);
+	});
 	
 
+	var rateArray = yearValues[0].rateVO; 
+	
 	var silderCont = getRatSlider(rateArray);
 
 	
@@ -3442,8 +3415,15 @@ function getRateSliderCont() {
 
 function getRatSlider(gridArray) {
 
+		
+	var rateArray = [];
 	
+	for(var i=0; i<gridArray.length;i++){
+		rateArray[i] = gridArray[i].teaserRate;
+	}
 
+	index = parseInt(rateArray.length / 2);	
+	
 	var container = $('<div>').attr({
 
 		"class" : "silder-cont rt-slider float-left"
@@ -3464,11 +3444,15 @@ function getRatSlider(gridArray) {
 
 		range : "min",
 
-		max : gridArray.length - 1,
+		max : rateArray.length - 1,
 
-		value : gridArray[0],
+		value : index,
 
 		change:function(event,ui){
+			
+			$('#lockrateaprid').html(gridArray[ui.value].APR);
+			$('#lockClosingCost').html(gridArray[ui.value].closingCost);
+			$('#lockInterestRate').html(gridArray[ui.value].teaserRate);
 
 		}
 
@@ -3502,7 +3486,7 @@ function getRatSlider(gridArray) {
 
 			"left" : leftOffset + "%"
 
-		}).html(gridArray[i] + "%");
+		}).html(gridArray[i].teaserRate + "%");
 
 		
 
@@ -3514,4 +3498,31 @@ function getRatSlider(gridArray) {
 
 	return container.append(gridItemCont);
 
+}
+
+
+function modifiedLQBJsonResponse(LQBResponse){
+	
+	var yearValues = [];
+
+	for (var i in LQBResponse) {
+
+	    loanDurationConform = LQBResponse[i].loanDuration;
+	    year = loanDurationConform.split(" ")[0];
+
+	    if (year.indexOf("/") > 0) {
+	        year = year.split("/")[0];
+	    }
+	    temp = {};
+	    temp.value = year;
+	    temp.text = year + " - year fixed arm",
+	    temp.rateVO = LQBResponse[i].rateVO;
+	    yearValues.push(temp);
+	}
+	yearValues.sort(function (a, b) {
+	    return parseFloat(a.value) - parseFloat(b.value);
+	});
+	
+	return yearValues;
+	
 }
