@@ -227,3 +227,7 @@ function adjustAgentDashboardOnResize() {
 	}
 	adjustCustomerNameWidth();
 }
+
+function scrollToTop(){
+	$(window).scrollTop(0);
+}
