@@ -202,8 +202,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var zipCode = $('input[name="zipCode"]').val();
     	var livingSince = $('input[name="startLivingTime"]').val();
     	var monthlyRent =  $('input[name="rentPerMonth"]').val();
-    	//var isSellYourhome = quesContxts[4].value;
+    	var isSellYourhome = quesContxts[4].value;
     	
+    	//alert(isSellYourhome);
     	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
         	
 
@@ -221,6 +222,11 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
     		appUserDetails.user = user;
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
+    		
+    		if(isSellYourhome =='Yes')
+    		appUserDetails.homeToSell = true;
+    		else
+    		appUserDetails.homeToSell = false;
     		
     		//appUserDetails.buyHome = buyHome;
     		//alert(JSON.stringify(appUserDetails));
@@ -311,7 +317,7 @@ function paintSpouseSaleOfCurrentHome() {
 	//appProgressBaar(1);
 	//$('#app-right-panel').html('');
 	
-	if(appUserDetails.isSellYourhome == "Yes"){
+	if(appUserDetails.homeToSell == true){
 		
 		var quesHeaderTxt = "Sale Of Your Current Home";
 	
@@ -538,15 +544,8 @@ function paintSpouseSaleOfCurrentHome() {
 
 
 
-
-function paintSaleOfCurrentHome() {
-    
-	applyLoanStatus = 1;
+function saleYourCurrentHome(){
 	
-	//$('#app-right-panel').html('');
-   
-	if(appUserDetails.isSellYourhome == "Yes"){
-		
 	var quesHeaderTxt = "Sale Of Your Current Home";
 
     var quesHeaderTextCont = $('<div>').attr({
@@ -574,269 +573,172 @@ function paintSaleOfCurrentHome() {
 	    }];
 	
 	    var questionsContainer = getQuestionsContainer(questions);
-   }
-
-      var quesHeaderTxt2 = "My Assets";
-
-     var quesHeaderTextCont2 = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt2);
-
-
-var quesHeaderTxt31 = "Bank Accounts";
-
-     var quesHeaderTextCont31 = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt31);
-
- var questions1 = [{
-        type: "select",
-        text: "Account Type",
-        name: "bankAccount",
-        options: [{
-            text: "Savings",
-            value: "0"
-        }, {
-            text: "Checkings",
-            value: "1"
-        }],
-        selected: ""
-    }, {
-        type: "desc",
-        text: "Current balance",
-        name: "bankAccountCurrentBankBalance",
-        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
-    }, {
-        type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.",
-        name: "bankAccountUsefornewhome",
-        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
-    }];
-
-    var questionsContainer1 = getQuestionsContainer(questions1);
-
-
-
-
-
-      var quesHeaderTxt3 = "Retirement Accounts";
-
-     var quesHeaderTextCont3 = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt3);
-
-
-   
-
-
- var questions2 = [{
-        type: "select",
-        text: "Account Type",
-        name: "accountType",
-        options: [{
-            text: "IRA",
-            value: "0"
-        }, {
-            text: "401K",
-            value: "1"
-        }, {
-            text: "Other",
-            value: "2"
-        }],
-        selected: ""
-    }, {
-        type: "desc",
-        text: "Current balance",
-        name: "accountTypeCurrentBankBalance",
-        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
-    }, {
-        type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
-        name: "accountTypeUseForNewHome",
-        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
-    }];
-
-    var questionsContainer2 = getQuestionsContainer(questions2);
-
-
-
-
-   var quesHeaderTxt4 = "Other Accounts & Securities";
-
-     var quesHeaderTextCont4 = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt4);
-
-
-   
-
-
- var questions3 = [{
-        type: "select",
-        text: "Account Type",
-        name: "otherAccounts",
-        options: [{
-            text: "Money Market",
-            value: "0"
-        }, {
-            text: "Cer8ficate of deposit",
-            value: "1"
-        }, {
-            text: "Mutual Fund",
-            value: "2"
-        }, {
-            text: "Stock",
-            value: "3"
-        }],
-        selected: ""
-    }, {
-        type: "desc",
-        text: "Current balance",
-        name: "otherAccountCurrentBankBalance",
-        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
-    }, {
-        type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
-        name: "otherAccountsUseForNewHome",
-        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
-    }];
-
-    var questionsContainer3 = getQuestionsContainer(questions3);
-
-
-
-
-
-
-    var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
-    }).html("Save & continue").on('click', function(event) {
-    	
-    	
-    	
-    	EmployedIncomePreTax= $('input[name="beforeTax"]').val();
-        EmployedAt = $('input[name="workPlace"]').val();
-        EmployedSince = $('input[name="startWorking"]').val();
-		
-        selfEmployedIncome = $('input[name="selfEmployed"]').val();
-        
-        ssDisabilityIncome = $('input[name="disability"]').val();
-		
-        monthlyPension = $('input[name="pension"]').val();
-
-		
-		
-		
-        appUserDetails.user.customerDetail.customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-		appUserDetails.user.customerDetail.customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-		appUserDetails.user.customerDetail.customerEmploymentIncome.employedAt = EmployedAt;
-		appUserDetails.user.customerDetail.customerEmploymentIncome.employedSince = EmployedSince;
-		
-		if(monthlyPension != "" && monthlyPension != undefined){
-			
-			appUserDetails.user.customerDetail.isselfEmployed= true;
-			appUserDetails.user.customerDetail.monthlyPension =monthlyPension;
-		}
-		
-		
-		if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
-			
-			appUserDetails.user.customerDetail.ispensionOrRetirement = true;
-			appUserDetails.user.customerDetail.selfEmployedIncome =selfEmployedIncome;
-		}
-		
-		if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
-			
-			appUserDetails.user.customerDetail.isssIncomeOrDisability=true;
-			appUserDetails.user.customerDetail.ssDisabilityIncome = ssDisabilityIncome;
-		}
-    	 
-    	
-    	 homelistprice = $('input[name="homelistprice"]').val();
-	     homemortgagebalance =  $('input[name="homemortgagebalance"]').val();
-	     inverstInPurchase = $('input[name="inverstInPurchase"]').val();			 
-	     
-	     /* Bank Account Start*/
-	     
-	     accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
-	     currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();			 
-	     amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
+	    quesHeaderTextCont.append(questionsContainer);
 	    
-	     
-	     appUserDetails.user.customerDetail.customerBankAccountDetails.accountSubType = accountSubType;
-	     appUserDetails.user.customerDetail.customerBankAccountDetails.currentAccountBalance =currentAccountBalance;
-	     appUserDetails.user.customerDetail.customerBankAccountDetails.amountForNewHome = amountForNewHome;
-	     
-	     /* Bank Account End*/
-	     
-	     
-	     /* Retirement Account Start*/
-	     
-	     accountSubType =  $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();			 
-	     currentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();		 
-	     accountTypeUseForNewHome  = $('input[name="accountTypeUseForNewHome"]').val();
-	     
-	     appUserDetails.user.customerDetail.customerRetirementAccountDetails.accountSubType = accountSubType;
-	     appUserDetails.user.customerDetail.customerRetirementAccountDetails.currentAccountBalance = currentAccountBalance;
-	     appUserDetails.user.customerDetail.customerRetirementAccountDetails.amountForNewHome= accountTypeUseForNewHome;
-	     
-	     /* Retirement Account Ends*/
-	     
-	     
-	     /* Other Account Start*/
-	     
-	     otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
-	     otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
-	     otherAccountsUseForNewHome  = $('input[name="otherAccountsUseForNewHome"]').val();
-	     
-	     appUserDetails.user.customerDetail.customerOtherAccountDetails.accountSubType = otherAccountName;
-	     appUserDetails.user.customerDetail.customerOtherAccountDetails.currentAccountBalance= otherAccountCurrentBankBalance;
-	     appUserDetails.user.customerDetail.customerOtherAccountDetails.amountForNewHome = otherAccountsUseForNewHome; 
-	     
-		 
-	     /* Other Account Ends*/
-		 
-	     /*appUserDetails.homelistprice = homelistprice;
-	     appUserDetails.homemortgagebalance = homemortgagebalance;
-	     appUserDetails.inverstInPurchase = inverstInPurchase;
-	     			 			 
-	     appUserDetails.accountTypeCurrentBankBalance = accountTypeCurrentBankBalance;			 			 
-	     appUserDetails.accountTypeUseForNewHome = accountTypeUseForNewHome;
-	     appUserDetails.otherAccountName = otherAccountName;
-		 appUserDetails.otherAccountsUseForNewHome = otherAccountsUseForNewHome;*/
-    		
-    		
-    		
-    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    		
-    		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
-    		
-    		//alert(JSON.stringify(appUserDetails));
-    		
-				if(appUserDetails.isSpouseOnLoan == true)
-				{
-				saveAndUpdateLoanAppForm(appUserDetails,paintMySpouseIncome());
-				}else{
-				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
-				}
-    		
-        	        	
-      //  }else{
-        //	showToastMessage("Please give answer of the questions");
-        //}
-   	
-    });
+       return quesHeaderTextCont;	    
+}
 
 
- var questionsContainer10 = $('<div>').attr({
+function bankAccount(){
+	
+	var quesHeaderTxt = "Bank Accounts";
+
+    var quesHeaderTextCont = $('<div>').attr({
+       "class": "app-ques-header-txt"
+    }).html(quesHeaderTxt);
+
+    var questions = [{
+       type: "select",
+       text: "Account Type",
+       name: "bankAccount",
+       options: [{
+           text: "Savings",
+           value: "0"
+       }, {
+           text: "Checkings",
+           value: "1"
+       }],
+       selected: ""
+   }, {
+       type: "desc",
+       text: "Current balance",
+       name: "bankAccountCurrentBankBalance",
+       value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+   }, {
+       type: "desc",
+       text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.",
+       name: "bankAccountUsefornewhome",
+       value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+   }];
+
+   var questionsContainer = getQuestionsContainer(questions);
+   
+   return quesHeaderTextCont.append(questionsContainer);
+}
+
+
+function retirementAccounts(){
+	
+	var quesRetirementAc = "Retirement Accounts";
+
+    var quesHeaderText = $('<div>').attr({
+       "class": "app-ques-header-txt"
+    }).html(quesRetirementAc);
+
+
+		var questions = [{
+		       type: "select",
+		       text: "Account Type",
+		       name: "accountType",
+		       options: [{
+		           text: "IRA",
+		           value: "0"
+		       }, {
+		           text: "401K",
+		           value: "1"
+		       }, {
+		           text: "Other",
+		           value: "2"
+		       }],
+		       selected: ""
+		   }, {
+		       type: "desc",
+		       text: "Current balance",
+		       name: "accountTypeCurrentBankBalance",
+		       value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+		   }, {
+		       type: "desc",
+		       text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
+		       name: "accountTypeUseForNewHome",
+		       value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+		   }];
+		
+		   var questionsContainer = getQuestionsContainer(questions);
+			
+		 return quesHeaderText.append(questionsContainer);
+}
+
+
+function otherAccount(){
+	
+
+	   var quesHeader = "Other Accounts & Securities";
+
+	   var quesHeaderTextCont = $('<div>').attr({
+	        "class": "app-ques-header-txt"
+	    }).html(quesHeader);
+
+	   var questions = [{
+	        type: "select",
+	        text: "Account Type",
+	        name: "otherAccounts",
+	        options: [{
+	            text: "Money Market",
+	            value: "0"
+	        }, {
+	            text: "Cer8ficate of deposit",
+	            value: "1"
+	        }, {
+	            text: "Mutual Fund",
+	            value: "2"
+	        }, {
+	            text: "Stock",
+	            value: "3"
+	        }],
+	        selected: ""
+	    }, {
+	        type: "desc",
+	        text: "Current balance",
+	        name: "otherAccountCurrentBankBalance",
+	        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+	    }, {
+	        type: "desc",
+	        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
+	        name: "otherAccountsUseForNewHome",
+	        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+	    }];
+
+	    var questionsContainer = getQuestionsContainer(questions);
+    
+	   return quesHeaderTextCont.append(questionsContainer);
+}
+
+
+function paintSaleOfCurrentHome() {
+    
+	//applyLoanStatus = 1;
+	
+	var questionsContainer = $('<div>').attr({
         "class": "app-ques-container"
     });
+   
+	if(appUserDetails.homeToSell == true){
+	
+	    var saleYourCurrentHomeDIV = saleYourCurrentHome(); 
+	    questionsContainer.append(saleYourCurrentHomeDIV);
+     }
 
+     var quesHeaderAssets = "My Assets";
+     var quesMyAssetsCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+     }).html(quesHeaderAssets);
+   
+     questionsContainer.append(quesMyAssetsCont);
+     
+     
+     /*  bank details*/
+     var bankAccountDiv = bankAccount();
+     questionsContainer.append(bankAccountDiv);
 
-    questionsContainer10.append(quesHeaderTextCont).append(questionsContainer).append(quesHeaderTextCont2).append(quesHeaderTextCont31).append(questionsContainer1).append(quesHeaderTextCont3).append(questionsContainer2).append(quesHeaderTextCont4).append(questionsContainer3)
-        .append(saveAndContinueButton);
+     /*  Retirement bank details*/
+     var retirementAccountsDiv = retirementAccounts();
+     questionsContainer.append(retirementAccountsDiv);
+     
+     /* other bank details*/
+     var otherAccountDiv = otherAccount();
+     questionsContainer.append(otherAccountDiv);
         
-        return questionsContainer10;
+     return questionsContainer;
 }
 
 
