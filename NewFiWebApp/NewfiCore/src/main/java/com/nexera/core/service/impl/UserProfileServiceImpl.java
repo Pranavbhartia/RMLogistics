@@ -878,7 +878,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// CustomerEnagagement customerEnagagement =
 			// userVO.getCustomerEnagagement();
 			UserVO userVO = loaAppFormVO.getUser();
-			String emailId = userVO.getEmailId();
 
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
