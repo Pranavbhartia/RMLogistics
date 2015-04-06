@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.Milestones;
@@ -49,10 +48,11 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 		String status = null;
 		int loanId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		String comments = inputMap.get(WorkflowDisplayConstants.QC_STATUS)
+		String comment = inputMap.get(
+				WorkflowDisplayConstants.WORKFLOW_QC_COMMENT)
 				.toString();
 		iWorkflowService.updateNexeraMilestone(loanId,
-				Milestones.QC.getMilestoneID(), comments);
+				Milestones.QC.getMilestoneID(), comment);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
@@ -62,7 +62,7 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
-		makeANote(loanId, LoanStatus.LM_Decision_Note_Message, user);
+		makeANote(loanId, comment, user);
 		return status;
 	}
 
