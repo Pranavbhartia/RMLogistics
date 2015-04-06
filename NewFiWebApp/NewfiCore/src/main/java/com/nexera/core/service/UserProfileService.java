@@ -61,4 +61,6 @@ public interface UserProfileService {
 
 	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO);
 
+	public void crateWorkflowItems(int defaultLoanId) throws Exception;
+
 }
