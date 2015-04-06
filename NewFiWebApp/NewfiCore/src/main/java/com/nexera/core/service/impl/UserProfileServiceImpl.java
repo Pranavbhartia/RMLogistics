@@ -432,10 +432,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
+			return User.convertFromEntityToVO(newUser);
 		}
 		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
-
-		return User.convertFromEntityToVO(newUser);
+		userVO.setPassword(newUser.getPassword());
+		userVO.setId(newUser.getId());
+		return userVO;
 
 	}
 
