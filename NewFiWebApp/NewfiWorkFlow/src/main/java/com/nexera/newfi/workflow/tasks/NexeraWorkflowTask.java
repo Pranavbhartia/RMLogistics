@@ -60,19 +60,17 @@ public abstract class NexeraWorkflowTask {
 			}
 			emailEntity.setSenderEmailId("web@newfi.com");
 			emailEntity.setRecipients(recipients);
-			String[] urls = new String[1];
-			if (objectMap
-					.containsKey(WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY))
-				urls[0] = objectMap.get(
-					WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY).toString();
-			else
-				urls[0] = "";
+
 			emailEntity.setSenderName("Newfi System");
 			emailEntity.setSubject("Nexera Newfi Portal");
 			Map<String, String[]> substitutions = new HashMap<String, String[]>();
 
 			substitutions.put("-name-", names);
-			substitutions.put("-url-", urls);
+			for (String key : objectMap.keySet()) {
+				String[] ary = new String[1];
+				ary[0] = objectMap.get(key).toString();
+				substitutions.put("-" + key + "-", ary);
+			}
 			// emailEntity.setTemplateBased(true);
 
 			emailEntity.setTokenMap(substitutions);
