@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -16,7 +18,8 @@ import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
-public class LMDecisionManager implements IWorkflowTaskExecutor {
+public class LMDecisionManager extends NexeraWorkflowTask implements
+		IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(LMDecisionManager.class);
 	@Autowired
@@ -33,17 +36,16 @@ public class LMDecisionManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = iWorkflowService.getNexeraMilestoneComments(loanId,
 				Milestones.LM_DECISION);
 		return status == null ? "" : status;
+	}
+
+	@Override
+	public String checkStatus(HashMap<String, Object> inputMap) {
+		return null;
 	}
 
 	@Override
@@ -60,7 +62,16 @@ public class LMDecisionManager implements IWorkflowTaskExecutor {
 		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 				WorkItemStatus.COMPLETED.getStatus());
 		status = WorkItemStatus.COMPLETED.getStatus();
+		int userId = Integer.parseInt(inputMap.get(
+				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		User user = new User();
+		user.setId(userId);
+		makeANote(loanId, LoanStatus.LM_Decision_Note_Message, user);
 		return status;
 	}
 
+	private void makeANote(int loanId, String message, User createdBy) {
+		messageServiceHelper.generatePrivateMessage(loanId, message, createdBy,
+				false);
+	}
 }
