@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,19 +26,17 @@ public abstract class NexeraWorkflowTask {
 	public MessageServiceHelper messageServiceHelper;
 	@Autowired
 	private LoanService loanService;
-	private static final Logger LOG = LoggerFactory
-			.getLogger(NexeraWorkflowTask.class);
 
 	public void sendEmail(HashMap<String, Object> objectMap) {
 		if (objectMap != null) {
 			LoanVO loanVO = new LoanVO();
 			loanVO.setId(Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanTeamListVO loanTeam = loanService
-					.getLoanTeamListForLoan(loanVO);
+			        .getLoanTeamListForLoan(loanVO);
 			String emailTemplate = objectMap.get(
-					WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-					.toString();
+			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+			        .toString();
 			EmailVO emailEntity = new EmailVO();
 			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 			String[] names = new String[1];
@@ -49,12 +45,12 @@ public abstract class NexeraWorkflowTask {
 				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
 				emailRecipientVO.setEmailID(teamMember.getUser().getEmailId());
 				emailRecipientVO.setRecipientName(teamMember.getUser()
-						.getFirstName()
-						+ " "
-						+ teamMember.getUser().getLastName());
+				        .getFirstName()
+				        + " "
+				        + teamMember.getUser().getLastName());
 				if (loanTeam.getLoanTeamList().size() == 1) {
 					names[0] = teamMember.getUser().getFirstName() + " "
-							+ teamMember.getUser().getLastName();
+					        + teamMember.getUser().getLastName();
 				}
 				recipients.add(emailRecipientVO);
 			}
@@ -62,9 +58,10 @@ public abstract class NexeraWorkflowTask {
 			emailEntity.setRecipients(recipients);
 			String[] urls = new String[1];
 			if (objectMap
-					.containsKey(WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY))
+			        .containsKey(WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY))
 				urls[0] = objectMap.get(
-					WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY).toString();
+				        WorkflowDisplayConstants.EMAIL_TEMPLATE_URL_KEY)
+				        .toString();
 			else
 				urls[0] = "";
 			emailEntity.setSenderName("Newfi System");

@@ -1,16 +1,19 @@
 package com.nexera.common.vo;
 
+import com.nexera.common.enums.MilestoneNotificationTypes;
+
 /*
  * @author charu
  */
 public class CreateReminderVo {
-	private String notificationType;
+	private MilestoneNotificationTypes notificationType;
 	private int loanId;
 	private int workflowItemExecutionId;
 	private String prevMilestoneKey;
 	private String notificationReminderContent;
 
-	public CreateReminderVo(String notificationType, int loanId,
+	public CreateReminderVo(MilestoneNotificationTypes notificationType,
+	        int loanId,
 			int workflowItemExecutionId, String prevMilestoneKey,
 			String notificationReminderContent) {
 		this.notificationType = notificationType;
@@ -23,11 +26,12 @@ public class CreateReminderVo {
 	public CreateReminderVo() {
 
 	}
-	public String getNotificationType() {
+
+	public MilestoneNotificationTypes getNotificationType() {
 		return notificationType;
 	}
 
-	public void setNotificationType(String notificationType) {
+	public void setNotificationType(MilestoneNotificationTypes notificationType) {
 		this.notificationType = notificationType;
 	}
 
