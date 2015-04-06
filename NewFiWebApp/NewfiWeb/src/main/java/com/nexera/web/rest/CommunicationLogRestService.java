@@ -19,7 +19,6 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
 import com.nexera.common.vo.MessageVO;
-import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.MessageService;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -35,7 +34,8 @@ public class CommunicationLogRestService {
 
 	@RequestMapping(value = "/{userID}/{loanID}/{pageNumber}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCommunicationLog(
-	        @PathVariable Integer userID, @PathVariable Integer loanID,@PathVariable Integer pageNumber) {
+	        @PathVariable Integer userID, @PathVariable Integer loanID,
+	        @PathVariable Integer pageNumber) {
 
 		CommonResponseVO response = null;
 
@@ -48,8 +48,8 @@ public class CommunicationLogRestService {
 			queryVO.setNumberOfRecords(CommonConstants.PAGINATION_SIZE);
 			hierarchyVO = messageService.getMessages(queryVO);
 			response = RestUtil.wrapObjectForSuccess(hierarchyVO);
-		} catch (FatalException | NonFatalException e) {
-			
+		} catch (Exception e) {
+
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        e.getMessage());
 			LOG.error("Error in retrieving communication log", e);
@@ -69,16 +69,16 @@ public class CommunicationLogRestService {
 			MessageVO messageVO = new Gson().fromJson(messageVOString,
 			        MessageVO.class);
 			String messageId = messageService.saveMessage(messageVO,
-			        MessageTypeEnum.NOTE.toString(),Boolean.TRUE);
+			        MessageTypeEnum.NOTE.toString(), Boolean.TRUE);
 			response.setResultObject(messageId);
 			LOG.info("saving communication complete.");
-		} catch (FatalException | NonFatalException e ) {
+		} catch (FatalException | NonFatalException e) {
 			// TODO Auto-generated catch block
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        e.getMessage());
 			LOG.error("Error in retrieving communication log", e);
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOG.error("Error in retrieving communication log", e);
 			e.printStackTrace();
 		}

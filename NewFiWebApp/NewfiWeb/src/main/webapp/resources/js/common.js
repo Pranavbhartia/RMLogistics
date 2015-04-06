@@ -185,3 +185,45 @@ function photoUpload(form, action_url, img_div_id,message_div_id,suffix,userId) 
 	}
 		
 }
+
+//Functions related to window resize
+
+function adjustCustomerApplicationPageOnResize(){
+    if(window.innerWidth > 992 || window.innerWidth <= 1199){
+        //Calcute application right panel width
+        var appRightPanel = $('#app-right-panel');
+        var parentWidth  = appRightPanel.parent().width();
+        appRightPanel.width(parentWidth - 290);
+    }
+}
+
+function adjustCenterPanelWidth() {
+	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
+		var leftPanelWidth = $('.left-panel').width();
+		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
+		var centerPanelWidth = $(window).width()
+				- (leftPanelWidth + leftPanelTab2Width) - 35;
+		$('.center-panel').width(centerPanelWidth);
+	} else if (window.innerWidth < 768) {
+		var leftPanelTab2Width = $('.lp-t2-wrapper').width();
+		var centerPanelWidth = $(window).width() - (leftPanelTab2Width) - 20;
+		$('.center-panel').width(centerPanelWidth);
+	}
+}
+
+function adjustRightPanelOnResize() {
+	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
+		var leftPanelWidth = $('.left-panel').width();
+		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
+		$('.right-panel-messageDashboard').width(centerPanelWidth);
+	}
+}
+
+function adjustAgentDashboardOnResize() {
+	if (window.innerWidth <= 1200 && window.innerWidth >= 768) {
+		var leftPanelWidth = $('.left-panel').width();
+		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
+		$('.rp-agent-dashboard').width(centerPanelWidth);
+	}
+	adjustCustomerNameWidth();
+}

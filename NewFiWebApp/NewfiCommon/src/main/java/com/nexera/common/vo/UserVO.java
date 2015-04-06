@@ -33,6 +33,7 @@ public class UserVO implements Serializable {
 	private List<UserEmailVO> userEmails;
 	
     private CustomerEnagagement  customerEnagagement ;
+    private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
     
 	public UserVO() {
 
@@ -227,4 +228,15 @@ public class UserVO implements Serializable {
 		this.defaultLoanId = defaultLoanId;
 	}
 
+	public List<InternalUserStateMappingVO> getInternalUserStateMappingVOs() {
+		return internalUserStateMappingVOs;
+	}
+
+	public void setInternalUserStateMappingVOs(
+			List<InternalUserStateMappingVO> internalUserStateMappingVOs) {
+		this.internalUserStateMappingVOs = internalUserStateMappingVOs;
+	}
+
+	
+	
 }

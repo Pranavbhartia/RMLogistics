@@ -73,7 +73,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-
+		// DO Nothing
 		return null;
 	}
 

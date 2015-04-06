@@ -10,8 +10,10 @@ public class GenericErrorCode implements ErrorCode {
 	private int serviceId;
 	private String message;
 
-	public GenericErrorCode(int errorCode, int serviceId, String message) {
-		this.errorCode = errorCode;
+	
+	
+	public GenericErrorCode(int serviceId, String message) {
+		this.errorCode = -1;
 		this.serviceId = serviceId;
 		this.message = message;
 	}

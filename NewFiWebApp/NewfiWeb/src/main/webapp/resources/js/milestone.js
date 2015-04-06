@@ -143,7 +143,13 @@ var workFlowContext = {
 		var childList = [];
 		workFlowContext.itemsStatesToBeFetched=[];
 		workFlowContext.mileStoneContextList={};
-		for (var i = 0; i < workItemExecList.length; i++) {
+
+		for (var i = 0; i < ob.mileStoneStepsStructured.length; i++) {
+			var parentWorkItem=ob.mileStoneStepsStructured[i];
+			appendMilestoneItem(parentWorkItem, parentWorkItem.childList);
+		}
+
+		/*for (var i = 0; i < workItemExecList.length; i++) {
 			var currentWorkItem = workItemExecList[i];
 			if (i == 0) {
 				parentWorkItem = currentWorkItem;
@@ -170,7 +176,7 @@ var workFlowContext = {
 			appendMilestoneItem(parentWorkItem, childList);
 		} else if (childList.length == 0) {
 			appendMilestoneItem(parentWorkItem);
-		}
+		}*/
 		countOfTasks=0;
 		adjustBorderMilestoneContainer();
 		if (callback) {
@@ -204,8 +210,8 @@ var workFlowContext = {
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			ob.getMileStoneSteps(role, function(ob) {
+				ob.structureParentChild();
 				ob.renderMileStoneSteps(function(){
-					ob.structureParentChild();
 					ob.fetchLatestStatus();
 				});
 			});
@@ -340,7 +346,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.workItem.workflowItemType
 			});
-			var ajaxURL = "";	
+			var ajaxURL = "";
+			data.loanID=workFlowContext.loanId;
 			//need to move this logic to a different function
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
@@ -355,21 +362,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
 			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=ob.workItem.workflowItemType == "LOCK_YOUR_RATE"?newfiObject.user.defaultLoanId:selectedUserDetail.loanID;
 			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Pending";
-			}
-			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to view Appraisal Status";
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -381,21 +381,17 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Closing Status";
 			}
-			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS"||ob.workItem.workflowItemType=="VIEW_NEEDS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=selectedUserDetail.loanID;
-				callback =paintNeedsInfo;			
+				callback =paintNeedsInfo;
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				data.loanID=selectedUserDetail.loanID;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=workFlowContext.loanId;
-				//ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";
 			}
 			
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
@@ -409,15 +405,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Click here to lock your rate";
 						
 			}
-			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL")
+			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Not ordered";
-						
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				/*ob.workItem.stateInfo = "Not ordered";*/
 			}
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;				
+				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;
 				data.loanID = newfi.user.defaultLoanId;
 				callback = paintMilestoneTeamMemberTable;		
 			}
@@ -755,10 +750,10 @@ function getMilestoneTeamMembeTable(input,workItem) {
 	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
 	if(rightClassCheck){
 		clas="milestone-rc-text";
-		floatCls="float-left"
+		floatCls="float-left";
 	}
 	var tableContainer = $('<div>').attr({
-		"class" : floatCls+" ms-team-member-table"
+		"class" : "ms-team-member-table clearfix"
 	});
 
 	userList=input.users;
@@ -777,7 +772,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 	tableContainer.append(addNewMember);
 	
 	//team table header
-	var th = getMilestoneTeamMembeTableHeader();
+	var th = getMilestoneTeamMembeTableHeader(floatCls);
 	tableContainer.append(th);	
 	for (i in userList) {
 		var user = userList[i];
@@ -790,7 +785,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 		}
-		tableContainer.append(getMilestoneTeamMembeTableRow(user));
+		tableContainer.append(getMilestoneTeamMembeTableRow(user,floatCls));
 	}
 	var homwOwnInsurance=input.homeOwnInsCompany;
 	var titleCompany=input.titleCompany;
@@ -801,7 +796,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 		homwOwnInsurance.userRole={
 				label : "Home Owners Insurance"
 		};
-		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance);
+		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance,floatCls);
 		tableContainer.append(tableRow);
 	}
 	
@@ -812,13 +807,13 @@ function getMilestoneTeamMembeTable(input,workItem) {
 		titleCompany.userRole={
 				label : "Title Company"
 		};
-		var tableRow = getMilestoneTeamMembeTableRow(titleCompany);
+		var tableRow = getMilestoneTeamMembeTableRow(titleCompany,floatCls);
 		tableContainer.append(tableRow);
 	}
 	return tableContainer;
 }
 
-function getMilestoneTeamMembeTableRow(user){
+function getMilestoneTeamMembeTableRow(user,floatCls){
 	if(user.lastName==undefined)user.lastName="";
 	var dispName = user.firstName+" "+user.lastName;
 	var userRole = user.userRole;
@@ -829,12 +824,12 @@ function getMilestoneTeamMembeTableRow(user){
 				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 	}
-	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id);
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls);
 }
 // Function to get milestone team member table header
-function getMilestoneTeamMembeTableHeader() {
+function getMilestoneTeamMembeTableHeader(floatCls) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-th clearfix"
+		"class" : "ms-team-member-th clearfix "+floatCls
 	});
 
 	var nameCol = $('<div>').attr({
@@ -849,9 +844,9 @@ function getMilestoneTeamMembeTableHeader() {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title,userID) {
+function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-tr clearfix",
+		"class" : "ms-team-member-tr clearfix "+floatCls,
 		"userID":userID
 	});
 
@@ -1240,7 +1235,7 @@ function milestoneChildEventHandler(event) {
 		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
 		context.createTitleCompanyPopup();
 	}
-	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS"||$(event.target).attr("data-text") == "VIEW_NEEDS") {
 	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
@@ -1367,12 +1362,92 @@ function appendLoanManagerPopup(element,loanManagerArray){
 
 $(document).resize(function(){
 	removeLoanManagerPopup();
+	removeLoanStatusPopup();
 });
 
 $(document).on('click',function(){
 	removeLoanManagerPopup();
+	removeLoanStatusPopup();
 });
 
-$(document).on('click','#loan-manager-popup',function(e){
+$(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
 	e.stopPropagation();
 });
+
+function appendLoanStatusPopup(element) {
+	
+	var offset = $(element).offset();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "loan-status-popup",
+		"class" : "ms-add-member-popup loan-status-popup"
+	}).css({
+		"left" : offset.left,
+		"top" : offset.top
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("Loan Status");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	
+	var radioButtonRow = $('<div>').attr({
+		"class" : "popup-row clearfix"
+	});
+	
+	var option1 = $('<div>').attr({
+		"class" : "option-radio clearfix float-left" 
+	});
+	
+	var option1Btn = $('<div>').attr({
+		"class" : "radio-btn float-left" 
+	}).bind('click',function(){
+		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
+		$(this).addClass('radio-btn-selected');
+	});
+	
+	var option1Txt = $('<div>').attr({
+		"class" : "radio-btn-label float-left" 
+	}).html("Pass"); 
+	option1.append(option1Btn).append(option1Txt);
+	
+	var option2 = $('<div>').attr({
+		"class" : "option-radio clearfix float-left" 
+	});
+	
+	var option2Btn = $('<div>').attr({
+		"class" : "radio-btn float-left" 
+	}).bind('click',function(){
+		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
+		$(this).addClass('radio-btn-selected');
+	});
+	
+	var option2Txt = $('<div>').attr({
+		"class" : "radio-btn-label float-left" 
+	}).html("Decline"); 
+	option2.append(option2Btn).append(option2Txt);
+	
+	radioButtonRow.append(option1).append(option2);
+	
+	var note = $('<textarea>').attr({
+		"class" : "popup-textbox",
+		"placeholder" : "Add a comment"
+	});
+	
+	var submitBtn = $('<div>').attr({
+		"class" : "popup-save-btn"
+	}).html("Save");
+	
+	container.append(radioButtonRow).append(note).append(submitBtn);
+	
+	wrapper.append(header).append(container);
+	
+	$('body').append(wrapper);
+}
+
+function removeLoanStatusPopup() {
+	$('#loan-status-popup').remove();
+}

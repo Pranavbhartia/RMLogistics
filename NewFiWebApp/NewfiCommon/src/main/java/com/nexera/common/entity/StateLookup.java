@@ -33,6 +33,10 @@ public class StateLookup implements Serializable {
 	public StateLookup() {
 	}
 
+	public StateLookup(Integer id) {
+		this.id = id;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {

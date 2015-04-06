@@ -2,10 +2,12 @@ package com.nexera.common.vo;
 
 import java.io.Serializable;
 
+import com.nexera.common.enums.ActiveInternalEnum;
+
 public class InternalUserDetailVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean activeInternal;
+	private ActiveInternalEnum activeInternal;
 	private UserVO user;
 	private UserVO manager;
 	private InternalUserRoleMasterVO internalUserRoleMasterVO;
@@ -18,12 +20,12 @@ public class InternalUserDetailVO implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getActiveInternal() {
+	public ActiveInternalEnum getActiveInternal() {
 		return activeInternal;
 	}
 
-	public void setActiveInternal(Boolean activeInternal) {
-		this.activeInternal = activeInternal;
+	public void setActiveInternal(ActiveInternalEnum activeInternalEnum) {
+		this.activeInternal = activeInternalEnum;
 	}
 
 	public UserVO getUser() {

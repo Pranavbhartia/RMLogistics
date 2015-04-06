@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.exception.InvalidInputException;
-import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.CustomerEnagagement;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -43,6 +41,9 @@ public class ShopperRegistrationController {
 	private UserProfileService userProfileService;
 
 	@Autowired
+	protected AuthenticationManager authenticationManager;
+	
+	@Autowired
 	private UserDetailsService userDetailsSvc;
 
 	@Autowired
@@ -51,9 +52,7 @@ public class ShopperRegistrationController {
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
 
-	@Autowired
-	protected AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	WorkflowCoreService workflowCoreService;
 
@@ -69,9 +68,9 @@ public class ShopperRegistrationController {
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
+
 		LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,LoanAppFormVO.class);
-		LOG.info("calling 1234 "+loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
-		LOG.info("calling 1234 "+loaAppFormVO.getUser().getFirstName());
+		
 		UserVO userVO = loaAppFormVO.getUser();
 		LOG.info("calling 1234  "+userVO.getEmailId());
 	//	CustomerEnagagement customerEnagagement = userVO.getCustomerEnagagement(); 
@@ -89,7 +88,6 @@ public class ShopperRegistrationController {
 			LOG.info("userVO in Shopper"+userVO.getCustomerDetail());
 				userVOObj = userProfileService.createNewUserAndSendMail(userVO);
 			
-			LOG.info("userVOObj in Shopper"+userVOObj.getCustomerDetail());
 				
 			
 			
@@ -127,21 +125,25 @@ public class ShopperRegistrationController {
 		//	if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			//	loanAppFormVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 		//	}
-LOG.info("loanAppFormService.create(loanAppFormVO)");
 			loanAppFormService.create(loanAppFormVO);
 			authenticateUserAndSetSession(emailId, userVOObj.getPassword(), request);
 
 		} catch (InvalidInputException e) {
 
-			e.printStackTrace();
-		} catch (UndeliveredEmailException e) {
+	LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
+			        LoanAppFormVO.class);
+			String emailId = loaAppFormVO.getUser().getEmailId();
+			
+
+			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
+			LOG.info("User succesfully created" + user);
+			authenticateUserAndSetSession(emailId, user.getPassword(), request);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 
 			e.printStackTrace();
-		} catch (Exception e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-        }
-		
+		}
+
 		return "./home.do";
 	}
 

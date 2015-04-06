@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 
@@ -28,7 +29,8 @@ import com.nexera.common.vo.InternalUserRoleMasterVO;
 public class InternalUserDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean activeInternal;
+	
+	private ActiveInternalEnum activeInternal;
 	private User manager;
 
 	private InternalUserRoleMaster internaUserRoleMaster;
@@ -44,15 +46,15 @@ public class InternalUserDetail implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	@Column(name = "active_internal", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getActiveInternal() {
+	}	
+	
+	@Column(name = "active_internal")
+	@Type(type = "com.nexera.common.enums.helper.ActiveInternalType")
+			public ActiveInternalEnum getActiveInternal() {
 		return this.activeInternal;
 	}
 
-	public void setActiveInternal(Boolean activeInternal) {
+	public void setActiveInternal(ActiveInternalEnum activeInternal) {
 		this.activeInternal = activeInternal;
 	}
 
@@ -86,6 +88,10 @@ public class InternalUserDetail implements Serializable {
 			return null;
 
 		InternalUserDetailVO detailVO = new InternalUserDetailVO();
+		detailVO.setId(internalUserDetail.getId());
+		if (internalUserDetail != null) {
+			detailVO.setActiveInternal(internalUserDetail.getActiveInternal());
+		}
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster()));
 
@@ -102,7 +108,10 @@ public class InternalUserDetail implements Serializable {
 		InternalUserDetail detail = new InternalUserDetail();
 		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
 		        .getInternalUserRoleMasterVO()));
-
+		detail.setId(internalUserDetailVO.getId());
+		if (internalUserDetailVO.getActiveInternal() != null) {
+			detail.setActiveInternal(internalUserDetailVO.getActiveInternal());
+		}
 		return detail;
 	}
 
