@@ -926,4 +926,11 @@ LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail());
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
 	}
+
+	@Override
+	@Transactional
+	public void updateLoan(Loan loan) {
+		loanDao.update(loan);
+
+	}
 }
