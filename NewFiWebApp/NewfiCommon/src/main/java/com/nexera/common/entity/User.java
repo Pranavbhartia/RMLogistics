@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -173,7 +174,7 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "customer_detail")
 	public CustomerDetail getCustomerDetail() {
 		return customerDetail;
@@ -454,10 +455,12 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User before covert"
+			        + userVO.getCustomerDetail());
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
-			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User after covert"
+			        + userVO.getCustomerDetail());
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
