@@ -1074,7 +1074,7 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 				console.log("Name entered : " + name);
 				var code = $('#add-memeber-user-type').attr("code");
 				var roleID = $('#add-memeber-user-type').attr("roleID");
-				if(roleID == undefined){
+				if(roleID == undefined&&(code!="TITLE_COMPANY"&&code!="HOME_OWN_INS")){
 					showToastMessage("Please select a user type");
 					return false;
 				}
