@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `newfi_schema`;
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
 -- Host: 127.0.0.1    Database: newfi_schema
@@ -2132,4 +2134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-06 16:08:01
+-- Dump completed on 2015-04-06 16:12:56
