@@ -954,7 +954,9 @@ function getMultiTextQuestion(quesText) {
     container.append(quesTextCont).append(optionContainer);
     return wrapper.append(container);
 }
-$('body').on('focus', "input[name='startWorking']", function() {
+
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime']", function(){
+
     $(this).datepicker({
         format: "M yyyy",
         minViewMode: "months",
