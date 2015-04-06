@@ -1248,6 +1248,10 @@ function milestoneChildEventHandler(event) {
 	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
 	 	event.stopPropagation();
 		window.location.hash="#myLoan/lock-my-rate"
+	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
@@ -1374,7 +1378,7 @@ $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
 	e.stopPropagation();
 });
 
-function appendLoanStatusPopup(element) {
+function appendLoanStatusPopup(element,milestoneId) {
 	
 	var offset = $(element).offset();
 	
@@ -1403,7 +1407,8 @@ function appendLoanStatusPopup(element) {
 	});
 	
 	var option1Btn = $('<div>').attr({
-		"class" : "radio-btn float-left" 
+		"class" : "radio-btn float-left" ,
+		"value" : "Pass"
 	}).bind('click',function(){
 		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
 		$(this).addClass('radio-btn-selected');
@@ -1419,7 +1424,8 @@ function appendLoanStatusPopup(element) {
 	});
 	
 	var option2Btn = $('<div>').attr({
-		"class" : "radio-btn float-left" 
+		"class" : "radio-btn float-left" ,
+		"value" : "Decline"
 	}).bind('click',function(){
 		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
 		$(this).addClass('radio-btn-selected');
@@ -1439,7 +1445,41 @@ function appendLoanStatusPopup(element) {
 	
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn"
-	}).html("Save");
+	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
+		var comment=event.data.comment.val();
+		var value=event.data.container.find(".radio-btn-selected").attr("value");
+		var milestoneId=event.data.milestoneId;
+		if(value){
+			var url="rest/workflow/invokeaction/"+milestoneId;
+			var data={};
+			data["EMAIL_RECIPIENT"]=newfiObject.user.emailId;
+			data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+			data["EMAIL_RECIPIENT_NAME"]=newfiObject.user.displayName;
+			data["userID"]=newfiObject.user.id;
+			data["loanID"]=workFlowContext.loanId;
+			data["workflowItemExecId"]=milestoneId;
+			data["workflowItemExecId"]=milestoneId;
+			data["decision"]=value;
+			data["comment"]=comment;
+	 		ajaxRequest(
+				url,
+				"POST",
+				"json",
+				JSON.stringify(data),
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						var contxt=workFlowContext.mileStoneContextList[milestoneId]
+						contxt.updateMilestoneView("3")
+						removeLoanStatusPopup();
+					}
+			},false);
+		}else{
+			showToastMessage("Please Select an Option");
+		}
+	});
+	;
 	
 	container.append(radioButtonRow).append(note).append(submitBtn);
 	
