@@ -4325,3 +4325,28 @@ input.calc-input {
 	width: 130px;
 	padding-left: 10px;
 }
+
+.add-btn {
+	padding: 0 20px;
+    height: 30px;
+  	line-height: 30px;
+    background: #6c9f2e;
+    border-radius:3px;
+    color:#fff;
+    margin: -20px 10px 20px 0;
+    cursor: pointer;
+}
+
+.ce-input-add{
+	margin-top:10px;
+}
+
+.add-account-btn{
+	display: inline-block;
+	margin: -5px 0 20px 30px;
+}
+
+.remove-account-btn {
+  display: inline-block;
+  margin: -5px 0 10px 15px;
+}

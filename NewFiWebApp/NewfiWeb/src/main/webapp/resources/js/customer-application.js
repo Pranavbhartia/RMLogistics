@@ -1032,13 +1032,22 @@ function paintMyIncome() {
 function paintRefinanceEmployed(divId) {
 
 	//appUserDetails.employed ="true";
-	var quesTxt = "About how much do you make a year";
-	var quesCont = getMultiTextQuestion(quesTxt);
+	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+		var quesTxt = "About how much do you make a year";
+		var quesCont = getMultiTextQuestion(quesTxt);
+		$('#ce-option_' + divId).prepend(quesCont);	
+	}
 	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(quesCont);
+	
+	
 }
 
 function getMultiTextQuestion(quesText) {
+	
+	var wrapper = $('<div>').attr({
+		"class" : "ce-option-ques-wrapper"
+	});
+	
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper",
 	});
@@ -1084,106 +1093,133 @@ function getMultiTextQuestion(quesText) {
 		"name" : "startWorking",
 		"value" : customerEmploymentIncome.employedSince
 	});
-
+	
 	quesTextCont3.append(inputBox3);
 
 	optionContainer.append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
 	putCurrencyFormat("beforeTax");
 	
-	return container.append(quesTextCont).append(optionContainer);
+	container.append(quesTextCont).append(optionContainer);
+ 	return wrapper.append(container);
 }
 
+$('body').on('focus',"input[name='startWorking']", function(){
+    $(this).datepicker({
+		format: "M yyyy",
+	    minViewMode: "months",
+	    endDate: "today",
+	    autoclose : true
+    }).on('changeDate',function(e){
+    	e.stopImmediatePropagation();
+    	var year = $(this).data('datepicker').getFormattedDate('yyyy');
+    	var month = $(this).data('datepicker').getFormattedDate('mm');
+    	var currentYear = new Date().getFullYear();
+    	var currentMonth = new Date().getMonth();
+    	
+    	if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
+    		$('#ce-option_0').find('.add-account-btn').trigger('click');
+    		var text = "Previous Employement Details";
+    		$('#ce-option_0').children('.ce-option-ques-wrapper').last().find('.ce-ques-wrapper').find('.ce-option-text').html(text);
+    	}
+    });
+});
+
 function paintRefinanceSelfEmployed(divId) {
-
-	var quesTxt = "How much do you make a year?";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "selfEmployed",
-		"value": appUserDetails.selfEmployedIncome
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
+	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+		var quesTxt = "How much do you make a year?";
+		var wrapper = $('<div>').attr({
+			"class" : "ce-option-ques-wrapper"
+		});
+		var container = $('<div>').attr({
+			"class" : "ce-ques-wrapper"
+		});
+		var quesTextCont = $('<div>').attr({
+			"class" : "ce-option-text"
+		}).html(quesTxt);
+		var optionContainer = $('<div>').attr({
+			"class" : "ce-options-cont"
+		});
+		var inputBox = $('<input>').attr({
+			"class" : "ce-input",
+			"name" : "selfEmployed",
+			"value" : appUserDetails.selfEmployedIncome
+		});
+		optionContainer.append(inputBox);
+		container.append(quesTextCont).append(optionContainer);
+		wrapper.append(container);
+		$('#ce-option_' + divId).prepend(wrapper);
+	}
 	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
 	
 	putCurrencyFormat("selfEmployed");
 }
 
 function paintRefinanceDisability(divId) {
+	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+		var quesTxt = "About how much do you get monthly?";
+		var wrapper = $('<div>').attr({
+			"class" : "ce-option-ques-wrapper"
+		});
+		var container = $('<div>').attr({
+			"class" : "ce-ques-wrapper"
+		});
 
-	var quesTxt = "About how much do you get monthly?";
+		var quesTextCont = $('<div>').attr({
+			"class" : "ce-option-text"
+		}).html(quesTxt);
 
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
+		var optionContainer = $('<div>').attr({
+			"class" : "ce-options-cont"
+		});
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
+		var inputBox = $('<input>').attr({
+			"class" : "ce-input",
+			"name" : "disability",
+			"value" : appUserDetails.ssDisabilityIncome
+		});
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "disability",
-		"value": appUserDetails.ssDisabilityIncome
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
+		optionContainer.append(inputBox);
+		container.append(quesTextCont).append(optionContainer);
+		wrapper.append(container);
+		$('#ce-option_' + divId).prepend(wrapper);
+	}
 	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-	
 	putCurrencyFormat("disability");
 }
 
 function paintRefinancePension(divId) {
-
-	var quesTxt = "About how much do you get monthly?";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "pension",
-		"value": appUserDetails.monthlyPension
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
+	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+		var quesTxt = "About how much do you get monthly?";
 	
+		var wrapper = $('<div>').attr({
+			"class" : "ce-option-ques-wrapper"
+		});
+		
+		var container = $('<div>').attr({
+			"class" : "ce-ques-wrapper"
+		});
+	
+		var quesTextCont = $('<div>').attr({
+			"class" : "ce-option-text"
+		}).html(quesTxt);
+	
+		var optionContainer = $('<div>').attr({
+			"class" : "ce-options-cont"
+		});
+	
+		var inputBox = $('<input>').attr({
+			"class" : "ce-input",
+			"name" : "pension",
+			"value": appUserDetails.monthlyPension
+		});
+	
+		optionContainer.append(inputBox);
+		container.append(quesTextCont).append(optionContainer);
+		wrapper.append(container);
+		$('#ce-option_' + divId).prepend(wrapper);
+	}
+	$('#ce-option_' + divId).toggle();
 	putCurrencyFormat("pension");
 }
 
@@ -1590,9 +1626,13 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 
 	for (var i = 0; i < options.length; i++) {
 
+		var optionsWrapper = $('<div>').attr({
+			"class" : "hide ce-sub-option-wrapper",
+			"id" : "ce-option_"+i
+		});
+
 		var optionIncome = $('<div>').attr({
-			"class" : "hide ce-option-ques-wrapper",
-			"id" : "ce-option_" + i
+			"class" : "ce-option-ques-wrapper"
 		});
 
 		var option = $('<div>').attr({
@@ -1614,7 +1654,41 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			event.data.option.onselect(event.data.option.value);
 		});
 
-		optionContainer.append(option).append(optionIncome);
+		optionContainer.append(option);
+		
+		var addAccountBtn = $('<div>').attr({
+			"class" : "add-btn add-account-btn"
+		}).html("Add Income").bind('click',function(){
+			
+			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
+			
+			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
+				showToastMessage("Maximum 3 income needed");
+			}
+			
+			var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
+			$(this).parent().find('.ce-option-ques-wrapper').unwrap();
+			$(this).before(containerToAppend);
+			
+			$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+			
+			var removeAccBtn = $('<div>').attr({
+				"class" : "add-btn remove-account-btn"
+			}).html("Remove Income")
+			.bind('click',{"mainContainerId":mainContainerId},function(event){
+				$(this).closest('.ce-option-ques-wrapper').remove();
+				var parentDiv = $('#'+event.data.mainContainerId);
+				
+				if(parentDiv.children('.ce-option-ques-wrapper').length==1){
+					parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+				}
+			});
+			
+			$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+		});
+		
+		optionsWrapper.append(addAccountBtn);
+		optionContainer.append(optionsWrapper);
 	}
 
 	var saveBtn = $('<div>').attr({
@@ -3540,4 +3614,54 @@ $.ajax({
 		}
 		
 	});
+}
+
+
+function getAddRemoveButtonRow(fieldName){
+	
+	var container = $('<div>').attr({
+		"class" : "add-remove-row clearfix"
+	});
+	
+	var addBtn = $('<div>').attr({
+		"class" : "add-btn float-left"
+	}).html("Add")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		
+		var inputElement = $('<input>').attr({
+			"name" : e.data.fieldName,
+			"class" : "ce-input ce-input-add"
+		});
+		
+		var numberOfInputs = inputField.parent().children('input').size();
+		
+		if(numberOfInputs<3){
+			inputField.parent().append(inputElement);
+			if(numberOfInputs == 2){
+				$(this).hide();
+			}
+		}
+	});
+	
+	/*var removeBtn = $('<div>').attr({
+		"class" : "remove-btn float-left"
+	}).html("-")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		if(inputField.parent().children('input').size()>1){
+			inputField.parent().find('input:last-child').remove();
+		}
+	});*/
+	return container.append(addBtn);
+}
+
+function getAddMoreEmployementDetails() {
+	var container = $('<div>').attr({
+		"class" : "add-remove-row clearfix"
+	});
+	var addBtn = $('<div>').attr({
+		"class" : "add-btn add-account-btn float-left"
+	}).html("Add Account");
+	return container.append(addBtn);
 }

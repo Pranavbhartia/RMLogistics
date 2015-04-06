@@ -277,6 +277,8 @@ $('#app-right-panel').html("");
 		quesContxts.push(contxt);
 	}
 	
+    var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
+    
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
@@ -296,7 +298,7 @@ $('#app-right-panel').html("");
 		
 	      });
 	
-    $('#app-right-panel').append(saveAndContinueButton);
+    $('#app-right-panel').append(addRemoveRow).append(saveAndContinueButton);
 
 
 }
