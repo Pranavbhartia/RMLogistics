@@ -521,7 +521,7 @@ public class LoanServiceImpl implements LoanService {
 		loan.setCustomerWorkflow(customerWorkflowID);
 
 		loan.setLoanManagerWorkflow(loanManagerWFID);
-		loanDao.save(loan);
+		loanDao.update(loan);
 	}
 
 	@Override
@@ -634,7 +634,8 @@ public class LoanServiceImpl implements LoanService {
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
-		return Loan.convertFromEntityToVO(loan);
+		loanVO.setId(loanId);
+		return loanVO;
 	}
 
 	@Override

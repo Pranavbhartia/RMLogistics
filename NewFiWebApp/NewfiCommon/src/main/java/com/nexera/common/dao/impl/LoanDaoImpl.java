@@ -636,7 +636,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		query.setParameter("EMAIL", generateLoanEmail);
 		query.setParameter("ID", loanId);
 		query.executeUpdate();
-
+		session.flush();
 	}
 
 	@Override
