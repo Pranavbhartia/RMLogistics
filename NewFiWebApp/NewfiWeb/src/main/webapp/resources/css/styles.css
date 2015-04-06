@@ -2809,6 +2809,10 @@ input.calc-input {
 	border-left-width: 7px;
 }
 
+.overlay-toast-success {
+	border-color: #dd4b39;
+}
+
 /* Apply these styles only when #preview-pane has
    been placed within the Jcrop widget */
 .jcrop-holder #preview-pane {
