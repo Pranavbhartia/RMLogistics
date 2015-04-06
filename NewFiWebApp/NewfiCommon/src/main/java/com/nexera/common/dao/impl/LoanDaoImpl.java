@@ -30,6 +30,7 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.ActiveInternalEnum;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -244,7 +245,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
-			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			// If the user is Sales manager, retrieve all loans
+			parseUserModel = (User) this.load(User.class,
+			        parseUserModel.getId());
+			if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+			        .getInternalUserDetail().getInternaUserRoleMaster().getId()) {
+				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			}
+
 			List<LoanTeam> loanTeamList = criteria.list();
 
 			if (loanTeamList != null) {
@@ -693,7 +701,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 							        && activeTeam.getUser().getStatus()
 							        && activeTeam.getUser()
 							                .getInternalUserDetail()
-							                .getActiveInternal()==ActiveInternalEnum.ACTIVE) {
+							                .getActiveInternal() == ActiveInternalEnum.ACTIVE) {
 								otherUserPresent = true;
 							}
 						}
