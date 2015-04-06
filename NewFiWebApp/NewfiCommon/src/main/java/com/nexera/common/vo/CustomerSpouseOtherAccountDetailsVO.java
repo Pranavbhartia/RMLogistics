@@ -5,11 +5,18 @@ import java.io.Serializable;
 public class CustomerSpouseOtherAccountDetailsVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	private int      id;
 	private String accountSubType;
 	private String   currentAccountBalance;
 	private String   amountForNewHome;
+	private CustomerSpouseOtherAccountDetailsVO customerSpouseOtherAccountDetails;
 	
-	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getAccountSubType() {
 		return accountSubType;
 	}
@@ -27,6 +34,13 @@ public class CustomerSpouseOtherAccountDetailsVO implements Serializable{
 	}
 	public void setAmountForNewHome(String amountForNewHome) {
 		this.amountForNewHome = amountForNewHome;
+	}
+	public CustomerSpouseOtherAccountDetailsVO getCustomerSpouseOtherAccountDetails() {
+		return customerSpouseOtherAccountDetails;
+	}
+	public void setCustomerSpouseOtherAccountDetails(
+			CustomerSpouseOtherAccountDetailsVO customerSpouseOtherAccountDetails) {
+		this.customerSpouseOtherAccountDetails = customerSpouseOtherAccountDetails;
 	}
 	
 	

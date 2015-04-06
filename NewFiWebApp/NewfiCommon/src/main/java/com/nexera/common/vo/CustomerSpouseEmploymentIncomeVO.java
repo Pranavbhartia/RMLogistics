@@ -8,6 +8,7 @@ public class CustomerSpouseEmploymentIncomeVO implements Serializable{
 	private String   employedIncomePreTax;
 	private String   employedAt;
 	private String   employedSince; 
+	private CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncome;
 	
 	public int getId() {
 		return id;
@@ -33,6 +34,13 @@ public class CustomerSpouseEmploymentIncomeVO implements Serializable{
 	}
 	public void setEmployedSince(String employedSince) {
 		this.employedSince = employedSince;
+	}
+	public CustomerSpouseEmploymentIncomeVO getCustomerSpouseEmploymentIncome() {
+		return customerSpouseEmploymentIncome;
+	}
+	public void setCustomerSpouseEmploymentIncome(
+			CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncome) {
+		this.customerSpouseEmploymentIncome = customerSpouseEmploymentIncome;
 	}
 	
 	

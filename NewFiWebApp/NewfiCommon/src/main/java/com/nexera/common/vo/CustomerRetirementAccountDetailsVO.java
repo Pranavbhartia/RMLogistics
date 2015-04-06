@@ -10,7 +10,7 @@ public class CustomerRetirementAccountDetailsVO implements Serializable{
 	private String accountSubType;
 	private String   currentAccountBalance;
 	private String   amountForNewHome;
-	
+	private CustomerRetirementAccountDetailsVO customerRetirementAccountDetails;
 	
 	
 	
@@ -37,6 +37,13 @@ public class CustomerRetirementAccountDetailsVO implements Serializable{
 	}
 	public void setAmountForNewHome(String amountForNewHome) {
 		this.amountForNewHome = amountForNewHome;
+	}
+	public CustomerRetirementAccountDetailsVO getCustomerRetirementAccountDetails() {
+		return customerRetirementAccountDetails;
+	}
+	public void setCustomerRetirementAccountDetails(
+			CustomerRetirementAccountDetailsVO customerRetirementAccountDetails) {
+		this.customerRetirementAccountDetails = customerRetirementAccountDetails;
 	}
 	
 	

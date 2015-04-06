@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -26,6 +28,7 @@ public class CustomerSpouseOtherAccountDetails implements Serializable {
 	private String accountSubType;
 	private String   currentaccountbalance;
 	private String   amountfornewhome;
+	private LoanAppForm loanAppForms;
 	
 	
 	public CustomerSpouseOtherAccountDetails() {
@@ -65,7 +68,16 @@ public class CustomerSpouseOtherAccountDetails implements Serializable {
 		this.amountfornewhome = amountfornewhome;
 	}
 	
-	
+	@ManyToOne
+    @JoinColumn(name="loanapp_formid")
+	public LoanAppForm getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(LoanAppForm loanAppForms) {
+		this.loanAppForms = loanAppForms;
+	}
 	
 	
 }

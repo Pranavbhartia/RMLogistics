@@ -1,5 +1,3 @@
-
-
 var appUserDetails = new Object();
 
 var purchase = false;
@@ -11,11 +9,11 @@ var customerBankAccountDetails = new Object();
 var customerRetirementAccountDetails = new Object();
 var customerOtherAccountDetails = new Object();
 
-customerDetail.customerSpouseDetail = customerSpouseDetail;
-customerDetail.customerEmploymentIncome = customerEmploymentIncome;
-customerDetail.customerBankAccountDetails = customerBankAccountDetails;
-customerDetail.customerRetirementAccountDetails = customerRetirementAccountDetails;
-customerDetail.customerOtherAccountDetails = customerOtherAccountDetails;
+//customerDetail.customerSpouseDetail = customerSpouseDetail;
+//customerDetail.customerEmploymentIncome = customerEmploymentIncome;
+//customerDetail.customerBankAccountDetails = customerBankAccountDetails;
+//customerDetail.customerRetirementAccountDetails = customerRetirementAccountDetails;
+//customerDetail.customerOtherAccountDetails = customerOtherAccountDetails;
 
 user.customerDetail = customerDetail;
 
@@ -24,23 +22,24 @@ var customerEnagagement = new Object();
 
 var purchaseDetails = new Object();
 appUserDetails.purchaseDetails = purchaseDetails;
-
+appUserDetails.customerSpouseDetail = customerSpouseDetail;
 var propertyTypeMaster = new Object();
 var governmentquestion = new Object();
 var refinancedetails = new Object();
 var loan = new Object();
-//var loanType = new Object();
+var loanType = new Object();
 //loanType.id=1;
 
-spouseGovernmentquestion = new Object();
+spouseGovernmentQuestions = new Object();
 
 appUserDetails.user = user;
 appUserDetails.propertyTypeMaster = propertyTypeMaster;
 appUserDetails.governmentquestion = governmentquestion;
 appUserDetails.refinancedetails = refinancedetails;
 appUserDetails.loan = loan;
-//appUserDetails.loanType = loanType;
-appUserDetails.spouseGovernmentquestion = spouseGovernmentquestion;
+appUserDetails.loanType = loanType;
+
+appUserDetails.spouseGovernmentQuestions = spouseGovernmentQuestions;
 
 
 
@@ -64,10 +63,10 @@ var applicationItemsList = [
 							    "text":"My Priority",
 	                            "onselect" : ""
 	                        },
-	                        {
+	                        /*{
 							    "text":"My Money",
 	                            "onselect" : ""
-	                        },
+	                        },*/
 	                        {
 							    "text":"Home Information",
 	                            "onselect" : paintCustomerApplicationPageStep1a
@@ -137,15 +136,25 @@ function paintCustomerApplicationPage() {
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
 	
-	customerSpouseDetail.id = newfi.user.customerDetail.customerSpouseDetail.id;
-	customerEmploymentIncome.id = newfi.user.customerDetail.customerEmploymentIncome.id;
-	customerBankAccountDetails.id = newfi.user.customerDetail.customerBankAccountDetails.id;
-	customerRetirementAccountDetails.id = newfi.user.customerDetail.customerRetirementAccountDetails.id;
-	customerOtherAccountDetails.id = newfi.user.customerDetail.customerOtherAccountDetails.id;
+	 if(newfi.customerSpouseDetail != null){
+		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
+	 }
+	 if(newfi.customerEmploymentIncome !=null){
+	 customerEmploymentIncome.id = newfi.customerEmploymentIncome.id;
+	 }
+	 if(newfi.customerBankAccountDetails != null){
+	 customerBankAccountDetails.id = newfi.customerBankAccountDetails.id;
+	 }
+	 if(newfi.customerRetirementAccountDetails != null){
+	 customerRetirementAccountDetails.id = newfi.customerRetirementAccountDetails.id;
+	 }
+	 if(newfi.user.customerDetail.customerOtherAccountDetails !=null){
+	 customerOtherAccountDetails.id = newfi.user.customerDetail.customerOtherAccountDetails.id;
+	 }
 	
-	user.customerEnagagement = customerEnagagement;
-	user.customerEmploymentIncome = customerEmploymentIncome;
-	user.customerBankAccountDetails = customerBankAccountDetails;
+	//user.customerEnagagement = customerEnagagement;
+	/*user.customerEmploymentIncome = customerEmploymentIncome;
+	user.customerBankAccountDetails = customerBankAccountDetails;*/
 	
 	
 	loan.id = newfi.user.defaultLoanId;
@@ -182,7 +191,9 @@ function paintCustomerApplicationPage() {
 
    // paintCustomerApplicationPageStep1a();
     
-     showLoanAppFormContainer(formCompletionStatus);
+    // showLoanAppFormContainer(formCompletionStatus);
+    
+    paintSelectLoanTypeQuestion();
     
 }
 
@@ -341,7 +352,20 @@ function getApplicationTextQues(question) {
         "class": "app-input",
         "name": question.name,
         "value":question.value
-    });
+    }).on("load keydown", function(e){
+          
+		if(question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri'  && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'ssn' && question.name != 'phoneNumber'){
+			$('input[name='+question.name+']').maskMoney({
+				thousands:',',
+				decimal:'.',
+				allowZero:true,
+				prefix: '$',
+			    precision:0,
+			    allowNegative:true
+			});
+		}
+		
+	});
 
     if (question.value != undefined) {
         optionCont.val(question.value);
@@ -391,7 +415,7 @@ function getApplicationMultipleChoiceQues(question) {
 function paintCustomerApplicationPageStep1a() {
     
 	applyLoanStatus = 1;
-	appProgressBaar(1);
+	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Residential Address";
 
@@ -746,7 +770,7 @@ var quesContxts=[];
 function paintCustomerApplicationPageStep2() {
 	
 	applyLoanStatus =2;
-	appProgressBaar(2); // this is to show the bubble status in the left panel
+	appProgressBaar(3); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Who's on the Loan?";
@@ -835,10 +859,11 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    		
 	    		customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+	    	
 	    	}else{
 	    		appUserDetails.spouseName  = "false";
 	    	}
-	    	
+	    	appUserDetails.customerSpouseDetail = customerSpouseDetail;
 	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	//alert(JSON.stringify(appUserDetails));
@@ -965,7 +990,7 @@ function getContextApplicationTextQues(contxt) {
 function paintMyIncome() {
 
 	applyLoanStatus = 3;
-	appProgressBaar(3);
+	appProgressBaar(4);
 	var quesTxt = "Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1033,7 +1058,7 @@ function getMultiTextQuestion(quesText) {
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "beforeTax",
-		"value" :customerDetail.customerEmploymentIncome.employedIncomePreTax
+		"value" :customerEmploymentIncome.employedIncomePreTax
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -1045,7 +1070,7 @@ function getMultiTextQuestion(quesText) {
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "workPlace",
-		"value":customerDetail.customerEmploymentIncome.employedAt
+		"value":customerEmploymentIncome.employedAt
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -1057,7 +1082,7 @@ function getMultiTextQuestion(quesText) {
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "startWorking",
-		"value" : customerDetail.customerEmploymentIncome.employedSince
+		"value" : customerEmploymentIncome.employedSince
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -1178,8 +1203,8 @@ function paintRefinancePension(divId) {
 function paintMySpouseIncome() {
 
 	applyLoanStatus = 3;
-	appProgressBaar(3);
-	var quesTxt = "Select all that apply";
+	//appProgressBaar(3);
+	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintSpouseRefinanceEmployed,
@@ -1269,6 +1294,8 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		"class" : "ce-save-btn"
 	}).html("Save & Continue").bind('click',function() {
 		        
+		        
+	        
 		        spouseBeforeTax= $('input[name="spouseBeforeTax"]').val();
 		        spouseWorkPlace = $('input[name="spouseWorkPlace"]').val();
 		        spouseStartWorking = $('input[name="spouseStartWorking"]').val();
@@ -1282,19 +1309,35 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 				
 				
 				
-				appUserDetails.isSpouseEmployed =  true;
-				appUserDetails.spouseBeforeTax = spouseBeforeTax;
-				appUserDetails.spouseWorkPlace = spouseWorkPlace;
-				appUserDetails.spouseStartWorking = spouseStartWorking;
+					
+				 var  customerSpouseEmploymentIncome1 = [];
+        var temp = new Object();
+
+        customerSpouseEmploymentIncome = {};
+        customerSpouseEmploymentIncome.employedIncomePreTax = spouseBeforeTax;
+        customerSpouseEmploymentIncome.employedAt =spouseWorkPlace;
+        customerSpouseEmploymentIncome.employedSince=spouseStartWorking;
+  temp.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+customerSpouseEmploymentIncome1.push(temp);
+      appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome1;
+   
+
+
+
 				
-				appUserDetails.isSpousePensionOrRetirement= true;
-				appUserDetails.spousePension =spousePension;
 				
-				appUserDetails.isSpouseSelfEmployed = true;
-				appUserDetails.spouseSelfEmployed =spouseSelfEmployed;
 				
-				appUserDetails.isSpouseIncomeOrDisability=true;
-				appUserDetails.spouseDisability = spouseDisability;
+				appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
+				
+				
+				appUserDetails.customerSpouseDetail.isSpousePensionOrRetirement= true;
+				appUserDetails.customerSpouseDetail.spousePension =spousePension;
+				
+				appUserDetails.customerSpouseDetail.isSpouseSelfEmployed = true;
+				appUserDetails.customerSpouseDetail.spouseSelfEmployed =spouseSelfEmployed;
+				
+				appUserDetails.customerSpouseDetail.isSpouseIncomeOrDisability=true;
+				appUserDetails.customerSpouseDetail.spouseDisability = spouseDisability;
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
@@ -1577,8 +1620,10 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
 	}).html("Save & Continue").bind('click',function() {
-		        
-		        /*EmployedIncomePreTax= $('input[name="beforeTax"]').val();
+		        console.log('inside save n continue');
+		        EmployedIncomePreTax= $('input[name="beforeTax"]').val();
+		     
+		     
 		        EmployedAt = $('input[name="workPlace"]').val();
 		        EmployedSince = $('input[name="startWorking"]').val();
 				
@@ -1588,32 +1633,42 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				
 		        monthlyPension = $('input[name="pension"]').val();
 
+					
 				
+				 var  customerEmploymentIncome1 = [];
+        var temp = new Object();
+
+        customerEmploymentIncome = {};
+        customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
+        customerEmploymentIncome.employedAt =EmployedAt;
+        customerEmploymentIncome.employedSince=EmployedSince;
+  temp.customerEmploymentIncome=customerEmploymentIncome;
+customerEmploymentIncome1.push(temp);
+      appUserDetails.customerEmploymentIncome=customerEmploymentIncome1;
+   
+
+		
 				
-				
-				
-				appUserDetails.user.customerDetail.customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-				appUserDetails.user.customerDetail.customerEmploymentIncome.employedAt = EmployedAt;
-				appUserDetails.user.customerDetail.customerEmploymentIncome.employedSince = EmployedSince;
+			 
 				
 				if(monthlyPension != "" && monthlyPension != undefined){
 					
-					appUserDetails.user.customerDetail.isselfEmployed= true;
-					appUserDetails.user.customerDetail.monthlyPension =monthlyPension;
+					appUserDetails.ispensionOrRetirement= true;
+					appUserDetails.monthlyPension =monthlyPension;
 				}
 				
 				
 				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
 					
-					appUserDetails.user.customerDetail.isselfEmployed = true;
-					appUserDetails.user.customerDetail.selfEmployedIncome =selfEmployedIncome;
+					appUserDetails.isselfEmployed = true;
+					appUserDetails.selfEmployedIncome =selfEmployedIncome;
 				}
 				
 				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
 					
 					appUserDetails.isssIncomeOrDisability=true;
-					appUserDetails.user.customerDetail.ssDisabilityIncome = ssDisabilityIncome;
-				}*/
+					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
+				}
 				
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
@@ -1645,7 +1700,7 @@ function paintCustomerApplicationPageStep4a() {
    
 	applyLoanStatus = 4;
 	quesDeclarationContxts = [];
-	appProgressBaar(4);
+	appProgressBaar(5);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Declaration Questions";
 
@@ -2078,7 +2133,7 @@ function paintCustomerApplicationPageStep4b(){
 function paintCustomerApplicationPageStep5() {
 	
 	applyLoanStatus = 5;
-	appProgressBaar(5);
+	appProgressBaar(6);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "My Credit";
 
@@ -2086,11 +2141,15 @@ function paintCustomerApplicationPageStep5() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
+    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth));
+    if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
+    	dob="";
+    
     var questions = [{
         type: "desc",
         text: "Birthday",
         name: "birthday",
-        value: $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth))
+        value: dob
     },
     {
         type: "desc",
@@ -2131,7 +2190,18 @@ function paintCustomerApplicationPageStep5() {
     		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     		
     ///alert(JSON.stringify(appUserDetails));
-    		saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
+    		
+    		
+    		if(appUserDetails.isSpouseOnLoan == true)
+				{
+				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerSpouseApplicationPageStep5());
+				}else{
+				 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
+				}
+    		
+    		
+    		
+    		
     		
     	}else{
     		showToastMessage("Please give the answers of the questions");
@@ -2143,6 +2213,95 @@ function paintCustomerApplicationPageStep5() {
         .append(saveAndContinueButton);
 }
 
+
+
+
+
+function paintCustomerSpouseApplicationPageStep5() {
+	
+	applyLoanStatus = 5;
+	appProgressBaar(6);
+	$('#app-right-panel').html('');
+    var quesHeaderTxt = "My Spouse Credit";
+
+    var quesHeaderTextCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    }).html(quesHeaderTxt);
+
+    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.dateOfBirth));
+    if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
+    	dob="";
+    
+    var questions = [{
+        type: "desc",
+        text: "Birthday",
+        name: "birthday",
+        value: dob
+    },
+    {
+        type: "desc",
+        text: "Social Security Number",
+        name: "ssn",
+        value: appUserDetails.customerSpouseDetail.ssn
+    },
+    {
+        type: "desc",
+        text: "Phone Number",
+        name: "phoneNumber",
+        value: appUserDetails.customerSpouseDetail.secPhoneNumber
+    }];
+
+    var questionsContainer = getQuestionsContainer(questions);
+
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "app-save-btn"
+    }).html("Save & continue").on('click', function() {
+    	dateOfBirth = $('input[name="birthday"]').val();
+    	ssn =  $('input[name="ssn"]').val();
+    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
+    	
+    	
+    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !=""){
+    		
+    		//appUserDetails.customerDetail
+    		
+    		customerDetailTemp =  appUserDetails.customerSpouseDetail;
+    		customerDetailTemp.spouseDateOfBirth= new Date(dateOfBirth).getTime();
+    		customerDetailTemp.spouseSsn = ssn;
+    		customerDetailTemp.spouseSecPhoneNumber = secPhoneNumber;
+    		//applicationFormSumbit();
+    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+    		
+    		appUserDetails.customerSpouseDetail = customerDetailTemp;
+    		//alert(JSON.stringify(customerDetail));
+    		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    		
+    ///alert(JSON.stringify(appUserDetails));
+    		
+    		
+    	
+				 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
+				
+    		
+    		
+    		
+    		
+    		
+    	}else{
+    		showToastMessage("Please give the answers of the questions");
+    	}
+    	
+    });
+
+    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
+        .append(saveAndContinueButton);
+}
+
+
+
+
+
+
 function applicationFormSumbit(){
 	
 	//createLoan();
@@ -2152,7 +2311,7 @@ function applicationFormSumbit(){
 
 function appProgressBaar(num){
 	
-	var count = 5;
+	var count = 6;
 	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
 	$('#appStepNoId_' + num).html(num);
@@ -2376,7 +2535,7 @@ function showLoanAppFormContainer(formCompletionStatus){
 
 function paintSelectLoanTypeQuestion() {
     
-
+	appProgressBaar(1);
 	console.log("Inside paintSelectLoanTypeQuestion ");
 	stages = 0;
 	//$('#ce-main-container').html('');
@@ -2406,10 +2565,8 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
 		
-		//customerEnagagement.loanType = "REF";
-				
-		//user.customerEnagagement = customerEnagagement;
-		loanType = 	"REF";
+	
+		loanType.loanTypeCd = "REF";
 		appUserDetails.loanType= loanType;
 		
 		paintRefinanceMainContainer();
@@ -2419,7 +2576,8 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
 		
-		appUserDetails.loanType = "buyHome";
+		loanType.loanTypeCd = "PUR";
+		appUserDetails.loanType= loanType;
 		
 		paintBuyHomeContainer();
 	});
@@ -2519,7 +2677,11 @@ var questions = [
 		    "class": "ce-save-btn"
 		}).html("Save & continue").bind('click',{'contxt':contxt}, function(event) {
 			
-			appUserDetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
+			
+			
+			
+			refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
+			 appUserDetails.refinancedetails = refinancedetails;
 			paintRefinanceStep3();
 			
 			//paintCustomerApplicationPageStep1a();
@@ -2591,12 +2753,14 @@ function paintRefinanceStep3() {
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		
-			appUserDetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
-			appUserDetails.isIncludeTaxes = quesContxts[1].value;
-			appUserDetails.annualPropertyTaxes = $('input[name="annualPropertyTaxes"]').val();
-			appUserDetails.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
-		  
-		    paintCustomerApplicationPageStep1a();
+			refinancedetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
+			refinancedetails.isIncludeTaxes = quesContxts[1].value;
+			propertyTypeMaster.annualPropertyTaxes = $('input[name="annualPropertyTaxes"]').val();
+			propertyTypeMaster.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
+		  appUserDetails.refinancedetails=refinancedetails;
+		  appUserDetails.propertyTypeMaster=propertyTypeMaster;
+		    saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1a());
+		    //paintCustomerApplicationPageStep1a();
 		
 	      });
 	
@@ -2905,9 +3069,11 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 
 		//	refinanceTeaserRate[key] = event.data.option.value;
 			
-			customerEnagagement[key] = event.data.option.value;			
-			user.customerEnagagement = customerEnagagement;					
-			appUserDetails.user = user;	
+			//customerEnagagement[key] = event.data.option.value;			
+			//user.customerEnagagement = customerEnagagement;					
+			//appUserDetails.user = user;	
+			refinancedetails.refinanceOption = event.data.option.value;
+						appUserDetails.refinancedetails = refinancedetails;	
 			
 			event.data.option.onselect();
 		});
@@ -2929,7 +3095,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
    
 	applyLoanStatus = 4;
 	quesDeclarationContxts = [];
-	appProgressBaar(4);
+	
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Spouse Declaration Questions";
 
@@ -3174,76 +3340,76 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
     	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
     	 //alert(isOutstandingJudgments);
-    	 delete appUserDetails.spouseGovernmentquestion;
+    	 delete appUserDetails.spouseGovernmentQuestions;
     	 
-    	 spouseGovernmentquestion = {};
+    	 spouseGovernmentQuestions = {};
     	 if( isOutstandingJudgments =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseOutstandingJudgments = true;
+    		 spouseGovernmentQuestions.isSpouseOutstandingJudgments = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseOutstandingJudgments = false;
+ 			spouseGovernmentQuestions.isSpouseOutstandingJudgments = false;
  		 }
     	 
     	 if( isSpouseBankrupt =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseBankrupt = true;
+    		 spouseGovernmentQuestions.isSpouseBankrupt = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseBankrupt = false;
+ 			spouseGovernmentQuestions.isSpouseBankrupt = false;
  		 }
     	 
     	 if( isSpousePropertyForeclosed =="Yes"){ 
-    		 spouseGovernmentquestion.isSpousePropertyForeclosed = true;
+    		 spouseGovernmentQuestions.isSpousePropertyForeclosed = true;
  		 }else{
- 			spouseGovernmentquestion.isSpousePropertyForeclosed = false;
+ 			spouseGovernmentQuestions.isSpousePropertyForeclosed = false;
  		 }
     	 
     	 if( isSpouseLawsuit =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseLawsuit = true;
+    		 spouseGovernmentQuestions.isSpouseLawsuit = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseLawsuit = false;
+ 			spouseGovernmentQuestions.isSpouseLawsuit = false;
  		 }
 
     	 if( isSpouseObligatedLoan =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseObligatedLoan = true;
+    		 spouseGovernmentQuestions.isSpouseObligatedLoan = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseObligatedLoan = false;
+ 			spouseGovernmentQuestions.isSpouseObligatedLoan = false;
  		 }
     	 
     	 if( isSpouseFederalDebt =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseFederalDebt = true;
+    		 spouseGovernmentQuestions.isSpouseFederalDebt = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseFederalDebt = false;
+ 			spouseGovernmentQuestions.isSpouseFederalDebt = false;
  		 }
 
     	 if( isSpouseObligatedToPayAlimony =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseObligatedToPayAlimony = true;
+    		 spouseGovernmentQuestions.isSpouseObligatedToPayAlimony = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseObligatedToPayAlimony = false;
+ 			spouseGovernmentQuestions.isSpouseObligatedToPayAlimony = false;
  		 }
     	 
     	 if( isSpouseEndorser =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseEndorser = true;
+    		 spouseGovernmentQuestions.isSpouseEndorser = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseEndorser = false;
+ 			spouseGovernmentQuestions.isSpouseEndorser = false;
  		 }
 
     	 if( isSpouseUSCitizen =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseUSCitizen = true;
+    		 spouseGovernmentQuestions.isSpouseUSCitizen = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseUSCitizen = false;
+ 			spouseGovernmentQuestions.isSpouseUSCitizen = false;
  		 }
 
     	 if( isSpouseOccupyPrimaryResidence =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseOccupyPrimaryResidence = true;
+    		 spouseGovernmentQuestions.isSpouseOccupyPrimaryResidence = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseOccupyPrimaryResidence = false;
+ 			spouseGovernmentQuestions.isSpouseOccupyPrimaryResidence = false;
  		 }
     	 
     	 if( isSpouseOwnershipInterestInProperty =="Yes"){ 
-    		 spouseGovernmentquestion.isSpouseOwnershipInterestInProperty = true;
+    		 spouseGovernmentQuestions.isSpouseOwnershipInterestInProperty = true;
  		 }else{
- 			spouseGovernmentquestion.isSpouseOwnershipInterestInProperty = false;
+ 			spouseGovernmentQuestions.isSpouseOwnershipInterestInProperty = false;
  		 }
     	 
-    	 appUserDetails.spouseGovernmentquestion =spouseGovernmentquestion;
+    	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
     	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	// alert(JSON.stringify(appUserDetails));
@@ -3338,9 +3504,9 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
 	    	
-	    	spouseGovernmentquestion.ethnicity = ethnicity;
-	    	spouseGovernmentquestion.race = race;
-	    	spouseGovernmentquestion.sex =sex;
+	    	spouseGovernmentQuestions.ethnicity = ethnicity;
+	    	spouseGovernmentQuestions.race = race;
+	    	spouseGovernmentQuestions.sex =sex;
 	    	
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());

@@ -53,11 +53,11 @@ public class CustomerDetail implements Serializable {
 	private String monthlyPension;
 	private String livingSince;
 	
-	private CustomerSpouseDetail customerSpouseDetail;
+//	private CustomerSpouseDetail customerSpouseDetail;
 	
-	private CustomerEmploymentIncome customerEmploymentIncome;
+	//private CustomerEmploymentIncome customerEmploymentIncome;
 	
-	private CustomerBankAccountDetails customerBankAccountDetails;
+//	private CustomerBankAccountDetails customerBankAccountDetails;
 	
 	private CustomerRetirementAccountDetails customerRetirementAccountDetails;
 	
@@ -241,7 +241,7 @@ public class CustomerDetail implements Serializable {
 	
 	
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	/*@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customerspousedetails")
 	public CustomerSpouseDetail getCustomerSpouseDetail() {
 		return customerSpouseDetail;
@@ -278,7 +278,7 @@ public class CustomerDetail implements Serializable {
 		this.customerBankAccountDetails = customerBankAccountDetails;
 	}
 	
-	
+	*/
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_retirement_ac_details")
@@ -322,9 +322,10 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetailVO.setMobileAlertsPreference(inputEntity.getMobileAlertsPreference());
-			customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
-			customerDetailVO.setCustomerEmploymentIncome(convertFromEntityToVO(inputEntity.getCustomerEmploymentIncome()));
-			customerDetailVO.setCustomerBankAccountDetails(convertFromEntityToVO(inputEntity.getCustomerBankAccountDetails()));
+		//	customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
+		//	System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
+		//	customerDetailVO.setCustomerEmploymentIncome(convertFromEntityToVO(inputEntity.getCustomerEmploymentIncome()));
+		//	customerDetailVO.setCustomerBankAccountDetails(convertFromEntityToVO(inputEntity.getCustomerBankAccountDetails()));
 			customerDetailVO.setCustomerRetirementAccountDetails(convertFromEntityToVO(inputEntity.getCustomerRetirementAccountDetails()));
 			customerDetailVO.setCustomerOtherAccountDetails(convertFromEntityToVO(inputEntity.getCustomerOtherAccountDetails()));
 			
@@ -336,9 +337,11 @@ public class CustomerDetail implements Serializable {
             CustomerOtherAccountDetails customerOtherAccountDetails) {
 	  
 		CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = new CustomerOtherAccountDetailsVO();
-		if(null == customerOtherAccountDetails)
-		return customerOtherAccountDetailsVO;
-		
+		if(null == customerOtherAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
+			return null;
+			//return customerOtherAccountDetailsVO;
+		}
 		customerOtherAccountDetailsVO.setId(customerOtherAccountDetails.getId());
 		customerOtherAccountDetailsVO.setAccountSubType(customerOtherAccountDetails.getAccountSubType());
 		customerOtherAccountDetailsVO.setCurrentAccountBalance(customerOtherAccountDetails.getCurrentaccountbalance());
@@ -351,9 +354,11 @@ public class CustomerDetail implements Serializable {
             CustomerRetirementAccountDetails customerRetirementAccountDetails) {
 	  
 		CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = new CustomerRetirementAccountDetailsVO();
-		if(null == customerRetirementAccountDetails)
-			return customerRetirementAccountDetailsVO;
-		
+		if(null == customerRetirementAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
+			return null;
+			//return customerRetirementAccountDetailsVO;
+		}
 		customerRetirementAccountDetailsVO.setId(customerRetirementAccountDetails.getId());
 		customerRetirementAccountDetailsVO.setAccountSubType(customerRetirementAccountDetails.getAccountSubType());
 		customerRetirementAccountDetailsVO.setCurrentAccountBalance(customerRetirementAccountDetails.getCurrentaccountbalance());
@@ -366,9 +371,11 @@ public class CustomerDetail implements Serializable {
             CustomerBankAccountDetails customerBankAccountDetails) {
 	   
 		CustomerBankAccountDetailsVO customerBankAccountDetailsVO = new CustomerBankAccountDetailsVO ();
-		if(null == customerBankAccountDetails)
-			return customerBankAccountDetailsVO;
-		
+		if(null == customerBankAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
+			return null;
+		//	return customerBankAccountDetailsVO;
+		}
 		customerBankAccountDetailsVO.setId(customerBankAccountDetails.getId());
 		customerBankAccountDetailsVO.setAccountSubType(customerBankAccountDetails.getAccountSubType());
 		customerBankAccountDetailsVO.setAmountForNewHome(customerBankAccountDetails.getAmountfornewhome());
@@ -381,9 +388,12 @@ public class CustomerDetail implements Serializable {
             CustomerEmploymentIncome customerEmploymentIncome) {
 
 		CustomerEmploymentIncomeVO customerEmploymentIncomeVO = new  CustomerEmploymentIncomeVO();
-		if(null ==customerEmploymentIncome)
-		return customerEmploymentIncomeVO;
-			
+		if(null ==customerEmploymentIncome){
+			//changed this as customer spouse detail should be be saved during registration 
+			return null;
+			//return customerEmploymentIncomeVO;
+		}
+		
 		customerEmploymentIncomeVO.setId(customerEmploymentIncome.getId());
 		customerEmploymentIncomeVO.setEmployedAt(customerEmploymentIncome.getEmployedAt());
 		customerEmploymentIncomeVO.setEmployedIncomePreTax(customerEmploymentIncome.getEmployedIncomePreTax());
@@ -396,12 +406,12 @@ public class CustomerDetail implements Serializable {
             CustomerSpouseDetail customerSpouseDetail) {
 
 		CustomerSpouseDetailVO customerSpouseDetailVO = new CustomerSpouseDetailVO ();
-		if(customerSpouseDetail == null)
+		if(customerSpouseDetail == null){
 			//changed this as customer spouse detail should be be saved during registration 
 			return null;
 			//return customerSpouseDetailVO;
 			
-		
+		}
 		customerSpouseDetailVO.setId(customerSpouseDetail.getId());
 		customerSpouseDetailVO.setSpouseName(customerSpouseDetail.getSpouseName());
 		
@@ -434,8 +444,8 @@ public class CustomerDetail implements Serializable {
 			if(null!=inputEntity.getProfileCompletionStatus()){
 			customerDetail.setProfileCompletionStatus(inputEntity.getProfileCompletionStatus());
 			
-			customerDetail.setCustomerBankAccountDetails(convertFromVOToEntity(inputEntity.getCustomerBankAccountDetails()));
-			customerDetail.setCustomerEmploymentIncome(convertFromVOToEntity(inputEntity.getCustomerEmploymentIncome()));
+			//customerDetail.setCustomerBankAccountDetails(convertFromVOToEntity(inputEntity.getCustomerBankAccountDetails()));
+			//customerDetail.setCustomerEmploymentIncome(convertFromVOToEntity(inputEntity.getCustomerEmploymentIncome()));
 			customerDetail.setCustomerOtherAccountDetails(convertFromVOToEntity(inputEntity.getCustomerOtherAccountDetails()));
 			customerDetail.setCustomerRetirementAccountDetails(convertFromVOToEntity(inputEntity.getCustomerRetirementAccountDetails()));
 			
@@ -456,7 +466,8 @@ public class CustomerDetail implements Serializable {
 	  
 		CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
 		if(null == customerOtherAccountDetailsVO)
-		return customerOtherAccountDetails;
+		return null;
+			//return customerOtherAccountDetails;
 		
 		customerOtherAccountDetails.setId(customerOtherAccountDetailsVO.getId());
 		customerOtherAccountDetails.setAccountSubType(customerOtherAccountDetailsVO.getAccountSubType());
@@ -471,7 +482,8 @@ public class CustomerDetail implements Serializable {
 	  
 		CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
 		if(null == customerRetirementAccountDetailsVO)
-			return customerRetirementAccountDetails;
+			return null;
+			//return customerRetirementAccountDetails;
 		
 		customerRetirementAccountDetails.setId(customerRetirementAccountDetailsVO.getId());
 		customerRetirementAccountDetails.setAccountSubType(customerRetirementAccountDetailsVO.getAccountSubType());
@@ -486,7 +498,8 @@ public class CustomerDetail implements Serializable {
 	   
 		CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
 		if(null == customerBankAccountDetailsVO)
-			return customerBankAccountDetails;
+			return null;
+			//return customerBankAccountDetails;
 		
 		customerBankAccountDetails.setId(customerBankAccountDetailsVO.getId());
 		customerBankAccountDetails.setAccountSubType(customerBankAccountDetailsVO.getAccountSubType());
@@ -501,7 +514,8 @@ public class CustomerDetail implements Serializable {
 
 		CustomerEmploymentIncome customerEmploymentIncome = new  CustomerEmploymentIncome();
 		if(null ==customerEmploymentIncomeVO)
-		return customerEmploymentIncome;
+		return null;
+			//return customerEmploymentIncome;
 			
 		customerEmploymentIncome.setId(customerEmploymentIncomeVO.getId());
 		customerEmploymentIncome.setEmployedAt(customerEmploymentIncomeVO.getEmployedAt());

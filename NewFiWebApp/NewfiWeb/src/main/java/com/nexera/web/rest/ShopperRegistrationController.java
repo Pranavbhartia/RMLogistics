@@ -87,9 +87,12 @@ public class ShopperRegistrationController {
 			LOG.info("calling createNewUserAndSendMail"+userVO.getEmailId());
 			
 			LOG.info("userVO in Shopper"+userVO.getCustomerDetail());
-			LOG.info("userVO in Shopper"+userVO.getCustomerDetail().getCustomerBankAccountDetails());
-			LOG.info("userVO in Shopper"+userVO.getCustomerDetail().getCustomerEmploymentIncome());
-			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+				userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+			
+			LOG.info("userVOObj in Shopper"+userVOObj.getCustomerDetail());
+				
+			
+			
 			// insert a record in the loan table also
 			loanVO = new LoanVO();
 
@@ -105,12 +108,15 @@ public class ShopperRegistrationController {
 		
 
 			loanVO = loanService.createLoan(loanVO);
+			
+			
+			
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
 		//	userVOObj.setCustomerEnagagement(customerEnagagement);
-			LOG.info("userVOObj.getCustomerDetail().getCustomerSpouseDetail()"+userVOObj.getCustomerDetail().getCustomerSpouseDetail());
+			//LOG.info("userVOObj.getCustomerDetail().getCustomerSpouseDetail()"+userVOObj.getCustomerDetail().getCustomerSpouseDetail());
 			
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);

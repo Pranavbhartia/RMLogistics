@@ -244,7 +244,8 @@ LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
 				//	this.save(user.getCustomerDetail().getCustomerEmploymentIncome());		
 		     	//	this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
 				//	this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());			
-		  this.save(user.getCustomerDetail());
+		LOG.info("Inside User Profile Dao user.getCustomerDetail()"+user.getCustomerDetail().getId());
+			this.save(user.getCustomerDetail());
 			sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);

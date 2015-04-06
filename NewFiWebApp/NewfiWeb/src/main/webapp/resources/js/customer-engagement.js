@@ -1402,11 +1402,11 @@ function paintApplyNow(refinanceTeaserRate){
 		propertyTypeMaster.annualHomeownersInsurance=refinanceTeaserRate.annualHomeownersInsurance;
 		propertyTypeMaster.homeWorthToday=refinanceTeaserRate.homeWorthToday;
 		propertyTypeMaster.homeZipCode=refinanceTeaserRate.zipCode;
-		customerDetail.customerEmploymentIncome=customerEmploymentIncome;
-		customerDetail.customerBankAccountDetails=customerBankAccountDetails;
-		customerDetail.customerRetirementAccountDetails=customerRetirementAccountDetails;
-		customerDetail.customerOtherAccountDetails=customerOtherAccountDetails;
-		customerDetail.customerSpouseDetail=customerSpouseDetail;
+		//customerDetail.customerEmploymentIncome=customerEmploymentIncome;
+		//customerDetail.customerBankAccountDetails=customerBankAccountDetails;
+		//customerDetail.customerRetirementAccountDetails=customerRetirementAccountDetails;
+		//customerDetail.customerOtherAccountDetails=customerOtherAccountDetails;
+		//customerDetail.customerSpouseDetail=customerSpouseDetail;
 		user.customerDetail=customerDetail;
 		
 		appUserDetails.user=user;

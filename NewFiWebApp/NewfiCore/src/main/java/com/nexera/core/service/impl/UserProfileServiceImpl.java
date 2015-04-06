@@ -330,7 +330,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-		sendNewUserEmail(newUser);
+		//sendNewUserEmail(newUser);
 
 		// We set password to null so that it isnt sent back to the front end
 		// newUser.setPassword(null);
@@ -339,7 +339,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (userID > 0) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}
-		LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
+	//	LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
 		
 		return User.convertFromEntityToVO(newUser);
 

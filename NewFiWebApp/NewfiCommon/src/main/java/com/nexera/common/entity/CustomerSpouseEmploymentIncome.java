@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -22,6 +24,8 @@ public class CustomerSpouseEmploymentIncome {
 	private String   employedIncomePreTax;
 	private String   employedAt;
 	private String   employedSince; 
+	private LoanAppForm loanAppForms;
+	
 	
 	public CustomerSpouseEmploymentIncome() {
 	}
@@ -60,6 +64,17 @@ public class CustomerSpouseEmploymentIncome {
 	}
 	public void setEmployedSince(String employedSince) {
 		this.employedSince = employedSince;
+	}
+	
+	@ManyToOne
+    @JoinColumn(name="loanapp_formid")
+	public LoanAppForm getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(LoanAppForm loanAppForms) {
+		this.loanAppForms = loanAppForms;
 	}
 	
 	

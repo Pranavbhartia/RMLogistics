@@ -11,7 +11,7 @@ public class CustomerBankAccountDetailsVO implements Serializable{
 	private String accountSubType;
 	private String   currentAccountBalance;
 	private String   amountForNewHome;
-	
+	private  CustomerBankAccountDetailsVO customerBankAccountDetails;
 	
 	
 	
@@ -38,6 +38,13 @@ public class CustomerBankAccountDetailsVO implements Serializable{
 	}
 	public void setAmountForNewHome(String amountForNewHome) {
 		this.amountForNewHome = amountForNewHome;
+	}
+	public CustomerBankAccountDetailsVO getCustomerBankAccountDetails() {
+		return customerBankAccountDetails;
+	}
+	public void setCustomerBankAccountDetails(
+			CustomerBankAccountDetailsVO customerBankAccountDetails) {
+		this.customerBankAccountDetails = customerBankAccountDetails;
 	}
 	
 	

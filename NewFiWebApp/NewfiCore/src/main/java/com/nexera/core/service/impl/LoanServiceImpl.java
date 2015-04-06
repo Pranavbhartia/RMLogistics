@@ -538,7 +538,8 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = new Loan();
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
-
+LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail());
+//LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail().getCustomerEmploymentIncome());
 			// Always, the loan state will be new Loan
 			loan.setLoanProgressStatus(new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.NEW_LOAN));

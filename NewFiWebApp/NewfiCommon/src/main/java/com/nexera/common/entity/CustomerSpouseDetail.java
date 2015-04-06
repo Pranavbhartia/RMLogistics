@@ -2,13 +2,16 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,7 +39,7 @@ public class CustomerSpouseDetail implements Serializable {
 	private String selfEmployedIncome;
 	private String ssDisabilityIncome;
 	private String monthlyPension;
-	
+	private List<LoanAppForm> loanAppForms;
 	
 
 	public CustomerSpouseDetail() {
@@ -114,15 +117,7 @@ public class CustomerSpouseDetail implements Serializable {
 		this.isssIncomeOrDisability = isssIncomeOrDisability;
 	}
 
-	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public boolean isIspensionOrRetirement() {
-		return is_pension_or_retirement;
-	}
-
-	public void setIspensionOrRetirement(boolean is_pension_or_retirement) {
-		this.is_pension_or_retirement = is_pension_or_retirement;
-	}
+	
 
 	@Column(name = "self_employed_income")
 	public String getSelfEmployedIncome() {
@@ -149,6 +144,34 @@ public class CustomerSpouseDetail implements Serializable {
 
 	public void setMonthlyPension(String monthlyPension) {
 		this.monthlyPension = monthlyPension;
+	}
+
+
+	
+
+	
+	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public boolean isIs_pension_or_retirement() {
+		return is_pension_or_retirement;
+	}
+
+
+	public void setIs_pension_or_retirement(boolean is_pension_or_retirement) {
+		this.is_pension_or_retirement = is_pension_or_retirement;
+	}
+
+	
+	
+	
+	@OneToMany(mappedBy = "customerspousedetail",cascade = CascadeType.ALL)
+	public List<LoanAppForm> getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(List<LoanAppForm> loanAppForms) {
+		this.loanAppForms = loanAppForms;
 	}
 
 	
