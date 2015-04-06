@@ -454,10 +454,12 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User before covert"
+			        + userVO.getCustomerDetail());
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
-			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User after covert"
+			        + userVO.getCustomerDetail());
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));

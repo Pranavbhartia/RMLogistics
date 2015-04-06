@@ -270,6 +270,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
+	public boolean changeUserPassword(UserVO userVO) {
+		return userProfileDao.changeUserPassword(userVO);
+
+	}
+
+	@Override
 	public Integer competeUserProfile(UserVO userVO) {
 
 		User user = new User();
@@ -337,8 +344,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		if(user.getInternalUserDetail()!=null){
-			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.INACTIVE);
+		if (user.getInternalUserDetail() != null) {
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.INACTIVE);
 			userProfileDao.update(user.getInternalUserDetail());
 		}
 	}
@@ -352,8 +360,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        "User not found in the user table");
 		}
 
-		if(user.getInternalUserDetail()!=null){
-			user.getInternalUserDetail().setActiveInternal(ActiveInternalEnum.ACTIVE);
+		if (user.getInternalUserDetail() != null) {
+			user.getInternalUserDetail().setActiveInternal(
+			        ActiveInternalEnum.ACTIVE);
 			userProfileDao.update(user.getInternalUserDetail());
 		}
 	}
@@ -394,7 +403,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
-
 		User newUser = User.convertFromVOToEntity(userVO);
 		if (newUser.getCustomerDetail() != null) {
 			newUser.getCustomerDetail().setProfileCompletionStatus(
@@ -414,7 +422,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-		//sendNewUserEmail(newUser);
+		// sendNewUserEmail(newUser);
 		try {
 			sendNewUserEmail(newUser);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
@@ -422,7 +430,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
-
 
 		// We set password to null so that it isnt sent back to the front end
 		// newUser.setPassword(null);
@@ -432,10 +439,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
+			return User.convertFromEntityToVO(newUser);
 		}
-	//	LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
-		
-		return User.convertFromEntityToVO(newUser);
+		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
+		userVO.setPassword(newUser.getPassword());
+		userVO.setId(newUser.getId());
+		return userVO;
 
 	}
 
@@ -878,7 +887,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// CustomerEnagagement customerEnagagement =
 			// userVO.getCustomerEnagagement();
 			UserVO userVO = loaAppFormVO.getUser();
-			String emailId = userVO.getEmailId();
 
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
@@ -904,6 +912,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+			userVOObj.setDefaultLoanId(loanVO.getId());
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
@@ -929,5 +938,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        + loaAppFormVO);
 			throw new FatalException("Error in User registration", e);
 		}
+	}
+
+	@Override
+	public void crateWorkflowItems(int defaultLoanId) throws Exception {
+		// TODO Auto-generated method stub
+		workflowCoreService.createWorkflow(new WorkflowVO(defaultLoanId));
 	}
 }
