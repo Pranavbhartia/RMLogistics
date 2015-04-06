@@ -271,9 +271,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	
 	@Override
 	@Transactional
-		public boolean changeUserPassword(int userId,String newPassword)
+		public boolean changeUserPassword(UserVO userVO)
 		{
-			return userProfileDao.changeUserPassword(userId, newPassword);
+			return userProfileDao.changeUserPassword(userVO);
 			
 			
 		}

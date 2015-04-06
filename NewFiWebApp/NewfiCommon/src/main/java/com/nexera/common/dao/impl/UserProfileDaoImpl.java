@@ -174,7 +174,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 	
 	@Override
-	public boolean changeUserPassword(int userId,String newPassword)
+	public boolean changeUserPassword(UserVO userVO)
 	{
 		int rowEffected;
 		
@@ -182,7 +182,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		{
 			Session session=sessionFactory.getCurrentSession();
 		
-		String hql = "UPDATE User usr set usr.password ='"+newPassword+"' where usr.id="+userId;
+		String hql = "UPDATE User usr set usr.password ='"+userVO.getPassword()+"' where usr.id="+userVO.getId();
 		Query query = (Query) session.createQuery(hql);
 		
 		rowEffected=query.executeUpdate();

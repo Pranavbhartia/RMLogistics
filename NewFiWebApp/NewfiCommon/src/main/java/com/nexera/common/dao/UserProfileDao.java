@@ -73,5 +73,5 @@ public interface UserProfileDao extends GenericDao {
 
 	void updateLoginTime(Date date, int userId);
 	
-	public boolean changeUserPassword(int userId,String newPassword);
+	public boolean changeUserPassword(UserVO userVO);
 }

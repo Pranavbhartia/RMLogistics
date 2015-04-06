@@ -134,14 +134,14 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 	
-	@RequestMapping(value="/changepassword",method=RequestMethod.POST)
+	@RequestMapping(value="/password",method=RequestMethod.POST)
 	public @ResponseBody CommonResponseVO changeUserPassword(@RequestBody String userVOStr)
 			{
 		boolean passwordChanged=false;
 		Gson gson = new Gson();
 		UserVO userVO = gson.fromJson(userVOStr, UserVO.class);
 		
-		passwordChanged=userProfileService.changeUserPassword(userVO.getId(), userVO.getPassword());
+		passwordChanged=userProfileService.changeUserPassword(userVO);
 		if(passwordChanged==true)
 		{			
 			CommonResponseVO commonResponseVO = new CommonResponseVO();
