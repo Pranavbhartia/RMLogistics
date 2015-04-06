@@ -28,11 +28,11 @@ public class CustomerDetailVO implements Serializable {
 	private String monthlyPension;
 	private String livingSince;
 	
-	private CustomerSpouseDetailVO customerSpouseDetail;
+	//private CustomerSpouseDetailVO customerSpouseDetail;
 	
-	private CustomerEmploymentIncomeVO customerEmploymentIncome;
+	//private CustomerEmploymentIncomeVO customerEmploymentIncome;
 	
-	private CustomerBankAccountDetailsVO customerBankAccountDetails;
+//	private CustomerBankAccountDetailsVO customerBankAccountDetails;
 	
 	private CustomerRetirementAccountDetailsVO customerRetirementAccountDetails;
 	
@@ -194,16 +194,16 @@ public class CustomerDetailVO implements Serializable {
 	}
 	
 
-	public CustomerSpouseDetailVO getCustomerSpouseDetail() {
+	/*public CustomerSpouseDetailVO getCustomerSpouseDetail() {
 		return customerSpouseDetail;
 	}
 
 	public void setCustomerSpouseDetail(CustomerSpouseDetailVO customerSpouseDetail) {
 		this.customerSpouseDetail = customerSpouseDetail;
-	}
+	}*/
 	
 
-	public CustomerEmploymentIncomeVO getCustomerEmploymentIncome() {
+	/*public CustomerEmploymentIncomeVO getCustomerEmploymentIncome() {
 		return customerEmploymentIncome;
 	}
 
@@ -222,7 +222,7 @@ public class CustomerDetailVO implements Serializable {
 	        CustomerBankAccountDetailsVO customerBankAccountDetails) {
 		this.customerBankAccountDetails = customerBankAccountDetails;
 	}
-	
+	*/
 	
 	
 

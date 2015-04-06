@@ -53,6 +53,7 @@ public class ShopperRegistrationController {
 			LOG.info("calling 1234 " + loaAppFormVO.getUser().getFirstName());
 
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
+			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (Exception e) {

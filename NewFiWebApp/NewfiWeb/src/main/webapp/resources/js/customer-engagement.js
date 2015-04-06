@@ -1376,12 +1376,18 @@ function paintApplyNow(refinanceTeaserRate){
 		
 		
 		
-		
 		// New Code added for saving form data 
 		var appUserDetails  = new Object();
 		var refinancedetails = new Object();
 		var propertyTypeMaster = new Object();
+		var customerDetail = new Object();
+		var customerSpouseDetail = new Object();
         var user = new Object();
+		var customerEmploymentIncome = new Object();
+		var customerBankAccountDetails = new Object();
+		var customerRetirementAccountDetails = new Object();
+		var customerOtherAccountDetails = new Object();
+		
 		
 		
 		//appUserDetails.loanType = refinanceTeaserRate.loanType;
@@ -1396,11 +1402,17 @@ function paintApplyNow(refinanceTeaserRate){
 		propertyTypeMaster.annualHomeownersInsurance=refinanceTeaserRate.annualHomeownersInsurance;
 		propertyTypeMaster.homeWorthToday=refinanceTeaserRate.homeWorthToday;
 		propertyTypeMaster.homeZipCode=refinanceTeaserRate.zipCode;
+		//customerDetail.customerEmploymentIncome=customerEmploymentIncome;
+		//customerDetail.customerBankAccountDetails=customerBankAccountDetails;
+		//customerDetail.customerRetirementAccountDetails=customerRetirementAccountDetails;
+		//customerDetail.customerOtherAccountDetails=customerOtherAccountDetails;
+		//customerDetail.customerSpouseDetail=customerSpouseDetail;
+		user.customerDetail=customerDetail;
+		
 		appUserDetails.user=user;
 		appUserDetails.refinancedetails = refinancedetails;
 		appUserDetails.propertyTypeMaster = propertyTypeMaster;
 		appUserDetails.livingSituation=buyHomeTeaserRate.livingSituation;
-
 
 
 alert('hey');

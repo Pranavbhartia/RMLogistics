@@ -2809,6 +2809,10 @@ input.calc-input {
 	border-left-width: 7px;
 }
 
+.overlay-toast-success {
+	border-color: #dd4b39;
+}
+
 /* Apply these styles only when #preview-pane has
    been placed within the Jcrop widget */
 .jcrop-holder #preview-pane {
@@ -4324,4 +4328,33 @@ input.calc-input {
 	margin: 3px;
 	width: 130px;
 	padding-left: 10px;
+}
+
+.add-btn {
+	padding: 0 20px;
+    height: 30px;
+  	line-height: 30px;
+    background: #6c9f2e;
+    border-radius:3px;
+    color:#fff;
+    margin: -20px 10px 20px 0;
+    cursor: pointer;
+}
+
+.ce-input-add{
+	margin-top:10px;
+}
+
+.add-account-btn{
+	display: inline-block;
+	margin: -5px 0 20px 30px;
+}
+
+.remove-account-btn {
+  display: inline-block;
+  margin: -5px 0 10px 15px;
+}
+
+.prof-form-input-cont .radio-btn{
+	 margin-top: 11px;
 }

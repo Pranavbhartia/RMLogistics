@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -22,6 +24,8 @@ public class CustomerSpouseEmploymentIncome {
 	private String   employedIncomePreTax;
 	private String   employedAt;
 	private String   employedSince; 
+	private LoanAppForm loanAppForms;
+	
 	
 	public CustomerSpouseEmploymentIncome() {
 	}
@@ -36,14 +40,14 @@ public class CustomerSpouseEmploymentIncome {
 		this.id = id;
 	}
 	
-	@Column(name = "EmployedIncomePreTax")
+	@Column(name = "employed_income_pre_tax")
 	public String getEmployedIncomePreTax() {
 		return employedIncomePreTax;
 	}
 	public void setEmployedIncomePreTax(String employedIncomePreTax) {
 		this.employedIncomePreTax = employedIncomePreTax;
 	}
-	@Column(name = "EmployedAt")
+	@Column(name = "employed_at")
 	public String getEmployedAt() {
 		return employedAt;
 	}
@@ -54,12 +58,23 @@ public class CustomerSpouseEmploymentIncome {
 	}
 	
 	
-	@Column(name = "EmployedSince")
+	@Column(name = "employed_since")
 	public String getEmployedSince() {
 		return employedSince;
 	}
 	public void setEmployedSince(String employedSince) {
 		this.employedSince = employedSince;
+	}
+	
+	@ManyToOne
+    @JoinColumn(name="loanapp_formid")
+	public LoanAppForm getLoanAppForms() {
+		return loanAppForms;
+	}
+
+
+	public void setLoanAppForms(LoanAppForm loanAppForms) {
+		this.loanAppForms = loanAppForms;
 	}
 	
 	

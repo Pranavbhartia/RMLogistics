@@ -11,7 +11,7 @@ public class CustomerOtherAccountDetailsVO implements Serializable{
 	private String accountSubType;
 	private String   currentAccountBalance;
 	private String   amountForNewHome;
-	
+	private CustomerOtherAccountDetailsVO customerOtherAccountDetails;
 	
 	
 	
@@ -38,6 +38,13 @@ public class CustomerOtherAccountDetailsVO implements Serializable{
 	}
 	public void setAmountForNewHome(String amountForNewHome) {
 		this.amountForNewHome = amountForNewHome;
+	}
+	public CustomerOtherAccountDetailsVO getCustomerOtherAccountDetails() {
+		return customerOtherAccountDetails;
+	}
+	public void setCustomerOtherAccountDetails(
+			CustomerOtherAccountDetailsVO customerOtherAccountDetails) {
+		this.customerOtherAccountDetails = customerOtherAccountDetails;
 	}
 	
 	
