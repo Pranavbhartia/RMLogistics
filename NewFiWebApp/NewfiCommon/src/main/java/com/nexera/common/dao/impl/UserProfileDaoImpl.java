@@ -172,6 +172,38 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return criteria.list();
 
 	}
+	
+	@Override
+	public boolean changeUserPassword(int userId,String newPassword)
+	{
+		int rowEffected;
+		
+		try		
+		{
+			Session session=sessionFactory.getCurrentSession();
+		
+		String hql = "UPDATE User usr set usr.password ='"+newPassword+"' where usr.id="+userId;
+		Query query = (Query) session.createQuery(hql);
+		
+		rowEffected=query.executeUpdate();
+		
+		if(rowEffected==0)
+			return false;
+		
+		else
+			
+			return true;
+		}
+		
+		catch(HibernateException e)
+		{
+			System.out.println(e.getMessage());
+			return false;
+			
+		}
+		
+					
+	}
 
 	@Override
 	public List<User> searchUsers(User user) {

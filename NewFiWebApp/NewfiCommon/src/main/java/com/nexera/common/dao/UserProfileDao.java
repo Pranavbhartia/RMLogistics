@@ -72,4 +72,6 @@ public interface UserProfileDao extends GenericDao {
 	UserVO getDefaultSalesManager();
 
 	void updateLoginTime(Date date, int userId);
+	
+	public boolean changeUserPassword(int userId,String newPassword);
 }

@@ -133,6 +133,30 @@ public class UserProfileRest {
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
+	
+	@RequestMapping(value="/changepassword",method=RequestMethod.POST)
+	public @ResponseBody CommonResponseVO changeUserPassword(@RequestBody String userVOStr)
+			{
+		boolean passwordChanged=false;
+		Gson gson = new Gson();
+		UserVO userVO = gson.fromJson(userVOStr, UserVO.class);
+		
+		passwordChanged=userProfileService.changeUserPassword(userVO.getId(), userVO.getPassword());
+		if(passwordChanged==true)
+		{			
+			CommonResponseVO commonResponseVO = new CommonResponseVO();
+			commonResponseVO.setResultObject("Password successfully changed");
+			return commonResponseVO;			
+		}
+		
+		else
+		{			
+			CommonResponseVO commonResponseVO = new CommonResponseVO();
+			commonResponseVO.setResultObject("Some problem in changing the password");
+			return commonResponseVO;
+			
+		}		
+			}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public @ResponseBody String searchUsers(

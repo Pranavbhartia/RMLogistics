@@ -268,6 +268,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return userVOList;
 
 	}
+	
+	@Override
+	@Transactional
+		public boolean changeUserPassword(int userId,String newPassword)
+		{
+			return userProfileDao.changeUserPassword(userId, newPassword);
+			
+			
+		}
 
 	@Override
 	public Integer competeUserProfile(UserVO userVO) {
