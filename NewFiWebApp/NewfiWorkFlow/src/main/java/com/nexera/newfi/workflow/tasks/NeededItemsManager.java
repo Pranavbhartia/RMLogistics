@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
@@ -31,6 +34,8 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	private WorkflowService workflowService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private IWorkflowService iWorkflowService;
 
 	public String execute(HashMap<String, Object> objectMap) {
 
@@ -39,25 +44,26 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		// Make a service call to get the number of needed items' assigned
 		// against the
 		NeededItemScoreVO neededItemScoreVO = needsListService
-				.getNeededItemsScore(loanId);
+		        .getNeededItemsScore(loanId);
 		StringBuffer strBuff = new StringBuffer();
 		strBuff.append(neededItemScoreVO.getTotalSubmittedItem() + " out of "
-				+ neededItemScoreVO.getNeededItemRequired());
+		        + neededItemScoreVO.getNeededItemRequired());
 		return new Gson().toJson(neededItemScoreVO);
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		int loanId = Integer.parseInt(inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		NeededItemScoreVO neededItemScoreVO = needsListService
-				.getNeededItemsScore(loanId);
+		        .getNeededItemsScore(loanId);
 		if (neededItemScoreVO.getTotalSubmittedItem() > 0) {
 			String status = WorkItemStatus.PENDING.getStatus();
 			if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
-					.getNeededItemRequired()) {
+			        .getNeededItemRequired()) {
 				status = WorkItemStatus.COMPLETED.getStatus();
 			}
 			LoanVO loanVO = loanService.getLoanByID(loanId);
@@ -67,7 +73,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 			        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_NEEDS_STATUS);
 			WorkflowItemExec managerNeedItem = workflowService
 			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-			
+
 			workflowExec.setId(loanVO.getCustomerWorkflowID());
 			workflowItemMaster = workflowService
 			        .getWorkflowByType(WorkflowConstants.WORKFLOW_CUST_ITEM_NEEDS_STATUS);
@@ -75,10 +81,10 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
 
 			engineTrigger.changeStateOfWorkflowItemExec(
-					managerNeedItem.getId(), status);
+			        managerNeedItem.getId(), status);
 			engineTrigger.changeStateOfWorkflowItemExec(CustNeedItem.getId(),
-					status);
-			
+			        status);
+
 			return status;
 		}
 		return null;
@@ -87,6 +93,39 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.CREDIT_SCORE_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE;
+		String notificationReminderContent = WorkflowConstants.CREDIT_SCORE_NOTIFICATION_CONTENT;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+		        notificationType, loanId, workflowItemExecutionId,
+		        prevMilestoneKey, notificationReminderContent);
+		NeededItemScoreVO neededItemScoreVO = needsListService
+		        .getNeededItemsScore(loanId);
+		if (neededItemScoreVO.getNeededItemRequired() <= 0) {
+			LoanVO loanVO = loanService.getLoanByID(createReminderVo
+			        .getLoanId());
+			WorkflowExec workflowExec = new WorkflowExec();
+			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
+			WorkflowItemMaster workflowItemMaster = workflowService
+			        .getWorkflowByType(createReminderVo.getPrevMilestoneKey());
+			WorkflowItemExec prevMilestone = workflowService
+			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+			iWorkflowService.sendReminder(createReminderVo,
+			        createReminderVo.getWorkflowItemExecutionId(),
+			        prevMilestone.getId());
+
+		} else {
+			iWorkflowService.dismissReadNotifications(
+			        createReminderVo.getLoanId(), notificationType);
+		}
 		return null;
 	}
 

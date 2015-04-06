@@ -726,7 +726,7 @@ function getStateRow(user) {
 	}
 	
 	var dropDownWrapper = $('<div>').attr({
-		"id" : "state-dro;pdown-wrapper",
+		"id" : "state-dropdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
 	

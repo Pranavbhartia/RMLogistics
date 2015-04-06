@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
-import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
@@ -24,7 +24,7 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
  */
 @Component
 public class SystemEduTask extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
@@ -33,6 +33,7 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	WorkflowService workflowService;
 	@Autowired
 	private NotificationService notificationService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// Do Nothing
@@ -54,52 +55,54 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		int workflowItemExecutionId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		WorkflowItemExec workflowItemExecution = workflowService
-				.getWorkflowExecById(workflowItemExecutionId);
+		        .getWorkflowExecById(workflowItemExecutionId);
 		if (workflowItemExecution != null) {
 			WorkflowExec workflowExec = workflowItemExecution
-					.getParentWorkflow();
+			        .getParentWorkflow();
 			if (!workflowExec.getStatus().equals(
-					WorkItemStatus.STARTED.getStatus())) {
+			        WorkItemStatus.STARTED.getStatus())) {
 				workflowExec.setStatus(WorkItemStatus.STARTED.getStatus());
 				workflowService.updateWorkflowExecStatus(workflowExec);
 			}
 			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
-					.getStatus());
+			        .getStatus());
 			workflowService
-					.updateWorkflowItemExecutionStatus(workflowItemExecution);
-			
+			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+
 			if (workflowItemExecution.getParentWorkflowItemExec() != null) {
 				WorkflowItemExec parentWorkflowItemExec = workflowItemExecution
-						.getParentWorkflowItemExec();
+				        .getParentWorkflowItemExec();
 				if (parentWorkflowItemExec.getStatus().equalsIgnoreCase(
-						WorkItemStatus.NOT_STARTED.getStatus())) {
+				        WorkItemStatus.NOT_STARTED.getStatus())) {
 					parentWorkflowItemExec.setStatus(WorkItemStatus.STARTED
-							.getStatus());
+					        .getStatus());
 					workflowService
-							.updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
+					        .updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
 				}
 				WorkflowItemExec parentEWorkflowItemExec = workflowItemExecution
-						.getParentWorkflowItemExec();
+				        .getParentWorkflowItemExec();
 				List<WorkflowItemExec> childWorkflowItemExecList = workflowService
-						.getWorkflowItemListByParentWorkflowExecItem(parentEWorkflowItemExec);
+				        .getWorkflowItemListByParentWorkflowExecItem(parentEWorkflowItemExec);
 				int count = 0;
 				for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
 					if (childWorkflowItemExec.getStatus().equalsIgnoreCase(
-							WorkItemStatus.COMPLETED.getStatus())) {
+					        WorkItemStatus.COMPLETED.getStatus())) {
 						count = count + 1;
 					}
 				}
-				
+
 				if (count == childWorkflowItemExecList.size()) {
 					inputMap.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
-							parentEWorkflowItemExec.getId());
+					        parentEWorkflowItemExec.getId());
 					String params = Utils.convertMapToJson(inputMap);
 					workflowService.saveParamsInExecTable(
-							parentEWorkflowItemExec.getId(), params);
+					        parentEWorkflowItemExec.getId(), params);
 
-					engineTrigger.startWorkFlowItemExecution(parentEWorkflowItemExec.getId());
+					engineTrigger
+					        .startWorkFlowItemExecution(parentEWorkflowItemExec
+					                .getId());
 				}
 
 			}
@@ -110,12 +113,13 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	}
 
 	private void dismissSystemEduNotification(HashMap<String, Object> objectMap) {
-		String notificationType = WorkflowConstants.SYS_EDU_NOTIFICATION_TYPE;
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.SYS_EDU_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		List<NotificationVO> notificationList = notificationService
-				.findNotificationTypeListForLoan(loanId, notificationType, true);
-		for(NotificationVO notificationVO:notificationList){
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), true);
+		for (NotificationVO notificationVO : notificationList) {
 			notificationService.dismissNotification(notificationVO.getId());
 		}
 	}
