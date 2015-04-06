@@ -414,9 +414,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-<<<<<<< HEAD
 		//sendNewUserEmail(newUser);
-=======
 		try {
 			sendNewUserEmail(newUser);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
@@ -424,7 +422,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
->>>>>>> f65de641cd634c2c76e432a351589ac80dba2ea2
+
 
 		// We set password to null so that it isnt sent back to the front end
 		// newUser.setPassword(null);
