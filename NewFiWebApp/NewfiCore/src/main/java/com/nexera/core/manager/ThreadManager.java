@@ -27,6 +27,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -438,12 +439,14 @@ public class ThreadManager implements Runnable {
 		        workflowItemtypeList, workflowItemExecList);
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
 			LOGGER.debug("Putting the item in execution ");
-			/*
-			 * String params = Utils.convertMapToJson(getParamsBasedOnStatus(
-			 * currentLoanStatus, workflowItemExec.getId()));
-			 * workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-			 * params);
-			 */
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+			        LoanStatus.disclosureAvail);
+			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+			String params = Utils.convertMapToJson(map);
+			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+			        params);
+
 			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
 		}
 	}
