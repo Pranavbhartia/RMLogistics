@@ -287,6 +287,10 @@ public class Utility {
 			if (fileEntry.isDirectory()) {
 				System.out.println("This is a directory");
 			} else {
+				if (fileEntry.getName().startsWith(".")) {
+					// Hidden file so ignore
+					continue;
+				}
 
 				FileProductPointRate pointRate = new FileProductPointRate();
 				List<ProductPointRate> productPointRate = readCSVFileContent(fileEntry);
@@ -505,8 +509,8 @@ public class Utility {
 	}
 
 	private UIEntity getUIEntityForRate(String rate, List<UIEntity> uiEntityList) {
-
 		BigDecimal floatRate = new BigDecimal(rate);
+
 		for (UIEntity uiEntity : uiEntityList) {
 
 			if (floatRate.equals(uiEntity.getRate())) {

@@ -30,7 +30,7 @@ public class ExtractCSV {
 		return mav;
 	}
 
-	@RequestMapping("/rates.do")
+	@RequestMapping("/")
 	public ModelAndView rates() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("rates");

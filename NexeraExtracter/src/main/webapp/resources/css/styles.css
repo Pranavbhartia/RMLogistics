@@ -143,11 +143,12 @@ a,a:hover,a:visited {
 }
 
 .print{
-	  height: 45px;
-	  width: 45px;
+	  height: 35px;
+	  width: 35px;
 	  background: url(../images/gnome_printer.png) no-repeat;
 	  margin-top: 59px;
 	  margin-left: 100px;
 	  background-size: cover;
 	  cursor:pointer;
+	  margin-right: 65px;
 }
