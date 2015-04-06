@@ -120,8 +120,12 @@ public class NotificationServiceImpl implements NotificationService {
 		notificationVO.setVisibleToUserRoles(notification
 				.getVisibleToUserRoles());
 
-		if (pushNotificationFlag)
+		if (pushNotificationFlag) {
+			notificationVO.setContent(generateDynamicString.generate(
+					notificationVO.getContent(),
+					new Date(notificationVO.getCreatedDate())));
 			TriggerNotification.triggerNewNotofication(notificationVO);
+		}
 		return notificationVO;
 
 	}
