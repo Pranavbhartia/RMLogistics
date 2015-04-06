@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
@@ -716,4 +718,27 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 		return true;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Loan> getLoanInActiveStatus() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session
+		        .createCriteria(LoanProgressStatusMaster.class);
+		criteria.add(Restrictions.ne("loanProgressStatus", "CLOSED"));
+		criteria.add(Restrictions.ne("loanProgressStatus", "WITHDRAWN"));
+		criteria.add(Restrictions.ne("loanProgressStatus", "DECLINED"));
+		List<LoanProgressStatusMaster> activeStatusList = criteria.list();
+
+		criteria = session.createCriteria(Loan.class);
+		Disjunction disjunction = Restrictions.disjunction();
+		for (int i = 0; i < activeStatusList.size(); i++) {
+			disjunction.add(Restrictions.eq("loanProgressStatus",
+			        activeStatusList.get(i)));
+		}
+		criteria.add(disjunction);
+
+		return criteria.list();
+	}
+
 }

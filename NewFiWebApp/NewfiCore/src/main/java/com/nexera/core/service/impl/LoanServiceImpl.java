@@ -944,4 +944,10 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.update(loan);
 
 	}
+
+	@Override
+	@Transactional
+	public List<Loan> getLoansInActiveStatus() {
+		return loanDao.getLoanInActiveStatus();
+	}
 }

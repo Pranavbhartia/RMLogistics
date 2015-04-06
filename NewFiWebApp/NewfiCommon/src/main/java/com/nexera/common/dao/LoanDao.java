@@ -131,6 +131,8 @@ public interface LoanDao extends GenericDao
 
 
 	public boolean checkLoanDependency(User user);
+
+	public List<Loan> getLoanInActiveStatus();
     
 
 
