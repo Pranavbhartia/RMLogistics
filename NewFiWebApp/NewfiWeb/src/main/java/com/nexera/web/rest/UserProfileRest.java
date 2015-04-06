@@ -58,7 +58,7 @@ public class UserProfileRest {
 
 	@Autowired
 	private InternalUserStateMappingService internalUserStateMappingService;
-	
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
 
@@ -114,10 +114,10 @@ public class UserProfileRest {
 			if (user.getPhotoImageUrl() != null) {
 				userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 			}
-            if(userVO.getInternalUserStateMappingVOs()!=null){
-            	internalUserStateMappingService.saveOrUpdateUserStates(
-            		userVO.getInternalUserStateMappingVOs());
-            }
+			if (userVO.getInternalUserStateMappingVOs() != null) {
+				internalUserStateMappingService.saveOrUpdateUserStates(userVO
+				        .getInternalUserStateMappingVOs());
+			}
 			Integer customerDetailsUpdateCount = userProfileService
 			        .updateCustomerDetails(userVO);
 
@@ -132,6 +132,29 @@ public class UserProfileRest {
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
+	}
+
+	@RequestMapping(value = "/password", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO changeUserPassword(
+	        @RequestBody String userVOStr) {
+		boolean passwordChanged = false;
+		Gson gson = new Gson();
+		UserVO userVO = gson.fromJson(userVOStr, UserVO.class);
+
+		passwordChanged = userProfileService.changeUserPassword(userVO);
+		if (passwordChanged == true) {
+			CommonResponseVO commonResponseVO = new CommonResponseVO();
+			commonResponseVO.setResultObject("Password successfully changed");
+			return commonResponseVO;
+		}
+
+		else {
+			CommonResponseVO commonResponseVO = new CommonResponseVO();
+			commonResponseVO
+			        .setResultObject("Some problem in changing the password");
+			return commonResponseVO;
+
+		}
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -384,7 +407,7 @@ public class UserProfileRest {
 			ErrorVO error = new ErrorVO();
 			error.setMessage(e.getMessage());
 			response.setError(error);
-        }
+		}
 		return response;
 
 	}

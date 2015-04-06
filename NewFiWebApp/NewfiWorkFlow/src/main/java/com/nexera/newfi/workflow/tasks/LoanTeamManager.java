@@ -61,7 +61,19 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// DO nothing
+		int loanID = Integer.parseInt(inputMap.get(
+				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		LoanVO loanVO = new LoanVO();
+		loanVO.setId(loanID);
+		ExtendedLoanTeamVO extendedLoanTeamVO = loanService
+				.findExtendedLoanTeam(loanVO);
+		if (extendedLoanTeamVO.getUsers().size() > 1) {
+			int workflowItemExecId = Integer.parseInt(inputMap.get(
+					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
+					WorkItemStatus.PENDING.getStatus());
+			return WorkItemStatus.PENDING.getStatus();
+		}
 		return null;
 	}
 
