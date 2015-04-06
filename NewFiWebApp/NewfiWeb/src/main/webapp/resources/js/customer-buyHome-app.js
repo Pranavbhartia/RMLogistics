@@ -147,7 +147,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     },{
-        type: "yearMonth",
+        type: "desc",
         text: "When did you start living here ?",
         name: "startLivingTime",
         value: appUserDetails.user.customerDetail.livingSince
