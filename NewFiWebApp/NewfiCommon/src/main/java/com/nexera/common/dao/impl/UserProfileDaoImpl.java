@@ -172,37 +172,34 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return criteria.list();
 
 	}
-	
+
 	@Override
-	public boolean changeUserPassword(UserVO userVO)
-	{
+	public boolean changeUserPassword(UserVO userVO) {
 		int rowEffected;
-		
-		try		
-		{
-			Session session=sessionFactory.getCurrentSession();
-		
-		String hql = "UPDATE User usr set usr.password ='"+userVO.getPassword()+"' where usr.id="+userVO.getId();
-		Query query = (Query) session.createQuery(hql);
-		
-		rowEffected=query.executeUpdate();
-		
-		if(rowEffected==0)
-			return false;
-		
-		else
-			
-			return true;
+
+		try {
+			Session session = sessionFactory.getCurrentSession();
+
+			String hql = "UPDATE User usr set usr.password ='"
+			        + userVO.getPassword() + "' where usr.id=" + userVO.getId();
+			Query query = (Query) session.createQuery(hql);
+
+			rowEffected = query.executeUpdate();
+
+			if (rowEffected == 0)
+				return false;
+
+			else
+
+				return true;
 		}
-		
-		catch(HibernateException e)
-		{
-			System.out.println(e.getMessage());
+
+		catch (HibernateException e) {
+
 			return false;
-			
+
 		}
-		
-					
+
 	}
 
 	@Override
@@ -256,34 +253,36 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			//sessionFactory.getCurrentSession().flush();
+			// sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getRealtorDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
 		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
-			//sessionFactory.getCurrentSession().flush();
+			// sessionFactory.getCurrentSession().flush();
 		}
-		
-LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
-		
+
+		LOG.info("user.getCustomerDetail() in daoimpl"
+		        + user.getCustomerDetail());
+
 		if (null != user.getCustomerDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		                .getRoleId()) {
-			
-			
-		//	if(user.getCustomerDetail().getCustomerBankAccountDetails() != null){
-				
-			//this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
-			//}
-				//	this.save(user.getCustomerDetail().getCustomerEmploymentIncome());		
-		     	//	this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
-				//	this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());			
-		LOG.info("Inside User Profile Dao user.getCustomerDetail()"+user.getCustomerDetail().getId());
+
+			// if(user.getCustomerDetail().getCustomerBankAccountDetails() !=
+			// null){
+
+			// this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
+			// }
+			// this.save(user.getCustomerDetail().getCustomerEmploymentIncome());
+			// this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
+			// this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());
+			LOG.info("Inside User Profile Dao user.getCustomerDetail()"
+			        + user.getCustomerDetail().getId());
 			this.save(user.getCustomerDetail());
-			//sessionFactory.getCurrentSession().flush();
+			// sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
 	}
@@ -559,7 +558,7 @@ LOG.info("user.getCustomerDetail() in daoimpl"+user.getCustomerDetail());
 	}
 
 	private void addIfUserIsEligible(User user, List<User> availableUsers) {
-		if (user.getInternalUserDetail().getActiveInternal()==ActiveInternalEnum.ACTIVE) {
+		if (user.getInternalUserDetail().getActiveInternal() == ActiveInternalEnum.ACTIVE) {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			criteria.add(Restrictions.eq("user.id", user.getId()));
