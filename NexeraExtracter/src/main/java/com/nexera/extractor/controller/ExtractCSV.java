@@ -36,5 +36,12 @@ public class ExtractCSV {
 		mav.setViewName("rates");
 		return mav;
 	}
+	
+	@RequestMapping("/")
+	public ModelAndView index() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("rates");
+		return mav;
+	}
 
 }

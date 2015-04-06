@@ -129,7 +129,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
 		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
 		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
-
+		filesListVO.setLqbFileID(uploadedFilesList.getLqbFileID());
+		
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
 		assignedUserVo.setUserRole(UserRole
@@ -384,7 +385,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 				checkVo.setUuid(latestRow.getUuidFileId());
 				checkVo.setFileName(latestRow.getFileName());
-
+				checkVo.setLqbFileId(latestRow.getLqbFileID());
+				
 				if (serverFile.exists()) {
 					serverFile.delete();
 				}
@@ -605,18 +607,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        String uuId) {
 		UploadedFilesList filesList = uploadedFilesListDao
 		        .fetchUsingFileUUID(uuId);
-		String lqbDocID = filesList.getLqbFileID();
-
-		LQBDocumentVO documentVO = new LQBDocumentVO();
-		documentVO.setsLoanNumber(lqbDocID);
-		JSONObject receivedResponse = null;
-		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
-		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
-		        documentVO);
+		
 		InputStream inputStream = null;
 		try {
-			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
-			        .toString());
+			inputStream = createLQBObjectToReadFile(filesList.getLqbFileID());
 
 			// File file = nexeraUtility.convertInputStreamToFile(inputStream);
 
@@ -641,10 +635,24 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 		}
 
-		LOG.info(" receivedResponse while uploading LQB Document : "
-		        + receivedResponse);
+	
 	}
 
+	@Override
+	public  InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException{
+		LQBDocumentVO documentVO = new LQBDocumentVO();
+		documentVO.setsLoanNumber(lqbDocID);
+		
+		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
+		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
+		        documentVO);
+		
+		InputStream inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
+		        .toString());
+		return inputStream;
+	}
+	
+	
 	@Override
 	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
@@ -798,6 +806,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return null;
 
+	}
+
+	@Override
+	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID) {
+		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
 	}
 
 }

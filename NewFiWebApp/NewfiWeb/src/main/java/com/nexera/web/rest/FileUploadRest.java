@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -124,14 +125,18 @@ public class FileUploadRest
         CommonResponseVO commonResponseVO;
         //Get information of the files that is saved in DB for this file ID.
         UploadedFilesList uploadedFilesList = uploadedFilesListService.fetchUsingFileId( fileId );
+        Integer id = uploadedFilesList.getId();
 
         try {
         	//Pass the S3 path, to get the document from S3, and convert itto PDObject
-            List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getS3path() );
+            List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getLqbFileID() );
             for ( File file : pdfPages ) {
             	//Create a new row in DB and upload file to S3.
                 Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
                 LOG.info( "New file saved with id " + fileSavedId );
+                if(file.exists()){
+                	file.delete();
+                }
             }
 
             //Deactive the old file, i.e the file which was split.
@@ -294,12 +299,17 @@ public class FileUploadRest
     }
 
 
-    private List<File> splitPdfDocumentIntoMultipleDocs( String s3path ) throws Exception
+    private List<File> splitPdfDocumentIntoMultipleDocs( String lqbDocId ) throws Exception
     {
 
-        File file = new File( s3FileUploadServiceImpl.downloadFile( s3path, nexeraUtility.tomcatDirectoryPath()
-            + File.separator + ( new File( s3path ) ).getName() ) );
+    	
+    	InputStream inputStream = uploadedFilesListService.createLQBObjectToReadFile(lqbDocId);
+        File file = nexeraUtility.copyInputStreamToFile(inputStream);
         List<File> splittedFiles = nexeraUtility.splitPDFPages( file );
+        
+        if(file.exists()){
+        	file.delete();
+        }
         return splittedFiles;
 
     }
