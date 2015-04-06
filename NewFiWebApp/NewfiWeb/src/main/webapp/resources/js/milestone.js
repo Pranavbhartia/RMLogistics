@@ -1252,6 +1252,10 @@ function milestoneChildEventHandler(event) {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
 			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
+	}else if ($(event.target).attr("data-text") == "QC_STATUS") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
@@ -1490,4 +1494,77 @@ function appendLoanStatusPopup(element,milestoneId) {
 
 function removeLoanStatusPopup() {
 	$('#loan-status-popup').remove();
+}
+
+function appendQCPopup(element,milestoneId) {
+	
+	var offset = $(element).offset();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "qc-popup",
+		"class" : "ms-add-member-popup loan-status-popup"
+	}).css({
+		"left" : offset.left,
+		"top" : offset.top
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("QC Status");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	
+	
+	
+	var note = $('<textarea>').attr({
+		"class" : "popup-textbox",
+		"placeholder" : "Add a comment"
+	});
+	
+	var submitBtn = $('<div>').attr({
+		"class" : "popup-save-btn"
+	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
+		var comment=event.data.comment.val();
+		var milestoneId=event.data.milestoneId;
+		if(comment){
+			var url="rest/workflow/invokeaction/"+milestoneId;
+			var data={};
+			data["EMAIL_RECIPIENT"]=newfiObject.user.emailId;
+			data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+			data["EMAIL_RECIPIENT_NAME"]=newfiObject.user.displayName;
+			data["userID"]=newfiObject.user.id;
+			data["loanID"]=workFlowContext.loanId;
+			data["workflowItemExecId"]=milestoneId;
+			data["comment"]=comment;
+	 		ajaxRequest(
+				url,
+				"POST",
+				"json",
+				JSON.stringify(data),
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						var contxt=workFlowContext.mileStoneContextList[milestoneId]
+						contxt.updateMilestoneView("3")
+						removeQCPopup();
+					}
+			},false);
+		}else{
+			showToastMessage("Please Select an Option");
+		}
+	});
+	;
+	
+	container.append(note).append(submitBtn);
+	
+	wrapper.append(header).append(container);
+	
+	$('body').append(wrapper);
+}
+
+function removeQCPopup() {
+	$('#qc-popup').remove();
 }

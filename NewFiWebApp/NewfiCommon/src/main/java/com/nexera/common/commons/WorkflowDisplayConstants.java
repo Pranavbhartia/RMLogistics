@@ -35,6 +35,8 @@ public class WorkflowDisplayConstants {
 	
 	public static final String WORKFLOW_LM_DECISION_COMMENT = "comment";
 	
+	public static final String WORKFLOW_QC_COMMENT = "comment";
+
 	public static final String QC_STATUS = "decision";
 
 }
