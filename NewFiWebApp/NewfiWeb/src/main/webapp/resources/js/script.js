@@ -3369,79 +3369,49 @@ function getYearSlider(){
 	for(var i=0; i<yearValues.length; i++){
 
 		var leftOffset = i/(yearValues.length-1) * 100;
-
-		
-
 		var gridItemCont = $('<div>').attr({
-
 			"class" : "yr-grid-cont"
-
 		});
-
-		
 
 		var selectIcon = $('<div>').attr({
-
 			"class" : "yr-slider-icon"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
 		}).bind('click',{"ratesArray" : yearValues[i].rateVO},function(event){
-
 			if(!$(this).hasClass('yr-slider-icon-selected')){
-
 				$('.yr-grid-cont .yr-slider-icon').removeClass('yr-slider-icon-selected');
-
 				$(this).addClass('yr-slider-icon-selected');
-
 				$('.yr-grid-cont .yr-grid-item-selected').hide();
-
 				$('.yr-grid-cont .yr-grid-item').show();
-
 				$(this).parent().find('.yr-grid-item').hide();
-
 				$(this).parent().find('.yr-grid-item-selected').show();
-				
 				$('#rate-slider-cont').find('.rt-slider').remove();
-				
 				var rateSlider = getRatSlider(event.data.ratesArray);
 				$('#rate-slider-cont').append(rateSlider);
-
 			}
-
 		});
 
-		
-
 		var gridItem = $('<div>').attr({
-
 			"class" : "yr-grid-item"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
 		}).html(yearValues[i].value + " Yr");
 
-		
-
 		var gridItemSelected = $('<div>').attr({
-
 			"class" : "yr-grid-item-selected hide"
-
 		}).css({
-
 			"left" : leftOffset + "%"
-
 		}).html(yearValues[i].text);
 
-		
-
 		gridItemCont.append(selectIcon).append(gridItem).append(gridItemSelected);
-
 		
+		
+		//Static code to select year by default
+		if(i == 0){
+			selectIcon.addClass('yr-slider-icon-selected');
+			gridItem.hide();
+			gridItemSelected.show();
+		}
 
 		container.append(gridItemCont);
 
