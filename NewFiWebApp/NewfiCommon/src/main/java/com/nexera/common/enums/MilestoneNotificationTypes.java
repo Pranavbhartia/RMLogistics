@@ -1,7 +1,8 @@
 package com.nexera.common.enums;
 
 public enum MilestoneNotificationTypes {
-	CREDIT_SCORE_NOTIFICATION_TYPE("CREDIT_SCORE_NOTIFICATION");
+	CREDIT_SCORE_NOTIFICATION_TYPE("CREDIT_SCORE_NOTIFICATION"), SYS_EDU_NOTIFICATION_TYPE(
+	        "SYS_EDU_NOTIFICATION");
 	MilestoneNotificationTypes(String notificationTypeName) {
 		this.notificationTypeName = notificationTypeName;
 	}
