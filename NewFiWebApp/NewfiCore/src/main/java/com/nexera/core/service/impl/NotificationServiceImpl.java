@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.GenerateDynamicString;
+import com.nexera.core.utility.TriggerNotification;
 
 @Component
 @Transactional
@@ -41,7 +43,8 @@ public class NotificationServiceImpl implements NotificationService {
 	private GenerateDynamicString generateDynamicString;
 	@Autowired
 	private Utils utils;
-	private boolean pushNotificationFlag = true;
+	@Value("${notification.enablePush}")
+	private boolean pushNotificationFlag;
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
@@ -61,7 +64,8 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
-		// TriggerNotification.triggerNewNotofication(notificationVO);
+		if (pushNotificationFlag)
+			TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}
@@ -115,8 +119,9 @@ public class NotificationServiceImpl implements NotificationService {
 				.getVisibleToInternalUserRoles());
 		notificationVO.setVisibleToUserRoles(notification
 				.getVisibleToUserRoles());
-		
-		// TriggerNotification.triggerNewNotofication(notificationVO);
+
+		if (pushNotificationFlag)
+			TriggerNotification.triggerNewNotofication(notificationVO);
 		return notificationVO;
 
 	}

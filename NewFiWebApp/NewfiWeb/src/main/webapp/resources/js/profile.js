@@ -571,9 +571,11 @@ function getPriEmailRow(user) {
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		alert("Incorrect Email");
+		showToastMessage("Incorrect Email");
 		validationFails = true;
+		return true;
 	}
+	return false;
 }
 
 
@@ -1093,6 +1095,7 @@ var row = $('<div>').attr({
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');
+			validatePhone('priPhoneNumberId');
 			
 	});
 	
@@ -1311,13 +1314,19 @@ function updateUserDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
+    
+    //var phoneStatus=validatePhone("priPhoneNumberId");
+	var phoneStatus;
+	if(customerDetails.mobileAlertsPreference){
+	 phoneStatus=validatePhone("priPhoneNumberId");	
+	}else if(!customerDetails.mobileAlertsPreference){
 
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),customerDetails.mobileAlertsPreference);
-	
+	  phoneStatus=true;	
+	}
   
 
     if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
-    if(phoneStatus!=false){
+    if(phoneStatus){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",

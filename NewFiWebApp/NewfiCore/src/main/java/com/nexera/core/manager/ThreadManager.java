@@ -27,6 +27,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -86,6 +87,8 @@ public class ThreadManager implements Runnable {
 	@Autowired
 	NeedsListService needsListService;
 
+	List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
+
 	@Override
 	public void run() {
 
@@ -130,7 +133,7 @@ public class ThreadManager implements Runnable {
 						if (loanStatusID == null) {
 							LOGGER.error("Not a supported LQB status ");
 						}
-						List<WorkflowItemExec> workflowItemExecList = getWorkflowItemExecByLoan(loan);
+						workflowItemExecList = getWorkflowItemExecByLoan(loan);
 						if (workflowItemExecList == null) {
 
 							workflowItemExecList = new ArrayList<WorkflowItemExec>();
@@ -407,18 +410,44 @@ public class ThreadManager implements Runnable {
 				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);
 				if (needsListMasterDisclosureAvailable != null) {
 					if (!checkIfAlreadAssigned(loan,
-					        needsListMasterDisclosureAvailable))
+					        needsListMasterDisclosureAvailable)) {
 						assignNeedToLoan(loan,
 						        needsListMasterDisclosureAvailable);
+					}
 				}
 				NeedsListMaster needsListMasterDisclosureSigned = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED);
 				if (needsListMasterDisclosureSigned != null) {
 					if (!checkIfAlreadAssigned(loan,
-					        needsListMasterDisclosureSigned))
+					        needsListMasterDisclosureSigned)) {
 						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
-
+						LOGGER.debug("Invoking Disclosure MileStone Classes ");
+						invokeDisclosuresWorkflow(workflowItemExecList);
+					}
 				}
 			}
+		}
+	}
+
+	public void invokeDisclosuresWorkflow(
+	        List<WorkflowItemExec> workflowItemExecList) {
+		String disclosureDisplayType = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_DISPLAY;
+		String disclosureAvaialableType = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
+		List<String> workflowItemtypeList = new ArrayList<String>();
+		workflowItemtypeList.add(disclosureAvaialableType);
+		workflowItemtypeList.add(disclosureDisplayType);
+		List<WorkflowItemExec> itemsToExecute = itemToExecute(
+		        workflowItemtypeList, workflowItemExecList);
+		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
+			LOGGER.debug("Putting the item in execution ");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+			        LoanStatus.disclosureAvail);
+			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+			String params = Utils.convertMapToJson(map);
+			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+			        params);
+
+			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
 		}
 	}
 
