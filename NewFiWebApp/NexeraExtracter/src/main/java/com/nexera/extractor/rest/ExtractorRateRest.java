@@ -11,24 +11,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.nexera.extractor.entity.FileProductPointRate;
-import com.nexera.extractor.entity.ProductPointRate;
+import com.nexera.extractor.entity.UIEntity;
 import com.nexera.extractor.utility.Utility;
 
 @Controller
 @RequestMapping("/rest")
 public class ExtractorRateRest {
-	
+
 	@Autowired
 	private Utility utility;
 
 	@RequestMapping("/rates")
-	public @ResponseBody String readFilesFromDestinationRest(){
-		final File folder = new File("C:\\Users\\Akash\\Downloads\\RateSheetFiles\\RateSheet Files\\Price");
+	public @ResponseBody String readFilesFromDestinationRest() {
+		final File folder = new File("C:\\Users\\Akash\\Downloads\\RateSheetFiles\\"
+				+ "RateSheet Files\\Price\\");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
-		
-		//List<Map<String, List<ProductPointRate>>> map= utility.getCompleteProductRateList(list);
-		
+
+		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list);
+		// utility.getCompleteProductRateList(list);
+
 		Gson gson = new Gson();
-		return gson.toJson(list);
+		return gson.toJson(uiMap);
 	}
 }

@@ -93,7 +93,7 @@ a,a:hover,a:visited {
 }
 
 .main-container{
-    margin-top: 50px;
+   
 }
 
 .header-logo {
@@ -104,9 +104,8 @@ a,a:hover,a:visited {
 }
 
 .rate-table-wrapper-cont {
-    display: inline-block;
-    width: 33.33%;
-    padding: 10px;
+    float:left;
+   	padding: 10px;
 }
 
 .th,.td {
@@ -140,4 +139,14 @@ a,a:hover,a:visited {
 
 .tr.table-header{
     border-bottom: 1px solid #cecece;
+}
+
+.print{
+	  height: 45px;
+	  width: 45px;
+	  background: url(../images/gnome_printer.png) no-repeat;
+	  margin-top: 59px;
+	  margin-left: 100px;
+	  background-size: cover;
+	  cursor:pointer;
 }

@@ -15,6 +15,8 @@
                 </div>
             </div>
             <div class="body-wrapper">
+            	<div class="print" onclick="window.print()" title="print"></div>
+            
                 <div id="main-container" class="main-container container"></div>
             </div>
         </div>
@@ -23,6 +25,7 @@
         
         <script type="text/javascript" src="resources/js/jquery-2.1.3.min.js"></script>
         <script type="text/javascript" src="resources/js/script.js"></script>
+        <script type="text/javascript" src="resources/js/masonry.pkgd.min.js"></script>
         <script>
             $(document).ready(function(){
             	 $.ajax({

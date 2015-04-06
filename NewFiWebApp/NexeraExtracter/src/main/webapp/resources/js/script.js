@@ -4,23 +4,29 @@ function paintRatesTablePage(data){
 	console.info(data.fileName);
     $('#main-container').html('');
     var wrapper = $('<div>').attr({
-        "class" : "rate-table-wrapper row"
+        "class" : "rate-table-wrapper row clearfix"
     });
     
+    var ObjectKeys = Object.keys(data);
     
-    for(var i=0; i<17;i++){
-        var tableArray = ratesTempArray.rates;
-        var title = data.fileName;
-        //var table = getRatesTable(tableArray,title);
+    for(var i=0; i<ObjectKeys.length;i++){
+        var tableArray = data[ObjectKeys[i]];
+        var title =ObjectKeys[i];
+        var table = getRatesTable(tableArray,title);
         wrapper.append(table);
     }
     
     $('#main-container').html(wrapper);
+    
+    $('.rate-table-wrapper').masonry({
+    	  itemSelector: '.rate-table-wrapper-cont',
+    	  columnWidth: 100
+    });
 }
 
 function getRatesTable(rateObjArray,title){
     var wrapper = $('<div>').attr({
-        "class" : "rate-table-wrapper-cont"
+        "class" : "rate-table-wrapper-cont "
     });
     var header = $('<div>').attr({
         "class" : "rate-table-header"
@@ -73,25 +79,46 @@ function getRatesTableRow(rateObj){
         "class" : "tr"
     });
     
+    var fifteenYearValue="-";
+    var thirtyYearValue="-";
+    var fortyfiveYearValue="-";
+    var sixtyYearValue="-";
+    
+    if(rateObj.col1Points!=undefined){
+    	fifteenYearValue = rateObj.col1Points;
+    }
+    if(rateObj.col2Points!=undefined){
+    	thirtyYearValue = rateObj.col2Points;
+    }
+    if(rateObj.col3Points!=undefined){
+    	fortyfiveYearValue = rateObj.col3Points;
+    }
+    if(rateObj.col4Points!=undefined){
+    	sixtyYearValue = rateObj.col4Points;
+    }
+    	
+    
+    if(rateObj.col1Points)
+    
     var col1 = $('<div>').attr({
         "class" : "td"
     }).html(rateObj.rate);
     
     var col2 = $('<div>').attr({
         "class" : "td"
-    }).html(rateObj.value[0]);
+    }).html(fifteenYearValue);
     
     var col3 = $('<div>').attr({
         "class" : "td"
-    }).html(rateObj.value[1]);
+    }).html(thirtyYearValue);
     
     var col4 = $('<div>').attr({
         "class" : "td"
-    }).html(rateObj.value[2]);
+    }).html(fortyfiveYearValue);
     
     var col5 = $('<div>').attr({
         "class" : "td"
-    }).html(rateObj.value[3]);
+    }).html(sixtyYearValue);
     
     return container.append(col1).append(col2).append(col3).append(col4).append(col5);
 }
