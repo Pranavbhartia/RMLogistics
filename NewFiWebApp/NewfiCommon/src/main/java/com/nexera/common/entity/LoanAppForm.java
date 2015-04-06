@@ -53,7 +53,20 @@ public class LoanAppForm implements Serializable {
 	private User user;
 	private PropertyTypeMaster propertyTypeMaster;
 	private GovernmentQuestion governmentquestion;
-	private SpouseGovernmentQuestions spousegovernmentquestions;
+	private CustomerSpouseDetail customerspousedetail;
+	
+//	private CustomerEmploymentIncome customerEmploymentIncome;
+	private List<CustomerEmploymentIncome> customerEmploymentIncome;
+	
+	private List<CustomerBankAccountDetails> customerBankAccountDetails;
+	private List<CustomerOtherAccountDetails> customerOtherAccountDetails;
+	private List<CustomerRetirementAccountDetails> customerRetirementAccountDetails;
+	private List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetails;
+	private List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncome;
+	private List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetails;
+	private List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetails;
+	
+	private SpouseGovernmentQuestions spouseGovernmentQuestions;
 	private RefinanceDetails refinancedetails;
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
@@ -222,13 +235,13 @@ public class LoanAppForm implements Serializable {
 	// bi-directional many-to-one association to GovermentQuestions
 		@OneToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "spousegov_quest")
-	public SpouseGovernmentQuestions getSpousegovernmentquestions() {
-		return spousegovernmentquestions;
+	public SpouseGovernmentQuestions getSpouseGovernmentQuestions() {
+		return spouseGovernmentQuestions;
 	}
 
-	public void setSpousegovernmentquestions(
-			SpouseGovernmentQuestions spousegovernmentquestions) {
-		this.spousegovernmentquestions = spousegovernmentquestions;
+	public void setSpouseGovernmentQuestions(
+			SpouseGovernmentQuestions spouseGovernmentQuestions) {
+		this.spouseGovernmentQuestions = spouseGovernmentQuestions;
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
@@ -416,5 +429,113 @@ public class LoanAppForm implements Serializable {
 
 		return userEmploymentHistory;
 	}
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customerspousedetails")
+	public CustomerSpouseDetail getCustomerspousedetail() {
+		return customerspousedetail;
+	}
+
+	public void setCustomerspousedetail(CustomerSpouseDetail customerspousedetail) {
+		this.customerspousedetail = customerspousedetail;
+	}
+
+	
+	
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerEmploymentIncome> getCustomerEmploymentIncome() {
+		return customerEmploymentIncome;
+	}
+
+	public void setCustomerEmploymentIncome(
+			List<CustomerEmploymentIncome> customerEmploymentIncome) {
+		this.customerEmploymentIncome = customerEmploymentIncome;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerBankAccountDetails> getCustomerBankAccountDetails() {
+		return customerBankAccountDetails;
+	}
+
+	public void setCustomerBankAccountDetails(
+			List<CustomerBankAccountDetails> customerBankAccountDetails) {
+		this.customerBankAccountDetails = customerBankAccountDetails;
+	}
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerOtherAccountDetails> getCustomerOtherAccountDetails() {
+		return customerOtherAccountDetails;
+	}
+
+	public void setCustomerOtherAccountDetails(
+			List<CustomerOtherAccountDetails> customerOtherAccountDetails) {
+		this.customerOtherAccountDetails = customerOtherAccountDetails;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerRetirementAccountDetails> getCustomerRetirementAccountDetails() {
+		return customerRetirementAccountDetails;
+	}
+
+	public void setCustomerRetirementAccountDetails(
+			List<CustomerRetirementAccountDetails> customerRetirementAccountDetails) {
+		this.customerRetirementAccountDetails = customerRetirementAccountDetails;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerSpouseBankAccountDetails> getCustomerSpouseBankAccountDetails() {
+		return customerSpouseBankAccountDetails;
+	}
+
+	public void setCustomerSpouseBankAccountDetails(
+			List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetails) {
+		this.customerSpouseBankAccountDetails = customerSpouseBankAccountDetails;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerSpouseEmploymentIncome> getCustomerSpouseEmploymentIncome() {
+		return customerSpouseEmploymentIncome;
+	}
+
+	public void setCustomerSpouseEmploymentIncome(
+			List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncome) {
+		this.customerSpouseEmploymentIncome = customerSpouseEmploymentIncome;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerSpouseOtherAccountDetails> getCustomerSpouseOtherAccountDetails() {
+		return customerSpouseOtherAccountDetails;
+	}
+
+	public void setCustomerSpouseOtherAccountDetails(
+			List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetails) {
+		this.customerSpouseOtherAccountDetails = customerSpouseOtherAccountDetails;
+	}
+
+	 @OneToMany(mappedBy="loanAppForms")
+	public List<CustomerSpouseRetirementAccountDetails> getCustomerSpouseRetirementAccountDetails() {
+		return customerSpouseRetirementAccountDetails;
+	}
+
+	public void setCustomerSpouseRetirementAccountDetails(
+			List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetails) {
+		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
+	}
+	
+	
+	
+	
+	/*@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cust_emp_income")
+	public CustomerEmploymentIncome getCustomerEmploymentIncome() {
+		return customerEmploymentIncome;
+	}
+
+	public void setCustomerEmploymentIncome(
+			CustomerEmploymentIncome customerEmploymentIncome) {
+		this.customerEmploymentIncome = customerEmploymentIncome;
+	}
+*/
+	
+	
 
 }

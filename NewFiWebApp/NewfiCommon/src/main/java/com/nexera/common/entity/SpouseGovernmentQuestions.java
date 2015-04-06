@@ -185,7 +185,7 @@ public class SpouseGovernmentQuestions implements Serializable{
 	
 	
 	// bi-directional many-to-one association to LoanAppForm
-		@OneToMany(mappedBy = "governmentquestion",cascade = CascadeType.ALL)
+		@OneToMany(mappedBy = "spouseGovernmentQuestions",cascade = CascadeType.ALL)
 		public List<LoanAppForm> getLoanappforms() {
 			return this.loanAppForms;
 		}
@@ -196,7 +196,7 @@ public class SpouseGovernmentQuestions implements Serializable{
 
 		public LoanAppForm addLoanappform(LoanAppForm loanappform) {
 			getLoanappforms().add(loanappform);
-			loanappform.setSpousegovernmentquestions(this);
+			loanappform.setSpouseGovernmentQuestions(this);
 
 			return loanappform;
 		}

@@ -394,11 +394,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
+
 		User newUser = User.convertFromVOToEntity(userVO);
 		if (newUser.getCustomerDetail() != null) {
 			newUser.getCustomerDetail().setProfileCompletionStatus(
 			        ProfileCompletionStatus.ON_CREATE);
 		}
+
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
 		newUser.setStatus(true);
@@ -412,6 +414,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
+		//sendNewUserEmail(newUser);
 		try {
 			sendNewUserEmail(newUser);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
@@ -419,6 +422,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
+
 
 		// We set password to null so that it isnt sent back to the front end
 		// newUser.setPassword(null);
@@ -429,8 +433,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		                .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 		}
-		LOG.info("Returning the userVO");
-
+	//	LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
+		
 		return User.convertFromEntityToVO(newUser);
 
 	}

@@ -37,6 +37,7 @@ public class CustomerEmploymentIncomeVO implements Serializable{
 	public void setEmployedSince(String employedSince) {
 		this.employedSince = employedSince;
 	}
+	
 	public CustomerEmploymentIncomeVO getCustomerEmploymentIncome() {
 		return customerEmploymentIncome;
 	}
