@@ -3,12 +3,16 @@ package com.nexera.web.rest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -131,9 +135,15 @@ public class FileUploadRest
         	//Pass the S3 path, to get the document from S3, and convert itto PDObject
             List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getLqbFileID() );
             for ( File file : pdfPages ) {
+            	Path path = Paths.get(file.getAbsolutePath());
+            	byte[] data = Files.readAllBytes(path);
             	//Create a new row in DB and upload file to S3.
-                Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
-                LOG.info( "New file saved with id " + fileSavedId );
+            	
+            	
+            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(file, new MimetypesFileTypeMap().getContentType(file),data, userId, loanId, assignedBy);
+            	
+                //Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
+                LOG.info( "New file saved with id " + checkUploadVO.getIsUploadSuccess() );
                 if(file.exists()){
                 	file.delete();
                 }

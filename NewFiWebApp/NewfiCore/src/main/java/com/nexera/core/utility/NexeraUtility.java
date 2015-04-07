@@ -101,20 +101,23 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
-	public List<File> splitPDFPages(File file) {
-
+	public List<File> splitPDFPages(File file2) {
+		File file = new File("C:\\Users\\Akash\\Desktop\\UILRXX.pdf");
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
 		Integer pageNum = 0;
+		PDPageContentStream contentStream=null;
 		for (PDPage pdPage : pdfPages) {
 
 			try {
+				
 				PDDocument newDocument = new PDDocument();
 				newDocument.addPage(pdPage);
 				String filepath = tomcatDirectoryPath() + File.separator
 				        + file.getName().replace(".pdf", "") + "_" + pageNum
 				        + ".pdf";
-
+				
+				
 				File newFile = new File(filepath);
 				newFile.createNewFile();
 
