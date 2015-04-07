@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
@@ -19,6 +20,7 @@ import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
+import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -32,6 +34,7 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
@@ -386,10 +389,40 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		// TODO get these hard coded data from entity
-		loanCustomerVO.setProcessor("Johny Tester");
-		loanCustomerVO.setPurpose("Purchase TBD");
+		boolean processorPresent = Boolean.FALSE;
+		if (loan.getLoanTeam() != null) {
+			List<LoanTeam> loanTeamList = loan.getLoanTeam();
+			for (LoanTeam loanTeam : loanTeamList) {
+				User loanUser = loanTeam.getUser();
+				if (loanUser.getInternalUserDetail() != null) {
+					InternalUserRoleMaster internalUserRoleMaster = loanUser
+					        .getInternalUserDetail().getInternaUserRoleMaster();
+					if (internalUserRoleMaster != null
+					        && internalUserRoleMaster.getId() == InternalUserRolesEum.PC
+					                .getRoleId()) {
+						loanCustomerVO.setProcessor(loanUser.getFirstName()
+						        + " " + loanUser.getLastName());
+						processorPresent = Boolean.TRUE;
+					}
+				}
+			}
+
+		}
+		if (!processorPresent) {
+			loanCustomerVO.setProcessor("-");
+		}
+
+		loanCustomerVO.setPurpose(loan.getLoanType().getDescription());
 		loanCustomerVO.setAlert_count("3");
-		loanCustomerVO.setCredit_score("732");
+		if (customerDetail != null) {
+			// constructCreditScore(customerDetail.get);
+			loanCustomerVO.setCredit_score(constrtCreditScore(
+			        customerDetail.getTransunionScore(),
+			        customerDetail.getEquifaxScore(),
+			        customerDetail.getExperianScore()));
+
+		}
+		loanCustomerVO.setCredit_score("-");
 
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
@@ -409,6 +442,37 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 
 		return loanCustomerVO;
+	}
+
+	private String constrtCreditScore(String transunionScore,
+	        String equifaxScore, String experianScore) {
+		// TODO Auto-generated method stub
+		String creditScore = "";
+		if (equifaxScore != null && !equifaxScore.isEmpty()) {
+			creditScore = CommonConstants.EQ + equifaxScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = CommonConstants.EQ + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		if (transunionScore != null && !transunionScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EQ + transunionScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.EQ
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		if (experianScore != null && !experianScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EQ + experianScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.EQ
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		return creditScore;
 	}
 
 	/**
@@ -958,5 +1022,12 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public List<Loan> getLoansInActiveStatus() {
 		return loanDao.getLoanInActiveStatus();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		return loanMilestoneMasterDao.loadAll(LoanMilestoneMaster.class);
 	}
 }
