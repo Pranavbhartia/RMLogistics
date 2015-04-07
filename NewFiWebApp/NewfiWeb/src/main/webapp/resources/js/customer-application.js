@@ -1066,32 +1066,33 @@ function paintMyIncome() {
     
     
     
-        EmployedIncomePreTax = $('input[name="beforeTax"]').val();
-        EmployedAt = $('input[name="workPlace"]').val();
-        EmployedSince = $('input[name="startWorking"]').val();
-        selfEmployedIncome = $('input[name="selfEmployed"]').val();
-        ssDisabilityIncome = $('input[name="disability"]').val();
-        monthlyPension = $('input[name="pension"]').val();
-       
-       
-					
-				
-				 var  customerEmploymentIncome1 = [];
-        var temp = new Object();
+    var  customerEmploymentIncome = [];
+     
+     $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+      customerEmploymentIncome1 = {};
+      
+      EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
+      EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
+      EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+     
+      customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
+      customerEmploymentIncome1.employedAt = EmployedAt;
+      customerEmploymentIncome1.employedSince = EmployedSince;
+      var termp = {};
+      termp.customerEmploymentIncome = customerEmploymentIncome1;
+      
+      customerEmploymentIncome.push(termp);
+     });
+     
 
-        customerEmploymentIncome = {};
-        customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-        customerEmploymentIncome.employedAt =EmployedAt;
-        customerEmploymentIncome.employedSince=EmployedSince;
-  temp.customerEmploymentIncome=customerEmploymentIncome;
-customerEmploymentIncome1.push(temp);
-      appUserDetails.customerEmploymentIncome=customerEmploymentIncome1;
-   
+appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+    selfEmployedIncome = $('input[name="selfEmployed"]').val();
+		        
+		        ssDisabilityIncome = $('input[name="disability"]').val();
+				
+		        monthlyPension = $('input[name="pension"]').val();
 
 		
-				
-			 
-				
 				if(monthlyPension != "" && monthlyPension != undefined){
 					
 					appUserDetails.ispensionOrRetirement= true;
@@ -1114,6 +1115,9 @@ customerEmploymentIncome1.push(temp);
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+			
+
+		
 				
 				
        
@@ -1430,110 +1434,152 @@ $('#app-right-panel').html('');
 
 
 function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
+ var container = $('<div>').attr({
+  "class" : "ce-ques-wrapper"
+ });
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesText);
+ var quesTextCont = $('<div>').attr({
+  "class" : "ce-rp-ques-text"
+ }).html(quesText);
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
+ var optionContainer = $('<div>').attr({
+  "class" : "ce-options-cont"
+ });
 
-	for (var i = 0; i < options.length; i++) {
+ for (var i = 0; i < options.length; i++) {
 
-		var optionIncome = $('<div>').attr({
-			"class" : "hide ce-option-ques-wrapper",
-			"id" : "ce-option_" + i
-		});
+  var optionsWrapper = $('<div>').attr({
+   "class" : "hide ce-sub-option-wrapper",
+   "id" : "ce-option_"+i
+  });
+  
+  var optionIncome = $('<div>').attr({
+   "class" : "ce-option-ques-wrapper"
+  });
 
-		var option = $('<div>').attr({
-			"class" : "ce-option-checkbox",
-			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : options[i].name
-		}, function(event) {
-			if($(this).hasClass('app-option-checked')){
-        		$(this).removeClass('app-option-checked');
-        		//appUserDetails[name] = false;
-        	}else{
-	        	$(this).addClass('app-option-checked');
-	        	//appUserDetails[name] = true;
-        	}
-			var key = event.data.name;
-			//appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value);
-		});
+  var option = $('<div>').attr({
+   "class" : "ce-option-checkbox",
+   "value" : options[i].value
+  }).html(options[i].text).bind('click', {
+   "option" : options[i],
+   "name" : options[i].name
+  }, function(event) {
+   if($(this).hasClass('app-option-checked')){
+          $(this).removeClass('app-option-checked');
+          //appUserDetails[name] = false;
+         }else{
+          $(this).addClass('app-option-checked');
+          //appUserDetails[name] = true;
+         }
+   var key = event.data.name;
+   //appUserDetails[key] = event.data.option.value;
+   event.data.option.onselect(event.data.option.value);
+  });
 
-		optionContainer.append(option).append(optionIncome);
-	}
-
-	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
-	}).html("Save & Continue").bind('click',function() {
-		        
-		        
-	        
-		        spouseBeforeTax= $('input[name="spouseBeforeTax"]').val();
-		        spouseWorkPlace = $('input[name="spouseWorkPlace"]').val();
-		        spouseStartWorking = $('input[name="spouseStartWorking"]').val();
-				
-		        spouseSelfEmployed = $('input[name="spouseSelfEmployed"]').val();
-		        
-		        spouseDisability = $('input[name="spouseDisability"]').val();
-				
-		        spousePension = $('input[name="spousePension"]').val();
-
-				
-				
-				
-					
-				 var  customerSpouseEmploymentIncome1 = [];
-        var temp = new Object();
-
-        customerSpouseEmploymentIncome = {};
-        customerSpouseEmploymentIncome.employedIncomePreTax = spouseBeforeTax;
-        customerSpouseEmploymentIncome.employedAt =spouseWorkPlace;
-        customerSpouseEmploymentIncome.employedSince=spouseStartWorking;
-  temp.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
-customerSpouseEmploymentIncome1.push(temp);
-      appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome1;
+  optionContainer.append(option);
+  
+  
+  var addAccountBtn = $('<div>').attr({
+   "class" : "add-btn add-account-btn"
+  }).html("Add Income").bind('click',function(){
    
+   var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
+   
+   if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
+    showToastMessage("Maximum 3 income needed");
+    return false;
+   }
+   
+   var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
+   $(this).parent().find('.ce-option-ques-wrapper').unwrap();
+   $(this).before(containerToAppend);
+   
+   $(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+   
+   var removeAccBtn = $('<div>').attr({
+    "class" : "add-btn remove-account-btn"
+   }).html("Remove Income")
+   .bind('click',{"mainContainerId":mainContainerId},function(event){
+    $(this).closest('.ce-option-ques-wrapper').remove();
+    var parentDiv = $('#'+event.data.mainContainerId);
+    
+    if(parentDiv.children('.ce-option-ques-wrapper').length==1){
+     parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+    }
+   });
+   
+   $(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+  });
+  
+ 
+  if(i==0){
+  optionsWrapper.append(addAccountBtn);
+  }
+  optionContainer.append(optionsWrapper);
+  
+  
+ }
 
+ var saveBtn = $('<div>').attr({
+  "class" : "ce-save-btn"
+ }).html("Save & Continue").bind('click',function() {
+          
+          
+         
+  var  customerSpouseEmploymentIncome = [];
+      
+      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+       customerSpouseEmploymentIncomeTemp1 = {};
+       
+       spouseBeforeTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseBeforeTax"]').val();
+       spouseWorkPlace = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseWorkPlace"]').val();
+       spouseStartWorking = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseStartWorking"]').val();
+      
+       customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = spouseBeforeTax;
+       customerSpouseEmploymentIncomeTemp1.employedAt = spouseWorkPlace;
+       customerSpouseEmploymentIncomeTemp1.employedSince = spouseStartWorking;
+       var temp = {};
+       temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
+       
+       customerSpouseEmploymentIncome.push(temp);
+      });
+      
+      appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+  
+  
+    
+          spouseSelfEmployed = $('input[name="spouseSelfEmployed"]').val();
+          
+          spouseDisability = $('input[name="spouseDisability"]').val();
+    
+          spousePension = $('input[name="spousePension"]').val();
 
+    
+    
+    
+    
+    appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
+    
+    
+    appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
+    appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
+    
+    appUserDetails.customerSpouseDetail.isSelfEmployed = true;
+    appUserDetails.customerSpouseDetail.selfEmployedIncome =spouseSelfEmployed;
+    
+    appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
+    appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
+    
+    //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+    appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    
+    
+    saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
+    //paintCustomerApplicationPageStep4a();
+   });
 
-				
-				
-				
-				appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
-				
-				
-				appUserDetails.customerSpouseDetail.isSpousePensionOrRetirement= true;
-				appUserDetails.customerSpouseDetail.spousePension =spousePension;
-				
-				appUserDetails.customerSpouseDetail.isSpouseSelfEmployed = true;
-				appUserDetails.customerSpouseDetail.spouseSelfEmployed =spouseSelfEmployed;
-				
-				appUserDetails.customerSpouseDetail.isSpouseIncomeOrDisability=true;
-				appUserDetails.customerSpouseDetail.spouseDisability = spouseDisability;
-				
-				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-				
-				
-				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
-				//paintCustomerApplicationPageStep4a();
-			});
-
-	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
+ return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
-
-
-
-
 
 
 
@@ -1542,13 +1588,21 @@ customerSpouseEmploymentIncome1.push(temp);
 function paintSpouseRefinanceEmployed(divId) {
 
 	//appUserDetails.employed ="true";
-	var quesTxt = "Spouse Income";
-	var quesCont = getMultiTextQuestionSpouse(quesTxt);
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(quesCont);
+ if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+  var quesTxt = "Spouse Income :About how much do you make a year";
+  var quesCont = getMultiTextQuestionSpouse(quesTxt);
+  $('#ce-option_' + divId).prepend(quesCont); 
+ }
+ $('#ce-option_' + divId).toggle();
+
 }
 
 function getMultiTextQuestionSpouse(quesText) {
+
+var wrapper = $('<div>').attr({
+  "class" : "ce-option-ques-wrapper"
+ });
+ 
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper",
 	});
@@ -1600,107 +1654,135 @@ function getMultiTextQuestionSpouse(quesText) {
 	optionContainer.append(quesTextCont1).append(quesTextCont2).append(
 			quesTextCont3);
 
-	return container.append(quesTextCont).append(optionContainer);
+	
 	
 	putCurrencyFormat("spouseBeforeTax");
+	
+	container.append(quesTextCont).append(optionContainer);
+ 
+    return wrapper.append(container);
 }
+
+
+
 
 function paintSpouseRefinanceSelfEmployed(divId) {
 
-	var quesTxt = "How much do you make a year?";
+ var quesTxt = "How much do you make a year?";
 
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
+ var wrapper = $('<div>').attr({
+  "class" : "ce-option-ques-wrapper"
+ });
+ 
+ var container = $('<div>').attr({
+  "class" : "ce-ques-wrapper"
+ });
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
+ var quesTextCont = $('<div>').attr({
+  "class" : "ce-option-text"
+ }).html(quesTxt);
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
+ var optionContainer = $('<div>').attr({
+  "class" : "ce-options-cont"
+ });
+var inputBox = $('<input>').attr({
+  "class" : "ce-input",
+  "name" : "spouseSelfEmployed",
+  "value": appUserDetails.spouseSelfEmployed
+ });
 
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "spouseSelfEmployed",
-		"value": appUserDetails.spouseSelfEmployed
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-	
-	putCurrencyFormat("spouseSelfEmployed");
+ optionContainer.append(inputBox);
+ container.append(quesTextCont).append(optionContainer);
+ wrapper.append(container);
+ if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+  
+  $('#ce-option_' + divId).prepend(wrapper); 
+ }
+ $('#ce-option_' + divId).toggle();
+ 
+ putCurrencyFormat("spouseSelfEmployed");
 }
+
+
 
 function paintSpouseRefinanceDisability(divId) {
 
-	var quesTxt = "About how much do you get monthly?";
+ var quesTxt = "About how much do you get monthly?";
 
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
+ var wrapper = $('<div>').attr({
+  "class" : "ce-option-ques-wrapper"
+ });
+ 
+ var container = $('<div>').attr({
+  "class" : "ce-ques-wrapper"
+ });
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
+ var quesTextCont = $('<div>').attr({
+  "class" : "ce-option-text"
+ }).html(quesTxt);
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
+ var optionContainer = $('<div>').attr({
+  "class" : "ce-options-cont"
+ });
 
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "spouseDisability",
-		"value": appUserDetails.spouseDisability
-	});
+ var inputBox = $('<input>').attr({
+  "class" : "ce-input",
+  "name" : "spouseDisability",
+  "value": appUserDetails.spouseDisability
+ });
 
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-	
-	putCurrencyFormat("spouseDisability");
+ optionContainer.append(inputBox);
+ container.append(quesTextCont).append(optionContainer);
+ wrapper.append(container);
+ if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+  
+  $('#ce-option_' + divId).prepend(wrapper); 
+ }
+ $('#ce-option_' + divId).toggle();
+ 
+ putCurrencyFormat("spouseDisability");
 }
+
+
+
 
 function paintSpouseRefinancePension(divId) {
 
-	var quesTxt = "About how much do you get monthly?";
+ var quesTxt = "About how much do you get monthly?";
 
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
+ var wrapper = $('<div>').attr({
+  "class" : "ce-option-ques-wrapper"
+ });
+ 
+ var container = $('<div>').attr({
+  "class" : "ce-ques-wrapper"
+ });
+ 
+ var quesTextCont = $('<div>').attr({
+  "class" : "ce-option-text"
+ }).html(quesTxt);
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text"
-	}).html(quesTxt);
+ var optionContainer = $('<div>').attr({
+  "class" : "ce-options-cont"
+ });
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
+ var inputBox = $('<input>').attr({
+  "class" : "ce-input",
+  "name" : "spousePension",
+  "value": appUserDetails.spousePension
+ });
 
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "spousePension",
-		"value": appUserDetails.spousePension
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-	
-	putCurrencyFormat("spousePension");
+ optionContainer.append(inputBox);
+ container.append(quesTextCont).append(optionContainer);
+ wrapper.append(container);
+ if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+  
+  $('#ce-option_' + divId).prepend(wrapper); 
+ }
+ $('#ce-option_' + divId).toggle();
+ 
+ putCurrencyFormat("spousePension");
 }
-
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -1809,6 +1891,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			
 			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
 				showToastMessage("Maximum 3 income needed");
+			     return false;
 			}
 			
 			var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
@@ -2179,10 +2262,12 @@ function paintCustomerApplicationPageStep4a() {
     $('#app-right-panel').append(saveAndContinueButton);
 }
 
-function paintCustomerApplicationPageStep4b(){
+
+
+ function paintCustomerApplicationPageStep4b(){
 	
 	
-	
+	$('#app-right-panel').html('');
     var quesHeaderTxt = "Government Monitoring Questions";
 
     var quesHeaderTextCont = $('<div>').attr({
@@ -2194,10 +2279,146 @@ function paintCustomerApplicationPageStep4b(){
 		"name" : name,
 		"value" : 0
 	}];
-	    $('#app-right-panel').append(quesHeaderTextCont);
-    var quesCont = paintIgnoreQuestions(quesHeaderTxt, options, name);
-    return quesCont;
+	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
+
+	$('#app-right-panel').append(quesCont);
+    
+
+    
+    ///
+    var questions = [{
+        type: "select",
+        text: "Ethnicity",
+        name: "ethnicity",
+        options: [{
+            text: "Hispanic",
+            value: "hispanic"
+        }, {
+            text: "Non Hispanic or Latino",
+            value: "latino"
+        }],
+        selected: ""
+    }, {
+        type: "select",
+        text: "Race",
+        name: "race",
+        options: [{
+            text: "American Indian or Alaska Native",
+            value: "americanIndian"
+        }, {
+            text: "Native Hawaiian or Pacific Islander",
+            value: "nativeHawaiian "
+        }, {
+            text: "Black or African American",
+            value: "black"
+        },
+        {
+            text: "White",
+            value: "white"
+        },
+        {
+            text: "Asian",
+            value: "asian"
+        }],
+        selected: ""
+    }, {
+        type: "select",
+        text: "Sex",
+        name: "sex",
+        options: [{
+            text: "Male",
+            value: "male"
+        }, {
+            text: "Female",
+            value: "female "
+        }],
+      selected: ""
+    }];
+
+	
+	 var questionsContainer = getQuestionsContainer(questions);
+	
+	 var saveAndContinueButton = $('<div>').attr({
+	        "class": "app-save-btn"
+	    }).html("Save & continue").on('click', function() {
+	    	
+	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
+	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
+	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
+	    	
+	    	
+	    	governmentquestion.ethnicity = ethnicity;
+	    	governmentquestion.race = race;
+	    	governmentquestion.sex =sex;
+	    	
+	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+	    	
+	    	
+	    	if(appUserDetails.isSpouseOnLoan == true)
+				{
+				saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4a());
+				}else{
+				 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
+				}
+	    	
+	    	//paintCustomerApplicationPageStep5();
+	    });
+
+	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
+	
 }
+
+
+
+function paintGovernmentMonitoringQuestions(quesText, options, name) {
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+		
+	});
+
+	var quesTextCont = $('<div>').attr({
+		"class" : "app-ques-header-txt"
+	}).html(quesText);
+
+	var optionContainer = $('<div>').attr({
+		"class" : "ce-options-cont"
+	});
+
+	for (var i = 0; i < options.length; i++) {
+
+		var optionIncome = $('<div>').attr({
+			"class" : "hide ce-option-ques-wrapper"
+			//"id" : "ce-option_" + i
+		});
+
+		var option = $('<div>').attr({
+			"class" : "ce-option-checkbox",
+			"value" : options[i].value
+		}).html(options[i].text).bind('click', {
+			"option" : options[i],
+			"name" : name
+		}, function(event) {
+			if($(this).hasClass("ce-option-checked")){
+				$(this).removeClass("ce-option-checked");
+			}else{
+				$(this).addClass("ce-option-checked");
+			}
+			/*var key = event.data.name;
+			appUserDetails[key] = event.data.option.value;
+			event.data.option.onselect(event.data.option.value);*/
+			$(".app-ques-container").toggle(function() {
+				
+			});
+		});
+
+		optionContainer.append(option).append(optionIncome);
+	}
+
+	return container.append(quesTextCont).append(optionContainer);
+}
+
+
+ 
  
 function goverementOptionalQues() {
  
@@ -2258,44 +2479,6 @@ function goverementOptionalQues() {
 	    return questionsContainer;
 }
  
-function paintCustomerApplicationPageStep4b() {
-    $('#app-right-panel').html('');
-    var quesCont = noThanksContinueDiv();
-    $('#app-right-panel').append(quesCont);
-    var goverementOptionalQuesDiv = goverementOptionalQues();
-    $('#app-right-panel').append(goverementOptionalQuesDiv);
- 
-	
-	
-	 var saveAndContinueButton = $('<div>').attr({
-	        "class": "app-save-btn"
-	    }).html("Save & continue").on('click', function() {
-	    	
-	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
-	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
-	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
-	    	
-	    	
-	    	governmentquestion.ethnicity = ethnicity;
-	    	governmentquestion.race = race;
-	    	governmentquestion.sex =sex;
-	    	
-	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-	    	
-	    	
-	    	if(appUserDetails.isSpouseOnLoan == true)
-				{
-				saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4a());
-				}else{
-				 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
-				}
-	    	
-	    	//paintCustomerApplicationPageStep5();
-	    });
-
-	   $('#app-right-panel').append(saveAndContinueButton);
-	
-}
 
 function paintCustomerApplicationPageStep5() {
 	
@@ -2395,7 +2578,7 @@ function paintCustomerSpouseApplicationPageStep5() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
-    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.dateOfBirth));
+    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.spouseDateOfBirth));
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
@@ -2471,8 +2654,9 @@ function paintCustomerSpouseApplicationPageStep5() {
 
 function applicationFormSumbit(){
 	
-	//createLoan();
-	changeSecondaryLeftPanel(3);
+	createLoan();
+	saveUserAndLockRate(appUserDetails) ;
+	//changeSecondaryLeftPanel(3);
 }
 
 
@@ -2590,18 +2774,33 @@ var tempdata = [{
  
 function saveUserAndLockRate(appUserDetails) {
     //alert(JSON.stringify(registration));
+    
+    var teaserrate = {};
+    
+    teaserrate.loanType="REF";
+    teaserrate.refinanceOption="REFLMP";
+    teaserrate.currentMortgageBalance="$280,000";
+    teaserrate.currentMortgagePayment="$3,000";
+    teaserrate.isIncludeTaxes="Yes";
+    teaserrate.propertyTaxesPaid="$350";
+    teaserrate.annualHomeownersInsurance="$500";
+    teaserrate.homeWorthToday="$350,000";
+    teaserrate.zipCode="94087";
+
+   
+    
     $.ajax({
         url: "rest/calculator/findteaseratevalue",
         type: "POST",
         data: {
-            "teaseRate": JSON.stringify(appUserDetails)
+            "teaseRate": JSON.stringify(teaserrate)
         },
         datatype: "application/json",
         success: function(data) {
             $('#overlay-loader').hide();
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
-            paintLockRate(tempdata, appUserDetails);
+            paintLockRate(JSON.parse(data), appUserDetails);
         },
         error: function() {
             alert("error");
@@ -2655,53 +2854,7 @@ function putCurrencyFormat(name){
 
 
 
-function paintIgnoreQuestions(quesText, options, name) {
-    var container = $('<div>').attr({
-        "class": "ce-ques-wrapper"
- 
-    });
- 
-    var quesTextCont = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesText);
- 
-    var optionContainer = $('<div>').attr({
-        "class": "ce-options-cont"
-    });
- 
-    for (var i = 0; i < options.length; i++) {
- 
-        var optionIncome = $('<div>').attr({
-            "class": "hide ce-option-ques-wrapper"
-                //"id" : "ce-option_" + i
-        });
- 
-        var option = $('<div>').attr({
-            "class": "ce-option-checkbox",
-            "value": options[i].value
-        }).html(options[i].text).bind('click', {
-            "option": options[i],
-            "name": name
-        }, function(event) {
-            if ($(this).hasClass("ce-option-checked")) {
-                $(this).removeClass("ce-option-checked");
-            } else {
-                $(this).addClass("ce-option-checked");
-            }
-            /*var key = event.data.name;
-            appUserDetails[key] = event.data.option.value;
-            event.data.option.onselect(event.data.option.value);*/
-            $(".app-ques-container").toggle(function() {});
- 
- 
-        });
- 
-        optionContainer.append(option).append(optionIncome);
-    }
- 
-    return container.append(quesTextCont).append(optionContainer);
-}
- 
+
  
  
 
@@ -3066,7 +3219,7 @@ function paintRefinanceStep3() {
 	}).html("Save & continue").on('click', function() {
 		
 			refinancedetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
-			refinancedetails.isIncludeTaxes = quesContxts[1].value;
+			refinancedetails.includeTaxes = quesContxts[1].value;
 			propertyTypeMaster.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
 			propertyTypeMaster.propertyInsuranceCost = $('input[name="annualHomeownersInsurance"]').val();
 		  appUserDetails.refinancedetails=refinancedetails;
@@ -3396,10 +3549,6 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 }
 
 
-
-
-
-
 ////////////Declaration and Government Question for Spouse///////
 
 
@@ -3625,24 +3774,24 @@ function paintSpouseCustomerApplicationPageStep4a() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
-    	isSpouseOutstandingJudgments =  quesDeclarationContxts[0].value;
-    	isSpouseBankrupt =  quesDeclarationContxts[1].value;
-    	isSpousePropertyForeclosed =  quesDeclarationContxts[2].value;
-    	isSpouseLawsuit =  quesDeclarationContxts[3].value;
-    	isSpouseObligatedLoan =  quesDeclarationContxts[4].value;
-    	isSpouseFederalDebt =  quesDeclarationContxts[5].value;
-    	isSpouseObligatedToPayAlimony =  quesDeclarationContxts[6].value;
+    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
+    	isBankrupt =  quesDeclarationContxts[1].value;
+    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
+    	isLawsuit =  quesDeclarationContxts[3].value;
+    	isObligatedLoan =  quesDeclarationContxts[4].value;
+    	isFederalDebt =  quesDeclarationContxts[5].value;
+    	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
     	//appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
-    	isSpouseEndorser =  quesDeclarationContxts[8].value;
+    	isEndorser =  quesDeclarationContxts[8].value;
     	
-    	isSpouseUSCitizen =  quesDeclarationContxts[9].value;
+    	isUSCitizen =  quesDeclarationContxts[9].value;
     
     	//appUserDetails["isPermanentResidentAlien"] = null;
     	//if(quesDeclarationContxts[9].childContexts.No != undefined)
     		//isOccupyPrimaryResidence = quesDeclarationContxts[9].childContexts.No[0].value;
     	
-    	 isSpouseOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
-    	 isSpouseOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
+    	 isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
+    	 isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
     	//appUserDetails["yourPrimaryResidence"] = null;
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
@@ -3656,69 +3805,69 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	 
     	 spouseGovernmentQuestions = {};
     	 if( isOutstandingJudgments =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseOutstandingJudgments = true;
+    		 spouseGovernmentQuestions.isOutstandingJudgments = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseOutstandingJudgments = false;
+ 			spouseGovernmentQuestions.isOutstandingJudgments = false;
  		 }
     	 
-    	 if( isSpouseBankrupt =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseBankrupt = true;
+    	 if( isBankrupt =="Yes"){ 
+    		 spouseGovernmentQuestions.isBankrupt = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseBankrupt = false;
+ 			spouseGovernmentQuestions.isBankrupt = false;
  		 }
     	 
-    	 if( isSpousePropertyForeclosed =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpousePropertyForeclosed = true;
+    	 if( isPropertyForeclosed =="Yes"){ 
+    		 spouseGovernmentQuestions.isPropertyForeclosed = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpousePropertyForeclosed = false;
+ 			spouseGovernmentQuestions.isPropertyForeclosed = false;
  		 }
     	 
-    	 if( isSpouseLawsuit =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseLawsuit = true;
+    	 if( isLawsuit =="Yes"){ 
+    		 spouseGovernmentQuestions.isLawsuit = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseLawsuit = false;
+ 			spouseGovernmentQuestions.isLawsuit = false;
  		 }
 
-    	 if( isSpouseObligatedLoan =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseObligatedLoan = true;
+    	 if( isObligatedLoan =="Yes"){ 
+    		 spouseGovernmentQuestions.isObligatedLoan = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseObligatedLoan = false;
+ 			spouseGovernmentQuestions.isObligatedLoan = false;
  		 }
     	 
-    	 if( isSpouseFederalDebt =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseFederalDebt = true;
+    	 if( isFederalDebt =="Yes"){ 
+    		 spouseGovernmentQuestions.isFederalDebt = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseFederalDebt = false;
+ 			spouseGovernmentQuestions.isFederalDebt = false;
  		 }
 
-    	 if( isSpouseObligatedToPayAlimony =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseObligatedToPayAlimony = true;
+    	 if( isObligatedToPayAlimony =="Yes"){ 
+    		 spouseGovernmentQuestions.isObligatedToPayAlimony = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseObligatedToPayAlimony = false;
+ 			spouseGovernmentQuestions.isObligatedToPayAlimony = false;
  		 }
     	 
-    	 if( isSpouseEndorser =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseEndorser = true;
+    	 if( isEndorser =="Yes"){ 
+    		 spouseGovernmentQuestions.isEndorser = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseEndorser = false;
+ 			spouseGovernmentQuestions.isEndorser = false;
  		 }
 
-    	 if( isSpouseUSCitizen =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseUSCitizen = true;
+    	 if( isUSCitizen =="Yes"){ 
+    		 spouseGovernmentQuestions.isUSCitizen = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseUSCitizen = false;
+ 			spouseGovernmentQuestions.isUSCitizen = false;
  		 }
 
-    	 if( isSpouseOccupyPrimaryResidence =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseOccupyPrimaryResidence = true;
+    	 if( isOccupyPrimaryResidence =="Yes"){ 
+    		 spouseGovernmentQuestions.isOccupyPrimaryResidence = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseOccupyPrimaryResidence = false;
+ 			spouseGovernmentQuestions.isOccupyPrimaryResidence = false;
  		 }
     	 
-    	 if( isSpouseOwnershipInterestInProperty =="Yes"){ 
-    		 spouseGovernmentQuestions.isSpouseOwnershipInterestInProperty = true;
+    	 if( isOwnershipInterestInProperty =="Yes"){ 
+    		 spouseGovernmentQuestions.isOwnershipInterestInProperty = true;
  		 }else{
- 			spouseGovernmentQuestions.isSpouseOwnershipInterestInProperty = false;
+ 			spouseGovernmentQuestions.isOwnershipInterestInProperty = false;
  		 }
     	 
     	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
@@ -3736,11 +3885,76 @@ function paintSpouseCustomerApplicationPageStep4a() {
 
 
 
+
+function paintSpouseGovernmentMonitoringQuestions(quesText, options, name) {
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+		
+	});
+
+	var quesTextCont = $('<div>').attr({
+		"class" : "app-ques-header-txt"
+	}).html(quesText);
+
+	var optionContainer = $('<div>').attr({
+		"class" : "ce-options-cont"
+	});
+
+	for (var i = 0; i < options.length; i++) {
+
+		var optionIncome = $('<div>').attr({
+			"class" : "hide ce-option-ques-wrapper"
+			//"id" : "ce-option_" + i
+		});
+
+		var option = $('<div>').attr({
+			"class" : "ce-option-checkbox",
+			"value" : options[i].value
+		}).html(options[i].text).bind('click', {
+			"option" : options[i],
+			"name" : name
+		}, function(event) {
+			if($(this).hasClass("ce-option-checked")){
+				$(this).removeClass("ce-option-checked");
+			}else{
+				$(this).addClass("ce-option-checked");
+			}
+			/*var key = event.data.name;
+			appUserDetails[key] = event.data.option.value;
+			event.data.option.onselect(event.data.option.value);*/
+			$(".app-ques-container").toggle(function() {
+				
+			});
+		});
+
+		optionContainer.append(option).append(optionIncome);
+	}
+
+	return container.append(quesTextCont).append(optionContainer);
+}
+
+
+
+
+
+
 function paintSpouseCustomerApplicationPageStep4b(){
 	
 	
+	
 	$('#app-right-panel').html('');
-  var quesCont = noThanksContinueDiv();
+    var quesHeaderTxt = "Spouse Government Monitoring Questions";
+
+    var quesHeaderTextCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    });
+
+	var options = [ {
+		"text" : "No thank you. Let’s move on",
+		"name" : name,
+		"value" : 0
+	}];
+	var quesCont = paintSpouseGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
 
 	$('#app-right-panel').append(quesCont);
     
@@ -3818,7 +4032,6 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    });
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
-	
 }
  
 

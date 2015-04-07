@@ -49,6 +49,7 @@ public class TeaserRateHandler extends DefaultHandler {
     			LqbTeaserRateVo rateVo = new LqbTeaserRateVo();
     			rateVo.setTeaserRate(attributes.getValue("Rate"));
     			rateVo.setClosingCost(attributes.getValue("TotalClosingCost"));
+    			rateVo.setAPR(attributes.getValue("APR"));
     			rateVoList.add(rateVo);
     			
     		}
