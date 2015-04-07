@@ -216,19 +216,24 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String joinPDDocuments(List<String> fileUrls) throws IOException,
+	public File joinPDDocuments(List<File> files) throws IOException,
 	        COSVisitorException {
 		PDFMergerUtility mergePDF = new PDFMergerUtility();
 		String newFilePath = this.tomcatDirectoryPath() + File.separator
 		        + randomStringOfLength() + ".pdf";
 
-		for (String fileUrl : fileUrls) {
-			LOGGER.info("Adding File with URL" + fileUrl);
-			mergePDF.addSource(new File(fileUrl));
+		for (File file : files) {
+			LOGGER.info("Adding File with URL" + file);
+			mergePDF.addSource(file);
+			if(file.exists()){
+				file.delete();
+			}
 		}
 		mergePDF.setDestinationFileName(newFilePath);
 		mergePDF.mergeDocuments();
-		return newFilePath;
+		
+		
+		return new File(newFilePath);
 	}
 
 	public String randomStringOfLength() {
