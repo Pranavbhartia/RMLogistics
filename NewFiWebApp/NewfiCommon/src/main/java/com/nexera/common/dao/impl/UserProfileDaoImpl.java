@@ -214,11 +214,11 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		if (user.getEmailId() != null)
 			searchQuery += " emailId like '" + user.getEmailId() + "%' or ";
 
-		if (user.getFirstName() != null)
-
+		if (user.getFirstName() != null) {
 			user.setFirstName(user.getFirstName().toLowerCase());
-		else
+		} else {
 			user.setFirstName("");
+		}
 		searchQuery += " lower(concat( firstName,lastName) ) like '"
 		        + user.getFirstName() + "%'";
 
