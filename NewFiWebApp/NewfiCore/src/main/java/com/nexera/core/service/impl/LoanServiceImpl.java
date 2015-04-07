@@ -54,6 +54,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
+import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanService;
@@ -393,7 +394,7 @@ public class LoanServiceImpl implements LoanService {
 			loanCustomerVO.setRole(user.getUserRole().getLabel());
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
-		// TODO get these hard coded data from entity
+
 		boolean processorPresent = Boolean.FALSE;
 		if (loan.getLoanTeam() != null) {
 			List<LoanTeam> loanTeamList = loan.getLoanTeam();
@@ -426,8 +427,9 @@ public class LoanServiceImpl implements LoanService {
 			        customerDetail.getEquifaxScore(),
 			        customerDetail.getExperianScore()));
 
+		} else {
+			loanCustomerVO.setCredit_score("-");
 		}
-		loanCustomerVO.setCredit_score("-");
 
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
@@ -461,22 +463,23 @@ public class LoanServiceImpl implements LoanService {
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
 		if (transunionScore != null && !transunionScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.EQ + transunionScore
+			creditScore = creditScore + CommonConstants.TU + transunionScore
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		} else {
-			creditScore = creditScore + CommonConstants.EQ
+			creditScore = creditScore + CommonConstants.TU
 			        + CommonConstants.UNKNOWN_SCORE
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
 
 		if (experianScore != null && !experianScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.EQ + experianScore
+			creditScore = creditScore + CommonConstants.EX + experianScore
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		} else {
-			creditScore = creditScore + CommonConstants.EQ
+			creditScore = creditScore + CommonConstants.EX
 			        + CommonConstants.UNKNOWN_SCORE
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
+
 		return creditScore;
 	}
 
@@ -1015,7 +1018,7 @@ public class LoanServiceImpl implements LoanService {
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
 	}
-	
+
 	@Transactional
 	@Override
 	public int getApplicationFee(int loanId) throws NoRecordsFetchedException,
@@ -1117,5 +1120,39 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
 		return loanMilestoneMasterDao.loadAll(LoanMilestoneMaster.class);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public UserLoanStatus getUserLoanStaus(LoanVO loan) {
+
+		UserLoanStatus loanStatus = new UserLoanStatus();
+
+		loanStatus.setLoanPurpose(loan.getLoanType().getDescription());
+
+		CustomerDetail customerDetail = userProfileService
+		        .getCustomerDetail(loan.getUser().getId());
+
+		if (customerDetail != null) {
+			// constructCreditScore(customerDetail.get);
+			loanStatus.setCreditInformation(constrtCreditScore(
+			        customerDetail.getTransunionScore(),
+			        customerDetail.getEquifaxScore(),
+			        customerDetail.getExperianScore()));
+
+		} else {
+			loanStatus.setCreditInformation("-");
+		}
+		// TODO: Currently hard coding
+		loanStatus.setCreditDecission("N.A");
+		if (loan.getLockedRate() != null) {
+			loanStatus.setLockRate(loan.getLockedRate().toString());
+		} else {
+			loanStatus.setLockRate("Not Locked");
+		}
+		// TODO: We do not know how to get this information
+		loanStatus.setLockExpiryDate(null);
+
+		return loanStatus;
 	}
 }

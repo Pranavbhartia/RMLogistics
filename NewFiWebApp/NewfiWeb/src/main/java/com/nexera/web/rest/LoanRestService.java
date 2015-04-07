@@ -74,6 +74,7 @@ public class LoanRestService {
 		if (loanVO != null) {
 			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
 			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
+			loanVO.setUserLoanStatus(loanService.getUserLoanStaus(loanVO));
 		}
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
@@ -84,9 +85,9 @@ public class LoanRestService {
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO addToLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID",required=false) Integer userID,
-	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
-	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
+	        @RequestParam(value = "userID", required = false) Integer userID,
+	        @RequestParam(value = "titleCompanyID", required = false) Integer titleCompanyID,
+	        @RequestParam(value = "homeOwnInsCompanyID", required = false) Integer homeOwnInsCompanyID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 
@@ -104,7 +105,7 @@ public class LoanRestService {
 			}
 			editLoanTeamVO.setOperationResult(result);
 			editLoanTeamVO.setUser(user);
-			
+
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
@@ -121,8 +122,7 @@ public class LoanRestService {
 			editLoanTeamVO.setOperationResult(true);
 		} else
 			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
-		
-		
+
 		CommonResponseVO responseVO = RestUtil
 		        .wrapObjectForSuccess(editLoanTeamVO);
 
@@ -133,13 +133,13 @@ public class LoanRestService {
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.DELETE)
 	public @ResponseBody CommonResponseVO removeFromLoanTeam(
 	        @PathVariable Integer loanID,
-	        @RequestParam(value = "userID",required=false) Integer userID,
-	        @RequestParam(value = "titleCompanyID",required=false) Integer titleCompanyID,
-	        @RequestParam(value = "homeOwnInsCompanyID",required=false) Integer homeOwnInsCompanyID) {
+	        @RequestParam(value = "userID", required = false) Integer userID,
+	        @RequestParam(value = "titleCompanyID", required = false) Integer titleCompanyID,
+	        @RequestParam(value = "homeOwnInsCompanyID", required = false) Integer homeOwnInsCompanyID) {
 
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
-		
+
 		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
 		editLoanTeamVO.setUserID(userID);
 		editLoanTeamVO.setLoanID(loanID);
@@ -187,7 +187,8 @@ public class LoanRestService {
 	        @PathVariable Integer loanID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
-		ExtendedLoanTeamVO extendedLoanTeamVO = loanService.findExtendedLoanTeam(loan);
+		ExtendedLoanTeamVO extendedLoanTeamVO = loanService
+		        .findExtendedLoanTeam(loan);
 		CommonResponseVO responseVO = RestUtil
 		        .wrapObjectForSuccess(extendedLoanTeamVO);
 
@@ -195,8 +196,8 @@ public class LoanRestService {
 	}
 
 	@RequestMapping(value = "/{loanID}/manager", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO retreiveLoanManagers(@PathVariable Integer loanID) {
+	public @ResponseBody CommonResponseVO retreiveLoanManagers(
+	        @PathVariable Integer loanID) {
 		LoanVO loan = new LoanVO();
 		loan.setId(loanID);
 		List<UserVO> team = loanService.retreiveLoanManagers(loan);
@@ -340,23 +341,23 @@ public class LoanRestService {
 
 		return RestUtil.wrapObjectForSuccess(vo);
 	}
+
 	@RequestMapping(value = "/loanTurnAroundTime/{loanId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO addLoanTurnArounTime(
-	        @PathVariable  Integer loanId) {
-		 loanService.saveAllLoanTurnAroundTimeForLoan(loanId);
-		 CommonResponseVO commonResponseVO=new CommonResponseVO();
-		 return RestUtil.wrapObjectForSuccess(commonResponseVO);
+	        @PathVariable Integer loanId) {
+		loanService.saveAllLoanTurnAroundTimeForLoan(loanId);
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		return RestUtil.wrapObjectForSuccess(commonResponseVO);
 	}
-	
+
 	@RequestMapping(value = "/TurnAroundTime/{loanId}/{workFlowItemId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO retrieveLoanTurnArounTime(
-	        @PathVariable  Integer loanId
-	        ,@PathVariable  Integer workFlowItemId) {
-		 LoanTurnAroundTimeVO aroundTimeVO= loanService.
-				 retrieveTurnAroundTimeByLoan(loanId,workFlowItemId);
-		 CommonResponseVO commonResponseVO=new CommonResponseVO();
-		 commonResponseVO.setResultObject(aroundTimeVO);
-		 return RestUtil.wrapObjectForSuccess(commonResponseVO);
+	        @PathVariable Integer loanId, @PathVariable Integer workFlowItemId) {
+		LoanTurnAroundTimeVO aroundTimeVO = loanService
+		        .retrieveTurnAroundTimeByLoan(loanId, workFlowItemId);
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		commonResponseVO.setResultObject(aroundTimeVO);
+		return RestUtil.wrapObjectForSuccess(commonResponseVO);
 	}
-	
+
 }

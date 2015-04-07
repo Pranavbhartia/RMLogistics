@@ -991,12 +991,13 @@ function appendCustomerLoanDetails(loanDetails) {
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
-	appendLoanDetailsRow("Lock Rate Details", "4.75 %");
-	appendLoanDetailsRow("Lock Expiration Date", "02/21/2015");
+	
+	appendLoanDetailsRow("Lock Rate Details", loanDetails.userLoanStatus.lockRate);
+	appendLoanDetailsRow("Lock Expiration Date",loanDetails.userLoanStatus);
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
-	appendLoanDetailsRow("Credit", "TU-646 | EQ-686 | EX-685", true);
-	appendLoanDetailsRow("Credit Decision", "Pass");
-	appendLoanDetailsRow("Loan Purpose", "Purchase TBD");
+	appendLoanDetailsRow("Credit", loanDetails.userLoanStatus.creditInformation, true);
+	appendLoanDetailsRow("Credit Decision", loanDetails.userLoanStatus.creditDecission);
+	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
     appendCustomerEditProfilePopUp();
 
 }
