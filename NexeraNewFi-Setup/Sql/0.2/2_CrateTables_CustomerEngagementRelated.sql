@@ -450,4 +450,10 @@ CREATE TABLE `spousegovernmentquestion` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+
+-- Dump completed on 2015-04-03 12:34:06
+
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`) VALUES ('5', 'REFMF', 'PayOffMortgageFaster');
+
 -- Dump completed on 2015-04-06  0:06:34
+
