@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanTeam;
@@ -121,7 +122,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
@@ -137,7 +138,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference WHERE customerdetail.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
@@ -155,10 +156,40 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	public Integer updateCustomerScore(CustomerDetail customerDetail) {
+
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.equifaxScore = :equifax,customerdetail.experianScore =:experian,customerdetail.transunionScore=:transunion WHERE customerdetail.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("equifax", customerDetail.getEquifaxScore());
+		query.setParameter("experian", customerDetail.getExperianScore());
+		query.setParameter("transunion", customerDetail.getTransunionScore());
+		query.setParameter("id", customerDetail.getId());
+		int result = query.executeUpdate();
+		return result;
+	}
+
+	@Override
+	public Integer updateCustomerSpouseScore(
+	        CustomerSpouseDetail customerSpouseDetail) {
+
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE CustomerSpouseDetail customerSpouseDetail set customerSpouseDetail.equifaxScore = :equifax,customerSpouseDetail.experianScore =:experian,customerSpouseDetail.transunionScore=:transunion WHERE customerSpouseDetail.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("equifax", customerSpouseDetail.getEquifaxScore());
+		query.setParameter("experian", customerSpouseDetail.getExperianScore());
+		query.setParameter("transunion",
+		        customerSpouseDetail.getTransunionScore());
+		query.setParameter("id", customerSpouseDetail.getId());
+		int result = query.executeUpdate();
+		return result;
+	}
+
+	@Override
 	public Integer updateUser(String s3ImagePath, Integer userid) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.photoImageUrl = :imagePath WHERE usr.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("imagePath", s3ImagePath);
 		query.setParameter("id", userid);
 		int result = query.executeUpdate();
@@ -185,7 +216,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 			String hql = "UPDATE User usr set usr.password ='"
 			        + userVO.getPassword() + "' where usr.id=" + userVO.getId();
-			Query query = (Query) session.createQuery(hql);
+			Query query = session.createQuery(hql);
 
 			rowEffected = query.executeUpdate();
 
@@ -295,7 +326,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
@@ -310,7 +341,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer completeCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
@@ -329,7 +360,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer managerUpdateUserProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
@@ -343,7 +374,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob WHERE customerdetail.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
@@ -461,6 +492,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return imageVOs;
 	}
 
+	@Override
 	public User saveUser(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
@@ -667,7 +699,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public void updateLoginTime(Date date, int userId) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.lastLoginDate=:DATE WHERE usr.id = :ID";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("ID", userId);
 		query.setTimestamp("DATE", date);
 		int result = query.executeUpdate();
@@ -678,7 +710,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateInternalUserDetail(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE InternalUserDetail internalusr set internalusr.activeInternal = :activeInternal WHERE internalusr.id = :id";
-		Query query = (Query) session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("id", user.getInternalUserDetail().getId());
 		query.setParameter("activeInternal", user.getInternalUserDetail()
 		        .getActiveInternal());

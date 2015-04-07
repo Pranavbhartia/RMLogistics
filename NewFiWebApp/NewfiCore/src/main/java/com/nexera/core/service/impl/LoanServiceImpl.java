@@ -987,4 +987,11 @@ public class LoanServiceImpl implements LoanService {
 	public List<Loan> getLoansInActiveStatus() {
 		return loanDao.getLoanInActiveStatus();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		return loanMilestoneMasterDao.loadAll(LoanMilestoneMaster.class);
+	}
 }

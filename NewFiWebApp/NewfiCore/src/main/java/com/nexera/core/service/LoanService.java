@@ -131,4 +131,6 @@ public interface LoanService {
 	        NeedsListMaster needsListMaster);
 
 	public void updateLoan(Loan loan);
+
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList();
 }

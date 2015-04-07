@@ -38,6 +38,7 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
@@ -243,6 +244,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return number;
 	}
 
+	@Override
 	public List<UserVO> searchUsers(UserVO userVO) {
 
 		return this.buildUserVOList(userProfileDao.searchUsers(User
@@ -450,7 +452,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (userID > 0) {
 			// && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
 			// .getRoleId()) {
-			newUser = (User) userProfileDao.findInternalUser(userID);
+			newUser = userProfileDao.findInternalUser(userID);
 			return User.convertFromEntityToVO(newUser);
 		}
 		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
@@ -486,6 +488,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
+	@Override
 	public User findUserByMail(String userMailAddress) {
 
 		User user = null;
@@ -513,11 +516,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// 1st create a entry in the customer details table
 		// use that id to put in the user table .
 
-		Integer userID = (Integer) userProfileDao.saveCustomerDetails(User
+		Integer userID = userProfileDao.saveCustomerDetails(User
 		        .convertFromVOToEntity(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
-			user = (User) userProfileDao.findInternalUser(userID);
+			user = userProfileDao.findInternalUser(userID);
 
 		return User.convertFromEntityToVO(user);
 
@@ -556,6 +559,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return internalUserDetailVO;
 	}
 
+	@Override
 	@Transactional
 	public List<User> fetchAllActiveUsers() {
 		return userProfileDao.fetchAllActiveUsers();
@@ -958,5 +962,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void crateWorkflowItems(int defaultLoanId) throws Exception {
 		// TODO Auto-generated method stub
 		workflowCoreService.createWorkflow(new WorkflowVO(defaultLoanId));
+	}
+
+	@Override
+	public void updateCustomerScore(CustomerDetail customerDetail) {
+		userProfileDao.updateCustomerScore(customerDetail);
+
+	}
+
+	@Override
+	public void updateCustomerSpouseScore(
+	        CustomerSpouseDetail customerSpouseDetail) {
+		userProfileDao.updateCustomerSpouseScore(customerSpouseDetail);
+
 	}
 }

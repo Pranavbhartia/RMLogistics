@@ -20,7 +20,6 @@ import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
-import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.exception.FatalException;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.BatchService;
@@ -62,7 +61,7 @@ public class LoanBatchProcessor extends QuartzJobBean {
 								ThreadManager threadManager = applicationContext
 								        .getBean(ThreadManager.class);
 								threadManager
-								        .setLoanMilestoneMasterList(getLoanMilestoneMasterByLoanType(loan));
+								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
 								threadManager.setLoan(loan);
 								taskExecutor.execute(threadManager);
 							}
@@ -112,10 +111,10 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		return batchService.getBatchJobMasterById(batchJobId);
 	}
 
-	private List<LoanMilestoneMaster> getLoanMilestoneMasterByLoanType(Loan loan) {
-		LOGGER.debug("Inside method getLoanMilestoneMasterByLoan ");
-		LoanTypeMaster loanTypeMaster = loan.getLoanType();
-		return loanService.getLoanMilestoneByLoanType(loanTypeMaster);
+	private List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		LOGGER.debug("Inside method getLoanMilestoneMasterList ");
+
+		return loanService.getLoanMilestoneMasterList();
 	}
 
 	private ThreadPoolTaskExecutor getTaskExecutor() {
