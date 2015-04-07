@@ -117,17 +117,21 @@ function getLoanPersonalInfoContainer(user) {
 	
 	var stateRow = getManagerStateRow(user);
 	container.append(stateRow);
- 	userStateMappingVOs=user.internalUserStateMappingVOs;
-
-	states.length = 0;
-	internalUserStates.length=0;
-	for(var i=0;i<userStateMappingVOs.length;i++) {
-			states.push(userStateMappingVOs[i].stateId.toString());
-			internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
-        }
-	var stateTextRow = getStateTextRow();
-	container.append(stateTextRow);
 	
+	if(user.internalUserStateMappingVOs!=undefined){
+		userStateMappingVOs=user.internalUserStateMappingVOs;
+
+		states.length = 0;
+		internalUserStates.length=0;
+		for(var i=0;i<userStateMappingVOs.length;i++) {
+				states.push(userStateMappingVOs[i].stateId.toString());
+				internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+	        }
+		var stateTextRow = getStateTextRow();
+		container.append(stateTextRow);
+	
+	}
+ 		
  
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
