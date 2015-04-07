@@ -23,6 +23,12 @@ public class CreateReminderVo {
 		this.notificationReminderContent = notificationReminderContent;
 	}
 
+	public CreateReminderVo(MilestoneNotificationTypes notificationType,
+	        int loanId, String notificationReminderContent) {
+		this.notificationType = notificationType;
+		this.loanId = loanId;
+		this.notificationReminderContent = notificationReminderContent;
+	}
 	public CreateReminderVo() {
 
 	}

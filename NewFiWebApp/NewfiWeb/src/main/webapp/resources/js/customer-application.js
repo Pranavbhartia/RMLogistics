@@ -1056,31 +1056,69 @@ function paintMyIncome() {
 		var questionsContainer10 = paintSaleOfCurrentHome();
 		        questcontainer.append(paintSaleOfCurrentHomeDIV);
     }
+   
+   
+   
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
-    }).html("Save & continue").on('click', function(event) {
+        "class": "ce-save-btn"
+    }).html("Save1 & continue").on('click', function(event) {
+    
+    
+    
+    
         EmployedIncomePreTax = $('input[name="beforeTax"]').val();
         EmployedAt = $('input[name="workPlace"]').val();
         EmployedSince = $('input[name="startWorking"]').val();
         selfEmployedIncome = $('input[name="selfEmployed"]').val();
         ssDisabilityIncome = $('input[name="disability"]').val();
         monthlyPension = $('input[name="pension"]').val();
-        appUserDetails.user.customerDetail.customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-        appUserDetails.user.customerDetail.customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-        appUserDetails.user.customerDetail.customerEmploymentIncome.employedAt = EmployedAt;
-        appUserDetails.user.customerDetail.customerEmploymentIncome.employedSince = EmployedSince;
-        if (monthlyPension != "" && monthlyPension != undefined) {
-            appUserDetails.user.customerDetail.isselfEmployed = true;
-            appUserDetails.user.customerDetail.monthlyPension = monthlyPension;
-        }
-        if (selfEmployedIncome != "" && selfEmployedIncome != undefined) {
-            appUserDetails.user.customerDetail.ispensionOrRetirement = true;
-            appUserDetails.user.customerDetail.selfEmployedIncome = selfEmployedIncome;
-        }
-        if (ssDisabilityIncome != "" && ssDisabilityIncome != undefined) {
-            appUserDetails.user.customerDetail.isssIncomeOrDisability = true;
-            appUserDetails.user.customerDetail.ssDisabilityIncome = ssDisabilityIncome;
-        }
+       
+       
+					
+				
+				 var  customerEmploymentIncome1 = [];
+        var temp = new Object();
+
+        customerEmploymentIncome = {};
+        customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
+        customerEmploymentIncome.employedAt =EmployedAt;
+        customerEmploymentIncome.employedSince=EmployedSince;
+  temp.customerEmploymentIncome=customerEmploymentIncome;
+customerEmploymentIncome1.push(temp);
+      appUserDetails.customerEmploymentIncome=customerEmploymentIncome1;
+   
+
+		
+				
+			 
+				
+				if(monthlyPension != "" && monthlyPension != undefined){
+					
+					appUserDetails.ispensionOrRetirement= true;
+					appUserDetails.monthlyPension =monthlyPension;
+				}
+				
+				
+				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
+					
+					appUserDetails.isselfEmployed = true;
+					appUserDetails.selfEmployedIncome =selfEmployedIncome;
+				}
+				
+				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
+					
+					appUserDetails.isssIncomeOrDisability=true;
+					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
+				}
+				
+				
+				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+				
+				
+       
+
+       
         homelistprice = $('input[name="homelistprice"]').val();
         homemortgagebalance = $('input[name="homemortgagebalance"]').val();
         inverstInPurchase = $('input[name="inverstInPurchase"]').val();
@@ -1088,25 +1126,25 @@ function paintMyIncome() {
         accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
         currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
         amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
-        appUserDetails.user.customerDetail.customerBankAccountDetails.accountSubType = accountSubType;
-        appUserDetails.user.customerDetail.customerBankAccountDetails.currentAccountBalance = currentAccountBalance;
-        appUserDetails.user.customerDetail.customerBankAccountDetails.amountForNewHome = amountForNewHome;
+      //  appUserDetails.customerBankAccountDetails.accountSubType = accountSubType;
+        //appUserDetails.customerBankAccountDetails.currentAccountBalance = currentAccountBalance;
+        //appUserDetails.customerBankAccountDetails.amountForNewHome = amountForNewHome;
         /* Bank Account End*/
         /* Retirement Account Start*/
-        accountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
+        //accountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
         currentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
         accountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
-        appUserDetails.user.customerDetail.customerRetirementAccountDetails.accountSubType = accountSubType;
-        appUserDetails.user.customerDetail.customerRetirementAccountDetails.currentAccountBalance = currentAccountBalance;
-        appUserDetails.user.customerDetail.customerRetirementAccountDetails.amountForNewHome = accountTypeUseForNewHome;
+       // appUserDetails.customerRetirementAccountDetails.accountSubType = accountSubType;
+        //appUserDetails.customerRetirementAccountDetails.currentAccountBalance = currentAccountBalance;
+        //appUserDetails.customerRetirementAccountDetails.amountForNewHome = accountTypeUseForNewHome;
         /* Retirement Account Ends*/
         /* Other Account Start*/
         otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
         otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
         otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
-        appUserDetails.user.customerDetail.customerOtherAccountDetails.accountSubType = otherAccountName;
-        appUserDetails.user.customerDetail.customerOtherAccountDetails.currentAccountBalance = otherAccountCurrentBankBalance;
-        appUserDetails.user.customerDetail.customerOtherAccountDetails.amountForNewHome = otherAccountsUseForNewHome;
+       // appUserDetails.customerOtherAccountDetails.accountSubType = otherAccountName;
+        //appUserDetails.customerOtherAccountDetails.currentAccountBalance = otherAccountCurrentBankBalance;
+        //appUserDetails.customerOtherAccountDetails.amountForNewHome = otherAccountsUseForNewHome;
         /* Other Account Ends*/
         /*appUserDetails.homelistprice = homelistprice;
              appUserDetails.homemortgagebalance = homemortgagebalance;
@@ -1793,85 +1831,19 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			
 			$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
 		});
-		
+	
+		if(i==0){
 		optionsWrapper.append(addAccountBtn);
+		}
 		optionContainer.append(optionsWrapper);
 	}
-
-	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
-	}).html("Save & Continue").bind('click',function() {
-		        console.log('inside save n continue');
-		        EmployedIncomePreTax= $('input[name="beforeTax"]').val();
-		     
-		     
-		        EmployedAt = $('input[name="workPlace"]').val();
-		        EmployedSince = $('input[name="startWorking"]').val();
-				
-		        selfEmployedIncome = $('input[name="selfEmployed"]').val();
-		        
-		        ssDisabilityIncome = $('input[name="disability"]').val();
-				
-		        monthlyPension = $('input[name="pension"]').val();
-
-					
-				
-				 var  customerEmploymentIncome1 = [];
-        var temp = new Object();
-
-        customerEmploymentIncome = {};
-        customerEmploymentIncome.employedIncomePreTax = EmployedIncomePreTax;
-        customerEmploymentIncome.employedAt =EmployedAt;
-        customerEmploymentIncome.employedSince=EmployedSince;
-  temp.customerEmploymentIncome=customerEmploymentIncome;
-customerEmploymentIncome1.push(temp);
-      appUserDetails.customerEmploymentIncome=customerEmploymentIncome1;
-   
-
-		
-				
-			 
-				
-				if(monthlyPension != "" && monthlyPension != undefined){
-					
-					appUserDetails.ispensionOrRetirement= true;
-					appUserDetails.monthlyPension =monthlyPension;
-				}
-				
-				
-				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
-					
-					appUserDetails.isselfEmployed = true;
-					appUserDetails.selfEmployedIncome =selfEmployedIncome;
-				}
-				
-				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
-					
-					appUserDetails.isssIncomeOrDisability=true;
-					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
-				}
-				
-				
-				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-				
-				
-				if(appUserDetails.isSpouseOnLoan == true)
-				{
-				saveAndUpdateLoanAppForm(appUserDetails,paintMySpouseIncome());
-				}else{
-				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
-				}
-				//paintCustomerApplicationPageStep4a();
-			});
 
 if(purchase ==true)
 {
 return container.append(quesTextCont).append(optionContainer);
 }
 
-	return container.append(quesTextCont).append(optionContainer).append(
-			saveBtn);
+	return container.append(quesTextCont).append(optionContainer);
 }
 
 
@@ -3095,8 +3067,8 @@ function paintRefinanceStep3() {
 		
 			refinancedetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
 			refinancedetails.isIncludeTaxes = quesContxts[1].value;
-			propertyTypeMaster.annualPropertyTaxes = $('input[name="annualPropertyTaxes"]').val();
-			propertyTypeMaster.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
+			propertyTypeMaster.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
+			propertyTypeMaster.propertyInsuranceCost = $('input[name="annualHomeownersInsurance"]').val();
 		  appUserDetails.refinancedetails=refinancedetails;
 		  appUserDetails.propertyTypeMaster=propertyTypeMaster;
 		    saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1a());

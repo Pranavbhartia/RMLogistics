@@ -65,6 +65,8 @@ public interface LoanService {
 
 	public List<Loan> getAllLoans();
 
+	public List<Loan> getLoansInActiveStatus();
+
 	// TODO added for loan rest service
 	public LoanVO createLoan(LoanVO loanVO);
 
@@ -131,4 +133,6 @@ public interface LoanService {
 	        NeedsListMaster needsListMaster);
 	
 	public int getApplicationFee(int loanId) throws NoRecordsFetchedException, InvalidInputException;
+
+	public void updateLoan(Loan loan);
 }
