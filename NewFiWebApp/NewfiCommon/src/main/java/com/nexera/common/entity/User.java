@@ -408,12 +408,15 @@ public class User implements Serializable, UserDetails {
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
+			
+			if(null!=user.getInternalUserStateMappings()){
 			List<InternalUserStateMappingVO> internalUserStateMappingVOs=new ArrayList<InternalUserStateMappingVO>();
-			for (InternalUserStateMapping internalUserStateMapping : user.getInternalUserStateMappings()) {
-				internalUserStateMappingVOs.add(InternalUserStateMapping.convertFromEntityToVO(internalUserStateMapping));
+				for (InternalUserStateMapping internalUserStateMapping : user.getInternalUserStateMappings()) {
+					internalUserStateMappingVOs.add(InternalUserStateMapping.convertFromEntityToVO(internalUserStateMapping));
+				}
+				
+				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
-			userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
-
 		}
 		return userVO;
 	}

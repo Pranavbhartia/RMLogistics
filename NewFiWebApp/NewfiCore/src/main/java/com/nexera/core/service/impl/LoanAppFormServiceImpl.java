@@ -229,6 +229,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 refinanceVO.setCurrentMortgageBalance(refinancedetails.getCurrentMortgageBalance());
 		 refinanceVO.setCurrentMortgagePayment(refinancedetails.getCurrentMortgagePayment());
 		 refinanceVO.setIncludeTaxes(refinancedetails.isIncludeTaxes());
+		 refinanceVO.setSecondMortageBalance(refinancedetails.getSecondMortageBalance());
+		 refinanceVO.setMortgageyearsleft(refinancedetails.getMortgageyearsleft());
+		 refinanceVO.setCashTakeOut(refinancedetails.getCashTakeOut());
 		  
 		 return refinanceVO;
 	    }

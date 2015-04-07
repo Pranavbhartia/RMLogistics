@@ -913,8 +913,9 @@ function paintRefinanceSeeRates() {
                 $('#overlay-loader').hide();
                 // var teaserRate = data;
                 // paintteaserRate(data);
-                // paintteaserRate(teaserRate);
-                               paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
+                  
+                  //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
+                  paintFixYourRatePageCEP(teaserRate, refinanceTeaserRate);
             },
             error: function() {
                 alert("error");
