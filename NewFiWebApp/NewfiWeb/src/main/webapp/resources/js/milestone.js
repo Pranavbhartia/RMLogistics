@@ -1261,11 +1261,13 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
-		url = "rest/payment/pay";
+		url = "/NewfiWeb/payment/initialisepayment.do";
+		payload = "loan_id=" + String(newfiObject.user.defaultLoanId);
 		
 		 $.ajax({
 		        url : url,
-		        type : "GET",
+		        type : "POST",
+		        data : payload,
 		        success : function(data) {
 		        	console.log("Show payment called with data : " + data);
 		        	$("#popup-overlay").html(data);
