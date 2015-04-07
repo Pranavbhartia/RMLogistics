@@ -39,7 +39,7 @@ function getRatesTable(rateObjArray,title){
     container.append(tableHeader);
     
     for(var i=0;i<rateObjArray.length;i++){
-    	if(i>=7){
+    	if(i>=12){
     		break;
     	}
         var tableRow = getRatesTableRow(rateObjArray[i]);
