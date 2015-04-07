@@ -8,10 +8,11 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 public class CreateReminderVo {
 	private MilestoneNotificationTypes notificationType;
 	private int loanId;
+	private int userID;
 	private int workflowItemExecutionId;
 	private String prevMilestoneKey;
 	private String notificationReminderContent;
-
+	private boolean forCustomer;
 	public CreateReminderVo(MilestoneNotificationTypes notificationType,
 	        int loanId,
 			int workflowItemExecutionId, String prevMilestoneKey,
@@ -73,5 +74,21 @@ public class CreateReminderVo {
 			String notificationReminderContent) {
 		this.notificationReminderContent = notificationReminderContent;
 	}
+
+	public int getUserID() {
+	    return userID;
+    }
+
+	public void setUserID(int userID) {
+	    this.userID = userID;
+    }
+
+	public boolean isForCustomer() {
+	    return forCustomer;
+    }
+
+	public void setForCustomer(boolean forCustomer) {
+	    this.forCustomer = forCustomer;
+    }
 
 }

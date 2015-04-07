@@ -9,7 +9,7 @@ import com.nexera.workflow.utils.Util;
 
 @Component
 public class GenerateDynamicString {
-	public String generate(String initialString,Date startedDate) {
+	public String generate(String initialString, Date startedDate, int loanId) {
 
 		while (initialString.indexOf("{") >= 0) {
 			int startIndx = initialString.indexOf("{");
@@ -30,6 +30,15 @@ public class GenerateDynamicString {
 					resultStr.append(timeLeft);
 					resultStr.append(" ");
 					break;
+				case "columnFetch":
+					String[] inputs = key.split("[&]");
+					switch(inputs[0]){
+					case "CustomerDetail":
+						
+						break;
+					}
+					resultStr.append(inputs[0]);
+					break;
 				default:
 					break;
 				}
@@ -39,11 +48,12 @@ public class GenerateDynamicString {
 		return initialString;
 	}
 
-	/*
-	 * public static void main(String[] args) { String demoStr =
-	 * "Disclosures are due in {\"72\":\"elapsed\"} hrs. {\"50\":\"elapsed\"}";
-	 * 
-	 * GenerateDynamicString dynamicStrGenerator = new GenerateDynamicString();
-	 * dynamicStrGenerator.generate(demoStr, new Date()); }
-	 */
+	
+	public static void main(String[] args) {
+		String demoStr = "Disclosures are due in {\"CustomerDetail&profileCompletionStatus\":\"columnFetch\"} hrs. {\"50\":\"elapsed\"}";
+
+		GenerateDynamicString dynamicStrGenerator = new GenerateDynamicString();
+		dynamicStrGenerator.generate(demoStr, new Date(), 0);
+	}
+	 
 }

@@ -75,7 +75,6 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	}
 
 	public String updateLMReminder(CreateReminderVo createReminderVo) {
-
 		WorkflowItemExec currMilestone = workflowService
 		        .getWorkflowExecById(createReminderVo
 		                .getWorkflowItemExecutionId());
@@ -83,6 +82,9 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		        WorkItemStatus.NOT_STARTED.getStatus())) {
 			LoanVO loanVO = loanService.getLoanByID(createReminderVo
 			        .getLoanId());
+			if (createReminderVo.isForCustomer())
+				createReminderVo.setUserID(loanVO.getUser() != null ? loanVO
+				        .getUser().getId() : 0);
 			WorkflowExec workflowExec = new WorkflowExec();
 			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
 			WorkflowItemMaster workflowItemMaster = workflowService
@@ -140,13 +142,23 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	    	                .getNotificationType()
 	    	                .getNotificationTypeName(),
 	    	        createReminderVo.getNotificationReminderContent());
-	    	List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
-	    	userRoles.add(UserRolesEnum.INTERNAL);
-	    	List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
-	    	internalUserRoles.add(InternalUserRolesEum.LM);
-	    	notificationService.createRoleBasedNotification(notificationVO,
-	    	        userRoles, internalUserRoles);
+			if (!createReminderVo.isForCustomer())
+				createNotificationForLM(notificationVO);
+			else {
+				notificationVO.setCreatedForID(createReminderVo.getUserID());
+				notificationVO.setTimeOffset(new Date().getTimezoneOffset());
+				notificationService.createNotification(notificationVO);
+			}
 	    }
+    }
+
+	private void createNotificationForLM(NotificationVO notificationVO) {
+	    List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
+	    userRoles.add(UserRolesEnum.INTERNAL);
+	    List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
+	    internalUserRoles.add(InternalUserRolesEum.LM);
+	    notificationService.createRoleBasedNotification(notificationVO,
+	            userRoles, internalUserRoles);
     }
 
 	public void sendReminder(CreateReminderVo createReminderVo,
