@@ -14,11 +14,17 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class LqbInvoker {
 
-	@Value("${muleUrl}")
-	private String muleUrl;
+	@Value("${muleUrlForLoan}")
+	private String muleUrlForLoan;
 
 	@Value("${muleUrlForDocs}")
 	private String muleUrlForDocs;
+
+	@Value("${muleUrlForAuth}")
+	private String muleUrlForAuth;
+
+	@Value("${muleUrlForAppView}")
+	private String muleUrlForAppView;
 
 	public JSONObject invokeLqbService(String formData) {
 		return invokeRestSpringParseObj(formData);
@@ -31,8 +37,34 @@ public class LqbInvoker {
 		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
 
-		String returnedUser = restTemplate.postForObject(muleUrl, request,
-		        String.class);
+		String returnedUser = restTemplate.postForObject(muleUrlForLoan,
+		        request, String.class);
+		JSONObject jsonObject = new JSONObject(returnedUser);
+		return jsonObject;
+	}
+
+	public String invokeRestSpringParseObjForAuth(String formData) {
+
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
+		RestTemplate restTemplate = new RestTemplate();
+
+		String returnedUser = restTemplate.postForObject(muleUrlForAuth,
+		        request, String.class);
+
+		return returnedUser;
+	}
+
+	public JSONObject invokeRestSpringParseObjForAppView(String formData) {
+
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
+		RestTemplate restTemplate = new RestTemplate();
+
+		String returnedUser = restTemplate.postForObject(muleUrlForAppView,
+		        request, String.class);
 		JSONObject jsonObject = new JSONObject(returnedUser);
 		return jsonObject;
 	}

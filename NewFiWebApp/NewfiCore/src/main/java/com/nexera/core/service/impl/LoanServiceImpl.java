@@ -946,4 +946,17 @@ public class LoanServiceImpl implements LoanService {
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
 	}
+
+	@Override
+	@Transactional
+	public void updateLoan(Loan loan) {
+		loanDao.update(loan);
+
+	}
+
+	@Override
+	@Transactional
+	public List<Loan> getLoansInActiveStatus() {
+		return loanDao.getLoanInActiveStatus();
+	}
 }

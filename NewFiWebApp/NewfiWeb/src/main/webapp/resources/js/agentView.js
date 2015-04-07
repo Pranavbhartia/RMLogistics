@@ -2349,7 +2349,14 @@ function getCreateTitleCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
-								ob.addCompanyToTeamList();
+								var input={titleCompanyID:response.resultObject.id};
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(input,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(input,
+											selectedUserDetail.loanID);
+								/*ob.addCompanyToTeamList();*/
 							}
 							
 						});

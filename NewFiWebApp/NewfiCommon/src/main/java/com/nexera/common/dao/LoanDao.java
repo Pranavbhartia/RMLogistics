@@ -106,6 +106,8 @@ public interface LoanDao extends GenericDao {
 
 	public boolean checkLoanDependency(User user);
 
+	public List<Loan> getLoanInActiveStatus();
+
 	public void updateWorkFlowItems(int loanID, int customerWorkflowID,
 	        int loanManagerWFID);
 

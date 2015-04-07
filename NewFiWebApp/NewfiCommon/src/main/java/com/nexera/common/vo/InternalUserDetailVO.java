@@ -11,6 +11,8 @@ public class InternalUserDetailVO implements Serializable {
 	private UserVO user;
 	private UserVO manager;
 	private InternalUserRoleMasterVO internalUserRoleMasterVO;
+	private String lqbUsername;
+	private String lqbPassword;
 
 	public int getId() {
 		return id;
@@ -49,8 +51,24 @@ public class InternalUserDetailVO implements Serializable {
 	}
 
 	public void setInternalUserRoleMasterVO(
-			InternalUserRoleMasterVO internalUserRoleMasterVO) {
+	        InternalUserRoleMasterVO internalUserRoleMasterVO) {
 		this.internalUserRoleMasterVO = internalUserRoleMasterVO;
+	}
+
+	public String getLqbUsername() {
+		return lqbUsername;
+	}
+
+	public void setLqbUsername(String lqbUsername) {
+		this.lqbUsername = lqbUsername;
+	}
+
+	public String getLqbPassword() {
+		return lqbPassword;
+	}
+
+	public void setLqbPassword(String lqbPassword) {
+		this.lqbPassword = lqbPassword;
 	}
 
 }
