@@ -328,7 +328,7 @@ public class ThreadManager implements Runnable {
 		invokeUnderwritingCondition(loan, format);
 
 		LOGGER.debug("Fetch Credit Score For This Loan ");
-		/* fetchCreditScore(loan); */
+		fetchCreditScore(loan);
 
 	}
 
@@ -336,7 +336,7 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Inside method fetchCreditScore ");
 		int format = 0;
 
-		JSONObject creditScoreJSONObject = createUnderWritingConditionJSONObject(
+		JSONObject creditScoreJSONObject = createCreditScoreJSONObject(
 		        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
 		        loan.getLqbFileId(), format);
 		LOGGER.debug("Invoking LQB service to fetch credit score  ");
