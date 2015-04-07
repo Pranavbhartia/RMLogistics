@@ -275,7 +275,7 @@ function getApplicationTextQues(question) {
         "name": question.name,
         "value": question.value
     }).on("load keydown", function(e) {
-        if (question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber') {
+        if (question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
             $('input[name=' + question.name + ']').maskMoney({
                 thousands: ',',
                 decimal: '.',
@@ -1718,7 +1718,9 @@ function paintCustomerApplicationPageStep4a() {
         });
         $('#app-right-panel').append(saveAndContinueButton);
     }
-    // This function will create a [] check box and on click on the box toggle the chile div
+
+
+// This function will create a [] check box and on click on the box toggle the chile div
 function noThanksContinueDiv() {
     var quesHeaderTxt = "Government Monitoring Questions";
     var quesHeaderTextCont = $('<div>').attr({
@@ -2271,7 +2273,7 @@ function paintRefinanceStep2() {
         "type": "desc",
         "text": "What is your current mortgage balance?",
         "name": "currentMortgageBalance",
-        "value": ""
+        "value": appUserDetails.refinancedetails.currentMortgageBalance
     }];
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
@@ -2307,7 +2309,7 @@ function paintRefinanceStep3() {
         "type": "desc",
         "text": "What is your current mortgage payment?",
         "name": "currentMortgagePayment",
-        "value": ""
+        "value": appUserDetails.refinancedetails.currentMortgagePayment
     }, {
         "type": "yesno",
         "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
@@ -2906,17 +2908,9 @@ function paintSpouseCustomerApplicationPageStep4a() {
 }
 
 function paintSpouseCustomerApplicationPageStep4b() {
-    $('#app-right-panel').html('');
-    var quesHeaderTxt = "Spouse Government Monitoring Questions";
-    var quesHeaderTextCont = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    });
-    var options = [{
-        "text": "No thank you. Let’s move on",
-        "name": name,
-        "value": 0
-    }];
-    var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
+   
+	$('#app-right-panel').html('');
+    var quesCont = noThanksContinueDiv();
     $('#app-right-panel').append(quesCont);
     ///
     var questions = [{
