@@ -407,10 +407,11 @@ public class UserProfileRest {
 			response.setResultObject(userVO);
 
 		} catch (InputValidationException e) {
-			LOG.error("error and message is : " + e.getMessage());
+			LOG.error("error and message is : " + e.getDebugMessage());
 			ErrorVO error = new ErrorVO();
-			error.setMessage(e.getMessage());
+			error.setMessage(e.getDebugMessage());
 			response.setError(error);
+			e.getDebugMessage();
 
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
