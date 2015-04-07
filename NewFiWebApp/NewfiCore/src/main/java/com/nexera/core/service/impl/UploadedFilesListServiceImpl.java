@@ -533,9 +533,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			else if (contentType.contains("image/tiff"))
 				contentType = "image/tiff";
 
-			checkUploadVO = uploadFile(file, contentType,
-			        nexeraUtility.getContentFromStream(stream), userId, loanId,
-			        assignedBy);
+			Path path = Paths.get(file.getAbsolutePath());
+			byte[] data = Files.readAllBytes(path);
+			checkUploadVO = uploadFile(file, contentType,data, userId, loanId, assignedBy);
+			
+			if(file.exists()){
+				file.delete();
+			}
 			return checkUploadVO;
 		}
 
