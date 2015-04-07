@@ -716,4 +716,19 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 		return true;
 	}
+
+	@Override
+	public void updateWorkFlowItems(int loanID, int customerWorkflowID,
+	        int loanManagerWFID) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.customerWorkflow = :CWFID,loan.loanManagerWorkflow =:LMFID WHERE loan.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("CWFID", customerWorkflowID);
+		query.setParameter("LMFID", loanManagerWFID);
+		query.setParameter("ID", loanID);
+
+		int result = query.executeUpdate();
+
+	}
 }
