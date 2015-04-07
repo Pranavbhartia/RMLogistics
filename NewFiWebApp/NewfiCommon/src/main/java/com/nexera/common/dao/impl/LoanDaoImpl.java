@@ -676,7 +676,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions.eq("user.id", user.getId()));
 		List<LoanTeam> loanList = criteria.list();
 		if (loanList == null || loanList.isEmpty()) {
-			return false;
+			return true;
 		}
 		for (LoanTeam loanTeam : loanList) {
 			Hibernate.initialize(loanTeam.getLoan());
