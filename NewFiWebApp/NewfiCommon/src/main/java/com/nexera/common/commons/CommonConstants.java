@@ -101,4 +101,19 @@ public interface CommonConstants {
 	public static final String SENDER_DOMAIN_REGEX = SENDER_DOMAIN+">";
 	
 	public static final Integer SYSTEM_USER_USERID = 1;
+	
+	/*
+	 * Loan Appform Constants
+	 */
+	public static final String SINGLE_FAMILY_RESIDENCE_VALUE = "0";
+	public static final String MULTI_FAMILY_RESIDENCE_VALUE = "1";
+	public static final String INVESTMENT_VALUE = "2";
+	public static final double LOAN_AMOUNT_THRESHOLD = 417000;
+	public static final int CSFPR = 395;
+	public static final int JSFPR = 595;
+	public static final int CINV = 495;
+	public static final int JINV = 695;
+	public static final int CMF = 595;
+	public static final int JMF = 695;
+	
 }

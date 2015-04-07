@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
@@ -21,6 +22,7 @@ import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -29,12 +31,16 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTurnAroundTime;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.PropertyTypeMaster;
+import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
@@ -937,5 +943,88 @@ public class LoanServiceImpl implements LoanService {
 	public LoanNeedsList findLoanNeedsList(Loan loan,
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
+	}
+	
+	@Transactional
+	@Override
+	public int getApplicationFee(int loanId) throws NoRecordsFetchedException,
+	        InvalidInputException {
+
+		Loan loan = (Loan) loanDao.load(Loan.class, loanId);
+
+		if (loan.getLoanAppForms() == null
+		        || loan.getLoanAppForms().size() <= 0) {
+			LOG.error("No loanappform record found for loan id : " + loanId);
+			throw new NoRecordsFetchedException(
+			        "No loanappform record found for loan id : " + loanId);
+
+		}
+		if (loan.getLoanAppForms().get(0).getPurchaseDetails() == null) {
+			LOG.error("No purchase details record found for loanappform id : "
+			        + loan.getLoanAppForms().get(0).getId());
+			throw new NoRecordsFetchedException(
+			        "No purchase details record found for loanappform id : "
+			                + loan.getLoanAppForms().get(0).getId());
+		}
+		if (loan.getPropertyType() == null) {
+			LOG.error("No property type record found for loan id : " + loanId);
+			throw new NoRecordsFetchedException(
+			        "No property type record found for loan id : " + loanId);
+		}
+
+		LoanAppForm loanAppForm = loan.getLoanAppForms().get(0);
+		PropertyTypeMaster propertyTypeMaster = loan.getPropertyType();
+		PurchaseDetails purchaseDetails = loanAppForm.getPurchaseDetails();
+
+		// Check if the required fields are available in purchaseDetails and
+		// propertyType
+
+		if (purchaseDetails.getLoanAmount() == null
+		        || purchaseDetails.getLoanAmount().isEmpty()) {
+			throw new NoRecordsFetchedException(
+			        "Loan amount property not found in purchase details for loan id : "
+			                + loanId);
+		}
+
+		if (propertyTypeMaster.getPropertyTypeCd() == null
+		        || propertyTypeMaster.getPropertyTypeCd().isEmpty()) {
+			throw new NoRecordsFetchedException(
+			        "Property type cd property not found in property type for loan id : "
+			                + loanId);
+		}
+
+		if (Integer.parseInt(purchaseDetails.getLoanAmount()) <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
+			if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				return CommonConstants.CSFPR;
+			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
+				return CommonConstants.CMF;
+			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.INVESTMENT_VALUE)) {
+				return CommonConstants.CINV;
+			} else {
+				throw new InvalidInputException(
+				        "Invalid property type for loan id : " + loanId
+				                + " Givern property type : "
+				                + propertyTypeMaster.getPropertyTypeCd());
+			}
+		} else {
+			if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				return CommonConstants.JSFPR;
+			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
+				return CommonConstants.JMF;
+			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
+			        CommonConstants.INVESTMENT_VALUE)) {
+				return CommonConstants.JINV;
+			} else {
+				throw new InvalidInputException(
+				        "Invalid property type for loan id : " + loanId
+				                + " Givern property type : "
+				                + propertyTypeMaster.getPropertyTypeCd());
+			}
+		}
 	}
 }
