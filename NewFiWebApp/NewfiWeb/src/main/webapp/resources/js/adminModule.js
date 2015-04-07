@@ -1,13 +1,9 @@
-var userDescription="System User";
-var salesManager="Sales Manager";
+var userDescription="Sales Manager";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
 var statusDelete="DELETED";
 $(document).on('click',function(e){
-	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
-		$('#admin-add-usertype-dropdown-cont').hide();
-	}
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -22,7 +18,8 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 });
 $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
-	if(userDescription==newfiObject.user.userRole.roleDescription ||salesManager==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+	if(userDescription==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
+ //if(userRoleCdForAdmin==newfiObject.user.userRole.roleCd)	
 	{
 	if($(this).has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
@@ -131,7 +128,7 @@ $('#alert-settings-btn').click(function(e){
 	}
 });
 
-/* Search for user list*/
+
 function getSearchResultForAdmin(searchValue)
 {
 	$('#right-panel').html('');
@@ -155,10 +152,12 @@ function getSearchResultDataForAdmin(searchValue)
 }
 
 
-/*TODO to load user mangement page*/
+//TODO to load user mangement page
 function userManagement(){
 $('#right-panel').html('');
-	paintAdminDashboard();	
+
+	paintAdminDashboard();
+	
 }
 
 function paintAdminDashboard(){
@@ -170,18 +169,13 @@ $('.lp-right-arrow').remove();
 		"class" : "rp-agent-dashboard-admin float-left-admin"
 	});
 	
-	var agentDashboardErrorWrraper = $('<div>').attr({
-		"id" : "admin-error-wrapper",
-		"class" : "admin-error-wrapper float-left-admin"
-	});
-	
 	var agentDashboardErrorContainer = $('<div>').attr({
 		"id" : "admin-error-container",
 		"class" : "admin-error-container float-left-admin"
 	});
-	agentDashboardErrorWrraper.append(agentDashboardErrorContainer);
-	$('#right-panel').append(agentDashboardErrorWrraper);
+	$('#right-panel').append(agentDashboardErrorContainer);
 	$('#right-panel').append(agentDashboardMainContainer);
+	//bindDataToAdminPN();
     getAdminDashboardRightPanel();
 
 
@@ -201,9 +195,11 @@ paintAdminUserPage(data);
 
 
 }
-/*paint method for userManagement page*/
+
 function paintAdminUserPage(data) {
+
 	var userDetails = data.resultObject;
+//alert(userDetails);	
 	appendAdminAddUserWrapper('admin-dashboard-container');
 	appendNewfiTeamWrapperForAdmin(userDetails);
 }
@@ -232,23 +228,25 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		"class" : "add-member-input-admin-cont float-left clearfix"
 	}).html("User Type");
 
-	
-	var spanLabel=$('<span>').attr({
-	"class":"admin-span-class float-left",		
-	}).html("Please Select");
 	var userTypeSel = $('<div>').attr({
 		"id" : "admin-add-memeber-user-type",
 		"class" : "add-member-sel-admin float-right"
 	}).on('click',function(e){
-		e.stopImmediatePropagation();
 	if($('#admin-add-usertype-dropdown-cont').css("display")=="block"){
 	$('#admin-add-usertype-dropdown-cont').hide();
 	}else{
-    appendAdminUserTypeDropDown(); 
+	appendAdminUserTypeDropDown();
 	$('#admin-add-usertype-dropdown-cont').show();
-	}	
+	}
+	
 	});
 
+	
+	var spanLabel=$('<span>').attr({
+	"class":"admin-span-class float-left",
+	
+	
+	}).html("Please Select");
 	userTypeSel.append(spanLabel);
 	userTypeCont.append(userTypeSel);
 	
@@ -263,17 +261,16 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 	var form=$('<form>').attr({
 	"id":"upload-form-admin",
-    "action":"#",
+    "action":"rest/userprofile/addusersfromcsv",
     "method":"post",
 	"enctype":"multipart/form-data"
 		
 	}).submit(function(event){
-		  event.preventDefault();
 		var formData = new FormData();
 		var file=$("#file").prop("files")[0];
 		console.log("file",file);
 		formData.append("file",file);
-		var formURL = "rest/userprofile/addusersfromcsv";
+		var formURL = $(this).attr("action");
 		$.ajax({
 			url :formURL,
 			type : "POST",
@@ -285,19 +282,17 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			success:function(data){
 			
 		    if(data!=null){
-				$("#admin-error-wrapper").toggleClass('admin-display');
-            var response=JSON.parse(data);
-            var errors=response.errors;
-			for(var i=0;i<=errors.length;i++){
-					var row=displayErrorMessage(errors[i]);
+				for(var i=0;i<=data.legth;i++){
+					var row=displayErrorMessage(data[i]);
 					$("#admin-error-container").append(row);
 				}
-			}else{
-				showToastMessage("Uploaded Successfully");
-			}			
+             
+
+
+			}
 			},
 			error:function(e){
-				//alert("error");
+				alert("error");
 			}
 			
 		});
@@ -308,11 +303,17 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	"name":"file",
 	"id":"file",
 	"onchange":"$('#upload-form-admin').submit();"
+	
 	}); 
 	var uploadCSV=$('<div>').attr({
 	"class":"prof-cust-upload-btn-admin-um float-left-admin",
 	"id":"upload-csv-id", 
 
+	}).on("click",function(e){
+		
+	
+
+		
 	});
     
 	uploadCSV.append(inputFile);
@@ -351,10 +352,11 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 function displayErrorMessage(data){
 	if($('.rp-agent-dashboard-admin')!=undefined || $('.rp-agent-dashboard-admin')!=""){
+
     var tableRow = $('<div>').attr({
 		"class" : "admin-error-list-list-tr clearfix",
 		
-	}).html("Error in line"+"-"+data.lineNumber+"  "+"csvLine is"+" -" +data.csvLine+ "and reason is: "+"  "+data.message);
+	}).html("Error in line"+data.lineNumber+"and message:"+data.message);
 	return tableRow;
 	
 }
@@ -375,7 +377,7 @@ var dropdownCont = $('<div>').attr({
 		"userRoleBased" : "true"
 	} ];
 
-	if(newfiObject.user.userRole.roleCd=="INTERNAL"||newfiObject.user.userRole.roleCd=="SYSTEM")
+	if(newfiObject.user.userRole.roleCd=="INTERNAL")
 	for (i in newfiObject.internalUserRoleMasters) {
 		var internalRole = newfiObject.internalUserRoleMasters[i];
 		userRoles.push({
@@ -433,7 +435,7 @@ var dropdownCont = $('<div>').attr({
 							$('#admin-add-memeber-user-type').attr("userRoleBased",
 									$(this).attr("userRoleBased"));
 							$('#admin-add-memeber-user-type').html($(this).html());
-							$('#admin-add-usertype-dropdown-cont').hide();
+							hideUserTypeDropDown();
 						});
 		dropdownCont.append(dropDownRow);
 	}
@@ -481,24 +483,20 @@ var popUpWrapper = $('<div>').attr({
 						console.log($('#admin-create-user-emailId').val()+"  "+$('#admin-create-user-first-name').val()+""+$('#admin-create-user-last-name').val());
 
 				if (user.firstName == "") {
-					$('#admin-create-user-first-name').addClass('err-input').focus();
-					showErrorToastMessage("First name cannot be empty");
+					showToastMessage("First name cannot be empty");
 					return;
 				} else if (user.lastName == "") {
-					$('#admin-create-user-last-name').addClass('err-input').focus();
-					showErrorToastMessage("Last name cannot be empty");
+					showToastMessage("Last name cannot be empty");
 					return;
 				} else if (user.emailId == "") {
-					$('#admin-create-user-emailId').addClass('err-input').focus();
-					showErrorToastMessage("Email ID cannot be empty");
+					showToastMessage("Email ID cannot be empty");
 					return;
 				}
 				if(user.emailId!="")
 				{var validationStatus=emailValidation(user.emailId);
 			      if(validationStatus){
-					  $('#admin-create-user-emailId').val('');								  
-				      $('#admin-create-user-emailId').addClass('err-input').focus();
-				  
+					  $('#admin-create-user-emailId').val('');
+				  $('#admin-create-user-emailId').addClass('err-input').focus();
 				  return;
 				  }else{
 					  $('#admin-create-user-emailId').removeClass('err-input');
@@ -545,7 +543,7 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
    var existingDiv = $('.admin-newfi-team-container').find(
 			'.admin-newfi-team-list-tr[userid=' + users.id + ']');
 	if (existingDiv != undefined && existingDiv.length > 0) {
-		showErrorToastMessage("User already exists on the loan team.");
+		showToastMessage("User already exists on the loan team.");
 		return;
 	}
    var tableRow = getAdminTeamListTableRow(users);
@@ -553,7 +551,7 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
    $('#admin-create-user-emailId').val('');
    $('#admin-create-user-first-name').val('');
    $('#admin-create-user-last-name').val('');
-
+   $("#admin-add-memeber-user-type").val('');
 	showToastMessage("User added to loan team.");
 	
 }
@@ -602,17 +600,16 @@ function appendAdminCreateUserPopupEmail(){
 		"id" : "admin-create-user-emailId"
 		
 	}).val("");
-	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
-	});
-	inputBox.append(errMessage);
 	row.append(label).append(inputBox);
 	$('#admin-create-user-container').append(row);
 
 }
 
 function appendNewfiTeamWrapperForAdmin(userDetails) {
-	var users = userDetails;	
+	var users = userDetails;
+
+	console.log("users list",users);
+	
 	var wrapper = $('<div>').attr({
 		"class" : "admin-newfi-team-wrapper"
 	});
@@ -629,11 +626,14 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 	$(this).parent().find('.admin-search-input').show().focus();
      if($('#search-id').val()!="" && $('#search-id').val()!=undefined){
 	 var searchValue=$('#search-id').val();
+		//alert(val);
 	 getSearchResultForAdmin(searchValue);
 	 
 	$('#search-id').val('');
 	 	$(this).parent().find('.admin-search-input').hide();
-	 }     	
+	 }     
+	
+
 	});
 	
 	var searchInputBox = $('<input>').attr({
@@ -653,11 +653,10 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 	container.append(tableHeader);
 
 for(var i=0;i<users.length;i++){
-	if(users[i].userRole.roleDescription!=userDescription){
-     var tableRow = getAdminTeamListTableRow(users[i]);
-      container.append(tableRow);
-      }
-	}
+var tableRow = getAdminTeamListTableRow(users[i]);
+		container.append(tableRow);}
+ 
+
 	wrapper.append(header).append(container);
 	$('#admin-dashboard-container').append(wrapper);
 
@@ -697,6 +696,7 @@ function getAdminTeamListTableHeader() {
 }
 
 function getAdminTeamListTableRow(user) {
+console.log("user",user);
 	var tableRow = $('<div>').attr({
 		"class" : "admin-newfi-team-list-tr clearfix",
 		"userid" : user.id
@@ -719,9 +719,6 @@ var userRoleStr;
 			if (intMaster.id == intRoleID)
 				userRoleStr = intMaster.roleDescription;
 		}
-	}else if(user.userRole.id == 2){
-	userRoleStr="Realtor";
-	
 	}else{
 	userRoleStr=user.userRole.label;
 	
@@ -829,7 +826,7 @@ function displayResponseData(data){
    showToastMessage("Loan manger deleted successfully");
   // tableRow.empty(teamMemberRow); 
 	}else{
-		showErrorToastMessage(data.error.message);
+		showToastMessage("Cannot Delete the Loan manger");
 	}
 }
 function appendAdminModuleDetails(){

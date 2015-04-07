@@ -106,6 +106,8 @@ public class ShopperRegistrationController {
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			
+			
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
 			UserVO userVOObj = null;

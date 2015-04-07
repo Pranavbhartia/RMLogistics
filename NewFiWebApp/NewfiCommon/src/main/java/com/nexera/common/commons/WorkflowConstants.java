@@ -121,11 +121,6 @@ public class WorkflowConstants {
 
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 
-	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "INitial needs list not created";
-	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
-	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
-	public static final String APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT = "Appraisals not available";
-	public static final String UW_NOTIFICATION__NOTIFICATION_CONTENT = "Underwriting pending";
 	static {
 
 		MILESTONE_WF_ITEM_LOOKUP.put(

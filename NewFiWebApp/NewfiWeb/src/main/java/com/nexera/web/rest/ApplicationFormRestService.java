@@ -118,7 +118,7 @@ public class ApplicationFormRestService {
 			// Customer Income 
 			System.out.println("cache.get(customerEmploymentIncome0)"+cache.get("customerEmploymentIncome0"));
 			if(loaAppFormVO.getCustomerEmploymentIncome() !=null && cache.get("customerEmploymentIncome0")!=null && loaAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getId()==0 && cache.get("customerEmploymentIncome0")!=0 )
-			{
+			{   System.out.println("Inside customerEmploymentIncome0 ");
 					Iterator<CustomerEmploymentIncomeVO> itr = loaAppFormVO.getCustomerEmploymentIncome().iterator();
 				int counter = 0 ; 
 				while(itr.hasNext()){
@@ -126,7 +126,10 @@ public class ApplicationFormRestService {
 					
 					CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
 					System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());		
-				loaAppFormVO.getCustomerEmploymentIncome().get(counter).getCustomerEmploymentIncome().setId(cache.get("customerEmploymentIncome"+counter+""));
+					System.out.println("cache.get(customerEmploymentIncome"+cache.get("customerEmploymentIncome"+counter+""));
+				if(cache.get("customerEmploymentIncome"+counter+"") !=null){
+					loaAppFormVO.getCustomerEmploymentIncome().get(counter).getCustomerEmploymentIncome().setId(cache.get("customerEmploymentIncome"+counter+""));
+				}
 				counter++;
 				}
 			}
@@ -188,7 +191,7 @@ public class ApplicationFormRestService {
 			
 			// Customer Spouse Income 
 			System.out.println("cache.get(customerSpouseEmploymentIncome0)"+cache.get("customerSpouseEmploymentIncome0"));
-			if(cache.get("customerSpouseEmploymentIncome0")!=null && loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getId()==0 && cache.get("customerSpouseEmploymentIncome0")!=0 )
+			if(loaAppFormVO.getCustomerSpouseEmploymentIncome() !=null && cache.get("customerSpouseEmploymentIncome0")!=null && loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getId()==0 && cache.get("customerSpouseEmploymentIncome0")!=0 )
 			{
 					Iterator<CustomerSpouseEmploymentIncomeVO> itr = loaAppFormVO.getCustomerSpouseEmploymentIncome().iterator();
 				int counter = 0 ; 
@@ -317,13 +320,13 @@ public class ApplicationFormRestService {
 			if(loanAppForm.getCustomerEmploymentIncome() !=null){
 				
 				
-				Iterator<CustomerEmploymentIncomeVO> itr = loaAppFormVO.getCustomerEmploymentIncome().iterator();
+				Iterator<CustomerEmploymentIncome> itr = loanAppForm.getCustomerEmploymentIncome().iterator();
 				int counter = 0 ; 
 				while(itr.hasNext()){
-				CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
-				System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
-				System.out.println("customeremploymentincomeVO.getCustomerEmploymentIncome().getId()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-				cache.put("customerEmploymentIncome"+counter, loaAppFormVO.getCustomerEmploymentIncome().get(counter).getCustomerEmploymentIncome().getId());
+				CustomerEmploymentIncome customeremploymentincome= itr.next();
+				System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincome.getEmployedAt());
+				System.out.println("customeremploymentincomeVO.getCustomerEmploymentIncome().getId()"+customeremploymentincome.getId());
+				cache.put("customerEmploymentIncome"+counter, customeremploymentincome.getId());
 				counter++;
 				}
 					
@@ -517,20 +520,32 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 	HashMap<String, String> hashmap = new HashMap();
 	try {
 	hashmap.put("loanPurpose", "1");
-	hashmap.put("loanPurchasePrice", "$400,000.00");
-	hashmap.put("loanApprovedValue", "$400,000.00");
+	hashmap.put("loanPurchasePrice", "400,000.00");
+	hashmap.put("loanApprovedValue", "400,000.00");
 	hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail().getSsn());
 	hashmap.put("firstName", loanAppFormVO.getUser().getFirstName());
 	hashmap.put("middleName",loanAppFormVO.getUser().getLastName());
 	hashmap.put("lastName",loanAppFormVO.getUser().getLastName());
 	hashmap.put("dob",loanAppFormVO.getUser().getCustomerDetail().getDateOfBirth().toString());
+	hashmap.put("PropertyState", loanAppFormVO.getUser().getCustomerDetail().getAddressState());
 	hashmap.put("alimonyName", "NONE");
 	hashmap.put("alimonyPayment", "1000");
 	hashmap.put("jobExpenses", "100");
 	hashmap.put("jobRelatedPayment", loanAppFormVO.getEmployedIncomePreTax());
-	
-	
-	
+    hashmap.put("userSSNnumber",  loanAppFormVO.getUser().getCustomerDetail().getSsn());
+	hashmap.put("baseIncome",  loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
+	hashmap.put("ProdLckdDays", "30");	
+	hashmap.put("loanAmount",  loanAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+	hashmap.put("applicantCity", loanAppFormVO.getUser().getCustomerDetail().getAddressCity());
+	hashmap.put("applicantState",loanAppFormVO.getUser().getCustomerDetail().getAddressState() );
+	hashmap.put("applicantZipCode", loanAppFormVO.getUser().getCustomerDetail().getAddressZipCode());
+	hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
+	hashmap.put("LOGIN_NAME", "testact");
+	hashmap.put("PASSWORD", "1234nexera");
+	hashmap.put("equifaxStatus", "Y");
+	hashmap.put("experianStatus", "Y");
+	hashmap.put("transunionStatus", "Y");
+	hashmap.put("applicantAddress", "888Appleroad");
 	
 	
 	

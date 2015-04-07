@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
@@ -20,7 +20,6 @@ import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
-import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -34,7 +33,6 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
-import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.CustomerDetailVO;
@@ -389,40 +387,10 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		// TODO get these hard coded data from entity
-		boolean processorPresent = Boolean.FALSE;
-		if (loan.getLoanTeam() != null) {
-			List<LoanTeam> loanTeamList = loan.getLoanTeam();
-			for (LoanTeam loanTeam : loanTeamList) {
-				User loanUser = loanTeam.getUser();
-				if (loanUser.getInternalUserDetail() != null) {
-					InternalUserRoleMaster internalUserRoleMaster = loanUser
-					        .getInternalUserDetail().getInternaUserRoleMaster();
-					if (internalUserRoleMaster != null
-					        && internalUserRoleMaster.getId() == InternalUserRolesEum.PC
-					                .getRoleId()) {
-						loanCustomerVO.setProcessor(loanUser.getFirstName()
-						        + " " + loanUser.getLastName());
-						processorPresent = Boolean.TRUE;
-					}
-				}
-			}
-
-		}
-		if (!processorPresent) {
-			loanCustomerVO.setProcessor("-");
-		}
-
-		loanCustomerVO.setPurpose(loan.getLoanType().getDescription());
+		loanCustomerVO.setProcessor("Johny Tester");
+		loanCustomerVO.setPurpose("Purchase TBD");
 		loanCustomerVO.setAlert_count("3");
-		if (customerDetail != null) {
-			// constructCreditScore(customerDetail.get);
-			loanCustomerVO.setCredit_score(constrtCreditScore(
-			        customerDetail.getTransunionScore(),
-			        customerDetail.getEquifaxScore(),
-			        customerDetail.getExperianScore()));
-
-		}
-		loanCustomerVO.setCredit_score("-");
+		loanCustomerVO.setCredit_score("732");
 
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
@@ -442,37 +410,6 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 
 		return loanCustomerVO;
-	}
-
-	private String constrtCreditScore(String transunionScore,
-	        String equifaxScore, String experianScore) {
-		// TODO Auto-generated method stub
-		String creditScore = "";
-		if (equifaxScore != null && !equifaxScore.isEmpty()) {
-			creditScore = CommonConstants.EQ + equifaxScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = CommonConstants.EQ + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-		if (transunionScore != null && !transunionScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.EQ + transunionScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = creditScore + CommonConstants.EQ
-			        + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-
-		if (experianScore != null && !experianScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.EQ + experianScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = creditScore + CommonConstants.EQ
-			        + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-		return creditScore;
 	}
 
 	/**
@@ -577,14 +514,14 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
 	        int loanManagerWFID) {
-		// Loan loan = (Loan) loanDao.load(Loan.class, loanID);
-		//
-		// Hibernate.initialize(loan.getCustomerWorkflow());
-		//
-		// loan.setCustomerWorkflow(customerWorkflowID);
-		//
-		// loan.setLoanManagerWorkflow(loanManagerWFID);
-		loanDao.updateWorkFlowItems(loanID, customerWorkflowID, loanManagerWFID);
+		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
+
+		Hibernate.initialize(loan.getCustomerWorkflow());
+
+		loan.setCustomerWorkflow(customerWorkflowID);
+
+		loan.setLoanManagerWorkflow(loanManagerWFID);
+		loanDao.update(loan);
 	}
 
 	@Override
@@ -627,13 +564,12 @@ public class LoanServiceImpl implements LoanService {
 
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
-			loan.setCreatedDate(new Date(System.currentTimeMillis()));
+			loan.setCreatedDate(loanVO.getCreatedDate());
 			loan.setDeleted(loanVO.getDeleted());
 			loan.setLoanEmailId(loanVO.getLoanEmailId());
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
-			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 			List<UserVO> userList = loanVO.getLoanTeam();
 			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
@@ -642,8 +578,6 @@ public class LoanServiceImpl implements LoanService {
 			LoanTeam e = new LoanTeam();
 			e.setUser(user);
 			e.setLoan(loan);
-			e.setActive(Boolean.TRUE);
-			e.setAssignedOn(new Date(System.currentTimeMillis()));
 			loanTeam.add(e);
 
 			/*
@@ -656,9 +590,6 @@ public class LoanServiceImpl implements LoanService {
 			LOG.debug("default Loan manager is: " + defaultUser);
 			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
 			defaultLanManager.setLoan(loan);
-			defaultLanManager.setActive(Boolean.TRUE);
-			defaultLanManager
-			        .setAssignedOn(new Date(System.currentTimeMillis()));
 			loanTeam.add(defaultLanManager);
 
 			// If loan team contains other users, then add those users to
@@ -670,10 +601,7 @@ public class LoanServiceImpl implements LoanService {
 					        && userVO.getId() != e.getId()) {
 						LoanTeam team = new LoanTeam();
 						User userTeam = User.convertFromVOToEntity(userVO);
-						team.setAssignedOn(new Date(System.currentTimeMillis()));
-						team.setActive(Boolean.TRUE);
 						team.setUser(userTeam);
-
 						team.setLoan(loan);
 					}
 
@@ -1009,25 +937,5 @@ public class LoanServiceImpl implements LoanService {
 	public LoanNeedsList findLoanNeedsList(Loan loan,
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
-	}
-
-	@Override
-	@Transactional
-	public void updateLoan(Loan loan) {
-		loanDao.update(loan);
-
-	}
-
-	@Override
-	@Transactional
-	public List<Loan> getLoansInActiveStatus() {
-		return loanDao.getLoanInActiveStatus();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional
-	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
-		return loanMilestoneMasterDao.loadAll(LoanMilestoneMaster.class);
 	}
 }

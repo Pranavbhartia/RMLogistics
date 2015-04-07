@@ -117,21 +117,17 @@ function getLoanPersonalInfoContainer(user) {
 	
 	var stateRow = getManagerStateRow(user);
 	container.append(stateRow);
-	
-	if(user.internalUserStateMappingVOs!=undefined){
-		userStateMappingVOs=user.internalUserStateMappingVOs;
+ 	userStateMappingVOs=user.internalUserStateMappingVOs;
 
-		states.length = 0;
-		internalUserStates.length=0;
-		for(var i=0;i<userStateMappingVOs.length;i++) {
-				states.push(userStateMappingVOs[i].stateId.toString());
-				internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
-	        }
-		var stateTextRow = getStateTextRow();
-		container.append(stateTextRow);
+	states.length = 0;
+	internalUserStates.length=0;
+	for(var i=0;i<userStateMappingVOs.length;i++) {
+			states.push(userStateMappingVOs[i].stateId.toString());
+			internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+        }
+	var stateTextRow = getStateTextRow();
+	container.append(stateTextRow);
 	
-	}
- 		
  
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
@@ -575,7 +571,7 @@ function getPriEmailRow(user) {
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		showToastErrorMessage("Incorrect Email");
+		showToastMessage("Incorrect Email");
 		validationFails = true;
 		return true;
 	}
@@ -686,10 +682,7 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);
@@ -804,10 +797,6 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
-	parentToAppendTo.perfectScrollbar({
-		suppressScrollX : true
-	});
-	parentToAppendTo.perfectScrollbar('update');
 }
 
 function appendManagerStateDropDown(elementToApeendTo) {
@@ -943,10 +932,7 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			$('.ui-autocomplete').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('.ui-autocomplete').perfectScrollbar('update');
+			
 		}
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);

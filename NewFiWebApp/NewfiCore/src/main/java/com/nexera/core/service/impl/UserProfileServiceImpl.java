@@ -38,7 +38,6 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
-import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
@@ -75,6 +74,7 @@ import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
+@Transactional
 public class UserProfileServiceImpl implements UserProfileService,
         InitializingBean {
 
@@ -114,7 +114,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        .getLogger(UserProfileServiceImpl.class);
 
 	@Override
-	@Transactional(readOnly = true)
 	public UserVO findUser(Integer userid) {
 
 		User user = userProfileDao.findByUserId(userid);
@@ -142,7 +141,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional()
 	public Integer updateUser(UserVO userVO) {
 
 		User user = User.convertFromVOToEntity(userVO);
@@ -153,7 +151,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public Integer updateCustomerDetails(UserVO userVO) {
 
 		LOG.info("To update the users");
@@ -237,14 +234,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public Integer updateUser(String s3ImagePath, Integer userid) {
 
 		Integer number = userProfileDao.updateUser(s3ImagePath, userid);
 		return number;
 	}
 
-	@Override
 	public List<UserVO> searchUsers(UserVO userVO) {
 
 		return this.buildUserVOList(userProfileDao.searchUsers(User
@@ -267,7 +262,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public List<UserVO> getUsersList() {
 		List<UserVO> userVOList = new ArrayList<UserVO>();
 		userVOList = buildUserVOList(userProfileDao.getUsersList());
@@ -278,12 +272,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public boolean changeUserPassword(UserVO userVO) {
-		// return userProfileDao.changeUserPassword(userVO);
-		return true;
+	//	return userProfileDao.changeUserPassword(userVO);
+     return true;
 	}
 
 	@Override
-	@Transactional
 	public Integer competeUserProfile(UserVO userVO) {
 
 		User user = new User();
@@ -300,7 +293,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public Integer completeCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
@@ -314,7 +306,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public Integer managerUpdateUserProfile(UserVO userVO) {
 		User user = new User();
 		user.setId(userVO.getId());
@@ -327,7 +318,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public Integer managerUpdateUCustomerDetails(UserVO userVO) {
 
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
@@ -340,14 +330,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public UserVO loadInternalUser(Integer userID) {
 		User user = userProfileDao.findInternalUser(userID);
 		return User.convertFromEntityToVO(user);
 	}
 
 	@Override
-	@Transactional
 	public void disableUser(int userId) throws NoRecordsFetchedException {
 
 		User user = userProfileDao.findByUserId(userId);
@@ -364,7 +352,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public void enableUser(int userId) throws NoRecordsFetchedException {
 
 		User user = userProfileDao.findByUserId(userId);
@@ -411,7 +398,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional
 	public UserVO createNewUserAndSendMail(UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException {
 		LOG.info("createNewUserAndSendMail called!");
@@ -449,10 +435,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// newUser.setPassword(null);
 
 		// newUser = null;
-		if (userID > 0) {
-			// && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
-			// .getRoleId()) {
-			newUser = userProfileDao.findInternalUser(userID);
+		if (userID > 0){
+		        //&& newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		          //      .getRoleId()) {
+			newUser = (User) userProfileDao.findInternalUser(userID);
 			return User.convertFromEntityToVO(newUser);
 		}
 		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
@@ -477,7 +463,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
 			        ActiveInternalEnum.DELETED);
-			// Integer count = userProfileDao.updateInternalUserDetail(user);
+			//Integer count = userProfileDao.updateInternalUserDetail(user);
 
 		} else {
 			throw new InputValidationException(new GenericErrorCode(
@@ -488,7 +474,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	@Override
 	public User findUserByMail(String userMailAddress) {
 
 		User user = null;
@@ -510,17 +495,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 	 * 
 	 */
 	@Override
-	@Transactional
 	public UserVO saveUser(UserVO userVO) {
 
 		// 1st create a entry in the customer details table
 		// use that id to put in the user table .
 
-		Integer userID = userProfileDao.saveCustomerDetails(User
+		Integer userID = (Integer) userProfileDao.saveCustomerDetails(User
 		        .convertFromVOToEntity(userVO));
 		User user = null;
 		if (userID != null && userID > 0)
-			user = userProfileDao.findInternalUser(userID);
+			user = (User) userProfileDao.findInternalUser(userID);
 
 		return User.convertFromEntityToVO(user);
 
@@ -559,8 +543,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return internalUserDetailVO;
 	}
 
-	@Override
-	@Transactional
 	public List<User> fetchAllActiveUsers() {
 		return userProfileDao.fetchAllActiveUsers();
 	}
@@ -896,6 +878,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return errors;
 	}
 
+	
+	
 	@Override
 	@Transactional
 	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)
@@ -962,18 +946,5 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void crateWorkflowItems(int defaultLoanId) throws Exception {
 		// TODO Auto-generated method stub
 		workflowCoreService.createWorkflow(new WorkflowVO(defaultLoanId));
-	}
-
-	@Override
-	public void updateCustomerScore(CustomerDetail customerDetail) {
-		userProfileDao.updateCustomerScore(customerDetail);
-
-	}
-
-	@Override
-	public void updateCustomerSpouseScore(
-	        CustomerSpouseDetail customerSpouseDetail) {
-		userProfileDao.updateCustomerSpouseScore(customerSpouseDetail);
-
 	}
 }

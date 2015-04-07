@@ -3,6 +3,8 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.CustomerOtherAccountDetails;
+import com.nexera.common.entity.CustomerRetirementAccountDetails;
 
 public class CustomerDetailVO implements Serializable {
 
@@ -25,19 +27,17 @@ public class CustomerDetailVO implements Serializable {
 	private Boolean ispensionOrRetirement;
 	private String monthlyPension;
 	private String livingSince;
-	private String equifaxScore;
-	private String experianScore;
-	private String transunionScore;
-
-	// private CustomerSpouseDetailVO customerSpouseDetail;
-
-	// private CustomerEmploymentIncomeVO customerEmploymentIncome;
-
-	// private CustomerBankAccountDetailsVO customerBankAccountDetails;
-
+	
+	//private CustomerSpouseDetailVO customerSpouseDetail;
+	
+	//private CustomerEmploymentIncomeVO customerEmploymentIncome;
+	
+//	private CustomerBankAccountDetailsVO customerBankAccountDetails;
+	
 	private CustomerRetirementAccountDetailsVO customerRetirementAccountDetails;
-
+	
 	private CustomerOtherAccountDetailsVO customerOtherAccountDetails;
+	
 
 	private UserVO user;
 
@@ -192,33 +192,39 @@ public class CustomerDetailVO implements Serializable {
 	public void setLivingSince(String livingSince) {
 		this.livingSince = livingSince;
 	}
+	
 
-	/*
-	 * public CustomerSpouseDetailVO getCustomerSpouseDetail() { return
-	 * customerSpouseDetail; }
-	 * 
-	 * public void setCustomerSpouseDetail(CustomerSpouseDetailVO
-	 * customerSpouseDetail) { this.customerSpouseDetail = customerSpouseDetail;
-	 * }
-	 */
+	/*public CustomerSpouseDetailVO getCustomerSpouseDetail() {
+		return customerSpouseDetail;
+	}
 
-	/*
-	 * public CustomerEmploymentIncomeVO getCustomerEmploymentIncome() { return
-	 * customerEmploymentIncome; }
-	 * 
-	 * public void setCustomerEmploymentIncome( CustomerEmploymentIncomeVO
-	 * customerEmploymentIncome) { this.customerEmploymentIncome =
-	 * customerEmploymentIncome; }
-	 * 
-	 * 
-	 * 
-	 * public CustomerBankAccountDetailsVO getCustomerBankAccountDetails() {
-	 * return customerBankAccountDetails; }
-	 * 
-	 * public void setCustomerBankAccountDetails( CustomerBankAccountDetailsVO
-	 * customerBankAccountDetails) { this.customerBankAccountDetails =
-	 * customerBankAccountDetails; }
-	 */
+	public void setCustomerSpouseDetail(CustomerSpouseDetailVO customerSpouseDetail) {
+		this.customerSpouseDetail = customerSpouseDetail;
+	}*/
+	
+
+	/*public CustomerEmploymentIncomeVO getCustomerEmploymentIncome() {
+		return customerEmploymentIncome;
+	}
+
+	public void setCustomerEmploymentIncome(
+	        CustomerEmploymentIncomeVO customerEmploymentIncome) {
+		this.customerEmploymentIncome = customerEmploymentIncome;
+	}
+	
+	
+
+	public CustomerBankAccountDetailsVO getCustomerBankAccountDetails() {
+		return customerBankAccountDetails;
+	}
+
+	public void setCustomerBankAccountDetails(
+	        CustomerBankAccountDetailsVO customerBankAccountDetails) {
+		this.customerBankAccountDetails = customerBankAccountDetails;
+	}
+	*/
+	
+	
 
 	public CustomerRetirementAccountDetailsVO getCustomerRetirementAccountDetails() {
 		return customerRetirementAccountDetails;
@@ -265,28 +271,5 @@ public class CustomerDetailVO implements Serializable {
 
 	}
 
-	public String getEquifaxScore() {
-		return equifaxScore;
-	}
-
-	public void setEquifaxScore(String equifaxScore) {
-		this.equifaxScore = equifaxScore;
-	}
-
-	public String getExperianScore() {
-		return experianScore;
-	}
-
-	public void setExperianScore(String experianScore) {
-		this.experianScore = experianScore;
-	}
-
-	public String getTransunionScore() {
-		return transunionScore;
-	}
-
-	public void setTransunionScore(String transunionScore) {
-		this.transunionScore = transunionScore;
-	}
 
 }

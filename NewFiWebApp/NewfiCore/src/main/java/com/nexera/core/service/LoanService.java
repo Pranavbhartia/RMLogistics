@@ -63,8 +63,6 @@ public interface LoanService {
 
 	public List<Loan> getAllLoans();
 
-	public List<Loan> getLoansInActiveStatus();
-
 	// TODO added for loan rest service
 	public LoanVO createLoan(LoanVO loanVO);
 
@@ -129,8 +127,4 @@ public interface LoanService {
 
 	public LoanNeedsList findLoanNeedsList(Loan loan,
 	        NeedsListMaster needsListMaster);
-
-	public void updateLoan(Loan loan);
-
-	public List<LoanMilestoneMaster> getLoanMilestoneMasterList();
 }

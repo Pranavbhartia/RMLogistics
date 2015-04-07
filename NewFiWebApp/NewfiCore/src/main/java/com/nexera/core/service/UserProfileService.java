@@ -7,8 +7,6 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
-import com.nexera.common.entity.CustomerDetail;
-import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -66,10 +64,5 @@ public interface UserProfileService {
 	public void crateWorkflowItems(int defaultLoanId) throws Exception;
 
 	public boolean changeUserPassword(UserVO uservo);
-
-	public void updateCustomerScore(CustomerDetail customerDetails);
-
-	public void updateCustomerSpouseScore(
-	        CustomerSpouseDetail customerSpouseDetail);
 
 }

@@ -48,8 +48,6 @@ public interface UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
-	
-	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 
@@ -80,7 +78,5 @@ public interface UploadedFilesListService {
 
 	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
 	        String uuid);
-
-	InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
 
 }

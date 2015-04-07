@@ -6,7 +6,7 @@ public class CheckUploadVO {
 	private Integer uploadFileId;
 	private String uuid;
 	private String fileName;
-	private String lqbFileId;
+	
 	
 	
 	public Boolean getIsUploadSuccess() {
@@ -37,12 +37,6 @@ public class CheckUploadVO {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-	public String getLqbFileId() {
-		return lqbFileId;
-	}
-	public void setLqbFileId(String lqbFileId) {
-		this.lqbFileId = lqbFileId;
 	}
 	
 	

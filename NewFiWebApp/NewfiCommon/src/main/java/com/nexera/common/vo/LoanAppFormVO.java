@@ -799,8 +799,10 @@ public class LoanAppFormVO implements Serializable {
 			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
 			CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
 			System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
+			System.out.println("customeremploymentincomeVO.id is()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-		customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
+			//customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
 		customerEmploymentIncome.setEmployedIncomePreTax(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedIncomePreTax());
 		customerEmploymentIncome.setEmployedSince(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedSince());
 		customerEmploymentIncomeList.add(customerEmploymentIncome);
@@ -971,7 +973,8 @@ public class LoanAppFormVO implements Serializable {
 		customerSpouseDetail.setMonthlyPension(customerSpouseDetailVO.getMonthlyPension());
 		customerSpouseDetail.setSelfEmployedIncome(customerSpouseDetailVO.getSelfEmployedIncome());
 		customerSpouseDetail.setSsDisabilityIncome(customerSpouseDetailVO.getSsDisabilityIncome());
-		customerSpouseDetail.setSpouseDateOfBirth(customerSpouseDetailVO.getSpouseDateOfBirth());
+		if(customerSpouseDetailVO.getSpouseDateOfBirth() != null)
+		customerSpouseDetail.setSpouseDateOfBirth(new Date(customerSpouseDetailVO.getSpouseDateOfBirth()));
 		customerSpouseDetail.setSpouseSecPhoneNumber(customerSpouseDetailVO.getSpouseSecPhoneNumber());
 	    return customerSpouseDetail;
     }

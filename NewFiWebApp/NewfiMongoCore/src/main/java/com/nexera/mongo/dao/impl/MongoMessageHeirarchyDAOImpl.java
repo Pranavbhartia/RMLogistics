@@ -2,21 +2,18 @@ package com.nexera.mongo.dao.impl;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.stereotype.Component;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.mongo.dao.MongoMessageHeirarchyDAO;
 import com.nexera.mongo.entity.MongoMessageHeirarchy;
-import com.nexera.mongo.entity.MongoQueryResult;
 import com.nexera.mongo.util.MongoConstants;
 
 /**
@@ -57,6 +54,8 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	 * @return
 	 */
 	public MongoMessageHeirarchy findLatestByMessageId(String messageId) {
+		// TODO: Change Method name
+		// TODO Add Test Case
 		DBObject queryObject = QueryBuilder.start("lastMessage").is(messageId)
 		        .get();
 		BasicQuery query = new BasicQuery(queryObject);
@@ -74,15 +73,12 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 	 * @param mongoQueryVO
 	 * @return
 	 */
-	public MongoQueryResult findBy(MongoQueryVO mongoQueryVO) {
+	public List<MongoMessageHeirarchy> findBy(MongoQueryVO mongoQueryVO) {
 		int limit = mongoQueryVO.getNumberOfRecords();
 		int skip = mongoQueryVO.getPageNumber() * limit;
 
 		BasicQuery query = new BasicQuery(constructQuery(mongoQueryVO));
 		query.with(new Sort(Direction.DESC, "date"));
-
-		long count = mongoTemplate.count(query,
-		        MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
 		query.skip(skip);
 		query.limit(limit);
 
@@ -90,10 +86,7 @@ public class MongoMessageHeirarchyDAOImpl implements MongoMessageHeirarchyDAO {
 		        query, MongoMessageHeirarchy.class,
 		        MongoConstants.MESSAGE_HEIRARCHY_COLLECTION);
 
-		MongoQueryResult result = new MongoQueryResult();
-		result.setTotalCount(count);
-		result.setMessageHeirarchies(messageHeirarchies);
-		return result;
+		return messageHeirarchies;
 	}
 
 }

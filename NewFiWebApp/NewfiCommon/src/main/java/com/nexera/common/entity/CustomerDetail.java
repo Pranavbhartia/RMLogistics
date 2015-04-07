@@ -52,20 +52,18 @@ public class CustomerDetail implements Serializable {
 	private Boolean ispensionOrRetirement;
 	private String monthlyPension;
 	private String livingSince;
-	private String equifaxScore;
-	private String experianScore;
-	private String transunionScore;
-
-	// private CustomerSpouseDetail customerSpouseDetail;
-
-	// private CustomerEmploymentIncome customerEmploymentIncome;
-
-	// private CustomerBankAccountDetails customerBankAccountDetails;
-
+	
+//	private CustomerSpouseDetail customerSpouseDetail;
+	
+	//private CustomerEmploymentIncome customerEmploymentIncome;
+	
+//	private CustomerBankAccountDetails customerBankAccountDetails;
+	
 	private CustomerRetirementAccountDetails customerRetirementAccountDetails;
-
+	
 	private CustomerOtherAccountDetails customerOtherAccountDetails;
-
+	
+	
 	public CustomerDetail() {
 	}
 
@@ -171,6 +169,7 @@ public class CustomerDetail implements Serializable {
 		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
 
+	
 	@Column(name = "isselfEmployed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsselfEmployed() {
@@ -190,6 +189,7 @@ public class CustomerDetail implements Serializable {
 		this.selfEmployedIncome = selfEmployedIncome;
 	}
 
+	
 	@Column(name = "isssIncomeOrDisability", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsssIncomeOrDisability() {
@@ -209,6 +209,7 @@ public class CustomerDetail implements Serializable {
 		this.ssDisabilityIncome = ssDisabilityIncome;
 	}
 
+	
 	@Column(name = "ispensionOrRetirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIspensionOrRetirement() {
@@ -218,7 +219,8 @@ public class CustomerDetail implements Serializable {
 	public void setIspensionOrRetirement(Boolean ispensionOrRetirement) {
 		this.ispensionOrRetirement = ispensionOrRetirement;
 	}
-
+	
+	
 	@Column(name = "monthlyPension")
 	public String getMonthlyPension() {
 		return monthlyPension;
@@ -236,43 +238,48 @@ public class CustomerDetail implements Serializable {
 	public void setLivingSince(String livingSince) {
 		this.livingSince = livingSince;
 	}
+	
+	
+	
+	/*@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "customerspousedetails")
+	public CustomerSpouseDetail getCustomerSpouseDetail() {
+		return customerSpouseDetail;
+	}
 
-	/*
-	 * @OneToOne(fetch = FetchType.EAGER)
-	 * 
-	 * @JoinColumn(name = "customerspousedetails") public CustomerSpouseDetail
-	 * getCustomerSpouseDetail() { return customerSpouseDetail; }
-	 * 
-	 * public void setCustomerSpouseDetail(CustomerSpouseDetail
-	 * customerSpouseDetail) { this.customerSpouseDetail = customerSpouseDetail;
-	 * }
-	 * 
-	 * 
-	 * 
-	 * @OneToOne(fetch = FetchType.EAGER)
-	 * 
-	 * @JoinColumn(name = "customeremploymentincome") public
-	 * CustomerEmploymentIncome getCustomerEmploymentIncome() { return
-	 * customerEmploymentIncome; }
-	 * 
-	 * public void setCustomerEmploymentIncome( CustomerEmploymentIncome
-	 * customerEmploymentIncome) { this.customerEmploymentIncome =
-	 * customerEmploymentIncome; }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @OneToOne(fetch = FetchType.EAGER)
-	 * 
-	 * @JoinColumn(name = "customerbankaccountdetails") public
-	 * CustomerBankAccountDetails getCustomerBankAccountDetails() { return
-	 * customerBankAccountDetails; }
-	 * 
-	 * public void setCustomerBankAccountDetails( CustomerBankAccountDetails
-	 * customerBankAccountDetails) { this.customerBankAccountDetails =
-	 * customerBankAccountDetails; }
-	 */
+	public void setCustomerSpouseDetail(CustomerSpouseDetail customerSpouseDetail) {
+		this.customerSpouseDetail = customerSpouseDetail;
+	}
 
+	
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "customeremploymentincome")
+	public CustomerEmploymentIncome getCustomerEmploymentIncome() {
+		return customerEmploymentIncome;
+	}
+
+	public void setCustomerEmploymentIncome(
+	        CustomerEmploymentIncome customerEmploymentIncome) {
+		this.customerEmploymentIncome = customerEmploymentIncome;
+	}
+	
+	
+	
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "customerbankaccountdetails")
+	public CustomerBankAccountDetails getCustomerBankAccountDetails() {
+		return customerBankAccountDetails;
+	}
+
+	public void setCustomerBankAccountDetails(
+	        CustomerBankAccountDetails customerBankAccountDetails) {
+		this.customerBankAccountDetails = customerBankAccountDetails;
+	}
+	
+	*/
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_retirement_ac_details")
 	public CustomerRetirementAccountDetails getCustomerRetirementAccountDetails() {
@@ -314,149 +321,110 @@ public class CustomerDetail implements Serializable {
 			        .getProfileCompletionStatus());
 			customerDetailVO.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
-			customerDetailVO.setMobileAlertsPreference(inputEntity
-			        .getMobileAlertsPreference());
-			customerDetailVO.setTransunionScore(inputEntity
-			        .getTransunionScore());
-			customerDetailVO.setEquifaxScore(inputEntity.getEquifaxScore());
-			customerDetailVO.setExperianScore(inputEntity.getExperianScore());
-			// customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
-			// System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
-			// customerDetailVO.setCustomerEmploymentIncome(convertFromEntityToVO(inputEntity.getCustomerEmploymentIncome()));
-			// customerDetailVO.setCustomerBankAccountDetails(convertFromEntityToVO(inputEntity.getCustomerBankAccountDetails()));
-			customerDetailVO
-			        .setCustomerRetirementAccountDetails(convertFromEntityToVO(inputEntity
-			                .getCustomerRetirementAccountDetails()));
-			customerDetailVO
-			        .setCustomerOtherAccountDetails(convertFromEntityToVO(inputEntity
-			                .getCustomerOtherAccountDetails()));
-
+			customerDetailVO.setMobileAlertsPreference(inputEntity.getMobileAlertsPreference());
+		//	customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
+		//	System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
+		//	customerDetailVO.setCustomerEmploymentIncome(convertFromEntityToVO(inputEntity.getCustomerEmploymentIncome()));
+		//	customerDetailVO.setCustomerBankAccountDetails(convertFromEntityToVO(inputEntity.getCustomerBankAccountDetails()));
+			customerDetailVO.setCustomerRetirementAccountDetails(convertFromEntityToVO(inputEntity.getCustomerRetirementAccountDetails()));
+			customerDetailVO.setCustomerOtherAccountDetails(convertFromEntityToVO(inputEntity.getCustomerOtherAccountDetails()));
+			
 		}
 		return customerDetailVO;
 	}
 
 	private static CustomerOtherAccountDetailsVO convertFromEntityToVO(
-	        CustomerOtherAccountDetails customerOtherAccountDetails) {
-
+            CustomerOtherAccountDetails customerOtherAccountDetails) {
+	  
 		CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = new CustomerOtherAccountDetailsVO();
-		if (null == customerOtherAccountDetails) {
-			// changed this as customer spouse detail should be be saved during
-			// registration
+		if(null == customerOtherAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
 			return null;
-			// return customerOtherAccountDetailsVO;
+			//return customerOtherAccountDetailsVO;
 		}
-		customerOtherAccountDetailsVO
-		        .setId(customerOtherAccountDetails.getId());
-		customerOtherAccountDetailsVO
-		        .setAccountSubType(customerOtherAccountDetails
-		                .getAccountSubType());
-		customerOtherAccountDetailsVO
-		        .setCurrentAccountBalance(customerOtherAccountDetails
-		                .getCurrentaccountbalance());
-		customerOtherAccountDetailsVO
-		        .setAmountForNewHome(customerOtherAccountDetails
-		                .getAmountfornewhome());
-
-		return customerOtherAccountDetailsVO;
-	}
+		customerOtherAccountDetailsVO.setId(customerOtherAccountDetails.getId());
+		customerOtherAccountDetailsVO.setAccountSubType(customerOtherAccountDetails.getAccountSubType());
+		customerOtherAccountDetailsVO.setCurrentAccountBalance(customerOtherAccountDetails.getCurrentaccountbalance());
+		customerOtherAccountDetailsVO.setAmountForNewHome(customerOtherAccountDetails.getAmountfornewhome());
+		
+	    return customerOtherAccountDetailsVO;
+    }
 
 	private static CustomerRetirementAccountDetailsVO convertFromEntityToVO(
-	        CustomerRetirementAccountDetails customerRetirementAccountDetails) {
-
+            CustomerRetirementAccountDetails customerRetirementAccountDetails) {
+	  
 		CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = new CustomerRetirementAccountDetailsVO();
-		if (null == customerRetirementAccountDetails) {
-			// changed this as customer spouse detail should be be saved during
-			// registration
+		if(null == customerRetirementAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
 			return null;
-			// return customerRetirementAccountDetailsVO;
+			//return customerRetirementAccountDetailsVO;
 		}
-		customerRetirementAccountDetailsVO
-		        .setId(customerRetirementAccountDetails.getId());
-		customerRetirementAccountDetailsVO
-		        .setAccountSubType(customerRetirementAccountDetails
-		                .getAccountSubType());
-		customerRetirementAccountDetailsVO
-		        .setCurrentAccountBalance(customerRetirementAccountDetails
-		                .getCurrentaccountbalance());
-		customerRetirementAccountDetailsVO
-		        .setAmountForNewHome(customerRetirementAccountDetails
-		                .getAmountfornewhome());
-
-		return customerRetirementAccountDetailsVO;
-	}
+		customerRetirementAccountDetailsVO.setId(customerRetirementAccountDetails.getId());
+		customerRetirementAccountDetailsVO.setAccountSubType(customerRetirementAccountDetails.getAccountSubType());
+		customerRetirementAccountDetailsVO.setCurrentAccountBalance(customerRetirementAccountDetails.getCurrentaccountbalance());
+		customerRetirementAccountDetailsVO.setAmountForNewHome(customerRetirementAccountDetails.getAmountfornewhome());
+		
+	    return customerRetirementAccountDetailsVO;
+    }
 
 	private static CustomerBankAccountDetailsVO convertFromEntityToVO(
-	        CustomerBankAccountDetails customerBankAccountDetails) {
-
-		CustomerBankAccountDetailsVO customerBankAccountDetailsVO = new CustomerBankAccountDetailsVO();
-		if (null == customerBankAccountDetails) {
-			// changed this as customer spouse detail should be be saved during
-			// registration
+            CustomerBankAccountDetails customerBankAccountDetails) {
+	   
+		CustomerBankAccountDetailsVO customerBankAccountDetailsVO = new CustomerBankAccountDetailsVO ();
+		if(null == customerBankAccountDetails){
+			//changed this as customer spouse detail should be be saved during registration 
 			return null;
-			// return customerBankAccountDetailsVO;
+		//	return customerBankAccountDetailsVO;
 		}
 		customerBankAccountDetailsVO.setId(customerBankAccountDetails.getId());
-		customerBankAccountDetailsVO
-		        .setAccountSubType(customerBankAccountDetails
-		                .getAccountSubType());
-		customerBankAccountDetailsVO
-		        .setAmountForNewHome(customerBankAccountDetails
-		                .getAmountfornewhome());
-		customerBankAccountDetailsVO
-		        .setCurrentAccountBalance(customerBankAccountDetails
-		                .getCurrentaccountbalance());
-
-		return customerBankAccountDetailsVO;
-	}
+		customerBankAccountDetailsVO.setAccountSubType(customerBankAccountDetails.getAccountSubType());
+		customerBankAccountDetailsVO.setAmountForNewHome(customerBankAccountDetails.getAmountfornewhome());
+		customerBankAccountDetailsVO.setCurrentAccountBalance(customerBankAccountDetails.getCurrentaccountbalance());
+		
+	    return customerBankAccountDetailsVO;
+    }
 
 	private static CustomerEmploymentIncomeVO convertFromEntityToVO(
-	        CustomerEmploymentIncome customerEmploymentIncome) {
+            CustomerEmploymentIncome customerEmploymentIncome) {
 
-		CustomerEmploymentIncomeVO customerEmploymentIncomeVO = new CustomerEmploymentIncomeVO();
-		if (null == customerEmploymentIncome) {
-			// changed this as customer spouse detail should be be saved during
-			// registration
+		CustomerEmploymentIncomeVO customerEmploymentIncomeVO = new  CustomerEmploymentIncomeVO();
+		if(null ==customerEmploymentIncome){
+			//changed this as customer spouse detail should be be saved during registration 
 			return null;
-			// return customerEmploymentIncomeVO;
+			//return customerEmploymentIncomeVO;
 		}
-
+		
 		customerEmploymentIncomeVO.setId(customerEmploymentIncome.getId());
-		customerEmploymentIncomeVO.setEmployedAt(customerEmploymentIncome
-		        .getEmployedAt());
-		customerEmploymentIncomeVO
-		        .setEmployedIncomePreTax(customerEmploymentIncome
-		                .getEmployedIncomePreTax());
-		customerEmploymentIncomeVO.setEmployedSince(customerEmploymentIncome
-		        .getEmployedSince());
-
-		return customerEmploymentIncomeVO;
-	}
+		customerEmploymentIncomeVO.setEmployedAt(customerEmploymentIncome.getEmployedAt());
+		customerEmploymentIncomeVO.setEmployedIncomePreTax(customerEmploymentIncome.getEmployedIncomePreTax());
+		customerEmploymentIncomeVO.setEmployedSince(customerEmploymentIncome.getEmployedSince());
+			
+	    return customerEmploymentIncomeVO;
+    }
 
 	private static CustomerSpouseDetailVO convertFromEntityToVO(
-	        CustomerSpouseDetail customerSpouseDetail) {
+            CustomerSpouseDetail customerSpouseDetail) {
 
-		CustomerSpouseDetailVO customerSpouseDetailVO = new CustomerSpouseDetailVO();
-		if (customerSpouseDetail == null) {
-			// changed this as customer spouse detail should be be saved during
-			// registration
+		CustomerSpouseDetailVO customerSpouseDetailVO = new CustomerSpouseDetailVO ();
+		if(customerSpouseDetail == null){
+			//changed this as customer spouse detail should be be saved during registration 
 			return null;
-			// return customerSpouseDetailVO;
-
+			//return customerSpouseDetailVO;
+			
 		}
 		customerSpouseDetailVO.setId(customerSpouseDetail.getId());
-		customerSpouseDetailVO.setSpouseName(customerSpouseDetail
-		        .getSpouseName());
-
-		return customerSpouseDetailVO;
-	}
+		customerSpouseDetailVO.setSpouseName(customerSpouseDetail.getSpouseName());
+		
+	    return customerSpouseDetailVO;
+    }
 
 	public static CustomerDetail convertFromVOToEntity(
 	        final CustomerDetailVO inputEntity) {
 		CustomerDetail customerDetail = new CustomerDetail();
 
 		customerDetail.setSubscriptionsStatus(2);
-
-		System.out.println("inputEntity in customer entity" + inputEntity);
+		
+		System.out.println("inputEntity in customer entity"+inputEntity);
 		if (inputEntity != null) {
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
 			customerDetail.setAddressState(inputEntity.getAddressState());
@@ -467,146 +435,98 @@ public class CustomerDetail implements Serializable {
 			}
 			customerDetail.setId(inputEntity.getId());
 			customerDetail.setId(inputEntity.getId());
-			customerDetail.setTransunionScore(inputEntity.getTransunionScore());
-			customerDetail.setEquifaxScore(inputEntity.getEquifaxScore());
-			customerDetail.setExperianScore(inputEntity.getExperianScore());
 			customerDetail.setSubscriptionsStatus(inputEntity
 			        .getSubscriptionsStatus());
 			customerDetail.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
-			if (null != inputEntity.getProfileCompletionStatus()) {
-				customerDetail.setProfileCompletionStatus(inputEntity
-				        .getProfileCompletionStatus());
-
-				// customerDetail.setCustomerBankAccountDetails(convertFromVOToEntity(inputEntity.getCustomerBankAccountDetails()));
-				// customerDetail.setCustomerEmploymentIncome(convertFromVOToEntity(inputEntity.getCustomerEmploymentIncome()));
-				customerDetail
-				        .setCustomerOtherAccountDetails(convertFromVOToEntity(inputEntity
-				                .getCustomerOtherAccountDetails()));
-				customerDetail
-				        .setCustomerRetirementAccountDetails(convertFromVOToEntity(inputEntity
-				                .getCustomerRetirementAccountDetails()));
-
+			if(null!=inputEntity.getProfileCompletionStatus()){
+			customerDetail.setProfileCompletionStatus(inputEntity.getProfileCompletionStatus());
+			
+			//customerDetail.setCustomerBankAccountDetails(convertFromVOToEntity(inputEntity.getCustomerBankAccountDetails()));
+			//customerDetail.setCustomerEmploymentIncome(convertFromVOToEntity(inputEntity.getCustomerEmploymentIncome()));
+			customerDetail.setCustomerOtherAccountDetails(convertFromVOToEntity(inputEntity.getCustomerOtherAccountDetails()));
+			customerDetail.setCustomerRetirementAccountDetails(convertFromVOToEntity(inputEntity.getCustomerRetirementAccountDetails()));
+			
+			
+			
 			}
 		}
 		return customerDetail;
 	}
-
+	
+	
+	
+	
+	
+	
 	private static CustomerOtherAccountDetails convertFromVOToEntity(
-	        CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO) {
-
+            CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO) {
+	  
 		CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
-		if (null == customerOtherAccountDetailsVO)
-			return null;
-		// return customerOtherAccountDetails;
-
-		customerOtherAccountDetails
-		        .setId(customerOtherAccountDetailsVO.getId());
-		customerOtherAccountDetails
-		        .setAccountSubType(customerOtherAccountDetailsVO
-		                .getAccountSubType());
-		customerOtherAccountDetails
-		        .setCurrentaccountbalance(customerOtherAccountDetailsVO
-		                .getCurrentAccountBalance());
-		customerOtherAccountDetails
-		        .setAmountfornewhome(customerOtherAccountDetailsVO
-		                .getAmountForNewHome());
-
-		return customerOtherAccountDetails;
-	}
+		if(null == customerOtherAccountDetailsVO)
+		return null;
+			//return customerOtherAccountDetails;
+		
+		customerOtherAccountDetails.setId(customerOtherAccountDetailsVO.getId());
+		customerOtherAccountDetails.setAccountSubType(customerOtherAccountDetailsVO.getAccountSubType());
+		customerOtherAccountDetails.setCurrentaccountbalance(customerOtherAccountDetailsVO.getCurrentAccountBalance());
+		customerOtherAccountDetails.setAmountfornewhome(customerOtherAccountDetailsVO.getAmountForNewHome());
+		
+	    return customerOtherAccountDetails;
+    }
 
 	private static CustomerRetirementAccountDetails convertFromVOToEntity(
-	        CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO) {
-
+            CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO) {
+	  
 		CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
-		if (null == customerRetirementAccountDetailsVO)
+		if(null == customerRetirementAccountDetailsVO)
 			return null;
-		// return customerRetirementAccountDetails;
-
-		customerRetirementAccountDetails
-		        .setId(customerRetirementAccountDetailsVO.getId());
-		customerRetirementAccountDetails
-		        .setAccountSubType(customerRetirementAccountDetailsVO
-		                .getAccountSubType());
-		customerRetirementAccountDetails
-		        .setCurrentaccountbalance(customerRetirementAccountDetailsVO
-		                .getCurrentAccountBalance());
-		customerRetirementAccountDetails
-		        .setAmountfornewhome(customerRetirementAccountDetailsVO
-		                .getAmountForNewHome());
-
-		return customerRetirementAccountDetails;
-	}
+			//return customerRetirementAccountDetails;
+		
+		customerRetirementAccountDetails.setId(customerRetirementAccountDetailsVO.getId());
+		customerRetirementAccountDetails.setAccountSubType(customerRetirementAccountDetailsVO.getAccountSubType());
+		customerRetirementAccountDetails.setCurrentaccountbalance(customerRetirementAccountDetailsVO.getCurrentAccountBalance());
+		customerRetirementAccountDetails.setAmountfornewhome(customerRetirementAccountDetailsVO.getAmountForNewHome());
+		
+	    return customerRetirementAccountDetails;
+    }
 
 	private static CustomerBankAccountDetails convertFromVOToEntity(
-	        CustomerBankAccountDetailsVO customerBankAccountDetailsVO) {
-
+            CustomerBankAccountDetailsVO customerBankAccountDetailsVO) {
+	   
 		CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
-		if (null == customerBankAccountDetailsVO)
+		if(null == customerBankAccountDetailsVO)
 			return null;
-		// return customerBankAccountDetails;
-
+			//return customerBankAccountDetails;
+		
 		customerBankAccountDetails.setId(customerBankAccountDetailsVO.getId());
-		customerBankAccountDetails
-		        .setAccountSubType(customerBankAccountDetailsVO
-		                .getAccountSubType());
-		customerBankAccountDetails
-		        .setAmountfornewhome(customerBankAccountDetailsVO
-		                .getAmountForNewHome());
-		customerBankAccountDetails
-		        .setCurrentaccountbalance(customerBankAccountDetailsVO
-		                .getCurrentAccountBalance());
-
-		return customerBankAccountDetails;
-	}
+		customerBankAccountDetails.setAccountSubType(customerBankAccountDetailsVO.getAccountSubType());
+		customerBankAccountDetails.setAmountfornewhome(customerBankAccountDetailsVO.getAmountForNewHome());
+		customerBankAccountDetails.setCurrentaccountbalance(customerBankAccountDetailsVO.getCurrentAccountBalance());
+		
+	    return customerBankAccountDetails;
+    }
 
 	private static CustomerEmploymentIncome convertFromVOToEntity(
-	        CustomerEmploymentIncomeVO customerEmploymentIncomeVO) {
+            CustomerEmploymentIncomeVO customerEmploymentIncomeVO) {
 
-		CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
-		if (null == customerEmploymentIncomeVO)
-			return null;
-		// return customerEmploymentIncome;
-
+		CustomerEmploymentIncome customerEmploymentIncome = new  CustomerEmploymentIncome();
+		if(null ==customerEmploymentIncomeVO)
+		return null;
+			//return customerEmploymentIncome;
+			
 		customerEmploymentIncome.setId(customerEmploymentIncomeVO.getId());
-		customerEmploymentIncome.setEmployedAt(customerEmploymentIncomeVO
-		        .getEmployedAt());
-		customerEmploymentIncome
-		        .setEmployedIncomePreTax(customerEmploymentIncomeVO
-		                .getEmployedIncomePreTax());
-		customerEmploymentIncome.setEmployedSince(customerEmploymentIncomeVO
-		        .getEmployedSince());
-
-		return customerEmploymentIncome;
-	}
-
-	@Column(name = "equifax_score")
-	public String getEquifaxScore() {
-		return equifaxScore;
-	}
-
-	public void setEquifaxScore(String equifaxScore) {
-		this.equifaxScore = equifaxScore;
-	}
-
-	@Column(name = "experian_score")
-	public String getExperianScore() {
-		return experianScore;
-	}
-
-	public void setExperianScore(String experianScore) {
-		this.experianScore = experianScore;
-	}
-
-	@Column(name = "transunion_score")
-	public String getTransunionScore() {
-		return transunionScore;
-	}
-
-	public void setTransunionScore(String transunionScore) {
-		this.transunionScore = transunionScore;
-	}
+		customerEmploymentIncome.setEmployedAt(customerEmploymentIncomeVO.getEmployedAt());
+		customerEmploymentIncome.setEmployedIncomePreTax(customerEmploymentIncomeVO.getEmployedIncomePreTax());
+		customerEmploymentIncome.setEmployedSince(customerEmploymentIncomeVO.getEmployedSince());
+			
+	    return customerEmploymentIncome;
+    }
+	
+	
+	
+	
 
 }

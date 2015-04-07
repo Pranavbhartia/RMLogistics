@@ -26,6 +26,4 @@ public interface IWorkflowService {
 
 	public void dismissReadNotifications(int loanID,
 	        MilestoneNotificationTypes noticationType);
-
-	public void createAlertOfType(CreateReminderVo createReminderVo);
 }
