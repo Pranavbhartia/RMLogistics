@@ -5,6 +5,7 @@
 <script src="resources/js/bootstrap-datepicker.js"></script>
 <script src="resources/js/moment.min.js"></script>
 <script src="resources/js/bootstrap-datetimepicker.js"></script>
+<script src="resources/js/perfect-scrollbar.js"></script>
 <script src="resources/js/common.js"></script>
 <script src="resources/js/script.js"></script>
 <script src="resources/js/messageDashboard.js"></script>
@@ -23,7 +24,10 @@
 <script src="resources/js/jquery.knob.js"></script>
 <script src="resources/js/customer-application.js"></script>
 <script src="resources/js/include/jquery-maskMoney.js"></script>
-
+<script src="resources/js/lockRate.js"></script>
+<script src="resources/js/adminModule.js"></script>
+<script src="resources/js/customer-buyHome-app.js"></script>
+<script src="resources/js/turnaround.js"></script>
 <div id="dialog" >
 </div>
 

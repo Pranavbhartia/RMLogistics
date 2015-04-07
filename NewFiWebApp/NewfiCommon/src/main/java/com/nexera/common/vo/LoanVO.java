@@ -1,6 +1,7 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -12,13 +13,13 @@ public class LoanVO implements Serializable {
 	private Date createdDate;
 	private Boolean deleted;
 	private String loanEmailId;
-	private Integer lqbFileId;
+	private String lqbFileId;
 	private Date modifiedDate;
 	private String name;
 	private String status;
 	private UserVO user;
 	private LoanTypeMasterVO loanType;
-	private LoanStatusMasterVO loanStatus;
+	
 	private PropertyTypeMasterVO propertyType;
 	private LoanMilestoneMasterVO currentLoanMilestone;
 	private List<LoanAppFormVO> loanAppForms;
@@ -30,7 +31,13 @@ public class LoanVO implements Serializable {
 	private List<LoanRateVO> loanRates;
 	private List<LoanSettingVO> loanSettings;
 	private List<UserVO> loanTeam;
-	
+	private ExtendedLoanTeamVO extendedLoanTeam;
+
+	private Boolean isRateLocked;
+	private Boolean isBankConnected;
+	private String setSenderDomain;
+	private BigDecimal lockedRate;
+
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
@@ -51,12 +58,12 @@ public class LoanVO implements Serializable {
 	}
 
 	public LoanVO(int loanId) {
-	    this.id = loanId;
-    }
+		this.id = loanId;
+	}
 
 	public LoanVO() {
-	    // TODO Auto-generated constructor stub
-    }
+		// TODO Auto-generated constructor stub
+	}
 
 	public int getId() {
 		return id;
@@ -90,11 +97,11 @@ public class LoanVO implements Serializable {
 		this.loanEmailId = loanEmailId;
 	}
 
-	public Integer getLqbFileId() {
+	public String getLqbFileId() {
 		return lqbFileId;
 	}
 
-	public void setLqbFileId(Integer lqbFileId) {
+	public void setLqbFileId(String lqbFileId) {
 		this.lqbFileId = lqbFileId;
 	}
 
@@ -130,13 +137,6 @@ public class LoanVO implements Serializable {
 		this.loanType = loanType;
 	}
 
-	public LoanStatusMasterVO getLoanStatus() {
-		return loanStatus;
-	}
-
-	public void setLoanStatus(LoanStatusMasterVO loanStatus) {
-		this.loanStatus = loanStatus;
-	}
 
 	public PropertyTypeMasterVO getPropertyType() {
 		return propertyType;
@@ -151,7 +151,7 @@ public class LoanVO implements Serializable {
 	}
 
 	public void setCurrentLoanMilestone(
-			LoanMilestoneMasterVO currentLoanMilestone) {
+	        LoanMilestoneMasterVO currentLoanMilestone) {
 		this.currentLoanMilestone = currentLoanMilestone;
 	}
 
@@ -168,7 +168,7 @@ public class LoanVO implements Serializable {
 	}
 
 	public void setLoanApplicationFees(
-			List<LoanApplicationFeeVO> loanApplicationFees) {
+	        List<LoanApplicationFeeVO> loanApplicationFees) {
 		this.loanApplicationFees = loanApplicationFees;
 	}
 
@@ -242,6 +242,46 @@ public class LoanVO implements Serializable {
 		loan.setId(this.getId());
 		return loan;
 
+	}
+
+	public String getSetSenderDomain() {
+		return setSenderDomain;
+	}
+
+	public void setSetSenderDomain(String setSenderDomain) {
+		this.setSenderDomain = setSenderDomain;
+	}
+
+	public BigDecimal getLockedRate() {
+		return lockedRate;
+	}
+
+	public void setLockedRate(BigDecimal lockedRate) {
+		this.lockedRate = lockedRate;
+	}
+
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
+
+	public ExtendedLoanTeamVO getExtendedLoanTeam() {
+		return extendedLoanTeam;
+	}
+
+	public void setExtendedLoanTeam(ExtendedLoanTeamVO extendedLoanTeam) {
+		this.extendedLoanTeam = extendedLoanTeam;
 	}
 
 }

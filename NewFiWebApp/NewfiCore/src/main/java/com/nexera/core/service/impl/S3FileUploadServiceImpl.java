@@ -12,10 +12,12 @@ package com.nexera.core.service.impl;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -136,7 +138,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				uniqueBucketName, key, file);
 
-		if(FilenameUtils.getExtension(file.getName()).equals("pdf")){
+		if(subfolderInBucket.equalsIgnoreCase("document")){
 			putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
 		}else{
 			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
@@ -253,6 +255,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		}
 
 	}
+	
 	
 	public static long generateRandomString() {
 		// TODO Auto-generated method stub

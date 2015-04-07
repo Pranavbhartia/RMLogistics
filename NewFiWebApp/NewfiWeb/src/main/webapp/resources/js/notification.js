@@ -11,6 +11,20 @@ function getNotificationContext(loanId,userId){
 		existingWrapper:undefined,
 		alertWrapper:undefined,
 		headerText:"",
+		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
+		enablePushnotification:false,
+		addToList:function(list,object){
+			var exist=false;
+			for(var i=0;i<list.length;i++){
+				if(list[i].id==object.id){
+					exist=true;
+				}
+			}
+			if(!exist){
+				list.push(object);
+			}
+			return exist;
+		},
 		getNotificationForUser:function(callback){
 			if(userId!=0){
 				var ob=this;
@@ -28,6 +42,87 @@ function getNotificationContext(loanId,userId){
 						}
 					}
 					
+				});
+			}
+		},
+		getNotificationUpdate:function(callback){
+			var ob=this;
+			if(ob.loanId!=0&&ob.enablePushnotification){
+				var data={};
+				data.userID=0;
+				data.loanID=ob.loanId;
+				//code to call API to get Notification List for loan
+				//http://localhost:8080/PushNotification/pushServlet/?task=notification&taskId=1
+				ajaxRequest(ob.pushServerUrl+ob.loanId,"GET","json",data,function(response){
+					
+				},false,undefined,function(response){
+					ob.getNotificationUpdate();
+					if(response.error){
+						showToastMessage(response.error.message);
+					}else{
+						if(response.action=="new"){
+							var nwData=response.data;
+							var exist=false;
+							//Removed Code 
+							//if(nwData.createdForID==newfiObject.user.id||(!nwData.createdForID||nwData.createdForID==0))
+							if(checkNotificationApplicable(nwData)){
+								exist=ob.addToList(ob.loanNotificationList,nwData);
+								if(!exist){
+									ob.updateWrapper();
+									ob.updateLoanListNotificationCount();
+									updateDefaultContext(nwData);
+								}
+							}
+						}else if(response.action=="remove"){
+							var notificationID=response.notificationID;
+							var id=response.id;
+							//ob.removeNotificationfromList(id);
+							var existAry=$("#"+notificationID);
+							if(existAry.length>0){
+								$("#"+notificationID).remove();
+							}
+							existAry=$("#"+"LNID"+id);
+							if(existAry.length>0){
+								$("#"+"LNID"+id).remove();
+							}
+							existAry=$("#"+"UNID"+id);
+							if(existAry.length>0){
+								$("#"+"UNID"+id).remove();
+							}
+							if(callback){
+								callback(ob);
+							}
+							removeNotificationFromAllContext(id);
+							ob.updateWrapper();
+						}else if(response.action=="snooze"){
+							var notificationID=response.notificationID;
+							var id=response.id;
+							ob.removeNotificationfromList(id);
+							var existAry=$("#"+notificationID);
+							if(existAry.length>0){
+								$("#"+notificationID).remove();
+							}
+							ob.updateLoanListNotificationCount();
+						}
+
+					}
+				});
+			}
+		},
+		updateOtherClients:function(change,callback){
+			var ob=this;
+			if((ob.loanId!=0||change.loanId)&&ob.enablePushnotification){
+				var data={};
+				var lnId=ob.loanId!=0?ob.loanId:change.loanId;
+				//code to call API to get Notification List for loan
+				ajaxRequest(ob.pushServerUrl+lnId+"&data="+JSON.stringify(change),"POST","json",data,function(response){
+					if(response.error){
+						showToastMessage(response.error.message);
+					}else{
+						if(callback){
+							callback(ob);
+						}
+					}
 				});
 			}
 		},
@@ -139,6 +234,18 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Notification Dismissed");
+
+					//code for updating all other clients start
+					var notificationOb;
+					for(var i=0;i<ob.loanNotificationList.length;i++){
+						if(ob.loanNotificationList[i].id==id){
+							notificationOb=ob.loanNotificationList[i];
+						}
+					}
+					var changeData={"action":"remove","notificationID":notificationID,"id":id,"loanId":notificationOb.loanID};
+					ob.updateOtherClients(changeData);
+					//end
+
 					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
@@ -178,6 +285,18 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Success");
+
+					//code for updating all other clients start
+					var notificationOb;
+					for(var i=0;i<ob.loanNotificationList.length;i++){
+						if(ob.loanNotificationList[i].id==id){
+							notificationOb=ob.loanNotificationList[i];
+						}
+					}
+					var changeData={"action":"snooze","notificationID":notificationID,"id":id,"loanId":notificationOb.loanID};
+					ob.updateOtherClients(changeData);
+					//end
+
 					ob.removeNotificationfromList(id);
 					var existAry=$("#"+notificationID);
 					if(existAry.length>0){
@@ -241,9 +360,15 @@ function getNotificationContext(loanId,userId){
 						data.id=response.resultObject.id;
 					data.dismissable=true;
 					
-					if(new Date().getTime()>=data.remindOn)
-						ob.loanNotificationList.push(data);
-					updateDefaultContext(data);
+					//code for updating all other clients start
+					var changeData={"action":"new","data":data};
+					ob.updateOtherClients(changeData);
+					//end
+
+					//if(new Date().getTime()>=data.remindOn)
+					var exist=ob.addToList(ob.loanNotificationList,data);
+					if(!exist)
+						updateDefaultContext(data);
 					if(callback){
 						callback(ob);
 					}
@@ -276,7 +401,32 @@ function getNotificationContext(loanId,userId){
 		}
 	};
 	//notificationContext.initContext();
+	if(notificationContext.loanId)
+		notificationContext.getNotificationUpdate();
 	return notificationContext;
+}
+function checkNotificationApplicable(notification){
+	if(notification.createdForID==newfiObject.user.id){
+		return true;
+	}else{
+		if(!notification.createdForID){
+			if(newfiObject.user.internalUserDetail){
+				if(notification.visibleToInternalUserRoles.indexOf(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName)>=0)
+				return true;
+			}else{
+				if(notification.visibleToUserRoles.indexOf(newfiObject.user.userRole.roleCd)>=0)
+				return true;
+			}
+		}else
+			return false;
+	}
+}
+function getUserRoleKey(){
+	if(newfiObject.user.internalUserDetail){
+		return newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName;
+	}else{
+		return newfiObject.user.userRole.roleCd;
+	}
 }
 function updateDefaultContext(notification){
 	var contxt=getContext("notification");
@@ -495,5 +645,10 @@ function addNotificationPopup(loanId,element,data){
 	});
 	showNotificationPopup();
 }
-
+$(document).click(function() {
+	if ($('#ms-add-notification-popup').css("display") == "block") {
+		if ($(event.target).attr("class") != "day")
+			removeNotificationPopup();
+	}
+});
 

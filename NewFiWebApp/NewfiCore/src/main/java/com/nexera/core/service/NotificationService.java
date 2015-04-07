@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.UserRolesEnum;
-import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
 
 public interface NotificationService {
@@ -25,4 +25,7 @@ public interface NotificationService {
 			List<InternalUserRolesEum> internalUserRoles);
 	
 	List<NotificationVO> findNotificationTypeListForUser(int userId,String type);
+
+	List<NotificationVO> findNotificationTypeListForLoan(int loanId,
+			String type, Boolean isRead);
 }

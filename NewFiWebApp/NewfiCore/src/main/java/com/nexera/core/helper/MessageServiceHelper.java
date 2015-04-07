@@ -4,16 +4,31 @@ import java.util.List;
 
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.MessageVO;
+import com.nexera.common.vo.MessageVO.FileVO;
 
 public interface MessageServiceHelper {
 
-	public void saveMessage(MessageVO messagesVO, String messageType);
+	public void saveMessage(MessageVO messagesVO, String messageType,
+	        boolean sendEmail);
 
-	public void generateCommunicationLogMessage(int loanId, User loggedInUser,
-            List<Integer> addedList, List<Integer> removedList);
-	       
-	
+	public void generateNeedListModificationMessage(int loanId,
+	        User loggedInUser, List<Integer> addedList,
+	        List<Integer> removedList, boolean sendEmail);
 
-	
-	
+	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
+	        String messageId, String noteText, List<FileVO> fileUrls,
+	        boolean successFlag, boolean sendEmail);
+
+	public void generateWorkflowMessage(int loanId, String noteText,
+	        boolean sendEmail);
+
+	public void generatePrivateMessage(int loanId, String noteText,
+	        User createdBy, boolean sendEmail);
+
+	public void checkIfUserFirstLogin(User user);
+
+	void generateWelcomeNote(User loggedInUser, int loanId);
+
+	void generateManagerMessage(int loanId, String noteText, User createdBy,
+	        boolean sendEmail);
 }

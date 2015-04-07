@@ -21,14 +21,6 @@
 		<property name="maxPoolSize" value="5" />
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
-	
-	
-	<bean id="emailTaskExecutor"
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="2" />
-		<property name="maxPoolSize" value="5" />
-		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
-	</bean>
 
 
 	<bean name="complexJobDetail"
@@ -44,18 +36,97 @@
 			value="com.nexera.core.batchprocessor.EmailBatchProcessor" />
 		<property name="durability" value="true" />
 	</bean>
-	
-		<bean id="emailCronTrigger"
+
+	<bean name="checkUserprofile"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckUserProfileBatch"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean name="checkLockUserRate"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckLockRateStatusBatch"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean name="checkLoanApplicationFee"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckLoanApplicationFeeBatch"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean name="checkIsBankConnected"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckIsConnectedToBankBatch"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean name="checkApplicationProgress"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckApplicationProgressBatch"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean name="checkNeededItems"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.CheckNeededItems"></property>
+		<property name="durability" value="true" />
+	</bean>
+
+	<bean id="emailCronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="emailJobDetail" />
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 
 
+
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
-		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+
+	<bean id="userProfileCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkUserprofile" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
+	</bean>
+
+	<bean id="lockUserRateCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkLockUserRate" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
+	</bean>
+
+	<bean id="applicationFeesCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkLoanApplicationFee" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
+	</bean>
+
+	<bean id="isBankConnectedCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkIsBankConnected" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
+	</bean>
+
+	<bean id="applicationProgressCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkApplicationProgress" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
+	</bean>
+
+	<bean id="neededDocumentCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="checkNeededItems" />
+		<property name="cronExpression" value="0 0/40 * * * ?" />
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 
@@ -65,6 +136,9 @@
 			<list>
 				<ref bean="complexJobDetail" />
 				<ref bean="emailJobDetail" />
+				<!-- <ref bean="checkUserprofile"/> <ref bean="checkLockUserRate"/> <ref 
+					bean="checkLoanApplicationFee"/> <ref bean="checkIsBankConnected"/> <ref 
+					bean="checkApplicationProgress"/> <ref bean="checkNeededItems"/> -->
 			</list>
 		</property>
 
@@ -72,6 +146,10 @@
 			<list>
 				<ref bean="cronTrigger" />
 				<ref bean="emailCronTrigger" />
+				<!-- <ref bean="userProfileCronTrigger" /> <ref bean="lockUserRateCronTrigger" 
+					/> <ref bean="applicationFeesCronTrigger" /> <ref bean="isBankConnectedCronTrigger" 
+					/> <ref bean="applicationProgressCronTrigger" /> <ref bean="neededDocumentCronTrigger" 
+					/> -->
 			</list>
 		</property>
 	</bean>

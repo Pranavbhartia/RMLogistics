@@ -7,44 +7,41 @@ import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.bean.WorkflowMaster;
 
+public interface WorkflowService {
 
-public interface WorkflowService
-{
+	WorkflowMaster getWorkFlowByWorkFlowType(String workflowType);
 
+	WorkflowExec setWorkflowIntoExecution(WorkflowMaster workflowMaster);
 
-    WorkflowMaster getWorkFlowByWorkFlowType( String workflowType );
+	WorkflowItemExec setWorkflowItemIntoExecution(
+	        WorkflowExec parentWorkflowMaster,
+	        WorkflowItemMaster workflowItemMaster,
+	        WorkflowItemExec parentWorkflowItemExec);
 
+	List<WorkflowItemMaster> getWorkflowItemMasterListByWorkflowMaster(
+	        WorkflowMaster workflowMaster);
 
-    WorkflowExec setWorkflowIntoExecution( WorkflowMaster workflowMaster );
+	WorkflowItemExec getWorkflowExecById(int workflowexecId);
 
+	void updateWorkflowExecStatus(WorkflowExec parentWorkflow);
 
-    WorkflowItemExec setWorkflowItemIntoExecution( WorkflowExec parentWorkflowMaster, WorkflowItemMaster workflowItemMaster,
-        WorkflowItemExec parentWorkflowItemExec );
+	void updateWorkflowItemExecutionStatus(
+	        WorkflowItemExec workflowItemExecution);
 
+	List<WorkflowItemExec> getWorkflowItemListByParentWorkflowExecItem(
+	        WorkflowItemExec workflowItemExecution);
 
-    List<WorkflowItemMaster> getWorkflowItemMasterListByWorkflowMaster( WorkflowMaster workflowMaster );
+	Boolean checkIfOnSuccessOfAnotherItem(WorkflowItemMaster workflowItemMaster);
 
+	WorkflowExec getWorkflowExecFromId(int workflowexecId);
 
-    WorkflowItemExec getWorkflowExecById( int workflowexecId );
+	void saveParamsInExecTable(Integer milestoneID, String params);
 
+	WorkflowItemMaster getWorkflowByType(String workflowType);
 
-    void updateWorkflowExecStatus( WorkflowExec parentWorkflow );
+	public WorkflowItemExec getWorkflowItemExecByType(
+	        WorkflowExec workflowExec, WorkflowItemMaster workflowItemMaster);
 
-
-    void updateWorkflowItemExecutionStatus( WorkflowItemExec workflowItemExecution );
-
-
-    List<WorkflowItemExec> getWorkflowItemListByParentWorkflowExecItem( WorkflowItemExec workflowItemExecution );
-
-
-    Boolean checkIfOnSuccessOfAnotherItem( WorkflowItemMaster workflowItemMaster );
-
-
-    WorkflowExec getWorkflowExecFromId( int workflowexecId );
-
-
-	
-    void saveParamsInExecTable(Integer milestoneID, String params);
-
+	List<WorkflowMaster> getAllWorkflows();
 
 }

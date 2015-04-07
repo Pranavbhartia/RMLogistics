@@ -1,7 +1,19 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import com.nexera.common.vo.RealtorDetailVO;
 
 /**
  * The persistent class for the realtordetails database table.
@@ -15,6 +27,7 @@ public class RealtorDetail implements Serializable {
 	private Integer id;
 	private String licenceInfo;
 	private String profileUrl;
+	private User defaultLoanManager;
 
 	public RealtorDetail() {
 	}
@@ -47,5 +60,36 @@ public class RealtorDetail implements Serializable {
 		this.profileUrl = profileUrl;
 	}
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "loanmanager_id")
+	public User getDefaultLoanManager() {
+		return defaultLoanManager;
+	}
 
+	public void setDefaultLoanManager(User defaultLoanManager) {
+		this.defaultLoanManager = defaultLoanManager;
+	}
+
+	public static RealtorDetailVO convertFromEntityToVO(
+	        final RealtorDetail inputEntity) {
+		RealtorDetailVO realtorDetailVO = new RealtorDetailVO();
+		if (inputEntity != null) {
+			realtorDetailVO.setId(inputEntity.getId());
+			realtorDetailVO.setLicenceInfo(inputEntity.getLicenceInfo());
+			realtorDetailVO.setProfileUrl(inputEntity.getProfileUrl());
+		}
+		return realtorDetailVO;
+	}
+
+	public static RealtorDetail convertFromVOToEntity(
+	        final RealtorDetailVO inputVO) {
+		RealtorDetail realtor = new RealtorDetail();
+		if (inputVO != null) {
+			realtor.setId(inputVO.getId());
+			realtor.setLicenceInfo(inputVO.getLicenceInfo());
+			realtor.setProfileUrl(inputVO.getProfileUrl());
+		}
+
+		return realtor;
+	}
 }

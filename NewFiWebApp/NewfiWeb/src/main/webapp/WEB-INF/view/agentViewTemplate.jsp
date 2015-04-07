@@ -12,9 +12,9 @@
 <link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
-<!-- added for loan manager profile pic-->
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/style-admin.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
 </head>
 
 <body>
@@ -31,9 +31,10 @@
 	<script>
 		var newfi = ${newfi};
 		$(document).ready(function() {
+		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi);
 			isAgentTypeDashboard = true;
-			paintAgentDashboard();
+			paintAgentDashboard('myloans');
 			retrieveState();
 			$(window).resize(function() {
 				adjustAgentDashboardOnResize();
@@ -72,17 +73,10 @@
 	        }
 			
 			$(document).on('change', '#prof-image', function() {
-				
-				//alert($('#prof-image')[0].files[0].name);
-				//alert("hiii");
 				var fileName=$("#prof-image").val();
-				//console.log("fileName"+fileName);
 	            var status=validatePhotoExtention(fileName);
-	            //alert("status"+status);
-				if(status!=false){
-					
-				initiateJcrop(this);
-				
+				if(status!=false){				
+				initiateJcrop(this);				
 				}
 			});
 			

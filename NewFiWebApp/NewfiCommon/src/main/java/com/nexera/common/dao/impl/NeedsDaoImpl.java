@@ -25,83 +25,148 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NeedsDaoImpl.class);
+	        .getLogger(NeedsDaoImpl.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	
-	
 	@Override
-	public List<LoanNeedsList> getLoanNeedsList(int loanId) throws NoRecordsFetchedException {
-		try{
+	public List<LoanNeedsList> getLoanNeedsList(int loanId)
+	        throws NoRecordsFetchedException {
+		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanNeedsList.class);
-			Loan loan=new Loan();
+			Loan loan = new Loan();
 			loan.setId(loanId);
 			criteria.add(Restrictions.eq("loan", loan));
-			List<LoanNeedsList> loanNeeds=(List<LoanNeedsList>)criteria.list();
-			return loanNeeds;	
-		}catch (HibernateException hibernateException) {
+			List<LoanNeedsList> loanNeeds = criteria.list();
+			return loanNeeds;
+		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        hibernateException);
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.nexera.common.dao.NeedsDao#deleteLoanNeeds(int)
 	 */
-	public void deleteLoanNeed(LoanNeedsList need){
+	@Override
+	public void deleteLoanNeed(LoanNeedsList need) {
 		Session session = sessionFactory.getCurrentSession();
 		session.delete(need);
 	}
+
 	@Override
 	public void deleteLoanNeeds(int loanId) {
 		try {
 			List<LoanNeedsList> list = getLoanNeedsList(loanId);
-		    for (LoanNeedsList need: list)
-		    	deleteLoanNeed(need);
-		    LOG.debug("delete successful");
+			for (LoanNeedsList need : list)
+				deleteLoanNeed(need);
+			LOG.debug("delete successful");
 		} catch (RuntimeException re) {
 			LOG.error("delete failed", re);
 			throw re;
 		} catch (NoRecordsFetchedException e) {
-			
+
 		}
 	}
-	@Override
 
+	@Override
 	public Integer getLoanNeedListIdByFileId(Integer fileId) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanNeedsList.class);
 		criteria.createAlias("uploadFileId", "upFileId");
 		criteria.add(Restrictions.eq("upFileId.id", fileId));
-		LoanNeedsList loanNeedsList =  (LoanNeedsList) criteria.uniqueResult();
-		if(loanNeedsList != null){
-			 LOG.info("loanNeedsList not empty");
-			 return loanNeedsList.getNeedsListMaster().getId();
+		LoanNeedsList loanNeedsList = (LoanNeedsList) criteria.uniqueResult();
+		if (loanNeedsList != null) {
+			LOG.info("loanNeedsList not empty");
+			return loanNeedsList.getNeedsListMaster().getId();
 		}
 		LOG.info("loanNeedsList empty");
 		return null;
 	}
-	
 
+	@Override
 	public List<NeedsListMaster> getMasterNeedsList(Boolean isCustom) {
-		try{
+		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(NeedsListMaster.class);
 			criteria.add(Restrictions.eq("isCustom", isCustom));
-			List<NeedsListMaster> loanNeeds=(List<NeedsListMaster>)criteria.list();
+			List<NeedsListMaster> loanNeeds = criteria.list();
 			return loanNeeds;
-		}catch (HibernateException hibernateException) {
+		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        hibernateException);
 			throw new DatabaseException(
-					"Exception caught in fetchUsersBySimilarEmailId() ",
-					hibernateException);
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
 		}
+	}
+
+	@Override
+	public LoanNeedsList findNeedForLoan(Loan loan,
+	        NeedsListMaster needsListMaster) {
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			criteria.add(Restrictions.eq("needsListMaster", needsListMaster));
+			List<LoanNeedsList> list = criteria.list();
+			if (list.size() > 0)
+				return list.get(0);
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+		}
+		return null;
+	}
+
+	@Override
+	public NeedsListMaster findNeedsListMasterByLabel(String label) {
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(NeedsListMaster.class);
+			criteria.add(Restrictions.eq("label", label));
+			List<NeedsListMaster> list = criteria.list();
+			if (list.size() > 0)
+				return list.get(0);
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+		}
+		return null;
+	}
+
+	@Override
+	public LoanNeedsList findLoanNeedByMaster(Loan loan,
+	        NeedsListMaster needListMaster) {
+		LoanNeedsList loanNeedsList = null;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			criteria.add(Restrictions.eq("loan", loan));
+			criteria.add(Restrictions.eq("needsListMaster", needListMaster));
+			List<LoanNeedsList> list = criteria.list();
+			if (list.size() > 0)
+				loanNeedsList = list.get(0);
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+		}
+		return loanNeedsList;
 	}
 
 }

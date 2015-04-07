@@ -1,5 +1,6 @@
 package com.nexera.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.nexera.common.entity.CustomerDetail;
@@ -7,6 +8,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.UserVO;
 
 public interface UserProfileDao extends GenericDao {
 
@@ -31,7 +33,7 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> searchUsers(User user);
 
-	public Integer saveInternalUser(User user);
+	public Integer saveUserWithDetails(User user);
 
 	public User findInternalUser(Integer userID);
 
@@ -45,6 +47,31 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<UserRoleNameImageVO> finUserDetailsList(List<Long> userList);
 
-	
 	public User saveUser(User user) throws DatabaseException;
+
+	public User authenticateUser(String userName, String password)
+	        throws NoRecordsFetchedException, DatabaseException;
+
+	public Integer saveCustomerDetails(User user);
+
+	public List<User> getEmailAddress(List<Integer> list);
+
+	public List<User> fetchAllActiveUsers();
+
+	public List<User> getUsersList();
+
+	public List<User> getLoanManagerForState(String stateName);
+
+	public List<User> getLoanManagerWithLeastWork();
+
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
+	        String stateName);
+
+	Integer updateInternalUserDetail(User user);
+
+	UserVO getDefaultSalesManager();
+
+	void updateLoginTime(Date date, int userId);
+	
+	public boolean changeUserPassword(UserVO userVO);
 }

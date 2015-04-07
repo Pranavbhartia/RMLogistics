@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
+import com.nexera.common.commons.ProfileCompletionStatus;
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.UserVO;
@@ -42,9 +47,8 @@ public class TemplateController extends DefaultController {
 	private NexeraUtility nexeraUtility;
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(TemplateController.class);
+	        .getLogger(TemplateController.class);
 
-	
 	@RequestMapping(value = "calculator.do")
 	public ModelAndView showCustomerPage1(HttpServletRequest req, Model model) {
 
@@ -52,10 +56,7 @@ public class TemplateController extends DefaultController {
 
 		try {
 
-			
-
-				mav.setViewName("calculator");
-			
+			mav.setViewName("calculator");
 
 		} catch (Exception e) {
 			// TODO: Handle exception scenario
@@ -64,11 +65,7 @@ public class TemplateController extends DefaultController {
 		}
 		return mav;
 	}
-	
-	
-	
-	
-	
+
 	@RequestMapping(value = "home.do")
 	public ModelAndView showCustomerPage(HttpServletRequest req, Model model) {
 
@@ -79,9 +76,10 @@ public class TemplateController extends DefaultController {
 			User user = getUserObject();
 
 			if (UserRolesEnum.CUSTOMER.toString().equals(
-					user.getUserRole().getRoleCd())) {
+			        user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req, user);
-				UserVO userVO = userProfileService.loadInternalUser(user.getId());
+				UserVO userVO = userProfileService.loadInternalUser(user
+				        .getId());
 				mav.addObject("user", userVO);
 				mav.setViewName(JspLookup.CUSTOMER_VIEW);
 			} else {
@@ -123,7 +121,8 @@ public class TemplateController extends DefaultController {
 	 */
 
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
-	public @ResponseBody String uploadCommonImageToS3(HttpServletRequest req, Model model)
+	public @ResponseBody String uploadCommonImageToS3(HttpServletRequest req,
+	        Model model)
 
 	throws IOException {
 
@@ -133,40 +132,67 @@ public class TemplateController extends DefaultController {
 			String imageBase64 = req.getParameter("imageBase64");
 			Integer userid = Integer.parseInt(req.getParameter("userid"));
 			String imageFileName = req.getParameter("imageFileName");
-			
+
 			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] decodedBytes = decoder.decodeBuffer(imageBase64.substring("data:image/png;base64,".length()));
-			BufferedImage image = ImageIO.read(new ByteArrayInputStream(decodedBytes));
+			byte[] decodedBytes = decoder.decodeBuffer(imageBase64
+			        .substring("data:image/png;base64,".length()));
+			BufferedImage image = ImageIO.read(new ByteArrayInputStream(
+			        decodedBytes));
 			if (image == null) {
 				LOG.error("Buffered Image is null");
 			}
-			
-			 File dir = new File(nexeraUtility.tomcatDirectoryPath());
-             if (!dir.exists())
-                 dir.mkdirs();
 
-             String filePath = dir.getAbsolutePath()+ File.separator + imageFileName;
-             // Create the file on server            
-			
+			File dir = new File(nexeraUtility.tomcatDirectoryPath());
+			if (!dir.exists())
+				dir.mkdirs();
+
+			String filePath = dir.getAbsolutePath() + File.separator
+			        + imageFileName;
+			// Create the file on server
+
 			File fileLocal = new File(filePath);
 			ImageIO.write(image, "png", fileLocal);
 
-			 s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User","complete");
-			 //Changed for loan profile bug fix
-			 editUserPhoto(s3Path,userid);
-			 // save the s3 url in the data base
-			 Integer num = userProfileService.updateUser(s3Path, userid);
-			 
-			 if(num < 0 ){
-				 
-				 LOG.error("Error whiile saving s3 url in the data base");
+			s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User",
+			        "complete");
+			// Changed for loan profile bug fix
+			editUserPhoto(s3Path, userid);
+			// save the s3 url in the data base
+			Integer num = userProfileService.updateUser(s3Path, userid);
 
-			 }
-			 LOG.error("S3 path-----"+s3Path);
+			UserVO userVO = userProfileService.findUser(userid);
+			if (userVO.getUserRole().getId() == 1) {
+				if (userVO.getCustomerDetail().getProfileCompletionStatus() != null) {
+
+					if (userVO.getCustomerDetail().getProfileCompletionStatus() <= 100) {
+
+						userProfileService.updateCustomerDetails(userVO);
+					}
+
+				} else {
+
+					if (userVO.getCustomerDetail().getMobileAlertsPreference() == null) {
+						userVO.getCustomerDetail().setMobileAlertsPreference(
+						        false);
+					} else {
+						userVO.getCustomerDetail().setMobileAlertsPreference(
+						        true);
+					}
+					userProfileService.updateCustomerDetails(userVO);
+				}
+			}
+
+			if (num < 0) {
+
+				LOG.error("Error whiile saving s3 url in the data base");
+
+			}
+			LOG.error("S3 path-----" + s3Path);
 
 		} catch (Exception e) {
-			
-			 LOG.error("Exception whiile saving s3 url in the data base" +e.getMessage());
+
+			LOG.error("Exception whiile saving s3 url in the data base"
+			        + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -174,93 +200,80 @@ public class TemplateController extends DefaultController {
 
 	}
 
-	/*@RequestMapping(method = RequestMethod.POST, value = "/uploadProfilePicture.do")
-	public @ResponseBody
-	String uploadProfilePicture(
-			@RequestParam(value = "fileName", required = true) MultipartFile multipartFile,
-			@RequestParam(required = true) Integer xAxis,
-			@RequestParam(required = true) Integer yAxis,
-			@RequestParam(required = true) Integer width,
-			@RequestParam(required = true) Integer height,
-			@RequestParam(required = true) Integer userId) throws IOException {
-		
-		LOG.info("*******FILE UPLOAD**********");
-		Gson gson = new Gson();
-		User user = null;
-		String s3PathCrop = "error";
-
-		try {
-
-			String orgName = multipartFile.getOriginalFilename();
-
-			LOG.info("fileName=" + orgName + " xAxis=" + xAxis + " yAxis="
-					+ yAxis + " width=" + width + " height=" + height
-					+ " userId=" + userId);
-
-			String tempDir = "D:\\temp";
-			String cropPathDir = "D:\\temp\\crop";
-			File dirPath = new File(tempDir);
-			File cropPath = new File(cropPathDir);
-
-			if (!dirPath.exists()) {
-				dirPath.mkdirs();
-			}
-
-			if (!cropPath.exists()) {
-				cropPath.mkdir();
-			}
-			// change
-			String randomString = String.valueOf(System.currentTimeMillis());
-
-			String filePath = tempDir + File.separator + randomString + orgName;
-
-			String croppathImage = cropPathDir + File.separator + randomString
-					+ orgName;
-
-			LOG.info("the File path is : " + filePath);
-			LOG.info(tempDir + ":file name=" + orgName);
-
-			File dest = new File(filePath);
-
-			multipartFile.transferTo(dest);
-
-			
-			 * try {
-			 * Thumbnails.of(dest).size(Integer.parseInt(imageWidth),Integer
-			 * .parseInt(imageHeight)).toFile(dest); } catch (IOException e) {
-			 * e.printStackTrace(); }
-			 
-
-			// code to crop image using
-			BufferedImage tempCrop = ImageIO.read(dest);
-
-			int widthI = tempCrop.getWidth();
-			int heightI = tempCrop.getHeight();
-			System.out.println(widthI + "-Sizi--" + heightI);
-
-			BufferedImage cropped = tempCrop.getSubimage(xAxis, yAxis, width,
-					height);
-			File newCFile = new File(croppathImage);
-			Boolean cropUpload = ImageIO.write(cropped, "jpg", newCFile);
-
-			s3PathCrop = s3FileUploadServiceImpl.uploadToS3(newCFile, "User",
-					"complete");
-			LOG.info(cropUpload + "the cropped image path " + s3PathCrop);
-			// userService.changeCropPhoto(user.getId(), s3PathCrop);
-
-			LOG.info("Uploaded to S3 with url: " + s3PathCrop);
-			editUserPhoto(s3PathCrop);
-			if (userId != 0) {
-				Integer num = userProfileService.updateUser(s3PathCrop, userId);
-			}
-
-		} catch (Exception e) {
-			LOG.error("REQUEST_FAILED", e);
-			e.printStackTrace();
-			return s3PathCrop;
-		}
-		return s3PathCrop;
-	}*/
+	/*
+	 * @RequestMapping(method = RequestMethod.POST, value =
+	 * "/uploadProfilePicture.do") public @ResponseBody String
+	 * uploadProfilePicture(
+	 * 
+	 * @RequestParam(value = "fileName", required = true) MultipartFile
+	 * multipartFile,
+	 * 
+	 * @RequestParam(required = true) Integer xAxis,
+	 * 
+	 * @RequestParam(required = true) Integer yAxis,
+	 * 
+	 * @RequestParam(required = true) Integer width,
+	 * 
+	 * @RequestParam(required = true) Integer height,
+	 * 
+	 * @RequestParam(required = true) Integer userId) throws IOException {
+	 * 
+	 * LOG.info("*******FILE UPLOAD**********"); Gson gson = new Gson(); User
+	 * user = null; String s3PathCrop = "error";
+	 * 
+	 * try {
+	 * 
+	 * String orgName = multipartFile.getOriginalFilename();
+	 * 
+	 * LOG.info("fileName=" + orgName + " xAxis=" + xAxis + " yAxis=" + yAxis +
+	 * " width=" + width + " height=" + height + " userId=" + userId);
+	 * 
+	 * String tempDir = "D:\\temp"; String cropPathDir = "D:\\temp\\crop"; File
+	 * dirPath = new File(tempDir); File cropPath = new File(cropPathDir);
+	 * 
+	 * if (!dirPath.exists()) { dirPath.mkdirs(); }
+	 * 
+	 * if (!cropPath.exists()) { cropPath.mkdir(); } // change String
+	 * randomString = String.valueOf(System.currentTimeMillis());
+	 * 
+	 * String filePath = tempDir + File.separator + randomString + orgName;
+	 * 
+	 * String croppathImage = cropPathDir + File.separator + randomString +
+	 * orgName;
+	 * 
+	 * LOG.info("the File path is : " + filePath); LOG.info(tempDir +
+	 * ":file name=" + orgName);
+	 * 
+	 * File dest = new File(filePath);
+	 * 
+	 * multipartFile.transferTo(dest);
+	 * 
+	 * 
+	 * try { Thumbnails.of(dest).size(Integer.parseInt(imageWidth),Integer
+	 * .parseInt(imageHeight)).toFile(dest); } catch (IOException e) {
+	 * e.printStackTrace(); }
+	 * 
+	 * 
+	 * // code to crop image using BufferedImage tempCrop = ImageIO.read(dest);
+	 * 
+	 * int widthI = tempCrop.getWidth(); int heightI = tempCrop.getHeight();
+	 * System.out.println(widthI + "-Sizi--" + heightI);
+	 * 
+	 * BufferedImage cropped = tempCrop.getSubimage(xAxis, yAxis, width,
+	 * height); File newCFile = new File(croppathImage); Boolean cropUpload =
+	 * ImageIO.write(cropped, "jpg", newCFile);
+	 * 
+	 * s3PathCrop = s3FileUploadServiceImpl.uploadToS3(newCFile, "User",
+	 * "complete"); LOG.info(cropUpload + "the cropped image path " +
+	 * s3PathCrop); // userService.changeCropPhoto(user.getId(), s3PathCrop);
+	 * 
+	 * LOG.info("Uploaded to S3 with url: " + s3PathCrop);
+	 * editUserPhoto(s3PathCrop); if (userId != 0) { Integer num =
+	 * userProfileService.updateUser(s3PathCrop, userId); }
+	 * 
+	 * } catch (Exception e) { LOG.error("REQUEST_FAILED", e);
+	 * e.printStackTrace(); return s3PathCrop; } return s3PathCrop; }
+	 */
 
 	//
 	// @RequestMapping(value="customerLoanPage.do")
@@ -332,21 +345,18 @@ public class TemplateController extends DefaultController {
 	// mav.setViewName("customerProfile");
 	// return mav;
 	// }
-	
-	
-	
-	
+
 	@RequestMapping(value = "customerEngagement.do")
-	 public ModelAndView showCustomerEngagementPage(){
-	 ModelAndView mav = new ModelAndView();
-	 mav.setViewName("customerEngagementTemplate");
-	 return mav;
+	public ModelAndView showCustomerEngagementPage() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("customerEngagementTemplate");
+		return mav;
 	}
-	
+
 	@RequestMapping(value = "register.do")
-	 public ModelAndView showCustomerRegisterPage(){
-	 ModelAndView mav = new ModelAndView();
-	 mav.setViewName("register");
-	 return mav;
+	public ModelAndView showCustomerRegisterPage() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("register");
+		return mav;
 	}
 }

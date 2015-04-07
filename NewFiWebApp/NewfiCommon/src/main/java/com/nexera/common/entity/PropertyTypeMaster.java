@@ -20,6 +20,15 @@ public class PropertyTypeMaster implements Serializable {
 	private String description;
 	private Date modifiedDate;
 	private String propertyTypeCd;
+	private String residenceTypeCd;
+	private String propertyTaxesPaid;
+	private String propertyInsuranceProvider;
+	private String propertyInsuranceCost;
+	private String propertyPurchaseYear;
+	private String homeWorthToday;
+	private String homeZipCode;
+	
+
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFeeMaster> loanApplicationFeeMasters;
@@ -63,6 +72,70 @@ public class PropertyTypeMaster implements Serializable {
 
 	public void setPropertyTypeCd(String propertyTypeCd) {
 		this.propertyTypeCd = propertyTypeCd;
+	}
+
+	@Column(name = "homeZipCode")
+	public String getHomeZipCode() {
+		return homeZipCode;
+	}
+
+	public void setHomeZipCode(String homeZipCode) {
+		this.homeZipCode = homeZipCode;
+	}
+	
+	
+	@Column(name = "residence_type_cd")
+	public String getResidenceTypeCd() {
+		return residenceTypeCd;
+	}
+
+	public void setResidenceTypeCd(String residenceTypeCd) {
+		this.residenceTypeCd = residenceTypeCd;
+	}
+
+	@Column(name = "property_tax")
+	public String getPropertyTaxesPaid() {
+		return propertyTaxesPaid;
+	}
+
+	public void setPropertyTaxesPaid(String propertyTaxesPaid) {
+		this.propertyTaxesPaid = propertyTaxesPaid;
+	}
+
+	@Column(name = "propertyInsuranceProvider")
+	public String getPropertyInsuranceProvider() {
+		return propertyInsuranceProvider;
+	}
+
+	public void setPropertyInsuranceProvider(String propertyInsuranceProvider) {
+		this.propertyInsuranceProvider = propertyInsuranceProvider;
+	}
+
+	@Column(name = "propertyInsuranceCost")
+	public String getPropertyInsuranceCost() {
+		return propertyInsuranceCost;
+	}
+
+	public void setPropertyInsuranceCost(String propertyInsuranceCost) {
+		this.propertyInsuranceCost = propertyInsuranceCost;
+	}
+
+	@Column(name = "propertyPurchaseYear")
+	public String getPropertyPurchaseYear() {
+		return propertyPurchaseYear;
+	}
+
+	public void setPropertyPurchaseYear(String propertyPurchaseYear) {
+		this.propertyPurchaseYear = propertyPurchaseYear;
+	}
+
+	@Column(name = "homeWorthToday")
+	public String getHomeWorthToday() {
+		return homeWorthToday;
+	}
+
+	public void setHomeWorthToday(String homeWorthToday) {
+		this.homeWorthToday = homeWorthToday;
 	}
 
 	// bi-directional many-to-one association to Loan

@@ -227,74 +227,91 @@
 	.prof-form-input-lg{
 		width: 250px;
 	}
-	.milestone-lc, .milestone-rc{
+	.loan-personal-info-wrapper {
+		padding-left: 10px;
+		padding-right: 5px;
+	}
+	.prof-form-input-cont{
+		width: 140px;
+	}
+	.silder-cont{
+		width: 90%;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt{
+		margin-right: 0px;
 		width: 100%;
-		left: 0;
 	}
-	.ms-cust-prof-container{
-		display: none;
+	.rt-slider {
+	    width: 95%;
 	}
-	.milestone-lc:after,.milestone-lc:before{
-		left:0;
+	.lock-rate-slider-container{
+		padding: 10px;
 	}
-	.milestone-lc-border{
-		left: -1px;
-		right: auto;
-	}
-	.milestone-lc{
-		padding-left:20px;
-		padding-right: 0; 
-	}
-	.milestone-lc-text {
-		text-align: left;
-	}
-	.milestone-lc-header-txt,.milestone-lc-header-icn{
-		float: left;
-	}
-	.milestone-lc-header-icn{
-		margin-right: 0;
-		margin-left: 10px;
-	}
-	.milestone-lc .ms-check-box-header {
-		margin-left: -10px;
-		margin-right: 10px;
-		float: left;
-	}
-	.milestone-lc-header-txt:after{
-		left: 0;
-		border-color: transparent;
-		transform: rotate(45deg);
-		border-top-width: 14px;
-		margin-left: -11px;
-		margin-top: -5px;
-		border-top-color:#ebebeb;
-	}
-	
-	.m-not-started  .milestone-lc-header-txt:before{
-		left:0;
-		margin-top: -6px;
-		margin-left:-10px;
-		transform: rotate(45deg);
-		border-color: rgba(136, 183, 213, 0);
-		border-top-color: #888;
-		border-top-width: 15px;
-	}
-	.m-complete .milestone-lc-header-txt:after {
-		border-color: transparent;
-		border-top-color: #7AB10D;
-	}
-	.m-in-progress .milestone-lc-header-txt:after {
-		border-color: transparent;
-		border-top-color: #F47521;
-	}
-	.ms-check-box{
-		float: left;
-	}
-	.m-not-started .milestone-lc-header-txt:after {
-		border-width: 1px;
-		border-top-width: 14px;
-		margin-left: -3px;
-	}
+    .reg-header-btns-wrapper{
+        display: none;
+    }
+    .cust-app-lp{
+        display: none;
+    }
+    .cust-app-rp{
+        margin-left: 0;
+        width: 100% !important;
+    }
+    .ce-ques-option{
+        width: 100%;
+        margin: 10px auto;
+        height: 50px;
+        line-height: 50px;
+        font-size: 28px;
+    }
+    .ce-rate-icon {
+      height: 150px;
+      margin-top: 10px;
+      background-size: 150px;
+    }
+    .ce-ques-text {
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .ce-title {
+      font-size: 30px;
+      padding: 0 10px;
+    }
+    .ce-ques-wrapper{
+        width: 100%;
+    }
+    .ce-ques-options-container{
+        padding: 0 10px;
+    }
+    .rt-grid-item:last-child {
+        margin-left: -18px;
+    }
+
+    .rt-grid-item:last-child:after {
+        left: 18px;
+    }
+    .slider-wrapper {
+      margin: 10px 0 25px 0;
+    }
+    .assigned-agent-cont-wrapper{
+        min-width: 80px;
+    }
+    .assigned-agent-cont-lc {
+        width: 60px;
+        float: none;
+        margin: 0 auto;
+        margin-top: 5px;
+    }
+    .assigned-agent-cont-rc{
+        display: none;
+    }
+    .milestone-header-bar{
+    	display: none;
+    }
+    .agent-message-dashboard{
+    	padding-left: 5px;
+    }
 }
 
 
@@ -310,6 +327,9 @@
 	.file-upload-text-mobile{
 		display: none;
 	}
+    .soft-menu-wrapper,.soft-menu-icon{
+        display: none !important;
+    }
 }
 
 
@@ -428,6 +448,36 @@
 	.ms-team-member-th,.ms-team-member-tr{	
 		width: 195px;
 	}
+	.prof-form-input-cont{
+		width: 175px;
+	}
+    .silder-cont{
+		width: 90%;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt{
+		margin-right: 0px;
+		width: 100%;
+	}
+	.rt-slider {
+	    width: 95%;
+	}
+	.lock-rate-slider-container{
+		padding: 10px;
+	}
+    .loan-summary-last-row .loan-summary-col-detail{
+        padding: 5px 10px;
+    }
+    .cust-app-lp{
+        display: none;
+    }
+    .cust-app-rp{
+        margin-left: 0;
+        width: 100% !important;
+    }
+    .milestone-header-bar{
+    	display: none;
+    }
 }
 
 
@@ -477,6 +527,24 @@
 	.add-member-input-cont {
 		padding-right: 10px;
 	}
+	.lock-rate-slider-container{
+		padding: 10px 20px;
+	}
+	.slider-hdr-txt{
+		margin-right: 20px;
+	}
+	.silder-cont{
+		width: 460px;
+	}
+    .cust-app-rp{
+        margin-left: 10px;
+    }
+    .app-input{
+        width: 340px;
+    }
+    .needed-items-lc {
+	  	width: 70%;
+	}
 }
 
 
@@ -490,6 +558,177 @@
 	}
 	.rp-agent-dashboard{
 		width:939px !important;
+	}
+    .cust-app-rp{
+        width: 534px !important;
+    }
+}
+
+/*Custom breakpoints for milestone page*/
+@media (max-width: 599px){
+	
+	.loan-progress-milestone-wrapper {
+		width: 400px;
+		max-width: 95%;
+		margin: 0 auto;
+	}
+	.milestone-lc, .milestone-rc{
+		width: 100%;
+		left: 0;
+	}
+	.ms-cust-prof-container{
+		display: none;
+	}
+	.milestone-lc:after,.milestone-lc:before{
+		left:0;
+	}
+	.milestone-lc-border{
+		left: -1px;
+		right: auto;
+	}
+	.milestone-lc{
+		padding-left:20px;
+        padding-bottom: 30px;
+		padding-right: 0; 
+	}
+	.milestone-lc-text {
+		text-align: left;
+	}
+	.milestone-lc-header-txt,.milestone-lc-header-icn{
+		float: left;
+	}
+	.milestone-lc-header-icn{
+		margin-right: 0;
+		margin-left: 10px;
+	}
+	.milestone-lc .ms-check-box-header {
+		margin-left: -10px;
+		margin-right: 10px;
+		float: left;
+	}
+	.milestone-lc-header-txt:after{
+		left: 0;
+		border-color: transparent;
+		transform: rotate(45deg);
+		border-top-width: 14px;
+		margin-left: -11px;
+		margin-top: -5px;
+		border-top-color:#ebebeb;
+	}
+	
+	.m-not-started  .milestone-lc-header-txt:before{
+		left:0;
+		margin-top: -6px;
+		margin-left:-10px;
+		transform: rotate(45deg);
+		border-color: rgba(136, 183, 213, 0);
+		border-top-color: #888;
+		border-top-width: 15px;
+	}
+	.m-complete .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #7AB10D;
+	}
+	.m-in-progress .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #F47521;
+	}
+	.ms-check-box{
+		float: left;
+	}
+	.m-not-started .milestone-lc-header-txt:after {
+		border-width: 1px;
+		border-top-width: 14px;
+		margin-left: -3px;
+	}
+	
+	.milestone-lc .float-right,
+	.milestone-lr .float-right{
+		float: left;
+	}
+}
+
+/*Custom breakpoints for milestone page*/
+
+@media (min-width: 767px) and (max-width: 850px){
+	.loan-progress-milestone-wrapper {
+		width: 400px;
+		max-width: 95%;
+		margin: 0 auto;
+	}
+	.milestone-lc, .milestone-rc{
+		width: 100%;
+		left: 0;
+	}
+	.ms-cust-prof-container{
+		display: none;
+	}
+	.milestone-lc:after,.milestone-lc:before{
+		left:0;
+	}
+	.milestone-lc-border{
+		left: -1px;
+		right: auto;
+	}
+	.milestone-lc{
+		padding-left:20px;
+        padding-bottom: 30px;
+		padding-right: 0; 
+	}
+	.milestone-lc-text {
+		text-align: left;
+	}
+	.milestone-lc-header-txt,.milestone-lc-header-icn{
+		float: left;
+	}
+	.milestone-lc-header-icn{
+		margin-right: 0;
+		margin-left: 10px;
+	}
+	.milestone-lc .ms-check-box-header {
+		margin-left: -10px;
+		margin-right: 10px;
+		float: left;
+	}
+	.milestone-lc-header-txt:after{
+		left: 0;
+		border-color: transparent;
+		transform: rotate(45deg);
+		border-top-width: 14px;
+		margin-left: -11px;
+		margin-top: -5px;
+		border-top-color:#ebebeb;
+	}
+	
+	.m-not-started  .milestone-lc-header-txt:before{
+		left:0;
+		margin-top: -6px;
+		margin-left:-10px;
+		transform: rotate(45deg);
+		border-color: rgba(136, 183, 213, 0);
+		border-top-color: #888;
+		border-top-width: 15px;
+	}
+	.m-complete .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #7AB10D;
+	}
+	.m-in-progress .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #F47521;
+	}
+	.ms-check-box{
+		float: left;
+	}
+	.m-not-started .milestone-lc-header-txt:after {
+		border-width: 1px;
+		border-top-width: 14px;
+		margin-left: -3px;
+	}
+	
+	.milestone-lc .float-right,
+	.milestone-lr .float-right{
+		float: left;
 	}
 }
 
@@ -622,6 +861,51 @@
 	.prof-form-row{
 		padding: 5px 0;
 	}
+	.upload-pic-desc {
+		line-height: 20px;
+	}
+	.yr-grid-item-selected,.yr-grid-item{
+		font-size:10px;
+        width: 50px;
+        margin-left: -17px;
+	}
+    .loan-summary-last-row .loan-summary-col-detail{
+        padding: 5px 10px;
+    }
+    .yr-grid-cont:first-child .yr-grid-item-selected {
+        margin-left: -9px;
+    }
+    .av-loan-details-container{
+        padding: 0;
+    }
+    .av-loan-details-row {
+        height: 30px;
+        line-height: 20px;
+        padding: 5px 0;
+    }
+    .av-loan-details-row-lc{
+        width: 50%;
+    }
+    .av-loan-details-row-rc{
+        width: 50%;
+        padding-left: 10px;
+    }
+    .app-options-cont,.app-input{
+        width: 100%;
+    }
+    .complete-application-header{
+        min-height: 45px;
+        padding: 5px 0;
+        line-height: 35px;
+        padding-left: 0;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .app-ques-header-txt{
+        font-size: 24px;
+        line-height: 40px;
+        margin-bottom: 15px;
+    }
 }
 
 

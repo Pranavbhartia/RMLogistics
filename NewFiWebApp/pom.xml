@@ -7,14 +7,14 @@
 	<packaging>pom</packaging>
 	<name>NewFiParent</name>
 	<modules>
-		<!-- <module>NewfiMuleFlow</module> -->
+		<module>NewfiMuleFlow</module>
 		<module>NewfiCommon</module>
 		<module>NewfiMongoCore</module>
 		<module>NewfiCore</module>
 		<module>WorkflowEngine</module>
 		<module>NewfiWorkFlow</module>
 		<module>NewfiWeb</module>
-
+		<module>PushNotification</module>
 
 
 	</modules>

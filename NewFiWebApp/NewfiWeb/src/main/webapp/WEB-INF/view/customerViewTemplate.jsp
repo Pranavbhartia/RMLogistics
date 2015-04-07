@@ -15,17 +15,17 @@
 <title>Nexera</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
+<link href="resources/css/perfect-scrollbar.min.css" rel="stylesheet">
 <link href="resources/css/font-awesome.min.css" rel="stylesheet">
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/datepicker.css" rel="stylesheet">
 <link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
-
+<link href="resources/css/style-resp.css" rel="stylesheet">
+    
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
 
@@ -69,9 +69,9 @@
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
+                adjustCustomerApplicationPageOnResize();
 			});
 
-						
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
@@ -114,6 +114,56 @@
 				initiateJcrop(this);}
 			});
 			
+			$(document).on('keypress','input[name="zipCode"]',function(e){
+				
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+			        //display error message
+			        showToastMessage("Enter correct zipcode");
+			          return false;
+			    }if($(this).val().length >= 6){
+			    	
+			    	 showToastMessage("Enter correct zipcode");
+			         return false;
+			    }
+			});
+			
+			$(document).on('click','#appProgressBaarId_1',function(){
+								
+					appProgressBaar(1);
+					paintCustomerApplicationPageStep1a();
+				
+			});
+			$(document).on('click','#appProgressBaarId_2',function(){
+				
+				if(applyLoanStatus > 1){
+					appProgressBaar(2);
+					paintCustomerApplicationPageStep2();
+				}
+			});
+			$(document).on('click','#appProgressBaarId_3',function(){
+				
+				if(applyLoanStatus > 2){
+					appProgressBaar(3);
+					paintMyIncome();
+				}
+			});
+			$(document).on('click','#appProgressBaarId_4',function(){
+				
+				if(applyLoanStatus > 3){
+					appProgressBaar(4);
+					paintCustomerApplicationPageStep4a();
+				}
+			});
+			
+			$(document).on('click','input[name="birthday"]',function(e){
+				
+				$(this).datepicker({
+					orientation : "top auto",
+					autoclose : true
+				});
+			});
+			
+
 		});
 	</script>
 </body>

@@ -2,8 +2,10 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,10 +19,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.UserVO;
 
 /**
  * The persistent class for the user database table.
@@ -51,6 +57,7 @@ public class User implements Serializable, UserDetails {
 	private List<LoanTeam> loanTeams;
 	private List<UserEmail> userEmails;
 	private List<TransactionDetails> transactionDetails;
+	private List<InternalUserStateMapping> internalUserStateMappings;
 
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
@@ -59,6 +66,9 @@ public class User implements Serializable, UserDetails {
 	private GrantedAuthority[] authorities;
 	private Locale userLocale;
 	private String minutesOffset;
+	private Boolean isProfileComplete;
+	private Date createdDate;
+	private Date lastLoginDate;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,6 +117,7 @@ public class User implements Serializable, UserDetails {
 		this.lastName = lastName;
 	}
 
+	@Override
 	public String getPassword() {
 		return this.password;
 	}
@@ -124,6 +135,24 @@ public class User implements Serializable, UserDetails {
 		this.phoneNumber = phoneNumber;
 	}
 
+	@Column(name = "created_on")
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Column(name = "login_time")
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
 	@Column(name = "photo_image_url")
 	public String getPhotoImageUrl() {
 		return this.photoImageUrl;
@@ -133,6 +162,7 @@ public class User implements Serializable, UserDetails {
 		this.photoImageUrl = photoImageUrl;
 	}
 
+	@Override
 	public String getUsername() {
 		return this.username;
 	}
@@ -212,13 +242,18 @@ public class User implements Serializable, UserDetails {
 		return userEmails;
 	}
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	public List<InternalUserStateMapping> getInternalUserStateMappings() {
+		return internalUserStateMappings;
+	}
+
 	public void setUserEmails(List<UserEmail> userEmails) {
 		this.userEmails = userEmails;
 	}
 
 	// Spring security related methods
 	public User(String emailId, String password, String firstName,
-			String lastName) {
+	        String lastName) {
 		super();
 		this.emailId = emailId;
 		this.password = password;
@@ -227,7 +262,7 @@ public class User implements Serializable, UserDetails {
 		// TODO: This is currently hard coded, we need to determine this based
 		// on the user type
 		this.authorities = new GrantedAuthority[] { new GrantedAuthorityImpl(
-				"ROLE_CUSTOMER") };
+		        "ROLE_CUSTOMER") };
 	}
 
 	public User() {
@@ -236,9 +271,10 @@ public class User implements Serializable, UserDetails {
 
 	public User(Integer userId) {
 		// TODO Auto-generated constructor stub
-		this.id=userId;
+		this.id = userId;
 	}
 
+	@Override
 	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
@@ -248,6 +284,7 @@ public class User implements Serializable, UserDetails {
 		this.accountNonExpired = accountNonExpired;
 	}
 
+	@Override
 	@Transient
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
@@ -257,6 +294,7 @@ public class User implements Serializable, UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
+	@Override
 	@Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
@@ -266,6 +304,7 @@ public class User implements Serializable, UserDetails {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 
+	@Override
 	@Transient
 	public boolean isEnabled() {
 		return enabled;
@@ -274,10 +313,12 @@ public class User implements Serializable, UserDetails {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
 	@Transient
 	public String getMinutesOffset() {
 		return minutesOffset;
 	}
+
 	public void setMinutesOffset(String minutesOffset) {
 		this.minutesOffset = minutesOffset;
 	}
@@ -291,11 +332,12 @@ public class User implements Serializable, UserDetails {
 	public void setAuthorities(GrantedAuthority[] authorities) {
 		this.authorities = authorities;
 	}
-	
+
 	@Transient
 	public Locale getUserLocale() {
 		return userLocale;
 	}
+
 	public void setUserLocale(Locale userLocale) {
 		this.userLocale = userLocale;
 	}
@@ -310,15 +352,112 @@ public class User implements Serializable, UserDetails {
 	public void setUserRole(UserRole userRole) {
 		this.userRole = userRole;
 	}
-	
+
 	// bi-directional many-to-one association to LoanAppForm
 	@OneToMany(mappedBy = "user")
 	public List<TransactionDetails> getTransactionDetails() {
 		return this.transactionDetails;
 	}
 
-	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
+	public void setTransactionDetails(
+	        List<TransactionDetails> transactionDetails) {
 		this.transactionDetails = transactionDetails;
+	}
+
+	@Column(name = "is_profile_complete", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsProfileComplete() {
+		return isProfileComplete;
+	}
+
+	public void setIsProfileComplete(Boolean isProfileComplete) {
+		this.isProfileComplete = isProfileComplete;
+	}
+
+	private int todaysLoansCount;
+
+	@Transient
+	public int getTodaysLoansCount() {
+		return todaysLoansCount;
+	}
+
+	public void setTodaysLoansCount(int todaysLoansCount) {
+		this.todaysLoansCount = todaysLoansCount;
+	}
+
+	public static UserVO convertFromEntityToVO(final User user) {
+		UserVO userVO = new UserVO();
+		if (user != null) {
+			userVO.setFirstName(user.getFirstName());
+			userVO.setStatus(user.getStatus());
+			userVO.setLastName(user.getLastName());
+			userVO.setPhoneNumber(user.getPhoneNumber());
+			userVO.setPhotoImageUrl(user.getPhotoImageUrl());
+			userVO.setPassword(user.getPassword());
+			userVO.setId(user.getId());
+			userVO.setUserRole(UserRole.convertFromEntityToVO(user
+			        .getUserRole()));
+			userVO.setEmailId(user.getEmailId());
+			userVO.setDisplayName(user.firstName + " " + user.lastName);
+			userVO.setEmailId(user.getEmailId());
+			userVO.setDisplayName(user.getFirstName() + " "
+			        + user.getLastName());
+			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
+			        .getCustomerDetail()));
+			userVO.setInternalUserDetail(InternalUserDetail
+			        .convertFromEntityToVO(user.getInternalUserDetail()));
+
+		}
+		return userVO;
+	}
+
+	public static User convertFromVOToEntity(UserVO userVO) {
+
+		if (userVO == null)
+			return null;
+		User userModel = new User();
+
+		userModel.setId(userVO.getId());
+		userModel.setFirstName(userVO.getFirstName());
+		userModel.setLastName(userVO.getLastName());
+
+		userModel.setUsername(userVO.getEmailId());
+		userModel.setEmailId(userVO.getEmailId());
+		userModel.setCreatedDate(new Date(System.currentTimeMillis()));
+		// if (userVO.getEmailId() != null) {
+		// userModel.setUsername(userVO.getEmailId().split(":")[0]);
+		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
+		// }
+		// userModel.setPassword(userVO.getPassword());
+
+		userModel.setStatus(true);
+
+		userModel.setPhoneNumber(userVO.getPhoneNumber());
+		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
+
+		userModel.setUserRole(UserRole.convertFromVOToEntity(userVO
+		        .getUserRole()));
+		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		        .getRoleId()) {
+			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
+			userModel.setCustomerDetail(CustomerDetail
+			        .convertFromVOToEntity(userVO.getCustomerDetail()));
+			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
+		}
+		userModel.setInternalUserDetail(InternalUserDetail
+		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
+		if (userModel.getUserRole().getId() == UserRolesEnum.REALTOR
+		        .getRoleId()) {
+			userModel.setRealtorDetail(RealtorDetail
+			        .convertFromVOToEntity(userVO.getRealtorDetail()));
+		}
+
+		return userModel;
+	}
+
+	public void setInternalUserStateMappings(
+	        List<InternalUserStateMapping> internalUserStateMappings) {
+		this.internalUserStateMappings = internalUserStateMappings;
 	}
 
 }

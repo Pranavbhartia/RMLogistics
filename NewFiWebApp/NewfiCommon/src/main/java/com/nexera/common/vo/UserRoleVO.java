@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.enums.UserRolesEnum;
+
 public class UserRoleVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -15,6 +17,15 @@ public class UserRoleVO implements Serializable {
 	private Boolean visibleOnLoanTeam;
 	private List<UiComponentPermissionVO> uiComponentPermissions;
 	private List<UserVO> users;
+
+	public UserRoleVO() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public UserRoleVO(UserRolesEnum customer) {
+		// TODO Auto-generated constructor stub
+		this.id = customer.getRoleId();
+	}
 
 	public int getId() {
 		return id;
@@ -69,7 +80,7 @@ public class UserRoleVO implements Serializable {
 	}
 
 	public void setUiComponentPermissions(
-			List<UiComponentPermissionVO> uiComponentPermissions) {
+	        List<UiComponentPermissionVO> uiComponentPermissions) {
 		this.uiComponentPermissions = uiComponentPermissions;
 	}
 

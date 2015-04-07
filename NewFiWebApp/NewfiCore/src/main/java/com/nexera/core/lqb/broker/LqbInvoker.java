@@ -1,100 +1,86 @@
 package com.nexera.core.lqb.broker;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
+import java.io.InputStream;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
+@Component
 public class LqbInvoker {
 
-	private void invokeRest(String urlStr) {
+	@Value("${muleUrlForLoan}")
+	private String muleUrlForLoan;
 
-		try {
-			URL url = new URL(urlStr);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Accept", "application/json");
+	@Value("${muleUrlForDocs}")
+	private String muleUrlForDocs;
 
-			if (conn.getResponseCode() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ conn.getResponseCode());
-			}
+	@Value("${muleUrlForAuth}")
+	private String muleUrlForAuth;
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
+	@Value("${muleUrlForAppView}")
+	private String muleUrlForAppView;
 
-			String output;
-			System.out.println("Output from Server .... \n");
-			while ((output = br.readLine()) != null) {
-				System.out.println(output);
-			}
-
-			conn.disconnect();
-
-		} catch (MalformedURLException ex) {
-
-			ex.printStackTrace();
-
-		} catch (IOException ex2) {
-
-			ex2.printStackTrace();
-
-		}
-
+	public JSONObject invokeLqbService(String formData) {
+		return invokeRestSpringParseObj(formData);
 	}
 
-	private void invokeRestSpring(String urlStr) {
+	private JSONObject invokeRestSpringParseObj(String formData) {
 
-		System.out.println("Call from Spring rest invoker.");
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
-		String response = restTemplate.getForObject(urlStr, String.class);
 
-		System.out.println("Response : " + response);
-
-		Gson gson = new Gson();
-		Type stringStringMap = new TypeToken<Map<String, String>>() {
-		}.getType();
-		Map<String, String> map = gson.fromJson(response, stringStringMap);
-		System.out.println("Response map : " + map);
-
+		String returnedUser = restTemplate.postForObject(muleUrlForLoan,
+		        request, String.class);
+		JSONObject jsonObject = new JSONObject(returnedUser);
+		return jsonObject;
 	}
 
-	private void invokeRestSpringParseObj(String urlStr) {
+	public String invokeRestSpringParseObjForAuth(String formData) {
 
-		System.out
-				.println("Call from Spring rest invoker. Parsing into object.");
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
-		String response = restTemplate.getForObject(urlStr, String.class);
 
-		System.out.println("Response : " + response);
+		String returnedUser = restTemplate.postForObject(muleUrlForAuth,
+		        request, String.class);
 
-		Gson gson = new Gson();
-		Type stringStringMap = new TypeToken<Map<String, String>>() {
-		}.getType();
-		Map<String, String> object = gson.fromJson(response, stringStringMap);
-		System.out.println("Response  : " + object);
-
+		return returnedUser;
 	}
 
-	public static void main(String args[]) {
+	public JSONObject invokeRestSpringParseObjForAppView(String formData) {
 
-		System.out.println("Invoking rest...");
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
+		RestTemplate restTemplate = new RestTemplate();
 
-		LqbInvoker invoker=new LqbInvoker();
-		invoker.invokeRest("http://graph.facebook.com/balaji.mx");
-		//LqbAuth.invokeRestSpring("http://graph.facebook.com/infosys");
-		invoker.invokeRestSpring("http://graph.facebook.com/balaji.mx");
-		invoker.invokeRestSpringParseObj("http://graph.facebook.com/balaji.mx");
+		String returnedUser = restTemplate.postForObject(muleUrlForAppView,
+		        request, String.class);
+		JSONObject jsonObject = new JSONObject(returnedUser);
+		return jsonObject;
+	}
 
+	public InputStream invokeRestSpringParseStream(String formData)
+	        throws IOException {
+
+		HttpHeaders headers = new HttpHeaders();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		HttpEntity request = new HttpEntity(formData, headers);
+		RestTemplate restTemplate = new RestTemplate();
+		byte[] returnedUser = restTemplate.postForObject(muleUrlForDocs,
+		        request, byte[].class);
+
+		InputStream content = new ByteArrayInputStream(returnedUser);
+		return content;
 	}
 
 }

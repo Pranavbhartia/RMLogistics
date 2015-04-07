@@ -1,5 +1,13 @@
-
+var stateList = [];
+var currentStateId = 0;
+var currentZipcodeLookUp = [];
+var internalUserStates = new Object();
+var states=[];
+//var userStates=[];
 function showCustomerProfilePage() {
+	
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -34,8 +42,7 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
-
-
+	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -93,11 +100,11 @@ function getLoanPersonalInfoContainer(user) {
 		"class" : "loan-personal-info-container"
 	});
 
-	var nameRow = getCustomerNameFormRow(user);
-	container.append(nameRow);
-
 	var uploadRow = getCustomerUploadPhotoRow(user);
 	container.append(uploadRow);
+	
+	var nameRow = getCustomerNameFormRow(user);
+	container.append(nameRow);
 
 	var DOBRow = getDOBRow(user);
 	container.append(DOBRow);
@@ -107,8 +114,21 @@ function getLoanPersonalInfoContainer(user) {
 
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
+	
+	var stateRow = getManagerStateRow(user);
+	container.append(stateRow);
+ 	userStateMappingVOs=user.internalUserStateMappingVOs;
 
-
+	states.length = 0;
+	internalUserStates.length=0;
+	for(var i=0;i<userStateMappingVOs.length;i++) {
+			states.push(userStateMappingVOs[i].stateId.toString());
+			internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+        }
+	var stateTextRow = getStateTextRow();
+	container.append(stateTextRow);
+	
+ 
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateLMDetails()"
@@ -134,6 +154,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
+	var internalUserState=[];
+	//for(var i=0;i<internalUserStates.length;i++){
+	for(var key in internalUserStates){
+		if(internalUserStates[key]!=0)
+			internalUserState.push(internalUserStates[key]);
+	}
+	userProfileJson.internalUserStateMappingVOs = internalUserState;
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -150,7 +177,7 @@ function updateLMDetails() {
 
 			$("#profileNameId").text($("#firstNameId").val());
 			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
-
+			showLoanManagerProfilePage();
 		},
 		error : function(error) {
 			showToastMessage("Mandatory Fileds should not be empty");
@@ -176,10 +203,6 @@ function paintCutomerProfileContainer() {
 function customerPersonalInfoWrapper(user) {
 
 	var wrapper = $('<div>').attr({
-		"class" : "cust-personal-info-wrapper"
-	});	
-
-	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
 
@@ -188,69 +211,73 @@ function customerPersonalInfoWrapper(user) {
 	}).html("Personal Information");
 
 	var container = getCustPersonalInfoContainer(user);
-
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
 
 }
-
 
 function getCustPersonalInfoContainer(user) {
 
 	var container = $('<div>').attr({
 		"class" : "cust-personal-info-container"
 	});
-
-	var nameRow = getCustomerNameFormRow(user);
-	container.append(nameRow);
+	
+	var formWrapper = $('<form>').attr({
+		"id" : "profile-form"
+	});
 
 	var uploadRow = getCustomerUploadPhotoRow(user);
-	container.append(uploadRow);
+	formWrapper.append(uploadRow);
+	
+	var nameRow = getCustomerNameFormRow(user);
+	formWrapper.append(nameRow);
 
 	var DOBRow = getDOBRow(user);
-	container.append(DOBRow);
+	formWrapper.append(DOBRow);
 
 	var priEmailRow = getPriEmailRow(user);
-	container.append(priEmailRow);
+	formWrapper.append(priEmailRow);
 
 	var secEmailRow = getSecEmailRow(user);
-	container.append(secEmailRow);
+	formWrapper.append(secEmailRow);
 
 	/*
 	 * var streetAddrRow = getStreetAddrRow(user);
 	 * container.append(streetAddrRow);
 	 */
 
-	var cityRow = getCityRow(user);
-	container.append(cityRow);
-
 	var stateRow = getStateRow(user);
-	container.append(stateRow);
+	formWrapper.append(stateRow);
 
+	var cityRow = getCityRow(user);
+	formWrapper.append(cityRow);
+	
 	var zipRow = getZipRow(user);
-	container.append(zipRow);
+	formWrapper.append(zipRow);
 
 	var phone1Row = getPhone1Row(user);
-	container.append(phone1Row);
+	formWrapper.append(phone1Row);
 
 	var phone2Row = getPhone2Row(user);
-	container.append(phone2Row);
-
+	formWrapper.append(phone2Row);
+    
+	var checkBox=getCheckStatus(user);
+	formWrapper.append(checkBox);
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateUserDetails()"
 	}).html("Save");
-	container.append(saveBtn);
-	return container;
+	formWrapper.append(saveBtn);
+	
+	return container.append(formWrapper);
 }
 
 
 function getCustomerNameFormRow(user) {
     //TODO added for validation 
     var span=$('<span>').attr({
-	
 		"class" : "mandatoryClass"
-	}).html("*").css("color","red");
+	}).html("*");
 
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -264,20 +291,42 @@ function getCustomerNameFormRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	var firstName = $('<input>').attr({
+	
+	var firstName = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var firstNameInput = $('<input>').attr({
 		"class" : "prof-form-input",
 		"placeholder" : "First Name",
 		"value" : user.firstName,
 		"id" : "firstNameId"
 	});
 
-	var lastName = $('<input>').attr({
+	var firstNameErrMessage = $('<div>').attr({
+		"class" : "err-msg hide"
+	});
+	
+	firstName.append(firstNameInput).append(firstNameErrMessage);
+	
+	var lastName = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	
+	var lastNameInputCont = $('<input>').attr({
 		"class" : "prof-form-input",
 		"placeholder" : "Last Name",
 		"value" : user.lastName,
 		"id" : "lastNameId"
 	});
+	
+	var lastNameErrMessage = $('<div>').attr({
+		"class" : "err-msg hide"
+	});
 
+	lastName.append(lastNameInputCont).append(lastNameErrMessage);
+	
 	var id = $('<input>').attr({
 		"type" : "hidden",
 		"value" : user.id,
@@ -301,7 +350,7 @@ function getCustomerUploadPhotoRow(user) {
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
-		"class" : "prof-form-row-desc float-left"
+		"class" : "prof-form-row-desc upload-pic-desc float-left"
 	}).html("Upload Photo");
 
 	var rowCol2 = $('<div>').attr({
@@ -324,6 +373,13 @@ function getCustomerUploadPhotoRow(user) {
 		});
 	}
 
+	
+	var uploadIcn = $('<div>').attr({
+		"class" : "upload-prof-pic-icn"
+	}).click(uploadeImage);
+	
+	uploadPicPlaceholder.append(uploadIcn);
+	
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"
 	});
@@ -333,7 +389,6 @@ function getCustomerUploadPhotoRow(user) {
 		"id" : "prof-image",
 		"name" : user.id,
 		"value" :"Upload"
-
 	});
 
 	var inputHiddenDiv = $('<div>').attr({
@@ -343,12 +398,11 @@ function getCustomerUploadPhotoRow(user) {
 
 	inputHiddenDiv.append(inputHiddenFile);
 
-	var uploadBtn = $('<div>').attr({
+	/*var uploadBtn = $('<div>').attr({
 		"class" : "prof-btn upload-btn float-left"
+	}).click(uploadeImage).html("upload");*/
 
-	}).click(uploadeImage).html("upload");
-
-	uploadBottomContianer.append(uploadBtn).append(inputHiddenDiv);
+	uploadBottomContianer.append(inputHiddenDiv);
 
 	rowCol2.append(uploadPicPlaceholder).append(uploadBottomContianer);
 
@@ -448,6 +502,11 @@ function getDOBRow(user) {
 
 		dob = "";
 	}
+	
+	var dobCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var dobInput = $('<input>').attr({
 		"class" : "prof-form-input date-picker",
 		"placeholder" : "MM/DD/YYYY",
@@ -457,7 +516,14 @@ function getDOBRow(user) {
 		orientation : "top auto",
 		autoclose : true
 	});
-	rowCol2.append(dobInput);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	dobCont.append(dobInput).append(errMessage);
+	
+	rowCol2.append(dobCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -465,7 +531,7 @@ function getPriEmailRow(user) {
     //TODO added for validation
     var span=$('<span>').attr({	
 		"class" : "mandatoryClass"
-	}).html("*").css("color","red");
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -480,6 +546,10 @@ function getPriEmailRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var emailInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-lg",
 		"value" : user.emailId,
@@ -487,16 +557,25 @@ function getPriEmailRow(user) {
 		"readonly":true,
 		"onblur" : "emailValidation(this.value)"
 	});
-	rowCol2.append(emailInput);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(emailInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		alert("Incorrect Email");
+		showToastMessage("Incorrect Email");
 		validationFails = true;
+		return true;
 	}
+	return false;
 }
 
 
@@ -511,12 +590,23 @@ function getSecEmailRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var emailInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-lg",
 		"value" : user.customerDetail.secEmailId,
 		"id" : "secEmailId"
 	});
-	rowCol2.append(emailInput);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(emailInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -530,6 +620,12 @@ function getSecEmailRow(user) {
  * return row.append(rowCol1).append(rowCol2); }
  */
 
+var a=["hello","hi","hello"];
+
+var unique=a.filter(function(itm,i,a){
+    return i==a.indexOf(itm);
+});
+
 function getCityRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -540,16 +636,61 @@ function getCityRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var cityInput = $('<input>').attr({
 		"class" : "prof-form-input",
 		"value" : user.customerDetail.addressCity,
 		"id" : "cityId"
+	}).bind('keydown',function(){
+		
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
 	});
-	rowCol2.append(cityInput);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(cityInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
+function initializeCityLookup(searchData){
+	$('#cityId').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus : function(event, ui) {
+			/*$("#cityId").val(ui.item.label);
+			return false;*/
+		},
+		select : function(event, ui) {
+			/*$("#cityId").val(ui.item.label);
+			return false;*/
+		},
+		open : function() {
+			
+		}
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
+}
+
 function getStateRow(user) {
+	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
@@ -560,12 +701,179 @@ function getStateRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 	var stateInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-sm",
-		"value" : user.customerDetail.addressState,
-		"id" : "stateId"
+		"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
+		"id" : "stateId",
+		"readonly" : "readonly"
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+				appendStateDropDown('state-dropdown-wrapper');
+			}else{
+				toggleStateDropDown();
+			}
+		}else{
+			toggleStateDropDown();
+		}
 	});
-	rowCol2.append(stateInput);
+	
+	if(user.customerDetail.addressState){
+		stateInput.val(user.customerDetail.addressState);
+		var stateCode = user.customerDetail.addressState.toUpperCase();
+		
+		var stateId = findStateIdForStateCode(stateCode);
+		ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+	}
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dropdown-wrapper",
+		"class" : "state-dropdown-wrapper hide"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+
+function getManagerStateRow(user) {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("State");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var stateInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
+		"id" : "stateId"
+	}).bind('click',function(e){
+		e.stopPropagation();
+			if($('#state-dropdown-wrapper').has('div').size() <= 0){
+				appendManagerStateDropDown('state-dropdown-wrapper');
+			}else{
+				toggleStateDropDown();
+			}
+	});
+	
+	
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dropdown-wrapper",
+		"class" : "state-dropdown-wrapper"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
+	return row.append(rowCol1).append(rowCol2);
+}
+function zipCodeLookUpListCallBack(response) {
+	if(response.error == null){
+		currentZipcodeLookUp = response.resultObject;
+	}
+}
+
+function appendStateDropDown(elementToApeendTo) {
+	
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	
+	for(var i=0; i<stateList.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row"
+		}).html(stateList[i].stateCode)
+		.bind('click',function(e){
+			e.stopPropagation();
+			$('#stateId').val($(this).html());
+			currentZipcodeLookUp = [];
+			$('#cityId').val('');
+			$('#zipcodeId').val('');
+			var stateCode = $(this).html();
+			
+			var stateId = findStateIdForStateCode(stateCode);
+			ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+			toggleStateDropDown();
+		});
+		
+		parentToAppendTo.append(stateRow);
+	}
+	toggleStateDropDown();
+}
+
+function appendManagerStateDropDown(elementToApeendTo) {
+
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	for(var i=0; i<stateList.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row clearfix",
+			"id" : stateList[i].id,
+			"name":  stateList[i].stateName
+		});
+		var checkBox = $('<input>').attr({
+				"class" : "float-left",
+				"id": "checkBox_"+stateList[i].id,
+				"type":"checkbox"
+		});
+		if(states.indexOf((stateList[i].id).toString())>-1){
+			$(checkBox).attr('checked',true);
+		}
+		var textRow = $('<div>').attr({
+			"class" : "float-left",
+			"id" : "stateName_"+stateList[i].id
+		}).html(stateList[i].stateName);
+			stateRow.append(checkBox).append(textRow);
+			stateRow.bind('click',function(e){
+				e.stopPropagation();
+				var internalUserStateMappingVO=new Object();
+				internalUserStateMappingVO.userId=$("#userid").val();
+				internalUserStateMappingVO.stateId=this.id;
+				if($("#checkBox_"+this.id).is(":checked")){
+					internalUserStateMappingVO.isChecked=true;		
+//		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}else{
+					internalUserStateMappingVO=internalUserStates[this.id];
+					internalUserStateMappingVO.isChecked=false;
+					internalUserStates[this.id]=internalUserStateMappingVO;
+				}
+				
+				$('#stateId').val(this.name);
+				toggleStateDropDown();
+			});
+		
+		parentToAppendTo.append(stateRow);
+	}
+	toggleStateDropDown();
+}
+function findStateIdForStateCode(stateCode) {
+	
+	for(var i=0; i<stateList.length; i++){
+		if(stateList[i].stateCode == stateCode){
+			return stateList[i].id;
+		}
+	}
+	
+	return 0;
+}
+
+function findStateNameForStateId(stateId) {
+	
+	for(var i=0; i<stateList.length; i++){
+		if(stateList[i].id == stateId){
+			return stateList[i].stateName;
+		}
+	}
+	
+	return 0;
+}
+function toggleStateDropDown() {
+	$('#state-dropdown-wrapper').slideToggle();
+}
+
+
+function stateListCallBack(response) {
+	if(response.error == null){
+		stateList = response.resultObject;
+	}
 }
 
 function getZipRow(user) {
@@ -578,16 +886,63 @@ function getZipRow(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var zipInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-sm",
 		"value" : user.customerDetail.addressZipCode,
 		"id" : "zipcodeId"
+	}).bind('keydown',function(){
+		
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+
+		initializeZipcodeLookup(searchData);
 	});
-	rowCol2.append(zipInput);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(zipInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
+function initializeZipcodeLookup(searchData){
+	$('#zipcodeId').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+		},
+		select : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+		},
+		open : function() {
+			
+		}
+	});/*.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>").append(item.label).appendTo(ul);
+	}*/
+}
+
 function getPhone1Row(user) {
+	var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -595,26 +950,38 @@ function getPhone1Row(user) {
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
 	}).html("Primary Phone");
+	if(user.customerDetail.mobileAlertsPreference){
+	rowCol1.append(span);
+	}
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.phoneNumber,
 		"id" : "priPhoneNumberId",
-		
-		
 	});
-	rowCol2.append(phone1Input);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(phone1Input).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 //TODO added for validation LM
 
 function getPhone1RowLM(user) {
     var span=$('<span>').attr({
-	
 		"class" : "mandatoryClass"
-	}).html("*").css("color","red");
+	}).html("*");
 	
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -626,6 +993,10 @@ function getPhone1RowLM(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input",
 		"value" : user.phoneNumber,
@@ -633,14 +1004,30 @@ function getPhone1RowLM(user) {
 		
 	});
 	
-	rowCol2.append(phone1Input);
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(phone1Input).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function phoneNumberValidation(phoneNo){
+function phoneNumberValidation(phoneNo,customerStatus){
 
 var regex = /^\d{10}$/;   
-	if (!regex.test(phoneNo)) {
+if(customerStatus){
+	if(phoneNo==null || phoneNo==""){
+	showToastMessage("Phone field cannot be empty");
+	return false;
+	}else if(!regex.test(phoneNo)) {
+		showToastMessage("Invalid phone number");
+		validationFails = true;
+		return false
+	}
+}
+if (!regex.test(phoneNo)) {
 		showToastMessage("Invalid phone number");
 		validationFails = true;
 		return false
@@ -658,17 +1045,250 @@ function getPhone2Row(user) {
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
 	var phone2Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.customerDetail.secPhoneNumber,
 		"id" : "secPhoneNumberId"
 	});
-	rowCol2.append(phone2Input);
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(phone2Input).append(errMessage);
+	
+	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
 }
 
+ function getCheckStatus(user){
+var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Receive SMS Alert");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("Yes");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var rowColtext2 = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("No");
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var radioYesButton = $('<div>').attr({
+		"class" : "cust-radio-btn-yes radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDYes",		
+		
+
+	}).bind('click',function(e){
+			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+			validatePhone('priPhoneNumberId');
+			
+	});
+	
+	var radioNoButton = $('<div>').attr({
+		"class" : "cust-radio-btn-no radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDNo"
+	}).bind('click',function(e){
+		
+			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+	});
+	
+	if(user.customerDetail.mobileAlertsPreference){
+		radioYesButton.addClass('radio-btn-selected');
+	}else{
+		radioNoButton.addClass('radio-btn-selected');
+	}
+
+	
+	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+
+
+}
+
+/**
+ * Functions related to form validations
+ */
+
+var isProfileFormValid = true;
+$(document).on('blur','#firstNameId',function(){
+	if(!validateFormField('firstNameId', true, "First name can not be empty", "","")){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#lastNameId',function(){
+	if(!validateFormField('lastNameId', true, "Last name can not be empty", "","")){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#secEmailId',function(){
+	if(!validateFormField('secEmailId', false, "", "Email Id not valid", emailRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#zipcodeId',function(){
+	if(!validateFormField("zipcodeId", false, "", "Zip Code not valid", zipcodeRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#priPhoneNumberId',function(){
+	if(!validateFormField("priPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+$(document).on('blur','#secPhoneNumberId',function(){
+	if(!validateFormField("secPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+		isProfileFormValid = false;
+	}
+});
+
+function validateProfileForm(){
+	
+	isProfileFormValid = true;
+	
+	$('#profile-form input').trigger('blur');
+	
+	return isProfileFormValid;
+}
+
+function validateFirstName(elementId){
+	
+	var inputVal = $('#'+elementId).val();
+	
+	if(inputVal == undefined || inputVal == ""){
+		$('#'+elementId).next('.err-msg').html("First name can not be empty").show();
+		$('#'+elementId).addClass('err-input').focus();
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+	
+}
+
+function validateLastName(elementId){
+	
+	var inputVal = $('#'+elementId).val();
+	
+	if(inputVal == undefined || inputVal == ""){
+		$('#'+elementId).next('.err-msg').html("Last name can not be empty").show();
+		$('#'+elementId).addClass('err-input').focus();
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
+function validateEmail(elementId){
+	
+	var inputVal = $('#'+elementId).val();
+	
+	if(inputVal == undefined || inputVal == ""){
+		$('#'+elementId).next('.err-msg').html("Email can not be empty").show();
+		$('#'+elementId).addClass('err-input').focus();
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
+
+function validateFormField(elementId,isRequired,emptyErrorMessage,errorMessage,regEx){
+	var inputVal = $('#'+elementId).val();
+	
+	if(regEx == undefined ||regEx == ""){
+		regEx = /.*/;
+	}
+	
+	if(inputVal == undefined || inputVal == ""){
+		if(isRequired){
+			$('#'+elementId).next('.err-msg').html(emptyErrorMessage).show();
+			$('#'+elementId).addClass('err-input');
+			return false;
+		}else{
+			$('#'+elementId).next('.err-msg').hide();
+			$('#'+elementId).removeClass('err-input');
+			return true;
+		}
+	}else if(!regEx.test(inputVal.trim())){
+		$('#'+elementId).next('.err-msg').html(errorMessage).show();
+		$('#'+elementId).addClass('err-input');
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
+
+function validatePhone(elementId){
+	
+	var inputVal = $('#'+elementId).val();
+	
+	if(inputVal == undefined || inputVal == ""){
+		$('#'+elementId).next('.err-msg').html("Phone can not be empty").show();
+		$('#'+elementId).addClass('err-input').focus();
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
+function validateZipCode(elementId){
+	
+	var inputVal = $('#'+elementId).val();
+	
+	if(inputVal == undefined || inputVal == ""){
+		$('#'+elementId).next('.err-msg').html("Zipcode can not be empty").show();
+		$('#'+elementId).addClass('err-input').focus();
+		return false;
+	}else{
+		$('#'+elementId).next('.err-msg').hide();
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+}
+
+
 function updateUserDetails() {
 
+	//Validate User form
+	
+	if(!validateProfileForm()){
+		return false;
+	}
+	
+	
 	var userProfileJson = new Object();
 
 	userProfileJson.id = $("#userid").val();
@@ -686,15 +1306,27 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		customerDetails.mobileAlertsPreference = true;	
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
+		customerDetails.mobileAlertsPreference = false;
+		}
+
 
 	userProfileJson.customerDetail = customerDetails;
+    
+    //var phoneStatus=validatePhone("priPhoneNumberId");
+	var phoneStatus;
+	if(customerDetails.mobileAlertsPreference){
+	 phoneStatus=validatePhone("priPhoneNumberId");	
+	}else if(!customerDetails.mobileAlertsPreference){
 
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
-	
+	  phoneStatus=true;	
+	}
   
 
-    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
-    if(phoneStatus!=false){
+    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
+    if(phoneStatus){
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
@@ -952,3 +1584,38 @@ function saveEditUserProfile(user){
 }
 
 
+function getStateTextRow() {
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	});
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	
+	
+	var emailHtmlText="";	
+	for(var key in internalUserStates){
+
+		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
+			emailHtmlText+="<div class=\"prof-form-input-textarea-block float-left\">"+findStateNameForStateId(internalUserStates[key].stateId)+"</div>";
+		}
+	}
+	var emailInput = $('<div>').attr({
+		"class" : "prof-form-input-textarea clearfix",
+		"id" : "inputTextarea"
+ 	}).html(emailHtmlText);
+
+	inputCont.append(emailInput);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}

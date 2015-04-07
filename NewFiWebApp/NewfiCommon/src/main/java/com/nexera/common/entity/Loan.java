@@ -1,20 +1,41 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.*;
-
-import org.hibernate.annotations.Type;
-
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
+
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.vo.LoanDetailVO;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 
 /**
  * The persistent class for the loan database table.
  * 
  */
 @Entity
-@Table(name="loan")
+@Table(name = "loan")
 @NamedQuery(name = "Loan.findAll", query = "SELECT l FROM Loan l")
 public class Loan implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -22,13 +43,13 @@ public class Loan implements Serializable {
 	private Date createdDate;
 	private Boolean deleted;
 	private String loanEmailId;
-	private Integer lqbFileId;
+	private String lqbFileId;
 	private Date modifiedDate;
 	private String name;
 	private User user;
 	private LoanTypeMaster loanType;
 	private LoanProgressStatusMaster loanProgressStatus;
-	private LoanStatusMaster loanStatus;
+
 	private PropertyTypeMaster propertyType;
 	private LoanMilestoneMaster currentLoanMilestone;
 	private List<LoanAppForm> loanAppForms;
@@ -41,10 +62,38 @@ public class Loan implements Serializable {
 	private List<LoanSetting> loanSettings;
 	private List<LoanTeam> loanTeam;
 	private List<TransactionDetails> transactionDetails;
-	private WorkflowExec customerWorkflow;
-	private WorkflowExec loanManagerWorkflow;
+	private List<UploadedFilesList> uploadedFileList;
+	private Integer customerWorkflow;
+	private Integer loanManagerWorkflow;
+	private Boolean isRateLocked;
+	private Boolean isBankConnected;
+	private BigDecimal lockedRate;
+
+	@Column(name = "rate_locked", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsRateLocked() {
+		return isRateLocked;
+	}
+
+	public void setIsRateLocked(Boolean isRateLocked) {
+		this.isRateLocked = isRateLocked;
+	}
+
+	@Column(name = "bank_connected", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsBankConnected() {
+		return isBankConnected;
+	}
+
+	public void setIsBankConnected(Boolean isBankConnected) {
+		this.isBankConnected = isBankConnected;
+	}
 
 	public Loan() {
+	}
+
+	public Loan(Integer id) {
+		this.id = id;
 	}
 
 	@Id
@@ -66,7 +115,8 @@ public class Loan implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	@Column(name="deleted" ,columnDefinition = "TINYINT")
+
+	@Column(name = "deleted", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getDeleted() {
 		return this.deleted;
@@ -86,11 +136,11 @@ public class Loan implements Serializable {
 	}
 
 	@Column(name = "lqb_file_id")
-	public Integer getLqbFileId() {
+	public String getLqbFileId() {
 		return lqbFileId;
 	}
 
-	public void setLqbFileId(Integer lqbFileId) {
+	public void setLqbFileId(String lqbFileId) {
 		this.lqbFileId = lqbFileId;
 	}
 
@@ -134,17 +184,6 @@ public class Loan implements Serializable {
 		this.loanType = loanType;
 	}
 
-	// bi-directional many-to-one association to LoanStatusMaster
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan_status")
-	public LoanStatusMaster getLoanStatus() {
-		return loanStatus;
-	}
-
-	public void setLoanStatus(LoanStatusMaster loanStatus) {
-		this.loanStatus = loanStatus;
-	}
-
 	// bi-directional many-to-one association to PropertyTypeMaster
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "property_type")
@@ -176,14 +215,15 @@ public class Loan implements Serializable {
 	public void setLoanAppForms(List<LoanAppForm> loanAppForms) {
 		this.loanAppForms = loanAppForms;
 	}
-	
+
 	// bi-directional many-to-one association to LoanAppForm
 	@OneToMany(mappedBy = "loan")
 	public List<TransactionDetails> getTransactionDetails() {
 		return this.transactionDetails;
 	}
 
-	public void setTransactionDetails(List<TransactionDetails> transactionDetails) {
+	public void setTransactionDetails(
+	        List<TransactionDetails> transactionDetails) {
 		this.transactionDetails = transactionDetails;
 	}
 
@@ -208,12 +248,12 @@ public class Loan implements Serializable {
 	}
 
 	public void setLoanApplicationFees(
-			List<LoanApplicationFee> loanApplicationFees) {
+	        List<LoanApplicationFee> loanApplicationFees) {
 		this.loanApplicationFees = loanApplicationFees;
 	}
 
 	public LoanApplicationFee addLoanApplicationFee(
-			LoanApplicationFee loanApplicationFee) {
+	        LoanApplicationFee loanApplicationFee) {
 		getLoanApplicationFees().add(loanApplicationFee);
 		loanApplicationFee.setLoan(this);
 
@@ -221,15 +261,15 @@ public class Loan implements Serializable {
 	}
 
 	public LoanApplicationFee removeLoanApplicationfee(
-			LoanApplicationFee loanApplicationFee) {
+	        LoanApplicationFee loanApplicationFee) {
 		getLoanApplicationFees().remove(loanApplicationFee);
 		loanApplicationFee.setLoan(null);
 
 		return loanApplicationFee;
 	}
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="loan_detail")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_detail")
 	public LoanDetail getLoanDetail() {
 		return loanDetail;
 	}
@@ -296,16 +336,14 @@ public class Loan implements Serializable {
 		this.loanNotifications = loanNotifications;
 	}
 
-	public Notification addLoanNotification(
-			Notification loanNotification) {
+	public Notification addLoanNotification(Notification loanNotification) {
 		getLoanNotifications().add(loanNotification);
 		loanNotification.setLoan(this);
 
 		return loanNotification;
 	}
 
-	public Notification removeLoanNotification(
-			Notification loanNotification) {
+	public Notification removeLoanNotification(Notification loanNotification) {
 		getLoanNotifications().remove(loanNotification);
 		loanNotification.setLoan(null);
 
@@ -337,18 +375,17 @@ public class Loan implements Serializable {
 	}
 
 	// bi-directional many-to-one association to LoanProgressStatusMaster
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loan_progress_status_master")
-	public LoanProgressStatusMaster getLoanProgressStatus()
-    {
-        return loanProgressStatus;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loan_progress_status_master")
+	public LoanProgressStatusMaster getLoanProgressStatus() {
+		return loanProgressStatus;
+	}
 
-    public void setLoanProgressStatus( LoanProgressStatusMaster loanProgressStatus )
-    {
-        this.loanProgressStatus = loanProgressStatus;
-    }
-    
+	public void setLoanProgressStatus(
+	        LoanProgressStatusMaster loanProgressStatus) {
+		this.loanProgressStatus = loanProgressStatus;
+	}
+
 	// bi-directional many-to-one association to LoanSetting
 	@OneToMany(mappedBy = "loan")
 	public List<LoanSetting> getLoanSettings() {
@@ -375,6 +412,7 @@ public class Loan implements Serializable {
 
 	// bi-directional many-to-one association to LoanTeam
 	@OneToMany(mappedBy = "loan")
+	@Cascade({ CascadeType.SAVE_UPDATE })
 	public List<LoanTeam> getLoanTeam() {
 		return this.loanTeam;
 	}
@@ -397,25 +435,91 @@ public class Loan implements Serializable {
 		return loanTeam;
 	}
 
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_workflow")
-	public WorkflowExec getCustomerWorkflow() {
+	@Column(name = "customer_workflow")
+	public Integer getCustomerWorkflow() {
 		return customerWorkflow;
 	}
 
-	public void setCustomerWorkflow(WorkflowExec customerWorkflow) {
+	public void setCustomerWorkflow(Integer customerWorkflow) {
 		this.customerWorkflow = customerWorkflow;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loan_manager_workflow")
-	public WorkflowExec getLoanManagerWorkflow() {
+	@Column(name = "loan_manager_workflow")
+	public Integer getLoanManagerWorkflow() {
 		return loanManagerWorkflow;
 	}
 
-	public void setLoanManagerWorkflow(WorkflowExec loanManagerWorkflow) {
+	public void setLoanManagerWorkflow(Integer loanManagerWorkflow) {
 		this.loanManagerWorkflow = loanManagerWorkflow;
+	}
+
+	@Column(name = "locked_rate")
+	public BigDecimal getLockedRate() {
+		return lockedRate;
+	}
+
+	public void setLockedRate(BigDecimal lockedRate) {
+		this.lockedRate = lockedRate;
+	}
+
+	public static LoanVO convertFromEntityToVO(Loan loan) {
+		if (loan == null)
+			return null;
+
+		LoanVO loanVo = new LoanVO();
+		loanVo.setId(loan.getId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setDeleted(loan.getDeleted());
+		loanVo.setLoanEmailId(loan.getLoanEmailId());
+		loanVo.setLqbFileId(loan.getLqbFileId());
+		loanVo.setCreatedDate(loan.getCreatedDate());
+		loanVo.setModifiedDate(loan.getModifiedDate());
+		loanVo.setName(loan.getName());
+
+		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
+		List<UserVO> loanTeam = new ArrayList<UserVO>();
+		for (LoanTeam team : loan.getLoanTeam()) {
+			UserVO userVo = User.convertFromEntityToVO(team.getUser());
+			loanVo.setUser(userVo);
+			loanTeam.add(userVo);
+		}
+		loanVo.setLoanTeam(loanTeam);
+		loanVo.setLoanDetail(buildLoanDetailVO(loan.getLoanDetail()));
+		if (loan.getCustomerWorkflow() != null) {
+			loanVo.setCustomerWorkflowID(loan.getCustomerWorkflow());
+		}
+		if (loan.getLoanManagerWorkflow() != null) {
+			loanVo.setLoanManagerWorkflowID(loan.getLoanManagerWorkflow());
+		}
+
+		loanVo.setIsBankConnected(loan.getIsBankConnected());
+		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
+		loanVo.setLockedRate(loan.getLockedRate());
+		return loanVo;
+	}
+
+	private static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
+		if (detail == null)
+			return null;
+
+		LoanDetailVO detailVO = new LoanDetailVO();
+		detailVO.setId(detail.getId());
+		detailVO.setDownPayment(detail.getDownPayment());
+		detailVO.setLoanAmount(detail.getLoanAmount());
+		detailVO.setRate(detail.getRate());
+
+		return detailVO;
+
+	}
+
+	@OneToMany(mappedBy = "loan")
+	public List<UploadedFilesList> getUploadedFileList() {
+		return uploadedFileList;
+	}
+
+	public void setUploadedFileList(List<UploadedFilesList> uploadedFileList) {
+		this.uploadedFileList = uploadedFileList;
 	}
 
 }

@@ -34,11 +34,13 @@ public class WorkflowItemExec implements Serializable {
 	private Date endTime;
 	private String status;
 	private Boolean success;
+	private WorkflowItemExec onSuccessItem;
 	private WorkflowItemMaster workflowItemMaster;
 	private WorkflowExec parentWorkflow;
 	private WorkflowItemExec parentWorkflowItemExec;
 	private String params;
 	private Boolean clickable;
+	private Integer displayOrder;
 
 	public WorkflowItemExec() {
 	}
@@ -102,7 +104,6 @@ public class WorkflowItemExec implements Serializable {
 		this.success = success;
 	}
 
-	
 	@Column(columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getClickable() {
@@ -112,6 +113,7 @@ public class WorkflowItemExec implements Serializable {
 	public void setClickable(Boolean clickable) {
 		this.clickable = clickable;
 	}
+
 	// bi-directional many-to-one association to WorkflowItemMaster
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "workflow_item_master")
@@ -182,6 +184,32 @@ public class WorkflowItemExec implements Serializable {
 	 */
 	public void setParams(String params) {
 		this.params = params;
+	}
+
+	@Column(name = "display_order")
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
+	/**
+	 * @return the onSuccessItem
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "on_success_item")
+	public WorkflowItemExec getOnSuccessItem() {
+		return onSuccessItem;
+	}
+
+	/**
+	 * @param onSuccessItem
+	 *            the onSuccessItem to set
+	 */
+	public void setOnSuccessItem(WorkflowItemExec onSuccessItem) {
+		this.onSuccessItem = onSuccessItem;
 	}
 
 }

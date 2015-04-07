@@ -1,7 +1,11 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -19,12 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.ActiveInternalEnum;
+import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.UserVO;
 
 @Component
 @Transactional
@@ -34,9 +46,40 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileDaoImpl.class);
 
+	private static String GMT = "GMT";
+
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	@Override
+	public User authenticateUser(String userName, String password)
+	        throws NoRecordsFetchedException, DatabaseException {
+		// TODO Auto-generated method stub
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(User.class);
+			criteria.add(Restrictions.eq("emailId", userName));
+			criteria.add(Restrictions.eq("password", password));
+
+			Object obj = criteria.uniqueResult();
+			if (obj == null) {
+				throw new NoRecordsFetchedException(
+				        DisplayMessageConstants.INVALID_USERNAME);
+			}
+			User user = (User) obj;
+			Hibernate.initialize(user.getUserRole());
+			return (User) obj;
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in authenticateUser() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in authenticateUser() ",
+			        hibernateException);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException {
 		try {
@@ -61,11 +104,16 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	}
 
+	@Override
+	@Transactional(readOnly = true)
 	public User findByUserId(Integer userId) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userId));
-		return (User) criteria.uniqueResult();
+		User user = (User) criteria.uniqueResult();
+		Hibernate.initialize(user.getInternalUserDetail());
+		Hibernate.initialize(user.getInternalUserStateMappings());
+		return user;
 	}
 
 	@Override
@@ -88,7 +136,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference WHERE customerdetail.id = :id";
 		Query query = (Query) session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
@@ -98,6 +146,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
+		query.setParameter("mobileAlertsPreference",
+		        customerDetail.getMobileAlertsPreference());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
@@ -117,13 +167,64 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	public List<User> getUsersList() {
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		return criteria.list();
+
+	}
+
+	@Override
+	public boolean changeUserPassword(UserVO userVO) {
+		int rowEffected;
+
+		try {
+			Session session = sessionFactory.getCurrentSession();
+
+			String hql = "UPDATE User usr set usr.password ='"
+			        + userVO.getPassword() + "' where usr.id=" + userVO.getId();
+			Query query = (Query) session.createQuery(hql);
+
+			rowEffected = query.executeUpdate();
+
+			if (rowEffected == 0)
+				return false;
+
+			else
+
+				return true;
+		}
+
+		catch (HibernateException e) {
+
+			return false;
+
+		}
+
+	}
+
+	@Override
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String searchQuery = "FROM User where lower(concat( first_name,',',last_name) ) like '%"
+		String searchQuery = "FROM User where ";
+
+		if (user.getEmailId() != null)
+			searchQuery += " emailId like '" + user.getEmailId() + "%' or ";
+
+		if (user.getFirstName() != null) {
+			user.setFirstName(user.getFirstName().toLowerCase());
+		} else {
+			user.setFirstName("");
+		}
+		searchQuery += " lower(concat( firstName,lastName) ) like '"
 		        + user.getFirstName() + "%'";
+
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
+			// session.save(user.getUserRole());
 		}
 		if (user.getInternalUserDetail() != null
 		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
@@ -145,23 +246,47 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setMaxResults(MAX_RESULTS);
 		List<User> userList = query.list();
 
-		for (User userObj : userList) {
-			Hibernate.initialize(user.getInternalUserDetail());
-			if (userObj.getInternalUserDetail() != null)
-				Hibernate.initialize(userObj.getInternalUserDetail()
-				        .getInternaUserRoleMaster());
-		}
-
 		return userList;
 	}
 
 	@Override
-	public Integer saveInternalUser(User user) {
-		if (null != user.getInternalUserDetail()) {
+	public Integer saveUserWithDetails(User user) {
+		if (null != user.getInternalUserDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
+		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			sessionFactory.getCurrentSession().flush();
+			// sessionFactory.getCurrentSession().flush();
+		}
+		if (null != user.getRealtorDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
+		                .getRoleId()) {
+			this.save(user.getRealtorDetail());
+			// sessionFactory.getCurrentSession().flush();
 		}
 
+		LOG.info("user.getCustomerDetail() in daoimpl"
+		        + user.getCustomerDetail());
+
+		if (null != user.getCustomerDetail()
+		        && user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		                .getRoleId()) {
+
+			// if(user.getCustomerDetail().getCustomerBankAccountDetails() !=
+			// null){
+
+			// this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
+			// }
+			// this.save(user.getCustomerDetail().getCustomerEmploymentIncome());
+			// this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
+			// this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());
+			LOG.info("Inside User Profile Dao user.getCustomerDetail()"
+			        + user.getCustomerDetail().getId());
+			this.save(user.getCustomerDetail());
+			// sessionFactory.getCurrentSession().flush();
+		}
 		return (Integer) this.save(user);
 	}
 
@@ -231,7 +356,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public User findInternalUser(Integer userID) {
-		User user = (User) this.load(User.class, userID);
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", userID));
+		User user = (User) criteria.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());
 			System.out.println("Test  : loadInternalUser");
@@ -267,7 +395,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public String findUserRoleForMongo(Integer userID)
@@ -310,6 +438,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		case REALTOR:
 			userVO.setUserRole(UserRolesEnum.REALTOR.toString());
 			break;
+		case SYSTEM:
+			userVO.setUserRole(UserRolesEnum.SYSTEM.toString());
+			break;
 		default:
 			userVO.setUserRole(user.getInternalUserDetail()
 			        .getInternaUserRoleMaster().getRoleDescription());
@@ -329,11 +460,231 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		}
 		return imageVOs;
 	}
-	
-	 public User saveUser(User user){
-		
-		 Session session = sessionFactory.getCurrentSession();
-		 session.save(user);
-		 return user;
+
+	public User saveUser(User user) {
+
+		Session session = sessionFactory.getCurrentSession();
+		session.save(user);
+		return user;
 	}
+
+	@Override
+	public Integer saveCustomerDetails(User user) {
+		if (null != user.getCustomerDetail()) {
+			this.save(user.getCustomerDetail());
+			sessionFactory.getCurrentSession().flush();
+		}
+
+		return (Integer) this.save(user);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<User> getEmailAddress(List<Integer> list) {
+		List<User> emailIds = new ArrayList<User>();
+
+		if (list != null && !list.isEmpty()) {
+			Session session = sessionFactory.getCurrentSession();
+			String hql = "from User where id in (:ids)";
+			Query qry = session.createQuery(hql);
+			qry.setParameterList("ids", list);
+			return qry.list();
+
+		}
+
+		return null;
+	}
+
+	@Override
+	public List<User> fetchAllActiveUsers() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("isProfileComplete", false));
+		return criteria.list();
+	}
+
+	@Override
+	public List<User> getLoanManagerForState(String stateName) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria criteria = session.createCriteria(StateLookup.class);
+		criteria.add(Restrictions.eq("statecode", stateName));
+		try {
+			StateLookup lookup = (StateLookup) criteria.uniqueResult();
+
+			criteria = session.createCriteria(InternalUserStateMapping.class);
+			criteria.add(Restrictions.eq("stateLookup", lookup));
+			List<InternalUserStateMapping> internalUsers = criteria.list();
+
+			if (internalUsers == null || internalUsers.isEmpty()) {
+				// No users found for this state
+				return Collections.EMPTY_LIST;
+			}
+			// Check amongst the users who is free
+
+			List<User> availableUsers = new ArrayList<User>();
+
+			for (InternalUserStateMapping internalUser : internalUsers) {
+				addIfUserIsEligible(internalUser.getUser(), availableUsers);
+
+			}
+			return availableUsers;
+		} catch (HibernateException exception) {
+			LOG.warn("State not present in system: " + stateName);
+			return Collections.EMPTY_LIST;
+		}
+
+	}
+
+	@Override
+	public List<User> getLoanManagerWithLeastWork() {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+
+		try {
+			List<User> users = criteria.list();
+			List<User> availableUsers = new ArrayList<User>();
+			for (User user : users) {
+				addIfUserIsEligible(user, availableUsers);
+			}
+			return availableUsers;
+		} catch (HibernateException exception) {
+			exception.printStackTrace();
+			LOG.error("Exception, but not expected", exception);
+			LOG.warn("No users available ");
+			return Collections.EMPTY_LIST;
+		}
+
+	}
+
+	private void addIfUserIsEligible(User user, List<User> availableUsers) {
+		if (user.getInternalUserDetail().getActiveInternal() == ActiveInternalEnum.ACTIVE) {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			List<LoanTeam> loanTeamList = criteria.list();
+			List<Loan> activeLoanList = new ArrayList<Loan>();
+			user.setLoans(activeLoanList);
+
+			if (loanTeamList == null || loanTeamList.isEmpty()) {
+				// This means that the user is not part of any team. Hence has
+				// no work
+				availableUsers.add(user);
+			}
+			int todaysLoanCount = 0;
+			for (LoanTeam loanTeam : loanTeamList) {
+				if (loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.IN_PROGRESS
+				        .getStatusId()
+				        || loanTeam.getLoan().getLoanProgressStatus().getId() == LoanProgressStatusMasterEnum.NEW_LOAN
+				                .getStatusId()) {
+					// It does not matter if the user is assigned a loan which
+					// is not active. Hence, for computation, we are considering
+					// only those loans which he is currently working on
+
+					// Additional check, if the loan is created today
+					if (loanWasCreatedToday(loanTeam.getLoan().getId(),
+					        loanTeam.getLoan().getCreatedDate())) {
+						todaysLoanCount = user.getTodaysLoansCount();
+						todaysLoanCount++;
+						user.setTodaysLoansCount(todaysLoanCount);
+					}
+
+					user.getLoans().add(loanTeam.getLoan());
+
+				}
+			}
+			availableUsers.add(user);
+
+		}
+	}
+
+	private boolean loanWasCreatedToday(int loanId, Date createdDate) {
+		// TODO Auto-generated method stub
+		if (createdDate == null) {
+			// TODO: Cannot happen
+			LOG.warn("There is a lone without created date: " + loanId);
+			return false;
+		}
+		Calendar today = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		today.setTime(new Date(System.currentTimeMillis()));
+		Calendar loanCreated = Calendar.getInstance(TimeZone.getTimeZone(GMT));
+		loanCreated.setTime(createdDate);
+		return (today.get(Calendar.ERA) == loanCreated.get(Calendar.ERA)
+		        && today.get(Calendar.YEAR) == loanCreated.get(Calendar.YEAR) && today
+		            .get(Calendar.DAY_OF_YEAR) == loanCreated
+		        .get(Calendar.DAY_OF_YEAR));
+
+	}
+
+	@Override
+	public UserVO getDefaultLoanManagerForRealtor(UserVO realtor,
+	        String stateName) {
+		User user = findByUserId(realtor.getId());
+		User defaultLoanManager = user.getRealtorDetail()
+		        .getDefaultLoanManager();
+
+		return User.convertFromEntityToVO(defaultLoanManager);
+	}
+
+	@Override
+	public UserVO getDefaultSalesManager() {
+		// This is a temporary method only to meet an absurd requirement of
+		// assigning all loans to Pat.
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		criteria.createAlias("internalUserDetail", "userDetail");
+		criteria.createAlias("userDetail.internaUserRoleMaster", "role");
+		criteria.add(Restrictions.eq("role.id",
+		        InternalUserRolesEum.SM.getRoleId()));
+		List<User> users = criteria.list();
+		if (users == null || users.isEmpty()) {
+			LOG.error("This cannot happen, there has to be a sales manager in the system ");
+			// TODO: Write to error table and email
+			return null;
+
+		}
+		if (users.size() > 1) {
+			LOG.warn("There are more than one sales manager in the system, which is not handled. Checking if user name contains pat, and returning that user. IF not found, then returning the first instance");
+			for (User user : users) {
+				if (user.getFirstName().contains("pat")) {
+					return User.convertFromEntityToVO(user);
+				}
+
+			}
+
+		}
+
+		return User.convertFromEntityToVO(users.get(0));
+	}
+
+	@Override
+	public void updateLoginTime(Date date, int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.lastLoginDate=:DATE WHERE usr.id = :ID";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("ID", userId);
+		query.setTimestamp("DATE", date);
+		int result = query.executeUpdate();
+
+	}
+
+	@Override
+	public Integer updateInternalUserDetail(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.activeInternal = :activeInternal WHERE internalusr.id = :id";
+		Query query = (Query) session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("activeInternal", user.getInternalUserDetail()
+		        .getActiveInternal());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
+
 }

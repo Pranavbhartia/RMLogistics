@@ -16,18 +16,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
-import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.core.authentication.AuthenticationService;
+import com.nexera.core.helper.MessageServiceHelper;
 
 public class UserAuthProvider extends DaoAuthenticationProvider {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UserAuthProvider.class);
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(UserAuthProvider.class);
 
 	@Autowired
 	private AuthenticationService authenticationService;
+
+	@Autowired
+	private MessageServiceHelper messageServiceHelper;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
@@ -36,18 +39,18 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 		String username = authentication.getName().split(":")[0];
 		String offSet = authentication.getName().split(":")[1];
 		String password = authentication.getCredentials().toString();
-		
+
 		User user;
 		try {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
-			user = authenticationService.getUserWithLoginName(username);
-
-			
+			user = authenticationService.getUserWithLoginName(username,
+			        password);
 
 			LOG.debug("Checking if user is not in inactive mode");
 			if (!user.getStatus()) {
-				throw new InvalidInputException("User not active in login", DisplayMessageConstants.USER_INACTIVE);
+				throw new InvalidInputException("User not active in login",
+				        DisplayMessageConstants.USER_INACTIVE);
 			}
 
 			authenticationService.validateUser(user, password);
@@ -55,23 +58,24 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 				List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 				user.setMinutesOffset(offSet);
-				
-				//user.setDisplayRoleCode();
-				//user.setMinutesOffset();
-				Authentication auth = new UsernamePasswordAuthenticationToken(user, password, grantedAuths);
-				LOG.info("Authentication provided for user : " + user.getEmailId());
+
+				// user.setDisplayRoleCode();
+				// user.setMinutesOffset();
+				Authentication auth = new UsernamePasswordAuthenticationToken(
+				        user, password, grantedAuths);
+				messageServiceHelper.checkIfUserFirstLogin(user);
+				LOG.info("Authentication provided for user : "
+				        + user.getEmailId());
 				return auth;
 			}
-		}
-		catch (NoRecordsFetchedException e) {
+		} catch (NoRecordsFetchedException e) {
 			LOG.error("User not found in the system: " + e.getMessage());
 			throw new UsernameNotFoundException("User not found in the system");
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e) {
 			LOG.error(e.getMessage());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
-			
+
 			e.printStackTrace();
 		}
 		return null;
@@ -91,13 +95,16 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 	 * @param password
 	 * @throws InvalidInputException
 	 */
-	private void validateLoginFormParameters(String username, String password) throws InvalidInputException {
+	private void validateLoginFormParameters(String username, String password)
+	        throws InvalidInputException {
 		LOG.debug("Validating Login form paramters loginName :" + username);
 		if (username == null || username.isEmpty()) {
-			throw new InvalidInputException("User name passed can not be null", DisplayMessageConstants.INVALID_USERNAME);
+			throw new InvalidInputException("User name passed can not be null",
+			        DisplayMessageConstants.INVALID_USERNAME);
 		}
 		if (password == null || password.isEmpty()) {
-			throw new InvalidInputException("Password passed can not be null", DisplayMessageConstants.INVALID_PASSWORD);
+			throw new InvalidInputException("Password passed can not be null",
+			        DisplayMessageConstants.INVALID_PASSWORD);
 		}
 		LOG.debug("Login form parameters validated successfully");
 	}

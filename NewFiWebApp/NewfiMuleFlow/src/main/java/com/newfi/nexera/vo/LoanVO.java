@@ -3,6 +3,10 @@
  */
 package com.newfi.nexera.vo;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
+
 /**
  * @author Utsav
  *
@@ -11,11 +15,13 @@ public class LoanVO
 {
     private String sTicket;
 
-    private String sXmlData;
+    private Map<String, String> sXmlDataMap;
 
     private String sTemplateName;
 
     private String sLoanNumber;
+
+    private Map<String, String> sDataContentMap;
 
     private String sDataContent;
 
@@ -25,13 +31,15 @@ public class LoanVO
 
     private Integer format;
 
-    private String sXmlQuery;
+    private Map<String, String> sXmlQueryMap;
 
     private String IlpTemplateId;
 
-    private Float requestedRate;
+    private BigDecimal requestedRate;
 
-    private Float requestedFee;
+    private BigDecimal requestedFee;
+
+    private String docId;
 
 
     /**
@@ -49,24 +57,6 @@ public class LoanVO
     public void setsTicket( String sTicket )
     {
         this.sTicket = sTicket;
-    }
-
-
-    /**
-     * @return the sXmlData
-     */
-    public String getsXmlData()
-    {
-        return sXmlData;
-    }
-
-
-    /**
-     * @param sXmlData the sXmlData to set
-     */
-    public void setsXmlData( String sXmlData )
-    {
-        this.sXmlData = sXmlData;
     }
 
 
@@ -103,42 +93,6 @@ public class LoanVO
     public void setsLoanNumber( String sLoanNumber )
     {
         this.sLoanNumber = sLoanNumber;
-    }
-
-
-    /**
-     * @return the sDataContent
-     */
-    public String getsDataContent()
-    {
-        return sDataContent;
-    }
-
-
-    /**
-     * @param sDataContent the sDataContent to set
-     */
-    public void setsDataContent( String sDataContent )
-    {
-        this.sDataContent = sDataContent;
-    }
-
-
-    /**
-     * @return the sXmlQuery
-     */
-    public String getsXmlQuery()
-    {
-        return sXmlQuery;
-    }
-
-
-    /**
-     * @param sXmlQuery the sXmlQuery to set
-     */
-    public void setsXmlQuery( String sXmlQuery )
-    {
-        this.sXmlQuery = sXmlQuery;
     }
 
 
@@ -215,27 +169,9 @@ public class LoanVO
 
 
     /**
-     * @return the requestedRate
-     */
-    public Float getRequestedRate()
-    {
-        return requestedRate;
-    }
-
-
-    /**
-     * @param requestedRate the requestedRate to set
-     */
-    public void setRequestedRate( Float requestedRate )
-    {
-        this.requestedRate = requestedRate;
-    }
-
-
-    /**
      * @return the requestedFee
      */
-    public Float getRequestedFee()
+    public BigDecimal getRequestedFee()
     {
         return requestedFee;
     }
@@ -244,9 +180,117 @@ public class LoanVO
     /**
      * @param requestedFee the requestedFee to set
      */
-    public void setRequestedFee( Float requestedFee )
+    public void setRequestedFee( BigDecimal requestedFee )
     {
         this.requestedFee = requestedFee;
+    }
+
+
+    /**
+     * @return the sXmlDataMap
+     */
+    public Map<String, String> getsXmlDataMap()
+    {
+        return sXmlDataMap;
+    }
+
+
+    /**
+     * @param sXmlDataMap the sXmlDataMap to set
+     */
+    public void setsXmlDataMap( Map<String, String> sXmlDataMap )
+    {
+        this.sXmlDataMap = sXmlDataMap;
+    }
+
+
+    /**
+     * @return the sXmlQueryMap
+     */
+    public Map<String, String> getsXmlQueryMap()
+    {
+        return sXmlQueryMap;
+    }
+
+
+    /**
+     * @param sXmlQueryMap the sXmlQueryMap to set
+     */
+    public void setsXmlQueryMap( Map<String, String> sXmlQueryMap )
+    {
+        this.sXmlQueryMap = sXmlQueryMap;
+    }
+
+
+    /**
+     * @return the sDataContentMap
+     */
+    public Map<String, String> getsDataContentMap()
+    {
+        return sDataContentMap;
+    }
+
+
+    /**
+     * @param sDataContentMap the sDataContentMap to set
+     */
+    public void setsDataContentMap( Map<String, String> sDataContentMap )
+    {
+        this.sDataContentMap = sDataContentMap;
+    }
+
+
+    /**
+     * @return the sDataContent
+     */
+    public String getsDataContent()
+    {
+        return sDataContent;
+    }
+
+
+    /**
+     * @param sDataContent the sDataContent to set
+     */
+    public void setsDataContent( String sDataContent )
+    {
+        this.sDataContent = sDataContent;
+    }
+
+
+    /**
+     * @return the requestedRate
+     */
+    public BigDecimal getRequestedRate()
+    {
+        return requestedRate;
+    }
+
+
+    /**
+     * @param requestedRate the requestedRate to set
+     */
+    public void setRequestedRate( BigDecimal requestedRate )
+    {
+        this.requestedRate = requestedRate;
+    }
+
+
+    /**
+     * @return the docId
+     */
+    public String getDocId()
+    {
+        return docId;
+    }
+
+
+    /**
+     * @param docId the docId to set
+     */
+    public void setDocId( String docId )
+    {
+        this.docId = docId;
     }
 
 }

@@ -13,7 +13,7 @@ public class ResponseVO
 
     private String responseCode;
 
-    private String responseMessage;
+    private Object responseMessage;
 
     private String responseTime;
 
@@ -61,7 +61,7 @@ public class ResponseVO
     /**
      * @return the responseMessage
      */
-    public String getResponseMessage()
+    public Object getResponseMessage()
     {
         return responseMessage;
     }
@@ -70,7 +70,7 @@ public class ResponseVO
     /**
      * @param responseMessage the responseMessage to set
      */
-    public void setResponseMessage( String responseMessage )
+    public void setResponseMessage( Object responseMessage )
     {
         this.responseMessage = responseMessage;
     }

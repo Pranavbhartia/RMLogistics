@@ -34,6 +34,7 @@
     font-family: 'opensanssemibold';
     text-transform: capitalize;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .reg-display-title {
@@ -62,4 +63,49 @@
 
 .reg-email{
 	background-image:url(../images/email.png); 
+}
+
+.reg-btn-cont {
+	width: 300px;
+	margin: 0 auto;
+}
+
+.reg-radio-btn-wrapper {
+	margin: 10px 0;
+}
+
+input.reg-radio {
+	width: 14px;
+	height: 14px;
+	margin-right: 10px;
+}
+
+.soft-menu-icon{
+    width: 44px;
+    height: 50px;
+    margin-right: 20px;
+    background: url("../images/menu.png") no-repeat center;
+    cursor: pointer;
+}
+
+.soft-menu-wrapper{
+    display: none;
+    position: absolute;
+    top: 51px;
+    right: 10px;
+    width: 200px;
+    background: #428bca;
+    border-radius: 0 0 3px 3px;
+    color: #fff;
+}
+
+.soft-menu-hdr{
+  line-height: 37px;
+  margin-left: 15px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.reg-header-btns-wrapper{
+    color: #fff;
 }

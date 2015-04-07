@@ -23,6 +23,8 @@ public class UploadedFilesListVO implements Serializable {
 	private AssignedUserVO assignedByUser;
 	private String uuidFileId;
 	private Integer totalPages;
+	private String lqbFileID;
+	
 	
 	public Integer getId() {
 		return id;
@@ -101,6 +103,12 @@ public class UploadedFilesListVO implements Serializable {
 	}
 	public void setTotalPages(Integer totalPages) {
 		this.totalPages = totalPages;
+	}
+	public String getLqbFileID() {
+		return lqbFileID;
+	}
+	public void setLqbFileID(String lqbFileID) {
+		this.lqbFileID = lqbFileID;
 	}
 	
 	

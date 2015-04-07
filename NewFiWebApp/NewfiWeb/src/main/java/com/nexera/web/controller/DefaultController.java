@@ -24,12 +24,15 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MasterDataService;
 import com.nexera.core.service.UserProfileService;
@@ -45,9 +48,15 @@ public class DefaultController implements InitializingBean {
 
 	@Autowired
 	protected MasterDataService masterDataService;
-	
+
 	@Autowired
 	protected UserProfileService userProfileService;
+
+	@Autowired
+	protected LoanAppFormService loanAppFormService;
+
+	@Autowired
+	private UserProfileDao userProfileDao;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DefaultController.class);
@@ -59,7 +68,8 @@ public class DefaultController implements InitializingBean {
 	protected HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
 	protected User getUserObject() {
-		final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		final Object principal = SecurityContextHolder.getContext()
+		        .getAuthentication().getPrincipal();
 		if (principal instanceof User) {
 			return (User) principal;
 		} else {
@@ -89,6 +99,7 @@ public class DefaultController implements InitializingBean {
 	 * @throws JSONException
 	 * @throws IOException
 	 */
+
 	public User loadDefaultValuesForCustomer(Model model,
 	        HttpServletRequest req, User user) throws IOException {
 
@@ -103,27 +114,43 @@ public class DefaultController implements InitializingBean {
 			if (localeText == null) {
 				localeText = loadLanguageMap(suffix);
 			}
-			UserVO userVO = new UserVO();
-			userVO.setForView(user);
+
+			UserVO userVO = user.convertFromEntityToVO(user);
 			LOG.info("Avoiding status code check of loan");
 			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-			userVO.setDefaultLoanId(loanVO.getId());
 			Gson gson = new Gson();
-			LoanTeamListVO loanTeamListVO = loanService
-			        .getLoanTeamListForLoan(loanVO);
-			List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
-			List<String> imageList = new ArrayList<String>();
-			for (LoanTeamVO loanTeamVO : userList) {
-				imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
-			}
+			if (null != loanVO) {
+				userVO.setDefaultLoanId(loanVO.getId());
 
-			model.addAttribute("loanTeamImage", imageList);
+				LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+				loanAppFormVO.setUser(userVO);
+				loanAppFormVO.setLoan(loanVO);
+				// find the loanAppForm object and get the
+				// loanAppFormCompletionStatus
+				loanAppFormVO = loanAppFormService.find(loanAppFormVO);
+
+				int formCompletionStatus = loanAppFormVO
+				        .getLoanAppFormCompletionStatus() == null ? 0
+				        : loanAppFormVO.getLoanAppFormCompletionStatus();
+				LoanTeamListVO loanTeamListVO = loanService
+				        .getLoanTeamListForLoan(loanVO);
+				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
+				List<String> imageList = new ArrayList<String>();
+				for (LoanTeamVO loanTeamVO : userList) {
+					imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+				}
+
+				model.addAttribute("loanTeamImage", imageList);
+				newfi.put("formCompletionStatus", formCompletionStatus);
+				newfi.put("loanAppFormid", loanAppFormVO.getId());
+				newfi.put("appUserDetails", gson.toJson(loanAppFormVO));
+			}
 			newfi.put("user", gson.toJson(userVO));
 
 			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -155,7 +182,7 @@ public class DefaultController implements InitializingBean {
 			if (localeText == null) {
 				localeText = loadLanguageMap(suffix);
 			}
-			//Loading complete details of the user
+			// Loading complete details of the user
 			UserVO userVO = userProfileService.loadInternalUser(user.getId());
 
 			List<InternalUserRoleMaster> internalUserRoleMasters = masterDataService

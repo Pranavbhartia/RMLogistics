@@ -23,9 +23,24 @@ public class WebServiceOperations
 
     public static String OP_NAME_LOAN_LOAD = "Load";
 
+    public static String OP_NAME_GET_CREDIT_SCORE = "CreditScore";
+
+    public static String OP_NAME_GET_UNDERWRITING_CONDITION = "UnderwritingCondition";
+
     public static String OP_NAME_LOAN_LOCK_LOAN_PROGRAM = "LockLoanProgram";
 
     public static String OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT = "UploadPDFDocument";
 
+    public static String OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID = "DownloadEdocsPdfById";
+
+    public static String OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER = "ListEdocsByLoanNumber";
+
+    public static String OP_NAME_APP_VIEW_GET_PML_LOAN_URL = "GetPmlLoanUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_PML_PIPELINE_URL = "GetPmlPipelineUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_VIEW_DESKTOP_URL = "GetViewDesktopUrl";
+
+    public static String OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL = "GetViewLoanUrl";
 
 }

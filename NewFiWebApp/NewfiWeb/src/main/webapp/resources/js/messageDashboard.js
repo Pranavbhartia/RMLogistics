@@ -33,16 +33,9 @@ function showAgentMessageDashboard() {
 }
 
 function paintConversationPagination(response){
+	
 	var conversations = response.resultObject.messageVOs;
 	paintConversations(conversations);
-}
-
-function adjustRightPanelOnResize() {
-	if(window.innerWidth <= 1200 && window.innerWidth >= 768){
-		var leftPanelWidth = $('.left-panel').width();
-		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 15;
-		$('.right-panel-messageDashboard').width(centerPanelWidth);
-	}
 }
 
 function setCurrentUserObject(){
@@ -66,6 +59,11 @@ function saveParentMessage(){
 	
 	parentId = null;
 	var messageText = $("#textareaParent").val();
+	
+	if($.trim(messageText) == ""){
+		showToastMessage("Please enter some text!");
+		return false;
+	}
 	doSavemessageAjaxCall(messageText);
 	
 }
@@ -135,7 +133,10 @@ function setCurrentMessageReplyId(parentMessageId){
 }
 
 function setReplyToMessageObject(messageText){
-	
+	if(messageText == ""){
+		showToastMessage("Please enter some text!");
+		return false;
+	}
 	doSavemessageAjaxCall(messageText);
 }
 
@@ -164,7 +165,15 @@ function paintCommunicationLog(response){
 	var conversationHistoryWrapper = getConversationHistoryWrapper();
 	$('#conv-main-container').append(msgDashboardWrapper).append(conversationHistoryWrapper);
 	$('#conv-container').html('');
-	var baseUrl = "resources/images/";
+	
+	if(response.error != undefined && response.error.code == 500){
+		showDialogPopup("Connection issue" , "Not able to connect.Please try again after some time" ,
+				function(){
+					location.reload();
+					return false;
+				});
+		return false;
+	}
 	
 	
 	var conversations = response.resultObject.messageVOs;
@@ -296,6 +305,10 @@ function getMessageDashboardWrapper() {
 }
 
 function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageUrl){
+	var wrapper = $('<div>').attr({
+        "class" : "assigned-agent-cont-wrapper"
+    });
+
 	var container = $('<div>').attr({
 		"class" : "assigned-agent-container clearfix float-left",
 		"data-agent" : agentName,
@@ -308,7 +321,9 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageU
 		"class" : "assigned-agent-img"
 	});
 	
-	imgCont.css("background-image" , "url('"+imageUrl+"')");
+	if(imageUrl != undefined){
+		imgCont.css("background-image" , "url('"+imageUrl+"')");
+	}
 	
 	var onlineStatus = $('<div>').attr({
 		"class" : "assigned-agent-online-status"
@@ -334,7 +349,7 @@ function getAssignedAgentContainer(id , agentName, agentRole, contactNo , imageU
 	rightCol.append(name).append(role).append(contact);
 	container.append(rightCol);
 	
-	return container;
+	return wrapper.append(container);
 }
 
 
@@ -369,9 +384,14 @@ function paintConversations(conversations){
 		});
 		
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
+			"class" : "conv-prof-image float-left"
 		});
+		
+		if(data.createdUser.imgUrl != undefined){
+			col1.attr({
+				"style" :  "background-image:url('"+data.createdUser.imgUrl+"')"
+			});
+		}
 		
 		var col2 = $('<div>').attr({
 			"class" : "float-left"
@@ -399,9 +419,15 @@ function paintConversations(conversations){
 			
 			var userImage = $('<div>').attr({
 				"class" : "conv-prof-image float-left",
-				"id" : otherUserBinded[k].userID,
-				"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+				"id" : otherUserBinded[k].userID
 			});
+			
+			if(otherUserBinded[k].imgUrl != undefined){
+				userImage.attr({
+					"style" :  "background-image:url('"+otherUserBinded[k].imgUrl+"')"
+				});
+			}
+			
 			if(otherUserBinded[k].userID == data.createdUser.userID)
 				userImage.hide();
 			col3.append(userImage);
@@ -489,20 +515,31 @@ function paintChildConversations(level,conversations){
 	for(var i=1; i<conversations.length; i++){
 		var data = conversations[i];
 		var conContainer = $('<div>').attr({
-			"class" : "clearfix conversation-container-child conversation-container-l"+level
+			"class" : "clearfix conversation-container-child"
 		});
-		/*if(i%2==1){
+		
+		if(i <= 3){
+			conContainer.addClass("conversation-container-l"+i);
+		}else{
+			conContainer.addClass("conversation-container-l3");
+		}
+		
+		if(i%2==1){
 			conContainer.addClass("conversation-container-even-child");
-		}*/
+		}
 		var topRow = $('<div>').attr({
 			"class" : "conv-top-row clearfix"
 		});
 		
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left",
-			"style" :  "background-image:url("+data.createdUser.imgUrl+")"
-			
+			"class" : "conv-prof-image float-left"
 		});
+		
+		if(data.createdUser.imgUrl != undefined){
+			col1.attr({
+				"style" :  "background-image:url("+data.createdUser.imgUrl+")"
+			});
+		}
 		
 		var col2 = $('<div>').attr({
 			"class" : "float-left"
@@ -600,8 +637,9 @@ $(document).on('click','.assigned-agent-container',function(){
 //Click event on remove person from conversation using remove icon
 $(document).on('click','.message-recipient-remove-icn',function(){
 	var agent = $(this).parent().attr("data-agent");
+    var agentId = $(this).parent().attr("agentId");
 	//$(this).parent().remove();
-	$('.assigned-agent-container[data-agent="'+agent+'"]').addClass('assigned-agent-unselect');
+	$('.assigned-agent-container[agentId="'+agentId+'"]').addClass('assigned-agent-unselect');
 	removeOtherUserObject( $(this).parent().attr("agentId"));
 	paintMessageRecipients();
 });

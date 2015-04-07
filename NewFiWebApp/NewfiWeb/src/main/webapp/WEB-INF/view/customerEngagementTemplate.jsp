@@ -8,11 +8,12 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
-</head>
+<link href="resources/css/customer-application.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
 
+</head>
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
@@ -32,6 +33,22 @@
 	<script>
 		$(document).ready(function() {
 			
+            
+            $(document).on('click','.soft-menu-icon',function(e){
+                e.stopPropagation();
+                $('.soft-menu-wrapper').slideToggle();
+            });
+
+            $(document).on('click','.soft-menu-wrapper',function(e){
+                e.stopPropagation();
+            });
+
+            $(document).on('click',function(e){
+                if($('.soft-menu-wrapper').css("display") == "block"){
+                    $('.soft-menu-wrapper').slideToggle();
+                }
+            });
+            
 			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){
 				$('input[name="currentMortgageBalance"]').maskMoney({
 					thousands:',',
@@ -116,10 +133,14 @@
 			
 			$(document).on('keypress','input[name="zipCode"]',function(e){
 				
-				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
 			        //display error message
-			        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+			        showToastMessage("Enter correct zipcode");
 			          return false;
+			    }if($(this).val().length >= 6){
+			    	
+			    	 showToastMessage("Enter correct zipcode");
+			         return false;
 			    }
 			});
 			

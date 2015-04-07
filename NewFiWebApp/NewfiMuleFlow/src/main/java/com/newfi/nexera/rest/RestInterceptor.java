@@ -3,6 +3,8 @@
  */
 package com.newfi.nexera.rest;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -38,7 +40,12 @@ public class RestInterceptor implements Callable
         String payload = message.getPayloadAsString();
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
-        message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION ) ) {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
+        } else {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        }
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
             NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
@@ -48,7 +55,7 @@ public class RestInterceptor implements Callable
             long currentTime = System.currentTimeMillis();
             long differenceInMilliSeconds = currentTime - generationTime;
             long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
-            if ( differenceInHours >= 4 ) {
+            if ( differenceInHours >= 3 ) {
                 LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
                 NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
@@ -59,7 +66,7 @@ public class RestInterceptor implements Callable
     }
 
 
-    public Object[] getAllParameters( RestParameters restParameters )
+    public Object[] getAllParameters( RestParameters restParameters ) throws IOException
     {
         LOG.debug( "Inside method getAllParameters" );
         Object[] inputParams = null;
@@ -75,11 +82,36 @@ public class RestInterceptor implements Callable
             inputParams[1] = restParameters.getLoanVO().getsTemplateName();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOAD ) ) {
             LOG.debug( "Operation Chosen Was Load " );
-            inputParams = new String[4];
+            inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            inputParams[2] = restParameters.getLoanVO().getsXmlQuery();
+            String sXmlQueryDefault = Utils.readFileAsString( "load.xml" );
+            if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
+                sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
+            }
+            inputParams[2] = sXmlQueryDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE ) ) {
+            LOG.debug( "Operation Chosen Was CreditScore " );
+            inputParams = new Object[4];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+            String sDataContentQueryDefault = Utils.readFileAsString( "loadCreditinfo.xml" );
+            /*if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
+                sDataContentQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), sDataContentQueryDefault );
+            }*/
+            inputParams[2] = sDataContentQueryDefault;
+            inputParams[3] = restParameters.getLoanVO().getFormat();
+
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION ) ) {
+            LOG.debug( "Operation Chosen Was UnderwritingCondition " );
+            inputParams = new Object[4];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+            String sDataContentQueryDefault = Utils.readFileAsString( "underwritingCondition.xml" );
+            inputParams[2] = sDataContentQueryDefault;
+            inputParams[3] = restParameters.getLoanVO().getFormat();
+
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_LOCK_LOAN_PROGRAM ) ) {
             LOG.debug( "Operation Chosen Was LockLoanProgram " );
             inputParams = new Object[5];
@@ -92,14 +124,26 @@ public class RestInterceptor implements Callable
             LOG.debug( "Operation Chosen Was RunQuickPricer " );
             inputParams = new String[2];
             inputParams[0] = NewFiManager.userTicket;
-            inputParams[1] = restParameters.getLoanVO().getsXmlData();
+            String teaserRateDefault = Utils.readFileAsString( "teaserRate.xml" );
+
+            if ( restParameters.getLoanVO().getsXmlDataMap() != null )
+                teaserRateDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlDataMap(), teaserRateDefault );
+            inputParams[1] = teaserRateDefault;
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_SAVE ) ) {
             LOG.debug( "Operation Chosen Was Save " );
             inputParams = new Object[4];
             inputParams[0] = NewFiManager.userTicket;
             inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-            inputParams[2] = restParameters.getLoanVO().getsDataContent();
+            String saveDefault = Utils.readFileAsString( "save.xml" );
+            if ( restParameters.getLoanVO().getsDataContentMap() != null )
+                saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
+            inputParams[2] = saveDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
+            LOG.debug( "Operation Chosen Was ListEDocsByLoanNumber " );
+            inputParams = new Object[2];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
         } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT ) ) {
             LOG.debug( "Operation Chosen Was UploadPDFDocument " );
 
@@ -109,6 +153,13 @@ public class RestInterceptor implements Callable
             inputParams[2] = restParameters.getLoanVO().getDocumentType();
             inputParams[3] = restParameters.getLoanVO().getNotes();
             inputParams[4] = restParameters.getLoanVO().getsDataContent();
+        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID ) ) {
+            LOG.debug( "Operation Chosen Was OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID " );
+
+            inputParams = new String[2];
+            inputParams[0] = NewFiManager.userTicket;
+            inputParams[1] = restParameters.getLoanVO().getDocId();
+
         }
         return inputParams;
     }

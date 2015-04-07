@@ -37,17 +37,17 @@ public class LoanServiceTest {
 	// }
 	//
 	// }
-
+	@Test
 	public void testGetLoansProgressForUser() {
 		UserVO user = new UserVO();
-		user.setId(1);
+		user.setId(6);
 		System.out.println("Invoking");
 		LoanVO loanVO = loanService.getActiveLoanOfUser(user);
 		System.out.println(loanVO.getId());
 
 	}
 
-	@Test
+	
 	public void testGetActiveLoan() {
 
 	}

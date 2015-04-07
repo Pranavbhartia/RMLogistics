@@ -28,6 +28,10 @@
 	padding: 10px 0;
 }
 
+#ce-refinance-cp .ce-ques-wrapper{
+	margin: 0;
+} 
+
 .ce-ques-text {
 	font-size: 16px;
 	line-height: 25px;
@@ -36,7 +40,8 @@
 }
 
 .ce-cp{
-	margin-left: 60px;	
+	margin-left: 60px;
+	width:830px;	
 }
 
 .ce-lp{
@@ -44,15 +49,15 @@
 }
 
 .ce-option {
-	width: 100%;
-	height: 55px;
-	line-height: 55px;
+	width: 350px;
+	height: 40px;
+	line-height: 40px;
 	color: #fff;
 	background: #6c9f2e;
 	margin-bottom: 20px;
 	border-radius: 3px;
 	text-align: center;
-	font-size: 34px;
+	font-size: 20px;
 	font-family: 'opensanssemibold';
 	text-transform: capitalize;
 	cursor: pointer;
@@ -60,14 +65,14 @@
 
 .ce-rp-ques-text {
 	font-family: 'opensanssemibold';
-	font-size: 36px;
-	line-height: 45px;
-	margin-bottom: 20px;
+	font-size: 18px;
+	line-height: 26px;
+	margin-bottom: 10px;
 	text-transform: capitalize;
 }
 
 .ce-input {
-	width:450px;
+	width:400px;
 	max-width: 100%;
 	height: 40px;
 	padding-left: 10px;
@@ -84,7 +89,6 @@
 
 .ce-save-btn {
 	width: 200px;
-	margin: 0 auto;
 	background: #6c9f2e;
 	color: #fff;
 	font-size: 20px;
@@ -99,7 +103,7 @@
 
 .ce-title {
     text-align: center;
-    font-size: 36px;
+    font-size: 24px;
     font-family: 'opensanssemibold';
 }
 
@@ -182,12 +186,22 @@
 }
 
 .ce-option-ques-wrapper {
-	position:relative;
-    border: 1px solid #dcdcdc;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 3px;
-    width: 500px;
+	position: relative;
+	border: 1px solid #cecece;
+	background: #fcfcfc;
+	margin: 10px 0 15px 30px;
+	padding: 10px;
+	border-radius: 3px;
+	width: 500px;
+}
+
+.ce-option-ques-wrapper .ce-input{
+	margin-top: 5px;
+	background: #fff;
+}
+
+.ce-option-ques-wrapper .ce-ques-wrapper{
+	padding: 10px 0 0px 14px;
 }
 
 .ce-option-ques-wrapper:after,.ce-option-ques-wrapper:before{
@@ -203,13 +217,13 @@
 
 .ce-option-ques-wrapper:after{
 	border-width: 12px;
-	border-bottom-color: #dcdcdc;
+	border-bottom-color: #cecece;
 	z-index: 0;
 }
 
 .ce-option-ques-wrapper:before{
 	border-width: 10px;
-	border-bottom-color: #fff;
+	border-bottom-color: #fcfcfc;
 	margin-left:2px;
 	z-index: 1;
 }

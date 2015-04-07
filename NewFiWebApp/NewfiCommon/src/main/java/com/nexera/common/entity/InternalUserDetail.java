@@ -2,9 +2,22 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+
+import com.nexera.common.enums.ActiveInternalEnum;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 
 /**
  * The persistent class for the internaluserdetails database table.
@@ -16,8 +29,13 @@ import org.hibernate.annotations.Type;
 public class InternalUserDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean activeInternal;
+
+	private ActiveInternalEnum activeInternal;
 	private User manager;
+
+	private String lqbUsername;
+
+	private String lqbPassword;
 
 	private InternalUserRoleMaster internaUserRoleMaster;
 
@@ -34,13 +52,13 @@ public class InternalUserDetail implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "active_internal", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getActiveInternal() {
+	@Column(name = "active_internal")
+	@Type(type = "com.nexera.common.enums.helper.ActiveInternalType")
+	public ActiveInternalEnum getActiveInternal() {
 		return this.activeInternal;
 	}
 
-	public void setActiveInternal(Boolean activeInternal) {
+	public void setActiveInternal(ActiveInternalEnum activeInternal) {
 		this.activeInternal = activeInternal;
 	}
 
@@ -52,7 +70,7 @@ public class InternalUserDetail implements Serializable {
 	}
 
 	public void setInternaUserRoleMaster(
-			InternalUserRoleMaster internaUserRoleMaster) {
+	        InternalUserRoleMaster internaUserRoleMaster) {
 		this.internaUserRoleMaster = internaUserRoleMaster;
 	}
 
@@ -65,6 +83,85 @@ public class InternalUserDetail implements Serializable {
 
 	public void setManager(User manager) {
 		this.manager = manager;
+	}
+
+	public static InternalUserDetailVO convertFromEntityToVO(
+	        InternalUserDetail internalUserDetail) {
+
+		if (internalUserDetail == null)
+			return null;
+
+		InternalUserDetailVO detailVO = new InternalUserDetailVO();
+		detailVO.setId(internalUserDetail.getId());
+		if (internalUserDetail != null) {
+			detailVO.setActiveInternal(internalUserDetail.getActiveInternal());
+		}
+		detailVO.setLqbUsername(internalUserDetail.getLqbUsername());
+		detailVO.setLqbPassword(internalUserDetail.getLqbPassword());
+		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
+		        .getInternaUserRoleMaster()));
+
+		return detailVO;
+	}
+
+	public static InternalUserDetail convertFromVOToEntity(
+	        InternalUserDetailVO internalUserDetailVO) {
+		// TODO Auto-generated method stub
+
+		if (internalUserDetailVO == null)
+			return null;
+
+		InternalUserDetail detail = new InternalUserDetail();
+		detail.setInternaUserRoleMaster(parseInternalUserRoleMasterModel(internalUserDetailVO
+		        .getInternalUserRoleMasterVO()));
+		detail.setId(internalUserDetailVO.getId());
+		if (internalUserDetailVO.getActiveInternal() != null) {
+			detail.setActiveInternal(internalUserDetailVO.getActiveInternal());
+		}
+		return detail;
+	}
+
+	private static InternalUserRoleMasterVO buildInternalUserRoleMasterVO(
+	        InternalUserRoleMaster internal) {
+		if (internal == null)
+			return null;
+
+		InternalUserRoleMasterVO masterVO = new InternalUserRoleMasterVO();
+		masterVO.setId(internal.getId());
+		masterVO.setRoleName(internal.getRoleName());
+		masterVO.setRoleDescription(internal.getRoleDescription());
+
+		return masterVO;
+	}
+
+	private static InternalUserRoleMaster parseInternalUserRoleMasterModel(
+	        InternalUserRoleMasterVO internalVO) {
+		if (internalVO == null)
+			return null;
+
+		InternalUserRoleMaster master = new InternalUserRoleMaster();
+		master.setId(internalVO.getId());
+		master.setRoleDescription(internalVO.getRoleDescription());
+
+		return master;
+	}
+
+	@Column(name = "lqb_username")
+	public String getLqbUsername() {
+		return lqbUsername;
+	}
+
+	public void setLqbUsername(String lqbUsername) {
+		this.lqbUsername = lqbUsername;
+	}
+
+	@Column(name = "lqb_password")
+	public String getLqbPassword() {
+		return lqbPassword;
+	}
+
+	public void setLqbPassword(String lqbPassword) {
+		this.lqbPassword = lqbPassword;
 	}
 
 }

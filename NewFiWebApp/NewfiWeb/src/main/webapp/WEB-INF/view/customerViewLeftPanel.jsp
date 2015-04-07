@@ -16,8 +16,15 @@
 			<div class="lp-talk-txt">talk to your newfi team</div>
 			<div class="lp-talk-pics clearfix">
 			<div class="lp-talk-pic lp-talk-pic1"></div>
-			<c:forEach var="image" items="${loanTeamImage}">
-				<div class="lp-talk-pic lp-talk-pic2" style="background-image:url(${image})"></div>
+			<c:forEach begin="0" end="3" var="image" items="${loanTeamImage}">
+				<c:choose>
+					<c:when test="${not empty image }">
+						<div class="lp-talk-pic lp-talk-pic2" style="background-image:url(${image})"></div>
+					</c:when>
+					<c:otherwise>
+						<div class="lp-talk-pic lp-talk-pic2"></div>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 			
 			</div>

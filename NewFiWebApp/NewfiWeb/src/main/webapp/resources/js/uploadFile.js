@@ -2,7 +2,7 @@
  * Functions for upload items module
  */
 var SPLIT_DOC = "Split Document";
-
+var needIdtoAssign = null;
 
 
 function uploadNeededItemsPage() {
@@ -80,24 +80,39 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		"class" : "doc-img showAnchor"
 	});
 	
+	var deactivete = $("<div>").attr({
+		"class" : "deactiveteIcon showAnchor",
+		"id" : "deactivate_"+listUploadedFiles.id
+		//"onclick" : deactivate(listUploadedFiles.id)
+	}).click(function(event){
+		event.stopImmediatePropagation();
+		deactivate($(this));
+	});
+	
+	
+	
+	docImg.append(deactivete);
+	
 	var img = $("<img>").attr({
-		 		"src" : listUploadedFiles.s3ThumbPath
+		 		"src" : "readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1"
 	}).load(function(){
 		docImg.css({
-			"background" : "url('"+listUploadedFiles.s3ThumbPath+"') no-repeat center",
+			"background" : "url('readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1') no-repeat center",
 			"background-size" : "cover"
 			
 		});
 	});
 	
+	//var deleteLink = $("<p class='showAnchor' onclick=deactivate('"+listUploadedFiles.id+"')>").html("(  delete )");
+	
 	
 	var docDesc = $('<div>').attr({
 		"class" : "doc-desc showAnchor"
-	}).html(listUploadedFiles.fileName);
+	}).append(listUploadedFiles.fileName);
 	
 	
 	var ahrefFile = $("<a>").attr({
-					"href" : "readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId,
+					"href" : "readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=0",
 					"target" : "_blank"
 	});
 	
@@ -108,7 +123,9 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		"class" : "assign",
 		"fileId" : listUploadedFiles.id,
 		"fileName" : listUploadedFiles.fileName,
-		"onchange" : "checkForSplitOption(this)"
+		"onchange" : ""
+	}).change(function(){
+		checkForSplitOption(this);
 	});
 
 	var assignOption = $("<option>").attr({
@@ -141,7 +158,7 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	if(newfiObject.user.userRole.roleDescription == "Realtor"){
 		if(listUploadedFiles.assignedByUser.userId == newfiObject.user.id ){
 			docImg.click(function(){
-				window.open("readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId, '_blank');
+				window.open("readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=0", '_blank');
 			});
 			ahrefFile.append(docDesc);
 		}else{
@@ -152,7 +169,7 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	}else{
 		
 		docImg.click(function(){
-			window.open("readFileAsStream.do?s3FileId="+listUploadedFiles.uuidFileId, '_blank');
+			window.open("readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=0", '_blank');
 		});
 		ahrefFile.append(docDesc);
 	}
@@ -162,6 +179,12 @@ function getDocumentUploadColumn(listUploadedFiles) {
 }
 
 
+function deactivate(Obj){
+	var fileString = Obj.attr("id");
+	var fileID = fileString.substring(11);
+	ajaxRequest("rest/fileupload/deactivate/file/"+fileID, "GET", "json", "", getRequiredDocuments);
+}
+
 function showFileLink(uploadedItems) {
 
 	$.each(uploadedItems, function(index, value) {
@@ -169,7 +192,7 @@ function showFileLink(uploadedItems) {
 		$('#needDoc' + needId).removeClass('hide');
 		$('#needDoc' + needId).addClass('doc-link-icn');
 		$('#needDoc' + needId).click(function() {
-			window.open("readFileAsStream.do?s3FileId="+value.uuidFileId, '_blank');
+			window.open("readFileAsStream.do?uuid="+value.uuidFileId+"&isThumb=0", '_blank');
 		});
 	});
 }
@@ -261,6 +284,12 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		leftContainer.append(createdNeededList("Other", needType));
 		hasNeeds = true;
 	}
+	
+	var needType = neededItemListObject.resultObject.listLoanNeedsListMap.System;
+	if (needType != undefined && needType.length != 0) {
+		leftContainer.append(createdNeededList("System", needType));
+		hasNeeds = true;
+	}
 
 	if (!hasNeeds) {
 		var incomeDocCont = $('<div>').attr({
@@ -299,6 +328,21 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 }
 
 
+function uploadDocument(event){
+	var needIdData=$(event.target).data("needId");
+	var myDropzone = Dropzone.forElement("div#drop-zone");
+	//myDropzone.params("needId" ,needIdData );
+	$("#file-upload-icn").click();
+	myDropzone.on("sending", function(file, xhr, formData) {
+		  // add headers with xhr.setRequestHeader() or
+		  // form data with formData.append(name, value);
+			formData.append("needId" , needIdData);
+	});
+	myDropzone.on("processing", function(file) {
+		 this.options.url = "rest/fileupload/documentUploadWithNeed";
+	});
+}
+
 
 
 function paintUploadNeededItemsPage(neededItemListObject) {
@@ -327,6 +371,28 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	uploadedNeedContainer.append(header).append(container);
 	$('#center-panel-cont').append(uploadedNeedContainer);
 	// using dropzone js for file upload
+	createDropZone();
+	
+	var uploadedItems = neededItemListObject.resultObject.listUploadedFilesListVO;
+	showFileLink(uploadedItems);
+
+	if ($('.document-cont-col').length == undefined
+			|| $('.document-cont-col').length == 0) {
+		$('.submit-btn').addClass('hide');
+	}
+
+}
+
+
+
+function createDropZone(needID){
+	
+	
+	var needId = null;
+	if(needID != undefined){
+		needId = needID;
+	}
+	
 	var unSupportedFile = new Array();
 	var myDropZone = new Dropzone("#drop-zone", {
 		url : "rest/fileupload/documentUpload",
@@ -334,7 +400,8 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		params : {
 			userID : currentUserAndLoanOnj.userId,
 			loanId : currentUserAndLoanOnj.activeLoanId ,
-			assignedBy : newfiObject.user.id
+			assignedBy : newfiObject.user.id,
+			
 		},
 		drop : function() {
 
@@ -344,6 +411,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			
 			$('#file-upload-icn').removeClass('file-upload-hover-icn');
 			getRequiredDocuments();
+			
 		},
 		success : function(file, response){
 			console.info(response);
@@ -382,18 +450,12 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			}
 			unSupportedFile = new Array();
 			console.info(unSupportedFile);
+			
 		},
 		addedfile : function(){
 			showOverlay();
 			$('#file-upload-icn').addClass('file-upload-loading');
 		}
 	});
-	var uploadedItems = neededItemListObject.resultObject.listUploadedFilesListVO;
-	showFileLink(uploadedItems);
-
-	if ($('.document-cont-col').length == undefined
-			|| $('.document-cont-col').length == 0) {
-		$('.submit-btn').addClass('hide');
-	}
 
 }

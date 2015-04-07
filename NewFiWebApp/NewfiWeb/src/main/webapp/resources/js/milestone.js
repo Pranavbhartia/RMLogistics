@@ -1,5 +1,6 @@
 //Function to paint to loan progress page
 var countOfTasks = 0;
+var LOAN_MANAGER="Loan Manager";
 var workFlowContext = {
 	init : function(loanId) {
 		this.countOfTasks = 0;
@@ -7,6 +8,7 @@ var workFlowContext = {
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
+	dataContainer:{},
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
@@ -14,22 +16,11 @@ var workFlowContext = {
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
 	mileStoneContextList : {},
-	ajaxRequest : function(url, type, dataType, data, successCallBack) {
-		$.ajax({
-			url : url,
-			type : type,
-			dataType : dataType,
-			data : data,
-			success : successCallBack,
-			error : function() {
-			}
-		});
-	},
 	getWorkflowID : function(callback) {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/details/" + ob.loanId,
 						"GET",
 						"json",
@@ -64,7 +55,7 @@ var workFlowContext = {
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
+		ajaxRequest(
 						"rest/workflow/create/" + ob.loanId,
 						"GET",
 						"json",
@@ -89,7 +80,7 @@ var workFlowContext = {
 		} else {
 			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 		}
-		ob.ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
@@ -128,6 +119,16 @@ var workFlowContext = {
 		}
 		ob.mileStoneStepsStructured=finalList;
 	},
+	getStructuredParent:function(parentId){
+		var ob=this;
+		for(var i=0;i<ob.mileStoneStepsStructured.length;i++){
+			var parent=ob.mileStoneStepsStructured[i];
+			if(parent.id==parentId){
+				return ob.mileStoneStepsStructured[i];
+			}
+		}
+		return null;
+	},
 	checkIfChild : function(workflowItem) {
 		var ob = this;
 		if (workflowItem.parentWorkflowItemExec != null)
@@ -142,7 +143,13 @@ var workFlowContext = {
 		var childList = [];
 		workFlowContext.itemsStatesToBeFetched=[];
 		workFlowContext.mileStoneContextList={};
-		for (var i = 0; i < workItemExecList.length; i++) {
+
+		for (var i = 0; i < ob.mileStoneStepsStructured.length; i++) {
+			var parentWorkItem=ob.mileStoneStepsStructured[i];
+			appendMilestoneItem(parentWorkItem, parentWorkItem.childList);
+		}
+
+		/*for (var i = 0; i < workItemExecList.length; i++) {
 			var currentWorkItem = workItemExecList[i];
 			if (i == 0) {
 				parentWorkItem = currentWorkItem;
@@ -169,7 +176,7 @@ var workFlowContext = {
 			appendMilestoneItem(parentWorkItem, childList);
 		} else if (childList.length == 0) {
 			appendMilestoneItem(parentWorkItem);
-		}
+		}*/
 		countOfTasks=0;
 		adjustBorderMilestoneContainer();
 		if (callback) {
@@ -181,24 +188,32 @@ var workFlowContext = {
 		var data={};
 		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
 		data.data={};
-		data.data.userId=newfiObject.user.id;
-		data.data.defaultLoanId=newfiObject.user.defaultLoanId;
+		data.data.userID=newfiObject.user.id;
+		data.data.loanID=ob.loanId;
 		data.data=JSON.stringify(data.data);
 		ajaxRequest("rest/workflow/getupdatedstatus", "GET", "json", data, function(response) {
 			if (response.error) {
 				showToastMessage(response.error.message)
 			} else {
-				ob.mileStoneSteps = response.resultObject;
+				for(var key in response.resultObject){
+					if(response.resultObject[key]!=""){
+						var contxt=workFlowContext.mileStoneContextList[key];
+						contxt.updateMilestoneView(response.resultObject[key]);
+					}
+				}
 			}
 			if (callback) {
 				callback(ob);
 			}
-		});
+		},false);
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			ob.getMileStoneSteps(role, function(ob) {
-				ob.renderMileStoneSteps();
+				ob.structureParentChild();
+				ob.renderMileStoneSteps(function(){
+					ob.fetchLatestStatus();
+				});
 			});
 		});
 
@@ -223,7 +238,7 @@ var workFlowContext = {
 		PROFILE_INFO : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		"1003_COMPLETE" : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
-		CREDIT_SCORE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		CREDIT_SCORE : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-application-fee"	},
 		AUS_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		QC_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
@@ -243,16 +258,27 @@ var workFlowContext = {
 		CONNECT_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		CONTACT_LOAN_MANAGER : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 		MANAGE_CREDIT_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		MANAGE_TEAM : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		MANAGE_TEAM : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-application-fee"	},
 		MANAGE_APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		LOCK_YOUR_RATE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		VIEW_APPRAISAL : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+		LOCK_YOUR_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-application-fee"	},
+		VIEW_APPRAISAL : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-application-fee"	},
 		VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-		VIEW_CLOSING : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	}
+		VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-application-fee"	}
 		}
 		if(cssMap[wfItemType] && cssMap[wfItemType][status])
 			return cssMap[wfItemType][status]
 		
+	},getItemToAppendTo: function(newLine,inline,workflowItem){
+		if(workflowItem.workflowItemType=="CREDIT_SCORE"){
+			return inline;
+		}else if(workflowItem.workflowItemType=="AUS_STATUS"){
+			return inline;
+		}else if(workflowItem.workflowItemType=="QC_STATUS"){
+			return inline;
+		}else if(workflowItem.workflowItemType=="LOAN_MANAGER_DECISION"){
+			return inline;
+		}
+		return newLine;
 	}
 };
 function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
@@ -261,63 +287,89 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 		
 		mileStoneId : mileStoneId,
 		workItem : workItem,
-		
-		ajaxRequest : function(url, type, dataType, data, successCallBack) {
-			$.ajax({
-				url : url,
-				type : type,
-				dataType : dataType,
-				contentType: "application/json",
-				data : data,
-				success : successCallBack,
-				error : function() {
+		stateInfoContainer:undefined,
+		updateMilestoneView:function(status,callback){
+			var ob=this;
+			ob.workItem.status=status;
+			var container=$("#WF"+ob.workItem.id);
+			var parentChk=container.attr("WFparent");
+			var childChk=container.attr("WFchild");
+			if(parentChk){
+				changeContainerClassBasedOnStatus(container,status);
+				var parentCheckBox=$(container).find(".ms-check-box-header");
+				parentCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parent=workFlowContext.getStructuredParent(ob.workItem.id);
+				for(var i=0;i<parent.childList.length;i++){
+					var childid=parent.childList[i].id;
+					var cntxt=workFlowContext.mileStoneContextList[childid];
+					if(cntxt.workItem.status!="3"){
+						cntxt.updateMilestoneView(status);
+					}
 				}
-			});
+			}else{
+				var childCheckBox=$(container).find(".ms-check-box");
+				childCheckBox.attr("data-checked", getStatusClass(ob.workItem));
+				var parentid=ob.workItem.parentWorkflowItemExec.id;
+				var parentContainer=$("#WF"+parentid);
+				var childs=parentContainer.find("div."+getContainerLftRghtClass(parentContainer)+"-text");
+				var childsChecked=true;
+				for(var i=0;i<childs.length;i++){
+					var child=childs[i];
+					var childCheckbox=$(child).find(".ms-check-box");
+					if($(childCheckbox).attr("data-checked")=="unchecked"){
+						childsChecked=false;
+					}
+				}
+				if(childsChecked){
+					var parentCheckBox=parentContainer.find(".ms-check-box-header");
+					$(parentCheckBox).attr("data-checked","checked");
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-complete");
+				}else{
+					clearStatusClass(parentContainer);
+					parentContainer.addClass("m-in-progress");
+				}
+			}
 		},
 		getStateInfo : function( rightLeftClass,itemToAppendTo,callback) {
 			var ob = this;
 			var data = {};
 			data.milestoneId=ob.mileStoneId;
-			var txtRow1 = $('<div>').attr({
-				"class" : rightLeftClass + "-text",
+			var floatClass="";
+			if(rightLeftClass.indexOf("rc")>=0){
+				floatClass="";
+			}else{
+				floatClass="float-right"
+			}
+			var txtRow1 = $('<span>').attr({
+				"class" : rightLeftClass + "-text "+floatClass,
 				"mileNotificationId" : ob.workItem.id,
 				"data-text" : ob.workItem.workflowItemType
 			});
-			var ajaxURL = "";	
+			var ajaxURL = "";
+			data.loanID=workFlowContext.loanId;
+			//need to move this logic to a different function
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
-			}
-			else if (ob.workItem.workflowItemType=="CREDIT_SCORE")
-			{				
-				ajaxURL = "";
-				ob.workItem.stateInfo = "EQ-646 | TU-686 | EX-685";
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Click here to view application ";			
 			} 			
-			else if (ob.workItem.workflowItemType=="DISCLOSURE_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click to view Disclosures Status";			
-			}//
+			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
+				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Pending";
-			}
-			else if (ob.workItem.workflowItemType=="APPRAISAL_STATUS")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to view Appraisal Status";
-			}
-			else if (ob.workItem.workflowItemType=="LOCK_RATE")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to lock rate";				
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -329,24 +381,17 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Closing Status";
 			}
-			else if (ob.workItem.workflowItemType=="NEEDS_STATUS")
+			else if (ob.workItem.workflowItemType=="NEEDS_STATUS"||ob.workItem.workflowItemType=="VIEW_NEEDS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID=selectedUserDetail.loanID;
-				callback =paintNeedsInfo;			
+				callback =paintNeedsInfo;
 			}
 			else if (ob.workItem.workflowItemType == "TEAM_STATUS") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				data.loanID=selectedUserDetail.loanID;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				callback = paintMilestoneTeamMemberTable;				
-			}
-			
-			//else return;
-			
-			else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS")
+			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "EQ-?? | TU-?? | EX-??";			
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
@@ -360,14 +405,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Click here to lock your rate";
 						
 			}
-			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL")
+			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Not ordered";
-						
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				/*ob.workItem.stateInfo = "Not ordered";*/
 			}
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;
 				data.loanID = newfi.user.defaultLoanId;
 				callback = paintMilestoneTeamMemberTable;		
 			}
@@ -383,9 +428,21 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.stateInfo = "Closed On";
 				workItem.stateInfo = "Closed on.";
 						
+			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID = newfi.user.defaultLoanId;
+			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.userID=newfiObject.user.id;
+				data.loanID = newfi.user.defaultLoanId;
 			}
+			txtRow1.bind("click", function(e) {
+				milestoneChildEventHandler(e)
+			});
+			ob.stateInfoContainer=txtRow1
+			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
-				ob.ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
+				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
 						if (response.error) {
 							showToastMessage(response.error.message)
@@ -397,19 +454,82 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						}
 						else
 						{
-							txtRow1.html(ob.workItem.stateInfo);
-							txtRow1.bind("click", function(e) {
-								milestoneChildEventHandler(e)
-							});
-							itemToAppendTo.append(txtRow1);
+							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"||ob.workItem.workflowItemType=="MANAGE_PROFILE"){
+								if(!ob.workItem.stateInfo)
+									ob.workItem.stateInfo=0;
+								if(ob.workItem.stateInfo>=0){
+									var progressBarCont = $('<div>').attr({
+										"class" : "clearfix"
+									});
+									var floatClass="float-right";
+									if(rightLeftClass.indexOf("rc")>=0){
+										floatClass="float-left";
+									}
+									var progressBarTxt = $('<div>').attr({
+										"class" : "miestone-progress-bar-txt "+floatClass
+									}).html(ob.workItem.stateInfo+" %");
+
+									var progressBar = $('<div>').attr({
+										"class" : "miestone-progress-bar "+floatClass+" clearfix"
+									});
+
+									var progress = ob.workItem.stateInfo/10;
+									for (var i = 0; i < 10; i++) {
+										var progressGrid = $('<div>').attr({
+											"class" : "miestone-progress-grid float-left"
+										});
+										if (progress == 0) {
+											progressGrid.addClass('miestone-progress-grid-incomplete');
+										} else {
+											progress--;
+										}
+										progressBar.append(progressGrid);
+									}
+
+									progressBarCont.append(progressBar).append(progressBarTxt);
+									ob.stateInfoContainer.append(progressBarCont);
+								}
+							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"){
+								if(ob.workItem.stateInfo){
+									var tempOb=JSON.parse(ob.workItem.stateInfo);
+									if(tempOb.url){
+										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
+											window.open(event.data.tempOb.url,"_blank")
+										})
+									}
+									if(tempOb.status)
+										ob.stateInfoContainer.html(tempOb.status);
+								}
+
+							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
+								if(ob.workItem.stateInfo!="null"){
+									ob.stateInfoContainer.html(ob.workItem.stateInfo);
+								}else
+								{
+									ob.stateInfoContainer.html("Click here to lock rate");
+								}
+							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
+								ob.workItem.workflowItemType=="CREDIT_SCORE"){
+								if(ob.workItem.stateInfo){
+									var tempOb=JSON.parse(ob.workItem.stateInfo);
+									if(tempOb.url){
+										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
+											window.open(event.data.tempOb.url,"_blank")
+										})
+
+									}
+									if(tempOb.status)
+										ob.stateInfoContainer.html(" "+tempOb.status);
+								}
+							}else
+								ob.stateInfoContainer.html(ob.workItem.stateInfo);
+							
 						}
 					});
 			}else{
-				txtRow1.html(ob.workItem.stateInfo);
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
-				itemToAppendTo.append(txtRow1);
+				ob.stateInfoContainer.html(ob.workItem.stateInfo);
 			}	
 
 
@@ -465,29 +585,27 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 
-function paintNeedsInfo(itemToAppendTo,ob)
+function paintNeedsInfo(itemToAppendTo,workItem)
 {
-	rightLeftClass = "milestone-lc";
+	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
 	var txtRow1 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" + " milestone-plain-text",
 	});
-	var information=JSON.parse(ob.workItem.stateInfo);
+	var information=JSON.parse(workItem.stateInfo);
 	txtRow1.html(information.totalSubmittedItem + " out of " + information.neededItemRequired);
 	
 	itemToAppendTo.append(txtRow1);
-	if (information.totalSubmittedItem != information.neededItemRequired)
-	{
-		txtRow1 = $('<div>').attr({
+	
+	txtRow1 = $('<div>').attr({
 			"class" : rightLeftClass + "-text",
-			"mileNotificationId" : ob.workItem.id,
-			"data-text" : ob.workItem.workflowItemType
+			"mileNotificationId" : workItem.id,
+			"data-text" : workItem.workflowItemType
 		});
 		txtRow1.html("Click here to upload more items");
 		txtRow1.bind("click", function(e) {
 			milestoneChildEventHandler(e)
 		});
-		itemToAppendTo.append(txtRow1);
-	}
+		itemToAppendTo.append(txtRow1);	
 }
 function paintCustomerLoanProgressPage() {
 
@@ -580,145 +698,7 @@ function paintCustomerLoanProgressContainer() {
 	adjustBorderMilestoneContainer();
 }
 
-function appendMilestoneMyProfile() {
-	var wrapper = $('<div>').attr({
-		"class" : "milestone-lc m-in-progress"
-	});
 
-	var leftBorder = $('<div>').attr({
-		"class" : "milestone-lc-border"
-	});
-
-	var header = $('<div>').attr({
-		"class" : "milestone-lc-header clearfix"
-	});
-
-	var headerTxt = $('<div>').attr({
-		"class" : "milestone-lc-header-txt float-right"
-	}).html("My Profile");
-
-	header.append(headerTxt);
-
-	var progressBarCont = $('<div>').attr({
-		"class" : "clearfix"
-	});
-
-	var progressBarTxt = $('<div>').attr({
-		"class" : "miestone-progress-bar-txt float-right"
-	}).html("50 %");
-
-	var progressBar = $('<div>').attr({
-		"class" : "miestone-progress-bar float-right clearfix"
-	});
-
-	var progress = 5;
-	for (var i = 0; i < 10; i++) {
-		var progressGrid = $('<div>').attr({
-			"class" : "miestone-progress-grid float-left"
-		});
-		if (progress == 0) {
-			progressGrid.addClass('miestone-progress-grid-incomplete');
-		} else {
-			progress--;
-		}
-		progressBar.append(progressGrid);
-	}
-
-	progressBarCont.append(progressBar).append(progressBarTxt);
-	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).html("Account");
-
-	var txtRow2 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("Online Application");
-
-	var txtRow3 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("Photo");
-
-	var txtRow4 = $('<div>').attr({
-		"class" : "milestone-lc-text"
-	}).click(function() {
-		$("#lp-customer-profile").click();
-	}).html("SMS Texting Preferences");
-
-	wrapper.append(leftBorder).append(header).append(progressBarCont).append(
-			txtRow1).append(txtRow2).append(txtRow3).append(txtRow4);
-
-	$('#loan-progress-milestone-wrapper').append(wrapper);
-}
-
-// Function to append custome miletone application status
-function appendMilestoneApplicationStatus() {
-	var wrapper = $('<div>').attr({
-		"class" : "milestone-rc m-in-progress"
-	});
-	var rightBorder = $('<div>').attr({
-		"class" : "milestone-rc-border"
-	});
-	var header = $('<div>').attr({
-		"class" : "milestone-rc-header clearfix"
-	});
-
-	var headerTxt = $('<div>').attr({
-		"class" : "milestone-rc-header-txt float-left"
-	}).html("Application Status");
-
-	var headerIcn = $('<div>')
-			.attr(
-					{
-						"class" : "milestone-rc-header-icn ms-icn-application-status float-left"
-					});
-
-	header.append(headerTxt).append(headerIcn);
-
-	var progressBarCont = $('<div>').attr({
-		"class" : "clearfix"
-	});
-
-	var progressBarTxt = $('<div>').attr({
-		"class" : "miestone-progress-bar-txt float-left"
-	}).html("40 %");
-
-	var progressBar = $('<div>').attr({
-		"class" : "miestone-progress-bar float-left clearfix"
-	});
-	var progress = 4;
-	for (var i = 0; i < 10; i++) {
-		var progressGrid = $('<div>').attr({
-			"class" : "miestone-progress-grid float-left"
-		});
-		if (progress == 0) {
-			progressGrid.addClass('miestone-progress-grid-incomplete');
-		} else {
-			progress--;
-		}
-		progressBar.append(progressGrid);
-	}
-	progressBarCont.append(progressBar).append(progressBarTxt);
-
-	var txtRow1 = $('<div>').attr({
-		"class" : "milestone-rc-text"
-	}).html("Connect Your Online Application");
-
-	var txtRow2 = $('<div>').attr({
-		"class" : "milestone-rc-text"
-	}).html("Contact Your Loan Manager");
-
-	var txtRow3 = $('<div>').attr({
-		"class" : "milestone-rc-text"
-	}).html("Connect Secu Your Online Application");
-
-	wrapper.append(rightBorder).append(header).append(progressBarCont).append(
-			txtRow1).append(txtRow2).append(txtRow3);
-
-	$('#loan-progress-milestone-wrapper').append(wrapper);
-}
 
 
 
@@ -764,28 +744,35 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 	appendTo.append(getMilestoneTeamMembeTable(userList,workItem));
 }
 
-function getMilestoneTeamMembeTable(userList,workItem) {
-
+function getMilestoneTeamMembeTable(input,workItem) {
+	var clas="milestone-lc-text";
+	var floatCls="float-right";
+	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
+	if(rightClassCheck){
+		clas="milestone-rc-text";
+		floatCls="float-left";
+	}
 	var tableContainer = $('<div>').attr({
-		"class" : "ms-team-member-table"
+		"class" : "ms-team-member-table clearfix"
 	});
 
-	
+	userList=input.users;
 	if(!userList ||  userList.length==0)
 		return;
 	
 	var addNewMember = $('<div>').attr({
-		"class" : "milestone-rc-text showAnchor",
+		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
-		"mileNotificationId":workItem.milestoneID
+		"mileNotificationId":workItem.id
 	}).html("Click here to add a Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});
 
+	
 	tableContainer.append(addNewMember);
 	
 	//team table header
-	var th = getMilestoneTeamMembeTableHeader();
+	var th = getMilestoneTeamMembeTableHeader(floatCls);
 	tableContainer.append(th);	
 	for (i in userList) {
 		var user = userList[i];
@@ -798,12 +785,36 @@ function getMilestoneTeamMembeTable(userList,workItem) {
 					&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 				roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 		}
-		tableContainer.append(getMilestoneTeamMembeTableRow(user));
+		tableContainer.append(getMilestoneTeamMembeTableRow(user,floatCls));
+	}
+	var homwOwnInsurance=input.homeOwnInsCompany;
+	var titleCompany=input.titleCompany;
+	if(homwOwnInsurance!=null){
+		homwOwnInsurance.homeOwnInsID=homwOwnInsurance.id;
+		homwOwnInsurance.firstName=homwOwnInsurance.name;
+		homwOwnInsurance.emailId=homwOwnInsurance.emailID;
+		homwOwnInsurance.userRole={
+				label : "Home Owners Insurance"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance,floatCls);
+		tableContainer.append(tableRow);
+	}
+	
+	if(titleCompany!=null){
+		titleCompany.titleCompanyID=titleCompany.id;
+		titleCompany.firstName=titleCompany.name;
+		titleCompany.emailId=titleCompany.emailID;
+		titleCompany.userRole={
+				label : "Title Company"
+		};
+		var tableRow = getMilestoneTeamMembeTableRow(titleCompany,floatCls);
+		tableContainer.append(tableRow);
 	}
 	return tableContainer;
 }
 
-function getMilestoneTeamMembeTableRow(user){
+function getMilestoneTeamMembeTableRow(user,floatCls){
+	if(user.lastName==undefined)user.lastName="";
 	var dispName = user.firstName+" "+user.lastName;
 	var userRole = user.userRole;
 	var roleLabel = userRole.label;
@@ -813,12 +824,12 @@ function getMilestoneTeamMembeTableRow(user){
 				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 	}
-	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id);
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls);
 }
 // Function to get milestone team member table header
-function getMilestoneTeamMembeTableHeader() {
+function getMilestoneTeamMembeTableHeader(floatCls) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-th clearfix"
+		"class" : "ms-team-member-th clearfix "+floatCls
 	});
 
 	var nameCol = $('<div>').attr({
@@ -833,9 +844,9 @@ function getMilestoneTeamMembeTableHeader() {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title,userID) {
+function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
 	var row = $('<div>').attr({
-		"class" : "ms-team-member-tr clearfix",
+		"class" : "ms-team-member-tr clearfix "+floatCls,
 		"userID":userID
 	});
 
@@ -866,14 +877,16 @@ function paintMilestoneCustomerProfileDetails() {
 	var custImg = $('<div>').attr({
 		"class" : "ms-cust-prof-img float-left"
 	});
-
+	if(newfiObject.user.photoImageUrl){
+		custImg.attr("style" , "background-image : url("+newfiObject.user.photoImageUrl+"); background-size: cover;");
+	}
 	var custTxtContainer = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-cont float-left"
 	});
 
 	var name = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-name"
-	}).html("jane doe");
+	}).html(newfiObject.user.firstName+" "+newfiObject.user.lastName);
 
 	var role = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-role"
@@ -881,7 +894,7 @@ function paintMilestoneCustomerProfileDetails() {
 
 	var contact = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-contact"
-	}).html("+1 (888) 555-1875");
+	}).html(newfiObject.user.phoneNumber);
 
 	custTxtContainer.append(name).append(role).append(contact);
 	container.append(custImg).append(custTxtContainer);
@@ -960,16 +973,20 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	targetData.parentChk=parentChk;
 	targetData.childChk=childChk;
 	if(parentChk){
-		var url="rest/workflow/changestateofworkflowitemexec/"+wf.id;
+		var url="rest/workflow/execute/"+wf.id;
 		var data={};
-		data.status="1";//since we will send only completed status from frontend
+		data.status="3";//since we will send only completed status from frontend
+		data["workflowItemExecId"]=wf.id;
+		data["loanID"]=workFlowContext.loanID;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}else{
-		var url="rest/workflow/execute/"+wf.id;
+		var url="rest/workflow/invokeaction/"+wf.id;
 		var data={};
 		data["EMAIL_RECIPIENT"]=selectedUserDetail.emailId;
 		data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
 		data["EMAIL_RECIPIENT_NAME"]=selectedUserDetail.name;
+		data["loanID"]=workFlowContext.loanId;
+		data["workflowItemExecId"]=wf.id;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
 	/*if(callback){
@@ -1027,11 +1044,33 @@ function getStatusClass(workflowItem){
 			return "checked";
 	}
 }
+function getParentStatusClass(status){
+	switch(status){
+		case "0":
+			return "m-not-started";
+		case "1":
+			return "m-in-progress";
+		case "2":
+			return "m-in-progress";
+		case "3":
+			return "m-complete";
+	}
+}
+function getContainerLftRghtClass(container){
+	if(container.hasClass("milestone-lc"))
+		return "milestone-lc";
+	else if(container.hasClass("milestone-rc"))
+		return "milestone-rc";
+}
+function changeContainerClassBasedOnStatus(container,status){
+	clearStatusClass(container);
+	container.addClass(getParentStatusClass(status));
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
 	var floatClass = "float-right";
-	if(workflowItem.status!=3)
+	if(workflowItem.status!=3||workflowItem.workflowItemType=="NEEDS_STATUS"||workflowItem.workflowItemType=="VIEW_NEEDS")//force status checking for needed list
 		workFlowContext.itemsStatesToBeFetched.push(workflowItem.id);
 	var progressClass = getProgressStatusClass(workflowItem.status);
 	var rightLeftClass = "milestone-lc";
@@ -1089,16 +1128,22 @@ function appendMilestoneItem(workflowItem, childList) {
 	header.append(headerTxt).append(headerIcn);
 
 	wrapper.append(rightBorder).append(header);
-	var WFContxt=appendInfoAction(rightLeftClass, wrapper, workflowItem);
+	var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,header,workflowItem);
+	var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, workflowItem);
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
+			
 			var childRow = $('<div>').attr({
-				"class" : rightLeftClass + "-text",
+				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id
 			}).html(childList[index].displayContent);
+			if(childList[index].workflowItemType == "QC_STATUS"  && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == LOAN_MANAGER)
+			{
+				continue;
+			}
 			childRow.attr("WFchild",true);
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
@@ -1129,7 +1174,8 @@ function appendMilestoneItem(workflowItem, childList) {
 			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
-			var WFContxt=appendInfoAction(rightLeftClass, wrapper, childList[index]);
+			var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,childRow,childList[index]);
+			var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, childList[index]);
 			workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
 			
 		}
@@ -1142,49 +1188,80 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
 	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
 	
-	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo,function(){});
+	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo);
 	
 	return mileStoneStepContext;
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
-	event.stopPropagation();
+	
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
+		event.stopPropagation();
 		var data = {};
 		data.milestoneId = event.target.getAttribute("milenotificationid");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneId;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneId;
 		addNotificationPopup(selectedUserDetail.loanID, event.target, data);
 	} else if  ($(event.target).attr("data-text") == "TEAM_STATUS")
 		{
-		var teamTable = getMilestoneTeamMembeTable();
+		event.stopPropagation();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = selectedUserDetail.loanID;
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
-		var teamTable = getMilestoneTeamMembeTable();
+		event.stopPropagation();
+		//var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
-		data.OTHURL = "rest/workflow/execute/"+data.milestoneID;
+		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
 		data.loanID = newfi.user.defaultLoanId;
 		appendMilestoneAddTeamMemberPopup(newfi.user.defaultLoanId,
 				event.target, data);
+		var context=getCreateTitleCompanyContext(
+				newfiObject.user.defaultLoanId);
+		context.createTitleCompanyPopup();
+
+				
+		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context.createTitleCompanyPopup();
 	}
-	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS") {
+	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS"||$(event.target).attr("data-text") == "VIEW_NEEDS") {
+	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
+	 	event.stopPropagation();
 		 $("#lp-step1").click();
-	}
-	
-	 else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+	}else if ($(event.target).attr("data-text") == "LOCK_RATE") {
+	 	event.stopPropagation();
+		 window.location.hash="#loan/1/lock-rate"
+	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
+	 	event.stopPropagation();
+		window.location.hash="#myLoan/lock-my-rate"
+	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
+	}else if ($(event.target).attr("data-text") == "QC_STATUS") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
+	}else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
-		url = "rest/payment/paymentpage.do";
+		url = "rest/payment/pay";
 		
 		 $.ajax({
 		        url : url,
@@ -1200,7 +1277,294 @@ function milestoneChildEventHandler(event) {
 		            console.error("error : " + e);
 		        }
 		    });
+	}else if ($(event.target).attr("data-text") == "CONTACT_LOAN_MANAGER") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.dataContainer.managerList){
+	 		appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+	 	}else{
+	 		var data={}
+	 		ajaxRequest(
+				"rest/loan/"+workFlowContext.loanId+"/manager",
+				"GET",
+				"json",
+				data,
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						workFlowContext.dataContainer.managerList=response.resultObject;
+						appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+					}
+			},false);
+	 	}
 	}
 }
 
 
+//Functions to view loan manager details in customer page
+
+function removeLoanManagerPopup(){
+	$('#loan-manager-popup').remove();
+}
+
+function appendLoanManagerPopup(element,loanManagerArray){
+	
+	removeLoanManagerPopup();
+	
+	var leftOffset = $(element).offset().left;
+	var topOffset = $(element).offset().top;
+	
+	var wrapper = $('<div>').attr({
+		"id" : "loan-manager-popup",
+		"class" : "loan-manager-popup"
+	}).css({
+		"left" : leftOffset,
+		"top" : topOffset
+	});
+	
+	for(var i=0;i<loanManagerArray.length;i++){
+		var loanManagerObj = loanManagerArray[i];
+		
+		var container = $('<div>').attr({
+			"class" : "loan-manager-popup-container clearfix"
+		});
+		
+		var profilePic = $('<div>').attr({
+			"class" : "lp-pic float-left"
+		});
+		
+		if(loanManagerObj.photoImageUrl != undefined && loanManagerObj.photoImageUrl != ""){
+			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
+		}
+		
+		var profileDetails = $('<div>').attr({
+			"class" : "lm-details-txt-col float-left"
+		});
+		
+		var name = $('<div>').attr({
+			"class" : "lp-txt1"
+		}).html(loanManagerObj.displayName);
+		
+		var emailId = $('<div>').attr({
+			"class" : "lp-txt2"
+		}).html(loanManagerObj.emailId);
+		
+		var phoneNumber = $('<div>').attr({
+			"class" : "lp-txt2"
+		});
+		
+		if(loanManagerObj.phoneNumber != undefined){
+			phoneNumber.html(formatPhoneNumberToUsFormat(loanManagerObj.phoneNumber));
+		}
+		
+		profileDetails.append(name).append(emailId).append(phoneNumber);
+		
+		container.append(profilePic).append(profileDetails);
+
+		wrapper.append(container);
+	}
+	
+		
+	$('body').append(wrapper);
+}
+
+$(document).resize(function(){
+	removeLoanManagerPopup();
+	removeLoanStatusPopup();
+});
+
+$(document).on('click',function(){
+	removeLoanManagerPopup();
+	removeLoanStatusPopup();
+});
+
+$(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
+	e.stopPropagation();
+});
+
+function appendLoanStatusPopup(element,milestoneId) {
+	
+	var offset = $(element).offset();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "loan-status-popup",
+		"class" : "ms-add-member-popup loan-status-popup"
+	}).css({
+		"left" : offset.left,
+		"top" : offset.top
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("Loan Status");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	
+	var radioButtonRow = $('<div>').attr({
+		"class" : "popup-row clearfix"
+	});
+	
+	var option1 = $('<div>').attr({
+		"class" : "option-radio clearfix float-left" 
+	});
+	
+	var option1Btn = $('<div>').attr({
+		"class" : "radio-btn float-left" ,
+		"value" : "Pass"
+	}).bind('click',function(){
+		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
+		$(this).addClass('radio-btn-selected');
+	});
+	
+	var option1Txt = $('<div>').attr({
+		"class" : "radio-btn-label float-left" 
+	}).html("Pass"); 
+	option1.append(option1Btn).append(option1Txt);
+	
+	var option2 = $('<div>').attr({
+		"class" : "option-radio clearfix float-left" 
+	});
+	
+	var option2Btn = $('<div>').attr({
+		"class" : "radio-btn float-left" ,
+		"value" : "Decline"
+	}).bind('click',function(){
+		$('#loan-status-popup .radio-btn').removeClass('radio-btn-selected');
+		$(this).addClass('radio-btn-selected');
+	});
+	
+	var option2Txt = $('<div>').attr({
+		"class" : "radio-btn-label float-left" 
+	}).html("Decline"); 
+	option2.append(option2Btn).append(option2Txt);
+	
+	radioButtonRow.append(option1).append(option2);
+	
+	var note = $('<textarea>').attr({
+		"class" : "popup-textbox",
+		"placeholder" : "Add a comment"
+	});
+	
+	var submitBtn = $('<div>').attr({
+		"class" : "popup-save-btn"
+	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
+		var comment=event.data.comment.val();
+		var value=event.data.container.find(".radio-btn-selected").attr("value");
+		var milestoneId=event.data.milestoneId;
+		if(value){
+			var url="rest/workflow/invokeaction/"+milestoneId;
+			var data={};
+			data["EMAIL_RECIPIENT"]=newfiObject.user.emailId;
+			data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+			data["EMAIL_RECIPIENT_NAME"]=newfiObject.user.displayName;
+			data["userID"]=newfiObject.user.id;
+			data["loanID"]=workFlowContext.loanId;
+			data["workflowItemExecId"]=milestoneId;
+			data["workflowItemExecId"]=milestoneId;
+			data["decision"]=value;
+			data["comment"]=comment;
+	 		ajaxRequest(
+				url,
+				"POST",
+				"json",
+				JSON.stringify(data),
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						var contxt=workFlowContext.mileStoneContextList[milestoneId]
+						contxt.updateMilestoneView("3")
+						removeLoanStatusPopup();
+					}
+			},false);
+		}else{
+			showToastMessage("Please Select an Option");
+		}
+	});
+	;
+	
+	container.append(radioButtonRow).append(note).append(submitBtn);
+	
+	wrapper.append(header).append(container);
+	
+	$('body').append(wrapper);
+}
+
+function removeLoanStatusPopup() {
+	$('#loan-status-popup').remove();
+}
+
+function appendQCPopup(element,milestoneId) {
+	
+	var offset = $(element).offset();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "qc-popup",
+		"class" : "ms-add-member-popup loan-status-popup"
+	}).css({
+		"left" : offset.left,
+		"top" : offset.top
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("QC Status");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	
+	
+	
+	var note = $('<textarea>').attr({
+		"class" : "popup-textbox",
+		"placeholder" : "Add a comment"
+	});
+	
+	var submitBtn = $('<div>').attr({
+		"class" : "popup-save-btn"
+	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
+		var comment=event.data.comment.val();
+		var milestoneId=event.data.milestoneId;
+		if(comment){
+			var url="rest/workflow/invokeaction/"+milestoneId;
+			var data={};
+			data["EMAIL_RECIPIENT"]=newfiObject.user.emailId;
+			data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
+			data["EMAIL_RECIPIENT_NAME"]=newfiObject.user.displayName;
+			data["userID"]=newfiObject.user.id;
+			data["loanID"]=workFlowContext.loanId;
+			data["workflowItemExecId"]=milestoneId;
+			data["comment"]=comment;
+	 		ajaxRequest(
+				url,
+				"POST",
+				"json",
+				JSON.stringify(data),
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						var contxt=workFlowContext.mileStoneContextList[milestoneId]
+						contxt.updateMilestoneView("3")
+						removeQCPopup();
+					}
+			},false);
+		}else{
+			showToastMessage("Please Select an Option");
+		}
+	});
+	;
+	
+	container.append(note).append(submitBtn);
+	
+	wrapper.append(header).append(container);
+	
+	$('body').append(wrapper);
+}
+
+function removeQCPopup() {
+	$('#qc-popup').remove();
+}

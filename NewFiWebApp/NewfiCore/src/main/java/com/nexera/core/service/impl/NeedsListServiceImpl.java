@@ -30,7 +30,6 @@ import com.nexera.core.service.NeedsListService;
 import com.nexera.core.utility.CoreCommonConstants;
 
 @Component
-@Transactional
 public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
@@ -38,16 +37,16 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private Utils utils;
-	
+
 	@Autowired
 	private LoanDao loanDao;
 
 	@Autowired
 	private MessageServiceHelper messageServiceHelper;
-	
+
+	@Transactional
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
-		List<NeedsListMaster> needs = (List<NeedsListMaster>) needsDao
-				.getMasterNeedsList(false);
+		List<NeedsListMaster> needs = needsDao.getMasterNeedsList(false);
 		LinkedHashMap<String, ManagerNeedVo> needsDirectory = new LinkedHashMap<String, ManagerNeedVo>();
 		for (NeedsListMaster need : needs) {
 			ManagerNeedVo managerNeedVo = new ManagerNeedVo(need);
@@ -56,26 +55,24 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return needsDirectory;
 	}
 
+	@Override
+	@Transactional
 	public HashMap<String, Object> getLoansNeedsList(int loanId)
-			throws Exception {
+	        throws Exception {
 		try {
 			HashMap<String, Object> loanNeedsNStatus = new HashMap<String, Object>();
 			List<LoanNeedsList> loanNeeds = needsDao.getLoanNeedsList(loanId);
-			// TODO Need Loan Details
-			// TODO Fetch List of Needs List from database for the loan if list
-			// is not null and length greater then 0 then those items need to be
-			// selected
 			List<ManagerNeedVo> result = new ArrayList<ManagerNeedVo>();
 			boolean initialNeedsCreation = false;
 			if (loanNeeds.size() > 0) {
-				List<NeedsListMaster> needs = (List<NeedsListMaster>) needsDao
-						.getMasterNeedsList(false);
+				List<NeedsListMaster> needs = needsDao
+				        .getMasterNeedsList(false);
 				// List<NeedsListMaster>
 				// needs=needsDao.loadAll(NeedsListMaster.class);
 				LinkedHashMap<String, LoanNeedsList> needsDir = new LinkedHashMap<String, LoanNeedsList>();
 				for (LoanNeedsList loanNeed : loanNeeds) {
 					needsDir.put(loanNeed.getNeedsListMaster().getId() + "",
-							loanNeed);
+					        loanNeed);
 				}
 				for (NeedsListMaster need : needs) {
 					ManagerNeedVo needVo = new ManagerNeedVo(need);
@@ -86,8 +83,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 					}
 					result.add(needVo);
 				}
-				List<NeedsListMaster> customNeeds = (List<NeedsListMaster>) needsDao
-						.getMasterNeedsList(true);
+				List<NeedsListMaster> customNeeds = needsDao
+				        .getMasterNeedsList(true);
 
 				for (NeedsListMaster need : customNeeds) {
 					if (needsDir.containsKey(need.getId() + "")) {
@@ -106,117 +103,192 @@ public class NeedsListServiceImpl implements NeedsListService {
 					throw new Exception("Insufficient Data");
 				}
 
-				if (loanAppForm.getMaritalStatus().equals(CoreCommonConstants.MARITAL_STATUS_DIVORCED)) {
+				if (null != loanAppForm.getMaritalStatus()
+				        && loanAppForm.getMaritalStatus().equals(
+				                CoreCommonConstants.MARITAL_STATUS_DIVORCED)) {
 					// #1
 					{
-						String indx=MasterNeedsEnum.Divorce_Settlement_Agree_No1.getIndx();
+						String indx = MasterNeedsEnum.Divorce_Settlement_Agree_No1
+						        .getIndx();
 						ManagerNeedVo managerNeedVo = needsList.get(indx);
 						managerNeedVo.setIsChecked(true);
 					}
-				} else if (loanAppForm.getMaritalStatus().equals(CoreCommonConstants.MARITAL_STATUS_SETTLEMENT)) {
+				} else if (null != loanAppForm.getMaritalStatus()
+				        && loanAppForm.getMaritalStatus().equals(
+				                CoreCommonConstants.MARITAL_STATUS_SETTLEMENT)) {
 					// #4
 					{
-						ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Cancelled_Check_Child_Support.getIndx());
+						ManagerNeedVo managerNeedVo = needsList
+						        .get(MasterNeedsEnum.Cancelled_Check_Child_Support
+						                .getIndx());
 						managerNeedVo.setIsChecked(true);
 					}
 				}
-				if (loanAppForm.getReceiveAlimonyChildSupport()) {
+				if (null != loanAppForm.getReceiveAlimonyChildSupport()
+				        && loanAppForm.getReceiveAlimonyChildSupport()) {
 					// #3,
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Divorce_Separation_Settlement_Agreement_No3.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Divorce_Separation_Settlement_Agreement_No3
+					                .getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
 
-				if (loanAppForm.getSecondMortgage()) {
+				if (null != loanAppForm.getSecondMortgage()
+				        && loanAppForm.getSecondMortgage()) {
 					// #7
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Mortgage_Equity_Line_Statement.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Mortgage_Equity_Line_Statement
+					                .getIndx());
 					managerNeedVo.setIsChecked(true);
-					if (!loanAppForm.getPaySecondMortgage()) {
+					if (null != loanAppForm.getPaySecondMortgage()
+					        && !loanAppForm.getPaySecondMortgage()) {
 						// #13
-						ManagerNeedVo managerNeedVo1 = needsList.get(MasterNeedsEnum.Loan_Agreement_2nd_Mortgage_Line.getIndx());
-						managerNeedVo.setIsChecked(true);
+						ManagerNeedVo managerNeedVo1 = needsList
+						        .get(MasterNeedsEnum.Loan_Agreement_2nd_Mortgage_Line
+						                .getIndx());
+						managerNeedVo1.setIsChecked(true);
 					}
 				}
-				if (loanAppForm.getHomeToSell()) {
+				if (null != loanAppForm.getHomeToSell()
+				        && loanAppForm.getHomeToSell()) {
 					// #10
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Purchase_Contract_Home_Currently_Sold.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Purchase_Contract_Home_Currently_Sold
+					                .getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
-				if (loanAppForm.getOwnsOtherProperty()) {
+				if (null != loanAppForm.getOwnsOtherProperty()
+				        && loanAppForm.getOwnsOtherProperty()) {
 					// #12
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Additional_Properties.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Additional_Properties
+					                .getIndx());
 					managerNeedVo.setIsChecked(true);
-					if (loanAppForm.getRentedOtherProperty()) {
+					if (null != loanAppForm.getRentedOtherProperty()
+					        && loanAppForm.getRentedOtherProperty()) {
 						// #32
-						ManagerNeedVo managerNeedVo32 = needsList.get(MasterNeedsEnum.Rental_Lease_Agreements.getIndx());
+						ManagerNeedVo managerNeedVo32 = needsList
+						        .get(MasterNeedsEnum.Rental_Lease_Agreements
+						                .getIndx());
 						managerNeedVo32.setIsChecked(true);
 					}
 				}
-				if (loanAppForm.getHomeRecentlySold()) {
+				if (null != loanAppForm.getHomeRecentlySold()
+				        && loanAppForm.getHomeRecentlySold()) {
 					// #15
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Settlement_HUD_1_Property_Recently_Sold.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Settlement_HUD_1_Property_Recently_Sold
+					                .getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
-				if (loanAppForm.getHoaDues()) {
+				if (null != loanAppForm.getHoaDues()
+				        && loanAppForm.getHoaDues()) {
 					// #16
-					ManagerNeedVo managerNeedVo = needsList.get(MasterNeedsEnum.Proof_of_HOA_Dues.getIndx());
+					ManagerNeedVo managerNeedVo = needsList
+					        .get(MasterNeedsEnum.Proof_of_HOA_Dues.getIndx());
 					managerNeedVo.setIsChecked(true);
 				}
-				if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_PURCHASE) {
+				if (null != loanAppForm.getLoanTypeMaster()
+				        && loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_PURCHASE) {
 					// Purchase type
 					// #5,#11,#14
-					needsList.get(MasterNeedsEnum.Copy_of_Check_Transfer_Escrow_Receipt.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Homeowner_Insurance_Quote.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Purchase_Contract_Including_Addendums.getIndx()).setIsChecked(true);
-					
+					needsList
+					        .get(MasterNeedsEnum.Copy_of_Check_Transfer_Escrow_Receipt
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Homeowner_Insurance_Quote
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Purchase_Contract_Including_Addendums
+					                .getIndx()).setIsChecked(true);
+
 					if (loanAppForm.getPropertyTypeMaster().getId() == CoreCommonConstants.PROPERTY_TYPE_RENTING) {
 						// Renting Purpose :2
 						// #8
-						needsList.get(MasterNeedsEnum.Cancelled_Checks_Rent_Payments.getIndx()).setIsChecked(true);
+						needsList.get(
+						        MasterNeedsEnum.Cancelled_Checks_Rent_Payments
+						                .getIndx()).setIsChecked(true);
 					}
-				} else if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE
-						|| loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE_CASH_OUT) {
+				} else if (null != loanAppForm.getLoanTypeMaster()
+				        && (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE || loanAppForm
+				                .getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE_CASH_OUT)) {
 					// All Refinance 2,3
 					// #6
-					needsList.get(MasterNeedsEnum.Mortgage_Statement.getIndx()).setIsChecked(true);
+					needsList.get(MasterNeedsEnum.Mortgage_Statement.getIndx())
+					        .setIsChecked(true);
 					if (loanAppForm.getLoanTypeMaster().getId() == CoreCommonConstants.LOAN_TYPE_REFINANCE) {
 						// #9
-						needsList.get(MasterNeedsEnum.Homeowner_Insurance.getIndx()).setIsChecked(true);
+						needsList.get(
+						        MasterNeedsEnum.Homeowner_Insurance.getIndx())
+						        .setIsChecked(true);
 					}
 				}
-				if (loanAppForm.getEmployed()) {
+				if (null != loanAppForm.getIsEmployed()
+				        && loanAppForm.getIsEmployed()) {
 					// #17,#18,
-					needsList.get(MasterNeedsEnum.Paychecks_Most_Recent_30_Days.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.W2s_Previous_2_Years.getIndx()).setIsChecked(true);
-					
+					needsList.get(
+					        MasterNeedsEnum.Paychecks_Most_Recent_30_Days
+					                .getIndx()).setIsChecked(true);
+					needsList.get(
+					        MasterNeedsEnum.W2s_Previous_2_Years.getIndx())
+					        .setIsChecked(true);
+
 				}
-				if (loanAppForm.getSsIncomeOrDisability()) {
+				if (null != loanAppForm.getIsssIncomeOrDisability()
+				        && loanAppForm.getIsssIncomeOrDisability()) {
 					// #19,#20,#21
-					needsList.get(MasterNeedsEnum.Social_Security_Award_Letter.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
+					needsList.get(
+					        MasterNeedsEnum.Social_Security_Award_Letter
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .setIsChecked(true);
 				}
-				if (loanAppForm.getSelfEmployed()) {
+				if (null != loanAppForm.getIsselfEmployed()
+				        && loanAppForm.getIsselfEmployed()) {
 					// #20,#21,#24,#25,#26
-					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Federal_Corporation_Partnership_K_1s_all_partnerships.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Year_to_date_Profit_Loss_Business.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Year_to_date_Balance_Sheet_Business.getIndx()).setIsChecked(true);					
+					needsList
+					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Federal_Corporation_Partnership_K_1s_all_partnerships
+					                .getIndx()).setIsChecked(true);
+					needsList.get(
+					        MasterNeedsEnum.Year_to_date_Profit_Loss_Business
+					                .getIndx()).setIsChecked(true);
+					needsList.get(
+					        MasterNeedsEnum.Year_to_date_Balance_Sheet_Business
+					                .getIndx()).setIsChecked(true);
 				}
-				if (loanAppForm.getPensionOrRetirement()) {
+				if (null != loanAppForm.getIspensionOrRetirement()
+				        && loanAppForm.getIspensionOrRetirement()) {
 					// #20,#21
-					needsList.get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs.getIndx()).setIsChecked(true);
-					needsList.get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
+					                .getIndx()).setIsChecked(true);
+					needsList
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .setIsChecked(true);
 				}
 				// #22,#28,#33
-				needsList.get(MasterNeedsEnum.Federal_Tax_Returns_Previous_2_Years.getIndx()).setIsChecked(true);
-				needsList.get(MasterNeedsEnum.Months2_Statements_Bank_Accounts.getIndx()).setIsChecked(true);
-				needsList.get(MasterNeedsEnum.Driver_License_Passport.getIndx()).setIsChecked(true);
-				
+				needsList.get(
+				        MasterNeedsEnum.Federal_Tax_Returns_Previous_2_Years
+				                .getIndx()).setIsChecked(true);
+				needsList.get(
+				        MasterNeedsEnum.Months2_Statements_Bank_Accounts
+				                .getIndx()).setIsChecked(true);
+				needsList
+				        .get(MasterNeedsEnum.Driver_License_Passport.getIndx())
+				        .setIsChecked(true);
 
 				result = new ArrayList<ManagerNeedVo>(needsList.values());
 				initialNeedsCreation = true;
-				// TODO code to Apply Rules comes here
 
 				// for(NeedsListMaster need:needs){
 				// if(need.getMandatory()==1){
@@ -245,12 +317,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 			return loanNeedsNStatus;
 
 		} catch (NoRecordsFetchedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
 
+	@Override
+	@Transactional
 	public int saveLoanNeeds(int loanId, List<Integer> needsList) {
 		LinkedHashMap<String, LoanNeedsList> existingNeeds = new LinkedHashMap<String, LoanNeedsList>();
 		List<LoanNeedsList> existingNeedsList = null;
@@ -259,13 +332,12 @@ public class NeedsListServiceImpl implements NeedsListService {
 		try {
 			existingNeedsList = needsDao.getLoanNeedsList(loanId);
 		} catch (NoRecordsFetchedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		for (LoanNeedsList need : existingNeedsList) {
 			existingNeeds.put(need.getNeedsListMaster().getId() + "", need);
 		}
-		
+
 		try {
 			for (Integer needId : needsList) {
 				LoanNeedsList need = new LoanNeedsList();
@@ -275,7 +347,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 				needListMaster.setId(needId.intValue());
 				need.setLoan(loan);
 				need.setNeedsListMaster(needListMaster);
-				
+
 				need.setDeleted(false);
 				need.setSystemAction(true);
 				need.setActive(true);
@@ -301,11 +373,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 		} catch (Exception e) {
 			return 0;
 		}
-		messageServiceHelper.generateCommunicationLogMessage(loanId,utils.getLoggedInUser(),addedList,removedList);
+		messageServiceHelper.generateNeedListModificationMessage(loanId,
+		        utils.getLoggedInUser(), addedList, removedList, Boolean.TRUE);
 		return 1;
 	}
 
 	@Override
+	@Transactional
 	public List<LoanNeedsListVO> getLoanNeedsList(Integer loanId) {
 		List<LoanNeedsList> loanNeedsList;
 		try {
@@ -320,8 +394,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return loanNeedsListVO;
 	}
 
-	public LoanNeedsListVO buildLoanNeedsListVO(
-			LoanNeedsList loanNeedsList) {
+	@Transactional
+	public LoanNeedsListVO buildLoanNeedsListVO(LoanNeedsList loanNeedsList) {
 
 		if (loanNeedsList == null)
 			return null;
@@ -330,13 +404,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 		loanNeedsListVO.setId(loanNeedsList.getId());
 		loanNeedsListVO.setActive(loanNeedsList.getActive());
 		loanNeedsListVO
-				.setNeedsListMaster(buildLoanNeedsListMasterVO(loanNeedsList
-						.getNeedsListMaster()));
+		        .setNeedsListMaster(buildLoanNeedsListMasterVO(loanNeedsList
+		                .getNeedsListMaster()));
 		return loanNeedsListVO;
 	}
 
+	@Transactional
 	public NeedsListMasterVO buildLoanNeedsListMasterVO(
-			NeedsListMaster needListMaster) {
+	        NeedsListMaster needListMaster) {
 		if (needListMaster == null)
 			return null;
 		NeedsListMasterVO needListMasterVO = new NeedsListMasterVO();
@@ -348,15 +423,18 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	}
 
+	@Override
+	@Transactional
 	public Integer getLoanNeedListIdByFileId(Integer fileId) {
 		return needsDao.getLoanNeedListIdByFileId(fileId);
 
 	}
 
 	@Override
+	@Transactional
 	public List<ManagerNeedVo> getNeedsListMaster(boolean isCustom) {
 		List<NeedsListMaster> customNeeds = needsDao
-				.getMasterNeedsList(isCustom);
+		        .getMasterNeedsList(isCustom);
 		List<ManagerNeedVo> result = new ArrayList<ManagerNeedVo>();
 		for (NeedsListMaster need : customNeeds) {
 			ManagerNeedVo needVo = new ManagerNeedVo(need);
@@ -366,6 +444,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 	}
 
 	@Override
+	@Transactional
 	public int saveCustomNeed(NeedsListMaster need) {
 		try {
 			return (int) needsDao.save(need);
@@ -373,12 +452,9 @@ public class NeedsListServiceImpl implements NeedsListService {
 			return 0;
 		}
 	}
-	
-	
-	
-	
 
 	@Override
+	@Transactional
 	public Map<String, List<LoanNeedsListVO>> getLoanNeedsMap(Integer loanId) {
 		Map<String, List<LoanNeedsListVO>> map = new HashMap<String, List<LoanNeedsListVO>>();
 
@@ -393,10 +469,10 @@ public class NeedsListServiceImpl implements NeedsListService {
 			String category = loanNeeds.getNeedsListMaster().getNeedCategory();
 			category = category.replace("/", "_");
 			List<LoanNeedsListVO> listVOs = null;
-			if(map.get(category)==null){
+			if (map.get(category) == null) {
 				listVOs = new ArrayList<LoanNeedsListVO>();
 				map.put(category, listVOs);
-			}else{
+			} else {
 				listVOs = map.get(category);
 			}
 			listVOs.add(buildLoanNeedsListVO(loanNeeds));
@@ -405,13 +481,68 @@ public class NeedsListServiceImpl implements NeedsListService {
 	}
 
 	@Override
+	@Transactional
 	public NeededItemScoreVO getNeededItemsScore(Integer loanId) {
-		Integer neededItemRequired  = loanDao.getNeededItemsRequired(loanId);
-		Integer totalNeededItem  = loanDao.getTotalNeededItem(loanId);
+		Integer neededItemRequired = loanDao.getNeededItemsRequired(loanId);
+		Integer totalNeededItem = loanDao.getTotalNeededItem(loanId);
 		NeededItemScoreVO neededItemScoreVO = new NeededItemScoreVO();
 		neededItemScoreVO.setNeededItemRequired(neededItemRequired);
 		neededItemScoreVO.setTotalSubmittedItem(totalNeededItem);
 		return neededItemScoreVO;
+	}
+
+	@Override
+	@Transactional
+	public NeedsListMaster fetchNeedListMasterUsingID(Integer needId) {
+		return (NeedsListMaster) needsDao.load(NeedsListMaster.class, needId);
+	}
+
+	@Override
+	@Transactional
+	public LoanNeedsList findNeedForLoan(Loan loan,
+	        NeedsListMaster needsListMaster) {
+		// TODO Needs To be changed based on dao IMPL
+		return needsDao.findNeedForLoan(loan, needsListMaster);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public NeedsListMaster fetchNeedListMasterByType(String needsListType) {
+		return needsDao.findNeedsListMasterByLabel(needsListType);
+	}
+
+	@Override
+	@Transactional
+	public void saveMasterNeedsForLoan(int loanId,
+	        List<NeedsListMaster> masterNeeds) {
+		for (NeedsListMaster masterNeed : masterNeeds) {
+			NeedsListMaster existingNeed = needsDao
+			        .findNeedsListMasterByLabel(masterNeed.getLabel());
+			if (existingNeed == null) {
+				Integer id = (Integer) needsDao.save(masterNeed);
+
+				masterNeed.setId(id);
+			} else {
+				masterNeed = existingNeed;
+			}
+
+			LoanNeedsList need = new LoanNeedsList();
+			Loan loan = new Loan();
+			loan.setId(loanId);
+			need.setLoan(loan);
+			need.setNeedsListMaster(masterNeed);
+			need.setDeleted(false);
+			need.setSystemAction(true);
+			need.setActive(true);
+			need.setComments("");
+			need.setMandatory(true);
+			need.setSystemAction(true);
+			LoanNeedsList loanNeedsList = needsDao.findLoanNeedByMaster(loan,
+			        masterNeed);
+			if (loanNeedsList == null) {
+				needsDao.save(need);
+			}
+		}
 	}
 
 }

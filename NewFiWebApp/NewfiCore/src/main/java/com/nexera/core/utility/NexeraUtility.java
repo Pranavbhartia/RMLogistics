@@ -1,24 +1,35 @@
 package com.nexera.core.utility;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.PDFToImage;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.io.RandomAccessFile;
@@ -26,6 +37,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDCcitt;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
@@ -33,59 +46,124 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.nexera.common.exception.NonFatalException;
+import com.nexera.common.vo.UserVO;
+import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
+
 @Component
 public class NexeraUtility {
 
-	private  static final Logger LOGGER = LoggerFactory
+	@Autowired
+	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+
+	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
 
-	private  final String OUTPUT_FILENAME_EXT = "jpg";
-	private  final String OUTPUT_PREFIX = "-outputPrefix";
-	private  final String END_PAGE = "-endPage";
+	private final String OUTPUT_FILENAME_EXT = "jpg";
+	private final String OUTPUT_PREFIX = "-outputPrefix";
+	private final String END_PAGE = "-endPage";
 
-	private  final String PAGE_NUMBER = "1";
-	private  final String START_PAGE = "-startPage";
+	private final String PAGE_NUMBER = "1";
+	private final String START_PAGE = "-startPage";
 
 	@SuppressWarnings("unchecked")
-	public  List<PDPage> splitPDFTOPages(File file) {
+	public List<PDPage> splitPDFTOPages(File file) {
 		PDDocument document = null;
 		List<PDPage> pdfPages = null;
 		// Create a Splitter object
 		try {
 			document = new PDDocument();
+			// TODO: Look at this warning
 			document = PDDocument.loadNonSeq(file, null);
 			return document.getDocumentCatalog().getAllPages();
 		} catch (IOException e) {
 			LOGGER.info("Exception in splitting pdf document : "
 			        + e.getMessage());
+		} finally {
+			if (document != null) {
+				try {
+					document.close();
+				} catch (IOException e) {
+					LOGGER.info("Unable to close the PDF document "
+					        + e.getMessage());
+				}
+			}
 		}
 		return pdfPages;
 	}
 
-	public  List<File> splitPDFPages(File file) {
-
+	public List<File> splitPDFPagesUsingIText(File file) throws IOException{
+		List<File> newPdfpages = new ArrayList<File>();
+		
+			 PdfReader reader = new PdfReader(file.getAbsolutePath());
+			
+			 Integer numberOfpages = reader.getNumberOfPages();
+			 for (int i = 1; i <= numberOfpages; i++) {
+				 Document document = null;
+				 PdfCopy writer = null;
+				 String filepath = tomcatDirectoryPath() + File.separator
+					        + file.getName().replace(".pdf", "") + "_" + i
+					        + ".pdf";
+				try{ 
+				 	document = new Document(reader.getPageSizeWithRotation(1));
+				 	writer = new PdfCopy(document, new FileOutputStream(filepath));
+	                document.open();
+	                PdfImportedPage page = writer.getImportedPage(reader, i);
+	                writer.addPage(page);
+	                document.close();
+	                writer.close();
+	                newPdfpages.add(new File(filepath));
+				 }catch(Exception e){
+						LOGGER.info("Exception in converting pdf pages document : "
+						        + e.getMessage());
+						throw new FatalException("Error in Splitting");
+				 }finally{
+					if(document != null){
+						document.close();
+					}	
+					if(writer != null){
+						writer.close();
+					}
+				 }
+		 }
+		
+		return newPdfpages;
+	}
+	
+	
+	public List<File> splitPDFPages(File file) {
+		
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
 		Integer pageNum = 0;
+		PDPageContentStream contentStream=null;
 		for (PDPage pdPage : pdfPages) {
 
 			try {
+				
 				PDDocument newDocument = new PDDocument();
 				newDocument.addPage(pdPage);
 				String filepath = tomcatDirectoryPath() + File.separator
 				        + file.getName().replace(".pdf", "") + "_" + pageNum
 				        + ".pdf";
-
+				
+				
 				File newFile = new File(filepath);
 				newFile.createNewFile();
-
+				
 				newDocument.save(filepath);
 				newDocument.close();
 				pageNum++;
@@ -100,52 +178,49 @@ public class NexeraUtility {
 		return newPdfpages;
 	}
 
-	public  String tomcatDirectoryPath() {
+	public String tomcatDirectoryPath() {
 		String rootPath = System.getProperty("catalina.home");
 		return rootPath + File.separator + "tmpFiles";
 	}
 
-	public  String uploadFileToLocal(MultipartFile file) {
+	public String uploadFileToLocal(File file) {
 		String filePath = null;
-		if (!file.isEmpty()) {
-			try {
-				byte[] bytes = file.getBytes();
 
-				// Creating the directory to store file
+		try {
+			byte[] bytes = FileUtils.readFileToByteArray(file);
 
-				File dir = new File(this.tomcatDirectoryPath());
-				if (!dir.exists())
-					dir.mkdirs();
+			// Creating the directory to store file
 
-				String fileName = file.getOriginalFilename();
+			File dir = new File(this.tomcatDirectoryPath());
+			if (!dir.exists())
+				dir.mkdirs();
 
-				filePath = dir.getAbsolutePath() + File.separator + fileName;
-				// Create the file on server
-				File serverFile = new File(filePath);
-				BufferedOutputStream stream = new BufferedOutputStream(
-				        new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
+			String fileName = file.getName();
 
-				LOGGER.info("Server File Location="
-				        + serverFile.getAbsolutePath());
+			filePath = dir.getAbsolutePath() + File.separator + fileName;
+			// Create the file on server
+			File serverFile = new File(filePath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+			        new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
 
-			} catch (Exception e) {
-				LOGGER.info("Exception in uploading file in local "
-				        + e.getMessage());
-				return null;
-			}
-		} else {
-			return null;
+			LOGGER.info("Server File Location=" + serverFile.getAbsolutePath());
+
+		} catch (Exception e) {
+			LOGGER.info("Exception in uploading file in local "
+			        + e.getMessage());
+			throw new FatalException("Cannot upload file to tomcat directory");
 		}
+
 		return filePath;
 	}
 
-	public  String joinPDDocuments(List<String> fileUrls)
-	        throws IOException, COSVisitorException {
+	public String joinPDDocuments(List<String> fileUrls) throws IOException,
+	        COSVisitorException {
 		PDFMergerUtility mergePDF = new PDFMergerUtility();
-		String newFilePath = this.tomcatDirectoryPath()
-		        + File.separator + randomStringOfLength() + ".pdf";
+		String newFilePath = this.tomcatDirectoryPath() + File.separator
+		        + randomStringOfLength() + ".pdf";
 
 		for (String fileUrl : fileUrls) {
 			LOGGER.info("Adding File with URL" + fileUrl);
@@ -156,7 +231,7 @@ public class NexeraUtility {
 		return newFilePath;
 	}
 
-	public  String randomStringOfLength() {
+	public String randomStringOfLength() {
 		Integer length = 10;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
@@ -167,8 +242,8 @@ public class NexeraUtility {
 		return buffer.substring(0, length);
 	}
 
-	public  String convertPDFToThumbnail(String pdfFile,
-	        String imageFilePath) throws Exception {
+	public String convertPDFToThumbnail(String pdfFile, String imageFilePath)
+	        throws Exception {
 
 		String[] args = new String[7];
 		args[0] = START_PAGE;
@@ -194,22 +269,21 @@ public class NexeraUtility {
 		}
 	}
 
-	private  String uuidString() {
+	private String uuidString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public  String convertImageToPDF(MultipartFile multipartFile) {
+	public String convertImageToPDF(File file, String contentType) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
 		try {
-			File file = multipartToFile(multipartFile);
 
 			PDDocument document = new PDDocument();
 
 			// InputStream in = new FileInputStream(file);
 			// BufferedImage bimg = ImageIO.read(in);
 			float width, height;
-			if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
+			if (contentType.equalsIgnoreCase("image/tiff")) {
 				FileSeekableStream fss = new FileSeekableStream(file);
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
@@ -233,13 +307,12 @@ public class NexeraUtility {
 
 			PDXObjectImage img = null;
 
-			if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
+			if (contentType.equalsIgnoreCase("image/jpeg")) {
 				img = new PDJpeg(document, new FileInputStream(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase("image/png")) {
+			} else if (contentType.equalsIgnoreCase("image/png")) {
 				img = new PDPixelMap(document, ImageIO.read(file));
-			} else if (multipartFile.getContentType().equalsIgnoreCase("image/tiff")) {
+			} else if (contentType.equalsIgnoreCase("image/tiff")) {
 				img = new PDCcitt(document, new RandomAccessFile(file, "r"));
-
 			}
 
 			PDPageContentStream contentStream = new PDPageContentStream(
@@ -266,29 +339,30 @@ public class NexeraUtility {
 		} catch (Exception e) {
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 			e.printStackTrace();
+			throw new FatalException("Cannot convert image to PDF");
 		}
 		return filepath;
 
 	}
 
-	public  File multipartToFile(MultipartFile multipart)
+	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		File convFile = new File(multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
 	}
 
-	public  MultipartFile filePathToMultipart(String filePath)
-	        throws IOException {
-		File file = new File(filePath);
-		DiskFileItem fileItem = new DiskFileItem("file", "text/plain", false,
-		        file.getName(), (int) file.length(), file.getParentFile());
+	public MultipartFile filePathToMultipart(File file) throws IOException {
+
+		DiskFileItem fileItem = new DiskFileItem("file", "application/pdf",
+		        false, file.getName(), (int) file.length(),
+		        file.getParentFile());
 		fileItem.getOutputStream();
 		MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
 		return multipartFile;
 	}
 
-	public  String convertImageToPDFDocument(MultipartFile multipartFile) {
+	public String convertImageToPDFDocument(MultipartFile multipartFile) {
 
 		File file = null;
 		String filepath = null;
@@ -355,7 +429,7 @@ public class NexeraUtility {
 
 	}
 
-	public  BufferedImage convertRenderedImage(RenderedImage img) {
+	public BufferedImage convertRenderedImage(RenderedImage img) {
 		if (img instanceof BufferedImage) {
 			return (BufferedImage) img;
 		}
@@ -376,6 +450,215 @@ public class NexeraUtility {
 		        isAlphaPremultiplied, properties);
 		img.copyData(raster);
 		return result;
+	}
+
+	public String createPDFFromStream(InputStream inputStream)
+	        throws IOException, COSVisitorException {
+		PDDocument document = null;
+		String filePath = null;
+		try {
+			// create the PDF document object
+			document = new PDDocument();
+			InputStream input = inputStream;
+			BufferedReader bufferReader = new BufferedReader(
+			        new InputStreamReader(input));
+			String theString = "";
+			String line = "";
+			while ((line = bufferReader.readLine()) != null)
+				theString += line + "\r\n";
+
+			byte[] byteArray = theString.getBytes();
+			theString = new String(byteArray, "UTF-8");
+			PDPage page = new PDPage();
+			document.addPage(page);
+			PDPageContentStream stream = new PDPageContentStream(document, page);
+			stream.beginText();
+			PDFont font = PDType1Font.HELVETICA_BOLD;
+			stream.setFont(font, 12);
+			stream.moveTextPositionByAmount(100, 700);
+			stream.setNonStrokingColor(Color.ORANGE);
+			stream.drawString(theString);
+			stream.endText();
+
+			filePath = tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf";
+
+			// save the document to the file stream.
+			document.save(filePath);
+		} finally {
+			if (document != null) {
+				document.close();
+			}
+
+		}
+		return filePath;
+	}
+
+	public String getContentFromFile(byte[] bytes) throws IOException,
+	        Exception {
+
+		String encodedText = new String(Base64.encodeBase64(bytes));
+		return encodedText;
+	}
+
+	public byte[] getContentFromStream(InputStream stream) throws IOException,
+	        Exception {
+
+		byte[] bytes = IOUtils.toByteArray(stream);
+		return bytes;
+	}
+
+	public File copyInputStreamToFile(InputStream in) throws IOException {
+		File file = null;
+		OutputStream out = null;
+		try {
+			file = new File(tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf");
+			out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			out.close();
+			in.close();
+		}
+		return file;
+	}
+
+	public MultipartFile getMultipartFileFromInputStream(InputStream instream)
+	        throws IOException {
+		File file = copyInputStreamToFile(instream);
+		return filePathToMultipart(file);
+
+	}
+
+	public byte[] convertInputStreamToByteArray(InputStream inputStream) {
+		byte[] buffer = new byte[8192];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		int bytesRead;
+		try {
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+		} catch (IOException e) {
+			// TODO call exception class
+		}
+		return baos.toByteArray();
+	}
+
+	public File convertInputStreamToFile(InputStream inputStream)
+	        throws COSVisitorException, IOException {
+
+		OutputStream outputStream = null;
+		File file = null;
+		try {
+			file = new File(tomcatDirectoryPath() + File.separator
+			        + randomStringOfLength() + ".pdf");
+			if (file.createNewFile()) {
+				outputStream = new FileOutputStream(file);
+				byte[] bytes = convertInputStreamToByteArray(inputStream);
+				outputStream.write(bytes);
+				outputStream.flush();
+
+			}
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+
+				}
+			}
+			if (outputStream != null) {
+				try {
+					// outputStream.flush();
+					outputStream.close();
+				} catch (IOException e) {
+
+				}
+
+			}
+
+		}
+		return file;
+
+	}
+
+	public Date convertToUTC(Date inputDate) {
+		return null;
+	}
+
+	public String getUUIDBasedNoteForLQBDocument(String uuId, UserVO user) {
+
+		StringBuffer stringBuf = new StringBuffer();
+		stringBuf.append("UUID:").append(uuId);
+		stringBuf.append(" UploadedBy:");
+		stringBuf.append(user.getFirstName()).append("-")
+		        .append(user.getLastName());
+
+		return stringBuf.toString();
+	}
+
+	public void getStreamForThumbnailFromS3Path(HttpServletResponse response,
+	        String s3Path) throws Exception {
+		response.setContentType("image/jpeg");
+		LOGGER.info("The s3path = " + s3Path);
+
+		// File downloadFile = new
+		// File(s3FileUploadServiceImpl.downloadFile(s3FileURL ,
+		// localFilePath));
+		InputStream inputStream = getInputStreamFromFile(s3Path,
+		        String.valueOf(1));
+		// get output stream of the response
+		OutputStream outStream = response.getOutputStream();
+
+		byte[] buffer = new byte[2048];
+		int bytesRead = -1;
+
+		// write bytes read from the input stream into the output stream
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			outStream.write(buffer, 0, bytesRead);
+		}
+
+		inputStream.close();
+		outStream.close();
+	}
+
+	public InputStream getInputStreamFromFile(String fileUrl, String isImage)
+	        throws Exception {
+
+		/*
+		 * String extention = null; if(isImage.equals("0")){ extention = ".pdf";
+		 * }else{ extention = ".jpeg"; }
+		 * 
+		 * String filePth = downloadFile(fileUrl,
+		 * nexeraUtility.tomcatDirectoryPath()+File.separator+
+		 * nexeraUtility.randomStringOfLength()+extention); File initialFile =
+		 * new File(filePth);
+		 */
+		InputStream input = null;
+		try {
+			input = new URL(fileUrl).openStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new NonFatalException("Exception in reading thumbnail");
+
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				LOGGER.info("exception in closing document");
+			}
+		}
+
+		return input;
 	}
 
 }

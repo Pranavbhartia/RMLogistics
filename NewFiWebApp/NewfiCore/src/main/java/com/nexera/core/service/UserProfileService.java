@@ -1,12 +1,17 @@
 package com.nexera.core.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
-import com.nexera.common.entity.InternalUserDetail;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.gson.JsonObject;
 import com.nexera.common.entity.User;
-import com.nexera.common.entity.UserRole;
-import com.nexera.common.vo.InternalUserDetailVO;
-import com.nexera.common.vo.UserRoleVO;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 
 public interface UserProfileService {
@@ -27,25 +32,37 @@ public interface UserProfileService {
 
 	public Integer managerUpdateUCustomerDetails(UserVO userVO);
 
-	public UserVO createUser(UserVO userVO);
-
 	public List<UserVO> searchUsers(UserVO userVO);
 
 	public UserVO loadInternalUser(Integer userID);
 
-	public UserRoleVO buildUserRoleVO(UserRole userRole);
-
-	public InternalUserDetailVO buildInternalUserDetailsVO(
-	        InternalUserDetail internalUserDetail);
-
-	public UserVO buildUserVO(User user);
-
 	public List<UserVO> buildUserVOList(List<User> team);
 
-	User parseUserModel(UserVO userVO);
+	public void disableUser(int userId) throws NoRecordsFetchedException;
 
-	public UserVO findUserByMail(String userMailAddress);
+	public void enableUser(int userId) throws NoRecordsFetchedException;
+
+	public UserVO createNewUserAndSendMail(UserVO userVO)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	public void deleteUser(UserVO userVO) throws Exception;
+
+	public User findUserByMail(String userMailAddress);
 
 	public UserVO saveUser(UserVO userVO);
+
+	public List<User> fetchAllActiveUsers();
+
+	public List<UserVO> getUsersList();
+
+	public JsonObject parseCsvAndAddUsers(MultipartFile file)
+	        throws FileNotFoundException, IOException, InvalidInputException,
+	        UndeliveredEmailException, NoRecordsFetchedException;
+
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO);
+
+	public void crateWorkflowItems(int defaultLoanId) throws Exception;
+
+	public boolean changeUserPassword(UserVO uservo);
 
 }

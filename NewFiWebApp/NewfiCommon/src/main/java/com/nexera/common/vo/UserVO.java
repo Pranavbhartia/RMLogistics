@@ -6,9 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nexera.common.entity.CustomerDetail;
-import com.nexera.common.entity.User;
-
 public class UserVO implements Serializable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
@@ -34,7 +31,10 @@ public class UserVO implements Serializable {
 	private List<NotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
-
+	
+    private CustomerEnagagement  customerEnagagement ;
+    private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
+    
 	public UserVO() {
 
 	}
@@ -60,7 +60,7 @@ public class UserVO implements Serializable {
 	}
 
 	public String getDisplayName() {
-		if(displayName==null || displayName.isEmpty()){
+		if (displayName == null || displayName.isEmpty()) {
 			return this.firstName + " " + this.lastName;
 		}
 		return displayName;
@@ -193,20 +193,31 @@ public class UserVO implements Serializable {
 	public void setUserEmails(List<UserEmailVO> userEmails) {
 		this.userEmails = userEmails;
 	}
+	
+	
+
+	
+	public CustomerEnagagement getCustomerEnagagement() {
+		return customerEnagagement;
+	}
+
+	public void setCustomerEnagagement(CustomerEnagagement customerEnagagement) {
+		this.customerEnagagement = customerEnagagement;
+	}
 
 	@Override
 	public String toString() {
 		return "UserVO [id=" + id + ", status=" + status + ", emailId="
-				+ emailId + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", password=" + password + ", phoneNumber="
-				+ phoneNumber + ", photoImageUrl=" + photoImageUrl
-				+ ", username=" + username + ", userRole=" + userRole
-				+ ", customerDetail=" + customerDetail
-				+ ", internalUserDetail=" + internalUserDetail
-				+ ", realtorDetail=" + realtorDetail + ", loans=" + loans
-				+ ", loanAppForms=" + loanAppForms + ", loanNotifications="
-				+ loanNotifications + ", loanTeams=" + loanTeams
-				+ ", userEmails=" + userEmails + "]";
+		        + emailId + ", firstName=" + firstName + ", lastName="
+		        + lastName + ", password=" + password + ", phoneNumber="
+		        + phoneNumber + ", photoImageUrl=" + photoImageUrl
+		        + ", username=" + username + ", userRole=" + userRole
+		        + ", customerDetail=" + customerDetail
+		        + ", internalUserDetail=" + internalUserDetail
+		        + ", realtorDetail=" + realtorDetail + ", loans=" + loans
+		        + ", loanAppForms=" + loanAppForms + ", loanNotifications="
+		        + loanNotifications + ", loanTeams=" + loanTeams
+		        + ", userEmails=" + userEmails + "]";
 	}
 
 	public int getDefaultLoanId() {
@@ -217,67 +228,15 @@ public class UserVO implements Serializable {
 		this.defaultLoanId = defaultLoanId;
 	}
 
-	public void setForView(User user) {
-		// TODO Auto-generated method stub
-
-		this.firstName = user.getFirstName();
-		this.lastName = user.getLastName();
-		this.phoneNumber = user.getPhoneNumber();
-		this.photoImageUrl = user.getPhotoImageUrl();
-		this.id = user.getId();
-		UserRoleVO roleVO = new UserRoleVO();
-		roleVO.setId(user.getUserRole().getId());
-		roleVO.setRoleDescription(user.getUserRole().getRoleDescription());
-
-		this.userRole = roleVO;
-		this.emailId = user.getEmailId();
-		this.displayName = this.firstName + " " + this.lastName;
-		this.userRole=roleVO;
-		this.emailId=user.getEmailId();
-		this.displayName = this.firstName+" "+this.lastName;
-		this.customerDetail = buildCustomerDetailVO(user);
-	    /*this.internalUserDetail;
-		this.realtorDetail;
-	}*/
+	public List<InternalUserStateMappingVO> getInternalUserStateMappingVOs() {
+		return internalUserStateMappingVOs;
 	}
 
-	public static CustomerDetailVO buildCustomerDetailVO(User user){
-		
-		if (user == null)
-			return null;
-		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
-		
-		CustomerDetail customerDetail = user.getCustomerDetail();
-		
-		if(null == customerDetail){
-			return null;
-		}
-		customerDetailVO.setAddressCity(customerDetail.getAddressCity());
-		customerDetailVO.setAddressState(customerDetail.getAddressState());
-		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
-		if(null != customerDetail.getDateOfBirth()){
-			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth().getTime());
-		}else{
-			// if the date of birth id null then ??
-			customerDetailVO.setDateOfBirth(0l);
-		}
-		customerDetailVO.setId(customerDetail.getId());
-		customerDetailVO.setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
-		customerDetailVO.setSecEmailId(customerDetail.getSecEmailId());
-		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
-		
-		return customerDetailVO;
-
-
+	public void setInternalUserStateMappingVOs(
+			List<InternalUserStateMappingVO> internalUserStateMappingVOs) {
+		this.internalUserStateMappingVOs = internalUserStateMappingVOs;
 	}
 
-	public User convertToEntity() {
-		User user = new User();
-
-		user.setId(this.id);
-
-		return user;
-
-	}
-
+	
+	
 }

@@ -3,64 +3,132 @@ package com.nexera.core.service;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.vo.ExtendedLoanTeamVO;
+import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
+import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 
+public interface LoanService {
 
-public interface LoanService
-{
+	public List<LoanVO> getLoansOfUser(UserVO user);
 
-    public List<LoanVO> getLoansOfUser( UserVO user );
+	public LoanVO getLoanByID(Integer loanID);
 
+	public boolean addToLoanTeam(LoanVO loan, UserVO user);
 
-    public LoanVO getLoanByID( Integer loanID );
+	public boolean removeFromLoanTeam(LoanVO loan, UserVO user);
 
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany);
 
-    public boolean addToLoanTeam( LoanVO loan, UserVO user );
+	public boolean removeFromLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance);
 
+	public List<UserVO> retreiveLoanTeam(LoanVO loan);
 
-    public boolean removeFromLoanTeam( LoanVO loan, UserVO user );
+	public List<UserVO> retreiveLoanManagers(LoanVO loanVO);
 
+	public List<LoanVO> retreiveLoansAsManager(UserVO loanManager);
 
-    public List<UserVO> retreiveLoanTeam( LoanVO loan );
+	public LoanVO getActiveLoanOfUser(UserVO user);
 
+	public LoanDashboardVO retrieveDashboard(UserVO user);
 
-    public List<LoanVO> retreiveLoansAsManager( UserVO loanManager );
+	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO user);
 
+	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO user);
 
-    public LoanVO getActiveLoanOfUser( UserVO user );
+	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
+	public List<Loan> getAllActiveLoan();
 
-    LoanDashboardVO retrieveDashboard( UserVO user );
+	public Loan fetchLoanById(Integer loanId);
 
+	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
+	        int loanManagerWFID);
 
-    LoanTeamListVO getLoanTeamListForLoan( LoanVO loan );
+	public LoanVO findWorkflowInfoById(int loanID);
 
+	public List<Loan> getAllLoans();
 
-    LoansProgressStatusVO getLoansProgressForUser( Integer i );
+	public List<Loan> getLoansInActiveStatus();
 
+	// TODO added for loan rest service
+	public LoanVO createLoan(LoanVO loanVO);
 
-    public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId );
+	public Loan completeLoanModel(LoanVO loanVO);
 
+	public List<TitleCompanyMasterVO> findTitleCompanyByName(
+	        TitleCompanyMasterVO titleCompany);
 
-    Loan parseLoanModel( LoanVO loanVO );
+	List<HomeOwnersInsuranceMasterVO> findHomeOwnInsByName(
+	        HomeOwnersInsuranceMasterVO homeOwnInsVO);
 
+	public LoanNeedsList fetchByNeedId(Integer needId);
 
-    LoanCustomerVO retrieveDashboard( UserVO userVO, LoanVO loanVO );
+	public TitleCompanyMasterVO addTitleCompany(TitleCompanyMasterVO vo);
 
+	public HomeOwnersInsuranceMasterVO addHomeOwnInsCompany(
+	        HomeOwnersInsuranceMasterVO vo);
 
-    public void saveWorkflowInfo( int loanID, int customerWorkflowID, int loanManagerWFID );
+	TitleCompanyMasterVO addToLoanTeam(LoanVO loan,
+	        TitleCompanyMasterVO titleCompany, UserVO addedBy);
 
+	HomeOwnersInsuranceMasterVO addToLoanTeam(LoanVO loan,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance, UserVO addedBy);
 
-    public LoanVO findWorkflowInfoById( int loanID );
+	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
+	        String loanMilestoneMAsterName);
 
+	public List<LoanMilestoneMaster> getLoanMilestoneByLoanType(
+	        LoanTypeMaster loanTypeMaster);
 
-    public List<Loan> getAllLoans();
+	public LoanMilestone saveLoanMilestone(LoanMilestone loanMilestone);
 
+	LoanTeamListVO getLoanTeamListForLoan(LoanVO loanVO);
 
+	Loan parseLoanModel(LoanVO loanVO);
+
+	LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO);
+
+	LoansProgressStatusVO getLoansProgressForUser(Integer userId);
+
+	UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
+
+	public void updateLoanMilestone(LoanMilestone loanMilestone);
+
+	TitleCompanyMasterVO findTitleCompanyOfLoan(LoanVO loan);
+
+	HomeOwnersInsuranceMasterVO findHomeOwnersInsuranceCompanyOfLoan(LoanVO loan);
+
+	ExtendedLoanTeamVO findExtendedLoanTeam(LoanVO loanVO);
+
+	public LoanTurnAroundTimeVO retrieveTurnAroundTimeByLoan(Integer loanId,
+	        Integer workFlowItemId);
+
+	public LoanNeedsList fetchLoanNeedByFileId(
+	        UploadedFilesList uploadedFileList);
+
+	public void updateLoanNeedList(LoanNeedsList loanNeedList);
+
+	public void saveAllLoanTurnAroundTimeForLoan(Integer loanId);
+
+	public void assignNeedsToLoan(LoanNeedsList loanNeedsList);
+
+	public LoanNeedsList findLoanNeedsList(Loan loan,
+	        NeedsListMaster needsListMaster);
+
+	public void updateLoan(Loan loan);
 }

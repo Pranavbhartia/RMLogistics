@@ -154,7 +154,7 @@
 			<id>dev</id>
 			<build>
 				<filters>
-					<filter>src/main/resources/filler.dev.properties</filter>
+					<filter>src/main/resources/filter-dev.properties</filter>
 				</filters>
 			</build>
 		</profile>
@@ -162,7 +162,7 @@
 			<id>test</id>
 			<build>
 				<filters>
-					<filter>src/main/resources/filler.test.properties</filter>
+					<filter>src/main/resources/filter-test.properties</filter>
 				</filters>
 			</build>
 		</profile>

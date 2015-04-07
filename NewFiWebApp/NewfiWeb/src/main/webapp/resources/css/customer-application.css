@@ -1,15 +1,15 @@
-.cust-app-lp {
-    width: 275px;
-    height: 1000px;
+.cust-app-lp .ce-lp{
+    width: 255px;
+    margin-left: 20px;
 }
 .cust-app-rp {
-    width: 549px;
+    width: 534px;
+    margin-left: 15px;
 }
 .app-ques-text {
     font-family: 'opensanssemibold';
     font-size: 16px;
     margin-bottom: 5px;
-    text-transform: capitalize;
 }
 .app-option {
     width: 100%;
@@ -24,18 +24,19 @@
     cursor: pointer;
 }
 .app-option-checked {
-	background: url(../images/check_box_checked.png) no-repeat left center;
+	background: url(../images/check_box_checked.png) no-repeat left center !important;
 }
 .app-ques-wrapper {
-    margin: 10px 0;
-    padding: 5px 0;
+    margin-bottom: 10px;
+	padding-top: 5px;
+	padding-bottom: 20px;
+	border-bottom: 1px dashed #dcdcdc;
 }
 .app-ques-header-txt {
     font-family: 'opensanssemibold';
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 15px;
-    text-transform: capitalize;
+    font-size: 24px;
+	line-height: 40px;
+	margin-bottom: 15px;
 }
 .app-input {
     width: 400px;
@@ -51,7 +52,7 @@
     width: 160px;
     height: 40px;
     line-height: 40px;
-    margin: 15px auto;
+    margin: 15px 0;
     text-align: center;
     font-size: 16px;
     color: #fff;
@@ -63,14 +64,14 @@
 }
 .app-options-cont {
     position: relative;
-    width: 400px;
+    width: 250px;
 }
 .app-dropdown-cont {
     position: absolute;
     width: 100%;
     border: 1px solid #dcdcdc;
     border-radius: 3px;
-    background: #fafafa;
+    background: #fff;
     z-index: 2;
 }
 .app-option-selected {
@@ -79,7 +80,8 @@
     line-height: 35px;
     border: 1px solid #dcdcdc;
     border-radius: 3px;
-    background: #fafafa;
+    background:url(../images/down-arrow.png) no-repeat right center;
+    background-color: #fafafa;
     font-size: 14px;
     cursor: pointer;
     text-transform: capitalize;
@@ -92,14 +94,15 @@
     cursor: pointer;
 }
 .app-option-sel:hover {
-    background: #e2e2e2;
+    background: #fafafa;
 }
 
 .app-option-choice {
 	display: inline-block;
-	width: 50px;
+	width: 75px;
 	height: 30px;
 	line-height: 30px;
+	margin-top:10px;
 	text-align: center;
 	margin-right: 10px;
 	color: #fff;
@@ -112,4 +115,34 @@
 
 .app-option-choice[isSelected="true"] {
 	background: #F47521;
+}
+
+
+.width-75{
+ width: 75px !important;
+}
+
+.width-150{
+ width: 327px !important;
+}
+.cust-app-lp{
+	margin-top:51px;
+}
+
+.cust-app-lp .ce-app-lp-item-text{
+	line-height: 40px;
+}
+
+.cust-app-lp .ce-lp-item-icon{
+	width: 35px;
+	height: 52px;
+	line-height: 40px;
+	background-size: 35px;
+}
+
+.cust-app-lp .ce-lp-complete .ce-lp-item-icon:after{
+	width: 38px;
+	height: 45px;
+	background-size: 20px;
+
 }

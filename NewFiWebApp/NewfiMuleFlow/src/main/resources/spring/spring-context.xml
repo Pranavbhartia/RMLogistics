@@ -10,7 +10,13 @@
 	</bean>
 	<bean id="newFiResponseProcessor" class="com.newfi.nexera.process.NewFiResponseProcessor">
 	</bean>
+	<bean id="newFiDocsResponseProcessor" class="com.newfi.nexera.process.NewFiDocsResponseProcessor">
+	</bean>
 	<bean id="restInterceptor" class="com.newfi.nexera.rest.RestInterceptor">
+	</bean>
+	<bean id="docsRestInterceptor" class="com.newfi.nexera.rest.DocsRestInterceptor">
+	</bean>
+	<bean id="appViewRestInterceptor" class="com.newfi.nexera.rest.AppViewRestInterceptor">
 	</bean>
 	<bean id="exceptionProcessor" class="com.newfi.nexera.process.ExceptionProcessor">
 	</bean>

@@ -1,6 +1,7 @@
 package com.nexera.common.commons;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -73,19 +74,27 @@ public class Utils {
 	}
 
 	public Date getUserDateInGMT(Date date) {
-
 		Integer offSetFromUser = getOffsetFromUserObject();
+		return generateDateUsingOffset(date, offSetFromUser);
+	}
+
+	public Date generateDateUsingOffset(Date date, Integer offset) {
 		Date gmt = null;
 		try {
 
-			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
-			gmt = new Date(date.getTime() + offset);
+			long offsetinMiliSec = offset * ONE_MINUTE_IN_MILLIS;
+			gmt = new Date(date.getTime() + offsetinMiliSec);
 			return gmt;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public Date getSystemDateInGMT(Date date) {
+		Integer offSetFromSystem = new Date().getTimezoneOffset();
+		return generateDateUsingOffset(date, offSetFromSystem);
 	}
 
 	private Integer getOffsetFromUserObject() {
@@ -130,4 +139,12 @@ public class Utils {
 	        String jsonString = gson.toJson( map );
 	        return jsonString;
 	    }
+
+	public String generateMessageIdFromAddress(String mongoMessageId, int loanId) {
+	    
+	    return MessageFormat.format("{0}-{1}{2}", mongoMessageId, loanId, CommonConstants.SENDER_DOMAIN);
+    }
+	public String generateLoanEmail(int loanId){
+		return loanId+CommonConstants.SENDER_DOMAIN;
+	}
 }

@@ -1,13 +1,27 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
-import java.util.Date;
-import java.util.List;
+import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.UserRoleVO;
 
 /**
  * The persistent class for the userrole database table.
@@ -29,6 +43,10 @@ public class UserRole implements Serializable {
 	private List<User> users;
 
 	public UserRole() {
+	}
+
+	public UserRole(UserRolesEnum internal) {
+		this.id = internal.getRoleId();
 	}
 
 	@Id
@@ -105,12 +123,12 @@ public class UserRole implements Serializable {
 	}
 
 	public void setUiComponentPermissions(
-			List<UiComponentPermission> uicomponentpermissions) {
+	        List<UiComponentPermission> uicomponentpermissions) {
 		this.uiComponentPermissions = uicomponentpermissions;
 	}
 
 	public UiComponentPermission addUiComponentPermission(
-			UiComponentPermission uicomponentpermission) {
+	        UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().add(uicomponentpermission);
 		uicomponentpermission.setUserRole(this);
 
@@ -118,7 +136,7 @@ public class UserRole implements Serializable {
 	}
 
 	public UiComponentPermission removeUiComponentPermission(
-			UiComponentPermission uicomponentpermission) {
+	        UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().remove(uicomponentpermission);
 		uicomponentpermission.setUserRole(null);
 
@@ -147,6 +165,40 @@ public class UserRole implements Serializable {
 		user.setUserRole(null);
 
 		return user;
+	}
+
+	public static UserRoleVO convertFromEntityToVO(final UserRole role) {
+
+		if (role == null)
+			return null;
+
+		UserRoleVO roleVO = new UserRoleVO();
+
+		roleVO.setId(role.getId());
+		roleVO.setRoleCd(role.getRoleCd());
+		roleVO.setLabel(role.getLabel());
+		roleVO.setRoleDescription(role.getRoleDescription());
+
+		return roleVO;
+
+	}
+
+	public static UserRole convertFromVOToEntity(UserRoleVO roleVO) {
+
+		UserRole role = new UserRole();
+
+		if (roleVO == null) {
+			return role;
+		} else {
+
+			role.setId(roleVO.getId());
+			role.setRoleCd(roleVO.getRoleCd());
+			role.setLabel(roleVO.getLabel());
+			role.setRoleDescription(roleVO.getRoleDescription());
+		}
+
+		return role;
+
 	}
 
 }

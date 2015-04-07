@@ -92,3 +92,112 @@ ADD CONSTRAINT `fk_wfItemOnSuccess`
   
   ALTER table newfi_schema.uploadedfileslist
   add column totalpages int(5);
+  
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD COLUMN `parent_workflow_item_master` INT NULL AFTER `clickable`,
+ADD INDEX `fk_wfItemEx_linkedToWfItemExec_idx` (`parent_workflow_item_master` ASC);
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD CONSTRAINT `fk_wfItemEx_linkedToWfItemExec`
+  FOREIGN KEY (`parent_workflow_item_master`)
+  REFERENCES `newfi_schema`.`workflowitemexec` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  CREATE TABLE `newfi_schema`.`titlecompanymaster` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NULL,
+  `address` VARCHAR(500) NULL,
+  `phone_number` VARCHAR(45) NULL,
+  `fax` VARCHAR(45) NULL,
+  `email_id` VARCHAR(100) NULL,
+  `primary_contact` VARCHAR(100) NULL,
+  `added_by_user` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_titleCompAddedBy_idx` (`added_by_user` ASC),
+  CONSTRAINT `fk_titleCompAddedBy`
+    FOREIGN KEY (`added_by_user`)
+    REFERENCES `newfi_schema`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+  CREATE TABLE `homeownersinsurancemaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `fax` varchar(45) DEFAULT NULL,
+  `email_id` varchar(100) DEFAULT NULL,
+  `primary_contact` varchar(100) DEFAULT NULL,
+  `added_by_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_homeOwnersInsurancepAddedBy_idx` (`added_by_user`),
+  CONSTRAINT `fk_homeOwnersInsurancepAddedBy_idx` FOREIGN KEY (`added_by_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+  
+ ALTER TABLE `newfi_schema`.`loandetails` 
+ADD COLUMN `home_owners_insurance` INT NULL AFTER `emi`,
+ADD COLUMN `title_company` INT NULL AFTER `home_owners_insurance`,
+ADD INDEX `fk_loanLinkedToTitleComp_idx` (`title_company` ASC),
+ADD INDEX `fk_loanLinkedToHomeOwnrIns_idx` (`home_owners_insurance` ASC);
+ALTER TABLE `newfi_schema`.`loandetails` 
+ADD CONSTRAINT `fk_loanLinkedToTitleComp`
+  FOREIGN KEY (`title_company`)
+  REFERENCES `newfi_schema`.`titlecompanymaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_loanLinkedToHomeOwnrIns`
+  FOREIGN KEY (`home_owners_insurance`)
+  REFERENCES `newfi_schema`.`homeownersinsurancemaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+ALTER TABLE `newfi_schema`.`workflowitemexec`   
+  ADD COLUMN `display_order` INT(11) NOT NULL AFTER `parent_workflow_item_master`;
+
+ALTER TABLE `newfi_schema`.`workflowitemmaster`   
+  ADD COLUMN `display_order` INT(11) NOT NULL AFTER `clickable`;
+
+
+Alter TABLE newfi_schema.user
+  Add COLUMN is_profile_complete TINYINT(4) DEFAULT 0;
+
+ALTER TABLE `newfi_schema`.`loan` 
+   CHANGE `lqb_file_id` `lqb_file_id` varchar(255) NULL;
+
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `bank_connected` TINYINT(1) DEFAULT 0;
+
+ALTER TABLE `newfi_schema`.`loan`   
+  ADD COLUMN `rate_locked` TINYINT(1) DEFAULT 0;
+  
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `loan_app_completion_status` INT(11) NULL;
+
+alter table `newfi_schema`.`loanmilestone` drop column `start_date`, drop column `end_date`,
+   change `created_date` `status_update_time` datetime NULL , 
+   change `status` `status` varchar(300) character set utf8 collate utf8_general_ci NULL ;
+
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `mobile_alert_preference` TINYINT(1) NULL DEFAULT 0 AFTER `subscriptionsStatus`;
+
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD COLUMN `on_success_item` INT(11) NULL AFTER `display_order`,
+ADD INDEX `fk_wfItem_successOfWfItemExec_idx` (`on_success_item` ASC);
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+ADD CONSTRAINT `fk_wfItem_successOfWfItemExec`
+  FOREIGN KEY (`on_success_item`)
+  REFERENCES `newfi_schema`.`workflowitemexec` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `locked_rate` DECIMAL(7,2) NULL AFTER `rate_locked`;
+
+ALTER TABLE `newfi_schema`.`batchjobexecution` 
+   change `id` `id` int(11) NOT NULL AUTO_INCREMENT

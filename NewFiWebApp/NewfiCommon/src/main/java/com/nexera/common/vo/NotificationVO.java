@@ -1,6 +1,9 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import com.nexera.common.commons.WorkflowConstants;
 public class NotificationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -15,6 +18,22 @@ public class NotificationVO implements Serializable {
 	private Integer createdByID;
 	private Integer loanID;
 	private Integer createdForID;
+	private Integer timeOffset;
+	private String visibleToUserRoles;
+	private String visibleToInternalUserRoles;
+
+	public NotificationVO() {
+	}
+	public NotificationVO(Integer loanID, String notificationType,
+			String content) {
+		this.setLoanID(loanID);
+		this.setNotificationType(notificationType);
+		this.setContent(content);
+		this.setDismissable(false);
+		this.setCreatedByID(WorkflowConstants.SYSTEM_USER);
+		this.setCreatedDate(new Date().getTime());
+		this.setTimeOffset(new Date().getTimezoneOffset());
+	}
 	public int getId() {
 		return id;
 	}
@@ -86,6 +105,24 @@ public class NotificationVO implements Serializable {
 	}
 	public void setCreatedForID(Integer createdForID) {
 		this.createdForID = createdForID;
+	}
+	public Integer getTimeOffset() {
+		return timeOffset;
+	}
+	public void setTimeOffset(Integer timeOffset) {
+		this.timeOffset = timeOffset;
+	}
+	public String getVisibleToUserRoles() {
+		return visibleToUserRoles;
+	}
+	public void setVisibleToUserRoles(String visibleToUserRoles) {
+		this.visibleToUserRoles = visibleToUserRoles;
+	}
+	public String getVisibleToInternalUserRoles() {
+		return visibleToInternalUserRoles;
+	}
+	public void setVisibleToInternalUserRoles(String visibleToInternalUserRoles) {
+		this.visibleToInternalUserRoles = visibleToInternalUserRoles;
 	}
 
 }
