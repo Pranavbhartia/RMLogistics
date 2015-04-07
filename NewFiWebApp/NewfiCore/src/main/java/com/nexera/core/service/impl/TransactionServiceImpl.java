@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.TransactionDetailsDao;
@@ -9,6 +10,7 @@ import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.TransactionService;
 
+@Component
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
