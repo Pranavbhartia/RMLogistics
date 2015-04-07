@@ -277,9 +277,9 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
 
 		// Get all loans this user has access to.
-		int userRoleId = loanDao.retrieveUserRoleId(userVO);
+		UserVO vo = userProfileService.findUser(userVO.getId());
 
-		if (userRoleId == (UserRolesEnum.SYSTEM.getRoleId())) {
+		if (checkIfUserIsAdmin(vo)) {
 
 			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
 			        .parseUserModel(userVO));
@@ -296,6 +296,16 @@ public class LoanServiceImpl implements LoanService {
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
+	}
+
+	private boolean checkIfUserIsAdmin(UserVO vo) {
+		// TODO Auto-generated method stub
+		if (vo.getUserRole().getId() == (UserRolesEnum.SYSTEM.getRoleId())
+		        || vo.getInternalUserDetail().getInternalUserRoleMasterVO()
+		                .getId() == UserRolesEnum.SM.getRoleId()) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
 	}
 
 	@Override
@@ -511,7 +521,7 @@ public class LoanServiceImpl implements LoanService {
 		loan.setCustomerWorkflow(customerWorkflowID);
 
 		loan.setLoanManagerWorkflow(loanManagerWFID);
-		loanDao.save(loan);
+		loanDao.update(loan);
 	}
 
 	@Override
@@ -542,8 +552,9 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = new Loan();
 		try {
 			User user = User.convertFromVOToEntity(loanVO.getUser());
-LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail());
-//LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail().getCustomerEmploymentIncome());
+			LOG.info("getCustomerDetail in LoanServiceIMPL "
+			        + user.getCustomerDetail());
+			// LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail().getCustomerEmploymentIncome());
 			// Always, the loan state will be new Loan
 			loan.setLoanProgressStatus(new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.NEW_LOAN));
@@ -623,7 +634,8 @@ LOG.info("getCustomerDetail in LoanServiceIMPL "+user.getCustomerDetail());
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
-		return Loan.convertFromEntityToVO(loan);
+		loanVO.setId(loanId);
+		return loanVO;
 	}
 
 	@Override

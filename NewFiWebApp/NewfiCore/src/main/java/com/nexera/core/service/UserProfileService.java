@@ -63,4 +63,6 @@ public interface UserProfileService {
 
 	public void crateWorkflowItems(int defaultLoanId) throws Exception;
 
+	public boolean changeUserPassword(UserVO uservo);
+
 }

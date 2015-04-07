@@ -105,9 +105,21 @@ function hideOverlay(){
 
 //Function to show toast message
 function showToastMessage(message){
-	$('#overlay-toast-txt').html(message);
+	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
 	$('#overlay-toast').fadeIn("slow",function(){
-		$('#overlay-toast').fadeOut("slow");
+		setTimeout(function(){
+			$('#overlay-toast').fadeOut("slow");
+		},3000);
+	});
+}
+
+//Function to show toast message
+function showErrorToastMessage(message){
+	$('#overlay-toast-txt').html(message).addClass('overlay-toast-success');
+	$('#overlay-toast').fadeIn("slow",function(){
+		setTimeout(function(){
+			$('#overlay-toast').fadeOut("slow");
+		},3000);
 	});
 }
 

@@ -110,14 +110,14 @@ public class ApplicationFormRestService {
 			}
 			
 			System.out.println("cache.get(customerSpouseDetail)"+cache.get("customerSpouseDetail"));
-			if(cache.get("customerSpouseDetail")!=null && loaAppFormVO.getCustomerSpouseDetail().getId()==0 && cache.get("customerSpouseDetail")!=0 )
+			if(loaAppFormVO.getCustomerSpouseDetail()!=null &&cache.get("customerSpouseDetail")!=null && loaAppFormVO.getCustomerSpouseDetail().getId()==0 && cache.get("customerSpouseDetail")!=0 )
 			{
 				loaAppFormVO.getCustomerSpouseDetail().setId(cache.get("customerSpouseDetail"));
 			}
 			
 			// Customer Income 
 			System.out.println("cache.get(customerEmploymentIncome0)"+cache.get("customerEmploymentIncome0"));
-			if(cache.get("customerEmploymentIncome0")!=null && loaAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getId()==0 && cache.get("customerEmploymentIncome0")!=0 )
+			if(loaAppFormVO.getCustomerEmploymentIncome() !=null && cache.get("customerEmploymentIncome0")!=null && loaAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getId()==0 && cache.get("customerEmploymentIncome0")!=0 )
 			{
 					Iterator<CustomerEmploymentIncomeVO> itr = loaAppFormVO.getCustomerEmploymentIncome().iterator();
 				int counter = 0 ; 
@@ -312,6 +312,8 @@ public class ApplicationFormRestService {
 			LOG.info("cache.putcustomerSpouseDetail"+loanAppForm.getCustomerspousedetail().getId());
 			}
 			
+		
+			
 			if(loanAppForm.getCustomerEmploymentIncome() !=null){
 				
 				
@@ -319,7 +321,8 @@ public class ApplicationFormRestService {
 				int counter = 0 ; 
 				while(itr.hasNext()){
 				CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
-				System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());		
+				System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
+				System.out.println("customeremploymentincomeVO.getCustomerEmploymentIncome().getId()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 				cache.put("customerEmploymentIncome"+counter, loaAppFormVO.getCustomerEmploymentIncome().get(counter).getCustomerEmploymentIncome().getId());
 				counter++;
 				}
@@ -378,6 +381,7 @@ public class ApplicationFormRestService {
 				while(itr.hasNext()){
 				CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO= itr.next();
 				System.out.println("customerSpouseemploymentincomeVO.getEmployedAt()"+customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());		
+				System.out.println("customerSpouseemploymentincomeVO.ID()"+customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getId());
 				cache.put("customerSpouseEmploymentIncome"+counter, loaAppFormVO.getCustomerSpouseEmploymentIncome().get(counter).getCustomerSpouseEmploymentIncome().getId());
 				counter++;
 				}

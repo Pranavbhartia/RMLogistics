@@ -270,6 +270,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
+	public boolean changeUserPassword(UserVO userVO) {
+	//	return userProfileDao.changeUserPassword(userVO);
+     return true;
+	}
+
+	@Override
 	public Integer competeUserProfile(UserVO userVO) {
 
 		User user = new User();
@@ -428,9 +435,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// newUser.setPassword(null);
 
 		// newUser = null;
-		if (userID > 0
-		        && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
-		                .getRoleId()) {
+		if (userID > 0){
+		        //&& newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		          //      .getRoleId()) {
 			newUser = (User) userProfileDao.findInternalUser(userID);
 			return User.convertFromEntityToVO(newUser);
 		}
@@ -456,7 +463,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
 			        ActiveInternalEnum.DELETED);
-			Integer count = userProfileDao.updateInternalUserDetail(user);
+			//Integer count = userProfileDao.updateInternalUserDetail(user);
 
 		} else {
 			throw new InputValidationException(new GenericErrorCode(
@@ -871,6 +878,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return errors;
 	}
 
+	
+	
 	@Override
 	@Transactional
 	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)

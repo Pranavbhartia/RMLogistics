@@ -14,7 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>4.1.6.RELEASE</spring.version>
     <jstl.version>1.2</jstl.version>
-    <dev.deployment.path>E:\Nexera\apache-tomcat-7.0.56\webapps</dev.deployment.path>
+    <dev.deployment.path>/apps/tomcat/apache-tomcat-7.0.55/webapps</dev.deployment.path>
   </properties>
 
   <dependencies>

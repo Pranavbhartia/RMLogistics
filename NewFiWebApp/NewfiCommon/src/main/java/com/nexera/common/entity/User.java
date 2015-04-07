@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -174,7 +173,7 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_detail")
 	public CustomerDetail getCustomerDetail() {
 		return customerDetail;
