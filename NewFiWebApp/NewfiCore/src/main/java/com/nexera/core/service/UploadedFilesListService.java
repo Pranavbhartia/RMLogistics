@@ -33,7 +33,7 @@ public interface UploadedFilesListService {
 
 	public void deactivateFileUsingFileId(Integer fileId);
 
-	public List<String> downloadFileFromS3Service(List<Integer> fileIds);
+	public List<File> downloadFileFromService(List<Integer> fileIds);
 
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
