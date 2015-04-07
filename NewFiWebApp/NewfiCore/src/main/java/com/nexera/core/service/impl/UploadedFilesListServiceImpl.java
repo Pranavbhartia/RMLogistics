@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -132,8 +129,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setS3ThumbPath(uploadedFilesList.getS3ThumbPath());
 		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
 		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
-		filesListVO.setLqbFileID(uploadedFilesList.getLqbFileID());
-		filesListVO.setIsMiscellaneous(uploadedFilesList.getIsMiscellaneous());
 
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
@@ -198,17 +193,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
-	public List<File> downloadFileFromService(List<Integer> fileIds) {
-		List<File> downloadFiles = new ArrayList<File>();
+	public List<String> downloadFileFromS3Service(List<Integer> fileIds) {
+		List<String> downloadFiles = new ArrayList<String>();
 		for (Integer fileId : fileIds) {
 			UploadedFilesList uploadedFilesList = uploadedFilesListDao
 			        .fetchUsingFileId(fileId);
 			try {
 
-				InputStream inputStream = createLQBObjectToReadFile(uploadedFilesList
-				        .getLqbFileID());
-				File file = nexeraUtility.copyInputStreamToFile(inputStream);
-				downloadFiles.add(file);
+				String fileName = s3FileUploadServiceImpl.downloadFile(
+				        uploadedFilesList.getS3path(),
+				        nexeraUtility.tomcatDirectoryPath() + File.separator
+				                + uploadedFilesList.getFileName());
+				downloadFiles.add(fileName);
+				LOG.info("s3 download returned  : " + fileName);
 			} catch (Exception e) {
 				LOG.info("Excepttion in downloading file : " + e.getMessage());
 
@@ -222,23 +219,15 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
-		List<File> filePaths = downloadFileFromService(fileIds);
-
-		File newFile = nexeraUtility.joinPDDocuments(filePaths);
-
-		Path path = Paths.get(newFile.getAbsolutePath());
-		byte[] data = Files.readAllBytes(path);
-		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        data, userId, loanId, assignedBy);
+		List<String> filePaths = downloadFileFromS3Service(fileIds);
+		String newFilepath = null;
+		newFilepath = nexeraUtility.joinPDDocuments(filePaths);
+		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath),
+		        loanId, userId, assignedBy, null, null);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
-
-		if (newFile.exists()) {
-			newFile.delete();
-		}
-
-		return checkUploadVO.getUploadFileId();
+		return fileSavedId;
 	}
 
 	@Override
@@ -317,7 +306,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setUuidFileId(uuidValue);
 		uploadedFilesList.setTotalPages(splittedFiles.size());
 		uploadedFilesList.setLqbFileID(lqbDocumentID);
-		uploadedFilesList.setIsMiscellaneous(true);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}
@@ -396,7 +384,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 				checkVo.setUuid(latestRow.getUuidFileId());
 				checkVo.setFileName(latestRow.getFileName());
-				checkVo.setLqbFileId(latestRow.getLqbFileID());
 
 				if (serverFile.exists()) {
 					serverFile.delete();
@@ -618,10 +605,18 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        String uuId) {
 		UploadedFilesList filesList = uploadedFilesListDao
 		        .fetchUsingFileUUID(uuId);
+		String lqbDocID = filesList.getLqbFileID();
 
+		LQBDocumentVO documentVO = new LQBDocumentVO();
+		documentVO.setsLoanNumber(lqbDocID);
+		JSONObject receivedResponse = null;
+		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
+		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
+		        documentVO);
 		InputStream inputStream = null;
 		try {
-			inputStream = createLQBObjectToReadFile(filesList.getLqbFileID());
+			inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
+			        .toString());
 
 			// File file = nexeraUtility.convertInputStreamToFile(inputStream);
 
@@ -646,21 +641,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 		}
 
-	}
-
-	@Override
-	public InputStream createLQBObjectToReadFile(String lqbDocID)
-	        throws IOException {
-		LQBDocumentVO documentVO = new LQBDocumentVO();
-		documentVO.setsLoanNumber(lqbDocID);
-
-		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
-		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
-		        documentVO);
-
-		InputStream inputStream = lqbInvoker
-		        .invokeRestSpringParseStream(jsonObject.toString());
-		return inputStream;
+		LOG.info(" receivedResponse while uploading LQB Document : "
+		        + receivedResponse);
 	}
 
 	@Override
@@ -789,15 +771,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setUploadedBy(loan.getUser());
 		fileUpload.setIsActivate(true);
 		fileUpload.setIsAssigned(false);
-		fileUpload.setIsMiscellaneous(false);
 		fileUpload.setLoan(loan);
 		fileUpload.setLqbFileID(edoc.getDocid());
 		fileUpload.setUploadedDate(new Date());
-		if (uuid != null) {
+		if (uuid != null)
 			fileUpload.setUuidFileId(uuid);
-		} else {
-			fileUpload.setUuidFileId(nexeraUtility.randomStringOfLength());
-		}
+
 		fileUpload.setTotalPages(2);
 		int fileUploadId = saveUploadedFile(fileUpload);
 		fileUpload.setId(fileUploadId);
@@ -819,11 +798,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return null;
 
-	}
-
-	@Override
-	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID) {
-		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
 	}
 
 }

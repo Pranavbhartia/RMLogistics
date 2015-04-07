@@ -97,13 +97,13 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDED_ITEMS_NOTIFICATION_TYPE;
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.CREDIT_SCORE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE;
-		String notificationReminderContent = WorkflowConstants.NEEDED_ITEMS_NOTIFICATION_CONTENT;
+		String notificationReminderContent = WorkflowConstants.CREDIT_SCORE_NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,
 		        prevMilestoneKey, notificationReminderContent);

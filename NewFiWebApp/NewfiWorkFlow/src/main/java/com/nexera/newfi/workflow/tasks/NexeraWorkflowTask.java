@@ -42,20 +42,17 @@ public abstract class NexeraWorkflowTask {
 			String[] names = new String[1];
 			names[0] = WorkflowDisplayConstants.EMAIL_RECPIENT_NAME;
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
+				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+				emailRecipientVO.setEmailID(teamMember.getUser().getEmailId());
+				emailRecipientVO.setRecipientName(teamMember.getUser()
+				        .getFirstName()
+				        + " "
+				        + teamMember.getUser().getLastName());
 				if (loanTeam.getLoanTeamList().size() == 1) {
 					names[0] = teamMember.getUser().getFirstName() + " "
 					        + teamMember.getUser().getLastName();
 				}
-				recipients.add(getReceipientVO(teamMember));
-				if (teamMember.getUser().getCustomerDetail() != null
-				        && teamMember.getUser().getCustomerDetail()
-				                .getSecEmailId() != null) {
-					recipients.add(getReceipientVO(teamMember.getUser()
-					        .getCustomerDetail().getSecEmailId(), teamMember
-					        .getUser().getFirstName(), teamMember.getUser()
-					        .getLastName()));
-				}
-
+				recipients.add(emailRecipientVO);
 			}
 			emailEntity.setSenderEmailId("web@newfi.com");
 			emailEntity.setRecipients(recipients);
@@ -69,25 +66,15 @@ public abstract class NexeraWorkflowTask {
 				ary[0] = objectMap.get(key).toString();
 				substitutions.put("-" + key + "-", ary);
 			}
+			// emailEntity.setTemplateBased(true);
+
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(emailTemplate);
+
+			// sendEmailService.sendMail(emailEntity, false);
 			sendGridEmailService.sendAsyncMail(emailEntity);
 
 		}
-	}
-
-	private EmailRecipientVO getReceipientVO(LoanTeamVO teamMember) {
-
-		return getReceipientVO(teamMember.getUser().getEmailId(), teamMember
-		        .getUser().getFirstName(), teamMember.getUser().getLastName());
-	}
-
-	private EmailRecipientVO getReceipientVO(String emailID, String firstName,
-	        String lastName) {
-		EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-		emailRecipientVO.setEmailID(emailID);
-		emailRecipientVO.setRecipientName(firstName + " " + lastName);
-		return emailRecipientVO;
 	}
 
 	public void makeANote(int loanId, String message) {

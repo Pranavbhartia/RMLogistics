@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -384,6 +383,7 @@ public class EngineTrigger {
 	}
 
 	public String startWorkFlowItemExecution(int workflowItemExecutionId) {
+		String result = null;
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
 		Future<String> future = null;
 		executorService = cacheManager.initializePool();
@@ -556,16 +556,6 @@ public class EngineTrigger {
 						}
 					}
 				}
-			}
-		}
-		if (future != null) {
-			try {
-
-				return future.get();
-			} catch (InterruptedException e) {
-				LOGGER.error("Interrupted Exception " + e.getMessage());
-			} catch (ExecutionException e) {
-				LOGGER.error("Execution Exception " + e.getMessage());
 			}
 		}
 		return "";

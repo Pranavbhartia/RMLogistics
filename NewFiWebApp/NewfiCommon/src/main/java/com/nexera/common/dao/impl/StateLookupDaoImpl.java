@@ -1,7 +1,6 @@
 package com.nexera.common.dao.impl;
 
 import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.ZipCodeLookup;
@@ -18,24 +16,21 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
 @Component
-public class StateLookupDaoImpl extends GenericDaoImpl implements
-        StateLookupDao {
-
+@Transactional
+public class StateLookupDaoImpl extends GenericDaoImpl implements StateLookupDao{
+	
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(StateLookupDaoImpl.class);
-
+	        		
 	@Override
-	@Transactional(readOnly = true)
-	public StateLookup findStateLookupByStateCode(String stateCode)
-	        throws NoRecordsFetchedException {
+	public StateLookup findStateLookupByStateCode(String stateCode) throws NoRecordsFetchedException {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(StateLookup.class);
 			criteria.add(Restrictions.eq("statecode", stateCode));
 			Object obj = criteria.uniqueResult();
 			if (obj == null) {
-				throw new NoRecordsFetchedException("Record for statecode : "
-				        + stateCode + " not found in database");
+				throw new NoRecordsFetchedException("Record for statecode : " + stateCode + " not found in database");
 			}
 			StateLookup lookup = (StateLookup) obj;
 			return lookup;
@@ -48,8 +43,8 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 		}
 	}
 
+
 	@Override
-	@Transactional(readOnly = true)
 	public List<ZipCodeLookup> findZipCodesForStateID(Integer stateID) {
 
 		if (stateID == null || stateID < 1)

@@ -37,7 +37,7 @@ public interface BraintreePaymentGatewayService {
 	 * @throws NoRecordsFetchedException 
 	 * @throws UndeliveredEmailException 
 	 */
-	public void makePayment(String paymentNonce, int loanId, User user) throws InvalidInputException, PaymentException, PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException, UndeliveredEmailException;
+	public void makePayment(String paymentNonce, float amount, int loanId, User user) throws InvalidInputException, PaymentException, PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException, UndeliveredEmailException;
 	
 
 }

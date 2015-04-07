@@ -977,7 +977,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		var data={};
 		data.status="3";//since we will send only completed status from frontend
 		data["workflowItemExecId"]=wf.id;
-		data["loanID"]=workFlowContext.loanID;
+		data["loanID"]=workFlowContext.loanId;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}else{
 		var url="rest/workflow/invokeaction/"+wf.id;
@@ -1261,13 +1261,11 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
-		url = "/NewfiWeb/payment/initialisepayment.do";
-		payload = "loan_id=" + String(newfiObject.user.defaultLoanId);
+		url = "rest/payment/pay";
 		
 		 $.ajax({
 		        url : url,
-		        type : "POST",
-		        data : payload,
+		        type : "GET",
 		        success : function(data) {
 		        	console.log("Show payment called with data : " + data);
 		        	$("#popup-overlay").html(data);

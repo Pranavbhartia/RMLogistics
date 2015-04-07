@@ -16,99 +16,122 @@ import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.UserVO;
 
-public interface LoanDao extends GenericDao {
 
-	public List<Loan> getLoansOfUser(User user);
+public interface LoanDao extends GenericDao
+{
 
-	Loan getLoanWithDetails(Integer loanID);
+    public List<Loan> getLoansOfUser( User user );
 
-	public Loan getLoanWorkflowDetails(Integer loanID);
 
-	public boolean addToLoanTeam(Loan loan, User user, User addedBy);
+    Loan getLoanWithDetails( Integer loanID );
 
-	public boolean removeFromLoanTeam(Loan loan, User user);
 
-	public boolean removeFromLoanTeam(Loan loan,
-	        HomeOwnersInsuranceMaster homeOwnIns);
+    public Loan getLoanWorkflowDetails( Integer loanID );
 
-	public boolean removeFromLoanTeam(Loan loan, TitleCompanyMaster titleCompany);
 
-	public List<User> retreiveLoanTeam(Loan loan);
+    public boolean addToLoanTeam( Loan loan, User user, User addedBy );
 
-	public List<Loan> retreiveLoansAsManager(User loanManager);
 
-	public LoanAppForm getLoanAppForm(Integer loanId);
+    public boolean removeFromLoanTeam( Loan loan, User user );
 
-	public Loan getActiveLoanOfUser(User parseUserModel);
 
-	public List<Loan> retrieveLoanForDashboard(User parseUserModel);
+    public boolean removeFromLoanTeam( Loan loan, HomeOwnersInsuranceMaster homeOwnIns );
 
-	public List<LoanTeam> getLoanTeamList(Loan loan);
 
-	public List<Loan> getLoansForUser(Integer userId);
+    public boolean removeFromLoanTeam( Loan loan, TitleCompanyMaster titleCompany );
 
-	public UploadedFilesList fetchUploadedFromLoanNeedId(Integer loanNeedId);
 
-	public Integer getNeededItemsRequired(Integer loanId);
+    public List<User> retreiveLoanTeam( Loan loan );
 
-	public Integer getTotalNeededItem(Integer loanId);
 
-	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
+    public List<Loan> retreiveLoansAsManager( User loanManager );
 
-	public List<LoanTypeMaster> getLoanTypeMater(
-	        LoanTypeMasterVO loanTypeMaterVO);
 
-	public List<TitleCompanyMaster> findTitleCompanyByName(
-	        TitleCompanyMaster titleCompany);
+    public LoanAppForm getLoanAppForm( Integer loanId );
 
-	public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName(
-	        HomeOwnersInsuranceMaster parseHomeOwnInsMaster);
 
-	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
-	        int loanProgressStatusId);
+    public Loan getActiveLoanOfUser( User parseUserModel );
 
-	public LoanNeedsList fetchByNeedId(Integer needId);
 
-	public HomeOwnersInsuranceMaster addHomeOwnInsCompany(
-	        HomeOwnersInsuranceMaster homeOwnInsMaster);
+    public List<Loan> retrieveLoanForDashboard( User parseUserModel );
 
-	public TitleCompanyMaster addTitleCompany(
-	        TitleCompanyMaster titleCompanyMaster);
 
-	boolean addToLoanTeam(Loan loan,
-	        HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy);
+    public List<LoanTeam> getLoanTeamList( Loan loan );
 
-	boolean addToLoanTeam(Loan loan, TitleCompanyMaster titleCompany,
-	        User addedBy);
 
-	public LoanMilestone findLoanMileStoneByLoan(Loan loan,
-	        String loanMilestoneMAsterName);
+    public List<Loan> getLoansForUser( Integer userId );
 
-	public List<Loan> getAllActiveLoan();
 
-	public List<Loan> retrieveLoanForDashboardForAdmin(User parseUserModel);
+    public UploadedFilesList fetchUploadedFromLoanNeedId( Integer loanNeedId );
 
-	public int retrieveUserRoleId(UserVO userVO);
 
-	public TitleCompanyMaster findTitleCompanyOfLoan(Loan loan);
+    public Integer getNeededItemsRequired( Integer loanId );
 
-	public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan(
-	        Loan loan);
 
-	LoanDetail findLoanDetailOfLoan(Loan loan);
+    public Integer getTotalNeededItem( Integer loanId );
 
-	public void updateLoanEmail(int loanId, String generateLoanEmail);
 
-	public LoanNeedsList fetchLoanNeedsByFileId(
-	        UploadedFilesList uploadedFileList);
+    Loan retrieveLoanForDashboard( User parseUserModel, Loan loan );
 
-	public List<LoanTeam> getLoanListBasedOnUser(User user);
+
+    public List<LoanTypeMaster> getLoanTypeMater( LoanTypeMasterVO loanTypeMaterVO );
+
+
+    public List<TitleCompanyMaster> findTitleCompanyByName( TitleCompanyMaster titleCompany );
+
+
+    public List<HomeOwnersInsuranceMaster> findHomeOwnInsByName( HomeOwnersInsuranceMaster parseHomeOwnInsMaster );
+
+
+    List<Loan> retrieveLoanByProgressStatus( User parseUserModel, int loanProgressStatusId );
+
+
+    public LoanNeedsList fetchByNeedId( Integer needId );
+
+
+    public HomeOwnersInsuranceMaster addHomeOwnInsCompany( HomeOwnersInsuranceMaster homeOwnInsMaster );
+
+
+    public TitleCompanyMaster addTitleCompany( TitleCompanyMaster titleCompanyMaster );
+
+
+    boolean addToLoanTeam( Loan loan, HomeOwnersInsuranceMaster homeOwnersInsurance, User addedBy );
+
+
+    boolean addToLoanTeam( Loan loan, TitleCompanyMaster titleCompany, User addedBy );
+
+
+    public LoanMilestone findLoanMileStoneByLoan( Loan loan, String loanMilestoneMAsterName );
+
+
+    public List<Loan> getAllActiveLoan();
+
+
+    public List<Loan> retrieveLoanForDashboardForAdmin( User parseUserModel );
+
+
+    public int retrieveUserRoleId( UserVO userVO );
+
+
+    public TitleCompanyMaster findTitleCompanyOfLoan( Loan loan );
+
+
+    public HomeOwnersInsuranceMaster findHomeOwnersInsuranceCompanyOfLoan( Loan loan );
+
+
+    LoanDetail findLoanDetailOfLoan( Loan loan );
+
+
+    public void updateLoanEmail( int loanId, String generateLoanEmail );
+
+
+    public LoanNeedsList fetchLoanNeedsByFileId( UploadedFilesList uploadedFileList );
+    
+    public List<LoanTeam> getLoanListBasedOnUser(User user);
+
 
 	public boolean checkLoanDependency(User user);
+    
 
-	public List<Loan> getLoanInActiveStatus();
-
-	public void updateWorkFlowItems(int loanID, int customerWorkflowID,
-	        int loanManagerWFID);
 
 }

@@ -33,7 +33,7 @@ public interface UploadedFilesListService {
 
 	public void deactivateFileUsingFileId(Integer fileId);
 
-	public List<File> downloadFileFromService(List<Integer> fileIds);
+	public List<String> downloadFileFromS3Service(List<Integer> fileIds);
 
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
@@ -48,8 +48,6 @@ public interface UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
-	
-	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
 
@@ -80,7 +78,5 @@ public interface UploadedFilesListService {
 
 	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
 	        String uuid);
-
-	InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
 
 }

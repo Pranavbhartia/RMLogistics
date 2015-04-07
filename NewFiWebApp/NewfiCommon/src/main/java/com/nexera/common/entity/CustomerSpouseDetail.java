@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
+
 /**
  * The persistent class for the customerdetails database table.
  * 
@@ -39,22 +40,25 @@ public class CustomerSpouseDetail implements Serializable {
 	private String ssDisabilityIncome;
 	private String monthlyPension;
 	private List<LoanAppForm> loanAppForms;
-	private String equifaxScore;
-	private String experianScore;
-	private String transunionScore;
+	
 
 	public CustomerSpouseDetail() {
 	}
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
 
+
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "spouse_date_of_birth")
@@ -113,6 +117,8 @@ public class CustomerSpouseDetail implements Serializable {
 		this.isssIncomeOrDisability = isssIncomeOrDisability;
 	}
 
+	
+
 	@Column(name = "self_employed_income")
 	public String getSelfEmployedIncome() {
 		return selfEmployedIncome;
@@ -140,50 +146,34 @@ public class CustomerSpouseDetail implements Serializable {
 		this.monthlyPension = monthlyPension;
 	}
 
+
+	
+
+	
 	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public boolean isIs_pension_or_retirement() {
 		return is_pension_or_retirement;
 	}
 
+
 	public void setIs_pension_or_retirement(boolean is_pension_or_retirement) {
 		this.is_pension_or_retirement = is_pension_or_retirement;
 	}
 
-	@OneToMany(mappedBy = "customerspousedetail", cascade = CascadeType.ALL)
+	
+	
+	
+	@OneToMany(mappedBy = "customerspousedetail",cascade = CascadeType.ALL)
 	public List<LoanAppForm> getLoanAppForms() {
 		return loanAppForms;
 	}
+
 
 	public void setLoanAppForms(List<LoanAppForm> loanAppForms) {
 		this.loanAppForms = loanAppForms;
 	}
 
-	@Column(name = "equifax_score")
-	public String getEquifaxScore() {
-		return equifaxScore;
-	}
-
-	public void setEquifaxScore(String equifaxScore) {
-		this.equifaxScore = equifaxScore;
-	}
-
-	@Column(name = "experian_score")
-	public String getExperianScore() {
-		return experianScore;
-	}
-
-	public void setExperianScore(String experianScore) {
-		this.experianScore = experianScore;
-	}
-
-	@Column(name = "transunion_score")
-	public String getTransunionScore() {
-		return transunionScore;
-	}
-
-	public void setTransunionScore(String transunionScore) {
-		this.transunionScore = transunionScore;
-	}
+	
 
 }
