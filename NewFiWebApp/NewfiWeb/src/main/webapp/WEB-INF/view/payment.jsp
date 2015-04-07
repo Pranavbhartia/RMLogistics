@@ -5,9 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 
-<div class="payment-details-wrapper" style="display: block; position: relative; margin: 80px auto 0px; width: 40%;">
-	<div id="payment-details-form" class="payment-details-form"
-		style="background-color: rgb(246, 248, 247); padding: 20px 0px; border-width: 4px 1px 1px; border-style: solid; border-color: rgb(66, 139, 202) rgb(183, 183, 183); overflow:auto;">
+<div class="payment-details-wrapper" style="display: block;">
+	<div id="payment-details-form" class="payment-details-form">
 		<c:choose>
 		<c:when test="${error == 1 }">
 			<div style="height: 40px; margin-bottom: 10px; line-height: 40px; text-align: center; font-family: opensanssemibold; font-size: 20px; width: 70%; margin:auto; height:auto;">${message}</div>
@@ -17,17 +16,14 @@
 		<div class="ms-add-member-popup-header" style="font-size: 23px;">Your
 			card details</div>
 		<form id="checkout" method="POST">
-			<div id="dropin" class="payment-dropin"
-				style="width: 405px; margin-left: 67px; margin-top: 30px;"></div>
+			<div id="dropin" class="payment-dropin"></div>
 			<div class="clearfix">
-				<input type="submit" class="login-submit-button"
-					style="margin-top: 14px; width: 29%; margin-left: 29px; margin-bottom: 0px; margin-top:20px;"
+				<input type="submit" class="prof-btn payment-btn payment-submit-btn float-left"
 					value="Make Payment" /> 
 		</c:otherwise>
 		</c:choose>
 				<input type="button" id="cancel-payment"
-					class="login-submit-button"
-					style="margin-top: 14px; width: 29%; float: right; margin-right: 29px; margin-bottom: 22px; margin-top:20px;"
+					class="prof-btn payment-btn payment-cancel-btn float-right"
 					value="Cancel" />
 			</div>
 		</form>
@@ -38,16 +34,13 @@
 <script type="text/javascript">
 	
 	$(document).ready(function() {
-		error = '${error}';
-		if(error == 0){
-			console.log("Loading braintree");
-			console.log("Setting up the payment form");
-			braintree.setup('${clienttoken}', 'dropin', {
-				container : 'dropin',
-				paymentMethodNonceReceived : makePayment
-			});
-			console.log("Braintree loaded");
-		}
+		console.log("Loading braintree");
+		console.log("Setting up the payment form");
+		braintree.setup('${clienttoken}', 'dropin', {
+			container : 'dropin',
+			paymentMethodNonceReceived : makePayment
+		});
+		console.log("Braintree loaded");
 	});
 	
 	function makePayment(event,nonce){
@@ -56,7 +49,7 @@
 		console.log(nonce);
 		console.log(newfiObject.user.defaultLoanId);
 		showOverlay();
-		url="./rest/payment/pay";
+		url="./payment/makepayment.do";
 		data = "payment_nonce=" + String(nonce);
 		data = data +"&loan_id=" + String(newfiObject.user.defaultLoanId);
 		$.ajax({

@@ -123,7 +123,8 @@ public class NotificationServiceImpl implements NotificationService {
 		if (pushNotificationFlag) {
 			notificationVO.setContent(generateDynamicString.generate(
 					notificationVO.getContent(),
-					new Date(notificationVO.getCreatedDate())));
+			        new Date(notificationVO.getCreatedDate()),
+			        notificationVO.getLoanID()));
 			TriggerNotification.triggerNewNotofication(notificationVO);
 		}
 		return notificationVO;
@@ -138,7 +139,8 @@ public class NotificationServiceImpl implements NotificationService {
 		vo.setId(notification.getId());
 		if (notification.getContent() != null)
 			vo.setContent(generateDynamicString.generate(new String(
-					notification.getContent()), notification.getCreatedDate()));
+			        notification.getContent()), notification.getCreatedDate(),
+			        notification.getLoan().getId()));
 		if (notification.getCreatedBy() != null)
 			vo.setCreatedByID(notification.getCreatedBy().getId());
 		if (notification.getCreatedFor() != null)
