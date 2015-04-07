@@ -22,6 +22,7 @@ import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.mongo.dao.MongoMessageDAO;
 import com.nexera.mongo.dao.MongoMessageHeirarchyDAO;
 import com.nexera.mongo.entity.MongoMessageHeirarchy;
+import com.nexera.mongo.entity.MongoQueryResult;
 import com.nexera.mongo.service.MongoCoreMessageService;
 
 @Component
@@ -95,7 +96,8 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 		LOG.info("MongoCoreMessageServiceImpl : getMessages method called.");
 
 		// First, find the ordered Heirarchy
-		List<MongoMessageHeirarchy> mhList = heriarchyDAO.findBy(mongoQueryVO);
+		MongoQueryResult result = heriarchyDAO.findBy(mongoQueryVO);
+		List<MongoMessageHeirarchy> mhList = result.getMessageHeirarchies();
 
 		LOG.info(" Message size retrieved : " + mhList.size());
 
@@ -112,6 +114,7 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 
 		// Construct the Hierarchy object
 		MongoMessageHierarchyVO mhvo = new MongoMessageHierarchyVO();
+		mhvo.setTotalMessageCount(result.getTotalCount());
 		mhvo.setMessageIds(threadList);
 
 		for (Entry<String, MongoMessagesVO> entry : idMap.entrySet()) {
