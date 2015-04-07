@@ -375,13 +375,15 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	}
 
 	private void setOnlyInternalUsersAccess(int loanId, MessageVO messageVO,
-	        User createdByUser, String message, boolean managerOnly) {
+	        User user, String message, boolean managerOnly) {
 
 		LoanTeamListVO teamList = loanService
 		        .getLoanTeamListForLoan(new LoanVO(loanId));
+
 		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
 
 		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+		User createdByUser = userProfileDao.findByUserId(user.getId());
 		for (LoanTeamVO loanTeamVO : loanTeamVos) {
 			UserVO userVo = loanTeamVO.getUser();
 			if (isInternalUser(userVo, managerOnly)) {
