@@ -1295,7 +1295,7 @@ function getMultiTextQuestion(quesText) {
      return wrapper.append(container);
 }
 
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime']", function(){
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(){
     $(this).datepicker({
 		format: "M yyyy",
 	    minViewMode: "months",
@@ -1733,7 +1733,7 @@ function paintSpouseRefinanceSelfEmployed(divId) {
 var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spouseSelfEmployed",
-  "value": appUserDetails.spouseSelfEmployed
+  "value": appUserDetails.customerSpouseDetail.selfEmployedIncome
  });
 
  optionContainer.append(inputBox);
@@ -1773,7 +1773,7 @@ function paintSpouseRefinanceDisability(divId) {
  var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spouseDisability",
-  "value": appUserDetails.spouseDisability
+  "value": appUserDetails.customerSpouseDetail.ssDisabilityIncome
  });
 
  optionContainer.append(inputBox);
@@ -1814,7 +1814,7 @@ function paintSpouseRefinancePension(divId) {
  var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spousePension",
-  "value": appUserDetails.spousePension
+  "value": appUserDetails.customerSpouseDetail.monthlyPension
  });
 
  optionContainer.append(inputBox);
