@@ -134,7 +134,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
 		filesListVO.setLqbFileID(uploadedFilesList.getLqbFileID());
 		filesListVO.setIsMiscellaneous(uploadedFilesList.getIsMiscellaneous());
-		
+
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
 		assignedUserVo.setUserRole(UserRole
@@ -205,9 +205,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			        .fetchUsingFileId(fileId);
 			try {
 
-				InputStream inputStream = createLQBObjectToReadFile(uploadedFilesList.getLqbFileID());
-		        File file = nexeraUtility.copyInputStreamToFile(inputStream);
-		        downloadFiles.add(file);
+				InputStream inputStream = createLQBObjectToReadFile(uploadedFilesList
+				        .getLqbFileID());
+				File file = nexeraUtility.copyInputStreamToFile(inputStream);
+				downloadFiles.add(file);
 			} catch (Exception e) {
 				LOG.info("Excepttion in downloading file : " + e.getMessage());
 
@@ -216,30 +217,27 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return downloadFiles;
 	}
 
-	
-	
-	
 	@Override
 	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
 		List<File> filePaths = downloadFileFromService(fileIds);
-		
-		
+
 		File newFile = nexeraUtility.joinPDDocuments(filePaths);
-		
+
 		Path path = Paths.get(newFile.getAbsolutePath());
-    	byte[] data = Files.readAllBytes(path);
-		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",  data, userId, loanId, assignedBy);
+		byte[] data = Files.readAllBytes(path);
+		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
+		        data, userId, loanId, assignedBy);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
-		
-		if(newFile.exists()){
+
+		if (newFile.exists()) {
 			newFile.delete();
 		}
-		
+
 		return checkUploadVO.getUploadFileId();
 	}
 
@@ -399,7 +397,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				checkVo.setUuid(latestRow.getUuidFileId());
 				checkVo.setFileName(latestRow.getFileName());
 				checkVo.setLqbFileId(latestRow.getLqbFileID());
-				
+
 				if (serverFile.exists()) {
 					serverFile.delete();
 				}
@@ -620,7 +618,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        String uuId) {
 		UploadedFilesList filesList = uploadedFilesListDao
 		        .fetchUsingFileUUID(uuId);
-		
+
 		InputStream inputStream = null;
 		try {
 			inputStream = createLQBObjectToReadFile(filesList.getLqbFileID());
@@ -648,24 +646,23 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 		}
 
-	
 	}
 
 	@Override
-	public  InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException{
+	public InputStream createLQBObjectToReadFile(String lqbDocID)
+	        throws IOException {
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		documentVO.setsLoanNumber(lqbDocID);
-		
+
 		JSONObject jsonObject = createFetchPdfDocumentJsonObject(
 		        WebServiceOperations.OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID,
 		        documentVO);
-		
-		InputStream inputStream = lqbInvoker.invokeRestSpringParseStream(jsonObject
-		        .toString());
+
+		InputStream inputStream = lqbInvoker
+		        .invokeRestSpringParseStream(jsonObject.toString());
 		return inputStream;
 	}
-	
-	
+
 	@Override
 	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
@@ -792,6 +789,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setUploadedBy(loan.getUser());
 		fileUpload.setIsActivate(true);
 		fileUpload.setIsAssigned(false);
+		fileUpload.setIsMiscellaneous(false);
 		fileUpload.setLoan(loan);
 		fileUpload.setLqbFileID(edoc.getDocid());
 		fileUpload.setUploadedDate(new Date());
