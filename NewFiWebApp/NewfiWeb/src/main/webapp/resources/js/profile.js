@@ -575,7 +575,7 @@ function getPriEmailRow(user) {
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		showToastMessage("Incorrect Email");
+		showToastErrorMessage("Incorrect Email");
 		validationFails = true;
 		return true;
 	}
@@ -686,7 +686,10 @@ function initializeCityLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			
+			$('.ui-autocomplete').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('.ui-autocomplete').perfectScrollbar('update');
 		}
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);
@@ -801,6 +804,10 @@ function appendStateDropDown(elementToApeendTo) {
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
+	parentToAppendTo.perfectScrollbar({
+		suppressScrollX : true
+	});
+	parentToAppendTo.perfectScrollbar('update');
 }
 
 function appendManagerStateDropDown(elementToApeendTo) {
@@ -936,7 +943,10 @@ function initializeZipcodeLookup(searchData){
 			return false;*/
 		},
 		open : function() {
-			
+			$('.ui-autocomplete').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('.ui-autocomplete').perfectScrollbar('update');
 		}
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);
