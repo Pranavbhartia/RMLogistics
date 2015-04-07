@@ -79,6 +79,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException {
 		try {
@@ -103,6 +104,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	}
 
+	@Override
+	@Transactional(readOnly = true)
 	public User findByUserId(Integer userId) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);

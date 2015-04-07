@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -514,14 +513,14 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
 	        int loanManagerWFID) {
-		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
-
-		Hibernate.initialize(loan.getCustomerWorkflow());
-
-		loan.setCustomerWorkflow(customerWorkflowID);
-
-		loan.setLoanManagerWorkflow(loanManagerWFID);
-		loanDao.save(loan);
+		// Loan loan = (Loan) loanDao.load(Loan.class, loanID);
+		//
+		// Hibernate.initialize(loan.getCustomerWorkflow());
+		//
+		// loan.setCustomerWorkflow(customerWorkflowID);
+		//
+		// loan.setLoanManagerWorkflow(loanManagerWFID);
+		loanDao.updateWorkFlowItems(loanID, customerWorkflowID, loanManagerWFID);
 	}
 
 	@Override
@@ -634,7 +633,8 @@ public class LoanServiceImpl implements LoanService {
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
-		return Loan.convertFromEntityToVO(loan);
+		loanVO.setId(loanId);
+		return loanVO;
 	}
 
 	@Override
