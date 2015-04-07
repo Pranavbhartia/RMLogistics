@@ -719,4 +719,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
+	@Override
+	public Integer updateLqbProfile(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword "
+				+ "WHERE internalusr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("lqbUserName", user.getInternalUserDetail()
+		        .getLqbUsername());
+		query.setParameter("lqbPassword", user.getInternalUserDetail()
+		        .getLqbPassword());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
 }
