@@ -203,20 +203,13 @@ public class FileUploadRest
                     fileIds.add( filesList.getId() );
                 }
                 Integer fileToGetContent = null;
-                if ( fileIds.size() > 1 ) {
-                    Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
-                    LOG.info( "new file pdf path :: " + newFileRowId );
-                    uploadedFilesListService.updateFileInLoanNeedList( key, newFileRowId );
-                    uploadedFilesListService.updateIsAssignedToTrue( newFileRowId );
-                    fileToGetContent = newFileRowId;
-                } else {
-                    uploadedFilesListService.updateFileInLoanNeedList( key, fileIds.get( 0 ) );
-                    uploadedFilesListService.updateIsAssignedToTrue( fileIds.get( 0 ) );
-                    fileToGetContent = fileIds.get( 0 );
-                }
-
+                Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
                
-            }
+                LOG.info( "new file pdf path :: " + newFileRowId );
+                uploadedFilesListService.updateFileInLoanNeedList( key, newFileRowId );
+                uploadedFilesListService.updateIsAssignedToTrue( newFileRowId );
+                fileToGetContent = newFileRowId;
+           }
 
            
             commonResponseVO = RestUtil.wrapObjectForSuccess( true );
