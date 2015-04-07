@@ -312,8 +312,26 @@
     .agent-message-dashboard{
     	padding-left: 5px;
     }
+    .cus-prof-popup:before {
+		bottom: 100%;
+		top: auto;
+		transform: rotate(90deg);
+		border-right-color: #428bca;
+		margin-bottom: 3px;
+		left: 170px;
+	}
+	.cus-prof-popup:after{
+		display: none;
+	}
+	.cus-prof-popup {
+		left: -150px;
+		top: 30px;
+		width: 400px;
+	}
+	.ms-add-notification-popup:after {
+		right: 50%;
+	}
 }
-
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
 @media (min-width: 768px) {
@@ -478,6 +496,20 @@
     .milestone-header-bar{
     	display: none;
     }
+    .cus-prof-popup:before,.cus-prof-popup:after {
+		left: 100%;
+		transform: rotate(180deg);
+	}
+	.cus-prof-popup{
+		left: auto;
+		right:30px;
+	}
+	.ms-add-notification-popup:after {
+	 	right: 150px;
+	}
+	.ms-add-notification-popup{
+		left: -100px;
+	}
 }
 
 
@@ -646,11 +678,16 @@
 	.milestone-lr .float-right{
 		float: left;
 	}
+	.ms-add-notification-popup {
+		padding: 10px 5px;
+		width: 300px;
+		left: -60px;
+	}
 }
 
 /*Custom breakpoints for milestone page*/
 
-@media (min-width: 767px) and (max-width: 850px){
+@media (min-width: 768px) and (max-width: 850px){
 	.loan-progress-milestone-wrapper {
 		width: 400px;
 		max-width: 95%;
@@ -729,6 +766,9 @@
 	.milestone-lc .float-right,
 	.milestone-lr .float-right{
 		float: left;
+	}
+	.ms-add-notification-popup:after {
+	 	right: 250px;
 	}
 }
 
@@ -812,7 +852,7 @@
 		display: none;
 	}
 	.leads-container-row{
-		padding: 15px 5px;
+		padding: 10px 0;
 	}
 	.onl-status-icn{
 		width: 10px;
@@ -823,7 +863,8 @@
 	}
 	.cus-img-icn{
 		width: 25px;
-		height: 35px;
+		height: 25px;
+		margin-top: 0;
 		background-size:25px auto;
 	}
 	.filer-dropdown{
@@ -887,8 +928,9 @@
         width: 50%;
     }
     .av-loan-details-row-rc{
-        width: 50%;
+        max-width: 50%;
         padding-left: 10px;
+        word-break:break-all;
     }
     .app-options-cont,.app-input{
         width: 100%;
@@ -906,6 +948,46 @@
         line-height: 40px;
         margin-bottom: 15px;
     }
+    .cust-prof-edit-label {
+		width: 100px;
+		padding-right: 15px;
+	}
+	.cust-prof-edit-row {
+	  	line-height: 35px;
+	}
+	.cus-prof-popup{
+		width:310px;
+		left:-180px;
+	}
+	.cus-prof-popup:before{
+		left:195px;
+	}
+	.cust-prof-edit-row input,.pop-up-header{
+		height: 35px;
+		line-height: 35px;
+	}
+	.overlay-popup-wrapper {
+		width: 300px;
+	}
+	.cus-name {
+		line-height: 15px;
+		display: inline-table;
+	}
+	.create-user-popup{
+		width: 310px;
+		left: -65px;
+	}
+	.create-user-popup-cont{
+		width: 100%;
+	}
+	.create-user-popup-label {
+		width: 90px;
+		padding-right: 10px;
+		text-align: right;
+	}
+	.create-user-popup-input{
+		width: 190px;
+	}
 }
 
 

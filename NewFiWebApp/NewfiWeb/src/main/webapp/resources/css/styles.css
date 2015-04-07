@@ -91,6 +91,21 @@ a,a:hover,a:visited {
 	cursor: pointer;
 }
 
+input[type="button"]:hover, button:hover {
+	border: none;
+	outline: none;
+}
+
+input[type="button"]:active, button:active {
+	border: none;
+	outline: none;
+}
+
+input[type="button"]:focus, button:focus {
+	border: none;
+	outline: none;
+}
+
 .container {
 	/*max-width: 980px;*/
 	
@@ -1876,6 +1891,7 @@ a,a:hover,a:visited {
 }
 
 .loan-detail-link {
+	position:relative;
 	color: #428bca;
 	cursor: pointer;
 }
@@ -1910,6 +1926,12 @@ a,a:hover,a:visited {
 	padding-left: 10px;
 	padding-right: 40px;
 	font-family: 'opensanssemibold';
+}
+
+.add-member-label {
+	width: 90px;
+	padding-right: 20px;
+	text-align: right;
 }
 
 .add-member-sel {
@@ -2056,6 +2078,8 @@ a,a:hover,a:visited {
 }
 
 .cus-prof-popup {
+	left: 50px;
+	top: -50px;
 	cursor: auto;
 }
 
@@ -3458,6 +3482,10 @@ input.calc-input {
 	width: 250px;
 }
 
+.ms-team-member-th {
+	margin-top: 10px;
+}
+
 .ms-team-member-th-col1,.ms-team-member-th-col2 {
 	font-family: 'opensanssemibold';
 }
@@ -4359,4 +4387,38 @@ input.calc-input {
 
 .prof-form-input-cont .radio-btn{
 	 margin-top: 11px;
+}
+
+.payment-details-form {
+	padding: 20px 0px;
+	border-width: 1px;
+	border-style: solid;
+	background-color: #fff;
+	border-color: #cecece;
+	overflow: auto;
+}
+
+.payment-btn {
+	width: 150px;
+	margin-top: 20px;
+	border: none;
+}
+
+.payment-submit-btn{
+	margin-left: 40px;
+}
+
+.payment-cancel-btn{
+	margin-right: 40px;
+}
+
+.payment-dropin{
+	width: 405px;
+	margin: 30px auto 0px auto;
+}
+
+.payment-details-wrapper{
+	position: relative;
+	margin: 80px auto 0px;
+	width: 480px;
 }
