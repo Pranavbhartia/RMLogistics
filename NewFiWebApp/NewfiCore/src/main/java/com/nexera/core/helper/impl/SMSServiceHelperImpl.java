@@ -38,7 +38,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 		} else if (carrierName
 		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_ALLTEL)) {
 			carrierEmailAddress = MobileCarriers.ALLTEL_EMAIL_ADDRESS;
-			maxLength = 280;
+			maxLength = 300;
 		} else if (carrierName
 		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_NEXTEL)) {
 			carrierEmailAddress = MobileCarriers.NEXTEL_EMAIL_ADDRESS;
@@ -46,6 +46,30 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 		} else if (carrierName
 		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_SPRINT)) {
 			carrierEmailAddress = MobileCarriers.SPRINT_EMAIL_ADDRESS;
+			maxLength = 160;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_BOOST_MOBILE)) {
+			carrierEmailAddress = MobileCarriers.BOOST_MOBILE_EMAIL_ADDRESS;
+			maxLength = 500;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_CINGULAR)) {
+			carrierEmailAddress = MobileCarriers.CINGULAR_EMAIL_ADDRES;
+			maxLength = 150;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_SPRINT)) {
+			carrierEmailAddress = MobileCarriers.SPRINT_EMAIL_ADDRESS;
+			maxLength = 160;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_T_MOBILE)) {
+			carrierEmailAddress = MobileCarriers.T_MOBILE_EMAIL_ADDRESS;
+			maxLength = 140;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_VERIZON)) {
+			carrierEmailAddress = MobileCarriers.VERIZON_EMAIL_ADDRESS;
+			maxLength = 160;
+		} else if (carrierName
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_VIRGIN_MOBILE)) {
+			carrierEmailAddress = MobileCarriers.VIRGIN_MOBILE_EMAIL_ADDRESS;
 			maxLength = 160;
 		}
 

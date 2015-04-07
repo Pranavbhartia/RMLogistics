@@ -34,6 +34,8 @@ public interface MobileCarriers {
 
 	public static String US_CELLULAR_EMAIL_ADDRESS = "number@email.uscc.net";
 
+	public static String CINGULAR_EMAIL_ADDRES = "mobile.mycingular.com";
+
 	// Carrier Names
 
 	public static String CARRIER_NAME_AT_T = "AT&T";
@@ -43,6 +45,8 @@ public interface MobileCarriers {
 	public static String CARRIER_NAME_VERIZON = "Verizon";
 
 	public static String CARRIER_NAME_SPRINT = "Sprint";
+
+	public static String CARRIER_NAME_CINGULAR = "Cingular";
 
 	public static String CARRIER_NAME_VIRGIN_MOBILE = "Virgin Mobile";
 
