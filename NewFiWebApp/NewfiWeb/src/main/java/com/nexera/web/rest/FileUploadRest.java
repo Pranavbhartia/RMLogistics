@@ -138,9 +138,9 @@ public class FileUploadRest
             	Path path = Paths.get(file.getAbsolutePath());
             	byte[] data = Files.readAllBytes(path);
             	//Create a new row in DB and upload file to S3.
+            	String contentType = "application/pdf";
             	
-            	
-            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(file, new MimetypesFileTypeMap().getContentType(file),data, userId, loanId, assignedBy);
+            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(file,contentType ,data, userId, loanId, assignedBy);
             	
                 //Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
                 LOG.info( "New file saved with id " + checkUploadVO.getIsUploadSuccess() );
@@ -315,7 +315,8 @@ public class FileUploadRest
     	
     	InputStream inputStream = uploadedFilesListService.createLQBObjectToReadFile(lqbDocId);
         File file = nexeraUtility.copyInputStreamToFile(inputStream);
-        List<File> splittedFiles = nexeraUtility.splitPDFPages( file );
+        List<File> splittedFiles = nexeraUtility.splitPDFPagesUsingIText( file );
+        
         
         if(file.exists()){
         	file.delete();

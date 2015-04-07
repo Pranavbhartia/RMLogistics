@@ -51,6 +51,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -101,8 +105,47 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
-	public List<File> splitPDFPages(File file2) {
-		File file = new File("C:\\Users\\Akash\\Desktop\\UILRXX.pdf");
+	public List<File> splitPDFPagesUsingIText(File file) throws IOException{
+		List<File> newPdfpages = new ArrayList<File>();
+		
+			 PdfReader reader = new PdfReader(file.getAbsolutePath());
+			
+			 Integer numberOfpages = reader.getNumberOfPages();
+			 for (int i = 1; i <= numberOfpages; i++) {
+				 Document document = null;
+				 PdfCopy writer = null;
+				 String filepath = tomcatDirectoryPath() + File.separator
+					        + file.getName().replace(".pdf", "") + "_" + i
+					        + ".pdf";
+				try{ 
+				 	document = new Document(reader.getPageSizeWithRotation(1));
+				 	writer = new PdfCopy(document, new FileOutputStream(filepath));
+	                document.open();
+	                PdfImportedPage page = writer.getImportedPage(reader, i);
+	                writer.addPage(page);
+	                document.close();
+	                writer.close();
+	                newPdfpages.add(new File(filepath));
+				 }catch(Exception e){
+						LOGGER.info("Exception in converting pdf pages document : "
+						        + e.getMessage());
+						throw new FatalException("Error in Splitting");
+				 }finally{
+					if(document != null){
+						document.close();
+					}	
+					if(writer != null){
+						writer.close();
+					}
+				 }
+		 }
+		
+		return newPdfpages;
+	}
+	
+	
+	public List<File> splitPDFPages(File file) {
+		
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
 		Integer pageNum = 0;
@@ -120,7 +163,7 @@ public class NexeraUtility {
 				
 				File newFile = new File(filepath);
 				newFile.createNewFile();
-
+				
 				newDocument.save(filepath);
 				newDocument.close();
 				pageNum++;
