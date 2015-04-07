@@ -421,7 +421,11 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setAlert_count("3");
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanCustomerVO.setCredit_score("732");
+			loanCustomerVO.setCredit_score(constrtCreditScore(
+			        customerDetail.getTransunionScore(),
+			        customerDetail.getEquifaxScore(),
+			        customerDetail.getExperianScore()));
+
 		}
 		loanCustomerVO.setCredit_score("-");
 
@@ -443,6 +447,37 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 
 		return loanCustomerVO;
+	}
+
+	private String constrtCreditScore(String transunionScore,
+	        String equifaxScore, String experianScore) {
+		// TODO Auto-generated method stub
+		String creditScore = "";
+		if (equifaxScore != null && !equifaxScore.isEmpty()) {
+			creditScore = CommonConstants.EQ + equifaxScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = CommonConstants.EQ + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		if (transunionScore != null && !transunionScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EQ + transunionScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.EQ
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		if (experianScore != null && !experianScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EQ + experianScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.EQ
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		return creditScore;
 	}
 
 	/**
@@ -1075,5 +1110,12 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public List<Loan> getLoansInActiveStatus() {
 		return loanDao.getLoanInActiveStatus();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		return loanMilestoneMasterDao.loadAll(LoanMilestoneMaster.class);
 	}
 }

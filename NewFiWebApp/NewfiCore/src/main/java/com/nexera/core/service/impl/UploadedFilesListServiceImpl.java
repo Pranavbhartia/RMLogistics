@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,6 +133,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		filesListVO.setUuidFileId(uploadedFilesList.getUuidFileId());
 		filesListVO.setTotalPages(uploadedFilesList.getTotalPages());
 		filesListVO.setLqbFileID(uploadedFilesList.getLqbFileID());
+		filesListVO.setIsMiscellaneous(uploadedFilesList.getIsMiscellaneous());
 		
 		AssignedUserVO assignedUserVo = new AssignedUserVO();
 		assignedUserVo.setUserId(uploadedFilesList.getAssignedBy().getId());
@@ -194,19 +198,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
-	public List<String> downloadFileFromS3Service(List<Integer> fileIds) {
-		List<String> downloadFiles = new ArrayList<String>();
+	public List<File> downloadFileFromService(List<Integer> fileIds) {
+		List<File> downloadFiles = new ArrayList<File>();
 		for (Integer fileId : fileIds) {
 			UploadedFilesList uploadedFilesList = uploadedFilesListDao
 			        .fetchUsingFileId(fileId);
 			try {
 
-				String fileName = s3FileUploadServiceImpl.downloadFile(
-				        uploadedFilesList.getS3path(),
-				        nexeraUtility.tomcatDirectoryPath() + File.separator
-				                + uploadedFilesList.getFileName());
-				downloadFiles.add(fileName);
-				LOG.info("s3 download returned  : " + fileName);
+				InputStream inputStream = createLQBObjectToReadFile(uploadedFilesList.getLqbFileID());
+		        File file = nexeraUtility.copyInputStreamToFile(inputStream);
+		        downloadFiles.add(file);
 			} catch (Exception e) {
 				LOG.info("Excepttion in downloading file : " + e.getMessage());
 
@@ -215,20 +216,31 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return downloadFiles;
 	}
 
+	
+	
+	
 	@Override
 	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
-		List<String> filePaths = downloadFileFromS3Service(fileIds);
-		String newFilepath = null;
-		newFilepath = nexeraUtility.joinPDDocuments(filePaths);
-		Integer fileSavedId = addUploadedFilelistObejct(new File(newFilepath),
-		        loanId, userId, assignedBy, null, null);
+		List<File> filePaths = downloadFileFromService(fileIds);
+		
+		
+		File newFile = nexeraUtility.joinPDDocuments(filePaths);
+		
+		Path path = Paths.get(newFile.getAbsolutePath());
+    	byte[] data = Files.readAllBytes(path);
+		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",  data, userId, loanId, assignedBy);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
-		return fileSavedId;
+		
+		if(newFile.exists()){
+			newFile.delete();
+		}
+		
+		return checkUploadVO.getUploadFileId();
 	}
 
 	@Override
@@ -307,6 +319,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setUuidFileId(uuidValue);
 		uploadedFilesList.setTotalPages(splittedFiles.size());
 		uploadedFilesList.setLqbFileID(lqbDocumentID);
+		uploadedFilesList.setIsMiscellaneous(true);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
 		return fileSavedId;
 	}

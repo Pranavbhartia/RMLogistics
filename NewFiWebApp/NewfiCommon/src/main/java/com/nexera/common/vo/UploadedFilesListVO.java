@@ -24,6 +24,7 @@ public class UploadedFilesListVO implements Serializable {
 	private String uuidFileId;
 	private Integer totalPages;
 	private String lqbFileID;
+	private Boolean isMiscellaneous;
 	
 	
 	public Integer getId() {
@@ -109,6 +110,12 @@ public class UploadedFilesListVO implements Serializable {
 	}
 	public void setLqbFileID(String lqbFileID) {
 		this.lqbFileID = lqbFileID;
+	}
+	public Boolean getIsMiscellaneous() {
+		return isMiscellaneous;
+	}
+	public void setIsMiscellaneous(Boolean isMiscellaneous) {
+		this.isMiscellaneous = isMiscellaneous;
 	}
 	
 	

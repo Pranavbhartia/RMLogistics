@@ -135,4 +135,6 @@ public interface LoanService {
 	public int getApplicationFee(int loanId) throws NoRecordsFetchedException, InvalidInputException;
 
 	public void updateLoan(Loan loan);
+
+	public List<LoanMilestoneMaster> getLoanMilestoneMasterList();
 }
