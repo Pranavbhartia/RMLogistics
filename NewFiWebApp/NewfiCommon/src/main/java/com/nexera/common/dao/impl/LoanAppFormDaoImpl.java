@@ -61,7 +61,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
 				                        .getId());
-				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				System.out.println("loanAppForm.getUser().getCustomerDetail().getAddressCity()"+loanAppForm.getUser().getCustomerDetail().getAddressCity());
+				
+				/*if(!"NONE".equalsIgnoreCase(loanAppForm.getUser().getCustomerDetail().getAddressCity()) )
+				{*/
+					
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				
+				//}
 				System.out
 				        .println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
