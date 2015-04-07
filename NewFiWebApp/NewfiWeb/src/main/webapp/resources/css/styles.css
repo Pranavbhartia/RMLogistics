@@ -4214,6 +4214,7 @@ input.calc-input {
     z-index: 222;
     border: 1px solid #cecece;
     border-radius: 0 0 3px 3px;
+    overflow-y: scroll;
 }
 
 .state-dropdown-row {
@@ -4316,7 +4317,8 @@ input.calc-input {
 	background-color: #FAFAFA !important;
 	border: 1px #E2E2E2 solid;
 	border-radius: 3px;
-	width: 300px;
+	width: 415px;
+	min-height:30px;
 }
 
 .prof-form-input-textarea-block {
@@ -4326,7 +4328,7 @@ input.calc-input {
 	border: 1px #E2E2E2 solid;
 	border-radius: 3px;
 	margin: 3px;
-	width: 130px;
+	width: 200px;
 	padding-left: 10px;
 }
 

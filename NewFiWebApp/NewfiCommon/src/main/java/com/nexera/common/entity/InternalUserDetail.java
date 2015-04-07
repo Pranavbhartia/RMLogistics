@@ -118,6 +118,8 @@ public class InternalUserDetail implements Serializable {
 		if (internalUserDetailVO.getActiveInternal() != null) {
 			detail.setActiveInternal(internalUserDetailVO.getActiveInternal());
 		}
+		detail.setLqbPassword(internalUserDetailVO.getLqbPassword());
+		detail.setLqbUsername(internalUserDetailVO.getLqbUsername());
 		return detail;
 	}
 

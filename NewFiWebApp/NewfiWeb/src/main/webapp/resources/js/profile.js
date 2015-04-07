@@ -3,6 +3,7 @@ var currentStateId = 0;
 var currentZipcodeLookUp = [];
 var internalUserStates = new Object();
 var states=[];
+var internalUserDetailId;
 //var userStates=[];
 function showCustomerProfilePage() {
 	
@@ -91,8 +92,81 @@ function LoanPersonalInfoWrapper(user) {
 
 	wrapper.append(header).append(container);
 	$('#loan-profile-main-container').append(wrapper);
+	
+	
+	var lqbWrapper = $('<div>').attr({
+		"class" : "loan-personal-info-wrapper"
+	});
+
+	var lqbHeader = $('<div>').attr({
+		//included that of customer css
+		"class" : "cust-personal-info-header"
+	}).html("LQB Information");
+
+	var lqbContainer = getLoanLqbInfoContainer(user);
+
+	lqbWrapper.append(lqbHeader).append(lqbContainer);
+	$('#loan-profile-main-container').append(lqbWrapper);
+	appendChangePasswordContainer();
 
 }
+
+function appendChangePasswordContainer(){
+	
+	var lqbWrapper = $('<div>').attr({
+		"class" : "loan-personal-info-wrapper"
+	});
+
+	var lqbHeader = $('<div>').attr({
+		//included that of customer css
+		"class" : "cust-personal-info-header"
+	}).html("Change Password");
+
+	var lqbContainer = getPasswordInfoContainer(user);
+
+	lqbWrapper.append(lqbHeader).append(lqbContainer);
+	$('#loan-profile-main-container').append(lqbWrapper);
+
+}
+function getPasswordInfoContainer(){
+	var container = $('<div>').attr({
+		"class" : "loan-personal-info-container"
+	});
+	var passwordRow = getPasswordRow("New Password","password");
+	container.append(passwordRow);
+
+
+	var newpasswordRow = getPasswordRow("Confirm Password","confirmpassword");
+	container.append(newpasswordRow);
+	
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-btn prof-save-btn",
+		"onclick" : "changePassword()"
+	}).html("Update");
+	container.append(saveBtn);
+	return container;
+}
+
+function getLoanLqbInfoContainer(user){
+	var container = $('<div>').attr({
+		"class" : "loan-personal-info-container"
+	});
+	console.info("userName:"+user.internalUserDetail.lqbUsername);
+	var uploadRow = getLqbRow("User Name",user.internalUserDetail.lqbUsername,"lqb_userName");
+	container.append(uploadRow);
+
+	internalUserDetailId=user.internalUserDetail.id;
+	var passwordRow = getPasswordRow("Password","lqb_userPassword");
+	container.append(passwordRow);
+	
+	var saveBtn = $('<div>').attr({
+		"class" : "prof-btn prof-save-btn",
+		"onclick" : "updateLqbLMDetails()"
+	}).html("Update");
+	container.append(saveBtn);
+	return container;
+}
+
 
 function getLoanPersonalInfoContainer(user) {
 
@@ -141,6 +215,56 @@ function getLoanPersonalInfoContainer(user) {
 	return container;
 }
 
+function updateLqbLMDetails(){
+	var userProfileJson = new Object();
+	userProfileJson.id = $("#userid").val();
+	var internalUserDetail = new Object();
+	internalUserDetail.id = internalUserDetailId;
+	internalUserDetail.lqbUsername = $("#lqb_userName").val();
+	internalUserDetail.lqbPassword = $("#lqb_userPassword").val();
+	userProfileJson.internalUserDetail=internalUserDetail;
+	console.info("userProfileJson:"+userProfileJson);
+	 $.ajax({
+			url : "rest/userprofile/updateLqbprofile",
+			type : "POST",
+			data : {
+				"updateUserInfo" : JSON.stringify(userProfileJson)
+			},
+			dataType : "json",
+			success : function(data) {
+				showToastMessage("Succesfully updated");
+			},
+			error : function(error) {
+				showToastMessage("Something went wrong");
+			}
+		});
+}
+
+function changePassword(){
+	var user = new Object();
+	user.id = $("#userid").val();
+	user.password = $("#password").val();
+	console.info("userProfileJson:"+JSON.stringify(user));
+	  if($('#password').val() != $('#confirmpassword').val()) {
+            alert("Password and Confirm Password don't match");
+            event.preventDefault();
+            return false;
+          }
+	 $.ajax({
+			url : "rest/userprofile/password",
+			type : "POST",
+			data : {
+				"userVOStr" : JSON.stringify(user)
+			},
+			dataType : "json",
+			success : function(data) {
+				showToastMessage("Succesfully updated");
+			},
+			error : function(error) {
+				showToastMessage("Something went wrong");
+			}
+		});
+}
 function updateLMDetails() {
 
 	var userProfileJson = new Object();
@@ -813,6 +937,7 @@ function appendStateDropDown(elementToApeendTo) {
 function appendManagerStateDropDown(elementToApeendTo) {
 
 	var parentToAppendTo = $('#'+elementToApeendTo);
+	var $containerToAppend=$("<div>");
 	for(var i=0; i<stateList.length; i++){
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row clearfix",
@@ -843,16 +968,25 @@ function appendManagerStateDropDown(elementToApeendTo) {
 					internalUserStates[this.id]=internalUserStateMappingVO;
 				}else{
 					internalUserStateMappingVO=internalUserStates[this.id];
-					internalUserStateMappingVO.isChecked=false;
+					if(internalUserStateMappingVO.isChecked!=typeof underdefined)
+						internalUserStateMappingVO.isChecked=false;
 					internalUserStates[this.id]=internalUserStateMappingVO;
 				}
 				
 				$('#stateId').val(this.name);
-				toggleStateDropDown();
+				//toggleStateDropDown();
 			});
+		if(states.indexOf((stateList[i].id).toString())>-1){
+			stateRow.prependTo($containerToAppend);
+
+		}
+		else{ 
+			$containerToAppend.append(stateRow);
+		}
+		//$containerToAppend.append(stateRow);
 		
-		parentToAppendTo.append(stateRow);
 	}
+	parentToAppendTo.append($containerToAppend);
 	toggleStateDropDown();
 }
 function findStateIdForStateCode(stateCode) {
@@ -1629,6 +1763,66 @@ function getStateTextRow() {
  	}).html(emailHtmlText);
 
 	inputCont.append(emailInput);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}
+function getLqbRow(displayName,value,id) {
+	
+	
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html(displayName);
+
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var input = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-m",
+		"value" : value,
+		"id" : id,
+	});
+	
+	inputCont.append(input);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+
+function getPasswordRow(displayName,id) {
+	
+	
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html(displayName);
+
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var input = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-m",
+		"id" : id,
+		"type" : "password"
+	});
+	
+	inputCont.append(input);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
