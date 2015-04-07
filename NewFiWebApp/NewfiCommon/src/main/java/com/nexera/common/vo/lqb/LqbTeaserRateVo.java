@@ -4,6 +4,7 @@ public class LqbTeaserRateVo {
 
 	private String teaserRate; 
 	private String closingCost;
+	private String APR;
 	
 	public String getTeaserRate() {
 		return teaserRate;
@@ -16,6 +17,12 @@ public class LqbTeaserRateVo {
 	}
 	public void setClosingCost(String closingCost) {
 		this.closingCost = closingCost;
+	}
+	public String getAPR() {
+		return APR;
+	}
+	public void setAPR(String aPR) {
+		APR = aPR;
 	}
 	
 	
