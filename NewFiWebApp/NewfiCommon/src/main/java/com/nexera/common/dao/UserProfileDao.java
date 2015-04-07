@@ -80,4 +80,5 @@ public interface UserProfileDao extends GenericDao {
 	void updateLoginTime(Date date, int userId);
 
 	public boolean changeUserPassword(UserVO userVO);
+	public Integer updateLqbProfile(User user);
 }

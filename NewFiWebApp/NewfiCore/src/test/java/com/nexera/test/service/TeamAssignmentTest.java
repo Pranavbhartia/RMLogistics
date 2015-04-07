@@ -41,8 +41,7 @@ public class TeamAssignmentTest {
 
 	// @Test
 	public void testGetDefaultLoanManager() {
-		UserVO userVO = teamAssignmentHelper.getDefaultLoanManager("RI");
-		System.out.println("Loan manager will be: " + userVO);
+		userProfileService.getUsersList();
 	}
 
 	// @Test

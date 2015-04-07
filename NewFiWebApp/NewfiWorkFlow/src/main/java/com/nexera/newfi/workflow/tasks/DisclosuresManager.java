@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
@@ -21,10 +22,12 @@ import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
+import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
@@ -38,7 +41,8 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	private NotificationService notificationService;
 	@Autowired
 	private NeedsListService needsListService;
-
+	@Autowired
+	private IWorkflowService iWorkflowService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
@@ -68,7 +72,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			List<NeedsListMaster> masterNeedsList = new ArrayList<NeedsListMaster>();
 			masterNeedsList.add(appraisalMasterNeed);
 			needsListService.saveMasterNeedsForLoan(loanId, masterNeedsList);
-
+			createAppilcationPaymentAlert(objectMap);
 		}
 		if (flag) {
 			makeANote(loanId, message);
@@ -126,6 +130,17 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			return null;
 		}
 		return sw.toString();
+	}
+
+	private void createAppilcationPaymentAlert(HashMap<String, Object> objectMap) {
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		
+		String notificationReminderContent = WorkflowConstants.APP_FEE__NOTIFICATION_CONTENT;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+		        notificationType, loanId, notificationReminderContent);
+		iWorkflowService.createAlertOfType(createReminderVo);
 	}
 
 	private void dismissDisclosureDueAlerts(HashMap<String, Object> objectMap) {

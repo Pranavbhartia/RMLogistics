@@ -145,8 +145,7 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO changeUserPassword(
-	        @RequestBody String userVOStr) {
+	public @ResponseBody CommonResponseVO changeUserPassword(String userVOStr) {
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
 		UserVO userVO = gson.fromJson(userVOStr, UserVO.class);
@@ -595,5 +594,22 @@ public class UserProfileRest {
 	 * 
 	 * }
 	 */
+	@RequestMapping(value = "/updateLqbprofile", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateLqbprofile(String updateUserInfo) {
+
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(updateUserInfo, UserVO.class);
+			userProfileService.updateLQBUsercred(userVO);
+
+		} catch (Exception e) {
+			LOG.error("Error while updataing the user datails ::",
+			        e.getMessage());
+		}
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
 
 }

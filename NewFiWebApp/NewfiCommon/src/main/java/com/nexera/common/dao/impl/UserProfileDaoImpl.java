@@ -200,10 +200,20 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public List<User> getUsersList() {
 
-		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(User.class);
+		/*
+		 * This method should return all users who are not deleted, meaning
+		 * status 0 and internaluserdetails status is not -1
+		 * 
+		 * All users who have internaluserdetails as null, if present, the
+		 * internal status should not be -1
+		 */
+		String searchQuery = "FROM User where internalUserDetail IS NULL OR (internalUserDetail.activeInternal!=:DELETED)";
 
-		return criteria.list();
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(searchQuery);
+		query.setParameter("DELETED", ActiveInternalEnum.DELETED);
+		return query.list();
 
 	}
 
@@ -719,4 +729,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 	}
 
+	@Override
+	public Integer updateLqbProfile(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword "
+				+ "WHERE internalusr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("lqbUserName", user.getInternalUserDetail()
+		        .getLqbUsername());
+		query.setParameter("lqbPassword", user.getInternalUserDetail()
+		        .getLqbPassword());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
 }
