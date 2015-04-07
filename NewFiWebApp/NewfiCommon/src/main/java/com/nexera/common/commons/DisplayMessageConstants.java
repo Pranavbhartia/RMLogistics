@@ -24,6 +24,8 @@ public final class DisplayMessageConstants {
 	
 	public static final String CREDIT_CARD_INVALID = "CREDIT_CARD_INVALID";
 	public static final String PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL";
+	public static final String PAYMENT_POPUP_ERROR = "PAYMENT_POPUP_ERROR";
+	public static final String PAYMENT_POPUP_MESSAGE = "PAYMENT_POPUP_MESSAGE";
 	
 	public static final String INVALID_COLUMN_LENGTH = "INVALID_COLUMN_LENGTH";
 	public static final String INVALID_FIRST_NAME = "INVALID_FIRST_NAME";

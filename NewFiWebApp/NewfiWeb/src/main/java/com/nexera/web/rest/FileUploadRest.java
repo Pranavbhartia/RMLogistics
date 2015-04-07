@@ -2,12 +2,17 @@ package com.nexera.web.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -124,14 +129,24 @@ public class FileUploadRest
         CommonResponseVO commonResponseVO;
         //Get information of the files that is saved in DB for this file ID.
         UploadedFilesList uploadedFilesList = uploadedFilesListService.fetchUsingFileId( fileId );
+        Integer id = uploadedFilesList.getId();
 
         try {
         	//Pass the S3 path, to get the document from S3, and convert itto PDObject
-            List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getS3path() );
+            List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getLqbFileID() );
             for ( File file : pdfPages ) {
+            	Path path = Paths.get(file.getAbsolutePath());
+            	byte[] data = Files.readAllBytes(path);
             	//Create a new row in DB and upload file to S3.
-                Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
-                LOG.info( "New file saved with id " + fileSavedId );
+            	String contentType = "application/pdf";
+            	
+            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(file,contentType ,data, userId, loanId, assignedBy);
+            	
+                //Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
+                LOG.info( "New file saved with id " + checkUploadVO.getIsUploadSuccess() );
+                if(file.exists()){
+                	file.delete();
+                }
             }
 
             //Deactive the old file, i.e the file which was split.
@@ -188,20 +203,13 @@ public class FileUploadRest
                     fileIds.add( filesList.getId() );
                 }
                 Integer fileToGetContent = null;
-                if ( fileIds.size() > 1 ) {
-                    Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
-                    LOG.info( "new file pdf path :: " + newFileRowId );
-                    uploadedFilesListService.updateFileInLoanNeedList( key, newFileRowId );
-                    uploadedFilesListService.updateIsAssignedToTrue( newFileRowId );
-                    fileToGetContent = newFileRowId;
-                } else {
-                    uploadedFilesListService.updateFileInLoanNeedList( key, fileIds.get( 0 ) );
-                    uploadedFilesListService.updateIsAssignedToTrue( fileIds.get( 0 ) );
-                    fileToGetContent = fileIds.get( 0 );
-                }
-
+                Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
                
-            }
+                LOG.info( "new file pdf path :: " + newFileRowId );
+                uploadedFilesListService.updateFileInLoanNeedList( key, newFileRowId );
+                uploadedFilesListService.updateIsAssignedToTrue( newFileRowId );
+                fileToGetContent = newFileRowId;
+           }
 
            
             commonResponseVO = RestUtil.wrapObjectForSuccess( true );
@@ -294,12 +302,18 @@ public class FileUploadRest
     }
 
 
-    private List<File> splitPdfDocumentIntoMultipleDocs( String s3path ) throws Exception
+    private List<File> splitPdfDocumentIntoMultipleDocs( String lqbDocId ) throws Exception
     {
 
-        File file = new File( s3FileUploadServiceImpl.downloadFile( s3path, nexeraUtility.tomcatDirectoryPath()
-            + File.separator + ( new File( s3path ) ).getName() ) );
-        List<File> splittedFiles = nexeraUtility.splitPDFPages( file );
+    	
+    	InputStream inputStream = uploadedFilesListService.createLQBObjectToReadFile(lqbDocId);
+        File file = nexeraUtility.copyInputStreamToFile(inputStream);
+        List<File> splittedFiles = nexeraUtility.splitPDFPagesUsingIText( file );
+        
+        
+        if(file.exists()){
+        	file.delete();
+        }
         return splittedFiles;
 
     }
