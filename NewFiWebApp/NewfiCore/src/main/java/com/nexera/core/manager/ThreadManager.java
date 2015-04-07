@@ -298,6 +298,9 @@ public class ThreadManager implements Runnable {
 									        .startWorkFlowItemExecution(workflowItemExec
 									                .getId());
 								}
+
+								LOGGER.debug("Updating last acted on time ");
+								updateLastModifiedTimeForThisLoan(loan);
 							}
 						}
 					}
@@ -316,6 +319,12 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Fetching underwriting conditions for this loan ");
 		invokeUnderwritingCondition(loan, format);
 
+	}
+
+	private void updateLastModifiedTimeForThisLoan(Loan loan) {
+		LOGGER.debug("Inside method updateLastModifiedTimeForThisLoan ");
+		loan.setModifiedDate(new Date());
+		loanService.updateLoan(loan);
 	}
 
 	private void invokeUnderwritingCondition(Loan loan, int format) {
@@ -422,6 +431,7 @@ public class ThreadManager implements Runnable {
 						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 						LOGGER.debug("Invoking Disclosure MileStone Classes ");
 						invokeDisclosuresWorkflow(workflowItemExecList);
+						updateLastModifiedTimeForThisLoan(loan);
 					}
 				}
 			}

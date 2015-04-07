@@ -113,13 +113,19 @@ public class WorkflowConstants {
 	                .getLosStatusID()));
 
 	public static final int SYSTEM_USER = 1;
-	public static final String SYS_EDU_NOTIFICATION_TYPE = "SYS_EDU";
+
 	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
-	public static final String DISCLOSURE_AVAIL_NOTIFICATION_TYPE = "DISCLOSURE_AVAIL";
+
 	// TODO DYNAMIC content
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are due in {\"72\":\"elapsed\"} hrs.";
-	public static final String CREDIT_SCORE_NOTIFICATION_TYPE = "CREDIT_SCORE";
+
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
+
+	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "INitial needs list not created";
+	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
+	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
+	public static final String APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT = "Appraisals not available";
+	public static final String UW_NOTIFICATION__NOTIFICATION_CONTENT = "Underwriting pending";
 	static {
 
 		MILESTONE_WF_ITEM_LOOKUP.put(

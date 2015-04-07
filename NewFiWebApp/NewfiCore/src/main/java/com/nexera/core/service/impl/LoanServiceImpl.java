@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -514,14 +513,14 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional
 	public void saveWorkflowInfo(int loanID, int customerWorkflowID,
 	        int loanManagerWFID) {
-		Loan loan = (Loan) loanDao.load(Loan.class, loanID);
-
-		Hibernate.initialize(loan.getCustomerWorkflow());
-
-		loan.setCustomerWorkflow(customerWorkflowID);
-
-		loan.setLoanManagerWorkflow(loanManagerWFID);
-		loanDao.save(loan);
+		// Loan loan = (Loan) loanDao.load(Loan.class, loanID);
+		//
+		// Hibernate.initialize(loan.getCustomerWorkflow());
+		//
+		// loan.setCustomerWorkflow(customerWorkflowID);
+		//
+		// loan.setLoanManagerWorkflow(loanManagerWFID);
+		loanDao.updateWorkFlowItems(loanID, customerWorkflowID, loanManagerWFID);
 	}
 
 	@Override
@@ -564,12 +563,13 @@ public class LoanServiceImpl implements LoanService {
 
 			loan.setId(loanVO.getId());
 			loan.setUser(user);
-			loan.setCreatedDate(loanVO.getCreatedDate());
+			loan.setCreatedDate(new Date(System.currentTimeMillis()));
 			loan.setDeleted(loanVO.getDeleted());
 			loan.setLoanEmailId(loanVO.getLoanEmailId());
 			loan.setLqbFileId(loanVO.getLqbFileId());
 			loan.setModifiedDate(loanVO.getModifiedDate());
 			loan.setName(loanVO.getName());
+			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 			List<UserVO> userList = loanVO.getLoanTeam();
 			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
@@ -578,6 +578,8 @@ public class LoanServiceImpl implements LoanService {
 			LoanTeam e = new LoanTeam();
 			e.setUser(user);
 			e.setLoan(loan);
+			e.setActive(Boolean.TRUE);
+			e.setAssignedOn(new Date(System.currentTimeMillis()));
 			loanTeam.add(e);
 
 			/*
@@ -590,6 +592,9 @@ public class LoanServiceImpl implements LoanService {
 			LOG.debug("default Loan manager is: " + defaultUser);
 			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
 			defaultLanManager.setLoan(loan);
+			defaultLanManager.setActive(Boolean.TRUE);
+			defaultLanManager
+			        .setAssignedOn(new Date(System.currentTimeMillis()));
 			loanTeam.add(defaultLanManager);
 
 			// If loan team contains other users, then add those users to
@@ -601,7 +606,10 @@ public class LoanServiceImpl implements LoanService {
 					        && userVO.getId() != e.getId()) {
 						LoanTeam team = new LoanTeam();
 						User userTeam = User.convertFromVOToEntity(userVO);
+						team.setAssignedOn(new Date(System.currentTimeMillis()));
+						team.setActive(Boolean.TRUE);
 						team.setUser(userTeam);
+
 						team.setLoan(loan);
 					}
 
@@ -634,7 +642,8 @@ public class LoanServiceImpl implements LoanService {
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
-		return Loan.convertFromEntityToVO(loan);
+		loanVO.setId(loanId);
+		return loanVO;
 	}
 
 	@Override
@@ -936,5 +945,18 @@ public class LoanServiceImpl implements LoanService {
 	public LoanNeedsList findLoanNeedsList(Loan loan,
 	        NeedsListMaster needsListMaster) {
 		return loanNeedListDao.findLoanNeedsList(loan, needsListMaster);
+	}
+
+	@Override
+	@Transactional
+	public void updateLoan(Loan loan) {
+		loanDao.update(loan);
+
+	}
+
+	@Override
+	@Transactional
+	public List<Loan> getLoansInActiveStatus() {
+		return loanDao.getLoanInActiveStatus();
 	}
 }

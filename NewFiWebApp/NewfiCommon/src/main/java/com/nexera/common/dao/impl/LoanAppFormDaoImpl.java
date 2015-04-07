@@ -61,7 +61,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
 				                        .getId());
-				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				System.out.println("loanAppForm.getUser().getCustomerDetail().getAddressCity()"+loanAppForm.getUser().getCustomerDetail().getAddressCity());
+				
+				/*if(!"NONE".equalsIgnoreCase(loanAppForm.getUser().getCustomerDetail().getAddressCity()) )
+				{*/
+					
+					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+				
+				//}
 				System.out
 				        .println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
@@ -203,14 +210,16 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			while (itr.hasNext()) {
 				CustomerEmploymentIncome cei = itr.next();
 				System.out.println("cei.getEmployedAt()" + cei.getEmployedAt());
+				System.out.println("cei.getId()" + cei.getId());
 				CustomerEmploymentIncome customeremploymentIncome = new CustomerEmploymentIncome();
+				customeremploymentIncome.setId(cei.getId());;
 				customeremploymentIncome.setEmployedAt(cei.getEmployedAt());
 				customeremploymentIncome.setEmployedIncomePreTax(cei
 				        .getEmployedIncomePreTax());
 				customeremploymentIncome.setEmployedSince(cei
 				        .getEmployedSince());
 				customeremploymentIncome.setLoanAppForms(loanAppForm);
-				this.save(customeremploymentIncome);
+				this.saveOrUpdate(customeremploymentIncome);
 			}
 
 			System.out
@@ -229,7 +238,9 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			while (itr.hasNext()) {
 				CustomerSpouseEmploymentIncome cei = itr.next();
 				System.out.println("cei.getEmployedAt()" + cei.getEmployedAt());
+				System.out.println("cei.cei.getId()()" + cei.getId());
 				CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome = new CustomerSpouseEmploymentIncome();
+				customerSpouseEmploymentIncome.setId(cei.getId());
 				customerSpouseEmploymentIncome.setEmployedAt(cei
 				        .getEmployedAt());
 				customerSpouseEmploymentIncome.setEmployedIncomePreTax(cei
@@ -237,7 +248,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				customerSpouseEmploymentIncome.setEmployedSince(cei
 				        .getEmployedSince());
 				customerSpouseEmploymentIncome.setLoanAppForms(loanAppForm);
-				this.save(customerSpouseEmploymentIncome);
+				this.saveOrUpdate(customerSpouseEmploymentIncome);
 			}
 
 			System.out

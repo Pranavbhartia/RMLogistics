@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
@@ -28,9 +29,9 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class EMailSender extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-			.getLogger(EMailSender.class);
+	        .getLogger(EMailSender.class);
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
 	@Autowired
@@ -41,17 +42,18 @@ public class EMailSender extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
 	// private SendEmailService sendEmailService;
 
 	public String execute(HashMap<String, Object> objectMap) {
 		// Call the Email Sender here.
 		if (objectMap != null) {
 			int loanId = Integer.parseInt(objectMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			LoanVO loanVo = loanService.getLoanByID(loanId);
 			String emailTemplate = objectMap.get(
-					WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-					.toString();
+			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+			        .toString();
 			LOG.debug("Template name is " + emailTemplate);
 
 			EmailVO emailEntity = new EmailVO();
@@ -69,9 +71,9 @@ public class EMailSender extends NexeraWorkflowTask implements
 			emailEntity.setSenderName("Newfi System");
 			emailEntity.setSubject("Nexera Newfi Portal");
 			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-			substitutions.put(
-					"-name-",
-							new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
+			substitutions
+			        .put("-name-",
+			                new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
 			// emailEntity.setTemplateBased(true);
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(emailTemplate);
@@ -106,16 +108,16 @@ public class EMailSender extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		String notificationType = WorkflowConstants.SYS_EDU_NOTIFICATION_TYPE;
-		int loanId=Integer.parseInt(objectMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.SYS_EDU_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
-				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT;
 		String notificationReminderContent = WorkflowConstants.SYS_EDU_NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
-				notificationType, loanId, workflowItemExecutionId,
-				prevMilestoneKey, notificationReminderContent);
+		        notificationType, loanId, workflowItemExecutionId,
+		        prevMilestoneKey, notificationReminderContent);
 		iWorkflowService.updateLMReminder(createReminderVo);
 		return null;
 	}

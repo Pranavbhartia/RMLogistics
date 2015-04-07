@@ -782,9 +782,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setLoan(loan);
 		fileUpload.setLqbFileID(edoc.getDocid());
 		fileUpload.setUploadedDate(new Date());
-		if (uuid != null)
+		if (uuid != null) {
 			fileUpload.setUuidFileId(uuid);
-
+		} else {
+			fileUpload.setUuidFileId(nexeraUtility.randomStringOfLength());
+		}
 		fileUpload.setTotalPages(2);
 		int fileUploadId = saveUploadedFile(fileUpload);
 		fileUpload.setId(fileUploadId);

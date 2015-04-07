@@ -1186,7 +1186,7 @@ function paintRefinanceSeeRates() {
 	}).html(quesTxt);
 
 	
-	alert(JSON.stringify(refinanceTeaserRate));
+	//alert(JSON.stringify(refinanceTeaserRate));
 	container.append(quesTextCont);
 	
 	$('#ce-refinance-cp').html(container);
@@ -1285,7 +1285,7 @@ function teaserFixYourRatePage() {
 
 function paintApplyNow(refinanceTeaserRate){
 	
-	alert(JSON.stringify(refinanceTeaserRate));
+//	alert(JSON.stringify(refinanceTeaserRate));
 	//var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
 	var registration = new Object ();
 	var parentWrapper = $('<div>').attr({
@@ -1415,8 +1415,8 @@ function paintApplyNow(refinanceTeaserRate){
 		appUserDetails.livingSituation=buyHomeTeaserRate.livingSituation;
 
 
-alert('hey');
-		alert(JSON.stringify(appUserDetails));
+//alert('hey');
+//		alert(JSON.stringify(appUserDetails));
 		console.log(JSON.stringify(appUserDetails));
 		
 		//saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
@@ -1475,7 +1475,7 @@ function saveUserAndRedirect(registration){
 			
 		},
 		error : function(data) {
-			alert(data);
+		//	alert(data);
 			$('#ce-main-container').html(data.toString());
 			//$('#overlay-loader').hide();
 		}
@@ -1494,7 +1494,7 @@ $.ajax({
 		data:{"appFormData" : JSON.stringify(appUserDetails)},
 		datatype : "application/json",
 		success:function(data){
-		alert('inside appFormData');
+		//alert('inside appFormData');
 
 			window.location.href = data;
 		},

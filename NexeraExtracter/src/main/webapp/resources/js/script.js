@@ -19,8 +19,8 @@ function paintRatesTablePage(data){
     $('#main-container').html(wrapper);
     
     $('.rate-table-wrapper').masonry({
-    	  itemSelector: '.rate-table-wrapper-cont',
-    	  columnWidth: 100
+    	  itemSelector: '.rate-table-wrapper-cont'
+    	  
     });
 }
 
@@ -39,8 +39,12 @@ function getRatesTable(rateObjArray,title){
     container.append(tableHeader);
     
     for(var i=0;i<rateObjArray.length;i++){
+    	if(i>=7){
+    		break;
+    	}
         var tableRow = getRatesTableRow(rateObjArray[i]);
         container.append(tableRow);
+        
     }
     
     return wrapper.append(header).append(container);
@@ -98,7 +102,6 @@ function getRatesTableRow(rateObj){
     }
     	
     
-    if(rateObj.col1Points)
     
     var col1 = $('<div>').attr({
         "class" : "td"

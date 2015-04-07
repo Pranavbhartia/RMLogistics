@@ -23,13 +23,13 @@ public class ExtractorRateRest {
 
 	@RequestMapping("/rates")
 	public @ResponseBody String readFilesFromDestinationRest() {
+
 		final File folder = new File("C:\\apps\\LQB\\‏Price");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 
 		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list);
 		// utility.getCompleteProductRateList(list);
-
 		Gson gson = new Gson();
-		return gson.toJson(uiMap);
+		return gson.toJson("Some error");
 	}
 }

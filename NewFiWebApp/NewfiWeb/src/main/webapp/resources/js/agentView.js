@@ -1074,7 +1074,7 @@ function appendAddTeamMemberWrapper(parentElement,clearParent,data) {
 				console.log("Name entered : " + name);
 				var code = $('#add-memeber-user-type').attr("code");
 				var roleID = $('#add-memeber-user-type').attr("roleID");
-				if(roleID == undefined){
+				if(roleID == undefined&&(code!="TITLE_COMPANY"&&code!="HOME_OWN_INS")){
 					showToastMessage("Please select a user type");
 					return false;
 				}
@@ -1928,15 +1928,15 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		this.appendFaxNumber();
 		this.appendEmailId();
 		this.appendPrimaryContact();
-
+		var ob=this;
 		// save button
 		var saveBtn = $('<div>').attr({
 			"class" : "prof-cust-save-btn"
-		}).html("save").on(
-				'click',
+		}).html("save").bind(
+				'click',{"contxt":ob},
 				function(event) {
 					event.stopImmediatePropagation();
-
+					var ob=event.data.contxt;
 					var company = new Object();
 					company.name=$('#create-hoic-name').val();
 					company.address=$('#create-hoic-address').val();
@@ -1945,7 +1945,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 					company.emailID=$('#create-hoic-email-id').val();
 					company.primaryContact=$('#create-hoic-primary-contact').val();
 					
-					this.company=company;
+					ob.company=company;
 					
 
 					if (company.name == "") {
@@ -1965,7 +1965,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 							+ JSON.stringify(company));
 					//TODO-write method to call add company
 					console.log("Adding company");
-
+					ob.addCompany();
 				});
 
 		$('#create-hoi-company-popup').append(saveBtn);
@@ -2101,11 +2101,11 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
-						"rest/loan/homeOwnersInsurance/" + ob.company,
+		ajaxRequest(
+						"rest/loan/homeOwnersInsurance/" ,
 						"POST",
 						"json",
-						data,
+						JSON.stringify(ob.company),
 						function(response) {
 							if (response.error) {
 								showToastMessage(response.error.message)
@@ -2115,7 +2115,13 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
-								addCompanyToTeamList();
+								var input={homeOwnInsID:response.resultObject.id};
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(input,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(input,
+											selectedUserDetail.loanID);
 							}
 							
 						});
@@ -2153,7 +2159,7 @@ function getCreateTitleCompanyContext(loanID){
 		popUpWrapper.append(header).append(container);
 		$('#add-member-sel').append(popUpWrapper);
 
-		
+		var ob=this;
 		this.appendTitleCompanyName();
 		this.appendAddress();
 		this.appendPhoneNumber();
@@ -2164,11 +2170,11 @@ function getCreateTitleCompanyContext(loanID){
 		// save button
 		var saveBtn = $('<div>').attr({
 			"class" : "prof-cust-save-btn"
-		}).html("save").on(
-				'click',
+		}).html("save").bind(
+				'click',{"contxt":ob},
 				function(event) {
 					event.stopImmediatePropagation();
-
+					var ob=event.data.contxt;
 					var company = new Object();
 					company.name=$('#create-tc-name').val();
 					company.address=$('#create-tc-address').val();
@@ -2177,7 +2183,7 @@ function getCreateTitleCompanyContext(loanID){
 					company.emailID=$('#create-tc-email-id').val();
 					company.primaryContact=$('#create-tc-primary-contact').val();
 					
-					this.company=company;
+					ob.company=company;
 					
 
 					if (company.name == "") {
@@ -2197,7 +2203,7 @@ function getCreateTitleCompanyContext(loanID){
 							+ JSON.stringify(company));
 					//TODO-write method to call add company
 					console.log("Adding company");
-					this.addCompany();
+					ob.addCompany();
 
 				});
 
@@ -2335,11 +2341,11 @@ function getCreateTitleCompanyContext(loanID){
 		var ob = this;
 		var data = {};
 		
-		ob.ajaxRequest(
-						"rest/loan/titleCompany/" + ob.company,
+		ajaxRequest(
+						"rest/loan/titleCompany",
 						"POST",
 						"json",
-						data,
+						JSON.stringify(ob.company),
 						function(response) {
 							if (response.error) {
 								showToastMessage(response.error.message)
@@ -2349,7 +2355,14 @@ function getCreateTitleCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
-								this.addCompanyToTeamList();
+								var input={titleCompanyID:response.resultObject.id};
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(input,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(input,
+											selectedUserDetail.loanID);
+								/*ob.addCompanyToTeamList();*/
 							}
 							
 						});

@@ -12,6 +12,7 @@ import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
@@ -48,15 +49,16 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	}
 
 	private void createAlertForDisclosureDue(HashMap<String, Object> objectMap) {
-		String notificationType = WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_TYPE;
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.DISCLOSURE_AVAIL_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		List<NotificationVO> notificationList = notificationService
-				.findNotificationTypeListForLoan(loanId, notificationType, null);
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), null);
 		if (notificationList.size() == 0
 				|| notificationList.get(0).getRead() == true) {
 			NotificationVO notificationVO = new NotificationVO(loanId,
-					notificationType,
+			        notificationType.getNotificationTypeName(),
 					WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
 			List<UserRolesEnum> userRoles=new ArrayList<UserRolesEnum>();
 			userRoles.add(UserRolesEnum.INTERNAL);

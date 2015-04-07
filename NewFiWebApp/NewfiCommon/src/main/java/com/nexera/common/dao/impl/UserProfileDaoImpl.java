@@ -79,6 +79,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException {
 		try {
@@ -103,6 +104,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	}
 
+	@Override
+	@Transactional(readOnly = true)
 	public User findByUserId(Integer userId) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
@@ -209,19 +212,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		String searchQuery = "FROM User where ";
 
 		if (user.getEmailId() != null)
-			searchQuery += " email_id like '" + user.getEmailId() + "%' ";
+			searchQuery += " emailId like '" + user.getEmailId() + "%' or ";
 
-		if (user.getFirstName() != null)
-
+		if (user.getFirstName() != null) {
 			user.setFirstName(user.getFirstName().toLowerCase());
-		else
+		} else {
 			user.setFirstName("");
-		searchQuery += " or lower(concat( first_name,',',last_name) ) like '"
+		}
+		searchQuery += " lower(concat( firstName,lastName) ) like '"
 		        + user.getFirstName() + "%'";
 
 		if (user.getUserRole() != null) {
 			searchQuery += " and userRole=:userRole";
-			session.save(user.getUserRole());
+			// session.save(user.getUserRole());
 		}
 		if (user.getInternalUserDetail() != null
 		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
