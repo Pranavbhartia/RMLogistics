@@ -193,7 +193,7 @@ public class WorkflowRestService {
 			String result = engineTrigger
 			        .startWorkFlowItemExecution(workflowItemId);
 
-			response = RestUtil.wrapObjectForSuccess(result);
+			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
