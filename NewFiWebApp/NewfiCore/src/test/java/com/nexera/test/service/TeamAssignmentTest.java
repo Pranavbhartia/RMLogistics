@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.TeamAssignmentHelper;
+import com.nexera.core.service.UserProfileService;
 
 @ContextConfiguration(locations = "/test-NewfiCore-Configuration.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -16,10 +17,12 @@ public class TeamAssignmentTest {
 	@Autowired
 	TeamAssignmentHelper teamAssignmentHelper;
 
+	@Autowired
+	UserProfileService userProfileService;
+
 	@Test
 	public void testGetDefaultLoanManager() {
-		UserVO userVO = teamAssignmentHelper.getDefaultLoanManager("RI");
-		System.out.println("Loan manager will be: " + userVO);
+		userProfileService.getUsersList();
 	}
 
 	// @Test
