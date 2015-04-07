@@ -128,6 +128,8 @@ public class DefaultController implements InitializingBean {
 				// find the loanAppForm object and get the
 				// loanAppFormCompletionStatus
 				loanAppFormVO = loanAppFormService.find(loanAppFormVO);
+			LOG.info("inside default conteoller loanAppFormVO.getRefinancedetails().getId()"+loanAppFormVO.getRefinancedetails().getId());	
+			LOG.info("inside default conteoller loanAppFormVO.getPropertyTypeMaster().getId()"+loanAppFormVO.getPropertyTypeMaster().getId());
 
 				int formCompletionStatus = loanAppFormVO
 				        .getLoanAppFormCompletionStatus() == null ? 0

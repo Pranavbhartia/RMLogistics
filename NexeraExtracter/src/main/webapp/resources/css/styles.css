@@ -146,9 +146,17 @@ a,a:hover,a:visited {
 	  height: 35px;
 	  width: 35px;
 	  background: url(../images/gnome_printer.png) no-repeat;
-	  margin-top: 59px;
-	  margin-left: 100px;
 	  background-size: cover;
 	  cursor:pointer;
-	  margin-right: 65px;
+}
+
+.body-header-container{
+	margin-top: 55px;
+	height: 35px;
+	line-height: 35px;
+}
+
+.header-txt {
+	font-size: 16px;
+	font-family: 'opensanssemibold';
 }

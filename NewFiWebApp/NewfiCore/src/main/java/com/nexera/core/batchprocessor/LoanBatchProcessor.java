@@ -20,13 +20,10 @@ import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
-import com.nexera.common.entity.LoanProgressStatusMaster;
-import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.exception.FatalException;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.BatchService;
 import com.nexera.core.service.LoanService;
-import com.nexera.core.utility.LoanStatusMaster;
 
 @DisallowConcurrentExecution
 public class LoanBatchProcessor extends QuartzJobBean {
@@ -57,29 +54,16 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				taskExecutor = getTaskExecutor();
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
 				try {
-					List<Loan> loanList = loanService.getAllLoans();
+					List<Loan> loanList = loanService.getLoansInActiveStatus();
 					if (loanList != null) {
 						for (Loan loan : loanList) {
 							if (loan.getLqbFileId() != null) {
-								LoanProgressStatusMaster loanProgessStatus = loan
-								        .getLoanProgressStatus();
-								if (loanProgessStatus != null) {
-									String loanStatus = loanProgessStatus
-									        .getLoanProgressStatus();
-									if ((!loanStatus
-									        .equalsIgnoreCase(LoanStatusMaster.STATUS_CLOSED))
-									        && (!loanStatus
-									                .equalsIgnoreCase(LoanStatusMaster.STATUS_WITHDRAW))
-									        && (!loanStatus
-									                .equalsIgnoreCase(LoanStatusMaster.STATUS_DECLINED))) {
-										ThreadManager threadManager = applicationContext
-										        .getBean(ThreadManager.class);
-										threadManager
-										        .setLoanMilestoneMasterList(getLoanMilestoneMasterByLoanType(loan));
-										threadManager.setLoan(loan);
-										taskExecutor.execute(threadManager);
-									}
-								}
+								ThreadManager threadManager = applicationContext
+								        .getBean(ThreadManager.class);
+								threadManager
+								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
+								threadManager.setLoan(loan);
+								taskExecutor.execute(threadManager);
 							}
 						}
 						taskExecutor.shutdown();
@@ -127,10 +111,10 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		return batchService.getBatchJobMasterById(batchJobId);
 	}
 
-	private List<LoanMilestoneMaster> getLoanMilestoneMasterByLoanType(Loan loan) {
-		LOGGER.debug("Inside method getLoanMilestoneMasterByLoan ");
-		LoanTypeMaster loanTypeMaster = loan.getLoanType();
-		return loanService.getLoanMilestoneByLoanType(loanTypeMaster);
+	private List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
+		LOGGER.debug("Inside method getLoanMilestoneMasterList ");
+
+		return loanService.getLoanMilestoneMasterList();
 	}
 
 	private ThreadPoolTaskExecutor getTaskExecutor() {

@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.commons.WebServiceMethodParameters;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -35,15 +39,15 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
-import com.nexera.common.vo.LoanTeamListVO;
-import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.web.rest.util.RestUtil;
 
 @Controller
@@ -58,6 +62,12 @@ public class UserProfileRest {
 
 	@Autowired
 	private InternalUserStateMappingService internalUserStateMappingService;
+
+	@Autowired
+	private LqbInvoker lqbInvoker;
+
+	@Autowired
+	private LoanService loanService;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
@@ -396,10 +406,11 @@ public class UserProfileRest {
 			response.setResultObject(userVO);
 
 		} catch (InputValidationException e) {
-			LOG.error("error and message is : " + e.getMessage());
+			LOG.error("error and message is : " + e.getDebugMessage());
 			ErrorVO error = new ErrorVO();
-			error.setMessage(e.getMessage());
+			error.setMessage(e.getDebugMessage());
 			response.setError(error);
+			e.getDebugMessage();
 
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
@@ -438,6 +449,140 @@ public class UserProfileRest {
 			e.printStackTrace();
 		}
 		return result.toString();
+	}
+
+	@RequestMapping(value = "/getLQBUrl/{userId}/{loanId}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getLQBUrl(
+	        @PathVariable Integer userId, @PathVariable Integer loanId) {
+
+		LOG.info("user id of this user is : " + userId);
+		CommonResponseVO response = new CommonResponseVO();
+		String url = null;
+		ErrorVO errorVO = null;
+		try {
+			UserVO userVO = userProfileService.findUser(userId);
+			if (userVO != null) {
+				String lqbUsername = userVO.getInternalUserDetail()
+				        .getLqbUsername();
+				String lqbPassword = userVO.getInternalUserDetail()
+				        .getLqbPassword();
+				if (lqbUsername != null && lqbPassword != null) {
+					JSONObject authOperationObject = createAuthObject(
+					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+					        lqbUsername, lqbPassword);
+					LOG.debug("Invoking LQB service to fetch user authentication ticket ");
+					String authTicketJson = lqbInvoker
+					        .invokeRestSpringParseObjForAuth(authOperationObject
+					                .toString());
+					if (!authTicketJson.contains("Access Denied")) {
+						String sTicket = authTicketJson;
+						LoanVO loanVO = getLoanById(loanId);
+						if (loanVO != null) {
+							url = getUrlByTicket(sTicket, loanVO.getLqbFileId());
+							LOG.debug("Url received for this user/loan " + url);
+							response.setResultObject(url);
+						} else {
+							LOG.error("Loan Id Entered is invalid ");
+							errorVO = new ErrorVO();
+							errorVO.setMessage("Ticket Not Generated For This User ");
+							response.setError(errorVO);
+						}
+
+					} else {
+						LOG.error("Ticket Not Generated For This User ");
+						errorVO = new ErrorVO();
+						errorVO.setMessage("Ticket Not Generated For This User ");
+						response.setError(errorVO);
+					}
+				} else {
+					LOG.error("LQBUsername or Password are not valid ");
+					errorVO = new ErrorVO();
+					errorVO.setMessage("LQBUsername and LQBPassword are not valid ");
+					response.setError(errorVO);
+				}
+			} else {
+				LOG.error("User not found with this user id");
+
+				errorVO = new ErrorVO();
+				errorVO.setMessage("User not found, Invalid user id");
+				response.setError(errorVO);
+
+			}
+			response.setResultObject(response);
+
+		} catch (InputValidationException e) {
+			LOG.error("error and message is : " + e.getMessage());
+			ErrorVO error = new ErrorVO();
+			error.setMessage(e.getMessage());
+			response.setError(error);
+
+		} catch (Exception e) {
+			LOG.error("error and message is : " + e.getMessage());
+			ErrorVO error = new ErrorVO();
+			error.setMessage(e.getMessage());
+			response.setError(error);
+		}
+		return response;
+
+	}
+
+	private LoanVO getLoanById(int loanId) {
+		LOG.debug("Inside method getLoanById ");
+		return loanService.getLoanByID(loanId);
+	}
+
+	public String getUrlByTicket(String sTicket, String lqbLoanNumber) {
+		String url = null;
+		LOG.debug("Invoking LQB service to fetch URL for this user ");
+		JSONObject appViewOperationObject = createUrlObject(
+		        WebServiceOperations.OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL,
+		        sTicket, lqbLoanNumber);
+		JSONObject urlJSON = lqbInvoker
+		        .invokeRestSpringParseObjForAppView(appViewOperationObject
+		                .toString());
+		if (!urlJSON.isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+
+			url = urlJSON
+			        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+			url = "https://secure.lendersoffice.com" + url;
+		} else {
+			LOG.error("Ticket Not Generated For This User ");
+		}
+		return url;
+
+	}
+
+	public JSONObject createUrlObject(String opName, String sTicket,
+	        String sLoanName) {
+		JSONObject json = new JSONObject();
+
+		try {
+
+			json.put(WebServiceMethodParameters.PARAMETER_S_TICKET, sTicket);
+			json.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NAME,
+			        sLoanName);
+			json.put("opName", opName);
+		} catch (JSONException e) {
+			LOG.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
+	public JSONObject createAuthObject(String opName, String userName,
+	        String password) {
+		JSONObject json = new JSONObject();
+
+		try {
+
+			json.put(WebServiceMethodParameters.PARAMETER_USERNAME, userName);
+			json.put(WebServiceMethodParameters.PARAMETER_PASSWORD, password);
+			json.put("opName", opName);
+		} catch (JSONException e) {
+			LOG.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
 	}
 
 	/*
