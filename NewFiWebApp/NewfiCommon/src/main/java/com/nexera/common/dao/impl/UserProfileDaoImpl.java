@@ -170,16 +170,16 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		 * This method should return all users who are not deleted, meaning
 		 * status 0 and internaluserdetails status is not -1
 		 * 
-		 * All users who have status as 0 in user table All users who have
-		 * internaluserdetails as null, if present, the internal status should
-		 * not be -1
+		 * All users who have internaluserdetails as null, if present, the
+		 * internal status should not be -1
 		 */
+		String searchQuery = "FROM User where internalUserDetail IS NULL OR (internalUserDetail.activeInternal!=:DELETED)";
 
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("status", new Boolean(Boolean.TRUE)));
 
-		return criteria.list();
+		Query query = session.createQuery(searchQuery);
+		query.setParameter("DELETED", ActiveInternalEnum.DELETED);
+		return query.list();
 
 	}
 
