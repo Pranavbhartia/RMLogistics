@@ -977,7 +977,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		var data={};
 		data.status="3";//since we will send only completed status from frontend
 		data["workflowItemExecId"]=wf.id;
-		data["loanID"]=workFlowContext.loanID;
+		data["loanID"]=workFlowContext.loanId;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}else{
 		var url="rest/workflow/invokeaction/"+wf.id;
