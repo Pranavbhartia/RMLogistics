@@ -51,6 +51,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -101,23 +105,65 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
+	public List<File> splitPDFPagesUsingIText(File file) throws IOException{
+		List<File> newPdfpages = new ArrayList<File>();
+		
+			 PdfReader reader = new PdfReader(file.getAbsolutePath());
+			
+			 Integer numberOfpages = reader.getNumberOfPages();
+			 for (int i = 1; i <= numberOfpages; i++) {
+				 Document document = null;
+				 PdfCopy writer = null;
+				 String filepath = tomcatDirectoryPath() + File.separator
+					        + file.getName().replace(".pdf", "") + "_" + i
+					        + ".pdf";
+				try{ 
+				 	document = new Document(reader.getPageSizeWithRotation(1));
+				 	writer = new PdfCopy(document, new FileOutputStream(filepath));
+	                document.open();
+	                PdfImportedPage page = writer.getImportedPage(reader, i);
+	                writer.addPage(page);
+	                document.close();
+	                writer.close();
+	                newPdfpages.add(new File(filepath));
+				 }catch(Exception e){
+						LOGGER.info("Exception in converting pdf pages document : "
+						        + e.getMessage());
+						throw new FatalException("Error in Splitting");
+				 }finally{
+					if(document != null){
+						document.close();
+					}	
+					if(writer != null){
+						writer.close();
+					}
+				 }
+		 }
+		
+		return newPdfpages;
+	}
+	
+	
 	public List<File> splitPDFPages(File file) {
-
+		
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
 		Integer pageNum = 0;
+		PDPageContentStream contentStream=null;
 		for (PDPage pdPage : pdfPages) {
 
 			try {
+				
 				PDDocument newDocument = new PDDocument();
 				newDocument.addPage(pdPage);
 				String filepath = tomcatDirectoryPath() + File.separator
 				        + file.getName().replace(".pdf", "") + "_" + pageNum
 				        + ".pdf";
-
+				
+				
 				File newFile = new File(filepath);
 				newFile.createNewFile();
-
+				
 				newDocument.save(filepath);
 				newDocument.close();
 				pageNum++;
@@ -170,19 +216,24 @@ public class NexeraUtility {
 		return filePath;
 	}
 
-	public String joinPDDocuments(List<String> fileUrls) throws IOException,
+	public File joinPDDocuments(List<File> files) throws IOException,
 	        COSVisitorException {
 		PDFMergerUtility mergePDF = new PDFMergerUtility();
 		String newFilePath = this.tomcatDirectoryPath() + File.separator
 		        + randomStringOfLength() + ".pdf";
 
-		for (String fileUrl : fileUrls) {
-			LOGGER.info("Adding File with URL" + fileUrl);
-			mergePDF.addSource(new File(fileUrl));
+		for (File file : files) {
+			LOGGER.info("Adding File with URL" + file);
+			mergePDF.addSource(file);
+			if(file.exists()){
+				file.delete();
+			}
 		}
 		mergePDF.setDestinationFileName(newFilePath);
 		mergePDF.mergeDocuments();
-		return newFilePath;
+		
+		
+		return new File(newFilePath);
 	}
 
 	public String randomStringOfLength() {

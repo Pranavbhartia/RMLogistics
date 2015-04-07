@@ -31,6 +31,7 @@ public class UploadedFilesList implements Serializable {
 	private String uuidFileId;
 	private Integer totalPages;
 	private String lqbFileID;
+	private Boolean isMiscellaneous;
 	
 	
 	public UploadedFilesList() {
@@ -161,6 +162,16 @@ public class UploadedFilesList implements Serializable {
 
 	public void setLqbFileID(String lqbFileID) {
 		this.lqbFileID = lqbFileID;
+	}
+
+	@Column(name = "is_miscellaneous", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsMiscellaneous() {
+		return isMiscellaneous;
+	}
+
+	public void setIsMiscellaneous(Boolean isMiscellaneous) {
+		this.isMiscellaneous = isMiscellaneous;
 	}
 
 	

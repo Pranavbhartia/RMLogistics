@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.braintreegateway.BraintreeGateway;
 import com.braintreegateway.Environment;
 import com.braintreegateway.Result;
@@ -38,18 +40,20 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.BraintreePaymentGatewayService;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
 
-
 /**
- * @author karthik This is the class that has methods to make api calls to Braintree payment gateway
- *         to initiate transactions.
+ * @author karthik This is the class that has methods to make api calls to
+ *         Braintree payment gateway to initiate transactions.
  */
 
 @Component
-public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatewayService, InitializingBean {
+public class BraintreePaymentGatewayServiceImpl implements
+        BraintreePaymentGatewayService, InitializingBean {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BraintreePaymentGatewayServiceImpl.class);
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(BraintreePaymentGatewayServiceImpl.class);
 
 	private BraintreeGateway gateway = null;
 
@@ -64,7 +68,7 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 
 	@Value("${ENVIRONMENT_SANDBOX}")
 	private int sandboxMode;
-	
+
 	@Value("${PAYMENT_TEMPLATE_ID}")
 	private String paymentTemplateId;
 
@@ -73,12 +77,16 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 
 	@Autowired
 	private TransactionDetailsDao transactionDetailsDao;
-	
-	@Autowired 
+
+	@Autowired
 	private SendGridEmailService sendGridMailService;
-	
+
+	@Autowired
+	private LoanService loanSerivce;
+
 	/**
 	 * Method to generate client token to be used by the front end.
+	 * 
 	 * @return
 	 */
 	@Override
@@ -93,8 +101,9 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 		return clientToken;
 	}
 
-	private String createTransaction(String paymentNonce, double amount) throws PaymentException, CreditCardException,
-			PaymentUnsuccessfulException {
+	private String createTransaction(String paymentNonce, double amount)
+	        throws PaymentException, CreditCardException,
+	        PaymentUnsuccessfulException {
 
 		LOG.info("createTransaction called to make a new transaction");
 		String transactionId = null;
@@ -111,39 +120,52 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 			LOG.debug("Making api call to create transaction");
 			result = gateway.transaction().sale(request);
 			LOG.debug("Api call complete");
-		}
-		catch (UnexpectedException e) {
-			LOG.error("makePayment : Unexpected exception has occurred, message : " + e.getMessage());
-			throw new PaymentException("makePayment : Unexpected exception has occurred, message : " + e.getMessage(), DisplayMessageConstants.GENERAL_ERROR);
+		} catch (UnexpectedException e) {
+			LOG.error("makePayment : Unexpected exception has occurred, message : "
+			        + e.getMessage());
+			throw new PaymentException(
+			        "makePayment : Unexpected exception has occurred, message : "
+			                + e.getMessage(),
+			        DisplayMessageConstants.GENERAL_ERROR);
 		}
 
-		LOG.debug("Payment status : " + result.isSuccess() + " Message : " + result.getMessage());
+		LOG.debug("Payment status : " + result.isSuccess() + " Message : "
+		        + result.getMessage());
 
 		if (result.isSuccess()) {
 			LOG.info("Result : " + result.isSuccess());
 			transactionId = result.getTarget().getId();
-		}
-		else {
-			LOG.info("Result : " + result.isSuccess() + " message : " + result.getMessage());
-			ValidationErrors creditCardErrors = result.getErrors().forObject("customer").forObject("creditCard");
+		} else {
+			LOG.info("Result : " + result.isSuccess() + " message : "
+			        + result.getMessage());
+			ValidationErrors creditCardErrors = result.getErrors()
+			        .forObject("customer").forObject("creditCard");
 			if (creditCardErrors.size() > 0) {
 				String errorMessage = "";
-				for (ValidationError error : creditCardErrors.getAllValidationErrors()) {
+				for (ValidationError error : creditCardErrors
+				        .getAllValidationErrors()) {
 					errorMessage += " Error Code : " + error.getCode();
-					errorMessage += " Error message : " + error.getMessage() + "\n";
+					errorMessage += " Error message : " + error.getMessage()
+					        + "\n";
 				}
-				throw new CreditCardException("Credit Card Validation failed, reason : \n " + errorMessage,
-						DisplayMessageConstants.CREDIT_CARD_INVALID);
+				throw new CreditCardException(
+				        "Credit Card Validation failed, reason : \n "
+				                + errorMessage,
+				        DisplayMessageConstants.CREDIT_CARD_INVALID);
 			}
-			List<ValidationError> allErrors = result.getErrors().getAllDeepValidationErrors();
+			List<ValidationError> allErrors = result.getErrors()
+			        .getAllDeepValidationErrors();
 			if (allErrors.size() > 0) {
 				String errorMessage = "";
 				for (ValidationError error : allErrors) {
 					errorMessage += " Error Code : " + error.getCode();
-					errorMessage += " Error message : " + error.getMessage() + "\n";
+					errorMessage += " Error message : " + error.getMessage()
+					        + "\n";
 				}
-				throw new PaymentUnsuccessfulException("Transaction creation failed, reason : \n " + errorMessage,
-						DisplayMessageConstants.PAYMENT_UNSUCCESSFUL);
+				throw new PaymentUnsuccessfulException(
+				        "Transaction creation failed, reason : \n "
+				                + errorMessage,
+				        DisplayMessageConstants.PAYMENT_UNSUCCESSFUL);
 			}
 		}
 
@@ -151,24 +173,29 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 		return transactionId;
 	}
 
-	private void updateTransactionDetails(String transactionId, int loanId, User user, float amount) throws InvalidInputException,
-			NoRecordsFetchedException {
+	private void updateTransactionDetails(String transactionId, int loanId,
+	        User user, float amount) throws InvalidInputException,
+	        NoRecordsFetchedException {
 
 		if (transactionId == null || transactionId.isEmpty()) {
 			LOG.error("updateTransactionDetails : transactionId is null or empty!");
-			throw new InvalidInputException("updateTransactionDetails : transactionId is null or empty!");
+			throw new InvalidInputException(
+			        "updateTransactionDetails : transactionId is null or empty!");
 		}
 		if (loanId <= 0) {
 			LOG.error("updateTransactionDetails : loanId is invalid!");
-			throw new InvalidInputException("updateTransactionDetails : loanId is invalid!");
+			throw new InvalidInputException(
+			        "updateTransactionDetails : loanId is invalid!");
 		}
 		if (user == null) {
 			LOG.error("updateTransactionDetails : user is null or empty!");
-			throw new InvalidInputException("updateTransactionDetails : user is null or empty!");
+			throw new InvalidInputException(
+			        "updateTransactionDetails : user is null or empty!");
 		}
 		if (amount <= 0) {
 			LOG.error("updateTransactionDetails : amount is invalid!");
-			throw new InvalidInputException("updateTransactionDetails : amount is invalid!");
+			throw new InvalidInputException(
+			        "updateTransactionDetails : amount is invalid!");
 		}
 
 		LOG.info("updateTransactionDetails called to update the database");
@@ -177,7 +204,8 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 
 		if (loan == null) {
 			LOG.error("Loan not found for loanId : " + loanId);
-			throw new NoRecordsFetchedException("Loan not found for loanId : " + loanId);
+			throw new NoRecordsFetchedException("Loan not found for loanId : "
+			        + loanId);
 		}
 
 		// We create a new transaction details object
@@ -187,52 +215,60 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 		transactionDetails.setUser(user);
 		transactionDetails.setAmount(amount);
 		transactionDetails.setCreated_by(user.getId());
-		transactionDetails.setCreated_date(new Timestamp(System.currentTimeMillis()));
+		transactionDetails.setCreated_date(new Timestamp(System
+		        .currentTimeMillis()));
 		transactionDetails.setModified_by(user.getId());
-		transactionDetails.setModified_date(new Timestamp(System.currentTimeMillis()));
+		transactionDetails.setModified_date(new Timestamp(System
+		        .currentTimeMillis()));
 
 		LOG.debug("Updating database with the new transaction details record!");
 		transactionDetailsDao.save(transactionDetails);
 		LOG.info("Transaction details successfully updated!");
 	}
-	
+
 	/**
-	 * Function to create a Braintree transaction with a particular payment method token and an amount
+	 * Function to create a Braintree transaction with a particular payment
+	 * method token and an amount
+	 * 
 	 * @param paymentMethodToken
 	 * @param amount
 	 * @return
 	 * @throws InvalidInputException
-	 * @throws PaymentException 
-	 * @throws PaymentUnsuccessfulException 
-	 * @throws CreditCardException 
-	 * @throws NoRecordsFetchedException 
-	 * @throws UndeliveredEmailException 
+	 * @throws PaymentException
+	 * @throws PaymentUnsuccessfulException
+	 * @throws CreditCardException
+	 * @throws NoRecordsFetchedException
+	 * @throws UndeliveredEmailException
 	 */
 	@Transactional
 	@Override
-	public void makePayment(String paymentNonce, float amount, int loanId, User user) throws InvalidInputException, PaymentException,
-			PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException, UndeliveredEmailException {
+	public void makePayment(String paymentNonce, int loanId, User user)
+	        throws InvalidInputException, PaymentException,
+	        PaymentUnsuccessfulException, CreditCardException,
+	        NoRecordsFetchedException, UndeliveredEmailException {
 
 		String transactionId = null;
 
 		if (paymentNonce == null || paymentNonce.isEmpty()) {
 			LOG.error("makePayment() : paymentMethodToken parameter is null or invalid!");
-			throw new InvalidInputException("makePayment() : paymentMethodToken parameter is null or invalid!");
-		}
-		if (amount <= 0.0) {
-			LOG.error("makePayment() : amount parameter is null or invalid!");
-			throw new InvalidInputException("makePayment() : amount parameter is null or invalid!");
+			throw new InvalidInputException(
+			        "makePayment() : paymentMethodToken parameter is null or invalid!");
 		}
 		if (loanId <= 0) {
 			LOG.error("makePayment() : loanId parameter is null or invalid!");
-			throw new InvalidInputException("makePayment() : loanId parameter is null or invalid!");
+			throw new InvalidInputException(
+			        "makePayment() : loanId parameter is null or invalid!");
 		}
-		if (user== null) {
+		if (user == null) {
 			LOG.error("makePayment() : user parameter is null or invalid!");
-			throw new InvalidInputException("makePayment() : user parameter is null or invalid!");
+			throw new InvalidInputException(
+			        "makePayment() : user parameter is null or invalid!");
 		}
 
-		LOG.info("Executing makePayment with parameters : paymentMethodToken : " + paymentNonce + " , amount" + amount);
+		int amount = loanSerivce.getApplicationFee(loanId);
+
+		LOG.info("Executing makePayment with parameters : paymentMethodToken : "
+		        + paymentNonce + " , amount" + amount);
 
 		transactionId = createTransaction(paymentNonce, amount);
 
@@ -241,23 +277,26 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 			updateTransactionDetails(transactionId, loanId, user, amount);
 			LOG.debug("Database updated with the new transaction details.");
 			LOG.debug("Sending mail");
-			//Making the Mail VOs
+			// Making the Mail VOs
 			EmailVO emailVO = new EmailVO();
-			EmailRecipientVO recipientVO = new EmailRecipientVO();			
-			recipientVO.setRecipientName(user.getFirstName() + " " + user.getLastName());
+			EmailRecipientVO recipientVO = new EmailRecipientVO();
+			recipientVO.setRecipientName(user.getFirstName() + " "
+			        + user.getLastName());
 			recipientVO.setEmailID(user.getEmailId());
-			
-			//We create the substitutions map
+
+			// We create the substitutions map
 			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-			substitutions.put("-name-", new String[]{recipientVO.getRecipientName()});
-			
-			emailVO.setRecipients(new ArrayList<EmailRecipientVO>(Arrays.asList(recipientVO)));
+			substitutions.put("-name-",
+			        new String[] { recipientVO.getRecipientName() });
+
+			emailVO.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+			        .asList(recipientVO)));
 			emailVO.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 			emailVO.setSenderName(CommonConstants.SENDER_NAME);
 			emailVO.setSubject("Your payment is successful");
 			emailVO.setTemplateId(paymentTemplateId);
 			emailVO.setTokenMap(substitutions);
-			
+
 			sendGridMailService.sendAsyncMail(emailVO);
 		}
 
@@ -269,12 +308,15 @@ public class BraintreePaymentGatewayServiceImpl implements BraintreePaymentGatew
 		LOG.info("afterPropertiesSet() : Executing method ");
 		if (gateway == null) {
 			if (sandboxMode == CommonConstants.SANDBOX_MODE_TRUE) {
-				LOG.info("Initialising gateway with keys: " + merchantId + " : " + publicKey + " : " + privateKey);
-				gateway = new BraintreeGateway(Environment.SANDBOX, merchantId, publicKey, privateKey);
-			}
-			else {
-				LOG.info("Initialising gateway with keys: " + merchantId + " : " + publicKey + " : " + privateKey);
-				gateway = new BraintreeGateway(Environment.PRODUCTION, merchantId, publicKey, privateKey);
+				LOG.info("Initialising gateway with keys: " + merchantId
+				        + " : " + publicKey + " : " + privateKey);
+				gateway = new BraintreeGateway(Environment.SANDBOX, merchantId,
+				        publicKey, privateKey);
+			} else {
+				LOG.info("Initialising gateway with keys: " + merchantId
+				        + " : " + publicKey + " : " + privateKey);
+				gateway = new BraintreeGateway(Environment.PRODUCTION,
+				        merchantId, publicKey, privateKey);
 			}
 		}
 	}

@@ -147,4 +147,12 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements
 		        .add(Restrictions.eq("lqbFileID", lqbfieldId));
 		return (UploadedFilesList) criteria.uniqueResult();
 	}
+
+	@Override
+	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UploadedFilesList.class)
+		        .add(Restrictions.eq("lqbFileID", lqbDocID));
+		return (UploadedFilesList) criteria.uniqueResult();
+	}
 }
