@@ -87,7 +87,7 @@ a,a:hover,a:visited {
     top: 0;
     width: 100%;
     position: fixed;
-    height: 50px;
+    height: 60px;
     background-color: #428bca;
     z-index: 9999;
 }
@@ -97,10 +97,11 @@ a,a:hover,a:visited {
 }
 
 .header-logo {
-    height: 50px;
-    width: 88px;
-    background: url(../images/logo.png) no-repeat;
-    background-position: center;
+ height: 44px;
+  width: 122px;
+  background: url(../images/image003.png) no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .rate-table-wrapper-cont {
@@ -140,6 +141,10 @@ a,a:hover,a:visited {
 
 .tr.table-header{
     border-bottom: 1px solid #cecece;
+}
+
+.header-row{
+	margin-top:15px;
 }
 
 .print{
