@@ -5,9 +5,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 
-<div class="payment-details-wrapper" style="display: block; position: relative; margin: 100px auto 0px; width: 40%;">
+<div class="payment-details-wrapper" style="display: block; position: relative; margin: 80px auto 0px; width: 40%;">
 	<div id="payment-details-form" class="payment-details-form"
-		style="background-color: rgb(246, 248, 247); padding: 20px 0px; border-width: 4px 1px 1px; border-style: solid; border-color: rgb(66, 139, 202) rgb(183, 183, 183);">
+		style="background-color: rgb(246, 248, 247); padding: 20px 0px; border-width: 4px 1px 1px; border-style: solid; border-color: rgb(66, 139, 202) rgb(183, 183, 183); overflow:auto;">
+		<c:choose>
+		<c:when test="${error == 1 }">
+			<div style="height: 40px; margin-bottom: 10px; line-height: 40px; text-align: center; font-family: opensanssemibold; font-size: 20px; width: 70%; margin:auto; height:auto;">${message}</div>
+		</c:when>
+		<c:otherwise>
+		<div style="height: 40px; margin-bottom: 10px; line-height: 40px; text-align: center; font-family: opensanssemibold; font-size: 18px; margin:auto; height:auto;">${message}</div>
 		<div class="ms-add-member-popup-header" style="font-size: 23px;">Your
 			card details</div>
 		<form id="checkout" method="POST">
@@ -15,26 +21,33 @@
 				style="width: 405px; margin-left: 67px; margin-top: 30px;"></div>
 			<div class="clearfix">
 				<input type="submit" class="login-submit-button"
-					style="margin-top: 14px; width: 29%; margin-left: 29px; margin-bottom: 22px;"
-					value="Make Payment" /> <input type="button" id="cancel-payment"
+					style="margin-top: 14px; width: 29%; margin-left: 29px; margin-bottom: 0px; margin-top:20px;"
+					value="Make Payment" /> 
+		</c:otherwise>
+		</c:choose>
+				<input type="button" id="cancel-payment"
 					class="login-submit-button"
-					style="margin-top: 14px; width: 29%; float: right; margin-right: 29px; margin-bottom: 22px;"
+					style="margin-top: 14px; width: 29%; float: right; margin-right: 29px; margin-bottom: 22px; margin-top:20px;"
 					value="Cancel" />
 			</div>
 		</form>
 	</div>
 </div>
 
+
 <script type="text/javascript">
 	
 	$(document).ready(function() {
-		console.log("Loading braintree");
-		console.log("Setting up the payment form");
-		braintree.setup('${clienttoken}', 'dropin', {
-			container : 'dropin',
-			paymentMethodNonceReceived : makePayment
-		});
-		console.log("Braintree loaded");
+		error = '${error}';
+		if(error == 0){
+			console.log("Loading braintree");
+			console.log("Setting up the payment form");
+			braintree.setup('${clienttoken}', 'dropin', {
+				container : 'dropin',
+				paymentMethodNonceReceived : makePayment
+			});
+			console.log("Braintree loaded");
+		}
 	});
 	
 	function makePayment(event,nonce){
@@ -43,7 +56,7 @@
 		console.log(nonce);
 		console.log(newfiObject.user.defaultLoanId);
 		showOverlay();
-		url="./payment/makepayment.do";
+		url="./rest/payment/pay";
 		data = "payment_nonce=" + String(nonce);
 		data = data +"&loan_id=" + String(newfiObject.user.defaultLoanId);
 		$.ajax({

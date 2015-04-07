@@ -46,8 +46,8 @@ public class UserRole implements Serializable {
 	}
 
 	public UserRole(UserRolesEnum internal) {
-		this.id = internal.getRoleId();
-	}
+	    this.id = internal.getRoleId();
+    }
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -123,12 +123,12 @@ public class UserRole implements Serializable {
 	}
 
 	public void setUiComponentPermissions(
-	        List<UiComponentPermission> uicomponentpermissions) {
+			List<UiComponentPermission> uicomponentpermissions) {
 		this.uiComponentPermissions = uicomponentpermissions;
 	}
 
 	public UiComponentPermission addUiComponentPermission(
-	        UiComponentPermission uicomponentpermission) {
+			UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().add(uicomponentpermission);
 		uicomponentpermission.setUserRole(this);
 
@@ -136,7 +136,7 @@ public class UserRole implements Serializable {
 	}
 
 	public UiComponentPermission removeUiComponentPermission(
-	        UiComponentPermission uicomponentpermission) {
+			UiComponentPermission uicomponentpermission) {
 		getUiComponentPermissions().remove(uicomponentpermission);
 		uicomponentpermission.setUserRole(null);
 
@@ -188,7 +188,8 @@ public class UserRole implements Serializable {
 		UserRole role = new UserRole();
 
 		if (roleVO == null) {
-			return role;
+			role.setId(UserRolesEnum.CUSTOMER.getRoleId());
+			role.setRoleCd(UserRolesEnum.CUSTOMER.toString());
 		} else {
 
 			role.setId(roleVO.getId());

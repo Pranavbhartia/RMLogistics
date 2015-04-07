@@ -42,6 +42,10 @@ public interface UploadedFilesListDao
 
     public void remove( UploadedFilesList uploadedFileList );
 
-	public UploadedFilesList fetchUsingFileLQBFieldId(String lqbfieldId);
+	
+    public UploadedFilesList fetchUsingFileLQBFieldId(String lqbfieldId);
+
+
+	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
 }

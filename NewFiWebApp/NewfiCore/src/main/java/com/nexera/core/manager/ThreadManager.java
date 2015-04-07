@@ -33,6 +33,8 @@ import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -42,6 +44,7 @@ import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
+import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
@@ -51,7 +54,9 @@ import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.CreditScoreXMLHandler;
 import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.core.utility.UnderwritingXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
@@ -80,6 +85,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	EngineTrigger engineTrigger;
+
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Autowired
 	UploadedFilesListService uploadedFileListService;
@@ -298,6 +306,9 @@ public class ThreadManager implements Runnable {
 									        .startWorkFlowItemExecution(workflowItemExec
 									                .getId());
 								}
+
+								LOGGER.debug("Updating last acted on time ");
+								updateLastModifiedTimeForThisLoan(loan);
 							}
 						}
 					}
@@ -316,6 +327,164 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Fetching underwriting conditions for this loan ");
 		invokeUnderwritingCondition(loan, format);
 
+		LOGGER.debug("Fetch Credit Score For This Loan ");
+		fetchCreditScore(loan);
+
+	}
+
+	private void fetchCreditScore(Loan loan) {
+		LOGGER.debug("Inside method fetchCreditScore ");
+		int format = 0;
+
+		JSONObject creditScoreJSONObject = createCreditScoreJSONObject(
+		        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
+		        loan.getLqbFileId(), format);
+		LOGGER.debug("Invoking LQB service to fetch credit score  ");
+		JSONObject creditScoreJSONResponse = lqbInvoker
+		        .invokeLqbService(creditScoreJSONObject.toString());
+		if (creditScoreJSONResponse != null) {
+			if (!creditScoreJSONResponse
+			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+				String creditScores = creditScoreJSONResponse
+				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+				List<CreditScoreResponseVO> creditScoreResponseList = parseCreditScoresResponse(creditScores);
+				Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
+				LOGGER.debug("Save Credit Score For This Borrower ");
+				saveCreditScoresForBorrower(creditScoreMap);
+				creditScoreMap.clear();
+			}
+		}
+	}
+
+	private void saveCreditScoresForBorrower(Map<String, String> creditScoreMap) {
+		LOGGER.debug("Inside method saveCreditScores ");
+		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
+		if (customerDetail != null) {
+			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
+				String borrowerEquifaxScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
+				if (borrowerEquifaxScore != null
+				        && !borrowerEquifaxScore.equalsIgnoreCase("")) {
+					customerDetail.setEquifaxScore(borrowerEquifaxScore);
+				}
+				String borrowerExperianScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
+				if (borrowerExperianScore != null
+				        && !borrowerExperianScore.equalsIgnoreCase("")) {
+					customerDetail.setExperianScore(borrowerExperianScore);
+				}
+				String borrowerTransunionScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
+				if (borrowerTransunionScore != null
+				        && !borrowerTransunionScore.equalsIgnoreCase("")) {
+					customerDetail.setTransunionScore(borrowerTransunionScore);
+				}
+
+				LOGGER.debug("Updating customer details ");
+				updateCustomerDetails(customerDetail);
+
+			} else {
+				LOGGER.error("Credit Scores Not Found For This Loan ");
+			}
+		} else {
+			LOGGER.error("Customer Details Not Found With this user id ");
+		}
+	}
+
+	private void saveCreditScoresForCoBorrower(
+	        Map<String, String> creditScoreMap) {
+
+		LOGGER.debug("Inside method saveCreditScoresForCoBorrower ");
+		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
+		if (customerDetail != null) {
+
+			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
+				String borrowerEquifaxScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE);
+				if (borrowerEquifaxScore != null
+				        && !borrowerEquifaxScore.equalsIgnoreCase("")) {
+					customerDetail.setEquifaxScore(borrowerEquifaxScore);
+				}
+				String borrowerExperianScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE);
+				if (borrowerExperianScore != null
+				        && !borrowerExperianScore.equalsIgnoreCase("")) {
+					customerDetail.setExperianScore(borrowerExperianScore);
+				}
+				String borrowerTransunionScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE);
+				if (borrowerTransunionScore != null
+				        && !borrowerTransunionScore.equalsIgnoreCase("")) {
+					customerDetail.setTransunionScore(borrowerTransunionScore);
+				}
+
+				LOGGER.debug("Updating customer details ");
+				updateCustomerDetails(customerDetail);
+
+			} else {
+				LOGGER.error("Credit Scores Not Found For This Loan ");
+			}
+		} else {
+			LOGGER.error("Customer Details Not Found With this user id ");
+		}
+
+	}
+
+	private void updateCustomerDetails(CustomerDetail customerDetail) {
+		LOGGER.debug("Updating customer detail ");
+		userProfileService.updateCustomerScore(customerDetail);
+	}
+
+	private void updateCustomerSpouseScore(
+	        CustomerSpouseDetail customerSpouseDetail) {
+		LOGGER.debug("Updating updateCustomerSpouseScore ");
+		userProfileService.updateCustomerSpouseScore(customerSpouseDetail);
+	}
+
+	private Map<String, String> fillCreditScoresInMap(
+	        List<CreditScoreResponseVO> creditScoreResponseVOList) {
+		LOGGER.debug("Inside method fillCreditScoresInMap");
+		Map<String, String> creditScoreMap = new HashMap<String, String>();
+		for (CreditScoreResponseVO creditScoreResponseVO : creditScoreResponseVOList) {
+			if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE)) {
+				creditScoreMap
+				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE,
+				                creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE)) {
+				creditScoreMap
+				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE,
+				                creditScoreResponseVO.getFieldValue());
+			}
+		}
+		return creditScoreMap;
+	}
+
+	private void updateLastModifiedTimeForThisLoan(Loan loan) {
+		LOGGER.debug("Inside method updateLastModifiedTimeForThisLoan ");
+		loan.setModifiedDate(new Date());
+		loanService.updateLoan(loan);
 	}
 
 	private void invokeUnderwritingCondition(Loan loan, int format) {
@@ -422,6 +591,7 @@ public class ThreadManager implements Runnable {
 						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 						LOGGER.debug("Invoking Disclosure MileStone Classes ");
 						invokeDisclosuresWorkflow(workflowItemExecList);
+						updateLastModifiedTimeForThisLoan(loan);
 					}
 				}
 			}
@@ -602,6 +772,24 @@ public class ThreadManager implements Runnable {
 	}
 
 	public JSONObject createUnderWritingConditionJSONObject(String opName,
+	        String lqbLoanId, int format) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
+
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
+	public JSONObject createCreditScoreJSONObject(String opName,
 	        String lqbLoanId, int format) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
@@ -896,6 +1084,32 @@ public class ThreadManager implements Runnable {
 			sp.parse(new InputSource(new StringReader(underWritingResponse)),
 			        handler);
 			return handler.getUnderWriConditionResponseList();
+
+		} catch (SAXException se) {
+			se.printStackTrace();
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private List<CreditScoreResponseVO> parseCreditScoresResponse(
+	        String creditScoreResponse) {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+			CreditScoreXMLHandler handler = new CreditScoreXMLHandler();
+			// parse the file and also register this class for call backs
+			sp.parse(new InputSource(new StringReader(creditScoreResponse)),
+			        handler);
+			return handler.getCreditScoreResponseList();
 
 		} catch (SAXException se) {
 			se.printStackTrace();
