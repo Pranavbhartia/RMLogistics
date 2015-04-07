@@ -14,6 +14,12 @@ public class MongoMessageHierarchyVO {
 	private Map<String, MongoMessagesVO> idMap = new HashMap<String, MongoMessagesVO>();
 
 	/**
+	 * This is the <b>total</b> count for the query, which does not take into <br>
+	 * the pagination parameters
+	 */
+	private long totalMessageCount;
+
+	/**
 	 * @return
 	 */
 	public List<List<String>> getMessageIds() {
@@ -42,10 +48,18 @@ public class MongoMessageHierarchyVO {
 		return this.idMap.get(id);
 	}
 
+	public long getTotalMessageCount() {
+		return totalMessageCount;
+	}
+
+	public void setTotalMessageCount(long totalMessageCount) {
+		this.totalMessageCount = totalMessageCount;
+	}
+
 	@Override
 	public String toString() {
 		return "MongoMessageHierarchyVO [messageIds=" + messageIds + ", idMap="
-				+ idMap + "]";
+				+ idMap + ", totalMessageCount=" + totalMessageCount + "]";
 	}
 
 }
