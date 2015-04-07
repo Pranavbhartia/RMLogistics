@@ -15,8 +15,8 @@
 			</div>
 		</div>
 		<div class="body-wrapper">
-			<div class="clearfix">
-				<div class="float-left">Some dummy header content here.</div>
+			<div class="clearfix container body-header-container">
+				<div class="float-left header-txt">Some dummy header content here.</div>
 				<div class="float-right print" onclick="window.print()" title="print"></div>
 			</div>
 

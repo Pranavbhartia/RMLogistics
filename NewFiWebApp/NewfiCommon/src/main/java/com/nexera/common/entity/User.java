@@ -404,24 +404,16 @@ public class User implements Serializable, UserDetails {
 			userVO.setEmailId(user.getEmailId());
 			userVO.setDisplayName(user.getFirstName() + " "
 			        + user.getLastName());
-			if (user.getStatus() != null) {
-				userVO.setStatus(user.getStatus());
-			}
 			userVO.setCustomerDetail(CustomerDetail.convertFromEntityToVO(user
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
-			List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
-			if (user.getInternalUserStateMappings() != null) {
-				for (InternalUserStateMapping internalUserStateMapping : user
-				        .getInternalUserStateMappings()) {
-					internalUserStateMappingVOs.add(InternalUserStateMapping
-					        .convertFromEntityToVO(internalUserStateMapping));
-				}
-
+			List<InternalUserStateMappingVO> internalUserStateMappingVOs=new ArrayList<InternalUserStateMappingVO>();
+			for (InternalUserStateMapping internalUserStateMapping : user.getInternalUserStateMappings()) {
+				internalUserStateMappingVOs.add(InternalUserStateMapping.convertFromEntityToVO(internalUserStateMapping));
 			}
-
 			userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
+
 		}
 		return userVO;
 	}
@@ -438,7 +430,7 @@ public class User implements Serializable, UserDetails {
 
 		userModel.setUsername(userVO.getEmailId());
 		userModel.setEmailId(userVO.getEmailId());
-
+		userModel.setCreatedDate(new Date(System.currentTimeMillis()));
 		// if (userVO.getEmailId() != null) {
 		// userModel.setUsername(userVO.getEmailId().split(":")[0]);
 		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
@@ -454,12 +446,10 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			System.out.println("userVO in User before covert"
-			        + userVO.getCustomerDetail());
+			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
-			System.out.println("userVO in User after covert"
-			        + userVO.getCustomerDetail());
+			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));

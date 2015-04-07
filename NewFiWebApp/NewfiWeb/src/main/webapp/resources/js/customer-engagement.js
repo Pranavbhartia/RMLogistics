@@ -914,7 +914,7 @@ function paintRefinanceSeeRates() {
                 // var teaserRate = data;
                 // paintteaserRate(data);
                 // paintteaserRate(teaserRate);
-                paintFixYourRatePageCEP(teaserRate, refinanceTeaserRate);
+                               paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
             },
             error: function() {
                 alert("error");
@@ -1058,7 +1058,7 @@ function paintApplyNow(refinanceTeaserRate) {
         refinancedetails.currentMortgagePayment = refinanceTeaserRate.currentMortgagePayment;
         refinancedetails.isIncludeTaxes = refinanceTeaserRate.isIncludeTaxes;
         propertyTypeMaster.propertyTaxesPaid = refinanceTeaserRate.propertyTaxesPaid;
-        propertyTypeMaster.annualHomeownersInsurance = refinanceTeaserRate.annualHomeownersInsurance;
+        propertyTypeMaster.propertyInsuranceCost = refinanceTeaserRate.annualHomeownersInsurance;
         propertyTypeMaster.homeWorthToday = refinanceTeaserRate.homeWorthToday;
         propertyTypeMaster.homeZipCode = refinanceTeaserRate.zipCode;
         appUserDetails.user = user;
@@ -1524,7 +1524,7 @@ function getRatSliderCEP(gridArray) {
         max: rateArray.length - 1,
         value: index,
         change: function(event, ui) {
-            // alert(ui.);
+         //    alert(gridArray[ui.value].APR);
             $('#aprid').html(gridArray[ui.value].APR);
             $('#closingCostId').html(gridArray[ui.value].closingCost);
             $('#teaserRateId').html(gridArray[ui.value].teaserRate);

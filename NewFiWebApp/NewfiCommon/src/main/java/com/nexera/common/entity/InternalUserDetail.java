@@ -29,9 +29,13 @@ import com.nexera.common.vo.InternalUserRoleMasterVO;
 public class InternalUserDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	
+
 	private ActiveInternalEnum activeInternal;
 	private User manager;
+
+	private String lqbUsername;
+
+	private String lqbPassword;
 
 	private InternalUserRoleMaster internaUserRoleMaster;
 
@@ -46,11 +50,11 @@ public class InternalUserDetail implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}	
-	
+	}
+
 	@Column(name = "active_internal")
 	@Type(type = "com.nexera.common.enums.helper.ActiveInternalType")
-			public ActiveInternalEnum getActiveInternal() {
+	public ActiveInternalEnum getActiveInternal() {
 		return this.activeInternal;
 	}
 
@@ -92,6 +96,8 @@ public class InternalUserDetail implements Serializable {
 		if (internalUserDetail != null) {
 			detailVO.setActiveInternal(internalUserDetail.getActiveInternal());
 		}
+		detailVO.setLqbUsername(internalUserDetail.getLqbUsername());
+		detailVO.setLqbPassword(internalUserDetail.getLqbPassword());
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster()));
 
@@ -112,6 +118,8 @@ public class InternalUserDetail implements Serializable {
 		if (internalUserDetailVO.getActiveInternal() != null) {
 			detail.setActiveInternal(internalUserDetailVO.getActiveInternal());
 		}
+		detail.setLqbPassword(internalUserDetailVO.getLqbPassword());
+		detail.setLqbUsername(internalUserDetailVO.getLqbUsername());
 		return detail;
 	}
 
@@ -138,6 +146,24 @@ public class InternalUserDetail implements Serializable {
 		master.setRoleDescription(internalVO.getRoleDescription());
 
 		return master;
+	}
+
+	@Column(name = "lqb_username")
+	public String getLqbUsername() {
+		return lqbUsername;
+	}
+
+	public void setLqbUsername(String lqbUsername) {
+		this.lqbUsername = lqbUsername;
+	}
+
+	@Column(name = "lqb_password")
+	public String getLqbPassword() {
+		return lqbPassword;
+	}
+
+	public void setLqbPassword(String lqbPassword) {
+		this.lqbPassword = lqbPassword;
 	}
 
 }

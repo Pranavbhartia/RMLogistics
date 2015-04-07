@@ -220,6 +220,9 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getEmployedSince());
 				customeremploymentIncome.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customeremploymentIncome);
+				System.out.println("custom engagement id is "+customeremploymentIncome.getId());
+				System.out.println("custom engagement id is "+loanAppForm.getCustomerEmploymentIncome().get(0).getId());
+				loanAppForm.getCustomerEmploymentIncome().get(0).setId(customeremploymentIncome.getId());
 			}
 
 			System.out
