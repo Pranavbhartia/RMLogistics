@@ -71,7 +71,9 @@ public interface UserProfileService {
 
 	public void updateCustomerSpouseScore(
 	        CustomerSpouseDetail customerSpouseDetail);
-	
+
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception;
+
+	public CustomerDetail getCustomerDetail(int id);
 
 }

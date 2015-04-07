@@ -19,7 +19,7 @@ public class LoanVO implements Serializable {
 	private String status;
 	private UserVO user;
 	private LoanTypeMasterVO loanType;
-	
+
 	private PropertyTypeMasterVO propertyType;
 	private LoanMilestoneMasterVO currentLoanMilestone;
 	private List<LoanAppFormVO> loanAppForms;
@@ -41,6 +41,11 @@ public class LoanVO implements Serializable {
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
 
+	// Added to attach additional fields for Loan to display in Loan dashboard
+	// UI related to credit score etc.
+
+	private UserLoanStatus userLoanStatus;
+
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
 	}
@@ -59,6 +64,14 @@ public class LoanVO implements Serializable {
 
 	public LoanVO(int loanId) {
 		this.id = loanId;
+	}
+
+	public UserLoanStatus getUserLoanStatus() {
+		return userLoanStatus;
+	}
+
+	public void setUserLoanStatus(UserLoanStatus userLoanStatus) {
+		this.userLoanStatus = userLoanStatus;
 	}
 
 	public LoanVO() {
@@ -136,7 +149,6 @@ public class LoanVO implements Serializable {
 	public void setLoanType(LoanTypeMasterVO loanType) {
 		this.loanType = loanType;
 	}
-
 
 	public PropertyTypeMasterVO getPropertyType() {
 		return propertyType;

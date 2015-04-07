@@ -202,6 +202,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			if (loanTeamList != null) {
 				for (LoanTeam loanTeam : loanTeamList) {
 					Hibernate.initialize(loanTeam.getLoan());
+					if (loanTeam.getLoan() != null) {
+						Hibernate.initialize(loanTeam.getLoan().getUser());
+					}
+
 					Loan loan = loanTeam.getLoan();
 					loanListForUser.add(loan);
 
@@ -312,6 +316,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		if (loan != null) {
 			Hibernate.initialize(loan.getLoanDetail());
+			Hibernate.initialize(loan.getLoanProgressStatus());
 			Hibernate.initialize(loan.getLoanRates());
 			Hibernate.initialize(loan.getUser());
 
