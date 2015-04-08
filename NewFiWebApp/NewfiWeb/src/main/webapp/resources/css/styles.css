@@ -2920,6 +2920,11 @@ input.calc-input {
 	text-transform: uppercase;
 }
 
+.loan-progress-sub-txt {
+	padding: 0 10px 10px 10px;
+	font-size: 13px;
+}
+
 .loan-progress-heading {
 	text-align: center;
 	font-size: 24px;
@@ -3453,7 +3458,8 @@ input.calc-input {
 .ms-cust-prof-img {
 	width: 50px;
 	height: 50px;
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #fafafa;
+	border:1px solid #d4d4d4;
 	border-radius: 50%;
 }
 
@@ -4420,5 +4426,5 @@ input.calc-input {
 .payment-details-wrapper{
 	position: relative;
 	margin: 80px auto 0px;
-	width: 480px;
+	width: 450px;
 }
