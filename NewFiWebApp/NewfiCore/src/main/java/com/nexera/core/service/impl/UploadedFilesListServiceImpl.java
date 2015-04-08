@@ -355,6 +355,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		String lqbDocumentId = null;
 		String localFilePath = null;
 		Boolean fileUpload = false;
+		File serverFile = null;
 		CheckUploadVO checkVo = new CheckUploadVO();
 		try {
 			// Upload the file locally. If png, convert to PDF, else save
@@ -374,9 +375,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			// Upload succesfull
 
 			if (fileUpload) {
-
+				serverFile = new File(localFilePath);
 				String uuidValue = nexeraUtility.randomStringOfLength();
-
+				
 				// Send file to LQB
 				LQBResponseVO lqbResponseVO = createLQBVO(userId, bytes,
 				        loanId, uuidValue , isNeedAssigned);
@@ -388,28 +389,23 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					        .getLoanByID(loanId).getLqbFileId());
 
 					lqbDocumentId = fetchDocumentIDByUUID(responseVO, uuidValue);
+					
+					// Upload the file to S3. Insert in to File table
+					Integer savedRowId = addUploadedFilelistObejct(serverFile,
+					        loanId, userId, assignedBy, lqbDocumentId, uuidValue);
+					LOG.info("Added File document row : " + savedRowId);
+					checkVo.setUploadFileId(savedRowId);
 
-					// updateLQBDocumentInUploadNeededFile(lqbDocumentId ,
-					// fileId);
+					UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
 
+					checkVo.setUuid(latestRow.getUuidFileId());
+					checkVo.setFileName(latestRow.getFileName());
+					checkVo.setLqbFileId(latestRow.getLqbFileID());
+
+				}else{
+					throw new FatalException("Error saving document");
 				}
-
-				File serverFile = new File(localFilePath);
-				// Upload the file to S3. Insert in to File table
-				Integer savedRowId = addUploadedFilelistObejct(serverFile,
-				        loanId, userId, assignedBy, lqbDocumentId, uuidValue);
-				LOG.info("Added File document row : " + savedRowId);
-				checkVo.setUploadFileId(savedRowId);
-
-				UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
-
-				checkVo.setUuid(latestRow.getUuidFileId());
-				checkVo.setFileName(latestRow.getFileName());
-				checkVo.setLqbFileId(latestRow.getLqbFileID());
-
-				if (serverFile.exists()) {
-					serverFile.delete();
-				}
+				
 			}
 
 		} catch (Exception e) {
@@ -417,6 +413,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
+		}finally{
+			if (serverFile.exists()) {
+				serverFile.delete();
+			}
 		}
 		checkVo.setIsUploadSuccess(fileUpload);
 		LOG.info("file.getOriginalFilename() : " + file.getName());
