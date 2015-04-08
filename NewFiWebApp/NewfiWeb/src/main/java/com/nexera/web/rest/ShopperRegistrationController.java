@@ -144,6 +144,7 @@ public class ShopperRegistrationController {
 			
 			loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
 			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			// loanAppFormVO.setLoanType(new
