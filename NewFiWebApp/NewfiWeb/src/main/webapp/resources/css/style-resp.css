@@ -988,6 +988,38 @@
 	.create-user-popup-input{
 		width: 190px;
 	}
+	.ms-team-member-th, .ms-team-member-tr{
+    	width:210px;
+    }
+    .payment-details-wrapper{
+    	width:320px;
+    }
+    .payment-dropin{
+    	width:280px;
+    }
+	.payment-submit-btn {
+		margin-left: 15px;
+	}
+	.payment-btn {
+		width: 125px;
+		font-size: 14px;
+		margin-top: 20px;
+		border: none;
+	}
+	.payment-cancel-btn {
+		margin-right: 15px;
+	}
+	#ms-add-member-popup .add-team-mem-header{
+		margin-bottom: 0;
+	}
+	#ms-add-member-popup{
+		right: 0;
+		width:300px;
+	}
+	#ms-add-member-popup .add-member-sel,#ms-add-member-popup .add-member-sel-search
+		{
+		width: 100%;
+	}
 }
 
 

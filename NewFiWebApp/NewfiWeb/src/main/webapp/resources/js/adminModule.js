@@ -3,7 +3,7 @@ var salesManager="Sales Manager";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
-var statusDelete="DELETED";
+
 $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
 		$('#admin-add-usertype-dropdown-cont').hide();
@@ -757,6 +757,8 @@ var userRoleStr;
 	}else if(user.internalUserDetail.activeInternal==statusInActive){
 	console.log("status of user in",user.status);
 	trCol4.append(inputInActive);
+	}else{
+		trCol4.append(inputActive);
 	}
 	}
 	}

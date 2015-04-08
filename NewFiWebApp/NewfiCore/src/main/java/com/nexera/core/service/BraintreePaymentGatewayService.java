@@ -1,6 +1,10 @@
 package com.nexera.core.service;
 
 import org.springframework.stereotype.Component;
+
+import com.braintreegateway.Transaction;
+import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.CreditCardException;
 import com.nexera.common.exception.InvalidInputException;
@@ -39,5 +43,14 @@ public interface BraintreePaymentGatewayService {
 	 */
 	public void makePayment(String paymentNonce, int loanId, User user) throws InvalidInputException, PaymentException, PaymentUnsuccessfulException, CreditCardException, NoRecordsFetchedException, UndeliveredEmailException;
 	
-
+	
+	/**
+	 * Checks the status of transaction and takes necessary actions
+	 * @param transactionDetails
+	 * @throws NoRecordsFetchedException
+	 * @throws InvalidInputException
+	 */
+	public void checkAndUpdateTransactions(TransactionDetails transactionDetails) throws NoRecordsFetchedException, InvalidInputException;
+	
+	public Transaction getTrasactionDetails(LoanApplicationFee applicationFee) throws InvalidInputException, NoRecordsFetchedException, PaymentException;
 }

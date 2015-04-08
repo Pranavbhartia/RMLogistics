@@ -27,6 +27,7 @@ public class TransactionDetails {
 	private Loan loan;
 	private User user;
 	private float amount;
+	private int status;
 	private Timestamp created_date;
 	private int created_by;
 	private Timestamp modified_date;
@@ -111,4 +112,13 @@ public class TransactionDetails {
 	public void setLoan(Loan loan) {
 		this.loan = loan;
 	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 }
