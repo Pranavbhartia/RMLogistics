@@ -359,4 +359,11 @@ public class TemplateController extends DefaultController {
 		mav.setViewName("register");
 		return mav;
 	}
+	
+	@RequestMapping(value = "forgotPassword.do")
+	public ModelAndView showForgetPasswordPage() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("forgotPassword");
+		return mav;
+	}
 }
