@@ -34,7 +34,7 @@ function paintBuyHomeQuest() {
 	//homeProgressBaar(1);
 	
 	
-	appUserDetails = {};
+appUserDetails = {};
 	
 	appUserDetails = JSON.parse(newfi.appUserDetails);
 	
@@ -42,17 +42,65 @@ function paintBuyHomeQuest() {
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
 	
-	loan.id = newfi.user.defaultLoanId;
 	
-	purchaseDetails.id = appUserDetails.purchaseDetails.id;
 	
-	customerSpouseDetail.id = newfi.user.customerDetail.customerSpouseDetail.id;
+	
+	 if(appUserDetails.propertyTypeMaster != null){
+		 propertyTypeMaster.id = appUserDetails.propertyTypeMaster.id;
+		 propertyTypeMaster.propertyTypeCd = appUserDetails.propertyTypeMaster.propertyTypeCd;
+		 propertyTypeMaster.residenceTypeCd = appUserDetails.propertyTypeMaster.residenceTypeCd;
+		 propertyTypeMaster.propertyTaxesPaid = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+		 propertyTypeMaster.propertyInsuranceProvider = appUserDetails.propertyTypeMaster.propertyInsuranceProvider;
+		 propertyTypeMaster.propertyInsuranceCost = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+		 propertyTypeMaster.propertyPurchaseYear = appUserDetails.propertyTypeMaster.propertyPurchaseYear;
+		 propertyTypeMaster.homeWorthToday=appUserDetails.propertyTypeMaster.homeWorthToday;
+		 propertyTypeMaster.homeZipCode = appUserDetails.propertyTypeMaster.homeZipCode;
 
+	 }
+	 
+	 
+	 if(appUserDetails.refinancedetails !=null){
+     refinancedetails.id =appUserDetails.refinancedetails.id; 	 
+	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
+	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
+	 //refinancedetails.currentMortgageBalance=9090;
+	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
+	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
+	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
+	
+	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
+	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
+	
+	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
+	 }
+	 
+	 
+	 if(newfi.customerSpouseDetail != null){
+		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
+	 }
+	 if(newfi.customerEmploymentIncome !=null){
+	 customerEmploymentIncome.id = newfi.customerEmploymentIncome.id;
+	 }
+	 if(newfi.customerBankAccountDetails != null){
+	 customerBankAccountDetails.id = newfi.customerBankAccountDetails.id;
+	 }
+	 if(newfi.customerRetirementAccountDetails != null){
+	 customerRetirementAccountDetails.id = newfi.customerRetirementAccountDetails.id;
+	 }
+	 if(newfi.user.customerDetail.customerOtherAccountDetails !=null){
+	 customerOtherAccountDetails.id = newfi.user.customerDetail.customerOtherAccountDetails.id;
+	 }
+	
+	//user.customerEnagagement = customerEnagagement;
+	/*user.customerEmploymentIncome = customerEmploymentIncome;
+	user.customerBankAccountDetails = customerBankAccountDetails;*/
+	
+	
+	loan.id = newfi.user.defaultLoanId;
 	
 	formCompletionStatus = newfi.formCompletionStatus;
 	
 	appUserDetails.id = newfi.loanAppFormid; 
-
 
 	
 	
@@ -248,7 +296,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 function paintWhereYouLiveStep(){
 
 	quesContxts = [];
-$('#app-right-panel').html("");
+	$('#app-right-panel').html("");
 	
     var questions = [
                     
@@ -283,6 +331,8 @@ $('#app-right-panel').html("");
 		quesContxts.push(contxt);
 	}
 	
+    var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
+    
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
@@ -302,7 +352,7 @@ $('#app-right-panel').html("");
 		
 	      });
 	
-    $('#app-right-panel').append(saveAndContinueButton);
+    $('#app-right-panel').append(addRemoveRow).append(saveAndContinueButton);
 
 
 }
@@ -559,17 +609,17 @@ function saleYourCurrentHome(){
 	        type: "desc",
 	        text: "Whats the listing price of your current home?",
 	        name: "homelistprice",
-	        value: appUserDetails.homelistprice
+	        value: ""
 	    }, {
 	        type: "desc",
 	        text: "Whats the mortage balance of your current home?",
 	        name: "homemortgagebalance",
-	        value: appUserDetails.homemortgagebalance
+	        value: ""
 	    }, {
 	        type: "desc",
 	        text: "How much from this sale do you intend to purchase towards your new home ?",
 	        name: "inverstInPurchase",
-	        value: appUserDetails.inverstInPurchase
+	        value: ""
 	    }];
 	
 	    var questionsContainer = getQuestionsContainer(questions);
@@ -593,22 +643,22 @@ function bankAccount(){
        name: "bankAccount",
        options: [{
            text: "Savings",
-           value: "0"
+           value: "savings"
        }, {
            text: "Checkings",
-           value: "1"
+           value: "checkings"
        }],
        selected: ""
    }, {
        type: "desc",
        text: "Current balance",
        name: "bankAccountCurrentBankBalance",
-       value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+       value: ""
    }, {
        type: "desc",
        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.",
        name: "bankAccountUsefornewhome",
-       value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+       value: ""
    }];
 
    var questionsContainer = getQuestionsContainer(questions);
@@ -645,12 +695,12 @@ function retirementAccounts(){
 		       type: "desc",
 		       text: "Current balance",
 		       name: "accountTypeCurrentBankBalance",
-		       value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+		       value: ""
 		   }, {
 		       type: "desc",
 		       text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
 		       name: "accountTypeUseForNewHome",
-		       value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+		       value: ""
 		   }];
 		
 		   var questionsContainer = getQuestionsContainer(questions);
@@ -690,12 +740,12 @@ function otherAccount(){
 	        type: "desc",
 	        text: "Current balance",
 	        name: "otherAccountCurrentBankBalance",
-	        value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
+	        value: ""
 	    }, {
 	        type: "desc",
 	        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
 	        name: "otherAccountsUseForNewHome",
-	        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
+	        value: ""
 	    }];
 
 	    var questionsContainer = getQuestionsContainer(questions);

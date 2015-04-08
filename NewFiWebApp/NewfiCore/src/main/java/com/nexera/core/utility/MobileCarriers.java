@@ -2,39 +2,39 @@ package com.nexera.core.utility;
 
 public interface MobileCarriers {
 
-	public static String AT_T_EMAIL_ADDRESS = "number@txt.att.net";
+	public static String AT_T_EMAIL_ADDRESS = "@txt.att.net";
 
-	public static String T_MOBILE_EMAIL_ADDRESS = "number@tmomail.net";
+	public static String T_MOBILE_EMAIL_ADDRESS = "@tmomail.net";
 
-	public static String VERIZON_EMAIL_ADDRESS = "number@vtext.com";
+	public static String VERIZON_EMAIL_ADDRESS = "@vtext.com";
 
-	public static String SPRINT_EMAIL_ADDRESS = "number@messaging.sprintpcs.com";
+	public static String SPRINT_EMAIL_ADDRESS = "@messaging.sprintpcs.com";
 
-	public static String SPRINT_ALTERNATIVE_EMAIL_ADDRESS = "number@pm.sprint.com";
+	public static String SPRINT_ALTERNATIVE_EMAIL_ADDRESS = "@pm.sprint.com";
 
-	public static String VIRGIN_MOBILE_EMAIL_ADDRESS = "number@vmobl.com";
+	public static String VIRGIN_MOBILE_EMAIL_ADDRESS = "@vmobl.com";
 
-	public static String TRACFONE_EMAIL_ADDRESS = "number@mmst5.tracfone.com";
+	public static String TRACFONE_EMAIL_ADDRESS = "@mmst5.tracfone.com";
 
-	public static String METRO_PCS_EMAIL_ADDRESS = "number@mymetropcs.com";
+	public static String METRO_PCS_EMAIL_ADDRESS = "@mymetropcs.com";
 
-	public static String BOOST_MOBILE_EMAIL_ADDRESS = "number@myboostmobile.com";
+	public static String BOOST_MOBILE_EMAIL_ADDRESS = "@myboostmobile.com";
 
-	public static String CRICKET_EMAIL_ADDRESS = "number@sms.mycricket.com";
+	public static String CRICKET_EMAIL_ADDRESS = "@sms.mycricket.com";
 
-	public static String NEXTEL_EMAIL_ADDRESS = "number@messaging.nextel.com";
+	public static String NEXTEL_EMAIL_ADDRESS = "@messaging.nextel.com";
 
-	public static String ALLTEL_EMAIL_ADDRESS = "number@message.alltel.com";
+	public static String ALLTEL_EMAIL_ADDRESS = "@message.alltel.com";
 
-	public static String PTEL_EMAIL_ADDRESS = "number@ptel.com";
+	public static String PTEL_EMAIL_ADDRESS = "@ptel.com";
 
-	public static String SUNCOM_EMAIL_ADDRESS = "number@tms.suncom.com";
+	public static String SUNCOM_EMAIL_ADDRESS = "@tms.suncom.com";
 
-	public static String QUEST_EMAIL_ADDRESS = "number@qwestmp.com";
+	public static String QUEST_EMAIL_ADDRESS = "@qwestmp.com";
 
-	public static String US_CELLULAR_EMAIL_ADDRESS = "number@email.uscc.net";
+	public static String US_CELLULAR_EMAIL_ADDRESS = "@email.uscc.net";
 
-	public static String CINGULAR_EMAIL_ADDRES = "mobile.mycingular.com";
+	public static String CINGULAR_EMAIL_ADDRES = "@mobile.mycingular.com";
 
 	// Carrier Names
 

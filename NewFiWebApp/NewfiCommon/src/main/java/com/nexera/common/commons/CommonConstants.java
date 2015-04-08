@@ -14,6 +14,7 @@ public interface CommonConstants {
 	 * Default constants
 	 */
 	public static final Integer RANDOM_PASSWORD_LENGTH = 8;
+	public static final int SYSTEM_ADMIN_ID = 1;
 
 	/**
 	 * Entity status
@@ -71,6 +72,10 @@ public interface CommonConstants {
 	public static final String MESSAGE_KEY = "message";
 	public static final int SUCCESS = 1;
 	public static final int FAILURE = 0;
+	public static final int TRANSACTION_STATUS_ENABLED = 1;
+	public static final int TRANSACTION_STATUS_DISABLED = 0;
+	public static final int TRANSACTION_STATUS_FAILED = 2;
+
 
 	/*
 	 * SendGrid constants
@@ -82,6 +87,7 @@ public interface CommonConstants {
 	        + "Newfi Team";
 
 	public static final String SENDER_DOMAIN = "@loan.newfi.com";
+	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE="Password updated successfully.Please Check your mail";
 
 	/*
 	 * Constants for email subjects

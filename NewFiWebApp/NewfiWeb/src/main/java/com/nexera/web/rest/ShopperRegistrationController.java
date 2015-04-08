@@ -75,10 +75,8 @@ public class ShopperRegistrationController {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
 			        LoanAppFormVO.class);
 			String emailId = loaAppFormVO.getUser().getEmailId();
-			LOG.info("calling 1234 "
-			        + loaAppFormVO.getRefinancedetails()
-			                .getCurrentMortgageBalance());
-			LOG.info("calling 1234 " + loaAppFormVO.getUser().getFirstName());
+			//LOG.info("calling 1234 "+ loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+			LOG.info("calling UserName : " + loaAppFormVO.getUser().getFirstName());
 
 			UserVO user = registerCustomer(loaAppFormVO);
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
@@ -125,22 +123,28 @@ public class ShopperRegistrationController {
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-
+			if(loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			}else{
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+			}
+			
+			
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 			userVOObj.setDefaultLoanId(loanVO.getId());
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-			// userVOObj.setCustomerEnagagement(customerEnagagement);
+		
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
-			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
-			        .getPropertyTypeMaster());
-			loanAppFormVO.setRefinancedetails(loaAppFormVO
-			        .getRefinancedetails());
+			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
+			
+			loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
+			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			// loanAppFormVO.setLoanType(new

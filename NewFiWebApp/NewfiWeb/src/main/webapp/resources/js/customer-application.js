@@ -1103,7 +1103,7 @@ function paintMyIncome() {
 	if(purchase == true){
 		
 		var questionsContainer10 = paintSaleOfCurrentHome();
-		        questcontainer.append(paintSaleOfCurrentHomeDIV);
+		  questcontainer.append(questionsContainer10);
     }
    
    
@@ -1134,7 +1134,7 @@ function paintMyIncome() {
      });
      
 
-appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+    appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
     selfEmployedIncome = $('input[name="selfEmployed"]').val();
 		        
 		        ssDisabilityIncome = $('input[name="disability"]').val();
@@ -1175,30 +1175,69 @@ appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
         homelistprice = $('input[name="homelistprice"]').val();
         homemortgagebalance = $('input[name="homemortgagebalance"]').val();
         inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+        
+        
+        var  customerBankAccountDetails = [];
         /* Bank Account Start*/
         accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
         currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
         amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
-      //  appUserDetails.customerBankAccountDetails.accountSubType = accountSubType;
-        //appUserDetails.customerBankAccountDetails.currentAccountBalance = currentAccountBalance;
-        //appUserDetails.customerBankAccountDetails.amountForNewHome = amountForNewHome;
+      
+        customerBankAccountDetails1 = {};
+        customerBankAccountDetails1.accountSubType = accountSubType;
+        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
+        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
+        var termp = {};
+        termp.customerBankAccountDetails = customerBankAccountDetails1;
+        
+        customerBankAccountDetails.push(termp);
+        
+        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
+        
         /* Bank Account End*/
         /* Retirement Account Start*/
-        //accountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
-        currentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
-        accountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
-       // appUserDetails.customerRetirementAccountDetails.accountSubType = accountSubType;
-        //appUserDetails.customerRetirementAccountDetails.currentAccountBalance = currentAccountBalance;
-        //appUserDetails.customerRetirementAccountDetails.amountForNewHome = accountTypeUseForNewHome;
+        
+        var  customerRetirementAccountDetails = [];
+        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
+        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
+        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
+        
+        customerRetirementAccountDetails1 = {};
+        
+        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
+        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
+        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
+        
+        var termp2 = {};
+        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
+        
+        customerRetirementAccountDetails.push(termp2);
+        
+        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
+        
         /* Retirement Account Ends*/
         /* Other Account Start*/
+        
+        var  customerOtherAccountDetails = [];
         otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
         otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
         otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
-       // appUserDetails.customerOtherAccountDetails.accountSubType = otherAccountName;
-        //appUserDetails.customerOtherAccountDetails.currentAccountBalance = otherAccountCurrentBankBalance;
-        //appUserDetails.customerOtherAccountDetails.amountForNewHome = otherAccountsUseForNewHome;
+        
+        customerOtherAccountDetails1 = {};
+        
+        customerOtherAccountDetails1.accountSubType = otherAccountName;
+        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
+        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
+        
+        var termp3 = {};
+        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
+        
+        customerOtherAccountDetails.push(termp3);
+        
+        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
+        
         /* Other Account Ends*/
+        
         /*appUserDetails.homelistprice = homelistprice;
              appUserDetails.homemortgagebalance = homemortgagebalance;
              appUserDetails.inverstInPurchase = inverstInPurchase;
@@ -1299,7 +1338,7 @@ function getMultiTextQuestion(quesText) {
      return wrapper.append(container);
 }
 
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime']", function(){
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(){
     $(this).datepicker({
 		format: "M yyyy",
 	    minViewMode: "months",
@@ -1464,17 +1503,15 @@ function paintMySpouseIncome() {
 
 	
 
-$('#app-right-panel').html('');
-	var questcontainer = $('#app-right-panel').append(quesCont);
-	
-	console.log('purchase'+purchase);
-	if(purchase == true)
-    {
-    var questionsContainer10 = paintSpouseSaleOfCurrentHome();
-   questcontainer.append(questionsContainer10);
-    }
-
-
+	$('#app-right-panel').html('');
+		var questcontainer = $('#app-right-panel').append(quesCont);
+		
+		console.log('purchase'+purchase);
+		if(purchase == true)
+	    {
+	    var questionsContainer10 = paintSpouseSaleOfCurrentHome();
+	    questcontainer.append(questionsContainer10);
+	    }
 
 }
 
@@ -1597,11 +1634,11 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
   
   
     
-          spouseSelfEmployed = $('input[name="spouseSelfEmployed"]').val();
+      spouseSelfEmployed = $('input[name="spouseSelfEmployed"]').val();
           
-          spouseDisability = $('input[name="spouseDisability"]').val();
+      spouseDisability = $('input[name="spouseDisability"]').val();
     
-          spousePension = $('input[name="spousePension"]').val();
+      spousePension = $('input[name="spousePension"]').val();
 
     
     
@@ -1737,7 +1774,7 @@ function paintSpouseRefinanceSelfEmployed(divId) {
 var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spouseSelfEmployed",
-  "value": appUserDetails.spouseSelfEmployed
+  "value": appUserDetails.customerSpouseDetail.selfEmployedIncome
  });
 
  optionContainer.append(inputBox);
@@ -1777,7 +1814,7 @@ function paintSpouseRefinanceDisability(divId) {
  var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spouseDisability",
-  "value": appUserDetails.spouseDisability
+  "value": appUserDetails.customerSpouseDetail.ssDisabilityIncome
  });
 
  optionContainer.append(inputBox);
@@ -1818,7 +1855,7 @@ function paintSpouseRefinancePension(divId) {
  var inputBox = $('<input>').attr({
   "class" : "ce-input",
   "name" : "spousePension",
-  "value": appUserDetails.spousePension
+  "value": appUserDetails.customerSpouseDetail.monthlyPension
  });
 
  optionContainer.append(inputBox);

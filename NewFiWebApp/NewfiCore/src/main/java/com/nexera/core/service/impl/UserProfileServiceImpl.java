@@ -56,7 +56,9 @@ import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -990,5 +992,49 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// TODO Auto-generated method stub
 		User user = (User) userProfileDao.load(User.class, id);
 		return user.getCustomerDetail();
+	}
+
+	@Override
+	public void forgetPassword(User user) throws InvalidInputException,
+	        UndeliveredEmailException {
+		LOG.info("function to generate random password and save");
+		CommonResponseVO response = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		String password = generateRandomPassword();
+		user.setPassword(password);
+		UserVO userVO = User.convertFromEntityToVO(user);
+		boolean isSuccess = userProfileDao.changeUserPassword(userVO);
+		if (isSuccess) {
+
+			LOG.info("sending reset password to the user");
+			sendNewPasswordToUser(user);
+
+		}
+
+	}
+
+	private void sendNewPasswordToUser(User user) throws InvalidInputException,
+	        UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		substitutions.put("-username-", new String[] { user.getUsername() });
+		substitutions.put("-password-", new String[] { user.getPassword() });
+
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Your password has been reset");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(newUserMailTemplateId);
+
+		sendGridEmailService.sendMail(emailEntity);
 	}
 }
