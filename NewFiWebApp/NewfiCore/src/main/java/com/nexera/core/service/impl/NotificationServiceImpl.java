@@ -275,6 +275,10 @@ public class NotificationServiceImpl implements NotificationService {
 		if (pushNotificationFlag) {
 			NotificationVO notificationVO = new NotificationVO();
 			notificationVO.setId(notification.getId());
+			notification = (Notification) notificationDao.load(
+			        Notification.class,
+			        notificationId);
+			Loan loan = notification.getLoan();
 			notificationVO.setLoanID(notification.getLoan().getId());
 			TriggerNotification.triggerDismissNotofication(notificationVO, url);
 		}
