@@ -76,6 +76,6 @@ public interface UserProfileService {
 	
 	public void forgetPassword(User user);
 
-	CustomerDetail getCustomerDetail(int id);
+	public CustomerDetail getCustomerDetail(int id);
 
 }
