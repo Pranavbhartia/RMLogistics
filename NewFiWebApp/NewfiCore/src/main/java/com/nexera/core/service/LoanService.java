@@ -20,6 +20,7 @@ import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
+import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
 
 public interface LoanService {
@@ -131,10 +132,13 @@ public interface LoanService {
 
 	public LoanNeedsList findLoanNeedsList(Loan loan,
 	        NeedsListMaster needsListMaster);
-	
-	public int getApplicationFee(int loanId) throws NoRecordsFetchedException, InvalidInputException;
+
+	public int getApplicationFee(int loanId) throws NoRecordsFetchedException,
+	        InvalidInputException;
 
 	public void updateLoan(Loan loan);
 
 	public List<LoanMilestoneMaster> getLoanMilestoneMasterList();
+
+	public UserLoanStatus getUserLoanStaus(LoanVO loanVO);
 }

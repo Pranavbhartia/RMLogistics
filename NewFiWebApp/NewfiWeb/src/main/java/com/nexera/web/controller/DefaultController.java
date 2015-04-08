@@ -27,6 +27,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -128,8 +129,10 @@ public class DefaultController implements InitializingBean {
 				// find the loanAppForm object and get the
 				// loanAppFormCompletionStatus
 				loanAppFormVO = loanAppFormService.find(loanAppFormVO);
-			LOG.info("inside default conteoller loanAppFormVO.getRefinancedetails().getId()"+loanAppFormVO.getRefinancedetails().getId());	
-			LOG.info("inside default conteoller loanAppFormVO.getPropertyTypeMaster().getId()"+loanAppFormVO.getPropertyTypeMaster().getId());
+				LOG.info("inside default conteoller loanAppFormVO.getRefinancedetails().getId()"
+				        + loanAppFormVO.getRefinancedetails().getId());
+				LOG.info("inside default conteoller loanAppFormVO.getPropertyTypeMaster().getId()"
+				        + loanAppFormVO.getPropertyTypeMaster().getId());
 
 				int formCompletionStatus = loanAppFormVO
 				        .getLoanAppFormCompletionStatus() == null ? 0
@@ -139,7 +142,17 @@ public class DefaultController implements InitializingBean {
 				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
 				List<String> imageList = new ArrayList<String>();
 				for (LoanTeamVO loanTeamVO : userList) {
-					imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+					if (loanTeamVO.getUser().getInternalUserDetail() != null) {
+						if (InternalUserRolesEum.LM.equals(loanTeamVO.getUser()
+						        .getInternalUserDetail()
+						        .getInternalUserRoleMasterVO().getRoleName())) {
+							imageList.add(loanTeamVO.getUser()
+							        .getPhotoImageUrl());
+						}
+					} else {
+						imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
+					}
+
 				}
 
 				model.addAttribute("loanTeamImage", imageList);
