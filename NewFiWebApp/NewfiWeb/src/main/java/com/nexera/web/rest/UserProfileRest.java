@@ -98,7 +98,16 @@ public class UserProfileRest {
 		ErrorVO errors = new ErrorVO();
 
 		if (userDetail != null) {
-			commonResponse = userProfileService.forgetPassword(userDetail);
+
+			try {
+				userProfileService.forgetPassword(userDetail);
+				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
+				commonResponse.setResultObject(successMessage);
+			} catch (Exception e) {
+				LOG.error("Error in forget password", e.getMessage());
+				errors.setMessage(e.getMessage());
+				commonResponse.setError(errors);
+			}
 
 		} else {
 			errors.setMessage(ErrorConstants.FORGET_PASSWORD_USER_EMPTY);

@@ -75,7 +75,7 @@ public interface UserProfileService {
 
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception;
 	
-	public CommonResponseVO forgetPassword(User user);
+	public void forgetPassword(User user)throws Exception;
 
 	public CustomerDetail getCustomerDetail(int id);
 

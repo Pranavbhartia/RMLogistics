@@ -995,7 +995,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	public CommonResponseVO forgetPassword(User user) {
+	public void forgetPassword(User user) throws InvalidInputException,
+	        UndeliveredEmailException {
 		LOG.info("function to generate random password and save");
 		CommonResponseVO response = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
@@ -1004,17 +1005,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		UserVO userVO = User.convertFromEntityToVO(user);
 		boolean isSuccess = userProfileDao.changeUserPassword(userVO);
 		if (isSuccess) {
-			try {
-				LOG.info("sending reset password to the user");
-				sendNewPasswordToUser(user);
-				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
-				response.setResultObject(successMessage);
-			} catch (InvalidInputException | UndeliveredEmailException e) {
-				error.setMessage(e.getMessage());
-				response.setError(error);
-			}
+
+			LOG.info("sending reset password to the user");
+			sendNewPasswordToUser(user);
+
 		}
-		return response;
 
 	}
 
