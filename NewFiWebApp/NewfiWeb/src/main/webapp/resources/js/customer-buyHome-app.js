@@ -119,6 +119,14 @@ appUserDetails = {};
 	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,"livingSituation");
 	$('#app-right-panel').html(quesCont);
 	
+	
+	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
+		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
+	} 
+	else{
+		
+		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
+	}
 }
 
 function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {

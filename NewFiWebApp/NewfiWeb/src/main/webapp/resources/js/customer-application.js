@@ -161,7 +161,7 @@ function paintCustomerApplicationPage() {
 	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
 	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
 	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
-	 alert('mortgageyearsleft'+appUserDetails.refinancedetails.mortgageyearsleft);
+	 
 	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
 	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
 	
@@ -3127,6 +3127,7 @@ function paintSelectLoanTypeQuestion() {
 		option1.css("background","rgb(247, 72, 31)");
 	}
 
+
 	var option2 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
@@ -3137,6 +3138,10 @@ function paintSelectLoanTypeQuestion() {
 		paintBuyHomeContainer();
 	});
 
+	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
+		option2.css("background","rgb(247, 72, 31)");
+	}
+	
 	optionsContainer.append(option1).append(option2);
 
 	/*var question = $('<div>').attr({
