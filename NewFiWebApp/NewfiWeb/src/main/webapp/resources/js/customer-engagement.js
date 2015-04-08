@@ -984,8 +984,9 @@ function progressBaar(num) {
      * .append(closingCostWrapper);
      * $('#ce-refinance-cp').append(rateProgramWrapper); }
      */
-function paintApplyNow(refinanceTeaserRate) {
-    // alert(JSON.stringify(refinanceTeaserRate));
+function paintApplyNow(inputCustomerDetails) {
+   
+    console.log(JSON.stringify(inputCustomerDetails));
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
     var registration = new Object();
     var parentWrapper = $('<div>').attr({
@@ -1035,45 +1036,68 @@ function paintApplyNow(refinanceTeaserRate) {
     }).html("Get Started").bind('click', {
         "userDetails": registration
     }, function(event) {
-        registration.firstName = $('input[name="fname"]').val();
+        
+    	registration.firstName = $('input[name="fname"]').val();
         registration.lastName = $('input[name="lname"]').val();
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
-        customerEnagagement = {};
-        customerEnagagement.loanType = refinanceTeaserRate.loanType;
-        customerEnagagement.refinanceOption = refinanceTeaserRate.refinanceOption;
-        customerEnagagement.propertyTaxesPaid = refinanceTeaserRate.propertyTaxesPaid;
-        customerEnagagement.livingSituation = buyHomeTeaserRate.livingSituation;
-        registration.customerEnagagement = customerEnagagement;
-        // New Code added for saving form data
+        
+
         var appUserDetails = new Object();
         var refinancedetails = new Object();
         var propertyTypeMaster = new Object();
+        var purchaseDetails = new Object();
         var user = new Object();
-        // appUserDetails.loanType =
-        // refinanceTeaserRate.loanType;
+
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
        
-        refinancedetails.refinanceOption = refinanceTeaserRate.refinanceOption;
-        refinancedetails.mortgageyearsleft=refinanceTeaserRate.yearLeftOnMortgage;
-        refinancedetails.cashTakeOut=refinanceTeaserRate.cashTakeOut;
-        refinancedetails.currentMortgageBalance = refinanceTeaserRate.currentMortgageBalance;
-        refinancedetails.currentMortgagePayment = refinanceTeaserRate.currentMortgagePayment;
-        refinancedetails.isIncludeTaxes = refinanceTeaserRate.isIncludeTaxes;
-        propertyTypeMaster.propertyTaxesPaid = refinanceTeaserRate.propertyTaxesPaid;
-        propertyTypeMaster.propertyInsuranceCost = refinanceTeaserRate.annualHomeownersInsurance;
-        propertyTypeMaster.homeWorthToday = refinanceTeaserRate.homeWorthToday;
-        propertyTypeMaster.homeZipCode = refinanceTeaserRate.zipCode;
+        loanType = {};
+        loanType.loanTypeCd = inputCustomerDetails.loanType;
+        appUserDetails.loanType = loanType;
+        
+        if(appUserDetails.loanType.loanTypeCd === 'REF'){
+        	
+        	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
+            refinancedetails.mortgageyearsleft=inputCustomerDetails.yearLeftOnMortgage;
+            refinancedetails.cashTakeOut=inputCustomerDetails.cashTakeOut;
+            refinancedetails.currentMortgageBalance = inputCustomerDetails.currentMortgageBalance;
+            refinancedetails.currentMortgagePayment = inputCustomerDetails.currentMortgagePayment;
+            refinancedetails.isIncludeTaxes = inputCustomerDetails.isIncludeTaxes;
+            
+            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
+            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
+            propertyTypeMaster.homeWorthToday = inputCustomerDetails.homeWorthToday;
+            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
+            
+            
+            appUserDetails.refinancedetails = refinancedetails;
+            appUserDetails.propertyTypeMaster = propertyTypeMaster;
+            
+        }else{
+        	
+            //purchaseDetails
+         purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
+   		 purchaseDetails.housePrice =inputCustomerDetails.housePrice;
+   		 purchaseDetails.loanAmount = inputCustomerDetails.loanAmount;
+   		 purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.isIncludeTaxes; 
+   		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
+   		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
+
+   		 appUserDetails.purchaseDetails =purchaseDetails;
+        }
+     
         appUserDetails.user = user;
-        appUserDetails.refinancedetails = refinancedetails;
-        appUserDetails.propertyTypeMaster = propertyTypeMaster;
-        appUserDetails.livingSituation = buyHomeTeaserRate.livingSituation;
+       
+        
+        // Where livingSituation should goes 
+        //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
+        
         // alert('hey');
         // alert(JSON.stringify(appUserDetails));
-       alert('final'+JSON.stringify(appUserDetails));
+       
         console.log(JSON.stringify(appUserDetails));
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         saveUserAndRedirect(appUserDetails);
@@ -1262,19 +1286,19 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
      * });
      *  }
      */
-function paintFixYourRatePageCEP(teaserRate, refinanceTeaserRate) {
+function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails) {
     /*
      * var rateProgramWrapper = getLockRateProgramContainer();
      * $('#center-panel-cont').append(rateProgramWrapper);
      */
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
     // var loanTypeText = refinanceTeaserRate.loanType;
-    var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, refinanceTeaserRate);
+    var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails);
     $('#ce-refinance-cp').append(loanSummaryWrapper);
 }
 
-function getLoanSummaryWrapperCEP(teaserRate, refinanceTeaserRate) {
-    var loanSummaryWrapper = getLoanSummaryWrapperTeaserRate(teaserRate, refinanceTeaserRate);
+function getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails) {
+    var loanSummaryWrapper = getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails);
     // var closingCostWrapper = getClosingCostSummaryContainer();
     // $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
@@ -1287,7 +1311,7 @@ function getLoanSummaryWrapperCEP(teaserRate, refinanceTeaserRate) {
      * getLoanSummaryContainerRefinanceCEP(); }else if(loanTypeText ==
      * "purchase"){ container = getLoanSummaryContainerPurchaseCEP(); }
      */
-    var rateWrapper = getLoanSliderWrapperCEP(teaserRate, refinanceTeaserRate);
+    var rateWrapper = getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails);
     var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
     // parentWrapper.append(container).append(loanSummaryWrapper).append(closingCostWrapper).append(rateWrapper).append(bottomText);
     parentWrapper.append(loanSummaryWrapper).append(rateWrapper).append(bottomText);
@@ -1369,7 +1393,7 @@ function getLoanSummaryHeaderCEP() {
      *
      * container.append(leftCol).append(rightCol); return container; }
      */
-function getLoanSliderWrapperCEP(teaserRate, refinanceTeaserRate) {
+function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails) {
     // alert(JSON.stringify(refinanceTeaserRate));
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
@@ -1386,13 +1410,13 @@ function getLoanSliderWrapperCEP(teaserRate, refinanceTeaserRate) {
     var rateBtn1 = $('<div>').attr({
         "class": "rate-btn"
     }).html("Create Your Account").on('click', function() {
-        var mainContainer = paintApplyNow(refinanceTeaserRate);
+        var mainContainer = paintApplyNow(inputCustomerDetails);
         $('#ce-main-container').html(mainContainer);
     });
     var rateBtn2 = $('<div>').attr({
         "class": "rate-btn-alertRate"
     }).html("Email My Number").on('click', function() {
-        var mainContainer = paintApplyNow(refinanceTeaserRate);
+        var mainContainer = paintApplyNow(inputCustomerDetails);
         $('#ce-main-container').html(mainContainer);
     });
     return wrapper.append(header).append(container).append(rateBtn1).append(rateBtn2);;
@@ -1553,8 +1577,8 @@ function getRatSliderCEP(gridArray) {
     return container.append(gridItemCont);
 }
 
-function getLoanSummaryWrapperTeaserRate(teaserRate, refinanceTeaserRate) {
-    var customerInputData = refinanceTeaserRate;
+function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails) {
+    var customerInputData = inputCustomerDetails;
     loanTypeText = customerInputData.loanType;
     var parentWrapper = $('<div>').attr({
         "class": "loan-summary-wrapper"

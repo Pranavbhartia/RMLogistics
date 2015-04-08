@@ -2,8 +2,8 @@
 var active = 0;
 
 var buyHomeTeaserRate = new Object();
-var purchaseDetails = new Object();
-buyHomeTeaserRate.purchaseDetails=purchaseDetails;
+//var purchaseDetails = new Object();
+//buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 
 var buyHomeitemsList = [ "Your priority", "Loan Amount",
 		"Zip Code", "Your Rates"];
@@ -48,7 +48,7 @@ function getbuyHomeLeftPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintBuyHomeContainer() {
 
-	buyHomeTeaserRate.loanType = "purchase";
+	buyHomeTeaserRate.loanType = "PUR";
 	$('#ce-main-container').html('');
 	var wrapper = $('<div>').attr({
 		"class" : "ce-refinance-wrapper clearfix"
@@ -351,7 +351,7 @@ function paintPlanToBuyYourHouse() {
 function paintRentOfYourHouse() {
 	active = 2;
 	homeProgressBaar(2);
-	buyHomeTeaserRate.purchaseDetails.livingSituation = 'renting';
+	buyHomeTeaserRate.livingSituation = 'renting';
 	
 	var quesTxt = "How much do you pay each month for rent?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
@@ -412,9 +412,10 @@ function paintloanamount(){
 	 		var saveAndContinueButton = $('<div>').attr({
 	 		    "class": "ce-save-btn"
 	 		}).html("Save & continue").on('click', function() {
+	 		
 	 		buyHomeTeaserRate.housePrice = $('input[name="housePrice"]').val();
             buyHomeTeaserRate.loanAmount = $('input[name="loanAmount"]').val();
-             buyHomeTeaserRate.isIncludeTaxes = quesContxts[1].value;
+            buyHomeTeaserRate.isIncludeTaxes = quesContxts[1].value;
             buyHomeTeaserRate.estimatedPurchasePrice = $('input[name="estimatedPurchasePrice"]').val();
           	 
 	 			paintHomeZipCode();
@@ -825,12 +826,13 @@ function paintHomeZipCode() {
 function paintBuyHomeSeeTeaserRate() {
         
         
-        buyHomeTeaserRate.purchaseDetails.housePrice=buyHomeTeaserRate.housePrice;
+       /* buyHomeTeaserRate.purchaseDetails.housePrice=buyHomeTeaserRate.housePrice;
         buyHomeTeaserRate.purchaseDetails.loanAmount=buyHomeTeaserRate.loanAmount;
 		buyHomeTeaserRate.purchaseDetails.isIncludeTaxes=buyHomeTeaserRate.isIncludeTaxes;
 		buyHomeTeaserRate.purchaseDetails.estimatedPurchasePrice=buyHomeTeaserRate.estimatedPurchasePrice;
 		//buyHomeTeaserRate.rentPerMonth;	
-		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;
+		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
+	
         alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         stages = 6;
         progressBaar(6);
@@ -846,6 +848,7 @@ function paintBuyHomeSeeTeaserRate() {
         container.append(quesTextCont);
         $('#ce-refinance-cp').html(container);
         $('#overlay-loader').show();
+        
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",
