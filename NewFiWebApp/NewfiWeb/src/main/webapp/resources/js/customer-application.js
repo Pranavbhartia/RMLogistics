@@ -141,10 +141,31 @@ function paintCustomerApplicationPage() {
 	
 	 if(appUserDetails.propertyTypeMaster != null){
 		 propertyTypeMaster.id = appUserDetails.propertyTypeMaster.id;
+		 propertyTypeMaster.propertyTypeCd = appUserDetails.propertyTypeMaster.propertyTypeCd;
+		 propertyTypeMaster.residenceTypeCd = appUserDetails.propertyTypeMaster.residenceTypeCd;
+		 propertyTypeMaster.propertyTaxesPaid = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+		 propertyTypeMaster.propertyInsuranceProvider = appUserDetails.propertyTypeMaster.propertyInsuranceProvider;
+		 propertyTypeMaster.propertyInsuranceCost = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+		 propertyTypeMaster.propertyPurchaseYear = appUserDetails.propertyTypeMaster.propertyPurchaseYear;
 		 propertyTypeMaster.homeWorthToday=appUserDetails.propertyTypeMaster.homeWorthToday;
+		 propertyTypeMaster.homeZipCode = appUserDetails.propertyTypeMaster.homeZipCode;
+
 	 }
+	 
+	 
 	 if(appUserDetails.refinancedetails !=null){
-	 refinancedetails.id = appUserDetails.refinancedetails.id;
+     refinancedetails.id =appUserDetails.refinancedetails.id; 	 
+	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
+	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
+	 //refinancedetails.currentMortgageBalance=9090;
+	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
+	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
+	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
+	 alert('mortgageyearsleft'+appUserDetails.refinancedetails.mortgageyearsleft);
+	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
+	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
+	
+	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
 	 }
 	 
 	 
@@ -234,9 +255,9 @@ function getApplicationQuestion(question) {
     } else if (question.type == "yesno") {
         quesCont = getApplicationYesNoQues(question);
     }
-    else if (question.type == "yearMonth") {
+    /*else if (question.type == "yearMonth") {
         quesCont = getMonthYearTextQuestion(question);
-    }
+    }*/
     return quesCont;
 }
 
@@ -341,10 +362,21 @@ function getApplicationSelectQues(question) {
                 });
         dropDownContainer.append(optionCont);
     }
-
+    
+    var val=getMappedValue(question);
+    if(val)
+    	setDropDownData(selectedOption, question.options,getMappedValue(question));
+    
     optionsContainer.append(selectedOption).append(dropDownContainer);
 
     return container.append(quesTextCont).append(optionsContainer);
+}
+function getMappedValue(question){
+	if(question.text==="What type of property is this?"){
+		return appUserDetails.propertyTypeMaster.propertyTypeCd;
+	}else if(question.text==="How do you use this home?"){
+		return appUserDetails.propertyTypeMaster.residenceTypeCd;
+	}
 }
 
 function getApplicationTextQues(question) {
@@ -567,14 +599,15 @@ function paintCustomerApplicationPageStep1b() {
         name: "insuranceCost",
         value: appUserDetails.propertyTypeMaster.propertyInsuranceCost
     }, {
-        type: "yearMonth",
+        type: "desc",
         text: "When did you purchase this property?",
         name: "purchaseTime",
-        value: ""
+        value: appUserDetails.propertyTypeMaster.propertyPurchaseYear
     }];
 
     var questionsContainer = getQuestionsContainer(questions);
-
+    
+   
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
@@ -615,13 +648,28 @@ function paintCustomerApplicationPageStep1b() {
         
     });
 
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
-        .append(saveAndContinueButton);
+    
+
+    
+    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
    
     putCurrencyFormat("taxesPaid");
     putCurrencyFormat("insuranceCost");
     
     
+}
+
+function setDropDownData(element, dataSet, value){
+	
+	for(var i=0 ; i <dataSet.length ; i ++ ){
+		
+		if(dataSet[i].value === value ){
+			
+			$(element).html(dataSet[i].text);
+			$(element).data("value",value);
+		}
+	}
+	
 }
 
 
@@ -637,7 +685,7 @@ $('#app-right-panel').html("");
                      {
                          "type": "yesno",
                          "text": "Do you have a second mortgage on this property? ?",
-                         "name": "isSecondaryMortgage",
+                         "name": "secondMortgage",
                          "options": [
                              {
                                  "text": "Yes",
@@ -646,20 +694,21 @@ $('#app-right-panel').html("");
                                          "type": "desc",
                                          "text": "What is the current balance for this additional mortgage??",
                                          "name": "secondaryMortgageBalance",
-                                         "value": ""
+                                         "selected": appUserDetails.refinancedetails.secondMortageBalance
                                      }
                                  ]
                              },
                              {
                                  "text": "No"
                              }
-                         ]
+                         ],
+                        "selected": ""
                      }
                  ];
     
     for(var i=0;i<questions.length;i++){
 		var question=questions[i];
-		var contxt=getQuestionContextCEP(question,$('#app-right-panel'));
+		var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails);
 		contxt.drawQuestion();
 		
 		quesContxts.push(contxt);
@@ -1250,7 +1299,7 @@ function getMultiTextQuestion(quesText) {
      return wrapper.append(container);
 }
 
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime']", function(){
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime']", function(){
     $(this).datepicker({
 		format: "M yyyy",
 	    minViewMode: "months",
@@ -2800,7 +2849,8 @@ function saveUserAndLockRate(appUserDetails) {
             $('#overlay-loader').hide();
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
-            paintLockRate(JSON.parse(data), appUserDetails);
+            //paintLockRate(JSON.parse(data), appUserDetails);
+            paintLockRate(tempdata, appUserDetails);
         },
         error: function() {
             alert("error");
@@ -3030,12 +3080,15 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
 		
-	
 		loanType.loanTypeCd = "REF";
 		appUserDetails.loanType= loanType;
 		
 		paintRefinanceMainContainer();
 	});
+	
+	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
+		option1.css("background","rgb(247, 72, 31)");
+	}
 
 	var option2 = $('<div>').attr({
 		"class" : "ce-option"
@@ -3094,22 +3147,41 @@ function paintRefinanceQuest1() {
 	}, {
 		"text" : "Pay Off My Mortgage Faster",
 		"onselect" : paintRefinanceStep1a,
-		"value" : "payOffMortgage"
+		"value" : "REFMF"
 	}, {
 		"text" : "Take Cash Out of My Home",
 		"onselect" : paintRefinanceStep1b,
-		"value" : "takeCashOut"
+		"value" : "REFCO"
 	} ];
 
 	var quesCont = getMutipleChoiceQuestion(quesText, options,"refinanceOption");
 
 	$('#app-right-panel').html(quesCont);
+	
+	
+	
+	
+	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFLMP"){
+		
+		//$('.ce-options-cont').find('.ce-option').first().addClass("selected");
+		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
+	}
+	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFMF"){
+		
+		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
+	//	$('.ce-options-cont').find('.ce-option').first().next().addClass("selected");
+	}
+	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFCO"){
+	
+		$('.ce-options-cont').find('.ce-option').first().next().next().css("background","rgb(247, 72, 31)");
+	}
 	/*
 	 * $("#progressBaarId_1").addClass('ce-lp-in-progress');
 	 * $('#stepNoId_1').html("1");
 	 */
 
 }
+
 
 
 
@@ -3127,7 +3199,7 @@ var questions = [
                     "type": "desc",
                     "text": "What is your current mortgage balance?",
                     "name": "currentMortgageBalance",
-                    "value": ""
+                    "selected": appUserDetails.refinancedetails.currentMortgageBalance
                 }];
 
 		for(var i=0;i<questions.length;i++){
@@ -3175,12 +3247,13 @@ function paintRefinanceStep3() {
                          "type": "desc",
                          "text": "What is your current mortgage payment?",
                          "name": "currentMortgagePayment",
-                         "value": appUserDetails.refinancedetails.currentMortgagePayment
+                         "selected": appUserDetails.refinancedetails.currentMortgagePayment
                      },
                      {
                          "type": "yesno",
                          "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
                          "name": "isIncludeTaxes",
+                         "selected":"",
                          "options": [
                              {
                                  "text": "Yes",
@@ -3189,13 +3262,13 @@ function paintRefinanceStep3() {
                                          "type": "desc",
                                          "text": "How much are your annual property taxes?",
                                          "name": "annualPropertyTaxes",
-                                         "value": ""
+                                         "selected":appUserDetails.propertyTypeMaster.propertyTaxesPaid
                                      },
                                      {
                                          "type": "desc",
                                          "text": "How much is your annual homeowners insurance ?",
                                          "name": "annualHomeownersInsurance",
-                                         "value": ""
+                                         "selected": appUserDetails.propertyTypeMaster.propertyInsuranceCost
                                      }
                                  ]
                              },
@@ -3237,7 +3310,7 @@ function paintRefinanceStep1a() {
 
 	var quesTxt = "How many years are left on your mortgage?";
 
-	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"yearLeftOnMortgage");
+	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"mortgageyearsleft");
 
 	$('#app-right-panel').html(quesCont);
 }
@@ -3492,7 +3565,8 @@ function getTextQuestion(quesText, clickEvent, name) {
 		console.log('key'+key);
 		inputValue= $('input[name="' + key + '"]').val();
 
-		appUserDetails[key]  = inputValue;
+		appUserDetails.refinancedetails[key]  = inputValue;
+
 		//sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
         if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
         	console.log("event.data.clickEvent");

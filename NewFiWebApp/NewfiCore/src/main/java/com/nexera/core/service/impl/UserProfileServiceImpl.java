@@ -278,8 +278,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public boolean changeUserPassword(UserVO userVO) {
-		 return userProfileDao.changeUserPassword(userVO);
-		//return true;
+		return userProfileDao.changeUserPassword(userVO);
+		// return true;
 	}
 
 	@Override
@@ -976,12 +976,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 		userProfileDao.updateCustomerSpouseScore(customerSpouseDetail);
 
 	}
-	
+
 	@Override
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
 		return userProfileDao.updateLqbProfile(user);
 
+	}
+
+	@Override
+	public CustomerDetail getCustomerDetail(int id) {
+		// TODO Auto-generated method stub
+		User user = (User) userProfileDao.load(User.class, id);
+		return user.getCustomerDetail();
 	}
 }

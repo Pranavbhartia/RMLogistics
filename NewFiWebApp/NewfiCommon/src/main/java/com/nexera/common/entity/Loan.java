@@ -475,12 +475,20 @@ public class Loan implements Serializable {
 		loanVo.setCreatedDate(loan.getCreatedDate());
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setName(loan.getName());
+		if (loan.getLoanProgressStatus() != null) {
+			loanVo.setStatus(loan.getLoanProgressStatus()
+			        .getLoanProgressStatus());
+		}
+		if (loan.getLoanType() != null) {
+			loanVo.setLoanType(LoanTypeMaster.convertEntityToVO(loan
+			        .getLoanType()));
+		}
 
 		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
 		List<UserVO> loanTeam = new ArrayList<UserVO>();
 		for (LoanTeam team : loan.getLoanTeam()) {
 			UserVO userVo = User.convertFromEntityToVO(team.getUser());
-			loanVo.setUser(userVo);
+			// loanVo.setUser(userVo);
 			loanTeam.add(userVo);
 		}
 		loanVo.setLoanTeam(loanTeam);

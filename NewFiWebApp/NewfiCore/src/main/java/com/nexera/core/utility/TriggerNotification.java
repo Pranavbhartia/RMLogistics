@@ -28,18 +28,20 @@ import com.nexera.common.vo.NotificationVO;
 public class TriggerNotification extends Thread {
 	private final String USER_AGENT = "Mozilla/5.0";
 	private HashMap<String, String> params = new HashMap<String, String>();
-	private String url = "http://localhost:8080/PushNotification/pushServlet/";
+	private String url;
 	public static void main(String[] args) {
 		NotificationVO notificationVo = new NotificationVO();
 		notificationVo.setId(2);
 		notificationVo.setLoanID(1);
-		TriggerNotification.triggerDismissNotofication(notificationVo);
+		TriggerNotification.triggerDismissNotofication(notificationVo,
+		        "http://localhost:8080/PushNotification/pushServlet/");
 		// TriggerNotification triggernotification = new TriggerNotification();
 		// triggernotification.start();
 	}
 
-	private TriggerNotification(HashMap<String, String> params) {
+	private TriggerNotification(HashMap<String, String> params, String url) {
 		this.params = params;
+		this.url = url;
 	}
 	public void run() {
 		// String url = "http://localhost:8080/PushNotification/pushServlet/";
@@ -73,19 +75,17 @@ public class TriggerNotification extends Thread {
 			}
 			System.out.println(result.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	public static void triggerNewNotofication(NotificationVO notificationVo) {
+	public static void triggerNewNotofication(NotificationVO notificationVo,
+	        String url) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("action", "new");
@@ -95,13 +95,10 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -109,12 +106,13 @@ public class TriggerNotification extends Thread {
 		params.put("taskId", notificationVo.getLoanID() + "");
 		params.put("data", sw.toString());
 		TriggerNotification triggerNotification = new TriggerNotification(
-				params);
+		        params, url);
 		triggerNotification.start();
 
 	}
 
-	public static void triggerDismissNotofication(NotificationVO notificationVo) {
+	public static void triggerDismissNotofication(
+	        NotificationVO notificationVo, String url) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("action", "remove");
@@ -126,13 +124,10 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -140,12 +135,13 @@ public class TriggerNotification extends Thread {
 		params.put("taskId", notificationVo.getLoanID() + "");
 		params.put("data", sw.toString());
 		TriggerNotification triggerNotification = new TriggerNotification(
-				params);
+		        params, url);
 		triggerNotification.start();
 
 	}
 
-	public static void triggerSnoozeNotofication(NotificationVO notificationVo) {
+	public static void triggerSnoozeNotofication(NotificationVO notificationVo,
+	        String url) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("action", "snooze");
@@ -157,13 +153,10 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -171,7 +164,7 @@ public class TriggerNotification extends Thread {
 		params.put("taskId", notificationVo.getLoanID() + "");
 		params.put("data", sw.toString());
 		TriggerNotification triggerNotification = new TriggerNotification(
-				params);
+		        params, url);
 		triggerNotification.start();
 
 	}
