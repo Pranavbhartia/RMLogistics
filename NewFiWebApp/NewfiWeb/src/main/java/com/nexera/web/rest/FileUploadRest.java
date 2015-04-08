@@ -130,7 +130,7 @@ public class FileUploadRest
         //Get information of the files that is saved in DB for this file ID.
         UploadedFilesList uploadedFilesList = uploadedFilesListService.fetchUsingFileId( fileId );
         Integer id = uploadedFilesList.getId();
-
+        Boolean isAssignedToNeed = false;
         try {
         	//Pass the S3 path, to get the document from S3, and convert itto PDObject
             List<File> pdfPages = splitPdfDocumentIntoMultipleDocs( uploadedFilesList.getLqbFileID() );
@@ -140,7 +140,9 @@ public class FileUploadRest
             	//Create a new row in DB and upload file to S3.
             	String contentType = "application/pdf";
             	
-            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(file,contentType ,data, userId, loanId, assignedBy);
+            	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(
+            															file,contentType ,data
+            															, userId, loanId, assignedBy , isAssignedToNeed);
             	
                 //Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
                 LOG.info( "New file saved with id " + checkUploadVO.getIsUploadSuccess() );
@@ -347,13 +349,18 @@ public class FileUploadRest
         LOG.info( "in document upload  wuth user id " + userID + " and loanId :" + loanId + " and assignedBy : " + assignedBy
             + " and need id : " + needId );
         List<String> unsupportedFile = new ArrayList<String>();
+        Boolean isAssignedToNeed = (needId!=null)?true:false;
         for ( MultipartFile multipartFile : file ) {
             CheckUploadVO checkFileUploaded = null;
 			try {
 				
 				byte[] bytes = multipartFile.getBytes();
 				//Upload the file locally and returns the response of file upload
-				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) , multipartFile.getContentType(),bytes,  userID, loanId, assignedBy );
+				
+				
+				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) 
+																				, multipartFile.getContentType(),
+																					bytes,  userID, loanId, assignedBy , isAssignedToNeed );
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to false.
 				checkFileUploaded.setIsUploadSuccess(false);
