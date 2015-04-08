@@ -200,17 +200,17 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public List<User> getUsersList() {
 		
-		String searchQuery1 = "FROM User where internalUserDetail IS NULL";
-		String searchQuery2="FROM User where internalUserDetail.activeInternal!=:DELETED";
+		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL";
+		String searchQueryInternalUser="FROM User where internalUserDetail.activeInternal!=:DELETED";
 				
 		Session session = sessionFactory.getCurrentSession();
 		
-		Query query1 = session.createQuery(searchQuery1);
-		Query query2=session.createQuery(searchQuery2);
-		query2.setParameter("DELETED", ActiveInternalEnum.DELETED);
+		Query queryCustomer = session.createQuery(searchQueryCustomer);
+		Query queryInternalUser=session.createQuery(searchQueryInternalUser);
+		queryInternalUser.setParameter("DELETED", ActiveInternalEnum.DELETED);
 		
-		List<User>userList=query1.list();
-		userList.addAll(query2.list());
+		List<User>userList=queryCustomer.list();
+		userList.addAll(queryInternalUser.list());
 				
 		return userList;
 
