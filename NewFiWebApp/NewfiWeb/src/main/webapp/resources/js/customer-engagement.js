@@ -385,11 +385,11 @@ function paintRefinanceQuest1() {
     }, {
         "text": "Pay Off My Mortgage Faster",
         "onselect": paintRefinanceStep1a,
-        "value": "payOffMortgage"
+        "value": "REFMF"
     }, {
         "text": "Take Cash Out of My Home",
         "onselect": paintRefinanceStep1b,
-        "value": "takeCashOut"
+        "value": "REFCO"
     }];
     var quesCont = getMutipleChoiceQuestion(quesText, options, "refinanceOption");
     $('#ce-refinance-cp').html(quesCont);
@@ -462,7 +462,9 @@ function getTextQuestion(quesText, clickEvent, name) {
             var key = event.data.name;
             inputValue = $('input[name="' + key + '"]').val();
             refinanceTeaserRate[key] = inputValue;
+            alert('json'+JSON.stringify(refinanceTeaserRate));
             sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
+          
             if (inputValue != undefined && inputValue != "" && inputValue != "$0") {
                 event.data.clickEvent();
             } else {
@@ -1054,7 +1056,10 @@ function paintApplyNow(refinanceTeaserRate) {
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
+       
         refinancedetails.refinanceOption = refinanceTeaserRate.refinanceOption;
+        refinancedetails.mortgageyearsleft=refinanceTeaserRate.yearLeftOnMortgage;
+        refinancedetails.cashTakeOut=refinanceTeaserRate.cashTakeOut;
         refinancedetails.currentMortgageBalance = refinanceTeaserRate.currentMortgageBalance;
         refinancedetails.currentMortgagePayment = refinanceTeaserRate.currentMortgagePayment;
         refinancedetails.isIncludeTaxes = refinanceTeaserRate.isIncludeTaxes;
@@ -1068,6 +1073,7 @@ function paintApplyNow(refinanceTeaserRate) {
         appUserDetails.livingSituation = buyHomeTeaserRate.livingSituation;
         // alert('hey');
         // alert(JSON.stringify(appUserDetails));
+       alert('final'+JSON.stringify(appUserDetails));
         console.log(JSON.stringify(appUserDetails));
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         saveUserAndRedirect(appUserDetails);
@@ -1595,9 +1601,12 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
         "class": "loan-summary-lp float-left"
     });
     // add rows in left column
+   
+   alert(customerInputData.refinanceOption);
     if (customerInputData.refinanceOption == "REFLMP") refinanceOpt = "Lower My Monthly Payment";
     if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
     if (customerInputData.refinanceOption == "REFCO") refinanceOpt = "Take Cash Out of My Home";
+   
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", "30 Years Fixed");
     var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");

@@ -157,10 +157,14 @@ function paintCustomerApplicationPage() {
      refinancedetails.id =appUserDetails.refinancedetails.id; 	 
 	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
 	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
+	 //refinancedetails.currentMortgageBalance=9090;
 	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
 	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
 	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
-	 refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
+	 alert('mortgageyearsleft'+appUserDetails.refinancedetails.mortgageyearsleft);
+	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
+	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
+	
 	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
 	 }
 	 
@@ -3154,6 +3158,9 @@ function paintRefinanceQuest1() {
 
 	$('#app-right-panel').html(quesCont);
 	
+	
+	
+	
 	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFLMP"){
 		
 		//$('.ce-options-cont').find('.ce-option').first().addClass("selected");
@@ -3161,11 +3168,12 @@ function paintRefinanceQuest1() {
 	}
 	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFMF"){
 		
-		$('.ce-options-cont').find('.ce-option').first().next().addClass("selected");
+		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
+	//	$('.ce-options-cont').find('.ce-option').first().next().addClass("selected");
 	}
 	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFCO"){
 	
-		$('.ce-options-cont').find('.ce-option').first().next().next().addClass("selected");
+		$('.ce-options-cont').find('.ce-option').first().next().next().css("background","rgb(247, 72, 31)");
 	}
 	/*
 	 * $("#progressBaarId_1").addClass('ce-lp-in-progress');
@@ -3302,7 +3310,7 @@ function paintRefinanceStep1a() {
 
 	var quesTxt = "How many years are left on your mortgage?";
 
-	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"yearLeftOnMortgage");
+	var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2,"mortgageyearsleft");
 
 	$('#app-right-panel').html(quesCont);
 }
@@ -3557,7 +3565,8 @@ function getTextQuestion(quesText, clickEvent, name) {
 		console.log('key'+key);
 		inputValue= $('input[name="' + key + '"]').val();
 
-		appUserDetails[key]  = inputValue;
+		appUserDetails.refinancedetails[key]  = inputValue;
+
 		//sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
         if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
         	console.log("event.data.clickEvent");
