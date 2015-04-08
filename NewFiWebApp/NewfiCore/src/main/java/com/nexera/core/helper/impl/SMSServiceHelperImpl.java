@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -13,11 +14,13 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.utility.MobileCarriers;
 
+@Component
 public class SMSServiceHelperImpl implements SMSServiceHelper {
 
 	@Value("${sms.mail.host}")
@@ -27,7 +30,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 	        .getLogger(SMSServiceHelperImpl.class);
 
 	@Override
-	public String sendNotificationSMS(String carrierName, int phoneNumber,
+	public String sendNotificationSMS(String carrierName, long phoneNumber,
 	        String textMessage) {
 		LOGGER.debug("Inside method sendNotificationSMS ");
 		String carrierEmailAddress = null;
@@ -73,8 +76,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 			maxLength = 160;
 		}
 
-		carrierEmailAddress = String.valueOf(phoneNumber) + "@"
-		        + carrierEmailAddress;
+		carrierEmailAddress = String.valueOf(phoneNumber) + carrierEmailAddress;
 		if (send(maxLength, carrierEmailAddress, textMessage)) {
 			return "Message Successfully Sent ";
 		} else {
@@ -86,6 +88,8 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 	public boolean send(int maxlength, String mailAddress, String textMessage) {
 
 		int msgLength;
+		final String username = "myusername@gmail.com";
+		final String password = "mypassword";
 		String fromAddress = CommonConstants.SENDER_EMAIL_ID;
 		String subject = "";
 		LOGGER.debug("Calculating message Length ");
@@ -99,9 +103,17 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 
 		if (mailHost != null) {
 			props.put("mail.smtp.host", mailHost);
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.auth", "true");
 		}
 
-		Session session = Session.getDefaultInstance(props, null);
+		Session session = Session.getInstance(props,
+	            new javax.mail.Authenticator() {
+	                @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+	                    return new PasswordAuthentication(username, password);
+	                }
+	            });
 
 		try {
 
