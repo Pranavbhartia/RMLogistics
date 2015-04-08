@@ -13,7 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.UserRolesEnum;
 
 @Component
 public class Utils {
@@ -98,14 +100,14 @@ public class Utils {
 	}
 
 	private Integer getOffsetFromUserObject() {
-		
-		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext()
-				.getAuthentication()==null)
+
+		if (SecurityContextHolder.getContext() == null
+		        || SecurityContextHolder.getContext().getAuthentication() == null)
 			return 0;
-		
+
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
-		if (principal!=null && (principal instanceof User)) {
+		if (principal != null && (principal instanceof User)) {
 			User user = (User) principal;
 			if (user.getMinutesOffset() == null) {
 				return 0;
@@ -118,33 +120,76 @@ public class Utils {
 
 	}
 
-	//To be used by all modules to fetch the currently logged in user
+	// To be used by all modules to fetch the currently logged in user
 	public User getLoggedInUser() {
-		
-		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext()
-				.getAuthentication()==null)
+
+		if (SecurityContextHolder.getContext() == null
+		        || SecurityContextHolder.getContext().getAuthentication() == null)
 			return null;
-		
+
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
-		if (principal!=null && principal instanceof User) {
+		if (principal != null && principal instanceof User) {
 			User user = (User) principal;
 			return user;
 		}
 		return null;
 	}
-	public static String convertMapToJson( Map<String, Object> map )
-	  {
-	        Gson gson = new Gson();
-	        String jsonString = gson.toJson( map );
-	        return jsonString;
-	    }
+
+	public static String convertMapToJson(Map<String, Object> map) {
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(map);
+		return jsonString;
+	}
 
 	public String generateMessageIdFromAddress(String mongoMessageId, int loanId) {
-	    
-	    return MessageFormat.format("{0}-{1}{2}", mongoMessageId, loanId, CommonConstants.SENDER_DOMAIN);
-    }
-	public String generateLoanEmail(int loanId){
-		return loanId+CommonConstants.SENDER_DOMAIN;
+
+		return MessageFormat.format("{0}-{1}{2}", mongoMessageId, loanId,
+		        CommonConstants.SENDER_DOMAIN);
+	}
+
+	public String generateLoanEmail(int loanId) {
+		return loanId + CommonConstants.SENDER_DOMAIN;
+	}
+
+	public UserRolesEnum getLoggedInUserRole() {
+		return UserRolesEnum.valueOf(getLoggedInUser().getUserRole()
+		        .getRoleCd());
+
+	}
+
+	public String constrtCreditScore(CustomerDetail customerDetail) {
+		// TODO Auto-generated method stub
+
+		String creditScore = "";
+		String equifaxScore = customerDetail.getEquifaxScore();
+		if (equifaxScore != null && !equifaxScore.isEmpty()) {
+			creditScore = CommonConstants.EQ + equifaxScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = CommonConstants.EQ + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		String transunionScore = customerDetail.getTransunionScore();
+		if (transunionScore != null && !transunionScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.TU + transunionScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.TU
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		String experianScore = customerDetail.getExperianScore();
+		if (experianScore != null && !experianScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EX + experianScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore + CommonConstants.EX
+			        + CommonConstants.UNKNOWN_SCORE
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		return creditScore;
 	}
 }

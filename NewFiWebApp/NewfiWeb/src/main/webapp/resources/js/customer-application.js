@@ -1872,122 +1872,143 @@ var wrapper = $('<div>').attr({
 
 
 
-function paintSpouseRefinanceSelfEmployed(divId) {
+function paintSpouseRefinanceSelfEmployed(divId,value) {
+  var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+   
 
- var quesTxt = "How much do you make a year?";
+    //appUserDetails.employed ="true";
+    if(flag){
+         var quesTxt = "How much do you make a year?";
 
- var wrapper = $('<div>').attr({
-  "class" : "ce-option-ques-wrapper"
- });
- 
- var container = $('<div>').attr({
-  "class" : "ce-ques-wrapper"
- });
+         var wrapper = $('<div>').attr({
+          "class" : "ce-option-ques-wrapper"
+         });
+         
+         var container = $('<div>').attr({
+          "class" : "ce-ques-wrapper"
+         });
 
- var quesTextCont = $('<div>').attr({
-  "class" : "ce-option-text"
- }).html(quesTxt);
+         var quesTextCont = $('<div>').attr({
+          "class" : "ce-option-text"
+         }).html(quesTxt);
 
- var optionContainer = $('<div>').attr({
-  "class" : "ce-options-cont"
- });
-var inputBox = $('<input>').attr({
-  "class" : "ce-input",
-  "name" : "spouseSelfEmployed",
-  "value": appUserDetails.customerSpouseDetail.selfEmployedIncome
- });
+         var optionContainer = $('<div>').attr({
+          "class" : "ce-options-cont"
+         });
+        var inputBox = $('<input>').attr({
+          "class" : "ce-input",
+          "name" : "spouseSelfEmployed",
+          "value": appUserDetails.customerSpouseDetail.selfEmployedIncome
+         });
 
- optionContainer.append(inputBox);
- container.append(quesTextCont).append(optionContainer);
- wrapper.append(container);
- if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-  
-  $('#ce-option_' + divId).prepend(wrapper); 
- }
- $('#ce-option_' + divId).toggle();
- 
- putCurrencyFormat("spouseSelfEmployed");
+         optionContainer.append(inputBox);
+         container.append(quesTextCont).append(optionContainer);
+         wrapper.append(container);
+         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+          
+          $('#ce-option_' + divId).prepend(wrapper); 
+         }
+         $('#ce-option_' + divId).toggle();
+         
+         putCurrencyFormat("spouseSelfEmployed");
+    }
 }
 
 
 
-function paintSpouseRefinanceDisability(divId) {
+function paintSpouseRefinanceDisability(divId,value) {
+  var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+   
 
- var quesTxt = "About how much do you get monthly?";
+    //appUserDetails.employed ="true";
+    if(flag){
+         var quesTxt = "About how much do you get monthly?";
 
- var wrapper = $('<div>').attr({
-  "class" : "ce-option-ques-wrapper"
- });
- 
- var container = $('<div>').attr({
-  "class" : "ce-ques-wrapper"
- });
+         var wrapper = $('<div>').attr({
+          "class" : "ce-option-ques-wrapper"
+         });
+         
+         var container = $('<div>').attr({
+          "class" : "ce-ques-wrapper"
+         });
 
- var quesTextCont = $('<div>').attr({
-  "class" : "ce-option-text"
- }).html(quesTxt);
+         var quesTextCont = $('<div>').attr({
+          "class" : "ce-option-text"
+         }).html(quesTxt);
 
- var optionContainer = $('<div>').attr({
-  "class" : "ce-options-cont"
- });
+         var optionContainer = $('<div>').attr({
+          "class" : "ce-options-cont"
+         });
 
- var inputBox = $('<input>').attr({
-  "class" : "ce-input",
-  "name" : "spouseDisability",
-  "value": appUserDetails.customerSpouseDetail.ssDisabilityIncome
- });
+         var inputBox = $('<input>').attr({
+          "class" : "ce-input",
+          "name" : "spouseDisability",
+          "value": appUserDetails.customerSpouseDetail.ssDisabilityIncome
+         });
 
- optionContainer.append(inputBox);
- container.append(quesTextCont).append(optionContainer);
- wrapper.append(container);
- if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-  
-  $('#ce-option_' + divId).prepend(wrapper); 
- }
- $('#ce-option_' + divId).toggle();
- 
- putCurrencyFormat("spouseDisability");
+         optionContainer.append(inputBox);
+         container.append(quesTextCont).append(optionContainer);
+         wrapper.append(container);
+         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+          
+          $('#ce-option_' + divId).prepend(wrapper); 
+         }
+         $('#ce-option_' + divId).toggle();
+         
+         putCurrencyFormat("spouseDisability");
+     }
 }
 
 
 
 
-function paintSpouseRefinancePension(divId) {
+function paintSpouseRefinancePension(divId,value) {
+  var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+   
 
- var quesTxt = "About how much do you get monthly?";
+    //appUserDetails.employed ="true";
+    if(flag){
+         var quesTxt = "About how much do you get monthly?";
 
- var wrapper = $('<div>').attr({
-  "class" : "ce-option-ques-wrapper"
- });
- 
- var container = $('<div>').attr({
-  "class" : "ce-ques-wrapper"
- });
- 
- var quesTextCont = $('<div>').attr({
-  "class" : "ce-option-text"
- }).html(quesTxt);
+         var wrapper = $('<div>').attr({
+          "class" : "ce-option-ques-wrapper"
+         });
+         
+         var container = $('<div>').attr({
+          "class" : "ce-ques-wrapper"
+         });
+         
+         var quesTextCont = $('<div>').attr({
+          "class" : "ce-option-text"
+         }).html(quesTxt);
 
- var optionContainer = $('<div>').attr({
-  "class" : "ce-options-cont"
- });
+         var optionContainer = $('<div>').attr({
+          "class" : "ce-options-cont"
+         });
 
- var inputBox = $('<input>').attr({
-  "class" : "ce-input",
-  "name" : "spousePension",
-  "value": appUserDetails.customerSpouseDetail.monthlyPension
- });
+         var inputBox = $('<input>').attr({
+          "class" : "ce-input",
+          "name" : "spousePension",
+          "value": appUserDetails.customerSpouseDetail.monthlyPension
+         });
 
- optionContainer.append(inputBox);
- container.append(quesTextCont).append(optionContainer);
- wrapper.append(container);
- if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-  
-  $('#ce-option_' + divId).prepend(wrapper); 
- }
- $('#ce-option_' + divId).toggle();
- 
- putCurrencyFormat("spousePension");
+         optionContainer.append(inputBox);
+         container.append(quesTextCont).append(optionContainer);
+         wrapper.append(container);
+         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+          
+          $('#ce-option_' + divId).prepend(wrapper); 
+         }
+         $('#ce-option_' + divId).toggle();
+         
+         putCurrencyFormat("spousePension");
+    }
 }
 
 
