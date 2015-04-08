@@ -1256,7 +1256,13 @@ function milestoneChildEventHandler(event) {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
 			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
-	}else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+	}
+	else if ($(event.target).attr("data-text") == "MANAGE_PHOTO" || $(event.target).attr("data-text") == "MANAGE_ACCOUNT" ||
+			$(event.target).attr("data-text") == "SMS_TEXTING_PREF") {
+	 	event.stopPropagation();
+	 	showCustomerProfilePage();
+	}
+	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();
 		console.log("Pay application fee clicked!");
 		showOverlay();

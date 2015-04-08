@@ -798,6 +798,7 @@ $(document).on('click', '.lp-t2-agent-item', function() {
 });
 
 function paintMyLoansView() {
+	scrollToTop();
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -883,6 +884,7 @@ function paintAgentLoanPage(data) {
 // function called when secondary left panel is changed in agent view loan
 // progress pages
 function changeAgentSecondaryLeftPanel(elementId) {
+	scrollToTop();
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
 	$('#' + elementId).addClass('t2-active');

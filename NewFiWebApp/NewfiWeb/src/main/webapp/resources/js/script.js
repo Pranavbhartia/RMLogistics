@@ -5,6 +5,7 @@ var doPagination = false;
 var loanTypeText = "refinance";
 
 function changeLeftPanel(primary) {
+	scrollToTop();
     var leftPanel = parseInt(primary);
     $('.lp-item').removeClass('lp-item-active');
     $('.lp-right-arrow').remove();
@@ -85,6 +86,7 @@ function showMessageDashboard() {
 }
 
 function showCustomerLoanPage(user) {
+	scrollToTop();
     $('.lp-right-arrow').remove();
     $('#right-panel').html('');
     $('.lp-item').removeClass('lp-item-active');
@@ -107,6 +109,7 @@ function showCustomerLoanPage(user) {
 }
 
 function changeSecondaryLeftPanel(secondary) {
+		scrollToTop();
         secondary = parseInt(secondary);
         $('.lp-t2-item').removeClass('t2-active');
         $('.lp-t2-item .arrow-right').remove();
