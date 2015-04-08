@@ -296,14 +296,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getRealtorDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
 		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 
 		LOG.info("user.getCustomerDetail() in daoimpl"
@@ -325,7 +325,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			LOG.info("Inside User Profile Dao user.getCustomerDetail()"
 			        + user.getCustomerDetail().getId());
 			this.save(user.getCustomerDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
 	}
