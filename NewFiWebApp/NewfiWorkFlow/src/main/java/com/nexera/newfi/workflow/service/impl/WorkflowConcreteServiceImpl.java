@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanMilestone;
@@ -27,9 +28,11 @@ import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -49,6 +52,11 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private WorkflowService workflowService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	UserProfileService userProfileService;
+
+	@Autowired
+	Utils utils;
 
 	@Override
 	public String getJsonStringOfMap(HashMap<String, Object> map) {
@@ -130,18 +138,16 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	}
 
 	public void createAlertOfType(CreateReminderVo createReminderVo) {
-	    List<NotificationVO> notificationList = notificationService
-	            .findNotificationTypeListForLoan(createReminderVo
-	                    .getLoanId(), createReminderVo
-	                    .getNotificationType().getNotificationTypeName(),
-	                    null);
-	    if (notificationList.size() == 0
-	            || notificationList.get(0).getRead() == true) {
-	    	NotificationVO notificationVO = new NotificationVO(
-	    	        createReminderVo.getLoanId(), createReminderVo
-	    	                .getNotificationType()
-	    	                .getNotificationTypeName(),
-	    	        createReminderVo.getNotificationReminderContent());
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(createReminderVo.getLoanId(),
+		                createReminderVo.getNotificationType()
+		                        .getNotificationTypeName(), null);
+		if (notificationList.size() == 0
+		        || notificationList.get(0).getRead() == true) {
+			NotificationVO notificationVO = new NotificationVO(
+			        createReminderVo.getLoanId(), createReminderVo
+			                .getNotificationType().getNotificationTypeName(),
+			        createReminderVo.getNotificationReminderContent());
 			if (!createReminderVo.isForCustomer())
 				createNotificationForLM(notificationVO);
 			else {
@@ -149,17 +155,17 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 				notificationVO.setTimeOffset(new Date().getTimezoneOffset());
 				notificationService.createNotification(notificationVO);
 			}
-	    }
-    }
+		}
+	}
 
 	private void createNotificationForLM(NotificationVO notificationVO) {
-	    List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
-	    userRoles.add(UserRolesEnum.INTERNAL);
-	    List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
-	    internalUserRoles.add(InternalUserRolesEum.LM);
-	    notificationService.createRoleBasedNotification(notificationVO,
-	            userRoles, internalUserRoles);
-    }
+		List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
+		userRoles.add(UserRolesEnum.INTERNAL);
+		List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
+		internalUserRoles.add(InternalUserRolesEum.LM);
+		notificationService.createRoleBasedNotification(notificationVO,
+		        userRoles, internalUserRoles);
+	}
 
 	public void sendReminder(CreateReminderVo createReminderVo,
 	        int currMilestoneID, int prevMilestoneID) {
@@ -204,5 +210,15 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		if (mileStone != null)
 			comments = mileStone.getComments().toString();
 		return comments;
+	}
+
+	@Override
+	public String getCreditDisplayScore(int userID) {
+		UserVO user = userProfileService.findUser(userID);
+		if (user.getCustomerDetail() != null) {
+
+		}
+
+		return "";
 	}
 }

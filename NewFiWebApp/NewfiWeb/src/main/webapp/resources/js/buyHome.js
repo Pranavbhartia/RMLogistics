@@ -833,7 +833,7 @@ function paintBuyHomeSeeTeaserRate() {
 		//buyHomeTeaserRate.rentPerMonth;	
 		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
 	
-        alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
+        //alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         stages = 6;
         progressBaar(6);
         delete sessionStorage.refinaceData;

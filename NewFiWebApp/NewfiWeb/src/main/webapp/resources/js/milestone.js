@@ -2,9 +2,10 @@
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
 var workFlowContext = {
-	init : function(loanId) {
+	init : function(loanId, refUserId) {
 		this.countOfTasks = 0;
 		this.loanId = loanId;
+		this.refUserId = refUserId;
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
@@ -12,6 +13,7 @@ var workFlowContext = {
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
+	refUserId:{},
 	initAttempted:false,
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
@@ -391,6 +393,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
+				data.userID=workFlowContext.refUserId;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
@@ -684,7 +687,7 @@ function paintCustomerLoanProgressContainer() {
 
 	$('#cust-loan-progress').append(heading).append(loanProgressCont);
 	paintMilestoneCustomerProfileDetails();
-	workFlowContext.init(newfi.user.defaultLoanId);
+	workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user.id);
 
 	workFlowContext.initialize("CUSTOMER", function() {
 	});
@@ -932,7 +935,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 
-	workFlowContext.init(selectedUserDetail.loanID);
+	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail.userID);
 
 	workFlowContext.initialize("AGENT", function() {
 	});

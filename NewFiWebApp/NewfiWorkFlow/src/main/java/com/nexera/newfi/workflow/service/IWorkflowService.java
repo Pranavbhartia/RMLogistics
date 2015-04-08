@@ -28,4 +28,6 @@ public interface IWorkflowService {
 	        MilestoneNotificationTypes noticationType);
 
 	public void createAlertOfType(CreateReminderVo createReminderVo);
+
+	public String getCreditDisplayScore(int userID);
 }
