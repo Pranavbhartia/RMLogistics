@@ -34,13 +34,16 @@
 <script type="text/javascript">
 	
 	$(document).ready(function() {
-		console.log("Loading braintree");
-		console.log("Setting up the payment form");
-		braintree.setup('${clienttoken}', 'dropin', {
-			container : 'dropin',
-			paymentMethodNonceReceived : makePayment
-		});
-		console.log("Braintree loaded");
+		error = '${error}';
+		if(error != 1){
+			console.log("Loading braintree");
+			console.log("Setting up the payment form");
+			braintree.setup('${clienttoken}', 'dropin', {
+				container : 'dropin',
+				paymentMethodNonceReceived : makePayment
+			});
+			console.log("Braintree loaded");
+		}
 	});
 	
 	function makePayment(event,nonce){
@@ -49,7 +52,7 @@
 		console.log(nonce);
 		console.log(newfiObject.user.defaultLoanId);
 		showOverlay();
-		url="./payment/makepayment.do";
+		url="./rest/payment/pay";
 		data = "payment_nonce=" + String(nonce);
 		data = data +"&loan_id=" + String(newfiObject.user.defaultLoanId);
 		$.ajax({

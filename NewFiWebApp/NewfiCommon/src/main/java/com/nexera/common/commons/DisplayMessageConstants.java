@@ -43,6 +43,14 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_PROFILE_URL = "INVALID_PROFILE_URL";
 	public static final String INVALID_STATE_CODE_LIST_LENGTH = "INVALID_STATE_CODE_LIST_LENGTH";
 	public static final String INVALID_STATE_CODE = "INVALID_STATE_CODE";
+	
+	
+	
+	
+	// Email subject constants
+	public static final String PAYMENT_SUCCESSFUL_SUBJECT = "Payment Successful!";
+	public static final String PAYMENT_UNSUCCESSFUL_SUBJECT = "Payment Unsuccessful!";
+
 
 
 
