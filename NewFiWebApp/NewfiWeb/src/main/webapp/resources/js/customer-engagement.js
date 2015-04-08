@@ -1086,6 +1086,7 @@ function paintApplyNow(inputCustomerDetails) {
    		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
    		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
 
+   		 appUserDetails.monthlyRent = inputCustomerDetails.rentPerMonth;
    		 appUserDetails.purchaseDetails =purchaseDetails;
         }
      
@@ -1587,7 +1588,7 @@ function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails) {
     var container;
     if (loanTypeText == "REF") {
         container = getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData);
-    } else if (loanTypeText == "purchase") {
+    } else if (loanTypeText == "PUR") {
         container = getLoanSummaryContainerPurchaseCEP();
     }
     // var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may

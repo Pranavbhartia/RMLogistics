@@ -9,6 +9,9 @@ quesContxts = [];
 
 function paintBuyHomeContainer() {
 
+	
+	
+	
 	$('#app-right-panel').html('');
 	var wrapper = $('<div>').attr({
 		"class" : "ce-refinance-wrapper clearfix"
@@ -34,48 +37,42 @@ function paintBuyHomeQuest() {
 	//homeProgressBaar(1);
 	
 	
-appUserDetails = {};
+		appUserDetails = {};
 	
-	appUserDetails = JSON.parse(newfi.appUserDetails);
+		appUserDetails = JSON.parse(newfi.appUserDetails);
 	
 
-	user.id = newfi.user.id;
-	customerDetail.id = newfi.user.customerDetail.id;
+		user.id = newfi.user.id;
+		customerDetail.id = newfi.user.customerDetail.id;
 	
 	
 	
 	
 	 if(appUserDetails.propertyTypeMaster != null){
-		 propertyTypeMaster.id = appUserDetails.propertyTypeMaster.id;
-		 propertyTypeMaster.propertyTypeCd = appUserDetails.propertyTypeMaster.propertyTypeCd;
-		 propertyTypeMaster.residenceTypeCd = appUserDetails.propertyTypeMaster.residenceTypeCd;
-		 propertyTypeMaster.propertyTaxesPaid = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
-		 propertyTypeMaster.propertyInsuranceProvider = appUserDetails.propertyTypeMaster.propertyInsuranceProvider;
-		 propertyTypeMaster.propertyInsuranceCost = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
-		 propertyTypeMaster.propertyPurchaseYear = appUserDetails.propertyTypeMaster.propertyPurchaseYear;
-		 propertyTypeMaster.homeWorthToday=appUserDetails.propertyTypeMaster.homeWorthToday;
-		 propertyTypeMaster.homeZipCode = appUserDetails.propertyTypeMaster.homeZipCode;
-
+		 propertyTypeMaster = appUserDetails.propertyTypeMaster;
+		
 	 }
 	 
 	 
 	 if(appUserDetails.refinancedetails !=null){
-     refinancedetails.id =appUserDetails.refinancedetails.id; 	 
-	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
-	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
-	 //refinancedetails.currentMortgageBalance=9090;
-	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
-	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
-	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
-	
-	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
-	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
-	
-	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
+	     refinancedetails.id =appUserDetails.refinancedetails.id; 	 
+		 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
+		 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
+		 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
+		 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
+		 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
+		 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
+		 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
 	 }
 	 
+	 if(appUserDetails.purchaseDetails != null){
+		 
+		 purchaseDetails = appUserDetails.purchaseDetails;
+	 }
 	 
-	 if(newfi.customerSpouseDetail != null){
+
+	 
+	 if(newfi.customerSpouseDetail != null){ 
 		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
 	 }
 	 if(newfi.customerEmploymentIncome !=null){
@@ -119,6 +116,14 @@ appUserDetails = {};
 	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,"livingSituation");
 	$('#app-right-panel').html(quesCont);
 	
+	
+	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
+		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
+	} 
+	else{
+		
+		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
+	}
 }
 
 function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
@@ -340,14 +345,10 @@ function paintWhereYouLiveStep(){
 		  isCityOrZipKnown =quesContxts[0].value; 
 		  buyhomeZipPri = $('input[name="buyhomeZipPri"]').val();
 		 
-		  //buyHome["isCityOrZipKnown"] = isCityOrZipKnown;
-		  //buyHome["locationZipCode"] = locationZipCode;
 		  
-		  
-		 // appUserDetails.buyHome = buyHome;
 		  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
 		  appUserDetails.purchaseDetails = purchaseDetails;
-		 //alert(JSON.stringify(appUserDetails));
+		
 		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
 		
 	      });
