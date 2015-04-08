@@ -701,7 +701,7 @@ public class ThreadManager implements Runnable {
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);
 		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
-		loanMilestone.setComments(loanStatus.getDisplayStatus().getBytes());
+		loanMilestone.setComments(loanStatus.getDisplayStatus());
 		saveLoanMilestone(loanMilestone);
 
 	}

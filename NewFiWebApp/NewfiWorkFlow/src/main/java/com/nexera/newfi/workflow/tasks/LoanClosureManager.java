@@ -76,7 +76,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		String returnString = "";
+		StringBuffer returnString = new StringBuffer();
+
 		try {
 
 			Loan loan = new Loan();
@@ -85,13 +86,15 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.LOAN_CLOSURE.getMilestoneKey());
 			if (mileStone != null && mileStone.getComments() != null) {
-				returnString = mileStone.getComments().toString();
+				returnString.append(mileStone.getComments());
+				returnString.append(" On " + mileStone.getStatusUpdateTime());
+
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			returnString = "";
+
 		}
-		return returnString;
+		return returnString.toString();
 	}
 
 	@Override
