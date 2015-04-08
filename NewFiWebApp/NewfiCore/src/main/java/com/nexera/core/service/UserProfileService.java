@@ -73,7 +73,9 @@ public interface UserProfileService {
 	        CustomerSpouseDetail customerSpouseDetail);
 
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception;
+	
+	public void forgetPassword(User user);
 
-	public CustomerDetail getCustomerDetail(int id);
+	CustomerDetail getCustomerDetail(int id);
 
 }
