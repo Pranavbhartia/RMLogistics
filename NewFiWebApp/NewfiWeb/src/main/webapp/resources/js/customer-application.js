@@ -136,6 +136,11 @@ function paintCustomerApplicationPage() {
 	user.id = newfi.user.id;
 	customerDetail.id = newfi.user.customerDetail.id;
 	
+	if(newfi.user.customerDetail != null){
+		
+		customerDetail = appUserDetails.user.customerDetail;
+	
+	}
 	
 	
 	
@@ -371,6 +376,8 @@ function getApplicationSelectQues(question) {
 
     return container.append(quesTextCont).append(optionsContainer);
 }
+
+
 function getMappedValue(question){
 	if(question.text==="What type of property is this?"){
 		return appUserDetails.propertyTypeMaster.propertyTypeCd;
@@ -618,7 +625,7 @@ function paintCustomerApplicationPageStep1b() {
     	propertyInsuranceProvider = $('input[name="insuranceProvider"]').val();
     	propertyInsuranceCost = $('input[name="insuranceCost"]').val();
     	propertyPurchaseYear = $('input[name="purchaseTime"]').val();
-    	homeWorthToday = '$35,000';
+    	
     	
     	
     	
@@ -630,7 +637,7 @@ function paintCustomerApplicationPageStep1b() {
         	propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
         	propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
         	propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
-        	propertyTypeMaster.homeWorthToday = homeWorthToday ;
+          //	propertyTypeMaster.homeWorthToday = homeWorthToday ;
         	  	
         	appUserDetails.propertyTypeMaster = propertyTypeMaster;
         	
@@ -927,16 +934,18 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	
 	    	// this is the condition when spouseName is in the loan
+            if(!appUserDetails.customerSpouseDetail)
+                appUserDetails.customerSpouseDetail={};
 	    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
 	    		appUserDetails.isSpouseOnLoan = true;
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    		
-	    		customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+	    		appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    	
 	    	}else{
-	    		appUserDetails.spouseName  = "false";
+	    		appUserDetails.customerSpouseDetail.spouseName  = "false";
 	    	}
-	    	appUserDetails.customerSpouseDetail = customerSpouseDetail;
+	    	
 	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	//alert(JSON.stringify(appUserDetails));
@@ -1064,29 +1073,53 @@ function incomesSelectALLThatApply() {
 
 	
 	var quesTxt = "Select all that apply";
+    var selfEmployedData={};
+    if(appUserDetails)
+        selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
+    var employedData={};
+    if(appUserDetails&&appUserDetails.customerEmploymentIncome)
+        employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
+    var ssiData={};
+    if(appUserDetails)
+        ssiData={"selected":appUserDetails.isssIncomeOrDisability,"data":appUserDetails.ssDisabilityIncome};
+    var prData={};
+    if(appUserDetails)
+        prData={"selected":appUserDetails.ispensionOrRetirement,"data":appUserDetails.monthlyPension};
+
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintRefinanceEmployed,
 		"name" : "isEmployed",
+        "data" : employedData,
 		"value" : 0
 	}, {
 		"text" : "Self-employed",
 		"onselect" : paintRefinanceSelfEmployed,
 		"name" : "isselfEmployed",
+        "data" : selfEmployedData,
 		"value" : 1
 	}, {
 		"text" : "Social Security Income/Disability",
 		"onselect" : paintRefinanceDisability,
 		"name" :"isssIncomeOrDisability",
+        "data" : ssiData,
 		"value" : 2
 	}, {
 		"text" : "Pension/Retirement/401(k)",
 		"onselect" : paintRefinancePension,
 		"name" : "ispensionOrRetirement",
+        "data" : prData,
 		"value" : 3
 	} ];
 	
 	    var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
+        $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
+        for(var i=0;i<options.length;i++){
+            var option=options[i];
+            if(option.onselect){
+                option.onselect(option.value,option.data);
+            }
+        }
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1095,7 +1128,7 @@ function paintMyIncome() {
     appProgressBaar(4);
     $('#app-right-panel').html('');
     var incomesSelectALLThatApplyDiv = incomesSelectALLThatApply();
-    var questcontainer = $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
+    var questcontainer = $('#app-right-panel');
  
   
 	
@@ -1262,20 +1295,39 @@ function paintMyIncome() {
 }
  
 
-function paintRefinanceEmployed(divId) {
-
+function paintRefinanceEmployed(divId,value) {
+    var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+    else{
+        if(value){
+            var quesCont ;
+            var incomes=value.data;
+            for(var i=0;i<incomes.length;i++){
+                var income=incomes[i].customerEmploymentIncome;
+                    var quesTxt = "About how much do you make a year";
+                    quesCont = getMultiTextQuestion(quesTxt,income);
+                    $('#ce-option_' + divId).prepend(quesCont);
+            }
+             if(incomes.length>1)
+                addRemoveButtons(quesCont);
+            $('#ce-option_' + divId).toggle();
+            flag=false;
+        }
+    }
 	//appUserDetails.employed ="true";
-	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-		var quesTxt = "About how much do you make a year";
-		var quesCont = getMultiTextQuestion(quesTxt);
-		$('#ce-option_' + divId).prepend(quesCont);	
-	}
-	$('#ce-option_' + divId).toggle();
-
+    if(flag){
+    	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+    		var quesTxt = "About how much do you make a year";
+    		var quesCont = getMultiTextQuestion(quesTxt);
+    		$('#ce-option_' + divId).prepend(quesCont);	
+    	}
+    	$('#ce-option_' + divId).toggle();
+    }
 
 }
 
-function getMultiTextQuestion(quesText) {
+function getMultiTextQuestion(quesText,value) {
 	
 	var wrapper = $('<div>').attr({
 		"class" : "ce-option-ques-wrapper"
@@ -1297,11 +1349,13 @@ function getMultiTextQuestion(quesText) {
 	var quesTextCont1 = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
 	}).html("Before Tax");
-
+    var val="";
+    if(value&&value.employedIncomePreTax)
+        val=value.employedIncomePreTax;
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "beforeTax",
-		"value" :customerEmploymentIncome.employedIncomePreTax
+		"value" :val
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -1309,11 +1363,13 @@ function getMultiTextQuestion(quesText) {
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("Where Do You Work ?");
-
+    val="";
+    if(value&&value.employedAt)
+        val=value.employedAt;
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "workPlace",
-		"value":customerEmploymentIncome.employedAt
+		"value":val
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -1321,11 +1377,13 @@ function getMultiTextQuestion(quesText) {
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("When Did You Start Working ?");
-
+    val="";
+    if(value&&value.employedSince)
+        val=value.employedSince;
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "startWorking",
-		"value" : customerEmploymentIncome.employedSince
+		"value" : val
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -1361,103 +1419,120 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
 
 
 
-function paintRefinanceSelfEmployed(divId) {
-
-	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-		var quesTxt = "How much do you make a year?";
-		var wrapper = $('<div>').attr({
-			"class" : "ce-option-ques-wrapper"
-		});
-		var container = $('<div>').attr({
-			"class" : "ce-ques-wrapper"
-		});
-		var quesTextCont = $('<div>').attr({
-			"class" : "ce-option-text"
-		}).html(quesTxt);
-		var optionContainer = $('<div>').attr({
-			"class" : "ce-options-cont"
-		});
-		var inputBox = $('<input>').attr({
-			"class" : "ce-input",
-			"name" : "selfEmployed",
-			"value" : appUserDetails.selfEmployedIncome
-		});
-		optionContainer.append(inputBox);
-		container.append(quesTextCont).append(optionContainer);
-		wrapper.append(container);
-		$('#ce-option_' + divId).prepend(wrapper);
-	}
-	$('#ce-option_' + divId).toggle();
-	
-	putCurrencyFormat("selfEmployed");
+function paintRefinanceSelfEmployed(divId,value) {
+    var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+    //appUserDetails.employed ="true";
+    if(flag){
+    	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+    		var quesTxt = "How much do you make a year?";
+    		var wrapper = $('<div>').attr({
+    			"class" : "ce-option-ques-wrapper"
+    		});
+    		var container = $('<div>').attr({
+    			"class" : "ce-ques-wrapper"
+    		});
+    		var quesTextCont = $('<div>').attr({
+    			"class" : "ce-option-text"
+    		}).html(quesTxt);
+    		var optionContainer = $('<div>').attr({
+    			"class" : "ce-options-cont"
+    		});
+    		var inputBox = $('<input>').attr({
+    			"class" : "ce-input",
+    			"name" : "selfEmployed",
+    			"value" : appUserDetails.selfEmployedIncome
+    		});
+    		optionContainer.append(inputBox);
+    		container.append(quesTextCont).append(optionContainer);
+    		wrapper.append(container);
+    		$('#ce-option_' + divId).prepend(wrapper);
+    	}
+    	$('#ce-option_' + divId).toggle();
+    	
+    	putCurrencyFormat("selfEmployed");
+    }
 }
 
-function paintRefinanceDisability(divId) {
-	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-		var quesTxt = "About how much do you get monthly?";
-		var wrapper = $('<div>').attr({
-			"class" : "ce-option-ques-wrapper"
-		});
-		var container = $('<div>').attr({
-			"class" : "ce-ques-wrapper"
-		});
+function paintRefinanceDisability(divId,value) {
+    var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+    //appUserDetails.employed ="true";
+    if(flag){
+    	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+    		var quesTxt = "About how much do you get monthly?";
+    		var wrapper = $('<div>').attr({
+    			"class" : "ce-option-ques-wrapper"
+    		});
+    		var container = $('<div>').attr({
+    			"class" : "ce-ques-wrapper"
+    		});
 
-		var quesTextCont = $('<div>').attr({
-			"class" : "ce-option-text"
-		}).html(quesTxt);
+    		var quesTextCont = $('<div>').attr({
+    			"class" : "ce-option-text"
+    		}).html(quesTxt);
 
-		var optionContainer = $('<div>').attr({
-			"class" : "ce-options-cont"
-		});
+    		var optionContainer = $('<div>').attr({
+    			"class" : "ce-options-cont"
+    		});
 
-		var inputBox = $('<input>').attr({
-			"class" : "ce-input",
-			"name" : "disability",
-			"value" : appUserDetails.ssDisabilityIncome
-		});
+    		var inputBox = $('<input>').attr({
+    			"class" : "ce-input",
+    			"name" : "disability",
+    			"value" : appUserDetails.ssDisabilityIncome
+    		});
 
-		optionContainer.append(inputBox);
-		container.append(quesTextCont).append(optionContainer);
-		wrapper.append(container);
-		$('#ce-option_' + divId).prepend(wrapper);
-	}
-	$('#ce-option_' + divId).toggle();
-	putCurrencyFormat("disability");
+    		optionContainer.append(inputBox);
+    		container.append(quesTextCont).append(optionContainer);
+    		wrapper.append(container);
+    		$('#ce-option_' + divId).prepend(wrapper);
+    	}
+    	$('#ce-option_' + divId).toggle();
+    	putCurrencyFormat("disability");
+    }
 }
 
-function paintRefinancePension(divId) {
-	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-		var quesTxt = "About how much do you get monthly?";
-	
-		var wrapper = $('<div>').attr({
-			"class" : "ce-option-ques-wrapper"
-		});
-		
-		var container = $('<div>').attr({
-			"class" : "ce-ques-wrapper"
-		});
-	
-		var quesTextCont = $('<div>').attr({
-			"class" : "ce-option-text"
-		}).html(quesTxt);
-	
-		var optionContainer = $('<div>').attr({
-			"class" : "ce-options-cont"
-		});
-	
-		var inputBox = $('<input>').attr({
-			"class" : "ce-input",
-			"name" : "pension",
-			"value": appUserDetails.monthlyPension
-		});
-	
-		optionContainer.append(inputBox);
-		container.append(quesTextCont).append(optionContainer);
-		wrapper.append(container);
-		$('#ce-option_' + divId).prepend(wrapper);
-	}
-	$('#ce-option_' + divId).toggle();
-	putCurrencyFormat("pension");
+function paintRefinancePension(divId,value) {
+    var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+    //appUserDetails.employed ="true";
+    if(flag){
+    	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+    		var quesTxt = "About how much do you get monthly?";
+    	
+    		var wrapper = $('<div>').attr({
+    			"class" : "ce-option-ques-wrapper"
+    		});
+    		
+    		var container = $('<div>').attr({
+    			"class" : "ce-ques-wrapper"
+    		});
+    	
+    		var quesTextCont = $('<div>').attr({
+    			"class" : "ce-option-text"
+    		}).html(quesTxt);
+    	
+    		var optionContainer = $('<div>').attr({
+    			"class" : "ce-options-cont"
+    		});
+    	
+    		var inputBox = $('<input>').attr({
+    			"class" : "ce-input",
+    			"name" : "pension",
+    			"value": appUserDetails.monthlyPension
+    		});
+    	
+    		optionContainer.append(inputBox);
+    		container.append(quesTextCont).append(optionContainer);
+    		wrapper.append(container);
+    		$('#ce-option_' + divId).prepend(wrapper);
+    	}
+    	$('#ce-option_' + divId).toggle();
+    	putCurrencyFormat("pension");
+    }
 }
 
 
@@ -1477,26 +1552,43 @@ function paintMySpouseIncome() {
 
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
+     var selfEmployedData={};
+    if(appUserDetails)
+        selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
+    var employedData={};
+    if(appUserDetails&&appUserDetails.customerSpouseEmploymentIncome)
+        employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
+    var ssiData={};
+    if(appUserDetails)
+        ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
+    var prData={};
+    if(appUserDetails)
+        prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
+
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintSpouseRefinanceEmployed,
 		"name" : "isSpouseEmployed",
+        "data" : employedData,
 		"value" : 0
 	}, {
 		"text" : "Self-employed",
 		"onselect" : paintSpouseRefinanceSelfEmployed,
 		"name" : "isSpouseSelfEmployed",
+        "data" : selfEmployedData,
 		"value" : 1
 	}, {
 		"text" : "Social Security Income/Disability",
 		"onselect" : paintSpouseRefinanceDisability,
 		"name" :"isSpouseIncomeOrDisability",
+        "data" : ssiData,
 		"value" : 2
 	}, {
 		"text" : "Pension/Retirement/401(k)",
 		"onselect" : paintSpouseRefinancePension,
 		"name" : "isSpousePensionOrRetirement",
+        "data" : prData,
 		"value" : 3
 	} ];
 	var quesCont = paintSpouseCustomerApplicationPageStep3(quesTxt, options, name);
@@ -1505,7 +1597,12 @@ function paintMySpouseIncome() {
 
 	$('#app-right-panel').html('');
 		var questcontainer = $('#app-right-panel').append(quesCont);
-		
+		for(var i=0;i<options.length;i++){
+            var option=options[i];
+            if(option.onselect){
+                option.onselect(option.value,option.data);
+            }
+        }
 		console.log('purchase'+purchase);
 		if(purchase == true)
 	    {
@@ -1542,9 +1639,11 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
   var optionIncome = $('<div>').attr({
    "class" : "ce-option-ques-wrapper"
   });
-
+    var selectedClas="";
+    if(options[i].data&&options[i].data.selected)
+        selectedClas="app-option-checked ";
   var option = $('<div>').attr({
-   "class" : "ce-option-checkbox",
+   "class" : "ce-option-checkbox "+selectedClas,
    "value" : options[i].value
   }).html(options[i].text).bind('click', {
    "option" : options[i],
@@ -1671,19 +1770,40 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
 
 
-function paintSpouseRefinanceEmployed(divId) {
+function paintSpouseRefinanceEmployed(divId,value) {
+    var flag=true;
+    if(value&&!value.selected)
+        flag=false;
+    else{
+        if(value){
+            var quesCont ;
+            var incomes=value.data;
+            for(var i=0;i<incomes.length;i++){
+                var income=incomes[i].customerSpouseEmploymentIncome;
+                    var quesTxt = "Spouse Income :About how much do you make a year";
+                    quesCont = getMultiTextQuestionSpouse(quesTxt,income);
+                    $('#ce-option_' + divId).prepend(quesCont);
+            }
+             if(incomes.length>1)
+                addRemoveButtons(quesCont);
+            $('#ce-option_' + divId).toggle();
+            flag=false;
+        }
+    }
 
 	//appUserDetails.employed ="true";
- if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-  var quesTxt = "Spouse Income :About how much do you make a year";
-  var quesCont = getMultiTextQuestionSpouse(quesTxt);
-  $('#ce-option_' + divId).prepend(quesCont); 
- }
- $('#ce-option_' + divId).toggle();
+    if(flag){
+        if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
+            var quesTxt = "Spouse Income :About how much do you make a year";
+            var quesCont = getMultiTextQuestionSpouse(quesTxt);
+            $('#ce-option_' + divId).prepend(quesCont); 
+        }
+        $('#ce-option_' + divId).toggle();
+    }
 
 }
 
-function getMultiTextQuestionSpouse(quesText) {
+function getMultiTextQuestionSpouse(quesText,value) {
 
 var wrapper = $('<div>').attr({
   "class" : "ce-option-ques-wrapper"
@@ -1708,7 +1828,7 @@ var wrapper = $('<div>').attr({
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseBeforeTax",
-		"value" :appUserDetails.spouseBeforeTax
+		"value" :value.employedIncomePreTax
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -1720,7 +1840,7 @@ var wrapper = $('<div>').attr({
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseWorkPlace",
-		"value":appUserDetails.spouseWorkPlace
+		"value":value.employedAt
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -1732,7 +1852,7 @@ var wrapper = $('<div>').attr({
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseStartWorking",
-		"value" : appUserDetails.spouseStartWorking
+		"value" : value.employedSince
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -1922,6 +2042,21 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
 }
+function addRemoveButtons(element){
+    $(element).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+    var mainContainerId = $(element).parent().attr("id");
+    var removeAccBtn = $('<div>').attr({
+        "class" : "add-btn remove-account-btn"
+    }).html("Remove Income").bind('click',{"mainContainerId":mainContainerId},function(event){
+        $(this).closest('.ce-option-ques-wrapper').remove();
+        var parentDiv = $('#'+event.data.mainContainerId);
+    
+        if(parentDiv.children('.ce-option-ques-wrapper').length==1){
+            parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+        }
+    });
+    $(element).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+}
 
 
 function paintCustomerApplicationPageStep3(quesText, options, name) {
@@ -1947,9 +2082,11 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		var optionIncome = $('<div>').attr({
 			"class" : "ce-option-ques-wrapper"
 		});
-
+        var selectedClas="";
+        if(options[i].data&&options[i].data.selected)
+            selectedClas="app-option-checked";
 		var option = $('<div>').attr({
-			"class" : "ce-option-checkbox",
+			"class" : "ce-option-checkbox "+selectedClas,
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
@@ -3127,7 +3264,6 @@ function paintSelectLoanTypeQuestion() {
 		option1.css("background","rgb(247, 72, 31)");
 	}
 
-
 	var option2 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
@@ -3198,7 +3334,7 @@ function paintRefinanceQuest1() {
 
 	var quesCont = getMutipleChoiceQuestion(quesText, options,"refinanceOption");
 
-	$('#app-right-panel').html(quesCont);
+	
 	
 	
 	
@@ -3222,6 +3358,7 @@ function paintRefinanceQuest1() {
 	 * $('#stepNoId_1').html("1");
 	 */
 
+	$('#app-right-panel').html(quesCont);
 }
 
 
@@ -3294,7 +3431,7 @@ function paintRefinanceStep3() {
                      {
                          "type": "yesno",
                          "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
-                         "name": "isIncludeTaxes",
+                         "name": "includeTaxes",
                          "selected":"",
                          "options": [
                              {
@@ -3323,7 +3460,7 @@ function paintRefinanceStep3() {
     
     for(var i=0;i<questions.length;i++){
 		var question=questions[i];
-		var contxt=getQuestionContextCEP(question,$('#app-right-panel'));
+		var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.refinancedetails);
 		contxt.drawQuestion();
 		
 		quesContxts.push(contxt);
@@ -3361,7 +3498,7 @@ function paintRefinanceStep1a() {
 
 
 
-function getQuestionContextCEP(question,parentContainer){
+function getQuestionContextCEP(question,parentContainer,valueset){
 	var contxt={
 			type: question.type,
 	        text: question.text,
@@ -3371,6 +3508,7 @@ function getQuestionContextCEP(question,parentContainer){
 	        childContainers:{},
 	        childContexts:{},
 	        value:question.selected,
+            valueset:valueset,
 	        parentContainer:parentContainer,
 	        drawQuestion:function(callback){
 	        	var ob=this;
