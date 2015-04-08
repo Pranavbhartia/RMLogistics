@@ -412,7 +412,7 @@ function getApplicationTextQues(question) {
           
 		
 	
-        if (question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -1045,7 +1045,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'yearLeftOnMortgage' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName'){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -1143,7 +1143,7 @@ function paintMyIncome() {
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
-    }).html("Save1 & continue").on('click', function(event) {
+    }).html("Save & continue").on('click', function(event) {
     
     
     
@@ -1203,72 +1203,72 @@ function paintMyIncome() {
 				
 				
        
-
-       
-        homelistprice = $('input[name="homelistprice"]').val();
-        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
-        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
-        
-        
-        var  customerBankAccountDetails = [];
-        /* Bank Account Start*/
-        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
-        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
-        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
-      
-        customerBankAccountDetails1 = {};
-        customerBankAccountDetails1.accountSubType = accountSubType;
-        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
-        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
-        var termp = {};
-        termp.customerBankAccountDetails = customerBankAccountDetails1;
-        
-        customerBankAccountDetails.push(termp);
-        
-        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
-        
-        /* Bank Account End*/
-        /* Retirement Account Start*/
-        
-        var  customerRetirementAccountDetails = [];
-        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
-        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
-        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
-        
-        customerRetirementAccountDetails1 = {};
-        
-        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
-        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
-        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
-        
-        var termp2 = {};
-        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
-        
-        customerRetirementAccountDetails.push(termp2);
-        
-        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
-        
-        /* Retirement Account Ends*/
-        /* Other Account Start*/
-        
-        var  customerOtherAccountDetails = [];
-        otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
-        otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
-        otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
-        
-        customerOtherAccountDetails1 = {};
-        
-        customerOtherAccountDetails1.accountSubType = otherAccountName;
-        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
-        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
-        
-        var termp3 = {};
-        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
-        
-        customerOtherAccountDetails.push(termp3);
-        
-        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
-        
+      if(purchase == true){
+            alert("hiiiii ");
+	        homelistprice = $('input[name="homelistprice"]').val();
+	        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
+	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+	        
+	        
+	        var  customerBankAccountDetails = [];
+	        /* Bank Account Start*/
+	        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
+	        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
+	        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
+	      
+	        customerBankAccountDetails1 = {};
+	        customerBankAccountDetails1.accountSubType = accountSubType;
+	        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
+	        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
+	        var termp = {};
+	        termp.customerBankAccountDetails = customerBankAccountDetails1;
+	        
+	        customerBankAccountDetails.push(termp);
+	        
+	        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
+	        
+	        /* Bank Account End*/
+	        /* Retirement Account Start*/
+	        
+	        var  customerRetirementAccountDetails = [];
+	        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
+	        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
+	        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
+	        
+	        customerRetirementAccountDetails1 = {};
+	        
+	        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
+	        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
+	        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
+	        
+	        var termp2 = {};
+	        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
+	        
+	        customerRetirementAccountDetails.push(termp2);
+	        
+	        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
+	        
+	        /* Retirement Account Ends*/
+	        /* Other Account Start*/
+	        
+	        var  customerOtherAccountDetails = [];
+	        otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
+	        otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
+	        otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
+	        
+	        customerOtherAccountDetails1 = {};
+	        
+	        customerOtherAccountDetails1.accountSubType = otherAccountName;
+	        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
+	        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
+	        
+	        var termp3 = {};
+	        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
+	        
+	        customerOtherAccountDetails.push(termp3);
+	        
+	        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
+	    }
         /* Other Account Ends*/
         
         /*appUserDetails.homelistprice = homelistprice;
@@ -3615,7 +3615,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'yearLeftOnMortgage' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -3720,7 +3720,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 	//	"value" : refinanceTeaserRate[name]
 	}).on("load keydown", function(e){
           
-		if(name != 'zipCode' && name != 'yearLeftOnMortgage'){
+		if(name != 'zipCode' && name != 'mortgageyearsleft'){
 			$('input[name='+name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
