@@ -141,4 +141,7 @@ public interface LoanService {
 	public List<LoanMilestoneMaster> getLoanMilestoneMasterList();
 
 	public UserLoanStatus getUserLoanStaus(LoanVO loanVO);
+
+	public LoanDashboardVO searchUsers(String userName, int[] loanStatus);
+
 }

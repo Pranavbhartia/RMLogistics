@@ -75,12 +75,7 @@ public class LoanAppFormVO implements Serializable {
 	private List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetails;
 	private List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetails;
 	
-	
-	
-	
-	
-	
-	
+
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
 	private Integer loanAppFormCompletionStatus;
@@ -469,8 +464,12 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 		
 		
+		if(this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REF));
+		}else{
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
+		}
 		
-				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REF));
 				
 		loanAppForm.setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this.getPropertyTypeMaster()));
 		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));

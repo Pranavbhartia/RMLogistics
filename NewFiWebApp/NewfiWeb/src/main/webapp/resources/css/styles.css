@@ -1574,7 +1574,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .filer-dropdown {
-	width: 90px;
+	position:relative;
+	width: 110px;
 	height: 30px;
 	line-height: 30px;
 	margin: 7.5px 0;
@@ -1584,6 +1585,25 @@ input[type="button"]:focus, button:focus {
 	background-color: #fff;
 	border-radius: 3px;
 	font-size: 14px;
+	cursor:pointer;
+}
+
+.filter-wrapper {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ECECEC;
+    border-radius: 0 0 3px 3px;
+}
+
+.filter-dropdown-item{
+	cursor:pointer;
+	padding-left: 20px;
+}
+
+.filter-dropdown-item:hover{
+	background-color: #fafafa;
 }
 
 .alert-txt {
@@ -2920,6 +2940,11 @@ input.calc-input {
 	text-transform: uppercase;
 }
 
+.loan-progress-sub-txt {
+	padding: 0 10px 10px 10px;
+	font-size: 13px;
+}
+
 .loan-progress-heading {
 	text-align: center;
 	font-size: 24px;
@@ -3453,7 +3478,8 @@ input.calc-input {
 .ms-cust-prof-img {
 	width: 50px;
 	height: 50px;
-	background: url(../images/person-placeholder.png) no-repeat center;
+	background: url(../images/person-placeholder.png) no-repeat center #fafafa;
+	border:1px solid #d4d4d4;
 	border-radius: 50%;
 }
 
@@ -4420,5 +4446,5 @@ input.calc-input {
 .payment-details-wrapper{
 	position: relative;
 	margin: 80px auto 0px;
-	width: 480px;
+	width: 450px;
 }

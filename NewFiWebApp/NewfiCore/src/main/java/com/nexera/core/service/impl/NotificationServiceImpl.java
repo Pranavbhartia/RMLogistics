@@ -45,6 +45,8 @@ public class NotificationServiceImpl implements NotificationService {
 	private Utils utils;
 	@Value("${notification.enablePush}")
 	private boolean pushNotificationFlag;
+	@Value("${notification.serverURL}")
+	private String url;
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
@@ -65,7 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
 		if (pushNotificationFlag)
-			TriggerNotification.triggerNewNotofication(notificationVO);
+			TriggerNotification.triggerNewNotofication(notificationVO, url);
 		return notificationVO;
 
 	}
@@ -125,7 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
 					notificationVO.getContent(),
 			        new Date(notificationVO.getCreatedDate()),
 			        notificationVO.getLoanID()));
-			TriggerNotification.triggerNewNotofication(notificationVO);
+			TriggerNotification.triggerNewNotofication(notificationVO, url);
 		}
 		return notificationVO;
 
@@ -270,6 +272,16 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setId(notificationId);
 		notification.setRead(true);
 		result = notificationDao.updateNotificationReadStatus(notification);
+		if (pushNotificationFlag) {
+			NotificationVO notificationVO = new NotificationVO();
+			notificationVO.setId(notification.getId());
+			notification = (Notification) notificationDao.load(
+			        Notification.class,
+			        notificationId);
+			Loan loan = notification.getLoan();
+			notificationVO.setLoanID(notification.getLoan().getId());
+			TriggerNotification.triggerDismissNotofication(notificationVO, url);
+		}
 		return result;
 	}
 

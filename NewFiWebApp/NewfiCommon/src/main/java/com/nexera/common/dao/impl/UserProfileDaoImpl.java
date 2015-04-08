@@ -199,21 +199,20 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public List<User> getUsersList() {
-
-		/*
-		 * This method should return all users who are not deleted, meaning
-		 * status 0 and internaluserdetails status is not -1
-		 * 
-		 * All users who have internaluserdetails as null, if present, the
-		 * internal status should not be -1
-		 */
-		String searchQuery = "FROM User where internalUserDetail IS NULL OR (internalUserDetail.activeInternal!=:DELETED)";
-
+		
+		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL";
+		String searchQueryInternalUser="FROM User where internalUserDetail.activeInternal!=:DELETED";
+				
 		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(searchQuery);
-		query.setParameter("DELETED", ActiveInternalEnum.DELETED);
-		return query.list();
+		
+		Query queryCustomer = session.createQuery(searchQueryCustomer);
+		Query queryInternalUser=session.createQuery(searchQueryInternalUser);
+		queryInternalUser.setParameter("DELETED", ActiveInternalEnum.DELETED);
+		
+		List<User>userList=queryCustomer.list();
+		userList.addAll(queryInternalUser.list());
+				
+		return userList;
 
 	}
 
@@ -297,14 +296,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
 		                .getRoleId()) {
 			this.save(user.getInternalUserDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 		if (null != user.getRealtorDetail()
 		        && user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
 		                .getRoleId()) {
 			this.save(user.getRealtorDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 
 		LOG.info("user.getCustomerDetail() in daoimpl"
@@ -326,7 +325,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			LOG.info("Inside User Profile Dao user.getCustomerDetail()"
 			        + user.getCustomerDetail().getId());
 			this.save(user.getCustomerDetail());
-			// sessionFactory.getCurrentSession().flush();
+			 sessionFactory.getCurrentSession().flush();
 		}
 		return (Integer) this.save(user);
 	}

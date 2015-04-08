@@ -7,6 +7,7 @@ import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -666,4 +667,25 @@ public class NexeraUtility {
 		return input;
 	}
 
+	
+	
+	public  byte[] getBytes(InputStream is) throws IOException {
+
+	    int len;
+	    int size = 1024;
+	    byte[] buf;
+
+	    if (is instanceof ByteArrayInputStream) {
+	      size = is.available();
+	      buf = new byte[size];
+	      len = is.read(buf, 0, size);
+	    } else {
+	      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	      buf = new byte[size];
+	      while ((len = is.read(buf, 0, size)) != -1)
+	        bos.write(buf, 0, len);
+	      buf = bos.toByteArray();
+	    }
+	    return buf;
+	  }
 }

@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +91,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private LoanService loanService;
+	
+	@Value("${un_assigned_folder}")
+	private String unAssignedFolder;
+	
+	@Value("${assigned_folder}")
+	private String assignedFolder;
 
 	@Override
 	@Transactional
@@ -228,8 +236,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		Path path = Paths.get(newFile.getAbsolutePath());
 		byte[] data = Files.readAllBytes(path);
+		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        data, userId, loanId, assignedBy);
+		        data, userId, loanId, assignedBy , isAssignedToNeed);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
@@ -339,13 +348,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy) {
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy , Boolean isNeedAssigned) {
 		String s3Path = null;
 
 		LOG.info("File content type  : " + contentType);
 		String lqbDocumentId = null;
 		String localFilePath = null;
 		Boolean fileUpload = false;
+		File serverFile = null;
 		CheckUploadVO checkVo = new CheckUploadVO();
 		try {
 			// Upload the file locally. If png, convert to PDF, else save
@@ -365,12 +375,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			// Upload succesfull
 
 			if (fileUpload) {
-
+				serverFile = new File(localFilePath);
 				String uuidValue = nexeraUtility.randomStringOfLength();
-
+				
 				// Send file to LQB
 				LQBResponseVO lqbResponseVO = createLQBVO(userId, bytes,
-				        loanId, uuidValue);
+				        loanId, uuidValue , isNeedAssigned);
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
 					// ID.
@@ -379,28 +389,23 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					        .getLoanByID(loanId).getLqbFileId());
 
 					lqbDocumentId = fetchDocumentIDByUUID(responseVO, uuidValue);
+					
+					// Upload the file to S3. Insert in to File table
+					Integer savedRowId = addUploadedFilelistObejct(serverFile,
+					        loanId, userId, assignedBy, lqbDocumentId, uuidValue);
+					LOG.info("Added File document row : " + savedRowId);
+					checkVo.setUploadFileId(savedRowId);
 
-					// updateLQBDocumentInUploadNeededFile(lqbDocumentId ,
-					// fileId);
+					UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
 
+					checkVo.setUuid(latestRow.getUuidFileId());
+					checkVo.setFileName(latestRow.getFileName());
+					checkVo.setLqbFileId(latestRow.getLqbFileID());
+
+				}else{
+					throw new FatalException("Error saving document");
 				}
-
-				File serverFile = new File(localFilePath);
-				// Upload the file to S3. Insert in to File table
-				Integer savedRowId = addUploadedFilelistObejct(serverFile,
-				        loanId, userId, assignedBy, lqbDocumentId, uuidValue);
-				LOG.info("Added File document row : " + savedRowId);
-				checkVo.setUploadFileId(savedRowId);
-
-				UploadedFilesList latestRow = fetchUsingFileId(savedRowId);
-
-				checkVo.setUuid(latestRow.getUuidFileId());
-				checkVo.setFileName(latestRow.getFileName());
-				checkVo.setLqbFileId(latestRow.getLqbFileID());
-
-				if (serverFile.exists()) {
-					serverFile.delete();
-				}
+				
 			}
 
 		} catch (Exception e) {
@@ -408,6 +413,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
+		}finally{
+			if (serverFile.exists()) {
+				serverFile.delete();
+			}
 		}
 		checkVo.setIsUploadSuccess(fileUpload);
 		LOG.info("file.getOriginalFilename() : " + file.getName());
@@ -439,13 +448,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	public LQBResponseVO createLQBVO(Integer usrId, byte[] bytes,
-	        Integer loanId, String uuidValue) {
+	        Integer loanId, String uuidValue , Boolean isNeedAssigned) {
 		UserVO user = userProfileService.findUser(usrId);
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		LQBResponseVO lqbResponseVO = null;
+		String folderName = null;
 		try {
+			
+			if(isNeedAssigned){
+				folderName = assignedFolder;
+			}else{
+				folderName = unAssignedFolder;
+			}
+			
 			// TODO: Hard coded value. Get it from DB.
-			documentVO.setDocumentType("APPRAISAL DOCUMENT");
+			documentVO.setDocumentType(folderName);
 
 			// TODO: Add logic to uniquely identify the file
 			documentVO.setNotes(nexeraUtility.getUUIDBasedNoteForLQBDocument(
@@ -523,6 +540,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        Integer assignedBy) throws Exception {
 		File file = nexeraUtility.convertInputStreamToFile(stream);
 		CheckUploadVO checkUploadVO = null;
+		Boolean isAssignedToNeed = false;
 		if (file != null) {
 			if (contentType.contains("application/pdf"))
 				contentType = "application/pdf";
@@ -535,7 +553,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			Path path = Paths.get(file.getAbsolutePath());
 			byte[] data = Files.readAllBytes(path);
-			checkUploadVO = uploadFile(file, contentType,data, userId, loanId, assignedBy);
+			
+			
+			checkUploadVO = uploadFile(file, contentType,data, userId, loanId, assignedBy , isAssignedToNeed);
 			
 			if(file.exists()){
 				file.delete();

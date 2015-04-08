@@ -58,10 +58,10 @@ public interface UploadedFilesListService {
 	        throws IOException, COSVisitorException, Exception;
 
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy);
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy ,  Boolean isNeedAssigned);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO);
+	        Integer loanId, String createLQBVO , Boolean isNeedAssigned);
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;

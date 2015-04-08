@@ -26,6 +26,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.User;
@@ -81,6 +83,37 @@ public class UserProfileRest {
 			return null;
 		}
 
+	}
+
+	@RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO getNewPassword(
+	        @RequestBody String user) {
+
+		LOG.info("Forget password call");
+		LOG.info("To know if there a user exsists for the emailID");
+		UserVO userVO = new Gson().fromJson(user, UserVO.class);
+		User userDetail = userProfileService
+		        .findUserByMail(userVO.getEmailId());
+		CommonResponseVO commonResponse = new CommonResponseVO();
+		ErrorVO errors = new ErrorVO();
+
+		if (userDetail != null) {
+
+			try {
+				userProfileService.forgetPassword(userDetail);
+				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
+				commonResponse.setResultObject(successMessage);
+			} catch (InvalidInputException | UndeliveredEmailException e) {
+				LOG.error("Error in forget password", e.getMessage());
+				errors.setMessage(e.getMessage());
+				commonResponse.setError(errors);
+			}
+
+		} else {
+			errors.setMessage(ErrorConstants.FORGET_PASSWORD_USER_EMPTY);
+			commonResponse.setError(errors);
+		}
+		return commonResponse;
 	}
 
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.GET)
