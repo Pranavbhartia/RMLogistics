@@ -210,8 +210,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        && userVO.getPhotoImageUrl() != null) {
 					customerDetail
 					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
-				} else if (!userVO.getCustomerDetail()
-				        .getMobileAlertsPreference()
+				} else if (userVO.getCustomerDetail()
+				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() != null) {
 					customerDetail.setMobileAlertsPreference(userVO
@@ -225,6 +225,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 						customerDetail
 						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 					}
+				} else if (userVO.getCustomerDetail()
+				        .getMobileAlertsPreference() == false
+				        && userVO.getPhotoImageUrl() != null
+				        && userVO.getPhoneNumber() == null) {
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 				}
 
 			}
@@ -479,7 +485,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
 			        ActiveInternalEnum.DELETED);
-			// Integer count = userProfileDao.updateInternalUserDetail(user);
+			userProfileDao.updateInternalUserDetail(user);
 
 		} else {
 			throw new InputValidationException(new GenericErrorCode(
