@@ -46,19 +46,25 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			        LoanStatus.loanSuspendedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)) {
+		} else if (status
+		        .equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanDeclinedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN)) {
+		} else if (status.equals(String
+		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanFundedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED)) {
+		} else if (status.equals(String
+		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanArchivedMessage);

@@ -222,6 +222,9 @@ public class ThreadManager implements Runnable {
 								List<LoanMilestone> loanMilestoneList = loan
 								        .getLoanMilestones();
 								for (LoanMilestone loanMiles : loanMilestoneList) {
+									if (loanMiles.getStatus() == null) {
+										continue;
+									}
 									if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
 										newStatus = false;
 										Date date = loanMiles
@@ -689,6 +692,9 @@ public class ThreadManager implements Runnable {
 			LOSLoanStatus loanStatusID = LOSLoanStatus
 			        .getLOSStatus(previousStatus);
 			for (LoanMilestone loanMilestone : loanMilestoneList) {
+				if (loanMilestone.getStatus() == null) {
+					continue;
+				}
 				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
 					LOGGER.debug("No status has been missed hence breaking out of the loop");
 					break;
