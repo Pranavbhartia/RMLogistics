@@ -1012,7 +1012,7 @@ CREATE TABLE `loanmilestone` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `loan` int(11) DEFAULT NULL,
   `milestone` int(11) DEFAULT NULL,
-  `comments` longblob,
+  `comments` tinytext,
   `status_update_time` datetime DEFAULT NULL,
   `status` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1021,6 +1021,7 @@ CREATE TABLE `loanmilestone` (
   CONSTRAINT `fk_LoanMileStone_Loan1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_LoanMileStone_LoanMileStoneMaster1` FOREIGN KEY (`milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
