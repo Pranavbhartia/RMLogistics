@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanMilestone;
@@ -192,7 +193,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
 			loanMilestoneMaster.setId(masterMileStoneId);
 			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
-			mileStone.setComments(comments.getBytes());
+			mileStone.setComments(comments);
 			loanService.saveLoanMilestone(mileStone);
 			status = WorkItemStatus.COMPLETED.getStatus();
 			return status;
@@ -214,11 +215,13 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String getCreditDisplayScore(int userID) {
+		String creditDisplay = "";
 		UserVO user = userProfileService.findUser(userID);
 		if (user.getCustomerDetail() != null) {
-
+			creditDisplay = utils.constrtCreditScore(CustomerDetail
+			        .convertFromVOToEntity(user.getCustomerDetail()));
 		}
 
-		return "";
+		return creditDisplay;
 	}
 }
