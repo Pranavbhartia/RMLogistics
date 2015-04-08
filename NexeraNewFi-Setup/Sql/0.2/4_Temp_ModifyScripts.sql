@@ -41,3 +41,4 @@ INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `d
 
 INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `is_custom`) VALUES ('38', 'System', 'Signed Disclosure', 'Signed Disclosures ', '0');
 
+#Anoop -- All the above are moved to 1_createtable sql file
