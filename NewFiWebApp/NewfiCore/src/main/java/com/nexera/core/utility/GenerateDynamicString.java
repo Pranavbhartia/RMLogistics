@@ -24,6 +24,8 @@ public class GenerateDynamicString {
 				switch (type) {
 				case "elapsed":
 					Date dateNow = new Date();
+					dateNow = new Date(dateNow.getTime()
+					        + (dateNow.getTimezoneOffset() * 60000));
 					long elapsed = (dateNow.getTime() - startedDate.getTime())
 							/ (1000 * 60 * 60);
 					long timeLeft = Long.parseLong(key) - elapsed;
