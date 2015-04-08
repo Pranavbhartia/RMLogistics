@@ -37,7 +37,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String returnStatus = null;
 		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-				.getLosStatusID() + "")) {
+		        .getLosStatusID() + "")) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.submittedMessage);
@@ -51,23 +51,24 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	private void createAlertForDisclosureDue(HashMap<String, Object> objectMap) {
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.DISCLOSURE_AVAIL_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
 		                notificationType.getNotificationTypeName(), null);
 		if (notificationList.size() == 0
-				|| notificationList.get(0).getRead() == true) {
+		        || notificationList.get(0).getRead() == true) {
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(),
-					WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
-			List<UserRolesEnum> userRoles=new ArrayList<UserRolesEnum>();
+			        WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
+			List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
 			userRoles.add(UserRolesEnum.INTERNAL);
-			List<InternalUserRolesEum> internalUserRoles=new ArrayList<InternalUserRolesEum>();
+			List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
 			internalUserRoles.add(InternalUserRolesEum.LM);
 			notificationService.createRoleBasedNotification(notificationVO,
-					userRoles, internalUserRoles);
+			        userRoles, internalUserRoles);
 		}
 	}
+
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
@@ -85,7 +86,6 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		return null;
