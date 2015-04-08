@@ -56,7 +56,9 @@ import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -993,21 +995,26 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	public void forgetPassword(User user) {
+	public CommonResponseVO forgetPassword(User user) {
 		LOG.info("function to generate random password and save");
+		CommonResponseVO response = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
 		String password = generateRandomPassword();
 		user.setPassword(password);
-		UserVO userVO=User.convertFromEntityToVO(user);
-		boolean count = userProfileDao.changeUserPassword(userVO);
-		if (count) {
+		UserVO userVO = User.convertFromEntityToVO(user);
+		boolean isSuccess = userProfileDao.changeUserPassword(userVO);
+		if (isSuccess) {
 			try {
 				LOG.info("sending reset password to the user");
-	            sendNewPasswordToUser(user);
-            } catch (InvalidInputException | UndeliveredEmailException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-            }
+				sendNewPasswordToUser(user);
+				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
+				response.setResultObject(successMessage);
+			} catch (InvalidInputException | UndeliveredEmailException e) {
+				error.setMessage(e.getMessage());
+				response.setError(error);
+			}
 		}
+		return response;
 
 	}
 

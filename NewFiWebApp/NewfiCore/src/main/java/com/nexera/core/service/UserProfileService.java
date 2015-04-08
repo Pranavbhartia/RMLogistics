@@ -13,6 +13,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 
@@ -74,7 +75,7 @@ public interface UserProfileService {
 
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception;
 	
-	public void forgetPassword(User user);
+	public CommonResponseVO forgetPassword(User user);
 
 	public CustomerDetail getCustomerDetail(int id);
 

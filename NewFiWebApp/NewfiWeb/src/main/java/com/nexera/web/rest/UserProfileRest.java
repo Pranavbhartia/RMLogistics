@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -85,26 +86,27 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getNewPassword(@RequestBody String user) {
-        
-		LOG.info("Forget password call");
-        LOG.info("To know if there a user exsists for the emailID");
-        UserVO userVO = new Gson().fromJson(user, UserVO.class);
-		User userDetail=userProfileService.findUserByMail(userVO.getEmailId());
-		CommonResponseVO commonResponse=new CommonResponseVO();
-		ErrorVO errors=new ErrorVO();
+	public @ResponseBody CommonResponseVO getNewPassword(
+	        @RequestBody String user) {
 
-		if(userDetail!=null){
-			userProfileService.forgetPassword(userDetail);
-			String successMessage="Password updated successfully.Please Check your mail";
-            commonResponse.setResultObject(successMessage);
-		}else{
+		LOG.info("Forget password call");
+		LOG.info("To know if there a user exsists for the emailID");
+		UserVO userVO = new Gson().fromJson(user, UserVO.class);
+		User userDetail = userProfileService
+		        .findUserByMail(userVO.getEmailId());
+		CommonResponseVO commonResponse = new CommonResponseVO();
+		ErrorVO errors = new ErrorVO();
+
+		if (userDetail != null) {
+			commonResponse = userProfileService.forgetPassword(userDetail);
+
+		} else {
 			errors.setMessage(ErrorConstants.FORGET_PASSWORD_USER_EMPTY);
 			commonResponse.setError(errors);
 		}
 		return commonResponse;
 	}
-	
+
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.GET)
 	public @ResponseBody String getUserProfileWithUserId() {
 
