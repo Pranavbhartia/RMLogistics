@@ -427,10 +427,9 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="VIEW_CLOSING")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Closed On";
-				workItem.stateInfo = "Closed on.";
-						
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				data.loanID = newfi.user.defaultLoanId;
+				
 			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID = newfi.user.defaultLoanId;
