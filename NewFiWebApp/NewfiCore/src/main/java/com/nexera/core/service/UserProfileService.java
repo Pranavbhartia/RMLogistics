@@ -75,7 +75,7 @@ public interface UserProfileService {
 
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception;
 	
-	public void forgetPassword(User user)throws Exception;
+	public void forgetPassword(User user)throws InvalidInputException,UndeliveredEmailException;
 
 	public CustomerDetail getCustomerDetail(int id);
 

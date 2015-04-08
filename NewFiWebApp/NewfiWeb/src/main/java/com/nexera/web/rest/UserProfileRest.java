@@ -103,7 +103,7 @@ public class UserProfileRest {
 				userProfileService.forgetPassword(userDetail);
 				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
 				commonResponse.setResultObject(successMessage);
-			} catch (Exception e) {
+			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
 				errors.setMessage(e.getMessage());
 				commonResponse.setError(errors);
