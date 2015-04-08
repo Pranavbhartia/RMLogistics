@@ -1,6 +1,5 @@
-.ce-refinance-wrapper{
-	width:900px;
-	margin:0 auto;
+.ce-refinance-wrapper {
+	margin-left: 100px;
 	margin-top: 60px;
 }
 
@@ -41,9 +40,9 @@
 	margin: 20px 0;
 }
 
-.ce-cp{
-	margin-left: 60px;
-	width:565px;	
+.ce-cp {
+	margin-left: 40px;
+	width: 755px;
 }
 
 .ce-lp{
@@ -281,4 +280,12 @@
 .app-sub-quest-text {
 	font-size: 14px;
 	margin: 15px 0 25px 0;
+}
+
+.ce-refinance-wrapper .yr-slider{
+	width: 510px;
+}
+
+.ce-refinance-wrapper .rt-slider{
+	width: 520px;
 }

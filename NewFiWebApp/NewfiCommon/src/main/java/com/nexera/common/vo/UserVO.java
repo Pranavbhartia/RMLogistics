@@ -22,7 +22,6 @@ public class UserVO implements Serializable {
 	private String photoImageUrl;
 	private String username;
 	private UserRoleVO userRole;
-
 	private CustomerDetailVO customerDetail;
 	private InternalUserDetailVO internalUserDetail;
 	private RealtorDetailVO realtorDetail;
@@ -31,12 +30,15 @@ public class UserVO implements Serializable {
 	private List<NotificationVO> loanNotifications;
 	private List<LoanTeamVO> loanTeams;
 	private List<UserEmailVO> userEmails;
-	
-    private CustomerEnagagement  customerEnagagement ;
-    private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
-    
+	private CustomerEnagagement customerEnagagement;
+	private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
+
 	public UserVO() {
 
+	}
+
+	public UserVO(int id) {
+		this.id = id;
 	}
 
 	public int getId() {
@@ -193,10 +195,7 @@ public class UserVO implements Serializable {
 	public void setUserEmails(List<UserEmailVO> userEmails) {
 		this.userEmails = userEmails;
 	}
-	
-	
 
-	
 	public CustomerEnagagement getCustomerEnagagement() {
 		return customerEnagagement;
 	}
@@ -233,10 +232,8 @@ public class UserVO implements Serializable {
 	}
 
 	public void setInternalUserStateMappingVOs(
-			List<InternalUserStateMappingVO> internalUserStateMappingVOs) {
+	        List<InternalUserStateMappingVO> internalUserStateMappingVOs) {
 		this.internalUserStateMappingVOs = internalUserStateMappingVOs;
 	}
 
-	
-	
 }

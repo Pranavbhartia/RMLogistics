@@ -161,14 +161,58 @@ function paintAgentDashboardRightPanel(data) {
 
 	var filter = $('<div>').attr({
 		"class" : "filer-dropdown float-left"
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#filter-drop-down').css("display") == "none"){
+			showFilterDropDown();
+		}else{
+			hideFilterDropDown();
+		}
+	});
+	
+	var filterSelected = $('<div>').attr({
+		"class" : "filter-selected"
 	}).html("New");
-
+	
+	filter.append(filterSelected);
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "filter-drop-down",
+		"class" : "filter-wrapper hide"
+	});
+	
+	//TODO:Anoop sir, implementation
+	var dropDownItemArray = ["New","Closed","Withdrawn","Declined","All"];
+	
+	for(var i=0; i<dropDownItemArray.length;i++){
+		var dropDownItem = $('<div>').attr({
+			"class" : "filter-dropdown-item"
+		}).html(dropDownItemArray[i])
+		.bind('click',function(e){
+			e.stopPropagation();
+			var val = $(this).html();
+			$('#filter-drop-down').parent().find('.filter-selected').html(val);
+			hideFilterDropDown();
+		});
+		dropDownWrapper.append(dropDownItem);
+	}
+	
+	filter.append(dropDownWrapper);
+	
 	rightCon.append(searchCon).append(filterText).append(filter);
 
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
 	appendCustomers("leads-container", customerData.customers);
+}
+
+function showFilterDropDown() {
+	$('#filter-drop-down').slideDown();
+}
+
+function hideFilterDropDown() {
+	$('#filter-drop-down').slideUp();
 }
 
 function appendAgentDashboardContainer() {
@@ -754,6 +798,7 @@ $(document).on('click', '.lp-t2-agent-item', function() {
 });
 
 function paintMyLoansView() {
+	scrollToTop();
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -839,6 +884,7 @@ function paintAgentLoanPage(data) {
 // function called when secondary left panel is changed in agent view loan
 // progress pages
 function changeAgentSecondaryLeftPanel(elementId) {
+	scrollToTop();
 	$('.lp-t2-item').removeClass('t2-active');
 	$('.lp-t2-item .arrow-right').remove();
 	$('#' + elementId).addClass('t2-active');

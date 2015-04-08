@@ -40,9 +40,12 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.FatalException;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
@@ -51,8 +54,10 @@ import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.common.vo.lqb.UnderwritingConditionResponseVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
+import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
@@ -87,7 +92,13 @@ public class ThreadManager implements Runnable {
 	EngineTrigger engineTrigger;
 
 	@Autowired
+	TransactionService transactionService;
+
+	@Autowired
 	UserProfileService userProfileService;
+
+	@Autowired
+	BraintreePaymentGatewayService braintreePaymentGatewayService;
 
 	@Autowired
 	UploadedFilesListService uploadedFileListService;
@@ -222,6 +233,9 @@ public class ThreadManager implements Runnable {
 								List<LoanMilestone> loanMilestoneList = loan
 								        .getLoanMilestones();
 								for (LoanMilestone loanMiles : loanMilestoneList) {
+									if (loanMiles.getStatus() == null) {
+										continue;
+									}
 									if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
 										newStatus = false;
 										Date date = loanMiles
@@ -330,6 +344,27 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Fetch Credit Score For This Loan ");
 		fetchCreditScore(loan);
 
+		LOGGER.debug("Calling Braintree Tansaction Related Classes");
+		/* invokeBrainTree(loan); */
+	}
+
+	private void invokeBrainTree(Loan loan) {
+		List<TransactionDetails> transactionDetailsList = getActiveTransactions(loan);
+		for (TransactionDetails transactionDetails : transactionDetailsList) {
+			LOGGER.debug("Invoking Braintree Service ");
+			try {
+				braintreePaymentGatewayService
+				        .checkAndUpdateTransactions(transactionDetails);
+			} catch (NoRecordsFetchedException | InvalidInputException e) {
+				LOGGER.error("Exception received for this transaction "
+				        + transactionDetails.getTransaction_id() + " "
+				        + e.getMessage());
+			}
+		}
+	}
+
+	private List<TransactionDetails> getActiveTransactions(Loan loan) {
+		return transactionService.getActiveTransactionsByLoan(loan);
 	}
 
 	private void fetchCreditScore(Loan loan) {
@@ -493,7 +528,7 @@ public class ThreadManager implements Runnable {
 
 		WebServiceOperations.OP_NAME_UNDERWRITING_CONDITION,
 		        loan.getLqbFileId(), format);
-		LOGGER.debug("Invoking LQB service to fetch Loan status ");
+		LOGGER.debug("Invoking LQB service to fetch underwriting condition ");
 		JSONObject underWritingJSONResponse = lqbInvoker
 		        .invokeLqbService(underWritingConditionJSONObject.toString());
 		if (underWritingJSONResponse != null) {
@@ -689,6 +724,9 @@ public class ThreadManager implements Runnable {
 			LOSLoanStatus loanStatusID = LOSLoanStatus
 			        .getLOSStatus(previousStatus);
 			for (LoanMilestone loanMilestone : loanMilestoneList) {
+				if (loanMilestone.getStatus() == null) {
+					continue;
+				}
 				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
 					LOGGER.debug("No status has been missed hence breaking out of the loop");
 					break;

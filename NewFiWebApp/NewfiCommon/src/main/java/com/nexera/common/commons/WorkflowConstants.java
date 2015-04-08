@@ -118,7 +118,7 @@ public class WorkflowConstants {
 
 	// TODO DYNAMIC content
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are due in {\"72\":\"elapsed\"} hrs.";
-
+	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an agent? Please add him to NewFi Team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 
 	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "INitial needs list not created";
