@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -24,6 +23,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	private IWorkflowService iWorkflowService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -39,13 +40,13 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		Loan loan = new Loan();
-		loan.setId(Integer.parseInt(inputMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-		LoanAppForm loanAppForm = iWorkflowService.getLoanAppFormDetails(loan);
+
+		int userID = (Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString()));
+
 		// TO Remove------ start
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
-		        "EQ-?? | TU-?? | EX-??");
+		        iWorkflowService.getCreditDisplayScore(userID));
 		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
 		        "http://www.lendingqb.com/");
 		// TO Remove------ end
