@@ -20,11 +20,8 @@
 	box-shadow: 0px 0px 5px #dcdcdc;
 }
 .admin-error-wrapper {
-  margin-left: 212px;
-  border-left: 1px #bebebe solid;
-  padding-top: 15px;
-
-  display: none;
+    margin-bottom: 15px;
+	display:none;
 }
 .admin-display{
 display: block;
@@ -33,14 +30,15 @@ display: block;
 .admin-error-container {
     background: #FFC2C2; 
     color: #dd4b39;
-    border: 1px solid #dd4b39;
-    border-radius: 50px;
-    margin-left: 15px;
-    padding-right: 43px;
+    border-radius: 5px;
+    padding: 10px 15px 15px 0;
 }
-.admin-error-list-list-tr.clearfix {
-  margin-left: 42px;
-  margin-top: 5px;
+.admin-error-list-list-tr {
+  margin-left: 25px;
+  padding-top: 10px;
+  background: url(../images/error.png) no-repeat 0 9px;
+  background-size: 17px;
+  padding-left: 28px;
 }
 .admin-add-team-mem-wrapper{
 	margin-bottom: 10px;	
@@ -50,14 +48,15 @@ display: block;
 	height: 18px;
 	margin: 10px 40px;
 	background: url(../images/search_icon.png) no-repeat center;
+	cursor: pointer;
 }
 .admin-search-input {
-	width: 150px;
-	line-height: 16px;
+	width: 140px;
+	line-height: 32px;
 	border: none;
 	background: transparent;
-	padding-right: 21px;
-	cursor: pointer;
+	padding-right: 20px;
+	/* cursor: pointer; */
 }
 .admin-add-member-dropdown-cont{
 	position: absolute;
@@ -71,7 +70,12 @@ display: block;
 	padding: 5px 0;
 	box-shadow: 0px 0px 5px #dcdcdc;
 }
-
+.admin-create-user-popup-label {
+  width: 90px;
+  padding-right: 10px;
+  text-align: right;
+  text-transform: capitalize;
+}
 .admin-add-member-dropdown-row {
 	padding-left: 20px;
 	line-height: 30px;
@@ -81,8 +85,8 @@ display: block;
 }
 .admin-label-class{
 	line-height: 40px;
-	padding-left: 35px;
-	padding-right: 65px;
+	padding-left: 0px;
+	padding-right: 15px;
 	font-family: 'OpenSans';
 
 }
@@ -116,12 +120,14 @@ display: block;
 
 .input-file-admin {
   opacity: 0;
-  width: 85px;
+  width: 60px;
   cursor: pointer;
   z-index: -1;
-  height: 33px;
+  height: 35px;
   left: 966px;
 
+  /* position: relative; */
+  /* float: left; */
 }
  .admin-module-row-content{
   height: 32px;	
@@ -174,7 +180,7 @@ display: block;
 }
 
 .admin-upload-label {
-	line-height: 40px;
+	line-height: 44px;
 	padding-left: 8px;
 	padding-right: 40px;
 	font-family: 'opensanssemibold';
@@ -201,17 +207,17 @@ display: block;
 }
 
 .prof-cust-save-btn-admin-um {
+	position: relative;
 	width: 100px;
-	height: 28px;
-	margin: 0px right;
-	line-height: 28px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	text-transform: uppercase;
 	color: #fff;
 	background-color: #F6914D;
 	border-radius: 3px;
 	cursor: pointer;
-	margin-right: 30px;
+	margin-right: 20px;
 	margin-top: 7px;
 	padding-top: 0px;
 	margin-left: -15px;
@@ -232,9 +238,9 @@ display: block;
 }
 
 .add-member-input-admin-cont{
-	line-height: 40px;
+	line-height: 45px;
 	padding-left: 7px;
-	padding-right: 44px;
+	padding-right: 25px;
 	font-family: 'opensanssemibold';
 }
 
@@ -342,15 +348,15 @@ display: block;
 }
 
 #admin-create-user-popup.create-user-popup {
-	top: 177px;
-	width: 780px;
+	position: absolute;
+	width: 660px;
 	padding: 10px;
-	left: 13px;
+	left: -288px;
 }
 
 #admin-create-user-popup.create-user-popup:after {
 	bottom: 100%;
-	right: 60px;
+	right: 50%;
 	border: solid transparent;
 	content: " ";
 	height: 0;
@@ -362,7 +368,23 @@ display: block;
 	border-width: 8px;
 	margin-left: -8px;
 }
+.admin-create-user-popup-input{
+  width: 225px;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 10px;
+  border: 1px #dcdcdc solid;
+  border-radius: 3px;
+  background-color: #FAFAFA;
 
+}
+.admin-create-user-popup-cont{
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  margin: 10px 0;
+
+}
 .create-turn-around-label {
 	width: 250px;
 	padding-right: 20px;
