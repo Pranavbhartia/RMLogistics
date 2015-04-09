@@ -260,7 +260,7 @@ public class CustomerDetailVO implements Serializable {
 		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
 		customerDetailVO.setSubscriptionsStatus(customerDetail
 		        .getSubscriptionsStatus());
-
+		customerDetailVO.setLivingSince(customerDetail.getLivingSince());
 		return customerDetailVO;
 
 	}
