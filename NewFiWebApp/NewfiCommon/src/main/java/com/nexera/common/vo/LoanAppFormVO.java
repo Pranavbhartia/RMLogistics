@@ -799,7 +799,8 @@ public class LoanAppFormVO implements Serializable {
 			CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
 			System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
 			System.out.println("customeremploymentincomeVO.id is()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			if(null!= customeremploymentincomeVO.getCustomerEmploymentIncome() && customeremploymentincomeVO.getCustomerEmploymentIncome().getId() != 0)
+			customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 			//customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
 		customerEmploymentIncome.setEmployedIncomePreTax(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedIncomePreTax());
