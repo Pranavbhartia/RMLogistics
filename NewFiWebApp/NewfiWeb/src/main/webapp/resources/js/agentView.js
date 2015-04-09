@@ -250,7 +250,9 @@ function appendAgentDashboardContainer() {
 
 	inactiveWrapper.append(inactiveHeader).append(inactiveContainer);
 
-	container.append(leadsWrapper).append(inactiveWrapper);
+	//Hiding inactive loans since we are not differentiating active and inactive now.
+	//container.append(leadsWrapper).append(inactiveWrapper);
+	container.append(leadsWrapper);
 	$('#agent-dashboard-container').append(container);
 }
 
