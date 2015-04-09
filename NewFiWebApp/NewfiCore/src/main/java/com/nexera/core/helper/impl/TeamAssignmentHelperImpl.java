@@ -46,9 +46,10 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		/*
 		 * If there is none available, assign to Sales Manager.
 		 */
-
-		return userProfileDao.getDefaultSalesManager();
-
+		// This logic is changed to not assign anyone. Sales manager will be
+		// assigned neverthless
+		// return userProfileDao.getDefaultSalesManager();
+		return null;
 		// userList = userProfileDao.getLoanManagerWithLeastWork();
 		// if (!userList.isEmpty()) {
 		// return pickTheChosenOne(userList);
@@ -88,7 +89,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		        stateName);
 		if (userVO == null || userVO.getId() == 0) {
 			// The realtor does not have default loan manager. Hence return the
-			// one with least work
+			// one with least work on this state
 			return this.getDefaultLoanManager(stateName);
 		}
 		return userVO;
