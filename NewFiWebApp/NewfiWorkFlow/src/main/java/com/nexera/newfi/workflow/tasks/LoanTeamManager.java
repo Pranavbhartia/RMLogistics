@@ -1,6 +1,7 @@
 package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,14 +12,19 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
@@ -29,7 +35,7 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class LoanTeamManager extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 
 	@Autowired
 	LoanService loanService;
@@ -40,9 +46,12 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private EngineTrigger engineTrigger;
-
+	@Autowired
+	private IWorkflowService iWorkflowService;
 	@Autowired
 	private Utils utils;
+	@Autowired
+	private NotificationService notificationService;
 
 	public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
@@ -62,16 +71,16 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanID = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 		ExtendedLoanTeamVO extendedLoanTeamVO = loanService
-				.findExtendedLoanTeam(loanVO);
+		        .findExtendedLoanTeam(loanVO);
 		if (extendedLoanTeamVO.getUsers().size() > 1) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-					WorkItemStatus.PENDING.getStatus());
+			        WorkItemStatus.PENDING.getStatus());
 			return WorkItemStatus.PENDING.getStatus();
 		}
 		return null;
@@ -83,6 +92,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
+		boolean agentAdded = false;
 		Integer userID = null, titleCompanyID = null, homeOwnInsCompanyID = null;
 		if (objectMap.containsKey(WorkflowDisplayConstants.USER_ID_KEY_NAME)) {
 			Object userIDObj = objectMap
@@ -90,16 +100,16 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			userID = Integer.parseInt(userIDObj.toString());
 		}
 
-		if (objectMap.containsKey(WorkflowDisplayConstants.TITLE_COMPANY_ID))
+		if (objectMap.containsKey(WorkflowDisplayConstants.TITLE_COMPANY_ID)) {
 			titleCompanyID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.TITLE_COMPANY_ID).toString());
-
+		}
 		if (objectMap
-		        .containsKey(WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID))
+		        .containsKey(WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID)) {
 			homeOwnInsCompanyID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.HOME_OWN_INS_COMP_ID).toString());
+		}
 
-		// return new Gson().toJson(user);
 		EditLoanTeamVO editLoanTeamVO = new EditLoanTeamVO();
 		editLoanTeamVO.setUserID(userID);
 		editLoanTeamVO.setLoanID(loanID);
@@ -107,21 +117,23 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		String message = null;
 		if (userID != null && userID > 0) {
-			UserVO user = new UserVO();
-			user.setId(userID);
+			UserVO user = new UserVO(userID);
 			boolean result = loanService.addToLoanTeam(loanVO, user);
 			if (result) {
 				user = userProfileService.loadInternalUser(userID);
+				if (user.getUserRole() != null
+				        && user.getUserRole().getRoleCd()
+				                .equals(UserRolesEnum.REALTOR.getName())) {
+					agentAdded = true;
+				}
 			}
+
 			editLoanTeamVO.setOperationResult(result);
 			editLoanTeamVO.setUser(user);
 			changeState(loanID);
-			message = LoanStatus.teamMemberAddedMessage
-					+ " Name : "
-					+ user.getDisplayName()
-					+ " Role : "
-					+ user.getUserRole()
-							.getRoleDescription();
+			message = LoanStatus.teamMemberAddedMessage + " Name : "
+			        + user.getDisplayName() + " Role : "
+			        + user.getUserRole().getRoleDescription();
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
@@ -130,9 +142,8 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			editLoanTeamVO.setTitleCompany(company);
 			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
-			message = LoanStatus.titleCompanyAddedMessage
-					+ " Name : "
-					+ company.getName();
+			message = LoanStatus.titleCompanyAddedMessage + " Name : "
+			        + company.getName();
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
@@ -142,12 +153,27 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			editLoanTeamVO.setOperationResult(true);
 			changeState(loanID);
 			message = LoanStatus.HMInsCompanyAddedMessage + " Name : "
-					+ company.getName();
-		} else
+			        + company.getName();
+		} else {
 			return "Bad request";
-		if (message != null)
+		}
+		if (message != null) {
 			makeANote(loanID, message);
+		}
+		if (agentAdded) {
+			dismissAgentAddAlert(loanID);
+		}
 		return new Gson().toJson(editLoanTeamVO);
+	}
+
+	private void dismissAgentAddAlert(int loanId) {
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), true);
+		for (NotificationVO notificationVO : notificationList) {
+			notificationService.dismissNotification(notificationVO.getId());
+		}
 	}
 
 	private void changeState(int loanID) {
@@ -158,7 +184,6 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_TEAM_STATUS);
 		WorkflowItemExec workflowitemexec = workflowService
 		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-
 		workflowExec.setId(loanVO.getCustomerWorkflowID());
 		WorkflowItemMaster custWorkflowItemMaster = workflowService
 		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_MANAGE_TEAM);
@@ -169,6 +194,6 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		        WorkItemStatus.STARTED.getStatus());
 		engineTrigger.changeStateOfWorkflowItemExec(workflowitemexec.getId(),
 		        WorkItemStatus.STARTED.getStatus());
-
 	}
+
 }

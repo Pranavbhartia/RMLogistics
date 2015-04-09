@@ -1,4 +1,5 @@
-.ce-refinance-wrapper{
+.ce-refinance-wrapper {
+	margin-left: 100px;
 	margin-top: 60px;
 }
 
@@ -39,9 +40,9 @@
 	margin: 20px 0;
 }
 
-.ce-cp{
-	margin-left: 60px;
-	width:830px;	
+.ce-cp {
+	margin-left: 40px;
+	width: 755px;
 }
 
 .ce-lp{
@@ -66,7 +67,13 @@
 .ce-rp-ques-text {
 	font-family: 'opensanssemibold';
 	font-size: 18px;
-	line-height: 26px;
+	margin-bottom: 5px;
+	text-transform: capitalize;
+}
+
+.ce-mul-ques-text{
+	font-family: 'opensanssemibold';
+	font-size: 26px;
 	margin-bottom: 10px;
 	text-transform: capitalize;
 }
@@ -152,7 +159,7 @@
 .ce-lp-item-text {
     padding-left: 15px;
     line-height: 44px;
-    font-size: 19px;
+    font-size: 18px;
     font-family: 'opensanssemibold';
     text-transform: capitalize;
 }
@@ -192,7 +199,7 @@
 	margin: 10px 0 15px 30px;
 	padding: 10px;
 	border-radius: 3px;
-	width: 500px;
+	width: 455px;
 }
 
 .ce-option-ques-wrapper .ce-input{
@@ -262,11 +269,23 @@
 	width: 830px;
 }
 
-.ce-app-lp-item-text{
-	
-  padding-left: 15px;
-  line-height: 44px;
-  font-size: 15px;
-  font-family: 'opensanssemibold';
-  text-transform: capitalize;
+.ce-app-lp-item-text {
+	padding-left: 15px;
+	line-height: 44px;
+	font-size: 15px;
+	font-family: 'opensanssemibold';
+	text-transform: capitalize;
+}
+
+.app-sub-quest-text {
+	font-size: 14px;
+	margin: 15px 0 25px 0;
+}
+
+.ce-refinance-wrapper .yr-slider{
+	width: 510px;
+}
+
+.ce-refinance-wrapper .rt-slider{
+	width: 520px;
 }

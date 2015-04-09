@@ -17,7 +17,7 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 @Component
 public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-			.getLogger(ClosureDisplayManager.class);
+	        .getLogger(ClosureDisplayManager.class);
 
 	@Autowired
 	private LoanService loanService;
@@ -30,17 +30,23 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		StringBuffer returnString = new StringBuffer();
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
-					Milestones.LOAN_CLOSURE.getMilestoneKey());
-			return mileStone.getComments().toString();
+			        Milestones.LOAN_CLOSURE.getMilestoneKey());
+			if (mileStone != null && mileStone.getComments() != null) {
+				returnString.append(mileStone.getComments().toString());
+				returnString.append(" On " + mileStone.getStatusUpdateTime());
+
+			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			return "";
+
 		}
+		return returnString.toString();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ var states=[];
 var internalUserDetailId;
 //var userStates=[];
 function showCustomerProfilePage() {
-	
+	scrollToTop();
 	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	
 	$('.lp-right-arrow').remove();

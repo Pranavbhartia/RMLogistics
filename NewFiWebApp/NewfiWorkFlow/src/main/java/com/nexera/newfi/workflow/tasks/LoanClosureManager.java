@@ -46,19 +46,25 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			        LoanStatus.loanSuspendedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)) {
+		} else if (status
+		        .equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanDeclinedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN)) {
+		} else if (status.equals(String
+		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanFundedMessage);
 			sendEmail(objectMap);
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED)) {
+		} else if (status.equals(String
+		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
+		                .getLosStatusID()))) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.loanArchivedMessage);
@@ -70,7 +76,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		String returnString = "";
+		StringBuffer returnString = new StringBuffer();
+
 		try {
 
 			Loan loan = new Loan();
@@ -79,13 +86,15 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.LOAN_CLOSURE.getMilestoneKey());
 			if (mileStone != null && mileStone.getComments() != null) {
-				returnString = mileStone.getComments().toString();
+				returnString.append(mileStone.getComments());
+				returnString.append(" On " + mileStone.getStatusUpdateTime());
+
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			returnString = "";
+
 		}
-		return returnString;
+		return returnString.toString();
 	}
 
 	@Override

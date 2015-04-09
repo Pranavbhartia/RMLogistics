@@ -20,7 +20,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.json.JSONException;
@@ -91,10 +90,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private LoanService loanService;
-	
+
 	@Value("${un_assigned_folder}")
 	private String unAssignedFolder;
-	
+
 	@Value("${assigned_folder}")
 	private String assignedFolder;
 
@@ -238,7 +237,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		byte[] data = Files.readAllBytes(path);
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        data, userId, loanId, assignedBy , isAssignedToNeed);
+		        data, userId, loanId, assignedBy, isAssignedToNeed);
 		for (Integer fileId : fileIds) {
 			deactivateFileUsingFileId(fileId);
 		}
@@ -348,7 +347,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy , Boolean isNeedAssigned) {
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	        Boolean isNeedAssigned) {
 		String s3Path = null;
 
 		LOG.info("File content type  : " + contentType);
@@ -377,10 +377,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
 				String uuidValue = nexeraUtility.randomStringOfLength();
-				
+
 				// Send file to LQB
 				LQBResponseVO lqbResponseVO = createLQBVO(userId, bytes,
-				        loanId, uuidValue , isNeedAssigned);
+				        loanId, uuidValue, isNeedAssigned);
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
 					// ID.
@@ -389,10 +389,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					        .getLoanByID(loanId).getLqbFileId());
 
 					lqbDocumentId = fetchDocumentIDByUUID(responseVO, uuidValue);
-					
+
 					// Upload the file to S3. Insert in to File table
 					Integer savedRowId = addUploadedFilelistObejct(serverFile,
-					        loanId, userId, assignedBy, lqbDocumentId, uuidValue);
+					        loanId, userId, assignedBy, lqbDocumentId,
+					        uuidValue);
 					LOG.info("Added File document row : " + savedRowId);
 					checkVo.setUploadFileId(savedRowId);
 
@@ -402,10 +403,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					checkVo.setFileName(latestRow.getFileName());
 					checkVo.setLqbFileId(latestRow.getLqbFileID());
 
-				}else{
+				} else {
 					throw new FatalException("Error saving document");
 				}
-				
+
 			}
 
 		} catch (Exception e) {
@@ -413,7 +414,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			e.printStackTrace();
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
-		}finally{
+		} finally {
 			if (serverFile.exists()) {
 				serverFile.delete();
 			}
@@ -448,19 +449,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	public LQBResponseVO createLQBVO(Integer usrId, byte[] bytes,
-	        Integer loanId, String uuidValue , Boolean isNeedAssigned) {
+	        Integer loanId, String uuidValue, Boolean isNeedAssigned) {
 		UserVO user = userProfileService.findUser(usrId);
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		LQBResponseVO lqbResponseVO = null;
 		String folderName = null;
 		try {
-			
-			if(isNeedAssigned){
+
+			if (isNeedAssigned) {
 				folderName = assignedFolder;
-			}else{
+			} else {
 				folderName = unAssignedFolder;
 			}
-			
+
 			// TODO: Hard coded value. Get it from DB.
 			documentVO.setDocumentType(folderName);
 
@@ -553,11 +554,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			Path path = Paths.get(file.getAbsolutePath());
 			byte[] data = Files.readAllBytes(path);
-			
-			
-			checkUploadVO = uploadFile(file, contentType,data, userId, loanId, assignedBy , isAssignedToNeed);
-			
-			if(file.exists()){
+
+			checkUploadVO = uploadFile(file, contentType, data, userId, loanId,
+			        assignedBy, isAssignedToNeed);
+
+			if (file.exists()) {
 				file.delete();
 			}
 			return checkUploadVO;
@@ -712,7 +713,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 
 		for (LQBedocVO edoc : edocsList) {
-
+			if (edoc.getDoc_type().equalsIgnoreCase("CASE ASSIGNMENT")) {
+				LOG.debug("Ignoring files for this doc type ");
+				continue;
+			}
 			String uuidDetails = edoc.getDescription();
 			String uuid = fetchUUID(uuidDetails);
 			if (uuid != null) {

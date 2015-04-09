@@ -422,10 +422,8 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setAlert_count("3");
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanCustomerVO.setCredit_score(constrtCreditScore(
-			        customerDetail.getTransunionScore(),
-			        customerDetail.getEquifaxScore(),
-			        customerDetail.getExperianScore()));
+			loanCustomerVO.setCredit_score(utils
+			        .constrtCreditScore(customerDetail));
 
 		} else {
 			loanCustomerVO.setCredit_score("-");
@@ -449,38 +447,6 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 
 		return loanCustomerVO;
-	}
-
-	private String constrtCreditScore(String transunionScore,
-	        String equifaxScore, String experianScore) {
-		// TODO Auto-generated method stub
-		String creditScore = "";
-		if (equifaxScore != null && !equifaxScore.isEmpty()) {
-			creditScore = CommonConstants.EQ + equifaxScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = CommonConstants.EQ + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-		if (transunionScore != null && !transunionScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.TU + transunionScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = creditScore + CommonConstants.TU
-			        + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-
-		if (experianScore != null && !experianScore.isEmpty()) {
-			creditScore = creditScore + CommonConstants.EX + experianScore
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		} else {
-			creditScore = creditScore + CommonConstants.EX
-			        + CommonConstants.UNKNOWN_SCORE
-			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
-		}
-
-		return creditScore;
 	}
 
 	/**
@@ -1135,10 +1101,8 @@ public class LoanServiceImpl implements LoanService {
 
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanStatus.setCreditInformation(constrtCreditScore(
-			        customerDetail.getTransunionScore(),
-			        customerDetail.getEquifaxScore(),
-			        customerDetail.getExperianScore()));
+			loanStatus.setCreditInformation(utils
+			        .constrtCreditScore(customerDetail));
 
 		} else {
 			loanStatus.setCreditInformation("-");
@@ -1154,5 +1118,23 @@ public class LoanServiceImpl implements LoanService {
 		loanStatus.setLockExpiryDate(null);
 
 		return loanStatus;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO searchUsers(String userName, int[] loanProgressStatus) {
+
+		/*
+		 * This function is called from Search of Loan manager, where in, the
+		 * loan manager would have selected the loanprogress filter. the int[]
+		 * passed contains the applicable filter in this case. Expected output:
+		 * Retrieva all loans which are in the status as per the int[] input
+		 * paramter and whose name starts with userName paramter passed.
+		 * 
+		 * Refer to the method:LoanDashboardVO
+		 * retrieveDashboardForWorkLoans(UserVO userVO) For a similar
+		 * implementation which works with a particular loanManager userId
+		 */
+		return null;
 	}
 }

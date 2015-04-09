@@ -67,9 +67,9 @@
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
 			$(window).resize(function() {
-				//adjustCenterPanelWidth();
-				//adjustRightPanelOnResize();
-                //adjustCustomerApplicationPageOnResize();
+				adjustCenterPanelWidth();
+				adjustRightPanelOnResize();
+                adjustCustomerApplicationPageOnResize();
 			});
 
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
