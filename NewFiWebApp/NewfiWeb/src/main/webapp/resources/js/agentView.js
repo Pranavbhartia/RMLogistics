@@ -3,6 +3,7 @@
  */
 var isAgentTypeDashboard;
 var docData = [];
+dropDownItemArray = ["New","Closed","Withdrawn","Declined","All"];
 
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
@@ -57,12 +58,15 @@ function paintAgentDashboard(loanType) {
 	$('#right-panel').append(agentDashboardMainContainer);
 	if(loanType == "workloans"){
         $('#lp-work-on-loan').addClass('lp-item-active');
+        dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForWorkLoans();
 	}else if(loanType == "myloans"){
         $('#lp-my-loans').addClass('lp-item-active');
+        dropDownItemArray = [ "New", "All" ];
 		getDashboardRightPanelForMyLoans();
 	}else if(loanType == "archivesloans"){
         $('#lp-my-archives').addClass('lp-item-active');
+        dropDownItemArray = [ "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();
@@ -172,7 +176,7 @@ function paintAgentDashboardRightPanel(data) {
 	
 	var filterSelected = $('<div>').attr({
 		"class" : "filter-selected"
-	}).html("New");
+	}).html("All");
 	
 	filter.append(filterSelected);
 	
@@ -182,7 +186,7 @@ function paintAgentDashboardRightPanel(data) {
 	});
 	
 	//TODO:Anoop sir, implementation
-	var dropDownItemArray = ["New","Closed","Withdrawn","Declined","All"];
+	
 	
 	for(var i=0; i<dropDownItemArray.length;i++){
 		var dropDownItem = $('<div>').attr({
@@ -403,7 +407,13 @@ function appendCustomerTableHeader(elementId) {
 
 	var thCol4 = $('<div>').attr({
 		"class" : "leads-container-tc4 float-left"
-	}).html("Processor");
+	});
+	
+	if (newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName == "SM") {
+		thCol4.html("Loan Manager");
+		} else {
+				thCol4.html("Processor");
+			}
 
 	var thCol5 = $('<div>').attr({
 		"class" : "leads-container-tc5 float-left"
