@@ -175,7 +175,7 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> team = retreiveLoanTeam(loanVO);
 		for (UserVO user : team) {
 			if (null != user.getInternalUserDetail()) {
-				if (UserRolesEnum.LOANMANAGER.equalsName(user
+				if (UserRolesEnum.LM.equalsName(user
 				        .getInternalUserDetail().getInternalUserRoleMasterVO()
 				        .getRoleName())) {
 					managerList.add(user);
