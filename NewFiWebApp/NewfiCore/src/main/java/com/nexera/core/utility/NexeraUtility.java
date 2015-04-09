@@ -19,8 +19,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -56,8 +58,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -238,7 +242,7 @@ public class NexeraUtility {
 	}
 
 	public String randomStringOfLength() {
-		Integer length = 10;
+		Integer length = 20;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
 			buffer.append(uuidString());
@@ -667,6 +671,53 @@ public class NexeraUtility {
 		return input;
 	}
 
+	
+	public List<String> getFileUUIDList(List<UploadedFilesList> uploadList) {
+
+		List<String> uploadFileUUIDList = new ArrayList<String>();
+		if (uploadList != null) {
+			for (UploadedFilesList uploadFiles : uploadList) {
+				uploadFileUUIDList.add(uploadFiles.getUuidFileId());
+			}
+		}
+		return uploadFileUUIDList;
+	}
+
+	public String fetchUUID(String uuidString) {
+		if (uuidString != null) {
+			if (uuidString.contains("UUID")) {
+				String keyValuePair[] = uuidString.split(" ");
+				Map<String, String> map = new HashMap<String, String>();
+				for (String pair : keyValuePair) {
+					String[] entry = pair.split(":");
+					map.put(entry[0].trim(), entry[1].trim());
+				}
+				return map.get("UUID");
+
+			}
+		}
+		return null;
+
+	}
+	
+	public  List<String> getEdocsUUIDList(List<LQBedocVO> lqbedocVOList) {
+		List<String> edocList = new ArrayList<String>();
+		for (LQBedocVO edoc : lqbedocVOList) {
+			String uuidDetails = edoc.getDescription();
+			String uuid = fetchUUID(uuidDetails);
+			if (uuid != null)
+				edocList.add(uuid);
+		}
+		return edocList;
+	}
+
+	public List<String> getEdocsDocList(List<LQBedocVO> lqbedocVOList) {
+		List<String> edocList = new ArrayList<String>();
+		for (LQBedocVO edoc : lqbedocVOList) {
+			edocList.add(edoc.getDocid());
+		}
+		return edocList;
+	}
 	
 	
 	public  byte[] getBytes(InputStream is) throws IOException {

@@ -39,6 +39,7 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 			Loan loan = new Loan();
 			loan.setId(loanId);
 			criteria.add(Restrictions.eq("loan", loan));
+			
 			List<LoanNeedsList> loanNeeds = criteria.list();
 			return loanNeeds;
 		} catch (HibernateException hibernateException) {
