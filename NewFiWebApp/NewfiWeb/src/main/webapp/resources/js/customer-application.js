@@ -177,8 +177,10 @@ function paintCustomerApplicationPage() {
 	 if(newfi.customerSpouseDetail != null){
 		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
 	 }
+	// alert('newfi.customerEmploymentIncome'+JSON.stringify(newfi));
 	 if(newfi.customerEmploymentIncome !=null){
 	 customerEmploymentIncome.id = newfi.customerEmploymentIncome.id;
+	//alert('newfi.customerEmploymentIncome'+JSON.stringify(newfi.customerEmploymentIncome));
 	 }
 	 if(newfi.customerBankAccountDetails != null){
 	 customerBankAccountDetails.id = newfi.customerBankAccountDetails.id;
@@ -1074,18 +1076,24 @@ function incomesSelectALLThatApply() {
 	
 	var quesTxt = "Select all that apply";
     var selfEmployedData={};
+     alert('appUserDetails'+appUserDetails);
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
+  alert('selfEmployedData'+selfEmployedData);
+  
+  
     var employedData={};
     if(appUserDetails&&appUserDetails.customerEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
+    
     var ssiData={};
     if(appUserDetails)
         ssiData={"selected":appUserDetails.isssIncomeOrDisability,"data":appUserDetails.ssDisabilityIncome};
+  
     var prData={};
     if(appUserDetails)
         prData={"selected":appUserDetails.ispensionOrRetirement,"data":appUserDetails.monthlyPension};
-
+ 
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintRefinanceEmployed,
@@ -1166,8 +1174,11 @@ function paintMyIncome() {
       customerEmploymentIncome.push(termp);
      });
      
-
-    appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+    // alert('customerEmploymentIncome.size');
+   
+   if(!customerEmploymentIncome == '[]')
+   appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+   
     selfEmployedIncome = $('input[name="selfEmployed"]').val();
 		        
 		        ssDisabilityIncome = $('input[name="disability"]').val();
@@ -1296,11 +1307,16 @@ function paintMyIncome() {
  
 
 function paintRefinanceEmployed(divId,value) {
+   alert('value insise employed is'+value);
     var flag=true;
-    if(value&&!value.selected)
+    if(value&&!value.selected){
+            alert('inside  if');
         flag=false;
+        }
     else{
+            alert('inside else ');
         if(value){
+        alert('inside else if');
             var quesCont ;
             var incomes=value.data;
             for(var i=0;i<incomes.length;i++){
@@ -1317,6 +1333,7 @@ function paintRefinanceEmployed(divId,value) {
     }
 	//appUserDetails.employed ="true";
     if(flag){
+       alert('isside flag');
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var quesTxt = "About how much do you make a year";
     		var quesCont = getMultiTextQuestion(quesTxt);
@@ -1553,18 +1570,29 @@ function paintMySpouseIncome() {
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
      var selfEmployedData={};
+     alert('appUserDetails'+appUserDetails);
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
+        alert('spouse selfEmployedData'+selfEmployedData);
+   
     var employedData={};
     if(appUserDetails&&appUserDetails.customerSpouseEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
+   
+    alert('spouse employedData'+employedData);
+   
     var ssiData={};
     if(appUserDetails)
         ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
+       alert('spouse ssiData'+ssiData);
+   
+   
     var prData={};
     if(appUserDetails)
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
-
+	 alert('spouse prData'+ssiData);
+	
+	
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1707,12 +1735,13 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
  var saveBtn = $('<div>').attr({
   "class" : "ce-save-btn"
- }).html("Save & Continue").bind('click',function() {
+ }).html("Save2 & Continue").bind('click',function() {
           
           
-         
+         alert('inside Save2');
   var  customerSpouseEmploymentIncome = [];
       
+     
       $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
        customerSpouseEmploymentIncomeTemp1 = {};
        
@@ -1738,11 +1767,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
       spouseDisability = $('input[name="spouseDisability"]').val();
     
       spousePension = $('input[name="spousePension"]').val();
-
-    
-    
-    
-    
+ 
     appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
     
     
@@ -1757,13 +1782,18 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
     
     //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-    
+    alert(JSON.stringify(appUserDetails));
     
     saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
     //paintCustomerApplicationPageStep4a();
    });
 
+
+if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
+ return container.append(quesTextCont).append(optionContainer);
+}else{
  return container.append(quesTextCont).append(optionContainer).append(saveBtn);
+ }
 }
 
 
@@ -1771,11 +1801,16 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
 
 function paintSpouseRefinanceEmployed(divId,value) {
+   alert('value in spuse is '+value);
     var flag=true;
-    if(value&&!value.selected)
+    if(value&&!value.selected){
         flag=false;
+        alert('inside if');
+        }
     else{
+      alert('inside else');
         if(value){
+            alert('inside else if');
             var quesCont ;
             var incomes=value.data;
             for(var i=0;i<incomes.length;i++){
@@ -1793,6 +1828,7 @@ function paintSpouseRefinanceEmployed(divId,value) {
 
 	//appUserDetails.employed ="true";
     if(flag){
+    alert('inside spouse flag');
         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
             var quesTxt = "Spouse Income :About how much do you make a year";
             var quesCont = getMultiTextQuestionSpouse(quesTxt);
@@ -1825,10 +1861,16 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
 	}).html("Before Tax");
 
+
+   var val="";
+      if(value&&value.employedIncomePreTax)
+        val=value.employedIncomePreTax;
+        
+        
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseBeforeTax",
-		"value" :value.employedIncomePreTax
+		"value" :val
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -1837,10 +1879,14 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("Where Do You Work ?");
 
+ val="";
+    if(value&&value.employedAt)
+        val=value.employedAt;
+        
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseWorkPlace",
-		"value":value.employedAt
+		"value":val
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -1849,10 +1895,14 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("When Did You Start Working ?");
 
+	 val="";
+    if(value&&value.employedSince)
+        val=value.employedSince;
+        
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseStartWorking",
-		"value" : value.employedSince
+		"value" : val
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -4344,44 +4394,6 @@ function paintLockRate(lqbData, appUserDetails) {
 
 
 
-function getAddRemoveButtonRow(fieldName){
-	
-	var container = $('<div>').attr({
-		"class" : "add-remove-row clearfix"
-	});
-	
-	var addBtn = $('<div>').attr({
-		"class" : "add-btn float-left"
-	}).html("Add")
-	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		
-		var inputElement = $('<input>').attr({
-			"name" : e.data.fieldName,
-			"class" : "ce-input ce-input-add"
-		});
-		
-		var numberOfInputs = inputField.parent().children('input').size();
-		
-		if(numberOfInputs<3){
-			inputField.parent().append(inputElement);
-			if(numberOfInputs == 2){
-				$(this).hide();
-			}
-		}
-	});
-	
-	/*var removeBtn = $('<div>').attr({
-		"class" : "remove-btn float-left"
-	}).html("-")
-	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		if(inputField.parent().children('input').size()>1){
-			inputField.parent().find('input:last-child').remove();
-		}
-	});*/
-	return container.append(addBtn);
-}
 
 function getAddMoreEmployementDetails() {
 	var container = $('<div>').attr({

@@ -75,6 +75,7 @@ function paintBuyHomeQuest() {
 	 if(newfi.customerSpouseDetail != null){ 
 		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
 	 }
+	//alert('newfi1'+JSON.stringify(newfi));
 	 if(newfi.customerEmploymentIncome !=null){
 	 customerEmploymentIncome.id = newfi.customerEmploymentIncome.id;
 	 }
@@ -344,9 +345,16 @@ function paintWhereYouLiveStep(){
 		
 		  isCityOrZipKnown =quesContxts[0].value; 
 		  buyhomeZipPri = $('input[name="buyhomeZipPri"]').val();
-		 
+		   buyhomeZipSec = $('input[name="buyhomeZipPri1"]').val();
+		    buyhomeZipTri = $('input[name="buyhomeZipPri2"]').val();
+		
+		// alert('buyhomeZipPri'+buyhomeZipPri);
+		 //		 alert('buyhomeZipSec'+buyhomeZipSec);
+		 	//	 		 alert('buyhomeZipTri'+buyhomeZipTri);
 		  
 		  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
+		  purchaseDetails.buyhomeZipSec=buyhomeZipSec;
+		  purchaseDetails.buyhomeZipTri=buyhomeZipTri;
 		  appUserDetails.purchaseDetails = purchaseDetails;
 		
 		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
@@ -360,6 +368,44 @@ function paintWhereYouLiveStep(){
 
 
 
+function getAddRemoveButtonRow(fieldName){
+	
+	var container = $('<div>').attr({
+		"class" : "add-remove-row clearfix"
+	});
+	
+	var addBtn = $('<div>').attr({
+		"class" : "add-btn float-left"
+	}).html("Add")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		
+		var inputElement = $('<input>').attr({
+			"name" : e.data.fieldName+inputField.parent().children('input').size(),
+			"class" : "ce-input ce-input-add"
+		});
+		//alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
+		var numberOfInputs = inputField.parent().children('input').size();
+		
+		if(numberOfInputs<3){
+			inputField.parent().append(inputElement);
+			if(numberOfInputs == 2){
+				$(this).hide();
+			}
+		}
+	});
+	
+	/*var removeBtn = $('<div>').attr({
+		"class" : "remove-btn float-left"
+	}).html("-")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		if(inputField.parent().children('input').size()>1){
+			inputField.parent().find('input:last-child').remove();
+		}
+	});*/
+	return container.append(addBtn);
+}
 
 
 function paintSpouseSaleOfCurrentHome() {
@@ -535,12 +581,86 @@ function paintSpouseSaleOfCurrentHome() {
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
     	
-    	
+    	////This code added to get Customer Spouse employment Income///////
     		
-    	spouseHomeListPrice = $('input[name="spouseHomeListPrice"]').val();
+    		var  customerSpouseEmploymentIncome = [];
+    		var customerSpouseBankAccountDetails =[];
+    		var customerSpouseOtherAccountDetails=[];
+    		var customerSpouseRetirementAccountDetails=[];
+      
+     
+      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+       customerSpouseEmploymentIncomeTemp1 = {};
+       
+       spouseBeforeTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseBeforeTax"]').val();
+       spouseWorkPlace = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseWorkPlace"]').val();
+       spouseStartWorking = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseStartWorking"]').val();
+      
+       customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = spouseBeforeTax;
+       customerSpouseEmploymentIncomeTemp1.employedAt = spouseWorkPlace;
+       customerSpouseEmploymentIncomeTemp1.employedSince = spouseStartWorking;
+       var temp = {};
+       temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
+       
+       customerSpouseEmploymentIncome.push(temp);
+      });
+      
+      if(!customerSpouseEmploymentIncome == '[]')
+   appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+  
+      
+     // appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+  
+  
+    
+      spouseSelfEmployed = $('input[name="spouseSelfEmployed"]').val();
+          
+      spouseDisability = $('input[name="spouseDisability"]').val();
+    
+      spousePension = $('input[name="spousePension"]').val();
+ 
+   
+   
+   
+    appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
+    
+    
+    appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
+    appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
+    
+    appUserDetails.customerSpouseDetail.isSelfEmployed = true;
+    appUserDetails.customerSpouseDetail.selfEmployedIncome =spouseSelfEmployed;
+    
+    appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
+    appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
+  
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    	////////	
+    	
+    	
+    	
+    	
+    	 spouseHomeListPrice = $('input[name="spouseHomeListPrice"]').val();
 	     spouseHomeMortgageBalance = $('input[name="spouseHomeMortgageBalance"]').val();
 		 spouseInvestmentInHome = $('input[name="spouseInvestmentInHome"]').val();			 
 		 
+		
+		
+		
+		
+       
+		
 		 spouseBankAccount = $('.app-options-cont[name="spouseBankAccount"]').find('.app-option-selected').text();
 		 spouseBankAcCurrentBankBalance = $('input[name="spouseBankAcCurrentBankBalance"]').val();	
 		 spouseBankAcUseForNewHome = $('input[name="spouseBankAcUseForNewHome"]').val();	
@@ -557,17 +677,73 @@ function paintSpouseSaleOfCurrentHome() {
 	     appUserDetails.spouseHomeMortgageBalance = spouseHomeMortgageBalance;
 		 appUserDetails.spouseInvestmentInHome = spouseInvestmentInHome;
 		 
-		 appUserDetails.spouseBankAccount = spouseBankAccount;
-		 appUserDetails.spouseBankAcCurrentBankBalance = spouseBankAcCurrentBankBalance;
-		 appUserDetails.spouseBankAcUseForNewHome = spouseBankAcUseForNewHome;
+		// appUserDetails.spouseBankAccount = spouseBankAccount;
+		// appUserDetails.spouseBankAcCurrentBankBalance = spouseBankAcCurrentBankBalance;
+		 //appUserDetails.spouseBankAcUseForNewHome = spouseBankAcUseForNewHome;
 		
-		 appUserDetails.spouseRetirementBankAccounts = spouseRetirementBankAccounts;
-		 appUserDetails.spouseRetirementCurrentBankBalance = spouseRetirementCurrentBankBalance;
-		 appUserDetails.spouseRetirementAmountUseForNewHome = spouseRetirementAmountUseForNewHome;
+		
+		//For Fetching Customer Spouse bank Account Details
+	   customerSpouseBankAccountTemp1 = {};
+	   customerSpouseBankAccountTemp1.accountSubType = spouseBankAccount;
+       customerSpouseBankAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
+       customerSpouseBankAccountTemp1.amountForNewHome = spouseBankAcUseForNewHome;
+       var temp = {};
+       temp.customerSpouseBankAccountDetails = customerSpouseBankAccountTemp1;
+       customerSpouseBankAccountDetails.push(temp);
+	   
+	     if(!customerSpouseBankAccountDetails == '[]')
+    appUserDetails.customerSpouseBankAccountDetails=customerSpouseBankAccountDetails;
+  
+	  
+		
+		
+		
+		
+		// appUserDetails.spouseRetirementBankAccounts = spouseRetirementBankAccounts;
+		// appUserDetails.spouseRetirementCurrentBankBalance = spouseRetirementCurrentBankBalance;
+		// appUserDetails.spouseRetirementAmountUseForNewHome = spouseRetirementAmountUseForNewHome;
 		 
-		 appUserDetails.spouseOtherBankAccount = spouseOtherBankAccount;
-		 appUserDetails.spouseOtherBankCurrentBankBalance = spouseOtherBankCurrentBankBalance;
-		 appUserDetails.spouseOtherAmountUseForNewHome = spouseOtherAmountUseForNewHome;
+		 		//For Fetching Customer Spouse Retirement Account Details
+	   customerSpouseRetirementAccountTemp1 = {};
+	   customerSpouseRetirementAccountTemp1.accountSubType = spouseRetirementBankAccounts;
+       customerSpouseRetirementAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
+       customerSpouseRetirementAccountTemp1.amountForNewHome = spouseBankAcUseForNewHome;
+       var temp = {};
+       temp.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountTemp1;
+       customerSpouseRetirementAccountDetails.push(temp);
+	   
+	   
+	    if(!customerSpouseRetirementAccountDetails == '[]')
+    appUserDetails.customerSpouseRetirementAccountDetails=customerSpouseRetirementAccountDetails;
+  
+	   
+		
+		
+		
+		 
+		 
+		 
+		// appUserDetails.spouseOtherBankAccount = spouseOtherBankAccount;
+		 //appUserDetails.spouseOtherBankCurrentBankBalance = spouseOtherBankCurrentBankBalance;
+		 //appUserDetails.spouseOtherAmountUseForNewHome = spouseOtherAmountUseForNewHome;
+    	
+    	//For Fetching Customer Spouse Other Account Details
+    	 customerSpouseOtherAccountTemp1 = {};
+	   customerSpouseOtherAccountTemp1.accountSubType = spouseOtherBankAccount;
+       customerSpouseOtherAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
+       customerSpouseOtherAccountTemp1.amountForNewHome = spouseOtherAmountUseForNewHome;
+       var temp = {};
+       temp.customerSpouseOtherAccountDetails = customerSpouseOtherAccountTemp1;
+       customerSpouseOtherAccountDetails.push(temp);
+	   
+	   
+	   if(!customerSpouseOtherAccountDetails == '[]')
+    appUserDetails.customerSpouseOtherAccountDetails=customerSpouseOtherAccountDetails;
+  
+	   
+		
+		
+    	
     	
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		
