@@ -45,9 +45,8 @@ public enum MasterNeedsEnum {
 	        "Gift_Letter_from_Donor"), Current_Business_License(35,
 	        "Current_Business_License"), Copy_of_Relocation_Agreement(36,
 	        "Copy_of_Relocation_Agreement"), Disclsoure_Available(37,
-	        "Disclosure Available"), Signed_Disclosure(38, "Signed Disclosure"), System_Disclosure_Need(
-	        99, "System_Disclosure_Need"), Appraisal_Report(100,
-	        "Appraisals Report");
+	        "Disclosure Available"), Signed_Disclosure(38, "Signed Disclosure"), Appraisal_Report(
+	        39, "Appraisals Report");
 
 	private final int indx;
 
