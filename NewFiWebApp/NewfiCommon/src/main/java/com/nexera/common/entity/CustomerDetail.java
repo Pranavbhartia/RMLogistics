@@ -452,6 +452,9 @@ public class CustomerDetail implements Serializable {
 
 	public static CustomerDetail convertFromVOToEntity(
 	        final CustomerDetailVO inputEntity) {
+		if (inputEntity == null) {
+			return null;
+		}
 		CustomerDetail customerDetail = new CustomerDetail();
 
 		customerDetail.setSubscriptionsStatus(2);

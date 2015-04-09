@@ -316,6 +316,15 @@ public class LoanServiceImpl implements LoanService {
 		return Boolean.FALSE;
 	}
 
+	private boolean checkIfUserIsSalesManager() {
+
+		UserRolesEnum userRole = utils.getLoggedInUserRole();
+		if (userRole.getRoleId() == (InternalUserRolesEum.SM.getRoleId())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
@@ -381,7 +390,7 @@ public class LoanServiceImpl implements LoanService {
 
 		User user = loan.getUser();
 		CustomerDetail customerDetail = user.getCustomerDetail();
-
+		List<LoanTeam> loanTeamList = loan.getLoanTeam();
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
 		loanCustomerVO.setTime(loan.getCreatedDate().toString());
@@ -399,9 +408,12 @@ public class LoanServiceImpl implements LoanService {
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.
 		 */
+
 		boolean processorPresent = Boolean.FALSE;
+		boolean loanManagerPresent = Boolean.FALSE;
+		String loanManagerList = "";
 		if (loan.getLoanTeam() != null) {
-			List<LoanTeam> loanTeamList = loan.getLoanTeam();
+			loanTeamList = loan.getLoanTeam();
 			for (LoanTeam loanTeam : loanTeamList) {
 				User loanUser = loanTeam.getUser();
 				if (loanUser.getInternalUserDetail() != null) {
@@ -413,13 +425,34 @@ public class LoanServiceImpl implements LoanService {
 						loanCustomerVO.setProcessor(loanUser.getFirstName()
 						        + " " + loanUser.getLastName());
 						processorPresent = Boolean.TRUE;
+					} else if (checkIfUserIsSalesManager()) {
+						if (loanUser.getInternalUserDetail()
+						        .getInternaUserRoleMaster().getId() == InternalUserRolesEum.LM
+						        .getRoleId()) {
+							loanManagerList = loanManagerList
+							        + loanUser.getFirstName() + " "
+							        + loanUser.getLastName() + ",";
+							loanManagerPresent = Boolean.TRUE;
+							processorPresent = Boolean.TRUE;
+
+						}
+
 					}
 				}
+
 			}
 
 		}
 		if (!processorPresent) {
 			loanCustomerVO.setProcessor("-");
+		}
+		if (loanManagerPresent) {
+			if (loanManagerList.endsWith(",")) {
+				loanManagerList = loanManagerList.substring(0,
+				        loanManagerList.length() - 1);
+			}
+
+			loanCustomerVO.setProcessor(loanManagerList);
 		}
 
 		loanCustomerVO.setPurpose(loan.getLoanType().getDescription());
