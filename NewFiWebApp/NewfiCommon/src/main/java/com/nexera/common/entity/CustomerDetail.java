@@ -316,6 +316,7 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetailVO.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
+			customerDetailVO.setLivingSince(inputEntity.getLivingSince());
 			customerDetailVO.setTransunionScore(inputEntity
 			        .getTransunionScore());
 			customerDetailVO.setEquifaxScore(inputEntity.getEquifaxScore());
@@ -452,6 +453,9 @@ public class CustomerDetail implements Serializable {
 
 	public static CustomerDetail convertFromVOToEntity(
 	        final CustomerDetailVO inputEntity) {
+		if (inputEntity == null) {
+			return null;
+		}
 		CustomerDetail customerDetail = new CustomerDetail();
 
 		customerDetail.setSubscriptionsStatus(2);
@@ -476,6 +480,8 @@ public class CustomerDetail implements Serializable {
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
+			customerDetail.setLivingSince(inputEntity.getLivingSince());
+			
 			if (null != inputEntity.getProfileCompletionStatus()) {
 				customerDetail.setProfileCompletionStatus(inputEntity
 				        .getProfileCompletionStatus());

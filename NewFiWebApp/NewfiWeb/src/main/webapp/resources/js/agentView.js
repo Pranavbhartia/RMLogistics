@@ -3,6 +3,7 @@
  */
 var isAgentTypeDashboard;
 var docData = [];
+dropDownItemArray = ["New","Closed","Withdrawn","Declined","All"];
 
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
@@ -57,12 +58,15 @@ function paintAgentDashboard(loanType) {
 	$('#right-panel').append(agentDashboardMainContainer);
 	if(loanType == "workloans"){
         $('#lp-work-on-loan').addClass('lp-item-active');
+        dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForWorkLoans();
 	}else if(loanType == "myloans"){
         $('#lp-my-loans').addClass('lp-item-active');
+        dropDownItemArray = [ "New", "All" ];
 		getDashboardRightPanelForMyLoans();
 	}else if(loanType == "archivesloans"){
         $('#lp-my-archives').addClass('lp-item-active');
+        dropDownItemArray = [ "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();
@@ -172,7 +176,7 @@ function paintAgentDashboardRightPanel(data) {
 	
 	var filterSelected = $('<div>').attr({
 		"class" : "filter-selected"
-	}).html("New");
+	}).html("All");
 	
 	filter.append(filterSelected);
 	
@@ -182,7 +186,7 @@ function paintAgentDashboardRightPanel(data) {
 	});
 	
 	//TODO:Anoop sir, implementation
-	var dropDownItemArray = ["New","Closed","Withdrawn","Declined","All"];
+	
 	
 	for(var i=0; i<dropDownItemArray.length;i++){
 		var dropDownItem = $('<div>').attr({
@@ -250,7 +254,9 @@ function appendAgentDashboardContainer() {
 
 	inactiveWrapper.append(inactiveHeader).append(inactiveContainer);
 
-	container.append(leadsWrapper).append(inactiveWrapper);
+	//Hiding inactive loans since we are not differentiating active and inactive now.
+	//container.append(leadsWrapper).append(inactiveWrapper);
+	container.append(leadsWrapper);
 	$('#agent-dashboard-container').append(container);
 }
 
@@ -326,7 +332,7 @@ function appendCustomers(elementId, customers) {
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
 		var phone_num = "NA";
-		if (customer.phone_no!=null){
+		if (customer.phone_no!=null && customer.phone_no.trim()!=""){
 			 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
 		}
 		
@@ -401,7 +407,13 @@ function appendCustomerTableHeader(elementId) {
 
 	var thCol4 = $('<div>').attr({
 		"class" : "leads-container-tc4 float-left"
-	}).html("Processor");
+	});
+	
+	if (newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName == "SM") {
+		thCol4.html("Loan Manager");
+		} else {
+				thCol4.html("Processor");
+			}
 
 	var thCol5 = $('<div>').attr({
 		"class" : "leads-container-tc5 float-left"
@@ -1983,15 +1995,15 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		this.appendFaxNumber();
 		this.appendEmailId();
 		this.appendPrimaryContact();
-
+		var ob=this;
 		// save button
 		var saveBtn = $('<div>').attr({
 			"class" : "prof-cust-save-btn"
-		}).html("save").on(
-				'click',
+		}).html("save").bind(
+				'click',{"contxt":ob},
 				function(event) {
 					event.stopImmediatePropagation();
-
+					var ob=event.data.contxt;
 					var company = new Object();
 					company.name=$('#create-hoic-name').val();
 					company.address=$('#create-hoic-address').val();
@@ -2000,7 +2012,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 					company.emailID=$('#create-hoic-email-id').val();
 					company.primaryContact=$('#create-hoic-primary-contact').val();
 					
-					this.company=company;
+					ob.company=company;
 					
 
 					if (company.name == "") {
@@ -2020,7 +2032,7 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 							+ JSON.stringify(company));
 					//TODO-write method to call add company
 					console.log("Adding company");
-
+					ob.addCompany();
 				});
 
 		$('#create-hoi-company-popup').append(saveBtn);
@@ -2157,10 +2169,10 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 		var data = {};
 		
 		ajaxRequest(
-						"rest/loan/homeOwnersInsurance/" + ob.company,
+						"rest/loan/homeOwnersInsurance/" ,
 						"POST",
 						"json",
-						data,
+						JSON.stringify(ob.company),
 						function(response) {
 							if (response.error) {
 								showToastMessage(response.error.message)
@@ -2170,7 +2182,13 @@ function getCreateHomeOwnInsCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
-								addCompanyToTeamList();
+								var input={homeOwnInsID:response.resultObject.id};
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(input,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(input,
+											selectedUserDetail.loanID);
 							}
 							
 						});
@@ -2404,7 +2422,14 @@ function getCreateTitleCompanyContext(loanID){
 								if(callback){
 									callback(ob);
 								}
-								ob.addCompanyToTeamList();
+								var input={titleCompanyID:response.resultObject.id};
+								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+									addUserToLoanTeam(input,
+											newfiObject.user.defaultLoanId);
+								else
+									addUserToLoanTeam(input,
+											selectedUserDetail.loanID);
+								/*ob.addCompanyToTeamList();*/
 							}
 							
 						});

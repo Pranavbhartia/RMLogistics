@@ -175,9 +175,8 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> team = retreiveLoanTeam(loanVO);
 		for (UserVO user : team) {
 			if (null != user.getInternalUserDetail()) {
-				if (UserRolesEnum.LOANMANAGER.equalsName(user
-				        .getInternalUserDetail().getInternalUserRoleMasterVO()
-				        .getRoleName())) {
+				if (UserRolesEnum.LM.equalsName(user.getInternalUserDetail()
+				        .getInternalUserRoleMasterVO().getRoleName())) {
 					managerList.add(user);
 				}
 			}
@@ -316,6 +315,15 @@ public class LoanServiceImpl implements LoanService {
 		return Boolean.FALSE;
 	}
 
+	private boolean checkIfUserIsSalesManager() {
+
+		UserRolesEnum userRole = utils.getLoggedInUserRole();
+		if (userRole.getRoleId() == (InternalUserRolesEum.SM.getRoleId())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
@@ -381,10 +389,11 @@ public class LoanServiceImpl implements LoanService {
 
 		User user = loan.getUser();
 		CustomerDetail customerDetail = user.getCustomerDetail();
-
+		List<LoanTeam> loanTeamList = loan.getLoanTeam();
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
-		loanCustomerVO.setTime(loan.getCreatedDate().toString());
+		loanCustomerVO.setTime(utils.getDateInUserLocaleFormatted(loan
+		        .getCreatedDate()));
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
@@ -395,9 +404,16 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 
+		/*
+		 * TODO: Check if the logged in user is a Sales Manager. and show the
+		 * name of the loan manager instead of processor.
+		 */
+
 		boolean processorPresent = Boolean.FALSE;
+		boolean loanManagerPresent = Boolean.FALSE;
+		String loanManagerList = "";
 		if (loan.getLoanTeam() != null) {
-			List<LoanTeam> loanTeamList = loan.getLoanTeam();
+			loanTeamList = loan.getLoanTeam();
 			for (LoanTeam loanTeam : loanTeamList) {
 				User loanUser = loanTeam.getUser();
 				if (loanUser.getInternalUserDetail() != null) {
@@ -409,13 +425,34 @@ public class LoanServiceImpl implements LoanService {
 						loanCustomerVO.setProcessor(loanUser.getFirstName()
 						        + " " + loanUser.getLastName());
 						processorPresent = Boolean.TRUE;
+					} else if (checkIfUserIsSalesManager()) {
+						if (loanUser.getInternalUserDetail()
+						        .getInternaUserRoleMaster().getId() == InternalUserRolesEum.LM
+						        .getRoleId()) {
+							loanManagerList = loanManagerList
+							        + loanUser.getFirstName() + " "
+							        + loanUser.getLastName() + ",";
+							loanManagerPresent = Boolean.TRUE;
+							processorPresent = Boolean.TRUE;
+
+						}
+
 					}
 				}
+
 			}
 
 		}
 		if (!processorPresent) {
 			loanCustomerVO.setProcessor("-");
+		}
+		if (loanManagerPresent) {
+			if (loanManagerList.endsWith(",")) {
+				loanManagerList = loanManagerList.substring(0,
+				        loanManagerList.length() - 1);
+			}
+
+			loanCustomerVO.setProcessor(loanManagerList);
 		}
 
 		loanCustomerVO.setPurpose(loan.getLoanType().getDescription());
@@ -574,7 +611,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<Loan> getAllLoans() {
 		List<Loan> loanList = loanDao.loadAll(Loan.class);
 		return loanList;
@@ -626,21 +663,25 @@ public class LoanServiceImpl implements LoanService {
 			 */
 			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
-			LoanTeam defaultLanManager = new LoanTeam();
-			LOG.debug("default Loan manager is: " + defaultUser);
-			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
-			defaultLanManager.setLoan(loan);
-			defaultLanManager.setActive(Boolean.TRUE);
-			defaultLanManager
-			        .setAssignedOn(new Date(System.currentTimeMillis()));
-			loanTeam.add(defaultLanManager);
+			if (defaultUser != null) {
+				LoanTeam defaultLanManager = new LoanTeam();
+				LOG.debug("default Loan manager is: " + defaultUser);
+				defaultLanManager.setUser(User
+				        .convertFromVOToEntity(defaultUser));
+				defaultLanManager.setLoan(loan);
+				defaultLanManager.setActive(Boolean.TRUE);
+				defaultLanManager.setAssignedOn(new Date(System
+				        .currentTimeMillis()));
+				loanTeam.add(defaultLanManager);
+			}
 
 			// If loan team contains other users, then add those users to
 			// the team automatically.
 			if (userList != null) {
 				for (UserVO userVO : userList) {
 					// If the user is not already added to the team
-					if (userVO.getId() != defaultLanManager.getId()
+
+					if (userVO.getId() != getId(defaultUser)
 					        && userVO.getId() != e.getId()) {
 						LoanTeam team = new LoanTeam();
 						User userTeam = User.convertFromVOToEntity(userVO);
@@ -664,6 +705,13 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		return loan;
+	}
+
+	private int getId(UserVO defaultUser) {
+		if (defaultUser == null) {
+			return 0;
+		}
+		return defaultUser.getId();
 	}
 
 	@Override

@@ -8,11 +8,11 @@
 				<div class="float-left login-hdr hdr-get-quote">Get Your Quote</div>
 				<div class="float-left login-hdr hdr-signup-btn">SignUp for
 					Rate Alerts</div>
-                <div class="float-left login-hdr hdr-login-btn">Login</div>
+                <div class="float-left login-hdr hdr-login-btn" onclick="window.location='./'">Login</div>
 			</div>
             <div class="soft-menu-icon float-right"></div>
             <div class="soft-menu-wrapper">
-                <div class="soft-menu-hdr cursor-pointer">Login</div>
+                <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div>
                 <div class="soft-menu-hdr cursor-pointer">Get Your Quote</div>
 				<div class="soft-menu-hdr cursor-pointer">SignUp for
 					Rate Alerts</div>

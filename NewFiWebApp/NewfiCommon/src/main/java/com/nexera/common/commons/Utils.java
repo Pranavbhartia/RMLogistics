@@ -153,8 +153,13 @@ public class Utils {
 	}
 
 	public UserRolesEnum getLoggedInUserRole() {
-		return UserRolesEnum.valueOf(getLoggedInUser().getUserRole()
-		        .getRoleCd());
+		User loggedInUser = getLoggedInUser();
+		if (null != loggedInUser.getInternalUserDetail()) {
+
+			return UserRolesEnum.valueOf(loggedInUser.getInternalUserDetail()
+			        .getInternaUserRoleMaster().getRoleName());
+		}
+		return UserRolesEnum.valueOf(loggedInUser.getUserRole().getRoleCd());
 
 	}
 

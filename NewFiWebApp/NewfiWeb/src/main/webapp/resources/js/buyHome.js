@@ -2,7 +2,8 @@
 var active = 0;
 
 var buyHomeTeaserRate = new Object();
-//var purchaseDetails = new Object();
+var purchaseDetails = new Object();
+buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 //buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 
 var buyHomeitemsList = [ "Your priority", "Loan Amount",
@@ -351,7 +352,7 @@ function paintPlanToBuyYourHouse() {
 function paintRentOfYourHouse() {
 	active = 2;
 	homeProgressBaar(2);
-	buyHomeTeaserRate.livingSituation = 'renting';
+	buyHomeTeaserRate.purchaseDetails.livingSituation = 'renting';
 	
 	var quesTxt = "How much do you pay each month for rent?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
@@ -413,11 +414,17 @@ function paintloanamount(){
 	 		    "class": "ce-save-btn"
 	 		}).html("Save & continue").on('click', function() {
 	 		
-	 		buyHomeTeaserRate.housePrice = $('input[name="housePrice"]').val();
-            buyHomeTeaserRate.loanAmount = $('input[name="loanAmount"]').val();
+	 		buyHomeTeaserRate.homeWorthToday = $('input[name="housePrice"]').val();
+            buyHomeTeaserRate.currentMortgageBalance = $('input[name="loanAmount"]').val();
             buyHomeTeaserRate.isIncludeTaxes = quesContxts[1].value;
+            
             buyHomeTeaserRate.estimatedPurchasePrice = $('input[name="estimatedPurchasePrice"]').val();
-          	 
+          	
+          	 buyHomeTeaserRate.purchaseDetails.housePrice=$('input[name="housePrice"]').val();;
+          	 buyHomeTeaserRate.purchaseDetails.loanAmount=$('input[name="loanAmount"]').val();
+          	 buyHomeTeaserRate.purchaseDetails.estimatedPrice=$('input[name="estimatedPurchasePrice"]').val();
+          	// buyHomeTeaserRate.purchaseDetails.isTax&InsuranceInLoanAmt=$('input[name="isIncludeTaxes"]').val();
+	 		
 	 			paintHomeZipCode();
 	 		       });
 	 		
@@ -832,7 +839,7 @@ function paintBuyHomeSeeTeaserRate() {
 		buyHomeTeaserRate.purchaseDetails.estimatedPurchasePrice=buyHomeTeaserRate.estimatedPurchasePrice;
 		//buyHomeTeaserRate.rentPerMonth;	
 		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
-	
+	alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         //alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         stages = 6;
         progressBaar(6);

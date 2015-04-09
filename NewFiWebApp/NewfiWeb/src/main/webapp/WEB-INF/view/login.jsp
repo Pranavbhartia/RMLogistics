@@ -84,7 +84,7 @@
 								value="Login to your account">
 							<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
 							<div class="forgot-pwd">
-								Forgot Password?<span class="forgot-pwd-link">Click here</span>
+								Forgot Password?<span class="forgot-pwd-link" onclick="window.location='forgotPassword.do'">Click here</span>
 							</div>
 						</form>
 					</div>

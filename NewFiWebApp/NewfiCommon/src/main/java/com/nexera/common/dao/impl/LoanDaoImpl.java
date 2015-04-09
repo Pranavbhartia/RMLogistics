@@ -229,7 +229,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Criteria criteria = session.createCriteria(Loan.class);
 
 			loanListForUser = criteria.list();
-
+			for (Loan loan : loanListForUser) {
+				Hibernate.initialize(loan.getLoanTeam());
+			}
 			return loanListForUser;
 
 		}
@@ -702,7 +704,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				for (LoanTeam activeTeam : activeTeamList) {
 					if (activeTeam.getUser().getInternalUserDetail() != null) {
 						if (activeTeam.getUser().getInternalUserDetail()
-						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LOANMANAGER
+						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LM
 						        .getRoleId()) {
 							if (activeTeam.getUser().getId() != user.getId()
 							        && activeTeam.getUser().getStatus()

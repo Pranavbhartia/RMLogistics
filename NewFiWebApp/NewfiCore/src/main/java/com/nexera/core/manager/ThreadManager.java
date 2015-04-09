@@ -27,7 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -625,7 +624,7 @@ public class ThreadManager implements Runnable {
 					        needsListMasterDisclosureSigned)) {
 						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 						LOGGER.debug("Invoking Disclosure MileStone Classes ");
-						invokeDisclosuresWorkflow(workflowItemExecList);
+						/* invokeDisclosuresWorkflow(workflowItemExecList); */
 						updateLastModifiedTimeForThisLoan(loan);
 					}
 				}
@@ -633,28 +632,27 @@ public class ThreadManager implements Runnable {
 		}
 	}
 
-	public void invokeDisclosuresWorkflow(
-	        List<WorkflowItemExec> workflowItemExecList) {
-		String disclosureDisplayType = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_DISPLAY;
-		String disclosureAvaialableType = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
-		List<String> workflowItemtypeList = new ArrayList<String>();
-		workflowItemtypeList.add(disclosureAvaialableType);
-		workflowItemtypeList.add(disclosureDisplayType);
-		List<WorkflowItemExec> itemsToExecute = itemToExecute(
-		        workflowItemtypeList, workflowItemExecList);
-		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
-			LOGGER.debug("Putting the item in execution ");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-			        LoanStatus.disclosureAvail);
-			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-			String params = Utils.convertMapToJson(map);
-			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-			        params);
-
-			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
-		}
-	}
+	/*
+	 * public void invokeDisclosuresWorkflow( List<WorkflowItemExec>
+	 * workflowItemExecList) { String disclosureDisplayType =
+	 * WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_DISPLAY; String
+	 * disclosureAvaialableType =
+	 * WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS; List<String>
+	 * workflowItemtypeList = new ArrayList<String>();
+	 * workflowItemtypeList.add(disclosureAvaialableType);
+	 * workflowItemtypeList.add(disclosureDisplayType); List<WorkflowItemExec>
+	 * itemsToExecute = itemToExecute( workflowItemtypeList,
+	 * workflowItemExecList); for (WorkflowItemExec workflowItemExec :
+	 * itemsToExecute) { LOGGER.debug("Putting the item in execution ");
+	 * Map<String, Object> map = new HashMap<String, Object>();
+	 * map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+	 * LoanStatus.disclosureAvail);
+	 * map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId()); String
+	 * params = Utils.convertMapToJson(map);
+	 * workflowService.saveParamsInExecTable(workflowItemExec.getId(), params);
+	 * 
+	 * engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId()); } }
+	 */
 
 	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster) {
 		LOGGER.debug("Found a Need, Assigning it to a loan ");
