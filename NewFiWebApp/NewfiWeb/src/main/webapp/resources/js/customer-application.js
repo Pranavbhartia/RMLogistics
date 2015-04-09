@@ -1074,17 +1074,12 @@ function incomesSelectALLThatApply() {
 	
 	var quesTxt = "Select all that apply";
     var selfEmployedData={};
-<<<<<<< HEAD
-    if(appUserDetails)
-        selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
-=======
+
    //  alert('appUserDetails'+appUserDetails);
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
   //alert('selfEmployedData'+selfEmployedData);
-  
-  
->>>>>>> upstream/master
+
     var employedData={};
     if(appUserDetails && appUserDetails.customerEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
@@ -1177,8 +1172,11 @@ function paintMyIncome() {
       customerEmploymentIncome.push(termp);
      });
      
-
-    appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+    // alert('customerEmploymentIncome.size');
+   
+   if(!customerEmploymentIncome == '[]')
+   appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+   
     selfEmployedIncome = $('input[name="selfEmployed"]').val();
 		        
 		        ssDisabilityIncome = $('input[name="disability"]').val();
@@ -1308,14 +1306,9 @@ function paintMyIncome() {
 
 function paintRefinanceEmployed(divId,value) {
     var flag=true;
-<<<<<<< HEAD
-    if(value&&!value.selected)
-        flag=false;
-=======
     if(value&&!value.selected){
         flag=false;
     }
->>>>>>> upstream/master
     else{
         if(value){
             var quesCont ;
@@ -1591,20 +1584,7 @@ function paintMySpouseIncome() {
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
      var selfEmployedData={};
-<<<<<<< HEAD
-    if(appUserDetails)
-        selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
-    var employedData={};
-    if(appUserDetails&&appUserDetails.customerSpouseEmploymentIncome)
-        employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
-    var ssiData={};
-    if(appUserDetails)
-        ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
-    var prData={};
-    if(appUserDetails)
-        prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 
-=======
      if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
      
@@ -1622,8 +1602,7 @@ function paintMySpouseIncome() {
     if(appUserDetails)
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 	
-	
->>>>>>> upstream/master
+
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1822,7 +1801,12 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
     //paintCustomerApplicationPageStep4a();
    });
 
+
+if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
+ return container.append(quesTextCont).append(optionContainer);
+}else{
  return container.append(quesTextCont).append(optionContainer).append(saveBtn);
+ }
 }
 
 
@@ -1833,7 +1817,8 @@ function paintSpouseRefinanceEmployed(divId,value) {
     var flag=true;
     if(value&&!value.selected){
         flag=false;
-    }else{
+        }
+    else{
         if(value){
             var quesCont ;
             var incomes=value.data;
@@ -1884,10 +1869,16 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
 	}).html("Before Tax");
 
+
+   var val="";
+      if(value&&value.employedIncomePreTax)
+        val=value.employedIncomePreTax;
+        
+        
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseBeforeTax",
-		"value" :value.employedIncomePreTax
+		"value" :val
 	});
 
 	quesTextCont1.append(inputBox1);
@@ -1905,7 +1896,7 @@ var wrapper = $('<div>').attr({
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseWorkPlace",
-		"value":value.employedAt
+		"value":val
 	});
 
 	quesTextCont2.append(inputBox2);
@@ -1914,10 +1905,14 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("When Did You Start Working ?");
 
+	 val="";
+    if(value&&value.employedSince)
+        val=value.employedSince;
+        
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseStartWorking",
-		"value" : value.employedSince
+		"value" : val
 	});
 
 	quesTextCont3.append(inputBox3);
@@ -2584,7 +2579,7 @@ function paintCustomerApplicationPageStep4a() {
     });
 
 	var options = [ {
-		"text" : "No thank you. Letâ€™s move on",
+		"text" : "No thank you. Let’s move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -3113,7 +3108,7 @@ function saveUserAndLockRate(appUserDetails) {
             paintLockRate(tempdata, appUserDetails);
         },
         error: function() {
-            //alert("error");
+            alert("error");
             $('#overlay-loader').hide(); 
         }
  
@@ -3258,7 +3253,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 			callBack;
 		},
 		error:function(erro){
-			//alert("error");
+			alert("error");
 		}
 		
 	});
@@ -4290,7 +4285,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     });
 
 	var options = [ {
-		"text" : "No thank you. Letâ€™s move on",
+		"text" : "No thank you. Let’s move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -4393,7 +4388,7 @@ $.ajax({
 			callBack;
 		},
 		error:function(erro){
-			//alert("success");
+			alert("error inside createLoan ");
 		}
 		
 	});
