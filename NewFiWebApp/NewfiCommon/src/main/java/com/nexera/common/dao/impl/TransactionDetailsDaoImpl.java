@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.TransactionDetailsDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanApplicationFee;
@@ -47,6 +48,8 @@ public class TransactionDetailsDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(TransactionDetails.class);
 		criteria.add(Restrictions.eq("loan", loan));
+		criteria.add(Restrictions.eq("status",
+		        CommonConstants.TRANSACTION_STATUS_ENABLED));
 		return criteria.list();
 	}
 
