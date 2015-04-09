@@ -4268,7 +4268,6 @@ input.calc-input {
     z-index: 222;
     border: 1px solid #cecece;
     border-radius: 0 0 3px 3px;
-    overflow-y: scroll;
 }
 
 .state-dropdown-row {
