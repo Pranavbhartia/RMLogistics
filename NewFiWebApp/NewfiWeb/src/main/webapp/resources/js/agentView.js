@@ -332,7 +332,7 @@ function appendCustomers(elementId, customers) {
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
 		var phone_num = "NA";
-		if (customer.phone_no!=null){
+		if (customer.phone_no!=null && customer.phone_no.trim()!=""){
 			 phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
 		}
 		

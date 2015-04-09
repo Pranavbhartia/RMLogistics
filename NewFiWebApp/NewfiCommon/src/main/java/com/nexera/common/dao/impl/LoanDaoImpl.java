@@ -704,7 +704,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				for (LoanTeam activeTeam : activeTeamList) {
 					if (activeTeam.getUser().getInternalUserDetail() != null) {
 						if (activeTeam.getUser().getInternalUserDetail()
-						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LOANMANAGER
+						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LM
 						        .getRoleId()) {
 							if (activeTeam.getUser().getId() != user.getId()
 							        && activeTeam.getUser().getStatus()

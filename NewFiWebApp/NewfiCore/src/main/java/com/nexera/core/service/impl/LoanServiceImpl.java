@@ -175,9 +175,8 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> team = retreiveLoanTeam(loanVO);
 		for (UserVO user : team) {
 			if (null != user.getInternalUserDetail()) {
-				if (UserRolesEnum.LOANMANAGER.equalsName(user
-				        .getInternalUserDetail().getInternalUserRoleMasterVO()
-				        .getRoleName())) {
+				if (UserRolesEnum.LM.equalsName(user.getInternalUserDetail()
+				        .getInternalUserRoleMasterVO().getRoleName())) {
 					managerList.add(user);
 				}
 			}
@@ -393,7 +392,8 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanTeam> loanTeamList = loan.getLoanTeam();
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
-		loanCustomerVO.setTime(loan.getCreatedDate().toString());
+		loanCustomerVO.setTime(utils.getDateInUserLocaleFormatted(loan
+		        .getCreatedDate()));
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
@@ -611,7 +611,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<Loan> getAllLoans() {
 		List<Loan> loanList = loanDao.loadAll(Loan.class);
 		return loanList;
@@ -663,21 +663,25 @@ public class LoanServiceImpl implements LoanService {
 			 */
 			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
-			LoanTeam defaultLanManager = new LoanTeam();
-			LOG.debug("default Loan manager is: " + defaultUser);
-			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
-			defaultLanManager.setLoan(loan);
-			defaultLanManager.setActive(Boolean.TRUE);
-			defaultLanManager
-			        .setAssignedOn(new Date(System.currentTimeMillis()));
-			loanTeam.add(defaultLanManager);
+			if (defaultUser != null) {
+				LoanTeam defaultLanManager = new LoanTeam();
+				LOG.debug("default Loan manager is: " + defaultUser);
+				defaultLanManager.setUser(User
+				        .convertFromVOToEntity(defaultUser));
+				defaultLanManager.setLoan(loan);
+				defaultLanManager.setActive(Boolean.TRUE);
+				defaultLanManager.setAssignedOn(new Date(System
+				        .currentTimeMillis()));
+				loanTeam.add(defaultLanManager);
+			}
 
 			// If loan team contains other users, then add those users to
 			// the team automatically.
 			if (userList != null) {
 				for (UserVO userVO : userList) {
 					// If the user is not already added to the team
-					if (userVO.getId() != defaultLanManager.getId()
+
+					if (userVO.getId() != getId(defaultUser)
 					        && userVO.getId() != e.getId()) {
 						LoanTeam team = new LoanTeam();
 						User userTeam = User.convertFromVOToEntity(userVO);
@@ -701,6 +705,13 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		return loan;
+	}
+
+	private int getId(UserVO defaultUser) {
+		if (defaultUser == null) {
+			return 0;
+		}
+		return defaultUser.getId();
 	}
 
 	@Override
