@@ -675,7 +675,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER
 		        .toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
-		                .equals(UserRolesEnum.LOANMANAGER.toString())
+		                .equals(UserRolesEnum.LM.toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
 		                .equals(UserRolesEnum.REALTOR.toString())) {
 			message = messageUtils.getDisplayMessage(
@@ -749,7 +749,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		if (csvRow[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LOANMANAGER.toString())) {
+		        .equals(UserRolesEnum.LM.toString())) {
 			if (csvRow[CommonConstants.STATE_CODE_COLUMN] != null
 			        && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
 				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN]
@@ -806,7 +806,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		UserRoleVO userRoleVO = new UserRoleVO();
 		if (rowData[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LOANMANAGER.toString())) {
+		        .equals(UserRolesEnum.LM.toString())) {
 
 			userRoleVO.setId(UserRolesEnum.INTERNAL.getRoleId());
 			userRoleVO.setRoleCd(UserRolesEnum.INTERNAL.toString());
@@ -816,7 +816,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			internalUserDetailVO
 			        .setInternalUserRoleMasterVO(new InternalUserRoleMasterVO());
 			internalUserDetailVO.getInternalUserRoleMasterVO().setId(
-			        UserRolesEnum.LOANMANAGER.getRoleId());
+			        UserRolesEnum.LM.getRoleId());
 			userVO.setInternalUserDetail(internalUserDetailVO);
 
 		} else if (rowData[CommonConstants.ROLE_COLUMN]
