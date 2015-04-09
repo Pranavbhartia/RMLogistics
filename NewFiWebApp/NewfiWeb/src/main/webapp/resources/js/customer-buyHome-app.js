@@ -482,7 +482,7 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }];
 
-    var questionsContainer1 = getQuestionsContainer(questions1);
+    var questionsContainer1 = getPopupQuestionsContainer(questions1);
 
 
 
@@ -525,7 +525,7 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.spouseRetirementAmountUseForNewHome
     }];
 
-    var questionsContainer2 = getQuestionsContainer(questions2);
+    var questionsContainer2 = getPopupQuestionsContainer(questions2);
 
 
 
@@ -570,7 +570,7 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }];
 
-    var questionsContainer3 = getQuestionsContainer(questions3);
+    var questionsContainer3 = getPopupQuestionsContainer(questions3);
 
 
 
@@ -771,6 +771,21 @@ function paintSpouseSaleOfCurrentHome() {
 
 
 
+function getPopupQuestionsContainer(questions) {
+    var questionsContainer = $('<div>').attr({
+        "class": "ce-option-ques-wrapper"
+    });
+    
+    for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var quesCont = getApplicationQuestion(question);
+        questionsContainer.append(quesCont);
+    }
+    return questionsContainer;
+}
+
+
+
 function saleYourCurrentHome(){
 	
 	var quesHeaderTxt = "Sale Of Your Current Home";
@@ -805,14 +820,30 @@ function saleYourCurrentHome(){
        return quesHeaderTextCont;	    
 }
 
+$('body').on('click','.app-account-wrapper .ce-option-checkbox',function(e){
+	e.stopPropagation();
+	
+	if($(this).hasClass('app-option-checked')){
+		$(this).removeClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').hide();
+	}else{
+		$(this).addClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').show();
+	}
+});
 
 function bankAccount(){
 	
 	var quesHeaderTxt = "Bank Accounts";
 
+	var quesHeaderWrapper = $('<div>').attr({
+	       "class": "app-account-wrapper"
+	    });
+
     var quesHeaderTextCont = $('<div>').attr({
-       "class": "app-ques-header-txt"
+    	"class" : "ce-option-checkbox"
     }).html(quesHeaderTxt);
+    quesHeaderWrapper.append(quesHeaderTextCont);
 
     var questions = [{
        type: "select",
@@ -838,9 +869,42 @@ function bankAccount(){
        value: ""
    }];
 
-   var questionsContainer = getQuestionsContainer(questions);
+   var questionsContainer = getPopupQuestionsContainer(questions);
+
+   var questionsWrapper = $('<div>').attr({
+	  "class" : "hide ce-sub-option-wrapper" 
+   });
    
-   return quesHeaderTextCont.append(questionsContainer);
+	   var addAccountBtn = $('<div>').attr({
+		  "class" : "add-btn add-account-btn" 
+	   }).html("Add Account")
+	   .bind('click',function(e){
+		    	 
+	    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+	    	 
+	    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+	    		 return false;
+	    	 }
+	    	 
+	    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    	 
+    		 var questionsCont = getPopupQuestionsContainer(questions);
+    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+    		 
+    		 var removeAccountBtn = $('<div>').attr({
+  	    		"class" : "add-btn remove-account-btn" 
+  	    	 }).html("Remove Account")
+  	    	 .bind('click',function(e){
+  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+  	    		}
+  	    	 });
+     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+	     });
+   
+   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+   return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -848,11 +912,15 @@ function retirementAccounts(){
 	
 	var quesRetirementAc = "Retirement Accounts";
 
+    var quesHeaderWrapper = $('<div>').attr({
+       "class": "app-account-wrapper"
+    });
+
     var quesHeaderText = $('<div>').attr({
-       "class": "app-ques-header-txt"
+    	"class" : "ce-option-checkbox"
     }).html(quesRetirementAc);
-
-
+    quesHeaderWrapper.append(quesHeaderText);
+    
 		var questions = [{
 		       type: "select",
 		       text: "Account Type",
@@ -880,9 +948,41 @@ function retirementAccounts(){
 		       value: ""
 		   }];
 		
-		   var questionsContainer = getQuestionsContainer(questions);
-			
-		 return quesHeaderText.append(questionsContainer);
+		   var questionsContainer = getPopupQuestionsContainer(questions);
+
+		   var questionsWrapper = $('<div>').attr({
+			  "class" : "hide ce-sub-option-wrapper" 
+		   });
+		   var addAccountBtn = $('<div>').attr({
+				  "class" : "add-btn add-account-btn" 
+		   }).html("Add Account")
+		   .bind('click',function(e){
+		    	 
+		    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+		    	 
+		    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+		    		 return false;
+		    	 }
+		    	 
+		    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+		    	 
+	    		 var questionsCont = getPopupQuestionsContainer(questions);
+	    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+	    		 
+	    		 var removeAccountBtn = $('<div>').attr({
+	  	    		"class" : "add-btn remove-account-btn" 
+	  	    	 }).html("Remove Account")
+	  	    	 .bind('click',function(e){
+	  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+	  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+	  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	  	    		}
+	  	    	 });
+	     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+		     });
+			   
+		   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+		 return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -891,9 +991,14 @@ function otherAccount(){
 
 	   var quesHeader = "Other Accounts & Securities";
 
-	   var quesHeaderTextCont = $('<div>').attr({
-	        "class": "app-ques-header-txt"
-	    }).html(quesHeader);
+	   var quesHeaderWrapper = $('<div>').attr({
+	       "class": "app-account-wrapper"
+	    });
+
+		var quesHeaderTextCont = $('<div>').attr({
+			"class" : "ce-option-checkbox"
+		}).html(quesHeader);
+		quesHeaderWrapper.append(quesHeaderTextCont);
 
 	   var questions = [{
 	        type: "select",
@@ -925,9 +1030,40 @@ function otherAccount(){
 	        value: ""
 	    }];
 
-	    var questionsContainer = getQuestionsContainer(questions);
-    
-	   return quesHeaderTextCont.append(questionsContainer);
+	    var questionsContainer = getPopupQuestionsContainer(questions);
+	    var questionsWrapper = $('<div>').attr({
+			  "class" : "hide ce-sub-option-wrapper" 
+		   });
+	    var addAccountBtn = $('<div>').attr({
+	  	  "class" : "add-btn add-account-btn" 
+	     }).html("Add Account")
+	     .bind('click',function(e){
+	    	 
+	    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+	    	 
+	    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+	    		 return false;
+	    	 }
+	    	 
+	    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    	 
+    		 var questionsCont = getPopupQuestionsContainer(questions);
+    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+    		 
+    		 var removeAccountBtn = $('<div>').attr({
+  	    		"class" : "add-btn remove-account-btn" 
+  	    	 }).html("Remove Account")
+  	    	 .bind('click',function(e){
+  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+  	    		}
+  	    	 });
+     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+	     });
+	     
+	   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+	   return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -952,20 +1088,36 @@ function paintSaleOfCurrentHome() {
    
      questionsContainer.append(quesMyAssetsCont);
      
+     var skipQuestions = $('<div>').attr({
+    	"class" : "ce-option-checkbox" 
+     }).html("No Thanks, Let's move on")
+     .bind('click',function(){
+    	 if($(this).hasClass('app-option-checked')){
+    		 $(this).removeClass('app-option-checked');
+        	 $(this).next('.asset-ques-wrapper').show();
+    	 }else{
+    		 $(this).addClass('app-option-checked');
+        	 $(this).next('.asset-ques-wrapper').hide();    		 
+    	 }
+     });
+     
+     var assetQuestionsWrapper = $('<div>').attr({
+    	"class" : "asset-ques-wrapper" 
+     });
      
      /*  bank details*/
      var bankAccountDiv = bankAccount();
-     questionsContainer.append(bankAccountDiv);
+     assetQuestionsWrapper.append(bankAccountDiv);
 
      /*  Retirement bank details*/
      var retirementAccountsDiv = retirementAccounts();
-     questionsContainer.append(retirementAccountsDiv);
+     assetQuestionsWrapper.append(retirementAccountsDiv);
      
      /* other bank details*/
      var otherAccountDiv = otherAccount();
-     questionsContainer.append(otherAccountDiv);
+     assetQuestionsWrapper.append(otherAccountDiv);
         
-     return questionsContainer;
+     return questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);
 }
 
 

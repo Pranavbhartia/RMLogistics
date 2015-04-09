@@ -19,14 +19,15 @@
 }
 
 .reg-btn-wrapper{
-	width: 340px;
+	width: 300px;
 	height: 40px;
 	line-height: 40px;
-	margin: 35px auto;
+	margin: 20px auto;
 }
 
 .reg-btn {
-    width: 150px;
+    width: 100%;
+    margin:0 auto;
     background: #6c9f2e;
     color: #fff;
     text-align: center;
