@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,7 +49,7 @@ public interface UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
-	
+
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
@@ -58,10 +59,11 @@ public interface UploadedFilesListService {
 	        throws IOException, COSVisitorException, Exception;
 
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy ,  Boolean isNeedAssigned);
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	        Boolean isNeedAssigned);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO , Boolean isNeedAssigned);
+	        Integer loanId, String createLQBVO, Boolean isNeedAssigned);
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;
@@ -82,5 +84,8 @@ public interface UploadedFilesListService {
 	        String uuid);
 
 	InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
+
+	public void changeWorkItem(
+	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID);
 
 }
