@@ -142,6 +142,6 @@ public interface LoanService {
 
 	public UserLoanStatus getUserLoanStaus(LoanVO loanVO);
 
-	public LoanDashboardVO searchUsers(String userName, int[] loanStatus);
+	public LoanDashboardVO searchUsers(String userName, int[] loanProgressStatus);
 
 }

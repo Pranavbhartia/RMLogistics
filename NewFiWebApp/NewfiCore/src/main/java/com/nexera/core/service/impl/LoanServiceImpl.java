@@ -1135,6 +1135,11 @@ public class LoanServiceImpl implements LoanService {
 		 * retrieveDashboardForWorkLoans(UserVO userVO) For a similar
 		 * implementation which works with a particular loanManager userId
 		 */
-		return null;
+		List<Loan> loanList = loanDao.retrieveLoanDetailsOnSearch(userName,
+		        loanProgressStatus);
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
 	}
 }

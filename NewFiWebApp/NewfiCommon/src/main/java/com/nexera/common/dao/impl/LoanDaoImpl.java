@@ -1,6 +1,7 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -241,6 +242,43 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        hibernateException);
 		}
 
+	}
+
+	public List<Loan> retrieveLoanDetailsOnSearch(String userName,
+	        int[] loanProgressStatus) {
+		
+		/*CReated by Rahul Belwal...
+		 * This method should be able to get integer array from the rest service
+		 * 
+		 * i've tested it using user defined array inside this method, and its working fine for that
+		 */
+
+		try {
+
+			ArrayList<Integer> progressStatusList = new ArrayList<Integer>(
+			        loanProgressStatus.length);
+			for (int i = 0; i < loanProgressStatus.length; i++)
+				progressStatusList.add(Integer.valueOf(loanProgressStatus[i]));
+
+			List<Loan> loanListForSearchedUser = new ArrayList<Loan>();
+			Session session = sessionFactory.getCurrentSession();
+
+			String queryStr = "FROM Loan WHERE user.firstName like '"
+			        + userName + "%' AND loanProgressStatus.id IN (:ids)";
+			Query query = session.createQuery(queryStr).setParameterList("ids",
+			        progressStatusList);
+
+			loanListForSearchedUser = query.list();
+
+			return loanListForSearchedUser;
+
+		}
+
+		catch (HibernateException hibernateException) {
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
 	}
 
 	@Override
