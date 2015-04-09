@@ -69,6 +69,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
+			Hibernate.initialize(user.getInternalUserDetail());
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in authenticateUser() ",

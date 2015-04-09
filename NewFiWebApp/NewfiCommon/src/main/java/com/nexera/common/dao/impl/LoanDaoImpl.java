@@ -229,7 +229,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Criteria criteria = session.createCriteria(Loan.class);
 
 			loanListForUser = criteria.list();
-
+			for (Loan loan : loanListForUser) {
+				Hibernate.initialize(loan.getLoanTeam());
+			}
 			return loanListForUser;
 
 		}

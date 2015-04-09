@@ -450,15 +450,12 @@ public class LoanAppFormVO implements Serializable {
 		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 
-		if (this.getLoanType() != null) {
-			if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-				        LoanTypeMasterEnum.REF));
-			} else {
-				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-				        LoanTypeMasterEnum.PUR));
-			}
-
+		if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+			        LoanTypeMasterEnum.REF));
+		} else {
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+			        LoanTypeMasterEnum.PUR));
 		}
 
 		loanAppForm
@@ -515,8 +512,8 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setPurchaseDetails(parseVOtoEntityPurchaseDetails(this
 		        .getPurchaseDetails()));
 
-		// loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
-		loanAppForm.setUser(User.convertFromVOToEntity(this.getUser()));
+		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
+
 		loanAppForm.setLoan(this.getLoan().convertToEntity());
 
 		/* save data in the purchase table */
@@ -845,7 +842,12 @@ public class LoanAppFormVO implements Serializable {
 			System.out.println("customeremploymentincomeVO.id is()"
 			        + customeremploymentincomeVO.getCustomerEmploymentIncome()
 			                .getId());
-			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			if (null != customeremploymentincomeVO
+			        .getCustomerEmploymentIncome()
+			        && customeremploymentincomeVO.getCustomerEmploymentIncome()
+			                .getId() != 0)
+				customerEmploymentIncome.setId(customeremploymentincomeVO
+				        .getCustomerEmploymentIncome().getId());
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO
 			        .getCustomerEmploymentIncome().getEmployedAt());
