@@ -12,7 +12,7 @@
 			</div>
             <div class="soft-menu-icon float-right"></div>
             <div class="soft-menu-wrapper">
-                <div class="soft-menu-hdr cursor-pointer">Login</div>
+                <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div>
                 <div class="soft-menu-hdr cursor-pointer">Get Your Quote</div>
 				<div class="soft-menu-hdr cursor-pointer">SignUp for
 					Rate Alerts</div>
