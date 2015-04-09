@@ -611,7 +611,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<Loan> getAllLoans() {
 		List<Loan> loanList = loanDao.loadAll(Loan.class);
 		return loanList;
