@@ -395,6 +395,10 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 
+		/*
+		 * TODO: Check if the logged in user is a Sales Manager. and show the
+		 * name of the loan manager instead of processor.
+		 */
 		boolean processorPresent = Boolean.FALSE;
 		if (loan.getLoanTeam() != null) {
 			List<LoanTeam> loanTeamList = loan.getLoanTeam();

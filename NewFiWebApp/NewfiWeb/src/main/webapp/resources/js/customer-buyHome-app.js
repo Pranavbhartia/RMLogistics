@@ -451,11 +451,23 @@ function paintSpouseSaleOfCurrentHome() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt2);
 
+    var skipQuestions = $('<div>').attr({
+    	"class" : "ce-option-checkbox"
+    }).html("No Thanks, Let's move on")
+    .bind('click',function(){
+	   	 if($(this).hasClass('app-option-checked')){
+			 $(this).removeClass('app-option-checked');
+	    	 $(this).next('.asset-ques-wrapper').show();
+		 }else{
+			 $(this).addClass('app-option-checked');
+	    	 $(this).next('.asset-ques-wrapper').hide();    		 
+		 }
+	 });
 
     var quesHeaderTxt31 = "Bank Accounts";
 
     var quesHeaderTextCont31 = $('<div>').attr({
-        "class": "app-ques-header-txt"
+        "class": "ce-option-checkbox"
     }).html(quesHeaderTxt31);
 
     var questions1 = [{
@@ -482,23 +494,15 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }];
 
-    var questionsContainer1 = getQuestionsContainer(questions1);
-
-
-
-
+    var questionsContainer1 = getPopupQuestionsContainer(questions1);
 
       var quesHeaderTxt3 = "Retirement Accounts";
 
      var quesHeaderTextCont3 = $('<div>').attr({
-        "class": "app-ques-header-txt"
+        "class": "ce-option-checkbox"
     }).html(quesHeaderTxt3);
 
-
-   
-
-
- var questions2 = [{
+     var questions2 = [{
         type: "select",
         text: "Account Type",
         name: "spouseRetirementBankAccounts",
@@ -525,22 +529,15 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.spouseRetirementAmountUseForNewHome
     }];
 
-    var questionsContainer2 = getQuestionsContainer(questions2);
-
-
-
+    var questionsContainer2 = getPopupQuestionsContainer(questions2);
 
    var quesHeaderTxt4 = "Other Accounts & Securities";
 
      var quesHeaderTextCont4 = $('<div>').attr({
-        "class": "app-ques-header-txt"
+        "class": "ce-option-checkbox"
     }).html(quesHeaderTxt4);
 
-
-   
-
-
- var questions3 = [{
+     var questions3 = [{
         type: "select",
         text: "Account Type",
         name: "spouseOtherBankAccount",
@@ -570,12 +567,7 @@ function paintSpouseSaleOfCurrentHome() {
         value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
     }];
 
-    var questionsContainer3 = getQuestionsContainer(questions3);
-
-
-
-
-
+    var questionsContainer3 = getPopupQuestionsContainer(questions3);
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
@@ -618,12 +610,8 @@ function paintSpouseSaleOfCurrentHome() {
       spouseDisability = $('input[name="spouseDisability"]').val();
     
       spousePension = $('input[name="spousePension"]').val();
- 
-   
-   
    
     appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
-    
     
     appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
     appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
@@ -634,32 +622,10 @@ function paintSpouseSaleOfCurrentHome() {
     appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
     appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
   
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
     	////////	
-    	
-    	
-    	
-    	
     	 spouseHomeListPrice = $('input[name="spouseHomeListPrice"]').val();
 	     spouseHomeMortgageBalance = $('input[name="spouseHomeMortgageBalance"]').val();
 		 spouseInvestmentInHome = $('input[name="spouseInvestmentInHome"]').val();			 
-		 
-		
-		
-		
-		
-       
 		
 		 spouseBankAccount = $('.app-options-cont[name="spouseBankAccount"]').find('.app-option-selected').text();
 		 spouseBankAcCurrentBankBalance = $('input[name="spouseBankAcCurrentBankBalance"]').val();	
@@ -693,12 +659,6 @@ function paintSpouseSaleOfCurrentHome() {
 	   
 	     if(!customerSpouseBankAccountDetails == '[]')
     appUserDetails.customerSpouseBankAccountDetails=customerSpouseBankAccountDetails;
-  
-	  
-		
-		
-		
-		
 		// appUserDetails.spouseRetirementBankAccounts = spouseRetirementBankAccounts;
 		// appUserDetails.spouseRetirementCurrentBankBalance = spouseRetirementCurrentBankBalance;
 		// appUserDetails.spouseRetirementAmountUseForNewHome = spouseRetirementAmountUseForNewHome;
@@ -716,13 +676,6 @@ function paintSpouseSaleOfCurrentHome() {
 	    if(!customerSpouseRetirementAccountDetails == '[]')
     appUserDetails.customerSpouseRetirementAccountDetails=customerSpouseRetirementAccountDetails;
   
-	   
-		
-		
-		
-		 
-		 
-		 
 		// appUserDetails.spouseOtherBankAccount = spouseOtherBankAccount;
 		 //appUserDetails.spouseOtherBankCurrentBankBalance = spouseOtherBankCurrentBankBalance;
 		 //appUserDetails.spouseOtherAmountUseForNewHome = spouseOtherAmountUseForNewHome;
@@ -739,11 +692,6 @@ function paintSpouseSaleOfCurrentHome() {
 	   
 	   if(!customerSpouseOtherAccountDetails == '[]')
     appUserDetails.customerSpouseOtherAccountDetails=customerSpouseOtherAccountDetails;
-  
-	   
-		
-		
-    	
     	
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		
@@ -758,15 +706,57 @@ function paintSpouseSaleOfCurrentHome() {
     });
 
 
- var questionsContainer10 = $('<div>').attr({
+    var questionsContainer10 = $('<div>').attr({
         "class": "app-ques-container"
     });
 
 
-    questionsContainer10.append(quesHeaderTextCont).append(questionsContainer).append(quesHeaderTextCont2).append(quesHeaderTextCont31).append(questionsContainer1).append(quesHeaderTextCont3).append(questionsContainer2).append(quesHeaderTextCont4).append(questionsContainer3)
+    var assetWrapper = $('<div>').attr({
+    	"class" : "asset-ques-wrapper"
+    });
+    
+    var assetCont1 = $('<div>').attr({
+    	"class" : "app-account-wrapper"
+    });
+    var subQuesWrapper1 = $('<div>').attr({
+    	"class" : "hide ce-sub-option-wrapper"
+    }).append(questionsContainer1).append(getAddAccountBtn(questions1));
+    assetCont1.append(quesHeaderTextCont31).append(subQuesWrapper1);
+    var assetCont2 = $('<div>').attr({
+    	"class" : "app-account-wrapper"
+    });
+    var subQuesWrapper2 = $('<div>').attr({
+    	"class" : "hide ce-sub-option-wrapper"
+    }).append(questionsContainer2).append(getAddAccountBtn(questions2));
+    assetCont2.append(quesHeaderTextCont3).append(subQuesWrapper2);
+    var assetCont3 = $('<div>').attr({
+    	"class" : "app-account-wrapper"
+    });
+    var subQuesWrapper3 = $('<div>').attr({
+    	"class" : "hide ce-sub-option-wrapper"
+    }).append(questionsContainer3).append(getAddAccountBtn(questions3));
+    assetCont3.append(quesHeaderTextCont4).append(subQuesWrapper3);
+    assetWrapper.append(assetCont1).append(assetCont2).append(assetCont3);
+    
+    questionsContainer10.append(quesHeaderTextCont).append(questionsContainer).append(quesHeaderTextCont2).append(skipQuestions).append(assetWrapper)
         .append(saveAndContinueButton);
         
-        return questionsContainer10;
+    return questionsContainer10;
+}
+
+
+
+function getPopupQuestionsContainer(questions) {
+    var questionsContainer = $('<div>').attr({
+        "class": "ce-option-ques-wrapper"
+    });
+    
+    for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var quesCont = getApplicationQuestion(question);
+        questionsContainer.append(quesCont);
+    }
+    return questionsContainer;
 }
 
 
@@ -805,14 +795,30 @@ function saleYourCurrentHome(){
        return quesHeaderTextCont;	    
 }
 
+$('body').on('click','.app-account-wrapper .ce-option-checkbox',function(e){
+	e.stopPropagation();
+	
+	if($(this).hasClass('app-option-checked')){
+		$(this).removeClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').hide();
+	}else{
+		$(this).addClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').show();
+	}
+});
 
 function bankAccount(){
 	
 	var quesHeaderTxt = "Bank Accounts";
 
+	var quesHeaderWrapper = $('<div>').attr({
+	       "class": "app-account-wrapper"
+	    });
+
     var quesHeaderTextCont = $('<div>').attr({
-       "class": "app-ques-header-txt"
+    	"class" : "ce-option-checkbox"
     }).html(quesHeaderTxt);
+    quesHeaderWrapper.append(quesHeaderTextCont);
 
     var questions = [{
        type: "select",
@@ -838,9 +844,42 @@ function bankAccount(){
        value: ""
    }];
 
-   var questionsContainer = getQuestionsContainer(questions);
+   var questionsContainer = getPopupQuestionsContainer(questions);
+
+   var questionsWrapper = $('<div>').attr({
+	  "class" : "hide ce-sub-option-wrapper" 
+   });
    
-   return quesHeaderTextCont.append(questionsContainer);
+	   var addAccountBtn = $('<div>').attr({
+		  "class" : "add-btn add-account-btn" 
+	   }).html("Add Account")
+	   .bind('click',function(e){
+		    	 
+	    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+	    	 
+	    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+	    		 return false;
+	    	 }
+	    	 
+	    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    	 
+    		 var questionsCont = getPopupQuestionsContainer(questions);
+    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+    		 
+    		 var removeAccountBtn = $('<div>').attr({
+  	    		"class" : "add-btn remove-account-btn" 
+  	    	 }).html("Remove Account")
+  	    	 .bind('click',function(e){
+  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+  	    		}
+  	    	 });
+     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+	     });
+   
+   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+   return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -848,11 +887,15 @@ function retirementAccounts(){
 	
 	var quesRetirementAc = "Retirement Accounts";
 
+    var quesHeaderWrapper = $('<div>').attr({
+       "class": "app-account-wrapper"
+    });
+
     var quesHeaderText = $('<div>').attr({
-       "class": "app-ques-header-txt"
+    	"class" : "ce-option-checkbox"
     }).html(quesRetirementAc);
-
-
+    quesHeaderWrapper.append(quesHeaderText);
+    
 		var questions = [{
 		       type: "select",
 		       text: "Account Type",
@@ -880,9 +923,41 @@ function retirementAccounts(){
 		       value: ""
 		   }];
 		
-		   var questionsContainer = getQuestionsContainer(questions);
-			
-		 return quesHeaderText.append(questionsContainer);
+		   var questionsContainer = getPopupQuestionsContainer(questions);
+
+		   var questionsWrapper = $('<div>').attr({
+			  "class" : "hide ce-sub-option-wrapper" 
+		   });
+		   var addAccountBtn = $('<div>').attr({
+				  "class" : "add-btn add-account-btn" 
+		   }).html("Add Account")
+		   .bind('click',function(e){
+		    	 
+		    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+		    	 
+		    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+		    		 return false;
+		    	 }
+		    	 
+		    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+		    	 
+	    		 var questionsCont = getPopupQuestionsContainer(questions);
+	    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+	    		 
+	    		 var removeAccountBtn = $('<div>').attr({
+	  	    		"class" : "add-btn remove-account-btn" 
+	  	    	 }).html("Remove Account")
+	  	    	 .bind('click',function(e){
+	  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+	  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+	  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	  	    		}
+	  	    	 });
+	     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+		     });
+			   
+		   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+		 return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -891,9 +966,14 @@ function otherAccount(){
 
 	   var quesHeader = "Other Accounts & Securities";
 
-	   var quesHeaderTextCont = $('<div>').attr({
-	        "class": "app-ques-header-txt"
-	    }).html(quesHeader);
+	   var quesHeaderWrapper = $('<div>').attr({
+	       "class": "app-account-wrapper"
+	    });
+
+		var quesHeaderTextCont = $('<div>').attr({
+			"class" : "ce-option-checkbox"
+		}).html(quesHeader);
+		quesHeaderWrapper.append(quesHeaderTextCont);
 
 	   var questions = [{
 	        type: "select",
@@ -925,9 +1005,40 @@ function otherAccount(){
 	        value: ""
 	    }];
 
-	    var questionsContainer = getQuestionsContainer(questions);
-    
-	   return quesHeaderTextCont.append(questionsContainer);
+	    var questionsContainer = getPopupQuestionsContainer(questions);
+	    var questionsWrapper = $('<div>').attr({
+			  "class" : "hide ce-sub-option-wrapper" 
+		   });
+	    var addAccountBtn = $('<div>').attr({
+	  	  "class" : "add-btn add-account-btn" 
+	     }).html("Add Account")
+	     .bind('click',function(e){
+	    	 
+	    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+	    	 
+	    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+	    		 return false;
+	    	 }
+	    	 
+	    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    	 
+    		 var questionsCont = getPopupQuestionsContainer(questions);
+    		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+    		 
+    		 var removeAccountBtn = $('<div>').attr({
+  	    		"class" : "add-btn remove-account-btn" 
+  	    	 }).html("Remove Account")
+  	    	 .bind('click',function(e){
+  	    		$(this).closest('.ce-option-ques-wrapper').remove();
+  	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+  	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+  	    		}
+  	    	 });
+     		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+	     });
+	     
+	   questionsWrapper.append(questionsContainer).append(addAccountBtn);
+	   return quesHeaderWrapper.append(questionsWrapper);
 }
 
 
@@ -952,22 +1063,69 @@ function paintSaleOfCurrentHome() {
    
      questionsContainer.append(quesMyAssetsCont);
      
+     var skipQuestions = $('<div>').attr({
+    	"class" : "ce-option-checkbox" 
+     }).html("No Thanks, Let's move on")
+     .bind('click',function(){
+    	 if($(this).hasClass('app-option-checked')){
+    		 $(this).removeClass('app-option-checked');
+        	 $(this).next('.asset-ques-wrapper').show();
+    	 }else{
+    		 $(this).addClass('app-option-checked');
+        	 $(this).next('.asset-ques-wrapper').hide();    		 
+    	 }
+     });
+     
+     var assetQuestionsWrapper = $('<div>').attr({
+    	"class" : "asset-ques-wrapper" 
+     });
      
      /*  bank details*/
      var bankAccountDiv = bankAccount();
-     questionsContainer.append(bankAccountDiv);
+     assetQuestionsWrapper.append(bankAccountDiv);
 
      /*  Retirement bank details*/
      var retirementAccountsDiv = retirementAccounts();
-     questionsContainer.append(retirementAccountsDiv);
+     assetQuestionsWrapper.append(retirementAccountsDiv);
      
      /* other bank details*/
      var otherAccountDiv = otherAccount();
-     questionsContainer.append(otherAccountDiv);
+     assetQuestionsWrapper.append(otherAccountDiv);
         
-     return questionsContainer;
+     return questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);
 }
 
+
+function getAddAccountBtn(questions) {
+	var addAccountBtn = $('<div>').attr({
+		  "class" : "add-btn add-account-btn" 
+	   }).html("Add Account")
+	   .bind('click',function(e){
+		    	 
+	    	 var parentWrapper = $(this).closest('.ce-sub-option-wrapper');
+	    	 
+	    	 if(parentWrapper.children('.ce-option-ques-wrapper').length >= 3){
+	    		 return false;
+	    	 }
+	    	 
+	    	 parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    	 
+  		 var questionsCont = getPopupQuestionsContainer(questions);
+  		 questionsCont.insertBefore(parentWrapper.find('.add-account-btn'));
+  		 
+  		 var removeAccountBtn = $('<div>').attr({
+	    		"class" : "add-btn remove-account-btn" 
+	    	 }).html("Remove Account")
+	    	 .bind('click',function(e){
+	    		$(this).closest('.ce-option-ques-wrapper').remove();
+	    		if(parentWrapper.children('.ce-option-ques-wrapper').length == 1){
+	    			parentWrapper.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+	    		}
+	    	 });
+   		 parentWrapper.children('.ce-option-ques-wrapper').append(removeAccountBtn);
+   });
+	return addAccountBtn;
+}
 
 
 ///////////////BuyHomeApplication /////////////////

@@ -1074,8 +1074,17 @@ function incomesSelectALLThatApply() {
 	
 	var quesTxt = "Select all that apply";
     var selfEmployedData={};
+<<<<<<< HEAD
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
+=======
+   //  alert('appUserDetails'+appUserDetails);
+    if(appUserDetails)
+        selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
+  //alert('selfEmployedData'+selfEmployedData);
+  
+  
+>>>>>>> upstream/master
     var employedData={};
     if(appUserDetails && appUserDetails.customerEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
@@ -1299,8 +1308,14 @@ function paintMyIncome() {
 
 function paintRefinanceEmployed(divId,value) {
     var flag=true;
+<<<<<<< HEAD
     if(value&&!value.selected)
         flag=false;
+=======
+    if(value&&!value.selected){
+        flag=false;
+    }
+>>>>>>> upstream/master
     else{
         if(value){
             var quesCont ;
@@ -1576,6 +1591,7 @@ function paintMySpouseIncome() {
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
      var selfEmployedData={};
+<<<<<<< HEAD
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
     var employedData={};
@@ -1588,6 +1604,26 @@ function paintMySpouseIncome() {
     if(appUserDetails)
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 
+=======
+     if(appUserDetails)
+        selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
+     
+    var employedData={};
+    if(appUserDetails&&appUserDetails.customerSpouseEmploymentIncome)
+        employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
+   
+   
+    var ssiData={};
+    if(appUserDetails)
+        ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
+   
+   
+    var prData={};
+    if(appUserDetails)
+        prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
+	
+	
+>>>>>>> upstream/master
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1795,9 +1831,9 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
 function paintSpouseRefinanceEmployed(divId,value) {
     var flag=true;
-    if(value&&!value.selected)
+    if(value&&!value.selected){
         flag=false;
-    else{
+    }else{
         if(value){
             var quesCont ;
             var incomes=value.data;
@@ -1859,6 +1895,12 @@ var wrapper = $('<div>').attr({
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("Where Do You Work ?");
+
+
+    val="";
+    if(value&&value.employedAt)
+        val=value.employedAt;
+        
 
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
