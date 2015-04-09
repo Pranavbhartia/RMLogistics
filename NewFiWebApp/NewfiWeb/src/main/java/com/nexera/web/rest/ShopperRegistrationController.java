@@ -92,7 +92,6 @@ public class ShopperRegistrationController {
 	// userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 	// userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
 	//
-	//
 	// // String password = userVO.getPassword();
 	// // UserVO userVOObj= userProfileService.saveUser(userVO);
 	// UserVO userVOObj = null;
@@ -110,12 +109,12 @@ public class ShopperRegistrationController {
 	//
 	// // Currently hardcoding to refinance, this has to come from UI
 	// // TODO: Add LoanTypeMaster dynamically based on option selected
-	// if(loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
+	// if (loaAppFormVO.getLoanType().getLoanTypeCd()
+	// .equalsIgnoreCase("REF")) {
 	// loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-	// }else{
+	// } else {
 	// loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
 	// }
-	//
 	//
 	// loanVO = loanService.createLoan(loanVO);
 	// workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
@@ -127,9 +126,11 @@ public class ShopperRegistrationController {
 	// loanAppFormVO.setUser(userVOObj);
 	// loanAppFormVO.setLoan(loanVO);
 	// loanAppFormVO.setLoanAppFormCompletionStatus(0);
-	// loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
+	// loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
+	// .getPropertyTypeMaster());
 	//
-	// loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
+	// loanAppFormVO.setRefinancedetails(loaAppFormVO
+	// .getRefinancedetails());
 	// loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
 	// loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 	// loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
@@ -148,7 +149,6 @@ public class ShopperRegistrationController {
 	// throw new FatalException("Error in User registration", e);
 	// }
 	// }
-	//
 
 	private void authenticateUserAndSetSession(String emailId, String password,
 	        HttpServletRequest request) {
