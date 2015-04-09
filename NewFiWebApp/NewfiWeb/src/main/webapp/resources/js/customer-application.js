@@ -123,6 +123,7 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 		"class" : "ce-app-lp-item-text float-left"
 	}).html(itemTxt.text);
 
+    //contxtHolder.createBreadCrumbItem(itemCont,itemTxt,stepNo);
 	return itemCont.append(leftIcon).append(textCont);
 }
 
@@ -837,6 +838,14 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        		return "No";
 	        	}else
 	        		return value;
+	        },getValuesForDB:function(){
+	        	var value=this.value;
+	        	if(value=="Yes"||value==true){
+	        		return true;
+	        	}else if(value=="No"||value==false){
+	        		return false;
+	        	}else
+	        		return value;
 	        }
 	};
 	
@@ -848,6 +857,11 @@ function getQuestionContext(question,parentContainer,valueSet){
 	         }
 	     }
 	 }
+     if(!contxt.value){
+        var res=mapDbDataForFrontend(contxt.name);
+        if(res)
+            contxt.value=contxt.mapValues(res);
+     }
 	return contxt;
 }
 
@@ -1167,6 +1181,9 @@ function paintMyIncome() {
       customerEmploymentIncome1 = {};
      
       id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
+      if(id ==""){
+    	  id = undefined;
+      }
       EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
       EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
       EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
@@ -1183,7 +1200,7 @@ function paintMyIncome() {
      
     // alert('customerEmploymentIncome.size');
    
-   if(!customerEmploymentIncome == '[]')
+   if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
    appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
    
     selfEmployedIncome = $('input[name="selfEmployed"]').val();
@@ -1379,7 +1396,7 @@ function getMultiTextQuestion(quesText,value) {
 		"name" : "beforeTax"
 	});
 	if(val!=""){
-		inputBox1.val(val);
+		inputBox1.attr("value",val);
 	}
 
 	var quesTextCont0 = $('<div>').attr({
@@ -1397,7 +1414,7 @@ function getMultiTextQuestion(quesText,value) {
 		"type":"hidden"
 	});
 	if(val!=""){
-		inputBox0.val(val);
+		inputBox0.attr("value",val);
 	}
 	quesTextCont0.append(inputBox0);
 	
@@ -1414,7 +1431,7 @@ function getMultiTextQuestion(quesText,value) {
 		"name" : "workPlace"
 	});
 	if(val!=""){
-		inputBox2.val(val);
+		inputBox2.attr("value",val);
 	}
 	quesTextCont2.append(inputBox2);
 
@@ -1429,7 +1446,7 @@ function getMultiTextQuestion(quesText,value) {
 		"name" : "startWorking"
 	});
 	if(val!=""){
-		inputBox3.val(val);
+		inputBox3.attr("value",val);
 	}
 	quesTextCont3.append(inputBox3);
 
@@ -2869,11 +2886,9 @@ function paintSelectLoanTypeQuestion() {
 	var option1 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
-		
 		loanType.loanTypeCd = "REF";
 		appUserDetails.loanType= loanType;
-		
-		paintRefinanceMainContainer();
+		paintPageBasedObLoanType();
 	});
 	
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
@@ -2883,11 +2898,9 @@ function paintSelectLoanTypeQuestion() {
 	var option2 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
-		
 		loanType.loanTypeCd = "PUR";
 		appUserDetails.loanType= loanType;
-		
-		paintBuyHomeContainer();
+		paintPageBasedObLoanType();
 	});
 
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
@@ -2905,6 +2918,13 @@ function paintSelectLoanTypeQuestion() {
 	wrapper.append(optionsContainer);
 
 	$('#app-right-panel').append(wrapper);
+}
+function paintPageBasedObLoanType(){
+    if(appUserDetails.loanType.loanTypeCd == "PUR"){
+        paintBuyHomeContainer();
+    }else if(appUserDetails.loanType.loanTypeCd == "REF"){
+        paintRefinanceMainContainer();
+    }
 }
 
 function paintRefinanceMainContainer() {
@@ -2955,20 +2975,7 @@ function paintRefinanceQuest1() {
 	
 	
 	
-	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFLMP"){
-		
-		//$('.ce-options-cont').find('.ce-option').first().addClass("selected");
-		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
-	}
-	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFMF"){
-		
-		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
-	//	$('.ce-options-cont').find('.ce-option').first().next().addClass("selected");
-	}
-	if(appUserDetails.refinancedetails.refinanceOption && appUserDetails.refinancedetails.refinanceOption  =="REFCO"){
 	
-		$('.ce-options-cont').find('.ce-option').first().next().next().css("background","rgb(247, 72, 31)");
-	}
 	/*
 	 * $("#progressBaarId_1").addClass('ce-lp-in-progress');
 	 * $('#stepNoId_1').html("1");
@@ -3087,7 +3094,8 @@ function paintRefinanceStep3() {
 	}).html("Save & continue").on('click', function() {
 		
 			refinancedetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
-			refinancedetails.includeTaxes = quesContxts[1].value;
+			refinancedetails.includeTaxes = quesContxts[1].getValuesForDB();
+			
 			propertyTypeMaster.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
 			propertyTypeMaster.propertyInsuranceCost = $('input[name="annualHomeownersInsurance"]').val();
 		  appUserDetails.refinancedetails=refinancedetails;
@@ -3412,6 +3420,11 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 			
 			event.data.option.onselect();
 		});
+		if(options[i].value==appUserDetails.refinancedetails.refinanceOption){
+			option.css("background","rgb(247, 72, 31)")
+		}
+		
+		
 		optionContainer.append(option);
 	}
 
@@ -3657,8 +3670,12 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
     	  
-    	 
-    	 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
+    	 if(appUserDetails.spouseGovernmentQuestions){
+    		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
+    	 }
+    	 else{
+    		 spouseGovernmentQuestions = {};
+    	 }
     	 
     	 if( isOutstandingJudgments =="Yes"){ 
     		 spouseGovernmentQuestions.isOutstandingJudgments = true;
@@ -3922,6 +3939,33 @@ function paintLockRate(lqbData, appUserDetails) {
     paintFixYourRatePage1(lqbData, appUserDetails);
 }
  
+
+function mapDbDataForFrontend(key){
+    switch(key){
+        case "state":
+            return appUserDetails.user.customerDetail.addressState;
+        case "city":
+            return appUserDetails.user.customerDetail.addressCity;
+        case "zipCode":
+            return appUserDetails.user.customerDetail.addressZipCode;
+        case "startLivingTime":
+            return appUserDetails.user.customerDetail.livingSince;
+        case "rentPerMonth":
+            return appUserDetails.monthlyRent;
+        case "isCityOrZipKnown":
+            if(appUserDetails.purchaseDetails.buyhomeZipPri&&appUserDetails.purchaseDetails.buyhomeZipPri!="")
+                return true;
+            else
+                return false;
+        case "buyhomeZipPri":
+            return appUserDetails.purchaseDetails.buyhomeZipPri;
+    }
+}
+
+function showAlert(message){
+    alert(message);
+}
+
 
 
 

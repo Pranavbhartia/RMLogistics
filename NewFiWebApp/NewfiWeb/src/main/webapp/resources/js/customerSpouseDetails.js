@@ -304,7 +304,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	    return false;
 	   }
 	    var quesTxt = "About how much do you make a year";
-		var quesCont = getMultiTextQuestion(quesTxt);
+		var quesCont = getMultiTextQuestionSpouse(quesTxt);
 	   /*var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
 	   $(this).parent().find('.ce-option-ques-wrapper').unwrap();*/
 	   $(this).before(quesCont);
@@ -347,6 +347,10 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	       customerSpouseEmploymentIncomeTemp1 = {};
 	       
 	       id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="custSpouseEmploymentIncomeId"]').val();
+	       if(id ==""){
+	     	  id = undefined;
+	       }
+	       
 	       spouseBeforeTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseBeforeTax"]').val();
 	       spouseWorkPlace = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseWorkPlace"]').val();
 	       spouseStartWorking = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseStartWorking"]').val();
@@ -374,17 +378,25 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	    
 	    
 	    
+	    if(appUserDetails.customerSpouseEmploymentIncome&&appUserDetails.customerSpouseEmploymentIncome.length>0)
+	    	appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
 	    
-	    appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
-	    
-	    
-	    appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
+	    if(spousePension&&spousePension!=""&&spousePension!="$0")
+	    	appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
+	    else
+	    	appUserDetails.customerSpouseDetail.ispensionOrRetirement= false;
 	    appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
 	    
-	    appUserDetails.customerSpouseDetail.isSelfEmployed = true;
+	    if(spouseSelfEmployed&&spouseSelfEmployed!=""&&spouseSelfEmployed!="$0")
+		    appUserDetails.customerSpouseDetail.isSelfEmployed = true;
+	    else
+		    appUserDetails.customerSpouseDetail.isSelfEmployed = false;
 	    appUserDetails.customerSpouseDetail.selfEmployedIncome =spouseSelfEmployed;
 	    
-	    appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
+	    if(spouseDisability&&spouseDisability!=""&&spouseDisability!="$0")
+		    appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
+	    else
+		    appUserDetails.customerSpouseDetail.isssIncomeOrDisability=false;
 	    appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
 	    
 	    //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);

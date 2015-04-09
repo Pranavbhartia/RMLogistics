@@ -331,7 +331,7 @@ function paintWhereYouLiveStep(){
     
     for(var i=0;i<questions.length;i++){
 		var question=questions[i];
-		var contxt=getQuestionContextCEP(question,$('#app-right-panel'));
+		var contxt=getQuestionContext(question,$('#app-right-panel'));
 		contxt.drawQuestion();
 		
 		quesContxts.push(contxt);
@@ -339,6 +339,13 @@ function paintWhereYouLiveStep(){
 	
     var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
     
+    var btn=$(addRemoveRow).find(".add-btn");
+    if(appUserDetails.purchaseDetails.buyhomeZipSec&&appUserDetails.purchaseDetails.buyhomeZipSec!=""){
+        addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipSec);
+    }
+    if(appUserDetails.purchaseDetails.buyhomeZipTri&&appUserDetails.purchaseDetails.buyhomeZipTri!=""){
+        addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipTri);
+    }
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
@@ -366,6 +373,26 @@ function paintWhereYouLiveStep(){
 
 }
 
+function addZipField(fieldName,element,value){
+
+        var inputField = $('input[name="'+fieldName+'"]');
+        
+        var inputElement = $('<input>').attr({
+            "name" : fieldName+inputField.parent().children('input').size(),
+            "class" : "ce-input ce-input-add"
+        });
+        if(value)
+            inputElement.val(value);
+        //alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
+        var numberOfInputs = inputField.parent().children('input').size();
+        
+        if(numberOfInputs<3){
+            inputField.parent().append(inputElement);
+            if(numberOfInputs == 2){
+                $(element).hide();
+            }
+        }
+}
 
 
 function getAddRemoveButtonRow(fieldName){
@@ -378,21 +405,7 @@ function getAddRemoveButtonRow(fieldName){
 		"class" : "add-btn float-left"
 	}).html("Add")
 	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		
-		var inputElement = $('<input>').attr({
-			"name" : e.data.fieldName+inputField.parent().children('input').size(),
-			"class" : "ce-input ce-input-add"
-		});
-		//alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
-		var numberOfInputs = inputField.parent().children('input').size();
-		
-		if(numberOfInputs<3){
-			inputField.parent().append(inputElement);
-			if(numberOfInputs == 2){
-				$(this).hide();
-			}
-		}
+        addZipField(e.data.fieldName,$(this))
 	});
 	
 	/*var removeBtn = $('<div>').attr({
