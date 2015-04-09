@@ -177,11 +177,9 @@ function paintCustomerApplicationPage() {
 	 if(newfi.customerSpouseDetail != null){
 		 customerSpouseDetail.id = newfi.customerSpouseDetail.id;
 	 }
-	// alert('newfi.customerEmploymentIncome'+JSON.stringify(newfi));
-	 if(newfi.customerEmploymentIncome !=null){
+	 /*if(newfi.customerEmploymentIncome !=null){
 	 customerEmploymentIncome.id = newfi.customerEmploymentIncome.id;
-	//alert('newfi.customerEmploymentIncome'+JSON.stringify(newfi.customerEmploymentIncome));
-	 }
+	 }*/
 	 if(newfi.customerBankAccountDetails != null){
 	 customerBankAccountDetails.id = newfi.customerBankAccountDetails.id;
 	 }
@@ -414,7 +412,7 @@ function getApplicationTextQues(question) {
           
 		
 	
-        if (question.name != 'zipCode' && question.name != 'yearLeftOnMortgage' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -535,7 +533,7 @@ function paintCustomerApplicationPageStep1a() {
     		appUserDetails.user = user;
     		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		
-    		//alert(JSON.stringify(appUserDetails));
+    		////alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		
         	        	
@@ -950,7 +948,7 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-	    	//alert(JSON.stringify(appUserDetails));
+	    	////alert(JSON.stringify(appUserDetails));
 	    
 	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
 	    	
@@ -959,7 +957,7 @@ function paintCustomerApplicationPageStep2() {
     	}else{
     		showToastMessage("Please give the answers of the questions");
     	}
-         //alert(JSON.stringify(appUserDetails));
+         ////alert(JSON.stringify(appUserDetails));
     	//paintCustomerApplicationPageStep3();
     	
     	
@@ -1047,7 +1045,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'yearLeftOnMortgage' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName'){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -1076,24 +1074,22 @@ function incomesSelectALLThatApply() {
 	
 	var quesTxt = "Select all that apply";
     var selfEmployedData={};
+
    //  alert('appUserDetails'+appUserDetails);
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
   //alert('selfEmployedData'+selfEmployedData);
-  
-  
+
     var employedData={};
-    if(appUserDetails&&appUserDetails.customerEmploymentIncome)
+    if(appUserDetails && appUserDetails.customerEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
-    
     var ssiData={};
     if(appUserDetails)
         ssiData={"selected":appUserDetails.isssIncomeOrDisability,"data":appUserDetails.ssDisabilityIncome};
-  
     var prData={};
     if(appUserDetails)
         prData={"selected":appUserDetails.ispensionOrRetirement,"data":appUserDetails.monthlyPension};
- 
+
 	var options = [ {
 		"text" : "Employed",
 		"onselect" : paintRefinanceEmployed,
@@ -1151,7 +1147,7 @@ function paintMyIncome() {
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
-    }).html("Save1 & continue").on('click', function(event) {
+    }).html("Save & continue").on('click', function(event) {
     
     
     
@@ -1160,11 +1156,13 @@ function paintMyIncome() {
      
      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
       customerEmploymentIncome1 = {};
-      
+     
+      id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
       EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
       EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
       EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
      
+      customerEmploymentIncome1.id  = id;
       customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
       customerEmploymentIncome1.employedAt = EmployedAt;
       customerEmploymentIncome1.employedSince = EmployedSince;
@@ -1214,72 +1212,72 @@ function paintMyIncome() {
 				
 				
        
-
-       
-        homelistprice = $('input[name="homelistprice"]').val();
-        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
-        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
-        
-        
-        var  customerBankAccountDetails = [];
-        /* Bank Account Start*/
-        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
-        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
-        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
-      
-        customerBankAccountDetails1 = {};
-        customerBankAccountDetails1.accountSubType = accountSubType;
-        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
-        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
-        var termp = {};
-        termp.customerBankAccountDetails = customerBankAccountDetails1;
-        
-        customerBankAccountDetails.push(termp);
-        
-        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
-        
-        /* Bank Account End*/
-        /* Retirement Account Start*/
-        
-        var  customerRetirementAccountDetails = [];
-        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
-        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
-        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
-        
-        customerRetirementAccountDetails1 = {};
-        
-        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
-        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
-        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
-        
-        var termp2 = {};
-        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
-        
-        customerRetirementAccountDetails.push(termp2);
-        
-        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
-        
-        /* Retirement Account Ends*/
-        /* Other Account Start*/
-        
-        var  customerOtherAccountDetails = [];
-        otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
-        otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
-        otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
-        
-        customerOtherAccountDetails1 = {};
-        
-        customerOtherAccountDetails1.accountSubType = otherAccountName;
-        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
-        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
-        
-        var termp3 = {};
-        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
-        
-        customerOtherAccountDetails.push(termp3);
-        
-        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
-        
+      if(purchase == true){
+            //alert("hiiiii ");
+	        homelistprice = $('input[name="homelistprice"]').val();
+	        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
+	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+	        
+	        
+	        var  customerBankAccountDetails = [];
+	        /* Bank Account Start*/
+	        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
+	        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
+	        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
+	      
+	        customerBankAccountDetails1 = {};
+	        customerBankAccountDetails1.accountSubType = accountSubType;
+	        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
+	        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
+	        var termp = {};
+	        termp.customerBankAccountDetails = customerBankAccountDetails1;
+	        
+	        customerBankAccountDetails.push(termp);
+	        
+	        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
+	        
+	        /* Bank Account End*/
+	        /* Retirement Account Start*/
+	        
+	        var  customerRetirementAccountDetails = [];
+	        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
+	        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
+	        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
+	        
+	        customerRetirementAccountDetails1 = {};
+	        
+	        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
+	        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
+	        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
+	        
+	        var termp2 = {};
+	        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
+	        
+	        customerRetirementAccountDetails.push(termp2);
+	        
+	        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
+	        
+	        /* Retirement Account Ends*/
+	        /* Other Account Start*/
+	        
+	        var  customerOtherAccountDetails = [];
+	        otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
+	        otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
+	        otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
+	        
+	        customerOtherAccountDetails1 = {};
+	        
+	        customerOtherAccountDetails1.accountSubType = otherAccountName;
+	        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
+	        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
+	        
+	        var termp3 = {};
+	        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
+	        
+	        customerOtherAccountDetails.push(termp3);
+	        
+	        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
+	    }
         /* Other Account Ends*/
         
         /*appUserDetails.homelistprice = homelistprice;
@@ -1292,7 +1290,7 @@ function paintMyIncome() {
              appUserDetails.otherAccountsUseForNewHome = otherAccountsUseForNewHome;*/
         //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
         appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-        //alert(JSON.stringify(appUserDetails));
+        ////alert(JSON.stringify(appUserDetails));
         if (appUserDetails.isSpouseOnLoan == true) {
             saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome());
         } else {
@@ -1361,15 +1359,36 @@ function getMultiTextQuestion(quesText,value) {
 	var quesTextCont1 = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
 	}).html("Before Tax");
-    var val="";
-    if(value&&value.employedIncomePreTax)
+   
+	var val="";
+   
+	if(value&&value.employedIncomePreTax)
         val=value.employedIncomePreTax;
+	
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "beforeTax",
 		"value" :val
 	});
+	
 
+	var quesTextCont0 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	});
+	
+	
+	var val="";
+	   
+	if(value && value.id)
+        val=value.id;
+	var inputBox0 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "customerEmploymentIncomeId",
+		"type":"hidden",
+		"value" :val
+	});
+	quesTextCont0.append(inputBox0);
+	
 	quesTextCont1.append(inputBox1);
 
 	var quesTextCont2 = $('<div>').attr({
@@ -1400,7 +1419,7 @@ function getMultiTextQuestion(quesText,value) {
 
 	quesTextCont3.append(inputBox3);
 
-	optionContainer.append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
+	optionContainer.append(quesTextCont0).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
 	putCurrencyFormat("beforeTax");
 	
@@ -1565,6 +1584,7 @@ function paintMySpouseIncome() {
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
      var selfEmployedData={};
+
      if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
      
@@ -1582,7 +1602,7 @@ function paintMySpouseIncome() {
     if(appUserDetails)
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 	
-	
+
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
 		"text" : "Employed",
@@ -1725,13 +1745,12 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
  var saveBtn = $('<div>').attr({
   "class" : "ce-save-btn"
- }).html("Save2 & Continue").bind('click',function() {
+ }).html("Save & Continue").bind('click',function() {
           
           
-         alert('inside Save2');
+         
   var  customerSpouseEmploymentIncome = [];
       
-     
       $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
        customerSpouseEmploymentIncomeTemp1 = {};
        
@@ -1757,7 +1776,11 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
       spouseDisability = $('input[name="spouseDisability"]').val();
     
       spousePension = $('input[name="spousePension"]').val();
- 
+
+    
+    
+    
+    
     appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
     
     
@@ -1772,7 +1795,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
     
     //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-    alert(JSON.stringify(appUserDetails));
+    
     
     saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
     //paintCustomerApplicationPageStep4a();
@@ -1864,10 +1887,12 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("Where Do You Work ?");
 
+
     val="";
     if(value&&value.employedAt)
         val=value.employedAt;
         
+
 	var inputBox2 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "spouseWorkPlace",
@@ -2459,7 +2484,7 @@ function paintCustomerApplicationPageStep4a() {
     	//appUserDetails["propertyStatus"] =null;
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
     	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
-    	 //alert(isOutstandingJudgments);
+    	 ////alert(isOutstandingJudgments);
     	 delete appUserDetails.governmentquestion;
     	 
     	 governmentquestion = {};
@@ -2532,7 +2557,7 @@ function paintCustomerApplicationPageStep4a() {
     	 appUserDetails.governmentquestion =governmentquestion;
     	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    	// alert(JSON.stringify(appUserDetails));
+    	// //alert(JSON.stringify(appUserDetails));
     	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
     	
     	//paintCustomerApplicationPageStep4b();
@@ -2554,7 +2579,7 @@ function paintCustomerApplicationPageStep4a() {
     });
 
 	var options = [ {
-		"text" : "No thank you. Letâ€™s move on",
+		"text" : "No thank you. Let’s move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -2815,10 +2840,10 @@ function paintCustomerApplicationPageStep5() {
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		appUserDetails.user.customerDetail = customerDetailTemp;
-    		//alert(JSON.stringify(customerDetail));
+    		////alert(JSON.stringify(customerDetail));
     		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     		
-    ///alert(JSON.stringify(appUserDetails));
+    /////alert(JSON.stringify(appUserDetails));
     		
     		
     		if(appUserDetails.isSpouseOnLoan == true)
@@ -2902,10 +2927,10 @@ function paintCustomerSpouseApplicationPageStep5() {
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		appUserDetails.customerSpouseDetail = customerDetailTemp;
-    		//alert(JSON.stringify(customerDetail));
+    		////alert(JSON.stringify(customerDetail));
     		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     		
-    ///alert(JSON.stringify(appUserDetails));
+    /////alert(JSON.stringify(appUserDetails));
     		
     		
     	
@@ -3052,7 +3077,7 @@ var tempdata = [{
 }];
  
 function saveUserAndLockRate(appUserDetails) {
-    //alert(JSON.stringify(registration));
+    ////alert(JSON.stringify(registration));
     
     var teaserrate = {};
     
@@ -3671,7 +3696,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'yearLeftOnMortgage' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -3776,7 +3801,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 	//	"value" : refinanceTeaserRate[name]
 	}).on("load keydown", function(e){
           
-		if(name != 'zipCode' && name != 'yearLeftOnMortgage'){
+		if(name != 'zipCode' && name != 'mortgageyearsleft'){
 			$('input[name='+name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -4110,7 +4135,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	//appUserDetails["propertyStatus"] =null;
     	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
     	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
-    	 //alert(isOutstandingJudgments);
+    	 ////alert(isOutstandingJudgments);
     	 delete appUserDetails.spouseGovernmentQuestions;
     	 
     	 spouseGovernmentQuestions = {};
@@ -4183,7 +4208,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
     	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    	// alert(JSON.stringify(appUserDetails));
+    	// //alert(JSON.stringify(appUserDetails));
     	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
     	
     	//paintCustomerApplicationPageStep4b();
@@ -4260,7 +4285,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     });
 
 	var options = [ {
-		"text" : "No thank you. Letâ€™s move on",
+		"text" : "No thank you. Let’s move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -4352,7 +4377,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 
 function createLoan(appUserDetails,callBack)
 {
-//alert('inside create loan method');
+////alert('inside create loan method');
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
@@ -4363,7 +4388,7 @@ $.ajax({
 			callBack;
 		},
 		error:function(erro){
-			alert("success");
+			alert("error inside createLoan ");
 		}
 		
 	});
@@ -4379,6 +4404,44 @@ function paintLockRate(lqbData, appUserDetails) {
 
 
 
+function getAddRemoveButtonRow(fieldName){
+	
+	var container = $('<div>').attr({
+		"class" : "add-remove-row clearfix"
+	});
+	
+	var addBtn = $('<div>').attr({
+		"class" : "add-btn float-left"
+	}).html("Add")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		
+		var inputElement = $('<input>').attr({
+			"name" : e.data.fieldName,
+			"class" : "ce-input ce-input-add"
+		});
+		
+		var numberOfInputs = inputField.parent().children('input').size();
+		
+		if(numberOfInputs<3){
+			inputField.parent().append(inputElement);
+			if(numberOfInputs == 2){
+				$(this).hide();
+			}
+		}
+	});
+	
+	/*var removeBtn = $('<div>').attr({
+		"class" : "remove-btn float-left"
+	}).html("-")
+	.bind('click',{"fieldName":fieldName},function(e){
+		var inputField = $('input[name="'+e.data.fieldName+'"]');
+		if(inputField.parent().children('input').size()>1){
+			inputField.parent().find('input:last-child').remove();
+		}
+	});*/
+	return container.append(addBtn);
+}
 
 function getAddMoreEmployementDetails() {
 	var container = $('<div>').attr({

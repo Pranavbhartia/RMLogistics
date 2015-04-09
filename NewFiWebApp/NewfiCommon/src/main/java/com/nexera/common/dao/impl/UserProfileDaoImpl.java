@@ -69,6 +69,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
+			Hibernate.initialize(user.getInternalUserDetail());
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in authenticateUser() ",
@@ -199,19 +200,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public List<User> getUsersList() {
-		
+
 		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL";
-		String searchQueryInternalUser="FROM User where internalUserDetail.activeInternal!=:DELETED";
-				
+		String searchQueryInternalUser = "FROM User where internalUserDetail.activeInternal!=:DELETED";
+
 		Session session = sessionFactory.getCurrentSession();
-		
+
 		Query queryCustomer = session.createQuery(searchQueryCustomer);
-		Query queryInternalUser=session.createQuery(searchQueryInternalUser);
+		Query queryInternalUser = session.createQuery(searchQueryInternalUser);
 		queryInternalUser.setParameter("DELETED", ActiveInternalEnum.DELETED);
-		
-		List<User>userList=queryCustomer.list();
+
+		List<User> userList = queryCustomer.list();
 		userList.addAll(queryInternalUser.list());
-				
+
 		return userList;
 
 	}
@@ -291,42 +292,45 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public Integer saveUserWithDetails(User user) {
-		if (null != user.getInternalUserDetail()
-		        && user.getUserRole() != null
-		        && user.getUserRole().getId() == UserRolesEnum.INTERNAL
-		                .getRoleId()) {
-			this.save(user.getInternalUserDetail());
-			 sessionFactory.getCurrentSession().flush();
-		}
-		if (null != user.getRealtorDetail()
-		        && user.getUserRole() != null
-		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
-		                .getRoleId()) {
-			this.save(user.getRealtorDetail());
-			 sessionFactory.getCurrentSession().flush();
-		}
-
-		LOG.info("user.getCustomerDetail() in daoimpl"
-		        + user.getCustomerDetail());
-
-		if (null != user.getCustomerDetail()
-		        && user.getUserRole() != null
-		        && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
-		                .getRoleId()) {
-
-			// if(user.getCustomerDetail().getCustomerBankAccountDetails() !=
-			// null){
-
-			// this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
-			// }
-			// this.save(user.getCustomerDetail().getCustomerEmploymentIncome());
-			// this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
-			// this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());
-			LOG.info("Inside User Profile Dao user.getCustomerDetail()"
-			        + user.getCustomerDetail().getId());
-			this.save(user.getCustomerDetail());
-			 sessionFactory.getCurrentSession().flush();
-		}
+		// if (null != user.getInternalUserDetail()
+		// && user.getUserRole() != null
+		// && user.getUserRole().getId() == UserRolesEnum.INTERNAL
+		// .getRoleId()) {
+		// this.save(user.getInternalUserDetail());
+		// sessionFactory.getCurrentSession().flush();
+		// }
+		// if (null != user.getRealtorDetail()
+		// && user.getUserRole() != null
+		// && user.getUserRole().getId() == UserRolesEnum.REALTOR
+		// .getRoleId()) {
+		// this.save(user.getRealtorDetail());
+		// sessionFactory.getCurrentSession().flush();
+		// }
+		//
+		// LOG.info("user.getCustomerDetail() in daoimpl"
+		// + user.getCustomerDetail());
+		//
+		// if (null != user.getCustomerDetail()
+		// && user.getUserRole() != null
+		// && user.getUserRole().getId() == UserRolesEnum.CUSTOMER
+		// .getRoleId()) {
+		//
+		// // if(user.getCustomerDetail().getCustomerBankAccountDetails() !=
+		// // null){
+		//
+		// //
+		// this.save(user.getCustomerDetail().getCustomerBankAccountDetails());
+		// // }
+		// // this.save(user.getCustomerDetail().getCustomerEmploymentIncome());
+		// //
+		// this.save(user.getCustomerDetail().getCustomerOtherAccountDetails());
+		// //
+		// this.save(user.getCustomerDetail().getCustomerRetirementAccountDetails());
+		// LOG.info("Inside User Profile Dao user.getCustomerDetail()"
+		// + user.getCustomerDetail().getId());
+		// this.save(user.getCustomerDetail());
+		// sessionFactory.getCurrentSession().flush();
+		// }
 		return (Integer) this.save(user);
 	}
 
@@ -732,7 +736,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateLqbProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword "
-				+ "WHERE internalusr.id = :id";
+		        + "WHERE internalusr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", user.getInternalUserDetail().getId());
 		query.setParameter("lqbUserName", user.getInternalUserDetail()

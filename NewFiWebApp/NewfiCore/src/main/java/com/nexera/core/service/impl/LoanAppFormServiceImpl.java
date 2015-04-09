@@ -1,10 +1,14 @@
 package com.nexera.core.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
@@ -13,6 +17,7 @@ import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.CustomerEmploymentIncomeVO;
 import com.nexera.common.vo.GovernmentQuestionVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
@@ -69,8 +74,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	public LoanAppFormVO find(LoanAppFormVO loaAppFormVO) {
 		
 		
-		LoanAppForm loanAppForm = loanAppFormDao.find(parseLoanAppFormVO(loaAppFormVO));		
-		
+		LoanAppForm loanAppForm = loanAppFormDao.find(parseLoanAppFormVO(loaAppFormVO));
+				
 		LoanAppFormVO  loanAppFormVO = convertToLoanAppFormVO(loanAppForm);
 				
 		return loanAppFormVO;
@@ -108,11 +113,51 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setRefinancedetails(convertTORefinancedetailsVO(loanAppForm.getRefinancedetails()));
 		 loanAppFormVO.setLoanType(convertTOLoanTypeVO(loanAppForm.getLoanTypeMaster()));
 		 loanAppFormVO.setPurchaseDetails(convertTOPurchaseDetails(loanAppForm.getPurchaseDetails()));
+		 loanAppFormVO.setCustomerEmploymentIncome(convertTOCustomerEmploymentIncomeList(loanAppForm.getCustomerEmploymentIncome()));
 		 
 		 return loanAppFormVO;
 		 
 	 }
 
+
+	private List<CustomerEmploymentIncomeVO> convertTOCustomerEmploymentIncomeList(
+            List<CustomerEmploymentIncome> customerEmploymentIncomelist) {
+	  
+		if(customerEmploymentIncomelist ==  null || customerEmploymentIncomelist.size() == 0)
+			return null;
+		
+		List<CustomerEmploymentIncomeVO> customerEmploymentIncomeVOlist = new ArrayList<CustomerEmploymentIncomeVO>();
+		CustomerEmploymentIncomeVO customerEmploymentIncomeVO = null;
+		CustomerEmploymentIncome customerEmploymentIncome = null;
+		for (int i = 0; i < customerEmploymentIncomelist.size(); i++) {
+			
+			customerEmploymentIncome = customerEmploymentIncomelist.get(i);
+			
+			customerEmploymentIncomeVO = convertTOCustomerEmploymentIncomeVO(customerEmploymentIncome);
+			customerEmploymentIncomeVOlist.add(customerEmploymentIncomeVO);
+		}
+		
+	    return customerEmploymentIncomeVOlist;
+    }
+	
+
+	private CustomerEmploymentIncomeVO convertTOCustomerEmploymentIncomeVO(
+            CustomerEmploymentIncome customerEmploymentIncome) {
+	   
+		if(null == customerEmploymentIncome)
+			return null;
+		
+		CustomerEmploymentIncomeVO customerEmploymentIncomeVO = new CustomerEmploymentIncomeVO();
+		CustomerEmploymentIncomeVO customerEmploymentITemp = new CustomerEmploymentIncomeVO();
+		
+
+		customerEmploymentITemp.setId(customerEmploymentIncome.getId());
+		customerEmploymentITemp.setEmployedSince(customerEmploymentIncome.getEmployedSince());
+		customerEmploymentITemp.setEmployedAt(customerEmploymentIncome.getEmployedAt());		
+		customerEmploymentITemp.setEmployedIncomePreTax(customerEmploymentIncome.getEmployedIncomePreTax());
+		customerEmploymentIncomeVO.setCustomerEmploymentIncome(customerEmploymentITemp);
+	    return customerEmploymentIncomeVO;
+    }
 
 	private PurchaseDetailsVO convertTOPurchaseDetails( PurchaseDetails purchaseDetails) {
 	
@@ -164,6 +209,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setSpouseName(loanAppForm.getSpouseName());
 		 loanAppFormVO.setPaySecondMortgage(loanAppForm.getPaySecondMortgage());
 		 loanAppFormVO.setLoanAppFormCompletionStatus(loanAppForm.getLoanAppFormCompletionStatus());
+		
 		 
 		 return loanAppFormVO;
 		 

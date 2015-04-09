@@ -987,6 +987,7 @@ function progressBaar(num) {
 function paintApplyNow(inputCustomerDetails) {
    
     console.log(JSON.stringify(inputCustomerDetails));
+   // alert('input'+JSON.stringify(inputCustomerDetails))
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
     var registration = new Object();
     var parentWrapper = $('<div>').attr({
