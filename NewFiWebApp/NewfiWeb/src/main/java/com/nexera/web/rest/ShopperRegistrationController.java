@@ -1,7 +1,6 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,26 +20,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexera.common.enums.LoanTypeMasterEnum;
-import com.nexera.common.enums.UserRolesEnum;
-import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.LoanAppFormVO;
-import com.nexera.common.vo.LoanTypeMasterVO;
-import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
-import com.nexera.workflow.vo.WorkflowVO;
 
 @RestController
 @RequestMapping(value = "/shopper")
 public class ShopperRegistrationController {
 
-
-	
 	@Autowired
 	private UserProfileService userProfileService;
 
@@ -55,12 +45,10 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	protected AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	WorkflowCoreService workflowCoreService;
-	
-	
-	
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(ShopperRegistrationController.class);
 
@@ -75,10 +63,12 @@ public class ShopperRegistrationController {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
 			        LoanAppFormVO.class);
 			String emailId = loaAppFormVO.getUser().getEmailId();
-			//LOG.info("calling 1234 "+ loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
-			LOG.info("calling UserName : " + loaAppFormVO.getUser().getFirstName());
+			// LOG.info("calling 1234 "+
+			// loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+			LOG.info("calling UserName : "
+			        + loaAppFormVO.getUser().getFirstName());
 
-			UserVO user = registerCustomer(loaAppFormVO);
+			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
@@ -90,80 +80,76 @@ public class ShopperRegistrationController {
 		return "./home.do";
 	}
 
-	
+	// public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)
+	// throws FatalException {
+	//
+	// try {
+	// // CustomerEnagagement customerEnagagement =
+	// // userVO.getCustomerEnagagement();
+	// UserVO userVO = loaAppFormVO.getUser();
+	//
+	// userVO.setUsername(userVO.getEmailId().split(":")[0]);
+	// userVO.setEmailId(userVO.getEmailId().split(":")[0]);
+	// userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+	//
+	//
+	// // String password = userVO.getPassword();
+	// // UserVO userVOObj= userProfileService.saveUser(userVO);
+	// UserVO userVOObj = null;
+	// LoanVO loanVO = null;
+	//
+	// LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
+	// userVOObj = userProfileService.createNewUserAndSendMail(userVO);
+	// // insert a record in the loan table also
+	// loanVO = new LoanVO();
+	//
+	// loanVO.setUser(userVOObj);
+	//
+	// loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
+	// loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
+	//
+	// // Currently hardcoding to refinance, this has to come from UI
+	// // TODO: Add LoanTypeMaster dynamically based on option selected
+	// if(loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
+	// loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+	// }else{
+	// loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+	// }
+	//
+	//
+	// loanVO = loanService.createLoan(loanVO);
+	// workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+	// userVOObj.setDefaultLoanId(loanVO.getId());
+	// // create a record in the loanAppForm table
+	//
+	// LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+	//
+	// loanAppFormVO.setUser(userVOObj);
+	// loanAppFormVO.setLoan(loanVO);
+	// loanAppFormVO.setLoanAppFormCompletionStatus(0);
+	// loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
+	//
+	// loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
+	// loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+	// loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
+	// loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
+	//
+	// // if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
+	// // loanAppFormVO.setLoanType(new
+	// // LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+	// // }
+	// LOG.info("loanAppFormService.create(loanAppFormVO)");
+	// loanAppFormService.create(loanAppFormVO);
+	//
+	// return userVOObj;
+	// } catch (Exception e) {
+	// LOG.error("User registration failed. Generating an alert"
+	// + loaAppFormVO);
+	// throw new FatalException("Error in User registration", e);
+	// }
+	// }
+	//
 
-
-	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)
-	        throws FatalException {
-
-		try {
-			// CustomerEnagagement customerEnagagement =
-			// userVO.getCustomerEnagagement();
-			UserVO userVO = loaAppFormVO.getUser();
-
-			userVO.setUsername(userVO.getEmailId().split(":")[0]);
-			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
-			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
-			
-			
-			// String password = userVO.getPassword();
-			// UserVO userVOObj= userProfileService.saveUser(userVO);
-			UserVO userVOObj = null;
-			LoanVO loanVO = null;
-
-			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
-			userVOObj = userProfileService.createNewUserAndSendMail(userVO);
-			// insert a record in the loan table also
-			loanVO = new LoanVO();
-
-			loanVO.setUser(userVOObj);
-
-			loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
-			loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
-
-			// Currently hardcoding to refinance, this has to come from UI
-			// TODO: Add LoanTypeMaster dynamically based on option selected
-			if(loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-			}else{
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
-			}
-			
-			
-			loanVO = loanService.createLoan(loanVO);
-			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
-			userVOObj.setDefaultLoanId(loanVO.getId());
-			// create a record in the loanAppForm table
-
-			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-		
-			loanAppFormVO.setUser(userVOObj);
-			loanAppFormVO.setLoan(loanVO);
-			loanAppFormVO.setLoanAppFormCompletionStatus(0);
-			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO.getPropertyTypeMaster());
-			
-			loanAppFormVO.setRefinancedetails(loaAppFormVO.getRefinancedetails());
-			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
-			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
-			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
-
-			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
-			// loanAppFormVO.setLoanType(new
-			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
-			// }
-			LOG.info("loanAppFormService.create(loanAppFormVO)");
-			loanAppFormService.create(loanAppFormVO);
-
-			return userVOObj;
-		} catch (Exception e) {
-			LOG.error("User registration failed. Generating an alert"
-			        + loaAppFormVO);
-			throw new FatalException("Error in User registration", e);
-		}
-	}
-	
-	
-	
 	private void authenticateUserAndSetSession(String emailId, String password,
 	        HttpServletRequest request) {
 

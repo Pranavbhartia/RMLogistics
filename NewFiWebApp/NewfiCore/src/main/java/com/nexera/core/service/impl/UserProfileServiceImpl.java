@@ -457,15 +457,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// newUser.setPassword(null);
 
 		// newUser = null;
-		if (userID > 0) {
-			// && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
-			// .getRoleId()) {
-			newUser = userProfileDao.findInternalUser(userID);
-			return User.convertFromEntityToVO(newUser);
-		}
+		// if (userID > 0) {
+		// // && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		// // .getRoleId()) {
+		// newUser = userProfileDao.findInternalUser(userID);
+		// return User.convertFromEntityToVO(newUser);
+		// }
 		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
 		userVO.setPassword(newUser.getPassword());
-		userVO.setId(newUser.getId());
+
+		// reset this value so that two objects are not created
+		userVO.setCustomerDetail(null);
+		userVO.setId(userID);
 		return userVO;
 
 	}
@@ -917,6 +920,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			// Since the user is a customer, we are creating hte customer detail
+			// object
+			userVO.setCustomerDetail(new CustomerDetailVO());
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
 			UserVO userVOObj = null;

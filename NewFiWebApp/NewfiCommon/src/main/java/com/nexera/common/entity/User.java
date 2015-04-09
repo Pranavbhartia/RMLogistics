@@ -21,6 +21,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -174,6 +176,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)
+	@Cascade({ CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = "customer_detail")
 	public CustomerDetail getCustomerDetail() {
 		return customerDetail;
@@ -184,6 +187,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@Cascade({ CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = "internal_user_detail")
 	public InternalUserDetail getInternalUserDetail() {
 		return internalUserDetail;
@@ -194,6 +198,7 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@Cascade({ CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = "realtor_detail")
 	public RealtorDetail getRealtorDetail() {
 		return realtorDetail;
@@ -408,13 +413,16 @@ public class User implements Serializable, UserDetails {
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
-			
-			if(null!=user.getInternalUserStateMappings()){
-			List<InternalUserStateMappingVO> internalUserStateMappingVOs=new ArrayList<InternalUserStateMappingVO>();
-				for (InternalUserStateMapping internalUserStateMapping : user.getInternalUserStateMappings()) {
-					internalUserStateMappingVOs.add(InternalUserStateMapping.convertFromEntityToVO(internalUserStateMapping));
+
+			if (null != user.getInternalUserStateMappings()
+			        && !user.getInternalUserStateMappings().isEmpty()) {
+				List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
+				for (InternalUserStateMapping internalUserStateMapping : user
+				        .getInternalUserStateMappings()) {
+					internalUserStateMappingVOs.add(InternalUserStateMapping
+					        .convertFromEntityToVO(internalUserStateMapping));
 				}
-				
+
 				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
 		}
@@ -449,10 +457,12 @@ public class User implements Serializable, UserDetails {
 		        .getUserRole()));
 		if (userModel.getUserRole().getId() == UserRolesEnum.CUSTOMER
 		        .getRoleId()) {
-			System.out.println("userVO in User before covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User before covert"
+			        + userVO.getCustomerDetail());
 			userModel.setCustomerDetail(CustomerDetail
 			        .convertFromVOToEntity(userVO.getCustomerDetail()));
-			System.out.println("userVO in User after covert"+userVO.getCustomerDetail());
+			System.out.println("userVO in User after covert"
+			        + userVO.getCustomerDetail());
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
