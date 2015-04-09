@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -65,6 +66,7 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.RealtorDetailVO;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
@@ -285,10 +287,29 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public boolean changeUserPassword(UserVO userVO) {
-		return userProfileDao.changeUserPassword(userVO);
-		// return true;
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO) {
+		try {
+			return userProfileDao.changeUserPassword(updatePasswordVO);
+		}
+
+		catch (HibernateException hibernateException) {
+			LOG.error("Can't update the Password");
+			throw new FatalException("Error in updating the password",
+			        hibernateException);
+
+		}
+
+		catch (DatabaseException databaseException)
+
+		{
+
+			LOG.error("Can't update the password");
+			throw new FatalException("Error in updating the password",
+			        databaseException);
+
+		}
 	}
+
 
 	@Override
 	@Transactional
@@ -1022,7 +1043,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String password = generateRandomPassword();
 		user.setPassword(password);
 		UserVO userVO = User.convertFromEntityToVO(user);
-		boolean isSuccess = userProfileDao.changeUserPassword(userVO);
+		UpdatePasswordVO updatePasswordVO = new UpdatePasswordVO();
+		updatePasswordVO.setNewPassword(userVO.getPassword());
+		updatePasswordVO.setUserId(userVO.getId());
+
+		boolean isSuccess = userProfileDao.changeUserPassword(updatePasswordVO);
 		if (isSuccess) {
 
 			LOG.info("sending reset password to the user");
@@ -1031,6 +1056,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 	}
+
 
 	private void sendNewPasswordToUser(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
