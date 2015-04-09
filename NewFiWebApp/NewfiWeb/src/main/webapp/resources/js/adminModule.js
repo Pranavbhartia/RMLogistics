@@ -137,7 +137,7 @@ function getSearchResultForAdmin(searchValue)
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "admin-dashboard-container",
-		"class" : "rp-agent-dashboard-admin lp-item float-left-admin"
+		"class" : "rp-agent-dashboard-admin float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
      getSearchResultDataForAdmin(searchValue);
@@ -167,20 +167,20 @@ $('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "admin-dashboard-container",
-		"class" : "rp-agent-dashboard-admin float-left-admin"
+		"class" : "rp-agent-dashboard-admin"
 	});
 	
 	var agentDashboardErrorWrraper = $('<div>').attr({
 		"id" : "admin-error-wrapper",
-		"class" : "admin-error-wrapper float-left-admin"
+		"class" : "admin-error-wrapper"
 	});
 	
 	var agentDashboardErrorContainer = $('<div>').attr({
 		"id" : "admin-error-container",
-		"class" : "admin-error-container float-left-admin"
+		"class" : "admin-error-container"
 	});
 	agentDashboardErrorWrraper.append(agentDashboardErrorContainer);
-	$('#right-panel').append(agentDashboardErrorWrraper);
+	agentDashboardMainContainer.append(agentDashboardErrorWrraper);
 	$('#right-panel').append(agentDashboardMainContainer);
     getAdminDashboardRightPanel();
 
@@ -335,8 +335,8 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	container.append(userTypeCont);
 	container.append(createUserButton); 
 	container.append(label);
-
-	container.append(uploadText).append(form);
+    uploadText.append(form);
+	container.append(uploadText);
 	wrapper.append(header).append(container);
 	if(clearParent){
 		$('#'+parentElement).html("");
@@ -354,7 +354,7 @@ function displayErrorMessage(data){
     var tableRow = $('<div>').attr({
 		"class" : "admin-error-list-list-tr clearfix",
 		
-	}).html("Error in line"+"-"+data.lineNumber+"  "+"csvLine is"+" -" +data.csvLine+ "and reason is: "+"  "+data.message);
+	}).html("Error in line"+"-"+data.lineNumber+"  "+data.message);
 	return tableRow;
 	
 }
@@ -559,14 +559,14 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
 }
 function appendAdminCreateUserPopupFirstName(){
 var row = $('<div>').attr({
-		"class" : "create-user-popup-cont clearfix float-left"
+		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
-		"class" : "create-user-popup-label float-left"
+		"class" : "admin-create-user-popup-label float-left"
 	}).html("First Name");
 	
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input",
+		"class" : "admin-create-user-popup-input",
 		"id" : "admin-create-user-first-name"
 	}).val("");
 	row.append(label).append(inputBox);
@@ -576,13 +576,13 @@ var row = $('<div>').attr({
 
 function appendAdminCreateUserPopupLastName(){
 var row = $('<div>').attr({
-		"class" : "create-user-popup-cont clearfix float-left"
+		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
-		"class" : "create-user-popup-label float-left"
+		"class" : "admin-create-user-popup-label float-left"
 	}).html("Last Name");
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input",
+		"class" : "admin-create-user-popup-input",
 		"id" : "admin-create-user-last-name"
 	}).val("");
 	row.append(label).append(inputBox);
@@ -592,13 +592,13 @@ var row = $('<div>').attr({
 
 function appendAdminCreateUserPopupEmail(){
 	var row = $('<div>').attr({
-		"class" : "create-user-popup-cont clearfix float-left"
+		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
-		"class" : "create-user-popup-label float-left"
+		"class" : "admin-create-user-popup-label float-left"
 	}).html("Email");
 	var inputBox = $('<input>').attr({
-		"class" : "create-user-popup-input",
+		"class" : "admin-create-user-popup-input",
 		"id" : "admin-create-user-emailId"
 		
 	}).val("");
@@ -635,15 +635,29 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 	 	$(this).parent().find('.admin-search-input').hide();
 	 }     	
 	});
-	
+	var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
 	var searchInputBox = $('<input>').attr({
 		"class" : "admin-search-input float-right",
 		"id":"search-id",
 		"placeholder":"Search User",
 		"name":"search User"
+	})
+	.bind('keyup',function(e){
+		 delay(function(){
+			 e.preventDefault();
+			 
+     var searchValue=$('#search-id').val();
+	 getSearchResultForAdmin(searchValue);
+    }, 1000 );
+		
 	});
-	searchDiv.append(searchInputBox);
-	header.append(searchDiv);
+	header.append(searchDiv).append(searchInputBox);
 	var container = $('<div>').attr({
 		"class" : "admin-newfi-team-container",
 		"id":"admin-newfi-team-container-id"
