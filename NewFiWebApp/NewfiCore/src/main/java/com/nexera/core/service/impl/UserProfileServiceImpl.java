@@ -920,8 +920,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
-			// Since the user is a customer, we are creating hte customer detail
-			// object
 			userVO.setCustomerDetail(new CustomerDetailVO());
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
@@ -940,7 +938,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			if (loaAppFormVO.getLoanType().getLoanTypeCd()
+			        .equalsIgnoreCase("REF")) {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			} else {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+			}
 
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
@@ -948,14 +951,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-			// userVOObj.setCustomerEnagagement(customerEnagagement);
+
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
+
 			loanAppFormVO.setRefinancedetails(loaAppFormVO
 			        .getRefinancedetails());
+			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
+			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			// loanAppFormVO.setLoanType(new
