@@ -22,7 +22,7 @@
 				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber }</div>
 			</div>
 		</div>
-		<div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">
+		<%-- <div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">
 			<div class="lp-item-header">work on your loan</div>
 			<div class="lp-item-body lp-agent-item1">
 				<div class="lp-item-body-row lp-item-body-top-row">
@@ -34,7 +34,7 @@
 						Total leads</span>
 				</div>
 			</div>
-		</div>
+		</div> --%>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
 			<div class="lp-item-header">my loans</div>
 			<div class="lp-item-body lp-agent-item2">

@@ -44,6 +44,43 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 	});
 }
 
+function synchronousAjaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback){
+	if(isPagination===undefined){
+		showOverlay();
+	}else if(isPagination==true){
+		showPaginationScrollIcon(div);
+	}	
+	
+	$.ajax({
+		url : url,
+		type : type,
+		dataType : dataType,
+		async:false,
+		data : data,
+		contentType: "application/json",
+		success : successCallBack,
+		complete:function(response){
+			if(isPagination){
+				removePaginationScrollIcon(div);
+			}else{
+				hideOverlay();
+			}
+			if(completeCallback){
+				var data={};
+				if(response.responseJSON)
+					data=response.responseJSON;
+				completeCallback(data);
+			}
+			adjustCenterPanelWidth();
+			adjustRightPanelOnResize();
+            adjustCustomerApplicationPageOnResize();
+            adjustAgentDashboardOnResize();
+		},
+		error : function(){
+			
+		}
+	});
+}
 
 function formatPhoneNumberToUsFormat(text){
 	if(text == undefined || text ==null){

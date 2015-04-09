@@ -1076,10 +1076,10 @@ function incomesSelectALLThatApply() {
 	
 	var quesTxt = "Select all that apply";
     var selfEmployedData={};
-     alert('appUserDetails'+appUserDetails);
+   //  alert('appUserDetails'+appUserDetails);
     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
-  alert('selfEmployedData'+selfEmployedData);
+  //alert('selfEmployedData'+selfEmployedData);
   
   
     var employedData={};
@@ -1307,16 +1307,12 @@ function paintMyIncome() {
  
 
 function paintRefinanceEmployed(divId,value) {
-   alert('value insise employed is'+value);
     var flag=true;
     if(value&&!value.selected){
-            alert('inside  if');
         flag=false;
-        }
+    }
     else{
-            alert('inside else ');
         if(value){
-        alert('inside else if');
             var quesCont ;
             var incomes=value.data;
             for(var i=0;i<incomes.length;i++){
@@ -1333,7 +1329,6 @@ function paintRefinanceEmployed(divId,value) {
     }
 	//appUserDetails.employed ="true";
     if(flag){
-       alert('isside flag');
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var quesTxt = "About how much do you make a year";
     		var quesCont = getMultiTextQuestion(quesTxt);
@@ -1570,27 +1565,22 @@ function paintMySpouseIncome() {
 	applyLoanStatus = 3;
 	//appProgressBaar(3);
      var selfEmployedData={};
-     alert('appUserDetails'+appUserDetails);
-    if(appUserDetails)
+     if(appUserDetails)
         selfEmployedData={"selected":appUserDetails.customerSpouseDetail.isSelfEmployed,"data":appUserDetails.customerSpouseDetail.selfEmployedIncome};
-        alert('spouse selfEmployedData'+selfEmployedData);
-   
+     
     var employedData={};
     if(appUserDetails&&appUserDetails.customerSpouseEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
    
-    alert('spouse employedData'+employedData);
    
     var ssiData={};
     if(appUserDetails)
         ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
-       alert('spouse ssiData'+ssiData);
    
    
     var prData={};
     if(appUserDetails)
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
-	 alert('spouse prData'+ssiData);
 	
 	
 	var quesTxt = "Spouse Details :Select all that apply";
@@ -1801,16 +1791,12 @@ if (appUserDetails.loanType.description && appUserDetails.loanType.description =
 
 
 function paintSpouseRefinanceEmployed(divId,value) {
-   alert('value in spuse is '+value);
     var flag=true;
     if(value&&!value.selected){
         flag=false;
-        alert('inside if');
         }
     else{
-      alert('inside else');
         if(value){
-            alert('inside else if');
             var quesCont ;
             var incomes=value.data;
             for(var i=0;i<incomes.length;i++){
@@ -1828,7 +1814,6 @@ function paintSpouseRefinanceEmployed(divId,value) {
 
 	//appUserDetails.employed ="true";
     if(flag){
-    alert('inside spouse flag');
         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
             var quesTxt = "Spouse Income :About how much do you make a year";
             var quesCont = getMultiTextQuestionSpouse(quesTxt);
@@ -1879,7 +1864,7 @@ var wrapper = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html("Where Do You Work ?");
 
- val="";
+    val="";
     if(value&&value.employedAt)
         val=value.employedAt;
         

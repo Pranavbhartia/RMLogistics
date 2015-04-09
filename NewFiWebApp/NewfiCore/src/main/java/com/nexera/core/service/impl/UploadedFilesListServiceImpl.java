@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -552,9 +553,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			else if (contentType.contains("image/tiff"))
 				contentType = "image/tiff";
 
-			Path path = Paths.get(file.getAbsolutePath());
-			byte[] data = Files.readAllBytes(path);
-
+			byte[] data = null;
+			try {
+				data = readContentIntoByteArray(file);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			checkUploadVO = uploadFile(file, contentType, data, userId, loanId,
 			        assignedBy, isAssignedToNeed);
 
@@ -565,6 +569,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 
 		return checkUploadVO;
+	}
+
+	private static byte[] readContentIntoByteArray(File file) {
+		FileInputStream fileInputStream = null;
+		byte[] bFile = new byte[(int) file.length()];
+		try {
+			// convert file into array of bytes
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bFile);
+			fileInputStream.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bFile;
 	}
 
 	@Override
