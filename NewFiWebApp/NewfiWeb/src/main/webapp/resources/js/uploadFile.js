@@ -136,7 +136,7 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		}).html(SPLIT_DOC);
 	docAssign.append(assignOption);
 
-	if(listUploadedFiles.totalPages>1){
+	if(listUploadedFiles.isMiscellaneous && listUploadedFiles.totalPages>1 ){
 		docAssign.append(splitOption);
 	}
 	
