@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
 import com.nexera.common.entity.CustomerEmploymentIncome;
+import com.nexera.common.entity.CustomerSpouseEmploymentIncome;
 import com.nexera.common.entity.GovernmentQuestion;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
@@ -18,6 +19,7 @@ import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
+import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.GovernmentQuestionVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
@@ -115,10 +117,51 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setPurchaseDetails(convertTOPurchaseDetails(loanAppForm.getPurchaseDetails()));
 		 loanAppFormVO.setCustomerEmploymentIncome(convertTOCustomerEmploymentIncomeList(loanAppForm.getCustomerEmploymentIncome()));
 		 
+		 loanAppFormVO.setCustomerSpouseEmploymentIncome(convertTOCustomerSpouseEmploymentIncomeList(loanAppForm.getCustomerSpouseEmploymentIncome()));
 		 return loanAppFormVO;
 		 
 	 }
 
+
+	private List<CustomerSpouseEmploymentIncomeVO> convertTOCustomerSpouseEmploymentIncomeList(
+            List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncomelist) {
+		
+		if(customerSpouseEmploymentIncomelist ==  null || customerSpouseEmploymentIncomelist.size() == 0)
+			return null;
+		
+		List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncomeVOlist = new ArrayList<CustomerSpouseEmploymentIncomeVO>();
+		
+		CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncomeVO = null;
+		CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome = null;
+		for (int i = 0; i < customerSpouseEmploymentIncomelist.size(); i++) {
+			
+			customerSpouseEmploymentIncome = customerSpouseEmploymentIncomelist.get(i);
+			
+			customerSpouseEmploymentIncomeVO = convertTOCustomerSpouseEmploymentIncomeVO(customerSpouseEmploymentIncome);
+			customerSpouseEmploymentIncomeVOlist.add(customerSpouseEmploymentIncomeVO);
+		}
+		
+	    return customerSpouseEmploymentIncomeVOlist;
+    }
+
+	private CustomerSpouseEmploymentIncomeVO convertTOCustomerSpouseEmploymentIncomeVO(
+            CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome) {
+		
+		if(null == customerSpouseEmploymentIncome)
+			return null;
+		
+		CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncomeVO = new CustomerSpouseEmploymentIncomeVO();
+		CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncomeVOTemp = new CustomerSpouseEmploymentIncomeVO();
+		
+
+		customerSpouseEmploymentIncomeVOTemp.setId(customerSpouseEmploymentIncome.getId());
+		customerSpouseEmploymentIncomeVOTemp.setEmployedSince(customerSpouseEmploymentIncome.getEmployedSince());
+		customerSpouseEmploymentIncomeVOTemp.setEmployedAt(customerSpouseEmploymentIncome.getEmployedAt());		
+		customerSpouseEmploymentIncomeVOTemp.setEmployedIncomePreTax(customerSpouseEmploymentIncome.getEmployedIncomePreTax());
+		
+		customerSpouseEmploymentIncomeVO.setCustomerSpouseEmploymentIncome(customerSpouseEmploymentIncomeVOTemp);
+	    return customerSpouseEmploymentIncomeVO;
+    }
 
 	private List<CustomerEmploymentIncomeVO> convertTOCustomerEmploymentIncomeList(
             List<CustomerEmploymentIncome> customerEmploymentIncomelist) {

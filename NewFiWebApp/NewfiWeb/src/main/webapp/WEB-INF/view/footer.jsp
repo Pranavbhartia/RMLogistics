@@ -22,6 +22,7 @@
 <script src="resources/js/notification.js"></script>
 <script src="resources/js/milestone.js"></script>
 <script src="resources/js/jquery.knob.js"></script>
+<script src="resources/js/customerSpouseDetails.js"></script>
 <script src="resources/js/customer-application.js"></script>
 <script src="resources/js/include/jquery-maskMoney.js"></script>
 <script src="resources/js/lockRate.js"></script>

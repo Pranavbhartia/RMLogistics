@@ -854,8 +854,11 @@ public class LoanAppFormVO implements Serializable {
 		while(itr.hasNext()){
 			CustomerSpouseRetirementAccountDetails customerSpouseRetirementAccountDetails = new CustomerSpouseRetirementAccountDetails();
 			CustomerSpouseRetirementAccountDetailsVO custSpouseRetAccDetVO= itr.next();
+			
 			System.out.println("custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance()"+custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance());
+			if(null!= custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails() && custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getId()!=0)
 			customerSpouseRetirementAccountDetails.setId(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getId());
+			
 			customerSpouseRetirementAccountDetails.setAccountSubType(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getAccountSubType());
 			customerSpouseRetirementAccountDetails.setAmountfornewhome(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getAmountForNewHome());
 			customerSpouseRetirementAccountDetails.setCurrentaccountbalance(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance());	
@@ -926,10 +929,12 @@ public class LoanAppFormVO implements Serializable {
 			CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome = new CustomerSpouseEmploymentIncome();
 			CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO= itr.next();
 			System.out.println("customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt()"+customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			
+			customerSpouseEmploymentIncome.setId(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getId());
 			customerSpouseEmploymentIncome.setEmployedAt(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());
 			customerSpouseEmploymentIncome.setEmployedIncomePreTax(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
 			customerSpouseEmploymentIncome.setEmployedSince(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedSince());
+			
 			customerSpouseEmploymentIncomeList.add(customerSpouseEmploymentIncome);
 		}
 	    return customerSpouseEmploymentIncomeList;
