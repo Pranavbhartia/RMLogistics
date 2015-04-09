@@ -175,9 +175,8 @@ public class LoanServiceImpl implements LoanService {
 		List<UserVO> team = retreiveLoanTeam(loanVO);
 		for (UserVO user : team) {
 			if (null != user.getInternalUserDetail()) {
-				if (UserRolesEnum.LM.equalsName(user
-				        .getInternalUserDetail().getInternalUserRoleMasterVO()
-				        .getRoleName())) {
+				if (UserRolesEnum.LM.equalsName(user.getInternalUserDetail()
+				        .getInternalUserRoleMasterVO().getRoleName())) {
 					managerList.add(user);
 				}
 			}
@@ -393,7 +392,8 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanTeam> loanTeamList = loan.getLoanTeam();
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
-		loanCustomerVO.setTime(loan.getCreatedDate().toString());
+		loanCustomerVO.setTime(utils.getDateInUserLocaleFormatted(loan
+		        .getCreatedDate()));
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
