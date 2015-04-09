@@ -3,7 +3,7 @@
  */
 var SPLIT_DOC = "Split Document";
 var needIdtoAssign = null;
-
+var loanIdAssigned = new Array();
 
 function uploadNeededItemsPage() {
 	var userId = newfiObject.user.id;
@@ -72,6 +72,24 @@ function afterPDFSplit(response){
 }
 
 
+function checkforSimilarNeed(Object){
+	select = $(Object);
+	console.info(select.attr("ismiscellaneous"));
+	if(select.attr("ismiscellaneous")=="false" && select.val() != "Assign"){
+		$( ".assign" ).each(function() {
+			if($(this).attr("ismiscellaneous")=="false" && $(this).val() != "Assign" && !select.is($(this))){
+				if(select.val()==$(this).val()){
+					select.val('Assign');
+					showDialogPopup("Document Assignment", "Cannot assign same need to two or more document", function(){
+						return false;
+					});
+				}
+			}
+		});
+	}
+}
+
+
 function getDocumentUploadColumn(listUploadedFiles) {
 	var column = $('<div>').attr({
 		"class" : "document-cont-col float-left"
@@ -91,17 +109,18 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	
 	
 	
-	docImg.append(deactivete);
+//	docImg.append(deactivete);
 	
-	var img = $("<img>").attr({
-		 		"src" : "readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1"
-	}).load(function(){
+	if(listUploadedFiles.isMiscellaneous){
+		var img = $("<img>").attr({
+	 		"src" : "readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1"
+		}).load(function(){
 		docImg.css({
 			"background" : "url('readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1') no-repeat center",
-			"background-size" : "cover"
-			
+			"background-size" : "cover"	});
 		});
-	});
+	}
+	
 	
 	//var deleteLink = $("<p class='showAnchor' onclick=deactivate('"+listUploadedFiles.id+"')>").html("(  delete )");
 	
@@ -123,7 +142,8 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		"class" : "assign",
 		"fileId" : listUploadedFiles.id,
 		"fileName" : listUploadedFiles.fileName,
-		"onchange" : ""
+		"isMiscellaneous" : listUploadedFiles.isMiscellaneous,
+		"onchange" : "checkforSimilarNeed(this)"
 	}).change(function(){
 		checkForSplitOption(this);
 	});
@@ -187,6 +207,9 @@ function deactivate(Obj){
 
 function showFileLink(uploadedItems) {
 
+	
+	var loanNeed =neededItemListObject.resultObject.listLoanNeedsListVO;
+	
 	$.each(uploadedItems, function(index, value) {
 		var needId = value.needType;
 		$('#needDoc' + needId).removeClass('hide');
@@ -194,7 +217,26 @@ function showFileLink(uploadedItems) {
 		$('#needDoc' + needId).click(function() {
 			window.open("readFileAsStream.do?uuid="+value.uuidFileId+"&isThumb=0", '_blank');
 		});
+		$("doc-uploaded-icn_"+needId).addClass("hide");
+		
+		for(i in loanNeed){
+			var needIdAssigned =  loanNeed[i].needsListMaster.id;
+			if(needIdAssigned == needId){
+				var loanAssignments = new Object();
+				loanAssignments.needId = needId;
+				loanAssignments.loanId = loanNeed[i].id;
+				loanIdAssigned.push(loanAssignments);
+			}
+			
+		}
+		
 	});
+	
+	for(i in loanIdAssigned){
+		$(".assign option[value='"+loanIdAssigned[i].loanId+"']").remove();
+	}
+	
+	
 }
 
 

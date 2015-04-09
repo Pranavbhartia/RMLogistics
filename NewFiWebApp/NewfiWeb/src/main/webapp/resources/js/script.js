@@ -1311,7 +1311,8 @@ function getNeededDocRow(desc, needId) {
         "class": "needed-item-desc float-left"
     }).html(desc);
     var docUploadImage = $("<div>").attr({
-        "class": "doc-uploaded-icn float-left"
+        "class": "doc-uploaded-icn float-left",
+        "id" : "doc-uploaded-icn_"+needId
     }).data("needId", needId).on("click", uploadDocument);
     row.append(leftImage).append(rowDesc);
     var docRemoveImage = $('<div>').attr({

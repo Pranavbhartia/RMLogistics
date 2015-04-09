@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +46,7 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
+import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
@@ -229,6 +229,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
+		
 		List<File> filePaths = downloadFileFromService(fileIds);
 
 		File newFile = nexeraUtility.joinPDDocuments(filePaths);
@@ -238,9 +239,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
 		        data, userId, loanId, assignedBy, isAssignedToNeed);
-		for (Integer fileId : fileIds) {
-			deactivateFileUsingFileId(fileId);
-		}
+		
 
 		if (newFile.exists()) {
 			newFile.delete();
@@ -536,6 +535,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
+	@Transactional
 	public CheckUploadVO uploadFileByEmail(InputStream stream,
 	        String contentType, Integer userId, Integer loanId,
 	        Integer assignedBy) throws Exception {
@@ -629,7 +629,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			List<LQBedocVO> lqBedocVOs = lqbResponseVO
 			        .getDocumentResponseListVOs().getvBedocVO();
 			for (LQBedocVO lqBedocVO : lqBedocVOs) {
-				if (uuId.equals(fetchUUID(lqBedocVO.getDescription()))) {
+				if (uuId.equals(nexeraUtility.fetchUUID(lqBedocVO.getDescription()))) {
 					return lqBedocVO.getDocid();
 				}
 			}
@@ -700,10 +700,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		List<UploadedFilesList> timeModifiedUploadedList = new ArrayList<UploadedFilesList>();
 
-		List<String> uploadFileUUIDList = getFileUUIDList(loan
+		List<String> uploadFileUUIDList = nexeraUtility.getFileUUIDList(loan
 		        .getUploadedFileList());
-		List<String> uuidEdocList = getEdocsUUIDList(edocsList);
-		List<String> docIdList = getEdocsDocList(edocsList);
+		List<String> uuidEdocList = nexeraUtility.getEdocsUUIDList(edocsList);
+		List<String> docIdList = nexeraUtility.getEdocsDocList(edocsList);
 
 		for (UploadedFilesList uploadFiles : loan.getUploadedFileList()) {
 			if (loan.getUploadedFileList() != null) {
@@ -718,7 +718,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				continue;
 			}
 			String uuidDetails = edoc.getDescription();
-			String uuid = fetchUUID(uuidDetails);
+			String uuid = nexeraUtility.fetchUUID(uuidDetails);
 			if (uuid != null) {
 				if (!uploadFileUUIDList.contains(uuid)) {
 					insertFileIntoNewFi(edoc, loan, uuid);
@@ -771,41 +771,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return filesToDelete;
 	}
 
-	private List<String> getFileUUIDList(List<UploadedFilesList> uploadList) {
-
-		List<String> uploadFileUUIDList = new ArrayList<String>();
-		if (uploadList != null) {
-			for (UploadedFilesList uploadFiles : uploadList) {
-				uploadFileUUIDList.add(uploadFiles.getUuidFileId());
-			}
-		}
-		return uploadFileUUIDList;
-	}
-
-	private List<String> getEdocsUUIDList(List<LQBedocVO> lqbedocVOList) {
-		List<String> edocList = new ArrayList<String>();
-		for (LQBedocVO edoc : lqbedocVOList) {
-			String uuidDetails = edoc.getDescription();
-			String uuid = fetchUUID(uuidDetails);
-			if (uuid != null)
-				edocList.add(uuid);
-		}
-		return edocList;
-	}
-
-	private List<String> getEdocsDocList(List<LQBedocVO> lqbedocVOList) {
-		List<String> edocList = new ArrayList<String>();
-		for (LQBedocVO edoc : lqbedocVOList) {
-			edocList.add(edoc.getDocid());
-		}
-		return edocList;
-	}
+	
 
 	@Transactional
 	public UploadedFilesList getUploadedFileByLQBFieldId(String lqbfieldId) {
 		return uploadedFilesListDao.fetchUsingFileLQBFieldId(lqbfieldId);
 	}
 
+	@Override
 	@Transactional
 	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid) {
 		LOG.debug("This uuid does not exist hence adding this record in newfi database ");
@@ -831,27 +804,63 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setId(fileUploadId);
 	}
 
-	@Override
-	public String fetchUUID(String uuidString) {
-		if (uuidString != null) {
-			if (uuidString.contains("UUID")) {
-				String keyValuePair[] = uuidString.split(" ");
-				Map<String, String> map = new HashMap<String, String>();
-				for (String pair : keyValuePair) {
-					String[] entry = pair.split(":");
-					map.put(entry[0].trim(), entry[1].trim());
-				}
-				return map.get("UUID");
-
-			}
-		}
-		return null;
-
-	}
-
+	
 	@Override
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID) {
 		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
 	}
 
+	@Override
+	@Transactional
+	public Boolean assignFileToNeeds( Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
+		        Integer userId, Integer assignedBy )
+		    {
+				Boolean isSuccess = false;
+		        CommonResponseVO commonResponseVO = null;
+		        try {
+
+		            for ( Integer key : mapFileMappingToNeed.keySet() ) {
+		                UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId( key );
+		                LOG.info( "fetchUploadedFromLoanNeedId returned : " + filesList );
+		                List<Integer> fileIds = mapFileMappingToNeed.get( key );
+
+		                if ( filesList != null ) {
+		                    fileIds.add( filesList.getId() );
+		                }
+		                Integer newFileRowId = null;
+		                
+		                newFileRowId = mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
+		                
+		                for (Integer fileId : fileIds) {
+		        			deactivateFileUsingFileId(fileId);
+		        		}
+		                
+		                LOG.info( "new file pdf path :: " + newFileRowId );
+		                updateFileInLoanNeedList( key, newFileRowId );
+		                updateIsAssignedToTrue( newFileRowId );
+		               
+		               
+		           }
+
+		            isSuccess = true;
+		            //commonResponseVO = RestUtil.wrapObjectForSuccess( true );
+
+		        } catch ( Exception e ) {
+		            LOG.error( "exception in converting  : " + e.getMessage(), e );
+		            e.printStackTrace();
+		            isSuccess = false;
+		        }
+
+		        return isSuccess ;
+
+		    }
+
+	@Override
+	@Transactional
+	public  void updateAssignments(Integer needId , Integer fileId){
+		 LoanNeedsList loanNeed = loanService.fetchByNeedId( needId );
+		 updateFileInLoanNeedList( loanNeed.getId(), fileId );
+         updateIsAssignedToTrue( fileId );
+	}
+	
 }

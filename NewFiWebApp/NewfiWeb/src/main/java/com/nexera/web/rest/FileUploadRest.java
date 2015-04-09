@@ -50,6 +50,7 @@ import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.RestUtil;
+import com.nexera.workflow.exception.FatalException;
 
 
 @Controller
@@ -177,7 +178,13 @@ public class FileUploadRest
             List<FileAssignVO> val = new ArrayList<FileAssignVO>();
             val = mapper.readValue( fileAssignMent, typeRef );
             Map<Integer, List<Integer>> mapFileMappingToNeed = getmapFromFileAssignObj( val );
-            commonResponseVO = assignFileToNeeds( mapFileMappingToNeed, loanId, userId, assignedBy );
+            Boolean isSuccess  = uploadedFilesListService.assignFileToNeeds( mapFileMappingToNeed, loanId, userId, assignedBy );
+        
+            if(isSuccess){
+            	  commonResponseVO = RestUtil.wrapObjectForSuccess( true );
+            }else{
+            	throw new FatalException("Problem in assigning needs to files");
+            }
         } catch ( Exception e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -189,44 +196,8 @@ public class FileUploadRest
     }
 
 
-    public CommonResponseVO assignFileToNeeds( Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
-        Integer userId, Integer assignedBy )
-    {
-
-        CommonResponseVO commonResponseVO = null;
-        try {
-
-            for ( Integer key : mapFileMappingToNeed.keySet() ) {
-                UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId( key );
-                LOG.info( "fetchUploadedFromLoanNeedId returned : " + filesList );
-                List<Integer> fileIds = mapFileMappingToNeed.get( key );
-
-                if ( filesList != null ) {
-                    fileIds.add( filesList.getId() );
-                }
-                Integer fileToGetContent = null;
-                Integer newFileRowId = uploadedFilesListService.mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
-               
-                LOG.info( "new file pdf path :: " + newFileRowId );
-                uploadedFilesListService.updateFileInLoanNeedList( key, newFileRowId );
-                uploadedFilesListService.updateIsAssignedToTrue( newFileRowId );
-                fileToGetContent = newFileRowId;
-           }
-
-           
-            commonResponseVO = RestUtil.wrapObjectForSuccess( true );
-
-        } catch ( Exception e ) {
-            LOG.error( "exception in converting  : " + e.getMessage(), e );
-            e.printStackTrace();
-            commonResponseVO = RestUtil.wrapObjectForSuccess( false );
-        }
-
-        return commonResponseVO;
-
-    }
-
-    public Map<Integer, List<Integer>> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
+   
+    private Map<Integer, List<Integer>> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
     {
         Map<Integer, List<Integer>> mapFileAssign = new HashMap<Integer, List<Integer>>();
         for ( FileAssignVO fileAssign : fileAssignVO ) {
@@ -371,17 +342,8 @@ public class FileUploadRest
                     LOG.info( "Needs is null" );
                 } else {
                     LOG.info( "Assigning needs" );
-                    //If the document was mapped with a need, then update the DB with corresponding need.
-                    List<FileAssignVO> list = new ArrayList<FileAssignVO>();
-                    FileAssignVO fileAssignVO = new FileAssignVO();
-                    fileAssignVO.setFileId( checkFileUploaded.getUploadFileId() );
-
-                    LoanNeedsList loanNeedsList = loanService.fetchByNeedId( needId );
-
-                    fileAssignVO.setNeedListId( loanNeedsList.getId() );
-                    list.add( fileAssignVO );
-
-                    assignFileToNeeds( getmapFromFileAssignObj( list ), loanId, userID, assignedBy );
+                    
+                    uploadedFilesListService.updateAssignments(needId , checkFileUploaded.getUploadFileId());
                 }
                 
 				
@@ -394,8 +356,7 @@ public class FileUploadRest
     }
 
 
-    private User getUserObject()
-    {
+    private User getUserObject()    {
         final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if ( principal instanceof User ) {
             return (User) principal;
