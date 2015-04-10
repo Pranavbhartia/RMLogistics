@@ -240,7 +240,7 @@ public class LoanRestService {
 		user.setId(userID);
 
 		LoanDashboardVO responseVO = loanService
-		        .retrieveDashboardForMyLoans(user);
+		        .retrieveDashboardForWorkLoans(user);
 
 		return RestUtil.wrapObjectForSuccess(responseVO);
 	}

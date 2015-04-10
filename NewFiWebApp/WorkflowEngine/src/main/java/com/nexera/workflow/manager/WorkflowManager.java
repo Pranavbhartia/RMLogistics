@@ -56,52 +56,56 @@ public class WorkflowManager implements Callable<String> {
 	        WorkflowItemExec workflowItemExecution) {
 
 		LOGGER.debug("Updating workflow master status if its not updated ");
-		int workflowId = workflowItemExecution.getId();
 		WorkflowItemMaster workflowItemMaster = workflowItemExecution
 		        .getWorkflowItemMaster();
 		String result = executeMethod(workflowItemMaster, workflowItemExecution);
+		if (result != null) {
+			if (result.equalsIgnoreCase(WorkItemStatus.COMPLETED.getStatus())) {
 
-		if (result.equalsIgnoreCase(WorkItemStatus.COMPLETED.getStatus())) {
+				LOGGER.debug("Updating workflowitem master to completed ");
+				workflowItemExecution.setEndTime(new Date());
+				workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+				LOGGER.debug("Checking if it has an onSuccess item to execute ");
+				if (workflowItemExecution.getOnSuccessItem() != null) {
+					WorkflowItemExec succesItem = workflowItemExecution
+					        .getOnSuccessItem();
+					startWorkFlowItemExecution(succesItem);
 
-			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setEndTime(new Date());
-			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
-			        .getStatus());
-			workflowService
-			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
-			LOGGER.debug("Checking if it has an onSuccess item to execute ");
-			if (workflowItemExecution.getOnSuccessItem() != null) {
-				WorkflowItemExec succesItem = workflowItemExecution
-				        .getOnSuccessItem();
-				startWorkFlowItemExecution(succesItem);
+				}
 
+			} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
+
+				LOGGER.debug("Updating workflowitem master to completed ");
+				workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+				LOGGER.debug("Checking if it has an onFailure item to execute ");
+				// TODO test this Might Have issues regarding parent of success
+				// workflow item
+				/*
+				 * if (workflowItemMaster.getOnFailure() != null) {
+				 * WorkflowItemMaster failureWorkflowItemMaster =
+				 * workflowItemMaster .getOnFailure(); WorkflowItemExec
+				 * failureWorkflowItemExec = workflowService
+				 * .setWorkflowItemIntoExecution(workflowItemExecution
+				 * .getParentWorkflow(), failureWorkflowItemMaster,
+				 * workflowItemExecution .getParentWorkflowItemExec());
+				 * startWorkFlowItemExecution(failureWorkflowItemExec); }
+				 */
+
+			} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
+				workflowItemExecution.setStatus(WorkItemStatus.PENDING
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 			}
-
-		} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
-
-			LOGGER.debug("Updating workflowitem master to completed ");
-			workflowItemExecution.setStatus(WorkItemStatus.COMPLETED
-			        .getStatus());
-			workflowService
-			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
-			LOGGER.debug("Checking if it has an onFailure item to execute ");
-			// TODO test this Might Have issues regarding parent of success
-			// workflow item
-			/*
-			 * if (workflowItemMaster.getOnFailure() != null) {
-			 * WorkflowItemMaster failureWorkflowItemMaster = workflowItemMaster
-			 * .getOnFailure(); WorkflowItemExec failureWorkflowItemExec =
-			 * workflowService
-			 * .setWorkflowItemIntoExecution(workflowItemExecution
-			 * .getParentWorkflow(), failureWorkflowItemMaster,
-			 * workflowItemExecution .getParentWorkflowItemExec());
-			 * startWorkFlowItemExecution(failureWorkflowItemExec); }
-			 */
-
-		} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
-			workflowItemExecution.setStatus(WorkItemStatus.PENDING.getStatus());
-			workflowService
-			        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+		} else {
+			LOGGER.error("Invalid result received for this milestone "
+			        + workflowItemExecution.getId());
 		}
 
 		return result;

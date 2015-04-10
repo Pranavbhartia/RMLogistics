@@ -89,6 +89,32 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "cust-personal-info-header"
 	}).html("Personal Information");
 
+	
+	var text=$('<div>').attr({
+		"class" : " cust-profile-url float-right"
+	}).html("Profile URL :");	
+	
+	var emailInput = $('<input>').attr({
+		"class" : "cust-personal-info-header-url loan-detail-link",
+		"id" : "profileUrlId",
+		"readonly":"readonly",
+		"value":user.userProfileBaseUrl+""+user.username	
+	}).on("click",function(e){
+		$(this).zclip({
+			path: "resources/js/ZeroClipboard.swf",
+			copy: function(e){
+				e.preventDefault();
+				showToastMessage("copied to clipboard");
+			    return $(this).val();
+			    }
+			});
+	});
+		
+	if(user.userRole.roleDescription=="Realtor" || user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+    text.append(emailInput);
+	header.append(text);
+	}
+
 	var container = getLoanPersonalInfoContainer(user);
 
 	wrapper.append(header).append(container);
@@ -942,7 +968,7 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row agent-state-dropdown-row clearfix",
 			"id" : stateList[i].id,
-			"name":  stateList[i].stateName
+			"name":  stateList[i].stateCode
 		});
 		var checkBox = $('<div>').attr({
 				"class" : "float-left doc-checkbox",
@@ -957,7 +983,7 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		var textRow = $('<div>').attr({
 			"class" : "float-left state-row",
 			"id" : "stateName_"+stateList[i].id
-		}).html(stateList[i].stateName);
+		}).html(stateList[i].stateCode);
 		stateRow.append(checkBox).append(textRow);
 		stateRow.bind('click',function(e){
 			e.stopPropagation();
@@ -1014,7 +1040,7 @@ function findStateNameForStateId(stateId) {
 	
 	for(var i=0; i<stateList.length; i++){
 		if(stateList[i].id == stateId){
-			return stateList[i].stateName;
+			return stateList[i].stateCode;
 		}
 	}
 	

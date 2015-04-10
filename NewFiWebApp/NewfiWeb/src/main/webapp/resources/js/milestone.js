@@ -377,8 +377,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to view Underwriting status";
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				
 			}			
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
 			{
@@ -395,7 +395,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
-				data.userID=workFlowContext.customerId;
+				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
@@ -949,7 +949,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 
-	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail);
+	workFlowContext.init(selectedUserDetail.loanID,createNewfiUser());
 
 	workFlowContext.initialize("AGENT", function() {
 	});
@@ -1264,7 +1264,12 @@ function milestoneChildEventHandler(event) {
 		 window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
 	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
 	 	event.stopPropagation();
-		window.location.hash="#myLoan/lock-my-rate"
+	 	if(userIsRealtor()){
+	 		window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
+	 	}else{
+	 		window.location.hash="#myLoan/lock-my-rate"	
+	 	}
+		
 	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
@@ -1277,7 +1282,10 @@ function milestoneChildEventHandler(event) {
 	else if ($(event.target).attr("data-text") == "MANAGE_PHOTO" || $(event.target).attr("data-text") == "MANAGE_ACCOUNT" ||
 			$(event.target).attr("data-text") == "SMS_TEXTING_PREF") {
 	 	event.stopPropagation();
-	 	showCustomerProfilePage();
+	 	if(!userIsRealtor()){
+	 		showCustomerProfilePage();	
+	 	}
+	 	
 	}
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();

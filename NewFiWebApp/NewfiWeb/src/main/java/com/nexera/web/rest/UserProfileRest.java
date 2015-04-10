@@ -28,9 +28,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
+import com.nexera.common.commons.PropertyFileReader;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.InputValidationException;
@@ -71,6 +74,12 @@ public class UserProfileRest {
 
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private Utils utils;
+
+	@Autowired
+	private PropertyFileReader propertyFileReader;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
@@ -123,12 +132,15 @@ public class UserProfileRest {
 		LOG.info("completeprofile profile get call : ");
 		Gson gson = new Gson();
 		User user = getUserObject();
+		String userProfileUrl = propertyFileReader.getProperty(
+		        CommonConstants.APPLICATION_PROPERTIES_FILE, "profile.url");
 
 		Integer userid = user.getId();
 		UserVO userVO = null;
 		String userprofile = null;
 		try {
 			userVO = userProfileService.findUser(userid);
+			userVO.setUserProfileBaseUrl(userProfileUrl);
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
@@ -179,13 +191,15 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO changeUserPassword(@RequestBody String changePasswordData) {
+	public @ResponseBody CommonResponseVO changeUserPassword(
+	        @RequestBody String changePasswordData) {
 		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
-		 
-		UpdatePasswordVO updatePassword = gson.fromJson(changePasswordData, UpdatePasswordVO.class);
-				
+
+		UpdatePasswordVO updatePassword = gson.fromJson(changePasswordData,
+		        UpdatePasswordVO.class);
+
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO errors = new ErrorVO();
 
@@ -333,6 +347,19 @@ public class UserProfileRest {
 			userVO.setUsername(userVO.getEmailId());
 		try {
 			userVO = userProfileService.createNewUserAndSendMail(userVO);
+			if (userVO.getUserRole().getRoleCd()
+			        .equals(UserRolesEnum.REALTOR.toString())) {
+				/*
+				 * This is the case when the loan manager adds a realtor, the
+				 * default assignment should happen now.
+				 */
+				if (UserRolesEnum.LM.getName().equals(
+				        utils.getLoggedInUserRole().getName())) {
+					// User is Loan Manager
+					userProfileService.addDefaultLM(userVO);
+				}
+
+			}
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

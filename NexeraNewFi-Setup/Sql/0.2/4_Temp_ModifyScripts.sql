@@ -50,3 +50,27 @@ ALTER TABLE `newfi_schema`.`workflowitemmaster`
    
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
    ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`
+
+
+
+#Lavanya on 10th April 4:49 PM IST
+
+DROP TABLE IF EXISTS `template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(45) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `value` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+insert into template values(1,'PAYMENT_TEMPLATE_ID','Payment Mail','2015-04-10 12:53:34','7aac7754-7115-488d-a108-d64e505c47d7');
+insert into template values(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10 12:53:34','8b40d8f2-47b4-4ad7-8108-24fe7aac2ab8');
+insert into template values(3,'NEW_NOTE_TEMPLATE','New Note Created','2015-04-10 12:53:34','864e95f8-99b7-4366-95e7-52dd791e71f2');
+insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','0fef5375-ba8c-4820-939b-977ef30c58b1');
+
+

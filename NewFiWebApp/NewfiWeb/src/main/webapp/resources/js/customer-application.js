@@ -253,16 +253,18 @@ function getQuestionsContainer(questions) {
     return questionsContainer;
 }
 
-function getApplicationQuestion(question) {
+function getApplicationQuestion(question,val) {
     var quesCont;
     if (question.type == "mcq") {
-        quesCont = getApplicationMultipleChoiceQues(question);
+        quesCont = getApplicationMultipleChoiceQues(question,val);
     } else if (question.type == "desc") {
+        if(val)
+            question.value=val
         quesCont = getApplicationTextQues(question);
     } else if (question.type == "select") {
-        quesCont = getApplicationSelectQues(question);
+        quesCont = getApplicationSelectQues(question,val);
     } else if (question.type == "yesno") {
-        quesCont = getApplicationYesNoQues(question);
+        quesCont = getApplicationYesNoQues(question,val);
     }
     /*else if (question.type == "yearMonth") {
         quesCont = getMonthYearTextQuestion(question);
@@ -329,7 +331,7 @@ function getContextApplicationSelectQues(contxt) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 
-function getApplicationSelectQues(question) {
+function getApplicationSelectQues(question,val) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -352,7 +354,7 @@ function getApplicationSelectQues(question) {
     var dropDownContainer = $('<div>').attr({
         "class": "app-dropdown-cont hide"
     });
-
+    var selVal;
     for (var i = 0; i < question.options.length; i++) {
         var option = question.options[i];
         var optionCont = $('<div>').attr({
@@ -369,15 +371,22 @@ function getApplicationSelectQues(question) {
                     '.app-option-selected').data("value",$(this).data("value"));
                     $(this).closest('.app-dropdown-cont').toggle();
                 });
+            if(option.value==val)
+                selVal=optionCont;
         dropDownContainer.append(optionCont);
     }
-    
     var val=getMappedValue(question);
     if(val)
     	setDropDownData(selectedOption, question.options,getMappedValue(question));
     
     optionsContainer.append(selectedOption).append(dropDownContainer);
 
+    if(selVal){
+        $(selVal).closest('.app-options-cont').find(
+                        '.app-option-selected').html($(selVal).html());
+        $(selVal).closest('.app-options-cont').find(
+        '.app-option-selected').data("value",$(selVal).data("value"));
+    }
     return container.append(quesTextCont).append(optionsContainer);
 }
 
@@ -463,7 +472,7 @@ quesTextCont.append(requird)
     return container.append(quesTextCont).append(optionsContainer);
 }
 
-function getApplicationMultipleChoiceQues(question) {
+function getApplicationMultipleChoiceQues(question,value) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -479,8 +488,12 @@ function getApplicationMultipleChoiceQues(question) {
 
     for (var i = 0; i < question.options.length; i++) {
         var option = question.options[i];
+        var selctedClas="";
+        if(value&&value==option.value){
+            selctedClas="app-option-checked";
+        }
         var optionCont = $('<div>').attr({
-            "class": "app-option"
+            "class": "app-option "+selctedClas
         }).data({
             value: option.value
         }).html(option.text)
@@ -1254,13 +1267,13 @@ function paintMyIncome() {
 	        var otherContainer=assets[2];
 	        
 	        if($(bankContainer).find('.app-option-checked')){
-	        	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","bankAccount","bankAccountCurrentBankBalance","bankAccountUsefornewhome");
+	        	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
 	        }
 			if($(retirementContainer).find('.app-option-checked')){
-				appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountType","accountTypeCurrentBankBalance","accountTypeUseForNewHome");
+				appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
 		    }
 			if($(otherContainer).find('.app-option-checked')){
-				appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","otherAccounts","otherAccountCurrentBankBalance","otherAccountsUseForNewHome");
+				appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
 			}
 			
 			
@@ -1282,12 +1295,14 @@ function getAccountValues(element,key,accType,balance,forNewHome){
 	var values=[];
 	$(element).find('.ce-option-ques-wrapper').each(function(){
 		
-		var accountSubType = $(this).find('.app-options-cont[name="'+accType+'"]').find('.app-option-selected').text();
+		var id =$(this).find('.ce-rp-ques-text').find('.ce-input[name="id"]').attr("value");
+		var accountSubType = $(this).find('.app-options-cont[name="'+accType+'"]').find('.app-option-selected').data("value");
 		var currentAccountBalance = $(this).find('input[name="'+balance+'"]').val();
 		var  amountForNewHome =  $(this).find('input[name="'+forNewHome+'"]').val();
 		
 		var accDetailTemp = {};
 		var accDetail = {};
+		accDetail.id = id;
 		accDetail.accountSubType = accountSubType;
 		accDetail.currentAccountBalance = currentAccountBalance;
 		accDetail.amountForNewHome = amountForNewHome;
@@ -2098,7 +2113,7 @@ function paintCustomerApplicationPageStep4a() {
     });
 
 	var options = [ {
-		"text" : "No thank you. Let�s move on",
+		"text" : "No thank you. Let's move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -2477,7 +2492,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 
 function applicationFormSumbit(){
 	
-	createLoan();
+	//createLoan(appUserDetails);
 	saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
@@ -2491,107 +2506,107 @@ var tempdata = [{
     "rateVO": [{
         "teaserRate": "3.000",
         "closingCost": "0",
-        "APR": "1",
+        "APR": "1"
     }, {
         "teaserRate": "2.875",
         "closingCost": "$1,782.62",
-        "APR": "2",
+        "APR": "2"
     }, {
         "teaserRate": "2.750",
         "closingCost": "$3,512.43",
-        "APR": "3",
+        "APR": "3"
     }]
 }, {
     "loanDuration": "20 YR FIXED CONFORMING",
     "rateVO": [{
         "teaserRate": "3.625",
         "closingCost": "0",
-        "APR": "1",
+        "APR": "1"
     }, {
         "teaserRate": "3.500",
         "closingCost": "$1,155.53",
-        "APR": "2",
+        "APR": "2"
     }, {
         "teaserRate": "3.375",
         "closingCost": "$3,658.15",
-        "APR": "3",
+        "APR": "3"
     }, {
         "teaserRate": "3.250",
         "closingCost": "$6,166.37",
-        "APR": "4",
+        "APR": "4"
     }]
 }, {
     "loanDuration": "30 YR FIXED CONFORMING",
     "rateVO": [{
         "teaserRate": "3.875",
         "closingCost": "0",
-        "APR": "1",
+        "APR": "1"
     }, {
         "teaserRate": "3.750",
         "closingCost": "$493.10",
-        "APR": "2",
+        "APR": "2"
     }, {
         "teaserRate": "3.625",
         "closingCost": "$2,872.52",
-        "APR": "3",
+        "APR": "3"
     }, {
         "teaserRate": "3.500",
         "closingCost": "$5,660.73",
-        "APR": "4",
+        "APR": "4"
     }]
 }, {
     "loanDuration": "5/1 1 YR LIBOR CONFORMING  2/2/5 30 YR ARM",
     "rateVO": [{
         "teaserRate": "3.125",
         "closingCost": "0",
-        "APR": "1",
+        "APR": "1"
     }, {
         "teaserRate": "3.000",
         "closingCost": "$425.20",
-        "APR": "2",
+        "APR": "2"
     }, {
         "teaserRate": "2.875",
         "closingCost": "$1,443.82",
-        "APR": "3",
+        "APR": "3"
     }, {
         "teaserRate": "2.750",
         "closingCost": "$2,456.83",
-        "APR": "4",
+        "APR": "4"
     }, {
         "teaserRate": "2.625",
         "closingCost": "$3,472.65",
-        "APR": "5",
+        "APR": "5"
     }, {
         "teaserRate": "2.500",
         "closingCost": "$4,796.47",
-        "APR": "6",
+        "APR": "6"
     }]
 }, {
     "loanDuration": "7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM",
     "rateVO": [{
         "teaserRate": "3.250",
         "closingCost": "0",
-        "APR": "1",
+        "APR": "1"
     }, {
         "teaserRate": "3.125",
         "closingCost": "$347.38",
-        "APR": "2",
+        "APR": "2"
     }, {
         "teaserRate": "3.000",
         "closingCost": "$1,643.20",
-        "APR": "3",
+        "APR": "3"
     }, {
         "teaserRate": "2.875",
         "closingCost": "$2,950.22",
-        "APR": "4",
+        "APR": "4"
     }, {
         "teaserRate": "2.750",
         "closingCost": "$4,262.83",
-        "APR": "5",
+        "APR": "5"
     }, {
         "teaserRate": "2.625",
         "closingCost": "$5,569.85",
-        "APR": "6",
+        "APR": "6"
     }]
 }];
  
@@ -3790,7 +3805,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     });
 
 	var options = [ {
-		"text" : "No thank you. Let�s move on",
+		"text" : "No thank you. Let's move on",
 		"name" : name,
 		"value" : 0
 	}];
@@ -3901,9 +3916,8 @@ $.ajax({
 
 
 function paintLockRate(lqbData, appUserDetails) {
-    //console.log("lqbData..."+JSON.stringify(lqbData));
-    //console.log("appUserDetails..."+JSON.stringify(appUserDetails));
-    paintFixYourRatePage1(lqbData, appUserDetails);
+   
+    fixAndLoakYourRatePage(lqbData, appUserDetails);
 }
  
 

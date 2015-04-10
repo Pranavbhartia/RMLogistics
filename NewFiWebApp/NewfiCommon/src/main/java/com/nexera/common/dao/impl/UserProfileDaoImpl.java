@@ -744,4 +744,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		LOG.info("updated Successfully");
 		return result;
 	}
+
+	@Override
+	public void updateLMID(Integer realtorID, int loanManagerId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE RealtorDetail realtor set realtor.defaultLoanManager = :LM "
+		        + "WHERE realtor.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", realtorID);
+		query.setEntity("LM", new User(loanManagerId));
+		query.executeUpdate();
+	}
 }
