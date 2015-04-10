@@ -308,6 +308,9 @@ public class LoanServiceImpl implements LoanService {
 
 	private boolean checkIfUserIsAdmin(UserVO vo) {
 		// TODO Auto-generated method stub
+		if (vo.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+			return Boolean.FALSE;
+		}
 		if (vo.getUserRole().getId() == (UserRolesEnum.SYSTEM.getRoleId())
 		        || vo.getInternalUserDetail().getInternalUserRoleMasterVO()
 		                .getId() == UserRolesEnum.SM.getRoleId()) {
