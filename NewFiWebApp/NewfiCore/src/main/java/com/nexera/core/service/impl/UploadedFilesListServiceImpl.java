@@ -54,7 +54,6 @@ import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
-import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
@@ -846,9 +845,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
 	}
 
-	@Override
 	@Transactional
-	public void changeWorkItem(
+	private void changeWorkItem(
 	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID) {
 		// Start
 		// Loan ID : get LoanManagerWFID from the loan object
@@ -896,7 +894,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
 	        Integer userId, Integer assignedBy) {
 		Boolean isSuccess = false;
-		CommonResponseVO commonResponseVO = null;
 		try {
 
 			for (Integer key : mapFileMappingToNeed.keySet()) {
@@ -924,8 +921,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 			changeWorkItem(mapFileMappingToNeed, loanId);
 			isSuccess = true;
-			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
-
 		} catch (Exception e) {
 			LOG.error("exception in converting  : " + e.getMessage(), e);
 			e.printStackTrace();
