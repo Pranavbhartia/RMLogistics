@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class TeaserRateResponseVO {
 
 	private String loanDuration;
+	private String loanNumber;
 	private ArrayList<LqbTeaserRateVo> rateVO;
 	
 	
@@ -21,6 +22,12 @@ public class TeaserRateResponseVO {
 	}
 	public void setRateVO(ArrayList<LqbTeaserRateVo> rateVO) {
 		this.rateVO = rateVO;
+	}
+	public String getLoanNumber() {
+		return loanNumber;
+	}
+	public void setLoanNumber(String loanNumber) {
+		this.loanNumber = loanNumber;
 	}
 	
 }
