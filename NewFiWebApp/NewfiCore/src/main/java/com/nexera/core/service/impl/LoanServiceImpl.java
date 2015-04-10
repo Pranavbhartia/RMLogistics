@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -1182,6 +1183,12 @@ public class LoanServiceImpl implements LoanService {
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
+	}
+
+	@Override
+	@Transactional
+	public void updateLoanAppFee(int loanId, BigDecimal newAppFee) {
+		loanDao.updateLoanAppFee(loanId, newAppFee);
 	}
 
 }

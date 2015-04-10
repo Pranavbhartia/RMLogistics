@@ -1,7 +1,6 @@
 package com.nexera.newfi.workflow.service.impl;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,15 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -30,6 +27,8 @@ import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
@@ -39,6 +38,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
@@ -65,25 +65,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private NeedsListService needsListService;
 	@Autowired
 	Utils utils;
-
-	@Override
-	public String getJsonStringOfMap(HashMap<String, Object> map) {
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter sw = new StringWriter();
-		try {
-			mapper.writeValue(sw, map);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-			return null;
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return sw.toString();
-	}
+	@Autowired
+	private TransactionService transactionService;
 
 	@Override
 	public LoanAppForm getLoanAppFormDetails(Loan loan) {
@@ -259,6 +242,45 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 				        loanNeedsList.getUploadFileId().getS3path());
 			}
 		}
-		return getJsonStringOfMap(map);
+		return utils.getJsonStringOfMap(map);
+	}
+
+	@Override
+	public String getRenderInfoForApplicationFee(int loanID) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String status = null;
+
+		LoanApplicationFee loanApplicationFee = transactionService
+		        .findByLoan(new LoanVO(loanID));
+		if (loanApplicationFee != null
+		        && loanApplicationFee.getPaymentDate() != null) {
+			status = LoanStatus.paymentSuccessStatusMessage;
+		} else {
+			status = LoanStatus.paymentPendingStatusMessage;
+			int amount = 0;
+			BigDecimal configuredAmount = null;
+			try {
+				LoanVO loan = loanService.getLoanByID(loanID);
+				// Configured Amount : Loan Table App Fee - set my SM
+				configuredAmount = loan.getAppFee();
+				amount = loanService.getApplicationFee(loanID);
+			} catch (NoRecordsFetchedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidInputException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (configuredAmount == null) {
+				map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, amount);
+			} else {
+				map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME,
+				        configuredAmount);
+			}
+		}
+		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+		        status);
+
+		return utils.getJsonStringOfMap(map);
 	}
 }

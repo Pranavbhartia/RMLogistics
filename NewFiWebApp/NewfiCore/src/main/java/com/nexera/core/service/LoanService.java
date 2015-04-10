@@ -1,5 +1,6 @@
 package com.nexera.core.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
@@ -145,4 +146,5 @@ public interface LoanService {
 
 	public LoanDashboardVO searchUsers(LoanUserSearchVO searchVO);
 
+	public void updateLoanAppFee(int loanId, BigDecimal newAppFee);
 }
