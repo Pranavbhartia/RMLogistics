@@ -360,6 +360,13 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "registerNew.do")
+	public ModelAndView showCustomerRegisterNewPage() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("registerNew");
+		return mav;
+	}
+	
 	@RequestMapping(value = "forgotPassword.do")
 	public ModelAndView showForgetPasswordPage() {
 		ModelAndView mav = new ModelAndView();
