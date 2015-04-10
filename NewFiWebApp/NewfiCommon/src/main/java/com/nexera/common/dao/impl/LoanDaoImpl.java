@@ -303,16 +303,20 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			}
 
 			List<LoanTeam> loanTeamList = criteria.list();
-
+			List<Integer> loanIdList = new ArrayList<Integer>();
+			int i = 0;
 			if (loanTeamList != null) {
 				for (LoanTeam loanTeam : loanTeamList) {
 					Hibernate.initialize(loanTeam.getLoan());
 					Loan loan = loanTeam.getLoan();
-					for (int loanProgressStatusId : loanProgressStatusIds) {
-						if (loan.getLoanProgressStatus().getId() == loanProgressStatusId) {
-							loanListForUser.add(loan);
-						}
+					if (loanIdList.contains(loan.getId())) {
+						continue;
+					}
 
+					if (checkIfIdIsInList(loan.getLoanProgressStatus().getId(),
+					        loanProgressStatusIds)) {
+						loanListForUser.add(loan);
+						loanIdList.add(loan.getId());
 					}
 
 				}
@@ -325,6 +329,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        "Exception caught in retrieveLoanForDashboard() ",
 			        hibernateException);
 		}
+	}
+
+	private boolean checkIfIdIsInList(int id, int[] loanProgressStatusIds) {
+		// TODO Auto-generated method stub
+		for (int i : loanProgressStatusIds) {
+			if (i == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

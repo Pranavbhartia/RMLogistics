@@ -35,6 +35,7 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.commons.ProfileCompletionStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -111,6 +112,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
+
+	@Autowired
+	private Utils utils;
 
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
@@ -900,7 +904,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        UndeliveredEmailException, NoRecordsFetchedException {
 
 		Reader reader = new InputStreamReader(file.getInputStream());
-		CSVReader csvReader = new CSVReader(reader,',', CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
+		CSVReader csvReader = new CSVReader(reader, ',',
+		        CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
 		int lineCounter = 1;
 
 		JsonObject errors = new JsonObject();
@@ -1080,5 +1085,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTemplateId(newUserMailTemplateId);
 
 		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	@Override
+	public void addDefaultLM(UserVO userVO) {
+		// Get loan manager Id
+		;
+		userProfileDao.updateLMID(userVO.getRealtorDetail().getId(), utils
+		        .getLoggedInUser().getId());
 	}
 }

@@ -23,6 +23,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.EmailRecipientTypeEnum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.MessageHierarchyVO;
@@ -184,8 +185,16 @@ public class MessageServiceImpl implements MessageService {
 
 	private List<String> getUserRoles(List<MessageUserVO> otherUsers) {
 		List<String> userroleList = new ArrayList<String>();
+		boolean internalUserPresent = Boolean.FALSE;
 		for (MessageUserVO messageUserVO : otherUsers) {
 			userroleList.add(messageUserVO.getRoleName());
+			if (messageUserVO.getRoleName().equals(
+			        UserRolesEnum.INTERNAL.getName())) {
+				internalUserPresent = Boolean.TRUE;
+			}
+		}
+		if (!internalUserPresent) {
+			userroleList.add(UserRolesEnum.INTERNAL.getName());
 		}
 		return userroleList;
 	}
