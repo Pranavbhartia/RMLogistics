@@ -1,5 +1,9 @@
 package com.nexera.core.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -147,6 +151,16 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		} else {
 			email.setText(emailEntity.getBody());
 		}
+		if(emailEntity.getAttachmentStream() != null){
+			try {
+				ByteArrayOutputStream  arrayOutputStream= emailEntity.getAttachmentStream();
+				InputStream inputStream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
+				email.addAttachment("receipt.pdf", inputStream);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	
 
 		for (Entry<String, String[]> entry : emailEntity.getTokenMap()
 		        .entrySet()) {
