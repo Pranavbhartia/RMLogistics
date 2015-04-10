@@ -14,13 +14,13 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.EmailRecipientTypeEnum;
 import com.nexera.common.enums.UserRolesEnum;
@@ -39,6 +39,7 @@ import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.mongo.service.MongoCoreMessageService;
 
 @Component
@@ -54,10 +55,10 @@ public class MessageServiceImpl implements MessageService {
 	Utils utils;
 
 	@Autowired
-	MongoCoreMessageService mongoMessageService;
+	TemplateService templateService;
 
-	@Value("${NEW_NOTE_TEMPLATE}")
-	private String sendGridTemplateName;
+	@Autowired
+	MongoCoreMessageService mongoMessageService;
 
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
@@ -107,6 +108,8 @@ public class MessageServiceImpl implements MessageService {
 	private void sendEmail(MessageVO messagesVO, String mongoMessageId) {
 
 		EmailVO emailVO = new EmailVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_NOTE);
 
 		// Set to address, it will be all the users to whom the message is
 		// targetted
@@ -152,7 +155,7 @@ public class MessageServiceImpl implements MessageService {
 
 		// Set template information
 		emailVO.setTemplateBased(Boolean.TRUE);
-		emailVO.setTemplateId(sendGridTemplateName);
+		emailVO.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendAsyncMail(emailVO);
 
@@ -246,6 +249,7 @@ public class MessageServiceImpl implements MessageService {
 				messageVOList.add(messageVO);
 			}
 			Collections.sort(messageVOList, new Comparator<MessageVO>() {
+				@Override
 				public int compare(MessageVO o1, MessageVO o2) {
 					if (o1.getSortOrderDate() == null
 					        || o2.getSortOrderDate() == null)

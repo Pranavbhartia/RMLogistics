@@ -39,4 +39,10 @@ public class TemplateServiceImpl implements TemplateService {
 		return templateVOs;
 	}
 
+	@Transactional
+	@Override
+	public Template getTemplateByKey(String key) {
+		return templateDao.getTemplateByKey(key);
+	}
+
 }
