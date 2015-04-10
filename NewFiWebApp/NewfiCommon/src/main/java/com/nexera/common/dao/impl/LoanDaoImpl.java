@@ -38,6 +38,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -246,27 +247,24 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	}
 
-	public List<Loan> retrieveLoanDetailsOnSearch(String userName,
-	        int[] loanProgressStatus) {
-		
-		/*CReated by Rahul Belwal...
-		 * This method should be able to get integer array from the rest service
-		 * 
-		 * i've tested it using user defined array inside this method, and its working fine for that
-		 */
+	public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
 
 		try {
 
 			ArrayList<Integer> progressStatusList = new ArrayList<Integer>(
-			        loanProgressStatus.length);
-			for (int i = 0; i < loanProgressStatus.length; i++)
-				progressStatusList.add(Integer.valueOf(loanProgressStatus[i]));
+			        searchVO.getProgressStatus().length);
+			for (int i = 0; i < searchVO.getProgressStatus().length; i++) {
+				progressStatusList.add(Integer.valueOf(searchVO
+				        .getProgressStatus()[i]));
+			}
 
 			List<Loan> loanListForSearchedUser = new ArrayList<Loan>();
+
 			Session session = sessionFactory.getCurrentSession();
 
 			String queryStr = "FROM Loan WHERE user.firstName like '"
-			        + userName + "%' AND loanProgressStatus.id IN (:ids)";
+			        + searchVO.getUserName()
+			        + "%' AND loanProgressStatus.id IN (:ids)";
 			Query query = session.createQuery(queryStr).setParameterList("ids",
 			        progressStatusList);
 

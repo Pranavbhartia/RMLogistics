@@ -50,6 +50,7 @@ import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
+import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
@@ -1170,24 +1171,13 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public LoanDashboardVO searchUsers(String userName, int[] loanProgressStatus) {
+	public LoanDashboardVO searchUsers(LoanUserSearchVO searchVO) {
 
-		/*
-		 * This function is called from Search of Loan manager, where in, the
-		 * loan manager would have selected the loanprogress filter. the int[]
-		 * passed contains the applicable filter in this case. Expected output:
-		 * Retrieva all loans which are in the status as per the int[] input
-		 * paramter and whose name starts with userName paramter passed.
-		 * 
-		 * Refer to the method:LoanDashboardVO
-		 * retrieveDashboardForWorkLoans(UserVO userVO) For a similar
-		 * implementation which works with a particular loanManager userId
-		 */
-		List<Loan> loanList = loanDao.retrieveLoanDetailsOnSearch(userName,
-		        loanProgressStatus);
+		List<Loan> loanList = loanDao.retrieveLoanDetailsOnSearch(searchVO);
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
 	}
+
 }
