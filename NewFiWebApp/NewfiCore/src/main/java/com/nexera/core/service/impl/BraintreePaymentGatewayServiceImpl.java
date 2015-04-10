@@ -33,6 +33,7 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.TransactionDetailsDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.CreditCardException;
@@ -47,6 +48,7 @@ import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.ReceiptPdfService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 
 /**
  * @author karthik This is the class that has methods to make api calls to
@@ -74,12 +76,8 @@ public class BraintreePaymentGatewayServiceImpl implements
 	@Value("${ENVIRONMENT_SANDBOX}")
 	private int sandboxMode;
 
-	@Value("${PAYMENT_TEMPLATE_ID}")
-	private String paymentTemplateId;
-	
-	@Value("${PAYMENT_UNSUCCESSFUL_TEMPLATE_ID}")
-	private String paymentUnsuccessfulTemplateId;
-	
+	@Autowired
+	private TemplateService templateService;
 
 	@Autowired
 	private LoanDao loanDao;
@@ -95,6 +93,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 	@Autowired
 	private ReceiptPdfService receiptPdfService;
+
 	/**
 	 * Method to generate client token to be used by the front end.
 	 * 
@@ -111,8 +110,9 @@ public class BraintreePaymentGatewayServiceImpl implements
 		LOG.info("Client token : " + clientToken);
 		return clientToken;
 	}
-	
-	private void sendPaymentMail(User user,String templateId,String subject,ByteArrayOutputStream attachmentStream){
+
+	private void sendPaymentMail(User user, String templateId, String subject,
+	        ByteArrayOutputStream attachmentStream) {
 		LOG.debug("Sending mail");
 		// Making the Mail VOs
 		EmailVO emailVO = new EmailVO();
@@ -149,7 +149,6 @@ public class BraintreePaymentGatewayServiceImpl implements
 		request.amount(new BigDecimal(amount));
 		request.paymentMethodNonce(paymentNonce);
 		request.options().submitForSettlement(true);
-		
 
 		Result<Transaction> result = null;
 
@@ -210,7 +209,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 		LOG.info("createTransaction : returning " + transactionId);
 		return transactionId;
 	}
-	
+
 	private void updateTransactionDetails(String transactionId, int loanId,
 	        User user, float amount) throws InvalidInputException,
 	        NoRecordsFetchedException {
@@ -252,14 +251,14 @@ public class BraintreePaymentGatewayServiceImpl implements
 		transactionDetails.setTransaction_id(transactionId);
 		transactionDetails.setUser(user);
 		transactionDetails.setAmount(amount);
-		transactionDetails.setStatus(CommonConstants.TRANSACTION_STATUS_ENABLED);
+		transactionDetails
+		        .setStatus(CommonConstants.TRANSACTION_STATUS_ENABLED);
 		transactionDetails.setCreated_by(user.getId());
 		transactionDetails.setCreated_date(new Timestamp(System
 		        .currentTimeMillis()));
 		transactionDetails.setModified_by(user.getId());
 		transactionDetails.setModified_date(new Timestamp(System
 		        .currentTimeMillis()));
-		
 
 		LOG.debug("Updating database with the new transaction details record!");
 		transactionDetailsDao.save(transactionDetails);
@@ -316,7 +315,8 @@ public class BraintreePaymentGatewayServiceImpl implements
 			LOG.debug("Transaction successfully created. Updating the database.");
 			updateTransactionDetails(transactionId, loanId, user, amount);
 			LOG.debug("Database updated with the new transaction details.");
-		//	sendPaymentMail(user, paymentTemplateId,DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,null);
+			// sendPaymentMail(user,
+			// paymentTemplateId,DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,null);
 		}
 
 		LOG.info("makePayment successfully complete!");
@@ -342,61 +342,78 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 	@Override
 	@Transactional
-    public void checkAndUpdateTransactions(TransactionDetails transactionDetails) throws NoRecordsFetchedException, InvalidInputException {
-		
-		if(transactionDetails.getTransaction_id() == null ){
-			throw new InvalidInputException("The transaction details object has empty transaction id entity");
-		}
-		
-		if(transactionDetails.getUser() == null ){
-			throw new InvalidInputException("The transaction details object has empty user entity");
-		}
-		
-		if(transactionDetails.getLoan() == null ){
-			throw new InvalidInputException("The transaction details object has empty loan entity");
-		}
-		
-		//First we make an api call to fetch the transaction 
-		Transaction transaction = null;
-		
-		try {
-			transaction = gateway.transaction().find(transactionDetails.getTransaction_id());
-			LOG.debug("Transaction fetched, status of the transaction is : " + transaction.getStatus());
+	public void checkAndUpdateTransactions(TransactionDetails transactionDetails)
+	        throws NoRecordsFetchedException, InvalidInputException {
 
-        } catch (NotFoundException e) {
-	        LOG.error("No records fetched from Braintree for the transaction id : " + transactionDetails.getTransaction_id());
-	        throw new NoRecordsFetchedException("No records fetched from Braintree for the transaction id : " + transactionDetails.getTransaction_id());
-        }
-		catch (UnexpectedException e) {
-			LOG.error("UnexpectedException has occured while fetching transaction details from Braintree. Message : " + e.getMessage(),e);
-			//throw e;
+		if (transactionDetails.getTransaction_id() == null) {
+			throw new InvalidInputException(
+			        "The transaction details object has empty transaction id entity");
 		}
-		
-		//Now we check the different possible cases of the transaction status
+
+		if (transactionDetails.getUser() == null) {
+			throw new InvalidInputException(
+			        "The transaction details object has empty user entity");
+		}
+
+		if (transactionDetails.getLoan() == null) {
+			throw new InvalidInputException(
+			        "The transaction details object has empty loan entity");
+		}
+
+		// First we make an api call to fetch the transaction
+		Transaction transaction = null;
+
+		try {
+			transaction = gateway.transaction().find(
+			        transactionDetails.getTransaction_id());
+			LOG.debug("Transaction fetched, status of the transaction is : "
+			        + transaction.getStatus());
+
+		} catch (NotFoundException e) {
+			LOG.error("No records fetched from Braintree for the transaction id : "
+			        + transactionDetails.getTransaction_id());
+			throw new NoRecordsFetchedException(
+			        "No records fetched from Braintree for the transaction id : "
+			                + transactionDetails.getTransaction_id());
+		} catch (UnexpectedException e) {
+			LOG.error(
+			        "UnexpectedException has occured while fetching transaction details from Braintree. Message : "
+			                + e.getMessage(), e);
+			// throw e;
+		}
+
+		// Now we check the different possible cases of the transaction status
 		if (transaction.getStatus() == Transaction.Status.SETTLED) {
 
-			
 			User sysAdmin = new User();
 			sysAdmin.setId(CommonConstants.SYSTEM_ADMIN_ID);
-			
+
 			LoanApplicationFee applicationFee = new LoanApplicationFee();
 			applicationFee.setLoan(transactionDetails.getLoan());
 			applicationFee.setFee(transaction.getAmount().doubleValue());
 			applicationFee.setModifiedBy(sysAdmin);
-			applicationFee.setModifiedDate(new Date(System.currentTimeMillis()));
-			applicationFee.setPaymentType(transaction.getCreditCard().getCardType());
+			applicationFee
+			        .setModifiedDate(new Date(System.currentTimeMillis()));
+			applicationFee.setPaymentType(transaction.getCreditCard()
+			        .getCardType());
 			applicationFee.setPaymentDate(transaction.getCreatedAt().getTime());
 			applicationFee.setTransactionDetails(transactionDetails);
-			applicationFee.setTransactionMetadata(transaction.getStatus().toString());
-			
-			//Use the loan dao object to make a general save
+			applicationFee.setTransactionMetadata(transaction.getStatus()
+			        .toString());
+
+			// Use the loan dao object to make a general save
 			loanDao.save(applicationFee);
-			
-			//Update the transaction details table to soft delete the record.
-			transactionDetails.setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
-			loanDao.update(transactionDetails);			
-			
-			sendPaymentMail(transactionDetails.getUser(), paymentTemplateId,DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,receiptPdfService.generateReceipt(LoanApplicationFee.convertEntityToVO(applicationFee)));
+
+			// Update the transaction details table to soft delete the record.
+			transactionDetails
+			        .setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
+			loanDao.update(transactionDetails);
+			Template template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT);
+			sendPaymentMail(transactionDetails.getUser(), template.getValue(),
+			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
+			        receiptPdfService.generateReceipt(LoanApplicationFee
+			                .convertEntityToVO(applicationFee)));
 		} else if (transaction.getStatus() == Transaction.Status.AUTHORIZATION_EXPIRED
 		        || transaction.getStatus() == Transaction.Status.FAILED
 		        || transaction.getStatus() == Transaction.Status.GATEWAY_REJECTED
@@ -404,17 +421,24 @@ public class BraintreePaymentGatewayServiceImpl implements
 		        || transaction.getStatus() == Transaction.Status.SETTLEMENT_DECLINED
 		        || transaction.getStatus() == Transaction.Status.UNRECOGNIZED
 		        || transaction.getStatus() == Transaction.Status.VOIDED) {
-			
-			sendPaymentMail(transactionDetails.getUser(), paymentUnsuccessfulTemplateId,DisplayMessageConstants.PAYMENT_UNSUCCESSFUL_SUBJECT,null);
-			
-			//Update the transaction details table to change status to 2.
-			transactionDetails.setStatus(CommonConstants.TRANSACTION_STATUS_FAILED);
-			loanDao.update(transactionDetails);		
+
+			Template template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL);
+			sendPaymentMail(transactionDetails.getUser(), template.getValue(),
+			        DisplayMessageConstants.PAYMENT_UNSUCCESSFUL_SUBJECT, null);
+
+			// Update the transaction details table to change status to 2.
+			transactionDetails
+			        .setStatus(CommonConstants.TRANSACTION_STATUS_FAILED);
+			loanDao.update(transactionDetails);
 		} else {
-			//We dont do anything and just poll it the next time to check the status as the transaction is pending.
-			LOG.debug("The transaction with id : " + transactionDetails.getTransaction_id() + " is pending for settlement");
-			
+			// We dont do anything and just poll it the next time to check the
+			// status as the transaction is pending.
+			LOG.debug("The transaction with id : "
+			        + transactionDetails.getTransaction_id()
+			        + " is pending for settlement");
+
 		}
-	    
-    }
+
+	}
 }
