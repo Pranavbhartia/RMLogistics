@@ -357,7 +357,8 @@ public class NexeraUtility {
 
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
-		File convFile = new File(multipart.getOriginalFilename());
+		File convFile = new File( tomcatDirectoryPath()
+		        + File.separator+multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
 	}

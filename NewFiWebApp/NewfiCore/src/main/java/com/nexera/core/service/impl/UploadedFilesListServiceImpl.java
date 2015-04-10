@@ -266,11 +266,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		File newFile = nexeraUtility.joinPDDocuments(filePaths);
 
-		Path path = Paths.get(newFile.getAbsolutePath());
-		byte[] data = Files.readAllBytes(path);
+		
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        data, userId, loanId, assignedBy, isAssignedToNeed);
+		         userId, loanId, assignedBy, isAssignedToNeed);
 
 		if (newFile.exists()) {
 			newFile.delete();
@@ -377,7 +376,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	         Integer userId, Integer loanId, Integer assignedBy,
 	        Boolean isNeedAssigned) {
 		String s3Path = null;
 
@@ -406,10 +405,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
+				Path path = Paths.get(serverFile.getAbsolutePath());
+            	byte[] data = Files.readAllBytes(path);
 				String uuidValue = nexeraUtility.randomStringOfLength();
 
 				// Send file to LQB
-				LQBResponseVO lqbResponseVO = createLQBVO(userId, bytes,
+				LQBResponseVO lqbResponseVO = createLQBVO(userId, data,
 				        loanId, uuidValue, isNeedAssigned);
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
@@ -583,13 +584,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			else if (contentType.contains("image/tiff"))
 				contentType = "image/tiff";
 
-			byte[] data = null;
-			try {
-				data = readContentIntoByteArray(file);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			checkUploadVO = uploadFile(file, contentType, data, userId, loanId,
+			
+			checkUploadVO = uploadFile(file, contentType, userId, loanId,
 			        assignedBy, isAssignedToNeed);
 
 			if (file.exists()) {
