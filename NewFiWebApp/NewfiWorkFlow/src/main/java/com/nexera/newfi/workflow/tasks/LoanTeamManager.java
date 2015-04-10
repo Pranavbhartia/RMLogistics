@@ -196,4 +196,9 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		        WorkItemStatus.STARTED.getStatus());
 	}
 
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

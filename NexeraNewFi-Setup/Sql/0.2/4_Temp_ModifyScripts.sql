@@ -42,3 +42,11 @@ INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `d
 INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `is_custom`) VALUES ('38', 'System', 'Signed Disclosure', 'Signed Disclosures ', '0');
 
 #Anoop -- All the above are moved to 1_createtable sql file
+
+#Utsav on 10th April 15:29 PM IST
+
+ALTER TABLE `newfi_schema`.`workflowitemmaster` 
+   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `display_turn_order`
+   
+ALTER TABLE `newfi_schema`.`workflowitemexec` 
+   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`

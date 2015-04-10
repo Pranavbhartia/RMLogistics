@@ -63,4 +63,9 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

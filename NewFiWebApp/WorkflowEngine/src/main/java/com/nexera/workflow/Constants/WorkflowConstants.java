@@ -21,6 +21,8 @@ public class WorkflowConstants {
 
 	public static final String CHECK_STATUS_METHOD = "checkStatus";
 
+	public static final String INVOKE_UPDATE_REMINDER = "updateReminder";
+
 	public static final String INVOKE_ACTION_METHOD = "invokeAction";
 
 	public static final String EXECUTE_METHOD = "execute";
