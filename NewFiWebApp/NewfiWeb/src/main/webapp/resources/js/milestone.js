@@ -377,8 +377,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to view Underwriting status";
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				
 			}			
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
 			{
@@ -395,7 +395,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
-				data.userID=workFlowContext.customerId;
+				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
@@ -949,7 +949,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 
-	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail);
+	workFlowContext.init(selectedUserDetail.loanID,createNewfiUser());
 
 	workFlowContext.initialize("AGENT", function() {
 	});
