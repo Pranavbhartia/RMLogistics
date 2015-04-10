@@ -31,7 +31,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	</catch-exception-strategy>
 
 	<flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
-		<http:inbound-endpoint address="http://localhost:8181/authCall"
+		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
 			responseTimeout="300000">
 		</http:inbound-endpoint>
