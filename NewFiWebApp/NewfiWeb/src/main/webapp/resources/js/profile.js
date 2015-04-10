@@ -92,14 +92,24 @@ function LoanPersonalInfoWrapper(user) {
 	
 	var text=$('<div>').attr({
 		"class" : " cust-profile-url float-right"
-	}).html("Profile URL");	
+	}).html("Profile URL :");	
 	
 	var emailInput = $('<input>').attr({
 		"class" : "cust-personal-info-header-url loan-detail-link",
 		"id" : "profileUrlId",
 		"readonly":"readonly",
 		"value":user.userProfileBaseUrl+""+user.username	
+	}).on("click",function(e){
+		$(this).zclip({
+			path: "resources/js/ZeroClipboard.swf",
+			copy: function(e){
+				e.preventDefault();
+				showToastMessage("copied to clipboard");
+			    return $(this).val();
+			    }
+			});
 	});
+		
 	if(user.userRole.roleDescription=="Realtor" || user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
     text.append(emailInput);
 	header.append(text);
