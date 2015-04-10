@@ -1,6 +1,6 @@
 function paintMySpouseIncome() {
 
-	applyLoanStatus = 3;
+	
 	//appProgressBaar(3);
      var selfEmployedData={};
 
@@ -400,7 +400,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	    appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
 	    
 	    //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-	    appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+	    
 	    
 	    
 	    saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
