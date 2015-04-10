@@ -40,6 +40,7 @@ import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.FileAssignVO;
+import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.UploadFileScreenVO;
 import com.nexera.common.vo.UploadedFilesListVO;
@@ -68,8 +69,6 @@ public class FileUploadRest
 
     @Autowired
     private LoanService loanService;
-
-    
 
     @Autowired
     private UploadedFilesListService uploadedFilesListService;
@@ -177,7 +176,7 @@ public class FileUploadRest
             TypeReference<List<FileAssignVO>> typeRef = new TypeReference<List<FileAssignVO>>() {};
             List<FileAssignVO> val = new ArrayList<FileAssignVO>();
             val = mapper.readValue( fileAssignMent, typeRef );
-            Map<Integer, List<Integer>> mapFileMappingToNeed = getmapFromFileAssignObj( val );
+            Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed = getmapFromFileAssignObj( val );
             Boolean isSuccess  = uploadedFilesListService.assignFileToNeeds( mapFileMappingToNeed, loanId, userId, assignedBy );
         
             if(isSuccess){
@@ -197,15 +196,18 @@ public class FileUploadRest
 
 
    
-    private Map<Integer, List<Integer>> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
+    private Map<Integer, FileAssignmentMappingVO> getmapFromFileAssignObj( List<FileAssignVO> fileAssignVO )
     {
-        Map<Integer, List<Integer>> mapFileAssign = new HashMap<Integer, List<Integer>>();
+        Map<Integer, FileAssignmentMappingVO> mapFileAssign = new HashMap<Integer,FileAssignmentMappingVO>();
         for ( FileAssignVO fileAssign : fileAssignVO ) {
-            List<Integer> tempFileList = mapFileAssign.get( fileAssign.getNeedListId() );
+        	List<Integer> tempFileList = mapFileAssign.get( fileAssign.getNeedListId() )== null?null:mapFileAssign.get( fileAssign.getNeedListId() ).getFileIds();
+            FileAssignmentMappingVO mapping = new FileAssignmentMappingVO();
             if ( tempFileList == null ) {
                 tempFileList = new ArrayList<Integer>();
                 tempFileList.add( fileAssign.getFileId() );
-                mapFileAssign.put( fileAssign.getNeedListId(), tempFileList );
+                mapping.setFileIds(tempFileList);
+                mapping.setIsMiscellaneous(fileAssign.getIsMiscellanous());
+                mapFileAssign.put( fileAssign.getNeedListId(), mapping );
             } else {
                 tempFileList.add( fileAssign.getFileId() );
             }
