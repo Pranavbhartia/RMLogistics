@@ -942,7 +942,7 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row agent-state-dropdown-row clearfix",
 			"id" : stateList[i].id,
-			"name":  stateList[i].stateName
+			"name":  stateList[i].stateCode
 		});
 		var checkBox = $('<div>').attr({
 				"class" : "float-left doc-checkbox",
@@ -957,7 +957,7 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		var textRow = $('<div>').attr({
 			"class" : "float-left state-row",
 			"id" : "stateName_"+stateList[i].id
-		}).html(stateList[i].stateName);
+		}).html(stateList[i].stateCode);
 		stateRow.append(checkBox).append(textRow);
 		stateRow.bind('click',function(e){
 			e.stopPropagation();
@@ -1014,7 +1014,7 @@ function findStateNameForStateId(stateId) {
 	
 	for(var i=0; i<stateList.length; i++){
 		if(stateList[i].id == stateId){
-			return stateList[i].stateName;
+			return stateList[i].stateCode;
 		}
 	}
 	

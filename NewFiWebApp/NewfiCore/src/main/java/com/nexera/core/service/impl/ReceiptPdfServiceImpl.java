@@ -119,20 +119,9 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 							+ " has been received as Application fee from "
 							+ applicationReceiptVO.getCustomerName()
 							+ ". Thanks for the payment. Your loan will move to next stage after the transaction is confirmed.",
-					genFont));
+							h2Font));
 			PdfPTable tbl = new PdfPTable(2);
 			document.add(Chunk.NEWLINE);
-			/*
-			 * PdfPCell cell = new PdfPCell(new Phrase(
-			 * "This is to confirm that amount $XXX.XX has been received as Application fee from <username>. Thanks for the payment. Your loan will move to next stage after the transaction is confirmed."
-			 * , genBold)); cell.disableBorderSide(Rectangle.BOX); //
-			 * cell.enableBorderSide(2); tbl.addCell(cell);
-			 * 
-			 * cell = new PdfPCell(new Phrase("$" +
-			 * applicationReceiptVO.getFee(), genBold));
-			 * cell.disableBorderSide(Rectangle.BOX); //
-			 * cell.enableBorderSide(2); tbl.addCell(cell);
-			 */
 			document.add(tbl);
 			document.add(Chunk.NEWLINE);
 			document.add(p4);
