@@ -76,4 +76,9 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 		messageServiceHelper.generatePrivateMessage(loanId, message, createdBy,
 				false);
 	}
+
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

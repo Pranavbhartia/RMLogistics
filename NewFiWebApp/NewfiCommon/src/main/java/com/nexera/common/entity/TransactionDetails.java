@@ -1,6 +1,8 @@
 package com.nexera.common.entity;
 
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +34,14 @@ public class TransactionDetails {
 	private int created_by;
 	private Timestamp modified_date;
 	private int modified_by;
+	
+	
+	public TransactionDetails(){
+		
+	}
+	public TransactionDetails(Integer id){
+		this.id=id;
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -112,7 +122,8 @@ public class TransactionDetails {
 	public void setLoan(Loan loan) {
 		this.loan = loan;
 	}
-	
+
+	@Column
 	public int getStatus() {
 		return status;
 	}

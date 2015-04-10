@@ -52,5 +52,4 @@ public interface BraintreePaymentGatewayService {
 	 */
 	public void checkAndUpdateTransactions(TransactionDetails transactionDetails) throws NoRecordsFetchedException, InvalidInputException;
 	
-	public Transaction getTrasactionDetails(LoanApplicationFee applicationFee) throws InvalidInputException, NoRecordsFetchedException, PaymentException;
 }

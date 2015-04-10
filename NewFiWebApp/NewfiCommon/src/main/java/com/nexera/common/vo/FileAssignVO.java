@@ -4,7 +4,16 @@ public class FileAssignVO {
 
 	private Integer fileId;
 	private Integer needListId;
+	private Boolean isMiscellanous;
 	
+	
+	
+	public Boolean getIsMiscellanous() {
+		return isMiscellanous;
+	}
+	public void setIsMiscellanous(Boolean isMiscellanous) {
+		this.isMiscellanous = isMiscellanous;
+	}
 	public Integer getFileId() {
 		return fileId;
 	}

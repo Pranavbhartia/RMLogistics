@@ -27,7 +27,11 @@ public class LqbInvoker {
 	private String muleUrlForAppView;
 
 	public JSONObject invokeLqbService(String formData) {
-		return invokeRestSpringParseObj(formData);
+		try {
+			return invokeRestSpringParseObj(formData);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	private JSONObject invokeRestSpringParseObj(String formData) {

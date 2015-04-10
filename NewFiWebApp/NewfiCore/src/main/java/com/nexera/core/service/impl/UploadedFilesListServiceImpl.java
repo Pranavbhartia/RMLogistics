@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,32 +36,47 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
+import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
+import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
-import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.LQBXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
+import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.service.WorkflowService;
 
 @Component
 public class UploadedFilesListServiceImpl implements UploadedFilesListService {
@@ -97,6 +113,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Value("${assigned_folder}")
 	private String assignedFolder;
+
+	@Value("${NEW_NOTE_TEMPLATE}")
+	private String templateId;
+
+	@Autowired
+	private WorkflowService workflowService;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	private LoanNeedListDao loanNeedListDAO;
+
+	@Autowired
+	private EngineTrigger engineTrigger;
 
 	@Override
 	@Transactional
@@ -230,7 +261,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
 	        COSVisitorException {
-		
+
 		List<File> filePaths = downloadFileFromService(fileIds);
 
 		File newFile = nexeraUtility.joinPDDocuments(filePaths);
@@ -240,7 +271,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
 		        data, userId, loanId, assignedBy, isAssignedToNeed);
-		
 
 		if (newFile.exists()) {
 			newFile.delete();
@@ -648,7 +678,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			List<LQBedocVO> lqBedocVOs = lqbResponseVO
 			        .getDocumentResponseListVOs().getvBedocVO();
 			for (LQBedocVO lqBedocVO : lqBedocVOs) {
-				if (uuId.equals(nexeraUtility.fetchUUID(lqBedocVO.getDescription()))) {
+				if (uuId.equals(nexeraUtility.fetchUUID(lqBedocVO
+				        .getDescription()))) {
 					return lqBedocVO.getDocid();
 				}
 			}
@@ -711,7 +742,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
-
+		int insertFile = 0;
+		int removedFile = 0;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(timeBeforeCallMade);
 		cal.add(Calendar.MINUTE, -5);
@@ -740,6 +772,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			String uuid = nexeraUtility.fetchUUID(uuidDetails);
 			if (uuid != null) {
 				if (!uploadFileUUIDList.contains(uuid)) {
+					insertFile = insertFile + 1;
 					insertFileIntoNewFi(edoc, loan, uuid);
 				}
 			} else {
@@ -748,6 +781,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				String lqbFileId = edoc.getDocid();
 				if (getUploadedFileByLQBFieldId(lqbFileId) == null) {
 					LOG.debug("Inserting this manually entered doc by Loan Manager in Newfi");
+					insertFile = insertFile + 1;
 					insertFileIntoNewFi(edoc, loan, null);
 				}
 			}
@@ -769,10 +803,64 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 						loanNeedList.setUploadFileId(null);
 						loanService.updateLoanNeedList(loanNeedList);
 					}
+					removedFile = removedFile + 1;
 					uploadedFilesListDao.remove(fileToDelete);
 				}
 			}
 		}
+		LOG.debug("Send Email For File Sync");
+		sendEmailForFileSync(insertFile, removedFile, loan);
+	}
+
+	private void sendEmailForFileSync(int insertFileCount, int removeFileCount,
+	        Loan loan) {
+		EmailVO emailVO = constructEmail(loan);
+		if (insertFileCount > 0) {
+			LOG.debug("New Files have been inserted ");
+			emailVO.setTemplateId(templateId);
+			sendEmail(emailVO);
+		}
+
+		if (removeFileCount > 0) {
+			LOG.debug("Files have been removed ");
+			emailVO.setTemplateId(templateId);
+			sendEmail(emailVO);
+		}
+	}
+
+	private EmailVO constructEmail(Loan loan) {
+		EmailVO emailEntity = new EmailVO();
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		List<LoanTeam> loanTeamList = loan.getLoanTeam();
+		if (loanTeamList != null) {
+			for (LoanTeam loanTeam : loanTeamList) {
+				User user = loanTeam.getUser();
+				if (user != null) {
+					if (user.getEmailId() != null) {
+						EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+						emailRecipientVO.setEmailID(user.getEmailId());
+						emailRecipientVO.setRecipientName(user.getFirstName());
+						recipients.add(emailRecipientVO);
+					}
+				}
+			}
+		}
+
+		emailEntity.setSenderEmailId("web@newfi.com");
+		emailEntity.setRecipients(recipients);
+
+		emailEntity.setSenderName("Newfi System");
+		emailEntity.setSubject("Nexera Newfi Portal");
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-",
+		        new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
+		emailEntity.setTokenMap(substitutions);
+		return emailEntity;
+	}
+
+	private void sendEmail(EmailVO emailVO) {
+		LOG.debug("Sending Email ");
+		sendGridEmailService.sendAsyncMail(emailVO);
 	}
 
 	private List<UploadedFilesList> filesToDeleteList(
@@ -789,8 +877,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 		return filesToDelete;
 	}
-
-	
 
 	@Transactional
 	public UploadedFilesList getUploadedFileByLQBFieldId(String lqbfieldId) {
@@ -823,7 +909,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setId(fileUploadId);
 	}
 
-	
 	@Override
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID) {
 		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
@@ -831,55 +916,104 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
-	public Boolean assignFileToNeeds( Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
-		        Integer userId, Integer assignedBy )
-		    {
-				Boolean isSuccess = false;
-		        CommonResponseVO commonResponseVO = null;
-		        try {
+	public Boolean assignFileToNeeds(
+	        Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed,
+	        Integer loanId, Integer userId, Integer assignedBy) {
+		Boolean isSuccess = false;
 
-		            for ( Integer key : mapFileMappingToNeed.keySet() ) {
-		                UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId( key );
-		                LOG.info( "fetchUploadedFromLoanNeedId returned : " + filesList );
-		                List<Integer> fileIds = mapFileMappingToNeed.get( key );
+		try {
 
-		                if ( filesList != null ) {
-		                    fileIds.add( filesList.getId() );
-		                }
-		                Integer newFileRowId = null;
-		                
-		                newFileRowId = mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
-		                
-		                for (Integer fileId : fileIds) {
-		        			deactivateFileUsingFileId(fileId);
-		        		}
-		                
-		                LOG.info( "new file pdf path :: " + newFileRowId );
-		                updateFileInLoanNeedList( key, newFileRowId );
-		                updateIsAssignedToTrue( newFileRowId );
-		               
-		               
-		           }
+			for (Integer key : mapFileMappingToNeed.keySet()) {
 
-		            isSuccess = true;
-		            //commonResponseVO = RestUtil.wrapObjectForSuccess( true );
+				FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
+				List<Integer> fileIds = mapping.getFileIds();
+				Integer newFileRowId = null;
+				if (mapping.getIsMiscellaneous()) {
+					UploadedFilesList filesList = loanService
+					        .fetchUploadedFromLoanNeedId(key);
+					LOG.info("fetchUploadedFromLoanNeedId returned : "
+					        + filesList);
+					if (filesList != null) {
+						fileIds.add(filesList.getId());
+					}
+					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
+					        assignedBy);
 
-		        } catch ( Exception e ) {
-		            LOG.error( "exception in converting  : " + e.getMessage(), e );
-		            e.printStackTrace();
-		            isSuccess = false;
-		        }
+					for (Integer fileId : fileIds) {
+						deactivateFileUsingFileId(fileId);
+					}
+				} else {
+					newFileRowId = fileIds.get(0);
+				}
+				LOG.info("new file pdf path :: " + newFileRowId);
+				updateFileInLoanNeedList(key, newFileRowId);
+				updateIsAssignedToTrue(newFileRowId);
 
-		        return isSuccess ;
+			}
 
-		    }
+			isSuccess = true;
+			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
+
+		} catch (Exception e) {
+			LOG.error("exception in converting  : " + e.getMessage(), e);
+			e.printStackTrace();
+			isSuccess = false;
+		}
+
+		return isSuccess;
+
+	}
+
+	private void changeWorkItem(
+	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID) {
+		// Start
+		// Loan ID : get LoanManagerWFID from the loan object
+		//
+		for (Integer keyID : mapFileMappingToNeed.keySet()) {
+			LoanNeedsList needListItem = loanNeedListDAO.findById(keyID);
+			if (needListItem.getNeedsListMaster() != null
+			        && MasterNeedsEnum.getNeedReference(needListItem
+			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Disclsoure_Available
+			        || MasterNeedsEnum.getNeedReference(needListItem
+			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Signed_Disclosure) {
+				changeItemStatus(loanID,
+				        MasterNeedsEnum.getNeedReference(needListItem
+				                .getNeedsListMaster().getId()));
+			}
+
+		}
+
+	}
+
+	private void changeItemStatus(int loanID, MasterNeedsEnum masterNeed) {
+
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		int wfExecID = loanVO.getLoanManagerWorkflowID();
+		WorkflowExec workflowExec = new WorkflowExec();
+		workflowExec.setId(wfExecID);
+		WorkflowItemMaster workflowItemMaster = workflowService
+		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS);
+		WorkflowItemExec workItemRef = workflowService
+		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+		// Create Map here.
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (masterNeed != null) {
+			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+			        masterNeed == MasterNeedsEnum.Disclsoure_Available ? LoanStatus.disclosureAvail
+			                : LoanStatus.disclosureSigned);
+		}
+		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loanVO.getId());
+		String params = Utils.convertMapToJson(map);
+		workflowService.saveParamsInExecTable(workItemRef.getId(), params);
+		engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
+	}
 
 	@Override
 	@Transactional
-	public  void updateAssignments(Integer needId , Integer fileId){
-		 LoanNeedsList loanNeed = loanService.fetchByNeedId( needId );
-		 updateFileInLoanNeedList( loanNeed.getId(), fileId );
-         updateIsAssignedToTrue( fileId );
+	public void updateAssignments(Integer needId, Integer fileId) {
+		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId);
+		updateFileInLoanNeedList(loanNeed.getId(), fileId);
+		updateIsAssignedToTrue(fileId);
 	}
-	
+
 }

@@ -1,5 +1,6 @@
 package com.nexera.common.vo.email;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ public class EmailVO {
 	private boolean isTemplateBased;
 	private String templateId;
 	private Map<String, String[]> substitutionsMap;
+	private ByteArrayOutputStream attachmentStream;
 
 	public List<EmailRecipientVO> getRecipients() {
 		if(recipients==null){
@@ -105,6 +107,14 @@ public class EmailVO {
 
 		return substitutionsMap.remove(key);
 
+	}
+
+	public ByteArrayOutputStream getAttachmentStream() {
+		return attachmentStream;
+	}
+
+	public void setAttachmentStream(ByteArrayOutputStream attachmentStream) {
+		this.attachmentStream = attachmentStream;
 	}
 
 	@Override
