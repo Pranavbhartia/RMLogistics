@@ -3,7 +3,7 @@
  */
 var isAgentTypeDashboard;
 var docData = [];
-dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
+var dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
 
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
@@ -30,7 +30,7 @@ function getAgentSecondaryLeftNav() {
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	if (!userIsRealtor()) {
+	if (userIsRealtor()) {
 		return leftTab2Wrapper.append(step0).append(step1).append(step3)
 				.append(step4).append(step5);
 	}
@@ -75,7 +75,7 @@ function paintAgentDashboard(loanType) {
 		getDashboardRightPanelForMyLoans();
 	} else if (loanType == "archivesloans") {
 		$('#lp-my-archives').addClass('lp-item-active');
-		dropDownItemArray = [ "Withdrawn", "Declined", "All" ];
+		dropDownItemArray = ["Closed", "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();

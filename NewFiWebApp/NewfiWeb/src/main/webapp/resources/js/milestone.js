@@ -1259,7 +1259,7 @@ function milestoneChildEventHandler(event) {
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
 	 	event.stopPropagation();
 		 $("#lp-step1").click();
-	}else if ($(event.target).attr("data-text") == "LOCK_RATE") {
+	}else if ($(event.target).attr("data-text") == "LOCK_RATE"||userIsRealtor()) {
 	 	event.stopPropagation();
 		 window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
 	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {

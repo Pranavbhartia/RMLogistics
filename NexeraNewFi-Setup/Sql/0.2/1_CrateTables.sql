@@ -782,7 +782,7 @@ CREATE TABLE `loanappform` (
   `pension_or_retirement` tinyint(4) DEFAULT NULL,
   `property_type` int(11) DEFAULT NULL,
   `loan_type` int(11) DEFAULT NULL,
-  `loan_app_completion_status` int(11) DEFAULT NULL,
+  `loan_app_completion_status` DECIMAL(8,5) DEFAULT NULL,
   `monthlyRent` varchar(45) DEFAULT NULL,
   `isemployed` tinyint(4) DEFAULT NULL,
   `isspouseOnLoan` varchar(45) DEFAULT NULL,
