@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -65,6 +66,7 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.RealtorDetailVO;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
@@ -285,9 +287,27 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public boolean changeUserPassword(UserVO userVO) {
-		return userProfileDao.changeUserPassword(userVO);
-		// return true;
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO) {
+		try {
+			return userProfileDao.changeUserPassword(updatePasswordVO);
+		}
+
+		catch (HibernateException hibernateException) {
+			LOG.error("Can't update the Password");
+			throw new FatalException("Error in updating the password",
+			        hibernateException);
+
+		}
+
+		catch (DatabaseException databaseException)
+
+		{
+
+			LOG.error("Can't update the password");
+			throw new FatalException("Error in updating the password",
+			        databaseException);
+
+		}
 	}
 
 	@Override
@@ -674,8 +694,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER
 		        .toString())
-		        && !csvRow[CommonConstants.ROLE_COLUMN]
-		                .equals(UserRolesEnum.LM.toString())
+		        && !csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LM
+		                .toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
 		                .equals(UserRolesEnum.REALTOR.toString())) {
 			message = messageUtils.getDisplayMessage(
@@ -748,8 +768,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			}
 		}
 
-		if (csvRow[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LM.toString())) {
+		if (csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LM
+		        .toString())) {
 			if (csvRow[CommonConstants.STATE_CODE_COLUMN] != null
 			        && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
 				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN]
@@ -805,8 +825,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		userVO.setEmailId(rowData[CommonConstants.EMAIL_COLUMN]);
 
 		UserRoleVO userRoleVO = new UserRoleVO();
-		if (rowData[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LM.toString())) {
+		if (rowData[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LM
+		        .toString())) {
 
 			userRoleVO.setId(UserRolesEnum.INTERNAL.getRoleId());
 			userRoleVO.setRoleCd(UserRolesEnum.INTERNAL.toString());
@@ -954,7 +974,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
-			loanAppFormVO.setLoanAppFormCompletionStatus(0);
+			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
 
@@ -1022,7 +1042,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String password = generateRandomPassword();
 		user.setPassword(password);
 		UserVO userVO = User.convertFromEntityToVO(user);
-		boolean isSuccess = userProfileDao.changeUserPassword(userVO);
+		UpdatePasswordVO updatePasswordVO = new UpdatePasswordVO();
+		updatePasswordVO.setNewPassword(userVO.getPassword());
+		updatePasswordVO.setUserId(userVO.getId());
+
+		boolean isSuccess = userProfileDao.changeUserPassword(updatePasswordVO);
 		if (isSuccess) {
 
 			LOG.info("sending reset password to the user");

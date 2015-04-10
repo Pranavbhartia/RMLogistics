@@ -15,6 +15,7 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserVO;
 
 public interface UserProfileService {
@@ -66,7 +67,7 @@ public interface UserProfileService {
 
 	public void crateWorkflowItems(int defaultLoanId) throws Exception;
 
-	public boolean changeUserPassword(UserVO uservo);
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO);
 
 	public void updateCustomerScore(CustomerDetail customerDetails);
 

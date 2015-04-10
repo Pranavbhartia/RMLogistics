@@ -596,6 +596,19 @@ public class EngineTrigger {
 		return null;
 	}
 
+	public String invokeReminder(int workflowItemExecId,
+	        HashMap<String, Object> map) {
+		LOGGER.debug("Inside method invokeReminder ");
+		WorkflowItemExec workflowItemExec = workflowService
+		        .getWorkflowExecById(workflowItemExecId);
+		if (workflowItemExec != null) {
+			String output = invokeReminderReflection(map, workflowItemExec,
+			        WorkflowConstants.INVOKE_UPDATE_REMINDER);
+			return output;
+		}
+		return null;
+	}
+
 	public String invokeActionMethod(int workflowItemExecId) {
 		LOGGER.debug("Inside method invokeActionMethod ");
 		WorkflowItemExec workflowItemExec = workflowService
@@ -606,6 +619,45 @@ public class EngineTrigger {
 			return output;
 		}
 		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private String invokeReminderReflection(HashMap params,
+	        WorkflowItemExec workflowItemExec, String methodName) {
+		String result = "";
+		WorkflowTaskConfigMaster workflowTaskConfigMaster = workflowItemExec
+		        .getWorkflowItemMaster().getTask();
+		if (workflowTaskConfigMaster != null) {
+			LOGGER.debug("Will call the respective method of this workflow item ");
+			String className = workflowTaskConfigMaster.getClassName();
+			LOGGER.debug("Calling java reflection api to invoke method with specified params ");
+			try {
+				Class classToLoad = Class.forName(className);
+				Object obj = applicationContext.getBean(classToLoad);
+
+				Method method = classToLoad.getDeclaredMethod(methodName,
+				        new Class[] { HashMap.class });
+
+				result = (String) method.invoke(obj, params);
+
+			} catch (ClassNotFoundException e) {
+				LOGGER.debug("Class Not Found " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				LOGGER.debug("Unable to access the object" + e.getMessage());
+			} catch (NoSuchMethodException e) {
+				LOGGER.error("Method not found for this class "
+				        + e.getMessage());
+			} catch (SecurityException e) {
+				LOGGER.error("Security Contrainsts " + e.getMessage());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Arguments passed are not valid for this method "
+				        + e.getMessage());
+			} catch (InvocationTargetException e) {
+				LOGGER.error("Unable to invoke the method " + e.getMessage());
+			}
+		}
+		return result;
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

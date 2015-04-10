@@ -47,6 +47,7 @@ import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -54,19 +55,19 @@ import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
-
-import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
-
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.LQBXMLHandler;
@@ -112,8 +113,15 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Value("${assigned_folder}")
 	private String assignedFolder;
+
+	@Value("${NEW_NOTE_TEMPLATE}")
+	private String templateId;
+
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	@Autowired
 	private LoanNeedListDao loanNeedListDAO;
@@ -734,7 +742,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade) {
-
+		int insertFile = 0;
+		int removedFile = 0;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(timeBeforeCallMade);
 		cal.add(Calendar.MINUTE, -5);
@@ -763,6 +772,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			String uuid = nexeraUtility.fetchUUID(uuidDetails);
 			if (uuid != null) {
 				if (!uploadFileUUIDList.contains(uuid)) {
+					insertFile = insertFile + 1;
 					insertFileIntoNewFi(edoc, loan, uuid);
 				}
 			} else {
@@ -771,6 +781,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				String lqbFileId = edoc.getDocid();
 				if (getUploadedFileByLQBFieldId(lqbFileId) == null) {
 					LOG.debug("Inserting this manually entered doc by Loan Manager in Newfi");
+					insertFile = insertFile + 1;
 					insertFileIntoNewFi(edoc, loan, null);
 				}
 			}
@@ -792,10 +803,64 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 						loanNeedList.setUploadFileId(null);
 						loanService.updateLoanNeedList(loanNeedList);
 					}
+					removedFile = removedFile + 1;
 					uploadedFilesListDao.remove(fileToDelete);
 				}
 			}
 		}
+		LOG.debug("Send Email For File Sync");
+		sendEmailForFileSync(insertFile, removedFile, loan);
+	}
+
+	private void sendEmailForFileSync(int insertFileCount, int removeFileCount,
+	        Loan loan) {
+		EmailVO emailVO = constructEmail(loan);
+		if (insertFileCount > 0) {
+			LOG.debug("New Files have been inserted ");
+			emailVO.setTemplateId(templateId);
+			sendEmail(emailVO);
+		}
+
+		if (removeFileCount > 0) {
+			LOG.debug("Files have been removed ");
+			emailVO.setTemplateId(templateId);
+			sendEmail(emailVO);
+		}
+	}
+
+	private EmailVO constructEmail(Loan loan) {
+		EmailVO emailEntity = new EmailVO();
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		List<LoanTeam> loanTeamList = loan.getLoanTeam();
+		if (loanTeamList != null) {
+			for (LoanTeam loanTeam : loanTeamList) {
+				User user = loanTeam.getUser();
+				if (user != null) {
+					if (user.getEmailId() != null) {
+						EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+						emailRecipientVO.setEmailID(user.getEmailId());
+						emailRecipientVO.setRecipientName(user.getFirstName());
+						recipients.add(emailRecipientVO);
+					}
+				}
+			}
+		}
+
+		emailEntity.setSenderEmailId("web@newfi.com");
+		emailEntity.setRecipients(recipients);
+
+		emailEntity.setSenderName("Newfi System");
+		emailEntity.setSubject("Nexera Newfi Portal");
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-",
+		        new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
+		emailEntity.setTokenMap(substitutions);
+		return emailEntity;
+	}
+
+	private void sendEmail(EmailVO emailVO) {
+		LOG.debug("Sending Email ");
+		sendGridEmailService.sendAsyncMail(emailVO);
 	}
 
 	private List<UploadedFilesList> filesToDeleteList(
@@ -849,11 +914,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return uploadedFilesListDao.fetchUsingFileLQBDocId(lqbDocID);
 	}
 
+	@Override
 	@Transactional
 	public Boolean assignFileToNeeds(
 	        Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed,
 	        Integer loanId, Integer userId, Integer assignedBy) {
 		Boolean isSuccess = false;
+
 
 		try {
 

@@ -41,6 +41,7 @@ public class WorkflowItemExec implements Serializable {
 	private String params;
 	private Boolean clickable;
 	private Integer displayOrder;
+	private Boolean remind;
 
 	public WorkflowItemExec() {
 	}
@@ -210,6 +211,16 @@ public class WorkflowItemExec implements Serializable {
 	 */
 	public void setOnSuccessItem(WorkflowItemExec onSuccessItem) {
 		this.onSuccessItem = onSuccessItem;
+	}
+
+	@Column(columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getRemind() {
+		return remind;
+	}
+
+	public void setRemind(Boolean remind) {
+		this.remind = remind;
 	}
 
 }
