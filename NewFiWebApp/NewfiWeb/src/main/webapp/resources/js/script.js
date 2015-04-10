@@ -1299,7 +1299,10 @@ function getDocumentContainer() {
             documentContainer.append(col1);
             $('.submit-btn').removeClass('hide');
         }
+        
     }
+    
+   
     return container.append(documentContainer);
 }
 
@@ -1337,7 +1340,11 @@ function getNeededDocRow(desc, needId) {
         "class": "hide float-left",
         "id": "needDoc" + needId
     });
+    
     row.append(docUploadImage).append(docRemoveImage);
+    
+   
+    
     return row;
 }
 
