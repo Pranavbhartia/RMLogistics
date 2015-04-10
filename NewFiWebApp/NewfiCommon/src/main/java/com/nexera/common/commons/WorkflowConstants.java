@@ -77,12 +77,12 @@ public class WorkflowConstants {
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING
 	                        .getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_FINAL_DOCS.getLosStatusID()));
+	                LOSLoanStatus.LQB_STATUS_FINAL_DOCS.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID()));
 	private static final List<Integer> APPRAISAL_LIST = new ArrayList<Integer>(
 	        Arrays.asList(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED
 	                .getLosStatusID(), LOSLoanStatus.LQB_STATUS_DOCS_DRAWN
@@ -102,7 +102,7 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED.getLosStatusID()));
 
 	private static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
-	        Arrays.asList(
+	        Arrays.asList(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
