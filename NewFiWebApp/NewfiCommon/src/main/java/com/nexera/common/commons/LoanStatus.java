@@ -28,4 +28,8 @@ public interface LoanStatus {
 	String LM_Decision_Note_Message = "LM Decision Note Message";
 
 	String APP_PAYMENT_SUCCESS = "success";
+
+	String paymentPendingStatusMessage = "Pending";
+
+	String paymentSuccessStatusMessage = "Payment Made";
 }

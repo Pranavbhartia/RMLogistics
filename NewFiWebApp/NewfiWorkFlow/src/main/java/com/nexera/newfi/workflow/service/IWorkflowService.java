@@ -1,7 +1,5 @@
 package com.nexera.newfi.workflow.service;
 
-import java.util.HashMap;
-
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -9,8 +7,6 @@ import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 
 public interface IWorkflowService {
-
-	String getJsonStringOfMap(HashMap<String, Object> map);
 
 	LoanAppForm getLoanAppFormDetails(Loan loan);
 
@@ -32,4 +28,6 @@ public interface IWorkflowService {
 	public String getCreditDisplayScore(int userID);
 
 	public String getRenderInfoForDisclosure(int loanID);
+
+	public String getRenderInfoForApplicationFee(int loanID);
 }
