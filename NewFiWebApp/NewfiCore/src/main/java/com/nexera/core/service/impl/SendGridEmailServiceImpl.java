@@ -1,14 +1,20 @@
 package com.nexera.core.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -16,9 +22,9 @@ import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.SendGridEmailService;
 import com.sendgrid.SendGrid;
-import com.sendgrid.SendGridException;
 import com.sendgrid.SendGrid.Email;
 import com.sendgrid.SendGrid.Response;
+import com.sendgrid.SendGridException;
 
 @Component
 public class SendGridEmailServiceImpl implements SendGridEmailService,InitializingBean {
@@ -104,7 +110,16 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,Initializi
 		}else{
 			email.setText(emailEntity.getBody());
 		}
-		
+		if(emailEntity.getAttachmentStream() != null){
+			try {
+				ByteArrayOutputStream  arrayOutputStream= emailEntity.getAttachmentStream();
+				InputStream inputStream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
+				email.addAttachment("receipt.pdf", inputStream);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
 		
 		for(Entry<String, String[]> entry : emailEntity.getTokenMap().entrySet()){
 			email.addSubstitution(entry.getKey(), entry.getValue());
