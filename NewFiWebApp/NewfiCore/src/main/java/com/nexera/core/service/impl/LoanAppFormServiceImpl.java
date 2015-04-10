@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
+import com.nexera.common.entity.CustomerOtherAccountDetails;
+import com.nexera.common.entity.CustomerRetirementAccountDetails;
 import com.nexera.common.entity.CustomerSpouseBankAccountDetails;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.CustomerSpouseEmploymentIncome;
@@ -22,7 +25,10 @@ import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.User;
+import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
+import com.nexera.common.vo.CustomerOtherAccountDetailsVO;
+import com.nexera.common.vo.CustomerRetirementAccountDetailsVO;
 import com.nexera.common.vo.CustomerSpouseBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerSpouseDetailVO;
 import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
@@ -123,13 +129,20 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setRefinancedetails(convertTORefinancedetailsVO(loanAppForm.getRefinancedetails()));
 		 loanAppFormVO.setLoanType(convertTOLoanTypeVO(loanAppForm.getLoanTypeMaster()));
 		 loanAppFormVO.setPurchaseDetails(convertTOPurchaseDetails(loanAppForm.getPurchaseDetails()));
-		 loanAppFormVO.setCustomerEmploymentIncome(convertTOCustomerEmploymentIncomeList(loanAppForm.getCustomerEmploymentIncome()));
 		 
-		 loanAppFormVO.setCustomerSpouseEmploymentIncome(convertTOCustomerSpouseEmploymentIncomeList(loanAppForm.getCustomerSpouseEmploymentIncome()));
-		 loanAppFormVO.setCustomerSpouseDetail(convertTOCustomerSpouseDetail(loanAppForm.getCustomerspousedetail()));
+		
+		
+		 // Customer details Start
+		 loanAppFormVO.setCustomerEmploymentIncome(convertTOCustomerEmploymentIncomeList(loanAppForm.getCustomerEmploymentIncome()));
+		 loanAppFormVO.setCustomerBankAccountDetails(convertTOCustomerBankAccountDetails(loanAppForm.getCustomerBankAccountDetails()));
+		 loanAppFormVO.setCustomerRetirementAccountDetails(convertTOCustomerRetirementAccountDetails(loanAppForm.getCustomerRetirementAccountDetails()));
+		 loanAppFormVO.setCustomerOtherAccountDetails(convertTOCustomerOtherAccountDetails(loanAppForm.getCustomerOtherAccountDetails()));
+		 // Ends
 		 
 		 // spouse Bank detials setting in VO Start
 		 
+		 loanAppFormVO.setCustomerSpouseDetail(convertTOCustomerSpouseDetail(loanAppForm.getCustomerspousedetail()));
+		 loanAppFormVO.setCustomerSpouseEmploymentIncome(convertTOCustomerSpouseEmploymentIncomeList(loanAppForm.getCustomerSpouseEmploymentIncome()));
 		 loanAppFormVO.setCustomerSpouseBankAccountDetails(convertTOSpouseBankAccountList(loanAppForm.getCustomerSpouseBankAccountDetails()));
 		 loanAppFormVO.setCustomerSpouseRetirementAccountDetails(convertTOSpouseRetirementAccountList(loanAppForm.getCustomerSpouseRetirementAccountDetails()));
 		 loanAppFormVO.setCustomerSpouseOtherAccountDetails(convertTOSpouseOtherAccountList(loanAppForm.getCustomerSpouseOtherAccountDetails()));
@@ -140,6 +153,123 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 
 	 }
 
+
+	private List<CustomerOtherAccountDetailsVO> convertTOCustomerOtherAccountDetails(
+            List<CustomerOtherAccountDetails> customerOtherAccountDetailslist) {
+	   
+		
+		if(customerOtherAccountDetailslist ==  null || customerOtherAccountDetailslist.size() == 0)
+			return null;
+		
+		List<CustomerOtherAccountDetailsVO> customerOtherAccountDetailsVOList = new ArrayList<CustomerOtherAccountDetailsVO>();
+		
+		CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = null;
+		CustomerOtherAccountDetails customerOtherAccountDetails = null;
+		for (int i = 0; i < customerOtherAccountDetailslist.size(); i++) {
+			
+			customerOtherAccountDetails = customerOtherAccountDetailslist.get(i);
+			
+			customerOtherAccountDetailsVO = convertTOCustomerBankAccountDetailsVO(customerOtherAccountDetails);
+			customerOtherAccountDetailsVOList.add(customerOtherAccountDetailsVO);
+		}
+		
+	    return customerOtherAccountDetailsVOList;
+    }
+
+	private CustomerOtherAccountDetailsVO convertTOCustomerBankAccountDetailsVO(
+            CustomerOtherAccountDetails customerOtherAccountDetails) {
+	    
+		if(null == customerOtherAccountDetails)
+			return null;
+		CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = new CustomerOtherAccountDetailsVO();
+		customerOtherAccountDetailsVO.setId(customerOtherAccountDetails.getId());
+		customerOtherAccountDetailsVO.setAccountSubType(customerOtherAccountDetails.getAccountSubType());
+		customerOtherAccountDetailsVO.setAmountForNewHome(customerOtherAccountDetails.getAmountfornewhome());
+		customerOtherAccountDetailsVO.setCurrentAccountBalance(customerOtherAccountDetails.getCurrentaccountbalance());
+		
+		CustomerOtherAccountDetailsVO customerOtherAccountDetailsVOTemp = new CustomerOtherAccountDetailsVO();
+		customerOtherAccountDetailsVOTemp.setCustomerOtherAccountDetails(customerOtherAccountDetailsVO);
+		
+	    return customerOtherAccountDetailsVOTemp;
+    }
+
+	private List<CustomerRetirementAccountDetailsVO> convertTOCustomerRetirementAccountDetails(
+            List<CustomerRetirementAccountDetails> customerRetirementAccountDetailsList) {
+	   
+		if(customerRetirementAccountDetailsList ==  null || customerRetirementAccountDetailsList.size() == 0)
+			return null;
+		
+		List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetailsVOList = new ArrayList<CustomerRetirementAccountDetailsVO>();
+		
+		CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = null;
+		CustomerRetirementAccountDetails customerRetirementAccountDetails = null;
+		for (int i = 0; i < customerRetirementAccountDetailsList.size(); i++) {
+			
+			customerRetirementAccountDetails = customerRetirementAccountDetailsList.get(i);
+			
+			customerRetirementAccountDetailsVO = convertTOCustomerBankAccountDetailsVO(customerRetirementAccountDetails);
+			customerRetirementAccountDetailsVOList.add(customerRetirementAccountDetailsVO);
+		}
+		
+	    return customerRetirementAccountDetailsVOList;
+    }
+
+	private CustomerRetirementAccountDetailsVO convertTOCustomerBankAccountDetailsVO(
+            CustomerRetirementAccountDetails customerRetirementAccountDetails) {
+	   
+		
+		if(null == customerRetirementAccountDetails)
+			return null;
+		CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = new CustomerRetirementAccountDetailsVO();
+		
+		customerRetirementAccountDetailsVO.setId(customerRetirementAccountDetails.getId());
+		customerRetirementAccountDetailsVO.setAccountSubType(customerRetirementAccountDetails.getAccountSubType());
+		customerRetirementAccountDetailsVO.setAmountForNewHome(customerRetirementAccountDetails.getAmountfornewhome());
+		customerRetirementAccountDetailsVO.setCurrentAccountBalance(customerRetirementAccountDetails.getCurrentaccountbalance());
+		
+		CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsTemp = new CustomerRetirementAccountDetailsVO();
+		customerRetirementAccountDetailsTemp.setCustomerRetirementAccountDetails(customerRetirementAccountDetailsVO);
+		
+	    return customerRetirementAccountDetailsTemp;
+    }
+
+	private List<CustomerBankAccountDetailsVO> convertTOCustomerBankAccountDetails(
+            List<CustomerBankAccountDetails> customerBankAccountDetailsList) {
+	   
+		if(customerBankAccountDetailsList ==  null || customerBankAccountDetailsList.size() == 0)
+			return null;
+		
+		List<CustomerBankAccountDetailsVO> customerBankAccountDetailsVOList = new ArrayList<CustomerBankAccountDetailsVO>();
+		
+		CustomerBankAccountDetailsVO customerBankAccountDetailsVO = null;
+		CustomerBankAccountDetails customerBankAccountDetails = null;
+		for (int i = 0; i < customerBankAccountDetailsList.size(); i++) {
+			
+			customerBankAccountDetails = customerBankAccountDetailsList.get(i);
+			
+			customerBankAccountDetailsVO = convertTOCustomerBankAccountDetailsVO(customerBankAccountDetails);
+			customerBankAccountDetailsVOList.add(customerBankAccountDetailsVO);
+		}
+		
+	    return customerBankAccountDetailsVOList;
+    }
+
+	private CustomerBankAccountDetailsVO convertTOCustomerBankAccountDetailsVO(
+            CustomerBankAccountDetails customerBankAccountDetails) {
+	  
+		if(null ==customerBankAccountDetails)
+			return null;
+		CustomerBankAccountDetailsVO customerBankAccountDetailsVO = new CustomerBankAccountDetailsVO();
+		customerBankAccountDetailsVO.setId(customerBankAccountDetails.getId());
+		customerBankAccountDetailsVO.setAccountSubType(customerBankAccountDetails.getAccountSubType());
+		customerBankAccountDetailsVO.setAmountForNewHome(customerBankAccountDetails.getAmountfornewhome());
+		customerBankAccountDetailsVO.setCurrentAccountBalance(customerBankAccountDetails.getCurrentaccountbalance());
+		
+		CustomerBankAccountDetailsVO customerBankAccountDetailsVOTemp = new CustomerBankAccountDetailsVO();
+		customerBankAccountDetailsVOTemp.setCustomerBankAccountDetails(customerBankAccountDetailsVO);
+		
+	    return customerBankAccountDetailsVOTemp;
+    }
 
 	private List<CustomerSpouseOtherAccountDetailsVO> convertTOSpouseOtherAccountList(
             List<CustomerSpouseOtherAccountDetails> spouseOtherAccountDetailsList) {
@@ -175,7 +305,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		spouseOtherAccountDetailsVO.setAmountForNewHome(spouseOtherAccountDetails.getAmountfornewhome());
 		spouseOtherAccountDetailsVO.setCurrentAccountBalance(spouseOtherAccountDetails.getCurrentaccountbalance());
 		
-	    return spouseOtherAccountDetailsVO;
+		CustomerSpouseOtherAccountDetailsVO spouseOtherAccountDetailsVOTemp = new CustomerSpouseOtherAccountDetailsVO();
+		spouseOtherAccountDetailsVOTemp.setCustomerSpouseOtherAccountDetails(spouseOtherAccountDetailsVO);
+		
+	    return spouseOtherAccountDetailsVOTemp;
     }
 
 	private List<CustomerSpouseRetirementAccountDetailsVO> convertTOSpouseRetirementAccountList(
@@ -212,7 +345,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		spouseRetirementAccountDetailsVO.setAmountForNewHome(spouseRetirementAccountDetails.getAmountfornewhome());
 		spouseRetirementAccountDetailsVO.setCurrentAccountBalance(spouseRetirementAccountDetails.getCurrentaccountbalance());
 		
-	    return spouseRetirementAccountDetailsVO;
+		CustomerSpouseRetirementAccountDetailsVO spouseRetirementAccountDetailsVOTemp = new CustomerSpouseRetirementAccountDetailsVO();
+		spouseRetirementAccountDetailsVOTemp.setCustomerSpouseRetirementAccountDetails(spouseRetirementAccountDetailsVO);
+		
+	    return spouseRetirementAccountDetailsVOTemp;
     }
 
 	private List<CustomerSpouseBankAccountDetailsVO> convertTOSpouseBankAccountList(
@@ -247,7 +383,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		customerSpouseBankAccountDetailsVO.setAccountSubType(customerSpouseBankAccountDetails.getAccountSubType());
 		customerSpouseBankAccountDetailsVO.setAmountForNewHome(customerSpouseBankAccountDetails.getAmountfornewhome());
 		customerSpouseBankAccountDetailsVO.setCurrentAccountBalance(customerSpouseBankAccountDetails.getCurrentaccountbalance());
-	    return customerSpouseBankAccountDetailsVO;
+		
+		CustomerSpouseBankAccountDetailsVO customerSpouseBankAccountDetailsVOTemp = new CustomerSpouseBankAccountDetailsVO();
+		customerSpouseBankAccountDetailsVOTemp.setCustomerSpouseBankAccountDetails(customerSpouseBankAccountDetailsVO);
+		
+		
+	    return customerSpouseBankAccountDetailsVOTemp;
     }
 
 	private CustomerSpouseDetailVO convertTOCustomerSpouseDetail(
