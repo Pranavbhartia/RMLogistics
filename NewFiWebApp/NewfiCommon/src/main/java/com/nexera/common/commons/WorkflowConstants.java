@@ -77,6 +77,7 @@ public class WorkflowConstants {
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING
@@ -95,10 +96,9 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_PRE_PURCHASE_CONDITIONS
 	                        .getLosStatusID()));
 	private static final List<Integer> QC_LIST = new ArrayList<Integer>(
-	        Arrays.asList(
-	                LOSLoanStatus.LQB_STATUS_PRE_DOC_QC.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE.getLosStatusID(),
+	        Arrays.asList(LOSLoanStatus.LQB_STATUS_PRE_DOC_QC.getLosStatusID(),
+
+	        LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED.getLosStatusID()));
 
 	private static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
@@ -177,7 +177,8 @@ public class WorkflowConstants {
 		        LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING, UW_LIST);
 		MILESTONE_ORDER_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_FINAL_DOCS, UW_LIST);
-
+		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
+		        UW_LIST);
 		// Apparisal
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        APPRAISAL_LIST);
@@ -200,8 +201,7 @@ public class WorkflowConstants {
 		// QC
 		MILESTONE_ORDER_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_PRE_DOC_QC, QC_LIST);
-		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
-		        QC_LIST);
+
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE,
 		        QC_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED,
@@ -246,8 +246,8 @@ public class WorkflowConstants {
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
-		        new WorkItemMilestoneInfo(Milestones.QC,
-		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.QC),
+		        new WorkItemMilestoneInfo(Milestones.UW,
+		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE)));
 
