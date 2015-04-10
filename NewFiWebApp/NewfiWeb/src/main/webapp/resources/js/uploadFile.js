@@ -182,17 +182,25 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	
 	if(newfiObject.user.userRole.roleDescription == "Realtor"){
 		if(listUploadedFiles.assignedByUser.userId == newfiObject.user.id ){
+			docImg.attr({
+				"data-toggle":"tooltip" , "data-placement"  : "top" , "title" : "Click here to view file."
+			});
 			docImg.click(function(){
 				window.open("readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=0", '_blank');
 			});
 			ahrefFile.append(docDesc);
 		}else{
+			docImg.attr({
+				"data-toggle":"tooltip" , "data-placement"  : "top" , "title" : "Cannot access file."
+			});
 			docImg.addClass("unlink");
 			ahrefFile = docDesc;
 			docAssign.hide();
 		}
 	}else{
-		
+		docImg.attr({
+			"data-toggle":"tooltip" , "data-placement"  : "top" , "title" : "Click here to view file."
+		});
 		docImg.click(function(){
 			window.open("readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=0", '_blank');
 		});
@@ -220,9 +228,21 @@ function showFileLink(uploadedItems) {
 		$('#needDoc' + needId).removeClass('hide');
 		$('#needDoc' + needId).addClass('doc-link-icn');
 		$('#needDoc' + needId).click(function() {
-			window.open("readFileAsStream.do?uuid="+value.uuidFileId+"&isThumb=0", '_blank');
+			 if(newfiObject.user.userRole.roleDescription == "Realtor"){
+					if(value.assignedByUser.userId == newfiObject.user.id ){
+						window.open("readFileAsStream.do?uuid="+value.uuidFileId+"&isThumb=0", '_blank');
+					}else{
+						showDialogPopup("File Access","You dont have access to file.", function(){
+									return false;
+							});
+					}
+			 }else{
+				 window.open("readFileAsStream.do?uuid="+value.uuidFileId+"&isThumb=0", '_blank');
+			 }
+			
+			
 		});
-		$("doc-uploaded-icn_"+needId).addClass("hide");
+		$("#doc-uploaded-icn_"+needId).addClass("hide");
 		
 		for(i in loanNeed){
 			var needIdAssigned =  loanNeed[i].needsListMaster.id;
