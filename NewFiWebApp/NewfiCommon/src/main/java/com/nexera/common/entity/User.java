@@ -402,6 +402,7 @@ public class User implements Serializable, UserDetails {
 			userVO.setPhotoImageUrl(user.getPhotoImageUrl());
 			userVO.setPassword(user.getPassword());
 			userVO.setId(user.getId());
+			userVO.setUsername(user.getUsername());
 			userVO.setUserRole(UserRole.convertFromEntityToVO(user
 			        .getUserRole()));
 			userVO.setEmailId(user.getEmailId());

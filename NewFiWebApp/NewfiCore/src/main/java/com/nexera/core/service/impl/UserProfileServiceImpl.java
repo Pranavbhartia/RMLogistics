@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gson.JsonArray;
@@ -899,7 +900,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        UndeliveredEmailException, NoRecordsFetchedException {
 
 		Reader reader = new InputStreamReader(file.getInputStream());
-		CSVReader csvReader = new CSVReader(reader, ',');
+		CSVReader csvReader = new CSVReader(reader,',', CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
 		int lineCounter = 1;
 
 		JsonObject errors = new JsonObject();
