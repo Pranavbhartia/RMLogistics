@@ -51,6 +51,3 @@ ALTER TABLE `newfi_schema`.`workflowitemmaster`
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
    ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`;
 
-#Rajeswari on 10th April
-ALTER TABLE `newfi_schema`.`loanappform` 
-CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
