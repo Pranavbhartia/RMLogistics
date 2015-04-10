@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
+import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.User;
@@ -71,6 +73,9 @@ public class UserProfileRest {
 
 	@Autowired
 	private LoanService loanService;
+	
+	@Autowired
+	private PropertyFileReader propertyFileReader;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
@@ -123,12 +128,14 @@ public class UserProfileRest {
 		LOG.info("completeprofile profile get call : ");
 		Gson gson = new Gson();
 		User user = getUserObject();
-
+		String userProfileUrl = propertyFileReader.getProperty(CommonConstants.APPLICATION_PROPERTIES_FILE, "profile.url");
+        
 		Integer userid = user.getId();
 		UserVO userVO = null;
 		String userprofile = null;
 		try {
 			userVO = userProfileService.findUser(userid);
+			userVO.setUserProfileBaseUrl(userProfileUrl);
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
