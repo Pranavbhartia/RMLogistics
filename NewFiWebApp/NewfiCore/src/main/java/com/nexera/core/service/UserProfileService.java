@@ -82,4 +82,6 @@ public interface UserProfileService {
 
 	public void addDefaultLM(UserVO userVO);
 
+	public String getLQBUrl(Integer userId, Integer loanId);
+
 }
