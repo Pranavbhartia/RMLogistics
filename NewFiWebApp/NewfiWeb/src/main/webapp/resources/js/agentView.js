@@ -3,6 +3,18 @@
  */
 var isAgentTypeDashboard;
 var docData = [];
+var currentLoanType = null;
+
+LOAN_ENUM = {
+		ALL : "ALL",
+		NEW_PROSPECT : "NEW PROSPECT",
+		LEAD : "LEAD",
+		NEW_LOAN : "NEW LOAN",
+		IN_PROGRESS:"IN PROGRESS",
+		CLOSED : "CLOSED",
+		WITHDRAWN :"WITHDRAWN",
+		DECLINED : "DECLINED"
+	};
 
 
 function adjustCustomerNameWidth() {
@@ -65,17 +77,17 @@ function paintAgentDashboard(loanType) {
 		"class" : "rp-agent-dashboard float-left"
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
+	currentLoanType = loanType;
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
 		
 		getDashboardRightPanelForWorkLoans();
 	} else if (loanType == "myloans") {
 		$('#lp-my-loans').addClass('lp-item-active');
-		
 		getDashboardRightPanelForMyLoans();
 	} else if (loanType == "archivesloans") {
 		$('#lp-my-archives').addClass('lp-item-active');
-		dropDownItemArray = ["Closed", "Withdrawn", "Declined", "All" ];
+		
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();
@@ -101,21 +113,21 @@ function getDashboardRightPanel() {
 }
 
 // ajax call to get dashboard for work loans
-function getDashboardRightPanelForWorkLoans() {
+function getDashboardRightPanelForWorkLoans(loanType) {
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForWorkLoans/" + userID, "GET",
 			"json", {}, paintAgentDashboardRightPanel);
 }
 
 // ajax call to get dashboard for my loans
-function getDashboardRightPanelForMyLoans() {
+function getDashboardRightPanelForMyLoans(loanType) {
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
 			"json", {}, paintAgentDashboardRightPanel);
 }
 
 // ajax call to get dashboard for archive loans
-function getDashboardRightPanelForArchivesLoans() {
+function getDashboardRightPanelForArchivesLoans(loanType) {
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
 			"json", {}, paintAgentDashboardRightPanel);
@@ -155,7 +167,10 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "search-input float-left hide"
 	}).on('keyup', function(e) {
 		if (e.which == 13) {
-			$(this).hide();
+			if($(this).val()==""){
+				$(this).hide();
+			}
+			filterCustomerName(customerData.customers , $(this).val());
 			$(this).parent().find('.search-icn').show();
 		}
 	}).on('blur', function() {
@@ -180,24 +195,78 @@ function paintAgentDashboardRightPanel(data) {
 		}
 	});
 
-	var filterSelected = $('<div>').attr({
-		"class" : "filter-selected"
-	}).html("All");
-
-	filter.append(filterSelected);
-
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "filter-drop-down",
 		"class" : "filter-wrapper hide"
 	});
+	var dropDownItemArray;
+	if(currentLoanType=="myloans"){
+		dropDownItemArray = ["ALL" , "NEW_LOAN" , "IN_PROGRESS"];
+	}else if(currentLoanType == "archivesloans"){
+		dropDownItemArray = ["ALL" , "CLOSED" , "WITHDRAWN" , "DECLINED"];
+	}
 
+	for (var i = 0; i < dropDownItemArray.length; i++) {
+		
+		if(i==0){
+			var filterSelected = $('<div>').attr({
+				"class" : "filter-selected"
+			}).html("All");
+
+			filter.append(filterSelected);
+		}
+		
+		var dropDownItem = $('<div>').attr({
+			"class" : "filter-dropdown-item",
+			"id" : dropDownItemArray[i]
+		}).html(LOAN_ENUM[dropDownItemArray[i]]).bind('click', function(e) {
+			e.stopPropagation();
+			var val = $(this).html();
+			$('#filter-drop-down').parent().find('.filter-selected').html(val);
+			hideFilterDropDown();
+			searchCustomerLoanByLoanStatus(customerData.customers , $(this).attr('id'));
+		});
+		dropDownWrapper.append(dropDownItem);
+	}
+
+	filter.append(dropDownWrapper);
 
 	rightCon.append(searchCon).append(filterText).append(filter);
-
+	
+	
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
 	appendCustomers("leads-container", customerData.customers);
+}
+
+function searchCustomerLoanByLoanStatus(customers , loanStatus){
+	var searchObject = new Array();
+	
+	if(loanStatus != LOAN_ENUM.ALL){
+		for(i in customers){
+			if(customers[i].loanStatus == loanStatus){
+				searchObject.push(customers[i]);
+			}
+		}
+	}else{
+		searchObject = customers;
+	}
+	
+	
+	appendCustomers("leads-container", searchObject);
+}
+
+
+function filterCustomerName(customer , searchVal){
+	var searchObject = new Array();
+	for(i in customer){
+		if((customer[i].name.toLowerCase().indexOf($.trim(searchVal).toLowerCase()))>-1){
+			searchObject.push(customer[i]);
+		}
+	}
+	
+	appendCustomers("leads-container", searchObject);
 }
 
 function showFilterDropDown() {
@@ -3072,8 +3141,7 @@ function searchUsersBasedOnCode(name, code) {
 	restURL += "&companyName=" + name;
 
 	ajaxRequest(restURL, "GET", "json", {}, function(data) {
-
-		onReturnSearchBasedOnCodeToAddToLoanTeam(data, id);
+				onReturnSearchBasedOnCodeToAddToLoanTeam(data, id);
 	}, true);
 
 }

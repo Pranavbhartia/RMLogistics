@@ -374,7 +374,7 @@ public class LoanServiceImpl implements LoanService {
 			loanCustomerVO.setRole(user.getUserRole().getLabel());
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
-
+		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus().getLoanProgressStatus());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.
