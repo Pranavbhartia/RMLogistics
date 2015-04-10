@@ -11,6 +11,7 @@
 		<field id="sSpZip" />
 		<field id="sStatusT" />
 		<field id="sOpenedD" />
+		<field id="PricingResult" />
 		<field id="sOpenedDTime" />
 		<field id="sLeadD" />
 		<field id="sLeadDTime" />

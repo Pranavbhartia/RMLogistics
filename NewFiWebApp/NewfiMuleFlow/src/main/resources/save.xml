@@ -1,12 +1,13 @@
 <LOXmlFormat version="1.0">
 	<loan>
 		<field id="sLPurposeT">loanPurpose</field>
+		<field id="sProdCashoutAmt">prodCashOut</field>
 		<field id="sPurchPrice">loanPurchasePrice</field>
 		<field id="sProdRLckdDays ">ProdLckdDays</field>
 		<field id="sLAmtCalc">loanAmount</field>
-		<field id="sSpState">PropertyState</field>
+		<field id="sSpState">propertyState</field>
 		<field id="sApprVal">loanApprovedValue</field>
-		<collection id="sCondDataSet">
+		<!--  <collection id="sCondDataSet">
 			<record>
 				<field id="IsRequired">True</field>
 				<field id="Category">Prior Doc - Edit</field>
@@ -25,7 +26,7 @@
 				<field id="Category">Prior Doc</field>
 				<field id="CondDesc">This is condition 3</field>
 			</record>
-		</collection>
+		</collection>-->
 		<applicant id="applicantId">
 			<credit craid="creditCardId" requestType="NEW" loginName="LOGIN_NAME"
 				password="PASSWORD" equifax="equifaxStatus" experian="experianStatus"

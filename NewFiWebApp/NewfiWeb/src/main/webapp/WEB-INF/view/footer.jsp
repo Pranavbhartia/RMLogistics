@@ -30,6 +30,10 @@
 <script src="resources/js/customer-buyHome-app.js"></script>
 <script src="resources/js/turnaround.js"></script>
 <script src="resources/js/breadCrumb.js"></script>
+<script src="resources/js/template.js"></script>
+<script src="resources/js/jquery.zclip.js"></script>
+<script src="resources/js/ZeroClipboard.swf"></script>
+<script src="resources/js/jquery.zclip.min.js"></script>
 <div id="dialog" >
 </div>
 

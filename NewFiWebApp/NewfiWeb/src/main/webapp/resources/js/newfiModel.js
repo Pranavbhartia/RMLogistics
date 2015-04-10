@@ -59,7 +59,7 @@ function createNewfiUser(){
 	userObject.displayName=selectedUserDetail.firstName+ " "+selectedUserDetail.lastName;
 	userObject.emailId=selectedUserDetail.emailId;
 	userObject.firstName=selectedUserDetail.firstName;
-	userObject.id=selectedUserDetail.customerId;
+	userObject.id=selectedUserDetail.userID;
 	userObject.lastName=selectedUserDetail.lastName;
 	userObject.photoImageUrl=selectedUserDetail.photoUrl;
 	return userObject;

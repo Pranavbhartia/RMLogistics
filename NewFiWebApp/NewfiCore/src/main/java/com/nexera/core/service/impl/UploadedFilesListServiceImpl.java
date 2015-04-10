@@ -48,6 +48,7 @@ import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -68,6 +69,7 @@ import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.LQBXMLHandler;
@@ -114,8 +116,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Value("${assigned_folder}")
 	private String assignedFolder;
 
-	@Value("${NEW_NOTE_TEMPLATE}")
-	private String templateId;
+	@Autowired
+	private TemplateService templateService;
 
 	@Autowired
 	private WorkflowService workflowService;
@@ -266,11 +268,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		File newFile = nexeraUtility.joinPDDocuments(filePaths);
 
-		Path path = Paths.get(newFile.getAbsolutePath());
-		byte[] data = Files.readAllBytes(path);
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        data, userId, loanId, assignedBy, isAssignedToNeed);
+		        userId, loanId, assignedBy, isAssignedToNeed);
 
 		if (newFile.exists()) {
 			newFile.delete();
@@ -377,7 +377,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	        Integer userId, Integer loanId, Integer assignedBy,
 	        Boolean isNeedAssigned) {
 		String s3Path = null;
 
@@ -406,11 +406,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
+				Path path = Paths.get(serverFile.getAbsolutePath());
+				byte[] data = Files.readAllBytes(path);
 				String uuidValue = nexeraUtility.randomStringOfLength();
 
 				// Send file to LQB
-				LQBResponseVO lqbResponseVO = createLQBVO(userId, bytes,
-				        loanId, uuidValue, isNeedAssigned);
+				LQBResponseVO lqbResponseVO = createLQBVO(userId, data, loanId,
+				        uuidValue, isNeedAssigned);
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
 					// ID.
@@ -583,13 +585,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			else if (contentType.contains("image/tiff"))
 				contentType = "image/tiff";
 
-			byte[] data = null;
-			try {
-				data = readContentIntoByteArray(file);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			checkUploadVO = uploadFile(file, contentType, data, userId, loanId,
+			checkUploadVO = uploadFile(file, contentType, userId, loanId,
 			        assignedBy, isAssignedToNeed);
 
 			if (file.exists()) {
@@ -815,15 +811,17 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	private void sendEmailForFileSync(int insertFileCount, int removeFileCount,
 	        Loan loan) {
 		EmailVO emailVO = constructEmail(loan);
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_NOTE);
 		if (insertFileCount > 0) {
 			LOG.debug("New Files have been inserted ");
-			emailVO.setTemplateId(templateId);
+			emailVO.setTemplateId(template.getValue());
 			sendEmail(emailVO);
 		}
 
 		if (removeFileCount > 0) {
 			LOG.debug("Files have been removed ");
-			emailVO.setTemplateId(templateId);
+			emailVO.setTemplateId(template.getValue());
 			sendEmail(emailVO);
 		}
 	}

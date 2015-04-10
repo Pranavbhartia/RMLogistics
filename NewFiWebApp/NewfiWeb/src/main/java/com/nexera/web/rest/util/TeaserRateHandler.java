@@ -50,6 +50,12 @@ public class TeaserRateHandler extends DefaultHandler {
     			rateVo.setTeaserRate(attributes.getValue("Rate"));
     			rateVo.setClosingCost(attributes.getValue("TotalClosingCost"));
     			rateVo.setAPR(attributes.getValue("APR"));
+    			rateVo.setlLpTemplateId(attributes.getValue("lLpTemplateId"));
+    			rateVo.setPayment(attributes.getValue("Payment"));
+    			rateVo.setPoint(attributes.getValue("Point"));
+    			
+    			
+    			
     			rateVoList.add(rateVo);
     			
     		}

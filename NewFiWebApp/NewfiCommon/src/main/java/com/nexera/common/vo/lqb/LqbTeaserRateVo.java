@@ -5,6 +5,9 @@ public class LqbTeaserRateVo {
 	private String teaserRate; 
 	private String closingCost;
 	private String APR;
+	private String payment;
+	private String lLpTemplateId;
+	private String point;
 	
 	public String getTeaserRate() {
 		return teaserRate;
@@ -23,6 +26,24 @@ public class LqbTeaserRateVo {
 	}
 	public void setAPR(String aPR) {
 		APR = aPR;
+	}
+	public String getlLpTemplateId() {
+		return lLpTemplateId;
+	}
+	public void setlLpTemplateId(String lLpTemplateId) {
+		this.lLpTemplateId = lLpTemplateId;
+	}
+	public String getPayment() {
+		return payment;
+	}
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+	public String getPoint() {
+		return point;
+	}
+	public void setPoint(String point) {
+		this.point = point;
 	}
 	
 	

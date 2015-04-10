@@ -60,7 +60,7 @@ public interface UploadedFilesListService {
 	        throws IOException, COSVisitorException, Exception;
 
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	        Integer userId, Integer loanId, Integer assignedBy,
 	        Boolean isNeedAssigned);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,

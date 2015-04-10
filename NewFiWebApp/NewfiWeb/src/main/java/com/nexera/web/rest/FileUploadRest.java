@@ -138,8 +138,8 @@ public class FileUploadRest
             	String contentType = "application/pdf";
             	
             	CheckUploadVO checkUploadVO  = uploadedFilesListService.uploadFile(
-            															file,contentType ,data
-            															, userId, loanId, assignedBy , isAssignedToNeed);
+            															file,contentType , userId, loanId, 
+            																	assignedBy , isAssignedToNeed);
             	
                 //Integer fileSavedId = uploadedFilesListService.addUploadedFilelistObejct( file, loanId, userId, assignedBy , null , null );
                 LOG.info( "New file saved with id " + checkUploadVO.getIsUploadSuccess() );
@@ -325,13 +325,13 @@ public class FileUploadRest
 
 			try {
 
-				byte[] bytes = multipartFile.getBytes();
+				
 				// Upload the file locally and returns the response of file
 				// upload
 
 				checkFileUploaded = uploadedFilesListService.uploadFile(
 				        nexeraUtility.multipartToFile(multipartFile),
-				        multipartFile.getContentType(), bytes, userID, loanId,
+				        multipartFile.getContentType(), userID, loanId,
 				        assignedBy, isAssignedToNeed);
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to

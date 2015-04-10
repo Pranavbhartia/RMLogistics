@@ -269,55 +269,22 @@ public class LoanServiceImpl implements LoanService {
 	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO) {
 
 		// Get new prospect and lead loans this user has access to.
-		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 1);
-		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 2));
-
+		List<Loan> loanList = loanDao
+		        .retrieveLoanByProgressStatus(
+		                this.parseUserModel(userVO),
+		                new int[] {
+		                        LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId(),
+		                        LoanProgressStatusMasterEnum.IN_PROGRESS
+		                                .getStatusId() });
+		;
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO userVO) {
-
-		// Get all loans this user has access to.
-		UserVO vo = userProfileService.findUser(userVO.getId());
-
-		if (checkIfUserIsAdmin(vo)) {
-
-			List<Loan> loanList = loanDao.retrieveLoanForDashboardForAdmin(this
-			        .parseUserModel(userVO));
-			LoanDashboardVO loanDashboardVO = this
-			        .buildLoanDashboardVoFromLoanList(loanList);
-
-			return loanDashboardVO;
-
-		}
-
-		List<Loan> loanList = loanDao.retrieveLoanForDashboard(this
-		        .parseUserModel(userVO));
-		LoanDashboardVO loanDashboardVO = this
-		        .buildLoanDashboardVoFromLoanList(loanList);
-
-		return loanDashboardVO;
-	}
-
-	private boolean checkIfUserIsAdmin(UserVO vo) {
-		// TODO Auto-generated method stub
-		if (vo.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
-			return Boolean.FALSE;
-		}
-		if (vo.getUserRole().getId() == (UserRolesEnum.SYSTEM.getRoleId())
-		        || vo.getInternalUserDetail().getInternalUserRoleMasterVO()
-		                .getId() == UserRolesEnum.SM.getRoleId()) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
+	
 
 	private boolean checkIfUserIsSalesManager() {
 
@@ -334,11 +301,11 @@ public class LoanServiceImpl implements LoanService {
 
 		// Get declined , withdrawn and closed loans this user has access to.
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 5);
-		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 6));
-		loanList.addAll(loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO), 7));
+		        this.parseUserModel(userVO), new int[] {
+		                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
+		                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
+		                LoanProgressStatusMasterEnum.DECLINED.getStatusId() });
+
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 

@@ -139,7 +139,9 @@ public class RestInterceptor implements Callable
                 saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
             inputParams[2] = saveDefault;
             inputParams[3] = restParameters.getLoanVO().getFormat();
-        } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
+        LOG.info("saveDefault xmls is"+saveDefault);
+        }
+        else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
             LOG.debug( "Operation Chosen Was ListEDocsByLoanNumber " );
             inputParams = new Object[2];
             inputParams[0] = NewFiManager.userTicket;

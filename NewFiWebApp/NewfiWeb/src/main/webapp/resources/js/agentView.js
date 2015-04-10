@@ -3,7 +3,7 @@
  */
 var isAgentTypeDashboard;
 var docData = [];
-dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
+
 
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
@@ -30,7 +30,7 @@ function getAgentSecondaryLeftNav() {
 	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
 	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
 
-	if (!userIsRealtor()) {
+	if (userIsRealtor()) {
 		return leftTab2Wrapper.append(step0).append(step1).append(step3)
 				.append(step4).append(step5);
 	}
@@ -67,15 +67,15 @@ function paintAgentDashboard(loanType) {
 	$('#right-panel').append(agentDashboardMainContainer);
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
-		dropDownItemArray = [ "New", "Closed", "Withdrawn", "Declined", "All" ];
+		
 		getDashboardRightPanelForWorkLoans();
 	} else if (loanType == "myloans") {
 		$('#lp-my-loans').addClass('lp-item-active');
-		dropDownItemArray = [ "New", "All" ];
+		
 		getDashboardRightPanelForMyLoans();
 	} else if (loanType == "archivesloans") {
 		$('#lp-my-archives').addClass('lp-item-active');
-		dropDownItemArray = [ "Withdrawn", "Declined", "All" ];
+		dropDownItemArray = ["Closed", "Withdrawn", "Declined", "All" ];
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();
@@ -191,21 +191,6 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "filter-wrapper hide"
 	});
 
-	// TODO:Anoop sir, implementation
-
-	for (var i = 0; i < dropDownItemArray.length; i++) {
-		var dropDownItem = $('<div>').attr({
-			"class" : "filter-dropdown-item"
-		}).html(dropDownItemArray[i]).bind('click', function(e) {
-			e.stopPropagation();
-			var val = $(this).html();
-			$('#filter-drop-down').parent().find('.filter-selected').html(val);
-			hideFilterDropDown();
-		});
-		dropDownWrapper.append(dropDownItem);
-	}
-
-	filter.append(dropDownWrapper);
 
 	rightCon.append(searchCon).append(filterText).append(filter);
 
