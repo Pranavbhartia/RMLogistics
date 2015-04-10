@@ -30,6 +30,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	private TransactionService transactionService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		if (objectMap != null) {
@@ -57,18 +58,18 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// TODO check payment status
 		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO user = new UserVO();
 		user.setId(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(user);
 		LoanApplicationFee loanApplicationFee = transactionService
-				.findByLoan(loan);
+		        .findByLoan(loan);
 		if (loanApplicationFee.getPaymentDate() != null) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-			engineTrigger
-					.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-			return "3";
+			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
+			        WorkItemStatus.COMPLETED.toString());
+			return WorkItemStatus.COMPLETED.toString();
 		}
 		return null;
 	}
@@ -79,7 +80,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
-	private void dismissAllPaymentAlerts(int loanID){
+	private void dismissAllPaymentAlerts(int loanID) {
 		iWorkflowService.dismissReadNotifications(loanID,
 		        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_OVERDUE_TYPE);
 		iWorkflowService.dismissReadNotifications(loanID,

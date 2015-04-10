@@ -21,13 +21,12 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
@@ -35,14 +34,13 @@ public class AccountStatusManager implements IWorkflowTaskExecutor {
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-		        WorkItemStatus.COMPLETED.getStatus());
+		engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
