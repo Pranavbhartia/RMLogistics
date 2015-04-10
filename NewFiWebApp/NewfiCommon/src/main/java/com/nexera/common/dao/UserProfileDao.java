@@ -8,6 +8,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.UserVO;
 
@@ -79,6 +80,6 @@ public interface UserProfileDao extends GenericDao {
 
 	void updateLoginTime(Date date, int userId);
 
-	public boolean changeUserPassword(UserVO userVO);
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO);
 	public Integer updateLqbProfile(User user);
 }

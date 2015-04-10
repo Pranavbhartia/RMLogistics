@@ -22,6 +22,7 @@ import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
+import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
@@ -340,6 +341,20 @@ public class LoanRestService {
 		vo = loanService.addHomeOwnInsCompany(vo);
 
 		return RestUtil.wrapObjectForSuccess(vo);
+	}
+
+	@RequestMapping(value = "/LoanDashBoardOnSearch", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO LoanDashboardOnSearch(
+	        @RequestBody String searchData)
+
+	{
+
+		LoanUserSearchVO searchVO = new Gson().fromJson(searchData,
+		        LoanUserSearchVO.class);
+
+		LoanDashboardVO responseVO = loanService.searchUsers(searchVO);
+
+		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
 
 	@RequestMapping(value = "/loanTurnAroundTime/{loanId}", method = RequestMethod.GET)

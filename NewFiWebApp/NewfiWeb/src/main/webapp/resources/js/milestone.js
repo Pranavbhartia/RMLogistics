@@ -617,6 +617,10 @@ function paintCustomerLoanProgressPage() {
 
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();
 
+	var subText = $('<div>').attr({
+		"class" : "loan-progress-sub-txt"
+	}).html("Below is a detail list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, you can connect with a team member to discuss by clicking here.");
+	
 	var header = $('<div>').attr({
 		"class" : "loan-progress-header"
 	}).html("loan progress");
@@ -624,7 +628,7 @@ function paintCustomerLoanProgressPage() {
 		"id" : "cust-loan-progress",
 		"class" : "loan-progress-container"
 	});
-	wrapper.append(progressHeader).append(header).append(container);
+	wrapper.append(progressHeader).append(subText).append(header).append(container);
 	$('#center-panel-cont').append(wrapper);
 
 	paintCustomerLoanProgressContainer();
@@ -636,15 +640,15 @@ function getCustomerMilestoneLoanProgressHeaderBar() {
 	});
 
 	var step1 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 1,
-			"My Profile");
+			"Application");
 	var step2 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 2,
-			"Application Status");
+			"Disclosures");
 	var step3 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 3,
-			"Credit Status");
+			"Needs List");
 	var step4 = getCustomerMilestoneLoanProgressHeaderBarStep("IN_PROGESS", 4,
-			"Team");
+			"Application Fee");
 	var step5 = getCustomerMilestoneLoanProgressHeaderBarStep("NOT_STARTED", 5,
-			"Initial Needs List");
+			"Lock Your Rates");
 
 	return container.append(step1).append(step2).append(step3).append(step4)
 			.append(step5);

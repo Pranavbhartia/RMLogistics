@@ -210,7 +210,7 @@ input[type="button"]:focus, button:focus {
 	margin-bottom: 10px;
 	padding-left: 8px;
 	text-transform: uppercase;
-	font-size: 10px;
+	font-size: 11px;
 }
 
 .lp-talk-pic {
@@ -222,7 +222,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .lp-talk-pic1 {
-	margin-right: 20px;
+	margin-right: 10px;
+	margin-left: 10px;
 	background: url(../images/ConversaionIcon.png) no-repeat center;
 	border-radius: 0;
 }
@@ -281,7 +282,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-txt1 {
 	padding-left: 8px;
-	font-size: 10px;
+	font-size: 11px;
 	text-transform: uppercase;
 }
 
@@ -293,6 +294,7 @@ input[type="button"]:focus, button:focus {
 .lp-alert-header {
 	padding-left: 8px;
 	text-transform: uppercase;
+	font-size: 11px;
 }
 
 .lp-alert-item {
@@ -652,7 +654,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-sub-col-detail {
   width: 100px;
-  text-align: center;
+  padding:0 10px;
   color: #428bca;
   font-family: 'opensanssemibold';
   border: 1px solid #dcdcdc;
@@ -1141,7 +1143,6 @@ input[type="button"]:focus, button:focus {
 	line-height: 45px;
 	background-color: #f5f9fc;
 	padding-left: 20px;
-	margin-bottom: 20px;
 }
 
 .conversation-header {
@@ -1494,7 +1495,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-th>div {
-	font-size: 14px;
+	font-size: 12px;
 }
 
 .leads-container-tc1 {
@@ -1510,11 +1511,11 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc4 {
-	width: 180px;
+	width: 140px;
 }
 
 .leads-container-tc5 {
-	width: 90px;
+	width: 138px;
 }
 
 .leads-container-tc6 {
@@ -2751,6 +2752,7 @@ input.calc-input {
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+	font-size: 16px;
 }
 
 .forgot-pwd {
@@ -2760,7 +2762,8 @@ input.calc-input {
 }
 
 .forgot-pwd-link {
-	color: #428bca;
+	color: #d7d7d7;
+	margin-left:5px;
 	cursor: pointer;
 }
 
@@ -4446,4 +4449,22 @@ input.calc-input {
 	position: relative;
 	margin: 80px auto 0px;
 	width: 450px;
+}
+
+.agent-state-dropdown-row {
+    padding: 5px 0 5px 15px;
+    height: 28px;
+}
+
+.state-row {
+    padding-left: 10px;
+    line-height: 20px;
+}
+
+.footer{
+	width: 100%;
+	margin-top: 50px;
+	padding-bottom: 10px;
+	color:#d7d7d7;
+	text-align: center;
 }

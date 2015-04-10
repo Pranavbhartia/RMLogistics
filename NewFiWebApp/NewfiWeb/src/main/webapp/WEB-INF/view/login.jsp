@@ -90,6 +90,10 @@
 					</div>
 				</div>
 			</div>
+			
+			
+			<!-- Footer -->
+			<div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
 		</div>
 	</div>
 </body>

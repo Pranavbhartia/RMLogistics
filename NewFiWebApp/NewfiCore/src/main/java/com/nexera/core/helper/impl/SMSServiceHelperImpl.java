@@ -1,37 +1,31 @@
 package com.nexera.core.helper.impl;
 
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.core.helper.SMSServiceHelper;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.utility.MobileCarriers;
+import com.sendgrid.SendGrid.Email;
 
 @Component
 public class SMSServiceHelperImpl implements SMSServiceHelper {
 
-	@Value("${sms.mail.host}")
-	private String mailHost;
+	@Value("${sms.body}")
+	private String smsBodyText;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(SMSServiceHelperImpl.class);
 
 	@Override
-	public String sendNotificationSMS(String carrierName, long phoneNumber,
-	        String textMessage) {
+	public String sendNotificationSMS(String carrierName, long phoneNumber) {
 		LOGGER.debug("Inside method sendNotificationSMS ");
 		String carrierEmailAddress = null;
 		int maxLength = 0;
@@ -77,7 +71,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 		}
 
 		carrierEmailAddress = String.valueOf(phoneNumber) + carrierEmailAddress;
-		if (send(maxLength, carrierEmailAddress, textMessage)) {
+		if (send(maxLength, carrierEmailAddress)) {
 			return "Message Successfully Sent ";
 		} else {
 			return "Message was not send ";
@@ -85,59 +79,27 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 
 	}
 
-	public boolean send(int maxlength, String mailAddress, String textMessage) {
-
+	public boolean send(int maxlength, String mailAddress) {
+		String[] tos = new String[1];
+		tos[0] = mailAddress;
+		Email email = new Email();
 		int msgLength;
-		final String username = "myusername@gmail.com";
-		final String password = "mypassword";
-		String fromAddress = CommonConstants.SENDER_EMAIL_ID;
-		String subject = "";
+		String subject = " ";
 		LOGGER.debug("Calculating message Length ");
-		msgLength = fromAddress.length() + 1 + subject.length() + 1
-		        + textMessage.length();
+		msgLength = CommonConstants.SENDER_EMAIL_ID.length() + 1
+		        + subject.length() + 1 + smsBodyText.length();
 		if (msgLength > maxlength) {
 			LOGGER.error("Message Length Too Long ");
 			return false;
 		}
-		Properties props = System.getProperties();
-
-		if (mailHost != null) {
-			props.put("mail.smtp.host", mailHost);
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.auth", "true");
-		}
-
-		Session session = Session.getInstance(props,
-	            new javax.mail.Authenticator() {
-	                @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-	                    return new PasswordAuthentication(username, password);
-	                }
-	            });
-
-		try {
-
-			Message msg = new MimeMessage(session);
-
-			if (fromAddress != null) {
-				msg.setFrom(new InternetAddress(fromAddress));
-			}
-			msg.setSubject(subject);
-			msg.setText(textMessage);
-
-			// Add Recipient
-			msg.setRecipients(Message.RecipientType.TO,
-			        InternetAddress.parse(mailAddress, false));
-
-			msg.setSentDate(new Date());
-
-			Transport.send(msg);
-
-			return true;
-		} catch (MessagingException mex) {
-			LOGGER.error("Exception caught while sending message");
+		email.setText(smsBodyText);
+		email.setFrom(CommonConstants.SENDER_EMAIL_ID);
+		email.setSubject(subject);
+		email.setTo(tos);
+		if (sendGridEmailService.sendSMSEmail(email) == null) {
 			return false;
+		} else {
+			return true;
 		}
-
 	}
 }

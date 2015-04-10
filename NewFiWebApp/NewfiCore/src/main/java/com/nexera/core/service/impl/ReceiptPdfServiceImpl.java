@@ -38,7 +38,6 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 
 	private static final Font h2Font = new Font(Font.getFamily("Segoe UI"), 12,
 			Font.NORMAL, new BaseColor(Color.decode("#222649")));
-	private static String FILE = "/home/admin/Desktop/nexara_receipt.pdf";
 
 	public ByteArrayOutputStream generateReceipt(
 			LoanApplicationReceiptVO applicationReceiptVO) {
@@ -50,7 +49,6 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 		Document document = new Document(pageSize);
 
 		try {
-			PdfWriter.getInstance(document, new FileOutputStream(FILE));
 			PdfWriter.getInstance(document, pdfInMemory);
 			document.open();
 
@@ -75,7 +73,7 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 
 			PdfPCell cell2 = new PdfPCell();
 			cell2.setBorder(Rectangle.NO_BORDER);
-			Paragraph p1 = new Paragraph("\n Application Fee Receipt", capFont);
+			Paragraph p1 = new Paragraph("Application Fee Receipt", capFont);
 			p1.setAlignment(Element.ALIGN_CENTER);
 			cell2.addElement(p1);
 			table.addCell(cell2);
@@ -115,20 +113,26 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 			p4.add(new Chunk(new LineSeparator()));
 
 			document.add(p4);
-
+			document.add(new Paragraph(
+					"\nThis is to confirm that amount $"
+							+ applicationReceiptVO.getFee()
+							+ " has been received as Application fee from "
+							+ applicationReceiptVO.getCustomerName()
+							+ ". Thanks for the payment. Your loan will move to next stage after the transaction is confirmed.",
+					genFont));
 			PdfPTable tbl = new PdfPTable(2);
 			document.add(Chunk.NEWLINE);
-			PdfPCell cell = new PdfPCell(new Phrase("Application Fee", genBold));
-			cell.disableBorderSide(Rectangle.BOX);
-			// cell.enableBorderSide(2);
-			tbl.addCell(cell);
-
-			cell = new PdfPCell(new Phrase("$" + applicationReceiptVO.getFee(),
-					genBold));
-			cell.disableBorderSide(Rectangle.BOX);
-			// cell.enableBorderSide(2);
-			tbl.addCell(cell);
-
+			/*
+			 * PdfPCell cell = new PdfPCell(new Phrase(
+			 * "This is to confirm that amount $XXX.XX has been received as Application fee from <username>. Thanks for the payment. Your loan will move to next stage after the transaction is confirmed."
+			 * , genBold)); cell.disableBorderSide(Rectangle.BOX); //
+			 * cell.enableBorderSide(2); tbl.addCell(cell);
+			 * 
+			 * cell = new PdfPCell(new Phrase("$" +
+			 * applicationReceiptVO.getFee(), genBold));
+			 * cell.disableBorderSide(Rectangle.BOX); //
+			 * cell.enableBorderSide(2); tbl.addCell(cell);
+			 */
 			document.add(tbl);
 			document.add(Chunk.NEWLINE);
 			document.add(p4);
