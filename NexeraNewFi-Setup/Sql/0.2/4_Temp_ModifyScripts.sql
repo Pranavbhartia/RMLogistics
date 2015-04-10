@@ -46,7 +46,11 @@ INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `d
 #Utsav on 10th April 15:29 PM IST
 
 ALTER TABLE `newfi_schema`.`workflowitemmaster` 
-   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `display_turn_order`
+   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `display_turn_order`;
    
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
-   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`
+   ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`;
+
+#Rajeswari on 10th April
+ALTER TABLE `newfi_schema`.`loanappform` 
+CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
