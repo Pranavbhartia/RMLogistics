@@ -167,7 +167,7 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 function paintCustomerApplicationPurchasePageStep1a() {
 	quesContxts = [];
 	
-	applyLoanStatus = 1;
+	
 	appProgressBaar(2);
 	
 	$('#app-right-panel').html('');
@@ -275,7 +275,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
     		appUserDetails.user = user;
-    		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
+    		
     		
     		if(isSellYourhome =='Yes')
     		appUserDetails.homeToSell = true;
@@ -423,7 +423,6 @@ function getAddRemoveButtonRow(fieldName){
 
 function paintSpouseSaleOfCurrentHome() {
     
-	applyLoanStatus = 1;
 	//appProgressBaar(1);
 	//$('#app-right-panel').html('');
 	
@@ -550,8 +549,6 @@ function paintSpouseSaleOfCurrentHome() {
         "class": "ce-option-checkbox"
     }).html(quesHeaderTxt4);
 
-
-
      var questions3 = [{
         type: "select",
         text: "Account Type",
@@ -591,16 +588,8 @@ function paintSpouseSaleOfCurrentHome() {
     	////This code added to get Customer Spouse employment Income///////
     		
     		var  customerSpouseEmploymentIncome = [];
-    		var customerSpouseBankAccountDetails =[];
-    		var customerSpouseOtherAccountDetails=[];
-    		var customerSpouseRetirementAccountDetails=[];
-      
-     
-     
-    
-     
-	      
-	      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+    		
+      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
 	       customerSpouseEmploymentIncomeTemp1 = {};
 	       
 	       id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="custSpouseEmploymentIncomeId"]').val();
@@ -622,11 +611,11 @@ function paintSpouseSaleOfCurrentHome() {
 	       customerSpouseEmploymentIncome.push(temp);
 	      });
     
-     if(customerSpouseEmploymentIncome&&customerSpouseEmploymentIncome.length>0)
-   appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+	      if(customerSpouseEmploymentIncome&&customerSpouseEmploymentIncome.length>0)
+	    	  appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
    
-   
-      
+ 
+	      
      // appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
   
   
@@ -653,85 +642,44 @@ function paintSpouseSaleOfCurrentHome() {
 	     spouseHomeMortgageBalance = $('input[name="spouseHomeMortgageBalance"]').val();
 		 spouseInvestmentInHome = $('input[name="spouseInvestmentInHome"]').val();			 
 		
-		 $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
-		 spouseBankAccount = $('.app-options-cont[name="spouseBankAccount"]').find('.app-option-selected').text();
-		 spouseBankAcCurrentBankBalance = $('input[name="spouseBankAcCurrentBankBalance"]').val();	
-		 spouseBankAcUseForNewHome = $('input[name="spouseBankAcUseForNewHome"]').val();	
-		}
-		
-		
-		 spouseRetirementBankAccounts =  $('.app-options-cont[name="spouseRetirementBankAccounts"]').find('.app-option-selected').text();
-		 spouseRetirementCurrentBankBalance = $('input[name="spouseRetirementCurrentBankBalance"]').val();
-		 spouseRetirementAmountUseForNewHome = $('input[name="spouseRetirementAmountUseForNewHome"]').val(); 
 		 
-		 spouseOtherBankAccount = $('.app-options-cont[name="spouseOtherBankAccount"]').find('.app-option-selected').text();
-		 spouseOtherBankCurrentBankBalance = $('input[name="spouseOtherBankCurrentBankBalance"]').val();
-		 spouseOtherAmountUseForNewHome  = $('input[name="spouseOtherAmountUseForNewHome"]').val();
-		 
-	     appUserDetails.spouseHomeListPrice = spouseHomeListPrice;
-	     appUserDetails.spouseHomeMortgageBalance = spouseHomeMortgageBalance;
-		 appUserDetails.spouseInvestmentInHome = spouseInvestmentInHome;
-		 
-		// appUserDetails.spouseBankAccount = spouseBankAccount;
-		// appUserDetails.spouseBankAcCurrentBankBalance = spouseBankAcCurrentBankBalance;
-		 //appUserDetails.spouseBankAcUseForNewHome = spouseBankAcUseForNewHome;
-		
-		
-		//For Fetching Customer Spouse bank Account Details
-	   customerSpouseBankAccountTemp1 = {};
-	   customerSpouseBankAccountTemp1.accountSubType = spouseBankAccount;
-       customerSpouseBankAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
-       customerSpouseBankAccountTemp1.amountForNewHome = spouseBankAcUseForNewHome;
-       var temp = {};
-       temp.customerSpouseBankAccountDetails = customerSpouseBankAccountTemp1;
-       customerSpouseBankAccountDetails.push(temp);
-	   
-	     if(!customerSpouseBankAccountDetails == '[]')
-    appUserDetails.customerSpouseBankAccountDetails=customerSpouseBankAccountDetails;
-		// appUserDetails.spouseRetirementBankAccounts = spouseRetirementBankAccounts;
-		// appUserDetails.spouseRetirementCurrentBankBalance = spouseRetirementCurrentBankBalance;
-		// appUserDetails.spouseRetirementAmountUseForNewHome = spouseRetirementAmountUseForNewHome;
-		 
-		 		//For Fetching Customer Spouse Retirement Account Details
-	   customerSpouseRetirementAccountTemp1 = {};
-	   customerSpouseRetirementAccountTemp1.accountSubType = spouseRetirementBankAccounts;
-       customerSpouseRetirementAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
-       customerSpouseRetirementAccountTemp1.amountForNewHome = spouseBankAcUseForNewHome;
-       var temp = {};
-       temp.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountTemp1;
-       customerSpouseRetirementAccountDetails.push(temp);
-	   
-	   
-	    if(!customerSpouseRetirementAccountDetails == '[]')
-    appUserDetails.customerSpouseRetirementAccountDetails=customerSpouseRetirementAccountDetails;
-  
-		// appUserDetails.spouseOtherBankAccount = spouseOtherBankAccount;
-		 //appUserDetails.spouseOtherBankCurrentBankBalance = spouseOtherBankCurrentBankBalance;
-		 //appUserDetails.spouseOtherAmountUseForNewHome = spouseOtherAmountUseForNewHome;
+		 if(purchase == true){
+	            
+		        homelistprice = $('input[name="homelistprice"]').val();
+		        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
+		        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+		        
+		        
+		        appUserDetails.customerSpouseBankAccountDetails = [];
+		        appUserDetails.customerSpouseRetirementAccountDetails = [];
+		        appUserDetails.customerSpouseOtherAccountDetails = [];
+		        
+		        var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
+		        
+		        var bankContainer=assets[0];
+		        var retirementContainer=assets[1];
+		        var otherContainer=assets[2];
+		        
+		        if($(bankContainer).find('.app-option-checked')){
+		        	appUserDetails.customerSpouseBankAccountDetails=getAccountValues(bankContainer,"customerSpouseBankAccountDetails","spouseBankAccount","spouseBankAcCurrentBankBalance","spouseBankAcUseForNewHome");
+		        }
+				if($(retirementContainer).find('.app-option-checked')){
+					appUserDetails.customerSpouseRetirementAccountDetails=getAccountValues(retirementContainer,"customerSpouseRetirementAccountDetails","spouseRetirementBankAccounts","spouseRetirementCurrentBankBalance","spouseRetirementAmountUseForNewHome");
+			    }
+				if($(otherContainer).find('.app-option-checked')){
+					appUserDetails.customerSpouseOtherAccountDetails=getAccountValues(otherContainer,"customerSpouseOtherAccountDetails","spouseOtherBankAccount","spouseOtherBankCurrentBankBalance","spouseOtherAmountUseForNewHome");
+				}
+				
+				
+		    }
+	      
+	 
     	
-    	//For Fetching Customer Spouse Other Account Details
-    	 customerSpouseOtherAccountTemp1 = {};
-	   customerSpouseOtherAccountTemp1.accountSubType = spouseOtherBankAccount;
-       customerSpouseOtherAccountTemp1.currentAccountBalance = spouseBankAcCurrentBankBalance;
-       customerSpouseOtherAccountTemp1.amountForNewHome = spouseOtherAmountUseForNewHome;
-       var temp = {};
-       temp.customerSpouseOtherAccountDetails = customerSpouseOtherAccountTemp1;
-       customerSpouseOtherAccountDetails.push(temp);
-	   
-	   
-	   if(!customerSpouseOtherAccountDetails == '[]')
-    appUserDetails.customerSpouseOtherAccountDetails=customerSpouseOtherAccountDetails;
-    	
-    		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
     		
-    		//alert(JSON.stringify(appUserDetails));
+    		
+ 
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep4a());
-    		
-        	        	
-     //   }else{
-       // 	showToastMessage("Please give answer of the questions");
-        //}
-   	
+  
     });
 
 
@@ -1073,7 +1021,7 @@ function otherAccount(){
 
 function paintSaleOfCurrentHome() {
     
-	//applyLoanStatus = 1;
+	
 	
 	var questionsContainer = $('<div>').attr({
         "class": "app-ques-container"

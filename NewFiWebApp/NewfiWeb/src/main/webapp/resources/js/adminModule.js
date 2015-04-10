@@ -96,7 +96,8 @@ $('#alert-settings-btn').click(function(e){
 	});
 	var anchortag3=$('<a>').attr({
 	"id" : "templates",
-    "href":""	
+        "href":"#"	,
+        "onclick":"populateTemplate()"	
 	});
     var templatesRowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
@@ -869,6 +870,5 @@ function showSettingsPopup(){
 
 $('#alert-popup-wrapper-settings').show();
 }
-
 
 

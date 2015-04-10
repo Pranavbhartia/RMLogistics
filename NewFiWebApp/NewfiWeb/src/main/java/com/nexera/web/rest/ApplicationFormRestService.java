@@ -1,9 +1,14 @@
 package com.nexera.web.rest;
 
+import java.io.File;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -19,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.google.gson.Gson;
 import com.nexera.common.entity.CustomerBankAccountDetails;
@@ -35,6 +45,7 @@ import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.CustomerSpouseOtherAccountDetailsVO;
 import com.nexera.common.vo.CustomerSpouseRetirementAccountDetailsVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.web.rest.util.RestUtil;
@@ -462,7 +473,7 @@ public class ApplicationFormRestService {
 	
 @RequestMapping(value = "/createLoan", method = RequestMethod.POST)
 public @ResponseBody String createLoan(String appFormData) {
-	System.out.println("Inside createLoan");
+	System.out.println("Inside createLoan"+appFormData);
 	Gson gson = new Gson();
 	String lockRateData = null;
 	try{
@@ -472,12 +483,14 @@ public @ResponseBody String createLoan(String appFormData) {
 	if(!"".equalsIgnoreCase(loanNumber))
 		{
 		
-		String response = invokeRest(saveLoan(loanNumber,loaAppFormVO).toString());
+		String response = invokeRest((saveLoan(loanNumber,loaAppFormVO)).toString());
 		System.out.println("Save Loan Response is "+response);
-		 JSONObject jsonObject = new JSONObject(response);
-		 LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
-		 if("200".equalsIgnoreCase(jsonObject.get("responseCode").toString())){
+		 //JSONObject jsonObject = new JSONObject(response);
+		 //LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
+		
+		 if(response != null){
 			 lockRateData = loadLoanRateData(loanNumber);
+			 System.out.println("lockRateData"+lockRateData);
 		 }
 		}
 	}catch(Exception e){
@@ -489,6 +502,29 @@ public @ResponseBody String createLoan(String appFormData) {
 }
 
 
+
+@RequestMapping(value = "/lockLoanRate", method = RequestMethod.POST)
+public @ResponseBody String lockLoanRateLoan(String appFormData) {
+	System.out.println("Inside lockLoanRateLoan"+appFormData);
+	Gson gson = new Gson();
+	String lockRateData = null;
+	try{
+		LoanLockRateVO loanLockRateVO = gson.fromJson(appFormData,LoanLockRateVO.class);
+		System.out.println("lockLoanRate is"+loanLockRateVO.getIlpTemplateId());
+	String response = invokeRest(prepareLockLoanRateJson(loanLockRateVO).toString());
+	System.out.println("lockLoanRate is"+response);
+	
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		return "error";
+	}
+	return lockRateData;
+	
+}
+
+
+
 private String loadLoanRateData(String loanNumber)
 {
 	Gson gson = new Gson();
@@ -498,14 +534,13 @@ private String loadLoanRateData(String loanNumber)
 	JSONObject jsonChild = new JSONObject();
 	try {
 		jsonChild.put("sLoanNumber",loanNumber);		
-		jsonChild.put("sXmlQueryMap","{}");	
-		jsonChild.put("format","0");	
+		jsonChild.put("sXmlQueryMap",new JSONObject("{}"));	
+		jsonChild.put("format",0);	
 		json.put("opName","Load" );
 		json.put("loanVO", jsonChild); 
 		System.out.println("jsonMapObject load Loandata"+json);		
-		String response = invokeRest(json.toString());
-		JSONObject jsonObject = new JSONObject(response);
-		teaserRateList = rateService.parseLqbResponse(jsonObject.get("responseMessage").toString());
+		//JSONObject jsonObject = new JSONObject(invokeRest(json.toString()));
+		teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(invokeRest(json.toString())));
 		
 	} catch (JSONException e) {
 		e.printStackTrace();
@@ -534,6 +569,84 @@ public JSONObject prepareCreateLoanJson(String templateName)
 	}  
 		return json;
 }
+
+
+private String retrievePricingDetails(String xml)
+{
+	String pricingResultXml = null;
+	try{
+		
+			DocumentBuilderFactory factory =  DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			 Document document = builder.parse(new InputSource(new StringReader(xml)));
+			    NodeList nodeList = document.getDocumentElement().getChildNodes();
+			    
+			    
+			    NodeList nList = document.getElementsByTagName("field");
+			 
+			    for(int j = 0; j < nList.getLength(); j++){
+			    	Node nNode = nList.item(j);
+			    	
+			    	 
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+			 
+						Element eElement = (Element) nNode;
+			 
+						
+						
+						if("PricingResult".equalsIgnoreCase(eElement.getAttribute("id"))){
+						
+							if(eElement.getChildNodes().item(0)!=null){
+								System.out.println("Pricing result is"+eElement.getChildNodes().item(0).getTextContent());
+								pricingResultXml=eElement.getChildNodes().item(0).getTextContent();
+								break;	
+							}
+							
+						}
+						
+						
+					}
+			    }
+			    
+			    
+			  
+			    
+			    
+			    
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+	
+	return pricingResultXml;
+			
+}
+
+
+
+public JSONObject prepareLockLoanRateJson(LoanLockRateVO loanLockRateVO)
+{
+	JSONObject json = new JSONObject();
+	JSONObject jsonChild = new JSONObject();
+	try {
+		jsonChild.put("sLoanNumber",loanLockRateVO.getsLoanNumber());
+		jsonChild.put("IlpTemplateId",loanLockRateVO.getIlpTemplateId());	
+		jsonChild.put("requestedRate",loanLockRateVO.getRequestedFee());	
+		jsonChild.put("requestedFee",loanLockRateVO.getRequestedRate());	
+		json.put("opName","LockLoanProgram" );
+		
+		json.put("loanVO", jsonChild); 
+		
+		System.out.println("jsonMapObject"+json);
+	} catch (JSONException e) {
+		e.printStackTrace();
+	}  
+		return json;
+}
+
+
+
+
 
 private String invokeRest(String appFormData){
 	
@@ -565,19 +678,28 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 	hashmap.put("loanPurchasePrice", "400,000.00");
 	hashmap.put("loanApprovedValue", "400,000.00");
 	hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail().getSsn());
-	hashmap.put("firstName", loanAppFormVO.getUser().getFirstName());
-	hashmap.put("middleName",loanAppFormVO.getUser().getLastName());
-	hashmap.put("lastName",loanAppFormVO.getUser().getLastName());
+	hashmap.put("firstName", loanAppFormVO.getLoan().getUser().getFirstName());
+	hashmap.put("middleName",loanAppFormVO.getLoan().getUser().getLastName());
+	hashmap.put("lastName",loanAppFormVO.getLoan().getUser().getLastName());
 	hashmap.put("dob",loanAppFormVO.getUser().getCustomerDetail().getDateOfBirth().toString());
 	hashmap.put("PropertyState", loanAppFormVO.getUser().getCustomerDetail().getAddressState());
 	hashmap.put("alimonyName", "NONE");
 	hashmap.put("alimonyPayment", "1000");
 	hashmap.put("jobExpenses", "100");
-	hashmap.put("jobRelatedPayment", loanAppFormVO.getEmployedIncomePreTax());
+	if(loanAppFormVO.getCustomerEmploymentIncome()!=null && loanAppFormVO.getCustomerEmploymentIncome().size()>0){
+	hashmap.put("jobRelatedPayment", loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
+	}else{
+		hashmap.put("jobRelatedPayment", "1000");
+	}
     hashmap.put("userSSNnumber",  loanAppFormVO.getUser().getCustomerDetail().getSsn());
 	hashmap.put("baseIncome",  loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
 	hashmap.put("ProdLckdDays", "30");	
-	hashmap.put("loanAmount",  loanAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+	if("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType().getDescription())){
+		hashmap.put("loanAmount",  loanAppFormVO.getPurchaseDetails().getLoanAmount());
+	}else{
+		
+		hashmap.put("loanAmount",  loanAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
+	}
 	hashmap.put("applicantCity", loanAppFormVO.getUser().getCustomerDetail().getAddressCity());
 	hashmap.put("applicantState",loanAppFormVO.getUser().getCustomerDetail().getAddressState() );
 	hashmap.put("applicantZipCode", loanAppFormVO.getUser().getCustomerDetail().getAddressZipCode());

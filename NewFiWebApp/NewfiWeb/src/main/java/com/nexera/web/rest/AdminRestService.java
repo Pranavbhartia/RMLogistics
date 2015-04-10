@@ -17,7 +17,9 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
+import com.nexera.common.vo.TemplateVO;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -26,6 +28,9 @@ public class AdminRestService {
 
 	@Autowired
 	private MileStoneTurnAroundTimeService aroundTimeService;
+
+	@Autowired
+	private TemplateService templateService;
 
 	@RequestMapping(value = "/retrieveTurnAround", method = RequestMethod.GET)
 	public @ResponseBody
@@ -53,4 +58,29 @@ public class AdminRestService {
 		CommonResponseVO responseVO = new CommonResponseVO();
 		return responseVO;
 	}
+
+	@RequestMapping(value = "/retrieveTemplates", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO loadAllTemplates() {
+
+		List<TemplateVO> templateVOs = templateService.getListsTemplate();
+		CommonResponseVO responseVO = RestUtil
+				.wrapObjectForSuccess(templateVOs);
+
+		return responseVO;
+	}
+
+	@RequestMapping(value = "/saveTemplates", method = RequestMethod.POST)
+	public @ResponseBody
+	CommonResponseVO saveOrUpdateTemplates(@RequestBody String strTemplateVOs)
+			throws NoRecordsFetchedException {
+		TypeToken<List<TemplateVO>> token = new TypeToken<List<TemplateVO>>() {
+		};
+		List<TemplateVO> templateVOs = new Gson().fromJson(strTemplateVOs,
+				token.getType());
+		templateService.saveOrUpdate(templateVOs);
+		CommonResponseVO responseVO = new CommonResponseVO();
+		return responseVO;
+	}
+
 }

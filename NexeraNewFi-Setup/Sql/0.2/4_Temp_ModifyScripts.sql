@@ -50,3 +50,27 @@ ALTER TABLE `newfi_schema`.`workflowitemmaster`
    
 ALTER TABLE `newfi_schema`.`workflowitemexec` 
    ADD COLUMN `remind` tinyint(1) DEFAULT '0' NULL AFTER `on_success_item`
+
+
+
+#Lavanya on 10th April 4:49 PM IST
+
+DROP TABLE IF EXISTS `template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(45) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `value` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+insert into template values(1,'NEWFI_WELCOME','Newfi Welcome','2015-04-10 12:53:34','');
+insert into template values(2,'1003_APP_COMPLETE','1003 APP COMPLETE','2015-04-10 12:53:34','');
+insert into template values(3,'INITIAL_NEEDS_LIST_ADDED','INITIAL NEEDS LIST ADDED','2015-04-10 12:53:34','');
+insert into template values(4,'1003_REMINDER','1003 REMINDER','2015-04-10 12:53:34','');
+
+

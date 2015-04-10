@@ -52,8 +52,6 @@ public interface LoanService {
 
 	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO user);
 
-	public LoanDashboardVO retrieveDashboardForMyLoans(UserVO user);
-
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO user);
 
 	public List<Loan> getAllActiveLoan();
