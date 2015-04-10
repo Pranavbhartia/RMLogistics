@@ -30,4 +30,6 @@ public interface IWorkflowService {
 	public void createAlertOfType(CreateReminderVo createReminderVo);
 
 	public String getCreditDisplayScore(int userID);
+
+	public String getRenderInfoForDisclosure(int loanID);
 }

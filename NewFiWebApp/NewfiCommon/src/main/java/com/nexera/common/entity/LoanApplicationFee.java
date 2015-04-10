@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.vo.LoanApplicationReceiptVO;
+
 import java.util.Date;
 
 /**
@@ -21,11 +24,10 @@ public class LoanApplicationFee implements Serializable {
 	private Date modifiedDate;
 	private Date paymentDate;
 	private String paymentType;
-	private String transactionId;
 	private String transactionMetadata;
 	private Loan loan;
 	private User modifiedBy;
-
+    private TransactionDetails  transactionDetails;
 	public LoanApplicationFee() {
 	}
 
@@ -84,14 +86,6 @@ public class LoanApplicationFee implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	@Column(name = "transaction_id")
-	public String getTransactionId() {
-		return this.transactionId;
-	}
-
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
 
 	@Column(name = "transaction_metadata")
 	public String getTransactionMetadata() {
@@ -122,6 +116,33 @@ public class LoanApplicationFee implements Serializable {
 
 	public void setModifiedBy(User modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "transaction_id")
+	public TransactionDetails getTransactionDetails() {
+		return transactionDetails;
+	}
+
+	public void setTransactionDetails(TransactionDetails transactionDetails) {
+		this.transactionDetails = transactionDetails;
+	}
+
+	public static LoanApplicationReceiptVO convertEntityToVO(LoanApplicationFee applicationFee){
+		LoanApplicationReceiptVO	applicationReceiptVO = new LoanApplicationReceiptVO();
+		applicationReceiptVO.setCreatedAt(applicationFee.getPaymentDate());
+		applicationReceiptVO.setCustomerName(applicationFee.getLoan()
+				.getUser().getFirstName()
+				+ " "
+				+ applicationFee.getLoan().getUser().getLastName());
+		applicationReceiptVO.setFee(applicationFee.getFee());
+		applicationReceiptVO.setInvoice(applicationFee.getId() + "");
+		applicationReceiptVO
+				.setLoanId(applicationFee.getLoan().getId());
+		applicationReceiptVO.setPaymentStatus(CommonConstants.SUCCESS_KEY);
+		applicationReceiptVO.setTypeOfCard(applicationFee.getPaymentType());
+		return applicationReceiptVO;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +38,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -243,6 +245,40 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        hibernateException);
 		}
 
+	}
+
+	public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
+
+		try {
+
+			ArrayList<Integer> progressStatusList = new ArrayList<Integer>(
+			        searchVO.getProgressStatus().length);
+			for (int i = 0; i < searchVO.getProgressStatus().length; i++) {
+				progressStatusList.add(Integer.valueOf(searchVO
+				        .getProgressStatus()[i]));
+			}
+
+			List<Loan> loanListForSearchedUser = new ArrayList<Loan>();
+
+			Session session = sessionFactory.getCurrentSession();
+
+			String queryStr = "FROM Loan WHERE user.firstName like '"
+			        + searchVO.getUserName()
+			        + "%' AND loanProgressStatus.id IN (:ids)";
+			Query query = session.createQuery(queryStr).setParameterList("ids",
+			        progressStatusList);
+
+			loanListForSearchedUser = query.list();
+
+			return loanListForSearchedUser;
+
+		}
+
+		catch (HibernateException hibernateException) {
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
 	}
 
 	@Override

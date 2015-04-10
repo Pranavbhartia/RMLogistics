@@ -53,3 +53,15 @@ function getRandomID() {
 	return (Math.floor(Math.random() * 10000) + Math
 			.floor(Math.random() * 10000));
 }
+function createNewfiUser(){
+	var userObject = new Object();
+	userObject.defaultLoanId = selectedUserDetail.loanID;
+	userObject.displayName=selectedUserDetail.firstName+ " "+selectedUserDetail.lastName;
+	userObject.emailId=selectedUserDetail.emailId;
+	userObject.firstName=selectedUserDetail.firstName;
+	userObject.id=selectedUserDetail.userID;
+	userObject.lastName=selectedUserDetail.lastName;
+	userObject.photoImageUrl=selectedUserDetail.photoUrl;
+	return userObject;
+	
+}

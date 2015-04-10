@@ -2,10 +2,11 @@
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
 var workFlowContext = {
-	init : function(loanId, refUserId) {
+	init : function(loanId, customer) {
 		this.countOfTasks = 0;
 		this.loanId = loanId;
-		this.refUserId = refUserId;
+		this.customer = customer;
+		
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
@@ -13,7 +14,8 @@ var workFlowContext = {
 	loanManagerWorkflowID : {},
 	currentRole : {},
 	loanId : {},
-	refUserId:{},
+	customerId:{},
+	
 	initAttempted:false,
 	mileStoneSteps : [],
 	mileStoneStepsStructured : [],
@@ -190,7 +192,7 @@ var workFlowContext = {
 		var data={};
 		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
 		data.data={};
-		data.data.userID=newfiObject.user.id;
+		data.data.userID=this.customerId;
 		data.data.loanID=ob.loanId;
 		data.data=JSON.stringify(data.data);
 		ajaxRequest("rest/workflow/getupdatedstatus", "GET", "json", data, function(response) {
@@ -393,7 +395,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				callback = paintMilestoneTeamMemberTable;				
 			}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||ob.workItem.workflowItemType=="CREDIT_SCORE")
 			{
-				data.userID=workFlowContext.refUserId;
+				data.userID=workFlowContext.customerId;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
@@ -416,7 +418,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;
-				data.loanID = newfi.user.defaultLoanId;
+				data.loanID = workFlowContext.loanId;
 				callback = paintMilestoneTeamMemberTable;		
 			}
 			
@@ -435,8 +437,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				data.loanID = newfi.user.defaultLoanId;
 			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.userID=newfiObject.user.id;
-				data.loanID = newfi.user.defaultLoanId;
+				data.userID=workFlowContext.customer.id;
+				data.loanID = workFlowContext.loanId;
 			}
 			txtRow1.bind("click", function(e) {
 				milestoneChildEventHandler(e)
@@ -617,6 +619,10 @@ function paintCustomerLoanProgressPage() {
 
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();
 
+	var subText = $('<div>').attr({
+		"class" : "loan-progress-sub-txt"
+	}).html("Below is a detail list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, you can connect with a team member to discuss by clicking here.");
+	
 	var header = $('<div>').attr({
 		"class" : "loan-progress-header"
 	}).html("loan progress");
@@ -624,7 +630,7 @@ function paintCustomerLoanProgressPage() {
 		"id" : "cust-loan-progress",
 		"class" : "loan-progress-container"
 	});
-	wrapper.append(progressHeader).append(header).append(container);
+	wrapper.append(progressHeader).append(subText).append(header).append(container);
 	$('#center-panel-cont').append(wrapper);
 
 	paintCustomerLoanProgressContainer();
@@ -636,15 +642,15 @@ function getCustomerMilestoneLoanProgressHeaderBar() {
 	});
 
 	var step1 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 1,
-			"My Profile");
+			"Application");
 	var step2 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 2,
-			"Application Status");
+			"Disclosures");
 	var step3 = getCustomerMilestoneLoanProgressHeaderBarStep("COMPLETE", 3,
-			"Credit Status");
+			"Needs List");
 	var step4 = getCustomerMilestoneLoanProgressHeaderBarStep("IN_PROGESS", 4,
-			"Team");
+			"Application Fee");
 	var step5 = getCustomerMilestoneLoanProgressHeaderBarStep("NOT_STARTED", 5,
-			"Initial Needs List");
+			"Lock Your Rates");
 
 	return container.append(step1).append(step2).append(step3).append(step4)
 			.append(step5);
@@ -685,9 +691,16 @@ function paintCustomerLoanProgressContainer() {
 	});
 
 	$('#cust-loan-progress').append(heading).append(loanProgressCont);
-	paintMilestoneCustomerProfileDetails();
-	workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user.id);
 
+	
+	if(!userIsRealtor()){
+		workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user);	
+	}else{
+		
+		
+		workFlowContext.init(selectedUserDetail.loanID, createNewfiUser());
+	}
+	paintMilestoneCustomerProfileDetails(workFlowContext.customer);
 	workFlowContext.initialize("CUSTOMER", function() {
 	});
 	
@@ -871,7 +884,10 @@ function adjustBorderMilestoneContainer() {
 	});
 }
 
-function paintMilestoneCustomerProfileDetails() {
+
+
+function paintMilestoneCustomerProfileDetails(userObj) {
+
 	var container = $('<div>').attr({
 		"class" : "ms-cust-prof-container clearfix"
 	});
@@ -879,8 +895,8 @@ function paintMilestoneCustomerProfileDetails() {
 	var custImg = $('<div>').attr({
 		"class" : "ms-cust-prof-img float-left"
 	});
-	if(newfiObject.user.photoImageUrl){
-		custImg.attr("style" , "background-image : url("+newfiObject.user.photoImageUrl+"); background-size: cover;");
+	if(userObj.photoImageUrl){
+		custImg.attr("style" , "background-image : url("+userObj.photoImageUrl+"); background-size: cover;");
 	}
 	var custTxtContainer = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-cont float-left"
@@ -888,7 +904,7 @@ function paintMilestoneCustomerProfileDetails() {
 
 	var name = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-name"
-	}).html(newfiObject.user.firstName+" "+newfiObject.user.lastName);
+	}).html(userObj.firstName+" "+userObj.lastName);
 
 	var role = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-role"
@@ -896,13 +912,12 @@ function paintMilestoneCustomerProfileDetails() {
 
 	var contact = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-contact"
-	}).html(newfiObject.user.phoneNumber);
+	}).html(userObj.phoneNumber);
 
 	custTxtContainer.append(name).append(role).append(contact);
 	container.append(custImg).append(custTxtContainer);
 	$('#loan-progress-milestone-wrapper').append(container);
 }
-
 // Function to paint to loan progress page
 function paintAgentLoanProgressPage() {
 
@@ -934,7 +949,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 
-	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail.userID);
+	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail);
 
 	workFlowContext.initialize("AGENT", function() {
 	});
@@ -1213,11 +1228,11 @@ function milestoneChildEventHandler(event) {
 		appendMilestoneAddTeamMemberPopup(selectedUserDetail.loanID,
 				event.target, data);
 		var context=getCreateTitleCompanyContext(
-				newfiObject.user.defaultLoanId);
+				workFlowContext.loanId);
 		context.createTitleCompanyPopup();
 
 				
-		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context = getCreateHomeOwnInsCompanyContext(workFlowContext.loanId)
 		context.createCompanyPopup();
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
@@ -1230,11 +1245,11 @@ function milestoneChildEventHandler(event) {
 		appendMilestoneAddTeamMemberPopup(newfi.user.defaultLoanId,
 				event.target, data);
 		var context=getCreateTitleCompanyContext(
-				newfiObject.user.defaultLoanId);
+				workFlowContext.loanId);
 		context.createTitleCompanyPopup();
 
 				
-		context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+		context = getCreateHomeOwnInsCompanyContext(workFlowContext.loanId)
 		context.createTitleCompanyPopup();
 	}
 	 else if ($(event.target).attr("data-text") == "NEEDS_STATUS"||$(event.target).attr("data-text") == "VIEW_NEEDS") {
@@ -1270,7 +1285,7 @@ function milestoneChildEventHandler(event) {
 		showOverlay();
 		$('body').addClass('body-no-scroll');
 		url = "/NewfiWeb/payment/initialisepayment.do";
-		payload = "loan_id=" + String(newfiObject.user.defaultLoanId);
+		payload = "loan_id=" + String(workFlowContext.loanId);
 		
 		 $.ajax({
 		        url : url,

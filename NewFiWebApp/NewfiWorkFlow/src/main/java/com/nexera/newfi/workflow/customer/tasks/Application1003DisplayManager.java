@@ -101,4 +101,9 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 		}
 	}
 
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

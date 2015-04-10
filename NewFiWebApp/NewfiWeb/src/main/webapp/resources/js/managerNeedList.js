@@ -270,7 +270,10 @@ function paintAgentNeedsListPage(callback){
 	loanNeedContext.init(function(){
 		appendDocumentToolTip();
 		appendCustomerDetailHeader(selectedUserDetail);
-		appendInitialNeedsListWrapper();
+		if(!userIsRealtor()){
+			appendInitialNeedsListWrapper();	
+		}
+		
 		if(callback){
 			callback();
 		}
@@ -285,6 +288,9 @@ function paintAgentNeedsListPage(callback){
 }
 
 function appendInitialNeedsListWrapper(){
+	if(userIsRealtor()){
+		return ;
+	}
 	var wrapper = $('<div>').attr({
 		"id" : "initial-needs-wrapper",
 		"class" : "initial-needs-wrapper"

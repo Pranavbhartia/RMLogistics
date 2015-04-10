@@ -7,7 +7,7 @@ var internalUserDetailId;
 //var userStates=[];
 function showCustomerProfilePage() {
 	scrollToTop();
-	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
@@ -43,7 +43,8 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
-	ajaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	scrollToTop();
+	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -102,12 +103,14 @@ function LoanPersonalInfoWrapper(user) {
 		//included that of customer css
 		"class" : "cust-personal-info-header"
 	}).html("LQB Information");
+	if(!userIsRealtor()){
+		var lqbContainer = getLoanLqbInfoContainer(user);
 
-	var lqbContainer = getLoanLqbInfoContainer(user);
-
-	lqbWrapper.append(lqbHeader).append(lqbContainer);
-	$('#loan-profile-main-container').append(lqbWrapper);
-	appendChangePasswordContainer();
+		lqbWrapper.append(lqbHeader).append(lqbContainer);
+		$('#loan-profile-main-container').append(lqbWrapper);
+	
+	}
+		appendChangePasswordContainer();
 
 }
 
@@ -180,8 +183,8 @@ function getLoanPersonalInfoContainer(user) {
 	var nameRow = getCustomerNameFormRow(user);
 	container.append(nameRow);
 
-	var DOBRow = getDOBRow(user);
-	container.append(DOBRow);
+//	var DOBRow = getDOBRow(user);
+//	container.append(DOBRow);
 
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
@@ -878,7 +881,8 @@ function getManagerStateRow(user) {
 	});
 	var stateInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
-		"id" : "stateId"
+		"id" : "stateId",
+		"readonly" : "readonly"
 	}).bind('click',function(e){
 		e.stopPropagation();
 			if($('#state-dropdown-wrapper').has('div').size() <= 0){
@@ -892,7 +896,7 @@ function getManagerStateRow(user) {
 	
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "state-dropdown-wrapper",
-		"class" : "state-dropdown-wrapper"
+		"class" : "state-dropdown-wrapper hide"
 	});
 	
 	rowCol2.append(stateInput).append(dropDownWrapper);
@@ -921,17 +925,13 @@ function appendStateDropDown(elementToApeendTo) {
 			var stateCode = $(this).html();
 			
 			var stateId = findStateIdForStateCode(stateCode);
-			ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 			toggleStateDropDown();
 		});
 		
 		parentToAppendTo.append(stateRow);
 	}
 	toggleStateDropDown();
-	parentToAppendTo.perfectScrollbar({
-		suppressScrollX : true
-	});
-	parentToAppendTo.perfectScrollbar('update');
 }
 
 function appendManagerStateDropDown(elementToApeendTo) {
@@ -940,38 +940,44 @@ function appendManagerStateDropDown(elementToApeendTo) {
 	var $containerToAppend=$("<div>");
 	for(var i=0; i<stateList.length; i++){
 		var stateRow = $('<div>').attr({
-			"class" : "state-dropdown-row clearfix",
+			"class" : "state-dropdown-row agent-state-dropdown-row clearfix",
 			"id" : stateList[i].id,
 			"name":  stateList[i].stateName
 		});
-		var checkBox = $('<input>').attr({
-				"class" : "float-left",
+		var checkBox = $('<div>').attr({
+				"class" : "float-left doc-checkbox",
 				"id": "checkBox_"+stateList[i].id,
-				"type":"checkbox"
 		});
 		if(states.indexOf((stateList[i].id).toString())>-1){
-			$(checkBox).attr('checked',true);
+			//$(checkBox).attr('checked',true);
+			$(checkBox).addClass('doc-checked');
+		}else{
+			$(checkBox).addClass('doc-unchecked');
 		}
 		var textRow = $('<div>').attr({
-			"class" : "float-left",
+			"class" : "float-left state-row",
 			"id" : "stateName_"+stateList[i].id
 		}).html(stateList[i].stateName);
-			stateRow.append(checkBox).append(textRow);
-			stateRow.bind('click',function(e){
-				e.stopPropagation();
-				var internalUserStateMappingVO=new Object();
-				internalUserStateMappingVO.userId=$("#userid").val();
-				internalUserStateMappingVO.stateId=this.id;
-				if($("#checkBox_"+this.id).is(":checked")){
-					internalUserStateMappingVO.isChecked=true;		
+		stateRow.append(checkBox).append(textRow);
+		stateRow.bind('click',function(e){
+			e.stopPropagation();
+			var internalUserStateMappingVO=new Object();
+			internalUserStateMappingVO.userId=$("#userid").val();
+			internalUserStateMappingVO.stateId=this.id;
+			if($("#checkBox_"+this.id).hasClass("doc-unchecked")){
+				$("#checkBox_"+this.id).removeClass("doc-unchecked").addClass("doc-checked");
+				internalUserStateMappingVO.isChecked=true;		
 //		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
-					internalUserStates[this.id]=internalUserStateMappingVO;
-				}else{
-					internalUserStateMappingVO=internalUserStates[this.id];
-					if(internalUserStateMappingVO.isChecked!=typeof underdefined)
-						internalUserStateMappingVO.isChecked=false;
-					internalUserStates[this.id]=internalUserStateMappingVO;
-				}
+				internalUserStates[this.id]=internalUserStateMappingVO;
+			}else{
+				internalUserStates[this.id].isChecked = false;
+				//$('.message-recipient-remove-icn[data-id="'+this.id+'"]').closest('.prof-form-input-textarea-block').remove();
+				$("#checkBox_"+this.id).addClass("doc-unchecked").removeClass("doc-checked");
+				/*internalUserStateMappingVO=internalUserStates[this.id];
+				if(internalUserStateMappingVO.isChecked!=typeof underdefined)
+					internalUserStateMappingVO.isChecked=false;
+				internalUserStates[this.id]=internalUserStateMappingVO;*/
+			}
 				
 				$('#stateId').val(this.name);
 				//toggleStateDropDown();
@@ -987,8 +993,12 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		
 	}
 	parentToAppendTo.append($containerToAppend);
+	
 	toggleStateDropDown();
+	
 }
+
+
 function findStateIdForStateCode(stateCode) {
 	
 	for(var i=0; i<stateList.length; i++){
@@ -1011,7 +1021,12 @@ function findStateNameForStateId(stateId) {
 	return 0;
 }
 function toggleStateDropDown() {
-	$('#state-dropdown-wrapper').slideToggle();
+	$('#state-dropdown-wrapper').slideToggle("slow",function(){
+		$('#state-dropdown-wrapper').perfectScrollbar({
+			suppressScrollX : true
+		});
+		$('#state-dropdown-wrapper').perfectScrollbar('update');		
+	});
 }
 
 
@@ -1749,19 +1764,36 @@ function getStateTextRow() {
 	});
 	
 	
-	
-	var emailHtmlText="";	
-	for(var key in internalUserStates){
-
-		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
-			emailHtmlText+="<div class=\"prof-form-input-textarea-block float-left\">"+findStateNameForStateId(internalUserStates[key].stateId)+"</div>";
-		}
-	}
 	var emailInput = $('<div>').attr({
 		"class" : "prof-form-input-textarea clearfix",
 		"id" : "inputTextarea"
- 	}).html(emailHtmlText);
-
+ 	});
+	for(var key in internalUserStates){
+		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
+			
+			var emailHtml = $('<div>').attr({
+				"class" : "prof-form-input-textarea-block float-left"
+			});
+			
+			var emailHtmlTxt = $('<div>').attr({
+				"class" : "float-left"
+			}).html(findStateNameForStateId(internalUserStates[key].stateId));
+			
+			var removeIcn = $('<div>').attr({
+				"class" : "message-recipient-remove-icn float-left",
+				"data-id" : key
+			}).bind('click',function(e){
+				var id = $(this).attr("data-id");
+				internalUserStates[id].isChecked = false;
+				$(this).closest('.prof-form-input-textarea-block').remove();
+				$("#checkBox_"+id).addClass("doc-unchecked").removeClass("doc-checked");
+			});
+			
+			emailHtml.append(emailHtmlTxt).append(removeIcn);
+			
+			emailInput.append(emailHtml);
+		}
+	}
 	inputCont.append(emailInput);
 	
 	rowCol2.append(inputCont);

@@ -1,7 +1,5 @@
 package com.nexera.newfi.workflow.tasks;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,15 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -43,6 +35,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	private NeedsListService needsListService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
@@ -52,19 +45,17 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String message = "";
 		String returnStatus = "";
+		String mileStoneStatus = null;
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message = LoanStatus.disclosureAvailMessage;
 			flag = true;
 			returnStatus = WorkItemStatus.STARTED.getStatus();
-		} else if (status.equals(LoanStatus.disclosureViewed)) {
-			message = LoanStatus.disclosureViewedMessage;
-			flag = true;
-			returnStatus = WorkItemStatus.STARTED.getStatus();
+			mileStoneStatus = LoanStatus.disclosureAvail;
 		} else if (status.equals(LoanStatus.disclosureSigned)) {
 			message = LoanStatus.disclosureSignedMessage;
 			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-
+			mileStoneStatus = LoanStatus.disclosureSigned;
 			// Have to add need for appraisal
 			NeedsListMaster appraisalMasterNeed = needsListService
 			        .fetchNeedListMasterByType(MasterNeedsEnum.Appraisal_Report
@@ -73,6 +64,11 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			masterNeedsList.add(appraisalMasterNeed);
 			needsListService.saveMasterNeedsForLoan(loanId, masterNeedsList);
 			createAppilcationPaymentAlert(objectMap);
+		}
+		if (mileStoneStatus != null) {
+
+			iWorkflowService.updateNexeraMilestone(loanId,
+			        Milestones.DISCLOSURE.getMilestoneID(), mileStoneStatus);
 		}
 		if (flag) {
 			makeANote(loanId, message);
@@ -86,57 +82,16 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> objectMap) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		Loan loan = new Loan();
-		loan.setId(Integer.parseInt(objectMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
-		        Milestones.DISCLOSURE.getMilestoneKey());
-		String status = loanMilestone.getComments().toString();
-		// TODO check Status Mapping
-		// String DisplayStat="";
-		if (status.equals(LoanStatus.disclosureAvail)
-		        || status.equals(LoanStatus.disclosureViewed)
-		        || status.equals(LoanStatus.disclosureSigned)) {
-			NeedsListMaster needsListMaster = new NeedsListMaster();
-			needsListMaster
-			        .setId(Integer
-			                .parseInt(MasterNeedsEnum.System_Disclosure_Need
-			                        .getIndx()));
-			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
-			        loan, needsListMaster);
-			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
-			        status);
-			// TODO check column path
-			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, loanNeedsList
-			        .getUploadFileId().getS3path());
-
-		} else {
-			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
-			        status);
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter sw = new StringWriter();
-		try {
-			mapper.writeValue(sw, map);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-			return null;
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return sw.toString();
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		return iWorkflowService.getRenderInfoForDisclosure(loanId);
 	}
 
 	private void createAppilcationPaymentAlert(HashMap<String, Object> objectMap) {
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		
+
 		String notificationReminderContent = WorkflowConstants.APP_FEE__NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, notificationReminderContent);

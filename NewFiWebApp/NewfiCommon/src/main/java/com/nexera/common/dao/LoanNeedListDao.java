@@ -8,4 +8,6 @@ public interface LoanNeedListDao extends GenericDao {
 
 	LoanNeedsList findLoanNeedsList(Loan loan, NeedsListMaster needsListMaster);
 
+	public LoanNeedsList findById(int loanNeedID);
+
 }
