@@ -66,6 +66,7 @@
 			changeLeftPanel(2);
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
+			
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
@@ -162,7 +163,7 @@
 					autoclose : true
 				});
 			});
-			
+			retrieveState();
 
 		});
 	</script>

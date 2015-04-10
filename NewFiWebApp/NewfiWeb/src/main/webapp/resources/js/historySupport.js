@@ -269,12 +269,21 @@ function retrieveState() {
 		var entries = newLocation.split("/");
 		if (entries[0])
 			params.pn = entries[0];
+		
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			
 
-		if (entries[1])
-			params.loanID = entries[1];
+			if (entries[1])
+				params.sn = entries[1];
+		}else{
+			if (entries[1])
+				params.loanID = entries[1];
 
-		if (entries[2])
-			params.sn = entries[2];
+			if (entries[2])
+				params.sn = entries[2];
+		}
+		
+		
 	} else {
 
 		return;
@@ -290,14 +299,7 @@ function retrieveState() {
 	
 	case PNEnum['MY_LOAN']:
 		console.log('Work on my loans');
-		if (loanID) {
-			for (i = 1; i <=5; i++) {
-				if (loanID == SNEnum[i])
-					loanID = i;
-			}
-			entryPointCustomerViewChangeNav(loanID);
-		} else 
-			entryPointCustomerViewChangeNav(2);
+	    showCustomerLoanPage(newfiObject.user);
 	
 		break;
 	
@@ -335,31 +337,35 @@ function retrieveState() {
 	// If customer is logged in. Skipping this module for now.
 	switch (primary) {
 	case PNEnum.PROFILE:
-		console.log('Profile view');
+		$("#lp-customer-profile").click();
 		break;
 
 	case PNEnum.TEAM:
 		console.log('TEAM view');
 		break;
 
-	case PNEnum.LOAN:
+	case PNEnum.MY_LOAN:
 		console.log('LOAN view');
 		switch (secondary) {
-		case SNEnum.GETTINGTOKNOWNEWFI:
-			console.log('GETTINGTOKNOWNEWFI view');
-			break;
-		case SNEnum.COMPLETEAPPLICATION:
+		case SNEnum[1]:
+			 console.log('GETTINGTOKNOWNEWFI view');
+			 $("#lp-step1").click();
+			 break;
+		case SNEnum[2]:
 			console.log('COMPLETEAPPLICATION view');
-
+			$("#lp-step2").click();
 			break;
-		case SNEnum.LOCKRATE:
+		case SNEnum[3]:
 			console.log('LOCKRATE view');
+			$("#lp-step3").click();
 			break;
-		case SNEnum.UPLOAD:
+		case SNEnum[4]:
 			console.log('UPLOAD view');
+			$("#lp-step4").click();
 			break;
-		case SNEnum.LOANPROGRESS:
+		case SNEnum[5]:
 			console.log('LOANPROGRESS view');
+			$("#lp-step5").click();
 			break;
 
 		default:
