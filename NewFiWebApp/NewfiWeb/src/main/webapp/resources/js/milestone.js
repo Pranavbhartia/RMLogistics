@@ -696,7 +696,9 @@ function paintCustomerLoanProgressContainer() {
 	if(!userIsRealtor()){
 		workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user);	
 	}else{
-		workFlowContext.init(selectedUserDetail.loanID, null);
+		
+		
+		workFlowContext.init(selectedUserDetail.loanID, createNewfiUser());
 	}
 	paintMilestoneCustomerProfileDetails(workFlowContext.customer);
 	workFlowContext.initialize("CUSTOMER", function() {

@@ -183,8 +183,8 @@ function getLoanPersonalInfoContainer(user) {
 	var nameRow = getCustomerNameFormRow(user);
 	container.append(nameRow);
 
-	var DOBRow = getDOBRow(user);
-	container.append(DOBRow);
+//	var DOBRow = getDOBRow(user);
+//	container.append(DOBRow);
 
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
