@@ -68,6 +68,7 @@ public class Loan implements Serializable {
 	private Boolean isRateLocked;
 	private Boolean isBankConnected;
 	private BigDecimal lockedRate;
+	private BigDecimal appFee;
 
 	@Column(name = "rate_locked", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -474,6 +475,7 @@ public class Loan implements Serializable {
 		loanVo.setLqbFileId(loan.getLqbFileId());
 		loanVo.setCreatedDate(loan.getCreatedDate());
 		loanVo.setModifiedDate(loan.getModifiedDate());
+		loanVo.setAppFee(loan.getAppFee());
 		loanVo.setName(loan.getName());
 		if (loan.getLoanProgressStatus() != null) {
 			loanVo.setStatus(loan.getLoanProgressStatus()
@@ -528,6 +530,15 @@ public class Loan implements Serializable {
 
 	public void setUploadedFileList(List<UploadedFilesList> uploadedFileList) {
 		this.uploadedFileList = uploadedFileList;
+	}
+
+	@Column(name = "app_fee")
+	public BigDecimal getAppFee() {
+		return appFee;
+	}
+
+	public void setAppFee(BigDecimal appFee) {
+		this.appFee = appFee;
 	}
 
 }

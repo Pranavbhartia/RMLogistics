@@ -1,6 +1,7 @@
 //Function to paint to loan progress page
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
+var SALES_MANAGER="Sales Manager";
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -152,35 +153,6 @@ var workFlowContext = {
 			var parentWorkItem=ob.mileStoneStepsStructured[i];
 			appendMilestoneItem(parentWorkItem, parentWorkItem.childList);
 		}
-
-		/*for (var i = 0; i < workItemExecList.length; i++) {
-			var currentWorkItem = workItemExecList[i];
-			if (i == 0) {
-				parentWorkItem = currentWorkItem;
-			} else if (ob.checkIfChild(currentWorkItem) == false) // It is a
-																	// parent
-			{
-				// The next item is a parent.
-				// This is a parent - push all the ones so far in parent
-				if (childList.length != 0) {
-					appendMilestoneItem(parentWorkItem, childList);
-					childList = [];
-				} else {
-					appendMilestoneItem(parentWorkItem);
-				}
-				parentWorkItem = currentWorkItem;
-			} else if (ob.checkIfChild(currentWorkItem) == true
-					&& currentWorkItem.parentWorkflowItemExec.id == parentWorkItem.id) {
-				// Keep collecting..
-				childList.push(currentWorkItem);
-			}
-		}
-		// Last item append
-		if (childList.length != 0) {
-			appendMilestoneItem(parentWorkItem, childList);
-		} else if (childList.length == 0) {
-			appendMilestoneItem(parentWorkItem);
-		}*/
 		countOfTasks=0;
 		adjustBorderMilestoneContainer();
 		if (callback) {
@@ -192,7 +164,7 @@ var workFlowContext = {
 		var data={};
 		data.items=JSON.stringify(ob.itemsStatesToBeFetched);
 		data.data={};
-		data.data.userID=this.customerId;
+		data.data.userID=workFlowContext.customer.id;
 		data.data.loanID=ob.loanId;
 		data.data=JSON.stringify(data.data);
 		ajaxRequest("rest/workflow/getupdatedstatus", "GET", "json", data, function(response) {
@@ -372,8 +344,9 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="APP_FEE")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Pending";
+				data.userID=workFlowContext.customer.id;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				callback = showAppFee;	
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -424,8 +397,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			
 			else if (ob.workItem.workflowItemType=="VIEW_UW")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "N/A";
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			else if (ob.workItem.workflowItemType=="VIEW_CLOSING")
 			{
@@ -527,9 +499,14 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 									if(tempOb.status)
 										ob.stateInfoContainer.html(" "+tempOb.status);
 								}
-							}else
+							}
+							else if(ob.workItem.workflowItemType == "APP_FEE")
+								{
+								
+								}
+							else{
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
-							
+							}
 						}
 					});
 			}else{
@@ -589,6 +566,33 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 	return internalEmployeeMileStoneContext;
 }
 
+function showAppFee (itemToAppendTo,workItem)
+{
+	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
+	var txtRow1 = $('<div>').attr({
+		"class" : rightLeftClass + "-text" + " milestone-plain-text",
+	});
+	var txtRow2 = $('<div>').attr({
+		"class" : rightLeftClass + "-text" + " milestone-plain-text",
+	});
+	if(workItem.stateInfo){
+		var tempOb=JSON.parse(workItem.stateInfo);
+		if(tempOb.status)
+		{
+			txtRow2.html(tempOb.status);
+			itemToAppendTo.append(txtRow2);
+		}
+		if(tempOb.appfee){
+			txtRow1.html("$"+tempOb.appfee);
+			itemToAppendTo.append(txtRow1);
+		}		
+	}
+	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
+			&& workItem.status != "3")
+	{
+		itemToAppendTo.append(getAppFeeEdit(workItem));
+	}
+}
 function paintNeedsInfo(itemToAppendTo,workItem)
 {
 	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
@@ -758,7 +762,28 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 	var userList=JSON.parse(workItem.stateInfo);
 	appendTo.append(getMilestoneTeamMembeTable(userList,workItem));
 }
-
+function getAppFeeEdit(workItem)
+{
+	if(workItem.status == "3")
+	{
+		return;
+	}
+	var clas="milestone-lc-text";
+	var floatCls="float-right";
+	var rightClassCheck=workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.hasClass("milestone-rc-text");
+	if(rightClassCheck){
+		clas="milestone-rc-text";
+		floatCls="float-left";
+	}
+	var appFeeEditItem = $('<div>').attr({
+		"class" : clas+" showAnchor",
+		"data-text" : workItem.workflowItemType,
+		"mileNotificationId":workItem.id
+	}).html("Click here to change fee").bind("click", function(e) {
+		milestoneChildEventHandler(e)
+	});
+	return appFeeEditItem;
+}
 function getMilestoneTeamMembeTable(input,workItem) {
 	var clas="milestone-lc-text";
 	var floatCls="float-right";
@@ -1148,6 +1173,8 @@ function appendMilestoneItem(workflowItem, childList) {
 	var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,header,workflowItem);
 	var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, workflowItem);
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
+	
+	
 	if (childList != null) {
 		for (index = 0; index < childList.length; index++) {
 			
@@ -1279,6 +1306,13 @@ function milestoneChildEventHandler(event) {
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
 			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}
+	else if ($(event.target).attr("data-text") == "APP_FEE") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+	 	{
+			appendAppFeeEditPopup($(event.target),$(event.target).attr("mileNotificationId"));
+	 	}
+	}
 	else if ($(event.target).attr("data-text") == "MANAGE_PHOTO" || $(event.target).attr("data-text") == "MANAGE_ACCOUNT" ||
 			$(event.target).attr("data-text") == "SMS_TEXTING_PREF") {
 	 	event.stopPropagation();
@@ -1404,11 +1438,13 @@ function appendLoanManagerPopup(element,loanManagerArray){
 $(document).resize(function(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
+	removeAppFeeEditPopup();
 });
 
 $(document).on('click',function(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
+	removeAppFeeEditPopup();
 });
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
@@ -1571,6 +1607,7 @@ function appendQCPopup(element,milestoneId) {
 			data["loanID"]=workFlowContext.loanId;
 			data["workflowItemExecId"]=milestoneId;
 			data["comment"]=comment;
+			data["userID"]=newfiObject.user.id;
 	 		ajaxRequest(
 				url,
 				"POST",
@@ -1600,4 +1637,75 @@ function appendQCPopup(element,milestoneId) {
 
 function removeQCPopup() {
 	$('#qc-popup').remove();
+}
+function appendAppFeeEditPopup(element,milestoneId) {
+	removeAppFeeEditPopup();
+	var offset = $(element).offset();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "appfee-edit-popup",
+		"class" : "ms-add-member-popup loan-status-popup"
+	}).css({
+		"left" : offset.left,
+		"top" : offset.top
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("App Fee Edit");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	var newFee = $('<textarea>').attr({
+		"class" : "popup-textbox",
+		"placeholder" : "Change Fee here"
+		
+	});
+	
+	var submitBtn = $('<div>').attr({
+		"class" : "popup-save-btn"
+	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
+		
+		var newFee=event.data.comment.val();
+		var milestoneId=event.data.milestoneId;
+		if(newFee){
+			var url="rest/workflow/invokeaction/"+milestoneId;
+			var data={};			
+			data["loanID"]=workFlowContext.loanId;
+			data["userID"] = newfiObject.user.id;
+			data["workflowItemExecId"]=milestoneId;
+			data["newFee"]=newFee;
+	 		ajaxRequest(
+				url,
+				"POST",
+				"json",
+				JSON.stringify(data),
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message);
+					}else{
+						var contxt=workFlowContext.mileStoneContextList[milestoneId];
+						contxt.updateMilestoneView("3");
+						
+						removeAppFeeEditPopup();
+					}
+			},false);
+		}else{
+			showToastMessage("Add a value");
+		}
+	});
+	;
+	
+	container.append(newFee).append(submitBtn);
+	
+	wrapper.append(header).append(container);
+	wrapper.bind("click",function(e){
+		e.stopPropagation();
+	})
+	$('body').append(wrapper);
+}
+
+function removeAppFeeEditPopup() {
+	$('#appfee-edit-popup').remove();
 }

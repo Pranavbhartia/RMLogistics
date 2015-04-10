@@ -1,5 +1,6 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
@@ -22,7 +24,8 @@ import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
-public class ApplicationFeeManager implements IWorkflowTaskExecutor {
+public class ApplicationFeeManager extends NexeraWorkflowTask implements
+        IWorkflowTaskExecutor {
 	@Autowired
 	private IWorkflowService iWorkflowService;
 	@Autowired
@@ -31,6 +34,7 @@ public class ApplicationFeeManager implements IWorkflowTaskExecutor {
 	private TransactionService transactionService;
 	@Autowired
 	private WorkflowService workflowService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
@@ -39,8 +43,11 @@ public class ApplicationFeeManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		// First Check if Payment Made
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		return iWorkflowService.getRenderInfoForApplicationFee(loanId);
+
 	}
 
 	@Override
@@ -51,8 +58,23 @@ public class ApplicationFeeManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		BigDecimal newAppFee = new BigDecimal(inputMap.get(
+		        WorkflowDisplayConstants.APP_FEE_CHANGE).toString());
+		loanService.updateLoanAppFee(loanId, newAppFee);
+		int userId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		User user = new User();
+		user.setId(userId);
+		// makeANote(loanId, newAppFee.toString(), user);
+		return newAppFee.toString();
+	}
+
+	private void makeANote(int loanId, String message, User createdBy) {
+		messageServiceHelper.generatePrivateMessage(loanId, message, createdBy,
+		        false);
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
