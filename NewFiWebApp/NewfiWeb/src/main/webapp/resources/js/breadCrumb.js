@@ -39,7 +39,13 @@ var contxtHolder={
     },
     switchBreadCrumb:function(){
         var ob=this;
-        if(appUserDetails.loanAppFormCompletionStatus&&appUserDetails.loanAppFormCompletionStatus>0){
+        if(appUserDetails.loanAppFormCompletionStatus&&appUserDetails.loanAppFormCompletionStatus>0||appUserDetails.loanAppFormCompletionStatus==1){
+	    if(appUserDetails.loan&&appUserDetails.loan.loanType&&appUserDetails.loan.loanType.id){
+                if(appUserDetails.loan.loanType.id==1)
+                    purchase = true;
+                else
+                    purchase = false;
+            }
             var contxt=ob.getContxtByCompletionStatus();
             contxt.clickHandler();
         }else{
@@ -67,7 +73,7 @@ function getBredCrumContext(element,item,indx){
         },
         clickHandler:function(callback){
             var ob=this;
-            if(contxtHolder.getPercentageForStep(ob.indx)<=appUserDetails.loanAppFormCompletionStatus)
+            if(contxtHolder.getPercentageForStep(ob.indx)<=appUserDetails.loanAppFormCompletionStatus||appUserDetails.loanAppFormCompletionStatus==1)
             if(ob.item.onselect){
                 ob.item.onselect();
             }
