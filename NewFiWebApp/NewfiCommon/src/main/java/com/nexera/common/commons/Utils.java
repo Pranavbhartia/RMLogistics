@@ -1,9 +1,12 @@
 package com.nexera.common.commons;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -12,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.User;
@@ -38,6 +44,24 @@ public class Utils {
 			return "";
 		}
 		return inputStr;
+	}
+
+	public String getJsonStringOfMap(HashMap<String, Object> map) {
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
+		try {
+			mapper.writeValue(sw, map);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return sw.toString();
 	}
 
 	public String getDateInUserLocaleFormatted(Date date) {

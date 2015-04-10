@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -19,6 +20,8 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	private Utils utils;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -37,7 +40,7 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        iWorkflowService.getCreditDisplayScore(userID));
 		// TODO confirm where credit score and url will be stored
-		return iWorkflowService.getJsonStringOfMap(map);
+		return utils.getJsonStringOfMap(map);
 	}
 
 	@Override

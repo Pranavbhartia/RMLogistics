@@ -4379,7 +4379,7 @@ input.calc-input {
 }
 
 .prof-form-input-statedropdown {
-	width: 200px;
+	width: 100px;
 }
 
 .prof-form-input-textarea {
@@ -4394,12 +4394,7 @@ input.calc-input {
 .prof-form-input-textarea-block {
 	height: 30px;
 	line-height: 30px;
-	background-color: #FFF !important;
-	border: 1px #E2E2E2 solid;
-	border-radius: 3px;
-	margin: 3px;
-	width: 200px;
-	padding-left: 10px;
+	padding-left: 15px;
 }
 
 .add-btn {

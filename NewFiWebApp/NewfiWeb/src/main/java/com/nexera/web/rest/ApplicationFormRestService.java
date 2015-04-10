@@ -511,8 +511,8 @@ public @ResponseBody String lockLoanRateLoan(String appFormData) {
 	try{
 		LoanLockRateVO loanLockRateVO = gson.fromJson(appFormData,LoanLockRateVO.class);
 		System.out.println("lockLoanRate is"+loanLockRateVO.getIlpTemplateId());
-	String response = invokeRest(prepareLockLoanRateJson(loanLockRateVO).toString());
-	System.out.println("lockLoanRate is"+response);
+	lockRateData = invokeRest(prepareLockLoanRateJson(loanLockRateVO).toString());
+	System.out.println("lockLoanRate is"+lockRateData);
 	
 		
 	}catch(Exception e){
@@ -529,6 +529,7 @@ private String loadLoanRateData(String loanNumber)
 {
 	Gson gson = new Gson();
 	List<TeaserRateResponseVO> teaserRateList = null;
+	List<TeaserRateResponseVO> lockLoanRateList = null;
 	RateCalculatorRestService rateService = new RateCalculatorRestService();
 	JSONObject json = new JSONObject();
 	JSONObject jsonChild = new JSONObject();
@@ -541,6 +542,14 @@ private String loadLoanRateData(String loanNumber)
 		System.out.println("jsonMapObject load Loandata"+json);		
 		//JSONObject jsonObject = new JSONObject(invokeRest(json.toString()));
 		teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(invokeRest(json.toString())));
+	
+		
+		TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
+		teaserRateResponseVO.setLoanDuration("sample");
+		teaserRateResponseVO.setLoanNumber(loanNumber);
+		teaserRateList.add(0, teaserRateResponseVO);
+		
+		
 		
 	} catch (JSONException e) {
 		e.printStackTrace();

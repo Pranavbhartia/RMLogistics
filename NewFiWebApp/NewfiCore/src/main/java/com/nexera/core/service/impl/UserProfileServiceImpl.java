@@ -16,11 +16,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.commons.ProfileCompletionStatus;
+import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WebServiceMethodParameters;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -44,6 +48,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
@@ -72,11 +77,14 @@ import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
@@ -96,10 +104,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private StateLookupDao stateLookupDao;
 
 	@Autowired
+	private LqbInvoker lqbInvoker;
+
+	@Autowired
 	private SendGridEmailService sendGridEmailService;
 
-	@Value("${NEW_USER_TEMPLATE_ID}")
-	private String newUserMailTemplateId;
+	@Autowired
+	private TemplateService templateService;
 
 	@Autowired
 	private MessageUtils messageUtils;
@@ -111,6 +122,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
+
+	@Autowired
+	private Utils utils;
 
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
@@ -419,7 +433,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
-
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
@@ -434,7 +449,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You have been subscribed to Nexera");
 		emailEntity.setTokenMap(substitutions);
-		emailEntity.setTemplateId(newUserMailTemplateId);
+		emailEntity.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendMail(emailEntity);
 	}
@@ -900,7 +915,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        UndeliveredEmailException, NoRecordsFetchedException {
 
 		Reader reader = new InputStreamReader(file.getInputStream());
-		CSVReader csvReader = new CSVReader(reader,',', CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
+		CSVReader csvReader = new CSVReader(reader, ',',
+		        CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
 		int lineCounter = 1;
 
 		JsonObject errors = new JsonObject();
@@ -1062,6 +1078,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
@@ -1077,8 +1095,127 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Your password has been reset");
 		emailEntity.setTokenMap(substitutions);
-		emailEntity.setTemplateId(newUserMailTemplateId);
+		emailEntity.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendMail(emailEntity);
 	}
+
+	@Override
+	public void addDefaultLM(UserVO userVO) {
+		// Get loan manager Id
+		;
+		userProfileDao.updateLMID(userVO.getRealtorDetail().getId(), utils
+		        .getLoggedInUser().getId());
+	}
+
+	@Override
+	public String getLQBUrl(Integer userId, Integer loanId) {
+
+		LOG.info("user id of this user is : " + userId);
+		String url = null;
+		try {
+			UserVO userVO = findUser(userId);
+			if (userVO != null) {
+				String lqbUsername = userVO.getInternalUserDetail()
+				        .getLqbUsername();
+				String lqbPassword = userVO.getInternalUserDetail()
+				        .getLqbPassword();
+				if (lqbUsername != null && lqbPassword != null) {
+					JSONObject authOperationObject = createAuthObject(
+					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+					        lqbUsername, lqbPassword);
+					LOG.debug("Invoking LQB service to fetch user authentication ticket ");
+					String authTicketJson = lqbInvoker
+					        .invokeRestSpringParseObjForAuth(authOperationObject
+					                .toString());
+					if (!authTicketJson.contains("Access Denied")) {
+						String sTicket = authTicketJson;
+						LoanVO loanVO = getLoanById(loanId);
+						if (loanVO != null) {
+							url = getUrlByTicket(sTicket, loanVO.getLqbFileId());
+							LOG.debug("Url received for this user/loan " + url);
+
+						} else {
+							LOG.error("Loan Id Entered is invalid ");
+						}
+					} else {
+						LOG.error("Ticket Not Generated For This User ");
+					}
+				} else {
+					LOG.error("LQBUsername or Password are not valid ");
+				}
+			} else {
+				LOG.error("User not found with this user id");
+
+			}
+
+		} catch (InputValidationException e) {
+			LOG.error("error and message is : " + e.getMessage());
+
+		} catch (Exception e) {
+			LOG.error("error and message is : " + e.getMessage());
+		}
+		return url;
+
+	}
+
+	private LoanVO getLoanById(int loanId) {
+		LOG.debug("Inside method getLoanById ");
+		return loanService.getLoanByID(loanId);
+	}
+
+	public String getUrlByTicket(String sTicket, String lqbLoanNumber) {
+		String url = null;
+		LOG.debug("Invoking LQB service to fetch URL for this user ");
+		JSONObject appViewOperationObject = createUrlObject(
+		        WebServiceOperations.OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL,
+		        sTicket, lqbLoanNumber);
+		JSONObject urlJSON = lqbInvoker
+		        .invokeRestSpringParseObjForAppView(appViewOperationObject
+		                .toString());
+		if (!urlJSON.isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+
+			url = urlJSON
+			        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+			url = "https://secure.lendersoffice.com" + url;
+		} else {
+			LOG.error("Unable to fetch the url ");
+		}
+		return url;
+
+	}
+
+	public JSONObject createUrlObject(String opName, String sTicket,
+	        String sLoanName) {
+		JSONObject json = new JSONObject();
+
+		try {
+
+			json.put(WebServiceMethodParameters.PARAMETER_S_TICKET, sTicket);
+			json.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NAME,
+			        sLoanName);
+			json.put("opName", opName);
+		} catch (JSONException e) {
+			LOG.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
+	public JSONObject createAuthObject(String opName, String userName,
+	        String password) {
+		JSONObject json = new JSONObject();
+
+		try {
+
+			json.put(WebServiceMethodParameters.PARAMETER_USERNAME, userName);
+			json.put(WebServiceMethodParameters.PARAMETER_PASSWORD, password);
+			json.put("opName", opName);
+		} catch (JSONException e) {
+			LOG.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+
 }

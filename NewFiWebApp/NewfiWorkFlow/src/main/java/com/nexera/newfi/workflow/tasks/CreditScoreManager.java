@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -25,6 +26,9 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	UserProfileService userProfileService;
+
+	@Autowired
+	Utils utils;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -51,16 +55,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		        "http://www.lendingqb.com/");
 		// TO Remove------ end
 
-		// TODO confirm where credit score and url will be stored
-		/*
-		 * if (loanAppForm.getCreditStatus() != null &&
-		 * !loanAppForm.getCreditStatus().trim().equals("")) {
-		 * map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-		 * loanAppForm.getCreditStatus()); // TODO check column path
-		 * map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-		 * loanAppForm.getCreditStatusUrl()); }
-		 */
-		return iWorkflowService.getJsonStringOfMap(map);
+		return utils.getJsonStringOfMap(map);
 	}
 
 	@Override

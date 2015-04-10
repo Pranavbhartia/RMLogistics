@@ -23,7 +23,7 @@ public class SMSPreferenceManager implements IWorkflowTaskExecutor {
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
