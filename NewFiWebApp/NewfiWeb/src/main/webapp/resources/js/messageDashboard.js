@@ -21,7 +21,7 @@ $(window).scroll(
 		});
 
 function getConversationPagination() {
-	ajaxRequest("rest/commlog/" + currentUserAndLoanOnj.userId + "/"
+	ajaxRequest("rest/commlog/" + newfiObject.user.id + "/"
 			+ currentUserAndLoanOnj.activeLoanId + "/" + currentPage, "GET",
 			"json", "", paintConversationPagination, true, "conv-container");
 }
@@ -157,7 +157,7 @@ function successCallBackSaveMessage() {
 }
 
 function getConversationsofUser() {
-	ajaxRequest("rest/commlog/" + currentUserAndLoanOnj.userId + "/"
+	ajaxRequest("rest/commlog/" + newfiObject.user.id + "/"
 			+ currentUserAndLoanOnj.activeLoanId + "/" + currentPage, "GET",
 			"json", "", paintCommunicationLog);
 }
