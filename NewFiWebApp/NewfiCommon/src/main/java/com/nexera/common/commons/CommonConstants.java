@@ -61,6 +61,7 @@ public interface CommonConstants {
 	public static final String MESSAGE_PROPERTIES_FILE = "displaymessage.properties";
 	public static final String LABEL_PROPERTIES_FILE = "message.properties";
 	public static final String CONFIG_PROPERTIES_FILE = "config.properties";
+	public static final String APPLICATION_PROPERTIES_FILE = "application.properties";
 	public static final String DEFAULT_LOCALE = "en_US";
 	public static final int DEFAULT_LOAN_ID = 0;
 
