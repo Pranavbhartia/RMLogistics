@@ -1,6 +1,7 @@
 package com.nexera.common.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -23,5 +24,15 @@ public class LoanNeedListDaoImpl extends GenericDaoImpl implements
 		criteria.add(Restrictions.eq("needsListMaster", needsListMaster));
 
 		return (LoanNeedsList) criteria.uniqueResult();
+	}
+
+	@Override
+	public LoanNeedsList findById(int loanNeedID) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.add(Restrictions.eq("id", loanNeedID));
+		LoanNeedsList loanNeedList = (LoanNeedsList) criteria.uniqueResult();
+		Hibernate.initialize(loanNeedList.getNeedsListMaster());
+		return loanNeedList;
 	}
 }

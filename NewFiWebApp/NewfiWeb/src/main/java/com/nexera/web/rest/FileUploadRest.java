@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +32,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
-import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
@@ -52,7 +50,6 @@ import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.exception.FatalException;
-
 
 @Controller
 @RequestMapping ( "/fileupload")
@@ -325,48 +322,50 @@ public class FileUploadRest
         Boolean isAssignedToNeed = (needId!=null)?true:false;
         for ( MultipartFile multipartFile : file ) {
             CheckUploadVO checkFileUploaded = null;
+
 			try {
-				
+
 				byte[] bytes = multipartFile.getBytes();
-				//Upload the file locally and returns the response of file upload
-				
-				
-				checkFileUploaded = uploadedFilesListService.uploadFile( nexeraUtility.multipartToFile(multipartFile) 
-																				, multipartFile.getContentType(),
-																					bytes,  userID, loanId, assignedBy , isAssignedToNeed );
+				// Upload the file locally and returns the response of file
+				// upload
+
+				checkFileUploaded = uploadedFilesListService.uploadFile(
+				        nexeraUtility.multipartToFile(multipartFile),
+				        multipartFile.getContentType(), bytes, userID, loanId,
+				        assignedBy, isAssignedToNeed);
 			} catch (IllegalStateException | IOException e) {
-				// If file conversion or saving fails, set upload status to false.
+				// If file conversion or saving fails, set upload status to
+				// false.
 				checkFileUploaded.setIsUploadSuccess(false);
 			}
 
-            if ( checkFileUploaded.getIsUploadSuccess() ) {
-                if ( needId == null ) {
-                    LOG.info( "Needs is null" );
-                } else {
-                    LOG.info( "Assigning needs" );
-                    
-                    uploadedFilesListService.updateAssignments(needId , checkFileUploaded.getUploadFileId());
-                }
-                
-				
-            } else {
-                unsupportedFile.add( multipartFile.getOriginalFilename() );
-            }
-            
-        }
-        return new Gson().toJson( unsupportedFile );
-    }
+			if (checkFileUploaded.getIsUploadSuccess()) {
+				if (needId == null) {
+					LOG.info("Needs is null");
+				} else {
+					LOG.info("Assigning needs");
 
+					uploadedFilesListService.updateAssignments(needId,
+					        checkFileUploaded.getUploadFileId());
+				}
 
-    private User getUserObject()    {
-        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if ( principal instanceof User ) {
-            return (User) principal;
-        } else {
-            return null;
-        }
+			} else {
+				unsupportedFile.add(multipartFile.getOriginalFilename());
+			}
 
-    }
+		}
+		return new Gson().toJson(unsupportedFile);
+	}
 
+	private User getUserObject() {
+		final Object principal = SecurityContextHolder.getContext()
+		        .getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			return (User) principal;
+		} else {
+			return null;
+		}
+
+	}
 
 }

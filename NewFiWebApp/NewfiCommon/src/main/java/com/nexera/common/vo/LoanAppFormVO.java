@@ -538,6 +538,9 @@ public class LoanAppFormVO implements Serializable {
 		        .setEstimatedPrice(purchaseDetailsVO.getEstimatedPrice());
 		purchaseDetails.setHousePrice(purchaseDetailsVO.getHousePrice());
 		purchaseDetails.setLoanAmount(purchaseDetailsVO.getLoanAmount());
+		
+		purchaseDetails.setTaxAndInsuranceInLoanAmt(purchaseDetailsVO.isTaxAndInsuranceInLoanAmt());
+		
 
 		return purchaseDetails;
 	}

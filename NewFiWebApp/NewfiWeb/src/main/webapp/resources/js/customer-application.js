@@ -1245,8 +1245,12 @@ function paintMyIncome() {
 	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
 	        
 	        
+	   
+	   
 	        var  customerBankAccountDetails = [];
 	        /* Bank Account Start*/
+	   
+	  
 	        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
 	        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
 	        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
