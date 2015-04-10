@@ -54,10 +54,10 @@ public class LoanAppForm implements Serializable {
 	private PropertyTypeMaster propertyTypeMaster;
 	private GovernmentQuestion governmentquestion;
 	private CustomerSpouseDetail customerspousedetail;
-	
-//	private CustomerEmploymentIncome customerEmploymentIncome;
+
+	// private CustomerEmploymentIncome customerEmploymentIncome;
 	private List<CustomerEmploymentIncome> customerEmploymentIncome;
-	
+
 	private List<CustomerBankAccountDetails> customerBankAccountDetails;
 	private List<CustomerOtherAccountDetails> customerOtherAccountDetails;
 	private List<CustomerRetirementAccountDetails> customerRetirementAccountDetails;
@@ -65,27 +65,26 @@ public class LoanAppForm implements Serializable {
 	private List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncome;
 	private List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetails;
 	private List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetails;
-	
+
 	private SpouseGovernmentQuestions spouseGovernmentQuestions;
 	private RefinanceDetails refinancedetails;
 	private LoanTypeMaster loanTypeMaster;
 	private Loan loan;
 	private List<UserEmploymentHistory> userEmploymentHistories;
 
-	private Integer loanAppFormCompletionStatus;
-	
+	private Float loanAppFormCompletionStatus;
+
 	private PurchaseDetails purchaseDetails;
 
 	public LoanAppForm() {
 	}
 
 	@Column(name = "loan_app_completion_status")
-	public Integer getLoanAppFormCompletionStatus() {
+	public Float getLoanAppFormCompletionStatus() {
 		return loanAppFormCompletionStatus;
 	}
 
-	public void setLoanAppFormCompletionStatus(
-	        Integer loanAppFormCompletionStatus) {
+	public void setLoanAppFormCompletionStatus(Float loanAppFormCompletionStatus) {
 		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
 	}
 
@@ -147,9 +146,6 @@ public class LoanAppForm implements Serializable {
 		this.monthlyRent = monthlyRent;
 	}
 
-	
-	
-	
 	@Column(name = "owns_other_property", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getOwnsOtherProperty() {
@@ -233,14 +229,14 @@ public class LoanAppForm implements Serializable {
 	// bi-directional many-to-one association to Refinace
 
 	// bi-directional many-to-one association to GovermentQuestions
-		@OneToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "spousegov_quest")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "spousegov_quest")
 	public SpouseGovernmentQuestions getSpouseGovernmentQuestions() {
 		return spouseGovernmentQuestions;
 	}
 
 	public void setSpouseGovernmentQuestions(
-			SpouseGovernmentQuestions spouseGovernmentQuestions) {
+	        SpouseGovernmentQuestions spouseGovernmentQuestions) {
 		this.spouseGovernmentQuestions = spouseGovernmentQuestions;
 	}
 
@@ -402,8 +398,7 @@ public class LoanAppForm implements Serializable {
 	        List<UserEmploymentHistory> userEmploymentHistories) {
 		this.userEmploymentHistories = userEmploymentHistories;
 	}
-	
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "purchasedetails")
 	public PurchaseDetails getPurchaseDetails() {
@@ -436,106 +431,100 @@ public class LoanAppForm implements Serializable {
 		return customerspousedetail;
 	}
 
-	public void setCustomerspousedetail(CustomerSpouseDetail customerspousedetail) {
+	public void setCustomerspousedetail(
+	        CustomerSpouseDetail customerspousedetail) {
 		this.customerspousedetail = customerspousedetail;
 	}
 
-	
-	
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerEmploymentIncome> getCustomerEmploymentIncome() {
 		return customerEmploymentIncome;
 	}
 
 	public void setCustomerEmploymentIncome(
-			List<CustomerEmploymentIncome> customerEmploymentIncome) {
+	        List<CustomerEmploymentIncome> customerEmploymentIncome) {
 		this.customerEmploymentIncome = customerEmploymentIncome;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerBankAccountDetails> getCustomerBankAccountDetails() {
 		return customerBankAccountDetails;
 	}
 
 	public void setCustomerBankAccountDetails(
-			List<CustomerBankAccountDetails> customerBankAccountDetails) {
+	        List<CustomerBankAccountDetails> customerBankAccountDetails) {
 		this.customerBankAccountDetails = customerBankAccountDetails;
 	}
-	 @OneToMany(mappedBy="loanAppForms")
+
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerOtherAccountDetails> getCustomerOtherAccountDetails() {
 		return customerOtherAccountDetails;
 	}
 
 	public void setCustomerOtherAccountDetails(
-			List<CustomerOtherAccountDetails> customerOtherAccountDetails) {
+	        List<CustomerOtherAccountDetails> customerOtherAccountDetails) {
 		this.customerOtherAccountDetails = customerOtherAccountDetails;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerRetirementAccountDetails> getCustomerRetirementAccountDetails() {
 		return customerRetirementAccountDetails;
 	}
 
 	public void setCustomerRetirementAccountDetails(
-			List<CustomerRetirementAccountDetails> customerRetirementAccountDetails) {
+	        List<CustomerRetirementAccountDetails> customerRetirementAccountDetails) {
 		this.customerRetirementAccountDetails = customerRetirementAccountDetails;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerSpouseBankAccountDetails> getCustomerSpouseBankAccountDetails() {
 		return customerSpouseBankAccountDetails;
 	}
 
 	public void setCustomerSpouseBankAccountDetails(
-			List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetails) {
+	        List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetails) {
 		this.customerSpouseBankAccountDetails = customerSpouseBankAccountDetails;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerSpouseEmploymentIncome> getCustomerSpouseEmploymentIncome() {
 		return customerSpouseEmploymentIncome;
 	}
 
 	public void setCustomerSpouseEmploymentIncome(
-			List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncome) {
+	        List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncome) {
 		this.customerSpouseEmploymentIncome = customerSpouseEmploymentIncome;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerSpouseOtherAccountDetails> getCustomerSpouseOtherAccountDetails() {
 		return customerSpouseOtherAccountDetails;
 	}
 
 	public void setCustomerSpouseOtherAccountDetails(
-			List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetails) {
+	        List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetails) {
 		this.customerSpouseOtherAccountDetails = customerSpouseOtherAccountDetails;
 	}
 
-	 @OneToMany(mappedBy="loanAppForms")
+	@OneToMany(mappedBy = "loanAppForms")
 	public List<CustomerSpouseRetirementAccountDetails> getCustomerSpouseRetirementAccountDetails() {
 		return customerSpouseRetirementAccountDetails;
 	}
 
 	public void setCustomerSpouseRetirementAccountDetails(
-			List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetails) {
+	        List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetails) {
 		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
 	}
-	
-	
-	
-	
-	/*@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cust_emp_income")
-	public CustomerEmploymentIncome getCustomerEmploymentIncome() {
-		return customerEmploymentIncome;
-	}
 
-	public void setCustomerEmploymentIncome(
-			CustomerEmploymentIncome customerEmploymentIncome) {
-		this.customerEmploymentIncome = customerEmploymentIncome;
-	}
-*/
-	
-	
+	/*
+	 * @OneToOne(fetch = FetchType.LAZY)
+	 * 
+	 * @JoinColumn(name = "cust_emp_income") public CustomerEmploymentIncome
+	 * getCustomerEmploymentIncome() { return customerEmploymentIncome; }
+	 * 
+	 * public void setCustomerEmploymentIncome( CustomerEmploymentIncome
+	 * customerEmploymentIncome) { this.customerEmploymentIncome =
+	 * customerEmploymentIncome; }
+	 */
 
 }
