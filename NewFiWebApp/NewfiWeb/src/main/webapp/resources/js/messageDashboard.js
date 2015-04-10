@@ -175,7 +175,7 @@ function paintCommunicationLog(response) {
 
 	if (response.error != undefined && response.error.code == 500) {
 		showDialogPopup("Connection issue",
-				"Not able to connect.Please try again after some time",
+				"Not able to connect.Please try again after some time.Click OK to continue.",
 				function() {
 					location.reload();
 					return false;
