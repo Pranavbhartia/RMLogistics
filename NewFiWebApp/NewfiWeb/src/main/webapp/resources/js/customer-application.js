@@ -69,7 +69,7 @@ var applicationItemsList = [
 	                        },*/
 	                        {
 							    "text":"Home Information",
-	                            "onselect" : paintCustomerApplicationPageStep1a
+	                            "onselect" : paintHomeInfoPage
 	                        },
 	                        {
 								"text":"Who's on the Loan?",
@@ -511,6 +511,13 @@ function getApplicationMultipleChoiceQues(question,value) {
 }
 
 //TODO-try nested yesno question
+function paintHomeInfoPage(){
+    if(purchase){
+        paintCustomerApplicationPurchasePageStep1a();
+    }else{
+        paintCustomerApplicationPageStep1a();
+    }
+}
 
 function paintCustomerApplicationPageStep1a() {
     

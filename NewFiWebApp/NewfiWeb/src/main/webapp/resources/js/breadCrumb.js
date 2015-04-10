@@ -26,7 +26,7 @@ var contxtHolder={
     getContxtByCompletionStatus:function(){
         var ob=this;
         var count=Object.keys(ob.bredCrumbContxts).length;
-        var indx=parseInt((appUserDetails.loanAppFormCompletionStatus*count)/100);
+        var indx=Math.round((appUserDetails.loanAppFormCompletionStatus*count)/100);
         if(indx==0)
             indx=1;
         return ob.bredCrumbContxts[(indx)];
@@ -73,7 +73,7 @@ function getBredCrumContext(element,item,indx){
         },
         clickHandler:function(callback){
             var ob=this;
-            if(contxtHolder.getPercentageForStep(ob.indx)<=appUserDetails.loanAppFormCompletionStatus||appUserDetails.loanAppFormCompletionStatus==1)
+            if(Math.round(contxtHolder.getPercentageForStep(ob.indx))<=Math.round(appUserDetails.loanAppFormCompletionStatus)||appUserDetails.loanAppFormCompletionStatus==1)
             if(ob.item.onselect){
                 ob.item.onselect();
             }
