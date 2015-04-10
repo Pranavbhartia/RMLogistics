@@ -217,7 +217,7 @@ public class ThreadManager implements Runnable {
 							}
 							LOGGER.debug("Saving/Updating LoanMileStone ");
 							boolean sameStatus = false;
-							boolean newStatus = false;
+							boolean newStatus = true;
 							LoanMilestone loanMilestone = getLoanMilestone(
 							        loan, loanMilestoneMaster);
 							if (loanMilestone == null) {
@@ -740,6 +740,7 @@ public class ThreadManager implements Runnable {
 		int currentIndex = statusTrackingList.indexOf(currentStatus);
 		LOGGER.debug("Checking if previous state has an entry ");
 		if (currentIndex != 0) {
+			int trackStatus = 0;
 			int previousStatus = statusTrackingList.get(currentIndex - 1);
 			LOSLoanStatus loanStatusID = LOSLoanStatus
 			        .getLOSStatus(previousStatus);
@@ -749,18 +750,20 @@ public class ThreadManager implements Runnable {
 				}
 				if (Integer.valueOf(loanMilestone.getStatus()) == previousStatus) {
 					LOGGER.debug("No status has been missed hence breaking out of the loop");
-					break;
-				} else {
-					putLoanMilestoneIntoExecution(loanStatusID, previousStatus,
-					        loadResponseVOList, loanMilestoneMaster);
-
-					LOGGER.debug("Recursively calling to see if multiple status has been missed ");
-					checkIfAnyStatusIsMissed(previousStatus,
-					        statusTrackingList, loadResponseVOList,
-					        loanMilestoneMaster);
+					trackStatus = trackStatus + 1;
 					break;
 				}
 			}
+			if (trackStatus == 0) {
+				putLoanMilestoneIntoExecution(loanStatusID, previousStatus,
+				        loadResponseVOList, loanMilestoneMaster);
+
+				LOGGER.debug("Recursively calling to see if multiple status has been missed ");
+				checkIfAnyStatusIsMissed(previousStatus, statusTrackingList,
+				        loadResponseVOList, loanMilestoneMaster);
+
+			}
+
 		}
 		return 0;
 	}
