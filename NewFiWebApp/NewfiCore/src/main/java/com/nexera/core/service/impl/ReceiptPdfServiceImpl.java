@@ -2,8 +2,11 @@ package com.nexera.core.service.impl;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.itextpdf.text.BaseColor;
@@ -23,11 +26,14 @@ import com.nexera.common.vo.LoanApplicationReceiptVO;
 import com.nexera.core.service.ReceiptPdfService;
 
 @Component
-public class ReceiptPdfServiceImpl implements ReceiptPdfService {
-
-	private static final Font genFont = new Font(Font.getFamily("Segoe UI"), 8,
+public class ReceiptPdfServiceImpl implements ReceiptPdfService ,InitializingBean {
+	
+	@Value("${receipt_logo_url}")
+	private String logoUrl;
+	
+	private static final Font genFont = new Font(Font.getFamily("Segoe UI"), 9,
 			Font.NORMAL, new BaseColor(Color.decode("#222649")));
-	private static final Font genBold = new Font(Font.getFamily("Segoe UI"), 9,
+	private static final Font genBold = new Font(Font.getFamily("Segoe UI"), 10,
 			Font.BOLD, new BaseColor(Color.decode("#222649")));
 
 	private static final Font capFont = new Font(Font.getFamily("Segoe UI"),
@@ -54,44 +60,44 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 
 			Image im = null;
 			im = Image
-					.getInstance("/home/admin/Desktop/Projects/Nexara/Workspacefrom master/nexera_newfi/NewFiWebApp/NewfiWeb/src/main/webapp/resources/images/logo.png");
-			im.scaleAbsolute(30f, 30f);
-			PdfPTable tabletmp = new PdfPTable(1);
-			tabletmp.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-			tabletmp.setWidthPercentage(100);
+					.getInstance(logoUrl);
+			im.scaleAbsolute(45f, 45f);
+			
 			PdfPTable table = new PdfPTable(2);
-			float[] colWidths = { 20, 45 };
+			float[] colWidths = { 25, 75 };
 			table.setWidths(colWidths);
-			table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-			table.getDefaultCell().setVerticalAlignment(Element.ALIGN_TOP);
-
+			table.getDefaultCell().setBorder(0);
+			
 			PdfPCell cell1 = new PdfPCell();
 			cell1.setBorder(Rectangle.NO_BORDER);
 			cell1.addElement(im);
+			cell1.disableBorderSide(Rectangle.BOX);
+			cell1.setBackgroundColor(new BaseColor(Color.decode("#428bca")));
+			cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			
 			table.addCell(cell1);
 
 			PdfPCell cell2 = new PdfPCell();
 			cell2.setBorder(Rectangle.NO_BORDER);
+	
+			
 			Paragraph p1 = new Paragraph("Application Fee Receipt", capFont);
-			p1.setAlignment(Element.ALIGN_CENTER);
+			p1.setAlignment(Element.ALIGN_LEFT);
+			p1.setLeading(0, 1);
 			cell2.addElement(p1);
+			cell2.setBackgroundColor(new BaseColor(Color.decode("#428bca")));
+			cell2.setMinimumHeight(30);
+			cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table.addCell(cell2);
-
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-			table.getDefaultCell().setHorizontalAlignment(
-					Element.ALIGN_JUSTIFIED);
-			tabletmp.addCell(table);
-			document.add(tabletmp);
-
-			Paragraph p3 = new Paragraph();
-
+			
+			table.setWidthPercentage(100);	
+			document.add(table);
+			
 			LineSeparator ls = new LineSeparator();
-			ls.setLineWidth(5f);
+			ls.setLineWidth(10f);
 			ls.setLineColor(new BaseColor(34, 38, 73));
-
-			p3.add(new Chunk(ls));
-			document.add(p3);
+			document.add(ls);
 
 			document.add(new Paragraph("Customer: "
 					+ applicationReceiptVO.getCustomerName(), genBold));
@@ -108,11 +114,7 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 			document.add(new Paragraph("Payment Status: "
 					+ applicationReceiptVO.getPaymentStatus(), genFont));
 			document.add(Chunk.NEWLINE);
-			Paragraph p4 = new Paragraph();
-			p4.getExtraParagraphSpace();
-			p4.add(new Chunk(new LineSeparator()));
-
-			document.add(p4);
+		
 			document.add(new Paragraph(
 					"\nThis is to confirm that amount $"
 							+ applicationReceiptVO.getFee()
@@ -120,15 +122,15 @@ public class ReceiptPdfServiceImpl implements ReceiptPdfService {
 							+ applicationReceiptVO.getCustomerName()
 							+ ". Thanks for the payment. Your loan will move to next stage after the transaction is confirmed.",
 							h2Font));
-			PdfPTable tbl = new PdfPTable(2);
-			document.add(Chunk.NEWLINE);
-			document.add(tbl);
-			document.add(Chunk.NEWLINE);
-			document.add(p4);
 			document.close();
 		} catch (Exception exception) {
 			System.err.println("Exception" + exception);
 		}
 		return pdfInMemory;
+	}
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }
