@@ -947,7 +947,7 @@ function paintAgentLoanProgressContainer() {
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
 
-	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail,selectedUserDetail.userID);
+	workFlowContext.init(selectedUserDetail.loanID,selectedUserDetail);
 
 	workFlowContext.initialize("AGENT", function() {
 	});
