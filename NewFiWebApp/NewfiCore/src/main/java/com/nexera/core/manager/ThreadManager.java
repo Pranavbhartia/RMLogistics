@@ -66,6 +66,7 @@ import com.nexera.core.utility.UnderwritingXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 
 @Component
@@ -345,6 +346,27 @@ public class ThreadManager implements Runnable {
 
 		LOGGER.debug("Calling Braintree Tansaction Related Classes");
 		/* invokeBrainTree(loan); */
+
+		LOGGER.debug("Calling Milestones With Reminder ");
+		invokeMilestonesWithReminder();
+	}
+
+	private void invokeMilestonesWithReminder() {
+		for (WorkflowItemExec workflowItemExec : workflowItemExecList) {
+			if (workflowItemExec.getRemind()) {
+				LOGGER.debug("This milestone has a reminder associated with it ");
+				if (!workflowItemExec.getStatus().equalsIgnoreCase(
+				        WorkItemStatus.COMPLETED.getStatus())) {
+					LOGGER.debug("Checking whether the milestone is already completed ");
+					HashMap<String, Object> map = new HashMap<String, Object>();
+					map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME,
+					        loan.getId());
+					map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+					        workflowItemExec.getId());
+					engineTrigger.invokeReminder(workflowItemExec.getId(), map);
+				}
+			}
+		}
 	}
 
 	private void invokeBrainTree(Loan loan) {

@@ -96,4 +96,9 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		createReminderVo.setForCustomer(true);
 		iWorkflowService.createAlertOfType(createReminderVo);
 	}
+
+	public String updateReminder(HashMap<String, Object> objectMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
