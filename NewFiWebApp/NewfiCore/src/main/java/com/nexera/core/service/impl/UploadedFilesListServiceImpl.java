@@ -950,7 +950,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				updateIsAssignedToTrue(newFileRowId);
 
 			}
-
+			changeWorkItem(mapFileMappingToNeed, loanId);
 			isSuccess = true;
 			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 
@@ -965,7 +965,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	private void changeWorkItem(
-	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID) {
+	        Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed,
+	        int loanID) {
 		// Start
 		// Loan ID : get LoanManagerWFID from the loan object
 		//
