@@ -128,33 +128,7 @@
 			    }
 			});
 			
-			$(document).on('click','#appProgressBaarId_1',function(){
-								
-					appProgressBaar(1);
-					paintCustomerApplicationPageStep1a();
-				
-			});
-			$(document).on('click','#appProgressBaarId_2',function(){
-				
-				if(applyLoanStatus > 1){
-					appProgressBaar(2);
-					paintCustomerApplicationPageStep2();
-				}
-			});
-			$(document).on('click','#appProgressBaarId_3',function(){
-				
-				if(applyLoanStatus > 2){
-					appProgressBaar(3);
-					paintMyIncome();
-				}
-			});
-			$(document).on('click','#appProgressBaarId_4',function(){
-				
-				if(applyLoanStatus > 3){
-					appProgressBaar(4);
-					paintCustomerApplicationPageStep4a();
-				}
-			});
+			
 			
 			$(document).on('click','input[name="birthday"]',function(e){
 				

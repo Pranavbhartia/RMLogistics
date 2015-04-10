@@ -50,10 +50,10 @@ if (sessionStorage.loanAppFormData) {
 //loan.id = 2;
 //loanType.id=1;
 
-var applyLoanStatus = 0; 
+
 var formCompletionStatus = 1;
 
-appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+
 
 
 
@@ -61,7 +61,7 @@ appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
 var applicationItemsList = [ 
                              {
 							    "text":"My Priority",
-	                            "onselect" : ""
+	                            "onselect" : paintSelectLoanTypeQuestion
 	                        },
 	                        /*{
 							    "text":"My Money",
@@ -110,7 +110,11 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 		"data-step" : stepNo,
 		"id" : "appProgressBaarId_" + stepNo
 	});
-	
+	var contxt=contxtHolder.createBreadCrumbItem(itemCont,itemTxt,stepNo);
+    itemCont.bind("click",{"contxt":contxt},function(event){
+        var contxt=event.data.contxt;
+        contxt.clickHandler();
+    })
 	var leftIcon = $('<div>').attr({
 		"class" : "ce-lp-item-icon float-left",
 		"id" : "appStepNoId_" + stepNo
@@ -123,7 +127,7 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 		"class" : "ce-app-lp-item-text float-left"
 	}).html(itemTxt.text);
 
-    //contxtHolder.createBreadCrumbItem(itemCont,itemTxt,stepNo);
+    
 	return itemCont.append(leftIcon).append(textCont);
 }
 
@@ -231,8 +235,7 @@ function paintCustomerApplicationPage() {
    // paintCustomerApplicationPageStep1a();
     
     // showLoanAppFormContainer(formCompletionStatus);
-    
-    paintSelectLoanTypeQuestion();
+    contxtHolder.switchBreadCrumb();
     
 }
 
@@ -498,7 +501,7 @@ function getApplicationMultipleChoiceQues(question) {
 
 function paintCustomerApplicationPageStep1a() {
     
-	applyLoanStatus = 1;
+	
 	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Residential Address";
@@ -552,7 +555,7 @@ function paintCustomerApplicationPageStep1a() {
     		
     		
     		appUserDetails.user = user;
-    		appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
+    		
     		
     		////alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
@@ -662,7 +665,7 @@ function paintCustomerApplicationPageStep1b() {
         	  	
         	appUserDetails.propertyTypeMaster = propertyTypeMaster;
         	
-        	appUserDetails.loanAppFormCompletionStatus=applyLoanStatus;
+        	
         	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
         	//saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
         	saveAndUpdateLoanAppForm(appUserDetails ,paintSecondPropertyStep());
@@ -872,7 +875,7 @@ var quesContxts=[];
 //TODO-try nested yesno question
 function paintCustomerApplicationPageStep2() {
 	
-	applyLoanStatus =2;
+	
 	appProgressBaar(3); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
@@ -969,7 +972,7 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.customerSpouseDetail.spouseName  = "false";
 	    	}
 	    	
-	    	appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+	    	
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	////alert(JSON.stringify(appUserDetails));
 	    
@@ -1151,14 +1154,12 @@ function incomesSelectALLThatApply() {
 }
  
 function paintMyIncome() {
-    //applyLoanStatus = 3;
+    
     appProgressBaar(4);
     $('#app-right-panel').html('');
     var incomesSelectALLThatApplyDiv = incomesSelectALLThatApply();
     var questcontainer = $('#app-right-panel');
- 
-  
-	
+ 	
 	console.log('purchase'+purchase);
 	if(purchase == true){
 		
@@ -1231,108 +1232,70 @@ function paintMyIncome() {
 				
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-				appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+				
 			
-
-		
-				
-				
+			
        
       if(purchase == true){
-            //alert("hiiiii ");
+            
 	        homelistprice = $('input[name="homelistprice"]').val();
 	        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
 	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
 	        
 	        
-	   
-	   
-	        var  customerBankAccountDetails = [];
-	        /* Bank Account Start*/
-	   
-	  
-	        accountSubType = $('.app-options-cont[name="bankAccount"]').find('.app-option-selected').text();
-	        currentAccountBalance = $('input[name="bankAccountCurrentBankBalance"]').val();
-	        amountForNewHome = $('input[name="bankAccountUsefornewhome"]').val();
-	      
-	        customerBankAccountDetails1 = {};
-	        customerBankAccountDetails1.accountSubType = accountSubType;
-	        customerBankAccountDetails1.currentAccountBalance = currentAccountBalance;
-	        customerBankAccountDetails1.amountForNewHome = amountForNewHome;
-	        var termp = {};
-	        termp.customerBankAccountDetails = customerBankAccountDetails1;
+	        appUserDetails.customerBankAccountDetails = [];
+	        appUserDetails.customerOtherAccountDetails = [];
+	        appUserDetails.customerRetirementAccountDetails = [];
 	        
-	        customerBankAccountDetails.push(termp);
+	        var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
 	        
-	        appUserDetails.customerBankAccountDetails=customerBankAccountDetails;
+	        var bankContainer=assets[0];
+	        var retirementContainer=assets[1];
+	        var otherContainer=assets[2];
 	        
-	        /* Bank Account End*/
-	        /* Retirement Account Start*/
-	        
-	        var  customerRetirementAccountDetails = [];
-	        retirementAccountSubType = $('.app-options-cont[name="accountType"]').find('.app-option-selected').text();
-	        retirementCurrentAccountBalance = $('input[name="accountTypeCurrentBankBalance"]').val();
-	        retirementAccountTypeUseForNewHome = $('input[name="accountTypeUseForNewHome"]').val();
-	        
-	        customerRetirementAccountDetails1 = {};
-	        
-	        customerRetirementAccountDetails1.accountSubType = retirementAccountSubType;
-	        customerRetirementAccountDetails1.currentAccountBalance = retirementCurrentAccountBalance;
-	        customerRetirementAccountDetails1.amountForNewHome = retirementAccountTypeUseForNewHome;
-	        
-	        var termp2 = {};
-	        termp2.customerRetirementAccountDetails = customerRetirementAccountDetails1;
-	        
-	        customerRetirementAccountDetails.push(termp2);
-	        
-	        appUserDetails.customerRetirementAccountDetails=customerRetirementAccountDetails;
-	        
-	        /* Retirement Account Ends*/
-	        /* Other Account Start*/
-	        
-	        var  customerOtherAccountDetails = [];
-	        otherAccountName = $('.app-options-cont[name="otherAccounts"]').find('.app-option-selected').text();
-	        otherAccountCurrentBankBalance = $('input[name="otherAccountCurrentBankBalance"]').val();
-	        otherAccountsUseForNewHome = $('input[name="otherAccountsUseForNewHome"]').val();
-	        
-	        customerOtherAccountDetails1 = {};
-	        
-	        customerOtherAccountDetails1.accountSubType = otherAccountName;
-	        customerOtherAccountDetails1.currentAccountBalance = otherAccountCurrentBankBalance;
-	        customerOtherAccountDetails1.amountForNewHome = otherAccountsUseForNewHome;
-	        
-	        var termp3 = {};
-	        termp3.customerOtherAccountDetails = customerOtherAccountDetails1;
-	        
-	        customerOtherAccountDetails.push(termp3);
-	        
-	        appUserDetails.customerOtherAccountDetails=customerOtherAccountDetails;
+	        if($(bankContainer).find('.app-option-checked')){
+	        	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","bankAccount","bankAccountCurrentBankBalance","bankAccountUsefornewhome");
+	        }
+			if($(retirementContainer).find('.app-option-checked')){
+				appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountType","accountTypeCurrentBankBalance","accountTypeUseForNewHome");
+		    }
+			if($(otherContainer).find('.app-option-checked')){
+				appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","otherAccounts","otherAccountCurrentBankBalance","otherAccountsUseForNewHome");
+			}
+			
+			
 	    }
-        /* Other Account Ends*/
+            
         
-        /*appUserDetails.homelistprice = homelistprice;
-             appUserDetails.homemortgagebalance = homemortgagebalance;
-             appUserDetails.inverstInPurchase = inverstInPurchase;
-                                     
-             appUserDetails.accountTypeCurrentBankBalance = accountTypeCurrentBankBalance;                       
-             appUserDetails.accountTypeUseForNewHome = accountTypeUseForNewHome;
-             appUserDetails.otherAccountName = otherAccountName;
-             appUserDetails.otherAccountsUseForNewHome = otherAccountsUseForNewHome;*/
-        //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-        appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
-        ////alert(JSON.stringify(appUserDetails));
+       
         if (appUserDetails.isSpouseOnLoan == true) {
             saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome());
         } else {
             saveAndUpdateLoanAppForm(appUserDetails, paintCustomerApplicationPageStep4a());
         }
-        //  }else{
-        //  showToastMessage("Please give answer of the questions");
-        //}
+        
     });
     $('#app-right-panel').append(saveAndContinueButton);
 }
  
+function getAccountValues(element,key,accType,balance,forNewHome){
+	var values=[];
+	$(element).find('.ce-option-ques-wrapper').each(function(){
+		
+		var accountSubType = $(this).find('.app-options-cont[name="'+accType+'"]').find('.app-option-selected').text();
+		var currentAccountBalance = $(this).find('input[name="'+balance+'"]').val();
+		var  amountForNewHome =  $(this).find('input[name="'+forNewHome+'"]').val();
+		
+		var accDetailTemp = {};
+		var accDetail = {};
+		accDetail.accountSubType = accountSubType;
+		accDetail.currentAccountBalance = currentAccountBalance;
+		accDetail.amountForNewHome = amountForNewHome;
+		accDetailTemp[key] = accDetail;
+		values.push(accDetailTemp);		
+	});	
+	return values;
+}
 
 function paintRefinanceEmployed(divId,value) {
     var flag=true;
@@ -1794,7 +1757,7 @@ return container.append(quesTextCont).append(optionContainer);
 var quesDeclarationContxts =[];
 function paintCustomerApplicationPageStep4a() {
    
-	applyLoanStatus = 4;
+	
 	quesDeclarationContxts = [];
 	appProgressBaar(5);
 	$('#app-right-panel').html('');
@@ -2111,7 +2074,7 @@ function paintCustomerApplicationPageStep4a() {
  		 }
     	 
     	 appUserDetails.governmentquestion =governmentquestion;
-    	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    	 
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	// //alert(JSON.stringify(appUserDetails));
     	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
@@ -2342,7 +2305,7 @@ function goverementOptionalQues() {
 
 function paintCustomerApplicationPageStep5() {
 	
-	applyLoanStatus = 5;
+	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "My Credit";
@@ -2397,7 +2360,7 @@ function paintCustomerApplicationPageStep5() {
     		
     		appUserDetails.user.customerDetail = customerDetailTemp;
     		////alert(JSON.stringify(customerDetail));
-    		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    		
     		
     /////alert(JSON.stringify(appUserDetails));
     		
@@ -2429,7 +2392,7 @@ function paintCustomerApplicationPageStep5() {
 
 function paintCustomerSpouseApplicationPageStep5() {
 	
-	applyLoanStatus = 5;
+	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "My Spouse Credit";
@@ -2484,7 +2447,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     		
     		appUserDetails.customerSpouseDetail = customerDetailTemp;
     		////alert(JSON.stringify(customerDetail));
-    		appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    		
     		
     /////alert(JSON.stringify(appUserDetails));
     		
@@ -2695,7 +2658,7 @@ function appProgressBaar(num){
 				.removeClass('ce-lp-complete').addClass('ce-lp-not-started');
 		$('#appStepNoId_' + i).html(i);
 	}
-	
+	appUserDetails.loanAppFormCompletionStatus=contxtHolder.getPercentageForStep(num);
 }
 
 function putCurrencyFormat(name){
@@ -3441,7 +3404,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 
 function paintSpouseCustomerApplicationPageStep4a() {
    
-	applyLoanStatus = 4;
+	
 	quesDeclarationContxts = [];
 	
 	$('#app-right-panel').html('');
@@ -3748,7 +3711,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
  		 }
     	 
     	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
-    	 appUserDetails.loanAppFormCompletionStatus = applyLoanStatus;
+    	 
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	// //alert(JSON.stringify(appUserDetails));
     	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
