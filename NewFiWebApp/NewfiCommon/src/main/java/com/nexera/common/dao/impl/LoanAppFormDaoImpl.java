@@ -61,14 +61,19 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
 				                        .getId());
-				System.out.println("loanAppForm.getUser().getCustomerDetail().getAddressCity()"+loanAppForm.getUser().getCustomerDetail().getAddressCity());
-				
-				/*if(!"NONE".equalsIgnoreCase(loanAppForm.getUser().getCustomerDetail().getAddressCity()) )
-				{*/
-					
-					this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
-				
-				//}
+				System.out
+				        .println("loanAppForm.getUser().getCustomerDetail().getAddressCity()"
+				                + loanAppForm.getUser().getCustomerDetail()
+				                        .getAddressCity());
+
+				/*
+				 * if(!"NONE".equalsIgnoreCase(loanAppForm.getUser().
+				 * getCustomerDetail().getAddressCity()) ) {
+				 */
+
+				this.saveOrUpdate(loanAppForm.getUser().getCustomerDetail());
+
+				// }
 				System.out
 				        .println("After saveOrUpdate(loanAppForm.getUser().getCustomerDetail()"
 				                + loanAppForm.getUser().getCustomerDetail()
@@ -212,7 +217,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				System.out.println("cei.getEmployedAt()" + cei.getEmployedAt());
 				System.out.println("cei.getId()" + cei.getId());
 				CustomerEmploymentIncome customeremploymentIncome = new CustomerEmploymentIncome();
-				customeremploymentIncome.setId(cei.getId());;
+				customeremploymentIncome.setId(cei.getId());
+				;
 				customeremploymentIncome.setEmployedAt(cei.getEmployedAt());
 				customeremploymentIncome.setEmployedIncomePreTax(cei
 				        .getEmployedIncomePreTax());
@@ -220,9 +226,13 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getEmployedSince());
 				customeremploymentIncome.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customeremploymentIncome);
-				System.out.println("custom engagement id is "+customeremploymentIncome.getId());
-				System.out.println("custom engagement id is "+loanAppForm.getCustomerEmploymentIncome().get(0).getId());
-				loanAppForm.getCustomerEmploymentIncome().get(0).setId(customeremploymentIncome.getId());
+				System.out.println("custom engagement id is "
+				        + customeremploymentIncome.getId());
+				System.out.println("custom engagement id is "
+				        + loanAppForm.getCustomerEmploymentIncome().get(0)
+				                .getId());
+				loanAppForm.getCustomerEmploymentIncome().get(0)
+				        .setId(customeremploymentIncome.getId());
 			}
 
 			System.out
@@ -479,12 +489,24 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(loanAppForm.getLoanTypeMaster());
 
 		Hibernate.initialize(loanAppForm.getCustomerspousedetail());
+		Hibernate.initialize(loanAppForm.getCustomerSpouseEmploymentIncome());
+		Hibernate.initialize(loanAppForm.getCustomerSpouseBankAccountDetails());
+		Hibernate.initialize(loanAppForm.getCustomerSpouseOtherAccountDetails());
+		Hibernate.initialize(loanAppForm.getCustomerSpouseRetirementAccountDetails());
+		
 		Hibernate.initialize(loanAppForm.getCustomerEmploymentIncome());
 		Hibernate.initialize(loanAppForm.getCustomerBankAccountDetails());
-		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail()
-		        .getCustomerRetirementAccountDetails());
-		Hibernate.initialize(loanAppForm.getUser().getCustomerDetail()
-		        .getCustomerOtherAccountDetails());
+
+		Hibernate.initialize(loanAppForm.getCustomerOtherAccountDetails());
+		Hibernate.initialize(loanAppForm.getCustomerRetirementAccountDetails());
+
+		if (loanAppForm.getUser().getCustomerDetail() != null) {
+			Hibernate.initialize(loanAppForm.getUser().getCustomerDetail()
+			        .getCustomerRetirementAccountDetails());
+			Hibernate.initialize(loanAppForm.getUser().getCustomerDetail()
+			        .getCustomerOtherAccountDetails());
+		}
+
 
 		return loanAppForm;
 	}

@@ -3,7 +3,7 @@ package com.nexera.common.enums;
 public enum UserRolesEnum {
 
 	CUSTOMER("CUSTOMER", 1), REALTOR("REALTOR", 2), INTERNAL("INTERNAL", 3), SYSTEM(
-	        "SYSTEM", 4), SM("SM", 2), PC("PC", 3), LOANMANAGER("LM", 1);
+	        "SYSTEM", 4), SM("SM", 2), PC("PC", 3), LM("LM", 1);
 
 	private final String name;
 	private final int roleId;

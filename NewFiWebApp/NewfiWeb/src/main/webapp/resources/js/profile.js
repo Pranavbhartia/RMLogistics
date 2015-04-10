@@ -699,7 +699,7 @@ function getPriEmailRow(user) {
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		showToastErrorMessage("Incorrect Email");
+		showErrorToastMessage("Incorrect Email");
 		validationFails = true;
 		return true;
 	}

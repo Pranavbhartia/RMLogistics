@@ -6,10 +6,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.Column;
-
-import org.hibernate.annotations.Type;
-
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerEmploymentIncome;
@@ -62,11 +58,11 @@ public class LoanAppFormVO implements Serializable {
 	private RefinanceVO refinancedetails;
 	private CustomerSpouseDetailVO customerSpouseDetail;
 	private SpouseGovernmentQuestionVO spouseGovernmentQuestions;
-   // private CustomerEmploymentIncomeVO customerEmploymentIncome;
-	
+	// private CustomerEmploymentIncomeVO customerEmploymentIncome;
+
 	private LoanTypeMasterVO loanType;
 	private List<CustomerEmploymentIncomeVO> customerEmploymentIncome;
-	
+
 	private List<CustomerBankAccountDetailsVO> customerBankAccountDetails;
 	private List<CustomerOtherAccountDetailsVO> customerOtherAccountDetails;
 	private List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetails;
@@ -74,14 +70,13 @@ public class LoanAppFormVO implements Serializable {
 	private List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncome;
 	private List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetails;
 	private List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetails;
-	
 
 	private LoanVO loan;
 	private List<UserEmploymentHistoryVO> userEmploymentHistories;
 	private Integer loanAppFormCompletionStatus;
 
 	private PurchaseDetailsVO purchaseDetails;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -314,12 +309,6 @@ public class LoanAppFormVO implements Serializable {
 	public void setRefinancedetails(RefinanceVO refinancedetails) {
 		this.refinancedetails = refinancedetails;
 	}
-	
-	
-	
-
-	
-	
 
 	public PurchaseDetailsVO getPurchaseDetails() {
 		return purchaseDetails;
@@ -333,18 +322,17 @@ public class LoanAppFormVO implements Serializable {
 		return loanAppFormCompletionStatus;
 	}
 
-	public void setLoanAppFormCompletionStatus(Integer loanAppFormCompletionStatus) {
+	public void setLoanAppFormCompletionStatus(
+	        Integer loanAppFormCompletionStatus) {
 		this.loanAppFormCompletionStatus = loanAppFormCompletionStatus;
 	}
 
-	
-	
-	
 	public CustomerSpouseDetailVO getCustomerSpouseDetail() {
 		return customerSpouseDetail;
 	}
 
-	public void setCustomerSpouseDetail(CustomerSpouseDetailVO customerSpouseDetail) {
+	public void setCustomerSpouseDetail(
+	        CustomerSpouseDetailVO customerSpouseDetail) {
 		this.customerSpouseDetail = customerSpouseDetail;
 	}
 
@@ -353,7 +341,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setSpouseGovernmentQuestions(
-			SpouseGovernmentQuestionVO spouseGovernmentQuestions) {
+	        SpouseGovernmentQuestionVO spouseGovernmentQuestions) {
 		this.spouseGovernmentQuestions = spouseGovernmentQuestions;
 	}
 
@@ -362,19 +350,16 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerEmploymentIncome(
-			List<CustomerEmploymentIncomeVO> customerEmploymentIncome) {
+	        List<CustomerEmploymentIncomeVO> customerEmploymentIncome) {
 		this.customerEmploymentIncome = customerEmploymentIncome;
 	}
 
-	
-	
-	
 	public List<CustomerBankAccountDetailsVO> getCustomerBankAccountDetails() {
 		return customerBankAccountDetails;
 	}
 
 	public void setCustomerBankAccountDetails(
-			List<CustomerBankAccountDetailsVO> customerBankAccountDetails) {
+	        List<CustomerBankAccountDetailsVO> customerBankAccountDetails) {
 		this.customerBankAccountDetails = customerBankAccountDetails;
 	}
 
@@ -383,7 +368,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerOtherAccountDetails(
-			List<CustomerOtherAccountDetailsVO> customerOtherAccountDetails) {
+	        List<CustomerOtherAccountDetailsVO> customerOtherAccountDetails) {
 		this.customerOtherAccountDetails = customerOtherAccountDetails;
 	}
 
@@ -392,7 +377,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerRetirementAccountDetails(
-			List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetails) {
+	        List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetails) {
 		this.customerRetirementAccountDetails = customerRetirementAccountDetails;
 	}
 
@@ -401,7 +386,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerSpouseBankAccountDetails(
-			List<CustomerSpouseBankAccountDetailsVO> customerSpouseBankAccountDetails) {
+	        List<CustomerSpouseBankAccountDetailsVO> customerSpouseBankAccountDetails) {
 		this.customerSpouseBankAccountDetails = customerSpouseBankAccountDetails;
 	}
 
@@ -410,7 +395,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerSpouseEmploymentIncome(
-			List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncome) {
+	        List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncome) {
 		this.customerSpouseEmploymentIncome = customerSpouseEmploymentIncome;
 	}
 
@@ -419,7 +404,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerSpouseOtherAccountDetails(
-			List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetails) {
+	        List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetails) {
 		this.customerSpouseOtherAccountDetails = customerSpouseOtherAccountDetails;
 	}
 
@@ -428,7 +413,7 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public void setCustomerSpouseRetirementAccountDetails(
-			List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetails) {
+	        List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetails) {
 		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
 	}
 
@@ -449,7 +434,8 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
 		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
 		loanAppForm.setMonthlyPension(this.monthlyPension);
-		loanAppForm.setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
+		loanAppForm
+		        .setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
 		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
 		loanAppForm.setSecondMortgage(this.secondMortgage);
 		loanAppForm.setPaySecondMortgage(this.paySecondMortgage);
@@ -460,81 +446,104 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setMonthlyRent(this.getMonthlyRent());
-		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
+		loanAppForm
+		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
-		
-		
-		if(this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")){
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.REF));
-		}else{
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
+
+		if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+			        LoanTypeMasterEnum.REF));
+		} else {
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+			        LoanTypeMasterEnum.PUR));
 		}
-		
-				
-		loanAppForm.setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this.getPropertyTypeMaster()));
-		loanAppForm.setGovernmentquestion(parseVOtoEntity(this.getGovernmentquestion()));
-		loanAppForm.setCustomerspousedetail(parseVOtoEntityCustomerSpouseDetail(this.getCustomerSpouseDetail()));
-		loanAppForm.setSpouseGovernmentQuestions(parseVOtoEntitySpouseGovernmentQuestions(this.getSpouseGovernmentQuestions()));
-		
-		loanAppForm.setCustomerEmploymentIncome(parseVOtoEntityCustomerEmploymentIncome(this.getCustomerEmploymentIncome()));
-		loanAppForm.setCustomerBankAccountDetails(parseVOtoEntityCustomerBankAccountDetails(this.getCustomerBankAccountDetails()));
-		loanAppForm.setCustomerOtherAccountDetails(parseVOtoEntityCustomerOtherAccountDetails(this.getCustomerOtherAccountDetails()));
-		loanAppForm.setCustomerRetirementAccountDetails(parseVOtoEntityCustomerRetirementAccountDetails(this.getCustomerRetirementAccountDetails()));
-		
-		
-		loanAppForm.setCustomerSpouseBankAccountDetails(parseVOtoEntityCustomerSpouseBankAccountDetails(this.getCustomerSpouseBankAccountDetails()));
-		loanAppForm.setCustomerSpouseEmploymentIncome(parseVOtoEntityCustomerSpouseEmploymentIncome(this.getCustomerSpouseEmploymentIncome()));
-		loanAppForm.setCustomerSpouseOtherAccountDetails(parseVOtoEntityCustomerSpouseOtherAccountDetails(this.getCustomerSpouseOtherAccountDetails()));
-		loanAppForm.setCustomerSpouseRetirementAccountDetails(parseVOtoEntityCustomerSpouseRetirementAccountDetails(this.getCustomerSpouseRetirementAccountDetails()));
-		
-		
-		
-		//if(null != this.getUser().getCustomerEnagagement() && null!= this.getRefinancedetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"))
-		//this.getRefinancedetails().setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
 
-		
-		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this.getRefinancedetails()));
-		
-		// Purchase Details 
-		//if (null!= this.getPurchaseDetails() && this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("purchase"))
-		//this.getPurchaseDetails().setLivingSituation(this.getUser().getCustomerEnagagement().getLivingSituation());
-		
-		loanAppForm.setPurchaseDetails(parseVOtoEntityPurchaseDetails(this.getPurchaseDetails()));
-		
+		loanAppForm
+		        .setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this
+		                .getPropertyTypeMaster()));
+		loanAppForm.setGovernmentquestion(parseVOtoEntity(this
+		        .getGovernmentquestion()));
+		loanAppForm
+		        .setCustomerspousedetail(parseVOtoEntityCustomerSpouseDetail(this
+		                .getCustomerSpouseDetail()));
+		loanAppForm
+		        .setSpouseGovernmentQuestions(parseVOtoEntitySpouseGovernmentQuestions(this
+		                .getSpouseGovernmentQuestions()));
 
-		loanAppForm.setUser(parseVOtoEntityUser(this.getUser()));
+		loanAppForm
+		        .setCustomerEmploymentIncome(parseVOtoEntityCustomerEmploymentIncome(this
+		                .getCustomerEmploymentIncome()));
+		loanAppForm
+		        .setCustomerBankAccountDetails(parseVOtoEntityCustomerBankAccountDetails(this
+		                .getCustomerBankAccountDetails()));
+		loanAppForm
+		        .setCustomerOtherAccountDetails(parseVOtoEntityCustomerOtherAccountDetails(this
+		                .getCustomerOtherAccountDetails()));
+		loanAppForm
+		        .setCustomerRetirementAccountDetails(parseVOtoEntityCustomerRetirementAccountDetails(this
+		                .getCustomerRetirementAccountDetails()));
 
-     	loanAppForm.setLoan(this.getLoan().convertToEntity());
-     	
-     
-		
+		loanAppForm
+		        .setCustomerSpouseBankAccountDetails(parseVOtoEntityCustomerSpouseBankAccountDetails(this
+		                .getCustomerSpouseBankAccountDetails()));
+		loanAppForm
+		        .setCustomerSpouseEmploymentIncome(parseVOtoEntityCustomerSpouseEmploymentIncome(this
+		                .getCustomerSpouseEmploymentIncome()));
+		loanAppForm
+		        .setCustomerSpouseOtherAccountDetails(parseVOtoEntityCustomerSpouseOtherAccountDetails(this
+		                .getCustomerSpouseOtherAccountDetails()));
+		loanAppForm
+		        .setCustomerSpouseRetirementAccountDetails(parseVOtoEntityCustomerSpouseRetirementAccountDetails(this
+		                .getCustomerSpouseRetirementAccountDetails()));
+
+		// if(null != this.getUser().getCustomerEnagagement() && null!=
+		// this.getRefinancedetails() &&
+		// this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("REF"))
+		// this.getRefinancedetails().setRefinanceOption(this.getUser().getCustomerEnagagement().getRefinanceOption());
+
+		loanAppForm.setRefinancedetails(parseVOtoEntityRefinance(this
+		        .getRefinancedetails()));
+
+		// Purchase Details
+		// if (null!= this.getPurchaseDetails() &&
+		// this.getUser().getCustomerEnagagement().getLoanType().equalsIgnoreCase("purchase"))
+		// this.getPurchaseDetails().setLivingSituation(this.getUser().getCustomerEnagagement().getLivingSituation());
+
+		loanAppForm.setPurchaseDetails(parseVOtoEntityPurchaseDetails(this
+		        .getPurchaseDetails()));
+
+		loanAppForm.setUser(User.convertFromVOToEntity(this.getUser()));
+
+		loanAppForm.setLoan(this.getLoan().convertToEntity());
+
 		/* save data in the purchase table */
-		
-		
 
 		return loanAppForm;
 	}
 
+	private PurchaseDetails parseVOtoEntityPurchaseDetails(
+	        PurchaseDetailsVO purchaseDetailsVO) {
 
-
-	private PurchaseDetails parseVOtoEntityPurchaseDetails(PurchaseDetailsVO purchaseDetailsVO) {
-	
 		PurchaseDetails purchaseDetails = new PurchaseDetails();
-		if(purchaseDetailsVO == null)
+		if (purchaseDetailsVO == null)
 			return purchaseDetails;
-		
+
 		purchaseDetails.setId(purchaseDetailsVO.getId());
-		purchaseDetails.setLivingSituation(purchaseDetailsVO.getLivingSituation());
+		purchaseDetails.setLivingSituation(purchaseDetailsVO
+		        .getLivingSituation());
 		purchaseDetails.setBuyhomeZipPri(purchaseDetailsVO.getBuyhomeZipPri());
 		purchaseDetails.setBuyhomeZipSec(purchaseDetailsVO.getBuyhomeZipSec());
 		purchaseDetails.setBuyhomeZipTri(purchaseDetailsVO.getBuyhomeZipTri());
-		purchaseDetails.setEstimatedPrice(purchaseDetailsVO.getEstimatedPrice());
+		purchaseDetails
+		        .setEstimatedPrice(purchaseDetailsVO.getEstimatedPrice());
 		purchaseDetails.setHousePrice(purchaseDetailsVO.getHousePrice());
 		purchaseDetails.setLoanAmount(purchaseDetailsVO.getLoanAmount());
 		
+		purchaseDetails.setTaxAndInsuranceInLoanAmt(purchaseDetailsVO.isTaxAndInsuranceInLoanAmt());
 		
+
 		return purchaseDetails;
-    }
+	}
 
 	public GovernmentQuestion parseVOtoEntity(
 	        GovernmentQuestionVO governmentQuestionVO) {
@@ -543,7 +552,7 @@ public class LoanAppFormVO implements Serializable {
 		if (governmentQuestionVO == null)
 			return governmentQuestion;
 
-		//GovernmentQuestion governmentQuestion = new GovernmentQuestion();
+		// GovernmentQuestion governmentQuestion = new GovernmentQuestion();
 		System.out.println(governmentQuestionVO.getId());
 		governmentQuestion.setId(governmentQuestionVO.getId());
 		governmentQuestion.setOutstandingJudgments(governmentQuestionVO
@@ -578,39 +587,53 @@ public class LoanAppFormVO implements Serializable {
 		RefinanceDetails refinanceDetails = new RefinanceDetails();
 		if (refinanceVO == null)
 			return refinanceDetails;
-		//RefinanceDetails refinanceDetails = new RefinanceDetails();
+		// RefinanceDetails refinanceDetails = new RefinanceDetails();
 		System.out.println("refinanceVO.getId()" + refinanceVO.getId());
 		refinanceDetails.setId(refinanceVO.getId());
-		refinanceDetails.setCurrentMortgageBalance(refinanceVO.getCurrentMortgageBalance());
+		refinanceDetails.setCurrentMortgageBalance(refinanceVO
+		        .getCurrentMortgageBalance());
 		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
-		refinanceDetails.setCurrentMortgagePayment(refinanceVO.getCurrentMortgagePayment());
+		refinanceDetails.setCurrentMortgagePayment(refinanceVO
+		        .getCurrentMortgagePayment());
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
-		refinanceDetails.setSecondMortageBalance(refinanceVO.getSecondMortageBalance());
+		refinanceDetails.setSecondMortageBalance(refinanceVO
+		        .getSecondMortageBalance());
 		refinanceDetails.setCashTakeOut(refinanceVO.getCashTakeOut());
-		refinanceDetails.setMortgageyearsleft(refinanceVO.getMortgageyearsleft());
+		refinanceDetails.setMortgageyearsleft(refinanceVO
+		        .getMortgageyearsleft());
 
 		return refinanceDetails;
 
 	}
 
-	public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(PropertyTypeMasterVO propertyTypeMasterVO) {
+	public PropertyTypeMaster parseVOtoEntityPropertyTypeMaster(
+	        PropertyTypeMasterVO propertyTypeMasterVO) {
 
 		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 		if (propertyTypeMasterVO == null)
 			return propertyTypeMaster;
-		//PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
+		// PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 
-		System.out.println("propertyTypeMasterVO.getId()"+ propertyTypeMasterVO.getId());
-		
+		System.out.println("propertyTypeMasterVO.getId()"
+		        + propertyTypeMasterVO.getId());
+
 		propertyTypeMaster.setId(propertyTypeMasterVO.getId());
-		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO.getPropertyTypeCd());
-		propertyTypeMaster.setResidenceTypeCd(propertyTypeMasterVO.getResidenceTypeCd());
-		propertyTypeMaster.setPropertyTaxesPaid(propertyTypeMasterVO.getPropertyTaxesPaid());
-		propertyTypeMaster.setPropertyInsuranceProvider(propertyTypeMasterVO.getPropertyInsuranceProvider());
-		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO.getPropertyInsuranceCost());
-		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO.getPropertyPurchaseYear());
-		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO.getHomeWorthToday());
-		propertyTypeMaster.setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
+		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO
+		        .getPropertyTypeCd());
+		propertyTypeMaster.setResidenceTypeCd(propertyTypeMasterVO
+		        .getResidenceTypeCd());
+		propertyTypeMaster.setPropertyTaxesPaid(propertyTypeMasterVO
+		        .getPropertyTaxesPaid());
+		propertyTypeMaster.setPropertyInsuranceProvider(propertyTypeMasterVO
+		        .getPropertyInsuranceProvider());
+		propertyTypeMaster.setPropertyInsuranceCost(propertyTypeMasterVO
+		        .getPropertyInsuranceCost());
+		propertyTypeMaster.setPropertyPurchaseYear(propertyTypeMasterVO
+		        .getPropertyPurchaseYear());
+		propertyTypeMaster.setHomeWorthToday(propertyTypeMasterVO
+		        .getHomeWorthToday());
+		propertyTypeMaster
+		        .setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
 		return propertyTypeMaster;
 
 	}
@@ -630,7 +653,8 @@ public class LoanAppFormVO implements Serializable {
 		if (userVO.getCustomerDetail() == null)
 			return user;
 
-		user.setCustomerDetail(parseVOtoEntityCustomerDetails(userVO.getCustomerDetail()));
+		user.setCustomerDetail(parseVOtoEntityCustomerDetails(userVO
+		        .getCustomerDetail()));
 
 		return user;
 
@@ -642,8 +666,8 @@ public class LoanAppFormVO implements Serializable {
 		CustomerDetail customerDetail = new CustomerDetail();
 		if (customerDetailVO == null)
 			return null;
-			//return customerDetail;
-		//CustomerDetail customerDetail = new CustomerDetail();
+		// return customerDetail;
+		// CustomerDetail customerDetail = new CustomerDetail();
 		customerDetail.setAddressCity(customerDetailVO.getAddressCity());
 		customerDetail.setAddressState(customerDetailVO.getAddressState());
 		customerDetail.setAddressZipCode(customerDetailVO.getAddressZipCode());
@@ -658,369 +682,430 @@ public class LoanAppFormVO implements Serializable {
 		customerDetail.setId(customerDetailVO.getId());
 		customerDetail.setMobileAlertsPreference(customerDetailVO
 		        .getMobileAlertsPreference());
-		
-		
-		customerDetail.setIsselfEmployed(customerDetailVO.getIsselfEmployed()) ;
-	    customerDetail.setSelfEmployedIncome(customerDetailVO.getSelfEmployedIncome()); 
-		customerDetail.setIsssIncomeOrDisability(customerDetailVO.getIsssIncomeOrDisability());  	
-		customerDetail.setSsDisabilityIncome(customerDetailVO.getSsDisabilityIncome()) ;
-		customerDetail.setIspensionOrRetirement(customerDetailVO.getIspensionOrRetirement()) ;
-		customerDetail.setMonthlyPension(customerDetailVO.getMonthlyPension()) ;
-		customerDetail.setLivingSince(customerDetailVO.getLivingSince()) ;
-		
-		
-		//customerDetail.setCustomerSpouseDetail(parseVOtoEntityCustomerSpouseDetail(customerDetailVO.getCustomerSpouseDetail()));
-		//customerDetail.setCustomerEmploymentIncome(parseVOtoEntityCustomerEmploymentIncome(customerDetailVO.getCustomerEmploymentIncome()));
-		//customerDetail.setCustomerBankAccountDetails(parseVOtoEntityCustomerBankAccountDetails(customerDetailVO.getCustomerBankAccountDetails()));
-		//customerDetail.setCustomerRetirementAccountDetails(parseVOtoEntityCustomerRetirementAccountDetails(customerDetailVO.getCustomerRetirementAccountDetails()));
-		//customerDetail.setCustomerOtherAccountDetails(parseVOtoEntityCustomerOtherAccountDetails(customerDetailVO.getCustomerOtherAccountDetails()));
-		
+
+		customerDetail.setIsselfEmployed(customerDetailVO.getIsselfEmployed());
+		customerDetail.setSelfEmployedIncome(customerDetailVO
+		        .getSelfEmployedIncome());
+		customerDetail.setIsssIncomeOrDisability(customerDetailVO
+		        .getIsssIncomeOrDisability());
+		customerDetail.setSsDisabilityIncome(customerDetailVO
+		        .getSsDisabilityIncome());
+		customerDetail.setIspensionOrRetirement(customerDetailVO
+		        .getIspensionOrRetirement());
+		customerDetail.setMonthlyPension(customerDetailVO.getMonthlyPension());
+		customerDetail.setLivingSince(customerDetailVO.getLivingSince());
+
+		// customerDetail.setCustomerSpouseDetail(parseVOtoEntityCustomerSpouseDetail(customerDetailVO.getCustomerSpouseDetail()));
+		// customerDetail.setCustomerEmploymentIncome(parseVOtoEntityCustomerEmploymentIncome(customerDetailVO.getCustomerEmploymentIncome()));
+		// customerDetail.setCustomerBankAccountDetails(parseVOtoEntityCustomerBankAccountDetails(customerDetailVO.getCustomerBankAccountDetails()));
+		// customerDetail.setCustomerRetirementAccountDetails(parseVOtoEntityCustomerRetirementAccountDetails(customerDetailVO.getCustomerRetirementAccountDetails()));
+		// customerDetail.setCustomerOtherAccountDetails(parseVOtoEntityCustomerOtherAccountDetails(customerDetailVO.getCustomerOtherAccountDetails()));
+
 		return customerDetail;
 
 	}
 
-	
-	
 	private List<CustomerOtherAccountDetails> parseVOtoEntityCustomerOtherAccountDetails(
-            List<CustomerOtherAccountDetailsVO> customerOtherAccountDetailsVO) {
-	    
+	        List<CustomerOtherAccountDetailsVO> customerOtherAccountDetailsVO) {
+
 		List<CustomerOtherAccountDetails> customerOtherAccountDetailsList = new ArrayList<CustomerOtherAccountDetails>();
-		if(null == customerOtherAccountDetailsVO)
+		if (null == customerOtherAccountDetailsVO)
 			return null;
-			//return customerOtherAccountDetails;
-			
-	    System.out.println("inside loan app form VO size is "+customerOtherAccountDetailsVO.size());
-		Iterator<CustomerOtherAccountDetailsVO> itr = customerOtherAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
-			CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails ();
-			CustomerOtherAccountDetailsVO custOtherAccDetVO= itr.next();
-			System.out.println("custOtherAccDetVO.getCustomerOtherAccountDetails()"+custOtherAccDetVO.getCustomerOtherAccountDetails().getCurrentAccountBalance());
-			customerOtherAccountDetails.setId(custOtherAccDetVO.getCustomerOtherAccountDetails().getId());
-			customerOtherAccountDetails.setAccountSubType(custOtherAccDetVO.getCustomerOtherAccountDetails().getAccountSubType());
-			customerOtherAccountDetails.setAmountfornewhome(custOtherAccDetVO.getCustomerOtherAccountDetails().getAmountForNewHome());
-			customerOtherAccountDetails.setCurrentaccountbalance(custOtherAccDetVO.getCustomerOtherAccountDetails().getCurrentAccountBalance());	
+		// return customerOtherAccountDetails;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerOtherAccountDetailsVO.size());
+		Iterator<CustomerOtherAccountDetailsVO> itr = customerOtherAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
+			CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
+			CustomerOtherAccountDetailsVO custOtherAccDetVO = itr.next();
+			System.out
+			        .println("custOtherAccDetVO.getCustomerOtherAccountDetails()"
+			                + custOtherAccDetVO
+			                        .getCustomerOtherAccountDetails()
+			                        .getCurrentAccountBalance());
+			customerOtherAccountDetails.setId(custOtherAccDetVO
+			        .getCustomerOtherAccountDetails().getId());
+			customerOtherAccountDetails.setAccountSubType(custOtherAccDetVO
+			        .getCustomerOtherAccountDetails().getAccountSubType());
+			customerOtherAccountDetails.setAmountfornewhome(custOtherAccDetVO
+			        .getCustomerOtherAccountDetails().getAmountForNewHome());
+			customerOtherAccountDetails
+			        .setCurrentaccountbalance(custOtherAccDetVO
+			                .getCustomerOtherAccountDetails()
+			                .getCurrentAccountBalance());
 			customerOtherAccountDetailsList.add(customerOtherAccountDetails);
 		}
-		
-	    return customerOtherAccountDetailsList;
-	
-	
-	
-	
-	
-	
+
+		return customerOtherAccountDetailsList;
+
 	}
 
-	
 	private List<CustomerRetirementAccountDetails> parseVOtoEntityCustomerRetirementAccountDetails(
-            List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetailsVO) {
-	    
+	        List<CustomerRetirementAccountDetailsVO> customerRetirementAccountDetailsVO) {
+
 		List<CustomerRetirementAccountDetails> customerRetirementAccountDetailsList = new ArrayList<CustomerRetirementAccountDetails>();
-		if(null == customerRetirementAccountDetailsVO)
+		if (null == customerRetirementAccountDetailsVO)
 			return null;
-			
-	    System.out.println("inside loan app form VO size is "+customerRetirementAccountDetailsVO.size());
-		Iterator<CustomerRetirementAccountDetailsVO> itr = customerRetirementAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
+
+		System.out.println("inside loan app form VO size is "
+		        + customerRetirementAccountDetailsVO.size());
+		Iterator<CustomerRetirementAccountDetailsVO> itr = customerRetirementAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
 			CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
-			CustomerRetirementAccountDetailsVO custRetAccDetVO= itr.next();
-			System.out.println("custBankAccDetVO.getCustomerRetirementAccountDetails  ().getCurrentAccountBalance()"+custRetAccDetVO.getCustomerRetirementAccountDetails().getCurrentAccountBalance());
-			customerRetirementAccountDetails.setId(custRetAccDetVO.getCustomerRetirementAccountDetails().getId());
-			customerRetirementAccountDetails.setAccountSubType(custRetAccDetVO.getCustomerRetirementAccountDetails().getAccountSubType());
-			customerRetirementAccountDetails.setAmountfornewhome(custRetAccDetVO.getCustomerRetirementAccountDetails().getAmountForNewHome());
-			customerRetirementAccountDetails.setCurrentaccountbalance(custRetAccDetVO.getCustomerRetirementAccountDetails().getCurrentAccountBalance());	
-			customerRetirementAccountDetailsList.add(customerRetirementAccountDetails);
+			CustomerRetirementAccountDetailsVO custRetAccDetVO = itr.next();
+			System.out
+			        .println("custBankAccDetVO.getCustomerRetirementAccountDetails  ().getCurrentAccountBalance()"
+			                + custRetAccDetVO
+			                        .getCustomerRetirementAccountDetails()
+			                        .getCurrentAccountBalance());
+			customerRetirementAccountDetails.setId(custRetAccDetVO
+			        .getCustomerRetirementAccountDetails().getId());
+			customerRetirementAccountDetails.setAccountSubType(custRetAccDetVO
+			        .getCustomerRetirementAccountDetails().getAccountSubType());
+			customerRetirementAccountDetails
+			        .setAmountfornewhome(custRetAccDetVO
+			                .getCustomerRetirementAccountDetails()
+			                .getAmountForNewHome());
+			customerRetirementAccountDetails
+			        .setCurrentaccountbalance(custRetAccDetVO
+			                .getCustomerRetirementAccountDetails()
+			                .getCurrentAccountBalance());
+			customerRetirementAccountDetailsList
+			        .add(customerRetirementAccountDetails);
 		}
-		
-	    return customerRetirementAccountDetailsList;
-}
 
-	
-	
-	
-	private List<CustomerBankAccountDetails> parseVOtoEntityCustomerBankAccountDetails(
-			List<CustomerBankAccountDetailsVO> customerBankAccountDetailsVO) {
-	
-		List<CustomerBankAccountDetails> customerBankAccountDetailsList = new ArrayList<CustomerBankAccountDetails>();
-		
-		
-		if(null == customerBankAccountDetailsVO)
-			return null;
-			//return customerBankAccountDetails;
-		
-		
-		
-		
-		System.out.println("inside loan app form VO size is "+customerBankAccountDetailsVO.size());
-		Iterator<CustomerBankAccountDetailsVO> itr = customerBankAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
-			CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
-			CustomerBankAccountDetailsVO custBankAccDetVO= itr.next();
-			System.out.println("custBankAccDetVO.getCustomerBankAccountDetails().getCurrentAccountBalance()"+custBankAccDetVO.getCustomerBankAccountDetails().getCurrentAccountBalance());
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-		
-		customerBankAccountDetails.setId(custBankAccDetVO.getCustomerBankAccountDetails().getId());
-		customerBankAccountDetails.setAccountSubType(custBankAccDetVO.getCustomerBankAccountDetails().getAccountSubType());
-		customerBankAccountDetails.setAmountfornewhome(custBankAccDetVO.getCustomerBankAccountDetails().getAmountForNewHome());
-		customerBankAccountDetails.setCurrentaccountbalance(custBankAccDetVO.getCustomerBankAccountDetails().getCurrentAccountBalance());
-		
-		customerBankAccountDetailsList.add(customerBankAccountDetails);
-		}
-		
-		
-		
-		
-		
-	    return customerBankAccountDetailsList;
-    }
-
-	
-	private List<CustomerEmploymentIncome>  parseVOtoEntityCustomerEmploymentIncome(
-			List<CustomerEmploymentIncomeVO>  customerEmploymentIncomeVO) {
-	    
-		
-		List<CustomerEmploymentIncome>  customerEmploymentIncomeList = new ArrayList();
-		
-		
-		
-		
-		if(null == customerEmploymentIncomeVO)
-			return null;
-			//return customerEmploymentIncome;
-		
-		System.out.println("inside loan app form VO size is "+customerEmploymentIncomeVO.size());
-		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVO.iterator();
-		
-		while(itr.hasNext()){
-			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
-			CustomerEmploymentIncomeVO customeremploymentincomeVO= itr.next();
-			System.out.println("customeremploymentincomeVO.getEmployedAt()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
-			System.out.println("customeremploymentincomeVO.id is()"+customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-			//customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
-		customerEmploymentIncome.setEmployedIncomePreTax(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedIncomePreTax());
-		customerEmploymentIncome.setEmployedSince(customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedSince());
-		customerEmploymentIncomeList.add(customerEmploymentIncome);
-		}
-	    return customerEmploymentIncomeList;
-    }
-
-	
-	
-	//Spouse Details Code below 
-	
-	private List<CustomerSpouseOtherAccountDetails> parseVOtoEntityCustomerSpouseOtherAccountDetails(
-            List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetailsVO) {
-	    
-		List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetailsList = new ArrayList<CustomerSpouseOtherAccountDetails>();
-		if(null == customerSpouseOtherAccountDetailsVO)
-			return null;
-			//return customerOtherAccountDetails;
-			
-	    System.out.println("inside loan app form VO size is "+customerSpouseOtherAccountDetailsVO.size());
-		Iterator<CustomerSpouseOtherAccountDetailsVO> itr = customerSpouseOtherAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
-			CustomerSpouseOtherAccountDetails customerSpouseOtherAccountDetails = new CustomerSpouseOtherAccountDetails ();
-			CustomerSpouseOtherAccountDetailsVO custSpouseOtherAccDetVO= itr.next();
-			System.out.println("custOtherAccDetVO.getCustomerOtherAccountDetails()"+custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails().getCurrentAccountBalance());
-			customerSpouseOtherAccountDetails.setId(custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails().getId());
-			customerSpouseOtherAccountDetails.setAccountSubType(custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails().getAccountSubType());
-			customerSpouseOtherAccountDetails.setAmountfornewhome(custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails().getAmountForNewHome());
-			customerSpouseOtherAccountDetails.setCurrentaccountbalance(custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails().getCurrentAccountBalance());	
-			customerSpouseOtherAccountDetailsList.add(customerSpouseOtherAccountDetails);
-		}
-		
-	    return customerSpouseOtherAccountDetailsList;
-	
+		return customerRetirementAccountDetailsList;
 	}
 
-	
-	private List<CustomerSpouseRetirementAccountDetails> parseVOtoEntityCustomerSpouseRetirementAccountDetails(
-            List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetailsVO) {
-	    
-		List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetailsList = new ArrayList<CustomerSpouseRetirementAccountDetails>();
-		if(null == customerSpouseRetirementAccountDetailsVO)
+	private List<CustomerBankAccountDetails> parseVOtoEntityCustomerBankAccountDetails(
+	        List<CustomerBankAccountDetailsVO> customerBankAccountDetailsVO) {
+
+		List<CustomerBankAccountDetails> customerBankAccountDetailsList = new ArrayList<CustomerBankAccountDetails>();
+
+		if (null == customerBankAccountDetailsVO)
 			return null;
-			
-	    System.out.println("inside loan app form VO size is "+customerSpouseRetirementAccountDetailsVO.size());
-		Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = customerSpouseRetirementAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
+		// return customerBankAccountDetails;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerBankAccountDetailsVO.size());
+		Iterator<CustomerBankAccountDetailsVO> itr = customerBankAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
+			CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
+			CustomerBankAccountDetailsVO custBankAccDetVO = itr.next();
+			System.out
+			        .println("custBankAccDetVO.getCustomerBankAccountDetails().getCurrentAccountBalance()"
+			                + custBankAccDetVO.getCustomerBankAccountDetails()
+			                        .getCurrentAccountBalance());
+			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+
+			customerBankAccountDetails.setId(custBankAccDetVO
+			        .getCustomerBankAccountDetails().getId());
+			customerBankAccountDetails.setAccountSubType(custBankAccDetVO
+			        .getCustomerBankAccountDetails().getAccountSubType());
+			customerBankAccountDetails.setAmountfornewhome(custBankAccDetVO
+			        .getCustomerBankAccountDetails().getAmountForNewHome());
+			customerBankAccountDetails
+			        .setCurrentaccountbalance(custBankAccDetVO
+			                .getCustomerBankAccountDetails()
+			                .getCurrentAccountBalance());
+
+			customerBankAccountDetailsList.add(customerBankAccountDetails);
+		}
+
+		return customerBankAccountDetailsList;
+	}
+
+	private List<CustomerEmploymentIncome> parseVOtoEntityCustomerEmploymentIncome(
+	        List<CustomerEmploymentIncomeVO> customerEmploymentIncomeVO) {
+
+		List<CustomerEmploymentIncome> customerEmploymentIncomeList = new ArrayList();
+
+		if (null == customerEmploymentIncomeVO)
+			return null;
+		// return customerEmploymentIncome;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerEmploymentIncomeVO.size());
+		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVO
+		        .iterator();
+
+		while (itr.hasNext()) {
+			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
+			CustomerEmploymentIncomeVO customeremploymentincomeVO = itr.next();
+			System.out.println("customeremploymentincomeVO.getEmployedAt()"
+			        + customeremploymentincomeVO.getCustomerEmploymentIncome()
+			                .getEmployedAt());
+			System.out.println("customeremploymentincomeVO.id is()"
+			        + customeremploymentincomeVO.getCustomerEmploymentIncome()
+			                .getId());
+			if (null != customeremploymentincomeVO
+			        .getCustomerEmploymentIncome()
+			        && customeremploymentincomeVO.getCustomerEmploymentIncome()
+			                .getId() != 0)
+				customerEmploymentIncome.setId(customeremploymentincomeVO
+				        .getCustomerEmploymentIncome().getId());
+			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO
+			        .getCustomerEmploymentIncome().getEmployedAt());
+			customerEmploymentIncome
+			        .setEmployedIncomePreTax(customeremploymentincomeVO
+			                .getCustomerEmploymentIncome()
+			                .getEmployedIncomePreTax());
+			customerEmploymentIncome
+			        .setEmployedSince(customeremploymentincomeVO
+			                .getCustomerEmploymentIncome().getEmployedSince());
+			customerEmploymentIncomeList.add(customerEmploymentIncome);
+		}
+		return customerEmploymentIncomeList;
+	}
+
+	// Spouse Details Code below
+
+	private List<CustomerSpouseOtherAccountDetails> parseVOtoEntityCustomerSpouseOtherAccountDetails(
+	        List<CustomerSpouseOtherAccountDetailsVO> customerSpouseOtherAccountDetailsVO) {
+
+		List<CustomerSpouseOtherAccountDetails> customerSpouseOtherAccountDetailsList = new ArrayList<CustomerSpouseOtherAccountDetails>();
+		if (null == customerSpouseOtherAccountDetailsVO)
+			return null;
+		// return customerOtherAccountDetails;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerSpouseOtherAccountDetailsVO.size());
+		Iterator<CustomerSpouseOtherAccountDetailsVO> itr = customerSpouseOtherAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
+			CustomerSpouseOtherAccountDetails customerSpouseOtherAccountDetails = new CustomerSpouseOtherAccountDetails();
+			CustomerSpouseOtherAccountDetailsVO custSpouseOtherAccDetVO = itr
+			        .next();
+			System.out
+			        .println("custOtherAccDetVO.getCustomerOtherAccountDetails()"
+			                + custSpouseOtherAccDetVO
+			                        .getCustomerSpouseOtherAccountDetails()
+			                        .getCurrentAccountBalance());
+			customerSpouseOtherAccountDetails.setId(custSpouseOtherAccDetVO
+			        .getCustomerSpouseOtherAccountDetails().getId());
+			customerSpouseOtherAccountDetails
+			        .setAccountSubType(custSpouseOtherAccDetVO
+			                .getCustomerSpouseOtherAccountDetails()
+			                .getAccountSubType());
+			customerSpouseOtherAccountDetails
+			        .setAmountfornewhome(custSpouseOtherAccDetVO
+			                .getCustomerSpouseOtherAccountDetails()
+			                .getAmountForNewHome());
+			customerSpouseOtherAccountDetails
+			        .setCurrentaccountbalance(custSpouseOtherAccDetVO
+			                .getCustomerSpouseOtherAccountDetails()
+			                .getCurrentAccountBalance());
+			customerSpouseOtherAccountDetailsList
+			        .add(customerSpouseOtherAccountDetails);
+		}
+
+		return customerSpouseOtherAccountDetailsList;
+
+	}
+
+	private List<CustomerSpouseRetirementAccountDetails> parseVOtoEntityCustomerSpouseRetirementAccountDetails(
+	        List<CustomerSpouseRetirementAccountDetailsVO> customerSpouseRetirementAccountDetailsVO) {
+
+		List<CustomerSpouseRetirementAccountDetails> customerSpouseRetirementAccountDetailsList = new ArrayList<CustomerSpouseRetirementAccountDetails>();
+		if (null == customerSpouseRetirementAccountDetailsVO)
+			return null;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerSpouseRetirementAccountDetailsVO.size());
+		Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = customerSpouseRetirementAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
 			CustomerSpouseRetirementAccountDetails customerSpouseRetirementAccountDetails = new CustomerSpouseRetirementAccountDetails();
+
 			CustomerSpouseRetirementAccountDetailsVO custSpouseRetAccDetVO= itr.next();
+			
 			System.out.println("custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance()"+custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance());
+			if(null!= custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails() && custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getId()!=0)
 			customerSpouseRetirementAccountDetails.setId(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getId());
+			
 			customerSpouseRetirementAccountDetails.setAccountSubType(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getAccountSubType());
 			customerSpouseRetirementAccountDetails.setAmountfornewhome(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getAmountForNewHome());
 			customerSpouseRetirementAccountDetails.setCurrentaccountbalance(custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance());	
 			customerSpouseRetirementAccountDetailsList.add(customerSpouseRetirementAccountDetails);
-		}
-		
-	    return customerSpouseRetirementAccountDetailsList;
-}
 
-	
-	
-	
+		}
+
+		return customerSpouseRetirementAccountDetailsList;
+	}
+
 	private List<CustomerSpouseBankAccountDetails> parseVOtoEntityCustomerSpouseBankAccountDetails(
-			List<CustomerSpouseBankAccountDetailsVO> customerSpouseBankAccountDetailsVO) {
-	
-		List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetailsList = new ArrayList<CustomerSpouseBankAccountDetails>();
-		
-		
-		if(null == customerSpouseBankAccountDetailsVO)
-			return null;
-			//return customerBankAccountDetails;
-		
-		
-		
-		
-		System.out.println("inside loan app form VO size is "+customerSpouseBankAccountDetailsVO.size());
-		Iterator<CustomerSpouseBankAccountDetailsVO> itr = customerSpouseBankAccountDetailsVO.iterator();
-		
-		while(itr.hasNext()){
-			CustomerSpouseBankAccountDetails customerSpouseBankAccountDetails = new CustomerSpouseBankAccountDetails();
-			CustomerSpouseBankAccountDetailsVO custSpouseBankAccDetVO= itr.next();
-			System.out.println("(custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getCurrentAccountBalance()"+(custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getCurrentAccountBalance()));
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-		
-			customerSpouseBankAccountDetails.setId(custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getId());
-			customerSpouseBankAccountDetails.setAccountSubType((custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getAccountSubType()));
-			customerSpouseBankAccountDetails.setAmountfornewhome((custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getAmountForNewHome()));
-			customerSpouseBankAccountDetails.setCurrentaccountbalance((custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getCurrentAccountBalance()));
-		
-			customerSpouseBankAccountDetailsList.add(customerSpouseBankAccountDetails);
-		}
-		
-		
-		
-		
-		
-	    return customerSpouseBankAccountDetailsList;
-    }
+	        List<CustomerSpouseBankAccountDetailsVO> customerSpouseBankAccountDetailsVO) {
 
-	
-	private List<CustomerSpouseEmploymentIncome>  parseVOtoEntityCustomerSpouseEmploymentIncome(
-			List<CustomerSpouseEmploymentIncomeVO>  customerSpouseEmploymentIncomeVO) {
-	    
-		
-		List<CustomerSpouseEmploymentIncome>  customerSpouseEmploymentIncomeList = new ArrayList();
-		
-		
-		
-		
-		if(null == customerSpouseEmploymentIncomeVO)
+		List<CustomerSpouseBankAccountDetails> customerSpouseBankAccountDetailsList = new ArrayList<CustomerSpouseBankAccountDetails>();
+
+		if (null == customerSpouseBankAccountDetailsVO)
 			return null;
-			//return customerEmploymentIncome;
-		
-		System.out.println("inside loan app form VO size is "+customerSpouseEmploymentIncomeVO.size());
-		Iterator<CustomerSpouseEmploymentIncomeVO> itr = customerSpouseEmploymentIncomeVO.iterator();
-		
-		while(itr.hasNext()){
+		// return customerBankAccountDetails;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerSpouseBankAccountDetailsVO.size());
+		Iterator<CustomerSpouseBankAccountDetailsVO> itr = customerSpouseBankAccountDetailsVO
+		        .iterator();
+
+		while (itr.hasNext()) {
+			CustomerSpouseBankAccountDetails customerSpouseBankAccountDetails = new CustomerSpouseBankAccountDetails();
+			CustomerSpouseBankAccountDetailsVO custSpouseBankAccDetVO = itr
+			        .next();
+			System.out
+			        .println("(custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getCurrentAccountBalance()"
+			                + (custSpouseBankAccDetVO
+			                        .getCustomerSpouseBankAccountDetails()
+			                        .getCurrentAccountBalance()));
+			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+
+			customerSpouseBankAccountDetails.setId(custSpouseBankAccDetVO
+			        .getCustomerSpouseBankAccountDetails().getId());
+			customerSpouseBankAccountDetails
+			        .setAccountSubType((custSpouseBankAccDetVO
+			                .getCustomerSpouseBankAccountDetails()
+			                .getAccountSubType()));
+			customerSpouseBankAccountDetails
+			        .setAmountfornewhome((custSpouseBankAccDetVO
+			                .getCustomerSpouseBankAccountDetails()
+			                .getAmountForNewHome()));
+			customerSpouseBankAccountDetails
+			        .setCurrentaccountbalance((custSpouseBankAccDetVO
+			                .getCustomerSpouseBankAccountDetails()
+			                .getCurrentAccountBalance()));
+
+			customerSpouseBankAccountDetailsList
+			        .add(customerSpouseBankAccountDetails);
+		}
+
+		return customerSpouseBankAccountDetailsList;
+	}
+
+	private List<CustomerSpouseEmploymentIncome> parseVOtoEntityCustomerSpouseEmploymentIncome(
+	        List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncomeVO) {
+
+		List<CustomerSpouseEmploymentIncome> customerSpouseEmploymentIncomeList = new ArrayList();
+
+		if (null == customerSpouseEmploymentIncomeVO)
+			return null;
+		// return customerEmploymentIncome;
+
+		System.out.println("inside loan app form VO size is "
+		        + customerSpouseEmploymentIncomeVO.size());
+		Iterator<CustomerSpouseEmploymentIncomeVO> itr = customerSpouseEmploymentIncomeVO
+		        .iterator();
+
+		while (itr.hasNext()) {
 			CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome = new CustomerSpouseEmploymentIncome();
+
 			CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO= itr.next();
 			System.out.println("customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt()"+customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());
-		//	customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			
+			customerSpouseEmploymentIncome.setId(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getId());
 			customerSpouseEmploymentIncome.setEmployedAt(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());
 			customerSpouseEmploymentIncome.setEmployedIncomePreTax(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
 			customerSpouseEmploymentIncome.setEmployedSince(customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedSince());
+			
 			customerSpouseEmploymentIncomeList.add(customerSpouseEmploymentIncome);
+
 		}
-	    return customerSpouseEmploymentIncomeList;
-    }
+		return customerSpouseEmploymentIncomeList;
+	}
 
-	
-	
-	////////////////////////////////////////
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// //////////////////////////////////////
+
 	private CustomerSpouseDetail parseVOtoEntityCustomerSpouseDetail(
-            CustomerSpouseDetailVO customerSpouseDetailVO) {
+	        CustomerSpouseDetailVO customerSpouseDetailVO) {
 
-		CustomerSpouseDetail customerSpouseDetail = new CustomerSpouseDetail ();
-		if(null== customerSpouseDetailVO)
+		CustomerSpouseDetail customerSpouseDetail = new CustomerSpouseDetail();
+		if (null == customerSpouseDetailVO)
 			return null;
-			//return customerSpouseDetail;
-		
-		customerSpouseDetail.setId(customerSpouseDetailVO.getId());
-		customerSpouseDetail.setSpouseName(customerSpouseDetailVO.getSpouseName());
-		
-		System.out.println("customerSpouseDetailVO.getMonthlyPension()"+customerSpouseDetailVO.getMonthlyPension());
-		customerSpouseDetail.setIs_pension_or_retirement(customerSpouseDetailVO.isIspensionOrRetirement());
-		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO.isIsssIncomeOrDisability());
-		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO.isSelfEmployed());
-		customerSpouseDetail.setMonthlyPension(customerSpouseDetailVO.getMonthlyPension());
-		customerSpouseDetail.setSelfEmployedIncome(customerSpouseDetailVO.getSelfEmployedIncome());
-		customerSpouseDetail.setSsDisabilityIncome(customerSpouseDetailVO.getSsDisabilityIncome());
-		if(customerSpouseDetailVO.getSpouseDateOfBirth() != null)
-		customerSpouseDetail.setSpouseDateOfBirth(new Date(customerSpouseDetailVO.getSpouseDateOfBirth()));
-		customerSpouseDetail.setSpouseSecPhoneNumber(customerSpouseDetailVO.getSpouseSecPhoneNumber());
-	    return customerSpouseDetail;
-    }
+		// return customerSpouseDetail;
 
-	
-	
+		customerSpouseDetail.setId(customerSpouseDetailVO.getId());
+		customerSpouseDetail.setSpouseName(customerSpouseDetailVO
+		        .getSpouseName());
+
+		System.out.println("customerSpouseDetailVO.getMonthlyPension()"
+		        + customerSpouseDetailVO.getMonthlyPension());
+		customerSpouseDetail.setIs_pension_or_retirement(customerSpouseDetailVO
+		        .isIspensionOrRetirement());
+		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO
+		        .isIsssIncomeOrDisability());
+		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO
+		        .isSelfEmployed());
+		customerSpouseDetail.setMonthlyPension(customerSpouseDetailVO
+		        .getMonthlyPension());
+		customerSpouseDetail.setSelfEmployedIncome(customerSpouseDetailVO
+		        .getSelfEmployedIncome());
+		customerSpouseDetail.setSsDisabilityIncome(customerSpouseDetailVO
+		        .getSsDisabilityIncome());
+		if (customerSpouseDetailVO.getSpouseDateOfBirth() != null)
+			customerSpouseDetail.setSpouseDateOfBirth(new Date(
+			        customerSpouseDetailVO.getSpouseDateOfBirth()));
+		customerSpouseDetail.setSpouseSecPhoneNumber(customerSpouseDetailVO
+		        .getSpouseSecPhoneNumber());
+		return customerSpouseDetail;
+	}
+
 	private SpouseGovernmentQuestions parseVOtoEntitySpouseGovernmentQuestions(
-			SpouseGovernmentQuestionVO spouseGovernmentQuestionsVO){
-	            	  
-	            	  
-		
+	        SpouseGovernmentQuestionVO spouseGovernmentQuestionsVO) {
+
 		SpouseGovernmentQuestions spouseGovernmentQuestions = new SpouseGovernmentQuestions();
 		if (spouseGovernmentQuestionsVO == null)
 			return null;
 
-		//GovernmentQuestion governmentQuestion = new GovernmentQuestion();
+		// GovernmentQuestion governmentQuestion = new GovernmentQuestion();
 		System.out.println(spouseGovernmentQuestions.getId());
 		spouseGovernmentQuestions.setId(spouseGovernmentQuestionsVO.getId());
-		spouseGovernmentQuestions.setOutstandingJudgments(spouseGovernmentQuestionsVO
-		        .isOutstandingJudgments());
-		spouseGovernmentQuestions.setBankrupt(spouseGovernmentQuestionsVO.isBankrupt());
-		spouseGovernmentQuestions.setPropertyForeclosed(spouseGovernmentQuestionsVO
-		        .isPropertyForeclosed());
-		spouseGovernmentQuestions.setLawsuit(spouseGovernmentQuestionsVO.isLawsuit());
+		spouseGovernmentQuestions
+		        .setOutstandingJudgments(spouseGovernmentQuestionsVO
+		                .isOutstandingJudgments());
+		spouseGovernmentQuestions.setBankrupt(spouseGovernmentQuestionsVO
+		        .isBankrupt());
+		spouseGovernmentQuestions
+		        .setPropertyForeclosed(spouseGovernmentQuestionsVO
+		                .isPropertyForeclosed());
+		spouseGovernmentQuestions.setLawsuit(spouseGovernmentQuestionsVO
+		        .isLawsuit());
 		spouseGovernmentQuestions.setObligatedLoan(spouseGovernmentQuestionsVO
 		        .isObligatedLoan());
 
-		spouseGovernmentQuestions.setFederalDebt(spouseGovernmentQuestionsVO.isFederalDebt());
-		spouseGovernmentQuestions.setObligatedToPayAlimony(spouseGovernmentQuestionsVO
-		        .isObligatedToPayAlimony());
-		spouseGovernmentQuestions.setEndorser(spouseGovernmentQuestionsVO.isEndorser());
-		spouseGovernmentQuestions.setUSCitizen(spouseGovernmentQuestionsVO.isUSCitizen());
-		spouseGovernmentQuestions.setOccupyPrimaryResidence(spouseGovernmentQuestionsVO
-		        .isOccupyPrimaryResidence());
-		spouseGovernmentQuestions.setOwnershipInterestInProperty(spouseGovernmentQuestionsVO
-		        .isOwnershipInterestInProperty());
+		spouseGovernmentQuestions.setFederalDebt(spouseGovernmentQuestionsVO
+		        .isFederalDebt());
+		spouseGovernmentQuestions
+		        .setObligatedToPayAlimony(spouseGovernmentQuestionsVO
+		                .isObligatedToPayAlimony());
+		spouseGovernmentQuestions.setEndorser(spouseGovernmentQuestionsVO
+		        .isEndorser());
+		spouseGovernmentQuestions.setUSCitizen(spouseGovernmentQuestionsVO
+		        .isUSCitizen());
+		spouseGovernmentQuestions
+		        .setOccupyPrimaryResidence(spouseGovernmentQuestionsVO
+		                .isOccupyPrimaryResidence());
+		spouseGovernmentQuestions
+		        .setOwnershipInterestInProperty(spouseGovernmentQuestionsVO
+		                .isOwnershipInterestInProperty());
 
-		spouseGovernmentQuestions.setEthnicity(spouseGovernmentQuestionsVO.getEthnicity());
-		spouseGovernmentQuestions.setRace(spouseGovernmentQuestionsVO.getRace());
+		spouseGovernmentQuestions.setEthnicity(spouseGovernmentQuestionsVO
+		        .getEthnicity());
+		spouseGovernmentQuestions
+		        .setRace(spouseGovernmentQuestionsVO.getRace());
 		spouseGovernmentQuestions.setSex(spouseGovernmentQuestionsVO.getSex());
 
 		return spouseGovernmentQuestions;
-		
-	            	  
-	              }
-	
-	
+
+	}
+
 	public Boolean getPaySecondMortgage() {
 		return paySecondMortgage;
 	}
@@ -1040,5 +1125,4 @@ public class LoanAppFormVO implements Serializable {
 		return loanAppFormVO;
 	}
 
-	
 }

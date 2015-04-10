@@ -78,12 +78,18 @@ public interface UploadedFilesListService {
 	public void updateUploadedDocument(List<LQBedocVO> edocsList, Loan loan,
 	        Date timeBeforeCallMade);
 
-	public String fetchUUID(String uuidString);
-
 	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
 	        String uuid);
 
-	InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
+	public InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
+
+	public Boolean assignFileToNeeds(
+			Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
+			Integer userId, Integer assignedBy);
+
+	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
+
+	void updateAssignments(Integer loanNeedId, Integer fileId);
 
 	public void changeWorkItem(
 	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID);

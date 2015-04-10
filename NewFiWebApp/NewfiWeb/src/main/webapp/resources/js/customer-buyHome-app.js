@@ -331,7 +331,7 @@ function paintWhereYouLiveStep(){
     
     for(var i=0;i<questions.length;i++){
 		var question=questions[i];
-		var contxt=getQuestionContextCEP(question,$('#app-right-panel'));
+		var contxt=getQuestionContext(question,$('#app-right-panel'));
 		contxt.drawQuestion();
 		
 		quesContxts.push(contxt);
@@ -339,6 +339,13 @@ function paintWhereYouLiveStep(){
 	
     var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
     
+    var btn=$(addRemoveRow).find(".add-btn");
+    if(appUserDetails.purchaseDetails.buyhomeZipSec&&appUserDetails.purchaseDetails.buyhomeZipSec!=""){
+        addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipSec);
+    }
+    if(appUserDetails.purchaseDetails.buyhomeZipTri&&appUserDetails.purchaseDetails.buyhomeZipTri!=""){
+        addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipTri);
+    }
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
@@ -366,6 +373,26 @@ function paintWhereYouLiveStep(){
 
 }
 
+function addZipField(fieldName,element,value){
+
+        var inputField = $('input[name="'+fieldName+'"]');
+        
+        var inputElement = $('<input>').attr({
+            "name" : fieldName+inputField.parent().children('input').size(),
+            "class" : "ce-input ce-input-add"
+        });
+        if(value)
+            inputElement.val(value);
+        //alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
+        var numberOfInputs = inputField.parent().children('input').size();
+        
+        if(numberOfInputs<3){
+            inputField.parent().append(inputElement);
+            if(numberOfInputs == 2){
+                $(element).hide();
+            }
+        }
+}
 
 
 function getAddRemoveButtonRow(fieldName){
@@ -378,21 +405,7 @@ function getAddRemoveButtonRow(fieldName){
 		"class" : "add-btn float-left"
 	}).html("Add")
 	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		
-		var inputElement = $('<input>').attr({
-			"name" : e.data.fieldName+inputField.parent().children('input').size(),
-			"class" : "ce-input ce-input-add"
-		});
-		//alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
-		var numberOfInputs = inputField.parent().children('input').size();
-		
-		if(numberOfInputs<3){
-			inputField.parent().append(inputElement);
-			if(numberOfInputs == 2){
-				$(this).hide();
-			}
-		}
+        addZipField(e.data.fieldName,$(this))
 	});
 	
 	/*var removeBtn = $('<div>').attr({
@@ -537,6 +550,8 @@ function paintSpouseSaleOfCurrentHome() {
         "class": "ce-option-checkbox"
     }).html(quesHeaderTxt4);
 
+
+
      var questions3 = [{
         type: "select",
         text: "Account Type",
@@ -581,25 +596,36 @@ function paintSpouseSaleOfCurrentHome() {
     		var customerSpouseRetirementAccountDetails=[];
       
      
-      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
-       customerSpouseEmploymentIncomeTemp1 = {};
-       
-       spouseBeforeTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseBeforeTax"]').val();
-       spouseWorkPlace = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseWorkPlace"]').val();
-       spouseStartWorking = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseStartWorking"]').val();
-      
-       customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = spouseBeforeTax;
-       customerSpouseEmploymentIncomeTemp1.employedAt = spouseWorkPlace;
-       customerSpouseEmploymentIncomeTemp1.employedSince = spouseStartWorking;
-       var temp = {};
-       temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
-       
-       customerSpouseEmploymentIncome.push(temp);
-      });
-      
-      if(!customerSpouseEmploymentIncome == '[]')
+     
+    
+     
+	      
+	      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+	       customerSpouseEmploymentIncomeTemp1 = {};
+	       
+	       id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="custSpouseEmploymentIncomeId"]').val();
+	       if(id ==""){
+	     	  id = undefined;
+	       }
+	       
+	       spouseBeforeTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseBeforeTax"]').val();
+	       spouseWorkPlace = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseWorkPlace"]').val();
+	       spouseStartWorking = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="spouseStartWorking"]').val();
+	      
+	       customerSpouseEmploymentIncomeTemp1.id = id;
+	       customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = spouseBeforeTax;
+	       customerSpouseEmploymentIncomeTemp1.employedAt = spouseWorkPlace;
+	       customerSpouseEmploymentIncomeTemp1.employedSince = spouseStartWorking;
+	       var temp = {};
+	       temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
+	       
+	       customerSpouseEmploymentIncome.push(temp);
+	      });
+    
+     if(customerSpouseEmploymentIncome&&customerSpouseEmploymentIncome.length>0)
    appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
-  
+   
+   
       
      // appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
   
@@ -627,9 +653,12 @@ function paintSpouseSaleOfCurrentHome() {
 	     spouseHomeMortgageBalance = $('input[name="spouseHomeMortgageBalance"]').val();
 		 spouseInvestmentInHome = $('input[name="spouseInvestmentInHome"]').val();			 
 		
+		 $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
 		 spouseBankAccount = $('.app-options-cont[name="spouseBankAccount"]').find('.app-option-selected').text();
 		 spouseBankAcCurrentBankBalance = $('input[name="spouseBankAcCurrentBankBalance"]').val();	
 		 spouseBankAcUseForNewHome = $('input[name="spouseBankAcUseForNewHome"]').val();	
+		}
+		
 		
 		 spouseRetirementBankAccounts =  $('.app-options-cont[name="spouseRetirementBankAccounts"]').find('.app-option-selected').text();
 		 spouseRetirementCurrentBankBalance = $('input[name="spouseRetirementCurrentBankBalance"]').val();

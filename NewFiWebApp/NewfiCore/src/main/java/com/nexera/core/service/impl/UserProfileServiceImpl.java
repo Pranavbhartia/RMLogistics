@@ -457,15 +457,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// newUser.setPassword(null);
 
 		// newUser = null;
-		if (userID > 0) {
-			// && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
-			// .getRoleId()) {
-			newUser = userProfileDao.findInternalUser(userID);
-			return User.convertFromEntityToVO(newUser);
-		}
+		// if (userID > 0) {
+		// // && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
+		// // .getRoleId()) {
+		// newUser = userProfileDao.findInternalUser(userID);
+		// return User.convertFromEntityToVO(newUser);
+		// }
 		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
 		userVO.setPassword(newUser.getPassword());
-		userVO.setId(newUser.getId());
+
+		// reset this value so that two objects are not created
+		userVO.setCustomerDetail(null);
+		userVO.setId(userID);
 		return userVO;
 
 	}
@@ -672,7 +675,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (!csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.CUSTOMER
 		        .toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
-		                .equals(UserRolesEnum.LOANMANAGER.toString())
+		                .equals(UserRolesEnum.LM.toString())
 		        && !csvRow[CommonConstants.ROLE_COLUMN]
 		                .equals(UserRolesEnum.REALTOR.toString())) {
 			message = messageUtils.getDisplayMessage(
@@ -746,7 +749,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		if (csvRow[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LOANMANAGER.toString())) {
+		        .equals(UserRolesEnum.LM.toString())) {
 			if (csvRow[CommonConstants.STATE_CODE_COLUMN] != null
 			        && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
 				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN]
@@ -803,7 +806,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		UserRoleVO userRoleVO = new UserRoleVO();
 		if (rowData[CommonConstants.ROLE_COLUMN]
-		        .equals(UserRolesEnum.LOANMANAGER.toString())) {
+		        .equals(UserRolesEnum.LM.toString())) {
 
 			userRoleVO.setId(UserRolesEnum.INTERNAL.getRoleId());
 			userRoleVO.setRoleCd(UserRolesEnum.INTERNAL.toString());
@@ -813,7 +816,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			internalUserDetailVO
 			        .setInternalUserRoleMasterVO(new InternalUserRoleMasterVO());
 			internalUserDetailVO.getInternalUserRoleMasterVO().setId(
-			        UserRolesEnum.LOANMANAGER.getRoleId());
+			        UserRolesEnum.LM.getRoleId());
 			userVO.setInternalUserDetail(internalUserDetailVO);
 
 		} else if (rowData[CommonConstants.ROLE_COLUMN]
@@ -917,6 +920,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setUsername(userVO.getEmailId().split(":")[0]);
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
+			userVO.setCustomerDetail(new CustomerDetailVO());
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
 			UserVO userVOObj = null;
@@ -934,7 +938,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			if (loaAppFormVO.getLoanType().getLoanTypeCd()
+			        .equalsIgnoreCase("REF")) {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			} else {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+			}
 
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
@@ -942,14 +951,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-			// userVOObj.setCustomerEnagagement(customerEnagagement);
+
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(0);
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
+
 			loanAppFormVO.setRefinancedetails(loaAppFormVO
 			        .getRefinancedetails());
+			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
+			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			// loanAppFormVO.setLoanType(new
