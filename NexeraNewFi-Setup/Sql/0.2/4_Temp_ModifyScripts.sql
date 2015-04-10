@@ -73,4 +73,6 @@ insert into template values(2,'1003_APP_COMPLETE','1003 APP COMPLETE','2015-04-1
 insert into template values(3,'INITIAL_NEEDS_LIST_ADDED','INITIAL NEEDS LIST ADDED','2015-04-10 12:53:34','');
 insert into template values(4,'1003_REMINDER','1003 REMINDER','2015-04-10 12:53:34','');
 
+ALTER TABLE `newfi_schema`.`loanappform` 
+CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
 
