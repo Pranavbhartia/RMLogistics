@@ -690,7 +690,12 @@ function paintCustomerLoanProgressContainer() {
 
 	$('#cust-loan-progress').append(heading).append(loanProgressCont);
 	paintMilestoneCustomerProfileDetails();
-	workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user.id);
+	if(!userIsRealtor()){
+		workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user.id);	
+	}else{
+		workFlowContext.init(selectedUserDetail.loanID, selectedUserDetail.userID);
+	}
+	
 
 	workFlowContext.initialize("CUSTOMER", function() {
 	});
@@ -876,6 +881,7 @@ function adjustBorderMilestoneContainer() {
 }
 
 function paintMilestoneCustomerProfileDetails() {
+	
 	var container = $('<div>').attr({
 		"class" : "ms-cust-prof-container clearfix"
 	});
