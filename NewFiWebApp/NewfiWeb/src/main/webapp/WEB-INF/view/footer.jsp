@@ -30,6 +30,7 @@
 <script src="resources/js/customer-buyHome-app.js"></script>
 <script src="resources/js/turnaround.js"></script>
 <script src="resources/js/breadCrumb.js"></script>
+<script src="resources/js/template.js"></script>
 <div id="dialog" >
 </div>
 
