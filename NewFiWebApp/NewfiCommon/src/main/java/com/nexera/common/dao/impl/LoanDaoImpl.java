@@ -1,7 +1,6 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -283,7 +282,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	@Override
 	public List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
-	        int loanProgressStatusId) {
+	        int[] loanProgressStatusIds) {
 
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
@@ -292,8 +291,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			// If the user is Sales manager, retrieve all loans
 			parseUserModel = (User) this.load(User.class,
 			        parseUserModel.getId());
-			if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
-			        .getInternalUserDetail().getInternaUserRoleMaster().getId()) {
+			if (parseUserModel.getInternalUserDetail() != null) {
+				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+				        .getInternalUserDetail().getInternaUserRoleMaster()
+				        .getId()) {
+					criteria.add(Restrictions.eq("user.id",
+					        parseUserModel.getId()));
+				}
+			} else {
 				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 			}
 
@@ -303,8 +308,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				for (LoanTeam loanTeam : loanTeamList) {
 					Hibernate.initialize(loanTeam.getLoan());
 					Loan loan = loanTeam.getLoan();
-					if (loan.getLoanProgressStatus().getId() == loanProgressStatusId)
-						loanListForUser.add(loan);
+					for (int loanProgressStatusId : loanProgressStatusIds) {
+						if (loan.getLoanProgressStatus().getId() == loanProgressStatusId) {
+							loanListForUser.add(loan);
+						}
+
+					}
 
 				}
 			}
