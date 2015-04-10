@@ -12,7 +12,7 @@ function getNotificationContext(loanId,userId){
 		alertWrapper:undefined,
 		headerText:"",
 		pushServerUrl:"/PushNotification/pushServlet/?task=notification&taskId=",
-		enablePushnotification:true,
+		enablePushnotification:false,
 		addToList:function(list,object){
 			var exist=false;
 			for(var i=0;i<list.length;i++){
