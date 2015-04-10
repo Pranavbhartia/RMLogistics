@@ -134,7 +134,7 @@ public class DefaultController implements InitializingBean {
 				LOG.info("inside default conteoller loanAppFormVO.getPropertyTypeMaster().getId()"
 				        + loanAppFormVO.getPropertyTypeMaster().getId());
 
-				int formCompletionStatus = loanAppFormVO
+				float formCompletionStatus = loanAppFormVO
 				        .getLoanAppFormCompletionStatus() == null ? 0
 				        : loanAppFormVO.getLoanAppFormCompletionStatus();
 				LoanTeamListVO loanTeamListVO = loanService
