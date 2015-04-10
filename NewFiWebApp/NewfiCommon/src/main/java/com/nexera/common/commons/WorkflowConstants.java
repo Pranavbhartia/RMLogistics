@@ -43,7 +43,6 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_PROFILE_INFO = "PROFILE_INFO";
 	public static final String WORKFLOW_ITEM_NEEDS_STATUS = "NEEDS_STATUS";
 	public static final String WORKFLOW_ITEM_NEEDS_EDU = "NEEDS_EDU";
-
 	public static final String WORKFLOW_ITEM_LOCK_RATE = "LOCK_RATE";
 	public static final String WORKFLOW_ITEM_LOAN_PROGRESS = "LOAN_PROGRESS";
 	public static final String WORKFLOW_ITEM_DISCLOSURE_STATUS = "DISCLOSURE_STATUS";
