@@ -103,12 +103,14 @@ function LoanPersonalInfoWrapper(user) {
 		//included that of customer css
 		"class" : "cust-personal-info-header"
 	}).html("LQB Information");
+	if(!userIsRealtor()){
+		var lqbContainer = getLoanLqbInfoContainer(user);
 
-	var lqbContainer = getLoanLqbInfoContainer(user);
-
-	lqbWrapper.append(lqbHeader).append(lqbContainer);
-	$('#loan-profile-main-container').append(lqbWrapper);
-	appendChangePasswordContainer();
+		lqbWrapper.append(lqbHeader).append(lqbContainer);
+		$('#loan-profile-main-container').append(lqbWrapper);
+	
+	}
+		appendChangePasswordContainer();
 
 }
 
