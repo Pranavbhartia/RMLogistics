@@ -7,9 +7,11 @@ public interface IWorkflowTaskExecutor {
 	public String execute(HashMap<String, Object> objectMap);
 
 	public String renderStateInfo(HashMap<String, Object> inputMap);
-	
+
 	public String checkStatus(HashMap<String, Object> inputMap);
 
 	public String invokeAction(HashMap<String, Object> inputMap);
-	
+
+	public String updateReminder(HashMap<String, Object> objectMap);
+
 }
