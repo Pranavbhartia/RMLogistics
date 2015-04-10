@@ -1,5 +1,6 @@
 package com.nexera.common.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
@@ -113,5 +114,7 @@ public interface LoanDao extends GenericDao {
 
 	public void updateWorkFlowItems(int loanID, int customerWorkflowID,
 	        int loanManagerWFID);
+
+	public void updateLoanAppFee(int loanId, BigDecimal newAppFee);
 
 }

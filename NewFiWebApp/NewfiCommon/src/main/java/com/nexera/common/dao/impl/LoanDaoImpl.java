@@ -1,5 +1,6 @@
 package com.nexera.common.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -822,4 +823,17 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	}
 
+	@Override
+	public void updateLoanAppFee(int loanId, BigDecimal newAppFee) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.appFee = :APPFEE WHERE loan.id = :ID";
+		try {
+			Query query = session.createQuery(hql);
+			query.setParameter("APPFEE", newAppFee);
+			query.setParameter("ID", loanId);
+			query.executeUpdate();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

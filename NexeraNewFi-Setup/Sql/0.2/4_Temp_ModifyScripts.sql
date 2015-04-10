@@ -73,4 +73,6 @@ insert into template values(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10
 insert into template values(3,'NEW_NOTE_TEMPLATE','New Note Created','2015-04-10 12:53:34','864e95f8-99b7-4366-95e7-52dd791e71f2');
 insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','0fef5375-ba8c-4820-939b-977ef30c58b1');
 
+ALTER TABLE `newfi_schema`.`loanappform` 
+CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
 
