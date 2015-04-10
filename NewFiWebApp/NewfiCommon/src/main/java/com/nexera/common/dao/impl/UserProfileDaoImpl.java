@@ -36,6 +36,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.UserVO;
 
@@ -218,31 +219,25 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public boolean changeUserPassword(UserVO userVO) {
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO)
+	        throws DatabaseException, HibernateException {
 		int rowEffected;
 
-		try {
-			Session session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-			String hql = "UPDATE User usr set usr.password ='"
-			        + userVO.getPassword() + "' where usr.id=" + userVO.getId();
-			Query query = session.createQuery(hql);
+		String hql = "UPDATE User usr set usr.password ='"
+		        + updatePasswordVO.getNewPassword() + "' where usr.id="
+		        + updatePasswordVO.getUserId();
+		Query query = session.createQuery(hql);
 
-			rowEffected = query.executeUpdate();
+		rowEffected = query.executeUpdate();
 
-			if (rowEffected == 0)
-				return false;
-
-			else
-
-				return true;
-		}
-
-		catch (HibernateException e) {
-
+		if (rowEffected == 0)
 			return false;
 
-		}
+		else
+
+			return true;
 
 	}
 

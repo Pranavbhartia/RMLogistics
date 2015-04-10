@@ -17,6 +17,7 @@ import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
+import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
@@ -142,6 +143,6 @@ public interface LoanService {
 
 	public UserLoanStatus getUserLoanStaus(LoanVO loanVO);
 
-	public LoanDashboardVO searchUsers(String userName, int[] loanStatus);
+	public LoanDashboardVO searchUsers(LoanUserSearchVO searchVO);
 
 }

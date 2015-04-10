@@ -42,6 +42,7 @@ import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -178,25 +179,29 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO changeUserPassword(String userVOStr) {
+	public @ResponseBody CommonResponseVO changeUserPassword(@RequestBody String changePasswordData) {
+		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
-		UserVO userVO = gson.fromJson(userVOStr, UserVO.class);
+		 
+		UpdatePasswordVO updatePassword = gson.fromJson(changePasswordData, UpdatePasswordVO.class);
+				
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO errors = new ErrorVO();
 
-		passwordChanged = userProfileService.changeUserPassword(userVO);
+		passwordChanged = userProfileService.changeUserPassword(updatePassword);
 		if (passwordChanged == true) {
-			CommonResponseVO commonResponseVO = new CommonResponseVO();
 			commonResponseVO.setResultObject("Password successfully changed");
 			return commonResponseVO;
 		}
 
 		else {
-			CommonResponseVO commonResponseVO = new CommonResponseVO();
-			commonResponseVO
-			        .setResultObject("Some problem in changing the password");
+			errors.setMessage("Can't update the password");
+			commonResponseVO.setError(errors);
 			return commonResponseVO;
 
 		}
+
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
