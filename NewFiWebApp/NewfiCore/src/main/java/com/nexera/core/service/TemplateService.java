@@ -2,6 +2,7 @@ package com.nexera.core.service;
 
 import java.util.List;
 
+import com.nexera.common.entity.Template;
 import com.nexera.common.vo.TemplateVO;
 
 public interface TemplateService {
@@ -10,5 +11,7 @@ public interface TemplateService {
 	
 	
 	public List<TemplateVO> getListsTemplate();
+
+	Template getTemplateByKey(String key);
 }
 

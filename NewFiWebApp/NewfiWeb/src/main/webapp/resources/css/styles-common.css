@@ -110,3 +110,27 @@ input.reg-radio {
 .reg-header-btns-wrapper{
     color: #fff;
 }
+
+.reg-option-dropdown {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #fafafa;
+    border: 1px solid #d4d4d4;
+    border-radius: 0 0 3px 3px;
+}
+
+.reg-select {
+    position: relative;
+    cursor:pointer;
+    background: url(../images/arrow_down.png) no-repeat right center #fafafa;  
+}
+
+.reg-select-option {
+    padding-left: 40px;
+    cursor: pointer;
+}
+
+.reg-select-option:hover {
+	background-color: #fff;	
+}

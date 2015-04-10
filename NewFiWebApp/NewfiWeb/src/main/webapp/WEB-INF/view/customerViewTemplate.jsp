@@ -77,9 +77,7 @@
 				$("#myProfilePicture").addClass("lp-pic float-left");
 				
 			}else{
-				
 				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
-				 
 			}
 			
 			
@@ -139,6 +137,8 @@
 			});
 			retrieveState();
 
+			
+			$('[data-toggle="tooltip"]').tooltip();   
 		});
 	</script>
 </body>

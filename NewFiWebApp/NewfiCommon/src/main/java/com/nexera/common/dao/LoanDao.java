@@ -67,7 +67,7 @@ public interface LoanDao extends GenericDao {
 	        HomeOwnersInsuranceMaster parseHomeOwnInsMaster);
 
 	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
-	        int loanProgressStatusId);
+	        int[] loanProgressStatusId);
 
 	public LoanNeedsList fetchByNeedId(Integer needId);
 

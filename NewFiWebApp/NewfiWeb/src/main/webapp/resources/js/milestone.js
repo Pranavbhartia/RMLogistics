@@ -1283,12 +1283,17 @@ function milestoneChildEventHandler(event) {
 	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
 	 	event.stopPropagation();
 		 $("#lp-step1").click();
-	}else if ($(event.target).attr("data-text") == "LOCK_RATE"||userIsRealtor()) {
+	}else if ($(event.target).attr("data-text") == "LOCK_RATE") {
 	 	event.stopPropagation();
 		 window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
 	}else if ($(event.target).attr("data-text") == "LOCK_YOUR_RATE") {
 	 	event.stopPropagation();
-		window.location.hash="#myLoan/lock-my-rate"
+	 	if(userIsRealtor()){
+	 		window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
+	 	}else{
+	 		window.location.hash="#myLoan/lock-my-rate"	
+	 	}
+		
 	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
@@ -1308,7 +1313,10 @@ function milestoneChildEventHandler(event) {
 	else if ($(event.target).attr("data-text") == "MANAGE_PHOTO" || $(event.target).attr("data-text") == "MANAGE_ACCOUNT" ||
 			$(event.target).attr("data-text") == "SMS_TEXTING_PREF") {
 	 	event.stopPropagation();
-	 	showCustomerProfilePage();
+	 	if(!userIsRealtor()){
+	 		showCustomerProfilePage();	
+	 	}
+	 	
 	}
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
 	 	event.stopPropagation();

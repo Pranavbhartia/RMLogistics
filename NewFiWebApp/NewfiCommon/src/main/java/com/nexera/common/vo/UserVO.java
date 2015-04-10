@@ -12,6 +12,7 @@ public class UserVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int defaultLoanId;
+	private String userProfileBaseUrl;
 	private Boolean status;
 	private String emailId;
 	private String firstName;
@@ -235,5 +236,13 @@ public class UserVO implements Serializable {
 	        List<InternalUserStateMappingVO> internalUserStateMappingVOs) {
 		this.internalUserStateMappingVOs = internalUserStateMappingVOs;
 	}
+
+	public String getUserProfileBaseUrl() {
+	    return userProfileBaseUrl;
+    }
+
+	public void setUserProfileBaseUrl(String userProfileBaseUrl) {
+	    this.userProfileBaseUrl = userProfileBaseUrl;
+    }
 
 }

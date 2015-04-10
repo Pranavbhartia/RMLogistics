@@ -2511,12 +2511,26 @@ input.calc-input {
 }
 
 .cust-personal-info-header {
-	line-height: 45px;
 	background-color: #f5f9fc;
 	margin-bottom: 20px;
-	text-align: center;
+	padding: 11px 15px;
 	font-family: 'opensanssemibold';
 	font-size: 14px;
+}
+
+.cust-personal-info-header-url {
+  font-family: 'OpenSans';
+  font-size: 11px;
+  height: 100%;
+  border: none;
+  background-color: inherit;
+  width: 242px;
+  padding-left: 5px;
+}
+
+.cust-profile-url {
+  font-family: 'opensanssemibold';
+  font-size: 12px;
 }
 
 .prof-form-row {
@@ -4365,7 +4379,7 @@ input.calc-input {
 }
 
 .prof-form-input-statedropdown {
-	width: 200px;
+	width: 100px;
 }
 
 .prof-form-input-textarea {
@@ -4380,12 +4394,7 @@ input.calc-input {
 .prof-form-input-textarea-block {
 	height: 30px;
 	line-height: 30px;
-	background-color: #FFF !important;
-	border: 1px #E2E2E2 solid;
-	border-radius: 3px;
-	margin: 3px;
-	width: 200px;
-	padding-left: 10px;
+	padding-left: 15px;
 }
 
 .add-btn {
@@ -4467,4 +4476,15 @@ input.calc-input {
 	padding-bottom: 10px;
 	color:#d7d7d7;
 	text-align: center;
+}
+
+.tooltip {
+	display:none;
+	position:absolute;
+	border:1px solid #333;
+	background-color:#161616;
+	border-radius:5px;
+	padding:10px;
+	color:#fff;
+	font-size:12px Arial;
 }

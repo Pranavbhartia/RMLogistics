@@ -89,6 +89,32 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "cust-personal-info-header"
 	}).html("Personal Information");
 
+	
+	var text=$('<div>').attr({
+		"class" : " cust-profile-url float-right"
+	}).html("Profile URL :");	
+	
+	var emailInput = $('<input>').attr({
+		"class" : "cust-personal-info-header-url loan-detail-link",
+		"id" : "profileUrlId",
+		"readonly":"readonly",
+		"value":user.userProfileBaseUrl+""+user.username	
+	}).on("click",function(e){
+		$(this).zclip({
+			path: "resources/js/ZeroClipboard.swf",
+			copy: function(e){
+				e.preventDefault();
+				showToastMessage("copied to clipboard");
+			    return $(this).val();
+			    }
+			});
+	});
+		
+	if(user.userRole.roleDescription=="Realtor" || user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+    text.append(emailInput);
+	header.append(text);
+	}
+
 	var container = getLoanPersonalInfoContainer(user);
 
 	wrapper.append(header).append(container);
@@ -836,19 +862,23 @@ function getStateRow(user) {
 	});
 	var stateInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
-		"id" : "stateId",
-		"readonly" : "readonly"
+		"id" : "stateId"
 	}).bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
-			if($('#state-dropdown-wrapper').has('div').size() <= 0){
-				appendStateDropDown('state-dropdown-wrapper');
-			}else{
-				toggleStateDropDown();
-			}
+			appendStateDropDown('state-dropdown-wrapper',stateList);
+			toggleStateDropDown();
 		}else{
 			toggleStateDropDown();
 		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDown('state-dropdown-wrapper',searchList);
 	});
 	
 	if(user.customerDetail.addressState){
@@ -881,15 +911,23 @@ function getManagerStateRow(user) {
 	});
 	var stateInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
-		"id" : "stateId",
-		"readonly" : "readonly"
+		"id" : "stateId"
 	}).bind('click',function(e){
 		e.stopPropagation();
-			if($('#state-dropdown-wrapper').has('div').size() <= 0){
-				appendManagerStateDropDown('state-dropdown-wrapper');
+			if($('#state-dropdown-wrapper').css("display") == "none"){
+				appendManagerStateDropDown('state-dropdown-wrapper',stateList);
+				toggleStateDropDown();
 			}else{
 				toggleStateDropDown();
 			}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendManagerStateDropDown('state-dropdown-wrapper',searchList);
 	});
 	
 	
@@ -908,14 +946,14 @@ function zipCodeLookUpListCallBack(response) {
 	}
 }
 
-function appendStateDropDown(elementToApeendTo) {
+function appendStateDropDown(elementToApeendTo,states) {
 	
 	var parentToAppendTo = $('#'+elementToApeendTo);
-	
-	for(var i=0; i<stateList.length; i++){
+	parentToAppendTo.html('');
+	for(var i=0; i<states.length; i++){
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row"
-		}).html(stateList[i].stateCode)
+		}).html(states[i].stateCode)
 		.bind('click',function(e){
 			e.stopPropagation();
 			$('#stateId').val($(this).html());
@@ -925,18 +963,18 @@ function appendStateDropDown(elementToApeendTo) {
 			var stateCode = $(this).html();
 			
 			var stateId = findStateIdForStateCode(stateCode);
-			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 			toggleStateDropDown();
+			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 		});
 		
 		parentToAppendTo.append(stateRow);
 	}
-	toggleStateDropDown();
 }
 
-function appendManagerStateDropDown(elementToApeendTo) {
+function appendManagerStateDropDown(elementToApeendTo,stateList) {
 
 	var parentToAppendTo = $('#'+elementToApeendTo);
+	parentToAppendTo.html('');
 	var $containerToAppend=$("<div>");
 	for(var i=0; i<stateList.length; i++){
 		var stateRow = $('<div>').attr({
@@ -945,7 +983,7 @@ function appendManagerStateDropDown(elementToApeendTo) {
 			"name":  stateList[i].stateCode
 		});
 		var checkBox = $('<div>').attr({
-				"class" : "float-left doc-checkbox",
+				"class" : "float-left doc-checkbox hide",
 				"id": "checkBox_"+stateList[i].id,
 		});
 		if(states.indexOf((stateList[i].id).toString())>-1){
@@ -969,15 +1007,16 @@ function appendManagerStateDropDown(elementToApeendTo) {
 				internalUserStateMappingVO.isChecked=true;		
 //		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
 				internalUserStates[this.id]=internalUserStateMappingVO;
-			}else{
+			}/*else{
 				internalUserStates[this.id].isChecked = false;
 				//$('.message-recipient-remove-icn[data-id="'+this.id+'"]').closest('.prof-form-input-textarea-block').remove();
 				$("#checkBox_"+this.id).addClass("doc-unchecked").removeClass("doc-checked");
-				/*internalUserStateMappingVO=internalUserStates[this.id];
+				internalUserStateMappingVO=internalUserStates[this.id];
 				if(internalUserStateMappingVO.isChecked!=typeof underdefined)
 					internalUserStateMappingVO.isChecked=false;
-				internalUserStates[this.id]=internalUserStateMappingVO;*/
-			}
+				internalUserStates[this.id]=internalUserStateMappingVO;
+			}*/
+			appendUserStatesInLMProfile($('#inputTextarea'));
 				
 				$('#stateId').val(this.name);
 				//toggleStateDropDown();
@@ -993,8 +1032,6 @@ function appendManagerStateDropDown(elementToApeendTo) {
 		
 	}
 	parentToAppendTo.append($containerToAppend);
-	
-	toggleStateDropDown();
 	
 }
 
@@ -1017,9 +1054,25 @@ function findStateNameForStateId(stateId) {
 			return stateList[i].stateCode;
 		}
 	}
-	
 	return 0;
 }
+
+function searchInStateArray(searchTerm){
+	//searchTerm = searchTerm.toUpperCase();
+	var regEx = new RegExp(searchTerm, 'i');
+	var searchedStateList = [];
+	count = 0;
+	for(var i=0; i<stateList.length;i++){
+		var result = stateList[i].stateCode.match(regEx);
+		if(result){
+			searchedStateList[count++] = stateList[i];			
+		}
+	}
+	
+	return searchedStateList;
+}
+
+
 function toggleStateDropDown() {
 	$('#state-dropdown-wrapper').slideToggle("slow",function(){
 		$('#state-dropdown-wrapper').perfectScrollbar({
@@ -1764,10 +1817,23 @@ function getStateTextRow() {
 	});
 	
 	
-	var emailInput = $('<div>').attr({
+	var userStates = $('<div>').attr({
 		"class" : "prof-form-input-textarea clearfix",
 		"id" : "inputTextarea"
  	});
+	
+	appendUserStatesInLMProfile(userStates);
+	
+	inputCont.append(userStates);
+	
+	rowCol2.append(inputCont);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+function appendUserStatesInLMProfile(element) {
+	
+	var userStates = element;
+	userStates.html('');
 	for(var key in internalUserStates){
 		if(internalUserStates[key]!=0 && internalUserStates[key].isChecked){
 			
@@ -1791,14 +1857,12 @@ function getStateTextRow() {
 			
 			emailHtml.append(emailHtmlTxt).append(removeIcn);
 			
-			emailInput.append(emailHtml);
+			userStates.append(emailHtml);
 		}
 	}
-	inputCont.append(emailInput);
-	
-	rowCol2.append(inputCont);
-	return row.append(rowCol1).append(rowCol2);
 }
+
+
 function getLqbRow(displayName,value,id) {
 	
 	
