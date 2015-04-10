@@ -336,8 +336,8 @@ public class UserProfileRest {
 			userVO.setUsername(userVO.getEmailId());
 		try {
 			userVO = userProfileService.createNewUserAndSendMail(userVO);
-			if (userVO.getUserRole().getRoleCd()
-			        .equals(UserRolesEnum.REALTOR.toString())) {
+			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+			        .getRoleId()) {
 				/*
 				 * This is the case when the loan manager adds a realtor, the
 				 * default assignment should happen now.

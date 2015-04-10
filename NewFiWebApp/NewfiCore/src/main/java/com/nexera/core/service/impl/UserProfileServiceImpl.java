@@ -1104,8 +1104,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void addDefaultLM(UserVO userVO) {
 		// Get loan manager Id
 		;
-		userProfileDao.updateLMID(userVO.getRealtorDetail().getId(), utils
-		        .getLoggedInUser().getId());
+		userProfileDao.updateLMID(userVO.getId(), utils.getLoggedInUser()
+		        .getId());
 	}
 
 	@Override

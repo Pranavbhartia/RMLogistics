@@ -18,6 +18,7 @@ public class LoanCustomerVO {
 	private Date lastActedOn;
 	private Integer userID;
 	private Integer loanID;
+	private String loanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
 	
@@ -179,6 +180,14 @@ public class LoanCustomerVO {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
+
+	public String getLoanStatus() {
+	    return loanStatus;
+    }
+
+	public void setLoanStatus(String loanStatus) {
+	    this.loanStatus = loanStatus;
+    }
 
 	
 	

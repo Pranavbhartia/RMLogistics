@@ -322,6 +322,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 				}
 			}
+			
+			for (Loan loan : loanListForUser) {
+	            Hibernate.isInitialized(loan.getLoanProgressStatus());
+            }
 
 			return loanListForUser;
 		} catch (HibernateException hibernateException) {
