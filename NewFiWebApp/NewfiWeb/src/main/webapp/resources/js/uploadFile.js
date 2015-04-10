@@ -75,15 +75,20 @@ function afterPDFSplit(response){
 function checkforSimilarNeed(Object){
 	select = $(Object);
 	console.info(select.attr("ismiscellaneous"));
-	if(select.attr("ismiscellaneous")=="false" && select.val() != "Assign"){
+	if( select.val() != "Assign"){
 		$( ".assign" ).each(function() {
-			if($(this).attr("ismiscellaneous")=="false" && $(this).val() != "Assign" && !select.is($(this))){
-				if(select.val()==$(this).val()){
-					select.val('Assign');
-					showDialogPopup("Document Assignment", "Cannot assign same need to two or more document", function(){
-						return false;
-					});
+			if( $(this).val() != "Assign" && !select.is($(this))){
+				
+				if(!(select.attr("ismiscellaneous")=="true" && $(this).attr("ismiscellaneous")=="true")){
+					if(select.val()==$(this).val()){
+						select.val('Assign');
+						showDialogPopup("Document Assignment", "Cannot assign same need to two or more document", function(){
+							return false;
+						});
+					}
 				}
+				
+				
 			}
 		});
 	}
@@ -248,10 +253,11 @@ function saveUserDocumentAssignments() {
 	var fileAssignMentVO = new Array();
 
 	$(".assign").each(function(index) {
-		console.info($(this).val())
+		console.info($(this).val());
 		if($(this).val()!="Assign"){
 			var fileAssignMent = new Object();
 			fileAssignMent.fileId = $(this).attr('fileid');
+			fileAssignMent.isMiscellanous = $(this).attr('ismiscellaneous');
 			fileAssignMent.needListId = $(this).val();
 			fileAssignMentVO.push(fileAssignMent);
 		}

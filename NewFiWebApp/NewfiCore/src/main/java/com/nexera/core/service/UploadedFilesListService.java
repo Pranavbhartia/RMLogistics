@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.CheckUploadVO;
+import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
@@ -85,10 +86,11 @@ public interface UploadedFilesListService {
 	        throws IOException;
 
 	public Boolean assignFileToNeeds(
-	        Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
-	        Integer userId, Integer assignedBy);
 
-	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
+	Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed, Integer loanId,
+			Integer userId, Integer assignedBy);
+
+    public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
 
 	void updateAssignments(Integer loanNeedId, Integer fileId);
 

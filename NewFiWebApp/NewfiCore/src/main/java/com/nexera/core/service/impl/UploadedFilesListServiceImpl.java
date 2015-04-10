@@ -54,6 +54,11 @@ import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
+
+import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.FileAssignmentMappingVO;
+
+
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
@@ -846,6 +851,54 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Transactional
+
+	public Boolean assignFileToNeeds( Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed, Integer loanId,
+		        Integer userId, Integer assignedBy )
+		    {
+				Boolean isSuccess = false;
+		        
+		        try {
+
+		            for ( Integer key : mapFileMappingToNeed.keySet() ) {
+		               
+		                
+		                FileAssignmentMappingVO mapping =  mapFileMappingToNeed.get( key );
+		                List<Integer> fileIds =mapping.getFileIds();
+		                Integer newFileRowId = null;
+		                if(mapping.getIsMiscellaneous()){
+		                	 UploadedFilesList filesList = loanService.fetchUploadedFromLoanNeedId( key );
+		                	 LOG.info( "fetchUploadedFromLoanNeedId returned : " + filesList );
+		                	  if ( filesList != null ) {
+				                    fileIds.add( filesList.getId() );
+				                }
+				                newFileRowId = mergeAndUploadFiles( fileIds, loanId, userId, assignedBy );
+				                
+				                for (Integer fileId : fileIds) {
+				        			deactivateFileUsingFileId(fileId);
+				        		}
+		                }else{
+		                	newFileRowId = fileIds.get(0);
+		                }
+		                LOG.info( "new file pdf path :: " + newFileRowId );
+		                updateFileInLoanNeedList( key, newFileRowId );
+		                updateIsAssignedToTrue( newFileRowId );
+		               
+		               
+		           }
+
+		            isSuccess = true;
+		            //commonResponseVO = RestUtil.wrapObjectForSuccess( true );
+
+		        } catch ( Exception e ) {
+		            LOG.error( "exception in converting  : " + e.getMessage(), e );
+		            e.printStackTrace();
+		            isSuccess = false;
+		        }
+
+		        return isSuccess ;
+
+		    }
+
 	private void changeWorkItem(
 	        Map<Integer, List<Integer>> mapFileMappingToNeed, int loanID) {
 		// Start
@@ -890,46 +943,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
 	}
 
-	public Boolean assignFileToNeeds(
-	        Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
-	        Integer userId, Integer assignedBy) {
-		Boolean isSuccess = false;
-		try {
-
-			for (Integer key : mapFileMappingToNeed.keySet()) {
-				UploadedFilesList filesList = loanService
-				        .fetchUploadedFromLoanNeedId(key);
-				LOG.info("fetchUploadedFromLoanNeedId returned : " + filesList);
-				List<Integer> fileIds = mapFileMappingToNeed.get(key);
-
-				if (filesList != null) {
-					fileIds.add(filesList.getId());
-				}
-				Integer newFileRowId = null;
-
-				newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
-				        assignedBy);
-
-				for (Integer fileId : fileIds) {
-					deactivateFileUsingFileId(fileId);
-				}
-
-				LOG.info("new file pdf path :: " + newFileRowId);
-				updateFileInLoanNeedList(key, newFileRowId);
-				updateIsAssignedToTrue(newFileRowId);
-
-			}
-			changeWorkItem(mapFileMappingToNeed, loanId);
-			isSuccess = true;
-		} catch (Exception e) {
-			LOG.error("exception in converting  : " + e.getMessage(), e);
-			e.printStackTrace();
-			isSuccess = false;
-		}
-
-		return isSuccess;
-
-	}
+	
 
 	@Override
 	@Transactional
