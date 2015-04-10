@@ -15,13 +15,18 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
@@ -32,6 +37,7 @@ import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -55,7 +61,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private LoanService loanService;
 	@Autowired
 	UserProfileService userProfileService;
-
+	@Autowired
+	private NeedsListService needsListService;
 	@Autowired
 	Utils utils;
 
@@ -223,5 +230,35 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		}
 
 		return creditDisplay;
+	}
+
+	@Override
+	public String getRenderInfoForDisclosure(int loanID) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Loan loan = new Loan(loanID);
+		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.DISCLOSURE.getMilestoneKey());
+		String status = loanMilestone.getComments().toString();
+		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+		        status);
+		MasterNeedsEnum needURLItem = null;
+		if (status.equals(LoanStatus.disclosureAvail)) {
+			needURLItem = MasterNeedsEnum.Disclsoure_Available;
+		} else if (status.equals(LoanStatus.disclosureSigned)) {
+			needURLItem = MasterNeedsEnum.Signed_Disclosure;
+		}
+		if (needURLItem != null) {
+			NeedsListMaster needsListMaster = new NeedsListMaster();
+			needsListMaster.setId(Integer.parseInt(needURLItem.getIndx()));
+			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
+			        loan, needsListMaster);
+			// TODO check column path
+			if (loanNeedsList != null
+			        && loanNeedsList.getUploadFileId() != null) {
+				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+				        loanNeedsList.getUploadFileId().getS3path());
+			}
+		}
+		return getJsonStringOfMap(map);
 	}
 }

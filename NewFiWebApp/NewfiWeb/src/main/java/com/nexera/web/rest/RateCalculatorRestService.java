@@ -299,7 +299,7 @@ public class RateCalculatorRestService {
 	
 	
 	
-	private  List<TeaserRateResponseVO> parseLqbResponse(String lqbTeaserRateResponse) {
+	public  List<TeaserRateResponseVO> parseLqbResponse(String lqbTeaserRateResponse) {
 
 		//get a factory
 		SAXParserFactory spf = SAXParserFactory.newInstance();

@@ -121,129 +121,6 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 	return container.append(quesTextCont).append(optionContainer);
 }
 
-// Renting
-
-/*function paintBuyHomeRenting() {
-	active = 2;
-	homeProgressBaar(2);
-
-	var quesTxt1 = "Where You Live Now ?";
-	var quesTxt2 = "Your Current Address ?";
-	var quesTxt3 = "City";
-	var quesTxt4 = "State";
-	var quesTxt5 = "ZIP Code";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesTxt1);
-
-	
-	 * var optionContainer1 = $('<div>').attr({ "class" : "ce-options-cont" });
-	 * 
-	 * var inputBox1 = $('<input>').attr({ "class" : "ce-input", "name" :
-	 * "liveNow" });
-	 
-
-	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-sub-ques-text"
-	}).html(quesTxt2);
-
-	var optionContainer2 = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox2 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "currentAddress"
-	});
-
-	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-sub-ques-text"
-	}).html(quesTxt3);
-
-	var optionContainer3 = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox3 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "city"
-	});
-
-	var quesTextCont4 = $('<div>').attr({
-		"class" : "ce-rp-sub-ques-text"
-	}).html(quesTxt4);
-
-	var optionContainer4 = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox4 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "state"
-	});
-
-	var quesTextCont5 = $('<div>').attr({
-		"class" : "ce-rp-sub-ques-text"
-	}).html(quesTxt5);
-
-	var optionContainer5 = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox5 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "zipCode"
-	});
-	// optionContainer1.append(inputBox1);
-	optionContainer2.append(inputBox2);
-	optionContainer3.append(inputBox3);
-	optionContainer4.append(inputBox4);
-	optionContainer5.append(inputBox5);
-	// quesTextCont1.append(optionContainer1);
-	quesTextCont2.append(optionContainer2);
-	quesTextCont3.append(optionContainer3);
-	quesTextCont4.append(optionContainer4);
-	quesTextCont5.append(optionContainer5);
-
-	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
-	}).html("Save & Continue")
-			.bind(
-					'click',
-					function(event) {
-
-						buyHomeTeaserRate["liveNow"] = $(
-								'input[name="liveNow"]').val();
-						buyHomeTeaserRate["currentAddress"] = $(
-								'input[name="currentAddress"]').val();
-						buyHomeTeaserRate["city"] = $('input[name="city"]')
-								.val();
-						buyHomeTeaserRate["state"] = $('input[name="state"]')
-								.val();
-						buyHomeTeaserRate["zipCode"] = $(
-								'input[name="zipCode"]').val();
-
-						paintBuyHomEachMonthrent();
-					});
-
-	$('#ce-refinance-cp').html(
-			container.append(quesTextCont1).append(quesTextCont2).append(
-					quesTextCont3).append(quesTextCont4).append(quesTextCont5)
-					.append(saveBtn));
-
-	
-	 * $("#progressBaarId_1").removeClass('ce-lp-in-progress').removeClass('ce-lp-not-started').addClass('ce-lp-complete');
-	 * $('#stepNoId_1').html("");
-	 * 
-	 * $("#progressBaarId_2").addClass('ce-lp-in-progress');
-	 * $('#stepNoId_2').html("2");
-	 
-}*/
 
 function paintBuyHomEachMonthrent() {
 	active = 3;
@@ -283,7 +160,7 @@ function paintBuyHomEachMonthrent() {
 	}).blur(function(){
 		
 		if($('input[name="rentPerMonth"]').val() > 2){
-			alert("grater then 2");
+			//alert("grater then 2");
 		}
 	});
 
@@ -416,7 +293,11 @@ function paintloanamount(){
 	 		
 	 		buyHomeTeaserRate.homeWorthToday = $('input[name="housePrice"]').val();
             buyHomeTeaserRate.currentMortgageBalance = $('input[name="loanAmount"]').val();
-            buyHomeTeaserRate.isIncludeTaxes = quesContxts[1].value;
+           if("Yes" == quesContxts[2].value){
+            buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = true;
+            }else{
+              buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = false;
+              }
             
             buyHomeTeaserRate.estimatedPurchasePrice = $('input[name="estimatedPurchasePrice"]').val();
           	
@@ -839,7 +720,7 @@ function paintBuyHomeSeeTeaserRate() {
 		buyHomeTeaserRate.purchaseDetails.estimatedPurchasePrice=buyHomeTeaserRate.estimatedPurchasePrice;
 		//buyHomeTeaserRate.rentPerMonth;	
 		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
-	alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
+ console.log('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         //alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         stages = 6;
         progressBaar(6);
@@ -1151,7 +1032,9 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
+		
 		buyHomeTeaserRate[key] = $('input[name="' + key + '"]').val();
+		buyHomeTeaserRate.purchaseDetails[key]= $('input[name="' + key + '"]').val();
 		event.data.clickEvent();
 	});
 

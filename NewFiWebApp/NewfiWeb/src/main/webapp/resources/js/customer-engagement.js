@@ -462,7 +462,7 @@ function getTextQuestion(quesText, clickEvent, name) {
             var key = event.data.name;
             inputValue = $('input[name="' + key + '"]').val();
             refinanceTeaserRate[key] = inputValue;
-            alert('json'+JSON.stringify(refinanceTeaserRate));
+          //  alert('json'+JSON.stringify(refinanceTeaserRate));
             sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
           
             if (inputValue != undefined && inputValue != "" && inputValue != "$0") {
@@ -985,9 +985,7 @@ function progressBaar(num) {
      * $('#ce-refinance-cp').append(rateProgramWrapper); }
      */
 function paintApplyNow(inputCustomerDetails) {
-   
-    console.log(JSON.stringify(inputCustomerDetails));
-   // alert('input'+JSON.stringify(inputCustomerDetails))
+  
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate) ;
     var registration = new Object();
     var parentWrapper = $('<div>').attr({
@@ -1081,9 +1079,9 @@ function paintApplyNow(inputCustomerDetails) {
         	
             //purchaseDetails
          purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
-   		 purchaseDetails.housePrice =inputCustomerDetails.housePrice;
-   		 purchaseDetails.loanAmount = inputCustomerDetails.loanAmount;
-   		 purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.isIncludeTaxes; 
+   		 purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
+   		 purchaseDetails.loanAmount = inputCustomerDetails.purchaseDetails.loanAmount;
+   		 purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
    		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
    		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
 
@@ -1097,8 +1095,7 @@ function paintApplyNow(inputCustomerDetails) {
         // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
         
-        // alert('hey');
-        // alert(JSON.stringify(appUserDetails));
+       
        
         console.log(JSON.stringify(appUserDetails));
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
@@ -1133,7 +1130,7 @@ function saveUserAndRedirect(registration) {
             // printMedianRate(data,container);
         },
         error: function(data) {
-            alert(data);
+           // alert(data);
             $('#ce-main-container').html(data.toString());
             // $('#overlay-loader').hide();
         }
@@ -1149,7 +1146,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
             },
             datatype: "application/json",
             success: function(data) {
-                alert('inside appFormData');
+              //  alert('inside appFormData');
                 window.location.href = data;
             },
             error: function(erro) {
@@ -1295,6 +1292,7 @@ function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails) {
      */
     // var refinanceTeaserRate = JSON.parse(refinanceTeaserRate);
     // var loanTypeText = refinanceTeaserRate.loanType;
+   
     var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails);
     $('#ce-refinance-cp').append(loanSummaryWrapper);
 }
@@ -1396,7 +1394,8 @@ function getLoanSummaryHeaderCEP() {
      * container.append(leftCol).append(rightCol); return container; }
      */
 function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails) {
-    // alert(JSON.stringify(refinanceTeaserRate));
+  
+  
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
     });
@@ -1628,7 +1627,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     });
     // add rows in left column
    
-   alert(customerInputData.refinanceOption);
+  // alert(customerInputData.refinanceOption);
     if (customerInputData.refinanceOption == "REFLMP") refinanceOpt = "Lower My Monthly Payment";
     if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
     if (customerInputData.refinanceOption == "REFCO") refinanceOpt = "Take Cash Out of My Home";

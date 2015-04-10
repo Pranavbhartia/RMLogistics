@@ -35,6 +35,7 @@ import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.CustomerSpouseOtherAccountDetailsVO;
 import com.nexera.common.vo.CustomerSpouseRetirementAccountDetailsVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -458,10 +459,13 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
+	
 @RequestMapping(value = "/createLoan", method = RequestMethod.POST)
 public @ResponseBody String createLoan(String appFormData) {
 	System.out.println("Inside createLoan");
 	Gson gson = new Gson();
+	String lockRateData = null;
+	try{
 	LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 	String loanNumber = invokeRest(prepareCreateLoanJson("DIRECT-REFI-MASTER TEMPLATE").toString());
 	System.out.println("createLoanResponse is"+loanNumber);
@@ -470,11 +474,49 @@ public @ResponseBody String createLoan(String appFormData) {
 		
 		String response = invokeRest(saveLoan(loanNumber,loaAppFormVO).toString());
 		System.out.println("Save Loan Response is "+response);
+		 JSONObject jsonObject = new JSONObject(response);
+		 LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
+		 if("200".equalsIgnoreCase(jsonObject.get("responseCode").toString())){
+			 lockRateData = loadLoanRateData(loanNumber);
+		 }
 		}
-	
-	return "Success";
+	}catch(Exception e){
+		e.printStackTrace();
+		return "error";
+	}
+	return lockRateData;
 	
 }
+
+
+private String loadLoanRateData(String loanNumber)
+{
+	Gson gson = new Gson();
+	List<TeaserRateResponseVO> teaserRateList = null;
+	RateCalculatorRestService rateService = new RateCalculatorRestService();
+	JSONObject json = new JSONObject();
+	JSONObject jsonChild = new JSONObject();
+	try {
+		jsonChild.put("sLoanNumber",loanNumber);		
+		jsonChild.put("sXmlQueryMap","{}");	
+		jsonChild.put("format","0");	
+		json.put("opName","Load" );
+		json.put("loanVO", jsonChild); 
+		System.out.println("jsonMapObject load Loandata"+json);		
+		String response = invokeRest(json.toString());
+		JSONObject jsonObject = new JSONObject(response);
+		teaserRateList = rateService.parseLqbResponse(jsonObject.get("responseMessage").toString());
+		
+	} catch (JSONException e) {
+		e.printStackTrace();
+	}  
+		
+	System.out.println("loadLoanRateData"+gson.toJson(teaserRateList));
+	return gson.toJson(teaserRateList);
+	
+}
+
+
 
 public JSONObject prepareCreateLoanJson(String templateName)
 {

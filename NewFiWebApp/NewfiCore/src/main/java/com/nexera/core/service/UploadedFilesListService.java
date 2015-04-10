@@ -49,7 +49,7 @@ public interface UploadedFilesListService {
 	public UploadedFilesList fetchUsingFileId(Integer fileId);
 
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId);
-	
+
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
 	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
@@ -59,10 +59,11 @@ public interface UploadedFilesListService {
 	        throws IOException, COSVisitorException, Exception;
 
 	public CheckUploadVO uploadFile(File file, String contentType,
-	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy ,  Boolean isNeedAssigned);
+	        byte[] bytes, Integer userId, Integer loanId, Integer assignedBy,
+	        Boolean isNeedAssigned);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO , Boolean isNeedAssigned);
+	        Integer loanId, String createLQBVO, Boolean isNeedAssigned);
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;
@@ -80,11 +81,12 @@ public interface UploadedFilesListService {
 	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
 	        String uuid);
 
-	public InputStream createLQBObjectToReadFile(String lqbDocID) throws IOException;
+	public InputStream createLQBObjectToReadFile(String lqbDocID)
+	        throws IOException;
 
 	public Boolean assignFileToNeeds(
-			Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
-			Integer userId, Integer assignedBy);
+	        Map<Integer, List<Integer>> mapFileMappingToNeed, Integer loanId,
+	        Integer userId, Integer assignedBy);
 
 	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
 
