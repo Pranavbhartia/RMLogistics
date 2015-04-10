@@ -569,9 +569,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 function showAppFee (itemToAppendTo,workItem)
 {
 	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
-	var txtRow1 = $('<div>').attr({
-		"class" : rightLeftClass + "-text" + " milestone-plain-text",
-	});
+
 	var txtRow2 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" + " milestone-plain-text",
 	});
@@ -583,8 +581,7 @@ function showAppFee (itemToAppendTo,workItem)
 			itemToAppendTo.append(txtRow2);
 		}
 		if(tempOb.appfee){
-			txtRow1.html("$"+tempOb.appfee);
-			itemToAppendTo.append(txtRow1);
+			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html("$"+tempOb.appfee);			
 		}		
 	}
 	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
@@ -1677,9 +1674,8 @@ function appendAppFeeEditPopup(element,milestoneId) {
 					if (response.error) {
 						showToastMessage(response.error.message);
 					}else{
-						var contxt=workFlowContext.mileStoneContextList[milestoneId];
-						contxt.updateMilestoneView("3");
-						
+						var contxt=workFlowContext.mileStoneContextList[milestoneId];	
+						contxt.stateInfoContainer.html(newFee);
 						removeAppFeeEditPopup();
 					}
 			},false);
