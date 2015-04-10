@@ -725,6 +725,7 @@ CREATE TABLE `loan` (
   `lqb_file_id` varchar(255) DEFAULT NULL,
   `current_milestone` int(11) DEFAULT NULL,
   `loan_detail` int(11) DEFAULT NULL,
+`app_fee` DECIMAL(7,2)  DEFAULT NULL ,
   `loan_progress_status_master` int(11) DEFAULT NULL,
   `customer_workflow` int(11) DEFAULT NULL,
   `loan_manager_workflow` int(11) DEFAULT NULL,
