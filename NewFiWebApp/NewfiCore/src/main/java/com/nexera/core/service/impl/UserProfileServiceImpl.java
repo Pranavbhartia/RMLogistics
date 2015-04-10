@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +44,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
@@ -76,6 +76,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.workflow.vo.WorkflowVO;
@@ -99,8 +100,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
 
-	@Value("${NEW_USER_TEMPLATE_ID}")
-	private String newUserMailTemplateId;
+	@Autowired
+	private TemplateService templateService;
 
 	@Autowired
 	private MessageUtils messageUtils;
@@ -423,7 +424,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
-
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
@@ -438,7 +440,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You have been subscribed to Nexera");
 		emailEntity.setTokenMap(substitutions);
-		emailEntity.setTemplateId(newUserMailTemplateId);
+		emailEntity.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendMail(emailEntity);
 	}
@@ -1067,6 +1069,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
@@ -1082,7 +1086,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Your password has been reset");
 		emailEntity.setTokenMap(substitutions);
-		emailEntity.setTemplateId(newUserMailTemplateId);
+		emailEntity.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendMail(emailEntity);
 	}

@@ -77,7 +77,6 @@ public interface CommonConstants {
 	public static final int TRANSACTION_STATUS_DISABLED = 0;
 	public static final int TRANSACTION_STATUS_FAILED = 2;
 
-
 	/*
 	 * SendGrid constants
 	 */
@@ -88,7 +87,7 @@ public interface CommonConstants {
 	        + "Newfi Team";
 
 	public static final String SENDER_DOMAIN = "@loan.newfi.com";
-	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE="Password updated successfully.Please Check your mail";
+	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE = "Password updated successfully.Please Check your mail";
 
 	/*
 	 * Constants for email subjects
@@ -104,7 +103,7 @@ public interface CommonConstants {
 	public static final String SENDER_DOMAIN_REGEX = SENDER_DOMAIN + ">";
 
 	public static final Integer SYSTEM_USER_USERID = 1;
-	
+
 	/*
 	 * Loan Appform Constants
 	 */
@@ -118,7 +117,6 @@ public interface CommonConstants {
 	public static final int JINV = 695;
 	public static final int CMF = 595;
 	public static final int JMF = 695;
-	
 
 	/*
 	 * Credit score - For UI
@@ -129,4 +127,12 @@ public interface CommonConstants {
 
 	public static final String UNKNOWN_SCORE = "?";
 	public static final String CREDIT_SCORE_SEPARATOR = "|";
+
+	/* Template Key Names */
+
+	public static final String TEMPLATE_KEY_NAME_PAYMENT = "PAYMENT_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_NEW_USER = "NEW_USER_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_NEW_NOTE = "NEW_NOTE_TEMPLATE";
+	public static final String TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_TEST_TEMPLATE = "TEST_EMAIL_TEMPLATE_ID";
 }
