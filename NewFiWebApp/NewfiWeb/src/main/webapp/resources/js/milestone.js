@@ -1675,7 +1675,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 						showToastMessage(response.error.message);
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];	
-						contxt.stateInfoContainer.html(newFee);
+						contxt.stateInfoContainer.html("$"+newFee);
 						removeAppFeeEditPopup();
 					}
 			},false);
