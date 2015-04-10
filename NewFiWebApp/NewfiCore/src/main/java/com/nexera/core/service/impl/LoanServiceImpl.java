@@ -1094,6 +1094,7 @@ public class LoanServiceImpl implements LoanService {
 				return CommonConstants.CMF;
 			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
 			        CommonConstants.INVESTMENT_VALUE)) {
+				/* For Investment change the column Name */
 				return CommonConstants.CINV;
 			} else {
 				throw new InvalidInputException(
