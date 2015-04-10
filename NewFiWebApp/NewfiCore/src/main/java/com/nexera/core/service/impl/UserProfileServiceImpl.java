@@ -1108,6 +1108,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .getLoggedInUser().getId());
 	}
 
+	@Override
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);
