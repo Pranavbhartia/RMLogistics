@@ -1011,9 +1011,9 @@ function getLoanAmountRow(desc, detail, id) {
     var col1row1 = $('<div>').attr({
         "class": "loan-summary-sub-col-desc float-left"
     }).html("Current Loan Amount");
-    var col2row1 = $('<div>').attr({
+    var col2row1 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left"
-    }).html("$ 303,000.00");
+    }).val("$ 303,000.00");
     row1.append(col1row1).append(col2row1);
     var row2 = $('<div>').attr({
         "class": "loan-summary-sub-row clearfix"
@@ -1021,9 +1021,9 @@ function getLoanAmountRow(desc, detail, id) {
     var col1row2 = $('<div>').attr({
         "class": "loan-summary-sub-col-desc float-left"
     }).html("Cashout");
-    var col2row2 = $('<div>').attr({
+    var col2row2 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left"
-    }).html("$ 70,000.00");
+    }).val("$ 70,000.00");
     row2.append(col1row2).append(col2row2);
     loanAmountDetails.append(row1).append(row2);
     return container.append(loanAmountCont).append(loanAmountDetails);
@@ -1052,8 +1052,22 @@ function getLoanSummaryRowCalculateBtn(desc, detail) {
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail calculate-btn float-left"
-    }).html(detail);
+        "class": "loan-summary-col-detail float-left"
+    });
+    
+    var col2Txt = $('<div>').attr({
+    	"class" : "calculate-btn"
+    }).html(detail)
+    .bind('click',function(){
+    	$(this).next('input').show().focus();
+    	$(this).hide();
+    });
+    
+    var inputBox = $('<input>').attr({
+    	"class" : "loan-summary-sub-col-detail hide"
+    });    
+    
+    col2.append(col2Txt).append(inputBox);
     container.append(col1).append(col2);
     return container;
 }

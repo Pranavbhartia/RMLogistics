@@ -654,7 +654,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-sub-col-detail {
   width: 100px;
-  text-align: center;
+  padding:0 10px;
   color: #428bca;
   font-family: 'opensanssemibold';
   border: 1px solid #dcdcdc;
