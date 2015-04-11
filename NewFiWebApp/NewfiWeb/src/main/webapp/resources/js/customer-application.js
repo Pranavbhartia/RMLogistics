@@ -4723,7 +4723,7 @@ $.ajax({
 		datatype : "application/json",
 		success:function(data){
 		
-            alert('createLoan data is '+data)
+           // alert('createLoan data is '+data)
 			paintLockRate(JSON.parse(data), appUserDetails);
 			 $('#overlay-loader').hide();
 		},
@@ -4745,7 +4745,7 @@ $.ajax({
 
 
 function paintLockRate(lqbData, appUserDetails) {
-   alert('lqbData'+lqbData);
+  // alert('lqbData'+lqbData);
 
     fixAndLoakYourRatePage(lqbData, appUserDetails);
 }
