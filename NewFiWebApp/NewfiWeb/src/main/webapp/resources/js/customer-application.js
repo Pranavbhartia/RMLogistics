@@ -2497,12 +2497,822 @@ function paintCustomerSpouseApplicationPageStep5() {
 
 
 
-function applicationFormSumbit(){
-	
+function applicationFormSumbit(appUserDetails){
+	paintLockRate(lqbData, appUserDetails);
 	//createLoan(appUserDetails);
-	saveUserAndLockRate(appUserDetails) ;
+	//saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
+
+
+
+
+
+
+var lqbData=[
+    {
+        "loanDuration": "sample",
+        "loanNumber": "D2015040065"
+    },
+    {
+        "loanDuration": "30 FIXED CONF YOSEMITE",
+        "rateVO": [
+            {
+                "teaserRate": "4.750",
+                "closingCost": "($3,245.83)",
+                "APR": "N/A",
+                "payment": "1,460.61",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "-1.925"
+            },
+            {
+                "teaserRate": "4.625",
+                "closingCost": "($2,902.02)",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "-1.797"
+            },
+            {
+                "teaserRate": "4.500",
+                "closingCost": "($1,810.60)",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "-1.402"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($590.38)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "-0.961"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "$719.43",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "-0.488"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "$2,709.65",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "0.228"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "$4,960.27",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "1.037"
+            },
+            {
+                "teaserRate": "3.990",
+                "closingCost": "$5,099.10",
+                "APR": "N/A",
+                "payment": "1,335.15",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "1.087"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "$6,695.68",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "1cca04b2-4f0d-4cc9-a67c-17210f95a5b2",
+                "point": "1.662"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 FIXED CONFORMING CASCADES",
+        "rateVO": [
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($8,889.58)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-3.925"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($8,296.57)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-3.708"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($6,605.95)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-3.099"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "($4,582.13)",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-2.371"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "($2,558.32)",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-1.643"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "($1,004.90)",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-1.083"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$1,220.52",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "-0.283"
+            },
+            {
+                "teaserRate": "3.500",
+                "closingCost": "$3,986.33",
+                "APR": "N/A",
+                "payment": "1,257.33",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "0.710"
+            },
+            {
+                "teaserRate": "3.375",
+                "closingCost": "$5,626.55",
+                "APR": "N/A",
+                "payment": "1,237.87",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "1.301"
+            },
+            {
+                "teaserRate": "3.250",
+                "closingCost": "$7,493.57",
+                "APR": "N/A",
+                "payment": "1,218.58",
+                "lLpTemplateId": "5e580ed9-2af2-4fd6-ab54-ce7ceb4a3461",
+                "point": "1.973"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 FIXED CONFORMING HIGH BALANCE CASCADES",
+        "rateVO": [
+            {
+                "teaserRate": "5.000",
+                "closingCost": "($6,680.27)",
+                "APR": "N/A",
+                "payment": "1,503.10",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-3.162"
+            },
+            {
+                "teaserRate": "4.875",
+                "closingCost": "($5,810.05)",
+                "APR": "N/A",
+                "payment": "1,481.78",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-2.846"
+            },
+            {
+                "teaserRate": "4.750",
+                "closingCost": "($5,040.63)",
+                "APR": "N/A",
+                "payment": "1,460.61",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-2.566"
+            },
+            {
+                "teaserRate": "4.500",
+                "closingCost": "($4,148.60)",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-2.237"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($3,485.58)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-1.995"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($2,377.37)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-1.594"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($765.15)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-1.013"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "$1,101.87",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-0.341"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "$1,414.88",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "-0.224"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "$2,856.30",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "0.296"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$4,966.92",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "13a99a03-3850-4f7f-afda-1f7a2516ec5a",
+                "point": "1.055"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 FIXED NONCONFORMING CASCADES",
+        "rateVO": [
+            {
+                "teaserRate": "4.500",
+                "closingCost": "($1,175.00)",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "-1.175"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($685.58)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "-0.995"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "$235.03",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "-0.661"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "$1,315.25",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "-0.270"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "$2,490.67",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "0.155"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "$3,909.68",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "0.667"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "$5,454.70",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "a458087b-4c16-444f-a3e5-8e745eb425fc",
+                "point": "1.224"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED CONF FNMA  ACADIA",
+        "rateVO": [
+            {
+                "teaserRate": "4.625",
+                "closingCost": "($9,764.82)",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-4.248"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($9,477.58)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-4.135"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($8,120.17)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-3.645"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($6,454.75)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-3.045"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "($4,318.93)",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-2.277"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "($2,832.72)",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-1.741"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "($1,556.50)",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-1.280"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$1,156.12",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "-0.306"
+            },
+            {
+                "teaserRate": "3.500",
+                "closingCost": "$4,288.73",
+                "APR": "N/A",
+                "payment": "1,257.33",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "0.818"
+            },
+            {
+                "teaserRate": "3.375",
+                "closingCost": "$5,786.15",
+                "APR": "N/A",
+                "payment": "1,237.87",
+                "lLpTemplateId": "36ba0070-8bbb-4897-a8cd-3f4d059663e0",
+                "point": "1.358"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED CONF FNMA HIGH BALANCE  ACADIA",
+        "rateVO": [
+            {
+                "teaserRate": "4.625",
+                "closingCost": "($6,656.82)",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-3.138"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($5,885.18)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-2.852"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($4,872.17)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-2.485"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($3,103.15)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-1.848"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "($743.33)",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-1.000"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "($209.12)",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-0.804"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "$644.30",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "-0.494"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$3,205.72",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "0.426"
+            },
+            {
+                "teaserRate": "3.375",
+                "closingCost": "$5,928.95",
+                "APR": "N/A",
+                "payment": "1,237.87",
+                "lLpTemplateId": "16329361-4bac-4a97-8ab4-a8fcdbda2014",
+                "point": "1.409"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED CONF HIGH BALANCE YOSEMITE",
+        "rateVO": [
+            {
+                "teaserRate": "5.125",
+                "closingCost": "($2,639.28)",
+                "APR": "N/A",
+                "payment": "1,524.56",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-1.724"
+            },
+            {
+                "teaserRate": "5.000",
+                "closingCost": "($1,578.67)",
+                "APR": "N/A",
+                "payment": "1,503.10",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-1.340"
+            },
+            {
+                "teaserRate": "4.990",
+                "closingCost": "($1,487.43)",
+                "APR": "N/A",
+                "payment": "1,501.39",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-1.307"
+            },
+            {
+                "teaserRate": "4.875",
+                "closingCost": "($445.25)",
+                "APR": "N/A",
+                "payment": "1,481.78",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-0.930"
+            },
+            {
+                "teaserRate": "4.750",
+                "closingCost": "$598.57",
+                "APR": "N/A",
+                "payment": "1,460.61",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-0.552"
+            },
+            {
+                "teaserRate": "4.625",
+                "closingCost": "$1,339.98",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "-0.282"
+            },
+            {
+                "teaserRate": "4.500",
+                "closingCost": "$2,305.40",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "0.068"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "$3,396.82",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "0.463"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "$4,692.63",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "0.931"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "$6,682.85",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "19815a7c-cd55-4cf3-9560-642f2e09b717",
+                "point": "1.647"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED CORE JUMBO MAMMOTH",
+        "rateVO": [
+            {
+                "teaserRate": "4.750",
+                "closingCost": "($2,545.83)",
+                "APR": "N/A",
+                "payment": "1,460.61",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-1.675"
+            },
+            {
+                "teaserRate": "4.625",
+                "closingCost": "($2,053.62)",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-1.494"
+            },
+            {
+                "teaserRate": "4.500",
+                "closingCost": "($1,256.20)",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-1.204"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($402.78)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-0.894"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "$506.63",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-0.564"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "$1,880.85",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "-0.068"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "$3,431.47",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "0.491"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "$6,701.28",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "1ce64dd7-c0c1-484c-8bd6-65f6ab88e712",
+                "point": "1.664"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED FNMA MAMMOTH",
+        "rateVO": [
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($8,904.17)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-3.925"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($7,431.95)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-3.394"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "($5,388.53)",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-2.659"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "($3,426.32)",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-1.953"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "($1,814.10)",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-1.372"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$288.12",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "-0.616"
+            },
+            {
+                "teaserRate": "3.500",
+                "closingCost": "$2,765.53",
+                "APR": "N/A",
+                "payment": "1,257.33",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "0.274"
+            },
+            {
+                "teaserRate": "3.375",
+                "closingCost": "$4,887.35",
+                "APR": "N/A",
+                "payment": "1,237.87",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "1.037"
+            },
+            {
+                "teaserRate": "3.250",
+                "closingCost": "$6,667.57",
+                "APR": "N/A",
+                "payment": "1,218.58",
+                "lLpTemplateId": "7fd495e2-ecec-489a-ab6a-97ecc9b2c508",
+                "point": "1.678"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED HIGH BALANCE FNMA MAMMOTH",
+        "rateVO": [
+            {
+                "teaserRate": "4.625",
+                "closingCost": "($7,480.02)",
+                "APR": "N/A",
+                "payment": "1,439.59",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-3.432"
+            },
+            {
+                "teaserRate": "4.500",
+                "closingCost": "($6,859.00)",
+                "APR": "N/A",
+                "payment": "1,418.72",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-3.205"
+            },
+            {
+                "teaserRate": "4.375",
+                "closingCost": "($5,815.18)",
+                "APR": "N/A",
+                "payment": "1,398.00",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-2.827"
+            },
+            {
+                "teaserRate": "4.250",
+                "closingCost": "($4,804.97)",
+                "APR": "N/A",
+                "payment": "1,377.43",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-2.461"
+            },
+            {
+                "teaserRate": "4.125",
+                "closingCost": "($3,416.75)",
+                "APR": "N/A",
+                "payment": "1,357.02",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-1.960"
+            },
+            {
+                "teaserRate": "4.000",
+                "closingCost": "($1,496.53)",
+                "APR": "N/A",
+                "payment": "1,336.76",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-1.269"
+            },
+            {
+                "teaserRate": "3.875",
+                "closingCost": "$177.28",
+                "APR": "N/A",
+                "payment": "1,316.66",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-0.666"
+            },
+            {
+                "teaserRate": "3.750",
+                "closingCost": "$1,652.30",
+                "APR": "N/A",
+                "payment": "1,296.72",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "-0.134"
+            },
+            {
+                "teaserRate": "3.625",
+                "closingCost": "$3,799.32",
+                "APR": "N/A",
+                "payment": "1,276.94",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "0.638"
+            },
+            {
+                "teaserRate": "3.500",
+                "closingCost": "$6,492.33",
+                "APR": "N/A",
+                "payment": "1,257.33",
+                "lLpTemplateId": "799d269b-d129-4df2-9229-afd5b36420a7",
+                "point": "1.605"
+            }
+        ]
+    },
+    {
+        "loanDuration": "30 YR FIXED LTV PLUS NONCONFORMING CASCADES",
+        "rateVO": []
+    }
+];
 
 
 
@@ -3902,28 +4712,41 @@ function paintSpouseCustomerApplicationPageStep4b(){
 
 
 
-function createLoan(appUserDetails,callBack)
+function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
+ $('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
 		data:{"appFormData" : JSON.stringify(appUserDetails)},
 		datatype : "application/json",
 		success:function(data){
-
-			callBack;
+		
+            alert('createLoan data is '+data)
+			paintLockRate(JSON.parse(data), appUserDetails);
+			 $('#overlay-loader').hide();
 		},
 		error:function(erro){
 			alert("error inside createLoan ");
+			 $('#overlay-loader').hide();
 		}
 		
 	});
 }
 
 
+
+
+
+
+
+
+
+
 function paintLockRate(lqbData, appUserDetails) {
-   
+   alert('lqbData'+lqbData);
+
     fixAndLoakYourRatePage(lqbData, appUserDetails);
 }
  

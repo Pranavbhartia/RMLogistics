@@ -602,6 +602,7 @@ public class LoanAppFormVO implements Serializable {
 		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
 		refinanceDetails.setCurrentMortgagePayment(refinanceVO
 		        .getCurrentMortgagePayment());
+		
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
 		refinanceDetails.setSecondMortageBalance(refinanceVO
 		        .getSecondMortageBalance());

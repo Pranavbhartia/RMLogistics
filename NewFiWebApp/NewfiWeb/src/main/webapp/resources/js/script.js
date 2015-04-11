@@ -495,9 +495,26 @@ function paintFixYourRatePage() {
 
 function fixAndLoakYourRatePage(lqbData, appUserDetails) {
 
+//alert('script lqbdata'+JSON.stringify(lqbData));
+
+
+
         $('#center-panel-cont').html("");
+        var loanNumber = lqbData[0].loanNumber;
+       // alert('script loanNumber'+loanNumber);
+        var loanDetail ={};
+
+        loanDetail.id=parseInt(loanNumber);
+   loan.loanDetail = loanDetail;
+     appUserDetails.loan = loan;
+    
+   saveAndUpdateLoanAppForm(appUserDetails);
+   
+   
+       
         
         var lqbData =  modifiedLQBJsonResponse(lqbData);
+        //alert('script lqbdata'+JSON.stringify(lqbData));
         var loanSummaryWrapper = getLoanSummaryWrapper(lqbData, appUserDetails);
         var closingCostWrapper = getClosingCostSummaryContainer(lqbData);
         $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
@@ -1689,6 +1706,14 @@ function getRatSlider(gridArray) {
     }
     return container.append(gridItemCont);
 }
+
+
+
+
+
+
+
+
 
 function modifiedLQBJsonResponse(LQBResponse) {
     var yearValues = [];
