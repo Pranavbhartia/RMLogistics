@@ -19,7 +19,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<http:connector name="HttpConnector" enableCookies="true"
 		clientSoTimeout="300000" cookieSpec="netscape" doc:name="HTTP-HTTPS"
 		receiveBacklog="0" receiveBufferSize="0" sendBufferSize="0"
-		serverSoTimeout="300000" socketSoLinger="0" validateConnections="true">
+		serverSoTimeout="300000" socketSoLinger="0" validateConnections="true"
+		keepSendSocketOpen="true" keepAlive="true">
+        <reconnect/>
 	</http:connector>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
@@ -33,12 +35,12 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000">
+			responseTimeout="300000" keepAlive="true">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="authenticationRestInterceptor" />
 		</component>
-		<message-properties-transformer>
+		<message-properties-transformer doc:name="Message Properties">
 			<add-message-property key="http.version" value="HTTP/1.0" />
 		</message-properties-transformer>
 		<choice doc:name="Choice">
@@ -50,7 +52,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='GetPmlUserAuthTicket']">
@@ -59,9 +61,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
-	method="POST"
-	address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
-	doc:name="HTTP" responseTimeout="300000" />
+					method="POST"
+					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 		</choice>
 		<object-to-string-transformer doc:name="Object to String" />
