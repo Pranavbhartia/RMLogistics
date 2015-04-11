@@ -12,7 +12,6 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='28' WHERE `id`='1';
 
 #Utsav on 7 April
 ALTER TABLE `newfi_schema`.`internaluserdetails` 
-
    ADD COLUMN `lqb_username` varchar(255) NULL after `user_role`, 
    ADD COLUMN `lqb_password` varchar(255) NULL after `lqb_username`;
 
@@ -75,4 +74,9 @@ insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failur
 
 ALTER TABLE `newfi_schema`.`loanappform` 
 CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
+
+
+Shashank Wrote- 
+INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('5', 'NONE', 'None', '2015-12-12 00:00:00', '2015-12-12 00:00:00');
+
 

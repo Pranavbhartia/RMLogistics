@@ -407,9 +407,31 @@ public class ThreadManager implements Runnable {
 				Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
 				LOGGER.debug("Save Credit Score For This Borrower ");
 				saveCreditScoresForBorrower(creditScoreMap);
+
+				LOGGER.debug("Invoking Credit Score Milestone ");
+				invokeCreditScoreMilestone();
 				creditScoreMap.clear();
 			}
 		}
+	}
+
+	private void invokeCreditScoreMilestone() {
+		LOGGER.debug("Inside method invokeCreditScoreMilestone");
+		String workflowItemType = WorkflowConstants.WORKFLOW_ITEM_CREDIT_SCORE;
+		List<String> workflowItemTypeList = new ArrayList<>();
+		workflowItemTypeList.add(workflowItemType);
+		List<WorkflowItemExec> itemsToExecute = itemToExecute(
+		        workflowItemTypeList, workflowItemExecList);
+		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
+			LOGGER.debug("Putting the item in execution ");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+			String params = Utils.convertMapToJson(map);
+			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+			        params);
+			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+		}
+
 	}
 
 	private void saveCreditScoresForBorrower(Map<String, String> creditScoreMap) {

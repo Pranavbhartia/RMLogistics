@@ -975,11 +975,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
+			if(loaAppFormVO.getLoanType() !=null ){
 			if (loaAppFormVO.getLoanType().getLoanTypeCd()
 			        .equalsIgnoreCase("REF")) {
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 			} else {
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+			}
+			}else{
+				LOG.info("loan type is NONE");
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
 			}
 
 			loanVO = loanService.createLoan(loanVO);
@@ -992,6 +997,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
+			
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
 
@@ -1104,8 +1110,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void addDefaultLM(UserVO userVO) {
 		// Get loan manager Id
 		;
-		userProfileDao.updateLMID(userVO.getRealtorDetail().getId(), utils
-		        .getLoggedInUser().getId());
+		userProfileDao.updateLMID(userVO.getId(), utils.getLoggedInUser()
+		        .getId());
 	}
 
 	@Override

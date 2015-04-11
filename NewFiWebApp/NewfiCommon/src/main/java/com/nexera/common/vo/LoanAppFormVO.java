@@ -449,6 +449,7 @@ public class LoanAppFormVO implements Serializable {
 		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 
+		if(this.getLoanType() !=null ){
 		if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
 			        LoanTypeMasterEnum.REF));
@@ -456,6 +457,13 @@ public class LoanAppFormVO implements Serializable {
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
 			        LoanTypeMasterEnum.PUR));
 		}
+		}else{
+			
+			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
+		}
+	
+		
+		
 
 		loanAppForm
 		        .setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this
