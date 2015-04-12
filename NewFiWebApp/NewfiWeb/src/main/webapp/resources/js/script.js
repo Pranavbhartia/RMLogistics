@@ -380,6 +380,35 @@ function getLoanDetailsWrapper() {
     return parent.append(header).append(container).append(saveApplicationButton);
 }
 
+
+
+function lockLoanRate(lockratedata){
+
+alert('final lockratedata'+JSON.stringify(lockratedata));
+
+ $.ajax({
+        url: "rest/application/lockLoanRate",
+        type: "POST",
+        data: {
+            "appFormData": JSON.stringify(lockratedata)
+        },
+        datatype: "application/json",
+        success: function(data) {
+            $('#overlay-loader').hide();
+            //TO:DO pass the data (json)which is coming from the controller
+            //paintLockRate(data,appUserDetails);
+            //paintLockRate(JSON.parse(data), appUserDetails);
+            alert('loan is locked');
+        },
+        error: function() {
+            alert("error");
+            $('#overlay-loader').hide(); 
+        }
+ 
+    });
+
+}
+
 function getLoanDetailsHeader() {
     var header = $('<div>').attr({
         "class": "application-form-header clearfix"
@@ -498,19 +527,14 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
 
 
 
-
+var lqbFileId ={};
         $('#center-panel-cont').html("");
         var loanNumber = lqbData[0].loanNumber;
-      
-        
-
-        loan.lqbFileId=loanNumber;
-      
-     appUserDetails.loan = loan;
-    
-  
-   
-   
+       loan.lqbFileId=loanNumber;  
+     //  alert('loan Number'+loanNumber);
+        appUserDetails.loan.lqbFileId = loanNumber;
+    lockratedata.sLoanNumber=loanNumber;
+    //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         saveAndUpdateLoanAppForm(appUserDetails);
         
         var lqbData =  modifiedLQBJsonResponse(lqbData);
@@ -960,7 +984,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
 	var yearValues = lqbData;
  //  console.log('yearValues'+JSON.stringify(yearValues));
     var rateVO = yearValues[yearValues.length-2].rateVO;
-     //alert('rateVO'+JSON.stringify(rateVO));
+  //   alert('rateVO'+JSON.stringify(rateVO));
     var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
  //alert('index'+index);
     var container = $('<div>').attr({
@@ -977,6 +1001,11 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "lockrateaprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", rateVO[index].closingCost, "lockClosingCost");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
+    lockratedata.IlpTemplateId =rateVO[index].lLpTemplateId;
+  				lockratedata.requestedRate = rateVO[index].teaserRate;
+   				lockratedata.requestedFee = rateVO[index].point;
+    
+    
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
     });
@@ -1558,6 +1587,8 @@ function entryPointCustomerViewChangeNav(viewName) {
     changeSecondaryLeftPanel(viewName);
 }
 
+var lockratedata= {};
+
 function getLoanSliderWrapper(lqbData) {
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
@@ -1575,7 +1606,25 @@ function getLoanSliderWrapper(lqbData) {
     container.append(tenureSlider).append(rateSlider);
     var rateBtn = $('<div>').attr({
         "class": "rate-btn"
-    }).html("Request Rate Lock");
+    }).html("Request Rate Lock").on('click', function(event) {
+    	
+    	
+    
+   
+   
+  // lockratedata.sLoanNumber="D2015040035";
+ //  lockratedata.IlpTemplateId ="1cca04b2-4f0d-4cc9-a67c-17210f95a5b2";
+  // lockratedata.requestedRate = "4.750";
+  // lockratedata.requestedFee = "0.075";
+
+    		
+    		//alert('lockratedata'+JSON.stringify(lockratedata));
+    		lockLoanRate(lockratedata);
+    		
+        	        	
+        
+   	
+    });
     return wrapper.append(header).append(container).append(rateBtn);
 }
 
@@ -1627,6 +1676,10 @@ function getYearSlider(LQBResponse) {
                 $('#lockrateaprid').html(event.data.ratesArray[index].APR);
                 $('#lockClosingCost').html(event.data.ratesArray[index].closingCost);
                 $('#lockInterestRate').html(event.data.ratesArray[index].teaserRate);
+             //  alert('setting lockratedata');
+                lockratedata.IlpTemplateId =event.data.ratesArray[index].lLpTemplateId;
+  				lockratedata.requestedRate = event.data.ratesArray[index].teaserRate;
+   				lockratedata.requestedFee = event.data.ratesArray[index].point;
             }
         });
         var gridItem = $('<div>').attr({
@@ -1688,9 +1741,14 @@ function getRatSlider(gridArray) {
         max: rateArray.length - 1,
         value: index,
         change: function(event, ui) {
+       // alert('changing 2');
             $('#lockrateaprid').html(gridArray[ui.value].APR);
             $('#lockClosingCost').html(gridArray[ui.value].closingCost);
             $('#lockInterestRate').html(gridArray[ui.value].teaserRate);
+            
+              lockratedata.IlpTemplateId =gridArray[ui.value].lLpTemplateId;
+  				lockratedata.requestedRate = gridArray[ui.value].teaserRate;
+   				lockratedata.requestedFee = gridArray[ui.value].point;
         }
     });
     container.append(tsIcon);

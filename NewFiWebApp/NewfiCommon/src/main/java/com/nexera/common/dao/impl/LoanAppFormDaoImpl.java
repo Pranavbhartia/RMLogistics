@@ -88,6 +88,44 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			        + loanAppForm.getUser().getId());
 			// sessionFactory.getCurrentSession().flush();
 		}
+		
+		System.out
+        .println("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan()"+loanAppForm.getLoan());
+		if(loanAppForm.getLoan() != null){
+			
+			System.out
+	        .println("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getLqbFileId()"+loanAppForm.getLoan().getLqbFileId());
+			
+		}
+		
+		if (null != loanAppForm.getLoan() && null != loanAppForm.getLoan().getLqbFileId() ) {
+			
+			System.out
+	        .println("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getLqbFileId()"
+	                + loanAppForm.getLoan().getLqbFileId());
+			System.out
+	        .println("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getId()"
+	                + loanAppForm.getLoan().getId());
+			
+			
+			try {
+
+		
+			this.update(loanAppForm.getLoan());
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+			System.out
+	        .println("After saveOrUpdate(loanAppForm.loanAppForm.getLoan().getId()"
+	                + loanAppForm.getLoan().getId());
+
+	sessionFactory.getCurrentSession().flush();
+			
+			
+		
+		}
+		
 
 		if (null != loanAppForm.getCustomerspousedetail()) {
 			System.out
