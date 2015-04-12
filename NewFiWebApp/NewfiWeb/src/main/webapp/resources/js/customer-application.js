@@ -1224,7 +1224,7 @@ function paintMyIncome() {
    if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
    appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
    
-    selfEmployedIncome = $('input[name="selfEmployed"]').val();
+    			selfEmployedIncome = $('input[name="selfEmployed"]').val();
 		        
 		        ssDisabilityIncome = $('input[name="disability"]').val();
 				
@@ -1350,6 +1350,7 @@ function paintRefinanceEmployed(divId,value) {
     	$('#ce-option_' + divId).toggle();
     }
 
+    putCurrencyFormat("beforeTax");
 }
 
 function getMultiTextQuestion(quesText,value) {
@@ -1441,9 +1442,7 @@ function getMultiTextQuestion(quesText,value) {
 
 	optionContainer.append(quesTextCont0).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
-	putCurrencyFormat("beforeTax");
-	
-	 container.append(quesTextCont).append(optionContainer);
+	 container.append(quesTextCont).append(optionContainer); 
      return wrapper.append(container);
 }
 
@@ -1468,7 +1467,19 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     });
 });
 
-
+/*$('body').on('focus',"input[name='beforeTax'],'input[name='spouseBeforeTax']",function(){
+			
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:true
+		});		
+  
+});
+*/
 
 function paintRefinanceSelfEmployed(divId,value) {
     var flag=true;
