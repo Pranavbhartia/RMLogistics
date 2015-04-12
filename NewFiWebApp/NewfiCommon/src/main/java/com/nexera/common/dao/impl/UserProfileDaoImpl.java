@@ -746,12 +746,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public void updateLMID(Integer realtorID, int loanManagerId) {
+	public void updateLMID(Integer userId, int loanManagerId) {
 		Session session = sessionFactory.getCurrentSession();
+		User user = (User) session.load(User.class, userId);
 		String hql = "UPDATE RealtorDetail realtor set realtor.defaultLoanManager = :LM "
 		        + "WHERE realtor.id = :id";
 		Query query = session.createQuery(hql);
-		query.setParameter("id", realtorID);
+		query.setParameter("id", user.getRealtorDetail().getId());
 		query.setEntity("LM", new User(loanManagerId));
 		query.executeUpdate();
 	}

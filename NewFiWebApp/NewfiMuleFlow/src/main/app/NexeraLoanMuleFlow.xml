@@ -20,9 +20,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
 	<flow name="NexeraLoanMuleFlowFlow" doc:name="NexeraLoanMuleFlowFlow">
-		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
+		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall" 
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000">
+			responseTimeout="300000" keepAlive="true">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
@@ -39,7 +39,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					/>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='ListEdocsByLoanNumber']">
@@ -49,7 +49,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Create']">
 				<cxf:jaxws-client operation="Create"
@@ -67,7 +67,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Save']">
 				<cxf:jaxws-client operation="Save"
@@ -76,7 +76,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='LockLoanProgram']">
 				<cxf:jaxws-client operation="LockLoanProgram"
@@ -85,7 +85,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Load']">
 				<cxf:jaxws-client operation="Load"
@@ -94,7 +94,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='UploadPDFDocument']">
 				<cxf:jaxws-client operation="UploadPDFDocument"
@@ -103,7 +103,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='DownloadEdocsPdfById']">
@@ -113,7 +113,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					doc:name="CXF" />
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://edocs.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
 			</when>
 
 		</choice>

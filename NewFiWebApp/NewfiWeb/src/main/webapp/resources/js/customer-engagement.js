@@ -616,8 +616,8 @@ function paintRefinanceSeeRates() {
                 // var teaserRate = data;
                 // paintteaserRate(data);
                   
-                  //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
-                  paintFixYourRatePageCEP(teaserRate, refinanceTeaserRate);
+                  paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
+                 // paintFixYourRatePageCEP(teaserRate, refinanceTeaserRate);
             },
             error: function() {
                 alert("error");
@@ -716,6 +716,14 @@ function paintApplyNow(inputCustomerDetails) {
         loanType.loanTypeCd = inputCustomerDetails.loanType;
         appUserDetails.loanType = loanType;
         
+        
+        	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
+	        		inputCustomerDetails.isIncludeTaxes = true;
+	        	}else if(inputCustomerDetails.isIncludeTaxes=="No"||inputCustomerDetails.isIncludeTaxes==false){
+	        		inputCustomerDetails.isIncludeTaxes = false;
+	        	}
+        
+        
         if(appUserDetails.loanType.loanTypeCd === 'REF'){
         	
         	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
@@ -723,7 +731,7 @@ function paintApplyNow(inputCustomerDetails) {
             refinancedetails.cashTakeOut=inputCustomerDetails.cashTakeOut;
             refinancedetails.currentMortgageBalance = inputCustomerDetails.currentMortgageBalance;
             refinancedetails.currentMortgagePayment = inputCustomerDetails.currentMortgagePayment;
-            refinancedetails.isIncludeTaxes = inputCustomerDetails.isIncludeTaxes;
+            refinancedetails.includeTaxes = inputCustomerDetails.isIncludeTaxes;
             
             propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
             propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;

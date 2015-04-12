@@ -683,7 +683,7 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 {
 	HashMap<String, String> hashmap = new HashMap();
 	try {
-	hashmap.put("loanPurpose", "1");
+	hashmap.put("loanPurpose", "2");
 	hashmap.put("loanPurchasePrice", "400,000.00");
 	hashmap.put("loanApprovedValue", "400,000.00");
 	hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail().getSsn());
@@ -719,8 +719,8 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 	hashmap.put("experianStatus", "Y");
 	hashmap.put("transunionStatus", "Y");
 	hashmap.put("applicantAddress", "888Appleroad");
-	hashmap.put("prodCashOut", "4000");
-	
+
+	hashmap.put("prodCashOut", "40000");
 	
 	
 	JSONObject jsonObject = new JSONObject(hashmap);

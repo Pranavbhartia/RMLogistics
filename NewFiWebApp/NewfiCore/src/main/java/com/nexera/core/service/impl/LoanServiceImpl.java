@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -374,7 +375,7 @@ public class LoanServiceImpl implements LoanService {
 			loanCustomerVO.setRole(user.getUserRole().getLabel());
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
-
+		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus().getLoanProgressStatus());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.
@@ -1149,6 +1150,12 @@ public class LoanServiceImpl implements LoanService {
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
 		return loanDashboardVO;
+	}
+
+	@Override
+	@Transactional
+	public void updateLoanAppFee(int loanId, BigDecimal newAppFee) {
+		loanDao.updateLoanAppFee(loanId, newAppFee);
 	}
 
 }
