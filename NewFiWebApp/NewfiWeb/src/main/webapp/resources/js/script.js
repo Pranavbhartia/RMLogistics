@@ -493,25 +493,25 @@ function paintFixYourRatePage() {
     $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 }
 
+
 function fixAndLoakYourRatePage(lqbData, appUserDetails) {
 
-//alert('script lqbdata'+JSON.stringify(lqbData));
 
 
 
         $('#center-panel-cont').html("");
         var loanNumber = lqbData[0].loanNumber;
-       // alert('script loanNumber'+loanNumber);
-        var loanDetail ={};
+      
+        
 
-        loanDetail.id=parseInt(loanNumber);
-   loan.loanDetail = loanDetail;
+        loan.lqbFileId=loanNumber;
+      
      appUserDetails.loan = loan;
     
-   saveAndUpdateLoanAppForm(appUserDetails);
+  
    
    
-       
+        saveAndUpdateLoanAppForm(appUserDetails);
         
         var lqbData =  modifiedLQBJsonResponse(lqbData);
         //alert('script lqbdata'+JSON.stringify(lqbData));
@@ -958,9 +958,11 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
 function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     
 	var yearValues = lqbData;
-    var rateVO = yearValues[yearValues.length-1].rateVO;
+ //  console.log('yearValues'+JSON.stringify(yearValues));
+    var rateVO = yearValues[yearValues.length-2].rateVO;
+     //alert('rateVO'+JSON.stringify(rateVO));
     var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
-   
+ //alert('index'+index);
     var container = $('<div>').attr({
         "class": "loan-summary-container clearfix"
     });
@@ -1723,11 +1725,14 @@ function modifiedLQBJsonResponse(LQBResponse) {
         if (year.indexOf("/") > 0) {
             year = year.split("/")[0];
         }
+        if(LQBResponse[i].rateVO != null && LQBResponse[i].rateVO.length != 0){
         temp = {};
         temp.value = year;
         temp.text = year + " - year fixed arm",
             temp.rateVO = LQBResponse[i].rateVO;
-        yearValues.push(temp);
+            yearValues.push(temp);
+            }
+       
     }
     yearValues.sort(function(a, b) {
         return parseFloat(a.value) - parseFloat(b.value);
