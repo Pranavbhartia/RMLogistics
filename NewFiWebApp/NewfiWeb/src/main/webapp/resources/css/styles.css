@@ -572,6 +572,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-col-desc {
 	width: 50%;
+	padding-right: 5px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
