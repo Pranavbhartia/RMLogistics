@@ -3911,6 +3911,7 @@ input.calc-input {
 #ms-add-member-popup .add-member-sel,#ms-add-member-popup .add-member-sel-search
 	{
 	width: 180px;
+	text-align: left;
 }
 
 #ms-add-member-popup .add-member-input {
