@@ -52,14 +52,17 @@ function paintMySpouseIncome() {
 
 	
 
-	$('#app-right-panel').html('');
+		$('#app-right-panel').html('');
 		var questcontainer = $('#app-right-panel').append(quesCont);
+		
+		
 		for(var i=0;i<options.length;i++){
             var option=options[i];
             if(option.onselect){
                 option.onselect(option.value,option.data);
             }
         }
+		
 		console.log('purchase'+purchase);
 		if(purchase == true)
 	    {
@@ -149,6 +152,7 @@ function paintSpouseRefinanceEmployed(divId,value) {
         $('#ce-option_' + divId).toggle();
     }
 
+    putCurrencyFormat("spouseBeforeTax");
 }
 
 
@@ -334,6 +338,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	  
 	  
 	 }
+	
 
 	 var saveBtn = $('<div>').attr({
 	  "class" : "ce-save-btn"
@@ -407,7 +412,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	    //paintCustomerApplicationPageStep4a();
 	   });
 
-
+	 
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
 	 return container.append(quesTextCont).append(optionContainer);
 	}else{
@@ -508,9 +513,6 @@ function getMultiTextQuestionSpouse(quesText,value) {
 		optionContainer.append(quesTextCont0).append(quesTextCont1).append(quesTextCont2).append(
 				quesTextCont3);
 
-		
-		
-		putCurrencyFormat("spouseBeforeTax");
 		
 		container.append(quesTextCont).append(optionContainer);
 	 

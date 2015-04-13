@@ -542,12 +542,12 @@ private String loadLoanRateData(String loanNumber)
 		System.out.println("jsonMapObject load Loandata"+json);		
 		//JSONObject jsonObject = new JSONObject(invokeRest(json.toString()));
 		teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(invokeRest(json.toString())));
-	
+	   
 		
 		TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 		teaserRateResponseVO.setLoanDuration("sample");
 		teaserRateResponseVO.setLoanNumber(loanNumber);
-		teaserRateList.add(0, teaserRateResponseVO);
+		teaserRateList.add(teaserRateResponseVO);
 		
 		
 		
@@ -683,15 +683,15 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 {
 	HashMap<String, String> hashmap = new HashMap();
 	try {
-	hashmap.put("loanPurpose", "1");
+	hashmap.put("loanPurpose", "2");
 	hashmap.put("loanPurchasePrice", "400,000.00");
 	hashmap.put("loanApprovedValue", "400,000.00");
 	hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail().getSsn());
 	hashmap.put("firstName", loanAppFormVO.getLoan().getUser().getFirstName());
 	hashmap.put("middleName",loanAppFormVO.getLoan().getUser().getLastName());
 	hashmap.put("lastName",loanAppFormVO.getLoan().getUser().getLastName());
-	hashmap.put("dob",loanAppFormVO.getUser().getCustomerDetail().getDateOfBirth().toString());
-	hashmap.put("PropertyState", loanAppFormVO.getUser().getCustomerDetail().getAddressState());
+	hashmap.put("dateOfBirth",loanAppFormVO.getUser().getCustomerDetail().getDateOfBirth().toString());
+	hashmap.put("propertyState", loanAppFormVO.getUser().getCustomerDetail().getAddressState());
 	hashmap.put("alimonyName", "NONE");
 	hashmap.put("alimonyPayment", "1000");
 	hashmap.put("jobExpenses", "100");
@@ -719,7 +719,8 @@ private JSONObject saveLoan(String loanNumber,LoanAppFormVO loanAppFormVO)
 	hashmap.put("experianStatus", "Y");
 	hashmap.put("transunionStatus", "Y");
 	hashmap.put("applicantAddress", "888Appleroad");
-	
+
+	hashmap.put("prodCashOut", "40000");
 	
 	
 	JSONObject jsonObject = new JSONObject(hashmap);
