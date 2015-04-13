@@ -1053,14 +1053,14 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     });
     
     var rcRow1 = getLoanSummaryRow("Principal Interest", principalInterest ,"principalIntId");
-    var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", tax,"calTaxID");
+    var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", tax,"calTaxID","calTaxID2",appUserDetails);
     rcRow2.addClass("no-border-bottom");
-    var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID");
+    var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",appUserDetails);
     //var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
     //var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment", "$ "+monthlyPayment);
-    var rcRow7 = getLoanSummaryRow("Monthly Payment Difference", "$ " + monthlyPaymentDifference);
-    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+totalEstMonthlyPayment);
+    var rcRow6 = getLoanSummaryRow("Current Monthly Payment", "$ "+monthlyPayment ,"monthlyPaymentId");
+    var rcRow7 = getLoanSummaryRow("Monthly Payment Difference", "$ " + monthlyPaymentDifference,"monthlyPaymentDifferenceId");
+    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+totalEstMonthlyPayment, "totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6).append(rcRow7).append(rcRow8);
     container.append(leftCol).append(rightCol);
     return container;
@@ -1144,7 +1144,7 @@ function getLoanSummaryRow(desc, detail, id) {
     return container;
 }
 
-function getLoanSummaryRowCalculateBtn(desc, detail,id) {
+function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     var container = $('<div>').attr({
         "class": "loan-summary-row clearfix"
     });
@@ -1156,20 +1156,25 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id) {
     });
     
     var col2Txt = $('<div>').attr({
-    	"class" : "calculate-btn"
+    	"class" : "calculate-btn",
+    	"id":id
 
     }).html(detail)
-    .bind('click',{"valueData":$(this).text()},function(event){
+    .bind('click',function(event){
     	var prevVal = $(this).text();
-    	$(this).next('input').show().focus().val(prevVal);
+    	$(this).next('input').show().focus().val(prevVal).numericInput({
+    	  allowFloat :false,
+      	  allowNegative: false
+    	});
     	$(this).hide();
-    	//$(this).html($(this).text());
+    	
     });
     
     var inputBox = $('<input>').attr({
     	"class" : "loan-summary-sub-col-detail hide",
-    	"id":id
-    }).bind('keyup',function(e){
+    	"id":id2
+    }).bind('keyup',{"appUserDetails":appUserDetails},function(e){
+    	
     	if(e.which == 27){
     		var prevVal = $(this).prev('.calculate-btn').text();
     		if($(this).val() == undefined || $(this).val() == prevVal){
@@ -1177,11 +1182,39 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id) {
     			$(this).prev('.calculate-btn').show();
     		}
     	}
-    });    
+    	
+    	
+    	var tax = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
+    	var insurance = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
+    	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
+    	
+    	var totalEstMonthlyPaymentId = tax+insurance+principalInt;
+    	
+    	var InsuranceTemp =  tax;
+    	var taxesTemp =  insurance;
+    	var sum = InsuranceTemp + taxesTemp;
+    	var monthlyPaymentTemp = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  
+    	var monthlyPayment = (monthlyPaymentTemp - sum )/12;
+    	
+    	var monthlyPaymentDifference = Math.abs(principalInt - monthlyPayment);
+    	
+    	
+    	$('#monthlyPaymentId').text("$" +monthlyPayment.toFixed(2));
+    	$('#monthlyPaymentDifferenceId').text("$" +monthlyPaymentDifference);
+    	$('#totalEstMonthlyPaymentId').text(("$" +totalEstMonthlyPaymentId));
+    	
+    });
+    $(inputBox).val(detail);
     
     col2.append(col2Txt).append(inputBox);
     container.append(col1).append(col2);
     return container;
+}
+
+
+function removedComma(inputData){
+	
+	return inputData.replace(/,/g, "");
 }
 
 function getLoanSummaryLastRow(desc, detail, id) {
