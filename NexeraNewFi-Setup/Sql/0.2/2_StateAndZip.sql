@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: nexera.cwnjisx93zca.ap-southeast-1.rds.amazonaws.com    Database: newfi_schema
+-- Host: 127.0.0.1    Database: newfi_schema
 -- ------------------------------------------------------
--- Server version	5.6.19-log
+-- Server version	5.6.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -79,4 +79,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-10 23:28:29
+-- Dump completed on 2015-04-13 12:56:10
