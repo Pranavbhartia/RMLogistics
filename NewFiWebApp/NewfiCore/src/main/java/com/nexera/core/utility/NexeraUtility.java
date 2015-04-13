@@ -110,65 +110,62 @@ public class NexeraUtility {
 		return pdfPages;
 	}
 
-	public List<File> splitPDFPagesUsingIText(File file) throws IOException{
+	public List<File> splitPDFPagesUsingIText(File file) throws IOException {
 		List<File> newPdfpages = new ArrayList<File>();
-		
-			 PdfReader reader = new PdfReader(file.getAbsolutePath());
-			
-			 Integer numberOfpages = reader.getNumberOfPages();
-			 for (int i = 1; i <= numberOfpages; i++) {
-				 Document document = null;
-				 PdfCopy writer = null;
-				 String filepath = tomcatDirectoryPath() + File.separator
-					        + file.getName().replace(".pdf", "") + "_" + i
-					        + ".pdf";
-				try{ 
-				 	document = new Document(reader.getPageSizeWithRotation(1));
-				 	writer = new PdfCopy(document, new FileOutputStream(filepath));
-	                document.open();
-	                PdfImportedPage page = writer.getImportedPage(reader, i);
-	                writer.addPage(page);
-	                document.close();
-	                writer.close();
-	                newPdfpages.add(new File(filepath));
-				 }catch(Exception e){
-						LOGGER.info("Exception in converting pdf pages document : "
-						        + e.getMessage());
-						throw new FatalException("Error in Splitting");
-				 }finally{
-					if(document != null){
-						document.close();
-					}	
-					if(writer != null){
-						writer.close();
-					}
-				 }
-		 }
-		
+
+		PdfReader reader = new PdfReader(file.getAbsolutePath());
+
+		Integer numberOfpages = reader.getNumberOfPages();
+		for (int i = 1; i <= numberOfpages; i++) {
+			Document document = null;
+			PdfCopy writer = null;
+			String filepath = tomcatDirectoryPath() + File.separator
+			        + file.getName().replace(".pdf", "") + "_" + i + ".pdf";
+			try {
+				document = new Document(reader.getPageSizeWithRotation(1));
+				writer = new PdfCopy(document, new FileOutputStream(filepath));
+				document.open();
+				PdfImportedPage page = writer.getImportedPage(reader, i);
+				writer.addPage(page);
+				document.close();
+				writer.close();
+				newPdfpages.add(new File(filepath));
+			} catch (Exception e) {
+				LOGGER.info("Exception in converting pdf pages document : "
+				        + e.getMessage());
+				throw new FatalException("Error in Splitting");
+			} finally {
+				if (document != null) {
+					document.close();
+				}
+				if (writer != null) {
+					writer.close();
+				}
+			}
+		}
+
 		return newPdfpages;
 	}
-	
-	
+
 	public List<File> splitPDFPages(File file) {
-		
+
 		List<PDPage> pdfPages = splitPDFTOPages(file);
 		List<File> newPdfpages = new ArrayList<File>();
 		Integer pageNum = 0;
-		PDPageContentStream contentStream=null;
+		PDPageContentStream contentStream = null;
 		for (PDPage pdPage : pdfPages) {
 
 			try {
-				
+
 				PDDocument newDocument = new PDDocument();
 				newDocument.addPage(pdPage);
 				String filepath = tomcatDirectoryPath() + File.separator
 				        + file.getName().replace(".pdf", "") + "_" + pageNum
 				        + ".pdf";
-				
-				
+
 				File newFile = new File(filepath);
 				newFile.createNewFile();
-				
+
 				newDocument.save(filepath);
 				newDocument.close();
 				pageNum++;
@@ -230,14 +227,13 @@ public class NexeraUtility {
 		for (File file : files) {
 			LOGGER.info("Adding File with URL" + file);
 			mergePDF.addSource(file);
-			if(file.exists()){
+			if (file.exists()) {
 				file.delete();
 			}
 		}
 		mergePDF.setDestinationFileName(newFilePath);
 		mergePDF.mergeDocuments();
-		
-		
+
 		return new File(newFilePath);
 	}
 
@@ -357,8 +353,8 @@ public class NexeraUtility {
 
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
-		File convFile = new File( tomcatDirectoryPath()
-		        + File.separator+multipart.getOriginalFilename());
+		File convFile = new File(tomcatDirectoryPath() + File.separator
+		        + multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
 	}
@@ -672,7 +668,6 @@ public class NexeraUtility {
 		return input;
 	}
 
-	
 	public List<String> getFileUUIDList(List<UploadedFilesList> uploadList) {
 
 		List<String> uploadFileUUIDList = new ArrayList<String>();
@@ -689,10 +684,11 @@ public class NexeraUtility {
 			if (uuidString.contains("UUID")) {
 				String keyValuePair[] = uuidString.split(" ");
 				Map<String, String> map = new HashMap<String, String>();
-				for (String pair : keyValuePair) {
-					String[] entry = pair.split(":");
-					map.put(entry[0].trim(), entry[1].trim());
-				}
+				String pair = keyValuePair[0];
+
+				String[] entry = pair.split(":");
+				map.put(entry[0].trim(), entry[1].trim());
+
 				return map.get("UUID");
 
 			}
@@ -700,8 +696,8 @@ public class NexeraUtility {
 		return null;
 
 	}
-	
-	public  List<String> getEdocsUUIDList(List<LQBedocVO> lqbedocVOList) {
+
+	public List<String> getEdocsUUIDList(List<LQBedocVO> lqbedocVOList) {
 		List<String> edocList = new ArrayList<String>();
 		for (LQBedocVO edoc : lqbedocVOList) {
 			String uuidDetails = edoc.getDescription();
@@ -719,25 +715,24 @@ public class NexeraUtility {
 		}
 		return edocList;
 	}
-	
-	
-	public  byte[] getBytes(InputStream is) throws IOException {
 
-	    int len;
-	    int size = 1024;
-	    byte[] buf;
+	public byte[] getBytes(InputStream is) throws IOException {
 
-	    if (is instanceof ByteArrayInputStream) {
-	      size = is.available();
-	      buf = new byte[size];
-	      len = is.read(buf, 0, size);
-	    } else {
-	      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	      buf = new byte[size];
-	      while ((len = is.read(buf, 0, size)) != -1)
-	        bos.write(buf, 0, len);
-	      buf = bos.toByteArray();
-	    }
-	    return buf;
-	  }
+		int len;
+		int size = 1024;
+		byte[] buf;
+
+		if (is instanceof ByteArrayInputStream) {
+			size = is.available();
+			buf = new byte[size];
+			len = is.read(buf, 0, size);
+		} else {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			buf = new byte[size];
+			while ((len = is.read(buf, 0, size)) != -1)
+				bos.write(buf, 0, len);
+			buf = bos.toByteArray();
+		}
+		return buf;
+	}
 }
