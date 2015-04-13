@@ -47,10 +47,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		        .getLosStatusID() + "")) {
 			message = LoanStatus.underwritingClearToCloseMessage;
 			milestoneStatus = WorkItemStatus.COMPLETED.getStatus();
-		}/*
-		 * else if (status.equals(LoanStatus.approvedWithConditions)) { message
-		 * = LoanStatus.approvedWithConditionsMessage; }
-		 */
+		}
 		// TODO add alert code here
 		if (!message.equals("")) {
 			makeANote(Integer.parseInt(objectMap.get(

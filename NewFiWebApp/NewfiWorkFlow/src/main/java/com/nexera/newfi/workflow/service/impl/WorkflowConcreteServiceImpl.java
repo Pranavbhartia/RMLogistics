@@ -283,4 +283,30 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 		return utils.getJsonStringOfMap(map);
 	}
+
+	@Override
+	public String getRenderInfoFor1003(int loanID, int userID) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Loan loan = new Loan(loanID);
+
+		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.App1003.getMilestoneKey());
+		if (loanMilestone != null) {
+			String status = loanMilestone.getComments();
+			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+			        status);
+			String lqbURL = userProfileService.getLQBUrl(userID, loanID);
+			if (lqbURL != null) {
+				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY, lqbURL);
+			}
+			LoanVO loanVO = loanService.getLoanByID(loanID);
+			if (loanVO != null && loanVO.getLqbFileId() != null) {
+				map.put(WorkflowDisplayConstants.WORKFLOW_LQB_FILE_KEY,
+				        loanVO.getLqbFileId());
+			}
+		}
+
+		return utils.getJsonStringOfMap(map);
+	}
 }

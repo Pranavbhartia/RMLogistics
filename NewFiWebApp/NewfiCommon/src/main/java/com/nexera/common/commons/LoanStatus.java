@@ -14,9 +14,10 @@ public interface LoanStatus {
 	String loancClosedMessage = "Loan Closed";
 	String loanDeclinedMessage = "Loan Declined";
 	String loanFundedMessage = "Loan Funded";
-	String disclosureAvail = "available";
+	String disclosureAvail = "Available";
 
 	String disclosureSigned = "Signed";
+	String appraisalAvailable = "Received";
 	String teamMemberAddedMessage = "New Team Member Added";
 	String titleCompanyAddedMessage = "New Title Company Added";
 	String HMInsCompanyAddedMessage = "New Home Owner Insurance Company Added";
