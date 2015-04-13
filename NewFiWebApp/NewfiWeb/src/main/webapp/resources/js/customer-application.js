@@ -466,7 +466,7 @@ function getApplicationTextQues(question) {
         optionCont.val(question.value);
     }
 
-quesTextCont.append(requird)
+    quesTextCont.append(requird);
     optionsContainer.append(optionCont);
 
     return container.append(quesTextCont).append(optionsContainer);

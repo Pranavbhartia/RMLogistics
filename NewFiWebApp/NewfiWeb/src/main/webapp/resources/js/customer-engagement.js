@@ -1,4 +1,8 @@
 //JavaScript functions for customer engagement pages
+
+var message = "Please enter required fields";
+
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -91,6 +95,13 @@ function getContextApplicationTextQuesCEP(contxt) {
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont"
     });
+    
+    var requird = $('<span>').attr({
+        "style": "color:red",
+    }).html("*");
+    
+    quesTextCont.append(requird);
+    
     var optionCont = $('<input>').attr({
         "class": "ce-input",
         "name": contxt.name,
@@ -125,9 +136,17 @@ function getContextApplicationYesNoQuesCEP(contxt) {
     });
     contxt.container = container;
     contxt.parentContainer.append(contxt.container);
+   
     var quesTextCont = $('<div>').attr({
         "class": "ce-rp-ques-text"
     }).html(contxt.text);
+   
+    var requird = $('<span>').attr({
+        "style": "color:red",
+    }).html("*");
+    
+    quesTextCont.append(requird);
+    
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont",
         "name": contxt.name
@@ -507,8 +526,16 @@ function paintRefinanceStep2() {
     }).html("Save & continue").bind('click', {
         'contxt': contxt
     }, function(event) {
-        refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
-        paintRefinanceStep3();
+        
+    	refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
+        if(refinanceTeaserRate.currentMortgageBalance && refinanceTeaserRate.currentMortgageBalance !=="$0")
+        {
+        	paintRefinanceStep3();
+        }else{
+        	showToastMessage(message);
+        	return false;
+        }
+        
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
 }
@@ -559,10 +586,25 @@ function paintRefinanceStep3() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "ce-save-btn"
         }).html("Save & continue").on('click', function() {
-            refinanceTeaserRate.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();
+            
+        	refinanceTeaserRate.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();
             refinanceTeaserRate.isIncludeTaxes = quesContxts[1].value;
             refinanceTeaserRate.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
             refinanceTeaserRate.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
+            
+           /* if(refinanceTeaserRate.currentMortgagePayment == "" || refinanceTeaserRate.currentMortgagePayment == null || refinanceTeaserRate.currentMortgagePayment == "$0" ){
+            	
+            	showToastMessage(message);
+        		return false;
+            }
+            else if(refinanceTeaserRate.isIncludeTaxes =="Yes" && (refinanceTeaserRate.propertyTaxesPaid == "" || refinanceTeaserRate.propertyTaxesPaid == null || refinanceTeaserRate.propertyTaxesPaid !="$0") && (refinanceTeaserRate.annualHomeownersInsurance == "" || refinanceTeaserRate.annualHomeownersInsurance == null || refinanceTeaserRate.annualHomeownersInsurance != "$0")){
+        		showToastMessage(message);
+        		return false;
+                
+        	}else{
+        		paintRefinanceHomeWorthToday();
+        	}
+        	*/
             paintRefinanceHomeWorthToday();
         });
         $('#ce-refinance-cp').append(saveAndContinueButton);
@@ -1086,27 +1128,30 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
     if (customerInputData.refinanceOption == "REFCO") refinanceOpt = "Take Cash Out of My Home";
    
-    var currentMortaggeBal =  customerInputData.currentMortgageBalance;
-   
+    var  monthlyPayment  = parseFloat(customerInputData.currentMortgagePayment.split("$")[1].replace(/,/g, "")/12); 
     var Insurance ="Calculate";
-    if(customerInputData.annualHomeownersInsurance && customerInputData.annualHomeownersInsurance !="$0")
-    	Insurance = customerInputData.annualHomeownersInsurance;
-    
-    if(customerInputData.annualHomeownersInsurance || customerInputData.annualHomeownersInsurance =="" || customerInputData.annualHomeownersInsurance=='$0')    
-    var InsuranceTemp =  parseFloat(customerInputData.annualHomeownersInsurance.split("$")[1].replace(/,/g, ""));
-
-    //if(customerInputData.propertyTaxesPaid || )
     var tax = "Calculate";
-    if(customerInputData.propertyTaxesPaid && customerInputData.propertyTaxesPaid != "$0")
-      tax = customerInputData.propertyTaxesPaid;
+    var totalEstMonthlyPayment =  rateVO[index].payment;
     
-    var taxesTemp =  parseFloat(customerInputData.propertyTaxesPaid.split("$")[1].replace(/,/g, ""));
+    if(customerInputData.isIncludeTaxes =="Yes"){
+    	var InsuranceTemp =  parseFloat(customerInputData.annualHomeownersInsurance.split("$")[1].replace(/,/g, ""));
+    	var taxesTemp =  parseFloat(customerInputData.propertyTaxesPaid.split("$")[1].replace(/,/g, ""));
+    	var sum = InsuranceTemp + taxesTemp;
+    	var monthlyPaymentTemp = parseFloat(customerInputData.currentMortgagePayment.split("$")[1].replace(/,/g, ""));  
+    	var monthlyPaymenttemp1 = (monthlyPaymentTemp - sum )/12;
+    	monthlyPayment = monthlyPaymenttemp1.toFixed(2);
+    	
+    	Insurance = customerInputData.annualHomeownersInsurance;
+    	tax = customerInputData.propertyTaxesPaid;
+    	var totalEstMonthlyPaymentTemp  = parseFloat(totalEstMonthlyPayment) + InsuranceTemp + taxesTemp;
+    	totalEstMonthlyPayment = totalEstMonthlyPaymentTemp.toFixed(2);
+    }
     
-    var monthlyPaymentDifference = parseFloat(InsuranceTemp +taxesTemp);
     
-    var currentMortgagePayment = parseFloat(customerInputData.currentMortgagePayment.split("$")[1].replace(/,/g, ""));
-    var monthlyPayment = parseFloat(rateVO[index].payment) + currentMortgagePayment +monthlyPaymentDifference ;
-   
+   var monthlyPaymentDifference = Math.abs(rateVO[index].payment - monthlyPayment);
+    
+  
+
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
@@ -1125,9 +1170,9 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID");
     //var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
    // var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", customerInputData.currentMortgagePayment);
+    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", "$ "+monthlyPayment);
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", "$ "+monthlyPaymentDifference);
-    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", "$ "+monthlyPayment);
+    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", "$ "+totalEstMonthlyPayment);
     
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6).append(rcRow7).append(rcRow8);
     container.append(leftCol).append(rightCol);

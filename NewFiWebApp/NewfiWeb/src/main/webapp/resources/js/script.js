@@ -1153,14 +1153,23 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id) {
 
     }).html(detail)
     .bind('click',{"valueData":$(this).text()},function(event){
-    	$(this).next('input').show().focus().html(event.data.valueData);
+    	var prevVal = $(this).text();
+    	$(this).next('input').show().focus().val(prevVal);
     	$(this).hide();
-    	$('#'+id).html($(this).text());
+    	//$(this).html($(this).text());
     });
     
     var inputBox = $('<input>').attr({
     	"class" : "loan-summary-sub-col-detail hide",
     	"id":id
+    }).bind('keyup',function(e){
+    	if(e.which == 27){
+    		var prevVal = $(this).prev('.calculate-btn').text();
+    		if($(this).val() == undefined || $(this).val() == prevVal){
+    			$(this).hide();
+    			$(this).prev('.calculate-btn').show();
+    		}
+    	}
     });    
     
     col2.append(col2Txt).append(inputBox);
