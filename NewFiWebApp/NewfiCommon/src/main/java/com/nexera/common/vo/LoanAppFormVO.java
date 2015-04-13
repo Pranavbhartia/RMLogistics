@@ -17,13 +17,16 @@ import com.nexera.common.entity.CustomerSpouseEmploymentIncome;
 import com.nexera.common.entity.CustomerSpouseOtherAccountDetails;
 import com.nexera.common.entity.CustomerSpouseRetirementAccountDetails;
 import com.nexera.common.entity.GovernmentQuestion;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.SpouseGovernmentQuestions;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 
 public class LoanAppFormVO implements Serializable {
@@ -521,13 +524,63 @@ public class LoanAppFormVO implements Serializable {
 
 		loanAppForm.setUser(User.convertFromVOToEntity(this.getUser()));
 
-		loanAppForm.setLoan(this.getLoan().convertToEntity());
+	
+		
+		
+		if(null!= this.getLoan() && null != this.getLoan().getLqbFileId()){
+			System.out.println("loanAppForm.getLoan().getLqbFileId()"+this.getLoan().getLqbFileId());
+		
+	     loanAppForm.setLoan(parseVOtoEntityLoan(this.getLoan()));
+		}else{
+			loanAppForm.setLoan(this.getLoan().convertToEntity());
+			System.out.println("loanAppForm.getLoan().getLqbFileId() inside else");
+		}
 
 		/* save data in the purchase table */
 
 		return loanAppForm;
 	}
 
+	
+	private Loan parseVOtoEntityLoan(LoanVO loanVO){
+		
+		Loan loan = new Loan();
+		loan.setId(loanVO.getId());
+		loan.setLqbFileId(loanVO.getLqbFileId());
+
+		if(null != loanVO.getLoanType()  ){
+			
+			System.out.println();
+			if (loanVO.getLoanType().getLoanTypeCd()
+			        .equalsIgnoreCase("REF")) {
+				System.out.println("loan type is REF");
+				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.REF));
+			} else {
+				System.out.println("loan type is PUR");
+				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
+				
+			}
+			}else{
+				System.out.println("loan type is NONE");
+				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
+			}
+		
+		loan.setCreatedDate(loanVO.getCreatedDate());
+		loan.setModifiedDate(loanVO.getModifiedDate());
+		loan.setLoanEmailId(loanVO.getLoanEmailId());
+		loan.setLoanProgressStatus(new LoanProgressStatusMaster(
+		        LoanProgressStatusMasterEnum.NEW_LOAN));
+		loan.setCustomerWorkflow(loanVO.getCustomerWorkflowID());
+		loan.setLoanManagerWorkflow(loanVO.getLoanManagerWorkflowID());
+		
+		
+		loan.setUser(User.convertFromVOToEntity(this.getUser()));
+		
+		return loan;
+		
+	}
+	
+	
 	private PurchaseDetails parseVOtoEntityPurchaseDetails(
 	        PurchaseDetailsVO purchaseDetailsVO) {
 
@@ -602,6 +655,7 @@ public class LoanAppFormVO implements Serializable {
 		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
 		refinanceDetails.setCurrentMortgagePayment(refinanceVO
 		        .getCurrentMortgagePayment());
+		
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
 		refinanceDetails.setSecondMortageBalance(refinanceVO
 		        .getSecondMortageBalance());
