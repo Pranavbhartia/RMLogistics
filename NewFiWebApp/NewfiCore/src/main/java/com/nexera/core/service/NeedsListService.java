@@ -41,6 +41,6 @@ public interface NeedsListService {
 
 	public NeedsListMaster fetchNeedListMasterByType(String needsListType);
 
-	public UploadedFilesList fetchPurchaseDocumentBasedOnNeed();
+	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract();
 
 }
