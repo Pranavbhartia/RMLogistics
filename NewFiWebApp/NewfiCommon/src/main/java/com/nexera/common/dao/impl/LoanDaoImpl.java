@@ -544,12 +544,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public LoanNeedsList fetchByNeedId(Integer needId) {
+	public LoanNeedsList fetchByNeedId(Integer needId, Integer loanId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanNeedsList.class);
 		criteria.createAlias("needsListMaster", "needType");
 		criteria.add(Restrictions.eq("needType.id", needId));
+		Loan loan = new Loan(loanId);
+		criteria.add(Restrictions.eq("needType.id", needId));
+		criteria.add(Restrictions.eq("loan", loan));
 		return (LoanNeedsList) criteria.uniqueResult();
 	}
 

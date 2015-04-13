@@ -58,6 +58,7 @@ public class MongoCoreMessageServiceImpl implements MongoCoreMessageService {
 			mh.setMessages(Arrays.asList(id));
 			mh.setMessageType(messagesVO.getMessageType());
 			mh.setUserList(messagesVO.getUserList());
+			mh.setRoleList(messagesVO.getRoleList());
 			mh.setLastMessage(id);
 			heriarchyDAO.save(mh);
 		} else {

@@ -1010,8 +1010,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	@Transactional
-	public void updateAssignments(Integer needId, Integer fileId) {
-		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId);
+	public void updateAssignments(Integer needId, Integer fileId, Integer loanId) {
+		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId, loanId);
 		updateFileInLoanNeedList(loanNeed.getId(), fileId);
 		updateIsAssignedToTrue(fileId);
 	}
