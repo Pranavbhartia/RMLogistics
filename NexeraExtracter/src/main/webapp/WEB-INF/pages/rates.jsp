@@ -4,6 +4,7 @@
 <title>Nexera</title>
 <link rel="stylesheet" href="resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/styles.css">
+<link rel="stylesheet" href="resources/css/styles-print.css">
 </head>
 <body>
 	<div class="">
@@ -15,9 +16,15 @@
 			</div>
 		</div>
 		<div class="body-wrapper">
-			<div class="clearfix container body-header-container">
-				<div class="float-left header-txt">Some dummy header content here.</div>
-				<div class="float-right print" onclick="window.print()" title="print"></div>
+			<div class="container body-header-container">
+				<div class="body-header-row row clearfix">
+					<div class="float-left header-txt">
+						NOTE: INDICATIVE PRICING ONLY - BASED ON $300K LOAN AMOUNT<br />
+						PLEASE LOG INTO BLUSTREAM PORTAL TO PORTAL TO OBTAIN LIVE LOCK
+						PRICING
+					</div>
+					<div class="float-right print" onclick="window.print()" title="print"></div>
+				</div>
 			</div>
 
 

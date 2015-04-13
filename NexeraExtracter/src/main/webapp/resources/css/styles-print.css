@@ -1,0 +1,23 @@
+@media print {
+	* {
+		-webkit-print-color-adjust: exact;
+	}
+	.header-logo{
+		background: url(../images/image003.png) no-repeat center !important;
+	}
+	.table-wrapper-header{
+		background-color: #16365C !important;
+		color:#fff !important;
+	}
+	.rate-table-header{
+		background: #004F6E !important;
+		color:#fff !important;
+	}
+	.container{
+		width: 1170px;
+	}
+	.price-table-wrapper-header{
+		  background: #538DD5 !important;
+		  color:#fff !important;
+	}
+}
