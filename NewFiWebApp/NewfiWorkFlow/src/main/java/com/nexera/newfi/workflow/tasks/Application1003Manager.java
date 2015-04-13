@@ -17,6 +17,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -30,21 +31,23 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private IWorkflowService iworkflowService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String returnStatus = null;
-		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-		        .getLosStatusID() + "")) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.submittedMessage);
-			sendEmail(objectMap);
-			createAlertForDisclosureDue(objectMap);
-			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-		}
+
+		makeANote(
+		        Integer.parseInt(objectMap.get(
+		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+		        LoanStatus.submittedMessage);
+		sendEmail(objectMap);
+		createAlertForDisclosureDue(objectMap);
+		returnStatus = WorkItemStatus.COMPLETED.getStatus();
+
 		return returnStatus;
 	}
 
@@ -71,8 +74,11 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		int userID = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		return iworkflowService.getRenderInfoFor1003(loanId, userID);
 	}
 
 	@Override
