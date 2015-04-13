@@ -201,16 +201,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 						        .getCustomerDetail()
 						        .getMobileAlertsPreference());
 
-						/*
-						 * if (customerDetail.getProfileCompletionStatus() ==
-						 * ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-						 * customerDetail
-						 * .setProfileCompletionStatus(customerDetail
-						 * .getProfileCompletionStatus()); } else {
-						 * customerDetail
-						 * .setProfileCompletionStatus(ProfileCompletionStatus
-						 * .ON_PROFILE_PIC_UPLOAD); }
-						 */
 					}
 				}
 			} else {
@@ -243,14 +233,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        && userVO.getPhoneNumber() != null) {
 					customerDetail.setMobileAlertsPreference(userVO
 					        .getCustomerDetail().getMobileAlertsPreference());
-					/*
-					 * if (customerDetail.getProfileCompletionStatus() ==
-					 * ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-					 * customerDetail .setProfileCompletionStatus(customerDetail
-					 * .getProfileCompletionStatus()); } else { customerDetail
-					 * .setProfileCompletionStatus
-					 * (ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD); }
-					 */
+
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
@@ -989,16 +972,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			if (loaAppFormVO.getLoanType() != null) {
-				if (loaAppFormVO.getLoanType().getLoanTypeCd()
-				        .equalsIgnoreCase("REF")) {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.REF));
-				} else {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.PUR));
-				}
+			if(loaAppFormVO.getLoanType() !=null ){
+			if (loaAppFormVO.getLoanType().getLoanTypeCd()
+			        .equalsIgnoreCase("REF")) {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 			} else {
+				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
+			}
+			}else{
 				LOG.info("loan type is NONE");
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
 			}
@@ -1013,7 +994,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
-
+			
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
 
