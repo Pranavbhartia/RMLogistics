@@ -20,7 +20,6 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -109,6 +108,10 @@ public class EmailProcessor implements Runnable {
 					loanId = toAddressArray[1];
 					loanId = loanId.replace(
 					        CommonConstants.SENDER_DOMAIN_REGEX, "");
+					if (loanId.contains("@")) {
+						loanId = loanId.substring(0, loanId.indexOf("@"));
+					}
+					loanId = "15";
 					messageId = messageId.replace(
 					        CommonConstants.SENDER_NAME_REGEX, "");
 				}
