@@ -23,6 +23,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
@@ -397,4 +398,11 @@ public class LoanRestService {
 		return RestUtil.wrapObjectForSuccess(commonResponseVO);
 	}
 
+	@RequestMapping(value = "/appform/{userId}", method = RequestMethod.GET)
+	public @ResponseBody
+	CommonResponseVO retrieveLoanAppForm(@PathVariable Integer userId) {
+		UserVO userVO=new UserVO(userId);
+		LoanAppFormVO loanAppFormVO = loanService.retrieveLoanAppForm(userVO);
+		return RestUtil.wrapObjectForSuccess(loanAppFormVO);
+	}
 }

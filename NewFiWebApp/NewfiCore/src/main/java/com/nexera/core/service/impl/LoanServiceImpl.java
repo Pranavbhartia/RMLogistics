@@ -46,6 +46,7 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
@@ -59,6 +60,7 @@ import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.TeamAssignmentHelper;
+import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.UserProfileService;
@@ -92,6 +94,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private TeamAssignmentHelper assignmentHelper;
+	@Autowired
+	private LoanAppFormService loanAppFormService;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
@@ -1157,4 +1161,23 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateLoanAppFee(loanId, newAppFee);
 	}
 
+	@Override
+	@Transactional
+	public LoanAppFormVO retrieveLoanAppForm(UserVO userVO) {
+		LoanVO loanVO = getActiveLoanOfUser(userVO);
+		if (null != loanVO) {
+			userVO.setDefaultLoanId(loanVO.getId());
+			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
+			loanAppFormVO.setUser(userVO);
+			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO = loanAppFormService.find(loanAppFormVO);
+			LOG.info("inside LoanServiceImpl retrive LoanAppForm"
+			        + loanAppFormVO.getRefinancedetails().getId());
+			LOG.info("inside LoanServiceImpl retrive LoanAppForm"
+			        + loanAppFormVO.getPropertyTypeMaster().getId());
+
+			return loanAppFormVO;
+		}
+		return null;
+	}
 }
