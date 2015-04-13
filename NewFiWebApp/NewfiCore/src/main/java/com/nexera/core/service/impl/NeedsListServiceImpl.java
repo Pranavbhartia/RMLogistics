@@ -11,13 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
+import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.NeedsDao;
+import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -43,7 +47,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private MessageServiceHelper messageServiceHelper;
+	
+	@Autowired
+	private LoanNeedListDao loanNeedListDao;
 
+	@Autowired
+	private UploadedFilesListDao uploadedFilesListDao;
+	
+	
 	@Transactional
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
 		List<NeedsListMaster> needs = needsDao.getMasterNeedsList(false);
@@ -543,6 +554,21 @@ public class NeedsListServiceImpl implements NeedsListService {
 				needsDao.save(need);
 			}
 		}
+	}
+	
+	
+	@Override
+	@Transactional
+	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract(){
+		NeedsListMaster needsListMaster =  needsDao.findNeedsListMasterByLabel(CommonConstants.PURCHASE_CONTRACT);
+		if(needsListMaster!= null ){
+			LoanNeedsList loanNeedsList = 	loanNeedListDao.findLoanNeedsList(needsListMaster);
+			if(loanNeedsList != null ){
+				
+				return loanNeedsList.getUploadFileId();
+			}
+		}
+		return null;
 	}
 
 }

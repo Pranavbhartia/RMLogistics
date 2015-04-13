@@ -94,4 +94,9 @@ public interface UploadedFilesListService {
 
 	void updateAssignments(Integer loanNeedId, Integer fileId);
 
+	public UploadedFilesListVO buildUpdateFileVo(UploadedFilesList file);
+
+	List<UploadedFilesListVO> buildUpdateFileVoList(
+            List<UploadedFilesList> filesLists);
+
 }
