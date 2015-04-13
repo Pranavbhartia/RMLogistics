@@ -2,6 +2,8 @@ package com.nexera.web.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +16,9 @@ import com.nexera.web.rest.util.RestUtil;
 @ControllerAdvice
 public class RestServiceControllerAdvice {
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(RestServiceControllerAdvice.class);
+
 	/**
 	 * The rest services can throw BaseRestException type of exception to return
 	 * a neat error response
@@ -25,7 +30,7 @@ public class RestServiceControllerAdvice {
 	@ExceptionHandler(BaseRestException.class)
 	@ResponseBody
 	public CommonResponseVO handleBaseRestException(HttpServletRequest req,
-			BaseRestException e) {
+	        BaseRestException e) {
 
 		String errorCode = "500";
 		String errorMessage = "Internal error Occurred";
@@ -37,6 +42,7 @@ public class RestServiceControllerAdvice {
 			if (err.getMessage() != null)
 				errorMessage = err.getMessage();
 		}
+		LOG.error("handleBaseRestException: " + e.getMessage(), e);
 
 		return RestUtil.wrapObjectForFailure(null, errorCode, errorMessage);
 
@@ -53,10 +59,11 @@ public class RestServiceControllerAdvice {
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public CommonResponseVO handleGeneralException(HttpServletRequest req,
-			Exception e) {
+	        Exception e) {
 
 		String errorCode = "500";
 		String errorMessage = "Internal error Occurred";
+		LOG.error("handleGeneralException: " + e.getMessage(), e);
 
 		return RestUtil.wrapObjectForFailure(null, errorCode, errorMessage);
 

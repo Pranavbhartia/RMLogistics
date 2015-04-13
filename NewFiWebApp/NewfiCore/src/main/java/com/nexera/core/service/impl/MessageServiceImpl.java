@@ -198,6 +198,7 @@ public class MessageServiceImpl implements MessageService {
 		}
 		if (!internalUserPresent) {
 			userroleList.add(UserRolesEnum.INTERNAL.getName());
+			userroleList.add(UserRolesEnum.SM.getName());
 		}
 		return userroleList;
 	}

@@ -1,6 +1,5 @@
 package com.nexera.web.rest;
 
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,91 +19,102 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
-import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.web.rest.util.RestUtil;
 
-
 @RestController
-@RequestMapping(value="/loanneeds/")
+@RequestMapping(value = "/loanneeds/")
 public class NeedsListRestService {
 
 	@Autowired
 	private NeedsListService needsListService;
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NeedsListRestService.class);
-	
+	        .getLogger(NeedsListRestService.class);
 
-	@RequestMapping(value = "{loanId}" , method=RequestMethod.GET)
+	@RequestMapping(value = "{loanId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getLoanNeeds(@PathVariable int loanId) {
-		System.out.println(loanId+"-----------------------");
-		CommonResponseVO response=null;
+		System.out.println(loanId + "-----------------------");
+		CommonResponseVO response = null;
 		try {
-			HashMap<String, Object> loanNeeds=needsListService.getLoansNeedsList(loanId);
-			response=RestUtil.wrapObjectForSuccess(loanNeeds);
-		}catch(Exception e){
-			LOG.error(e.getMessage());
-			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
+			HashMap<String, Object> loanNeeds = needsListService
+			        .getLoansNeedsList(loanId);
+			response = RestUtil.wrapObjectForSuccess(loanNeeds);
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
 		}
-		return response; 
+		return response;
 	}
 
-	@RequestMapping(value = "{loanId}" , method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO saveLoanNeeds(@PathVariable int loanId,String needs) {
-		CommonResponseVO response=null;
+	@RequestMapping(value = "{loanId}", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO saveLoanNeeds(
+	        @PathVariable int loanId, String needs) {
+		CommonResponseVO response = null;
 		try {
-			
-			ObjectMapper mapper=new ObjectMapper();
-			TypeReference<List<Integer>> typeRef=new TypeReference<List<Integer>>() {};
-			List<Integer> val=mapper.readValue(needs, typeRef);
-			int result=needsListService.saveLoanNeeds(loanId, val);
-			if(result==1){
-				response=RestUtil.wrapObjectForSuccess("Success");
+
+			ObjectMapper mapper = new ObjectMapper();
+			TypeReference<List<Integer>> typeRef = new TypeReference<List<Integer>>() {
+			};
+			List<Integer> val = mapper.readValue(needs, typeRef);
+			int result = needsListService.saveLoanNeeds(loanId, val);
+			if (result == 1) {
+				response = RestUtil.wrapObjectForSuccess("Success");
+			} else {
+				response = RestUtil.wrapObjectForFailure(null, "500",
+				        "Save need list failed");
 			}
-			else{
-				response=RestUtil.wrapObjectForFailure(null, "500", "Save need list failed");
-			}
-			
-		}catch(Exception e){
-			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
+
+		} catch (Exception e) {
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
 			LOG.error(e.getMessage());
 		}
-		return response; 
+		return response;
 	}
-	@RequestMapping(value = "custom" , method=RequestMethod.GET)
+
+	@RequestMapping(value = "custom", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getCustomNeedsList() {
-		CommonResponseVO response=null;
+		CommonResponseVO response = null;
 		try {
-			List<ManagerNeedVo> customNeedsList=needsListService.getNeedsListMaster(true);
-			response=RestUtil.wrapObjectForSuccess(customNeedsList);
-		}catch(Exception e){
-			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
+			List<ManagerNeedVo> customNeedsList = needsListService
+			        .getNeedsListMaster(true);
+			response = RestUtil.wrapObjectForSuccess(customNeedsList);
+		} catch (Exception e) {
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
 			LOG.error(e.getMessage());
 		}
-		return response; 
+		return response;
 	}
-	@RequestMapping(value = "custom" , method=RequestMethod.POST)
-	public @ResponseBody CommonResponseVO setCustomNeedsList(@RequestParam(required=true) String category,@RequestParam(required=true)String label,@RequestParam(required=true)String description) {
-		CommonResponseVO response=null;
+
+	@RequestMapping(value = "custom", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO setCustomNeedsList(
+	        @RequestParam(required = true) String category,
+	        @RequestParam(required = true) String label,
+	        @RequestParam(required = true) String description) {
+		CommonResponseVO response = null;
 		try {
-			User user=null;
-			try{
-				user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			}catch(Exception e){
-				//TODO return session expiry response
-				user=new User();
+			User user = null;
+			try {
+				user = (User) SecurityContextHolder.getContext()
+				        .getAuthentication().getPrincipal();
+			} catch (Exception e) {
+				// TODO return session expiry response
+				user = new User();
 				user.setId(1);
 			}
-			NeedsListMaster customNeed=NeedsListMaster.getCustomNeed(label, category, description,user);
-			int needId=needsListService.saveCustomNeed(customNeed);
-			response=RestUtil.wrapObjectForSuccess(needId);
-		}catch(Exception e){
-			response=RestUtil.wrapObjectForFailure(null, "500", e.getMessage());
+			NeedsListMaster customNeed = NeedsListMaster.getCustomNeed(label,
+			        category, description, user);
+			int needId = needsListService.saveCustomNeed(customNeed);
+			response = RestUtil.wrapObjectForSuccess(needId);
+		} catch (Exception e) {
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
 			LOG.error(e.getMessage());
 		}
-		return response; 
+		return response;
 	}
-	
-	
+
 }

@@ -24,7 +24,7 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override

@@ -122,8 +122,10 @@ function changeSecondaryLeftPanel(secondary) {
         if (secondary == 1) {
             // getting to know newfi page
         } else if (secondary == 2) {
-            //ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, paintProfileCompleteStep1);
-            paintCustomerApplicationPage();
+            var userId=newfiObject.user.id;
+            getAppDetailsForUser(userId,function(){
+                paintCustomerApplicationPage();
+            });
             //paintSelecedOption();
         } else if (secondary == 3) {
             // fix your rate page

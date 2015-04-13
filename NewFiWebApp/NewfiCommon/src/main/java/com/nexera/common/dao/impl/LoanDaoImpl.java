@@ -365,16 +365,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			}
 			// criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 			criteria.add(Restrictions.eq("loan", loan));
-			LoanTeam loanTeam = (LoanTeam) criteria.uniqueResult();
+			List<LoanTeam> loanTeam = criteria.list();
 
-			if (loanTeam != null) {
+			LoanTeam loanTeam2 = loanTeam.get(0);
+			Hibernate.initialize(loanTeam2.getLoan());
 
-				Hibernate.initialize(loanTeam.getLoan());
-				loanForUser = loanTeam.getLoan();
-
-			}
-
-			return loanForUser;
+			return loanTeam2.getLoan();
 		} catch (HibernateException hibernateException) {
 
 			throw new DatabaseException(
@@ -548,12 +544,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public LoanNeedsList fetchByNeedId(Integer needId) {
+	public LoanNeedsList fetchByNeedId(Integer needId, Integer loanId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanNeedsList.class);
 		criteria.createAlias("needsListMaster", "needType");
 		criteria.add(Restrictions.eq("needType.id", needId));
+		Loan loan = new Loan(loanId);
+		criteria.add(Restrictions.eq("needType.id", needId));
+		criteria.add(Restrictions.eq("loan", loan));
 		return (LoanNeedsList) criteria.uniqueResult();
 	}
 
