@@ -26,7 +26,7 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// TODO Auto-generated method stub
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
@@ -55,8 +55,7 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 				Milestones.QC.getMilestoneID(), comment);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-				WorkItemStatus.COMPLETED.getStatus());
+		engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 		status = WorkItemStatus.COMPLETED.getStatus();
 		int userId = Integer.parseInt(inputMap.get(
 				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
