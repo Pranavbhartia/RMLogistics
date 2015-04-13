@@ -431,9 +431,7 @@ public class EngineTrigger {
 					} catch (InterruptedException e) {
 						LOGGER.error("Exception caught while terminating executor "
 						        + e.getMessage());
-						throw new FatalException(
-						        "Exception caught while terminating executor "
-						                + e.getMessage());
+
 					}
 				}
 				LOGGER.debug("Checking whether the parents all workflow items are executed ");
