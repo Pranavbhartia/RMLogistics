@@ -18,27 +18,27 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class LMDecisionManager extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-			.getLogger(LMDecisionManager.class);
+	        .getLogger(LMDecisionManager.class);
 	@Autowired
 	private LoanService loanService;
 	@Autowired
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = iWorkflowService.getNexeraMilestoneComments(loanId,
-				Milestones.LM_DECISION);
+		        Milestones.LM_DECISION);
 		return status == null ? "" : status;
 	}
 
@@ -51,21 +51,20 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		String status = null;
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String decision = inputMap.get(
-				WorkflowDisplayConstants.WORKFLOW_LM_DECISION).toString();
+		        WorkflowDisplayConstants.WORKFLOW_LM_DECISION).toString();
 		String comment = inputMap.get(
-				WorkflowDisplayConstants.WORKFLOW_LM_DECISION_COMMENT)
-				.toString();
+		        WorkflowDisplayConstants.WORKFLOW_LM_DECISION_COMMENT)
+		        .toString();
 		iWorkflowService.updateNexeraMilestone(loanId,
-				Milestones.LM_DECISION.getMilestoneID(), decision);
+		        Milestones.LM_DECISION.getMilestoneID(), decision);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-				WorkItemStatus.COMPLETED.getStatus());
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 		status = WorkItemStatus.COMPLETED.getStatus();
 		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
 		makeANote(loanId, comment, user);
@@ -74,7 +73,7 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 
 	private void makeANote(int loanId, String message, User createdBy) {
 		messageServiceHelper.generatePrivateMessage(loanId, message, createdBy,
-				false);
+		        false);
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
