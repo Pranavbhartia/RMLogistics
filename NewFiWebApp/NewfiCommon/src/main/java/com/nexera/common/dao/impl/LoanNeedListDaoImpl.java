@@ -35,4 +35,13 @@ public class LoanNeedListDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(loanNeedList.getNeedsListMaster());
 		return loanNeedList;
 	}
+	
+	@Override
+	public LoanNeedsList findLoanNeedsList(  NeedsListMaster needsListMaster) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanNeedsList.class);
+		criteria.add(Restrictions.eq("needsListMaster", needsListMaster));
+
+		return (LoanNeedsList) criteria.uniqueResult();
+	}
 }

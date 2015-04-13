@@ -4488,3 +4488,18 @@ input.calc-input {
 	color:#fff;
 	font-size:12px Arial;
 }
+
+.documentLinkContainer{
+  line-height: 30px;
+  text-decoration: underline;
+  margin-left: 64px;
+}
+
+.dateContainer {
+	margin-left:30px;
+}
+
+.datelabel {
+	line-height: 30px;
+  padding-right: 30px;
+}

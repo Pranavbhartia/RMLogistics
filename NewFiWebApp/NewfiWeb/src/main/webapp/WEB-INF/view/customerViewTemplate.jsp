@@ -88,14 +88,13 @@
 			globalBinder();
 			onpopstate = function(event) {
 	            console.log('history modified');
-	            if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1){
+	            if(location.hash.trim()!=''){
 	                historyCallback= true;
-	               
 	                refreshSupport=true;
 	            }
 	            retrieveState();
 	        };
-			if(location.search.trim()!=''&&location.search.indexOf("q=")!=-1 ){
+			if(location.search.trim()!='' ){
 	            historyCallback= true;
 	            refreshSupport=true;
 	            retrieveState();
@@ -135,7 +134,7 @@
 					autoclose : true
 				});
 			});
-			retrieveState();
+		//	retrieveState();
 
 			
 			$('[data-toggle="tooltip"]').tooltip();   

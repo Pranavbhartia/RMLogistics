@@ -322,10 +322,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 				}
 			}
-			
+
 			for (Loan loan : loanListForUser) {
-	            Hibernate.isInitialized(loan.getLoanProgressStatus());
-            }
+				Hibernate.isInitialized(loan.getLoanProgressStatus());
+			}
 
 			return loanListForUser;
 		} catch (HibernateException hibernateException) {
@@ -347,13 +347,23 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public Loan retrieveLoanForDashboard(User parseUserModel, Loan loan) {
+	public Loan retrieveLoanForDashboard(UserVO parseUserModel, Loan loan) {
 
 		try {
 			Loan loanForUser = null;
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
-			criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			if (parseUserModel.getInternalUserDetail() != null) {
+				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+				        .getInternalUserDetail().getInternalUserRoleMasterVO()
+				        .getId()) {
+					criteria.add(Restrictions.eq("user.id",
+					        parseUserModel.getId()));
+				}
+			} else {
+				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			}
+			// criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 			criteria.add(Restrictions.eq("loan", loan));
 			LoanTeam loanTeam = (LoanTeam) criteria.uniqueResult();
 
