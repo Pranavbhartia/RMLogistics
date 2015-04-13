@@ -28,8 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.entity.LoanAppForm;
@@ -73,11 +71,8 @@ public class ApplicationFormRestService {
 			
 			System.out.println("appFormData is"+appFormData);
 			
-			TypeReference<LoanAppFormVO> typeRef=new TypeReference<LoanAppFormVO>() {};
-			ObjectMapper mapper = new ObjectMapper();
-			LoanAppFormVO loaAppFormVO = mapper.readValue(appFormData, typeRef);
-			// LoanAppFormVO loaAppFormVO =
-			// gson.fromJson(appFormData,LoanAppFormVO.class);
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			        LoanAppFormVO.class);
 
 			System.out.println(loaAppFormVO.toString());
 			
