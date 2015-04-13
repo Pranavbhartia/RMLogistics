@@ -285,8 +285,6 @@ public class LoanServiceImpl implements LoanService {
 		return loanDashboardVO;
 	}
 
-	
-
 	private boolean checkIfUserIsSalesManager() {
 
 		UserRolesEnum userRole = utils.getLoggedInUserRole();
@@ -318,8 +316,8 @@ public class LoanServiceImpl implements LoanService {
 	public LoanCustomerVO retrieveDashboard(UserVO userVO, LoanVO loanVO) {
 
 		// Get all loans this user has access to.
-		Loan loan = loanDao.retrieveLoanForDashboard(
-		        this.parseUserModel(userVO), this.parseLoanModel(loanVO));
+		Loan loan = loanDao.retrieveLoanForDashboard(userVO,
+		        this.parseLoanModel(loanVO));
 		LoanCustomerVO loanCustomerVO = this.buildLoanCustomerVoFromUser(loan);
 
 		return loanCustomerVO;
@@ -375,7 +373,8 @@ public class LoanServiceImpl implements LoanService {
 			loanCustomerVO.setRole(user.getUserRole().getLabel());
 		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
-		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus().getLoanProgressStatus());
+		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus()
+		        .getLoanProgressStatus());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.

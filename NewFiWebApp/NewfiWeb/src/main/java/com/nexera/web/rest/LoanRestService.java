@@ -2,6 +2,8 @@ package com.nexera.web.rest;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
@@ -27,6 +31,8 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -42,7 +48,15 @@ public class LoanRestService {
 
 	@Autowired
 	private Utils utils;
+	
+	@Autowired
+	private NeedsListService needsListService;
+	
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
 
+	private static final Logger LOG = LoggerFactory.getLogger( LoanRestService.class );
+	
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
 	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
 
@@ -72,6 +86,12 @@ public class LoanRestService {
 	        @PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
+		LOG.info("--"+LoanTypeMasterEnum.PUR.toString());
+		if(loanVO.getLoanType().getLoanTypeCd().equals(LoanTypeMasterEnum.PUR.toString())){
+					UploadedFilesList file = needsListService.fetchPurchaseDocumentBasedOnPurchaseContract();
+					loanVO.getLoanType().setUploadedFiles(uploadedFilesListService.buildUpdateFileVo(file));
+		}
+		
 		if (loanVO != null) {
 			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
 			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
@@ -79,7 +99,6 @@ public class LoanRestService {
 		}
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
-
 		return responseVO;
 	}
 
@@ -269,7 +288,10 @@ public class LoanRestService {
 			// return RestUtil.wrapObjectForFailure(null, "403",
 			// "User Not Logged in.");
 		}
-		UserVO userVO = User.convertFromEntityToVO(user);
+
+		// UserVO userVO = User.convertFromEntityToVO(user);
+
+		UserVO userVO = userProfileService.findUser(user.getId());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 

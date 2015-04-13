@@ -55,7 +55,7 @@ public interface LoanDao extends GenericDao {
 
 	public Integer getTotalNeededItem(Integer loanId);
 
-	Loan retrieveLoanForDashboard(User parseUserModel, Loan loan);
+	Loan retrieveLoanForDashboard(UserVO parseUserModel, Loan loan);
 
 	public List<LoanTypeMaster> getLoanTypeMater(
 	        LoanTypeMasterVO loanTypeMaterVO);

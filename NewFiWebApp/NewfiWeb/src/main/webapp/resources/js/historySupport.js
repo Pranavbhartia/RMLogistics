@@ -248,7 +248,12 @@ function saveState(primaryNav, secondaryNav, url) {
 	hashUrl = primaryNav + getUrlHashFunction(secondaryNav, "/")
 			+ getUrlHashFunction(url, "/");
 
-	history.pushState(getRandomID(), null, "#" + hashUrl);
+	if(!historyCallback){
+		history.pushState(getRandomID(), null, "#" + hashUrl);
+		
+	}
+	historyCallback = false;
+	
 }
 
 function getUrlHashFunction(tag, key) {
