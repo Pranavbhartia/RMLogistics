@@ -1,11 +1,7 @@
 package com.nexera.core.processor;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -70,72 +66,85 @@ public class EmailProcessor implements Runnable {
 		boolean sendEmail = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
-			MimeMessage mimeMessage = new MimeMessage(mimeMsg);
-			String subject = message.getSubject();
-			LOGGER.debug("Mail subject is " + subject);
-			Address[] fromAddress = message.getFrom();
-			Address[] toAddress = message.getAllRecipients();
-			if (toAddress.length > 1) {
-				LOGGER.debug("User is sending this message to multiple recepient ");
-				sendEmail = false;
-			} else {
-				sendEmail = true;
-			}
-			LOGGER.debug("From Address is  " + fromAddress[0]);
-			String fromAddressString = fromAddress[0].toString();
-			if (fromAddressString.contains("<")
-			        && fromAddressString.contains(">"))
-				fromAddressString = fromAddressString.substring(
-				        fromAddressString.indexOf("<") + 1,
-				        fromAddressString.indexOf(">")).trim();
-			User uploadedByUser = userProfileService
-			        .findUserByMail(fromAddressString);
-			String toAddressString = toAddress[0].toString();
-			String messageId = null;
-			String loanId = null;
-			if (toAddressString != null) {
-
-				String[] toAddressArray = toAddressString.split("-");
-				if (toAddressArray.length == 1) {
-					LOGGER.debug("This is a new message, does not contain a message id");
-					loanId = toAddressArray[0];
-					loanId = loanId.replace(
-					        CommonConstants.SENDER_DOMAIN_REGEX, "");
-
-				} else if (toAddressArray.length == 2) {
-					LOGGER.debug("This is a reply mail, must contain a message id");
-					messageId = toAddressArray[0];
-					loanId = toAddressArray[1];
-					loanId = loanId.replace(
-					        CommonConstants.SENDER_DOMAIN_REGEX, "");
-					if (loanId.contains("@")) {
-						loanId = loanId.substring(0, loanId.indexOf("@"));
+			if (mimeMsg != null) {
+				MimeMessage mimeMessage = new MimeMessage(mimeMsg);
+				if (mimeMessage != null) {
+					String subject = message.getSubject();
+					LOGGER.debug("Mail subject is " + subject);
+					Address[] fromAddress = message.getFrom();
+					Address[] toAddress = message.getAllRecipients();
+					if (toAddress.length > 1) {
+						LOGGER.debug("User is sending this message to multiple recepient ");
+						sendEmail = false;
+					} else {
+						sendEmail = true;
 					}
-					loanId = "15";
-					messageId = messageId.replace(
-					        CommonConstants.SENDER_NAME_REGEX, "");
-				}
+					LOGGER.debug("From Address is  " + fromAddress[0]);
+					String fromAddressString = fromAddress[0].toString();
+					if (fromAddressString.contains("<")
+					        && fromAddressString.contains(">"))
+						fromAddressString = fromAddressString.substring(
+						        fromAddressString.indexOf("<") + 1,
+						        fromAddressString.indexOf(">")).trim();
+					User uploadedByUser = userProfileService
+					        .findUserByMail(fromAddressString);
+					String toAddressString = toAddress[0].toString();
+					String messageId = null;
+					String loanId = null;
+					if (toAddressString != null) {
 
-			}
+						String[] toAddressArray = toAddressString.split("-");
+						if (toAddressArray.length == 1) {
+							LOGGER.debug("This is a new message, does not contain a message id");
+							loanId = toAddressArray[0];
+							loanId = loanId.replace(
+							        CommonConstants.SENDER_DOMAIN_REGEX, "");
+							if (loanId.contains("@")) {
+								loanId = loanId.substring(0,
+								        loanId.indexOf("@"));
+							}
 
-			LoanVO loanVO = loanService.getLoanByID(Integer.valueOf(loanId));
-			String emailBody = getEmailBody(mimeMessage);
-			LOGGER.debug("Body of the email is " + emailBody);
-			if (loanVO != null) {
-				if (uploadedByUser != null) {
+						} else if (toAddressArray.length == 2) {
+							LOGGER.debug("This is a reply mail, must contain a message id");
+							messageId = toAddressArray[0];
+							loanId = toAddressArray[1];
+							loanId = loanId.replace(
+							        CommonConstants.SENDER_DOMAIN_REGEX, "");
+							if (loanId.contains("@")) {
+								loanId = loanId.substring(0,
+								        loanId.indexOf("@"));
+							}
+							loanId = "15";
+							messageId = messageId.replace(
+							        CommonConstants.SENDER_NAME_REGEX, "");
+						}
 
-					extractAttachmentAndUploadEverything(emailBody, loanVO,
-					        uploadedByUser, loanVO.getUser(), mimeMessage,
-					        messageId, sendEmail);
+					}
 
-				} else {
-					LOGGER.error("user who uploaded not found in database");
+					LoanVO loanVO = loanService.getLoanByID(Integer
+					        .valueOf(loanId));
+					String emailBody = getEmailBody(mimeMessage);
+					LOGGER.debug("Body of the email is " + emailBody);
+					if (loanVO != null) {
+						if (uploadedByUser != null) {
+
+							extractAttachmentAndUploadEverything(emailBody,
+							        loanVO, uploadedByUser, loanVO.getUser(),
+							        mimeMessage, messageId, sendEmail);
+
+						} else {
+							LOGGER.error("user who uploaded not found in database");
+						}
+					} else {
+						LOGGER.error("Not a valid loan entry ");
+					}
 				}
 			} else {
-				LOGGER.error("Not a valid loan entry ");
+				LOGGER.error("Unable to create the mime message for this email ");
 			}
 		} catch (MessagingException e) {
-
+			LOGGER.error("Exception while creating mime message "
+			        + e.getMessage());
 		}
 
 	}
@@ -255,57 +264,6 @@ public class EmailProcessor implements Runnable {
 			LOGGER.error("Exception caught " + e.getMessage());
 		}
 
-	}
-
-	public byte[] convertInputStreamToByteArray(InputStream inputStream) {
-		byte[] buffer = new byte[8192];
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		int bytesRead;
-		try {
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, bytesRead);
-			}
-		} catch (IOException e) {
-			// TODO call exception class
-		}
-		return baos.toByteArray();
-	}
-
-	public File convertInputStreamToFile(InputStream inputStream, String dirPath)
-	        throws IOException {
-		OutputStream outputStream = null;
-		File file = null;
-		try {
-			file = new File(dirPath + File.separator
-			        + nexeraUtility.randomStringOfLength() + ".pdf");
-			if (file.createNewFile()) {
-				outputStream = new FileOutputStream(file);
-				byte[] bytes = convertInputStreamToByteArray(inputStream);
-				outputStream.write(bytes);
-				outputStream.flush();
-
-			}
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-
-				}
-			}
-			if (outputStream != null) {
-				try {
-					// outputStream.flush();
-					outputStream.close();
-				} catch (IOException e) {
-
-				}
-
-			}
-
-		}
-		return file;
 	}
 
 	public static String removeTags(String string) {
