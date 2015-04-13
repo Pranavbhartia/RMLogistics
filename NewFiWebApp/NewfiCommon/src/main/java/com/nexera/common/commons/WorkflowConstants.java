@@ -69,17 +69,15 @@ public class WorkflowConstants {
 	private static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();;
 	private static final HashMap<LOSLoanStatus, List<Integer>> MILESTONE_ORDER_LOOKUP = new HashMap<LOSLoanStatus, List<Integer>>();;
 
-	private static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
-	        Arrays.asList(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-	                .getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING
-	                        .getLosStatusID(),
+	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
+	        Arrays.asList(
+	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
-	                        .getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED.getLosStatusID()));
 	private static final List<Integer> UW_LIST = new ArrayList<Integer>(
 	        Arrays.asList(LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK
