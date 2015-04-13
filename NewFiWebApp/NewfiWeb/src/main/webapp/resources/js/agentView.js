@@ -1149,6 +1149,10 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit Decision",
 			loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
+	if(loanDetails.userLoanStatus.loanPurpose == "Purchase"){
+		
+	}
+	
 	appendCustomerEditProfilePopUp();
 
 }
