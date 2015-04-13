@@ -1,8 +1,6 @@
 package com.nexera.web.rest;
 
-import java.io.File;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,10 +28,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
-import com.nexera.common.entity.CustomerRetirementAccountDetails;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
@@ -75,7 +73,11 @@ public class ApplicationFormRestService {
 			
 			System.out.println("appFormData is"+appFormData);
 			
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+			TypeReference<LoanAppFormVO> typeRef=new TypeReference<LoanAppFormVO>() {};
+			ObjectMapper mapper = new ObjectMapper();
+			LoanAppFormVO loaAppFormVO = mapper.readValue(appFormData, typeRef);
+			// LoanAppFormVO loaAppFormVO =
+			// gson.fromJson(appFormData,LoanAppFormVO.class);
 
 			System.out.println(loaAppFormVO.toString());
 			
