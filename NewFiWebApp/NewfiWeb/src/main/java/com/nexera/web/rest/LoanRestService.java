@@ -412,6 +412,19 @@ public class LoanRestService {
 	        @PathVariable Integer userId) {
 		UserVO userVO = new UserVO(userId);
 		LoanAppFormVO loanAppFormVO = loanService.retrieveLoanAppForm(userVO);
-		return RestUtil.wrapObjectForSuccess(loanAppFormVO);
+		Gson gson = new Gson();
+		
+		/*ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
+		try {
+			mapper.writeValue(sw, loanAppFormVO);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		return RestUtil.wrapObjectForSuccess(gson.toJson(loanAppFormVO));
 	}
 }
