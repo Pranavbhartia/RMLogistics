@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -409,7 +408,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
 				Path path = Paths.get(serverFile.getAbsolutePath());
-				byte[] data = Files.readAllBytes(path);
+				byte[] data = readContentIntoByteArray(serverFile);
 				String uuidValue = nexeraUtility.randomStringOfLength();
 
 				// Send file to LQB
