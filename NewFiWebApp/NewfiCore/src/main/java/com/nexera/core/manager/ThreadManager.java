@@ -460,22 +460,13 @@ public class ThreadManager implements Runnable {
 			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
 				String borrowerEquifaxScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
-				if (borrowerEquifaxScore != null
-				        && !borrowerEquifaxScore.equalsIgnoreCase("")) {
-					customerDetail.setEquifaxScore(borrowerEquifaxScore);
-				}
+				customerDetail.setEquifaxScore(borrowerEquifaxScore);
 				String borrowerExperianScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
-				if (borrowerExperianScore != null
-				        && !borrowerExperianScore.equalsIgnoreCase("")) {
-					customerDetail.setExperianScore(borrowerExperianScore);
-				}
+				customerDetail.setExperianScore(borrowerExperianScore);
 				String borrowerTransunionScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
-				if (borrowerTransunionScore != null
-				        && !borrowerTransunionScore.equalsIgnoreCase("")) {
-					customerDetail.setTransunionScore(borrowerTransunionScore);
-				}
+				customerDetail.setTransunionScore(borrowerTransunionScore);
 
 				LOGGER.debug("Updating customer details ");
 				updateCustomerDetails(customerDetail);
