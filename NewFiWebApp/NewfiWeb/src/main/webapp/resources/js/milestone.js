@@ -181,7 +181,7 @@ var workFlowContext = {
 			if (callback) {
 				callback(ob);
 			}
-		},false);
+		});
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {

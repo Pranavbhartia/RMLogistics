@@ -352,7 +352,9 @@ function getNotificationContext(loanId,userId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage("Notification Scheduled");
+					var milestoneId;
 					if(data.milestoneId){
+						milestoneId=data.milestoneId;
 						data=data.notificationVo;
 						data.id=response.resultObject;
 					}
@@ -371,6 +373,10 @@ function getNotificationContext(loanId,userId){
 						updateDefaultContext(data);
 					if(callback){
 						callback(ob);
+					}
+					if(milestoneId){
+						var ctx=workFlowContext.mileStoneContextList[milestoneId];
+						ctx.updateMilestoneView("1");
 					}
 				}
 				

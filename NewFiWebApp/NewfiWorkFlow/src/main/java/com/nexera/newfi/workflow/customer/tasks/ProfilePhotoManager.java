@@ -35,17 +35,16 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
 		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO userVo = userProfileService.findUser(userId);
 		if (userVo.getPhotoImageUrl() != null
-				&& !userVo.getPhotoImageUrl().equals("")) {
+		        && !userVo.getPhotoImageUrl().equals("")) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-					WorkItemStatus.COMPLETED.getStatus());
+			        WorkItemStatus.COMPLETED.getStatus());
 			return WorkItemStatus.COMPLETED.getStatus();
 		}
 		return null;

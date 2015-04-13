@@ -159,11 +159,11 @@ public class ThreadManager implements Runnable {
 						}
 						milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
 						        .get(loanStatusID).getMilestone();
-						WorkItemMilestoneInfo wItemMSInfo = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
-						        .get(loanStatusID);
+						WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
 						if (wItemMSInfo != null) {
 							statusTrackingList = wItemMSInfo
 							        .getStatusTrackingList();
+
 						}
 						if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
 						        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
@@ -205,16 +205,7 @@ public class ThreadManager implements Runnable {
 
 						LoanMilestoneMaster loanMilestoneMaster = null;
 						if (milestones != null) {
-							for (LoanMilestoneMaster loanMilestone : getLoanMilestoneMasterList()) {
-
-								if (loanMilestone.getId() == milestones
-								        .getMilestoneID()) {
-									LOGGER.debug("Found LoanMilestone Master ");
-									loanMilestoneMaster = loanMilestone;
-									break;
-
-								}
-							}
+							loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
 							LOGGER.debug("Saving/Updating LoanMileStone ");
 							boolean sameStatus = false;
 							boolean newStatus = true;
@@ -289,37 +280,21 @@ public class ThreadManager implements Runnable {
 									        loadResponseList,
 									        loanMilestoneMaster);
 								}
-								if (statusTrackingList != null)
+								if (WorkflowConstants.LQB_MONITOR_LIST
+								        .contains(currentLoanStatus)) {
 									checkIfAnyStatusIsMissed(currentLoanStatus,
-									        statusTrackingList,
+									        WorkflowConstants.LQB_MONITOR_LIST,
 									        loadResponseList,
-									        loanMilestoneMaster);
-
-								List<String> workflowItemTypeList = null;
-								if (wItemMSInfo != null) {
-									workflowItemTypeList = wItemMSInfo
-									        .getWorkItems();
-									if (workflowItemTypeList == null) {
-										workflowItemTypeList = new ArrayList<String>();
-									}
+									        getLoanMilestoneMasterList());
 								}
+								List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
 
-								List<WorkflowItemExec> itemToExecute = itemToExecute(
+								List<WorkflowItemExec> itemsToExecute = itemToExecute(
 								        workflowItemTypeList,
 								        workflowItemExecList);
-
-								for (WorkflowItemExec workflowItemExec : itemToExecute) {
-									LOGGER.debug("Putting the item in execution ");
-									String params = Utils
-									        .convertMapToJson(getParamsBasedOnStatus(
-									                currentLoanStatus,
-									                workflowItemExec.getId()));
-									workflowService.saveParamsInExecTable(
-									        workflowItemExec.getId(), params);
-									engineTrigger
-									        .startWorkFlowItemExecution(workflowItemExec
-									                .getId());
-								}
+								LOGGER.debug("Putting milestone into execution ");
+								putItemsIntoExecution(itemsToExecute,
+								        currentLoanStatus);
 
 								LOGGER.debug("Updating last acted on time ");
 								updateLastModifiedTimeForThisLoan(loan);
@@ -349,6 +324,52 @@ public class ThreadManager implements Runnable {
 
 		LOGGER.debug("Calling Milestones With Reminder ");
 		invokeMilestonesWithReminder();
+	}
+
+	private List<String> getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(
+	        WorkItemMilestoneInfo wItemMSInfo) {
+		List<String> workflowItemTypeList = null;
+		if (wItemMSInfo != null) {
+			workflowItemTypeList = wItemMSInfo.getWorkItems();
+		}
+		if (workflowItemTypeList == null) {
+			workflowItemTypeList = new ArrayList<String>();
+		}
+		return workflowItemTypeList;
+	}
+
+	private WorkItemMilestoneInfo getWorkItemMilestoneInfoBasedOnLoanStatus(
+	        LOSLoanStatus loanStatusID) {
+		WorkItemMilestoneInfo wItemMSInfo = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+		        .get(loanStatusID);
+		return wItemMSInfo;
+	}
+
+	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
+	        int currentLoanStatus) {
+		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
+			LOGGER.debug("Putting the item in execution ");
+			String params = Utils.convertMapToJson(getParamsBasedOnStatus(
+			        currentLoanStatus, workflowItemExec.getId()));
+			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+			        params);
+			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+		}
+	}
+
+	private LoanMilestoneMaster getLoanMilestoneMasterBasedOnMilestone(
+	        Milestones milestones) {
+		LoanMilestoneMaster loanMilestoneMaster = null;
+		for (LoanMilestoneMaster loanMilestone : getLoanMilestoneMasterList()) {
+
+			if (loanMilestone.getId() == milestones.getMilestoneID()) {
+				LOGGER.debug("Found LoanMilestone Master ");
+				loanMilestoneMaster = loanMilestone;
+				break;
+
+			}
+		}
+		return loanMilestoneMaster;
 	}
 
 	private void invokeMilestonesWithReminder() {
@@ -408,8 +429,6 @@ public class ThreadManager implements Runnable {
 				LOGGER.debug("Save Credit Score For This Borrower ");
 				saveCreditScoresForBorrower(creditScoreMap);
 
-				LOGGER.debug("Invoking Credit Score Milestone ");
-				invokeCreditScoreMilestone();
 				creditScoreMap.clear();
 			}
 		}
@@ -460,6 +479,11 @@ public class ThreadManager implements Runnable {
 
 				LOGGER.debug("Updating customer details ");
 				updateCustomerDetails(customerDetail);
+
+				if (borrowerEquifaxScore != null
+				        || borrowerExperianScore != null
+				        || borrowerTransunionScore != null)
+					invokeCreditScoreMilestone();
 
 			} else {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
@@ -757,7 +781,7 @@ public class ThreadManager implements Runnable {
 	private int checkIfAnyStatusIsMissed(int currentStatus,
 	        List<Integer> statusTrackingList,
 	        List<LoadResponseVO> loadResponseVOList,
-	        LoanMilestoneMaster loanMilestoneMaster) {
+	        List<LoanMilestoneMaster> loanMileStoneMasterList) {
 		List<LoanMilestone> loanMilestoneList = loan.getLoanMilestones();
 		int currentIndex = statusTrackingList.indexOf(currentStatus);
 		LOGGER.debug("Checking if previous state has an entry ");
@@ -777,12 +801,22 @@ public class ThreadManager implements Runnable {
 				}
 			}
 			if (trackStatus == 0) {
+				Milestones milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+				        .get(loanStatusID).getMilestone();
+				LoanMilestoneMaster loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
 				putLoanMilestoneIntoExecution(loanStatusID, previousStatus,
 				        loadResponseVOList, loanMilestoneMaster);
 
+				LOGGER.debug("Invoking the milestone concrete classes for the missed status "
+				        + previousStatus);
+				WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
+				List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
+				List<WorkflowItemExec> itemsToExecute = itemToExecute(
+				        workflowItemTypeList, workflowItemExecList);
+				putItemsIntoExecution(itemsToExecute, previousStatus);
 				LOGGER.debug("Recursively calling to see if multiple status has been missed ");
 				checkIfAnyStatusIsMissed(previousStatus, statusTrackingList,
-				        loadResponseVOList, loanMilestoneMaster);
+				        loadResponseVOList, getLoanMilestoneMasterList());
 
 			}
 
