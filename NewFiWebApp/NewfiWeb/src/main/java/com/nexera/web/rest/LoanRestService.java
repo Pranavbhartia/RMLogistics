@@ -269,7 +269,10 @@ public class LoanRestService {
 			// return RestUtil.wrapObjectForFailure(null, "403",
 			// "User Not Logged in.");
 		}
-		UserVO userVO = User.convertFromEntityToVO(user);
+
+		// UserVO userVO = User.convertFromEntityToVO(user);
+
+		UserVO userVO = userProfileService.findUser(user.getId());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
 

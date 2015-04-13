@@ -1960,7 +1960,7 @@ CREATE TABLE `workflowitemexec` (
   `success` tinyint(4) DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `remind` tinyint(1) DEFAULT '0',
+  `remind` tinyint(1) NOT NULL DEFAULT '0',
   `modified_date` datetime DEFAULT NULL,
   `parent_workflow_itemexec` int(11) DEFAULT NULL,
   `params` text,
@@ -1980,6 +1980,7 @@ CREATE TABLE `workflowitemexec` (
   CONSTRAINT `fk_wfItem_successOfWfItemExec` FOREIGN KEY (`on_success_item`) REFERENCES `workflowitemexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2019,7 +2020,7 @@ CREATE TABLE `workflowitemmaster` (
   `clickable` tinyint(4) DEFAULT '1',
   `display_order` int(11) NOT NULL,
   `display_turn_order` int(11) DEFAULT NULL,
-  `remind` tinyint(4) DEFAULT NULL,
+  `remind` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_wfItemOnSuccess_idx` (`on_success`),
   KEY `fk_wfItemOnFailure_idx` (`on_failure`),
