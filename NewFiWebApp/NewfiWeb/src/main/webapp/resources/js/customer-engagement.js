@@ -1123,7 +1123,6 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     });
     
    
- ;
     if (customerInputData.refinanceOption == "REFLMP") refinanceOpt = "Lower My Monthly Payment";
     if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
     if (customerInputData.refinanceOption == "REFCO") refinanceOpt = "Take Cash Out of My Home";
@@ -1148,7 +1147,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     }
     
     
-   var monthlyPaymentDifference = Math.abs(rateVO[index].payment - monthlyPayment).toFixed(2);;
+   var monthlyPaymentDifference = Math.abs(rateVO[index].payment - monthlyPayment);
     
   
 
@@ -1165,19 +1164,83 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     });
     // add rows in right column
     var rcRow1 = getLoanSummaryRow("Principal Interest",rateVO[index].payment,"principalIntId");
-    var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", tax,"calTaxID");
+    var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", tax,"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
-    var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID");
-    //var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
-   // var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", "$ "+monthlyPayment);
-    var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", "$ "+monthlyPaymentDifference);
-    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", "$ "+totalEstMonthlyPayment);
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",customerInputData);
+   
+    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", "$ "+monthlyPayment ,"monthlyPaymentId");
+    var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", "$ "+monthlyPaymentDifference ,"monthlyPaymentDifferenceId");
+    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", "$ "+totalEstMonthlyPayment,"totalEstMonthlyPaymentId");
     
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6).append(rcRow7).append(rcRow8);
     container.append(leftCol).append(rightCol);
     return container;
 }
+
+
+function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData) {
+    var container = $('<div>').attr({
+        "class": "loan-summary-row clearfix"
+    });
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left"
+    }).html(desc);
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left"
+    });
+    
+    var col2Txt = $('<div>').attr({
+    	"class" : "calculate-btn",
+    	"id":id
+
+    }).html(detail)
+    .bind('click',{"valueData":$(this).text()},function(event){
+    	var prevVal = $(this).text();
+    	$(this).next('input').show().focus().val(prevVal);
+    	$(this).hide();
+    	
+    });
+    
+    var inputBox = $('<input>').attr({
+    	"class" : "loan-summary-sub-col-detail hide",
+    	"id":id2
+    }).bind('keyup',{"customerInputData":customerInputData},function(e){
+    	if(e.which == 27){
+    		var prevVal = $(this).prev('.calculate-btn').text();
+    		if($(this).val() == undefined || $(this).val() == prevVal){
+    			$(this).hide();
+    			$(this).prev('.calculate-btn').show();
+    		}
+    	}
+    	
+    	var tax = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
+    	var insurance = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
+    	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
+    	
+    	var totalEstMonthlyPaymentId = tax+insurance+principalInt;
+    	
+    	var InsuranceTemp =  tax;
+    	var taxesTemp =  insurance;
+    	var sum = InsuranceTemp + taxesTemp;
+    	var monthlyPaymentTemp = parseFloat(removedDoller(removedComma(customerInputData.currentMortgagePayment)));  
+    	var monthlyPayment = ((monthlyPaymentTemp - sum )/12).toFixed(2);
+    	
+    	var monthlyPaymentDifference = Math.abs(principalInt - monthlyPayment);
+    	
+    	
+    	$('#monthlyPaymentId').text("$ " +monthlyPayment);
+    	$('#monthlyPaymentDifferenceId').text("$ " +monthlyPaymentDifference);
+    	$('#totalEstMonthlyPaymentId').text(("$ " +totalEstMonthlyPaymentId));
+    	
+    	
+    });
+    $(inputBox).val(detail);
+    
+    col2.append(col2Txt).append(inputBox);
+    container.append(col1).append(col2);
+    return container;
+}
+
 
 function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     
@@ -1202,7 +1265,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     var lcRow1 = getLaonSummaryApplyBtnRow();
     var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow3 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
-    var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
+    var lcRow4 = getLoanSummaryRow("Down Payment", "");
     var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow6 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
     var lcRow7 = getLoanSummaryRow("Loan Amount", loanAmount);
@@ -1215,9 +1278,9 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     // add rows in right column
     var rcRow1 = getLoanSummaryRow("Monthly Payment", customerInputData.purchaseDetails.rentPerMonth);
     var rcRow2 = getLoanSummaryRow("Principal Interest", rateVO[index].payment,"principalIntId");
-    var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Calculate");
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "Calculate");
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Calculate");
+    var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "Calculate");
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
     //var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ 1,649.02");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);

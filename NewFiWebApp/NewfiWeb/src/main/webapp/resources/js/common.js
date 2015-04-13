@@ -285,3 +285,19 @@ function scrollToTop(){
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+
+function removedDoller(inputData) {
+    var processData = inputData;
+   if (inputData.indexOf('$') >= 0)     
+     processData = inputData.split("$")[1];
+
+      return processData;
+}
+
+function removedComma(inputData) {
+   if (inputData.indexOf(',') >= 0) 
+       return inputData.replace(/,/g, "");
+   else
+      return inputData;
+}

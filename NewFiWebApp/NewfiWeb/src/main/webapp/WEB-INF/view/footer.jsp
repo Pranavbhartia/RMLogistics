@@ -34,6 +34,7 @@
 <script src="resources/js/jquery.zclip.js"></script>
 <script src="resources/js/ZeroClipboard.swf"></script>
 <script src="resources/js/jquery.zclip.min.js"></script>
+<script src="resources/js/numericInput.js"></script>
 <div id="dialog" >
 </div>
 
