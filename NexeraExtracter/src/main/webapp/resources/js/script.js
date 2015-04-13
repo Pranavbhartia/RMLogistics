@@ -399,7 +399,7 @@ function appendFNMAConventionalARMTableWrapper(element){
 		
 	var table1 = getRatesTable(tableData["Fannie Mae 5/1 Libor ARM 2/2/5"],"Fannie Mae 5/1 Libor ARM 2/2/5");
 	var table2 = getRatesTable(tableData["Fannie Mae 5/1 Libor ARM High Balance 2/2/5"],"Fannie Mae 5/1 Libor ARM High Balance 2/2/5");
-	var table3 = getRatesTable(tableData["Fannie Mae 7/1 Libor ARM High Balance 5/2/5"],"Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
+	var table3 = getRatesTable(tableData["Fannie Mae 7/1 Libor ARM 2/2/5"],"Fannie Mae 7/1 Libor ARM 2/2/5");
 	var table4 = getRatesTable(tableData["Fannie Mae 7/1 Libor ARM High Balance 5/2/5"],"Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
 	
 	tableCont.append(table1).append(table2).append(table3).append(table4);

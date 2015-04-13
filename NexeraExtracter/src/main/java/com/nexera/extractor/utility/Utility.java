@@ -115,40 +115,52 @@ public class Utility {
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
 	        "30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
-	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_"};
+	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_" };
 
 	private static final String[] KEY_INDEX = { "15DAY_PRICE.csv",
 	        "30DAY_PRICE.csv", "45DAY_PRICE.csv", "60DAY_PRICE.csv" };
-	
-	
-	static final Map<String , String> FILE_PATTERN_LABEL = new HashMap<String , String>() {{
-		
-		
-		
-	    put("30_YR_FIXED_CONFORMING-RS_FNMA_",   "Fannie Mae 30yr Fixed");
-	    put("20_YR_FIXED_CONFORMING-RS_FNMA_",   "Fannie Mae 20yr Fixed");
-	    put("15_YR_FIXED_CONFORMING-RS_FNMA_",   "Fannie Mae 15yr Fixed");
-	    put("10_YR_FIXED_CONFORMING-RS_FNMA_",   "Fannie Mae 10yr Fixed");
-	  
-	    put("30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",   "Fannie Mae 30yr Fixed High Balance");
-	    put("20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",   "Fannie Mae 20yr Fixed High Balance");
-	    put("15_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",   "Fannie Mae 15yr Fixed High Balance");
-	    put("10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",   "Fannie Mae 10yr Fixed High Balance");
-	    
-	    put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_",   "Fannie Mae 5/1 Libor ARM 2/2/5");
-	    put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_",   "Fannie Mae 20yr Fixed High Balance");
-	    put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_HIBAL_",   "Fannie Mae 5/1 Libor ARM High Balance 2/2/5");
-	    put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_",   "Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
-	    
-	    put("30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",   "Mammoth Jumbo 30 YR Fixed");
-	    put("15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",   "Mammoth Jumbo 15 YR Fixed");
-	    put("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_",   "Mammoth Non Agency Hybrid 5/1 ARM");
-	    put("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_",   "Mammoth Non Agency Hybrid 5/1 ARM IO");
-	    
-	    put("30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",   "Cascades Jumbo 30 YR Fixed");
-	    put("15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",   "Cascades Jumbo 15 YR Fixed");
-	}};
-	
+
+	static final Map<String, String> FILE_PATTERN_LABEL = new HashMap<String, String>() {
+		{
+
+			put("30_YR_FIXED_CONFORMING-RS_FNMA_", "Fannie Mae 30yr Fixed");
+			put("20_YR_FIXED_CONFORMING-RS_FNMA_", "Fannie Mae 20yr Fixed");
+			put("15_YR_FIXED_CONFORMING-RS_FNMA_", "Fannie Mae 15yr Fixed");
+			put("10_YR_FIXED_CONFORMING-RS_FNMA_", "Fannie Mae 10yr Fixed");
+
+			put("30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+			        "Fannie Mae 30yr Fixed High Balance");
+			put("20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+			        "Fannie Mae 20yr Fixed High Balance");
+			put("15_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+			        "Fannie Mae 15yr Fixed High Balance");
+			put("10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+			        "Fannie Mae 10yr Fixed High Balance");
+
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_",
+			        "Fannie Mae 5/1 Libor ARM 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_",
+			        "Fannie Mae 7/1 Libor ARM 2/2/5");
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_HIBAL_",
+			        "Fannie Mae 5/1 Libor ARM High Balance 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_",
+			        "Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
+
+			put("30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
+			        "Mammoth Jumbo 30 YR Fixed");
+			put("15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
+			        "Mammoth Jumbo 15 YR Fixed");
+			put("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_",
+			        "Mammoth Non Agency Hybrid 5/1 ARM");
+			put("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_",
+			        "Mammoth Non Agency Hybrid 5/1 ARM IO");
+
+			put("30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
+			        "Cascades Jumbo 30 YR Fixed");
+			put("15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
+			        "Cascades Jumbo 15 YR Fixed");
+		}
+	};
 
 	public static Integer currentIndex = 0;
 
@@ -249,11 +261,11 @@ public class Utility {
 		//
 		// return listMap;
 	}
-	
+
 	@SuppressWarnings("unused")
-	private Boolean isPresent(String pattern){
-		for (String pattrn : FILE_PATTERN){
-			if(pattern.equals(pattrn)){
+	private Boolean isPresent(String pattern) {
+		for (String pattrn : FILE_PATTERN) {
+			if (pattern.equals(pattrn)) {
 				return true;
 			}
 		}
@@ -261,9 +273,7 @@ public class Utility {
 	}
 
 	private int getKeyIndex(String fileName) {
-		
-		
-		
+
 		for (int i = 0; i < KEY_INDEX.length; i++) {
 			if (fileName.contains(KEY_INDEX[i])) {
 
@@ -285,7 +295,7 @@ public class Utility {
 		for (String pattern : FILE_PATTERN) {
 			if (actualFileName.equals(pattern)) {
 				return FILE_PATTERN_LABEL.get(pattern);
-				//return actualFileName;
+				// return actualFileName;
 			}
 		}
 		return null;
@@ -465,6 +475,12 @@ public class Utility {
 
 			String rowHeader = getFilePattern(fileProductPointRate
 			        .getFileName());
+			System.out.println(fileProductPointRate.getFileName());
+			if (fileProductPointRate
+			        .getFileName()
+			        .equals("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_30DAY_PRICE.csv")) {
+				System.out.println("Here");
+			}
 			List<UIEntity> uiEntityList = null;
 
 			if (hashMap.get(rowHeader) == null) {
