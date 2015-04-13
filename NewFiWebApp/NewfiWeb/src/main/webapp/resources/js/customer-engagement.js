@@ -1131,7 +1131,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var  monthlyPayment  = parseFloat(customerInputData.currentMortgagePayment.split("$")[1].replace(/,/g, "")/12); 
     var Insurance ="Calculate";
     var tax = "Calculate";
-    var totalEstMonthlyPayment =  rateVO[index].payment;
+    var totalEstMonthlyPayment =  rateVO[index].payment.replace(/,/g, "");
     
     if(customerInputData.isIncludeTaxes =="Yes"){
     	var InsuranceTemp =  parseFloat(customerInputData.annualHomeownersInsurance.split("$")[1].replace(/,/g, ""));
@@ -1148,7 +1148,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     }
     
     
-   var monthlyPaymentDifference = Math.abs(rateVO[index].payment - monthlyPayment);
+   var monthlyPaymentDifference = Math.abs(rateVO[index].payment - monthlyPayment).toFixed(2);;
     
   
 

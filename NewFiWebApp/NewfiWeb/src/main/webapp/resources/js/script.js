@@ -993,34 +993,41 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
 function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     
 	var yearValues = lqbData;
- //  console.log('yearValues'+JSON.stringify(yearValues));
     var rateVO = yearValues[yearValues.length-2].rateVO;
-  //   alert('rateVO'+JSON.stringify(rateVO));
     var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
- //alert('index'+index);
+ 
     
     if (appUserDetails.refinancedetails.refinanceOption == "REFLMP") refinanceOpt = "Lower My Monthly Payment";
     if (appUserDetails.refinancedetails.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
     if (appUserDetails.refinancedetails.refinanceOption == "REFCO") refinanceOpt = "Take Cash Out of My Home";
     
+    var principalInterest = rateVO[index].payment; 
     var Insurance ="Edit";
-    if(appUserDetails.propertyTypeMaster.propertyInsuranceCost && appUserDetails.propertyTypeMaster.propertyInsuranceCost !="$0")
-    	Insurance = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
-    
-    var InsuranceTemp =  parseFloat(appUserDetails.propertyTypeMaster.propertyInsuranceCost.split("$")[1].replace(/,/g, ""));
-    
     var tax = "Edit";
-    if(appUserDetails.propertyTypeMaster.propertyTaxesPaid && appUserDetails.propertyTypeMaster.propertyTaxesPaid != "$0")
-      tax = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+    var  monthlyPayment  = parseFloat(appUserDetails.refinancedetails.currentMortgagePayment.split("$")[1].replace(/,/g, "")/12); 
+   
+    var totalEstMonthlyPayment =  principalInterest;
+    if(principalInterest != "" && principalInterest != undefined )
+    	principalInterest =  principalInterest.replace(/,/g, "") ;
     
-    var taxesTemp =  parseFloat(appUserDetails.propertyTypeMaster.propertyTaxesPaid.split("$")[1].replace(/,/g, ""));
+    if(appUserDetails.refinancedetails.includeTaxes ==true){
+    	
+    	var InsuranceTemp =  parseFloat(appUserDetails.propertyTypeMaster.propertyInsuranceCost.split("$")[1].replace(/,/g, ""));
+    	var taxesTemp =  parseFloat(appUserDetails.propertyTypeMaster.propertyTaxesPaid.split("$")[1].replace(/,/g, ""));
+    	var sum = InsuranceTemp + taxesTemp;
+    	var monthlyPaymentTemp = parseFloat(appUserDetails.refinancedetails.currentMortgagePayment.split("$")[1].replace(/,/g, ""));  
+    	var monthlyPaymenttemp1 = (monthlyPaymentTemp - sum )/12;
+    	monthlyPayment = monthlyPaymenttemp1.toFixed(2);
+    	
+    	Insurance = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+    	tax = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+    	totalEstMonthlyPaymentTemp  = parseFloat(principalInterest) + InsuranceTemp + taxesTemp;
+    	totalEstMonthlyPayment = totalEstMonthlyPaymentTemp.toFixed(2);
+    }
     
-    var monthlyPaymentDifference = parseFloat(InsuranceTemp +taxesTemp);
+    var monthlyPaymentDifference = Math.abs(principalInterest - monthlyPayment).toFixed(2);
     
-    var currentMortgagePayment = parseFloat(appUserDetails.refinancedetails.currentMortgagePayment.split("$")[1].replace(/,/g, ""));
-    var monthlyPaymentTemp = parseFloat(rateVO[index].payment.replace(/,/g, "")) + currentMortgagePayment +monthlyPaymentDifference ;
-    var monthlyPayment = monthlyPaymentTemp.toFixed(2);
-    
+
     var container = $('<div>').attr({
         "class": "loan-summary-container clearfix"
     });
@@ -1045,15 +1052,15 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
         "class": "loan-summary-rp float-right"
     });
     
-    var rcRow1 = getLoanSummaryRow("Principal Interest", rateVO[index].payment,"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Principal Interest", principalInterest ,"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", tax,"calTaxID");
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID");
     //var rcRow4 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
     //var rcRow5 = getLoanSummaryRow("Total Est. Monthly Payment", "$ 3,298.40");
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment", appUserDetails.refinancedetails.currentMortgagePayment);
+    var rcRow6 = getLoanSummaryRow("Current Monthly Payment", "$ "+monthlyPayment);
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference", "$ " + monthlyPaymentDifference);
-    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+monthlyPayment);
+    var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+totalEstMonthlyPayment);
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6).append(rcRow7).append(rcRow8);
     container.append(leftCol).append(rightCol);
     return container;
