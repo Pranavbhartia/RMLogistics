@@ -347,7 +347,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-	public Loan retrieveLoanForDashboard(User parseUserModel, Loan loan) {
+	public Loan retrieveLoanForDashboard(UserVO parseUserModel, Loan loan) {
 
 		try {
 			Loan loanForUser = null;
@@ -355,7 +355,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			if (parseUserModel.getInternalUserDetail() != null) {
 				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
-				        .getInternalUserDetail().getInternaUserRoleMaster()
+				        .getInternalUserDetail().getInternalUserRoleMasterVO()
 				        .getId()) {
 					criteria.add(Restrictions.eq("user.id",
 					        parseUserModel.getId()));
