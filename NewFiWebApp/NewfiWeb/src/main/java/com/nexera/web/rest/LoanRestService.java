@@ -49,15 +49,16 @@ public class LoanRestService {
 
 	@Autowired
 	private Utils utils;
-	
+
 	@Autowired
 	private NeedsListService needsListService;
-	
+
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
 
-	private static final Logger LOG = LoggerFactory.getLogger( LoanRestService.class );
-	
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LoanRestService.class);
+
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
 	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
 
@@ -87,12 +88,15 @@ public class LoanRestService {
 	        @PathVariable Integer loanID) {
 
 		LoanVO loanVO = loanService.getLoanByID(loanID);
-		LOG.info("--"+LoanTypeMasterEnum.PUR.toString());
-		if(loanVO.getLoanType().getLoanTypeCd().equals(LoanTypeMasterEnum.PUR.toString())){
-					UploadedFilesList file = needsListService.fetchPurchaseDocumentBasedOnPurchaseContract();
-					loanVO.getLoanType().setUploadedFiles(uploadedFilesListService.buildUpdateFileVo(file));
+		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
+		if (loanVO.getLoanType().getLoanTypeCd()
+		        .equals(LoanTypeMasterEnum.PUR.toString())) {
+			UploadedFilesList file = needsListService
+			        .fetchPurchaseDocumentBasedOnPurchaseContract();
+			loanVO.getLoanType().setUploadedFiles(
+			        uploadedFilesListService.buildUpdateFileVo(file));
 		}
-		
+
 		if (loanVO != null) {
 			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
 			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
@@ -295,11 +299,16 @@ public class LoanRestService {
 		UserVO userVO = userProfileService.findUser(user.getId());
 		LoanVO loanVO = new LoanVO();
 		loanVO.setId(loanID);
+		try {
+			LoanCustomerVO responseVO = loanService.retrieveDashboard(userVO,
+			        loanVO);
+			return RestUtil.wrapObjectForSuccess(responseVO);
+		} catch (Exception e) {
+			LOG.error("Exception in retrieve dashboard based on loan", e);
+			return RestUtil.wrapObjectForFailure(null, "500",
+			        "Internal Server Error");
+		}
 
-		LoanCustomerVO responseVO = loanService.retrieveDashboard(userVO,
-		        loanVO);
-
-		return RestUtil.wrapObjectForSuccess(responseVO);
 	}
 
 	@RequestMapping(value = "/activeloan/get/{userID}")
@@ -399,9 +408,9 @@ public class LoanRestService {
 	}
 
 	@RequestMapping(value = "/appform/{userId}", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO retrieveLoanAppForm(@PathVariable Integer userId) {
-		UserVO userVO=new UserVO(userId);
+	public @ResponseBody CommonResponseVO retrieveLoanAppForm(
+	        @PathVariable Integer userId) {
+		UserVO userVO = new UserVO(userId);
 		LoanAppFormVO loanAppFormVO = loanService.retrieveLoanAppForm(userVO);
 		return RestUtil.wrapObjectForSuccess(loanAppFormVO);
 	}
