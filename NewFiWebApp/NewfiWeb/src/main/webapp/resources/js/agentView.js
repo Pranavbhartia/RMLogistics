@@ -968,6 +968,19 @@ function paintAgentLoanPage(data) {
 	}
 
 }
+function getAppDetailsForUser(userId,callback){
+	ajaxRequest("rest/loan/appform/"+userId,"GET","json",undefined,function(response){
+			if(response.error){
+				showToastMessage(response.error.message)
+			}else{
+				var appFormDetails=response.resultObject;
+				newfi.appUserDetails=JSON.stringify(appFormDetails);
+				if(callback){
+					callback();
+				}
+			}
+		});
+}
 // function called when secondary left panel is changed in agent view loan
 // progress pages
 function changeAgentSecondaryLeftPanel(elementId) {
@@ -986,6 +999,10 @@ function changeAgentSecondaryLeftPanel(elementId) {
 		doPagination = true;
 		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
+		var userId=selectedUserDetail.userID;
+		getAppDetailsForUser(userId,function(){
+			paintCustomerApplicationPage();
+		});
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
 		if(userIsRealtor()){

@@ -466,7 +466,7 @@ function getApplicationTextQues(question) {
         optionCont.val(question.value);
     }
 
-quesTextCont.append(requird)
+    quesTextCont.append(requird);
     optionsContainer.append(optionCont);
 
     return container.append(quesTextCont).append(optionsContainer);
@@ -882,7 +882,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	 }
      if(!contxt.value){
         var res=mapDbDataForFrontend(contxt.name);
-        if(res)
+        if(res!=undefined)
             contxt.value=contxt.mapValues(res);
      }
 	return contxt;
@@ -4327,6 +4327,29 @@ function mapDbDataForFrontend(key){
                 return false;
         case "buyhomeZipPri":
             return appUserDetails.purchaseDetails.buyhomeZipPri;
+        case "isOutstandingJudgments":
+            return appUserDetails.governmentquestion.outstandingJudgments;
+        case "isBankrupt":
+            return appUserDetails.governmentquestion.bankrupt;
+        case "isPropertyForeclosed":
+            return appUserDetails.governmentquestion.propertyForeclosed;
+        case "isLawsuit":
+            return appUserDetails.governmentquestion.lawsuit;
+        case "isObligatedLoan":
+            return appUserDetails.governmentquestion.obligatedLoan;
+        case "isFederalDebt":
+            return appUserDetails.governmentquestion.federalDebt;
+        case "isObligatedToPayAlimony":
+            return appUserDetails.governmentquestion.obligatedToPayAlimony;
+        case "isEndorser":
+            return appUserDetails.governmentquestion.endorser;
+        case "isUSCitizen":
+            return appUserDetails.governmentquestion.uscitizen;
+        case "isOccupyPrimaryResidence":
+            return appUserDetails.governmentquestion.occupyPrimaryResidence;
+        case "isOwnershipInterestInProperty":
+            return appUserDetails.governmentquestion.ownershipInterestInProperty;
+            
     }
 }
 

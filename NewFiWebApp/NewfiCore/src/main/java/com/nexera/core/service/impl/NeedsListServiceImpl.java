@@ -255,7 +255,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
 					                .getIndx()).setIsChecked(true);
 					needsList
-					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
+					                .getIndx())
 					        .setIsChecked(true);
 				}
 				if (null != loanAppForm.getIsselfEmployed()
@@ -265,7 +266,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
 					                .getIndx()).setIsChecked(true);
 					needsList
-					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
+					                .getIndx())
 					        .setIsChecked(true);
 					needsList
 					        .get(MasterNeedsEnum.Federal_Corporation_Partnership_K_1s_all_partnerships
@@ -284,7 +286,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 					        .get(MasterNeedsEnum.Previous_2_years_1099_1099_s_1099_Rs
 					                .getIndx()).setIsChecked(true);
 					needsList
-					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income)
+					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
+					                .getIndx())
 					        .setIsChecked(true);
 				}
 				// #22,#28,#33

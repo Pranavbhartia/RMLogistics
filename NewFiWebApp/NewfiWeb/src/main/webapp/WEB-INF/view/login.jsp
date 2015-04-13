@@ -69,6 +69,7 @@
 						<form id="loginForm" name="loginForm"
 							action="j_spring_security_check" method="POST">
 							<div class="form-logo"></div>
+							<div class="login-error hide">Error message</div>
 							<div class="login-input-cont">
 								<input type="text" class="login-input login-input-username"
 									placeholder="Username" id="userId"> <input

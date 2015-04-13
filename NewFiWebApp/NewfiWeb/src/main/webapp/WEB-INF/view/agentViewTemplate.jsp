@@ -14,6 +14,8 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/customer-application.css" rel="stylesheet">
+<link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/style-admin.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 </head>

@@ -14,6 +14,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTeamListVO;
@@ -145,4 +146,6 @@ public interface LoanService {
 	public LoanDashboardVO searchUsers(LoanUserSearchVO searchVO);
 
 	public void updateLoanAppFee(int loanId, BigDecimal newAppFee);
+	
+	public LoanAppFormVO retrieveLoanAppForm(UserVO userVO);
 }

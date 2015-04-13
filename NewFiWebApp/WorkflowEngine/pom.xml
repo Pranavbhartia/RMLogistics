@@ -132,7 +132,7 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
 			</resource>
 		</resources>
 		<plugins>
@@ -149,24 +149,7 @@
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<build>
-				<filters>
-					<filter>src/main/resources/filter-dev.properties</filter>
-				</filters>
-			</build>
-		</profile>
-		<profile>
-			<id>test</id>
-			<build>
-				<filters>
-					<filter>src/main/resources/filter-test.properties</filter>
-				</filters>
-			</build>
-		</profile>
-	</profiles>
+	
 
 	<pluginRepositories>
 		<pluginRepository>
