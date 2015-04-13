@@ -1149,6 +1149,55 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit Decision",
 			loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
+	if(loanDetails.userLoanStatus.loanPurpose == "Purchase" &&  loanDetails.loanType.uploadedFiles != undefined){
+		
+		var purchaseContainer = $("<div>").attr({
+					"class" : "clearfix"
+		});
+		
+		var documentLinkContainer = $("<div>").attr({
+					"class" : "documentLinkContainer float-left"
+		});
+		
+		var documentLink  = $("<a>").attr({
+					"href" : "readFileAsStream.do?uuid="+ loanDetails.loanType.uploadedFiles.uuidFileId+"&isThumb=0",
+					"target" : "_blank"
+		}).html("Document Link");
+		
+		documentLinkContainer.append(documentLink);
+		
+		var dateContainer = $("<div>").attr({
+						"class" : "dateContainer float-left clearfix"
+		});
+		
+		var label = $("<div>").attr({
+				"class" : "datelabel float-left"
+		}).html("Set expiry date : ");
+		var dob = "";
+		if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
+			dob = "";
+		}
+		var dobInput = $('<input>').attr({
+			"class" : "prof-form-input date-picker float-left",
+			"placeholder" : "MM/DD/YYYY",
+			"value" : dob,
+			"id" : "dobID"
+		}).datepicker({
+			orientation : "top auto",
+			autoclose : true
+		}).on('show', function(e) {
+			var $popup = $('.datepicker');
+			$popup.click(function() {
+				return false;
+			});
+		});
+		dateContainer.append(label).append(dobInput);
+		purchaseContainer.append(documentLinkContainer).append(dateContainer);
+		
+		$('#av-loan-details-container').append(purchaseContainer);
+		
+	}
+	
 	appendCustomerEditProfilePopUp();
 
 }

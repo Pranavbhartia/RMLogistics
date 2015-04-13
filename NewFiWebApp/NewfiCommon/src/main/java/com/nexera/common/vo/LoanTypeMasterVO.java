@@ -17,6 +17,7 @@ public class LoanTypeMasterVO implements Serializable {
 	private List<LoanApplicationFeeMasterVO> loanApplicationFeeMasters;
 	private List<LoanMilestoneMasterVO> loanmilestonemasters;
 	private UserVO modifiedBy;
+	private UploadedFilesListVO uploadedFiles;
 
 	public LoanTypeMasterVO() {
 	    // TODO Auto-generated constructor stub
@@ -98,5 +99,11 @@ public class LoanTypeMasterVO implements Serializable {
 	public void setModifiedBy(UserVO modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+	public UploadedFilesListVO getUploadedFiles() {
+	    return uploadedFiles;
+    }
+	public void setUploadedFiles(UploadedFilesListVO uploadedFiles) {
+	    this.uploadedFiles = uploadedFiles;
+    }
 
 }
