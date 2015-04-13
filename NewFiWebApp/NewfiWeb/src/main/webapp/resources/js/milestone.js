@@ -200,7 +200,10 @@ var workFlowContext = {
 				ob.structureParentChild();
 				ob.renderMileStoneSteps(function(){
 					ob.fetchLatestStatus();
-					showProgressHeaderSteps();
+					if (role != "AGENT")
+					{
+						showProgressHeaderSteps();
+					}
 				});
 			});
 		});
