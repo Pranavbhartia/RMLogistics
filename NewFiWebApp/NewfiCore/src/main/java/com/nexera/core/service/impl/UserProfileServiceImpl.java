@@ -54,6 +54,7 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -179,6 +180,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
 		CustomerDetail customerDetail = CustomerDetail
 		        .convertFromVOToEntity(customerDetailVO);
+
 		LOG.info("Checking if the user is a customer");
 		if (userVO.getUserRole().getId() == 1) {
 			LOG.info("Checking for customer profile status of customers");
@@ -193,21 +195,22 @@ public class UserProfileServiceImpl implements UserProfileService,
 							                + ProfileCompletionStatus.ON_CREATE);
 						}
 
-					} else if (!userVO.getCustomerDetail()
-					        .getMobileAlertsPreference()) {
+					} else if (userVO.getCustomerDetail()
+					        .getMobileAlertsPreference() == false) {
 						customerDetail.setMobileAlertsPreference(userVO
 						        .getCustomerDetail()
 						        .getMobileAlertsPreference());
 
-						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							customerDetail
-							        .setProfileCompletionStatus(customerDetail
-							                .getProfileCompletionStatus()
-							                - ProfileCompletionStatus.ON_CREATE);
-						} else {
-							customerDetail
-							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-						}
+						/*
+						 * if (customerDetail.getProfileCompletionStatus() ==
+						 * ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+						 * customerDetail
+						 * .setProfileCompletionStatus(customerDetail
+						 * .getProfileCompletionStatus()); } else {
+						 * customerDetail
+						 * .setProfileCompletionStatus(ProfileCompletionStatus
+						 * .ON_PROFILE_PIC_UPLOAD); }
+						 */
 					}
 				}
 			} else {
@@ -216,11 +219,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
 					if (userVO.getPhoneNumber() != null
 					        && userVO.getCustomerDetail()
-					                .getMobileAlertsPreference())
+					                .getMobileAlertsPreference()) {
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
 						                .getProfileCompletionStatus()
 						                + ProfileCompletionStatus.ON_CREATE);
+					} else if (userVO.getPhoneNumber() != null
+					        && userVO.getCustomerDetail()
+					                .getMobileAlertsPreference() == false) {
+						customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus());
+					}
 				} else if (userVO.getPhoneNumber() != null
 				        && userVO.getCustomerDetail()
 				                .getMobileAlertsPreference()
@@ -233,15 +243,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        && userVO.getPhoneNumber() != null) {
 					customerDetail.setMobileAlertsPreference(userVO
 					        .getCustomerDetail().getMobileAlertsPreference());
-					if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                - ProfileCompletionStatus.ON_CREATE);
-					} else {
-						customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-					}
+					/*
+					 * if (customerDetail.getProfileCompletionStatus() ==
+					 * ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+					 * customerDetail .setProfileCompletionStatus(customerDetail
+					 * .getProfileCompletionStatus()); } else { customerDetail
+					 * .setProfileCompletionStatus
+					 * (ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD); }
+					 */
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
@@ -254,6 +263,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (customerDetail.getProfileCompletionStatus() > ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
 				customerDetail
 				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+			}
+			if (customerDetail.getCarrierInfo() != null) {
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+				        .getCarrierEmailForName(customerDetail.getCarrierInfo());
+				customerDetail.setCarrierInfo(mobileCarrier.getCarrierEmail());
 			}
 		}
 		Integer customerDetailVOObj = userProfileDao
@@ -975,14 +989,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			if(loaAppFormVO.getLoanType() !=null ){
-			if (loaAppFormVO.getLoanType().getLoanTypeCd()
-			        .equalsIgnoreCase("REF")) {
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			if (loaAppFormVO.getLoanType() != null) {
+				if (loaAppFormVO.getLoanType().getLoanTypeCd()
+				        .equalsIgnoreCase("REF")) {
+					loanVO.setLoanType(new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.REF));
+				} else {
+					loanVO.setLoanType(new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.PUR));
+				}
 			} else {
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
-			}
-			}else{
 				LOG.info("loan type is NONE");
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
 			}
@@ -997,7 +1013,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
-			
+
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
 

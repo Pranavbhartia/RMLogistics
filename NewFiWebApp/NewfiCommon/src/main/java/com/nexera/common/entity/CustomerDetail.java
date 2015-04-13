@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
@@ -55,6 +56,7 @@ public class CustomerDetail implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
+	private String carrierInfo;
 
 	// private CustomerSpouseDetail customerSpouseDetail;
 
@@ -321,6 +323,15 @@ public class CustomerDetail implements Serializable {
 			        .getTransunionScore());
 			customerDetailVO.setEquifaxScore(inputEntity.getEquifaxScore());
 			customerDetailVO.setExperianScore(inputEntity.getExperianScore());
+
+			if (inputEntity.getCarrierInfo() != null) {
+				MobileCarriersEnum enumValue = MobileCarriersEnum
+				        .getCarrierNameForEmail(inputEntity.getCarrierInfo());
+
+				customerDetailVO.setCarrierInfo(enumValue.getCarrierName());
+
+			}
+
 			// customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
 			// System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
 			// customerDetailVO.setCustomerEmploymentIncome(convertFromEntityToVO(inputEntity.getCustomerEmploymentIncome()));
@@ -481,7 +492,8 @@ public class CustomerDetail implements Serializable {
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
 			customerDetail.setLivingSince(inputEntity.getLivingSince());
-			
+			customerDetail.setCarrierInfo(inputEntity.getCarrierInfo());
+
 			if (null != inputEntity.getProfileCompletionStatus()) {
 				customerDetail.setProfileCompletionStatus(inputEntity
 				        .getProfileCompletionStatus());
@@ -613,6 +625,15 @@ public class CustomerDetail implements Serializable {
 
 	public void setTransunionScore(String transunionScore) {
 		this.transunionScore = transunionScore;
+	}
+
+	@Column(name = "carrier_info")
+	public String getCarrierInfo() {
+		return carrierInfo;
+	}
+
+	public void setCarrierInfo(String carrierInfo) {
+		this.carrierInfo = carrierInfo;
 	}
 
 }

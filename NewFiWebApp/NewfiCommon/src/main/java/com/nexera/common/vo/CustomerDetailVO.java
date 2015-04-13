@@ -28,6 +28,7 @@ public class CustomerDetailVO implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
+	private String carrierInfo;
 
 	// private CustomerSpouseDetailVO customerSpouseDetail;
 
@@ -260,6 +261,7 @@ public class CustomerDetailVO implements Serializable {
 		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
 		customerDetailVO.setSubscriptionsStatus(customerDetail
 		        .getSubscriptionsStatus());
+		customerDetailVO.setCarrierInfo(customerDetail.getCarrierInfo());
 		customerDetailVO.setLivingSince(customerDetail.getLivingSince());
 		return customerDetailVO;
 
@@ -288,5 +290,13 @@ public class CustomerDetailVO implements Serializable {
 	public void setTransunionScore(String transunionScore) {
 		this.transunionScore = transunionScore;
 	}
+
+	public String getCarrierInfo() {
+	    return carrierInfo;
+    }
+
+	public void setCarrierInfo(String carrierInfo) {
+	    this.carrierInfo = carrierInfo;
+    }
 
 }

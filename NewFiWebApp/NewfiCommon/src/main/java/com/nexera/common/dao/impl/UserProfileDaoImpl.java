@@ -118,6 +118,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(user.getUserRole());
 		Hibernate.initialize(user.getRealtorDetail());
 		Hibernate.initialize(user.getInternalUserStateMappings());
+		Hibernate.initialize(user.getCustomerDetail());
 		return user;
 	}
 
@@ -141,7 +142,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
@@ -154,6 +155,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("mobileAlertsPreference",
 		        customerDetail.getMobileAlertsPreference());
 		query.setParameter("id", customerDetail.getId());
+		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
 		return result;
