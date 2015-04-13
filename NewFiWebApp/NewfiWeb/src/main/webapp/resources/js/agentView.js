@@ -159,7 +159,7 @@ function paintAgentDashboardRightPanel(data) {
 	var searchIcon = $('<div>').attr({
 		"class" : "search-icn float-left"
 	}).on('click', function() {
-		$(this).hide();
+	
 		$(this).parent().find('.search-input').show().focus();
 	});
 
@@ -210,7 +210,8 @@ function paintAgentDashboardRightPanel(data) {
 		
 		if(i==0){
 			var filterSelected = $('<div>').attr({
-				"class" : "filter-selected"
+				"class" : "filter-selected",
+				"id" : "ALL"
 			}).html("All");
 
 			filter.append(filterSelected);
@@ -222,7 +223,7 @@ function paintAgentDashboardRightPanel(data) {
 		}).html(LOAN_ENUM[dropDownItemArray[i]]).bind('click', function(e) {
 			e.stopPropagation();
 			var val = $(this).html();
-			$('#filter-drop-down').parent().find('.filter-selected').html(val);
+			$('#filter-drop-down').parent().find('.filter-selected').attr("id" , dropDownItemArray[i]).html(val);
 			hideFilterDropDown();
 			searchCustomerLoanByLoanStatus(customerData.customers , $(this).attr('id'));
 		});
