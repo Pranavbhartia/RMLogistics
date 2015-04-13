@@ -4503,3 +4503,12 @@ input.calc-input {
 	line-height: 30px;
   padding-right: 30px;
 }
+
+.login-error{
+	color:#fff;
+	background-color:#f16d6d;
+	text-align: center;
+	padding: 10px 0;
+	margin-bottom: 5px;
+	opacity:0.7;
+}
