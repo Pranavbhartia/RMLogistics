@@ -55,6 +55,9 @@ public class WorkflowManager implements Callable<String> {
 	public String startWorkFlowItemExecution(
 	        WorkflowItemExec workflowItemExecution) {
 
+		LOGGER.debug("If parent exist, put parent into execution ");
+		changeStatusOfParent(workflowItemExecution);
+
 		LOGGER.debug("Updating workflow master status if its not updated ");
 		WorkflowItemMaster workflowItemMaster = workflowItemExecution
 		        .getWorkflowItemMaster();
@@ -84,18 +87,6 @@ public class WorkflowManager implements Callable<String> {
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				LOGGER.debug("Checking if it has an onFailure item to execute ");
-				// TODO test this Might Have issues regarding parent of success
-				// workflow item
-				/*
-				 * if (workflowItemMaster.getOnFailure() != null) {
-				 * WorkflowItemMaster failureWorkflowItemMaster =
-				 * workflowItemMaster .getOnFailure(); WorkflowItemExec
-				 * failureWorkflowItemExec = workflowService
-				 * .setWorkflowItemIntoExecution(workflowItemExecution
-				 * .getParentWorkflow(), failureWorkflowItemMaster,
-				 * workflowItemExecution .getParentWorkflowItemExec());
-				 * startWorkFlowItemExecution(failureWorkflowItemExec); }
-				 */
 
 			} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
 				workflowItemExecution.setStatus(WorkItemStatus.PENDING
@@ -110,6 +101,22 @@ public class WorkflowManager implements Callable<String> {
 
 		return result;
 
+	}
+
+	private void changeStatusOfParent(WorkflowItemExec workflowItemExecution) {
+		if (workflowItemExecution.getParentWorkflowItemExec() != null) {
+
+			WorkflowItemExec parentWorkflowItemExec = workflowItemExecution
+			        .getParentWorkflowItemExec();
+			if (parentWorkflowItemExec.getStatus().equalsIgnoreCase(
+			        WorkItemStatus.NOT_STARTED.getStatus())) {
+				LOGGER.debug("Updating the parent workflow item status to started ");
+				parentWorkflowItemExec.setStatus(WorkItemStatus.STARTED
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
+			}
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
