@@ -847,9 +847,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public LoanNeedsList fetchByNeedId(Integer needId) {
+	public LoanNeedsList fetchByNeedId(Integer needId, Integer loanId) {
 		// TODO Auto-generated method stub
-		return loanDao.fetchByNeedId(needId);
+		return loanDao.fetchByNeedId(needId, loanId);
 	}
 
 	@Override

@@ -88,15 +88,15 @@ public interface UploadedFilesListService {
 	public Boolean assignFileToNeeds(
 
 	Map<Integer, FileAssignmentMappingVO> mapFileMappingToNeed, Integer loanId,
-			Integer userId, Integer assignedBy);
+	        Integer userId, Integer assignedBy);
 
-    public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
+	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid);
 
-	void updateAssignments(Integer loanNeedId, Integer fileId);
+	void updateAssignments(Integer loanNeedId, Integer fileId, Integer loanId);
 
 	public UploadedFilesListVO buildUpdateFileVo(UploadedFilesList file);
 
 	List<UploadedFilesListVO> buildUpdateFileVoList(
-            List<UploadedFilesList> filesLists);
+	        List<UploadedFilesList> filesLists);
 
 }

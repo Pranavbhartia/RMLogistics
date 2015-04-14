@@ -249,7 +249,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			// loanAppForm.getCustomerEmploymentIncome().get(1).getEmployedAt());
 			Iterator<CustomerEmploymentIncome> itr = loanAppForm
 			        .getCustomerEmploymentIncome().iterator();
-
+            int counter = 0 ;
 			while (itr.hasNext()) {
 				CustomerEmploymentIncome cei = itr.next();
 				System.out.println("cei.getEmployedAt()" + cei.getEmployedAt());
@@ -266,11 +266,12 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				this.saveOrUpdate(customeremploymentIncome);
 				System.out.println("custom engagement id is "
 				        + customeremploymentIncome.getId());
-				System.out.println("custom engagement id is "
-				        + loanAppForm.getCustomerEmploymentIncome().get(0)
+				System.out.println("custom engagement id is "+counter+":::"
+				        + loanAppForm.getCustomerEmploymentIncome().get(counter)
 				                .getId());
-				loanAppForm.getCustomerEmploymentIncome().get(0)
+				loanAppForm.getCustomerEmploymentIncome().get(counter)
 				        .setId(customeremploymentIncome.getId());
+				counter++;
 			}
 
 			System.out
@@ -279,6 +280,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			sessionFactory.getCurrentSession().flush();
 		}
 
+		
+		
 		if (null != loanAppForm.getCustomerSpouseEmploymentIncome()) {
 			System.out
 			        .println("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerSpouseEmploymentIncome()"
@@ -286,6 +289,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			Iterator<CustomerSpouseEmploymentIncome> itr = loanAppForm
 			        .getCustomerSpouseEmploymentIncome().iterator();
 
+			
+			int counter = 0 ;
 			while (itr.hasNext()) {
 				CustomerSpouseEmploymentIncome cei = itr.next();
 				System.out.println("cei.getEmployedAt()" + cei.getEmployedAt());
@@ -300,6 +305,16 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getEmployedSince());
 				customerSpouseEmploymentIncome.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customerSpouseEmploymentIncome);
+				
+				System.out.println("custom spouse engagement id is "
+				        + customerSpouseEmploymentIncome.getId());
+				System.out.println("custom spouse engagement id is "+counter+":::"
+				        + loanAppForm.getCustomerSpouseEmploymentIncome().get(counter)
+				                .getId());
+				loanAppForm.getCustomerSpouseEmploymentIncome().get(counter)
+				        .setId(customerSpouseEmploymentIncome.getId());
+				counter++;
+				
 			}
 
 			System.out

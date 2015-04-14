@@ -975,7 +975,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			        && MasterNeedsEnum.getNeedReference(needListItem
 			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Disclsoure_Available
 			        || MasterNeedsEnum.getNeedReference(needListItem
-			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Signed_Disclosure) {
+			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Signed_Disclosure
+			        || MasterNeedsEnum.getNeedReference(needListItem
+			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Appraisal_Report) {
 				changeItemStatus(loanID,
 				        MasterNeedsEnum.getNeedReference(needListItem
 				                .getNeedsListMaster().getId()));
@@ -991,27 +993,40 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		int wfExecID = loanVO.getLoanManagerWorkflowID();
 		WorkflowExec workflowExec = new WorkflowExec();
 		workflowExec.setId(wfExecID);
-		WorkflowItemMaster workflowItemMaster = workflowService
-		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS);
-		WorkflowItemExec workItemRef = workflowService
-		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-		// Create Map here.
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (masterNeed != null) {
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-			        masterNeed == MasterNeedsEnum.Disclsoure_Available ? LoanStatus.disclosureAvail
-			                : LoanStatus.disclosureSigned);
+		String masterNeedKey = null;
+		String statusToBeSent = null;
+		if (masterNeed == MasterNeedsEnum.Disclsoure_Available) {
+			masterNeedKey = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
+			statusToBeSent = LoanStatus.disclosureAvail;
+		} else if (masterNeed == MasterNeedsEnum.Signed_Disclosure) {
+			masterNeedKey = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
+			statusToBeSent = LoanStatus.disclosureSigned;
+		} else if (masterNeed == MasterNeedsEnum.Appraisal_Report) {
+			masterNeedKey = WorkflowConstants.WORKFLOW_ITEM_APPRAISAL_STATUS;
+			statusToBeSent = LoanStatus.appraisalAvailable;
 		}
-		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loanVO.getId());
-		String params = Utils.convertMapToJson(map);
-		workflowService.saveParamsInExecTable(workItemRef.getId(), params);
-		engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
+		if (masterNeedKey != null) {
+			WorkflowItemMaster workflowItemMaster = workflowService
+			        .getWorkflowByType(masterNeedKey);
+			WorkflowItemExec workItemRef = workflowService
+			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+			// Create Map here.
+			Map<String, Object> map = new HashMap<String, Object>();
+			if (masterNeed != null && statusToBeSent != null) {
+				map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+				        statusToBeSent);
+			}
+			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loanVO.getId());
+			String params = Utils.convertMapToJson(map);
+			workflowService.saveParamsInExecTable(workItemRef.getId(), params);
+			engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
+		}
 	}
 
 	@Override
 	@Transactional
-	public void updateAssignments(Integer needId, Integer fileId) {
-		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId);
+	public void updateAssignments(Integer needId, Integer fileId, Integer loanId) {
+		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId, loanId);
 		updateFileInLoanNeedList(loanNeed.getId(), fileId);
 		updateIsAssignedToTrue(fileId);
 	}

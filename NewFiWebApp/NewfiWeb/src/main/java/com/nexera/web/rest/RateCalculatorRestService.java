@@ -45,7 +45,7 @@ import com.nexera.web.rest.util.TeaserRateHandler;
 public class RateCalculatorRestService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RateCalculatorRestService.class);
-	private String shopperCity;
+	
 	
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 
@@ -74,8 +74,13 @@ public class RateCalculatorRestService {
 	{
 		String loanAmount ;
 		String loanPurpose;
+		String shopperCounty = "";
+		String stateFromAPI = "";
 		
-
+		
+		
+		
+			
 		if("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance()) && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())){
 			
 			loanAmount =  "280000";
@@ -85,10 +90,10 @@ public class RateCalculatorRestService {
 		
 		if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
 			
-			loanAmount =  Integer.parseInt(teaserRateVO.getCashTakeOut()) +Integer.parseInt(teaserRateVO.getCurrentMortgageBalance())+"";
+			loanAmount =  Integer.parseInt(unformatCurrencyField(teaserRateVO.getCashTakeOut())) +Integer.parseInt(unformatCurrencyField(teaserRateVO.getCurrentMortgageBalance()))+"";
 			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
 		}else{
-			loanAmount = teaserRateVO.getCurrentMortgageBalance();
+			loanAmount = unformatCurrencyField(teaserRateVO.getCurrentMortgageBalance());
 		}
 		
       if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "payOffMortgage".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
@@ -104,23 +109,32 @@ public class RateCalculatorRestService {
     	  LOG.info("Setting hardcoded homeworth to 350000 ");
     	  teaserRateVO.setHomeWorthToday("350000");
       }
-      String stateFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+      
+      JSONObject geoFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+     
+      try{
+      
+    	  stateFromAPI=geoFromAPI.getString("state");
+    	  shopperCounty=geoFromAPI.getString("county");
       
       if("".equalsIgnoreCase(stateFromAPI)){
     	  stateFromAPI ="CA";
       }
       
+
+      if("".equalsIgnoreCase(shopperCounty)){
+    	  shopperCounty ="Santa Clara";
+      }}catch(Exception e){
+    	  e.printStackTrace();
+      }
       
       
-      
-      
-		HashMap<String, String> hashmap = new HashMap();
-		hashmap.put("homeWorthToday", teaserRateVO.getHomeWorthToday());
+		HashMap<String, String> hashmap = new HashMap<String, String>();
+		hashmap.put("homeWorthToday", unformatCurrencyField(teaserRateVO.getHomeWorthToday()));
 		hashmap.put("loanAmount", loanAmount);
 		hashmap.put("stateFromAPI", stateFromAPI);
-		hashmap.put("city", shopperCity);
-		hashmap.put("zipCode", teaserRateVO.getZipCode());
-		
+		hashmap.put("city", shopperCounty);
+		hashmap.put("zipCode", teaserRateVO.getZipCode());		
 		JSONObject jsonObject = new JSONObject(hashmap);
 		return jsonObject;
 	}
@@ -147,127 +161,24 @@ public class RateCalculatorRestService {
 	
 	
 	
-	/*public JSONObject  CreateTeaserRateJson(String requestXML,String opName){
-		JSONObject json = new JSONObject();
-		JSONObject jsonChild = new JSONObject();
-		try {
-			jsonChild.put("sXmlData",requestXML);		
-			json.put("opName",opName );
-			json.put("loanVO", jsonChild); 
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}  
-			return json;
-	}
-	*/
-	
-	
-	/*public String CreateXmlForTeaserRate(TeaserRateVO teaserRateVO)
-	{
-		String loanAmount ;
-		String loanPurpose;
+	JSONObject getStateUtlity(String zipCode){
+		//String geoServiceAPI = "http://www.webservicex.net/uszip.asmx/GetInfoByZIP?USZip="+zipCode;
 		
-
-		if("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance()) && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())){
-			
-			loanAmount =  "280000";
-			LOG.info("setting hardcoded calue for loan amount ");
-		}
+		String geoServiceAPI = "http://zip.getziptastic.com/v2/US/"+zipCode;
+		try{
 		
-		
-		if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
-			
-			loanAmount =  Integer.parseInt(teaserRateVO.getCashTakeOut()) +Integer.parseInt(teaserRateVO.getCurrentMortgageBalance())+"";
-			LOG.info("Inside cash takeout , total loan amount is "+loanAmount);
-		}else{
-			loanAmount = teaserRateVO.getCurrentMortgageBalance();
-		}
-		
-      if("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "payOffMortgage".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
-			
-	        loanPurpose = "1";
-			LOG.info("Inside loan purpose "+loanPurpose);
-		}else{
-			loanPurpose = "0";
-			LOG.info("Inside loan purpose "+loanPurpose);
-		}
-		
-      if("".equalsIgnoreCase(teaserRateVO.getHomeWorthToday())){
-    	  LOG.info("Setting hardcoded homeworth to 350000 ");
-    	  teaserRateVO.setHomeWorthToday("350000");
-      }
-      String stateFromAPI = getStateUtlity(teaserRateVO.getZipCode());
-      
-      if("".equalsIgnoreCase(stateFromAPI)){
-    	  stateFromAPI ="CA";
-      }
-      
-		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-				+ "<loan "
-				+ "sHouseValPe="+"\""+teaserRateVO.getHomeWorthToday()+"\""
-				+ " "
-				+ "sLAmtCalcPe="+"\""+loanAmount+"\""
-				+ " "
-				+ "sLPurposeTPe="+"\""+"1"+"\""
-				+ " "
-				+ "sProdFilterTerm30Yrs="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterTerm15Yrs="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterTerm20Yrs="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterTermOther="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterFinMeth3YrsArm="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterFinMeth5YrsArm="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterFinMeth7YrsArm="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterFinMeth10YrsArm="+"\""+"true"+"\""
-				+ " "
-				+ "sProdFilterFinMethFixed="+"\""+"true"+"\""
-				+ " "
-				+ "sProdIncludeNormalProc="+"\""+"true"+"\""
-				+ " "
-				+ "sCreditScoreType1="+"\""+"750"+"\""
-				+ " "
-				+ "sSpStatePe="+"\""+stateFromAPI+"\""
-				+ " "
-				+ "sSpCounty="+"\""+teaserRateVO.getCity()+"\""
-				+ " "
-				+ "sProdRLckdDays="+"\""+"30"+"\""
-				+ " "
-				+ "sSpZip="+"\""+teaserRateVO.getZipCode()+"\""
-				+ " "
-				+ "sOccTPe="+"\""+"0"+"\""
-				+ " "
-				+ "sProdSpT="+"\""+"0"+"\""
-				+ " "
-				+ "sProdImpound="+"\""+"false"+"\""
-				+ " "
-				+ "sProdIncludeMyCommunityProc="+"\""+"false"+"\""
-				+ " "
-				+ "sProdIncludeHomePossibleProc="+"\""+"false"+"\""
-				+ " "
-				+ "sProdIsDuRefiPlus="+"\""+"false"+"\""
-				+ " "
-				+ "sProdIncludeFHATotalProc="+"\""+"true"+"\""
-				+ " "
-				+ "sProdIncludeVAProc="+"\""+"true"+"\""
-				+ "/>";		
-		return xml;
-		
-	}
-	*/
-	
-	String getStateUtlity(String zipCode){
-		String geoServiceAPI = "http://www.webservicex.net/uszip.asmx/GetInfoByZIP?USZip="+zipCode;
 		RestTemplate restTemplate = new RestTemplate();
         String  geoResponse = restTemplate.getForObject(geoServiceAPI, String.class);
 		LOG.info("State Utility Response is "+geoResponse);
-		String state = parseXML(geoResponse);
-		return state;
+		//String state = parseXML(geoResponse);
+		JSONObject json = new JSONObject(geoResponse);
+		System.out.println(json.get("county"));
+		return json;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;
 		
 	}
 	
@@ -361,7 +272,7 @@ public class RateCalculatorRestService {
 				    		Element eElement = (Element) node;
 				    		System.out.println("State : " + eElement.getElementsByTagName("STATE").item(0).getTextContent());
 				    	state = eElement.getElementsByTagName("STATE").item(0).getTextContent();
-				    	shopperCity = eElement.getElementsByTagName("CITY").item(0).getTextContent();
+				    //	shopperCity = eElement.getElementsByTagName("CITY").item(0).getTextContent();
 				    	}
 				    	
 				    }
@@ -380,7 +291,24 @@ public class RateCalculatorRestService {
 	}
 
 
-	
-	
+	private String unformatCurrencyField(String field){
+		String finalString = "";
+
+		 if(field.contains("$") || field.contains(",")){
+	    		
+	    
+		
+		for(int i = 0; i < field.length(); i++)
+	    {
+	        if(field.charAt(i) != '$' && field.charAt(i) != ',')
+	            finalString += field.charAt(i);
+	    }
+		return finalString;
+	}else{
+		return field;
+	}
+		 
+		 
+	}
 
 }

@@ -975,7 +975,7 @@ function getAppDetailsForUser(userId,callback){
 				showToastMessage(response.error.message)
 			}else{
 				var appFormDetails=response.resultObject;
-				newfi.appUserDetails=JSON.stringify(appFormDetails);
+				newfi.appUserDetails=appFormDetails;
 				if(callback){
 					callback();
 				}

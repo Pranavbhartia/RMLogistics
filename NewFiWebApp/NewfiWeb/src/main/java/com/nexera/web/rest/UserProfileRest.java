@@ -2,7 +2,10 @@ package com.nexera.web.rest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InputValidationException;
@@ -123,7 +127,6 @@ public class UserProfileRest {
 		User user = getUserObject();
 		String userProfileUrl = propertyFileReader.getProperty(
 		        CommonConstants.APPLICATION_PROPERTIES_FILE, "profile.url");
-
 		Integer userid = user.getId();
 		UserVO userVO = null;
 		String userprofile = null;
@@ -138,6 +141,21 @@ public class UserProfileRest {
 		}
 
 		return userprofile;
+	}
+
+
+    @RequestMapping(value = "/getMobileCarriers", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getMobileCarriers() {
+
+		List<MobileCarriersEnum> mobileCarriers=Arrays.asList(MobileCarriersEnum.values());
+		List<String> names=new ArrayList<String>();
+		for(MobileCarriersEnum carrierNames:mobileCarriers){
+			names.add(carrierNames.getCarrierName());
+		}
+		CommonResponseVO responseVO = null;
+		responseVO = RestUtil.wrapObjectForSuccess(names);
+
+		return responseVO;
 	}
 
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.POST)
