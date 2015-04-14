@@ -396,13 +396,19 @@ function getMappedValue(question){
 		return appUserDetails.propertyTypeMaster.propertyTypeCd;
 	}else if(question.text==="How do you use this home?"){
 		return appUserDetails.propertyTypeMaster.residenceTypeCd;
+	}else if (question.name==="spouseEthnicity"){
+		return appUserDetails.spouseGovernmentQuestions.ethnicity;
+	}else if (question.name==="spouseRace"){
+		return appUserDetails.spouseGovernmentQuestions.race;
+	}else if (question.name==="spouseSex"){
+		return appUserDetails.spouseGovernmentQuestions.sex;
 	}else if (question.text==="Ethnicity"){
-		return appUserDetails.governmentquestion.ethnicity;
-	}else if (question.text==="Race"){
-		return appUserDetails.governmentquestion.race;
-	}else if (question.text==="Sex"){
-		return appUserDetails.governmentquestion.sex;
-	}
+        return appUserDetails.governmentquestion.ethnicity;
+    }else if (question.text==="Race"){
+        return appUserDetails.governmentquestion.race;
+    }else if (question.text==="Sex"){
+        return appUserDetails.governmentquestion.sex;
+    }
 }
 
 
@@ -589,7 +595,72 @@ function paintCustomerApplicationPageStep1a() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
         .append(saveAndContinueButton);
+    addStateCityZipLookUp();
 }
+
+function addStateCityZipLookUp(){
+synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+    
+    var stateDropDownWrapper = $('<div>').attr({
+    	"id" : "state-dropdown-wrapper",
+    	"class" : "state-dropdown-wrapper hide"
+    });
+    
+    $('input[name="state"]').after(stateDropDownWrapper);
+    
+    $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			appendStateDropDown('state-dropdown-wrapper',stateList);
+			toggleStateDropDown();
+		}else{
+			toggleStateDropDown();
+		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDown('state-dropdown-wrapper',searchList);
+	});
+    
+    $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
+		
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(200);
+    
+    $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
+		
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+
+		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	});
+}
+
 
 //TODO-try nested yesno question
 
@@ -962,8 +1033,8 @@ function paintCustomerApplicationPageStep2() {
     		    		if( isSpouseOnLoan =="Yes"){ 
     		    			appUserDetails.isSpouseOnLoan =true;
     		    		}else if(isSpouseOnLoan =="No"){
-    		    			appUserDetails.isSpouseOnLoan ="false";
-    		    			appUserDetails.spouseName  = false;
+    		    			appUserDetails.isSpouseOnLoan =false;
+    		    			appUserDetails.spouseName  = "";
     		    		}else{
     		    			 showToastMessage("Please give the answers of the questions");
     	    		    	 return false;
@@ -975,7 +1046,7 @@ function paintCustomerApplicationPageStep2() {
     			 
     		 }else{
     			 appUserDetails.isSpouseOnLoan =false;
-	    		 appUserDetails.spouseName  = "false";
+	    		 appUserDetails.spouseName  = "";
     		 }
 	    	
 	    	
@@ -989,7 +1060,7 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    	
 	    	}else{
-	    		appUserDetails.customerSpouseDetail.spouseName  = "false";
+	    		appUserDetails.customerSpouseDetail.spouseName  = "";
 	    	}
 	    	
 	    	
@@ -1232,23 +1303,31 @@ function paintMyIncome() {
 
 		
 				if(monthlyPension != "" && monthlyPension != undefined){
-					
 					appUserDetails.ispensionOrRetirement= true;
 					appUserDetails.monthlyPension =monthlyPension;
-				}
+				}else{
+                    appUserDetails.ispensionOrRetirement= false;
+                    appUserDetails.monthlyPension ="";
+                }
 				
 				
 				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
 					
 					appUserDetails.isselfEmployed = true;
 					appUserDetails.selfEmployedIncome =selfEmployedIncome;
-				}
+				}else{
+                    appUserDetails.isselfEmployed = false;
+                    appUserDetails.selfEmployedIncome ="";
+                }
 				
 				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
 					
 					appUserDetails.isssIncomeOrDisability=true;
 					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
-				}
+				}else{
+                    appUserDetails.isssIncomeOrDisability=false;
+                    appUserDetails.ssDisabilityIncome = "";
+                }
 				
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
@@ -4003,7 +4082,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.governmentquestion);
+    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.spouseGovernmentQuestions);
     	contxt.drawQuestion();
     	
     	quesDeclarationContxts.push(contxt);
@@ -4193,7 +4272,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     var questions = [{
         type: "select",
         text: "Ethnicity",
-        name: "ethnicity",
+        name: "spouseEthnicity",
         options: [{
             text: "Hispanic",
             value: "hispanic"
@@ -4205,7 +4284,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Race",
-        name: "race",
+        name: "spouseRace",
         options: [{
             text: "American Indian or Alaska Native",
             value: "americanIndian"
@@ -4228,7 +4307,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Sex",
-        name: "sex",
+        name: "spouseSex",
         options: [{
             text: "Male",
             value: "male"
@@ -4246,9 +4325,9 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
-	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
-	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
-	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
+	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
+	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
+	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
 	    	
 	    	
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;

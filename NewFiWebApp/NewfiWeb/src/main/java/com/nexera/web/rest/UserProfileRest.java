@@ -143,13 +143,13 @@ public class UserProfileRest {
 		return userprofile;
 	}
 
-
-    @RequestMapping(value = "/getMobileCarriers", method = RequestMethod.GET)
+	@RequestMapping(value = "/getMobileCarriers", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getMobileCarriers() {
 
-		List<MobileCarriersEnum> mobileCarriers=Arrays.asList(MobileCarriersEnum.values());
-		List<String> names=new ArrayList<String>();
-		for(MobileCarriersEnum carrierNames:mobileCarriers){
+		List<MobileCarriersEnum> mobileCarriers = Arrays
+		        .asList(MobileCarriersEnum.values());
+		List<String> names = new ArrayList<String>();
+		for (MobileCarriersEnum carrierNames : mobileCarriers) {
 			names.add(carrierNames.getCarrierName());
 		}
 		CommonResponseVO responseVO = null;
@@ -210,18 +210,21 @@ public class UserProfileRest {
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO errors = new ErrorVO();
 
-		passwordChanged = userProfileService.changeUserPassword(updatePassword);
-		if (passwordChanged == true) {
-			commonResponseVO.setResultObject("Password successfully changed");
-			return commonResponseVO;
-		}
-
-		else {
-			errors.setMessage("Can't update the password");
+		try {
+			passwordChanged = userProfileService
+			        .changeUserPassword(updatePassword);
+			if (passwordChanged == true) {
+				commonResponseVO
+				        .setResultObject("Password successfully changed");
+				return commonResponseVO;
+			}
+		} catch (InputValidationException inputValidation) {
+			errors.setMessage(inputValidation.getDebugMessage());
+			LOG.info(inputValidation.getDebugMessage());
 			commonResponseVO.setError(errors);
-			return commonResponseVO;
 
 		}
+		return commonResponseVO;
 
 	}
 

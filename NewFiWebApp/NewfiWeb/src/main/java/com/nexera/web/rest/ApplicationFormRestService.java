@@ -82,7 +82,7 @@ public class ApplicationFormRestService {
 			
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 			System.out.println("loaAppFormVO.getId()"+loaAppFormVO.getId());
-			System.out.println("cache.get(loanAppFormId)"+cache.get("loanAppFormId"));
+			//System.out.println("cache.get(loanAppFormId)"+cache.get("loanAppFormId"));
 
 			if(cache.get("loanAppFormId") != null && cache.get("loanAppFormId") != loaAppFormVO.getId()){
 				System.out.println("loan form id mismatch , setting cache to null");

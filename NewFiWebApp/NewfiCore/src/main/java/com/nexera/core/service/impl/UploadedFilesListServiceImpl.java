@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -882,6 +884,31 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return uploadedFilesListDao.fetchUsingFileLQBFieldId(lqbfieldId);
 	}
 
+	private Date convertLQBStringToDate(String mixedDate) {
+		Date parsedDate = null;
+		if (mixedDate != null) {
+			String[] dateTime = mixedDate.split("T");
+			String date = dateTime[0];
+			String time = dateTime[1];
+			SimpleDateFormat finalFormat = new SimpleDateFormat(
+			        "HH:mm:ss.SSSS yyyy-MM-dd");
+			mixedDate = time + " " + date;
+			parsedDate = parseDateInFormat(finalFormat, mixedDate);
+		}
+		return parsedDate;
+	}
+
+	private Date parseDateInFormat(SimpleDateFormat simpleDateFormat,
+	        String time) {
+		Date date = null;
+		try {
+			date = simpleDateFormat.parse(time);
+		} catch (ParseException e) {
+			LOG.error("Unable to parse date " + e.getMessage());
+		}
+		return date;
+	}
+
 	@Override
 	@Transactional
 	public void insertFileIntoNewFi(LQBedocVO edoc, Loan loan, String uuid) {
@@ -896,8 +923,10 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setIsAssigned(false);
 		fileUpload.setIsMiscellaneous(false);
 		fileUpload.setLoan(loan);
+		fileUpload.setDocumentType(edoc.getDoc_type());
 		fileUpload.setLqbFileID(edoc.getDocid());
-		fileUpload.setUploadedDate(new Date());
+		Date date = convertLQBStringToDate(edoc.getCreated_date());
+		fileUpload.setUploadedDate(date);
 		if (uuid != null) {
 			fileUpload.setUuidFileId(uuid);
 		} else {

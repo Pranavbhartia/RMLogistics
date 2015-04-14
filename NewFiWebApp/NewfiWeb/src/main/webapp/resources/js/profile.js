@@ -423,11 +423,7 @@ function getCustPersonalInfoContainer(user) {
     
 	var checkBox=getCheckStatus(user);
 	formWrapper.append(checkBox);
-
-		
-	var carrierInfo=appendCustomEmail(user);
-	formWrapper.append(carrierInfo);
-	
+				
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateUserDetails()"
@@ -822,6 +818,9 @@ function getCityRow(user) {
 		});
 		
 		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -1157,8 +1156,10 @@ function getZipRow(user) {
 				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
 			}
 		}
-
 		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -1227,8 +1228,9 @@ function getPhone1Row(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
+	var carrierInfo=getCarrierDropdown(user);
 	
-	rowCol2.append(inputCont);
+	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
 //TODO added for validation LM
@@ -1379,14 +1381,12 @@ var row = $('<div>').attr({
 
 
 }
-function appendCustomEmail(user){
+function getCarrierDropdown(user){
 var row = $('<div>').attr({
-		"class" : "prof-form-row clearfix hide",
+		"class" : "prof-form-row-carrier clearfix hide",
 		"id":"prof-form-row-custom-email"
 	});
-	var rowCol1 = $('<div>').attr({
-		"class" : "prof-form-row-desc float-left"
-	}).html("Carrier Information:Primary phone");
+
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
@@ -1394,6 +1394,7 @@ var row = $('<div>').attr({
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
 		"value" : user.customerDetail.carrierInfo,
+		"placeholder":"Select Carrier",
 		"id" : "carrierInfoID"
 	}).bind('click',function(e){
 		e.stopPropagation();
@@ -1417,7 +1418,7 @@ var row = $('<div>').attr({
 	});
 	
 	rowCol2.append(carrierinfo).append(dropDownWrapper);
-	return row.append(rowCol1).append(rowCol2);	
+	return row.append(rowCol2);	
 }
 /**
  * Functions related to form validations
@@ -1616,6 +1617,10 @@ function updateUserDetails() {
 	var phoneStatus;
 	if(customerDetails.mobileAlertsPreference){
 	 phoneStatus=validatePhone("priPhoneNumberId");	
+	 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
+		 showErrorToastMessage("Please select a carrier");
+		 return;
+	 }
 	}else if(!customerDetails.mobileAlertsPreference){
 
 	  phoneStatus=true;	

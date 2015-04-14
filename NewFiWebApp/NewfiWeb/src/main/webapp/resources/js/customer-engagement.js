@@ -1154,7 +1154,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
-    var lcRow4 = getLoanAmountRow("Loan Amount", customerInputData.currentMortgageBalance);
+    var lcRow4 = getLoanAmountRow("Loan Amount", customerInputData.currentMortgagePayment, "lockloanAmountid","Current Loan Amout","$ 303,000.00","Cashout","$ 70,000.00");
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "aprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", rateVO[index].closingCost, "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
