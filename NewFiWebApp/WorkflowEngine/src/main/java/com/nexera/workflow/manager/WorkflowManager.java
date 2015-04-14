@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -56,7 +57,7 @@ public class WorkflowManager implements Callable<String> {
 	        WorkflowItemExec workflowItemExecution) {
 
 		LOGGER.debug("If parent exist, put parent into execution ");
-		changeStatusOfParent(workflowItemExecution);
+		changeStatusOfParentToStarted(workflowItemExecution);
 
 		LOGGER.debug("Updating workflow master status if its not updated ");
 		WorkflowItemMaster workflowItemMaster = workflowItemExecution
@@ -76,7 +77,7 @@ public class WorkflowManager implements Callable<String> {
 					WorkflowItemExec succesItem = workflowItemExecution
 					        .getOnSuccessItem();
 					startWorkFlowItemExecution(succesItem);
-
+					changeStatusOfParentToCompleted(workflowItemExecution);
 				}
 
 			} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
@@ -103,7 +104,32 @@ public class WorkflowManager implements Callable<String> {
 
 	}
 
-	private void changeStatusOfParent(WorkflowItemExec workflowItemExecution) {
+	private void changeStatusOfParentToCompleted(
+	        WorkflowItemExec workflowItemExec) {
+		WorkflowItemExec parentWorkflowItemExec = workflowItemExec
+		        .getParentWorkflowItemExec();
+		if (parentWorkflowItemExec != null) {
+			List<WorkflowItemExec> childWorkflowItemExecList = workflowService
+			        .getWorkflowItemListByParentWorkflowExecItem(parentWorkflowItemExec);
+			int count = 0;
+			for (WorkflowItemExec childWorkflowItemExec : childWorkflowItemExecList) {
+				if (childWorkflowItemExec.getStatus().equalsIgnoreCase(
+				        WorkItemStatus.COMPLETED.getStatus())) {
+					count = count + 1;
+				}
+			}
+			if (count == childWorkflowItemExecList.size()) {
+				LOGGER.debug("All child items are complete, Updating the parent ");
+				parentWorkflowItemExec.setStatus(WorkItemStatus.COMPLETED
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(parentWorkflowItemExec);
+			}
+		}
+	}
+
+	private void changeStatusOfParentToStarted(
+	        WorkflowItemExec workflowItemExecution) {
 		if (workflowItemExecution.getParentWorkflowItemExec() != null) {
 
 			WorkflowItemExec parentWorkflowItemExec = workflowItemExecution
