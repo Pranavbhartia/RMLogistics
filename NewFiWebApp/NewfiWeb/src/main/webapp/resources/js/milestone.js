@@ -246,12 +246,19 @@ var workFlowContext = {
 				NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
 				VIEW_NEEDS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
 				TEAM_STATUS : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
+				MANAGE_TEAM : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
 				DISCLOSURE_STATUS : { active : "ms-icn-disclosure"	, inactive : "m-not-started ms-icn-disclosure"	},
+				DISCLOSURE_DISPLAY : { active : "ms-icn-disclosure"	, inactive : "m-not-started ms-icn-disclosure"	},
 				APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+				MANAGE_APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				APPRAISAL_STATUS : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
+				VIEW_APPRAISAL : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
 				LOCK_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
+				LOCK_YOUR_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},							
 				UW_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+				VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},		
 				CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
+				VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
 				MANAGE_PROFILE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_ACCOUNT : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
@@ -260,14 +267,7 @@ var workFlowContext = {
 				MANAGE_APP_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				CONNECT_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				CONTACT_LOAN_MANAGER : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				MANAGE_CREDIT_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				MANAGE_TEAM : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
-				LOCK_YOUR_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
-				MANAGE_APP_FEE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},				
-				VIEW_APPRAISAL : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
-				VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				DISCLOSURE_DISPLAY : { active : "ms-icn-disclosure"	, inactive : "m-not-started ms-icn-disclosure"	},
-				VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	}
+				MANAGE_CREDIT_STATUS : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	}														
 				}
 		if(cssMap[wfItemType] && cssMap[wfItemType][status])
 			return cssMap[wfItemType][status]
