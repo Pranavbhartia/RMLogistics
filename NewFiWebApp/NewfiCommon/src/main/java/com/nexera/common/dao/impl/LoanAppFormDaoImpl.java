@@ -530,7 +530,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(loanAppForm.getRefinancedetails());
 		Hibernate.initialize(loanAppForm.getPropertyTypeMaster());
 		Hibernate.initialize(loanAppForm.getPurchaseDetails());
-
+		Hibernate.initialize(loanAppForm.getSpouseGovernmentQuestions());
 		Hibernate.initialize(loanAppForm.getLoan());
 		Hibernate.initialize(loanAppForm.getUser());
 		User temp = loanAppForm.getUser();
