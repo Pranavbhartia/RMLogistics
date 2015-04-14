@@ -1,12 +1,22 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
-
-import java.util.Date;
 
 /**
  * The persistent class for the uploadedfileslist database table.
@@ -16,7 +26,7 @@ import java.util.Date;
 @Table(name = "uploadedfileslist")
 @NamedQuery(name = "UploadedFilesList.findAll", query = "SELECT l FROM UploadedFilesList l")
 public class UploadedFilesList implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Boolean isAssigned;
@@ -32,8 +42,8 @@ public class UploadedFilesList implements Serializable {
 	private Integer totalPages;
 	private String lqbFileID;
 	private Boolean isMiscellaneous;
-	
-	
+	private String documentType;
+
 	public UploadedFilesList() {
 	}
 
@@ -106,8 +116,7 @@ public class UploadedFilesList implements Serializable {
 	public void setUploadedBy(User uploadedBy) {
 		this.uploadedBy = uploadedBy;
 	}
-	
-	
+
 	@Column(name = "file_name")
 	public String getFileName() {
 		return fileName;
@@ -132,7 +141,6 @@ public class UploadedFilesList implements Serializable {
 		return assignedBy;
 	}
 
-	
 	public void setAssignedBy(User assignedBy) {
 		this.assignedBy = assignedBy;
 	}
@@ -174,5 +182,13 @@ public class UploadedFilesList implements Serializable {
 		this.isMiscellaneous = isMiscellaneous;
 	}
 
-	
+	@Column(name = "document_type")
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
 }
