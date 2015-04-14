@@ -1004,7 +1004,11 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	if(parentChk){
 		var url="rest/workflow/execute/"+wf.id;
 		var data={};
-		data.status="3";//since we will send only completed status from frontend
+		data.workflowItemstatus="3";//since we will send only completed status from frontend
+		if (workflowItem.workflowItemType == "1003_COMPLETE")
+		{
+			data.workflowItemstatus="28";
+		}
 		data["workflowItemExecId"]=wf.id;
 		data["loanID"]=workFlowContext.loanId;
 		updateMileStoneElementState(url,data,callback,targetData)
@@ -1294,9 +1298,9 @@ function milestoneChildEventHandler(event) {
 	 	event.stopPropagation();
 		 $("#lp-step4").click();
 	}
-	 else if ($(event.target).attr("data-text") == "1003_COMPLETE") {
+	 else if ($(event.target).attr("data-text") == "CONNECT_ONLINE_APP") {
 	 	event.stopPropagation();
-		 $("#lp-step1").click();
+		 $("#lp-step2").click();
 	}else if ($(event.target).attr("data-text") == "LOCK_RATE") {
 	 	event.stopPropagation();
 		 window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
