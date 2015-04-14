@@ -818,6 +818,9 @@ function getCityRow(user) {
 		});
 		
 		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -1153,8 +1156,10 @@ function getZipRow(user) {
 				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
 			}
 		}
-
 		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
 	});
 	
 	var errMessage = $('<div>').attr({

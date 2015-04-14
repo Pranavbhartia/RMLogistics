@@ -966,16 +966,17 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
         "class": "loan-summary-lp float-left"
     });
     // add rows in left column
-    var lcRow1 = getLaonSummaryApplyBtnRow();
-    var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
-    var lcRow3 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
-    var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
-    var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
-    var lcRow6 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
-    var lcRow7 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow8 = getLoanSummaryRow("APR", rateVO[index].APR, "aprid");
-    var lcRow9 = getLoanSummaryRow("Estimated<br/>Closing Cost",  rateVO[index].closingCost, "closingCostId");
-    leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6).append(lcRow7).append(lcRow8).append(lcRow9);
+    //var lcRow1 = getLaonSummaryApplyBtnRow();
+    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
+    var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
+    //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
+    var lcRow3 =  getLoanAmountRow("Loan Amount", loanAmount, "lockloanAmountid","Down Payment","$ 100,000.00","Purchase Amount",estimatedPrice);
+    //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
+    //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
+    var lcRow4 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
+    var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "aprid");
+    var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  rateVO[index].closingCost, "closingCostId");
+    leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
     });
@@ -989,7 +990,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ 1,649.02");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4).append(rcRow6);
     container.append(leftCol).append(rightCol);
-    return container;
+    return container; 
 }
 
 function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
@@ -1040,7 +1041,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "lockInterestRate");
-    var lcRow4 = getLoanAmountRow("Loan Amount", appUserDetails.currentMortgagePayment, "lockloanAmountid");
+    var lcRow4 = getLoanAmountRow("Loan Amount", appUserDetails.currentMortgagePayment, "lockloanAmountid","Current Loan Amout","$ 303,000.00","Cashout","$ 70,000.00");
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "lockrateaprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", rateVO[index].closingCost, "lockClosingCost");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
@@ -1082,7 +1083,7 @@ function getLaonSummaryApplyBtnRow() {
     return container;
 }
 
-function getLoanAmountRow(desc, detail, id) {
+function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     var container = $('<div>').attr({
         "class": "loan-summary-row"
     });
@@ -1112,20 +1113,40 @@ function getLoanAmountRow(desc, detail, id) {
     });
     var col1row1 = $('<div>').attr({
         "class": "loan-summary-sub-col-desc float-left"
-    }).html("Current Loan Amount");
+    }).html(row1Desc);
     var col2row1 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left"
-    }).val("$ 303,000.00");
+    }).val(row1Val)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:true
+		});		
+    });
     row1.append(col1row1).append(col2row1);
     var row2 = $('<div>').attr({
         "class": "loan-summary-sub-row clearfix"
     });
     var col1row2 = $('<div>').attr({
         "class": "loan-summary-sub-col-desc float-left"
-    }).html("Cashout");
+    }).html(row2Desc);
     var col2row2 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left"
-    }).val("$ 70,000.00");
+    }).val(row2Val)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:true
+		});		
+    });
     row2.append(col1row2).append(col2row2);
     loanAmountDetails.append(row1).append(row2);
     return container.append(loanAmountCont).append(loanAmountDetails);

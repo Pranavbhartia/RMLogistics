@@ -79,7 +79,7 @@
 }
 
 .ce-input {
-	width:400px;
+	width:140px;
 	max-width: 100%;
 	height: 40px;
 	padding-left: 10px;
@@ -202,13 +202,15 @@
 	width: 455px;
 }
 
-.ce-option-ques-wrapper .ce-input{
+.ce-option-ques-wrapper .ce-input {
 	margin-top: 5px;
 	background: #fff;
+	display: block;
+	width: 100%;
 }
 
 .ce-option-ques-wrapper .ce-ques-wrapper{
-	padding: 10px 0 0px 14px;
+	padding: 10px 14px 0px 14px;
 }
 
 .ce-option-ques-wrapper:after,.ce-option-ques-wrapper:before{
