@@ -1,25 +1,20 @@
 package com.nexera.common.vo;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import com.nexera.common.entity.GovernmentQuestion;
 
 public class SpouseGovernmentQuestionVO {
 
 	private int id;
-	private boolean isOutstandingJudgments;
-	private boolean isBankrupt;
-	private boolean isPropertyForeclosed;
-	private boolean isLawsuit;
-	private boolean isObligatedLoan;
-	private boolean isFederalDebt;
-	private boolean isObligatedToPayAlimony;
-	private boolean isEndorser;
-	private boolean isUSCitizen;
-	private boolean isOccupyPrimaryResidence;
-	private boolean isOwnershipInterestInProperty;
+	private Boolean isOutstandingJudgments;
+	private Boolean isBankrupt;
+	private Boolean isPropertyForeclosed;
+	private Boolean isLawsuit;
+	private Boolean isObligatedLoan;
+	private Boolean isFederalDebt;
+	private Boolean isObligatedToPayAlimony;
+	private Boolean isEndorser;
+	private Boolean isUSCitizen;
+	private Boolean isOccupyPrimaryResidence;
+	private Boolean isOwnershipInterestInProperty;
 	private String ethnicity;
 	private String race;
 	private String sex;
@@ -31,70 +26,93 @@ public class SpouseGovernmentQuestionVO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public boolean isOutstandingJudgments() {
+
+	public Boolean isOutstandingJudgments() {
 		return isOutstandingJudgments;
 	}
-	public void setOutstandingJudgments(boolean isOutstandingJudgments) {
+
+	public void setOutstandingJudgments(Boolean isOutstandingJudgments) {
 		this.isOutstandingJudgments = isOutstandingJudgments;
 	}
-	public boolean isBankrupt() {
+
+	public Boolean isBankrupt() {
 		return isBankrupt;
 	}
-	public void setBankrupt(boolean isBankrupt) {
+
+	public void setBankrupt(Boolean isBankrupt) {
 		this.isBankrupt = isBankrupt;
 	}
-	public boolean isPropertyForeclosed() {
+
+	public Boolean isPropertyForeclosed() {
 		return isPropertyForeclosed;
 	}
-	public void setPropertyForeclosed(boolean isPropertyForeclosed) {
+
+	public void setPropertyForeclosed(Boolean isPropertyForeclosed) {
 		this.isPropertyForeclosed = isPropertyForeclosed;
 	}
-	public boolean isLawsuit() {
+
+	public Boolean isLawsuit() {
 		return isLawsuit;
 	}
-	public void setLawsuit(boolean isLawsuit) {
+
+	public void setLawsuit(Boolean isLawsuit) {
 		this.isLawsuit = isLawsuit;
 	}
-	public boolean isObligatedLoan() {
+
+	public Boolean isObligatedLoan() {
 		return isObligatedLoan;
 	}
-	public void setObligatedLoan(boolean isObligatedLoan) {
+
+	public void setObligatedLoan(Boolean isObligatedLoan) {
 		this.isObligatedLoan = isObligatedLoan;
 	}
-	public boolean isFederalDebt() {
+
+	public Boolean isFederalDebt() {
 		return isFederalDebt;
 	}
-	public void setFederalDebt(boolean isFederalDebt) {
+
+	public void setFederalDebt(Boolean isFederalDebt) {
 		this.isFederalDebt = isFederalDebt;
 	}
-	public boolean isObligatedToPayAlimony() {
+
+	public Boolean isObligatedToPayAlimony() {
 		return isObligatedToPayAlimony;
 	}
-	public void setObligatedToPayAlimony(boolean isObligatedToPayAlimony) {
+
+	public void setObligatedToPayAlimony(Boolean isObligatedToPayAlimony) {
 		this.isObligatedToPayAlimony = isObligatedToPayAlimony;
 	}
-	public boolean isEndorser() {
+
+	public Boolean isEndorser() {
 		return isEndorser;
 	}
-	public void setEndorser(boolean isEndorser) {
+
+	public void setEndorser(Boolean isEndorser) {
 		this.isEndorser = isEndorser;
 	}
-	public boolean isUSCitizen() {
+
+	public Boolean isUSCitizen() {
 		return isUSCitizen;
 	}
-	public void setUSCitizen(boolean isUSCitizen) {
+
+	public void setUSCitizen(Boolean isUSCitizen) {
 		this.isUSCitizen = isUSCitizen;
 	}
-	public boolean isOccupyPrimaryResidence() {
+
+	public Boolean isOccupyPrimaryResidence() {
 		return isOccupyPrimaryResidence;
 	}
-	public void setOccupyPrimaryResidence(boolean isOccupyPrimaryResidence) {
+
+	public void setOccupyPrimaryResidence(Boolean isOccupyPrimaryResidence) {
 		this.isOccupyPrimaryResidence = isOccupyPrimaryResidence;
 	}
-	public boolean isOwnershipInterestInProperty() {
+
+	public Boolean isOwnershipInterestInProperty() {
 		return isOwnershipInterestInProperty;
 	}
-	public void setOwnershipInterestInProperty(boolean isOwnershipInterestInProperty) {
+
+	public void setOwnershipInterestInProperty(
+	        Boolean isOwnershipInterestInProperty) {
 		this.isOwnershipInterestInProperty = isOwnershipInterestInProperty;
 	}
 	public String getEthnicity() {

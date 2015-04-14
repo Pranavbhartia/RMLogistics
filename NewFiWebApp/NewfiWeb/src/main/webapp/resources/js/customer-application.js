@@ -592,7 +592,6 @@ function paintCustomerApplicationPageStep1a() {
     addStateCityZipLookUp();
 }
 
-
 function addStateCityZipLookUp(){
 synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
@@ -653,12 +652,8 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	}).bind('focus', function(){ 
 		$(this).trigger('keydown');
 		$(this).autocomplete("search"); 
-	}).width(75);
+	});
 }
-
-/*$(document).on('load','input[name="state"]',function(){
-	$(this).addClass('prof-form-input-statedropdown');
-});*/
 
 
 //TODO-try nested yesno question
@@ -1032,8 +1027,8 @@ function paintCustomerApplicationPageStep2() {
     		    		if( isSpouseOnLoan =="Yes"){ 
     		    			appUserDetails.isSpouseOnLoan =true;
     		    		}else if(isSpouseOnLoan =="No"){
-    		    			appUserDetails.isSpouseOnLoan ="false";
-    		    			appUserDetails.spouseName  = false;
+    		    			appUserDetails.isSpouseOnLoan =false;
+    		    			appUserDetails.spouseName  = "";
     		    		}else{
     		    			 showToastMessage("Please give the answers of the questions");
     	    		    	 return false;
@@ -1045,7 +1040,7 @@ function paintCustomerApplicationPageStep2() {
     			 
     		 }else{
     			 appUserDetails.isSpouseOnLoan =false;
-	    		 appUserDetails.spouseName  = "false";
+	    		 appUserDetails.spouseName  = "";
     		 }
 	    	
 	    	
@@ -1059,7 +1054,7 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    	
 	    	}else{
-	    		appUserDetails.customerSpouseDetail.spouseName  = "false";
+	    		appUserDetails.customerSpouseDetail.spouseName  = "";
 	    	}
 	    	
 	    	
@@ -4073,7 +4068,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.governmentquestion);
+    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.spouseGovernmentQuestions);
     	contxt.drawQuestion();
     	
     	quesDeclarationContxts.push(contxt);
