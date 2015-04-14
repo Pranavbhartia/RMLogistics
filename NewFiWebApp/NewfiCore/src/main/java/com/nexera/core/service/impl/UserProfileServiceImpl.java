@@ -197,9 +197,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false) {
-						customerDetail.setMobileAlertsPreference(userVO
-						        .getCustomerDetail()
-						        .getMobileAlertsPreference());
+						customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 					}
 				}
@@ -231,8 +229,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() != null) {
-					customerDetail.setMobileAlertsPreference(userVO
-					        .getCustomerDetail().getMobileAlertsPreference());
+					customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
