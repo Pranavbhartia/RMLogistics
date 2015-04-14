@@ -964,9 +964,15 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
 	
 	var livingSituation = capitalizeFirstLetter(appUserDetails.purchaseDetails.livingSituation);
     
-	var estimatedPrice = appUserDetails.purchaseDetails.estimatedPrice; 
-    var loanAmount = appUserDetails.purchaseDetails.loanAmount ;
 	
+	 var housePrice = getFloatValue(appUserDetails.purchaseDetails.housePrice);   
+	 var loanAmount =  getFloatValue(appUserDetails.purchaseDetails.loanAmount) ;    
+	 var downPayment = (housePrice-loanAmount);
+	
+	 var principalInterest = getFloatValue(rateVO[index].payment);
+	 var totalEstMonthlyPayment = principalInterest;
+	 
+	 
 	
 	var container = $('<div>').attr({
         "class": "loan-summary-container clearfix"
@@ -979,7 +985,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow3 =  getLoanAmountRow("Loan Amount", loanAmount, "lockloanAmountid","Down Payment","$ 100,000.00","Purchase Amount",estimatedPrice);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", loanAmount, "lockloanAmountid","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
@@ -990,13 +996,13 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
         "class": "loan-summary-rp float-right"
     });
     // add rows in right column
-    var rcRow1 = getLoanSummaryRow("Monthly Payment", appUserDetails.monthlyRent);
+    var rcRow1 = getLoanSummaryRow("Monthly Payment", appUserDetails.monthlyRent,"monthlyPaymentId");
     var rcRow2 = getLoanSummaryRow("Principal Interest", rateVO[index].payment,"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Edit","calTaxID","calTaxID2",appUserDetails);
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",customerInputData);
+    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",appUserDetails);
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal & interest payment");
-    var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ 1,649.02");
+    var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+totalEstMonthlyPayment,"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4).append(rcRow6);
     container.append(leftCol).append(rightCol);
     return container; 
@@ -1201,10 +1207,15 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     }).html(detail)
     .bind('click',function(event){
     	var prevVal = $(this).text();
-    	$(this).next('input').show().focus().val(prevVal).numericInput({
-    	  allowFloat :false,
-      	  allowNegative: false
-    	});
+    	
+    	if(prevVal!="Edit"){
+	    	$(this).next('input').show().focus().val(prevVal).numericInput({
+	    	  allowFloat :false,
+	      	  allowNegative: false
+	    	});
+    	}else{
+    		$(this).next('input').show().focus().val("");
+    	}
     	$(this).hide();
     	
     });
@@ -1226,14 +1237,19 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	//
     	
     	var taxesTemp = 0;
-    	if($('#calTaxID2').val() !="Calculate")
+    	if($('#calTaxID2').val() !="Calculate" && $('#calTaxID2').val() !="Edit")
     	 taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
     	
     	var InsuranceTemp = 0;
-    	if($('#CalInsuranceID2').val() !="Calculate")
+    	if($('#CalInsuranceID2').val() !="Calculate" && $('#CalInsuranceID2').val() !="Edit")
     	 InsuranceTemp = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     	
-    	var monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment))); 
+    	var  monthlyPayment = 0;
+    	if(appUserDetails.loanType.loanTypeCd =="REF")
+          monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  	
+    	else
+          monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
+        
     	
     	var investment = (InsuranceTemp + taxesTemp)/12;
     	var monthlyPaymentTemp = monthlyPayment - investment ;  	
@@ -1908,16 +1924,22 @@ function getRatSlider(gridArray,appUserDetails) {
 function lockRateCalculation(appUserDetails){
 	
 	var taxesTemp = 0;
-	 var InsuranceTemp = 0;
+	var InsuranceTemp = 0;
 	var principalInterest = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
+	
 	if($('#calTaxID2').val() != "Edit") 
 	taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));
     
 	if($('#CalInsuranceID2').val() != "Edit") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
-    var  monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  	
-    	
+	
+	var  monthlyPayment = 0;
+	if(appUserDetails.loanType.loanTypeCd =="REF")
+      monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  	
+	else
+      monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
     
+	
     var investment = (InsuranceTemp + taxesTemp)/12;
 	var monthlyPaymentTemp = monthlyPayment -investment ;
 	monthlyPayment = monthlyPaymentTemp.toFixed(2);
@@ -1958,4 +1980,97 @@ function modifiedLQBJsonResponse(LQBResponse) {
         return parseFloat(a.value) - parseFloat(b.value);
     });
     return yearValues;
+}
+
+
+
+var purchaseTRate;
+
+function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
+	purchaseTRate={};
+    var container = $('<div>').attr({
+        "class": "loan-summary-row"
+    });
+    var loanAmountCont = $('<div>').attr({
+        "class": "clearfix"
+    });
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left"
+    }).html(desc);
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left",
+        "id": id
+    }).html(detail);
+    
+    
+    var dropdownarrow = $('<div>').attr({
+        "class": "dropdown-arrow"
+    }).bind('click', function() {
+        $('#loan-amount-details').toggle();
+    });
+    col2.append(dropdownarrow);
+    
+    loanAmountCont.append(col1).append(col2);
+    
+    var loanAmountDetails = $('<div>').attr({
+        "id": "loan-amount-details",
+        "class": "loan-amount-details hide"
+    });
+    var row1 = $('<div>').attr({
+        "class": "loan-summary-sub-row clearfix"
+    });
+    var col1row1 = $('<div>').attr({
+        "class": "loan-summary-sub-col-desc float-left"
+    }).html(row1Desc);
+    var col2row1 = $('<input>').attr({
+        "class": "loan-summary-sub-col-detail float-left"
+    }).val(row1Val)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:true
+		});		
+    });
+    row1.append(col1row1).append(col2row1);
+    var row2 = $('<div>').attr({
+        "class": "loan-summary-sub-row clearfix"
+    });
+    var col1row2 = $('<div>').attr({
+        "class": "loan-summary-sub-col-desc float-left"
+    }).html(row2Desc);
+    var col2row2 = $('<input>').attr({
+        "class": "loan-summary-sub-col-detail float-left"
+    }).val(row2Val)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:true
+		});		
+    });
+    row2.append(col1row2).append(col2row2);
+    loanAmountDetails.append(row1).append(row2);
+    purchaseTRate.purAmtElement=col2row1;
+    purchaseTRate.dwnPayElement=col2row2;
+    purchaseTRate.LoanAmtElement=col2;
+    purchaseTRate.change=function(){
+    	var ob=purchaseTRate;
+    	var purAmt=  getFloatValue(ob.purAmtElement.val());
+    	var dwnAmt= getFloatValue(ob.dwnPayElement.val());
+    	
+    	var loanAmt = (purAmt - dwnAmt);
+    	
+    	ob.LoanAmtElement.text("$ "+loanAmt);
+    };
+    col2row1.keyup(purchaseTRate.change);
+    col2row2.keyup(purchaseTRate.change);
+    return container.append(loanAmountCont).append(loanAmountDetails);
+   // return container.append(loanAmountCont);
 }
