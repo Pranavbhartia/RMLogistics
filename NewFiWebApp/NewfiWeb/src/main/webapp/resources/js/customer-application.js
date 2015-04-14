@@ -451,7 +451,7 @@ function getApplicationTextQues(question) {
           
 		
 	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' && question.name != 'ssn') {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -462,7 +462,7 @@ function getApplicationTextQues(question) {
 			});
 		}
 		
-		        if (question.name == 'ssn') {
+		   if (question.name == 'ssn') {
             $('input[name="ssn"]').attr('type', 'password');
         }
 		
@@ -2454,6 +2454,7 @@ function paintCustomerApplicationPageStep5() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
+    	
     	dateOfBirth = $('input[name="birthday"]').val();
     	ssn =  $('input[name="ssn"]').val();
     	secPhoneNumber =  $('input[name="phoneNumber"]').val();
@@ -2590,6 +2591,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);
 	createLoan(appUserDetails);
+	changeSecondaryLeftPanel(3,true);
 	//saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
