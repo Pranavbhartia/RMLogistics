@@ -896,6 +896,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		fileUpload.setIsAssigned(false);
 		fileUpload.setIsMiscellaneous(false);
 		fileUpload.setLoan(loan);
+		fileUpload.setDocumentType(edoc.getDoc_type());
 		fileUpload.setLqbFileID(edoc.getDocid());
 		fileUpload.setUploadedDate(new Date());
 		if (uuid != null) {
