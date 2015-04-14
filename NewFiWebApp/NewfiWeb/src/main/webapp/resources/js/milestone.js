@@ -372,8 +372,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}			
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Closing Status";
+				data.loanID = workFlowContext.loanId;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			else if (ob.workItem.workflowItemType=="NEEDS_STATUS"||ob.workItem.workflowItemType=="VIEW_NEEDS")
 			{
@@ -418,12 +418,12 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="VIEW_CLOSING")
 			{
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID = newfi.user.defaultLoanId;
+				data.loanID = workFlowContext.loanId;
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
 				
 			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				data.loanID = newfi.user.defaultLoanId;
+				data.loanID = workFlowContext.loanId;
 			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.userID=workFlowContext.customer.id;

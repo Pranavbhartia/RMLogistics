@@ -4515,8 +4515,13 @@ input.calc-input {
 }
 
 /*styles for carrierInfo drop down*/
+.prof-form-row-carrier {
+  float: right;
+  margin: 0px -50px;
+}
+
 .prof-form-input-carrier {
-    width: 100%;    
+    width: 120px;    
 	height: 40px;    
 	line-height: 40px;    
 	padding-left: 15px;    
@@ -4542,4 +4547,6 @@ input.calc-input {
 	padding: 5px 0 5px 15px;    
 	cursor: pointer;
 }
+
+
 /*End*/

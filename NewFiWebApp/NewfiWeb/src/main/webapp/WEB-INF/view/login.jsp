@@ -34,6 +34,14 @@
 
 			return true;
 		});
+		var hrefValue=window.location.href.split( '?' );
+		if(hrefValue[1]=="s=autherror"){
+			$("#errorMessage").text("Please Enter Valid Credentials");
+			$("#errorMessage").show();
+		}else if(hrefValue[1]=="s=sessionerror"){
+			$("#errorMessage").text("Session expired.Please Login");
+			$("#errorMessage").show();
+		}
 	});
 </script>
 </head>
@@ -69,7 +77,7 @@
 						<form id="loginForm" name="loginForm"
 							action="j_spring_security_check" method="POST">
 							<div class="form-logo"></div>
-							<div class="login-error hide">Error message</div>
+							<div class="login-error hide" id="errorMessage"></div>
 							<div class="login-input-cont">
 								<input type="text" class="login-input login-input-username"
 									placeholder="Username" id="userId"> <input

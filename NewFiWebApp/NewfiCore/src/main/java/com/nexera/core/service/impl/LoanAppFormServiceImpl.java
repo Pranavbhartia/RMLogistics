@@ -24,6 +24,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
+import com.nexera.common.entity.SpouseGovernmentQuestions;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
@@ -40,6 +41,7 @@ import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.PurchaseDetailsVO;
 import com.nexera.common.vo.RefinanceVO;
+import com.nexera.common.vo.SpouseGovernmentQuestionVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -126,6 +128,11 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 loanAppFormVO.setPropertyTypeMaster(convertTOPropertyTypeMasterVO(loanAppForm.getPropertyTypeMaster()));
 		 
 		 loanAppFormVO.setGovernmentquestion(convertTOGovernmentquestionVO(loanAppForm.getGovernmentquestion()));
+
+		loanAppFormVO
+		        .setSpouseGovernmentQuestions(convertTOSpouseGovernmentquestionVO(loanAppForm
+		                .getSpouseGovernmentQuestions()));
+
 		 loanAppFormVO.setRefinancedetails(convertTORefinancedetailsVO(loanAppForm.getRefinancedetails()));
 		 loanAppFormVO.setLoanType(convertTOLoanTypeVO(loanAppForm.getLoanTypeMaster()));
 		 loanAppFormVO.setPurchaseDetails(convertTOPurchaseDetails(loanAppForm.getPurchaseDetails()));
@@ -582,6 +589,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 governmentQuestionVO.setId(governmentquestion.getId());
 		 governmentQuestionVO.setOutstandingJudgments(governmentquestion.isOutstandingJudgments());
 		 governmentQuestionVO.setBankrupt(governmentquestion.isBankrupt());
+		 governmentQuestionVO.setObligatedToPayAlimony(governmentquestion
+		        .isObligatedToPayAlimony());
 		 governmentQuestionVO.setPropertyForeclosed(governmentquestion.isPropertyForeclosed());
 		 governmentQuestionVO.setLawsuit(governmentquestion.isLawsuit());
 		 governmentQuestionVO.setObligatedLoan(governmentquestion.isObligatedLoan());
@@ -597,6 +606,49 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	    return governmentQuestionVO;
     }
 
+	private SpouseGovernmentQuestionVO convertTOSpouseGovernmentquestionVO(
+	        SpouseGovernmentQuestions spouseGovernmentquestions) {
+
+		if (null == spouseGovernmentquestions)
+			return null;
+
+		SpouseGovernmentQuestionVO spouseGovernmentQuestionVO = new SpouseGovernmentQuestionVO();
+
+		spouseGovernmentQuestionVO.setId(spouseGovernmentquestions.getId());
+		spouseGovernmentQuestionVO
+		        .setOutstandingJudgments(spouseGovernmentquestions
+		        .isOutstandingJudgments());
+		spouseGovernmentQuestionVO.setBankrupt(spouseGovernmentquestions
+		        .isBankrupt());
+		spouseGovernmentQuestionVO
+		        .setPropertyForeclosed(spouseGovernmentquestions
+		        .isPropertyForeclosed());
+		spouseGovernmentQuestionVO.setLawsuit(spouseGovernmentquestions
+		        .isLawsuit());
+		spouseGovernmentQuestionVO.setObligatedLoan(spouseGovernmentquestions
+		        .isObligatedLoan());
+		spouseGovernmentQuestionVO
+		        .setObligatedToPayAlimony(spouseGovernmentquestions
+		                .isObligatedToPayAlimony());
+		spouseGovernmentQuestionVO.setFederalDebt(spouseGovernmentquestions
+		        .isFederalDebt());
+		spouseGovernmentQuestionVO.setEndorser(spouseGovernmentquestions
+		        .isEndorser());
+		spouseGovernmentQuestionVO.setUSCitizen(spouseGovernmentquestions
+		        .isUSCitizen());
+		spouseGovernmentQuestionVO
+		        .setOccupyPrimaryResidence(spouseGovernmentquestions
+		        .isOccupyPrimaryResidence());
+		spouseGovernmentQuestionVO
+		        .setOwnershipInterestInProperty(spouseGovernmentquestions
+		        .isOwnershipInterestInProperty());
+		spouseGovernmentQuestionVO.setEthnicity(spouseGovernmentquestions
+		        .getEthnicity());
+		spouseGovernmentQuestionVO.setRace(spouseGovernmentquestions.getRace());
+		spouseGovernmentQuestionVO.setSex(spouseGovernmentquestions.getSex());
+
+		return spouseGovernmentQuestionVO;
+	}
       
 	 private RefinanceVO convertTORefinancedetailsVO( RefinanceDetails refinancedetails) {
 		   
