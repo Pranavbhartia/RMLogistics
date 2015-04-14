@@ -539,14 +539,29 @@ function paintSpouseSaleOfCurrentHome() {
    
         appUserDetails.customerSpouseDetail.isSpouseEmployed =  true;
         
-        appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
-        appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
+        if(spousePension!=""&&spousePension!=undefined){
+            appUserDetails.customerSpouseDetail.ispensionOrRetirement= true;
+            appUserDetails.customerSpouseDetail.monthlyPension =spousePension;
+        }else{
+            appUserDetails.customerSpouseDetail.ispensionOrRetirement= false;
+            appUserDetails.customerSpouseDetail.monthlyPension ="";
+        }
         
-        appUserDetails.customerSpouseDetail.isSelfEmployed = true;
-        appUserDetails.customerSpouseDetail.selfEmployedIncome =spouseSelfEmployed;
+        if(spouseSelfEmployed!=""&&spouseSelfEmployed!=undefined){
+            appUserDetails.customerSpouseDetail.isSelfEmployed = true;
+            appUserDetails.customerSpouseDetail.selfEmployedIncome =spouseSelfEmployed;
+        }else{
+            appUserDetails.customerSpouseDetail.isSelfEmployed = false;
+            appUserDetails.customerSpouseDetail.selfEmployedIncome ="";
+        }
         
-        appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
-        appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
+        if(spouseDisability!=""&&spouseDisability!=undefined){
+            appUserDetails.customerSpouseDetail.isssIncomeOrDisability=true;
+            appUserDetails.customerSpouseDetail.ssDisabilityIncome = spouseDisability;
+        }else{
+            appUserDetails.customerSpouseDetail.isssIncomeOrDisability=false;
+            appUserDetails.customerSpouseDetail.ssDisabilityIncome = "";
+        }
   
     	////////	
     	 spouseHomeListPrice = $('input[name="spouseHomeListPrice"]').val();
