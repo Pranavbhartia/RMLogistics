@@ -11,6 +11,8 @@
 		<context:exclude-filter type="regex"
 			expression="com.nexera.web.rest" />
 	</context:component-scan>
+	<context:property-placeholder
+		location="classpath:application.properties" />
 	<mvc:annotation-driven />
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

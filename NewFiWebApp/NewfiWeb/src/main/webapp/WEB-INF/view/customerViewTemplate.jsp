@@ -60,9 +60,10 @@
 	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
 	var newfi = ${newfi};
+	var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
-			initialize(newfi);
+			initialize(newfi,baseUrl);
 			changeLeftPanel(2);
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
