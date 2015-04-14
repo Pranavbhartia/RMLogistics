@@ -1261,11 +1261,6 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
 }
 
 
-function removedComma(inputData){
-	
-	return inputData.replace(/,/g, "");
-}
-
 function getLoanSummaryLastRow(desc, detail, id) {
     var container = $('<div>').attr({
         "class": "loan-summary-last-row clearfix"
