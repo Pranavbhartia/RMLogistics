@@ -37,4 +37,5 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_CO_BORROWER_EQUIFAX_SCORE = "aCEquifaxScore";
 	public static String SOAP_XML_CO_BORROWER_EXPERIAN_SCORE = "aCExperianScore";
 	public static String SOAP_XML_CO_BORROWER_TRANSUNION_SCORE = "aCTransUnionScore";
+
 }

@@ -2,7 +2,6 @@ package com.nexera.core.batchprocessor;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
@@ -20,7 +19,6 @@ import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
-import com.nexera.common.exception.FatalException;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.BatchService;
 import com.nexera.core.service.LoanService;
@@ -67,17 +65,17 @@ public class LoanBatchProcessor extends QuartzJobBean {
 							}
 						}
 						taskExecutor.shutdown();
-						try {
-							taskExecutor.getThreadPoolExecutor()
-							        .awaitTermination(Long.MAX_VALUE,
-							                TimeUnit.NANOSECONDS);
-						} catch (InterruptedException e) {
-							LOGGER.error("Exception caught while terminating executor "
-							        + e.getMessage());
-							throw new FatalException(
-							        "Exception caught while terminating executor "
-							                + e.getMessage());
-						}
+						// try {
+						// taskExecutor.getThreadPoolExecutor()
+						// .awaitTermination(Long.MAX_VALUE,
+						// TimeUnit.NANOSECONDS);
+						// } catch (InterruptedException e) {
+						// LOGGER.error("Exception caught while terminating executor "
+						// + e.getMessage());
+						// throw new FatalException(
+						// "Exception caught while terminating executor "
+						// + e.getMessage());
+						// }
 					}
 				} finally {
 					LOGGER.debug("Updating the end time for this batch job ");
@@ -121,7 +119,9 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		taskExecutor = new ThreadPoolTaskExecutor();
 		taskExecutor.initialize();
 		taskExecutor.setCorePoolSize(3);
-		taskExecutor.setMaxPoolSize(10);
+		taskExecutor.setMaxPoolSize(8);
+		taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+		taskExecutor.setAwaitTerminationSeconds(Integer.MAX_VALUE);
 		return taskExecutor;
 
 	}

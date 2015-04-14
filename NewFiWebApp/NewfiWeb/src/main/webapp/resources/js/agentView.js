@@ -1185,8 +1185,8 @@ function appendCustomerLoanDetails(loanDetails) {
 			});
 
 			var label = $("<div>").attr({
-				"class" : "datelabel float-left"
-			}).html("Set expiry date : ");
+				"class" : "av-loan-details-row-lc datelabel float-left"
+			}).html("Set expiry date");
 			var dob = "";
 			if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
 				dob = "";
@@ -1205,7 +1205,11 @@ function appendCustomerLoanDetails(loanDetails) {
 					return false;
 				});
 			});
-			dateContainer.append(label).append(dobInput);
+			var dobInputContainer = $('<div>').attr({
+				"class":"av-loan-details-row-rc datelabel float-left"
+			});
+			dobInputContainer.append(dobInput);
+			dateContainer.append(label).append(dobInputContainer);
 			purchaseContainer.append(dateContainer);
 
 			$('#av-loan-details-container').append(purchaseContainer);
