@@ -33,9 +33,10 @@
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
 		var newfi = ${newfi};
+		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
-			initialize(newfi);
+			initialize(newfi,baseUrl);
 			isAgentTypeDashboard = true;
 			paintAgentDashboard('myloans');
 			retrieveState();

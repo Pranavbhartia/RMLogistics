@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +59,9 @@ public class DefaultController implements InitializingBean {
 
 	@Autowired
 	private UserProfileDao userProfileDao;
+
+	@Value("${profile.url}")
+	private String baseUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DefaultController.class);
@@ -164,6 +168,7 @@ public class DefaultController implements InitializingBean {
 
 			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
+			model.addAttribute("baseUrl", baseUrl);
 		} catch (JSONException e) {
 
 			e.printStackTrace();
@@ -211,6 +216,7 @@ public class DefaultController implements InitializingBean {
 
 			newfi.put("i18n", new JSONObject(localeText));
 			model.addAttribute("userVO", userVO);
+			model.addAttribute("baseUrl", baseUrl);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

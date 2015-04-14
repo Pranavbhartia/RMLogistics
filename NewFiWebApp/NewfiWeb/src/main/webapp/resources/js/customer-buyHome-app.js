@@ -379,20 +379,47 @@ function addZipField(fieldName,element,value){
 
         var inputField = $('input[name="'+fieldName+'"]');
         
+        var inputCont = $('<div>').attr({
+        	"class" : "app-options-cont"
+        });
+        
         var inputElement = $('<input>').attr({
             "name" : fieldName+inputField.parent().children('input').size(),
             "class" : "ce-input ce-input-add"
         });
+        
+        inputCont.append(inputElement);
         if(value)
             inputElement.val(value);
         //alert('e.data.fieldName'+e.data.fieldName+inputField.parent().children('input').size())
-        var numberOfInputs = inputField.parent().children('input').size();
+        var numberOfInputs = inputField.parent().parent().children('.app-options-cont').size();
         
         if(numberOfInputs<3){
-            inputField.parent().append(inputElement);
-            if(numberOfInputs == 2){
+            inputField.parent().parent().append(inputCont);
+            if(numberOfInputs >= 2){
                 $(element).hide();
             }
+            
+            inputField.parent().parent().children('.app-options-cont').find('.remove-btn').remove();
+            
+            if(numberOfInputs > 0){
+            	var removeBtn = $('<div>').attr({
+            		"class" : "remove-btn"
+            	}).html("-")
+            	.bind('click',{"fieldName":fieldName},function(e){
+            		var inputField = $('input[name="'+e.data.fieldName+'"]');
+            		
+            		$(element).show();
+            		if(inputField.parent().parent().children('.app-options-cont').size()>1){
+            			$(this).parent().remove();
+            		}
+            		if(inputField.parent().parent().children('.app-options-cont').size()==1){
+            			inputField.parent().parent().children('.app-options-cont').find('.remove-btn').remove();
+            		}
+            	});
+            	inputField.parent().parent().children('.app-options-cont').append(removeBtn);
+            }
+            
         }
 }
 
@@ -407,18 +434,9 @@ function getAddRemoveButtonRow(fieldName){
 		"class" : "add-btn float-left"
 	}).html("Add")
 	.bind('click',{"fieldName":fieldName},function(e){
-        addZipField(e.data.fieldName,$(this))
+        addZipField(e.data.fieldName,$(this));
 	});
 	
-	/*var removeBtn = $('<div>').attr({
-		"class" : "remove-btn float-left"
-	}).html("-")
-	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		if(inputField.parent().children('input').size()>1){
-			inputField.parent().find('input:last-child').remove();
-		}
-	});*/
 	return container.append(addBtn);
 }
 
