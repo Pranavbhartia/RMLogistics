@@ -1232,23 +1232,31 @@ function paintMyIncome() {
 
 		
 				if(monthlyPension != "" && monthlyPension != undefined){
-					
 					appUserDetails.ispensionOrRetirement= true;
 					appUserDetails.monthlyPension =monthlyPension;
-				}
+				}else{
+                    appUserDetails.ispensionOrRetirement= false;
+                    appUserDetails.monthlyPension ="";
+                }
 				
 				
 				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
 					
 					appUserDetails.isselfEmployed = true;
 					appUserDetails.selfEmployedIncome =selfEmployedIncome;
-				}
+				}else{
+                    appUserDetails.isselfEmployed = false;
+                    appUserDetails.selfEmployedIncome ="";
+                }
 				
 				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
 					
 					appUserDetails.isssIncomeOrDisability=true;
 					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
-				}
+				}else{
+                    appUserDetails.isssIncomeOrDisability=false;
+                    appUserDetails.ssDisabilityIncome = "";
+                }
 				
 				
 				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
