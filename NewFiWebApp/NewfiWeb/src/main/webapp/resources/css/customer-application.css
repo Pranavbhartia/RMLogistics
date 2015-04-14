@@ -181,3 +181,15 @@
 .ce-sub-option-wrapper .app-ques-text{
 	margin-bottom: 5px;
 }
+
+.remove-btn {
+	font-size: 20px;
+	display: inline-block;
+	margin-left: 10px;
+	width: 35px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	border: 1px solid #d4d4d4;
+	border-radius: 50%;
+}
