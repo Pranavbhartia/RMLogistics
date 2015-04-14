@@ -4,10 +4,13 @@ var currentZipcodeLookUp = [];
 var internalUserStates = new Object();
 var states=[];
 var internalUserDetailId;
+var mobileCarrierConstants=[];
 //var userStates=[];
 function showCustomerProfilePage() {
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierList);
+	
 	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
@@ -420,6 +423,11 @@ function getCustPersonalInfoContainer(user) {
     
 	var checkBox=getCheckStatus(user);
 	formWrapper.append(checkBox);
+
+		
+	var carrierInfo=appendCustomEmail(user);
+	formWrapper.append(carrierInfo);
+	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateUserDetails()"
@@ -1082,13 +1090,44 @@ function toggleStateDropDown() {
 	});
 }
 
-
+function toggleCarrierDropDown() {
+	$('#carrier-dropdown-wrapper').slideToggle("slow",function(){
+		$('#carrier-dropdown-wrapper').perfectScrollbar({
+			suppressScrollX : true
+		});
+		$('#carrier-dropdown-wrapper').perfectScrollbar('update');		
+	});
+}
 function stateListCallBack(response) {
 	if(response.error == null){
 		stateList = response.resultObject;
 	}
 }
+function mobileCarrierList(response){
+	if(response.error == null){
+		mobileCarrierConstants = response.resultObject;
+	}
+}
 
+function appendCarrierNames(parentElement,carrierList){
+	var parentToAppendTo = $('#'+parentElement);
+	parentToAppendTo.html('');
+	for(var i=0; i<carrierList.length; i++){
+		var carrierRow = $('<div>').attr({
+			"class" : "carrier-dropdown-row"
+		}).html(carrierList[i])
+		.bind('click',function(e){
+			e.stopPropagation();
+			$('#carrierInfoID').val($(this).text());
+			toggleCarrierDropDown();
+			
+		});
+		
+		parentToAppendTo.append(carrierRow);
+	}
+	
+	
+}
 function getZipRow(user) {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -1310,9 +1349,9 @@ var row = $('<div>').attr({
 
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
-			$(this).addClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');			
 			validatePhone('priPhoneNumberId');
-			
+	        $('#prof-form-row-custom-email').show();
 	});
 	
 	var radioNoButton = $('<div>').attr({
@@ -1322,13 +1361,15 @@ var row = $('<div>').attr({
 		
 			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');
+			$('#prof-form-row-custom-email').hide();
 	});
 	
-	if(user.customerDetail.mobileAlertsPreference){
-		radioYesButton.addClass('radio-btn-selected');
-	}else{
-		radioNoButton.addClass('radio-btn-selected');
-	}
+	if(user.customerDetail.mobileAlertsPreference!=null){
+		if(user.customerDetail.mobileAlertsPreference){
+			radioYesButton.addClass('radio-btn-selected');
+		}else if(!user.customerDetail.mobileAlertsPreference){
+			radioNoButton.addClass('radio-btn-selected');
+		}}
 
 	
 	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
@@ -1338,7 +1379,46 @@ var row = $('<div>').attr({
 
 
 }
+function appendCustomEmail(user){
+var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix hide",
+		"id":"prof-form-row-custom-email"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	}).html("Carrier Information:Primary phone");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+			
+	var carrierinfo = $('<input>').attr({
+		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
+		"value" : user.customerDetail.carrierInfo,
+		"id" : "carrierInfoID"
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			appendCarrierNames('carrier-dropdown-wrapper',mobileCarrierConstants);
+			toggleCarrierDropDown();
+		}else{
+			toggleCarrierDropDown();
+		}
+	});
+	
 
+	if(user.customerDetail.mobileAlertsPreference){
+		row.removeClass('hide');
+		
+	}
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "carrier-dropdown-wrapper",
+		"class" : "carrier-dropdown-wrapper hide"
+	});
+	
+	rowCol2.append(carrierinfo).append(dropDownWrapper);
+	return row.append(rowCol1).append(rowCol2);	
+}
 /**
  * Functions related to form validations
  */
@@ -1524,11 +1604,12 @@ function updateUserDetails() {
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		customerDetails.mobileAlertsPreference = true;	
+		customerDetails.carrierInfo=$('#carrierInfoID').val();
 		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
 		customerDetails.mobileAlertsPreference = false;
 		}
 
-
+    
 	userProfileJson.customerDetail = customerDetails;
     
     //var phoneStatus=validatePhone("priPhoneNumberId");

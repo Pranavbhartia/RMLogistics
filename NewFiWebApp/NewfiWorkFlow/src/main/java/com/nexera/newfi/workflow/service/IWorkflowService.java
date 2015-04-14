@@ -30,4 +30,5 @@ public interface IWorkflowService {
 	public String getRenderInfoForDisclosure(int loanID);
 
 	public String getRenderInfoForApplicationFee(int loanID);
+	public String getRenderInfoFor1003(int loanID, int userID);
 }

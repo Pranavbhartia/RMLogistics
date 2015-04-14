@@ -4514,3 +4514,33 @@ input.calc-input {
 	margin-bottom: 5px;
 	opacity:0.7;
 }
+
+/*styles for carrierInfo drop down*/
+.prof-form-input-carrier {
+    width: 100%;    
+	height: 40px;    
+	line-height: 40px;    
+	padding-left: 15px;    
+	background-color: #FAFAFA !important;    
+	border: 1px #E2E2E2 solid;    
+	border-radius: 3px;
+}
+
+.carrier-dropdown-wrapper {
+    position: absolute;    
+	left: 0;    
+	margin-top: 1px;    
+	width: 100%;    
+	max-height: 120px;    
+	background: #fafafa;    
+	z-index: 222;    
+	border: 1px solid #cecece;    
+	border-radius: 0 0 3px 3px;
+}
+
+.carrier-dropdown-row {
+    line-height: 20px;    
+	padding: 5px 0 5px 15px;    
+	cursor: pointer;
+}
+/*End*/
