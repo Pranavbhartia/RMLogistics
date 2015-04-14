@@ -589,7 +589,77 @@ function paintCustomerApplicationPageStep1a() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
         .append(saveAndContinueButton);
+    addStateCityZipLookUp();
 }
+
+
+function addStateCityZipLookUp(){
+synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+    
+    var stateDropDownWrapper = $('<div>').attr({
+    	"id" : "state-dropdown-wrapper",
+    	"class" : "state-dropdown-wrapper hide"
+    });
+    
+    $('input[name="state"]').after(stateDropDownWrapper);
+    
+    $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			appendStateDropDown('state-dropdown-wrapper',stateList);
+			toggleStateDropDown();
+		}else{
+			toggleStateDropDown();
+		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDown('state-dropdown-wrapper',searchList);
+	});
+    
+    $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
+		
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(200);
+    
+    $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
+		
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+
+		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(75);
+}
+
+/*$(document).on('load','input[name="state"]',function(){
+	$(this).addClass('prof-form-input-statedropdown');
+});*/
+
 
 //TODO-try nested yesno question
 

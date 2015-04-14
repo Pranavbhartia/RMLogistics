@@ -294,6 +294,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
+    
+    addStateCityZipLookUp();
 }
 
 
