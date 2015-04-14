@@ -40,7 +40,7 @@
 	margin-bottom: 15px;
 }
 .app-input {
-    width: 400px;
+    width: 140px;
     height: 35px;
     padding-left: 10px;
     line-height: 35px;
@@ -65,7 +65,7 @@
 }
 .app-options-cont {
     position: relative;
-    width: 250px;
+    width: 200px;
 }
 .app-dropdown-cont {
     position: absolute;
@@ -76,21 +76,26 @@
     z-index: 2;
 }
 .app-option-selected {
-    height: 35px;
-    padding-left: 10px;
-    line-height: 35px;
-    border: 1px solid #dcdcdc;
-    border-radius: 3px;
-    background:url(../images/down-arrow.png) no-repeat right center;
-    background-color: #fafafa;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: capitalize;
+	height: 35px;
+	padding-left: 10px;
+	line-height: 35px;
+	border: 1px solid #dcdcdc;
+	border-radius: 3px;
+	background: url(../images/down-arrow.png) no-repeat right center;
+	background-color: #fafafa;
+	font-size: 14px;
+	cursor: pointer;
+	text-transform: capitalize;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 20px;
 }
+
 .app-option-sel {
-    height: 30px;
-    padding-left: 10px;
-    line-height: 30px;
+    min-height: 30px;
+    padding: 10px 0 5px 10px;
+    line-height: normal;
     font-size: 14px;
     cursor: pointer;
 }

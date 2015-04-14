@@ -294,6 +294,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
+    
+    addStateCityZipLookUp();
 }
 
 
@@ -1086,4 +1088,3 @@ function getAddAccountBtn(questions) {
 
 
 //////////////////////END OF NEW CODE /////////////////////////////
-

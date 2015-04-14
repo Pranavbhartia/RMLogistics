@@ -197,9 +197,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false) {
-						customerDetail.setMobileAlertsPreference(userVO
-						        .getCustomerDetail()
-						        .getMobileAlertsPreference());
+						customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 					}
 				}
@@ -231,8 +229,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() != null) {
-					customerDetail.setMobileAlertsPreference(userVO
-					        .getCustomerDetail().getMobileAlertsPreference());
+					customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
@@ -299,13 +296,23 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO) {
+	public boolean changeUserPassword(UpdatePasswordVO updatePasswordVO)
+	        throws InputValidationException {
 		try {
+			if (updatePasswordVO.getNewPassword() == null
+			        || updatePasswordVO.getNewPassword().equals("")) {
+				throw new InputValidationException(new GenericErrorCode(
+				        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
+				        ErrorConstants.NULL_PASSWORD),
+				        ErrorConstants.NULL_PASSWORD);
+
+			}
+
 			return userProfileDao.changeUserPassword(updatePasswordVO);
 		}
 
 		catch (HibernateException hibernateException) {
-			LOG.error("Can't update the Password");
+
 			throw new FatalException("Error in updating the password",
 			        hibernateException);
 
@@ -315,10 +322,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		{
 
-			LOG.error("Can't update the password");
 			throw new FatalException("Error in updating the password",
 			        databaseException);
-
 		}
 	}
 
@@ -972,14 +977,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
-			if(loaAppFormVO.getLoanType() !=null ){
-			if (loaAppFormVO.getLoanType().getLoanTypeCd()
-			        .equalsIgnoreCase("REF")) {
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.REF));
+			if (loaAppFormVO.getLoanType() != null) {
+				if (loaAppFormVO.getLoanType().getLoanTypeCd()
+				        .equalsIgnoreCase("REF")) {
+					loanVO.setLoanType(new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.REF));
+				} else {
+					loanVO.setLoanType(new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.PUR));
+				}
 			} else {
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.PUR));
-			}
-			}else{
 				LOG.info("loan type is NONE");
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
 			}
@@ -994,7 +1001,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
-			
+
 			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
 			        .getPropertyTypeMaster());
 
