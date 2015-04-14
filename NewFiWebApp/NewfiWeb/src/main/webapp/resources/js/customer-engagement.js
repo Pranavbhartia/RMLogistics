@@ -1054,7 +1054,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
         max: rateArray.length - 1,
         value: index,
         change: function(event, ui) {
-         //    alert(gridArray[ui.value].APR);
+         
             $('#aprid').html(gridArray[ui.value].APR);
             $('#closingCostId').html(gridArray[ui.value].closingCost);
             $('#teaserRateId').html(gridArray[ui.value].teaserRate);
@@ -1323,7 +1323,8 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	
     	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
     	
-    	var monthlyPaymentDifference = Math.abs(principalInt - monthlyPayment);
+    	var monthlyPaymentDifferenceTemp = Math.abs(principalInt - monthlyPayment);
+    	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(2);
     	var totalEstMonthlyPaymentId =  principalInt + taxesTemp + InsuranceTemp;
     	
     	
