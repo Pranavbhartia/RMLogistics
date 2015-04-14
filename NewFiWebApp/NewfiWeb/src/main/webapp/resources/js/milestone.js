@@ -344,17 +344,20 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
+				$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=workFlowContext.loanId;
 				data.userID = newfiObject.user.id;		
-				callback = showLQBInfo;			
+				callback = showLQBInfo;		
+				$(ob.stateInfoContainer).addClass("cursor-pointer");	
 			} 			
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
@@ -398,7 +401,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Click here to lock your rate";
-						
+				$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}
 			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
@@ -502,6 +505,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 								}else
 								{
 									ob.stateInfoContainer.html("Click here to lock rate");
+									$(ob.stateInfoContainer).addClass("cursor-pointer");
 								}
 							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
 								ob.workItem.workflowItemType=="CREDIT_SCORE"){
@@ -511,7 +515,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
 											window.open(event.data.tempOb.url,"_blank")
 										})
-
+										$(ob.stateInfoContainer).addClass("cursor-pointer");
 									}
 									if(tempOb.status)
 										ob.stateInfoContainer.html(" "+tempOb.status);
@@ -624,6 +628,7 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 			"data-text" : workItem.workflowItemType
 		});
 		txtRow1.html("Click here to upload more items");
+		$(txtRow1).addClass("cursor-pointer");
 		txtRow1.bind("click", function(e) {
 			milestoneChildEventHandler(e)
 		});
@@ -1134,6 +1139,23 @@ function changeContainerClassBasedOnStatus(container,status){
 	clearStatusClass(container);
 	container.addClass(getParentStatusClass(status));
 }
+function addClicableClassToElement(element,workflowItem){
+	var type=workflowItem.workflowItemType;
+	switch(type){
+		case "NEEDS_STATUS":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "VIEW_NEEDS":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "QC_STATUS":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "LOAN_MANAGER_DECISION":
+			$(element).addClass("cursor-pointer");
+			break;
+	}
+}
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
@@ -1176,6 +1198,7 @@ function appendMilestoneItem(workflowItem, childList) {
 		"data-checked" : getStatusClass(workflowItem)
 	});
 	if(workflowItem.clickable){
+		$(headerCheckBox).addClass("cursor-pointer");
 		headerCheckBox.bind('click', {
 			"workflowItem" : workflowItem
 		}, function(event) {
@@ -1191,6 +1214,8 @@ function appendMilestoneItem(workflowItem, childList) {
 			
 			// getLoanDetails(loanID);
 		})
+	}else{
+		$(headerCheckBox).addClass("cursor-auto");
 	}
 	headerTxt.append(headerCheckBox);
 	header.append(headerTxt).append(headerIcn);
@@ -1218,6 +1243,7 @@ function appendMilestoneItem(workflowItem, childList) {
 			childRow.bind("click", function(e) {
 				milestoneChildEventHandler(e)
 			});
+			addClicableClassToElement(childRow,childList[index])
 			if(childList[index].status!=3)
 				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
 
@@ -1226,6 +1252,7 @@ function appendMilestoneItem(workflowItem, childList) {
 				"data-checked" : getStatusClass(childList[index])
 			})
 			if(childList[index].clickable){
+				$(itemCheckBox).addClass("cursor-pointer");
 				itemCheckBox.bind('click', {
 					"workflowItem" : childList[index]
 				}, function(event) {
@@ -1241,6 +1268,8 @@ function appendMilestoneItem(workflowItem, childList) {
 			
 			// getLoanDetails(loanID);
 				})
+			}else{
+				$(itemCheckBox).addClass("cursor-auto");
 			}
 			childRow.append(itemCheckBox);
 			wrapper.append(childRow);
