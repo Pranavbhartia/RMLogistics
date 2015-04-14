@@ -396,13 +396,19 @@ function getMappedValue(question){
 		return appUserDetails.propertyTypeMaster.propertyTypeCd;
 	}else if(question.text==="How do you use this home?"){
 		return appUserDetails.propertyTypeMaster.residenceTypeCd;
+	}else if (question.name==="spouseEthnicity"){
+		return appUserDetails.spouseGovernmentQuestions.ethnicity;
+	}else if (question.name==="spouseRace"){
+		return appUserDetails.spouseGovernmentQuestions.race;
+	}else if (question.name==="spouseSex"){
+		return appUserDetails.spouseGovernmentQuestions.sex;
 	}else if (question.text==="Ethnicity"){
-		return appUserDetails.governmentquestion.ethnicity;
-	}else if (question.text==="Race"){
-		return appUserDetails.governmentquestion.race;
-	}else if (question.text==="Sex"){
-		return appUserDetails.governmentquestion.sex;
-	}
+        return appUserDetails.governmentquestion.ethnicity;
+    }else if (question.text==="Race"){
+        return appUserDetails.governmentquestion.race;
+    }else if (question.text==="Sex"){
+        return appUserDetails.governmentquestion.sex;
+    }
 }
 
 
@@ -445,7 +451,7 @@ function getApplicationTextQues(question) {
           
 		
 	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' ) {
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' && question.name != 'ssn') {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -456,7 +462,7 @@ function getApplicationTextQues(question) {
 			});
 		}
 		
-		        if (question.name == 'ssn') {
+		   if (question.name == 'ssn') {
             $('input[name="ssn"]').attr('type', 'password');
         }
 		
@@ -2448,6 +2454,7 @@ function paintCustomerApplicationPageStep5() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
+    	
     	dateOfBirth = $('input[name="birthday"]').val();
     	ssn =  $('input[name="ssn"]').val();
     	secPhoneNumber =  $('input[name="phoneNumber"]').val();
@@ -2584,6 +2591,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);
 	createLoan(appUserDetails);
+	changeSecondaryLeftPanel(3,true);
 	//saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
@@ -4266,7 +4274,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     var questions = [{
         type: "select",
         text: "Ethnicity",
-        name: "ethnicity",
+        name: "spouseEthnicity",
         options: [{
             text: "Hispanic",
             value: "hispanic"
@@ -4278,7 +4286,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Race",
-        name: "race",
+        name: "spouseRace",
         options: [{
             text: "American Indian or Alaska Native",
             value: "americanIndian"
@@ -4301,7 +4309,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Sex",
-        name: "sex",
+        name: "spouseSex",
         options: [{
             text: "Male",
             value: "male"
@@ -4319,9 +4327,9 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
-	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
-	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
-	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
+	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
+	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
+	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
 	    	
 	    	
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;
@@ -4445,30 +4453,41 @@ function getAddRemoveButtonRow(fieldName){
 	.bind('click',{"fieldName":fieldName},function(e){
 		var inputField = $('input[name="'+e.data.fieldName+'"]');
 		
+		var inputCont = $('<div>').attr({
+        	"class" : "app-options-cont"
+        });
+		
 		var inputElement = $('<input>').attr({
 			"name" : e.data.fieldName,
 			"class" : "ce-input ce-input-add"
 		});
 		
-		var numberOfInputs = inputField.parent().children('input').size();
+		inputCont.append(inputElement);
+		
+		var numberOfInputs = inputField.parent().parent().children('input').size();
 		
 		if(numberOfInputs<3){
-			inputField.parent().append(inputElement);
-			if(numberOfInputs == 2){
+			inputField.parent().parent().append(inputCont);
+			if(numberOfInputs >= 2){
 				$(this).hide();
 			}
+			
+			inputField.parent().parent().children('.app-options-cont').find('.remove-btn').remove();
+            
+            if(numberOfInputs > 0){
+            	var removeBtn = $('<div>').attr({
+            		"class" : "remove-btn"
+            	}).html("-")
+            	.bind('click',{"fieldName":fieldName},function(e){
+            		var inputField = $('input[name="'+e.data.fieldName+'"]');
+            		if(inputField.parent().parent().children('input').size()>1){
+            			$(this).parent().remove();
+            		}
+            	});
+            	inputField.parent().parent().children('.app-options-cont').append(removeBtn);
+            }
 		}
 	});
-	
-	/*var removeBtn = $('<div>').attr({
-		"class" : "remove-btn float-left"
-	}).html("-")
-	.bind('click',{"fieldName":fieldName},function(e){
-		var inputField = $('input[name="'+e.data.fieldName+'"]');
-		if(inputField.parent().children('input').size()>1){
-			inputField.parent().find('input:last-child').remove();
-		}
-	});*/
 	return container.append(addBtn);
 }
 
