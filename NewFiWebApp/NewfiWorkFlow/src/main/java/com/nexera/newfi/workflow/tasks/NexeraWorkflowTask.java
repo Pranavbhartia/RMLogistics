@@ -49,7 +49,8 @@ public abstract class NexeraWorkflowTask {
 				recipients.add(getReceipientVO(teamMember));
 				if (teamMember.getUser().getCustomerDetail() != null
 				        && teamMember.getUser().getCustomerDetail()
-				                .getSecEmailId() != null) {
+				                .getSecEmailId() != null && !teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId().isEmpty()) {
 					recipients.add(getReceipientVO(teamMember.getUser()
 					        .getCustomerDetail().getSecEmailId(), teamMember
 					        .getUser().getFirstName(), teamMember.getUser()

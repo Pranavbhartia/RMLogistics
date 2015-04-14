@@ -36,8 +36,9 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		
 		String status = objectMap.get(
-		        WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY).toString();
+		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String returnStatus = null;
 
 		makeANote(
