@@ -396,13 +396,19 @@ function getMappedValue(question){
 		return appUserDetails.propertyTypeMaster.propertyTypeCd;
 	}else if(question.text==="How do you use this home?"){
 		return appUserDetails.propertyTypeMaster.residenceTypeCd;
+	}else if (question.name==="spouseEthnicity"){
+		return appUserDetails.spouseGovernmentQuestions.ethnicity;
+	}else if (question.name==="spouseRace"){
+		return appUserDetails.spouseGovernmentQuestions.race;
+	}else if (question.name==="spouseSex"){
+		return appUserDetails.spouseGovernmentQuestions.sex;
 	}else if (question.text==="Ethnicity"){
-		return appUserDetails.governmentquestion.ethnicity;
-	}else if (question.text==="Race"){
-		return appUserDetails.governmentquestion.race;
-	}else if (question.text==="Sex"){
-		return appUserDetails.governmentquestion.sex;
-	}
+        return appUserDetails.governmentquestion.ethnicity;
+    }else if (question.text==="Race"){
+        return appUserDetails.governmentquestion.race;
+    }else if (question.text==="Sex"){
+        return appUserDetails.governmentquestion.sex;
+    }
 }
 
 
@@ -4266,7 +4272,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     var questions = [{
         type: "select",
         text: "Ethnicity",
-        name: "ethnicity",
+        name: "spouseEthnicity",
         options: [{
             text: "Hispanic",
             value: "hispanic"
@@ -4278,7 +4284,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Race",
-        name: "race",
+        name: "spouseRace",
         options: [{
             text: "American Indian or Alaska Native",
             value: "americanIndian"
@@ -4301,7 +4307,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
     }, {
         type: "select",
         text: "Sex",
-        name: "sex",
+        name: "spouseSex",
         options: [{
             text: "Male",
             value: "male"
@@ -4319,9 +4325,9 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
-	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
-	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
-	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
+	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
+	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
+	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
 	    	
 	    	
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;
