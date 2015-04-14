@@ -572,6 +572,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-col-desc {
 	width: 50%;
+	padding-right: 5px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
@@ -2837,6 +2838,7 @@ input.calc-input {
 
 .ui-menu .ui-menu-item{
 	padding-left: 20px;
+	cursor: pointer;
 }
 
 .overlay-loader {
@@ -3308,6 +3310,16 @@ input.calc-input {
 .m-not-started .milestone-lc-header-icn,.m-not-started .milestone-rc-header-icn
 	{
 	border: 1px #888 solid;
+}
+
+.ms-icn-my-profile {
+	background-image: url(../images/ms-my-profile.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.m-not-started .ms-icn-my-profile {
+	background-image: url(../images/ms-my-profile-grey.png);
 }
 
 .ms-icn-application-status {
@@ -4280,7 +4292,7 @@ input.calc-input {
     position: absolute;
     left: 0;
     margin-top: 1px;
-    width: 100%;
+    width: 100px;
     max-height: 120px;
     background: #fafafa;
     z-index: 222;
@@ -4380,7 +4392,11 @@ input.calc-input {
 }
 
 .prof-form-input-statedropdown {
-	width: 100px;
+	width: 100px !important;
+	background-image: url(../images/arrow_down.png) !important;
+	background-repeat:  no-repeat !important;
+	background-position:  right center !important; 
+	cursor: pointer;
 }
 
 .prof-form-input-textarea {
@@ -4547,6 +4563,4 @@ input.calc-input {
 	padding: 5px 0 5px 15px;    
 	cursor: pointer;
 }
-
-
 /*End*/
