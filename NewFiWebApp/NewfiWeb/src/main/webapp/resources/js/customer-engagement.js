@@ -1262,17 +1262,16 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
         "class": "loan-summary-lp float-left"
     });
     // add rows in left column
-    //var lcRow1 = getLaonSummaryApplyBtnRow();
-    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
-    var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
-    var lcRow3 =  getLoanAmountRow("Loan Amount", loanAmount, "lockloanAmountid","Down Payment","$ 100,000.00","Purchase Amount",estimatedPrice);
-    //var lcRow4 = getLoanSummaryRow("Down Payment", "");
-    //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
-    var lcRow4 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
-    //var lcRow7 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "aprid");
-    var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", rateVO[index].closingCost, "closingCostId");
-    leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
+    var lcRow1 = getLaonSummaryApplyBtnRow();
+    var lcRow2 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
+    var lcRow3 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
+    var lcRow4 = getLoanSummaryRow("Down Payment", "");
+    var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
+    var lcRow6 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
+    var lcRow7 = getLoanSummaryRow("Loan Amount", loanAmount);
+    var lcRow8 = getLoanSummaryRow("ARP", rateVO[index].APR, "aprid");
+    var lcRow9 = getLoanSummaryRow("Estimated<br/>Closing Cost", rateVO[index].closingCost, "closingCostId");
+    leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6).append(lcRow7).append(lcRow8).append(lcRow9);
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
     });
@@ -1283,8 +1282,8 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "Calculate");
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
-    var rcRow5 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ 1,649.02");
-    rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4).append(rcRow5);
+    //var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ 1,649.02");
+    rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
     container.append(leftCol).append(rightCol);
     return container;
 }
