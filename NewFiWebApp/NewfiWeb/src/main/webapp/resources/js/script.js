@@ -1915,10 +1915,10 @@ function lockRateCalculation(appUserDetails){
 	var taxesTemp = 0;
 	 var InsuranceTemp = 0;
 	var principalInterest = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
-	if($('#calTaxID2').val() != "Calculate") 
+	if($('#calTaxID2').val() != "Edit") 
 	taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));
     
-	if($('#CalInsuranceID2').val() != "Calculate") 
+	if($('#CalInsuranceID2').val() != "Edit") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  	
     	
