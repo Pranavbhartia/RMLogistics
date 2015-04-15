@@ -73,12 +73,12 @@ public class WorkflowManager implements Callable<String> {
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				LOGGER.debug("Checking if it has an onSuccess item to execute ");
+				changeStatusOfParentToCompleted(workflowItemExecution);
 				if (workflowItemExecution.getOnSuccessItem() != null) {
 					WorkflowItemExec succesItem = workflowItemExecution
 					        .getOnSuccessItem();
 					startWorkFlowItemExecution(succesItem);
-					changeStatusOfParentToCompleted(workflowItemExecution);
-				}
+				}				
 
 			} else if (result.equalsIgnoreCase(WorkflowConstants.FAILURE)) {
 
