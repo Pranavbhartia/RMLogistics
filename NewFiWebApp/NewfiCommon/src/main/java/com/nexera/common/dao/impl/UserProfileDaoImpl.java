@@ -330,7 +330,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		// this.save(user.getCustomerDetail());
 		// sessionFactory.getCurrentSession().flush();
 		// }
-		return (Integer) this.save(user);
+		Integer userId = (Integer) this.save(user);
+
+		String newUserName = user.getUsername().split("@")[0] + "+" + userId;
+		user.setUsername(newUserName);
+		this.update(user);
+		return userId;
 	}
 
 	@Override
@@ -757,5 +762,33 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("id", user.getRealtorDetail().getId());
 		query.setEntity("LM", new User(loanManagerId));
 		query.executeUpdate();
+	}
+
+	@Override
+	public List<String> getDefaultUsers(String userName) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("username", userName));
+
+		Object obj = criteria.uniqueResult();
+		if (obj != null) {
+			User user = (User) obj;
+			if (user.getInternalUserDetail() != null) {
+				List<String> emailIds = new ArrayList<String>();
+				emailIds.add(user.getEmailId());
+				return emailIds;
+			} else if (user.getRealtorDetail() != null) {
+				List<String> emailIds = new ArrayList<String>();
+				if (user.getRealtorDetail().getDefaultLoanManager() != null) {
+					emailIds.add(user.getRealtorDetail()
+					        .getDefaultLoanManager().getEmailId());
+				}
+				emailIds.add(user.getEmailId());
+
+				return emailIds;
+			}
+		}
+		return null;
 	}
 }

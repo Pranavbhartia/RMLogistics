@@ -95,13 +95,14 @@ function LoanPersonalInfoWrapper(user) {
 	
 	var text=$('<div>').attr({
 		"class" : " cust-profile-url float-right"
-	}).html("Profile URL :");	
+	}).html("Share this URL to refer: ");	
 	
 	var emailInput = $('<input>').attr({
 		"class" : "cust-personal-info-header-url loan-detail-link",
 		"id" : "profileUrlId",
 		"readonly":"readonly",
-		"value":user.userProfileBaseUrl+""+user.username	
+		"title":"Double click to copy",
+		"value":user.userProfileBaseUrl+""+user.username+"/register.do"
 	}).on("click",function(e){
 		$(this).zclip({
 			path: "resources/js/ZeroClipboard.swf",

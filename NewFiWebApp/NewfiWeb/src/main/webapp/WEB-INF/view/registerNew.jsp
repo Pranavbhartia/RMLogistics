@@ -5,11 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nexera</title>
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/css/jquery-ui.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/styles-common.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/styles-common.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/style-resp.css" rel="stylesheet">
+<script src="/NewfiWeb/resources/js/jquery-2.1.3.min.js"></script>
+	<script src="/NewfiWeb/resources/js/jquery-ui.js"></script>
+	<script src="/NewfiWeb/resources/js/bootstrap.min.js"></script>
+	<script src="/NewfiWeb/resources/js/common.js"></script>
+	<script src="/NewfiWeb/resources/js/customer-engagement.js"></script>
+	<script src="/NewfiWeb/resources/js/buyHome.js"></script>
 </head>
 
 <body>
@@ -45,10 +51,10 @@
                     			
 				</div>
 				<div class="reg-input-cont reg-email" id="loanManager-email">
-					<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId">	
+					<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" value="${loanManagerEmail}">	
 				</div>
 				<div class="reg-input-cont reg-email" id="realor-email">
-					<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId">	
+					<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId" value="${realtorEmail}">	
 				</div>
 				
 				<div class="reg-btn-wrapper clearfix">
@@ -59,12 +65,7 @@
 			</div>			
 		</div>
 	</div>
-	<script src="resources/js/jquery-2.1.3.min.js"></script>
-	<script src="resources/js/jquery-ui.js"></script>
-	<script src="resources/js/bootstrap.min.js"></script>
-	<script src="resources/js/common.js"></script>
-	<script src="resources/js/customer-engagement.js"></script>
-	<script src="resources/js/buyHome.js"></script>
+	
 	<script>
 		$(document).ready(function() {
 			$(document).on('click','.reg-option-selected',function(e){
@@ -135,7 +136,7 @@
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
-        url: "rest/shopper/registration",
+        url: "/NewfiWeb/rest/shopper/registration",
         type: "POST",
         data: {
             "registrationDetails": JSON.stringify(registration)
@@ -159,7 +160,7 @@
 		function createNewRealtor(user){
 		    $('#overlay-loader').show();
 		    $.ajax({
-		        url: "rest/shopper/realtorRegistration",
+		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
 		        type: "POST",
 		        data: {
 		            "registrationDetails": JSON.stringify(user)

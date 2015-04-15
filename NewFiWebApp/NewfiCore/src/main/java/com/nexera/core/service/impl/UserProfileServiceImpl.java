@@ -1127,8 +1127,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		try {
 			UserVO userVO = findUser(userId);
 			if (userVO != null) {
-				String lqbUsername =  userVO.getInternalUserDetail().getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
-				String lqbPassword =userVO.getInternalUserDetail().getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
+				String lqbUsername = userVO.getInternalUserDetail()
+				        .getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
+				String lqbPassword = userVO.getInternalUserDetail()
+				        .getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
 				if (lqbUsername != null && lqbPassword != null) {
 					JSONObject authOperationObject = createAuthObject(
 					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
@@ -1225,6 +1227,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			throw new FatalException("Could not parse json " + e.getMessage());
 		}
 		return json;
+	}
+
+	@Override
+	public List<String> getDefaultUsers(String userName) {
+		// TODO Auto-generated method stub
+		return userProfileDao.getDefaultUsers(userName);
 	}
 
 }

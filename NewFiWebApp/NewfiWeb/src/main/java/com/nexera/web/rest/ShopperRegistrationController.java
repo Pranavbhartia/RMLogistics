@@ -8,20 +8,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -54,6 +53,9 @@ public class ShopperRegistrationController {
 	@Autowired
 	WorkflowCoreService workflowCoreService;
 
+	@Value("${profile.url}")
+	private String profileUrl;
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(ShopperRegistrationController.class);
 
@@ -82,7 +84,7 @@ public class ShopperRegistrationController {
 			e.printStackTrace();
 		}
 
-		return "./home.do";
+		return profileUrl + "home.do";
 	}
 
 	@RequestMapping(value = "/realtorRegistration", method = RequestMethod.POST)
@@ -124,7 +126,7 @@ public class ShopperRegistrationController {
 			e.printStackTrace();
 		}
 
-		return "./home.do";
+		return profileUrl + "home.do";
 	}
 
 	// public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)

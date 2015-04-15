@@ -84,4 +84,6 @@ public interface UserProfileService {
 
 	public String getLQBUrl(Integer userId, Integer loanId);
 
+	public List<String> getDefaultUsers(String userName);
+
 }

@@ -85,4 +85,6 @@ public interface UserProfileDao extends GenericDao {
 	public Integer updateLqbProfile(User user);
 
 	public void updateLMID(Integer realtorID, int loanManagerId);
+
+	public List<String> getDefaultUsers(String userName);
 }
