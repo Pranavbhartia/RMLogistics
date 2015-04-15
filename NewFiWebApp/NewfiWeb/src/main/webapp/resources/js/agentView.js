@@ -1202,23 +1202,28 @@ function appendCustomerLoanDetails(loanDetails) {
 			var label = $("<div>").attr({
 				"class" : "av-loan-details-row-lc datelabel float-left"
 			}).html("Set expiry date");
-			var dob = "";
-			if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
-				dob = "";
+			var expiryDate = "";
+			if (loanDetails.purchaseDocumentExpiryDate!= undefined && loanDetails.purchaseDocumentExpiryDate != null) {
+				expiryDate =  $.datepicker.formatDate( 'mm/dd/yy', new Date(loanDetails.purchaseDocumentExpiryDate));
 			}
 			var dobInput = $('<input>').attr({
 				"class" : "prof-form-input date-picker float-left",
 				"placeholder" : "MM/DD/YYYY",
-				"value" : dob,
-				"id" : "dobID"
+				"value" : expiryDate,
+				"id" : "purchaseDocumentExpiryDate",
+				"onchange" : "updatePurchaseDocumentExpiryDate()"
 			}).datepicker({
 				orientation : "top auto",
 				autoclose : true
 			}).on('show', function(e) {
 				var $popup = $('.datepicker');
 				$popup.click(function() {
-					return false;
+					
 				});
+			}).on('close', function () {
+	            //you will get here once the user is done "choosing" - in the dateText you will have 
+	            //the new date or "" if no date has been selected    
+			  //updatePurchaseDocumentExpiryDate( );
 			});
 			var dobInputContainer = $('<div>').attr({
 				"class":"av-loan-details-row-rc datelabel float-left"
@@ -1238,6 +1243,47 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendCustomerEditProfilePopUp();
 
 }
+
+function updatePurchaseDocumentExpiryDate(){
+	var date =  new Date($("#purchaseDocumentExpiryDate").val()).getTime();
+	var currentTime  = new Date().getTime();
+	if(currentTime>date){
+		showToastMessage("Cannot select old value");
+		return ;
+	}
+	var data = {};
+	data.loanId = selectedUserDetail.loanID;
+	data.date = date;
+	var url = "rest/loan/purchaseDocument/expiryDate";
+	
+
+	$.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		contentType: "application/x-www-form-urlencoded",
+		success : function(response){
+			showExpiryDateResponse(response);
+		},
+		complete:function(response){},
+		error : function(){
+			
+		}
+	});
+
+	
+	
+}
+
+function showExpiryDateResponse(response){
+	console.info(response);
+	if(response.error == null){
+		showToastMessage("Expiry Date Accepted.");
+	}else{
+		showToastMessage("Problem saving Expiry Date.");
+	}
+}
+
 
 // Function to append loan details row
 function appendLoanDetailsRow(label, value, isLink,linkUrl) {

@@ -449,4 +449,26 @@ public class LoanRestService {
 		 */
 		return RestUtil.wrapObjectForSuccess(gson.toJson(loanAppFormVO));
 	}
+	
+	
+	@RequestMapping(value="/purchaseDocument/expiryDate" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO setExpiryDate(
+			@RequestParam(value = "loanId", required = false) String  loanId,
+			@RequestParam(value = "date", required = false) String  date
+			){
+		CommonResponseVO commonResponseVO  = null;
+		try {
+			LOG.info("loanId : "+loanId + " & "+date);
+	        loanService.setExpiryDateToPurchaseDocument(Integer.valueOf(loanId) ,Long.valueOf( date));
+			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+        } catch (Exception e) {
+        	commonResponseVO = RestUtil.wrapObjectForFailure(null , "500" , "Exception");
+        	LOG.error(e.getMessage() , e);
+        }
+		
+		return commonResponseVO;
+		
+	}
+	
+	
 }

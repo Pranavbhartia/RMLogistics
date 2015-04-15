@@ -38,4 +38,8 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_CO_BORROWER_EXPERIAN_SCORE = "aCExperianScore";
 	public static String SOAP_XML_CO_BORROWER_TRANSUNION_SCORE = "aCTransUnionScore";
 
+	// Exception Types
+	public static String EXCEPTION_TYPE_LOAN_BATCH = "loan_batch";
+	public static String EXCEPTION_TYPE_EMAIL_BATCH = "email_batch";
+
 }

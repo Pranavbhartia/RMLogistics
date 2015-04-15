@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.GenericDao;
 import com.nexera.common.exception.DatabaseException;
@@ -22,9 +23,8 @@ import com.nexera.common.exception.DatabaseException;
 public class GenericDaoImpl implements GenericDao {
 
 	private static final int BATCH_SIZE = 5;
-	
+
 	@Autowired
-	
 	protected SessionFactory sessionFactory;
 
 	public Object save(Object obj) throws DatabaseException {
@@ -35,11 +35,10 @@ public class GenericDaoImpl implements GenericDao {
 			return session.save(obj);
 
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
-	
 
 	public void saveOrUpdate(Object obj) throws DatabaseException {
 
@@ -49,7 +48,7 @@ public class GenericDaoImpl implements GenericDao {
 			session.saveOrUpdate(obj);
 
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
@@ -59,7 +58,7 @@ public class GenericDaoImpl implements GenericDao {
 		try {
 			session.update(obj);
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
@@ -69,7 +68,7 @@ public class GenericDaoImpl implements GenericDao {
 	 * associations. Load does not initialise the associations of a object.
 	 */
 	public Object load(@SuppressWarnings("rawtypes") Class cls, Integer id)
-			throws DatabaseException {
+	        throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
 		Object obj = null;
@@ -77,7 +76,7 @@ public class GenericDaoImpl implements GenericDao {
 			obj = session.get(cls, id);
 			return obj;
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
@@ -87,16 +86,17 @@ public class GenericDaoImpl implements GenericDao {
 	 * associations. Load does not initialise the associations of a object.
 	 */
 	public List loadAll(@SuppressWarnings("rawtypes") Class cls)
-			throws DatabaseException {
+	        throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
 
 		try {
 			//
-			return session.createCriteria(cls).setCacheable(Boolean.TRUE).list();
+			return session.createCriteria(cls).setCacheable(Boolean.TRUE)
+			        .list();
 
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
@@ -115,7 +115,7 @@ public class GenericDaoImpl implements GenericDao {
 	 */
 
 	public List executeNamedQuery(final String namedQuery, final Map params)
-			throws DatabaseException {
+	        throws DatabaseException {
 		final Session session = sessionFactory.getCurrentSession();
 		try {
 			final Query query = session.getNamedQuery(namedQuery);
@@ -127,37 +127,30 @@ public class GenericDaoImpl implements GenericDao {
 			return query.list();
 
 		} catch (Exception e) {
-			throw new DatabaseException(e.getMessage(),e);
+			throw new DatabaseException(e.getMessage(), e);
 		}
 
 	}
 
-	
+	@Transactional
+	public void saveAll(List data) throws DatabaseException {
+		Session session = null;
 
-	
-	public void saveAll(List data) throws DatabaseException
-	   {
-	      Session session = null;
-	      
-	      try
-	      {
-	         session = sessionFactory.getCurrentSession();
-	         for(int i=0;i<data.size();i++)
-	         {
-	            Object object = data.get(i);
-	            session.save(object);
-	            if(i != 0 && i % BATCH_SIZE == 0)
-	               session.flush();
+		try {
+			session = sessionFactory.getCurrentSession();
+			for (int i = 0; i < data.size(); i++) {
+				Object object = data.get(i);
+				session.save(object);
+				if (i != 0 && i % BATCH_SIZE == 0)
+					session.flush();
 
-	         }
-	         
-	         session.flush();
-	      } 
-	      catch (Throwable e)
-	      {
-	         throw new RuntimeException(e.getMessage(),e);
-	      }
-	      
-	   }
+			}
+
+			session.flush();
+		} catch (Throwable e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+
+	}
 
 }

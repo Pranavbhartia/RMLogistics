@@ -233,13 +233,14 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		"class" : "add-member-input-admin-cont float-left clearfix"
 	}).html("User Type");
 
-	
+
 	var spanLabel=$('<span>').attr({
-	"class":"admin-span-class float-left",		
-	}).html("Please Select");
+		"class":"admin-span-class float-left",		
+		}).html("Please Select");
 	var userTypeSel = $('<div>').attr({
 		"id" : "admin-add-memeber-user-type",
 		"class" : "add-member-sel-admin float-right"
+
 	}).on('click',function(e){
 		e.stopImmediatePropagation();
 	if($('#admin-add-usertype-dropdown-cont').css("display")=="block"){
@@ -250,7 +251,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	}	
 	});
 
-	userTypeSel.append(spanLabel);
+    userTypeSel.append(spanLabel);
 	userTypeCont.append(userTypeSel);
 	
 	var createUserButton=$('<div>').attr({
@@ -258,7 +259,15 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	"id":"create-user-id",
     
 	}).html("Create User").click(function(e){
-		showAddUserPopUp(e);
+		if($("#admin-add-memeber-user-type").attr("roleid")==undefined || $("#admin-add-memeber-user-type").attr(
+		"internalroleid")==undefined ){
+			$("#admin-create-user-popup").hide();
+			showErrorToastMessage("Please select a user type");
+			return ;
+		}else{
+			showAddUserPopUp(e);
+		}
+		
 
 	});	
 
@@ -518,6 +527,7 @@ var popUpWrapper = $('<div>').attr({
 					}
 				}
 				;
+
 				//TODO  to create function to call create user rest 		
 				createUserFromAdmin(user);
 

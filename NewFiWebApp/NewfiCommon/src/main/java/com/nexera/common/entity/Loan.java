@@ -21,8 +21,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import com.nexera.common.commons.CommonConstants;
@@ -69,6 +67,11 @@ public class Loan implements Serializable {
 	private Boolean isBankConnected;
 	private BigDecimal lockedRate;
 	private BigDecimal appFee;
+	private Long purchaseDocumentExpiryDate;
+	
+	
+	
+	
 
 	@Column(name = "rate_locked", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -413,7 +416,6 @@ public class Loan implements Serializable {
 
 	// bi-directional many-to-one association to LoanTeam
 	@OneToMany(mappedBy = "loan")
-	@Cascade({ CascadeType.SAVE_UPDATE })
 	public List<LoanTeam> getLoanTeam() {
 		return this.loanTeam;
 	}
@@ -477,6 +479,7 @@ public class Loan implements Serializable {
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setAppFee(loan.getAppFee());
 		loanVo.setName(loan.getName());
+		loanVo.setPurchaseDocumentExpiryDate(loan.getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
 			loanVo.setStatus(loan.getLoanProgressStatus()
 			        .getLoanProgressStatus());
@@ -540,5 +543,14 @@ public class Loan implements Serializable {
 	public void setAppFee(BigDecimal appFee) {
 		this.appFee = appFee;
 	}
+
+	@Column(name = "purchase_document_expiry_date")
+	public Long getPurchaseDocumentExpiryDate() {
+	    return purchaseDocumentExpiryDate;
+    }
+
+	public void setPurchaseDocumentExpiryDate(Long purchaseDocumentExpiryDate) {
+	    this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
+    }
 
 }

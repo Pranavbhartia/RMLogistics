@@ -621,58 +621,6 @@ public class LoanServiceImpl implements LoanService {
 			loan.setName(loanVO.getName());
 			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-			List<UserVO> userList = loanVO.getLoanTeam();
-			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
-			// Add customer by default to the loan team
-
-			LoanTeam e = new LoanTeam();
-			e.setUser(user);
-			e.setLoan(loan);
-			e.setActive(Boolean.TRUE);
-			e.setAssignedOn(new Date(System.currentTimeMillis()));
-			loanTeam.add(e);
-
-			/*
-			 * TODO: Get the state from the loan app form and pass it to the
-			 * method below
-			 */
-			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
-
-			if (defaultUser != null) {
-				LoanTeam defaultLanManager = new LoanTeam();
-				LOG.debug("default Loan manager is: " + defaultUser);
-				defaultLanManager.setUser(User
-				        .convertFromVOToEntity(defaultUser));
-				defaultLanManager.setLoan(loan);
-				defaultLanManager.setActive(Boolean.TRUE);
-				defaultLanManager.setAssignedOn(new Date(System
-				        .currentTimeMillis()));
-				loanTeam.add(defaultLanManager);
-			}
-
-			// If loan team contains other users, then add those users to
-			// the team automatically.
-			if (userList != null) {
-				for (UserVO userVO : userList) {
-					// If the user is not already added to the team
-
-					if (userVO.getId() != getId(defaultUser)
-					        && userVO.getId() != e.getId()) {
-						LoanTeam team = new LoanTeam();
-						User userTeam = User.convertFromVOToEntity(userVO);
-						team.setAssignedOn(new Date(System.currentTimeMillis()));
-						team.setActive(Boolean.TRUE);
-						team.setUser(userTeam);
-
-						team.setLoan(loan);
-					}
-
-				}
-
-			}
-
-			loan.setLoanTeam(loanTeam);
-
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -698,13 +646,66 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
-
+		addDefaultLoanTeam(loanVO, loanId);
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		loanVO.setId(loanId);
 		return loanVO;
+	}
+
+	private void updateLoanTeamList(List<LoanTeam> loanTeam, User user,
+	        int loanId) {
+		LoanTeam e = new LoanTeam();
+		e.setUser(user);
+		Loan loan = new Loan(loanId);
+		e.setLoan(loan);
+		e.setActive(Boolean.TRUE);
+		e.setAssignedOn(new Date(System.currentTimeMillis()));
+		loanTeam.add(e);
+	}
+
+	private void addDefaultLoanTeam(LoanVO loanVO, int loanId) {
+		// TODO Auto-generated method stub
+
+		// Add the user being registered to the team
+		User user = User.convertFromVOToEntity(loanVO.getUser());
+		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
+		updateLoanTeamList(loanTeam, user, loanId);
+		// Check if realtor email is valid
+
+		User realtor = userProfileService.findUserByMail(loanVO
+		        .getRealtorEmail());
+		if (realtor != null && realtor.getId() != 0) {
+			// User is valid. Update the loan team
+			updateLoanTeamList(loanTeam, realtor, loanId);
+		}
+		// Check if loanmanageremail is valid
+		userProfileService.findUserByMail(loanVO.getLmEmail());
+		User loanManager = userProfileService.findUserByMail(loanVO
+		        .getLmEmail());
+		boolean defaultManagerAdded = Boolean.FALSE;
+		if (loanManager != null && loanManager.getId() != 0) {
+			// User is valid. Update the loan team
+			updateLoanTeamList(loanTeam, loanManager, loanId);
+			defaultManagerAdded = Boolean.TRUE;
+		}
+		/*
+		 * TODO: Get the state from the loan app form and pass it to the method
+		 * below
+		 */
+
+		if (!defaultManagerAdded) {
+			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
+
+			if (defaultUser != null) {
+				updateLoanTeamList(loanTeam,
+				        User.convertFromVOToEntity(defaultUser), loanId);
+			}
+
+		}
+		loanDao.saveAll(loanTeam);
 	}
 
 	@Override
@@ -1029,14 +1030,15 @@ public class LoanServiceImpl implements LoanService {
 			        "No purchase details record found for loanappform id : "
 			                + loan.getLoanAppForms().get(0).getId());
 		}
-		if (loan.getPropertyType() == null) {
+		if (loan.getLoanAppForms().get(0).getPropertyTypeMaster() == null) {
 			LOG.error("No property type record found for loan id : " + loanId);
 			throw new NoRecordsFetchedException(
 			        "No property type record found for loan id : " + loanId);
 		}
 
 		LoanAppForm loanAppForm = loan.getLoanAppForms().get(0);
-		PropertyTypeMaster propertyTypeMaster = loan.getPropertyType();
+		PropertyTypeMaster propertyTypeMaster = loan.getLoanAppForms().get(0)
+		        .getPropertyTypeMaster();
 		PurchaseDetails purchaseDetails = loanAppForm.getPurchaseDetails();
 
 		// Check if the required fields are available in purchaseDetails and
@@ -1057,32 +1059,186 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		if (Integer.parseInt(purchaseDetails.getLoanAmount()) <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
-			if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.CSFPR;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.CMF;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.INVESTMENT_VALUE)) {
-				/* For Investment change the column Name */
-				return CommonConstants.CINV;
+			if (propertyTypeMaster
+			        .getPropertyTypeCd()
+			        .equalsIgnoreCase(
+			                CommonConstants.PROPERTY_TYPE_SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CSFPR;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_CONDO)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MULTI_UNIT)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CMF;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MOBILE_MANUFACTURE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
 			} else {
 				throw new InvalidInputException(
 				        "Invalid property type for loan id : " + loanId
 				                + " Givern property type : "
 				                + propertyTypeMaster.getPropertyTypeCd());
 			}
-		} else {
-			if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.JSFPR;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.JMF;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.INVESTMENT_VALUE)) {
-				return CommonConstants.JINV;
+		}
+
+		else {
+			if (propertyTypeMaster
+			        .getPropertyTypeCd()
+			        .equalsIgnoreCase(
+			                CommonConstants.PROPERTY_TYPE_SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JSFPR;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_CONDO)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MULTI_UNIT)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JMF;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MOBILE_MANUFACTURE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+				}
 			} else {
 				throw new InvalidInputException(
 				        "Invalid property type for loan id : " + loanId
@@ -1180,4 +1336,14 @@ public class LoanServiceImpl implements LoanService {
 		}
 		return null;
 	}
+
+	@Override
+	@Transactional
+    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+			loanDao.setExpiryDateToPurchaseDocument(loanId , date);
+    }
+	
+	
+	
+	
 }

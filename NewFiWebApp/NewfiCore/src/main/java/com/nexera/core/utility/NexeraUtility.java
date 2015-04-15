@@ -29,6 +29,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
@@ -59,10 +61,13 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import com.nexera.common.entity.ExceptionMaster;
+import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
+import com.nexera.core.service.ExceptionService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -74,6 +79,9 @@ public class NexeraUtility {
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+
+	@Autowired
+	private ExceptionService exceptionService;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
@@ -239,7 +247,7 @@ public class NexeraUtility {
 	}
 
 	public String randomStringOfLength() {
-		Integer length = 20;
+		Integer length = 30;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
 			buffer.append(uuidString());
@@ -268,7 +276,18 @@ public class NexeraUtility {
 			PDFToImage.main(args);
 			String imageFile = imageFilePath + File.separator + PAGE_NUMBER
 			        + "." + OUTPUT_FILENAME_EXT;
+			
+			String thumbpath = imageFilePath + File.separator + (PAGE_NUMBER+1)
+			        + "." + OUTPUT_FILENAME_EXT;
+			
+			File imageFileObj = new File(imageFile);
 			LOGGER.info("Image path for thumbnail : " + imageFile);
+			Thumbnails.of(new File(imageFile)).size(Integer.parseInt("100"),Integer.parseInt("100")).toFile(thumbpath);
+			
+			if(imageFileObj.exists()){
+				imageFileObj.delete();
+			}
+			
 			return imageFile;
 
 		} catch (Exception e) {
@@ -277,7 +296,7 @@ public class NexeraUtility {
 	}
 
 	private String uuidString() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
+		return UUID.randomUUID().toString();
 	}
 
 	public String convertImageToPDF(File file, String contentType) {
@@ -616,14 +635,14 @@ public class NexeraUtility {
 
 	public void getStreamForThumbnailFromS3Path(HttpServletResponse response,
 	        byte[] bytes) throws Exception {
-		
+
 		response.setContentLength(bytes.length);
 		response.setContentType("image/jpeg");
-		
+
 		ServletOutputStream servletoutputstream = response.getOutputStream();
 		servletoutputstream.write(bytes);
 		servletoutputstream.flush();
-		
+
 	}
 
 	public InputStream getInputStreamFromFile(String fileUrl, String isImage)
@@ -713,5 +732,20 @@ public class NexeraUtility {
 			buf = bos.toByteArray();
 		}
 		return buf;
+	}
+
+	public ExceptionMasterExecution putExceptionMasterIntoExecution(
+	        ExceptionMaster exceptionMaster, String exceptionMessage) {
+		ExceptionMasterExecution exceptionMasterExecution = new ExceptionMasterExecution();
+		exceptionMasterExecution.setExceptionMaster(exceptionMaster);
+		exceptionMasterExecution.setExceptionMessage(exceptionMessage);
+		exceptionMasterExecution.setExceptionTime(new Date());
+		return exceptionService
+		        .putExceptionMasterIntoExecution(exceptionMasterExecution);
+	}
+
+	public ExceptionMaster getExceptionMasterByType(String exceptionType) {
+		LOGGER.debug("Inside method getExceptionMasterByType");
+		return exceptionService.getExceptionMasterByType(exceptionType);
 	}
 }

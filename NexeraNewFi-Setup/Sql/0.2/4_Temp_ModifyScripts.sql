@@ -79,4 +79,31 @@ CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(
 Shashank Wrote- 
 INSERT INTO `newfi_schema`.`loantypemaster` (`id`, `loan_type_cd`, `description`, `modified_date`, `modified_by`) VALUES ('5', 'NONE', 'None', '2015-12-12 00:00:00', '2015-12-12 00:00:00');
 
+#Utsav New Tables for exception processing on 14:29 PM IST 15/04/2015
 
+CREATE TABLE `exceptionmaster` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exception_type` varchar(200) NOT NULL,
+  `description` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `exceptionmasterexecution` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exceptionmasterid` int(11) NOT NULL,
+  `exception_message` varchar(1000) DEFAULT NULL,
+  `exception_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `newfi_schema`.`exceptionmaster`(`id`, `exception_type`, `description`)
+VALUES ('1','loan_batch','loan batch related exceptions');
+
+
+INSERT INTO `newfi_schema`.`exceptionmaster`(`id`, `exception_type`, `description`)
+VALUES ('2','email_batch','email batch related exceptions');
+
+
+#Added by akash on 15th april
+Alter table  newfi_schema.loan
+ add  purchase_document_expiry_date BIGINT(20) DEFAULT NULL;

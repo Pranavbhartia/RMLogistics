@@ -628,8 +628,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions.eq("loan", loan));
 		criteria.add(Restrictions
 		        .eq("loanMilestoneMaster", loanMilestoneMaster));
-		List<LoanMilestone> milestones = criteria.list();
 		criteria.addOrder(Order.desc("id"));
+		List<LoanMilestone> milestones = criteria.list();
+		
 		LoanMilestone latestMS = null;
 		if (milestones.size() > 0) {
 			latestMS = milestones.get(0);
@@ -850,4 +851,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			ex.printStackTrace();
 		}
 	}
+
+
+	@Override
+    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+	    Session session = sessionFactory.getCurrentSession();
+	    
+	    Loan loan  = (Loan) this.load(Loan.class, loanId);
+	    loan.setPurchaseDocumentExpiryDate(date);
+	    session.save(loan);
+	    
+    }
+
 }

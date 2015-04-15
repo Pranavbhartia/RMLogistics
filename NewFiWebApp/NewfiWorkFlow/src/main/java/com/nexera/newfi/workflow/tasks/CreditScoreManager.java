@@ -12,6 +12,7 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -27,6 +28,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	@Autowired
 	UserProfileService userProfileService;
 
+	@Autowired
+	NeedsListService needsListService;
 	@Autowired
 	Utils utils;
 
@@ -47,12 +50,13 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 
 		int userID = (Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString()));
-
+		int loanID = (Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 		// TO Remove------ start
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        iWorkflowService.getCreditDisplayScore(userID));
 		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-		        "http://www.lendingqb.com/");
+				needsListService.checkCreditReport(loanID));
 		// TO Remove------ end
 
 		return utils.getJsonStringOfMap(map);
