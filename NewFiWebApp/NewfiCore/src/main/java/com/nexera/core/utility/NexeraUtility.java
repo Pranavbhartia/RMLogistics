@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
@@ -614,42 +615,20 @@ public class NexeraUtility {
 	}
 
 	public void getStreamForThumbnailFromS3Path(HttpServletResponse response,
-	        String s3Path) throws Exception {
+	        byte[] bytes) throws Exception {
+		
+		response.setContentLength(bytes.length);
 		response.setContentType("image/jpeg");
-		LOGGER.info("The s3path = " + s3Path);
-
-		// File downloadFile = new
-		// File(s3FileUploadServiceImpl.downloadFile(s3FileURL ,
-		// localFilePath));
-		InputStream inputStream = getInputStreamFromFile(s3Path,
-		        String.valueOf(1));
-		// get output stream of the response
-		OutputStream outStream = response.getOutputStream();
-
-		byte[] buffer = new byte[2048];
-		int bytesRead = -1;
-
-		// write bytes read from the input stream into the output stream
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-			outStream.write(buffer, 0, bytesRead);
-		}
-
-		inputStream.close();
-		outStream.close();
+		
+		ServletOutputStream servletoutputstream = response.getOutputStream();
+		servletoutputstream.write(bytes);
+		servletoutputstream.flush();
+		
 	}
 
 	public InputStream getInputStreamFromFile(String fileUrl, String isImage)
 	        throws Exception {
 
-		/*
-		 * String extention = null; if(isImage.equals("0")){ extention = ".pdf";
-		 * }else{ extention = ".jpeg"; }
-		 * 
-		 * String filePth = downloadFile(fileUrl,
-		 * nexeraUtility.tomcatDirectoryPath()+File.separator+
-		 * nexeraUtility.randomStringOfLength()+extention); File initialFile =
-		 * new File(filePth);
-		 */
 		InputStream input = null;
 		try {
 			input = new URL(fileUrl).openStream();
