@@ -91,6 +91,10 @@ a,a:hover,a:visited {
 	cursor: pointer;
 }
 
+.cursor-auto{
+	cursor: auto;
+}
+
 input[type="button"]:hover, button:hover {
 	border: none;
 	outline: none;
@@ -4513,12 +4517,12 @@ input.calc-input {
 }
 
 .dateContainer {
-	margin-left:30px;
+	
 }
 
 .datelabel {
 	line-height: 30px;
-  padding-right: 30px;
+  
 }
 
 .login-error{

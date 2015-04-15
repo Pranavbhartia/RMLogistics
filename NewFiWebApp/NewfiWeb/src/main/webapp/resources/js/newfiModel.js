@@ -40,12 +40,14 @@ AgentViewSNEnum = {
 	5:"progress"
 };
 
-function initialize(newfi){
+function initialize(newfi,baseUrl){
 	newfiObject = newfi;
 	newfiObject.user = JSON.parse(newfi.user);
 	if(newfi.internalUserRoleMasters!=undefined){
 		newfiObject.internalUserRoleMasters = JSON.parse(newfi.internalUserRoleMasters);	
 	}
+	newfiObject.baseUrl = baseUrl;
+	
 	
 }
 

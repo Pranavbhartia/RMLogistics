@@ -47,14 +47,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private MessageServiceHelper messageServiceHelper;
-	
+
 	@Autowired
 	private LoanNeedListDao loanNeedListDao;
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
-	
-	
+
 	@Transactional
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
 		List<NeedsListMaster> needs = needsDao.getMasterNeedsList(false);
@@ -256,8 +255,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					                .getIndx()).setIsChecked(true);
 					needsList
 					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
-					                .getIndx())
-					        .setIsChecked(true);
+					                .getIndx()).setIsChecked(true);
 				}
 				if (null != loanAppForm.getIsselfEmployed()
 				        && loanAppForm.getIsselfEmployed()) {
@@ -267,8 +265,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					                .getIndx()).setIsChecked(true);
 					needsList
 					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
-					                .getIndx())
-					        .setIsChecked(true);
+					                .getIndx()).setIsChecked(true);
 					needsList
 					        .get(MasterNeedsEnum.Federal_Corporation_Partnership_K_1s_all_partnerships
 					                .getIndx()).setIsChecked(true);
@@ -287,8 +284,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					                .getIndx()).setIsChecked(true);
 					needsList
 					        .get(MasterNeedsEnum.Evidence_recent_receipt_1099_1099_s_1099_Rs_Income
-					                .getIndx())
-					        .setIsChecked(true);
+					                .getIndx()).setIsChecked(true);
 				}
 				// #22,#28,#33
 				needsList.get(
@@ -558,20 +554,27 @@ public class NeedsListServiceImpl implements NeedsListService {
 			}
 		}
 	}
-	
-	
+
 	@Override
 	@Transactional
-	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract(){
-		NeedsListMaster needsListMaster =  needsDao.findNeedsListMasterByLabel(CommonConstants.PURCHASE_CONTRACT);
-		if(needsListMaster!= null ){
-			LoanNeedsList loanNeedsList = 	loanNeedListDao.findLoanNeedsList(needsListMaster);
-			if(loanNeedsList != null ){
-				
+	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract() {
+		NeedsListMaster needsListMaster = needsDao
+		        .findNeedsListMasterByLabel(CommonConstants.PURCHASE_CONTRACT);
+		if (needsListMaster != null) {
+			LoanNeedsList loanNeedsList = loanNeedListDao
+			        .findLoanNeedsList(needsListMaster);
+			if (loanNeedsList != null) {
+
 				return loanNeedsList.getUploadFileId();
 			}
 		}
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public String checkCreditReport(Integer loanID) {
+		// TODO Auto-generated method stub
+		return needsDao.checkCreditReport(loanID);
+	}
 }

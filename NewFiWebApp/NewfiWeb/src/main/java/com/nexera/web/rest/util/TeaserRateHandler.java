@@ -33,21 +33,38 @@ public class TeaserRateHandler extends DefaultHandler {
     public List<TeaserRateResponseVO> getTeaserRateList() {
         return teaserRateList;
     }
- 
+   boolean eligibilityFlag = false;
+    
     @Override
     public void startElement(String uri, String localName, String qName,
     		Attributes attributes) throws SAXException {
     	
+    	
+    	
     	//LOG.info("StartElement  qName # "+qName);
     	
     		if(qName.equalsIgnoreCase("Program")) {
+    			eligibilityFlag = false;
     			rateVoList = new  ArrayList<LqbTeaserRateVo>() ;
     			//create a new instance of TeaserRateResponseVO
     			teaserRateVo = new TeaserRateResponseVO();
+    		
+    			if(attributes.getValue("Status") == null ){
     			teaserRateVo.setLoanDuration(attributes.getValue("Name"));
+    			eligibilityFlag = true;
+    			}
+    			
+    			if(attributes.getValue("Status") != null && "Eligible".equalsIgnoreCase(attributes.getValue("Status")) ){
+    			
+    				teaserRateVo.setLoanDuration(attributes.getValue("Name"));
+    				eligibilityFlag = true;
+    				
+    			}
+    			
+    			
     		}
     		
-    		if(qName.equalsIgnoreCase("RateOption")) {
+    		if(qName.equalsIgnoreCase("RateOption") && eligibilityFlag== true) {
     			LqbTeaserRateVo rateVo = new LqbTeaserRateVo();
     				
     			
@@ -129,34 +146,18 @@ public class TeaserRateHandler extends DefaultHandler {
     
     
     
-
-	
-	
-	
-	
-	
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
  
     @Override
     public void endElement(String uri, String localName,
     		String qName) throws SAXException {
     	//LOG.info("end Element  qName # "+qName);
     		if(qName.equalsIgnoreCase("Program")) {
+    			
+    			if(rateVoList!=null && rateVoList.size()>0){
     			//add it to the list
     			teaserRateVo.setRateVO(rateVoList);
     			teaserRateList.add(teaserRateVo);
+    			}
        		}
    		}
 

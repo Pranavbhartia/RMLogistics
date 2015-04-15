@@ -289,15 +289,29 @@ function capitalizeFirstLetter(string) {
 
 function removedDoller(inputData) {
     var processData = inputData;
-   if (inputData.indexOf('$') >= 0)     
+   
+    if(processData == undefined)
+ 	   return null;
+    
+    if (inputData.indexOf('$') >= 0)     
      processData = inputData.split("$")[1];
 
       return processData;
 }
 
 function removedComma(inputData) {
-   if (inputData.indexOf(',') >= 0) 
+   if(inputData == undefined)
+	   return null;
+	
+	if (inputData.indexOf(',') >= 0) 
        return inputData.replace(/,/g, "");
    else
       return inputData;
+}
+
+
+function getFloatValue(inputData){
+	
+	return parseFloat(removedDoller(removedComma(inputData)));
+	
 }
