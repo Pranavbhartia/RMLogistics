@@ -182,7 +182,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .convertFromVOToEntity(customerDetailVO);
 
 		LOG.info("Checking if the user is a customer");
-		if (userVO.getUserRole().getId() == 1) {
+		if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
 			LOG.info("Checking for customer profile status of customers");
 			if (customerDetail.getProfileCompletionStatus() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
@@ -244,11 +244,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				customerDetail
 				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
 			}
-			if (customerDetail.getCarrierInfo() != null) {
-				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
-				        .getCarrierEmailForName(customerDetail.getCarrierInfo());
-				customerDetail.setCarrierInfo(mobileCarrier.getCarrierEmail());
-			}
+		
 		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
