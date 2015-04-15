@@ -17,11 +17,14 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.BatchService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.NexeraUtility;
 
 @DisallowConcurrentExecution
 public class LoanBatchProcessor extends QuartzJobBean {
@@ -40,12 +43,18 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	@Autowired
 	private BatchService batchService;
 
+	@Autowired
+	private NexeraUtility nexeraUtility;
+
+	private ExceptionMaster exceptionMaster;
+
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
 	        throws JobExecutionException {
 
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		LOGGER.debug("Triggering the Quartz Schedular ");
+		loadExceptionMaster();
 		BatchJobMaster batchJobMaster = getBatchJobMasterById(2);
 		if (batchJobMaster != null) {
 			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
@@ -61,6 +70,8 @@ public class LoanBatchProcessor extends QuartzJobBean {
 								threadManager
 								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
 								threadManager.setLoan(loan);
+								threadManager
+								        .setExceptionMaster(exceptionMaster);
 								taskExecutor.execute(threadManager);
 							}
 						}
@@ -102,6 +113,18 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		LOGGER.debug("Inside method getLoanMilestoneMasterList ");
 
 		return loanService.getLoanMilestoneMasterList();
+	}
+
+	private ExceptionMaster loadExceptionMaster() {
+
+		if (exceptionMaster == null) {
+			LOGGER.debug("Loading Loan ExceptionMaster ");
+			exceptionMaster = nexeraUtility
+			        .getExceptionMasterByType(CoreCommonConstants.EXCEPTION_TYPE_LOAN_BATCH);
+
+		}
+		return exceptionMaster;
+
 	}
 
 	private ThreadPoolTaskExecutor getTaskExecutor() {

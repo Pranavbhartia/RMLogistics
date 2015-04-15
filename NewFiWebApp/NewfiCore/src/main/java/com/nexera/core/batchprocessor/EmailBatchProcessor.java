@@ -29,9 +29,11 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
-import com.nexera.common.exception.FatalException;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.core.processor.EmailProcessor;
 import com.nexera.core.service.BatchService;
+import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.NexeraUtility;
 
 @DisallowConcurrentExecution
 public class EmailBatchProcessor extends QuartzJobBean {
@@ -60,15 +62,25 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	private ApplicationContext applicationContext;
 
 	@Autowired
+	private NexeraUtility nexeraUtility;
+
+	@Autowired
 	private BatchService batchService;
+
+	ExceptionMaster exceptionMaster;
 
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
 	        throws JobExecutionException {
-		LOGGER.debug("Code inside this will get triggered every 1 min ");
+
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		LOGGER.debug("Spring beans initialized for email Thread ");
+
 		BatchJobMaster batchJobMaster = getBatchJobMasterById(1);
+
+		LOGGER.debug("Loading Exception Master ");
+		loadExceptionMaster();
+
 		if (batchJobMaster != null) {
 			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
@@ -88,6 +100,18 @@ public class EmailBatchProcessor extends QuartzJobBean {
 	private void updateBatchJobExecution(BatchJobExecution batchJobExecution) {
 		batchJobExecution.setDateLastRunEndtime(new Date());
 		batchService.updateBatchJobExecution(batchJobExecution);
+
+	}
+
+	private ExceptionMaster loadExceptionMaster() {
+
+		if (exceptionMaster == null) {
+			LOGGER.debug("Loading Email ExceptionMaster ");
+			exceptionMaster = nexeraUtility
+			        .getExceptionMasterByType(CoreCommonConstants.EXCEPTION_TYPE_EMAIL_BATCH);
+
+		}
+		return exceptionMaster;
 
 	}
 
@@ -119,10 +143,12 @@ public class EmailBatchProcessor extends QuartzJobBean {
 			fetchUnReadMails(inbox);
 
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 			LOGGER.error("Exception Thrown " + e.getMessage());
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 			LOGGER.error("Exception Thrown " + e.getMessage());
 		} finally {
 
@@ -131,7 +157,8 @@ public class EmailBatchProcessor extends QuartzJobBean {
 					try {
 						inbox.close(true);
 					} catch (MessagingException e) {
-						e.printStackTrace();
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster, e.getMessage());
 						LOGGER.error("Exception Thrown " + e.getMessage());
 					}
 			}
@@ -142,7 +169,8 @@ public class EmailBatchProcessor extends QuartzJobBean {
 					} catch (MessagingException e) {
 						LOGGER.error("Unable to close the store "
 						        + e.getMessage());
-						e.printStackTrace();
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster, e.getMessage());
 					}
 			}
 		}
@@ -162,6 +190,7 @@ public class EmailBatchProcessor extends QuartzJobBean {
 				EmailProcessor emailProcessor = applicationContext
 				        .getBean(EmailProcessor.class);
 				emailProcessor.setMessage(unreadMsg);
+				emailProcessor.setExceptionMaster(exceptionMaster);
 				emailTaskExecutor.execute(emailProcessor);
 				inbox.setFlags(new Message[] { unreadMsg }, new Flags(
 				        Flags.Flag.SEEN), true);
@@ -174,13 +203,14 @@ public class EmailBatchProcessor extends QuartzJobBean {
 			} catch (InterruptedException e) {
 				LOGGER.error("Exception caught while terminating executor "
 				        + e.getMessage());
-				throw new FatalException(
-				        "Exception caught while terminating executor "
-				                + e.getMessage());
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        e.getMessage());
 			}
 
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while reading mails " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 	}
 
