@@ -128,13 +128,13 @@
 			
 			
 			
-			$(document).on('click','input[name="birthday"]',function(e){
+			/* $(document).on('click','input[name="birthday"]',function(e){
 				
 				$(this).datepicker({
 					orientation : "top auto",
 					autoclose : true
 				});
-			});
+			}); */
 		//	retrieveState();
 
 			
