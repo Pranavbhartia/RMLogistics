@@ -157,24 +157,29 @@ function paintAgentDashboardRightPanel(data) {
 	});
 
 	var searchIcon = $('<div>').attr({
-		"class" : "search-icn float-left"
+		"class" : "search-icn float-left",
+		
 	}).on('click', function() {
 	
 		$(this).parent().find('.search-input').show().focus();
 	});
 
 	var searchInputBox = $('<input>').attr({
-		"class" : "search-input float-left hide"
+		"class" : "search-input float-left hide",
+		"id" : "customerSearch"
 	}).on('keyup', function(e) {
 		if (e.which == 13) {
 			if($(this).val()==""){
 				$(this).hide();
 			}
-			filterCustomerName(customerData.customers , $(this).val());
+			searchByTermAndLoanType(customerData.customers );
 			$(this).parent().find('.search-icn').show();
 		}
 	}).on('blur', function() {
-		$(this).hide();
+		if($(this).val()==""){
+			$(this).hide();
+		}
+	
 		$(this).parent().find('.search-icn').show();
 	});
 
@@ -223,9 +228,12 @@ function paintAgentDashboardRightPanel(data) {
 		}).html(LOAN_ENUM[dropDownItemArray[i]]).bind('click', function(e) {
 			e.stopPropagation();
 			var val = $(this).html();
-			$('#filter-drop-down').parent().find('.filter-selected').attr("id" , dropDownItemArray[i]).html(val);
+			var filterSelected = $('#filter-drop-down').parent().find('.filter-selected');
+			filterSelected.removeAttr('id');
+			filterSelected.attr("id" , $(this).attr('id'));
+			filterSelected.html(val);
 			hideFilterDropDown();
-			searchCustomerLoanByLoanStatus(customerData.customers , $(this).attr('id'));
+			searchByTermAndLoanType(customerData.customers );
 		});
 		dropDownWrapper.append(dropDownItem);
 	}
@@ -241,6 +249,17 @@ function paintAgentDashboardRightPanel(data) {
 	appendCustomers("leads-container", customerData.customers);
 }
 
+function searchByTermAndLoanType(customers){
+	var searchTerm = $("#customerSearch").val();
+	var loanType = $(".filter-selected").attr('id');
+	
+	var filteredResult = searchCustomerLoanByLoanStatus(customers , loanType);
+	var finalResults = filterCustomerName(filteredResult , searchTerm);
+	appendCustomers("leads-container", finalResults);
+	
+}
+
+
 function searchCustomerLoanByLoanStatus(customers , loanStatus){
 	var searchObject = new Array();
 	
@@ -253,9 +272,7 @@ function searchCustomerLoanByLoanStatus(customers , loanStatus){
 	}else{
 		searchObject = customers;
 	}
-	
-	
-	appendCustomers("leads-container", searchObject);
+	return searchObject;
 }
 
 
@@ -266,8 +283,7 @@ function filterCustomerName(customer , searchVal){
 			searchObject.push(customer[i]);
 		}
 	}
-	
-	appendCustomers("leads-container", searchObject);
+	return searchObject;
 }
 
 function showFilterDropDown() {
