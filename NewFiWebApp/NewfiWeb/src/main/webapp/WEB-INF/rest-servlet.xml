@@ -11,6 +11,8 @@
 	<mvc:annotation-driven />
 
 	<context:annotation-config />
+		<context:property-placeholder
+		location="classpath:application.properties" />
 
 	<bean id="multipartResolver" 
 			class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
