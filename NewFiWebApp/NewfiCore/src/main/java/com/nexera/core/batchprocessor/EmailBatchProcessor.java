@@ -188,7 +188,9 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		emailTaskExecutor = new ThreadPoolTaskExecutor();
 		emailTaskExecutor.initialize();
 		emailTaskExecutor.setCorePoolSize(3);
-		emailTaskExecutor.setMaxPoolSize(10);
+		emailTaskExecutor.setMaxPoolSize(20);
+		emailTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+		emailTaskExecutor.setAwaitTerminationSeconds(Integer.MAX_VALUE);
 		return emailTaskExecutor;
 
 	}
