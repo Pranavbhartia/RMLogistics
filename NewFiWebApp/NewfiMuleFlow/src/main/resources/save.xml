@@ -4,10 +4,22 @@
 		<field id="sProdCashoutAmt">prodCashOut</field>
 		<field id="sPurchPrice">loanPurchasePrice</field>
 		<field id="sProdRLckdDays ">ProdLckdDays</field>
-		<field id="sLAmtCalc">loanAmount</field>
+		<field id="sLAmtCalc">loanAmount</field>	
 		<field id="sSpState">propertyState</field>
 		<field id="sApprVal">loanApprovedValue</field>
-		<!--  <collection id="sCondDataSet">
+		<field id="sProd3rdPartyUwResultT">thirdpartyresult</field>
+		<field id="sProdFilterDue10Yrs">true</field>
+		<field id="sProdFilterDue15Yrs">true</field>
+		<field id="sProdFilterDue20Yrs">true</field>
+		<field id="sProdFilterDue25Yrs">true</field>
+		<field id="sProdFilterDue30Yrs">true</field>
+		<field id="sProdFilterDueOther">true</field>
+		<field id="sProdFilterFinMeth10YrsArm">true</field>
+		<field id="sProdFilterFinMeth3YrsArm">true</field>
+		<field id="sProdFilterFinMeth5YrsArm">true</field>
+		<field id="sProdFilterFinMeth7YrsArm">true</field>
+		<field id="sProdFilterFinMethFixed">true</field>
+			<!--  <collection id="sCondDataSet">
 			<record>
 				<field id="IsRequired">True</field>
 				<field id="Category">Prior Doc - Edit</field>
