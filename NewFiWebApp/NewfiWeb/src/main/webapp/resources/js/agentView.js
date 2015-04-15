@@ -1202,22 +1202,22 @@ function appendCustomerLoanDetails(loanDetails) {
 			var label = $("<div>").attr({
 				"class" : "av-loan-details-row-lc datelabel float-left"
 			}).html("Set expiry date");
-			var dob = "";
-			if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
-				dob = "";
+			var expiryDate = "";
+			if (loanDetails.purchaseDocumentExpiryDate!= undefined && loanDetails.purchaseDocumentExpiryDate != null) {
+				expiryDate = loanDetails.purchaseDocumentExpiryDate;
 			}
 			var dobInput = $('<input>').attr({
 				"class" : "prof-form-input date-picker float-left",
 				"placeholder" : "MM/DD/YYYY",
-				"value" : dob,
-				"id" : "dobID"
+				"value" :  $.datepicker.formatDate( 'mm/dd/yy', new Date(expiryDate) ),
+				"id" : "purchaseDocumentExpiryDate"
 			}).datepicker({
 				orientation : "top auto",
 				autoclose : true
 			}).on('show', function(e) {
 				var $popup = $('.datepicker');
 				$popup.click(function() {
-					return false;
+					updatePurchaseDocumentExpiryDate(  new Date($("#purchaseDocumentExpiryDate").val()).getTime());
 				});
 			});
 			var dobInputContainer = $('<div>').attr({
@@ -1238,6 +1238,41 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendCustomerEditProfilePopUp();
 
 }
+
+function updatePurchaseDocumentExpiryDate(date){
+	var data = {};
+	data.loanId = selectedUserDetail.loanID;
+	data.date = date;
+	var url = "rest/loan/purchaseDocument/expiryDate";
+	
+
+	$.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		contentType: "application/x-www-form-urlencoded",
+		success : function(response){
+			showExpiryDateResponse(response);
+		},
+		complete:function(response){},
+		error : function(){
+			
+		}
+	});
+
+	
+	
+}
+
+function showExpiryDateResponse(response){
+	console.info(response);
+	if(response.error == null){
+		showToastMessage("Expiry Date Accepted.");
+	}else{
+		showToastMessage("Problem saving Expiry Date.");
+	}
+}
+
 
 // Function to append loan details row
 function appendLoanDetailsRow(label, value, isLink,linkUrl) {

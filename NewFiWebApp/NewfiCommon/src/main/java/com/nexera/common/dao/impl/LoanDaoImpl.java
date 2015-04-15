@@ -850,4 +850,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			ex.printStackTrace();
 		}
 	}
+
+	@Override
+    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+	    Session session = sessionFactory.getCurrentSession();
+	    
+	    Loan loan  = (Loan) this.load(Loan.class, loanId);
+	    loan.setPurchaseDocumentExpiryDate(date);
+	    session.save(loan);
+	    
+    }
 }

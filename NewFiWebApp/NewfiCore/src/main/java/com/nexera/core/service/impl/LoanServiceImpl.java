@@ -1180,4 +1180,14 @@ public class LoanServiceImpl implements LoanService {
 		}
 		return null;
 	}
+
+	@Override
+	@Transactional
+    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+			loanDao.setExpiryDateToPurchaseDocument(loanId , date);
+    }
+	
+	
+	
+	
 }
