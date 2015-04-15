@@ -1030,14 +1030,15 @@ public class LoanServiceImpl implements LoanService {
 			        "No purchase details record found for loanappform id : "
 			                + loan.getLoanAppForms().get(0).getId());
 		}
-		if (loan.getPropertyType() == null) {
+		if (loan.getLoanAppForms().get(0).getPropertyTypeMaster() == null) {
 			LOG.error("No property type record found for loan id : " + loanId);
 			throw new NoRecordsFetchedException(
 			        "No property type record found for loan id : " + loanId);
 		}
 
 		LoanAppForm loanAppForm = loan.getLoanAppForms().get(0);
-		PropertyTypeMaster propertyTypeMaster = loan.getPropertyType();
+		PropertyTypeMaster propertyTypeMaster = loan.getLoanAppForms().get(0)
+		        .getPropertyTypeMaster();
 		PurchaseDetails purchaseDetails = loanAppForm.getPurchaseDetails();
 
 		// Check if the required fields are available in purchaseDetails and
@@ -1058,32 +1059,186 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		if (Integer.parseInt(purchaseDetails.getLoanAmount()) <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
-			if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.CSFPR;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.CMF;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.INVESTMENT_VALUE)) {
-				/* For Investment change the column Name */
-				return CommonConstants.CINV;
+			if (propertyTypeMaster
+			        .getPropertyTypeCd()
+			        .equalsIgnoreCase(
+			                CommonConstants.PROPERTY_TYPE_SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CSFPR;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_CONDO)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MULTI_UNIT)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CMF;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MOBILE_MANUFACTURE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.CINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.CINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
 			} else {
 				throw new InvalidInputException(
 				        "Invalid property type for loan id : " + loanId
 				                + " Givern property type : "
 				                + propertyTypeMaster.getPropertyTypeCd());
 			}
-		} else {
-			if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.SINGLE_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.JSFPR;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.MULTI_FAMILY_RESIDENCE_VALUE)) {
-				return CommonConstants.JMF;
-			} else if (propertyTypeMaster.getPropertyTypeCd().equals(
-			        CommonConstants.INVESTMENT_VALUE)) {
-				return CommonConstants.JINV;
+		}
+
+		else {
+			if (propertyTypeMaster
+			        .getPropertyTypeCd()
+			        .equalsIgnoreCase(
+			                CommonConstants.PROPERTY_TYPE_SINGLE_FAMILY_RESIDENCE_VALUE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JSFPR;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_CONDO)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MULTI_UNIT)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JMF;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+
+				}
+			} else if (propertyTypeMaster.getPropertyTypeCd().equalsIgnoreCase(
+			        CommonConstants.PROPERTY_TYPE_MOBILE_MANUFACTURE)) {
+				if (propertyTypeMaster.getResidenceTypeCd().equalsIgnoreCase(
+				        CommonConstants.RESIDENCE_TYPE_PRIMARY_RESIDENCE)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster.getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_VACATION_HOME)) {
+					return CommonConstants.JINV;
+				} else if (propertyTypeMaster
+				        .getResidenceTypeCd()
+				        .equalsIgnoreCase(
+				                CommonConstants.RESIDENCE_TYPE_INVESTMENT_PROPERTY)) {
+					return CommonConstants.JINV;
+				} else {
+					throw new InvalidInputException(
+					        "Invalid property type for loan id : " + loanId
+					                + " Givern property type : "
+					                + propertyTypeMaster.getPropertyTypeCd());
+				}
 			} else {
 				throw new InvalidInputException(
 				        "Invalid property type for loan id : " + loanId

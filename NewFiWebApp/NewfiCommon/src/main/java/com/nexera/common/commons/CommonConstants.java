@@ -107,10 +107,17 @@ public interface CommonConstants {
 	/*
 	 * Loan Appform Constants
 	 */
-	public static final String SINGLE_FAMILY_RESIDENCE_VALUE = "0";
-	public static final String MULTI_FAMILY_RESIDENCE_VALUE = "1";
-	public static final String INVESTMENT_VALUE = "2";
+	public static final String PROPERTY_TYPE_SINGLE_FAMILY_RESIDENCE_VALUE = "0";
+	public static final String PROPERTY_TYPE_CONDO = "1";
+	public static final String PROPERTY_TYPE_MULTI_UNIT = "2";
+	public static final String PROPERTY_TYPE_MOBILE_MANUFACTURE = "3";
+
+	public static final String RESIDENCE_TYPE_PRIMARY_RESIDENCE = "0";
+	public static final String RESIDENCE_TYPE_VACATION_HOME = "1";
+	public static final String RESIDENCE_TYPE_INVESTMENT_PROPERTY = "2";
+
 	public static final double LOAN_AMOUNT_THRESHOLD = 417000;
+
 	public static final int CSFPR = 395;
 	public static final int JSFPR = 595;
 	public static final int CINV = 495;
