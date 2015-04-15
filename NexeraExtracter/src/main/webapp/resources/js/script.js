@@ -597,7 +597,7 @@ function getMammothARMAdjustersTable1() {
 
 function getMammothARMAdjustersTable2() {
 	var tableCont = $('<div>').attr({
-		"class" : "ltv-table-container float-right mammoth-table4"
+		"class" : "ltv-table-container float-left mammoth-table4"
 	});
 	
 	var hedaer = $('<div>').attr({
