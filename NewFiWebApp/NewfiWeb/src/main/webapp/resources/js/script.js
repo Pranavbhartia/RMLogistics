@@ -402,7 +402,7 @@ function getLoanDetailsWrapper() {
 
 function lockLoanRate(lockratedata){
 
-alert('final lockratedata'+JSON.stringify(lockratedata));
+//alert('final lockratedata'+JSON.stringify(lockratedata));
 
  $.ajax({
         url: "rest/application/lockLoanRate",
@@ -535,13 +535,13 @@ function paintFixYourRatePage(appUserDetails) {
 	
 	
 	
-	alert('isnide paintFixYourRatePage');
+	//alert('isnide paintFixYourRatePage');
 	appUserDetails = {};
 	
 	appUserDetails = JSON.parse(newfi.appUserDetails);
-	alert('appUserDetails JSON'+JSON.stringify(appUserDetails));
+	//alert('appUserDetails JSON'+JSON.stringify(appUserDetails));
 	loanNumber = appUserDetails.loan.lqbFileId;
-	alert('loanNumber'+loanNumber);
+	//alert('loanNumber'+loanNumber);
 	fetchLockRatedata( loanNumber,appUserDetails);
 	
 }
@@ -550,7 +550,7 @@ function paintFixYourRatePage(appUserDetails) {
 
 function fetchLockRatedata(loanNumber)
 {
-alert('inside create loan method');
+//alert('inside create loan method');
  $('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/fetchLockRatedata/"+loanNumber,
@@ -558,7 +558,7 @@ $.ajax({
 		datatype : "application/json",
 		success:function(data){
 		
-            alert('fetchLockRatedata data is '+JSON.stringify(data));
+           // alert('fetchLockRatedata data is '+JSON.stringify(data));
 			fixAndLoakYourRatePage2(JSON.parse(data), appUserDetails) ;
 			 $('#overlay-loader').hide();
 		},
@@ -581,7 +581,7 @@ var lqbFileId ={};
         appUserDetails.loan.lqbFileId = loanNumber;
     lockratedata.sLoanNumber=loanNumber;
       var lqbData1 =  modifiedLQBJsonResponse(lqbData1);
-    alert('modified data'+lqbData1)
+   // alert('modified data'+lqbData1)
         var loanSummaryWrapper = getLoanSummaryWrapper(lqbData1, appUserDetails);
         var closingCostWrapper = getClosingCostSummaryContainer(lqbData1);
         $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
@@ -2016,7 +2016,7 @@ function lockRateCalculation(appUserDetails){
 
 function modifiedLQBJsonResponse(LQBResponse) {
     var yearValues = [];
-    alert('LQBResponse'+LQBResponse);
+   // alert('LQBResponse'+LQBResponse);
     var loanDurationConform;
     for (var i in LQBResponse) {
     //alert('LQBResponse[i].loanDuration'+LQBResponse[i].loanDuration)
