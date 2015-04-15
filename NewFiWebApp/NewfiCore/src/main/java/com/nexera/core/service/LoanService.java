@@ -148,4 +148,6 @@ public interface LoanService {
 	public void updateLoanAppFee(int loanId, BigDecimal newAppFee);
 
 	public LoanAppFormVO retrieveLoanAppForm(UserVO userVO);
+
+	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date);
 }

@@ -44,4 +44,6 @@ public interface WorkflowService {
 
 	List<WorkflowMaster> getAllWorkflows();
 
+	public WorkflowItemExec getWorkflowItemExecBySucessItemID(
+	        WorkflowItemExec workflowItemexec);
 }

@@ -13,19 +13,16 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,9 +32,6 @@ import org.springframework.stereotype.Component;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -131,6 +125,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		
 		String fileName = nexeraUtility.randomStringOfLength()+"."+FilenameUtils.getExtension(file.getName());
 		if(prefix != null){
+			
 			key = subfolderInBucket + "/"+prefix +fileName.replaceAll(" ", "_");
 		}else{
 			key = subfolderInBucket + "/" +fileName.replaceAll(" ", "_");
@@ -140,11 +135,8 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				uniqueBucketName, key, file);
 
-		if(subfolderInBucket.equalsIgnoreCase("document")){
-			putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
-		}else{
-			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-		}
+		putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+
 		
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setCacheControl("public");

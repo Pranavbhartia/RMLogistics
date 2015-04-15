@@ -57,5 +57,12 @@ public class WorkflowMasterDaoImpl extends GenericDaoImpl implements WorkflowMas
    		criteria.add(Restrictions.eq("workflowItemMaster", workflowItemMaster));
    		return (WorkflowItemExec) criteria.uniqueResult();
    	}
+	@Override
+    public WorkflowItemExec getWorkflowItemExecBySuccessItemID(WorkflowItemExec successItem) {
+		Session session = sessionFactory.getCurrentSession();
+   		Criteria criteria = session.createCriteria(WorkflowItemExec.class);
+   		criteria.add(Restrictions.eq("onSuccessItem", successItem));   		
+   		return (WorkflowItemExec) criteria.uniqueResult();	   
+    }
 
 }

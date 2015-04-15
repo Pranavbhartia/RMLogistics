@@ -104,3 +104,6 @@ INSERT INTO `newfi_schema`.`exceptionmaster`(`id`, `exception_type`, `descriptio
 VALUES ('2','email_batch','email batch related exceptions');
 
 
+#Added by akash on 15th april
+Alter table  newfi_schema.loan
+ add  purchase_document_expiry_date BIGINT(20) DEFAULT NULL;

@@ -409,7 +409,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				/*ob.workItem.stateInfo = "Not ordered";*/
+				
 			}
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
@@ -453,7 +453,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						}
 						else
 						{
-							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"||ob.workItem.workflowItemType=="MANAGE_PROFILE"){
+							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
+								//||ob.workItem.workflowItemType=="VIEW_APPRAISAL"
 								if(!ob.workItem.stateInfo)
 									ob.workItem.stateInfo=0;
 								if(ob.workItem.stateInfo>=0){
@@ -489,7 +490,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 									ob.stateInfoContainer.append(progressBarCont);
 								}
 							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
-									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY"){
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"||
+									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){
 								if(ob.workItem.stateInfo){
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){

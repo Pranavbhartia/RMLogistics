@@ -310,4 +310,30 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 		return utils.getJsonStringOfMap(map);
 	}
+
+	public String getRenderInfoForAppraisal(int loanID) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Loan loan = new Loan(loanID);
+		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.APPRAISAL.getMilestoneKey());
+		String status = "Pending";
+		if (loanMilestone != null) {
+			status = loanMilestone.getComments().toString();
+			MasterNeedsEnum needURLItem = MasterNeedsEnum.Appraisal_Report;
+			NeedsListMaster needsListMaster = new NeedsListMaster();
+			needsListMaster.setId(Integer.parseInt(needURLItem.getIndx()));
+			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
+			        loan, needsListMaster);
+			if (loanNeedsList != null
+			        && loanNeedsList.getUploadFileId() != null) {
+				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+				        loanNeedsList.getUploadFileId().getUuidFileId());
+			}
+
+		}
+		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+		        status);
+		return utils.getJsonStringOfMap(map);
+
+	}
 }
