@@ -117,4 +117,6 @@ public interface LoanDao extends GenericDao {
 
 	public void updateLoanAppFee(int loanId, BigDecimal newAppFee);
 
+	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date);
+
 }

@@ -49,6 +49,9 @@ public class LoanVO implements Serializable {
 
 	private UserLoanStatus userLoanStatus;
 
+	private Long purchaseDocumentExpiryDate;
+	
+	
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
 	}
@@ -344,4 +347,12 @@ public class LoanVO implements Serializable {
 	public void setAppFee(BigDecimal appFee) {
 		this.appFee = appFee;
 	}
+
+	public Long getPurchaseDocumentExpiryDate() {
+	    return purchaseDocumentExpiryDate;
+    }
+
+	public void setPurchaseDocumentExpiryDate(Long purchaseDocumentExpiryDate) {
+	    this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
+    }
 }

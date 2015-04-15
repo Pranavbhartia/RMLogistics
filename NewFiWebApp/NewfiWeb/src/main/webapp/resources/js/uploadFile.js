@@ -118,10 +118,10 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	
 	if(listUploadedFiles.isMiscellaneous){
 		var img = $("<img>").attr({
-	 		"src" : "readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1"
+	 		"src" : "readImageAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1"
 		}).load(function(){
 		docImg.css({
-			"background" : "url('readFileAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1') no-repeat center",
+			"background" : "url('readImageAsStream.do?uuid="+listUploadedFiles.uuidFileId+"&isThumb=1') no-repeat center",
 			"background-size" : "cover"	});
 		});
 	}
