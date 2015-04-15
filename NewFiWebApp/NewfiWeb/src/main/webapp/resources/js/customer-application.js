@@ -4505,3 +4505,53 @@ function getAddMoreEmployementDetails() {
 	}).html("Add Account");
 	return container.append(addBtn);
 }
+
+function createTeaserRateObjectForPurchase(appUserDet){
+    var ob;
+    if(appUserDet){
+        ob= {
+            "purchaseDetails":{
+                "livingSituation":appUserDet.purchaseDetails.livingSituation,
+                "rentPerMonth":"$5,000",
+                "isTaxAndInsuranceInLoanAmt":appUserDet.purchaseDetails.isTaxAndInsuranceInLoanAmt,
+                "housePrice":appUserDet.purchaseDetails.housePrice,
+                "loanAmount":appUserDet.purchaseDetails.loanAmount,
+                "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
+            },
+            "loanType":appUserDet.loanType.loanTypeCd,
+            "livingSituation":appUserDet.purchaseDetails.livingSituation,
+            "rentPerMonth":"$5,000",
+            "homeWorthToday":appUserDet.purchaseDetails.estimatedPrice,
+            "currentMortgageBalance":"$280,000",
+            "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
+        };
+    }
+    return ob;
+}
+function createTeaserRateObjectForRefinance(appUserDet){
+    var ob;
+    if(appUserDet){
+        ob={
+            "loanType":"REF",
+            "refinanceOption":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.refinanceOption:"",
+            "yearLeftOnMortgage":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.mortgageyearsleft:"",
+            "currentMortgageBalance":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.currentMortgageBalance:"",
+            "currentMortgagePayment":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.currentMortgagePayment:"",
+            "isIncludeTaxes":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.includeTaxes:"",
+            "propertyTaxesPaid":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.propertyTaxesPaid:"",
+            "annualHomeownersInsurance":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.propertyInsuranceCost:"",
+            "homeWorthToday":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.homeWorthToday:"",
+            "zipCode":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.homeZipCode:""
+        };
+    }
+    return ob;
+}
+function paintTeaserRatePageBasedOnLoanType(appUserDet){
+    if(appUserDet.loanType.description=="Purchase"){
+        var parentContainer=$('center-panel-cont');
+        paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDet));
+    }else{
+        var parentContainer=$('center-panel-cont');
+        paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet));
+    }
+}

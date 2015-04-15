@@ -993,7 +993,7 @@ function getAppDetailsForUser(userId,callback){
 				var appFormDetails=response.resultObject;
 				newfi.appUserDetails=appFormDetails;
 				if(callback){
-					callback();
+					callback(JSON.parse(appFormDetails));
 				}
 			}
 		});

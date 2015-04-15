@@ -209,13 +209,7 @@ function paintBuyHomEachMonthrent() {
 				container.append(
 						quesTextCont4).append(saveBtn));
 	}
-	/*
-	 * $("#progressBaarId_2").removeClass('ce-lp-in-progress').removeClass('ce-lp-not-started').addClass('ce-lp-complete');
-	 * $('#stepNoId_2').html("");
-	 * 
-	 * $("#progressBaarId_3").addClass('ce-lp-in-progress');
-	 * $('#stepNoId_3').html("3");
-	 */
+
 }
 
 function paintPlanToBuyYourHouse() {
@@ -293,7 +287,9 @@ function paintloanamount(){
 	 		
 	 		buyHomeTeaserRate.homeWorthToday = $('input[name="housePrice"]').val();
             buyHomeTeaserRate.currentMortgageBalance = $('input[name="loanAmount"]').val();
-           if("Yes" == quesContxts[2].value){
+            
+            if("Yes" == quesContxts[2].value){
+    
             buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = true;
             }else{
               buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = false;
@@ -316,27 +312,6 @@ function paintloanamount(){
 }
 
 
-/*function paintPreferTaxesInsurance(){
-	
-	var quesTxt = "Do you prefer to include Taxes and Insurance as part of your loan payment? ";
-	
-	var options = [ {
-		"text" : "Yes",
-		"onselect" : paintBuyHomeAnnualPropertyTaxes,
-		"name" : name,
-		"value" : 1
-	}, {
-		"text" : "No",
-		"onselect" : paintBuyHomeEstimatedPurchasePrice,
-		"name" : name,
-		"value" : 0
-	} ];
-
-	var quesCont = getMutipleChoiceQuestion(quesTxt, options, "preferTaxesInsurance");
-	$('#ce-refinance-cp').html(quesCont);
-
-}*/
-
 
 function paintBuyHomeAnnualPropertyTaxes(){
 	
@@ -345,13 +320,6 @@ function paintBuyHomeAnnualPropertyTaxes(){
 	$('#ce-refinance-cp').html(quesCont);
 }
 
-
-/*function paintBuyHomeEstimatedPurchasePrice(){
-	
-	var quesTxt = "What is the estimated purchase price?";
-	var quesCont = getTextQuestion(quesTxt, paintHomeZipCode,"estimatedPurchasePrice");
-	$('#ce-refinance-cp').html(quesCont);
-}*/
 
 
 function paintBuyHomeSellHome() {
@@ -406,294 +374,12 @@ function paintSellYourHome(quesText, options, name) {
 	return container.append(quesTextCont).append(optionContainer);
 }
 
-/*function paintBuyHomeStartMilitaryloans() {
 
-	var quesTxt = "Are you eligible for, and interested in, VA/military loans?";
-	var options = [ {
-		"text" : "Yes",
-		"onselect" : paintBuyHomeMyIncome,
-		"name" : name,
-		"value" : 1
-	}, {
-		"text" : "No",
-		"onselect" : paintBuyHomeMyIncome,
-		"name" : name,
-		"value" : 0
-	} ];
-
-	var quesCont = getBuyHomeMutipleChoiceQuestion(quesTxt, options,"isVeteran");
-	$('#ce-refinance-cp').html(quesCont);
-}
-
-function paintBuyHomeMyIncome() {
-
-	active = 4;
-	homeProgressBaar(4);
-	var quesTxt = "Select all that apply";
-	var options = [ {
-		"text" : "Employed",
-		"onselect" : painBuyHomeEmployed,
-		"name" : name,
-		"value" : 0
-	}, {
-		"text" : "Self-employed",
-		"onselect" : paintBuyHomeSelfEmployed,
-		"name" : name,
-		"value" : 1
-	}, {
-		"text" : "Social Security Income/Disability",
-		"onselect" : paintBuyHomeDisability,
-		"name" : name,
-		"value" : 2
-	}, {
-		"text" : "Pension/Retirement/401(k)",
-		"onselect" : paintBuyHomePension,
-		"name" : name,
-		"value" : 3
-	} ];
-	var quesCont = paintBuyHomeMyMoney(quesTxt, options, name);
-
-	$('#ce-refinance-cp').html(quesCont);
-	
-	 * $("#progressBaarId_3").removeClass('ce-lp-in-progress').removeClass('ce-lp-not-started').addClass('ce-lp-complete');
-	 * $('#stepNoId_3').html("");
-	 * $("#progressBaarId_4").addClass('ce-lp-in-progress');
-	 * $('#stepNoId_4').html("4");
-	 
-
-}
-
-function painBuyHomeEmployed(divId) {
-
-	var quesTxt = "About how much do you make a year";
-	var quesCont = getBuyHomeMyMoney(quesTxt);
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(quesCont);
-}
-
-function getBuyHomeMyMoney(quesText) {
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper",
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text",
-	}).html(quesText);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont",
-	});
-
-	// /----
-	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text",
-	}).html("Before Tax");
-
-	var inputBox1 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "beforeTax",
-	});
-
-	quesTextCont1.append(inputBox1);
-
-	// /----
-	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html("Where Do You Work ?");
-
-	var inputBox2 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "workPlace"
-	});
-
-	quesTextCont2.append(inputBox2);
-
-	// /----
-	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html("When Did You Start Wokring ?");
-
-	var inputBox3 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "startWorking"
-	});
-
-	// /----
-
-	quesTextCont3.append(inputBox3);
-
-	optionContainer.append(quesTextCont1).append(quesTextCont2).append(
-			quesTextCont3);
-
-	return container.append(quesTextCont).append(optionContainer);
-}
-
-function paintBuyHomeSelfEmployed(divId) {
-
-	var quesTxt = "How much do you make a year?";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesTxt);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "selfEmployed"
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-}
-
-function paintBuyHomeDisability(divId) {
-
-	var quesTxt = "About how much do you get monthly?";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesTxt);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "disability"
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-}
-
-function paintBuyHomePension(divId) {
-
-	var quesTxt = "About how much do you get monthly?";
-
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesTxt);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	var inputBox = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "pension"
-	});
-
-	optionContainer.append(inputBox);
-	container.append(quesTextCont).append(optionContainer);
-
-	$('#ce-option_' + divId).toggle();
-	$('#ce-option_' + divId).html(container);
-}
-
-function paintBuyHomeMyMoney(quesText, options, name) {
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesText);
-
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont"
-	});
-
-	for (var i = 0; i < options.length; i++) {
-
-		var optionIncome = $('<div>').attr({
-			"class" : "hide ce-option-ques-wrapper",
-			"id" : "ce-option_" + i
-		});
-
-		var option = $('<div>').attr({
-			"class" : "ce-option-checkbox",
-			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : name
-		}, function(event) {
-			$('.ce-option-checkbox').removeClass("ce-option-checked");
-			$(this).addClass("ce-option-checked");
-			var key = event.data.name;
-			buyHomeTeaserRate[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value);
-		});
-
-		optionContainer.append(option).append(optionIncome);
-	}
-
-	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
-	}).html("Save & Continue")
-			.bind(
-					'click',
-					function() {
-						buyHomeTeaserRate["beforeTax"] = $(
-								'input[name="beforeTax"]').val();
-						buyHomeTeaserRate["workPlace"] = $(
-								'input[name="workPlace"]').val();
-						buyHomeTeaserRate["startWorking"] = $(
-								'input[name="startWorking"]').val();
-						buyHomeTeaserRate["selfEmployed"] = $(
-								'input[name="selfEmployed"]').val();
-						buyHomeTeaserRate["disability"] = $(
-								'input[name="disability"]').val();
-						buyHomeTeaserRate["pension"] = $(
-								'input[name="pension"]').val();
-
-						paintPriceOfTheHouse();
-						
-						 * if (buyHomeTeaserRate["livingSituation"] == 0) {
-						 * 
-						 * paintPriceOfTheHouse(); } else { if
-						 * (buyHomeTeaserRate["sellYourHome"] == 0) {
-						 * saleYourCurrentHome(); } else { paintBuyHomeSSN(); }
-						 *  }
-						 
-					});
-
-	return container.append(quesTextCont).append(optionContainer).append(
-			saveBtn);
-}
-
-}
-*/
 
 function saleYourCurrentHome() {
-buyHomeTeaserRate.purchaseDetails.livingSituation = 'homeOwner';
+	buyHomeTeaserRate.purchaseDetails.livingSituation = 'homeOwner';
 	active = 2;
-	homeProgressBaar(2);
-	/*var quesTxt = "What is the listing price of your current home?";
-	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount,"homeWorthToday");
-	$('#ce-refinance-cp').html(quesCont);*/
-	
+	homeProgressBaar(2);	
 	paintloanamount();
 
 }
@@ -711,8 +397,13 @@ function paintHomeZipCode() {
 
 
 
-function paintBuyHomeSeeTeaserRate() {
-        
+function paintBuyHomeSeeTeaserRate(parentContainer,teaserRateData,hideCreateAccountBtn) {
+        if(!parentContainer){
+            parentContainer=$('#ce-refinance-cp');
+        }
+        if(!teaserRateData){
+            teaserRateData=buyHomeTeaserRate;
+        }
         
        /* buyHomeTeaserRate.purchaseDetails.housePrice=buyHomeTeaserRate.housePrice;
         buyHomeTeaserRate.purchaseDetails.loanAmount=buyHomeTeaserRate.loanAmount;
@@ -720,7 +411,7 @@ function paintBuyHomeSeeTeaserRate() {
 		buyHomeTeaserRate.purchaseDetails.estimatedPurchasePrice=buyHomeTeaserRate.estimatedPurchasePrice;
 		//buyHomeTeaserRate.rentPerMonth;	
 		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
- console.log('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
+		console.log('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         //alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
         stages = 6;
         progressBaar(6);
@@ -734,14 +425,14 @@ function paintBuyHomeSeeTeaserRate() {
         }).html(quesTxt);
         // alert(JSON.stringify(refinanceTeaserRate));
         container.append(quesTextCont);
-        $('#ce-refinance-cp').html(container);
+        $(parentContainer).html(container);
         $('#overlay-loader').show();
         
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",
             data: {
-                "teaseRate": JSON.stringify(buyHomeTeaserRate)
+                "teaseRate": JSON.stringify(teaserRateData)
             },
             datatype: "application/json",
             success: function(data) {
@@ -750,68 +441,17 @@ function paintBuyHomeSeeTeaserRate() {
                 // paintteaserRate(data);
                   
                   //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
-                  paintFixYourRatePageCEP(teaserRate, buyHomeTeaserRate);
+                  paintFixYourRatePageCEP(JSON.parse(data), teaserRateData,parentContainer,hideCreateAccountBtn);
             },
             error: function() {
                 alert("error");
                 $('#overlay-loader').hide();
             }
         });
-        // paintFixYourRatePageCEP(refinanceTeaserRate);
+       
     }
     
     
-    
-/*
-function paintBuyHomeSeeTeaserRate() {
-    active = 4;
-	homeProgressBaar(4);
-	var quesTxt = "Analyze & Adjust Your Numbers";
-	var container = $('<div>').attr({
-		"class" : "ce-rate-main-container"
-	});
-
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html(quesTxt);
-
-//	var rateProgramWrapper = getRateProgramContainer(buyHomeTeaserRate);
-
-var rateProgramWrapper = paintRefinanceSeeRates(buyHomeTeaserRate);
-
-	container.append(quesTextCont).append(rateProgramWrapper);
-	$('#ce-refinance-cp').html(container);
-	$('#overlay-loader').show();
-	$.ajax({
-
-		url : "rest/calculator/findteaseratevalue",
-		type : "POST",
-		data : {
-			"teaseRate" : JSON.stringify(buyHomeTeaserRate)
-		},
-		datatype : "application/json",
-		success : function(data) {
-          
-			$('#overlay-loader').hide();
-			//var teaserRate = data;
-			//paintteaserRate(data);
-			paintteaserRate(teaserRate);
-			//printMedianRate(teaserRate, container);
-		},
-		error : function() {
-			alert("error");
-			$('#overlay-loader').hide();
-		}
-
-	});
-} */
-
-
-
-
-
-
-
 
 
 var tenureYear = [];
@@ -904,7 +544,7 @@ function tenureSlider(sortedTenureYear) {
 				rateCostSlider(rateVOArrayObj);
 			}
 		});
-		//$("#amount").val(sortedTenureYear[$("#tenure-slider").slider("value")]+ "Years");
+		
 	
 
 }

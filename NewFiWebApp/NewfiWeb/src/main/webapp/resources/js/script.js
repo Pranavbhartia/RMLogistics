@@ -131,10 +131,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	        } else if (secondary == 3) {
 	            // fix your rate page
 	        	
-	        	var userId=newfiObject.user.id;
-	            getAppDetailsForUser(userId,function(){
-	            	paintFixYourRatePage();
-	            });
+	        	
 	        	
 	        	
 	           
@@ -142,9 +139,19 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 /*	                var userId=selectedUserDetail==undefined?newfiObject.user.id:selectedUserDetail.id;
 	                getAppDetailsForUser(userId,function(appUserDetails){
 	                   createLoan(appUserDetails)
-	                });
-*/
-	             showToastMessage("Please Complete Your Application first");
+	                });*/
+
+                    var userId=newfiObject.user.id;
+                    getAppDetailsForUser(userId,function(appUserDetailsTemp){
+                        var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+                        if(LQBFileId){
+                            paintFixYourRatePage();
+                        }else{
+                            //code to Paint teaser rate page
+                            paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
+                        }
+                    });
+	             //showToastMessage("Please Complete Your Application first");
 	            }else{
 	                
 	            }
@@ -1097,6 +1104,8 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     
     var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
     
+    var loanAmount = appUserDetails.refinancedetails.currentMortgagePayment;
+    //var cashTakeOut = appUserDetails.refinancedetails;
 
     var container = $('<div>').attr({
         "class": "loan-summary-container clearfix"
@@ -1108,9 +1117,11 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     var lcRow3 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "lockInterestRate");
-
-    var lcRow4 = getLoanAmountRow("Loan Amount", appUserDetails.refinancedetails.currentMortgagePayment, "lockloanAmountid");
-
+    
+    if(appUserDetails.refinancedetails.refinanceOption != "REFCO")
+    var lcRow4 = getLoanAmountRow("Loan Amount",loanAmount, "lockloanAmountid");
+   // else
+   // var lcRow4 =getLoanAmountRowPurchase("Loan Amount", loanAmount, "lockloanAmountid","Current Loan Amout","$ "+housePrice, "Cashout","$ "+downPayment);
    // var lcRow4 = getLoanAmountRow("Loan Amount", appUserDetails.currentMortgagePayment, "lockloanAmountid","Current Loan Amout","$ 303,000.00","Cashout","$ 70,000.00");
 
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "lockrateaprid");
@@ -2044,7 +2055,7 @@ function modifiedLQBJsonResponse(LQBResponse) {
 
 var purchaseTRate;
 
-function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
+function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val,cashOutCheck) {
 	purchaseTRate={};
     var container = $('<div>').attr({
         "class": "loan-summary-row"
@@ -2115,15 +2126,23 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     });
     row2.append(col1row2).append(col2row2);
     loanAmountDetails.append(row1).append(row2);
+    
     purchaseTRate.purAmtElement=col2row1;
     purchaseTRate.dwnPayElement=col2row2;
     purchaseTRate.LoanAmtElement=col2;
+    purchaseTRate.cashOutCheck = cashOutCheck;
+    
     purchaseTRate.change=function(){
     	var ob=purchaseTRate;
     	var purAmt=  getFloatValue(ob.purAmtElement.val());
     	var dwnAmt= getFloatValue(ob.dwnPayElement.val());
-    	
-    	var loanAmt = (purAmt - dwnAmt);
+    	var loanAmt ;
+    	if(purchaseTRate.cashOutCheck){
+    		loanAmt = (purAmt + dwnAmt);
+    	}
+    	else{
+    		 loanAmt = (purAmt - dwnAmt);
+    	}
     	
     	ob.LoanAmtElement.text("$ "+loanAmt);
     };
