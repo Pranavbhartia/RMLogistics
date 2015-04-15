@@ -851,6 +851,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 	}
 
+
 	@Override
     public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
 	    Session session = sessionFactory.getCurrentSession();
@@ -860,4 +861,5 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    session.save(loan);
 	    
     }
+
 }

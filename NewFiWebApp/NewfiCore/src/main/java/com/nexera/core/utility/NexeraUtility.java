@@ -61,10 +61,13 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import com.nexera.common.entity.ExceptionMaster;
+import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
+import com.nexera.core.service.ExceptionService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.workflow.exception.FatalException;
 import com.sun.media.jai.codec.FileSeekableStream;
@@ -76,6 +79,9 @@ public class NexeraUtility {
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+
+	@Autowired
+	private ExceptionService exceptionService;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
@@ -629,14 +635,14 @@ public class NexeraUtility {
 
 	public void getStreamForThumbnailFromS3Path(HttpServletResponse response,
 	        byte[] bytes) throws Exception {
-		
+
 		response.setContentLength(bytes.length);
 		response.setContentType("image/jpeg");
-		
+
 		ServletOutputStream servletoutputstream = response.getOutputStream();
 		servletoutputstream.write(bytes);
 		servletoutputstream.flush();
-		
+
 	}
 
 	public InputStream getInputStreamFromFile(String fileUrl, String isImage)
@@ -726,5 +732,20 @@ public class NexeraUtility {
 			buf = bos.toByteArray();
 		}
 		return buf;
+	}
+
+	public ExceptionMasterExecution putExceptionMasterIntoExecution(
+	        ExceptionMaster exceptionMaster, String exceptionMessage) {
+		ExceptionMasterExecution exceptionMasterExecution = new ExceptionMasterExecution();
+		exceptionMasterExecution.setExceptionMaster(exceptionMaster);
+		exceptionMasterExecution.setExceptionMessage(exceptionMessage);
+		exceptionMasterExecution.setExceptionTime(new Date());
+		return exceptionService
+		        .putExceptionMasterIntoExecution(exceptionMasterExecution);
+	}
+
+	public ExceptionMaster getExceptionMasterByType(String exceptionType) {
+		LOGGER.debug("Inside method getExceptionMasterByType");
+		return exceptionService.getExceptionMasterByType(exceptionType);
 	}
 }

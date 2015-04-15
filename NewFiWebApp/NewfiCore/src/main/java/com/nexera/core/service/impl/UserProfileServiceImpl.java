@@ -31,6 +31,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.googlecode.ehcache.annotations.Cacheable;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
@@ -54,7 +55,6 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
 import com.nexera.common.enums.LoanTypeMasterEnum;
-import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -182,7 +182,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .convertFromVOToEntity(customerDetailVO);
 
 		LOG.info("Checking if the user is a customer");
-		if (userVO.getUserRole().getId() == 1) {
+		if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
 			LOG.info("Checking for customer profile status of customers");
 			if (customerDetail.getProfileCompletionStatus() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
@@ -197,7 +197,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false) {
-						customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						customerDetail
+						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 					}
 				}
@@ -229,7 +230,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() != null) {
-					customerDetail.setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
@@ -244,11 +246,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				customerDetail
 				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
 			}
-			if (customerDetail.getCarrierInfo() != null) {
-				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
-				        .getCarrierEmailForName(customerDetail.getCarrierInfo());
-				customerDetail.setCarrierInfo(mobileCarrier.getCarrierEmail());
-			}
+
 		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -1119,6 +1117,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Cacheable(cacheName = "lqbAuthToken")
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);

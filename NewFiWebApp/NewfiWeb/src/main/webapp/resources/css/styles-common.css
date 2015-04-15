@@ -134,3 +134,11 @@ input.reg-radio {
 .reg-select-option:hover {
 	background-color: #fff;	
 }
+
+.reg-option-selected {
+  height: 100%;
+  background-color: #FAFAFA !important;
+  border-bottom: inherit;
+  border: none;
+  width: 100%;
+}

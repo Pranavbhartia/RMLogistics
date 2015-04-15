@@ -16,9 +16,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +34,7 @@ import com.google.gson.Gson;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
+import com.nexera.core.service.LqbInterface;
 import com.nexera.web.rest.util.TeaserRateHandler;
 
 @RestController
@@ -46,6 +46,9 @@ public class RateCalculatorRestService {
 
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
+
+	@Autowired
+	LqbInterface lqbCacheInvoker;
 
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 	public @ResponseBody String getTeaserRate(String teaseRate) {
@@ -63,12 +66,13 @@ public class RateCalculatorRestService {
 		// List<TeaserRateResponseVO> teaserRateResponseVO =
 		// invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
 		JSONObject jsonObject = createMapforJson(teaserRateVO);
-		List<TeaserRateResponseVO> teaserRateResponseVO = invokeRest(CreateTeaserRateJson(
+		String lqbResponse = lqbCacheInvoker.invokeRest(CreateTeaserRateJson(
 		        jsonObject, "RunQuickPricer").toString());
+		List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
 
 		LOG.info("Json resonse returned to JSP is"
-		        + gson.toJson(teaserRateResponseVO));
-		return gson.toJson(teaserRateResponseVO);
+		        + gson.toJson(teaserRateList));
+		return gson.toJson(teaserRateList);
 	}
 
 	private JSONObject createMapforJson(TeaserRateVO teaserRateVO) {
@@ -181,32 +185,6 @@ public class RateCalculatorRestService {
 
 		return null;
 
-	}
-
-	public List<TeaserRateResponseVO> invokeRest(String appFormData) {
-
-		LOG.info("Invoking rest Service with Input " + appFormData);
-		List<TeaserRateResponseVO> teaserRateList = null;
-
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			HttpEntity request = new HttpEntity(appFormData, headers);
-			RestTemplate restTemplate = new RestTemplate();
-			String returnedUser = restTemplate.postForObject(muleLoanUrl,
-			        request, String.class);
-			JSONObject jsonObject = new JSONObject(returnedUser);
-			LOG.info("Response Returned from Rest Service is"
-			        + jsonObject.get("responseMessage").toString());
-			teaserRateList = parseLqbResponse(jsonObject.get("responseMessage")
-			        .toString());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("error in post entity");
-
-		}
-
-		return teaserRateList;
 	}
 
 	public List<TeaserRateResponseVO> parseLqbResponse(
