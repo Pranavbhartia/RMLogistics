@@ -14,10 +14,45 @@
 		color:#fff !important;
 	}
 	.container{
-		width: 1170px;
+		width: 8.5in !important;
 	}
 	.price-table-wrapper-header{
 		  background: #538DD5 !important;
 		  color:#fff !important;
 	}
+	.table-container {
+		margin: 0 -10px;
+	}
+	.rate-table-wrapper-cont{
+		padding: 0 10px;
+	}
+	table{
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+	.adjuster-table td, .adjuster-table th{
+		border-collapse: separate;
+		border-spacing: 0;
+		border: 1px solid black;
+	}
+	.adjuster-table th {
+		background: #0D056F !important;
+		color: #fff !important;
+	}
+}
+
+.table-wrapper{
+    page-break-before: always;
+}
+
+table,.rate-table-wrapper-cont,.ltv-table-container {
+	page-break-inside: avoid;
+}
+
+@page{
+    size:A4 portrait;
+}
+
+.table-wrapper:first-child {
+    page-break-before: avoid;
 }
