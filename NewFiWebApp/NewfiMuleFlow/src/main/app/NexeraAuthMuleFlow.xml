@@ -21,7 +21,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		receiveBacklog="0" receiveBufferSize="0" sendBufferSize="0"
 		serverSoTimeout="300000" socketSoLinger="0" validateConnections="true"
 		keepSendSocketOpen="true" keepAlive="true">
-        <reconnect/>
+		<reconnect />
 	</http:connector>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
@@ -40,7 +40,8 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<component doc:name="Java">
 			<spring-object bean="authenticationRestInterceptor" />
 		</component>
-		<message-properties-transformer doc:name="Message Properties">
+		<message-properties-transformer
+			doc:name="Message Properties">
 			<add-message-property key="http.version" value="HTTP/1.0" />
 		</message-properties-transformer>
 		<choice doc:name="Choice">
@@ -48,18 +49,32 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<cxf:jaxws-client operation="GetUserAuthTicket"
 					clientClass="com.lendersoffice.los.webservices.AuthService" port="AuthServiceSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='GetPmlUserAuthTicket']">
 				<cxf:jaxws-client operation="GetPmlUserAuthTicket"
 					clientClass="com.lendersoffice.los.webservices.AuthService" port="AuthServiceSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"

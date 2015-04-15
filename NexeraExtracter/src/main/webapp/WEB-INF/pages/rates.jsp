@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Nexera</title>
+<title>Blustream Lending Rate Sheet</title>
 <link rel="stylesheet" href="resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/styles.css">
 <link rel="stylesheet" href="resources/css/styles-print.css">

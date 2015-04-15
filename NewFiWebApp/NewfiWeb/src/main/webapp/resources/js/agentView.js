@@ -1183,53 +1183,56 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit Decision",
 			loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
-	if(loanDetails.userLoanStatus.loanPurpose == "Purchase" &&  loanDetails.loanType.uploadedFiles != undefined){
-		
-		var purchaseContainer = $("<div>").attr({
-					"class" : "clearfix"
-		});
-		
-		var documentLinkContainer = $("<div>").attr({
-					"class" : "documentLinkContainer float-left"
-		});
-		
-		var documentLink  = $("<a>").attr({
-					"href" : "readFileAsStream.do?uuid="+ loanDetails.loanType.uploadedFiles.uuidFileId+"&isThumb=0",
-					"target" : "_blank"
-		}).html("Document Link");
-		
-		documentLinkContainer.append(documentLink);
-		
-		var dateContainer = $("<div>").attr({
-						"class" : "dateContainer float-left clearfix"
-		});
-		
-		var label = $("<div>").attr({
-				"class" : "datelabel float-left"
-		}).html("Set expiry date : ");
-		var dob = "";
-		if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
-			dob = "";
-		}
-		var dobInput = $('<input>').attr({
-			"class" : "prof-form-input date-picker float-left",
-			"placeholder" : "MM/DD/YYYY",
-			"value" : dob,
-			"id" : "dobID"
-		}).datepicker({
-			orientation : "top auto",
-			autoclose : true
-		}).on('show', function(e) {
-			var $popup = $('.datepicker');
-			$popup.click(function() {
-				return false;
+	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
+		if (loanDetails.loanType.uploadedFiles != undefined) {
+			var purchaseContainer = $("<div>").attr({
+				"class" : "clearfix"
 			});
-		});
-		dateContainer.append(label).append(dobInput);
-		purchaseContainer.append(documentLinkContainer).append(dateContainer);
-		
-		$('#av-loan-details-container').append(purchaseContainer);
-		
+
+			var url = newfiObject.baseUrl+"readFileAsStream.do?uuid="
+				+ loanDetails.loanType.uploadedFiles.uuidFileId
+				+ "&isThumb=0";
+			
+						appendLoanDetailsRow("Purchase Contract", "Click here to view", true,url);
+
+			var dateContainer = $("<div>").attr({
+				"class" : "dateContainer float-left clearfix"
+			});
+
+			var label = $("<div>").attr({
+				"class" : "av-loan-details-row-lc datelabel float-left"
+			}).html("Set expiry date");
+			var dob = "";
+			if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
+				dob = "";
+			}
+			var dobInput = $('<input>').attr({
+				"class" : "prof-form-input date-picker float-left",
+				"placeholder" : "MM/DD/YYYY",
+				"value" : dob,
+				"id" : "dobID"
+			}).datepicker({
+				orientation : "top auto",
+				autoclose : true
+			}).on('show', function(e) {
+				var $popup = $('.datepicker');
+				$popup.click(function() {
+					return false;
+				});
+			});
+			var dobInputContainer = $('<div>').attr({
+				"class":"av-loan-details-row-rc datelabel float-left"
+			});
+			dobInputContainer.append(dobInput);
+			dateContainer.append(label).append(dobInputContainer);
+			purchaseContainer.append(dateContainer);
+
+			$('#av-loan-details-container').append(purchaseContainer);
+		}else{
+			appendLoanDetailsRow("Purchase Contract", "Upload Now", true,"#lp-step4");
+			
+		}
+
 	}
 	
 	appendCustomerEditProfilePopUp();
@@ -1237,7 +1240,7 @@ function appendCustomerLoanDetails(loanDetails) {
 }
 
 // Function to append loan details row
-function appendLoanDetailsRow(label, value, isLink) {
+function appendLoanDetailsRow(label, value, isLink,linkUrl) {
 	var row = $('<div>').attr({
 		"id" : "ld-" + convertStringToId(label),
 		"class" : "av-loan-details-row clearfix"
@@ -1252,6 +1255,17 @@ function appendLoanDetailsRow(label, value, isLink) {
 
 	if (isLink) {
 		rightCol.addClass('loan-detail-link');
+		if(linkUrl){
+			rightCol.click(function(e){
+				event.stopPropagation();
+				if(linkUrl.substring(0, 1)=="#" ){
+					$(linkUrl).click();	
+				}else{
+					window.open(linkUrl, '_blank');
+				}
+				 
+			});
+		}
 	}
 
 	row.append(leftCol).append(rightCol);

@@ -557,12 +557,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Override
 	@Transactional
-	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract() {
+	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract(
+	        Integer loanId) {
 		NeedsListMaster needsListMaster = needsDao
 		        .findNeedsListMasterByLabel(CommonConstants.PURCHASE_CONTRACT);
 		if (needsListMaster != null) {
-			LoanNeedsList loanNeedsList = loanNeedListDao
-			        .findLoanNeedsList(needsListMaster);
+			Loan loan = new Loan(loanId);
+			LoanNeedsList loanNeedsList = loanNeedListDao.findLoanNeedsList(
+			        loan, needsListMaster);
 			if (loanNeedsList != null) {
 
 				return loanNeedsList.getUploadFileId();
