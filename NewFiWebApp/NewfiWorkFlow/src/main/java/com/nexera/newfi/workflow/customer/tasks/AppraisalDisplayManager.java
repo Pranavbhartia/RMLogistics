@@ -8,49 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
-	private static final Logger LOG = LoggerFactory
-			.getLogger(AppraisalDisplayManager.class);
+
+	@Autowired
+	private IWorkflowService iWorkflowService;
 
 	@Autowired
 	private LoanService loanService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		/*String status = objectMap.get(
-		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
-				.toString();
-		if (status.equals(LoanStatus.appraisalOrdered)) {
-			return "2";
-		} else if (status.equals(LoanStatus.appraisalPending)) {
-			return "1";
-		} else if (status.equals(LoanStatus.appraisalReceived)) {
-			return "3";
-		}*/
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try {
-			Loan loan = new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
-					Milestones.APPRAISAL.getMilestoneKey());
-			return mileStone.getComments().toString();
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			return "";
-		}
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		return iWorkflowService.getRenderInfoForAppraisal(loanId);
 	}
 
 	@Override
