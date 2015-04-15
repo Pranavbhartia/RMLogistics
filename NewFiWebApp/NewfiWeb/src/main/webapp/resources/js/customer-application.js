@@ -259,7 +259,7 @@ function getApplicationQuestion(question,val) {
         quesCont = getApplicationMultipleChoiceQues(question,val);
     } else if (question.type == "desc") {
         if(val)
-            question.value=val
+            question.value=val;
         quesCont = getApplicationTextQues(question);
     } else if (question.type == "select") {
         quesCont = getApplicationSelectQues(question,val);
@@ -447,11 +447,9 @@ function getApplicationTextQues(question) {
         "class": "app-input",
         "name": question.name,
         "value":question.value
-    }).on("load keydown", function(e){
-          
-		
-	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' && question.name != 'ssn') {
+    }).on("keyup", function(e){
+          	
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' && question.name != 'ssn' && question.name != 'birthday') {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -1546,19 +1544,16 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     });
 });
 
-/*$('body').on('focus',"input[name='beforeTax'],'input[name='spouseBeforeTax']",function(){
+$('body').on('focus',"input[name='birthday']",function(){
 			
-    	$(this).maskMoney({
-			thousands:',',
-			decimal:'.',
-			allowZero:true,
-			prefix: '$',
-		    precision:0,
-		    allowNegative:true
-		});		
+    	$(this).datepicker({
+			orientation : "top auto",
+			autoclose : true,
+			maxDate: 0
+		});
   
 });
-*/
+
 
 function paintRefinanceSelfEmployed(divId,value) {
     var flag=true;
