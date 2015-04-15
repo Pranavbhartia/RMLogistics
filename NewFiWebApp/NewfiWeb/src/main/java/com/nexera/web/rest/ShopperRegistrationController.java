@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.entity.RealtorDetail;
+import com.nexera.common.entity.User;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
@@ -73,6 +77,48 @@ public class ShopperRegistrationController {
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "./home.do";
+	}
+
+	@RequestMapping(value = "/realtorRegistration", method = RequestMethod.POST)
+	public @ResponseBody String realtorRegistration(String registrationDetails,
+	        HttpServletRequest request, HttpServletResponse response)
+	        throws IOException {
+
+		Gson gson = new Gson();
+		LOG.info("registrationDetails - inout xml is" + registrationDetails);
+		try {
+			LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
+			        LoanAppFormVO.class);
+			String emailId = loanAppFormVO.getUser().getEmailId();
+
+			loanAppFormVO.getUser().getUserRole()
+			        .setId(UserRolesEnum.REALTOR.getRoleId());
+
+			loanAppFormVO.getUser().setUsername(
+			        loanAppFormVO.getUser().getEmailId().split(":")[0]);
+			loanAppFormVO.getUser().setEmailId(
+			        loanAppFormVO.getUser().getEmailId().split(":")[0]);
+			if (loanAppFormVO.getLoanMangerEmail() != null) {
+				User userDetail = userProfileService
+				        .findUserByMail(loanAppFormVO.getLoanMangerEmail());
+				if (userDetail != null) {
+					RealtorDetailVO realtor = new RealtorDetailVO();
+					realtor.setUser(User.convertFromEntityToVO(userDetail));
+					loanAppFormVO.getUser().setRealtorDetail(realtor);
+				}
+
+			}
+
+			UserVO userVO = userProfileService
+			        .createNewUserAndSendMail(loanAppFormVO.getUser());
+			authenticateUserAndSetSession(emailId, userVO.getPassword(),
+			        request);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

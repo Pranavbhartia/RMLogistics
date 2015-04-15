@@ -492,7 +492,11 @@ public class CustomerDetail implements Serializable {
 			customerDetail.setMobileAlertsPreference(inputEntity
 			        .getMobileAlertsPreference());
 			customerDetail.setLivingSince(inputEntity.getLivingSince());
-			customerDetail.setCarrierInfo(inputEntity.getCarrierInfo());
+			if (inputEntity.getCarrierInfo() != null) {
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+				        .getCarrierEmailForName(inputEntity.getCarrierInfo());
+				customerDetail.setCarrierInfo(mobileCarrier.getCarrierEmail());
+			}
 
 			if (null != inputEntity.getProfileCompletionStatus()) {
 				customerDetail.setProfileCompletionStatus(inputEntity

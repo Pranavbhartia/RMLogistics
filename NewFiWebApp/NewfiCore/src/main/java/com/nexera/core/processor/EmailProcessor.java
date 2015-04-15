@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
@@ -44,6 +45,8 @@ public class EmailProcessor implements Runnable {
 	        .getLogger(EmailProcessor.class);
 
 	private Message message;
+
+	private ExceptionMaster exceptionMaster;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -145,6 +148,8 @@ public class EmailProcessor implements Runnable {
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while creating mime message "
 			        + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 
 	}
@@ -169,8 +174,12 @@ public class EmailProcessor implements Runnable {
 			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        me.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 		return body;
 	}
@@ -227,8 +236,8 @@ public class EmailProcessor implements Runnable {
 						failureNoteText = failureNoteText
 						        + " were not uploaded";
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster, e.getMessage());
 					}
 
 				}
@@ -260,8 +269,12 @@ public class EmailProcessor implements Runnable {
 			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        me.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 
 	}
@@ -327,6 +340,14 @@ public class EmailProcessor implements Runnable {
 
 	public void setMessage(Message message) {
 		this.message = message;
+	}
+
+	public ExceptionMaster getExceptionMaster() {
+		return exceptionMaster;
+	}
+
+	public void setExceptionMaster(ExceptionMaster exceptionMaster) {
+		this.exceptionMaster = exceptionMaster;
 	}
 
 }
