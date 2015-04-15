@@ -119,9 +119,11 @@ function getContextApplicationTextQuesCEP(contxt) {
                 allowZero: true,
                 prefix: '$',
                 precision: 0,
-                allowNegative: true
+                allowNegative: false
             });
         }
+        
+        Math.abs($('input[name=' + contxt.name + ']').val());
     });
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
@@ -469,7 +471,7 @@ function getTextQuestion(quesText, clickEvent, name) {
                     allowZero: true,
                     prefix: '$',
                     precision: 0,
-                    allowNegative: true
+                    allowNegative: false
                 });
             }
         });
@@ -987,10 +989,17 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                
                 $('#aprid').html(event.data.ratesArray[index].APR);
                 $('#closingCostId').html(event.data.ratesArray[index].closingCost);
-                $('#teaserRateId').html(event.data.ratesArray[index].teaserRate);
+                $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(2)+" %");
                 $('#loanprogramId').html(event.data.year +" Years Fixed");
-                $('#principalIntId').html(event.data.ratesArray[index].payment);
-                
+                $('#principalIntId').html((event.data.ratesArray[index].payment).maskMoney({
+        			thousands:',',
+        			decimal:'.',
+        			allowZero:true,
+        			prefix: '$',
+        		    precision:0,
+        		    allowNegative:false
+        		})	
+                );
                 teaseCalculation(inputCustomerDetails);
             }
         });
@@ -1039,7 +1048,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
 	
 	var rateArray = [];
     for (var i = 0; i < gridArray.length; i++) {
-        rateArray[i] = gridArray[i].teaserRate;
+        rateArray[i] = parseFloat(gridArray[i].teaserRate).toFixed(2);
     }
     index = parseInt(rateArray.length / 2);
     var container = $('<div>').attr({
@@ -1057,8 +1066,8 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
          
             $('#aprid').html(gridArray[ui.value].APR);
             $('#closingCostId').html(gridArray[ui.value].closingCost);
-            $('#teaserRateId').html(gridArray[ui.value].teaserRate);
-            $('#principalIntId').html(gridArray[ui.value].payment);
+            $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(2) +" %");
+            $('#principalIntId').html("$ "+gridArray[ui.value].payment);
             
             teaseCalculation(inputCustomerDetails);
             
@@ -1074,7 +1083,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
             "class": "rt-grid-item"
         }).css({
             "left": leftOffset + "%"
-        }).html(gridArray[i].teaserRate + "%");
+        }).html(parseFloat(gridArray[i].teaserRate).toFixed(2) + "%");
         gridItemCont.append(gridItem);
     }
     return container.append(gridItemCont);
@@ -1099,7 +1108,7 @@ function teaseCalculation(inputCustomerDetails){
 	monthlyPayment = monthlyPaymentTemp.toFixed(2);
 	
 	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
-	var totalEstMonthlyPaymentId = (principalInterest + taxesTemp + InsuranceTemp).toFixed(2);
+	var totalEstMonthlyPaymentId = (principalInterest + investment).toFixed(2);
 	
 	$('#monthlyPaymentId').text("$ " +monthlyPayment);
 	$('#monthlyPaymentDifferenceId').text("$ " +monthlyPaymentDifference);
@@ -1178,7 +1187,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     	 Insurance = customerInputData.annualHomeownersInsurance;
     	 tax = customerInputData.propertyTaxesPaid;
     	 
-    	 var totalEstMonthlyPaymentTemp  = principalInterest + InsuranceTemp + taxesTemp;
+    	 var totalEstMonthlyPaymentTemp  = principalInterest + investment;
     	 totalEstMonthlyPayment = totalEstMonthlyPaymentTemp.toFixed(2);
     }
     
@@ -1199,7 +1208,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
         "class": "loan-summary-rp float-right"
     });
     // add rows in right column
-    var rcRow1 = getLoanSummaryRow("Principal Interest",rateVO[index].payment,"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Principal Interest","$ "+rateVO[index].payment,"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", tax,"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",customerInputData);
@@ -1299,6 +1308,16 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	"class" : "loan-summary-sub-col-detail hide",
     	"id":id2
     }).bind('keyup',{"customerInputData":customerInputData},function(e){
+    	
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});	
+    	
     	if(e.which == 27){
     		var prevVal = $(this).prev('.calculate-btn').text();
     		if($(this).val() == undefined || $(this).val() == prevVal){
@@ -1325,7 +1344,7 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	
     	var monthlyPaymentDifferenceTemp = Math.abs(principalInt - monthlyPayment);
     	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(2);
-    	var totalEstMonthlyPaymentId =  principalInt + taxesTemp + InsuranceTemp;
+    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(2);
     	
     	
     	$('#monthlyPaymentId').text("$ " +monthlyPayment);

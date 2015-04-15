@@ -1040,10 +1040,10 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", loanAmount, "lockloanAmountid","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", "$ "+loanAmount, "lockloanAmountid","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
-    var lcRow4 = getLoanSummaryRow("Interest Rate", rateVO[index].teaserRate, "teaserRateId");
+    var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(2), "teaserRateId");
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "aprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  rateVO[index].closingCost, "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5).append(lcRow6);
@@ -1126,7 +1126,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
         "class": "loan-summary-rp float-right"
     });
     
-    var rcRow1 = getLoanSummaryRow("Principal Interest", principalInterest ,"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Principal Interest", "$ "+principalInterest ,"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", tax,"calTaxID","calTaxID2",appUserDetails);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",appUserDetails);
@@ -1315,7 +1315,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	var monthlyPaymentDifferenceTemp = Math.abs(principalInt - monthlyPayment);
     	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(2);
     	
-    	var totalEstMonthlyPaymentId =  principalInt + taxesTemp + InsuranceTemp;
+    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(2);
     	
     	
     	$('#monthlyPaymentId').text("$ " +monthlyPayment);
@@ -1878,8 +1878,8 @@ function getYearSlider(LQBResponse,appUserDetails) {
                 
                 $('#lockrateaprid').html(event.data.ratesArray[index].APR);
                 $('#lockClosingCost').html(event.data.ratesArray[index].closingCost);
-                $('#lockInterestRate').html(event.data.ratesArray[index].teaserRate);
-                $('#principalIntId').html(event.data.ratesArray[index].payment);
+                $('#lockInterestRate').html(event.data.ratesArray[index].teaserRate+" %");
+                $('#principalIntId').html("$ "+event.data.ratesArray[index].payment);
              //  alert('setting lockratedata');
                 lockratedata.IlpTemplateId =event.data.ratesArray[index].lLpTemplateId;
   				lockratedata.requestedRate = event.data.ratesArray[index].teaserRate;
@@ -1950,8 +1950,8 @@ function getRatSlider(gridArray,appUserDetails) {
      
             $('#lockrateaprid').html(gridArray[ui.value].APR);
             $('#lockClosingCost').html(gridArray[ui.value].closingCost);
-            $('#lockInterestRate').html(gridArray[ui.value].teaserRate);
-            $('#principalIntId').html(gridArray[ui.value].payment);
+            $('#lockInterestRate').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(2)+" %");
+            $('#principalIntId').html("$ "+gridArray[ui.value].payment);
             
               lockratedata.IlpTemplateId =gridArray[ui.value].lLpTemplateId;
   			  lockratedata.requestedRate = gridArray[ui.value].teaserRate;
@@ -1970,7 +1970,7 @@ function getRatSlider(gridArray,appUserDetails) {
             "class": "rt-grid-item"
         }).css({
             "left": leftOffset + "%"
-        }).html(gridArray[i].teaserRate + "%");
+        }).html(parseFloat(gridArray[i].teaserRate).toFixed(2) + "%");
         gridItemCont.append(gridItem);
     }
     return container.append(gridItemCont);
@@ -2000,7 +2000,7 @@ function lockRateCalculation(appUserDetails){
 	monthlyPayment = monthlyPaymentTemp.toFixed(2);
 	
 	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
-	var totalEstMonthlyPaymentId = (principalInterest + taxesTemp + InsuranceTemp).toFixed(2);
+	var totalEstMonthlyPaymentId = (principalInterest + investment).toFixed(2);
 	
 	$('#monthlyPaymentId').text("$ " +monthlyPayment);
 	$('#monthlyPaymentDifferenceId').text("$ " +monthlyPaymentDifference);
@@ -2090,7 +2090,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 			allowZero:true,
 			prefix: '$',
 		    precision:0,
-		    allowNegative:true
+		    allowNegative:false
 		});		
     });
     row1.append(col1row1).append(col2row1);
@@ -2110,7 +2110,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 			allowZero:true,
 			prefix: '$',
 		    precision:0,
-		    allowNegative:true
+		    allowNegative:false
 		});		
     });
     row2.append(col1row2).append(col2row2);

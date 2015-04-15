@@ -456,12 +456,13 @@ function getApplicationTextQues(question) {
 				allowZero:true,
 				prefix: '$',
 			    precision:0,
-			    allowNegative:true
+			    allowNegative:false
 			});
 		}
 		
 		   if (question.name == 'ssn') {
-            $('input[name="ssn"]').attr('type', 'password');
+			  // $('input[name="ssn"]').mask("999-99-9999");
+			 // $('input[name="ssn"]').attr('type', 'password');
         }
 		
 	});
@@ -1167,7 +1168,7 @@ function getContextApplicationTextQues(contxt) {
 				allowZero:true,
 				prefix: '$',
 			    precision:0,
-			    allowNegative:true
+			    allowNegative:false
 			});
 		}
 		
@@ -1553,6 +1554,13 @@ $('body').on('focus',"input[name='birthday']",function(){
 		});
   
 });
+
+$('body').on('focus',"input[name='ssn']",function(){
+	
+	$(this).mask("***-**-*****");
+		
+});
+
 
 
 function paintRefinanceSelfEmployed(divId,value) {
@@ -3135,7 +3143,7 @@ function putCurrencyFormat(name){
 			allowZero:true,
 			prefix: '$',
 		    precision:0,
-		    allowNegative:true
+		    allowNegative:false
 		});		
     });
 }
@@ -3680,7 +3688,7 @@ function getContextApplicationTextQuesCEP(contxt) {
 				allowZero:true,
 				prefix: '$',
 			    precision:0,
-			    allowNegative:true
+			    allowNegative:false
 			});
 		}
 		
@@ -3785,7 +3793,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 				allowZero:true,
 				prefix: '$',
 			    precision:0,
-			    allowNegative:true
+			    allowNegative:false
 			});
 		}
 		
