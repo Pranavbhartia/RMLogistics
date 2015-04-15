@@ -42,21 +42,7 @@ public class ApplicationFormStatusManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
-		LoanAppForm loanAppForm = loanAppFormService.findByuserID(userId);
-
-		if (loanAppForm.getLoanAppFormCompletionStatus() == 100) {
-			int workflowItemExecId = Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-			engineTrigger
-					.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-
-			return "3";
-		}
-
+	public String checkStatus(HashMap<String, Object> inputMap) {		
 		return null;
 	}
 

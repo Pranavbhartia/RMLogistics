@@ -1126,10 +1126,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		try {
 			UserVO userVO = findUser(userId);
 			if (userVO != null) {
-				String lqbUsername = userVO.getInternalUserDetail()
-				        .getLqbUsername();
-				String lqbPassword = userVO.getInternalUserDetail()
-				        .getLqbPassword();
+				String lqbUsername =  userVO.getInternalUserDetail().getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
+				String lqbPassword =userVO.getInternalUserDetail().getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
 				if (lqbUsername != null && lqbPassword != null) {
 					JSONObject authOperationObject = createAuthObject(
 					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,

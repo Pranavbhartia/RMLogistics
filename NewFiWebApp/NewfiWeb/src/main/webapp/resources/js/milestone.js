@@ -2,6 +2,7 @@
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
 var SALES_MANAGER="Sales Manager";
+var COMPLETED = 3;
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -295,7 +296,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				for(var i=0;i<parent.childList.length;i++){
 					var childid=parent.childList[i].id;
 					var cntxt=workFlowContext.mileStoneContextList[childid];
-					if(cntxt.workItem.status!="3"){
+					if(cntxt.workItem.status!=COMPLETED){
 						cntxt.updateMilestoneView(status);
 					}
 				}
@@ -492,12 +493,15 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 								if(ob.workItem.stateInfo){
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
+										ob.stateInfoContainer.addClass("cursor-pointer");
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
-											window.open(event.data.tempOb.url,"_blank")
+											window.open(generateDownloadURL(tempOb.url),"_blank")
 										})
 									}
 									if(tempOb.status)
+									{
 										ob.stateInfoContainer.html(tempOb.status);
+									}
 								}
 
 							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
@@ -562,7 +566,7 @@ function showAppFee (itemToAppendTo,workItem)
 		}		
 	}
 	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-			&& workItem.status != "3")
+			&& workItem.status != COMPLETED)
 	{
 		itemToAppendTo.append(getAppFeeEdit(workItem));
 	}
@@ -659,7 +663,7 @@ function getCustomerMilestoneLoanProgressHeaderBarStep(status, step, heading) {
 		"class" : "milestone-header-bar-step float-left"
 	});
 
-	if (status == "3") {
+	if (status == COMPLETED) {
 		col.addClass('m-step-complete');
 	} else if (status == "2" || status == "1") {
 		col.addClass('m-step-in-progress');
@@ -751,7 +755,7 @@ function paintMilestoneTeamMemberTable(appendTo,workItem){
 }
 function getAppFeeEdit(workItem)
 {
-	if(workItem.status == "3")
+	if(workItem.status == COMPLETED)
 	{
 		return;
 	}
@@ -1204,7 +1208,7 @@ function appendMilestoneItem(workflowItem, childList) {
 				milestoneChildEventHandler(e)
 			});
 			addClicableClassToElement(childRow,childList[index])
-			if(childList[index].status!=3)
+			if(childList[index].status!=COMPLETED)
 				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
 
 			var itemCheckBox = $('<div>').attr({
@@ -1736,7 +1740,7 @@ function showLQBInfo (itemToAppendTo,workItem)
 		
 		if(tempOb.status){
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.lqbKey);
-			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("onclick","window.open("+tempOb.url+",'_blank')");
+			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("onclick","window.open('"+tempOb.url+"','_blank')");
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer‏");
 		}		
 	}
@@ -1745,4 +1749,13 @@ function showLQBInfo (itemToAppendTo,workItem)
 	{
 		itemToAppendTo.append(getAppFeeEdit(workItem));
 	}
+}
+
+function generateDownloadURL (uuID)
+{
+	var fileURL = newfiObject.baseUrl;
+	fileURL = fileURL+ "readFileAsStream.do?uuid=";
+	fileURL = fileURL+uuID;
+	fileURL = fileURL + "&isThumb=0";
+	return fileURL;
 }
