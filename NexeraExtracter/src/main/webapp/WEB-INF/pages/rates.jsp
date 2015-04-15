@@ -20,7 +20,7 @@
 				<div class="body-header-row row clearfix">
 					<div class="float-left header-txt">
 						NOTE: INDICATIVE PRICING ONLY - BASED ON $300K LOAN AMOUNT<br />
-						PLEASE LOG INTO BLUSTREAM PORTAL TO PORTAL TO OBTAIN LIVE LOCK
+						PLEASE LOG INTO BLUSTREAM PORTAL TO OBTAIN LIVE LOCK
 						PRICING
 					</div>
 					<div class="float-right print" onclick="window.print()" title="print"></div>

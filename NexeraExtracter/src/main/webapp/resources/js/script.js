@@ -117,8 +117,8 @@ function getLTVTable() {
 	row2.append(otherAdjustmentsTable);
 	
 	var note = "All loan level price adjustments are cumulative\n" +
-			"Prices are indicative and subject to change without notice. Please log into AmeriHome Mortgage correspondent portal to obtain live lock pricing\n" +
-			"Not all price adjustments are effective for all products. Please refer to AmeriHome product guide for complete eligibility rules.\n" +
+			"Prices are indicative and subject to change without notice. Please log into Blustream lending correspondent portal to obtain live lock pricing\n" +
+			"Not all price adjustments are effective for all products. Please refer to Blustream lending product guide for complete eligibility rules.\n" +
 			"Intended for use by mortgage professionals only and should not be distributed to borrowers, as defined by Section 226.2 of Regulation Z";
 	
 	
