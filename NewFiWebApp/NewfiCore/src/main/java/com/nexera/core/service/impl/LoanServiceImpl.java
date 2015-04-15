@@ -1016,6 +1016,11 @@ public class LoanServiceImpl implements LoanService {
 
 		Loan loan = (Loan) loanDao.load(Loan.class, loanId);
 
+		if (loan.getAppFee() != null) {
+			LOG.debug("Loan Manager has specified a loan app fee. overriding the rate calculation fee");
+			return loan.getAppFee().intValueExact();
+		}
+
 		if (loan.getLoanAppForms() == null
 		        || loan.getLoanAppForms().size() <= 0) {
 			LOG.error("No loanappform record found for loan id : " + loanId);
@@ -1023,6 +1028,7 @@ public class LoanServiceImpl implements LoanService {
 			        "No loanappform record found for loan id : " + loanId);
 
 		}
+
 		if (loan.getLoanAppForms().get(0).getPurchaseDetails() == null) {
 			LOG.error("No purchase details record found for loanappform id : "
 			        + loan.getLoanAppForms().get(0).getId());
@@ -1339,11 +1345,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
-			loanDao.setExpiryDateToPurchaseDocument(loanId , date);
-    }
-	
-	
-	
-	
+	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+		loanDao.setExpiryDateToPurchaseDocument(loanId, date);
+	}
+
 }
