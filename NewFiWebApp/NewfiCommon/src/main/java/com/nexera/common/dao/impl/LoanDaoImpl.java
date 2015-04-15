@@ -850,4 +850,5 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			ex.printStackTrace();
 		}
 	}
+
 }

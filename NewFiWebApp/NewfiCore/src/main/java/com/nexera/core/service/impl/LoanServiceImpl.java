@@ -621,58 +621,6 @@ public class LoanServiceImpl implements LoanService {
 			loan.setName(loanVO.getName());
 			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-			List<UserVO> userList = loanVO.getLoanTeam();
-			List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
-			// Add customer by default to the loan team
-
-			LoanTeam e = new LoanTeam();
-			e.setUser(user);
-			e.setLoan(loan);
-			e.setActive(Boolean.TRUE);
-			e.setAssignedOn(new Date(System.currentTimeMillis()));
-			loanTeam.add(e);
-
-			/*
-			 * TODO: Get the state from the loan app form and pass it to the
-			 * method below
-			 */
-			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
-
-			if (defaultUser != null) {
-				LoanTeam defaultLanManager = new LoanTeam();
-				LOG.debug("default Loan manager is: " + defaultUser);
-				defaultLanManager.setUser(User
-				        .convertFromVOToEntity(defaultUser));
-				defaultLanManager.setLoan(loan);
-				defaultLanManager.setActive(Boolean.TRUE);
-				defaultLanManager.setAssignedOn(new Date(System
-				        .currentTimeMillis()));
-				loanTeam.add(defaultLanManager);
-			}
-
-			// If loan team contains other users, then add those users to
-			// the team automatically.
-			if (userList != null) {
-				for (UserVO userVO : userList) {
-					// If the user is not already added to the team
-
-					if (userVO.getId() != getId(defaultUser)
-					        && userVO.getId() != e.getId()) {
-						LoanTeam team = new LoanTeam();
-						User userTeam = User.convertFromVOToEntity(userVO);
-						team.setAssignedOn(new Date(System.currentTimeMillis()));
-						team.setActive(Boolean.TRUE);
-						team.setUser(userTeam);
-
-						team.setLoan(loan);
-					}
-
-				}
-
-			}
-
-			loan.setLoanTeam(loanTeam);
-
 			loan.setLockedRate(loanVO.getLockedRate());
 		} catch (Exception e) {
 
@@ -698,13 +646,45 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
-
+		addDefaultLoanTeam(loanVO, loanId);
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		loanVO.setId(loanId);
 		return loanVO;
+	}
+
+	private void addDefaultLoanTeam(LoanVO loanVO, int loanId) {
+		// TODO Auto-generated method stub
+		User user = User.convertFromVOToEntity(loanVO.getUser());
+		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
+
+		LoanTeam e = new LoanTeam();
+		e.setUser(user);
+		Loan loan = new Loan(loanId);
+		e.setLoan(loan);
+		e.setActive(Boolean.TRUE);
+		e.setAssignedOn(new Date(System.currentTimeMillis()));
+		loanTeam.add(e);
+
+		/*
+		 * TODO: Get the state from the loan app form and pass it to the method
+		 * below
+		 */
+		UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
+
+		if (defaultUser != null) {
+			LoanTeam defaultLanManager = new LoanTeam();
+			LOG.debug("default Loan manager is: " + defaultUser);
+			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
+			defaultLanManager.setLoan(loan);
+			defaultLanManager.setActive(Boolean.TRUE);
+			defaultLanManager
+			        .setAssignedOn(new Date(System.currentTimeMillis()));
+			loanTeam.add(defaultLanManager);
+		}
+		loanDao.saveAll(loanTeam);
 	}
 
 	@Override

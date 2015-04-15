@@ -21,8 +21,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import com.nexera.common.commons.CommonConstants;
@@ -413,7 +411,6 @@ public class Loan implements Serializable {
 
 	// bi-directional many-to-one association to LoanTeam
 	@OneToMany(mappedBy = "loan")
-	@Cascade({ CascadeType.SAVE_UPDATE })
 	public List<LoanTeam> getLoanTeam() {
 		return this.loanTeam;
 	}
