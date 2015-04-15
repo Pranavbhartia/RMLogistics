@@ -655,11 +655,8 @@ public class LoanServiceImpl implements LoanService {
 		return loanVO;
 	}
 
-	private void addDefaultLoanTeam(LoanVO loanVO, int loanId) {
-		// TODO Auto-generated method stub
-		User user = User.convertFromVOToEntity(loanVO.getUser());
-		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
-
+	private void updateLoanTeamList(List<LoanTeam> loanTeam, User user,
+	        int loanId) {
 		LoanTeam e = new LoanTeam();
 		e.setUser(user);
 		Loan loan = new Loan(loanId);
@@ -667,22 +664,46 @@ public class LoanServiceImpl implements LoanService {
 		e.setActive(Boolean.TRUE);
 		e.setAssignedOn(new Date(System.currentTimeMillis()));
 		loanTeam.add(e);
+	}
 
+	private void addDefaultLoanTeam(LoanVO loanVO, int loanId) {
+		// TODO Auto-generated method stub
+
+		// Add the user being registered to the team
+		User user = User.convertFromVOToEntity(loanVO.getUser());
+		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
+		updateLoanTeamList(loanTeam, user, loanId);
+		// Check if realtor email is valid
+
+		User realtor = userProfileService.findUserByMail(loanVO
+		        .getRealtorEmail());
+		if (realtor != null && realtor.getId() != 0) {
+			// User is valid. Update the loan team
+			updateLoanTeamList(loanTeam, realtor, loanId);
+		}
+		// Check if loanmanageremail is valid
+		userProfileService.findUserByMail(loanVO.getLmEmail());
+		User loanManager = userProfileService.findUserByMail(loanVO
+		        .getLmEmail());
+		boolean defaultManagerAdded = Boolean.FALSE;
+		if (loanManager != null && loanManager.getId() != 0) {
+			// User is valid. Update the loan team
+			updateLoanTeamList(loanTeam, loanManager, loanId);
+			defaultManagerAdded = Boolean.TRUE;
+		}
 		/*
 		 * TODO: Get the state from the loan app form and pass it to the method
 		 * below
 		 */
-		UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
-		if (defaultUser != null) {
-			LoanTeam defaultLanManager = new LoanTeam();
-			LOG.debug("default Loan manager is: " + defaultUser);
-			defaultLanManager.setUser(User.convertFromVOToEntity(defaultUser));
-			defaultLanManager.setLoan(loan);
-			defaultLanManager.setActive(Boolean.TRUE);
-			defaultLanManager
-			        .setAssignedOn(new Date(System.currentTimeMillis()));
-			loanTeam.add(defaultLanManager);
+		if (!defaultManagerAdded) {
+			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
+
+			if (defaultUser != null) {
+				updateLoanTeamList(loanTeam,
+				        User.convertFromVOToEntity(defaultUser), loanId);
+			}
+
 		}
 		loanDao.saveAll(loanTeam);
 	}

@@ -969,6 +969,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanVO = new LoanVO();
 
 			loanVO.setUser(userVOObj);
+			loanVO.setLmEmail(loaAppFormVO.getLoanMangerEmail());
+			loanVO.setRealtorEmail(loaAppFormVO.getRealtorEmail());
 
 			loanVO.setCreatedDate(new Date(System.currentTimeMillis()));
 			loanVO.setModifiedDate(new Date(System.currentTimeMillis()));
