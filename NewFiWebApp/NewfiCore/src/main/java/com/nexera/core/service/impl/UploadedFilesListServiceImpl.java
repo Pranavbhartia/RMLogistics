@@ -757,8 +757,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		for (UploadedFilesList uploadFiles : loan.getUploadedFileList()) {
 			if (loan.getUploadedFileList() != null) {
-				if (uploadFiles.getUploadedDate().compareTo(modifiedDate) < 0)
+				if (uploadFiles.getUploadedDate() != null) {
+					if (uploadFiles.getUploadedDate().compareTo(modifiedDate) < 0)
+						timeModifiedUploadedList.add(uploadFiles);
+				} else {
 					timeModifiedUploadedList.add(uploadFiles);
+				}
 			}
 		}
 

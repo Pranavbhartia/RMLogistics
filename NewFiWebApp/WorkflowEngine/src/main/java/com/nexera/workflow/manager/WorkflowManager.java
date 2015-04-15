@@ -89,8 +89,15 @@ public class WorkflowManager implements Callable<String> {
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
 				LOGGER.debug("Checking if it has an onFailure item to execute ");
 
-			} else if (result.equalsIgnoreCase(WorkflowConstants.PENDING)) {
+			} else if (result.equalsIgnoreCase(WorkItemStatus.PENDING
+			        .getStatus())) {
 				workflowItemExecution.setStatus(WorkItemStatus.PENDING
+				        .getStatus());
+				workflowService
+				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
+			} else if (result.equalsIgnoreCase(WorkItemStatus.STARTED
+			        .getStatus())) {
+				workflowItemExecution.setStatus(WorkItemStatus.STARTED
 				        .getStatus());
 				workflowService
 				        .updateWorkflowItemExecutionStatus(workflowItemExecution);
