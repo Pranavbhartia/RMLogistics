@@ -1,8 +1,6 @@
 package com.nexera.web.rest;
 
-import java.io.File;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,7 +84,7 @@ public class ApplicationFormRestService {
 
 			if(cache.get("loanAppFormId") != null && cache.get("loanAppFormId") != loaAppFormVO.getId()){
 				System.out.println("loan form id mismatch , setting cache to null");
-				cache = null;
+				cache.clear();
 			}
 						
 			
