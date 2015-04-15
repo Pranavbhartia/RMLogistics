@@ -1,18 +1,17 @@
 package com.nexera.web.controller;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.UploadedFilesList;
@@ -46,17 +45,27 @@ public class FileUploadController {
 		String fileURL = null;
 		UploadedFilesList uplList = uploadedFilesListService
 		        .fetchUsingFileUUID(uuid);
-		if (isThumb.equals("0")) {
-			fileURL = uplList.getS3path();
-			response.setContentType("application/pdf");
-			uploadedFilesListService.getFileContentFromLQBUsingUUID(response,
+		fileURL = uplList.getS3path();
+		response.setContentType("application/pdf");
+		uploadedFilesListService.getFileContentFromLQBUsingUUID(response,
 			        uuid);
 			
-		} else {
+				
+	}
+		
+	@RequestMapping(value = "/readImageAsStream.do", method = RequestMethod.GET)
+	public @ResponseBody byte[] showImage(HttpServletRequest request,
+		        HttpServletResponse response, @RequestParam("uuid") String uuid,
+		        @RequestParam("isThumb") String isThumb) throws Exception {
+
+			String fileURL = null;
+			UploadedFilesList uplList = uploadedFilesListService
+			        .fetchUsingFileUUID(uuid);
+			
 			fileURL = uplList.getS3ThumbPath();
 			byte[] bytes = s3FileUploadServiceImpl.getInputStreamOfFile(fileURL);
-			nexeraUtility.getStreamForThumbnailFromS3Path(response, bytes);
-		}
+			return bytes;
+			
 
 	}
 

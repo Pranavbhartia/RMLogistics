@@ -29,6 +29,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
@@ -239,7 +241,7 @@ public class NexeraUtility {
 	}
 
 	public String randomStringOfLength() {
-		Integer length = 20;
+		Integer length = 30;
 		StringBuffer buffer = new StringBuffer();
 		while (buffer.length() < length) {
 			buffer.append(uuidString());
@@ -268,7 +270,18 @@ public class NexeraUtility {
 			PDFToImage.main(args);
 			String imageFile = imageFilePath + File.separator + PAGE_NUMBER
 			        + "." + OUTPUT_FILENAME_EXT;
+			
+			String thumbpath = imageFilePath + File.separator + (PAGE_NUMBER+1)
+			        + "." + OUTPUT_FILENAME_EXT;
+			
+			File imageFileObj = new File(imageFile);
 			LOGGER.info("Image path for thumbnail : " + imageFile);
+			Thumbnails.of(new File(imageFile)).size(Integer.parseInt("100"),Integer.parseInt("100")).toFile(thumbpath);
+			
+			if(imageFileObj.exists()){
+				imageFileObj.delete();
+			}
+			
 			return imageFile;
 
 		} catch (Exception e) {
@@ -277,7 +290,7 @@ public class NexeraUtility {
 	}
 
 	private String uuidString() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
+		return UUID.randomUUID().toString();
 	}
 
 	public String convertImageToPDF(File file, String contentType) {

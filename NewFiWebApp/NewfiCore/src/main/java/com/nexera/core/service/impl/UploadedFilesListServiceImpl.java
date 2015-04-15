@@ -409,7 +409,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
-				Path path = Paths.get(serverFile.getAbsolutePath());
+				//Path path = Paths.get(serverFile.getAbsolutePath());
 				byte[] data = readContentIntoByteArray(serverFile);
 				String uuidValue = nexeraUtility.randomStringOfLength();
 
