@@ -779,6 +779,7 @@ CREATE TABLE `loan` (
   `bank_connected` tinyint(1) DEFAULT '0',
   `rate_locked` tinyint(1) DEFAULT '0',
   `locked_rate` decimal(7,2) DEFAULT NULL,
+  `purchase_document_expiry_date` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_loanMappedToUser_idx` (`user`),
   KEY `FK_loanMappedToType_idx` (`loan_type`),
@@ -793,7 +794,8 @@ CREATE TABLE `loan` (
   CONSTRAINT `fk_Loan_PropertyType1` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
