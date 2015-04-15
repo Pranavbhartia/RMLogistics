@@ -3238,7 +3238,9 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 		data:{"appFormData" : JSON.stringify(appUserDetails)},
 		datatype : "application/json",
 		success:function(data){
-
+			
+			appUserDetails=data;
+			console.log('appUserDetails'+appUserDetails);
 			callBack;
 		},
 		error:function(erro){

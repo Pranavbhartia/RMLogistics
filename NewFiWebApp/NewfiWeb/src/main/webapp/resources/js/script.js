@@ -130,7 +130,14 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            //paintSelecedOption();
 	        } else if (secondary == 3) {
 	            // fix your rate page
-	            //paintFixYourRatePage();
+	        	
+	        	var userId=newfiObject.user.id;
+	            getAppDetailsForUser(userId,function(){
+	            	paintFixYourRatePage();
+	            });
+	        	
+	        	
+	           
 	            if(!doNothing){
 /*	                var userId=selectedUserDetail==undefined?newfiObject.user.id:selectedUserDetail.id;
 	                getAppDetailsForUser(userId,function(appUserDetails){
@@ -524,13 +531,61 @@ function getNonEditableFormRow(desc, value, id) {
      * Functions for fix your rate module
 
      */
-function paintFixYourRatePage() {
-    /*var rateProgramWrapper = getLockRateProgramContainer();
+function paintFixYourRatePage(appUserDetails) {
+	
+	
+	
+	alert('isnide paintFixYourRatePage');
+	appUserDetails = {};
+	
+	appUserDetails = JSON.parse(newfi.appUserDetails);
+	alert('appUserDetails JSON'+JSON.stringify(appUserDetails));
+	loanNumber = appUserDetails.loan.lqbFileId;
+	alert('loanNumber'+loanNumber);
+	fetchLockRatedata( loanNumber,appUserDetails);
+	
+}
 
-	$('#center-panel-cont').append(rateProgramWrapper);*/
-    var loanSummaryWrapper = getLoanSummaryWrapper(lqbData, appUserDetails);
-    var closingCostWrapper = getClosingCostSummaryContainer();
-    $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+
+
+function fetchLockRatedata(loanNumber)
+{
+alert('inside create loan method');
+ $('#overlay-loader').show();
+$.ajax({
+		url:"rest/application/fetchLockRatedata/"+loanNumber,
+		type:"POST",
+		datatype : "application/json",
+		success:function(data){
+		
+            alert('fetchLockRatedata data is '+JSON.stringify(data));
+			fixAndLoakYourRatePage2(JSON.parse(data), appUserDetails) ;
+			 $('#overlay-loader').hide();
+		},
+		error:function(erro){
+			alert("error inside createLoan ");
+			 $('#overlay-loader').hide();
+		}
+		
+	});
+}
+
+
+function fixAndLoakYourRatePage2(lqbData1, appUserDetails) {
+
+var lqbFileId ={};
+        $('#center-panel-cont').html("");
+        var loanNumber = lqbData1[0].loanNumber;
+       loan.lqbFileId=loanNumber;  
+    
+        appUserDetails.loan.lqbFileId = loanNumber;
+    lockratedata.sLoanNumber=loanNumber;
+      var lqbData1 =  modifiedLQBJsonResponse(lqbData1);
+    alert('modified data'+lqbData1)
+        var loanSummaryWrapper = getLoanSummaryWrapper(lqbData1, appUserDetails);
+        var closingCostWrapper = getClosingCostSummaryContainer(lqbData1);
+        $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+
 }
 
 
@@ -1961,7 +2016,10 @@ function lockRateCalculation(appUserDetails){
 
 function modifiedLQBJsonResponse(LQBResponse) {
     var yearValues = [];
+    alert('LQBResponse'+LQBResponse);
+    var loanDurationConform;
     for (var i in LQBResponse) {
+    //alert('LQBResponse[i].loanDuration'+LQBResponse[i].loanDuration)
         loanDurationConform = LQBResponse[i].loanDuration;
         year = loanDurationConform.split(" ")[0];
         if (year.indexOf("/") > 0) {
