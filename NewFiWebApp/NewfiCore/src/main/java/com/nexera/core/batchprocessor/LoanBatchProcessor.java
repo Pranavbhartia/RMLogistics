@@ -65,17 +65,6 @@ public class LoanBatchProcessor extends QuartzJobBean {
 							}
 						}
 						taskExecutor.shutdown();
-						// try {
-						// taskExecutor.getThreadPoolExecutor()
-						// .awaitTermination(Long.MAX_VALUE,
-						// TimeUnit.NANOSECONDS);
-						// } catch (InterruptedException e) {
-						// LOGGER.error("Exception caught while terminating executor "
-						// + e.getMessage());
-						// throw new FatalException(
-						// "Exception caught while terminating executor "
-						// + e.getMessage());
-						// }
 					}
 				} finally {
 					LOGGER.debug("Updating the end time for this batch job ");
