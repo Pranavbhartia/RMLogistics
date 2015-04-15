@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -57,6 +59,7 @@ import com.nexera.web.rest.util.RestUtil;
 @RestController
 @RequestMapping(value = "/application/")
 public class ApplicationFormRestService {
+	private static final String SESSION_CACHE_KEY = "Cache-key";
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(ApplicationFormRestService.class);
 	@Autowired
@@ -65,11 +68,10 @@ public class ApplicationFormRestService {
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
 
-	HashMap<String, Integer> cache = new HashMap<String, Integer>();
-
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
-	public @ResponseBody String createApplication(String appFormData) {
+	public @ResponseBody String createApplication(String appFormData,
+	        HttpServletRequest httpServletRequest) {
 
 		Gson gson = new Gson();
 
@@ -83,6 +85,18 @@ public class ApplicationFormRestService {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 			        LoanAppFormVO.class);
 			System.out.println("loaAppFormVO.getId()" + loaAppFormVO.getId());
+			HashMap<String, Integer> cache = new HashMap<String, Integer>();
+
+			HttpSession httpSession = httpServletRequest.getSession();
+			if (httpSession != null) {
+				Object map = httpSession.getAttribute(SESSION_CACHE_KEY);
+				if (map == null) {
+					httpSession.setAttribute(SESSION_CACHE_KEY,
+					        new HashMap<String, Integer>());
+					map = httpSession.getAttribute(SESSION_CACHE_KEY);
+				}
+				cache = (HashMap<String, Integer>) map;
+			}
 
 			if (cache.get("loanAppFormId") != null
 			        && cache.get("loanAppFormId") != loaAppFormVO.getId()) {

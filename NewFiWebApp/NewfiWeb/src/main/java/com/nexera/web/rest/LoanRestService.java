@@ -118,7 +118,7 @@ public class LoanRestService {
 		if (loanVO.getLoanType().getLoanTypeCd()
 		        .equals(LoanTypeMasterEnum.PUR.toString())) {
 			UploadedFilesList file = needsListService
-			        .fetchPurchaseDocumentBasedOnPurchaseContract();
+			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
 			loanVO.getLoanType().setUploadedFiles(
 			        uploadedFilesListService.buildUpdateFileVo(file));
 		}

@@ -41,7 +41,8 @@ public interface NeedsListService {
 
 	public NeedsListMaster fetchNeedListMasterByType(String needsListType);
 
-	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract();
+	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract(
+	        Integer loanID);
 
 	public String checkCreditReport(Integer loanID);
 
