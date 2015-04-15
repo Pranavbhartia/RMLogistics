@@ -20,14 +20,15 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
 	<flow name="NexeraLoanMuleFlowFlow" doc:name="NexeraLoanMuleFlowFlow">
-		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall" 
+		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
 			responseTimeout="300000" keepAlive="true">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
 		</component>
-		<message-properties-transformer doc:name="Message Properties">
+		<message-properties-transformer
+			doc:name="Message Properties">
 			<add-message-property key="http.version" value="HTTP/1.0" />
 		</message-properties-transformer>
 		<choice doc:name="Choice">
@@ -35,27 +36,47 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<cxf:jaxws-client operation="RunQuickPricer"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" 
-					/>
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='ListEdocsByLoanNumber']">
 				<cxf:jaxws-client operation="ListEdocsByLoanNumber"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Create']">
 				<cxf:jaxws-client operation="Create"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
 					doc:name="HTTP" responseTimeout="300000" />
@@ -64,56 +85,98 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<cxf:jaxws-client operation="CreateLead"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Save']">
 				<cxf:jaxws-client operation="Save"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='LockLoanProgram']">
 				<cxf:jaxws-client operation="LockLoanProgram"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='Load']">
 				<cxf:jaxws-client operation="Load"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='UploadPDFDocument']">
 				<cxf:jaxws-client operation="UploadPDFDocument"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='DownloadEdocsPdfById']">
 				<cxf:jaxws-client operation="DownloadEdocsPdfById"
 					clientClass="com.lendersoffice.los.webservices.Loan" port="LoanSoap"
 					wsdlLocation="https://edocs.lendingqb.com/los/webservice/Loan.asmx?WSDL"
-					doc:name="CXF" />
+					doc:name="CXF">
+					<cxf:inInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+					</cxf:inInterceptors>
+					<cxf:outInterceptors>
+						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+					</cxf:outInterceptors>
+				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://edocs.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"/>
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 
 		</choice>
