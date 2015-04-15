@@ -1204,12 +1204,12 @@ function appendCustomerLoanDetails(loanDetails) {
 			}).html("Set expiry date");
 			var expiryDate = "";
 			if (loanDetails.purchaseDocumentExpiryDate!= undefined && loanDetails.purchaseDocumentExpiryDate != null) {
-				expiryDate = loanDetails.purchaseDocumentExpiryDate;
+				expiryDate =  $.datepicker.formatDate( 'mm/dd/yy', new Date(loanDetails.purchaseDocumentExpiryDate));
 			}
 			var dobInput = $('<input>').attr({
 				"class" : "prof-form-input date-picker float-left",
 				"placeholder" : "MM/DD/YYYY",
-				"value" :  $.datepicker.formatDate( 'mm/dd/yy', new Date(expiryDate) ),
+				"value" : expiryDate,
 				"id" : "purchaseDocumentExpiryDate",
 				"onchange" : "updatePurchaseDocumentExpiryDate()"
 			}).datepicker({
