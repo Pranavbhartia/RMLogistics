@@ -34,6 +34,7 @@ import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -42,7 +43,6 @@ import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
-import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
@@ -62,6 +62,7 @@ import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.CreditScoreXMLHandler;
 import com.nexera.core.utility.LoadXMLHandler;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.core.utility.UnderwritingXMLHandler;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -82,6 +83,8 @@ public class ThreadManager implements Runnable {
 	@Autowired
 	LqbInvoker lqbInvoker;
 
+	private ExceptionMaster exceptionMaster;
+
 	@Autowired
 	WorkflowService workflowService;
 
@@ -90,6 +93,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	EngineTrigger engineTrigger;
+
+	@Autowired
+	NexeraUtility nexeraUtility;
 
 	@Autowired
 	TransactionService transactionService;
@@ -120,195 +126,214 @@ public class ThreadManager implements Runnable {
 		JSONObject loadOperationObject = createLoadJsonObject(map,
 		        WebServiceOperations.OP_NAME_LOAN_LOAD, loan.getLqbFileId(),
 		        format);
-		LOGGER.debug("Invoking LQB service to fetch Loan status ");
-		JSONObject loadJSONResponse = lqbInvoker
-		        .invokeLqbService(loadOperationObject.toString());
-		if (loadJSONResponse != null) {
-			if (!loadJSONResponse
-			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+		if (loadOperationObject != null) {
+			LOGGER.debug("Invoking LQB service to fetch Loan status ");
+			JSONObject loadJSONResponse = lqbInvoker
+			        .invokeLqbService(loadOperationObject.toString());
+			if (loadJSONResponse != null) {
+				if (!loadJSONResponse
+				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
 
-				String loadResponse = loadJSONResponse
-				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-				loadResponse = removeBackSlashDelimiter(loadResponse);
-				int currentLoanStatus = -1;
-				Milestones milestones = null;
-				List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
-				if (loadResponseList != null) {
-					for (LoadResponseVO loadResponseVO : loadResponseList) {
-						String fieldId = loadResponseVO.getFieldId();
-						if (fieldId
-						        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_LOAN_STATUS)) {
-							currentLoanStatus = Integer.parseInt(loadResponseVO
-							        .getFieldValue());
-						}
-
-					}
-					LOSLoanStatus loanStatusID = null;
-					if (currentLoanStatus == -1) {
-						LOGGER.error("Invalid/No status received from LQB ");
-					} else {
-						loanStatusID = LOSLoanStatus
-						        .getLOSStatus(currentLoanStatus);
-						if (loanStatusID == null) {
-							LOGGER.error("Not a supported LQB status ");
-						}
-						workflowItemExecList = getWorkflowItemExecByLoan(loan);
-						if (workflowItemExecList == null) {
-
-							workflowItemExecList = new ArrayList<WorkflowItemExec>();
-						}
-						milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
-						        .get(loanStatusID).getMilestone();
-						WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
-						if (wItemMSInfo != null) {
-							statusTrackingList = wItemMSInfo
-							        .getStatusTrackingList();
-
-						}
-						if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
-							LOGGER.debug("These status are related to underwriting ");
-
-						} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
-							LOGGER.debug("These status are related to appraisal ");
-
-						} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
-							LOGGER.debug("These status are related to QC ");
-
-						} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
-						        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
-							LOGGER.debug("These status are related to Loan Closure ");
-
-						} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
-							LOGGER.debug("These status are related to 1003 ");
-
-						}
-
-						LoanMilestoneMaster loanMilestoneMaster = null;
-						if (milestones != null) {
-							loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
-							LOGGER.debug("Saving/Updating LoanMileStone ");
-							boolean sameStatus = false;
-							boolean newStatus = true;
-							LoanMilestone loanMilestone = getLoanMilestone(
-							        loan, loanMilestoneMaster);
-							if (loanMilestone == null) {
-								LOGGER.debug("This is a new entry of this milestone "
-								        + loanMilestoneMaster.getName());
-								putLoanMilestoneIntoExecution(loanStatusID,
-								        currentLoanStatus, loadResponseList,
-								        loanMilestoneMaster);
-								newStatus = false;
-
-							} else {
-								LOGGER.debug("Milestone exist, need to update the status ");
-								List<LoanMilestone> loanMilestoneList = loan
-								        .getLoanMilestones();
-								for (LoanMilestone loanMiles : loanMilestoneList) {
-									if (loanMiles.getStatus() == null) {
-										continue;
-									}
-									if (Integer.valueOf(loanMiles.getStatus()) == currentLoanStatus) {
-										newStatus = false;
-										Date date = loanMiles
-										        .getStatusUpdateTime();
-										if (date != null) {
-											String currentDateString = getDataTimeField(
-											        currentLoanStatus,
-											        loadResponseList);
-											if (currentDateString != null) {
-												Date currentDate = parseStringIntoDate(currentDateString);
-												if (currentDate != null) {
-													currentDate = formatDateIntoUTC(currentDate);
-													if (date.compareTo(currentDate) == 0) {
-														sameStatus = true;
-													} else {
-														updateLoanMilestone(loanMilestone);
-													}
-												}
-											}
-
-										} else {
-											String currentDateString = getDataTimeField(
-											        currentLoanStatus,
-											        loadResponseList);
-											if (currentDateString != null) {
-												Date currentDate = parseStringIntoDate(currentDateString);
-												if (currentDate != null) {
-													currentDate = formatDateIntoUTC(currentDate);
-													if (currentDate != null) {
-														updateLoanMilestone(loanMilestone);
-													}
-												} else {
-													sameStatus = true;
-												}
-											} else {
-												sameStatus = true;
-											}
-										}
-
-									}
-								}
+					String loadResponse = loadJSONResponse
+					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+					loadResponse = removeBackSlashDelimiter(loadResponse);
+					int currentLoanStatus = -1;
+					Milestones milestones = null;
+					List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+					if (loadResponseList != null) {
+						for (LoadResponseVO loadResponseVO : loadResponseList) {
+							String fieldId = loadResponseVO.getFieldId();
+							if (fieldId
+							        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_LOAN_STATUS)) {
+								currentLoanStatus = Integer
+								        .parseInt(loadResponseVO
+								                .getFieldValue());
 							}
 
-							if (!sameStatus) {
+						}
+						LOSLoanStatus loanStatusID = null;
+						if (currentLoanStatus == -1) {
+							LOGGER.error("Invalid/No status received from LQB ");
+						} else {
+							loanStatusID = LOSLoanStatus
+							        .getLOSStatus(currentLoanStatus);
+							if (loanStatusID == null) {
+								LOGGER.error("Not a supported LQB status ");
+							}
+							workflowItemExecList = getWorkflowItemExecByLoan(loan);
+							if (workflowItemExecList == null) {
 
-								LOGGER.debug("If status has changed then only proceed to call the class ");
-								if (newStatus) {
-									LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
+								workflowItemExecList = new ArrayList<WorkflowItemExec>();
+							}
+							milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+							        .get(loanStatusID).getMilestone();
+							WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
+							if (wItemMSInfo != null) {
+								statusTrackingList = wItemMSInfo
+								        .getStatusTrackingList();
+
+							}
+							if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
+								LOGGER.debug("These status are related to underwriting ");
+
+							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
+								LOGGER.debug("These status are related to appraisal ");
+
+							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
+								LOGGER.debug("These status are related to QC ");
+
+							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
+							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
+								LOGGER.debug("These status are related to Loan Closure ");
+
+							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+								LOGGER.debug("These status are related to 1003 ");
+
+							}
+
+							LoanMilestoneMaster loanMilestoneMaster = null;
+							if (milestones != null) {
+								loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
+								LOGGER.debug("Saving/Updating LoanMileStone ");
+								boolean sameStatus = false;
+								boolean newStatus = true;
+								LoanMilestone loanMilestone = getLoanMilestone(
+								        loan, loanMilestoneMaster);
+								if (loanMilestone == null) {
+									LOGGER.debug("This is a new entry of this milestone "
+									        + loanMilestoneMaster.getName());
 									putLoanMilestoneIntoExecution(loanStatusID,
 									        currentLoanStatus,
 									        loadResponseList,
 									        loanMilestoneMaster);
-								}
-								if (WorkflowConstants.LQB_MONITOR_LIST
-								        .contains(currentLoanStatus)) {
-									checkIfAnyStatusIsMissed(currentLoanStatus,
-									        WorkflowConstants.LQB_MONITOR_LIST,
-									        loadResponseList,
-									        getLoanMilestoneMasterList());
-								}
-								List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
+									newStatus = false;
 
-								List<WorkflowItemExec> itemsToExecute = itemToExecute(
-								        workflowItemTypeList,
-								        workflowItemExecList);
-								LOGGER.debug("Putting milestone into execution ");
-								putItemsIntoExecution(itemsToExecute,
-								        currentLoanStatus);
+								} else {
+									LOGGER.debug("Milestone exist, need to update the status ");
+									List<LoanMilestone> loanMilestoneList = loan
+									        .getLoanMilestones();
+									for (LoanMilestone loanMiles : loanMilestoneList) {
+										if (loanMiles.getStatus() == null) {
+											continue;
+										}
+										if (Integer.valueOf(loanMiles
+										        .getStatus()) == currentLoanStatus) {
+											newStatus = false;
+											Date date = loanMiles
+											        .getStatusUpdateTime();
+											if (date != null) {
+												String currentDateString = getDataTimeField(
+												        currentLoanStatus,
+												        loadResponseList);
+												if (currentDateString != null) {
+													Date currentDate = parseStringIntoDate(currentDateString);
+													if (currentDate != null) {
+														currentDate = formatDateIntoUTC(currentDate);
+														if (date.compareTo(currentDate) == 0) {
+															sameStatus = true;
+														} else {
+															updateLoanMilestone(loanMilestone);
+														}
+													}
+												}
 
-								LOGGER.debug("Updating last acted on time ");
-								updateLastModifiedTimeForThisLoan(loan);
+											} else {
+												String currentDateString = getDataTimeField(
+												        currentLoanStatus,
+												        loadResponseList);
+												if (currentDateString != null) {
+													Date currentDate = parseStringIntoDate(currentDateString);
+													if (currentDate != null) {
+														currentDate = formatDateIntoUTC(currentDate);
+														if (currentDate != null) {
+															updateLoanMilestone(loanMilestone);
+														}
+													} else {
+														sameStatus = true;
+													}
+												} else {
+													sameStatus = true;
+												}
+											}
+
+										}
+									}
+								}
+
+								if (!sameStatus) {
+
+									LOGGER.debug("If status has changed then only proceed to call the class ");
+									if (newStatus) {
+										LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
+										putLoanMilestoneIntoExecution(
+										        loanStatusID,
+										        currentLoanStatus,
+										        loadResponseList,
+										        loanMilestoneMaster);
+									}
+									if (WorkflowConstants.LQB_MONITOR_LIST
+									        .contains(currentLoanStatus)) {
+										checkIfAnyStatusIsMissed(
+										        currentLoanStatus,
+										        WorkflowConstants.LQB_MONITOR_LIST,
+										        loadResponseList,
+										        getLoanMilestoneMasterList());
+									}
+									List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
+
+									List<WorkflowItemExec> itemsToExecute = itemToExecute(
+									        workflowItemTypeList,
+									        workflowItemExecList);
+									LOGGER.debug("Putting milestone into execution ");
+									putItemsIntoExecution(itemsToExecute,
+									        currentLoanStatus);
+
+									LOGGER.debug("Updating last acted on time ");
+									updateLastModifiedTimeForThisLoan(loan);
+								}
 							}
 						}
+					} else {
+						LOGGER.error(" Unable to parse the LQB response ");
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster,
+						        " Unable to parse the LQB response ");
 					}
 				} else {
-					LOGGER.error(" Unable to parse the LQB response ");
+					LOGGER.error(" Valid Response Not Received From Mule/LQB ");
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster,
+					        "Invalid response received from mule/lqb");
 				}
 			} else {
-				LOGGER.error(" Valid Response Not Received From Mule/LQB ");
+				LOGGER.error("Connection Timed out at LQB ");
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        " Connection to mule timed out");
 			}
 		} else {
-			LOGGER.error("Connection Timed out at LQB ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        "Request Json Object Not Created For Load ");
+
 		}
 		LOGGER.debug("Fetching Docs for this loan ");
 		fetchDocsForThisLoan(loan);
@@ -401,6 +426,8 @@ public class ThreadManager implements Runnable {
 				LOGGER.error("Exception received for this transaction "
 				        + transactionDetails.getTransaction_id() + " "
 				        + e.getMessage());
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        e.getMessage());
 			}
 		}
 	}
@@ -417,20 +444,25 @@ public class ThreadManager implements Runnable {
 		        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
 		        loan.getLqbFileId(), format);
 		LOGGER.debug("Invoking LQB service to fetch credit score  ");
-		JSONObject creditScoreJSONResponse = lqbInvoker
-		        .invokeLqbService(creditScoreJSONObject.toString());
-		if (creditScoreJSONResponse != null) {
-			if (!creditScoreJSONResponse
-			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-				String creditScores = creditScoreJSONResponse
-				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-				List<CreditScoreResponseVO> creditScoreResponseList = parseCreditScoresResponse(creditScores);
-				Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
-				LOGGER.debug("Save Credit Score For This Borrower ");
-				saveCreditScoresForBorrower(creditScoreMap);
+		if (creditScoreJSONObject != null) {
+			JSONObject creditScoreJSONResponse = lqbInvoker
+			        .invokeLqbService(creditScoreJSONObject.toString());
+			if (creditScoreJSONResponse != null) {
+				if (!creditScoreJSONResponse
+				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+					String creditScores = creditScoreJSONResponse
+					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+					List<CreditScoreResponseVO> creditScoreResponseList = parseCreditScoresResponse(creditScores);
+					Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
+					LOGGER.debug("Save Credit Score For This Borrower ");
+					saveCreditScoresForBorrower(creditScoreMap);
 
-				creditScoreMap.clear();
+					creditScoreMap.clear();
+				}
 			}
+		} else {
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        "Request Json Object Not Created For Credit Score ");
 		}
 	}
 
@@ -478,9 +510,14 @@ public class ThreadManager implements Runnable {
 
 			} else {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Credit Score Not Found for this loan ");
 			}
 		} else {
 			LOGGER.error("Customer Details Not Found With this user id ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        "Customer details not found for this user id "
+			                + loan.getUser().getId());
 		}
 	}
 
@@ -516,9 +553,14 @@ public class ThreadManager implements Runnable {
 
 			} else {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Credit Score Not Found for this loan ");
 			}
 		} else {
 			LOGGER.error("Customer Details Not Found With this user id ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        "Customer details not found for this user id "
+			                + loan.getUser().getId());
 		}
 
 	}
@@ -583,42 +625,56 @@ public class ThreadManager implements Runnable {
 	private void invokeUnderwritingCondition(Loan loan, int format) {
 		LOGGER.debug("Invoking UnderwritingCondition service of lendinqb ");
 		JSONObject underWritingConditionJSONObject = createUnderWritingConditionJSONObject(
-
-		WebServiceOperations.OP_NAME_UNDERWRITING_CONDITION,
+		        WebServiceOperations.OP_NAME_UNDERWRITING_CONDITION,
 		        loan.getLqbFileId(), format);
-		LOGGER.debug("Invoking LQB service to fetch underwriting condition ");
-		JSONObject underWritingJSONResponse = lqbInvoker
-		        .invokeLqbService(underWritingConditionJSONObject.toString());
-		if (underWritingJSONResponse != null) {
-			if (!underWritingJSONResponse
-			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-				String underwritingRespone = underWritingJSONResponse
-				        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-				List<UnderwritingConditionResponseVO> underWritingResponseList = parseUnderwritingResponse(underwritingRespone
-				        .toString());
+		if (underWritingConditionJSONObject != null) {
+			LOGGER.debug("Invoking LQB service to fetch underwriting condition ");
+			JSONObject underWritingJSONResponse = lqbInvoker
+			        .invokeLqbService(underWritingConditionJSONObject
+			                .toString());
+			if (underWritingJSONResponse != null) {
+				if (!underWritingJSONResponse
+				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+					String underwritingRespone = underWritingJSONResponse
+					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+					List<UnderwritingConditionResponseVO> underWritingResponseList = parseUnderwritingResponse(underwritingRespone
+					        .toString());
 
-				List<NeedsListMaster> conditionDescriptionList = new ArrayList<NeedsListMaster>();
-				for (UnderwritingConditionResponseVO underwritingConditionResponseVO : underWritingResponseList) {
-					if (underwritingConditionResponseVO
-					        .getFieldId()
-					        .equalsIgnoreCase(
-					                CoreCommonConstants.SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION)) {
-						NeedsListMaster needsListMaster = new NeedsListMaster();
-						needsListMaster.setNeedCategory("System");
-						needsListMaster
-						        .setLabel(underwritingConditionResponseVO
-						                .getFieldValue());
-						needsListMaster
-						        .setDescription(underwritingConditionResponseVO
-						                .getFieldValue());
-						needsListMaster.setIsCustom(false);
-						conditionDescriptionList.add(needsListMaster);
+					List<NeedsListMaster> conditionDescriptionList = new ArrayList<NeedsListMaster>();
+					for (UnderwritingConditionResponseVO underwritingConditionResponseVO : underWritingResponseList) {
+						if (underwritingConditionResponseVO
+						        .getFieldId()
+						        .equalsIgnoreCase(
+						                CoreCommonConstants.SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION)) {
+							NeedsListMaster needsListMaster = new NeedsListMaster();
+							needsListMaster.setNeedCategory("System");
+							needsListMaster
+							        .setLabel(underwritingConditionResponseVO
+							                .getFieldValue());
+							needsListMaster
+							        .setDescription(underwritingConditionResponseVO
+							                .getFieldValue());
+							needsListMaster.setIsCustom(false);
+							conditionDescriptionList.add(needsListMaster);
+						}
 					}
-				}
 
-				needsListService.saveMasterNeedsForLoan(loan.getId(),
-				        conditionDescriptionList);
+					needsListService.saveMasterNeedsForLoan(loan.getId(),
+					        conditionDescriptionList);
+				} else {
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster, underWritingJSONResponse
+					                .getString("errorDescription"));
+				}
+			} else {
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "No resposne received from lqb/mule");
 			}
+		} else {
+			nexeraUtility
+			        .putExceptionMasterIntoExecution(exceptionMaster,
+			                "Request Json Object Not Created For UnderwritingCondition ");
+
 		}
 	}
 
@@ -630,31 +686,44 @@ public class ThreadManager implements Runnable {
 		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
 		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
 		        loan.getLqbFileId());
+		if (getListOfDocs != null) {
+			JSONObject receivedResponseForDocs = lqbInvoker
+			        .invokeLqbService(getListOfDocs.toString());
+			if (receivedResponseForDocs != null) {
+				if (!receivedResponseForDocs
+				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+					LQBResponseVO lqbResponseVO = uploadedFileListService
+					        .parseLQBXMLResponse(receivedResponseForDocs);
+					if (lqbResponseVO != null) {
+						LOGGER.debug("Response received for this loan "
+						        + loan.getId());
+						if (lqbResponseVO.getResult().equalsIgnoreCase("Ok")) {
+							LQBDocumentResponseListVO lqbDocumentResponseListVO = lqbResponseVO
+							        .getDocumentResponseListVOs();
+							if (lqbDocumentResponseListVO != null) {
+								List<LQBedocVO> edocsList = lqbDocumentResponseListVO
+								        .getvBedocVO();
+								uploadedFileListService.updateUploadedDocument(
+								        edocsList, loan, timeBeforeCallMade);
 
-		JSONObject receivedResponseForDocs = lqbInvoker
-		        .invokeLqbService(getListOfDocs.toString());
-		if (receivedResponseForDocs != null) {
-			if (!receivedResponseForDocs
-			        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-				LQBResponseVO lqbResponseVO = uploadedFileListService
-				        .parseLQBXMLResponse(receivedResponseForDocs);
-				if (lqbResponseVO != null) {
-					LOGGER.debug("Response received for this loan "
-					        + loan.getId());
-					if (lqbResponseVO.getResult().equalsIgnoreCase("Ok")) {
-						LQBDocumentResponseListVO lqbDocumentResponseListVO = lqbResponseVO
-						        .getDocumentResponseListVOs();
-						if (lqbDocumentResponseListVO != null) {
-							List<LQBedocVO> edocsList = lqbDocumentResponseListVO
-							        .getvBedocVO();
-							uploadedFileListService.updateUploadedDocument(
-							        edocsList, loan, timeBeforeCallMade);
-
-							checkWhetherDisclosureReceived(loan, edocsList);
+								checkWhetherDisclosureReceived(loan, edocsList);
+							}
 						}
 					}
+				} else {
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster, receivedResponseForDocs
+					                .getString("errorDescription"));
 				}
+			} else {
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "No resposne received from lqb/mule");
 			}
+		} else {
+			nexeraUtility
+			        .putExceptionMasterIntoExecution(exceptionMaster,
+			                "Request Json Object Not Created For List EDocsByLoanNumber ");
+
 		}
 
 	}
@@ -829,7 +898,8 @@ public class ThreadManager implements Runnable {
 		try {
 			date = simpleDateFormat.parse(dateTime);
 		} catch (ParseException pe) {
-			LOGGER.error(pe.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        pe.getMessage());
 		}
 		return date;
 
@@ -874,7 +944,8 @@ public class ThreadManager implements Runnable {
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
 			LOGGER.error("Invalid Json String ");
-			throw new FatalException("Could not parse json " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 		return json;
 	}
@@ -892,7 +963,8 @@ public class ThreadManager implements Runnable {
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
 			LOGGER.error("Invalid Json String ");
-			throw new FatalException("Could not parse json " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 		return json;
 	}
@@ -910,7 +982,8 @@ public class ThreadManager implements Runnable {
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
 			LOGGER.error("Invalid Json String ");
-			throw new FatalException("Could not parse json " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 		return json;
 	}
@@ -1149,7 +1222,8 @@ public class ThreadManager implements Runnable {
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
 			LOGGER.error("Invalid Json String ");
-			throw new FatalException("Could not parse json " + e.getMessage());
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
 		}
 		return json;
 	}
@@ -1168,11 +1242,14 @@ public class ThreadManager implements Runnable {
 			return handler.getLoadResponseVOList();
 
 		} catch (SAXException se) {
-			se.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        se.getMessage());
 		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        pce.getMessage());
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        ie.getMessage());
 		}
 
 		return null;
@@ -1194,11 +1271,14 @@ public class ThreadManager implements Runnable {
 			return handler.getUnderWriConditionResponseList();
 
 		} catch (SAXException se) {
-			se.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        se.getMessage());
 		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        pce.getMessage());
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        ie.getMessage());
 		}
 
 		return null;
@@ -1220,11 +1300,14 @@ public class ThreadManager implements Runnable {
 			return handler.getCreditScoreResponseList();
 
 		} catch (SAXException se) {
-			se.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        se.getMessage());
 		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        pce.getMessage());
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        ie.getMessage());
 		}
 
 		return null;
@@ -1245,6 +1328,14 @@ public class ThreadManager implements Runnable {
 	public void setLoanMilestoneMasterList(
 	        List<LoanMilestoneMaster> loanMilestoneMasterList) {
 		this.loanMilestoneMasterList = loanMilestoneMasterList;
+	}
+
+	public ExceptionMaster getExceptionMaster() {
+		return exceptionMaster;
+	}
+
+	public void setExceptionMaster(ExceptionMaster exceptionMaster) {
+		this.exceptionMaster = exceptionMaster;
 	}
 
 }
