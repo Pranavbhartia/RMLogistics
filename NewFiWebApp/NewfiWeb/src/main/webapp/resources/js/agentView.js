@@ -1210,15 +1210,20 @@ function appendCustomerLoanDetails(loanDetails) {
 				"class" : "prof-form-input date-picker float-left",
 				"placeholder" : "MM/DD/YYYY",
 				"value" :  $.datepicker.formatDate( 'mm/dd/yy', new Date(expiryDate) ),
-				"id" : "purchaseDocumentExpiryDate"
+				"id" : "purchaseDocumentExpiryDate",
+				"onchange" : "updatePurchaseDocumentExpiryDate()"
 			}).datepicker({
 				orientation : "top auto",
 				autoclose : true
 			}).on('show', function(e) {
 				var $popup = $('.datepicker');
 				$popup.click(function() {
-					updatePurchaseDocumentExpiryDate(  new Date($("#purchaseDocumentExpiryDate").val()).getTime());
+					
 				});
+			}).on('close', function () {
+	            //you will get here once the user is done "choosing" - in the dateText you will have 
+	            //the new date or "" if no date has been selected    
+			  //updatePurchaseDocumentExpiryDate( );
 			});
 			var dobInputContainer = $('<div>').attr({
 				"class":"av-loan-details-row-rc datelabel float-left"
@@ -1239,7 +1244,13 @@ function appendCustomerLoanDetails(loanDetails) {
 
 }
 
-function updatePurchaseDocumentExpiryDate(date){
+function updatePurchaseDocumentExpiryDate(){
+	var date =  new Date($("#purchaseDocumentExpiryDate").val()).getTime();
+	var currentTime  = new Date().getTime();
+	if(currentTime>date){
+		showToastMessage("Cannot select old value");
+		return ;
+	}
 	var data = {};
 	data.loanId = selectedUserDetail.loanID;
 	data.date = date;
