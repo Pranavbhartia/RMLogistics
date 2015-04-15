@@ -310,4 +310,20 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 		return utils.getJsonStringOfMap(map);
 	}
+
+	public String getRenderInfoForAppraisal(int loanID) {
+		try {
+			String status = "Pending";
+			Loan loan = new Loan(loanID);
+			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+			        Milestones.APPRAISAL.getMilestoneKey());
+			if (mileStone != null) {
+				status = mileStone.getComments().toString();
+			}
+			return status;
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return "";
+		}
+	}
 }

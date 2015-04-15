@@ -246,6 +246,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 		return workflowMasterDao.getWorkflowItemExecByType(workflowExec,
 		        workflowItemMaster);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public WorkflowItemExec getWorkflowItemExecBySucessItemID(WorkflowItemExec workflowItemexec) {
+		return workflowMasterDao.getWorkflowItemExecBySuccessItemID(workflowItemexec);
+	}
 
 	/*
 	 * (non-Javadoc)
