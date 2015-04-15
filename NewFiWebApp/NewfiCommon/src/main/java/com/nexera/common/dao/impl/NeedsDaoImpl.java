@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -39,7 +42,7 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 			Loan loan = new Loan();
 			loan.setId(loanId);
 			criteria.add(Restrictions.eq("loan", loan));
-			
+
 			List<LoanNeedsList> loanNeeds = criteria.list();
 			return loanNeeds;
 		} catch (HibernateException hibernateException) {
@@ -170,4 +173,21 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		return loanNeedsList;
 	}
 
+	@Override
+	public String checkCreditReport(Integer loanID) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UploadedFilesList.class);
+		Loan loan = new Loan(loanID);
+		criteria.add(Restrictions.eq("loan", loan));
+		criteria.add(Restrictions.eq("documentType",
+		        CommonConstants.LQB_DOC_TYPE_CR));
+		criteria.addOrder(Order.desc("uploadedDate"));
+		List<UploadedFilesList> filesLists = criteria.list();
+
+		if (filesLists == null || filesLists.isEmpty()) {
+			return null;
+		}
+		UploadedFilesList latestFile = filesLists.get(0);
+		return latestFile.getUuidFileId();
+	}
 }

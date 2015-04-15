@@ -808,6 +808,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions.ne("loanProgressStatus", "CLOSED"));
 		criteria.add(Restrictions.ne("loanProgressStatus", "WITHDRAWN"));
 		criteria.add(Restrictions.ne("loanProgressStatus", "DECLINED"));
+
 		List<LoanProgressStatusMaster> activeStatusList = criteria.list();
 
 		criteria = session.createCriteria(Loan.class);
@@ -817,7 +818,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			        activeStatusList.get(i)));
 		}
 		criteria.add(disjunction);
-
+		criteria.addOrder(Order.desc("modifiedDate"));
 		return criteria.list();
 	}
 

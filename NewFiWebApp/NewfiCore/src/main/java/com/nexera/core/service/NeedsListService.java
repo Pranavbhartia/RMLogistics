@@ -43,4 +43,6 @@ public interface NeedsListService {
 
 	public UploadedFilesList fetchPurchaseDocumentBasedOnPurchaseContract();
 
+	public String checkCreditReport(Integer loanID);
+
 }

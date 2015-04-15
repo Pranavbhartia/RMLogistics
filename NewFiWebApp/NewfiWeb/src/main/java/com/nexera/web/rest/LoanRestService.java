@@ -18,6 +18,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
@@ -40,6 +41,10 @@ import com.nexera.web.rest.util.RestUtil;
 @RestController
 @RequestMapping(value = "/loan/*")
 public class LoanRestService {
+
+	private static final String ACCESS_DENIED = "401";
+
+	private static final String YOU_DO_NOT_HAVE_ACCESS = "You do not have access";
 
 	@Autowired
 	private LoanService loanService;
@@ -80,6 +85,27 @@ public class LoanRestService {
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loansList);
 
+		return responseVO;
+	}
+
+	@RequestMapping(value = "/checkCreditReport/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO checkCreditReport(
+	        @PathVariable Integer loanID) {
+		UserRolesEnum rolesEnum = utils.getLoggedInUserRole();
+
+		switch (rolesEnum) {
+		case CUSTOMER:
+			return RestUtil.wrapObjectForFailure(null, ACCESS_DENIED,
+			        YOU_DO_NOT_HAVE_ACCESS);
+		case REALTOR:
+			return RestUtil.wrapObjectForFailure(null, ACCESS_DENIED,
+			        YOU_DO_NOT_HAVE_ACCESS);
+
+		default:
+			break;
+		}
+		String fileId = needsListService.checkCreditReport(loanID);
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(fileId);
 		return responseVO;
 	}
 
@@ -413,18 +439,14 @@ public class LoanRestService {
 		UserVO userVO = new UserVO(userId);
 		LoanAppFormVO loanAppFormVO = loanService.retrieveLoanAppForm(userVO);
 		Gson gson = new Gson();
-		
-		/*ObjectMapper mapper = new ObjectMapper();
-		StringWriter sw = new StringWriter();
-		try {
-			mapper.writeValue(sw, loanAppFormVO);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
+
+		/*
+		 * ObjectMapper mapper = new ObjectMapper(); StringWriter sw = new
+		 * StringWriter(); try { mapper.writeValue(sw, loanAppFormVO); } catch
+		 * (JsonGenerationException e) { e.printStackTrace(); } catch
+		 * (JsonMappingException e) { e.printStackTrace(); } catch (IOException
+		 * e) { e.printStackTrace(); }
+		 */
 		return RestUtil.wrapObjectForSuccess(gson.toJson(loanAppFormVO));
 	}
 }
