@@ -79,6 +79,8 @@ public class LoanAppFormVO implements Serializable {
 	private Float loanAppFormCompletionStatus;
 
 	private PurchaseDetailsVO purchaseDetails;
+	private String loanMangerEmail;
+	private String realtorEmail;
 
 	public int getId() {
 		return id;
@@ -1224,5 +1226,21 @@ public class LoanAppFormVO implements Serializable {
 		        .getReceiveAlimonyChildSupport());
 		return loanAppFormVO;
 	}
+
+	public String getLoanMangerEmail() {
+	    return loanMangerEmail;
+    }
+
+	public void setLoanMangerEmail(String loanMangerEmail) {
+	    this.loanMangerEmail = loanMangerEmail;
+    }
+
+	public String getRealtorEmail() {
+	    return realtorEmail;
+    }
+
+	public void setRealtorEmail(String realtorEmail) {
+	    this.realtorEmail = realtorEmail;
+    }
 
 }
