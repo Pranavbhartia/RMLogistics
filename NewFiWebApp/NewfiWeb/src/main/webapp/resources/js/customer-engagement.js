@@ -935,7 +935,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     container.append(tenureSlider).append(rateSlider);
     var rateBtn1="";
     var rateBtn2="";
-    if(hideCreateAccountBtn){
+    if(hideCreateAccountBtn==undefined || hideCreateAccountBtn){
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
         }).html("Create Your Account").on('click', function() {

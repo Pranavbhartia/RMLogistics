@@ -783,6 +783,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 				if (user.getRealtorDetail().getDefaultLoanManager() != null) {
 					emailIds.add(user.getRealtorDetail()
 					        .getDefaultLoanManager().getEmailId());
+				} else {
+					emailIds.add("");
 				}
 				emailIds.add(user.getEmailId());
 

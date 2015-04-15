@@ -657,12 +657,20 @@ public class LoanServiceImpl implements LoanService {
 
 	private void updateLoanTeamList(List<LoanTeam> loanTeam, User user,
 	        int loanId) {
+		for (LoanTeam loanTeam2 : loanTeam) {
+			if (loanTeam2.getUser().getEmailId().equals(user.getEmailId())) {
+				// User already added in the team
+				return;
+			}
+
+		}
 		LoanTeam e = new LoanTeam();
 		e.setUser(user);
 		Loan loan = new Loan(loanId);
 		e.setLoan(loan);
 		e.setActive(Boolean.TRUE);
 		e.setAssignedOn(new Date(System.currentTimeMillis()));
+
 		loanTeam.add(e);
 	}
 

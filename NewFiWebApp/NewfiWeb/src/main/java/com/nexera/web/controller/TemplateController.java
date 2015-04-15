@@ -202,12 +202,16 @@ public class TemplateController extends DefaultController {
 		LOG.info("Url referer from" + userName);
 		List<String> emailIds = userProfileService.getDefaultUsers(userName);
 		if (emailIds != null) {
-			mav.addObject("loanManagerEmail", emailIds.get(0));
+
 			if (emailIds.size() == 2) {
 				// Has to be a Realtor referal
+				if (!emailIds.get(0).equals("")) {
+					mav.addObject("loanManagerEmail", emailIds.get(0));
+				}
+
 				mav.addObject("realtorEmail", emailIds.get(1));
 			} else {
-				mav.addObject("realtorEmail", "");
+				mav.addObject("loanManagerEmail", emailIds.get(0));
 			}
 		} else {
 			mav.addObject("loanManagerEmail", "");
