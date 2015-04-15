@@ -85,7 +85,7 @@ public class ApplicationFormRestService {
 			        && cache.get("loanAppFormId") != loaAppFormVO.getId()) {
 				System.out
 				        .println("loan form id mismatch , setting cache to null");
-				cache = null;
+				cache.clear();
 			}
 
 			if (cache.get("loanAppFormId") != null && loaAppFormVO.getId() == 0
@@ -441,7 +441,6 @@ public class ApplicationFormRestService {
 			 * LOG.info(
 			 * "cache.putcustomerSpouseDetail"+loanAppForm.getCustomerspousedetail
 			 * ().getId()); }
-			 * 
 			 * 
 			 * 
 			 * 
