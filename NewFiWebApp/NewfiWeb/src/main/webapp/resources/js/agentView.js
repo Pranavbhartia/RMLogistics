@@ -6,15 +6,16 @@ var docData = [];
 var currentLoanType = null;
 
 LOAN_ENUM = {
-	ALL : "ALL",
-	NEW_PROSPECT : "NEW PROSPECT",
-	LEAD : "LEAD",
-	NEW_LOAN : "NEW LOAN",
-	IN_PROGRESS : "IN PROGRESS",
-	CLOSED : "CLOSED",
-	WITHDRAWN : "WITHDRAWN",
-	DECLINED : "DECLINED"
-};
+		ALL : "ALL",
+		NEW_PROSPECT : "NEW PROSPECT",
+		LEAD : "LEAD",
+		NEW_LOAN : "NEW LOAN",
+		IN_PROGRESS:"IN PROGRESS",
+		CLOSED : "CLOSED",
+		WITHDRAWN :"WITHDRAWN",
+		DECLINED : "DECLINED"
+	};
+
 
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
@@ -79,14 +80,14 @@ function paintAgentDashboard(loanType) {
 	currentLoanType = loanType;
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
-
+		
 		getDashboardRightPanelForWorkLoans();
 	} else if (loanType == "myloans") {
 		$('#lp-my-loans').addClass('lp-item-active');
 		getDashboardRightPanelForMyLoans();
 	} else if (loanType == "archivesloans") {
 		$('#lp-my-archives').addClass('lp-item-active');
-
+		
 		getDashboardRightPanelForArchivesLoans();
 	}
 	adjustAgentDashboardOnResize();
@@ -156,24 +157,29 @@ function paintAgentDashboardRightPanel(data) {
 	});
 
 	var searchIcon = $('<div>').attr({
-		"class" : "search-icn float-left"
+		"class" : "search-icn float-left",
+		
 	}).on('click', function() {
-		$(this).hide();
+	
 		$(this).parent().find('.search-input').show().focus();
 	});
 
 	var searchInputBox = $('<input>').attr({
-		"class" : "search-input float-left hide"
+		"class" : "search-input float-left hide",
+		"id" : "customerSearch"
 	}).on('keyup', function(e) {
 		if (e.which == 13) {
-			if ($(this).val() == "") {
+			if($(this).val()==""){
 				$(this).hide();
 			}
-			filterCustomerName(customerData.customers, $(this).val());
+			searchByTermAndLoanType(customerData.customers );
 			$(this).parent().find('.search-icn').show();
 		}
 	}).on('blur', function() {
-		$(this).hide();
+		if($(this).val()==""){
+			$(this).hide();
+		}
+	
 		$(this).parent().find('.search-icn').show();
 	});
 
@@ -199,75 +205,85 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "filter-wrapper hide"
 	});
 	var dropDownItemArray;
-	if (currentLoanType == "myloans") {
-		dropDownItemArray = [ "ALL", "NEW_LOAN", "IN_PROGRESS" ];
-	} else if (currentLoanType == "archivesloans") {
-		dropDownItemArray = [ "ALL", "CLOSED", "WITHDRAWN", "DECLINED" ];
+	if(currentLoanType=="myloans"){
+		dropDownItemArray = ["ALL" , "NEW_LOAN" , "IN_PROGRESS"];
+	}else if(currentLoanType == "archivesloans"){
+		dropDownItemArray = ["ALL" , "CLOSED" , "WITHDRAWN" , "DECLINED"];
 	}
 
 	for (var i = 0; i < dropDownItemArray.length; i++) {
-
-		if (i == 0) {
+		
+		if(i==0){
 			var filterSelected = $('<div>').attr({
-				"class" : "filter-selected"
+				"class" : "filter-selected",
+				"id" : "ALL"
 			}).html("All");
 
 			filter.append(filterSelected);
 		}
-
+		
 		var dropDownItem = $('<div>').attr({
 			"class" : "filter-dropdown-item",
 			"id" : dropDownItemArray[i]
-		}).html(LOAN_ENUM[dropDownItemArray[i]]).bind(
-				'click',
-				function(e) {
-					e.stopPropagation();
-					var val = $(this).html();
-					$('#filter-drop-down').parent().find('.filter-selected')
-							.html(val);
-					hideFilterDropDown();
-					searchCustomerLoanByLoanStatus(customerData.customers, $(
-							this).attr('id'));
-				});
+		}).html(LOAN_ENUM[dropDownItemArray[i]]).bind('click', function(e) {
+			e.stopPropagation();
+			var val = $(this).html();
+			var filterSelected = $('#filter-drop-down').parent().find('.filter-selected');
+			filterSelected.removeAttr('id');
+			filterSelected.attr("id" , $(this).attr('id'));
+			filterSelected.html(val);
+			hideFilterDropDown();
+			searchByTermAndLoanType(customerData.customers );
+		});
 		dropDownWrapper.append(dropDownItem);
 	}
 
 	filter.append(dropDownWrapper);
 
 	rightCon.append(searchCon).append(filterText).append(filter);
-
+	
+	
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
 	appendCustomers("leads-container", customerData.customers);
 }
 
-function searchCustomerLoanByLoanStatus(customers, loanStatus) {
-	var searchObject = new Array();
+function searchByTermAndLoanType(customers){
+	var searchTerm = $("#customerSearch").val();
+	var loanType = $(".filter-selected").attr('id');
+	
+	var filteredResult = searchCustomerLoanByLoanStatus(customers , loanType);
+	var finalResults = filterCustomerName(filteredResult , searchTerm);
+	appendCustomers("leads-container", finalResults);
+	
+}
 
-	if (loanStatus != LOAN_ENUM.ALL) {
-		for (i in customers) {
-			if (customers[i].loanStatus == loanStatus) {
+
+function searchCustomerLoanByLoanStatus(customers , loanStatus){
+	var searchObject = new Array();
+	
+	if(loanStatus != LOAN_ENUM.ALL){
+		for(i in customers){
+			if(customers[i].loanStatus == loanStatus){
 				searchObject.push(customers[i]);
 			}
 		}
-	} else {
+	}else{
 		searchObject = customers;
 	}
-
-	appendCustomers("leads-container", searchObject);
+	return searchObject;
 }
 
-function filterCustomerName(customer, searchVal) {
+
+function filterCustomerName(customer , searchVal){
 	var searchObject = new Array();
-	for (i in customer) {
-		if ((customer[i].name.toLowerCase().indexOf($.trim(searchVal)
-				.toLowerCase())) > -1) {
+	for(i in customer){
+		if((customer[i].name.toLowerCase().indexOf($.trim(searchVal).toLowerCase()))>-1){
 			searchObject.push(customer[i]);
 		}
 	}
-
-	appendCustomers("leads-container", searchObject);
+	return searchObject;
 }
 
 function showFilterDropDown() {
@@ -377,14 +393,14 @@ function appendCustomers(elementId, customers) {
 			event.stopImmediatePropagation();
 
 			resetSelectedUserDetailObject(event.data.customer);
-			if (userIsRealtor()) {
+			if(userIsRealtor()){
 				saveState('loan', selectedUserDetail.loanID, "team");
-				entryPointForAgentView(selectedUserDetail.loanID, '0')
-			} else {
+				entryPointForAgentView(selectedUserDetail.loanID, '0')	
+			}else{
 				saveState('loan', selectedUserDetail.loanID, "detail");
 				entryPointForAgentView(selectedUserDetail.loanID, '2')
 			}
-
+			
 			// getLoanDetails(loanID);
 		}).html(customer.name);
 
@@ -969,19 +985,18 @@ function paintAgentLoanPage(data) {
 	}
 
 }
-function getAppDetailsForUser(userId, callback) {
-	ajaxRequest("rest/loan/appform/" + userId, "GET", "json", undefined,
-			function(response) {
-				if (response.error) {
-					showToastMessage(response.error.message)
-				} else {
-					var appFormDetails = response.resultObject;
-					newfi.appUserDetails = appFormDetails;
-					if (callback) {
-						callback();
-					}
+function getAppDetailsForUser(userId,callback){
+	ajaxRequest("rest/loan/appform/"+userId,"GET","json",undefined,function(response){
+			if(response.error){
+				showToastMessage(response.error.message)
+			}else{
+				var appFormDetails=response.resultObject;
+				newfi.appUserDetails=appFormDetails;
+				if(callback){
+					callback();
 				}
-			});
+			}
+		});
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages
@@ -1001,13 +1016,13 @@ function changeAgentSecondaryLeftPanel(elementId) {
 		doPagination = true;
 		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
-		var userId = selectedUserDetail.userID;
-		getAppDetailsForUser(userId, function() {
+		var userId=selectedUserDetail.userID;
+		getAppDetailsForUser(userId,function(){
 			paintCustomerApplicationPage();
 		});
 	} else if (elementId == "lp-step2") {
 		// TODO-pass the right id
-		if (userIsRealtor()) {
+		if(userIsRealtor()){
 			return false;
 		}
 		getLoanDetails(selectedUserDetail.loanID);
@@ -1015,17 +1030,17 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {
-		if (userIsRealtor()) {
+		if(userIsRealtor()){
 			paintCustomerLoanProgressPage();
-		} else {
-			paintAgentLoanProgressPage();
+		}else{
+			paintAgentLoanProgressPage();	
 		}
-
+		
 	}
 
 }
-function userIsRealtor() {
-	if (newfiObject.user.userRole.roleCd == "REALTOR") {
+function userIsRealtor(){
+	if(newfiObject.user.userRole.roleCd=="REALTOR"){
 		return true;
 	}
 	return false;
@@ -1168,64 +1183,61 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Credit Decision",
 			loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
-	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
-		if (loanDetails.loanType.uploadedFiles != undefined) {
-			var purchaseContainer = $("<div>").attr({
-				"class" : "clearfix"
-			});
-
-			var url = "readFileAsStream.do?uuid="
-				+ loanDetails.loanType.uploadedFiles.uuidFileId
-				+ "&isThumb=0";
-			
-						appendLoanDetailsRow("Purchase Contract", "Click here to view", true,url);
-
-			var dateContainer = $("<div>").attr({
-				"class" : "dateContainer float-left clearfix"
-			});
-
-			var label = $("<div>").attr({
-				"class" : "av-loan-details-row-lc datelabel float-left"
-			}).html("Set expiry date");
-			var dob = "";
-			if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
-				dob = "";
-			}
-			var dobInput = $('<input>').attr({
-				"class" : "prof-form-input date-picker float-left",
-				"placeholder" : "MM/DD/YYYY",
-				"value" : dob,
-				"id" : "dobID"
-			}).datepicker({
-				orientation : "top auto",
-				autoclose : true
-			}).on('show', function(e) {
-				var $popup = $('.datepicker');
-				$popup.click(function() {
-					return false;
-				});
-			});
-			var dobInputContainer = $('<div>').attr({
-				"class":"av-loan-details-row-rc datelabel float-left"
-			});
-			dobInputContainer.append(dobInput);
-			dateContainer.append(label).append(dobInputContainer);
-			purchaseContainer.append(dateContainer);
-
-			$('#av-loan-details-container').append(purchaseContainer);
-		}else{
-			appendLoanDetailsRow("Purchase Contract", "Upload Now", true,"#lp-step4");
-			
+	if(loanDetails.userLoanStatus.loanPurpose == "Purchase" &&  loanDetails.loanType.uploadedFiles != undefined){
+		
+		var purchaseContainer = $("<div>").attr({
+					"class" : "clearfix"
+		});
+		
+		var documentLinkContainer = $("<div>").attr({
+					"class" : "documentLinkContainer float-left"
+		});
+		
+		var documentLink  = $("<a>").attr({
+					"href" : "readFileAsStream.do?uuid="+ loanDetails.loanType.uploadedFiles.uuidFileId+"&isThumb=0",
+					"target" : "_blank"
+		}).html("Document Link");
+		
+		documentLinkContainer.append(documentLink);
+		
+		var dateContainer = $("<div>").attr({
+						"class" : "dateContainer float-left clearfix"
+		});
+		
+		var label = $("<div>").attr({
+				"class" : "datelabel float-left"
+		}).html("Set expiry date : ");
+		var dob = "";
+		if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
+			dob = "";
 		}
-
+		var dobInput = $('<input>').attr({
+			"class" : "prof-form-input date-picker float-left",
+			"placeholder" : "MM/DD/YYYY",
+			"value" : dob,
+			"id" : "dobID"
+		}).datepicker({
+			orientation : "top auto",
+			autoclose : true
+		}).on('show', function(e) {
+			var $popup = $('.datepicker');
+			$popup.click(function() {
+				return false;
+			});
+		});
+		dateContainer.append(label).append(dobInput);
+		purchaseContainer.append(documentLinkContainer).append(dateContainer);
+		
+		$('#av-loan-details-container').append(purchaseContainer);
+		
 	}
-
+	
 	appendCustomerEditProfilePopUp();
 
 }
 
 // Function to append loan details row
-function appendLoanDetailsRow(label, value, isLink,linkUrl) {
+function appendLoanDetailsRow(label, value, isLink) {
 	var row = $('<div>').attr({
 		"id" : "ld-" + convertStringToId(label),
 		"class" : "av-loan-details-row clearfix"
@@ -1240,17 +1252,6 @@ function appendLoanDetailsRow(label, value, isLink,linkUrl) {
 
 	if (isLink) {
 		rightCol.addClass('loan-detail-link');
-		if(linkUrl){
-			rightCol.click(function(e){
-				event.stopPropagation();
-				if(linkUrl.substring(0, 1)=="#" ){
-					$(linkUrl).click();	
-				}else{
-					window.open(linkUrl, '_blank');
-				}
-				 
-			});
-		}
 	}
 
 	row.append(leftCol).append(rightCol);
@@ -1441,8 +1442,8 @@ function paintUserNameDropDown(values, hideAddUser) {
 								console.log("User id : " + userID);
 								hideUserNameDropDown();
 								hideMilestoneAddTeamMemberPopup(); // For
-								// milestone
-								// view
+																	// milestone
+																	// view
 								$('#add-member-input').val("");
 								if (newfiObject.user.userRole.roleCd == "CUSTOMER")
 									addUserToLoanTeam(input,
@@ -2354,7 +2355,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 
 	context.hideCreateCompanyPopup = function() {
 		$('#create-hoi-company-popup').hide();
-		$('#ms-add-member-popup').hide();
+		$('#ms-add-member-popup').hide();	
 	}
 
 	context.addCompany = function(callback) {
@@ -2375,15 +2376,13 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 					homeOwnInsID : response.resultObject.id
 				};
 				if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-					addUserToLoanTeam(input, newfiObject.user.defaultLoanId,
-							function() {
-								ob.hideCreateCompanyPopup();
-							});
+					addUserToLoanTeam(input, newfiObject.user.defaultLoanId,function(){
+						ob.hideCreateCompanyPopup();
+					});
 				else
-					addUserToLoanTeam(input, selectedUserDetail.loanID,
-							function() {
-								ob.hideCreateCompanyPopup();
-							});
+					addUserToLoanTeam(input, selectedUserDetail.loanID,function(){
+						ob.hideCreateCompanyPopup();
+					});
 			}
 
 		});
@@ -2617,15 +2616,13 @@ function getCreateTitleCompanyContext(loanID) {
 					titleCompanyID : response.resultObject.id
 				};
 				if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-					addUserToLoanTeam(input, newfiObject.user.defaultLoanId,
-							function() {
-								ob.hideCreateTitleCompanyPopup();
-							});
+					addUserToLoanTeam(input, newfiObject.user.defaultLoanId,function(){
+						ob.hideCreateTitleCompanyPopup();
+					});
 				else
-					addUserToLoanTeam(input, selectedUserDetail.loanID,
-							function() {
-								ob.hideCreateTitleCompanyPopup();
-							});
+					addUserToLoanTeam(input, selectedUserDetail.loanID,function(){
+						ob.hideCreateTitleCompanyPopup();
+					});
 				/* ob.addCompanyToTeamList(); */
 			}
 
@@ -2793,63 +2790,64 @@ function appendCreateUserPopupDOB() {
  * Functions for agent view needs list page
  */
 
-// function paintAgentNeedsListPage() {
-// appendDocumentToolTip();
-// appendCustomerDetailHeader();
-// if(!userIsRealtor()){
-// appendInitialNeedsListWrapper();
-// }
+//function paintAgentNeedsListPage() {
+//	appendDocumentToolTip();
+//	appendCustomerDetailHeader();
+//	if(!userIsRealtor()){
+//		appendInitialNeedsListWrapper();	
+//	}
 //	
-// paintUploadNeededItemsPage();
-// }
+//	paintUploadNeededItemsPage();
+//}
 //
-// function appendInitialNeedsListWrapper() {
-// var wrapper = $('<div>').attr({
-// "id" : "initial-needs-wrapper",
-// "class" : "initial-needs-wrapper"
-// });
+//function appendInitialNeedsListWrapper() {
+//	var wrapper = $('<div>').attr({
+//		"id" : "initial-needs-wrapper",
+//		"class" : "initial-needs-wrapper"
+//	});
 //
-// var header = $('<div>').attr({
-// "class" : "initial-needs-header"
-// }).html("initial need list");
+//	var header = $('<div>').attr({
+//		"class" : "initial-needs-header"
+//	}).html("initial need list");
 //
-// var container = $('<div>').attr({
-// "class" : "initial-needs-container clearfix"
-// });
+//	var container = $('<div>').attr({
+//		"class" : "initial-needs-container clearfix"
+//	});
 //
-// var incomeDocContainer = getNeedsListDocumentContainer("income",
-// docData.income).addClass('float-left');
+//	var incomeDocContainer = getNeedsListDocumentContainer("income",
+//			docData.income).addClass('float-left');
 //
-// var propertyDocContainer = getNeedsListDocumentContainer("property",
-// docData.property).addClass('float-right');
+//	var propertyDocContainer = getNeedsListDocumentContainer("property",
+//			docData.property).addClass('float-right');
 //
-// var assetDocContainer = getNeedsListDocumentContainer("liabilities",
-// docData.asset).addClass('float-right');
+//	var assetDocContainer = getNeedsListDocumentContainer("liabilities",
+//			docData.asset).addClass('float-right');
 //
-// var otherDocContainer = getNeedsListDocumentContainer("other",
-// docData.other).addClass('float-left');
+//	var otherDocContainer = getNeedsListDocumentContainer("other",
+//			docData.other).addClass('float-left');
 //
-// container.append(incomeDocContainer).append(propertyDocContainer).append(
-// assetDocContainer).append(otherDocContainer);
+//	container.append(incomeDocContainer).append(propertyDocContainer).append(
+//			assetDocContainer).append(otherDocContainer);
 //
-// wrapper.append(header).append(container);
-// $('#center-panel-cont').append(wrapper);
+//	wrapper.append(header).append(container);
+//	$('#center-panel-cont').append(wrapper);
 //
-// appendAddNeedsContainer();
+//	appendAddNeedsContainer();
 //
-// // append save button
-// var savebtnWrapper = $('<div>').attr({
-// "class" : "need-list-save-btn-wrapper"
-// });
+//	// append save button
+//	var savebtnWrapper = $('<div>').attr({
+//		"class" : "need-list-save-btn-wrapper"
+//	});
 //
-// var savebtn = $('<div>').attr({
-// "class" : "need-list-save-btn"
-// }).html("Save Needs");
+//	var savebtn = $('<div>').attr({
+//		"class" : "need-list-save-btn"
+//	}).html("Save Needs");
 //
-// savebtnWrapper.append(savebtn);
+//	savebtnWrapper.append(savebtn);
 //
-// $('#center-panel-cont').append(savebtnWrapper);
-// }
+//	$('#center-panel-cont').append(savebtnWrapper);
+//}
+
 function getNeedsListDocumentContainer(docType, documents) {
 	var docWrapper = $('<div>').attr({
 		"class" : "initial-list-doc-wrapper",
@@ -3109,7 +3107,7 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 	teamMemberRow.parent().parent().remove();
 }
 
-function addUserToLoanTeam(input, loanID, callback) {
+function addUserToLoanTeam(input, loanID,callback) {
 
 	var addData = $('.add-team-mem-wrapper').data('additionalData');
 	var userID = input.userID == undefined ? 0 : input.userID;
@@ -3126,18 +3124,18 @@ function addUserToLoanTeam(input, loanID, callback) {
 
 					var user = JSON.parse(data.resultObject);
 					data.resultObject = user;
-					onReturnOfAddUserToLoanTeam(data, callback);
+					onReturnOfAddUserToLoanTeam(data,callback);
 				});
 		return;
 	}
 
 	ajaxRequest("rest/loan/" + loanID + "/team?" + queryString, "POST", "json",
-			{}, function(response) {
-				onReturnOfAddUserToLoanTeam(response, callback)
+			{}, function(response){
+				onReturnOfAddUserToLoanTeam(response,callback)
 			});
 }
 
-function onReturnOfAddUserToLoanTeam(data, callback) {
+function onReturnOfAddUserToLoanTeam(data,callback) {
 
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
@@ -3207,7 +3205,7 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 		parentContainer.addClass("m-in-progress");
 		container.append(getMilestoneTeamMembeTableRow(userToAdd));
 	}
-	if (callback) {
+	if(callback){
 		callback();
 	}
 }
@@ -3241,7 +3239,7 @@ function searchUsersBasedOnCode(name, code) {
 	restURL += "&companyName=" + name;
 
 	ajaxRequest(restURL, "GET", "json", {}, function(data) {
-		onReturnSearchBasedOnCodeToAddToLoanTeam(data, id);
+				onReturnSearchBasedOnCodeToAddToLoanTeam(data, id);
 	}, true);
 
 }
