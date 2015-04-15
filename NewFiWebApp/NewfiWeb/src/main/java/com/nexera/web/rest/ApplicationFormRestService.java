@@ -13,6 +13,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +52,6 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
-import com.nexera.web.constants.WebConstants;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -61,6 +61,9 @@ public class ApplicationFormRestService {
 	        .getLogger(ApplicationFormRestService.class);
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+
+	@Value("${muleUrlForLoan}")
+	private String muleLoanUrl;
 
 	HashMap<String, Integer> cache = new HashMap<String, Integer>();
 
@@ -441,6 +444,7 @@ public class ApplicationFormRestService {
 			 * LOG.info(
 			 * "cache.putcustomerSpouseDetail"+loanAppForm.getCustomerspousedetail
 			 * ().getId()); }
+			 * 
 			 * 
 			 * 
 			 * 
@@ -1015,8 +1019,8 @@ public class ApplicationFormRestService {
 			HttpHeaders headers = new HttpHeaders();
 			HttpEntity request = new HttpEntity(appFormData, headers);
 			RestTemplate restTemplate = new RestTemplate();
-			String returnedResponse = restTemplate.postForObject(
-			        WebConstants.MULE_SERVER_URL, request, String.class);
+			String returnedResponse = restTemplate.postForObject(muleLoanUrl,
+			        request, String.class);
 			JSONObject jsonObject = new JSONObject(returnedResponse);
 			LOG.info("Response Returned from Rest Service is"
 			        + jsonObject.get("responseMessage").toString());

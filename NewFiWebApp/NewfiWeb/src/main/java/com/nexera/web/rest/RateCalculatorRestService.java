@@ -16,6 +16,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,6 @@ import com.google.gson.Gson;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
-import com.nexera.web.constants.WebConstants;
 import com.nexera.web.rest.util.TeaserRateHandler;
 
 @RestController
@@ -43,6 +43,9 @@ public class RateCalculatorRestService {
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(RateCalculatorRestService.class);
+
+	@Value("${muleUrlForLoan}")
+	private String muleLoanUrl;
 
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 	public @ResponseBody String getTeaserRate(String teaseRate) {
@@ -189,8 +192,8 @@ public class RateCalculatorRestService {
 			HttpHeaders headers = new HttpHeaders();
 			HttpEntity request = new HttpEntity(appFormData, headers);
 			RestTemplate restTemplate = new RestTemplate();
-			String returnedUser = restTemplate.postForObject(
-			        WebConstants.MULE_SERVER_URL, request, String.class);
+			String returnedUser = restTemplate.postForObject(muleLoanUrl,
+			        request, String.class);
 			JSONObject jsonObject = new JSONObject(returnedUser);
 			LOG.info("Response Returned from Rest Service is"
 			        + jsonObject.get("responseMessage").toString());
