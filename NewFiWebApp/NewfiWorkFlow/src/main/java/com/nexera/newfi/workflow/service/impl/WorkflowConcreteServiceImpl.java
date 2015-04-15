@@ -184,6 +184,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			loanMilestoneMaster.setId(masterMileStoneId);
 			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
 			mileStone.setComments(comments);
+			mileStone.setStatusUpdateTime(new Date());
 			loanService.saveLoanMilestone(mileStone);
 			status = WorkItemStatus.COMPLETED.getStatus();
 			return status;
@@ -239,7 +240,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			if (loanNeedsList != null
 			        && loanNeedsList.getUploadFileId() != null) {
 				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-				        loanNeedsList.getUploadFileId().getS3path());
+				        loanNeedsList.getUploadFileId().getUuidFileId());
 			}
 		}
 		return utils.getJsonStringOfMap(map);
