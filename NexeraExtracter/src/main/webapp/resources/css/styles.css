@@ -26,6 +26,10 @@
 		format('truetype');
 }
 
+.container{
+	width: 8.5in !important;
+}
+
 * {
 	font-family: 'OpenSans';
 	font-weight: normal;
@@ -108,8 +112,8 @@ a,a:hover,a:visited {
 .rate-table-wrapper-cont {
     float:left;
     width: 33.33%;
-    height: 300px;
-    padding: 0 40px;
+    height: 270px;
+    padding: 0 10px;
 }
 
 .th,.td {
@@ -117,6 +121,7 @@ a,a:hover,a:visited {
     width: 20%;
     text-align: center;
     padding: 1px 0;
+    font-size: 10px;
 }
 
 .tr{
@@ -128,6 +133,7 @@ a,a:hover,a:visited {
     font-family: 'opensanssemibold';
     background: #004F6E;
     color: #fff;
+    font-size: 11px;
 }
 
 .th{
@@ -179,12 +185,12 @@ a,a:hover,a:visited {
 }
 
 .rate-table-container{
-	height:260px;
+	height: 240px;
 	border:1px solid #004F6E;
 }
 
 .table-container{
-	margin: 0 -40px;
+	margin: 0 -10px;
 }
 
 .price-table-wrapper-header {
@@ -197,9 +203,11 @@ a,a:hover,a:visited {
 }
 
 .price-table-th,.price-table-td {
-	font-size:11px;
-	width:63px;
-    display: table-cell;
+	font-size: 10px;
+	width: 55px;
+    
+	height: 14px;
+	display: table-cell;
     text-align: center;
 }
 
@@ -217,7 +225,7 @@ a,a:hover,a:visited {
     right: 0;
     top: 0;
     width: 0;
-    height: 17px;
+    height: 16px;
     content: " ";
     border: 1px solid black;
 }
@@ -249,7 +257,7 @@ a,a:hover,a:visited {
 .price-table-row.price-table-header-row {
     border: 2px solid black;
     border-bottom:none;
-    margin-left: 63px;
+    margin-left: 55px;
 }
 
 .price-tr-wrapper {
@@ -262,13 +270,14 @@ a,a:hover,a:visited {
 }
 
 .ltv-desc-table-td {
-	display: inline-block;
+	display: table-cell;
+	font-size: 10px;
 	height: 17px;
 	font-family: 'opensanssemibold';
 }
 
 .ltv-desc-table-td:first-child{
-	width: 260px;
+	width: 200px;
 	padding-left: 5px;
 }
 
@@ -357,15 +366,16 @@ a,a:hover,a:visited {
 }
 
 table.adjuster-table{
+    border: none;
 	
 }
 
 .adjuster-table td,.adjuster-table th{
-	border:2px solid black;
+	border: 2px solid black;
 	text-align: center;
 	vertical-align: bottom;
 	font-size: 11px;
-	width: 63px;
+	width: 55px;
 }
 
 .adjuster-table th{
@@ -375,7 +385,7 @@ table.adjuster-table{
 }
 
 .adjuster-table th:first-child{
-	width: 120px;
+	width: 55px;
 }
 
 .th1 {

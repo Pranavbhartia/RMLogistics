@@ -1,5 +1,8 @@
 package com.nexera.web.controller;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,7 +54,8 @@ public class FileUploadController {
 			
 		} else {
 			fileURL = uplList.getS3ThumbPath();
-			nexeraUtility.getStreamForThumbnailFromS3Path(response, fileURL);
+			byte[] bytes = s3FileUploadServiceImpl.getInputStreamOfFile(fileURL);
+			nexeraUtility.getStreamForThumbnailFromS3Path(response, bytes);
 		}
 
 	}

@@ -11,6 +11,7 @@ package com.nexera.core.service.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -255,6 +257,55 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 		}
 
 	}
+	
+	
+	public byte[] getInputStreamOfFile(String fileUrl)
+			throws Exception {
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+		
+		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
+		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
+		String key = fileUrl.replace(s3BaseUrl + uniqueBucketName, "");
+		key = key.substring(1, key.length());
+		GetObjectRequest getObjectRequest = new GetObjectRequest(
+				uniqueBucketName, key);
+		S3Object s3Object = s3.getObject(getObjectRequest);
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		
+		try {
+			
+			inputStream = new BufferedInputStream(s3Object.getObjectContent());
+			byte[] buffer = new byte[8192];
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			int bytesRead;
+			try {
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					baos.write(buffer, 0, bytesRead);
+				}
+			} catch (IOException e) {
+				// TODO call exception class
+			}
+			return baos.toByteArray();
+			
+		}/* catch (IOException e) {
+
+		throw new Exception(e);
+	} */finally {
+		if (inputStream != null) {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error closing Amazon stream while downloading: "
+						+ fileUrl);
+			}
+		}
+	}
+
+}
+
 	
 	
 	public static long generateRandomString() {
