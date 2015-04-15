@@ -239,8 +239,8 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		}).html("Please Select");
 	var userTypeSel = $('<div>').attr({
 		"id" : "admin-add-memeber-user-type",
-		"class" : "add-member-sel-admin float-right",
-		"placeholder":"Please Select"
+		"class" : "add-member-sel-admin float-right"
+
 	}).on('click',function(e){
 		e.stopImmediatePropagation();
 	if($('#admin-add-usertype-dropdown-cont').css("display")=="block"){
@@ -527,10 +527,7 @@ var popUpWrapper = $('<div>').attr({
 					}
 				}
 				;
-				
-               /*alert();
-               alert( $("#admin-add-memeber-user-type").attr(
-				"internalroleid"));*/
+
 				//TODO  to create function to call create user rest 		
 				createUserFromAdmin(user);
 
