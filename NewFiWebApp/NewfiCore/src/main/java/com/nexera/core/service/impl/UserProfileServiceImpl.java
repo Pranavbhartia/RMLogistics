@@ -50,6 +50,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -73,7 +74,10 @@ import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.PropertyTypeMasterVO;
+import com.nexera.common.vo.PurchaseDetailsVO;
 import com.nexera.common.vo.RealtorDetailVO;
+import com.nexera.common.vo.RefinanceVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -1006,12 +1010,38 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 
-			loanAppFormVO.setPropertyTypeMaster(loaAppFormVO
-			        .getPropertyTypeMaster());
 
-			loanAppFormVO.setRefinancedetails(loaAppFormVO
-			        .getRefinancedetails());
-			loanAppFormVO.setPurchaseDetails(loaAppFormVO.getPurchaseDetails());
+			
+			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
+			
+			propertyTypeMasterVO.setHomeZipCode(loaAppFormVO.getPropertyTypeMaster().getHomeZipCode());
+			propertyTypeMasterVO.setHomeWorthToday(loaAppFormVO.getPropertyTypeMaster().getHomeWorthToday());
+			propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO.getPropertyTypeMaster().getPropertyInsuranceCost());
+			propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO.getPropertyTypeMaster().getPropertyTaxesPaid());
+			
+			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
+			
+            RefinanceVO refinanceVO = new RefinanceVO();
+            refinanceVO.setRefinanceOption(loaAppFormVO.getRefinancedetails().getRefinanceOption());
+            refinanceVO.setMortgageyearsleft(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
+            refinanceVO.setCashTakeOut(loaAppFormVO.getRefinancedetails().getCashTakeOut());
+            refinanceVO.setCurrentMortgageBalance(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
+            refinanceVO.setCurrentMortgagePayment(loaAppFormVO.getRefinancedetails().getCurrentMortgagePayment());
+            refinanceVO.setIncludeTaxes(loaAppFormVO.getRefinancedetails().isIncludeTaxes());
+            
+			loanAppFormVO.setRefinancedetails(refinanceVO);		
+
+			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
+			purchaseDetailsVO.setLivingSituation(loaAppFormVO.getPurchaseDetails().getLivingSituation());
+			purchaseDetailsVO.setHousePrice(loaAppFormVO.getPurchaseDetails().getHousePrice());
+			purchaseDetailsVO.setLoanAmount(loaAppFormVO.getPurchaseDetails().getLoanAmount());
+			purchaseDetailsVO.setTaxAndInsuranceInLoanAmt(loaAppFormVO.getPurchaseDetails().isTaxAndInsuranceInLoanAmt());
+			purchaseDetailsVO.setEstimatedPrice(loaAppFormVO.getPurchaseDetails().getEstimatedPrice());
+			purchaseDetailsVO.setBuyhomeZipPri(loaAppFormVO.getPurchaseDetails().getBuyhomeZipPri());
+			
+			loanAppFormVO.setPurchaseDetails(purchaseDetailsVO);
+			
+			
 			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 
