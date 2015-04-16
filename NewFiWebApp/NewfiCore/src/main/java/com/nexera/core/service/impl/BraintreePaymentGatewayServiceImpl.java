@@ -29,6 +29,7 @@ import com.braintreegateway.exceptions.NotFoundException;
 import com.braintreegateway.exceptions.UnexpectedException;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.TransactionDetailsDao;
 import com.nexera.common.entity.Loan;
@@ -342,9 +343,11 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 	@Override
 	@Transactional
-	public void checkAndUpdateTransactions(TransactionDetails transactionDetails)
+	public String checkAndUpdateTransactions(
+	        TransactionDetails transactionDetails)
 	        throws NoRecordsFetchedException, InvalidInputException {
 
+		String paymentStatus = WorkflowDisplayConstants.PAYMENT_PENDING;
 		if (transactionDetails.getTransaction_id() == null) {
 			throw new InvalidInputException(
 			        "The transaction details object has empty transaction id entity");
@@ -379,7 +382,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			LOG.error(
 			        "UnexpectedException has occured while fetching transaction details from Braintree. Message : "
 			                + e.getMessage(), e);
-			// throw e;
+			throw e;
 		}
 
 		// Now we check the different possible cases of the transaction status
@@ -414,6 +417,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
 			        receiptPdfService.generateReceipt(LoanApplicationFee
 			                .convertEntityToVO(applicationFee)));
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_SUCCESSFUL;
 		} else if (transaction.getStatus() == Transaction.Status.AUTHORIZATION_EXPIRED
 		        || transaction.getStatus() == Transaction.Status.FAILED
 		        || transaction.getStatus() == Transaction.Status.GATEWAY_REJECTED
@@ -431,14 +435,15 @@ public class BraintreePaymentGatewayServiceImpl implements
 			transactionDetails
 			        .setStatus(CommonConstants.TRANSACTION_STATUS_FAILED);
 			loanDao.update(transactionDetails);
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_FAILURE;
 		} else {
 			// We dont do anything and just poll it the next time to check the
 			// status as the transaction is pending.
 			LOG.debug("The transaction with id : "
 			        + transactionDetails.getTransaction_id()
 			        + " is pending for settlement");
-
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_PENDING;
 		}
-
+		return paymentStatus;
 	}
 }

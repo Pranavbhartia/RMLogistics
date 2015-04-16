@@ -42,4 +42,10 @@ public class WorkflowDisplayConstants {
 
 	public static final String QC_STATUS = "decision";
 
+	public static final String PAYMENT_SUCCESSFUL = "success";
+
+	public static final String PAYMENT_FAILURE = "failure";
+
+	public static final String PAYMENT_PENDING = "pending";
+
 }
