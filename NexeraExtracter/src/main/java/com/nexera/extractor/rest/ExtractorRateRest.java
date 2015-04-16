@@ -25,6 +25,7 @@ public class ExtractorRateRest {
 	public @ResponseBody String readFilesFromDestinationRest() {
 
 		final File folder = new File("C:\\apps\\LQB\\Price");
+		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 
 		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list);
