@@ -906,7 +906,7 @@ function paintMyLoansView() {
 	scrollToTop();
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
-	$('.lp-item').removeClass('lp-item-active');
+	//$('.lp-item').removeClass('lp-item-active');
 	$('#lp-talk-wrapper').addClass('lp-item-active');
 	var rightPanelCont = $('<div>').attr({
 		"class" : "right-panel float-left"
