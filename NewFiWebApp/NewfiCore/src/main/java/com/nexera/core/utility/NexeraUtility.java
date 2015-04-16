@@ -372,7 +372,6 @@ public class NexeraUtility {
 
 		} catch (Exception e) {
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
-			e.printStackTrace();
 			throw new FatalException("Cannot convert image to PDF");
 		}
 		return filepath;
@@ -449,14 +448,15 @@ public class NexeraUtility {
 			document.close();
 		} catch (Exception e) {
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
-			e.printStackTrace();
+
 		} finally {
 			if (document != null) {
 				try {
 					document.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LOGGER.error("Exception in convertImageToPDF : "
+					        + e.getMessage());
 				}
 			}
 		}
@@ -558,7 +558,7 @@ public class NexeraUtility {
 			out.close();
 			in.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 		} finally {
 			out.close();
 			in.close();

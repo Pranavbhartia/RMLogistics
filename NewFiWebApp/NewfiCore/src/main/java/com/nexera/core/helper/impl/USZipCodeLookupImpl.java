@@ -8,8 +8,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class USZipCodeLookupImpl implements USZipCodeLookup {
 	@Autowired
 	@Qualifier("genericDaoImpl")
 	private GenericDao genericDao;
+
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(USZipCodeLookupImpl.class);
 
 	@Override
 	@Transactional
@@ -131,15 +135,15 @@ public class USZipCodeLookupImpl implements USZipCodeLookup {
 
 			} catch (JsonGenerationException e) {
 
-				e.printStackTrace();
+				LOGGER.error("Exception caught " + e.getMessage());
 
 			} catch (JsonMappingException e) {
 
-				e.printStackTrace();
+				LOGGER.error("Exception caught " + e.getMessage());
 
 			} catch (IOException e) {
 
-				e.printStackTrace();
+				LOGGER.error("Exception caught " + e.getMessage());
 
 			}
 
@@ -153,7 +157,7 @@ public class USZipCodeLookupImpl implements USZipCodeLookup {
 			codeLookupImpl.saveZipCodeInDB();
 		} catch (NonFatalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 	}
 
