@@ -453,11 +453,11 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 						}
 						else
 						{
-							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
-								//||ob.workItem.workflowItemType=="VIEW_APPRAISAL"
+							if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS" ||ob.workItem.workflowItemType=="MANAGE_PROFILE") {
 								if(!ob.workItem.stateInfo)
 									ob.workItem.stateInfo=0;
 								if(ob.workItem.stateInfo>=0){
+									ob.workItem.stateInfo=Math.round(ob.workItem.stateInfo);
 									var progressBarCont = $('<div>').attr({
 										"class" : "clearfix"
 									});
