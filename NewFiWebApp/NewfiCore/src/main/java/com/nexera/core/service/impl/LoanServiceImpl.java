@@ -705,6 +705,7 @@ public class LoanServiceImpl implements LoanService {
 		 */
 
 		if (!defaultManagerAdded) {
+
 			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
 			if (defaultUser != null) {
