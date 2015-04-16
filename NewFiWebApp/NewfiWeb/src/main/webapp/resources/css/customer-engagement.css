@@ -18,6 +18,10 @@
 	text-transform: capitalize;
 }
 
+.ce-ques-option:hover {
+	background: #F6914D;
+}
+
 .ce-ques-options-container {
 	margin: 10px 0;
 }
@@ -60,7 +64,6 @@
 	text-align: center;
 	font-size: 20px;
 	font-family: 'opensanssemibold';
-	text-transform: capitalize;
 	cursor: pointer;
 }
 
@@ -115,7 +118,7 @@
 }
 
 .ce-rate-icon {
-    height: 170px;
+    height: 130px;
     margin-top: 100px;
     background: url(../images/rate_logo_green.png) no-repeat center;
 }
@@ -290,4 +293,15 @@
 
 .ce-refinance-wrapper .rt-slider{
 	width: 520px;
+}
+
+.ce-get-started {
+    text-align: center;
+    font-size: 22px;
+    margin-top: 15px;
+    font-family: 'opensanssemibold';
+}
+
+.ce-option:hover,.ce-save-btn:hover,.app-option-choice:hover{
+	background: #F6914D;
 }

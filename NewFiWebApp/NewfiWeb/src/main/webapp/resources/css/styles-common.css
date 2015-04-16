@@ -142,3 +142,37 @@ input.reg-radio {
   border: none;
   width: 100%;
 }
+
+.reg-input-row {
+    height: 45px;
+    line-height: 45px;
+    margin: 20px 0;
+}
+
+.reg-row-lc,.reg-row-rc {
+    width: 50%;
+}
+
+.reg-row-lc {
+    text-align: right;
+    padding-right: 15px;
+    font-size: 15px;
+}
+
+.reg-row-rc{
+	padding-left: 15px;
+}
+
+.reg-input-row .reg-input-cont{
+	  width: 225px;
+	  margin: 0;
+}
+
+.reg-input-row .reg-lname{
+	margin-left: 20px;
+k}
+
+.reg-input-row .reg-fname,
+.reg-input-row .reg-lname{
+	width: 175px;
+}

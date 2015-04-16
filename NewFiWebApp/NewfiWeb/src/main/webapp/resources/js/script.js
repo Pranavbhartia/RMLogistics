@@ -996,7 +996,7 @@ function getLoanSummaryWrapper(lqbData, appUserDetails) {
     } else if (loanTypeText == "PUR") {
         container = getLoanSummaryContainerPurchase(lqbData, appUserDetails);
     }
-    var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
+    var bottomText = getHeaderText("Rate and APR quoted are based on the information you provided are not guaranteed and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified");
     var rateWrapper = getLoanSliderWrapper(lqbData,appUserDetails);
     parentWrapper.append(header).append(container).append(rateWrapper).append(bottomText);
     
@@ -1064,7 +1064,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",appUserDetails);
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal & interest payment");
-    var rcRow6 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", "$ "+totalEstMonthlyPayment,"totalEstMonthlyPaymentId");
+    var rcRow6 = getLoanSummaryLastRow("Estimated<br/>Monthly Payment", "$ "+totalEstMonthlyPayment,"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4).append(rcRow6);
     container.append(leftCol).append(rightCol);
     return container; 
@@ -1377,7 +1377,7 @@ function getClosingCostSummaryContainer() {
         "class": "closing-cost-wrapper"
     });
     var header = getClosingCostHeader("CLOSING COST SUMMARY");
-    var descText = getHeaderText("Based on the loan you selected your application, credit report and the estimated closing date of ");
+    var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
     var closingDate = $('<span>').attr({
         "class": "semibold"
     }).html("02/09/2015");
@@ -1398,14 +1398,14 @@ function getClosingCostTopConatiner() {
     var wrapper = $('<div>').attr({
         "class": "closing-cost-cont-wrapper-top"
     });
-    var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
+    var heading = getClosingCostHeadingCont("Estimated Closing Costs");
     var container1 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon1 = getClosingCostConatinerHeader("Estimated Lender Cost");
+    var headerCon1 = getClosingCostConatinerHeader("Estimated Lender Costs");
     var row1Con1 = getClosingCostContainerRow(1, "Lender Fee", "$ 1,495.00");
     var row2Con1 = getClosingCostContainerRow(2, "Credit/Charge", "$ 5,128.75");
-    var row3Con1 = getClosingCostContainerLastRow(3, "Total Estimated Lender Costs", "$ 6,623.75");
+    var row3Con1 = getClosingCostContainerLastRow(3, "Estimated Lender Costs", "$ 6,623.75");
     container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
@@ -1419,8 +1419,9 @@ function getClosingCostTopConatiner() {
     var row6Con2 = getClosingCostContainerRow(6, "Closing/Escrow Fee", "$ 500.00");
     var row7Con2 = getClosingCostContainerRow(7, "Recording Fee", "$ 107.00");
     var row8Con2 = getClosingCostContainerRow(8, "City/County Tax stamps", "$ 107.00");
-    var row9Con2 = getClosingCostContainerLastRow(9, "Total Estimated Third Party Costs", "$ 1,562.00");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
+    var row9Con2 = getClosingCostContainerRow(9, "Total Estimated Third Party Costs", "$ 1,562.00");
+    var row10Con2 = getClosingCostContainerLastRow(10, "Total Estimated Closing Cost", "$ 8,162.00");
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2).append(row10Con2);
     return wrapper.append(heading).append(container1).append(container2);
 }
 
@@ -1428,28 +1429,28 @@ function getClosingCostBottomConatiner() {
     var wrapper = $('<div>').attr({
         "class": "closing-cost-cont-wrapper-bottom no-border-bottom"
     });
-    var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
+    //var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
     var container1 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon1 = getClosingCostConatinerHeader("Prepaids");
+    var headerCon1 = getClosingCostConatinerHeader("Estimated Prepaids");
     var row1Con1 = getClosingCostContainerRowWithSubText(1, "Interest", "$ 699.40","");
-    var row2Con1 = getClosingCostContainerRow(2, "Haz Ins", "$ 455.00");
+    var row2Con1 = getClosingCostContainerRow(2, "Homeowners Insurance", "$ 455.00");
     var row3Con1 = getClosingCostContainerLastRow(3, "Total Prepaids", "$ 699.40");
     container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Reserves Deposited with Lender");
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Reserves Deposited in Escrow Account");
     var row1Con2 = getClosingCostContainerRowWithSubText(1, "Tax Reserve - Estimated 2 Month(s)", "$ 1,072.00", "(Varies based on calendar month of closing)");
     var row2Con2 = getClosingCostContainerRowWithSubText(2, "Haz ins. Reserve - Estimated 2 Month(s)", "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
     var row3Con2 = getClosingCostContainerRowWithSubText(3, "Mtg ins. Reserve - Estimated 2 Month(s)", "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
-    var row4Con2 = getClosingCostContainerLastRow(4, "Total Estimated Reserves Deposited with Lender", "$ 3,216.00");
+    var row4Con2 = getClosingCostContainerLastRow(4, "Total Estimated Reserves Deposited in Escrow Account", "$ 3,216.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2);
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row"
-    }).html("Note :-Taxes for both 1st and 2nd half installments must be paid or will be collected at closing");
-    return wrapper.append(heading).append(container1).append(container2).append(bottomSubText);
+    }).html("Note :-Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+    return wrapper.append(container1).append(container2).append(bottomSubText);
 }
 
 function getClosingCostConatinerHeader(text) {
@@ -1521,7 +1522,7 @@ function getClosingCostHeadingCont(text) {
     return heading;
 }
 
-function getFileDragAndDropContainer() {
+function getFileDragAndDropContainer(loanEmailID) {
     var container = $('<div>').attr({
         "id": "drop-zone",
         "class": "file-drag-drop-container"
@@ -1538,7 +1539,7 @@ function getFileDragAndDropContainer() {
     }).html("Select Files to Upload");
     var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
-    }).html("or, E-Mail Attachment To : 654321@loan.newfi.com");
+    }).html("or, E-Mail Attachment To : "+loanEmailID);
     return container.append(fileUploadIcn).append(textCont1).append(textCont1Mobile).append(textCont2);
 }
 
