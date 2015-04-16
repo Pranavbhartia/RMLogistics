@@ -130,12 +130,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            //paintSelecedOption();
 	        } else if (secondary == 3) {
 	            // fix your rate page
-	        	
-	        	
-	        	
-	        	
-	           
-	            if(!doNothing){
+	        	 if(!doNothing){
 /*	                var userId=selectedUserDetail==undefined?newfiObject.user.id:selectedUserDetail.id;
 	                getAppDetailsForUser(userId,function(appUserDetails){
 	                   createLoan(appUserDetails)

@@ -167,12 +167,16 @@ a,a:hover,a:visited {
 
 .header-txt {
 	max-width: 75%;
-	width: 600px;
+	width: 522px;
 	margin-top: 14px;
 	font-size: 10px;
 	line-height: 11px;
 	font-weight: bold;
 	color: rgb(66, 29, 26);
+}
+
+.printIcon{
+	margin-left:290px;
 }
 
 .table-wrapper-header {

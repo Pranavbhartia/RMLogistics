@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.nexera.extractor.entity.FileExtractorResposne;
 import com.nexera.extractor.entity.FileProductPointRate;
 import com.nexera.extractor.entity.UIEntity;
 import com.nexera.extractor.utility.Utility;
@@ -24,14 +25,16 @@ public class ExtractorRateRest {
 	@RequestMapping("/rates")
 	public @ResponseBody String readFilesFromDestinationRest() {
 
-		final File folder = new File("C:\\apps\\LQB\\Price");
+		final File folder = new File("C:\\apps\\LQB");
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
-
-		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list,
-		        folder.lastModified());
+		Long folderLastModfied =  folder.lastModified(); 
+		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list,folderLastModfied   );
 		// utility.getCompleteProductRateList(list);
+		FileExtractorResposne fileResponse  = new FileExtractorResposne(); 
+		fileResponse.setFileDetailList(uiMap);
+		fileResponse.setFolderTimeStamp(folderLastModfied);
 		Gson gson = new Gson();
-		return gson.toJson(uiMap);
+		return gson.toJson(fileResponse);
 	}
 }

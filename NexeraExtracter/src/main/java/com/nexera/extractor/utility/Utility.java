@@ -468,7 +468,7 @@ public class Utility {
 	        List<FileProductPointRate> list, long fileTimeStamp) {
 
 		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
-		if (fromCache == null) {
+		if (fromCache != null) {
 			return fromCache;
 		} else {
 			Map<String, List<UIEntity>> lastData = new HashMap<String, List<UIEntity>>();
