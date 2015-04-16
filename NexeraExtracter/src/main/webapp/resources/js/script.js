@@ -1,7 +1,11 @@
 var tableData = [];
-
+var currentFolderTime = null;
 function paintRatesTablePage(data){
-	tableData = data;
+	currentFolderTime = data.folderTimeStamp;
+	var folderDate = new Date(currentFolderTime);
+	$("#folderCurrentTimeStamp").html(folderDate);
+	
+	tableData = data.fileDetailList;
 	console.info(data.fileName);
     $('#main-container').html('');
     var wrapper = $('<div>').attr({
@@ -308,10 +312,13 @@ function getLTVTable5(){
 	}).html("Lock Expiration");
 	tableCont.append(hedaer);
 
- 	var tableArray = [ [ "15 Day", "04.10.15"],
-		[ "30 Day", "04.27.15"],
-		[ "45 Day", "05.11.15"],
-		[ "60 Day", "05.26.15"]];
+	
+	
+ 	var tableArray = [ 
+ 	    [ getDateByNumberOfDaysFolderDays(15), "04.10.15"],
+		[ getDateByNumberOfDaysFolderDays(30), "04.27.15"],
+		[ getDateByNumberOfDaysFolderDays(45), "05.11.15"],
+		[ getDateByNumberOfDaysFolderDays(60), "05.26.15"]];
  	
  	var tableRowCont = $('<div>').attr({
  		"class" : "price-tr-wrapper"
@@ -326,6 +333,22 @@ function getLTVTable5(){
 	
 	return tableCont;
 }
+
+function addDays(theDate, days) {
+    return new Date(theDate.getTime() + days*24*60*60*1000);
+}
+
+function getDateByNumberOfDaysFolderDays(days){
+	var someDate  = addDays(new Date(currentFolderTime), days);
+	
+	var dd = someDate.getDate();
+	var mm = someDate.getMonth() + 1;
+	var y = someDate.getFullYear();
+
+	var someFormattedDate = dd + '/'+ mm + '/'+ y;
+	return someFormattedDate;
+}
+
 
 function getLTVTable6(){
 	var tableCont = $('<div>').attr({

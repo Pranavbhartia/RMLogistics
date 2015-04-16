@@ -23,7 +23,20 @@
 						PLEASE LOG INTO BLUSTREAM PORTAL TO OBTAIN LIVE LOCK
 						PRICING
 					</div>
-					<div class="float-right print" onclick="window.print()" title="print"></div>
+					<div class="float-left">
+							<div class="clearfix ">
+									<div class="float-left">
+										<div> Landing rates as of : <span id="folderCurrentTimeStamp"></span></div>
+									</div>
+									<div class="float-right printIcon" >
+										<div class="print" onclick="window.print()" title="print"></div>
+									</div>
+							</div>
+					
+					</div>
+					
+					
+					
 				</div>
 			</div>
 
