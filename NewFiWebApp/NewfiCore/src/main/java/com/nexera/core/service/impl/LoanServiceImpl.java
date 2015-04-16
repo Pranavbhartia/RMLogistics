@@ -1371,6 +1371,7 @@ public class LoanServiceImpl implements LoanService {
 
 
 	@Override
+	@Transactional
 	public String saveLoanMilestone(int loanId, int masterMileStoneId,
 	        String comments) {
 		String status = null;

@@ -66,7 +66,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			}
 			if (status != null && !status.isEmpty()) {
 				loanService.saveLoanMilestone(loanId,
-				        Milestones.APP_FEE.getMilestoneID(), status);
+				        Milestones.APP_FEE.getMilestoneID(),
+				        status);
 				makeANote(Integer.parseInt(objectMap.get(
 				        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 				        status);
@@ -100,7 +101,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .findByLoan(loanVO);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		if (loanApplicationFee.getPaymentDate() != null) {
+		if (loanApplicationFee != null && loanApplicationFee.getPaymentDate() != null) {
 			inputMap.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
 			        LoanStatus.APP_PAYMENT_SUCCESS);
 			// This means Brain Tree has approved the fee payment
@@ -115,8 +116,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .getActiveTransactionsByLoan(new Loan(loanID));
 		if (transList != null && !transList.isEmpty()) {
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-			        WorkItemStatus.STARTED.toString());
-			return WorkItemStatus.STARTED.toString();
+			        WorkItemStatus.STARTED.getStatus());
+			return WorkItemStatus.STARTED.getStatus();
 		}
 		return null;
 	}

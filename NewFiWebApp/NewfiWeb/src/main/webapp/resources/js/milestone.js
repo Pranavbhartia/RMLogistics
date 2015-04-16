@@ -3,6 +3,7 @@ var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
 var SALES_MANAGER="Sales Manager";
 var COMPLETED = 3;
+var NOT_STARTED = 0;
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -365,11 +366,15 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
-			else if (ob.workItem.workflowItemType=="APP_FEE")
+			else if (ob.workItem.workflowItemType=="APP_FEE" )
 			{
 				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				callback = showAppFee;	
+			}
+			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE" )
+			{				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -395,11 +400,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
 			
-			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE")
-			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click Here to Pay Application Fee";		
-			}
+			
 			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
 			{
 				ajaxURL = "";
@@ -529,10 +530,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 										ob.stateInfoContainer.html(" "+tempOb.status);
 								}
 							}
-							else if(ob.workItem.workflowItemType == "APP_FEE")
-								{
-								
-								}
+							
 							else{
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
 							}
@@ -1343,7 +1341,12 @@ function milestoneChildEventHandler(event) {
 	 	
 	}
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE") {
+		if (workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"].status != NOT_STARTED )
+		{
+			return;
+		}
 	 	event.stopPropagation();
+	 	var workItemIDAppFee = $(event.target).attr("mileNotificationId");
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		$('body').addClass('body-no-scroll');
@@ -1357,7 +1360,7 @@ function milestoneChildEventHandler(event) {
 		        success : function(data) {
 		        	console.log("Show payment called with data : " + data);
 		        	$("#popup-overlay").html(data);
-		        	hideOverlay();
+		        	hideOverlay();		        		        	
 		        	$("#popup-overlay").show();
 		        },
 		        error : function(e) {
