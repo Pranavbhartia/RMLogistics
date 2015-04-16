@@ -345,7 +345,7 @@ public class ThreadManager implements Runnable {
 		fetchCreditScore(loan);
 
 		LOGGER.debug("Calling Braintree Tansaction Related Classes");
-		/* invokeBrainTree(loan); */
+		invokeBrainTree(loan);
 
 		LOGGER.debug("Calling Milestones With Reminder ");
 		invokeMilestonesWithReminder();
@@ -420,8 +420,18 @@ public class ThreadManager implements Runnable {
 		for (TransactionDetails transactionDetails : transactionDetailsList) {
 			LOGGER.debug("Invoking Braintree Service ");
 			try {
-				braintreePaymentGatewayService
-				        .checkAndUpdateTransactions(transactionDetails);
+				if (braintreePaymentGatewayService.checkAndUpdateTransactions(
+				        transactionDetails).equalsIgnoreCase(
+				        WorkflowDisplayConstants.PAYMENT_SUCCESSFUL)) {
+					LOGGER.debug("Transaction has been successful");
+					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_SUCCESSFUL);
+				} else if (braintreePaymentGatewayService
+				        .checkAndUpdateTransactions(transactionDetails)
+				        .equalsIgnoreCase(
+				                WorkflowDisplayConstants.PAYMENT_FAILURE)) {
+					LOGGER.debug("Transaction has failed");
+					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_FAILURE);
+				}
 			} catch (NoRecordsFetchedException | InvalidInputException e) {
 				LOGGER.error("Exception received for this transaction "
 				        + transactionDetails.getTransaction_id() + " "
@@ -476,6 +486,29 @@ public class ThreadManager implements Runnable {
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
 			LOGGER.debug("Putting the item in execution ");
 			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+			String params = Utils.convertMapToJson(map);
+			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+			        params);
+			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+		}
+
+	}
+
+	private void invokeApplicationFeeMilestone(String paymentStatus) {
+		LOGGER.debug("Inside method invokeApplicationFeeMilestone");
+		String workflowItemType = WorkflowConstants.WORKFLOW_ITEM_APP_FEE;
+		List<String> workflowItemTypeList = new ArrayList<>();
+		workflowItemTypeList.add(workflowItemType);
+		List<WorkflowItemExec> itemsToExecute = itemToExecute(
+		        workflowItemTypeList, workflowItemExecList);
+		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
+			LOGGER.debug("Putting the item in execution ");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+			        workflowItemExec.getId());
+			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+			        paymentStatus);
 			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
 			String params = Utils.convertMapToJson(map);
 			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
