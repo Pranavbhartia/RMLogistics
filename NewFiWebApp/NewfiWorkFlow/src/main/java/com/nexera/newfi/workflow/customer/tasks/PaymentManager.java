@@ -1,7 +1,6 @@
 package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +10,8 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.Milestones;
-import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -39,7 +35,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 
-		return WorkItemStatus.STARTED.getStatus();
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
