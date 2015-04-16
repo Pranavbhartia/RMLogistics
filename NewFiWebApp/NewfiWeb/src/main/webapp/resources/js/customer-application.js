@@ -1554,7 +1554,7 @@ $('body').on('focus',"input[name='birthday']",function(){
 
 $('body').on('focus',"input[name='ssn']",function(){
 	
-	$(this).mask("***-**-*****");
+	$(this).mask("***-**-****");
 		
 });
 
