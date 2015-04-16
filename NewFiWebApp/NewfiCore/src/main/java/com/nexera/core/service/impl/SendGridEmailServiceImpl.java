@@ -185,7 +185,7 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				email.addAttachment("receipt.pdf", inputStream);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Exception caught " + e.getMessage());
 			}
 		}
 

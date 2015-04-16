@@ -28,7 +28,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 	public String sendNotificationSMS(String carrierName, long phoneNumber) {
 		LOGGER.debug("Inside method sendNotificationSMS ");
 		String carrierEmailAddress = null;
-		int maxLength = 0;
+		int maxLength = 140;
 		if (carrierName.equalsIgnoreCase(MobileCarriers.CARRIER_NAME_AT_T)) {
 			carrierEmailAddress = MobileCarriers.AT_T_EMAIL_ADDRESS;
 			maxLength = 140;
@@ -45,17 +45,13 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 			carrierEmailAddress = MobileCarriers.SPRINT_EMAIL_ADDRESS;
 			maxLength = 160;
 		} else if (carrierName
-		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_BOOST_MOBILE)) {
-			carrierEmailAddress = MobileCarriers.BOOST_MOBILE_EMAIL_ADDRESS;
-			maxLength = 500;
-		} else if (carrierName
 		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_CINGULAR)) {
 			carrierEmailAddress = MobileCarriers.CINGULAR_EMAIL_ADDRES;
 			maxLength = 150;
 		} else if (carrierName
-		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_SPRINT)) {
-			carrierEmailAddress = MobileCarriers.SPRINT_EMAIL_ADDRESS;
-			maxLength = 160;
+		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_BOOST_MOBILE)) {
+			carrierEmailAddress = MobileCarriers.BOOST_MOBILE_EMAIL_ADDRESS;
+			maxLength = 500;
 		} else if (carrierName
 		        .equalsIgnoreCase(MobileCarriers.CARRIER_NAME_T_MOBILE)) {
 			carrierEmailAddress = MobileCarriers.T_MOBILE_EMAIL_ADDRESS;

@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,9 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
+
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(NeedsListServiceImpl.class);
 
 	@Transactional
 	public LinkedHashMap<String, ManagerNeedVo> getMasterNeedsListDirectory() {
@@ -327,7 +332,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 			return loanNeedsNStatus;
 
 		} catch (NoRecordsFetchedException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 			return null;
 		}
 	}
@@ -342,7 +347,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		try {
 			existingNeedsList = needsDao.getLoanNeedsList(loanId);
 		} catch (NoRecordsFetchedException e1) {
-			e1.printStackTrace();
+			LOGGER.error("Exception caught " + e1.getMessage());
 		}
 		for (LoanNeedsList need : existingNeedsList) {
 			existingNeeds.put(need.getNeedsListMaster().getId() + "", need);

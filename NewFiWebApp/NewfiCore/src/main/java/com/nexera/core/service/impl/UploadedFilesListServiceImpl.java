@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -409,7 +407,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
-				//Path path = Paths.get(serverFile.getAbsolutePath());
+				// Path path = Paths.get(serverFile.getAbsolutePath());
 				byte[] data = readContentIntoByteArray(serverFile);
 				String uuidValue = nexeraUtility.randomStringOfLength();
 
@@ -446,7 +444,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		} catch (Exception e) {
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
-			e.printStackTrace();
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		} finally {
@@ -523,7 +520,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Transactional
-	private void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
+	public void updateLQBDocumentInUploadNeededFile(String lqbDocumentId,
 	        Integer rowId) {
 		uploadedFilesListDao.updateLQBDocumentInUploadNeededFile(lqbDocumentId,
 		        rowId);
@@ -610,7 +607,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			fileInputStream.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception caught " + e.getMessage());
 		}
 		return bFile;
 	}
@@ -659,11 +656,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			lqbResponseVO = handler.getLqbResponseVO();
 			LOG.info(" parsed lqbResponseVO : " + lqbResponseVO.getResult());
 		} catch (SAXException se) {
-			se.printStackTrace();
+			LOG.error("Exception caught " + se.getMessage());
 		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+			LOG.error("Exception caught " + pce.getMessage());
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			LOG.error("Exception caught " + ie.getMessage());
 		}
 		return lqbResponseVO;
 	}
@@ -717,7 +714,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		} catch (Exception e) {
 			LOG.info("Exception File servlet");
-			e.printStackTrace();
+			LOG.error("Exception caught " + e.getMessage());
 		}
 
 	}
@@ -988,7 +985,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		} catch (Exception e) {
 			LOG.error("exception in converting  : " + e.getMessage(), e);
-			e.printStackTrace();
+			LOG.error("Exception caught " + e.getMessage());
 			isSuccess = false;
 		}
 
