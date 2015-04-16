@@ -582,8 +582,9 @@ input[type="button"]:focus, button:focus {
 .loan-summary-last-row .loan-summary-col-detail{
 	width: auto;
 	color:#fff;
+	font-size: 15px;
 	background: #428bca;
-	padding: 5px 20px;
+	padding: 5px 10px;
   	border-radius: 3px;
 }
 
@@ -2193,6 +2194,7 @@ input[type="button"]:focus, button:focus {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 70px auto;
+	border-radius: 50%;
 }
 
 .cust-prof-upload-btn {
@@ -2635,6 +2637,10 @@ input.calc-input {
 	text-transform: capitalize;
 	cursor: pointer;
 	font-family: 'opensanssemibold';
+}
+
+.prof-btn:hover{
+	background: #F6914D;
 }
 
 .upload-btn{

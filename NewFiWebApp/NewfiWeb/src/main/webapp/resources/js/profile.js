@@ -113,8 +113,13 @@ function LoanPersonalInfoWrapper(user) {
 			    }
 			});
 	});
-		
-	if(user.userRole.roleDescription=="Realtor" || user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+	if(user.internalUserDetail!=null){
+		if(user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+			  text.append(emailInput);
+				header.append(text);
+		}
+	}	
+	if(user.userRole.roleDescription=="Realtor"){
     text.append(emailInput);
 	header.append(text);
 	}
@@ -841,10 +846,12 @@ function initializeCityLookup(searchData){
 		focus : function(event, ui) {
 			/*$("#cityId").val(ui.item.label);
 			return false;*/
+			event.stopPropagation();
 		},
 		select : function(event, ui) {
 			/*$("#cityId").val(ui.item.label);
 			return false;*/
+			event.stopPropagation();
 		},
 		open : function() {
 			$('.ui-autocomplete').perfectScrollbar({
@@ -955,7 +962,7 @@ function zipCodeLookUpListCallBack(response) {
 }
 
 function appendStateDropDown(elementToApeendTo,states) {
-	
+
 	var parentToAppendTo = $('#'+elementToApeendTo);
 	parentToAppendTo.html('');
 	for(var i=0; i<states.length; i++){
@@ -1045,7 +1052,7 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 
 
 function findStateIdForStateCode(stateCode) {
-	
+
 	for(var i=0; i<stateList.length; i++){
 		if(stateList[i].stateCode == stateCode){
 			return stateList[i].id;
@@ -1180,10 +1187,12 @@ function initializeZipcodeLookup(searchData){
 		focus : function(event, ui) {
 			/*$("#zipcodeId").val(ui.item.label);
 			return false;*/
+			event.stopPropagation();
 		},
 		select : function(event, ui) {
 			/*$("#zipcodeId").val(ui.item.label);
 			return false;*/
+			event.stopPropagation();
 		},
 		open : function() {
 			$('.ui-autocomplete').perfectScrollbar({
@@ -1399,7 +1408,7 @@ var row = $('<div>').attr({
 		"id" : "carrierInfoID"
 	}).bind('click',function(e){
 		e.stopPropagation();
-		if($('#state-dropdown-wrapper').css("display") == "none"){
+		if($('#carrier-dropdown-wrapper').css("display") == "none"){
 			appendCarrierNames('carrier-dropdown-wrapper',mobileCarrierConstants);
 			toggleCarrierDropDown();
 		}else{

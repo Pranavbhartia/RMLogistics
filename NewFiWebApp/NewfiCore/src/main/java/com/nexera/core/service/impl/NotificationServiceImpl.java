@@ -67,8 +67,10 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notification = parseNotificationModel(notificationVO);
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
+
 		if (pushNotificationFlag)
 			TriggerNotification.triggerNewNotofication(notificationVO, url);
+
 		return notificationVO;
 
 	}

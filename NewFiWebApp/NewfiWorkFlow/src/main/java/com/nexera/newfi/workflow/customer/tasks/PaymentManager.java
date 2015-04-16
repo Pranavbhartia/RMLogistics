@@ -39,7 +39,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 
-		return WorkItemStatus.NOT_STARTED.getStatus();
+		return WorkItemStatus.STARTED.getStatus();
 	}
 
 	@Override
@@ -63,8 +63,22 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Dont do anything in this check Status : Let Batch Take care of it
-		return null;
+		String returnStatus = null;
+		Loan loan = new Loan();
+		loan.setId(Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		int workflowItemExecutionId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.APP_FEE.getMilestoneKey());
+		if (mileStone != null && mileStone.getComments() != null) {
+			if (mileStone.getComments().equals(LoanStatus.APP_PAYMENT_PENDING))
+			{
+				engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecutionId, WorkItemStatus.STARTED.getStatus());
+				returnStatus = WorkItemStatus.STARTED.getStatus();
+			}
+		}
+		return returnStatus;
 	}
 
 	@Override

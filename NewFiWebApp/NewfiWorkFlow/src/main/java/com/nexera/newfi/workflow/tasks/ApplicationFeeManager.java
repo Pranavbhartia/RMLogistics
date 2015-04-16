@@ -56,7 +56,6 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			if (status.equals(LoanStatus.APP_PAYMENT_SUCCESS)) {
 				dismissAllPaymentAlerts(loanId);
 				createAlertToLockRates(objectMap);
-
 				returnStatus = WorkItemStatus.COMPLETED.getStatus();
 
 			} else if (status.equals(LoanStatus.APP_PAYMENT_FAILURE)) {
@@ -68,7 +67,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			if (status != null && !status.isEmpty()) {
 				loanService.saveLoanMilestone(loanId,
 				        Milestones.APP_FEE.getMilestoneID(),
-				        LoanStatus.APP_PAYMENT_PENDING);
+				        status);
 				makeANote(Integer.parseInt(objectMap.get(
 				        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 				        status);
@@ -92,9 +91,9 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// This code can be removed from CHeck Status
 		// Since The Transaction and App Fee tables are updated only by Batch
-		//Batch will take care to update the WorkflowItem as correct status
+		// Batch will take care to update the WorkflowItem as correct status
 		// Keeping it for an additional fall back - but not required
-		
+
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO(loanID);
@@ -102,7 +101,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .findByLoan(loanVO);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		if (loanApplicationFee.getPaymentDate() != null) {
+		if (loanApplicationFee != null && loanApplicationFee.getPaymentDate() != null) {
 			inputMap.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
 			        LoanStatus.APP_PAYMENT_SUCCESS);
 			// This means Brain Tree has approved the fee payment
@@ -117,8 +116,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .getActiveTransactionsByLoan(new Loan(loanID));
 		if (transList != null && !transList.isEmpty()) {
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-			        WorkItemStatus.STARTED.toString());
-			return WorkItemStatus.STARTED.toString();
+			        WorkItemStatus.STARTED.getStatus());
+			return WorkItemStatus.STARTED.getStatus();
 		}
 		return null;
 	}
@@ -143,6 +142,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        false);
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());

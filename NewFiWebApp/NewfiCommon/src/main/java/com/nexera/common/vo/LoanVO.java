@@ -21,6 +21,8 @@ public class LoanVO implements Serializable {
 	private LoanTypeMasterVO loanType;
 	private String lmEmail;
 	private String realtorEmail;
+	private String creditReportUrl;
+	private Boolean lqbInformationAvailable;
 
 	private PropertyTypeMasterVO propertyType;
 	private LoanMilestoneMasterVO currentLoanMilestone;
@@ -50,8 +52,8 @@ public class LoanVO implements Serializable {
 	private UserLoanStatus userLoanStatus;
 
 	private Long purchaseDocumentExpiryDate;
-	
-	
+	private String lqbUrl;
+
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
 	}
@@ -349,10 +351,34 @@ public class LoanVO implements Serializable {
 	}
 
 	public Long getPurchaseDocumentExpiryDate() {
-	    return purchaseDocumentExpiryDate;
-    }
+		return purchaseDocumentExpiryDate;
+	}
 
 	public void setPurchaseDocumentExpiryDate(Long purchaseDocumentExpiryDate) {
-	    this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
-    }
+		this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
+	}
+
+	public void setLqbUrl(String lqbUrl) {
+		this.lqbUrl = lqbUrl;
+	}
+
+	public String getLqbUrl() {
+		return lqbUrl;
+	}
+
+	public String getCreditReportUrl() {
+		return creditReportUrl;
+	}
+
+	public void setCreditReportUrl(String creditReportUrl) {
+		this.creditReportUrl = creditReportUrl;
+	}
+
+	public void setLqbInformationAvailable(Boolean lqbInformationAvailable) {
+		this.lqbInformationAvailable = lqbInformationAvailable;
+	}
+
+	public Boolean getLqbInformationAvailable() {
+		return lqbInformationAvailable;
+	}
 }

@@ -74,6 +74,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		return loanAppFormService.findByLoan(loan);
 	}
 
+	@Override
 	public String updateLMReminder(CreateReminderVo createReminderVo) {
 		WorkflowItemExec currMilestone = workflowService
 		        .getWorkflowExecById(createReminderVo
@@ -103,6 +104,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		return null;
 	}
 
+	@Override
 	public void dismissReadNotifications(int loanID,
 	        MilestoneNotificationTypes noticationType) {
 		List<NotificationVO> notificationList = notificationService
@@ -116,19 +118,20 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private void sendReminder(CreateReminderVo createReminderVo,
 	        WorkflowItemExec currMilestone, WorkflowItemExec prevMilestone) {
 
-		long noOfDays = (prevMilestone.getEndTime().getTime() - new Date()
-		        .getTime()) / (1000 * 60 * 60 * 24);
+		long noOfHours = (prevMilestone.getEndTime().getTime() - new Date()
+		        .getTime()) / (1000 * 60 * 60);
 
 		LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 		        .retrieveTurnAroundTimeByLoan(createReminderVo.getLoanId(),
-		                currMilestone.getParentWorkflowItemExec().getId());
+		                currMilestone.getWorkflowItemMaster().getId());
 		long turnaroundTime = loanTurnAroundTimeVO.getHours();
 
-		if (noOfDays >= turnaroundTime) {
+		if (noOfHours >= turnaroundTime) {
 			createAlertOfType(createReminderVo);
 		}
 	}
 
+	@Override
 	public void createAlertOfType(CreateReminderVo createReminderVo) {
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(createReminderVo.getLoanId(),
@@ -159,6 +162,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		        userRoles, internalUserRoles);
 	}
 
+	@Override
 	public void sendReminder(CreateReminderVo createReminderVo,
 	        int currMilestoneID, int prevMilestoneID) {
 		WorkflowItemExec currMilestone = workflowService
@@ -174,6 +178,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		sendReminder(createReminderVo, currMilestone, prevMilestone);
 	}
 
+	@Override
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments) {
 		String status = null;
@@ -195,6 +200,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		}
 	}
 
+	@Override
 	public String getNexeraMilestoneComments(int loanId, Milestones milestone) {
 		String comments = null;
 		Loan loan = new Loan(loanId);
@@ -310,6 +316,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		return utils.getJsonStringOfMap(map);
 	}
 
+	@Override
 	public String getRenderInfoForAppraisal(int loanID) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Loan loan = new Loan(loanID);
