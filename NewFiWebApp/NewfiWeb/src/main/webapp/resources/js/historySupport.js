@@ -323,12 +323,13 @@ function retrieveState() {
 		} else if (loanID && loanID > 0)
 			entryPointForAgentView(loanID, 2);
 		else
-			paintAgentDashboard();
+			paintAgentDashboard('myloans');
 
 		break;
 
 	case AgentViewPNEnum['MY_ARCHIVES']:
 		console.log('My archives');
+	paintAgentDashboard('archivesloans');
 		break;
 
 	case AgentViewPNEnum['MY_IMP_ALERTS']:
