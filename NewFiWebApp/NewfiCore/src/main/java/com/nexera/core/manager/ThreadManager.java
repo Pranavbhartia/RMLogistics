@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -318,21 +319,29 @@ public class ThreadManager implements Runnable {
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster,
 						        " Unable to parse the LQB response ");
+						nexeraUtility
+						        .sendExceptionEmail("Unparasable LQB Response ");
 					}
 				} else {
 					LOGGER.error(" Valid Response Not Received From Mule/LQB ");
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster,
 					        "Invalid response received from mule/lqb");
+					nexeraUtility
+					        .sendExceptionEmail("Invalid Response Received From LQB ");
 				}
 			} else {
 				LOGGER.error("Connection Timed out at LQB ");
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        " Connection to mule timed out");
+				nexeraUtility
+				        .sendExceptionEmail("Connection to mule timed out");
 			}
 		} else {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Request Json Object Not Created For Load ");
+			nexeraUtility
+			        .sendExceptionEmail("Unable to create json object for load ");
 
 		}
 		LOGGER.debug("Fetching Docs for this loan ");
@@ -349,6 +358,29 @@ public class ThreadManager implements Runnable {
 
 		LOGGER.debug("Calling Milestones With Reminder ");
 		invokeMilestonesWithReminder();
+
+		LOGGER.debug("Check whether purchase document is about to expire");
+		if (checkPurchaseDocumentExpiry(loan)) {
+			LOGGER.debug("Purchase Docuement Is About To Expire ");
+		}
+	}
+
+	private Boolean checkPurchaseDocumentExpiry(Loan loan) {
+		boolean status = false;
+		if (loan.getPurchaseDocumentExpiryDate() != null) {
+			long expireDateInMilliseconds = loan
+			        .getPurchaseDocumentExpiryDate();
+			long currentDateInMilliseconds = new Date().getTime();
+			long timeLeft = expireDateInMilliseconds
+			        - currentDateInMilliseconds;
+			long hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeft);
+			if (hoursLeft <= 24) {
+				status = true;
+			} else {
+				status = false;
+			}
+		}
+		return status;
 	}
 
 	private List<String> getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(
@@ -438,6 +470,7 @@ public class ThreadManager implements Runnable {
 				        + e.getMessage());
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        e.getMessage());
+				nexeraUtility.sendExceptionEmail(e.getMessage());
 			}
 		}
 	}
@@ -473,6 +506,8 @@ public class ThreadManager implements Runnable {
 		} else {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Request Json Object Not Created For Credit Score ");
+			nexeraUtility
+			        .sendExceptionEmail("Unable to create json object for credit score ");
 		}
 	}
 
@@ -545,12 +580,20 @@ public class ThreadManager implements Runnable {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "Credit Score Not Found for this loan ");
+				nexeraUtility
+				        .sendExceptionEmail("Credit score not found for this loan "
+				                + loan.getId());
 			}
 		} else {
 			LOGGER.error("Customer Details Not Found With this user id ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Customer details not found for this user id "
 			                + loan.getUser().getId());
+			nexeraUtility
+			        .sendExceptionEmail("Customer Details Not Found for this user "
+			                + loan.getUser().getFirstName()
+			                + " "
+			                + loan.getUser().getLastName());
 		}
 	}
 
@@ -588,12 +631,20 @@ public class ThreadManager implements Runnable {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "Credit Score Not Found for this loan ");
+				nexeraUtility
+				        .sendExceptionEmail("Spouse Credit Score Not Found for this loan "
+				                + loan.getId());
 			}
 		} else {
 			LOGGER.error("Customer Details Not Found With this user id ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Customer details not found for this user id "
 			                + loan.getUser().getId());
+			nexeraUtility
+			        .sendExceptionEmail("Customer details not found for this user "
+			                + loan.getUser().getFirstName()
+			                + " "
+			                + loan.getUser().getLastName());
 		}
 
 	}
@@ -698,15 +749,21 @@ public class ThreadManager implements Runnable {
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster, underWritingJSONResponse
 					                .getString("errorDescription"));
+					nexeraUtility.sendExceptionEmail(underWritingJSONResponse
+					        .getString("errorDescription"));
 				}
 			} else {
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "No resposne received from lqb/mule");
+				nexeraUtility
+				        .sendExceptionEmail("No resposne received from lqb/mule");
 			}
 		} else {
 			nexeraUtility
 			        .putExceptionMasterIntoExecution(exceptionMaster,
 			                "Request Json Object Not Created For UnderwritingCondition ");
+			nexeraUtility
+			        .sendExceptionEmail("Unable to create request jsonobject for underwriting condition ");
 
 		}
 	}
@@ -747,15 +804,22 @@ public class ThreadManager implements Runnable {
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster, receivedResponseForDocs
 					                .getString("errorDescription"));
+					nexeraUtility.sendExceptionEmail(receivedResponseForDocs
+					        .getString("errorDescription"));
 				}
 			} else {
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "No resposne received from lqb/mule");
+				nexeraUtility
+				        .sendExceptionEmail("No resposne received from lqb/mule");
 			}
 		} else {
 			nexeraUtility
 			        .putExceptionMasterIntoExecution(exceptionMaster,
 			                "Request Json Object Not Created For List EDocsByLoanNumber ");
+			nexeraUtility
+			        .sendExceptionEmail("Unable to create request json object for ListEDocsByLoanNumber for this loan id "
+			                + loan.getId());
 
 		}
 
@@ -785,35 +849,12 @@ public class ThreadManager implements Runnable {
 					        needsListMasterDisclosureSigned)) {
 						assignNeedToLoan(loan, needsListMasterDisclosureSigned);
 						LOGGER.debug("Invoking Disclosure MileStone Classes ");
-						/* invokeDisclosuresWorkflow(workflowItemExecList); */
 						updateLastModifiedTimeForThisLoan(loan);
 					}
 				}
 			}
 		}
 	}
-
-	/*
-	 * public void invokeDisclosuresWorkflow( List<WorkflowItemExec>
-	 * workflowItemExecList) { String disclosureDisplayType =
-	 * WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_DISPLAY; String
-	 * disclosureAvaialableType =
-	 * WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS; List<String>
-	 * workflowItemtypeList = new ArrayList<String>();
-	 * workflowItemtypeList.add(disclosureAvaialableType);
-	 * workflowItemtypeList.add(disclosureDisplayType); List<WorkflowItemExec>
-	 * itemsToExecute = itemToExecute( workflowItemtypeList,
-	 * workflowItemExecList); for (WorkflowItemExec workflowItemExec :
-	 * itemsToExecute) { LOGGER.debug("Putting the item in execution ");
-	 * Map<String, Object> map = new HashMap<String, Object>();
-	 * map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-	 * LoanStatus.disclosureAvail);
-	 * map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId()); String
-	 * params = Utils.convertMapToJson(map);
-	 * workflowService.saveParamsInExecTable(workflowItemExec.getId(), params);
-	 * 
-	 * engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId()); } }
-	 */
 
 	private void assignNeedToLoan(Loan loan, NeedsListMaster needsListMaster) {
 		LOGGER.debug("Found a Need, Assigning it to a loan ");
@@ -933,6 +974,7 @@ public class ThreadManager implements Runnable {
 		} catch (ParseException pe) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        pe.getMessage());
+			nexeraUtility.sendExceptionEmail(pe.getMessage());
 		}
 		return date;
 
@@ -979,6 +1021,7 @@ public class ThreadManager implements Runnable {
 			LOGGER.error("Invalid Json String ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return json;
 	}
@@ -998,6 +1041,7 @@ public class ThreadManager implements Runnable {
 			LOGGER.error("Invalid Json String ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return json;
 	}
@@ -1017,6 +1061,7 @@ public class ThreadManager implements Runnable {
 			LOGGER.error("Invalid Json String ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return json;
 	}
@@ -1257,6 +1302,7 @@ public class ThreadManager implements Runnable {
 			LOGGER.error("Invalid Json String ");
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return json;
 	}
@@ -1277,12 +1323,15 @@ public class ThreadManager implements Runnable {
 		} catch (SAXException se) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        se.getMessage());
+			nexeraUtility.sendExceptionEmail(se.getMessage());
 		} catch (ParserConfigurationException pce) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        pce.getMessage());
+			nexeraUtility.sendExceptionEmail(pce.getMessage());
 		} catch (IOException ie) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        ie.getMessage());
+			nexeraUtility.sendExceptionEmail(ie.getMessage());
 		}
 
 		return null;
@@ -1306,12 +1355,15 @@ public class ThreadManager implements Runnable {
 		} catch (SAXException se) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        se.getMessage());
+			nexeraUtility.sendExceptionEmail(se.getMessage());
 		} catch (ParserConfigurationException pce) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        pce.getMessage());
+			nexeraUtility.sendExceptionEmail(pce.getMessage());
 		} catch (IOException ie) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        ie.getMessage());
+			nexeraUtility.sendExceptionEmail(ie.getMessage());
 		}
 
 		return null;
@@ -1335,12 +1387,15 @@ public class ThreadManager implements Runnable {
 		} catch (SAXException se) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        se.getMessage());
+			nexeraUtility.sendExceptionEmail(se.getMessage());
 		} catch (ParserConfigurationException pce) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        pce.getMessage());
+			nexeraUtility.sendExceptionEmail(pce.getMessage());
 		} catch (IOException ie) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        ie.getMessage());
+			nexeraUtility.sendExceptionEmail(ie.getMessage());
 		}
 
 		return null;
