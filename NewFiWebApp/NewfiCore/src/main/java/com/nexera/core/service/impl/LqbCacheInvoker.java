@@ -1,6 +1,8 @@
 package com.nexera.core.service.impl;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +17,9 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Value("${muleUrlForLoan}")
 	private String muleUrlForLoan;
+
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(LqbCacheInvoker.class);
 
 	@Cacheable(cacheName = "teaserRate")
 	@Override
@@ -31,9 +36,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			return jsonObject.get("responseMessage").toString();
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("error in post entity");
-
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 
 		return null;
