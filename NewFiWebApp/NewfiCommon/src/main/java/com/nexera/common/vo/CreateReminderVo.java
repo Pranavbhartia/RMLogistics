@@ -7,16 +7,16 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
  */
 public class CreateReminderVo {
 	private MilestoneNotificationTypes notificationType;
-	private int loanId;
-	private int userID;
-	private int workflowItemExecutionId;
+	private Integer loanId;
+	private Integer userID;
+	private Integer workflowItemExecutionId;
 	private String prevMilestoneKey;
 	private String notificationReminderContent;
 	private boolean forCustomer;
+
 	public CreateReminderVo(MilestoneNotificationTypes notificationType,
-	        int loanId,
-			int workflowItemExecutionId, String prevMilestoneKey,
-			String notificationReminderContent) {
+	        Integer loanId, Integer workflowItemExecutionId,
+	        String prevMilestoneKey, String notificationReminderContent) {
 		this.notificationType = notificationType;
 		this.loanId = loanId;
 		this.workflowItemExecutionId = workflowItemExecutionId;
@@ -30,6 +30,7 @@ public class CreateReminderVo {
 		this.loanId = loanId;
 		this.notificationReminderContent = notificationReminderContent;
 	}
+
 	public CreateReminderVo() {
 
 	}
@@ -40,22 +41,6 @@ public class CreateReminderVo {
 
 	public void setNotificationType(MilestoneNotificationTypes notificationType) {
 		this.notificationType = notificationType;
-	}
-
-	public int getLoanId() {
-		return loanId;
-	}
-
-	public void setLoanId(int loanId) {
-		this.loanId = loanId;
-	}
-
-	public int getWorkflowItemExecutionId() {
-		return workflowItemExecutionId;
-	}
-
-	public void setWorkflowItemExecutionId(int workflowItemExecutionId) {
-		this.workflowItemExecutionId = workflowItemExecutionId;
 	}
 
 	public String getPrevMilestoneKey() {
@@ -71,24 +56,40 @@ public class CreateReminderVo {
 	}
 
 	public void setNotificationReminderContent(
-			String notificationReminderContent) {
+	        String notificationReminderContent) {
 		this.notificationReminderContent = notificationReminderContent;
 	}
 
-	public int getUserID() {
-	    return userID;
-    }
-
-	public void setUserID(int userID) {
-	    this.userID = userID;
-    }
-
 	public boolean isForCustomer() {
-	    return forCustomer;
-    }
+		return forCustomer;
+	}
 
 	public void setForCustomer(boolean forCustomer) {
-	    this.forCustomer = forCustomer;
-    }
+		this.forCustomer = forCustomer;
+	}
+
+	public Integer getLoanId() {
+		return loanId;
+	}
+
+	public void setLoanId(Integer loanId) {
+		this.loanId = loanId;
+	}
+
+	public Integer getUserID() {
+		return userID;
+	}
+
+	public void setUserID(Integer userID) {
+		this.userID = userID;
+	}
+
+	public Integer getWorkflowItemExecutionId() {
+		return workflowItemExecutionId;
+	}
+
+	public void setWorkflowItemExecutionId(Integer workflowItemExecutionId) {
+		this.workflowItemExecutionId = workflowItemExecutionId;
+	}
 
 }

@@ -2194,6 +2194,7 @@ input[type="button"]:focus, button:focus {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 70px auto;
+	border-radius: 50%;
 }
 
 .cust-prof-upload-btn {

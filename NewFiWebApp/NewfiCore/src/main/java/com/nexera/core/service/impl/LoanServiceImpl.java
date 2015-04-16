@@ -40,6 +40,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -452,6 +453,15 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressState(customerDetail.getAddressState());
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
+			if (null != customerDetail.getCarrierInfo()) {
+
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+				        .getCarrierNameForEmail(customerDetail.getCarrierInfo());
+				customerDetailVO
+				        .setCarrierInfo(mobileCarrier.getCarrierName());
+
+			}
+
 			if (null != customerDetail.getDateOfBirth())
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
 				        .getTime());

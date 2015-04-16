@@ -4,6 +4,8 @@
 var isAgentTypeDashboard;
 var docData = [];
 var currentLoanType = null;
+var mobileCarrierNames=[];
+var stateLists=[];
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -373,7 +375,7 @@ function appendCustomers(elementId, customers) {
 		// TODO customer prof default pic to be set correctly
 		if (customer.prof_image == undefined || customer.prof_image == ""
 				|| customer.prof_image == null) {
-			customer.prof_image = "resources/images/cus-icn.png";
+			customer.prof_image = "resources/images/person-placeholder.png";
 		}
 		var profImage = $('<div>').attr({
 			"class" : "cus-img-icn float-left",
@@ -951,6 +953,7 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.emailId = userObject.emailId;
 
 	selectedUserDetail.customerId = userObject.customerDetail.id;
+	selectedUserDetail.carrierName=userObject.customerDetail.carrierInfo;
 	selectedUserDetail.city = userObject.customerDetail.addressCity;
 	selectedUserDetail.state = userObject.customerDetail.addressState;
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
@@ -962,7 +965,8 @@ function resetSelectedUserDetailObject(userObject) {
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
-		selectedUserDetail.photoUrl = "./resources/images/cus-icn.png";
+		selectedUserDetail.photoUrl = "./resources/images/person-placeholder.png";
+
 
 }
 
@@ -1936,11 +1940,18 @@ function appendCustomerEditProfilePopUp() {
 
 	// Upload photo row
 	appendCustomerProfUploadPhotoRow();
-
-	appendCustomerProfEditRow("City", selectedUserDetail.city, "cityID");
-	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
-	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");
 	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
+	
+/*	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
+	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");*/
+	appendStateEditRow();
+	appendCityEditRow();
+	//appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
+	appendZipEditRow();
+	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo, "primaryPhoneID");
+	//To append carrier info
+	appendCarrierNameDropDown();
+	
 	$('#emailIdID').attr("readonly", true)
 	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 
@@ -1986,9 +1997,199 @@ function appendCustomerEditProfilePopUp() {
 	}).html("save");
 
 	$('#cus-prof-container').append(saveBtn);
+    addStateCityZipLookUp();
 
 }
 
+function appendCityEditRow(){
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("City");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var cityInput = $('<input>').attr({
+		"class" : "prof-form-input",
+		"value" :selectedUserDetail.city,
+		"id" : "cityId"
+	}).bind('keydown',function(e){
+		e.stopPropagation();
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	});
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(cityInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
+    row.append(rowCol1).append(rowCol2);
+    $('#cus-prof-container').append(row);
+}
+function appendStateEditRow(){
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("State");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var stateInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
+		"id" : "stateId",
+		"value":selectedUserDetail.state
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			appendStateDropDown('state-dropdown-wrapper',stateLists);
+			toggleStateDropDown();
+		}else{
+			toggleStateDropDown();
+		}
+	}).bind('keyup',function(e){
+		e.stopPropagation();
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDown('state-dropdown-wrapper',searchList);
+	});
+	
+	if(user.customerDetail.addressState){
+		stateInput.val(user.customerDetail.addressState);
+		var stateCode = user.customerDetail.addressState.toUpperCase();
+		
+		var stateId = findStateIdForStateCode(stateCode);
+		ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+	}
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "state-dropdown-wrapper",
+		"class" : "state-dropdown-wrapper hide"
+	});
+	
+	rowCol2.append(stateInput).append(dropDownWrapper);
+    row.append(rowCol1).append(rowCol2);
+	$('#cus-prof-container').append(row);
+}
+function appendZipEditRow(){
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("Zip");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var zipInput = $('<input>').attr({
+		"class" : "prof-form-input prof-form-input-sm",
+		"value" : selectedUserDetail.zipCode,
+		"id" : "zipcodeId"
+	}).bind('keydown',function(e){
+		e.stopPropagation();
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	});
+	
+	var errMessage = $('<div>').attr({
+		"class" : "err-msg hide" 
+	});
+	
+	inputCont.append(zipInput).append(errMessage);
+	
+	rowCol2.append(inputCont);
+	 row.append(rowCol1).append(rowCol2);
+	 $('#cus-prof-container').append(row);
+}
+function appendCarrierNameDropDown(){
+	
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix",
+		"id":"prof-form-row-custom-email"
+	});
+
+	var label = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("Carrier Name");
+	
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+			
+	var carrierinfo = $('<input>').attr({
+		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
+		"value" : selectedUserDetail.carrierName,
+		"placeholder":"Select Carrier",
+		"id" : "carrierInfoID"
+	}).bind('click',function(e){
+		e.stopPropagation();
+		if($('#carrier-dropdown-wrapper').css("display") == "none"){
+			appendCarrierNames('carrier-dropdown-wrapper',mobileCarrierNames);
+			toggleCarrierDropDown();
+		}else{
+			toggleCarrierDropDown();
+		}
+	});
+	
+
+	if(user.customerDetail.mobileAlertsPreference){
+		row.removeClass('hide');
+		
+	}
+	
+	var dropDownWrapper = $('<div>').attr({
+		"id" : "carrier-dropdown-wrapper",
+		"class" : "carrier-dropdown-wrapper hide"
+	});
+	
+	rowCol2.append(carrierinfo).append(dropDownWrapper);
+	row.append(label).append(rowCol2);
+	$('#cus-prof-container').append(row);
+	
+}
 function updateUserProfile() {
 
 	var userProfileJson = new Object();
@@ -1997,15 +2198,20 @@ function updateUserProfile() {
 	userProfileJson.firstName = $("#firstNameID").val();
 	userProfileJson.lastName = $("#lastNameID").val();
 	userProfileJson.emailId = $("#emailIdID").val();
+	userProfileJson.phoneNumber = $("#primaryPhoneID").val();
 
 	var customerDetails = new Object();
 
 	customerDetails.id = selectedUserDetail.customerId;
-	customerDetails.addressCity = $("#cityID").val();
-	customerDetails.addressState = $("#stateID").val();
-	customerDetails.addressZipCode = $("#zipCodeID").val();
+	customerDetails.addressCity = $("#cityId").val();
+	customerDetails.addressState = $("#stateId").val();
+	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
 
+    if($('#carrierInfoID').val()!=null || $('#carrierInfoID').val()!=""){
+
+    	customerDetails.carrierInfo=$('#carrierInfoID').val();
+    }
 	userProfileJson.customerDetail = customerDetails;
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
@@ -2033,7 +2239,7 @@ function updateUserProfile() {
 
 		showToastMessage("Succesfully updated");
 	} else {
-		showToastMessage("Mandatory feilds cannot be empty");
+		showErrorToastMessage("Mandatory feilds cannot be empty");
 	}
 
 }
@@ -2112,7 +2318,7 @@ function appendCustomerProfUploadPhotoRow() {
 	var inputHiddenFile = $('<input>').attr({
 		"type" : "file",
 		"id" : "prof-image",
-		"name" : selectedUserDetail.customerId,
+		"name" : selectedUserDetail.userID,
 		"value" : "Upload"
 
 	});
@@ -3399,6 +3605,8 @@ $(document).on('click', '.pay-application-fee', function(event) {
 });
 
 function entryPointForAgentView(loanID, viewName) {
+	synchronousAjaxRequest("rest/states/", "GET", "json", "", listOfStates);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierNameList);
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
 		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
 				"json", undefined, function(response) {
@@ -3410,7 +3618,17 @@ function entryPointForAgentView(loanID, viewName) {
 		entryPointAgentViewChangeNav(viewName)
 
 }
-
+function mobileCarrierNameList(response){
+	if(response.error==null){
+		mobileCarrierNames=response.resultObject;
+	}
+	
+}
+function listOfStates(response){
+	if(response.error == null){
+		stateLists = response.resultObject;
+	}
+}
 function entryPointAgentViewChangeNav(viewName) {
 
 	paintMyLoansView();
