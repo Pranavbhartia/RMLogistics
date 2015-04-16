@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -60,6 +62,12 @@ public class LoanRestService {
 
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
+
+	@Value("${profile.url}")
+	private String systemBaseUrl;
+
+	@Value("${lqb.defaulturl}")
+	private String lqbDefaultUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanRestService.class);
@@ -127,6 +135,20 @@ public class LoanRestService {
 			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
 			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
 			loanVO.setUserLoanStatus(loanService.getUserLoanStaus(loanVO));
+			String lqbUrl = userProfileService.getLQBUrl(utils
+			        .getLoggedInUser().getId(), loanID);
+			if (lqbUrl.equals(lqbDefaultUrl)) {
+				loanVO.setLqbInformationAvailable(Boolean.FALSE);
+			}
+
+			String docId = needsListService.checkCreditReport(loanID);
+			if (docId != null && !docId.isEmpty()) {
+				loanVO.setCreditReportUrl(systemBaseUrl
+				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId);
+			} else {
+				loanVO.setCreditReportUrl("");
+			}
+
 		}
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
@@ -449,26 +471,25 @@ public class LoanRestService {
 		 */
 		return RestUtil.wrapObjectForSuccess(gson.toJson(loanAppFormVO));
 	}
-	
-	
-	@RequestMapping(value="/purchaseDocument/expiryDate" , method = RequestMethod.POST)
+
+	@RequestMapping(value = "/purchaseDocument/expiryDate", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO setExpiryDate(
-			@RequestParam(value = "loanId", required = false) String  loanId,
-			@RequestParam(value = "date", required = false) String  date
-			){
-		CommonResponseVO commonResponseVO  = null;
+	        @RequestParam(value = "loanId", required = false) String loanId,
+	        @RequestParam(value = "date", required = false) String date) {
+		CommonResponseVO commonResponseVO = null;
 		try {
-			LOG.info("loanId : "+loanId + " & "+date);
-	        loanService.setExpiryDateToPurchaseDocument(Integer.valueOf(loanId) ,Long.valueOf( date));
+			LOG.info("loanId : " + loanId + " & " + date);
+			loanService.setExpiryDateToPurchaseDocument(
+			        Integer.valueOf(loanId), Long.valueOf(date));
 			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
-        } catch (Exception e) {
-        	commonResponseVO = RestUtil.wrapObjectForFailure(null , "500" , "Exception");
-        	LOG.error(e.getMessage() , e);
-        }
-		
+		} catch (Exception e) {
+			commonResponseVO = RestUtil.wrapObjectForFailure(null, "500",
+			        "Exception");
+			LOG.error(e.getMessage(), e);
+		}
+
 		return commonResponseVO;
-		
+
 	}
-	
-	
+
 }

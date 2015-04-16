@@ -147,4 +147,6 @@ public interface CommonConstants {
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
+
+	public static final String FILE_DOWNLOAD_SERVLET = "readFileAsStream.do?uuid=";
 }
