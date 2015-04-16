@@ -27,6 +27,8 @@ import com.nexera.extractor.entity.YearBasedRate;
 @Component
 public class Utility {
 
+	private static HashMap<Long, Map<String, List<UIEntity>>> cache = new HashMap<Long, Map<String, List<UIEntity>>>();
+
 	private static final String[] FILE_KEY_INDEX = {
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
@@ -463,11 +465,46 @@ public class Utility {
 	}
 
 	public Map<String, List<UIEntity>> buildUIMap(
-	        List<FileProductPointRate> list) {
+	        List<FileProductPointRate> list, long fileTimeStamp) {
 
-		// Key is fileName, value is list of all the 15 days, 30 days etc.
-		// values to
-		// be displayed
+		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
+		if (fromCache == null) {
+			return fromCache;
+		} else {
+			Map<String, List<UIEntity>> lastData = new HashMap<String, List<UIEntity>>();
+			if (cache.get(0) != null) {
+				// Then we have the past run data. send this as a response if
+				// any of the files have error
+				lastData = cache.get(0);
+			}
+			Map<String, List<UIEntity>> data = populateMap(list);
+			if (data.size() < lastData.size()) {
+				// This is the case if there is any issue in extraction logic
+				return lastData;
+			}
+			cache = new HashMap<Long, Map<String, List<UIEntity>>>();
+			cache.put(fileTimeStamp, data);
+			// If there are too many elements in the cache, remove the oldest.
+			if (cache.size() > 10) {
+				clearCache();
+			}
+			return data;
+		}
+
+	}
+
+	private void clearCache() {
+		try {
+			Set<Long> keys = cache.keySet();
+			// TODO: Remove the old objects from cache
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	private Map<String, List<UIEntity>> populateMap(
+	        List<FileProductPointRate> list) {
 
 		Map<String, List<UIEntity>> hashMap = new HashMap<String, List<UIEntity>>();
 

@@ -1171,18 +1171,32 @@ function appendCustomerLoanDetails(loanDetails) {
 			+ loanDetails.setSenderDomain);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount)
+	
+	if(loanDetails.lqbInformationAvailable){
+		appendLoanDetailsRow("Loan URL in LQB", "Open file in LQB",true,loanDetails.lqbUrl);	
+	}else{
+		appendLoanDetailsRow("Loan URL in LQB", "Click here to set your LQB credentials",true,"#lp-loan-manager-profile");
+	}
+	
+	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount){
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
-
+	}
+	
 	appendLoanDetailsRow("Lock Rate Details",
 			loanDetails.userLoanStatus.lockRate);
 	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
-	appendLoanDetailsRow("Credit",
-			loanDetails.userLoanStatus.creditInformation, true);
-	appendLoanDetailsRow("Credit Decision",
-			loanDetails.userLoanStatus.creditDecission);
+	if(loanDetails.creditReportUrl==undefined || loanDetails.creditReportUrl == ""){
+		appendLoanDetailsRow("Credit",
+				loanDetails.userLoanStatus.creditInformation);	
+	}else{
+		appendLoanDetailsRow("Credit Report",
+				loanDetails.userLoanStatus.creditInformation, true,loanDetails.creditReportUrl);
+	}
+	
+	//appendLoanDetailsRow("Credit Decision",
+		//	loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
 		if (loanDetails.loanType.uploadedFiles != undefined) {
