@@ -1014,30 +1014,37 @@ public class UserProfileServiceImpl implements UserProfileService,
 			
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
 			
+			if(loaAppFormVO.getPropertyTypeMaster() != null){
 			propertyTypeMasterVO.setHomeZipCode(loaAppFormVO.getPropertyTypeMaster().getHomeZipCode());
 			propertyTypeMasterVO.setHomeWorthToday(loaAppFormVO.getPropertyTypeMaster().getHomeWorthToday());
 			propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO.getPropertyTypeMaster().getPropertyInsuranceCost());
 			propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO.getPropertyTypeMaster().getPropertyTaxesPaid());
+			}
 			
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
 			
             RefinanceVO refinanceVO = new RefinanceVO();
+            if(loaAppFormVO.getRefinancedetails() != null){
             refinanceVO.setRefinanceOption(loaAppFormVO.getRefinancedetails().getRefinanceOption());
             refinanceVO.setMortgageyearsleft(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
             refinanceVO.setCashTakeOut(loaAppFormVO.getRefinancedetails().getCashTakeOut());
             refinanceVO.setCurrentMortgageBalance(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
             refinanceVO.setCurrentMortgagePayment(loaAppFormVO.getRefinancedetails().getCurrentMortgagePayment());
             refinanceVO.setIncludeTaxes(loaAppFormVO.getRefinancedetails().isIncludeTaxes());
+            }
             
 			loanAppFormVO.setRefinancedetails(refinanceVO);		
 
+
 			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
+			 if(loaAppFormVO.getPurchaseDetails() != null){
 			purchaseDetailsVO.setLivingSituation(loaAppFormVO.getPurchaseDetails().getLivingSituation());
 			purchaseDetailsVO.setHousePrice(loaAppFormVO.getPurchaseDetails().getHousePrice());
 			purchaseDetailsVO.setLoanAmount(loaAppFormVO.getPurchaseDetails().getLoanAmount());
 			purchaseDetailsVO.setTaxAndInsuranceInLoanAmt(loaAppFormVO.getPurchaseDetails().isTaxAndInsuranceInLoanAmt());
 			purchaseDetailsVO.setEstimatedPrice(loaAppFormVO.getPurchaseDetails().getEstimatedPrice());
 			purchaseDetailsVO.setBuyhomeZipPri(loaAppFormVO.getPurchaseDetails().getBuyhomeZipPri());
+			 }
 			
 			loanAppFormVO.setPurchaseDetails(purchaseDetailsVO);
 			
