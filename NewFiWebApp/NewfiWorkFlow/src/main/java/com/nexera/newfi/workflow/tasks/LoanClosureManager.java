@@ -87,8 +87,9 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			        Milestones.LOAN_CLOSURE.getMilestoneKey());
 			if (mileStone != null && mileStone.getComments() != null) {
 				returnString.append(mileStone.getComments());
+			}
+			if (mileStone != null && mileStone.getStatusUpdateTime() != null) {
 				returnString.append(" On " + mileStone.getStatusUpdateTime());
-
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
