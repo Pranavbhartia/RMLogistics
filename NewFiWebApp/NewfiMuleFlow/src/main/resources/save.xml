@@ -7,7 +7,7 @@
 		<field id="sLAmtCalc">loanAmount</field>	
 		<field id="sSpState">propertyState</field>
 		<field id="sApprVal">loanApprovedValue</field>
-		<field id="sProd3rdPartyUwResultT">thirdpartyresult</field>
+		<field id="sProd3rdPartyUwResultT">1</field>
 		<field id="sProdFilterDue10Yrs">true</field>
 		<field id="sProdFilterDue15Yrs">true</field>
 		<field id="sProdFilterDue20Yrs">true</field>

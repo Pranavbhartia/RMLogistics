@@ -47,6 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
 	private boolean pushNotificationFlag;
 	@Value("${notification.serverURL}")
 	private String url;
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<NotificationVO> findActiveNotifications(LoanVO loanVO,
@@ -118,13 +119,13 @@ public class NotificationServiceImpl implements NotificationService {
 		Integer id = (Integer) notificationDao.save(notification);
 		notificationVO.setId(id);
 		notificationVO.setVisibleToInternalUserRoles(notification
-				.getVisibleToInternalUserRoles());
+		        .getVisibleToInternalUserRoles());
 		notificationVO.setVisibleToUserRoles(notification
-				.getVisibleToUserRoles());
+		        .getVisibleToUserRoles());
 
 		if (pushNotificationFlag) {
 			notificationVO.setContent(generateDynamicString.generate(
-					notificationVO.getContent(),
+			        notificationVO.getContent(),
 			        new Date(notificationVO.getCreatedDate()),
 			        notificationVO.getLoanID()));
 			TriggerNotification.triggerNewNotofication(notificationVO, url);
@@ -163,7 +164,7 @@ public class NotificationServiceImpl implements NotificationService {
 		vo.setNotificationType(notification.getNotificationType());
 		vo.setVisibleToUserRoles(notification.getVisibleToUserRoles());
 		vo.setVisibleToInternalUserRoles(notification
-				.getVisibleToInternalUserRoles());
+		        .getVisibleToInternalUserRoles());
 		return vo;
 	}
 
@@ -223,20 +224,19 @@ public class NotificationServiceImpl implements NotificationService {
 		if (loanNotification.getRemindOn() != null)
 			if (loanNotification.getTimeOffset() != null) {
 				model.setRemindOn(utils.getSystemDateInGMT(new Date(
-						loanNotification.getRemindOn())));
+				        loanNotification.getRemindOn())));
 			} else
 				model.setRemindOn(utils.getUserDateInGMT(new Date(
-						loanNotification
-			        .getRemindOn())));
+				        loanNotification.getRemindOn())));
 		if (loanNotification.getCreatedDate() == null) {
 			model.setCreatedDate(utils.getSystemDateInGMT(new Date()));
 		} else {
 			if (loanNotification.getTimeOffset() != null) {
 				model.setCreatedDate(utils.getSystemDateInGMT(new Date(
-						loanNotification.getCreatedDate())));
+				        loanNotification.getCreatedDate())));
 			} else
 				model.setCreatedDate(utils.getUserDateInGMT(new Date(
-			        loanNotification.getCreatedDate())));
+				        loanNotification.getCreatedDate())));
 		}
 		if (loanNotification.getNotificationType() == null) {
 			model.setNotificationType("Sample");
@@ -276,8 +276,7 @@ public class NotificationServiceImpl implements NotificationService {
 			NotificationVO notificationVO = new NotificationVO();
 			notificationVO.setId(notification.getId());
 			notification = (Notification) notificationDao.load(
-			        Notification.class,
-			        notificationId);
+			        Notification.class, notificationId);
 			Loan loan = notification.getLoan();
 			notificationVO.setLoanID(notification.getLoan().getId());
 			TriggerNotification.triggerDismissNotofication(notificationVO, url);
@@ -288,7 +287,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public NotificationVO updateNotification(NotificationVO notificationVO) {
 		return buildNotificationVO(notificationDao
-				.updateNotification(parseNotificationModel(notificationVO)));
+		        .updateNotification(parseNotificationModel(notificationVO)));
 	}
 
 	/*
@@ -310,11 +309,11 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public List<NotificationVO> findNotificationTypeListForLoan(int loanId,
-			String type, Boolean isRead) {
+	        String type, Boolean isRead) {
 		Loan loan = new Loan();
 		loan.setId(loanId);
 		List<NotificationVO> notList = buildNotificationVOList(notificationDao
-				.findNotificationTypeListForLoan(loan, type, isRead));
+		        .findNotificationTypeListForLoan(loan, type, isRead));
 		return notList;
 	}
 

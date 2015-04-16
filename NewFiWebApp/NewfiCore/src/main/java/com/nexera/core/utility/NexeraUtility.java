@@ -61,6 +61,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
@@ -68,8 +69,10 @@ import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.service.ExceptionService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.workflow.exception.FatalException;
+import com.sendgrid.SendGrid.Email;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
@@ -79,6 +82,9 @@ public class NexeraUtility {
 
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	@Autowired
 	private ExceptionService exceptionService;
@@ -276,18 +282,20 @@ public class NexeraUtility {
 			PDFToImage.main(args);
 			String imageFile = imageFilePath + File.separator + PAGE_NUMBER
 			        + "." + OUTPUT_FILENAME_EXT;
-			
-			String thumbpath = imageFilePath + File.separator + (PAGE_NUMBER+1)
-			        + "." + OUTPUT_FILENAME_EXT;
-			
+
+			String thumbpath = imageFilePath + File.separator
+			        + (PAGE_NUMBER + 1) + "." + OUTPUT_FILENAME_EXT;
+
 			File imageFileObj = new File(imageFile);
 			LOGGER.info("Image path for thumbnail : " + imageFile);
-			Thumbnails.of(new File(imageFile)).size(Integer.parseInt("100"),Integer.parseInt("100")).toFile(thumbpath);
-			
-			if(imageFileObj.exists()){
+			Thumbnails.of(new File(imageFile))
+			        .size(Integer.parseInt("100"), Integer.parseInt("100"))
+			        .toFile(thumbpath);
+
+			if (imageFileObj.exists()) {
 				imageFileObj.delete();
 			}
-			
+
 			return imageFile;
 
 		} catch (Exception e) {
@@ -747,5 +755,18 @@ public class NexeraUtility {
 	public ExceptionMaster getExceptionMasterByType(String exceptionType) {
 		LOGGER.debug("Inside method getExceptionMasterByType");
 		return exceptionService.getExceptionMasterByType(exceptionType);
+	}
+
+	public void sendExceptionEmail(String exceptionMessage) {
+		String[] tos = new String[1];
+		tos[0] = CommonConstants.SENDER_EMAIL_ID;
+		Email email = new Email();
+		String subject = "Exception Occured";
+		email.setText(exceptionMessage);
+		email.setFrom(CommonConstants.SENDER_EMAIL_ID);
+		email.setSubject(subject);
+		email.setTo(tos);
+		sendGridEmailService.sendExceptionEmail(email);
+
 	}
 }

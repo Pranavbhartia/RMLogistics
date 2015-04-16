@@ -137,19 +137,34 @@ public class EmailProcessor implements Runnable {
 
 						} else {
 							LOGGER.error("user who uploaded not found in database");
+							nexeraUtility
+							        .putExceptionMasterIntoExecution(
+							                exceptionMaster,
+							                "User who uploaded this, not found in the database ");
+							nexeraUtility
+							        .sendExceptionEmail("Uploaded By User Not Found For This Email ");
 						}
 					} else {
 						LOGGER.error("Not a valid loan entry ");
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster, "invalid loan information");
+						nexeraUtility
+						        .sendExceptionEmail("Invalid loan id for this email ");
 					}
 				}
 			} else {
 				LOGGER.error("Unable to create the mime message for this email ");
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Unable to create the mime message ");
+				nexeraUtility
+				        .sendExceptionEmail("Unable to create the mime message for this email ");
 			}
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while creating mime message "
 			        + e.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 
 	}
@@ -176,10 +191,12 @@ public class EmailProcessor implements Runnable {
 			LOGGER.error("Exception caught " + me.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        me.getMessage());
+			nexeraUtility.sendExceptionEmail(me.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return body;
 	}
@@ -238,6 +255,7 @@ public class EmailProcessor implements Runnable {
 					} catch (Exception e) {
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster, e.getMessage());
+						nexeraUtility.sendExceptionEmail(e.getMessage());
 					}
 
 				}
@@ -271,10 +289,12 @@ public class EmailProcessor implements Runnable {
 			LOGGER.error("Exception caught " + me.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        me.getMessage());
+			nexeraUtility.sendExceptionEmail(me.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 
 	}
