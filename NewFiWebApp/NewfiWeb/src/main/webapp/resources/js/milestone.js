@@ -1010,10 +1010,10 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 	if(parentChk){
 		var url="rest/workflow/execute/"+wf.id;
 		var data={};
-		data.workflowItemstatus="3";//since we will send only completed status from frontend
+		data.workflowItemstatus=COMPLETED;//since we will send only completed status from frontend
 		if (workflowItem.workflowItemType == "1003_COMPLETE")
 		{
-			data.workflowItemstatus="28";
+			data.workflowItemstatus="28"; // Tihs LOS Status for 1003 Complete
 		}
 		data["workflowItemExecId"]=wf.id;
 		data["loanID"]=workFlowContext.loanId;
@@ -1747,7 +1747,7 @@ function showLQBInfo (itemToAppendTo,workItem)
 		}		
 	}
 	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-			&& workItem.status != "3")
+			&& workItem.status != COMPLETED)
 	{
 		itemToAppendTo.append(getAppFeeEdit(workItem));
 	}
