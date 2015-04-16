@@ -682,11 +682,8 @@ function paintCustomerApplicationPageStep1b() {
             text: "Condo",
             value: "1"
         }, {
-            text: "Multi-Unit",
+            text: "2-4 Units",
             value: "2"
-        }, {
-            text: "Mobile/Manufactured",
-            value: "3"
         }],
         selected: ""
     }, {
@@ -700,7 +697,7 @@ function paintCustomerApplicationPageStep1b() {
             text: "Vacation Home",
             value: "1"
         }, {
-            text: "Investment Property",
+            text: "Second Home",
             value: "2"
         }],
         selected: ""
@@ -2124,68 +2121,90 @@ function paintCustomerApplicationPageStep4a() {
     	 governmentquestion = appUserDetails.governmentquestion;
     	 if( isOutstandingJudgments =="Yes"){ 
     		 governmentquestion.isOutstandingJudgments = true;
- 		 }else{
+ 		 }else if(isOutstandingJudgments =="No"){
  			governmentquestion.isOutstandingJudgments = false;
+ 		 }else{
+ 			governmentquestion.isOutstandingJudgments = null;
  		 }
     	 
     	 if( isBankrupt =="Yes"){ 
     		 governmentquestion.isBankrupt = true;
- 		 }else{
+ 		 }else if(isBankrupt =="No"){
  			governmentquestion.isBankrupt = false;
+ 		 }else{
+ 			governmentquestion.isBankrupt = null;
  		 }
     	 
     	 if( isPropertyForeclosed =="Yes"){ 
     		 governmentquestion.isPropertyForeclosed = true;
- 		 }else{
+ 		 }else if(isPropertyForeclosed =="No"){
  			governmentquestion.isPropertyForeclosed = false;
+ 		 }else{
+ 			governmentquestion.isPropertyForeclosed = null;
  		 }
     	 
     	 if( isLawsuit =="Yes"){ 
     		 governmentquestion.isLawsuit = true;
- 		 }else{
+ 		 }else if(isLawsuit =="No"){
  			governmentquestion.isLawsuit = false;
+ 		 }else{
+ 			governmentquestion.isLawsuit = null;
  		 }
 
     	 if( isObligatedLoan =="Yes"){ 
     		 governmentquestion.isObligatedLoan = true;
- 		 }else{
+ 		 }else if(isObligatedLoan =="No"){
  			governmentquestion.isObligatedLoan = false;
+ 		 }else{
+ 			governmentquestion.isObligatedLoan = null;
  		 }
     	 
     	 if( isFederalDebt =="Yes"){ 
     		 governmentquestion.isFederalDebt = true;
- 		 }else{
+ 		 }else if(isFederalDebt =="No"){
  			governmentquestion.isFederalDebt = false;
+ 		 }else{
+ 			governmentquestion.isFederalDebt = null;
  		 }
 
     	 if( isObligatedToPayAlimony =="Yes"){ 
     		 governmentquestion.isObligatedToPayAlimony = true;
- 		 }else{
+ 		 }else if( isObligatedToPayAlimony =="No"){
  			governmentquestion.isObligatedToPayAlimony = false;
+ 		 }else{
+ 			governmentquestion.isObligatedToPayAlimony = null;
  		 }
     	 
     	 if( isEndorser =="Yes"){ 
     		 governmentquestion.isEndorser = true;
- 		 }else{
+ 		 }else if(isEndorser =="No"){
  			governmentquestion.isEndorser = false;
+ 		 }else{
+ 			governmentquestion.isEndorser = null;
  		 }
 
     	 if( isUSCitizen =="Yes"){ 
     		 governmentquestion.isUSCitizen = true;
- 		 }else{
+ 		 }else if(isUSCitizen =="No"){
  			governmentquestion.isUSCitizen = false;
+ 		 }else{
+ 			governmentquestion.isUSCitizen = null;
  		 }
 
     	 if( isOccupyPrimaryResidence =="Yes"){ 
     		 governmentquestion.isOccupyPrimaryResidence = true;
- 		 }else{
+ 		 }else if(isOccupyPrimaryResidence =="No"){
  			governmentquestion.isOccupyPrimaryResidence = false;
+ 		 }else{
+ 			governmentquestion.isOccupyPrimaryResidence = null;
  		 }
     	 
     	 if( isOwnershipInterestInProperty =="Yes"){ 
     		 governmentquestion.isOwnershipInterestInProperty = true;
- 		 }else{
+ 		 }else if(isOwnershipInterestInProperty =="No"){
  			governmentquestion.isOwnershipInterestInProperty = false;
+ 		 }else{
+ 			governmentquestion.isOwnershipInterestInProperty = null;
  		 }
     	 
     	 appUserDetails.governmentquestion =governmentquestion;
@@ -3504,13 +3523,13 @@ function paintRefinanceStep3() {
                                  "addQuestions": [
                                      {
                                          "type": "desc",
-                                         "text": "How much are your annual property taxes?",
+                                         "text": "How much your property taxes?",
                                          "name": "annualPropertyTaxes",
                                          "selected":appUserDetails.propertyTypeMaster.propertyTaxesPaid
                                      },
                                      {
                                          "type": "desc",
-                                         "text": "How much is your annual homeowners insurance ?",
+                                         "text": "How much your homeowners insurance ?",
                                          "name": "annualHomeownersInsurance",
                                          "selected": appUserDetails.propertyTypeMaster.propertyInsuranceCost
                                      }
@@ -3877,325 +3896,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 ////////////Declaration and Government Question for Spouse///////
 
 
-function paintSpouseCustomerApplicationPageStep4a() {
-   
-	
-	quesDeclarationContxts = [];
-	
-	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Spouse Declaration Questions";
 
-    var quesHeaderTextCont = $('<div>').attr({
-        "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt);
-
-    var questions = [{
-        type: "yesno",
-        text: "Are there any outstanding judgments against you?",
-        name: "isOutstandingJudgments",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Have you been declared bankrupt within the past 7 years?",
-        name: "isBankrupt",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Have you had property foreclosed upon or given title or deed in lieu thereof in the last 7 years?",
-        name: "isPropertyForeclosed",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Are you a party to a lawsuit?",
-        name: "isLawsuit",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Have you directly or indirectly been obligated on any loan which resulted in foreclosure, transfer of title in lieu of foreclosure, or judgment?",
-        name: "isObligatedLoan",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Are you presently delinquent or in default on any Federal debt or any other loan, mortgage, financial obligation, bond or loan guarantee?",
-        name: "isFederalDebt",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Are you obligated to pay alimony, child support, or separate maintenance?",
-        name: "isObligatedToPayAlimony",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Is any part of the down payment borrowed?",
-        name: "isDownPaymentBorrowed",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Are you a co-maker or endorser on a note?",
-        name: "isEndorser",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    }, {
-        type: "yesno",
-        text: "Are you a US citizen?",
-        name: "isUSCitizen",
-        options: [{
-            text: "Yes"
-        }, {
-            text: "No",
-            addQuestions: [{
-                type: "yesno",
-                text: "Are you a permanent resident alien?",
-                name: "isPermanentResidentAlien",
-                options: [{
-                    text: "Yes",
-                    value: "Yes"
-                }, {
-                    text: "No",
-                    value: "No"
-                }],
-                "selected": ""
-            }]
-        }],
-        selected: ""
-    },
-    {
-        type: "yesno",
-        text: "Do you intend to occupy the property as your primary residence?",
-        name: "isOccupyPrimaryResidence",
-        options: [{
-            text: "Yes",
-            value: "Yes"
-        }, {
-            text: "No",
-            value: "No"
-        }],
-        selected: ""
-    },
-    {
-        type: "yesno",
-        text: "Have you had an ownership interest in a property in the last three years?",
-        name: "isOwnershipInterestInProperty",
-        options: [{
-            text: "Yes",
-            addQuestions: [{
-                type: "select",
-                text: "What type of property did you own? Select the choice that fits best.",
-                name: "yourPrimaryResidence",
-                options: [{
-                    text: "Your Primary Residence",
-                    value: "Your Primary Residence"
-                }, {
-                    text: "A Second Home",
-                    value: "A Second Home"
-                },
-                {
-                    text: "An Investment Property",
-                    value: "An Investment Property"
-                }],
-                "selected": ""
-            },
-            {
-                type: "select",
-                text: "What was your status on the title of that property",
-                name: "propertyStatus",
-                options: [{
-                    text: "I was the sole title holder",
-                    value: "I was the sole title holder"
-                }, {
-                    text: "I held the title jointly with my spouse",
-                    value: "I held the title jointly with my spouse"
-                },
-                {
-                    text: "I held title jointly with another person",
-                    value: "I held title jointly with another person"
-                }],
-                "selected": ""
-            }]
-        }, {
-            text: "No"
-        }],
-        selected: ""
-    }
-    ];
-
-   // var questionsContainer = getQuestionsContainer(questions);
-    
-    $('#app-right-panel').append(quesHeaderTextCont);
-   
-   
-    
-    for(var i=0;i<questions.length;i++){
-    	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.spouseGovernmentQuestions);
-    	contxt.drawQuestion();
-    	
-    	quesDeclarationContxts.push(contxt);
-    }
-
-    var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
-    	
-    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
-    	isBankrupt =  quesDeclarationContxts[1].value;
-    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
-    	isLawsuit =  quesDeclarationContxts[3].value;
-    	isObligatedLoan =  quesDeclarationContxts[4].value;
-    	isFederalDebt =  quesDeclarationContxts[5].value;
-    	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
-    	isEndorser =  quesDeclarationContxts[8].value;
-    	isUSCitizen =  quesDeclarationContxts[9].value;
-    	isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
-    	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
-    	
-    	  
-    	 if(appUserDetails.spouseGovernmentQuestions){
-    		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
-    	 }
-    	 else{
-    		 spouseGovernmentQuestions = {};
-    	 }
-    	 
-    	 if( isOutstandingJudgments =="Yes"){ 
-    		 spouseGovernmentQuestions.isOutstandingJudgments = true;
- 		 }else{
- 			spouseGovernmentQuestions.isOutstandingJudgments = false;
- 		 }
-    	 
-    	 if( isBankrupt =="Yes"){ 
-    		 spouseGovernmentQuestions.isBankrupt = true;
- 		 }else{
- 			spouseGovernmentQuestions.isBankrupt = false;
- 		 }
-    	 
-    	 if( isPropertyForeclosed =="Yes"){ 
-    		 spouseGovernmentQuestions.isPropertyForeclosed = true;
- 		 }else{
- 			spouseGovernmentQuestions.isPropertyForeclosed = false;
- 		 }
-    	 
-    	 if( isLawsuit =="Yes"){ 
-    		 spouseGovernmentQuestions.isLawsuit = true;
- 		 }else{
- 			spouseGovernmentQuestions.isLawsuit = false;
- 		 }
-
-    	 if( isObligatedLoan =="Yes"){ 
-    		 spouseGovernmentQuestions.isObligatedLoan = true;
- 		 }else{
- 			spouseGovernmentQuestions.isObligatedLoan = false;
- 		 }
-    	 
-    	 if( isFederalDebt =="Yes"){ 
-    		 spouseGovernmentQuestions.isFederalDebt = true;
- 		 }else{
- 			spouseGovernmentQuestions.isFederalDebt = false;
- 		 }
-
-    	 if( isObligatedToPayAlimony =="Yes"){ 
-    		 spouseGovernmentQuestions.isObligatedToPayAlimony = true;
- 		 }else{
- 			spouseGovernmentQuestions.isObligatedToPayAlimony = false;
- 		 }
-    	 
-    	 if( isEndorser =="Yes"){ 
-    		 spouseGovernmentQuestions.isEndorser = true;
- 		 }else{
- 			spouseGovernmentQuestions.isEndorser = false;
- 		 }
-
-    	 if( isUSCitizen =="Yes"){ 
-    		 spouseGovernmentQuestions.isUSCitizen = true;
- 		 }else{
- 			spouseGovernmentQuestions.isUSCitizen = false;
- 		 }
-
-    	 if( isOccupyPrimaryResidence =="Yes"){ 
-    		 spouseGovernmentQuestions.isOccupyPrimaryResidence = true;
- 		 }else{
- 			spouseGovernmentQuestions.isOccupyPrimaryResidence = false;
- 		 }
-    	 
-    	 if( isOwnershipInterestInProperty =="Yes"){ 
-    		 spouseGovernmentQuestions.isOwnershipInterestInProperty = true;
- 		 }else{
- 			spouseGovernmentQuestions.isOwnershipInterestInProperty = false;
- 		 }
-    	 
-    	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
-    	 
-    	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    	// //alert(JSON.stringify(appUserDetails));
-    	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
-    	
-    	//paintCustomerApplicationPageStep4b();
-    });
-
-    $('#app-right-panel').append(saveAndContinueButton);
-}
 
 
 
@@ -4521,7 +4222,7 @@ function createTeaserRateObjectForPurchase(appUserDet){
             "loanType":appUserDet.loanType.loanTypeCd,
             "livingSituation":appUserDet.purchaseDetails.livingSituation,
             "rentPerMonth":"$5,000",
-            "homeWorthToday":appUserDet.purchaseDetails.estimatedPrice,
+            "homeWorthToday":appUserDet.purchaseDetails.housePrice,
             "currentMortgageBalance":"$280,000",
             "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
         };
@@ -4548,10 +4249,10 @@ function createTeaserRateObjectForRefinance(appUserDet){
 }
 function paintTeaserRatePageBasedOnLoanType(appUserDet){
     if(appUserDet.loanType.description=="Purchase"){
-        var parentContainer=$('center-panel-cont');
-        paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDet));
+        var parentContainer=$('#center-panel-cont');
+        paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDet),true);
     }else{
-        var parentContainer=$('center-panel-cont');
-        paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet));
+        var parentContainer=$('#center-panel-cont');
+        paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet),true);
     }
 }
