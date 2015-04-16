@@ -56,7 +56,6 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			if (status.equals(LoanStatus.APP_PAYMENT_SUCCESS)) {
 				dismissAllPaymentAlerts(loanId);
 				createAlertToLockRates(objectMap);
-
 				returnStatus = WorkItemStatus.COMPLETED.getStatus();
 
 			} else if (status.equals(LoanStatus.APP_PAYMENT_FAILURE)) {
@@ -67,8 +66,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			}
 			if (status != null && !status.isEmpty()) {
 				loanService.saveLoanMilestone(loanId,
-				        Milestones.APP_FEE.getMilestoneID(),
-				        LoanStatus.APP_PAYMENT_PENDING);
+				        Milestones.APP_FEE.getMilestoneID(), status);
 				makeANote(Integer.parseInt(objectMap.get(
 				        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 				        status);
@@ -92,9 +90,9 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		// This code can be removed from CHeck Status
 		// Since The Transaction and App Fee tables are updated only by Batch
-		//Batch will take care to update the WorkflowItem as correct status
+		// Batch will take care to update the WorkflowItem as correct status
 		// Keeping it for an additional fall back - but not required
-		
+
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO(loanID);
@@ -143,6 +141,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        false);
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
