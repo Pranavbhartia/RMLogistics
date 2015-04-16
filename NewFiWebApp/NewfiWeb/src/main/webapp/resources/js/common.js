@@ -320,6 +320,14 @@ function getFloatValue(inputData){
 	
 }
 
+function getRoundValue(inputData){
+	if(inputData)
+		return Math.round(removedDoller(removedComma(inputData)));
+	else
+		return 0;
+	
+}
+
 function numberWithCommasAndDoller(x) {
     return "$"+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
