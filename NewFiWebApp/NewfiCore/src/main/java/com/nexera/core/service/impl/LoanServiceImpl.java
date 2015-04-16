@@ -64,6 +64,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.workflow.enums.WorkItemStatus;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -1356,5 +1357,29 @@ public class LoanServiceImpl implements LoanService {
 	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
 		loanDao.setExpiryDateToPurchaseDocument(loanId, date);
 	}
+
+
+	@Override
+	public String saveLoanMilestone(int loanId, int masterMileStoneId,
+	        String comments) {
+		String status = null;
+		try {
+			Loan loan = new Loan(loanId);
+			LoanMilestone mileStone = new LoanMilestone();
+			mileStone.setLoan(loan);
+			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
+			loanMilestoneMaster.setId(masterMileStoneId);
+			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
+			mileStone.setComments(comments);
+			mileStone.setStatusUpdateTime(new Date());
+			this.saveLoanMilestone(mileStone);
+			status = WorkItemStatus.COMPLETED.getStatus();
+			return status;
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return status;
+		}
+	}
+
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -248,7 +249,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String getRenderInfoForApplicationFee(int loanID) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		String status = null;
 
 		LoanApplicationFee loanApplicationFee = transactionService
@@ -266,11 +267,9 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 				configuredAmount = loan.getAppFee();
 				amount = loanService.getApplicationFee(loanID);
 			} catch (NoRecordsFetchedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				amount = 0;
 			} catch (InvalidInputException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				amount = 0;
 			}
 			if (configuredAmount == null) {
 				map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, amount);
