@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -1050,6 +1051,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
