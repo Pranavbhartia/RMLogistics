@@ -3592,6 +3592,7 @@ $(document).on('click', '.pay-application-fee', function(event) {
 
 function entryPointForAgentView(loanID, viewName) {
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", listOfStates);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierNameList);
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
 		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
 				"json", undefined, function(response) {
@@ -3602,6 +3603,12 @@ function entryPointForAgentView(loanID, viewName) {
 	else
 		entryPointAgentViewChangeNav(viewName)
 
+}
+function mobileCarrierNameList(response){
+	if(response.error==null){
+		mobileCarrierNames=response.resultObject;
+	}
+	
 }
 function listOfStates(response){
 	if(response.error == null){
