@@ -423,7 +423,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	var container = $('<div>').attr({
 		"class" : "upload-item-container"
 	});
-	var fileDragDropCon = getFileDragAndDropContainer();
+	var fileDragDropCon = getFileDragAndDropContainer(neededItemListObject.resultObject.loanEmailID);
 	var showSave = false;
 	var documentContainer = getDocumentContainer();
 	var submitBtn = $("<div>").attr({

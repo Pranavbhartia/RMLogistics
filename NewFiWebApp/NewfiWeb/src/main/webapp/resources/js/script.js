@@ -1521,7 +1521,7 @@ function getClosingCostHeadingCont(text) {
     return heading;
 }
 
-function getFileDragAndDropContainer() {
+function getFileDragAndDropContainer(loanEmailID) {
     var container = $('<div>').attr({
         "id": "drop-zone",
         "class": "file-drag-drop-container"
@@ -1538,7 +1538,7 @@ function getFileDragAndDropContainer() {
     }).html("Select Files to Upload");
     var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
-    }).html("or, E-Mail Attachment To : 654321@loan.newfi.com");
+    }).html("or, E-Mail Attachment To : "+loanEmailID);
     return container.append(fileUploadIcn).append(textCont1).append(textCont1Mobile).append(textCont2);
 }
 
