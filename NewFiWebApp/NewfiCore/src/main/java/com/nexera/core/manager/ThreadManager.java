@@ -28,6 +28,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -128,7 +129,7 @@ public class ThreadManager implements Runnable {
 		List<Integer> statusTrackingList = new LinkedList<Integer>();
 		Map<String, String> map = new HashMap<String, String>();
 		int format = 0;
-
+		workflowItemExecList = getWorkflowItemExecByLoan(loan);
 		LOGGER.debug("Invoking load service of lendinqb ");
 		JSONObject loadOperationObject = createLoadJsonObject(map,
 		        WebServiceOperations.OP_NAME_LOAN_LOAD, loan.getLqbFileId(),
@@ -167,7 +168,7 @@ public class ThreadManager implements Runnable {
 							if (loanStatusID == null) {
 								LOGGER.error("Not a supported LQB status ");
 							}
-							workflowItemExecList = getWorkflowItemExecByLoan(loan);
+
 							if (workflowItemExecList == null) {
 
 								workflowItemExecList = new ArrayList<WorkflowItemExec>();
@@ -366,33 +367,37 @@ public class ThreadManager implements Runnable {
 		invokeMilestonesWithReminder();
 
 		LOGGER.debug("Check whether purchase document is about to expire");
-		if (checkPurchaseDocumentExpiry(loan)) {
+		if (checkPurchaseDocumentExpiry(loan) <= 24) {
 			LOGGER.debug("Purchase Docuement Is About To Expire ");
 			NotificationVO notificationVO = new NotificationVO(
 			        loan.getId(),
 			        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
 			                .getNotificationTypeName(),
 			        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
-			notificationService.createNotification(notificationVO);
+			List<NotificationVO> notificationVOList = notificationService
+			        .findNotificationTypeListForLoan(
+			                loan.getId(),
+			                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+			                        .getNotificationTypeName(), false);
+			if (notificationVOList.isEmpty()) {
+				notificationVO = notificationService
+				        .createNotification(notificationVO);
+			}
 		}
 	}
 
-	private Boolean checkPurchaseDocumentExpiry(Loan loan) {
-		boolean status = false;
+	private long checkPurchaseDocumentExpiry(Loan loan) {
+		long hoursLeft = 0;
 		if (loan.getPurchaseDocumentExpiryDate() != null) {
 			long expireDateInMilliseconds = loan
 			        .getPurchaseDocumentExpiryDate();
 			long currentDateInMilliseconds = new Date().getTime();
 			long timeLeft = expireDateInMilliseconds
 			        - currentDateInMilliseconds;
-			long hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeft);
-			if (hoursLeft <= 24) {
-				status = true;
-			} else {
-				status = false;
-			}
+			hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeft);
+
 		}
-		return status;
+		return hoursLeft;
 	}
 
 	private List<String> getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(
@@ -470,15 +475,15 @@ public class ThreadManager implements Runnable {
 			try {
 				if (braintreePaymentGatewayService.checkAndUpdateTransactions(
 				        transactionDetails).equalsIgnoreCase(
-				        WorkflowDisplayConstants.PAYMENT_SUCCESSFUL)) {
+				        LoanStatus.APP_PAYMENT_SUCCESS)) {
 					LOGGER.debug("Transaction has been successful");
-					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_SUCCESSFUL);
+					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
 				} else if (braintreePaymentGatewayService
 				        .checkAndUpdateTransactions(transactionDetails)
 				        .equalsIgnoreCase(
-				                WorkflowDisplayConstants.PAYMENT_FAILURE)) {
+				        		LoanStatus.APP_PAYMENT_FAILURE)) {
 					LOGGER.debug("Transaction has failed");
-					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_FAILURE);
+					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_FAILURE);
 				}
 			} catch (NoRecordsFetchedException | InvalidInputException e) {
 				LOGGER.error("Exception received for this transaction "
