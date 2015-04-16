@@ -145,10 +145,12 @@ public class EmailBatchProcessor extends QuartzJobBean {
 		} catch (NoSuchProviderException e) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 			LOGGER.error("Exception Thrown " + e.getMessage());
 		} catch (MessagingException e) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 			LOGGER.error("Exception Thrown " + e.getMessage());
 		} finally {
 
@@ -160,6 +162,7 @@ public class EmailBatchProcessor extends QuartzJobBean {
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster, e.getMessage());
 						LOGGER.error("Exception Thrown " + e.getMessage());
+						nexeraUtility.sendExceptionEmail(e.getMessage());
 					}
 			}
 			if (store != null) {
@@ -171,6 +174,7 @@ public class EmailBatchProcessor extends QuartzJobBean {
 						        + e.getMessage());
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster, e.getMessage());
+						nexeraUtility.sendExceptionEmail(e.getMessage());
 					}
 			}
 		}
@@ -205,12 +209,14 @@ public class EmailBatchProcessor extends QuartzJobBean {
 				        + e.getMessage());
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        e.getMessage());
+				nexeraUtility.sendExceptionEmail(e.getMessage());
 			}
 
 		} catch (MessagingException e) {
 			LOGGER.error("Exception while reading mails " + e.getMessage());
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 	}
 

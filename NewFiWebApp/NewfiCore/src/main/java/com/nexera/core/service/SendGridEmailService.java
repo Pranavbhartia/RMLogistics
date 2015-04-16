@@ -14,4 +14,6 @@ public interface SendGridEmailService {
 
 	public String sendSMSEmail(Email email);
 
+	public String sendExceptionEmail(Email email);
+
 }

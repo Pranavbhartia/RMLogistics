@@ -74,6 +74,31 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 
 	}
 
+	@Override
+	public String sendExceptionEmail(Email email) {
+
+		Response response = null;
+		sendGrid = new SendGrid(sendGridUserName, sendGridPassword);
+		LOG.debug("Making sendgrid api call");
+		try {
+			response = sendGrid.send(email);
+		} catch (SendGridException e) {
+			LOG.error("Error while sending sms " + e.getMessage());
+			return null;
+		}
+		if (response == null)
+			return null;
+		else {
+			if (response.getStatus()) {
+				LOG.debug("Response received " + response.getMessage());
+				return response.getMessage();
+			} else {
+				return null;
+			}
+		}
+
+	}
+
 	@Async
 	@Override
 	public void sendAsyncMail(EmailVO emailEntity) {
@@ -151,16 +176,18 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		} else {
 			email.setText(emailEntity.getBody());
 		}
-		if(emailEntity.getAttachmentStream() != null){
+		if (emailEntity.getAttachmentStream() != null) {
 			try {
-				ByteArrayOutputStream  arrayOutputStream= emailEntity.getAttachmentStream();
-				InputStream inputStream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
+				ByteArrayOutputStream arrayOutputStream = emailEntity
+				        .getAttachmentStream();
+				InputStream inputStream = new ByteArrayInputStream(
+				        arrayOutputStream.toByteArray());
 				email.addAttachment("receipt.pdf", inputStream);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}	
+		}
 
 		for (Entry<String, String[]> entry : emailEntity.getTokenMap()
 		        .entrySet()) {
