@@ -45,18 +45,8 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO check credit score columns in loan table
-		int userId = Integer.parseInt(inputMap.get(
-		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
-		// LoanAppForm loanAppForm = loanAppFormDao.findByuserID(userId);
-		/*
-		 * if(loanAppForm.getCreditStatus()!=null&&!loanAppForm.getCreditStatus()
-		 * .trim().equals("")){ int
-		 * workflowItemExecId=Integer.parseInt(inputMap.
-		 * get("workflowItemExecId").toString());
-		 * engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
-		 * return "3"; }
-		 */
+		// Do nothing - 
+		//Since this value only from Batch : It will surely be kept up-to-date
 		return null;
 	}
 
