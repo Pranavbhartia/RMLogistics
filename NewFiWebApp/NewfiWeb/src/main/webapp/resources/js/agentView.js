@@ -183,7 +183,7 @@ function paintAgentDashboardRightPanel(data) {
 		$(this).parent().find('.search-icn').show();
 	});
 
-	searchCon.append(searchIcon).append(searchInputBox);
+	searchCon.append(searchInputBox).append(searchIcon);
 
 	var filterText = $('<div>').attr({
 		"class" : "filter-text float-left"
