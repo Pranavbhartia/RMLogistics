@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,6 +134,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
+
+	@Value("${lqb.defaulturl}")
+	private String lqbDefaultUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
@@ -443,7 +447,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
-		substitutions.put("-username-", new String[] { user.getUsername() });
+		substitutions.put("-username-", new String[] { user.getEmailId() });
 		substitutions.put("-password-", new String[] { user.getPassword() });
 
 		recipientVO.setEmailID(user.getEmailId());
@@ -1153,7 +1157,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);
-		String url = null;
+		// By default the URL will be the landing page of LQB, if the user has
+		// provided the details, it will take the user to the loan specific page
+		String url = lqbDefaultUrl;
 		try {
 			UserVO userVO = findUser(userId);
 			if (userVO != null) {

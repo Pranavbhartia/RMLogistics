@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -46,7 +45,7 @@ public class Utils {
 		return inputStr;
 	}
 
-	public String getJsonStringOfMap(HashMap<String, Object> map) {
+	public String getJsonStringOfMap(Map<String, Object> map) {
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();
 		try {

@@ -390,13 +390,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("id", customerDetail.getId());
+		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
 		System.out.println("Rows affected: " + result);
 		return result;

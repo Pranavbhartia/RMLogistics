@@ -313,16 +313,11 @@ function removedComma(inputData) {
 
 
 function getFloatValue(inputData){
+	if(inputData)
+		return parseFloat(removedDoller(removedComma(inputData)));
+	else
+		return 0;
 	
-	return parseFloat(removedDoller(removedComma(inputData)));
-	
-}
-
-
-function getRoundValue(inputData) {
-
-    return Math.round(removedDoller(removedComma(inputData)));
-
 }
 
 function numberWithCommasAndDoller(x) {
@@ -332,4 +327,196 @@ function numberWithCommasAndDoller(x) {
 function showValue(number) {
     return numberWithCommasAndDoller(getRoundValue(number));
 
+}
+
+
+
+
+var closingCostHolder;
+function objectKeyMakerFunction(item){
+    switch(item){
+       	case "Lender Fee":
+			return "lenderFee813";
+		case "Credit/Charge":
+			return "creditOrCharge802" ;
+		case "Estimated Lender Costs":
+			return "TotEstLenCost" ;
+		case "Appraisal Fee":
+			return "appraisalFee804";
+		case "Credit Report":
+			return "creditReport805";
+		case "Flood Certification":
+			return "floodCertification807";
+		case "Wire Fee":
+			return "wireFee812";
+		case "Owners Title Insurance":
+			return "ownersTitleInsurance1103";
+		case "Lenders Title Insurance":
+			return "lendersTitleInsurance1104";
+		case "Closing/Escrow Fee":
+			return "closingEscrowFee1102";
+		case "Recording Fee":
+			return "recordingFees1201";
+		case "City/County Tax stamps":
+			return "cityCountyTaxStamps1204";
+		case "Total Estimated Third Party Costs":
+			return "totEstThdPtyCst";
+		case "Interest":
+			return "interest901";
+		case "Homeowners Insurance":
+			return "hazIns903";
+		case "Total Prepaids":
+			return "totPrepaids";
+		case "Tax Reserve - Estimated 2 Month(s)":
+			return "taxResrv1004";
+		case "Haz ins. Reserve - Estimated 2 Month(s)":
+			return "hazInsReserve1002";
+		case "Total Estimated Reserves Deposited in Escrow Account":
+			return "totEstResDepWthLen";
+    }
+    return undefined;
+}
+function getCalculationFunctionForItem(key){
+    var fun=function(){
+    	if(closingCostHolder.valueSet[key])
+    		return closingCostHolder.valueSet[key];
+    	else
+    		return "0";
+    };
+    switch(key){
+    	case "TotEstLenCost":
+    		fun=function(){
+    			var val1=getFloatValue(closingCostHolder.valueSet["lenderFee813"]);
+    			var val2=getFloatValue(closingCostHolder.valueSet["creditOrCharge802"]);
+    			var result=val1+val2;
+    			return result;
+    		};
+    		break;
+		case "recordingFees1201":
+    		fun=function(){
+    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+		    		return closingCostHolder.valueSet[key];
+		    	else
+		    		return "$ 125.00";
+    		};
+    		break;
+    	case "hazIns903":
+    		fun=function(){
+    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+		    		return closingCostHolder.valueSet[key];
+		    	else{
+		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){
+		    			var purchaseValue=getFloatValue(buyHomeTeaserRate.purchaseDetails.housePrice);
+		    			var result=Math.round(.0035*purchaseValue)
+		    			return result;
+		    		}else{
+		    			var result=refinanceTeaserRate!=undefined?refinanceTeaserRate.annualHomeownersInsurance:"";
+		    			return result;
+		    		}
+		    	}
+    		};
+    		break;
+    	case "taxResrv1004":
+    		fun=function(){
+    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+		    		return closingCostHolder.valueSet[key];
+		    	else{
+		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){
+		    			var purchaseValue=getFloatValue(buyHomeTeaserRate.purchaseDetails.housePrice);
+		    			var result=Math.round((.0125*purchaseValue)/6);
+		    			return result;
+		    		}else{
+		    			var taxVal=getFloatValue(refinanceTeaserRate.propertyTaxesPaid);
+		    			var result=Math.round(taxVal/6);
+		    			return result;
+		    		}
+		    	}
+    		};
+    		break;
+    	case "hazInsReserve1002":
+    		fun=function(){
+    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+		    		return closingCostHolder.valueSet[key];
+		    	else{
+		    		return "$ 0";
+		    	}
+    		};
+    		break;
+    	case "totEstThdPtyCst":
+    		fun=function(){
+				var val1=getFloatValue(closingCostHolder.valueSet["appraisalFee804"]);
+    			var val2=getFloatValue(closingCostHolder.valueSet["creditReport805"]);
+    			var val3=getFloatValue(closingCostHolder.valueSet["floodCertification807"]);
+    			var val4=getFloatValue(closingCostHolder.valueSet["wireFee812"]);
+    			var val5=getFloatValue(closingCostHolder.valueSet["ownersTitleInsurance1103"]);
+    			var val6=getFloatValue(closingCostHolder.valueSet["lendersTitleInsurance1104"]);
+    			var val7=getFloatValue(closingCostHolder.valueSet["closingEscrowFee1102"]);
+    			var val8=getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
+    			var val9=getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
+    			var result=val1+val2+val3+val4+val5+val6+val7+val8+val9;
+    			return result;
+    		};
+    		break;
+    	case "totPrepaids":
+    		fun=function(){
+    			var val1=getFloatValue(closingCostHolder.valueSet["interest901"]);
+    			var val2=getFloatValue(closingCostHolder.valueSet["hazIns903"]);
+    			var result=val1+val2;
+    			return result;
+    		};
+    		break;
+    	case "totEstResDepWthLen":
+    		fun=function(){
+    			var val1=getFloatValue(closingCostHolder.valueSet["taxResrv1004"]);
+    			var val2=getFloatValue(closingCostHolder.valueSet["hazInsReserve1002"]);
+    			var result=val1+val2;
+    			return result;
+    		};
+    		break;
+    }
+    return fun;
+}
+
+
+function getRowHolderObject(container,value,key){
+    var rw={
+        container:container,
+        value:value,
+        key:key,
+        updateFunction:getCalculationFunctionForItem(key),
+        updateView:function(){
+        	var ob=this;
+        	var getVal=ob.updateFunction();
+        	$(ob.container).text(getVal);
+        }
+    };
+    return rw;
+}
+function getObContainer(){
+	var obj={
+		update:function(){
+			var ob=this;
+			for(var key in ob){
+				var keyObj=ob[key];
+				if(keyObj.updateView){
+					keyObj.updateView();
+				}
+			}
+		}
+	};
+	return obj;
+}
+function updateOnSlide(valueSet){
+	if(valueSet){
+        closingCostHolder.valueSet=valueSet;
+    }else{
+        closingCostHolder.valueSet={};
+    }
+    closingCostHolder.update();
+}
+
+function getLQBObj(yearValues){
+    var rateVO = yearValues[yearValues.length-1].rateVO;
+    var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
+    return rateVO[index];
 }

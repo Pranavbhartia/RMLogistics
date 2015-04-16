@@ -40,6 +40,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -64,6 +65,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.workflow.enums.WorkItemStatus;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -451,6 +453,15 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressState(customerDetail.getAddressState());
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
+			if (null != customerDetail.getCarrierInfo()) {
+
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+				        .getCarrierNameForEmail(customerDetail.getCarrierInfo());
+				customerDetailVO
+				        .setCarrierInfo(mobileCarrier.getCarrierName());
+
+			}
+
 			if (null != customerDetail.getDateOfBirth())
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
 				        .getTime());
@@ -705,6 +716,7 @@ public class LoanServiceImpl implements LoanService {
 		 */
 
 		if (!defaultManagerAdded) {
+
 			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
 
 			if (defaultUser != null) {
@@ -1356,5 +1368,30 @@ public class LoanServiceImpl implements LoanService {
 	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
 		loanDao.setExpiryDateToPurchaseDocument(loanId, date);
 	}
+
+
+	@Override
+	@Transactional
+	public String saveLoanMilestone(int loanId, int masterMileStoneId,
+	        String comments) {
+		String status = null;
+		try {
+			Loan loan = new Loan(loanId);
+			LoanMilestone mileStone = new LoanMilestone();
+			mileStone.setLoan(loan);
+			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
+			loanMilestoneMaster.setId(masterMileStoneId);
+			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
+			mileStone.setComments(comments);
+			mileStone.setStatusUpdateTime(new Date());
+			this.saveLoanMilestone(mileStone);
+			status = WorkItemStatus.COMPLETED.getStatus();
+			return status;
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return status;
+		}
+	}
+
 
 }

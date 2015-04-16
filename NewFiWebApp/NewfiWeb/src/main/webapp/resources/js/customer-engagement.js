@@ -380,7 +380,12 @@ function paintSelectLoanTypeQuestion() {
     var titleText = $('<div>').attr({
         "class": "ce-title"
     }).html("A New way to Finance your home");
-    $('#ce-main-container').append(rateIcon).append(titleText);
+    
+    var getStartedTxt = $('<div>').attr({
+    	"class" : "ce-get-started"
+    }).html("Get Started Now");
+    
+    $('#ce-main-container').append(rateIcon).append(titleText).append(getStartedTxt);
     var wrapper = $('<div>').attr({
         "class": "ce-ques-wrapper"
     });
@@ -400,7 +405,7 @@ function paintSelectLoanTypeQuestion() {
     optionsContainer.append(option1).append(option2);
     var question = $('<div>').attr({
         "class": "ce-ques-text"
-    }).html("Why Pay thousands more to use a loan officer ?<br/>With newfi, saving weeks of headache and thousands of dollars is easy.");
+    }).html("Newfi difference #1: we empower you with advanced tools to save time and money!");
     wrapper.append(optionsContainer).append(question);
     $('#ce-main-container').append(wrapper);
 }
@@ -420,7 +425,7 @@ function paintRefinanceMainContainer() {
     $('#ce-main-container').append(wrapper);
     paintRefinanceQuest1();
 }
-var itemsList = ["Your Priority", "Your Mortgage", "Monthly Payment", "Home Value", "Zip Code", "Your Rates"];
+var itemsList = ["Loan Purpose", "Your Mortgage", "Monthly Payment", "Home Value", "Zip Code", "Your Rates"];
 
 function getRefinanceLeftPanel() {
     var container = $('<div>').attr({
@@ -630,12 +635,12 @@ function paintRefinanceStep3() {
                 "text": "Yes",
                 "addQuestions": [{
                     "type": "desc",
-                    "text": "How much are your annual property taxes?",
+                    "text": "How much are your property taxes?",
                     "name": "annualPropertyTaxes",
                     "value": ""
                 }, {
                     "type": "desc",
-                    "text": "How much is your annual homeowners insurance ?",
+                    "text": "How much is your homeowners insurance ?",
                     "name": "annualHomeownersInsurance",
                     "value": ""
                 }]
@@ -1010,7 +1015,7 @@ function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails,parentContaine
 	var teaserRate =  modifiedLQBJsonRes(teaserRate);
     var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     
-    var closingCostWrapper = getClosingCostSummaryContainer(teaserRate);
+    var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
@@ -1067,7 +1072,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     container.append(tenureSlider).append(rateSlider);
     var rateBtn1="";
     var rateBtn2="";
-    if(hideCreateAccountBtn==undefined || hideCreateAccountBtn){
+    if(!hideCreateAccountBtn){
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
         }).html("Create Your Account").on('click', function() {
@@ -1141,7 +1146,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 $('#loanprogramId').html(event.data.year +" Year Fixed");
                 
                 $('#principalIntId').html(showValue(event.data.ratesArray[index].payment));
-                
+                 updateOnSlide(event.data.ratesArray[index]);
                 
                 teaseCalculation(inputCustomerDetails);
             }
@@ -1213,7 +1218,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
             teaseCalculation(inputCustomerDetails);
-            
+            updateOnSlide(gridArray[ui.value]);
         }
     });
     container.append(tsIcon);
@@ -1311,10 +1316,10 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
    
     var loanAmount  = customerInputData.currentMortgageBalance;
     
-    if (customerInputData.refinanceOption == "REFLMP") refinanceOpt = "Lower My Monthly Payment";
-    if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay Off My Mortgage Faster";
+    if (customerInputData.refinanceOption == "REFLMP") refinanceOpt = "Lower monthly payment";
+    if (customerInputData.refinanceOption == "REFMF") refinanceOpt = "Pay off mortgage faster";
     if (customerInputData.refinanceOption == "REFCO"){
-    	refinanceOpt = "Take Cash Out of My Home";
+    	refinanceOpt = "Take cash out";
     	
         var cashTakeOut = getFloatValue(customerInputData.cashTakeOut);
         var currentMortgageBalance = getFloatValue(customerInputData.currentMortgageBalance);

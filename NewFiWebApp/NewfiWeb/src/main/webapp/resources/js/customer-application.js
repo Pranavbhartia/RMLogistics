@@ -4222,7 +4222,7 @@ function createTeaserRateObjectForPurchase(appUserDet){
             "loanType":appUserDet.loanType.loanTypeCd,
             "livingSituation":appUserDet.purchaseDetails.livingSituation,
             "rentPerMonth":"$5,000",
-            "homeWorthToday":appUserDet.purchaseDetails.estimatedPrice,
+            "homeWorthToday":appUserDet.purchaseDetails.housePrice,
             "currentMortgageBalance":"$280,000",
             "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
         };
@@ -4249,10 +4249,10 @@ function createTeaserRateObjectForRefinance(appUserDet){
 }
 function paintTeaserRatePageBasedOnLoanType(appUserDet){
     if(appUserDet.loanType.description=="Purchase"){
-        var parentContainer=$('center-panel-cont');
-        paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDet));
+        var parentContainer=$('#center-panel-cont');
+        paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDet),true);
     }else{
-        var parentContainer=$('center-panel-cont');
-        paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet));
+        var parentContainer=$('#center-panel-cont');
+        paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet),true);
     }
 }

@@ -150,4 +150,7 @@ public interface LoanService {
 	public LoanAppFormVO retrieveLoanAppForm(UserVO userVO);
 
 	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date);
+
+	public String saveLoanMilestone(int loanId, int masterMileStoneId,
+	        String comments);
 }

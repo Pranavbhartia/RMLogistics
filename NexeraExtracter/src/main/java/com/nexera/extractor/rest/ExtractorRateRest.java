@@ -28,7 +28,8 @@ public class ExtractorRateRest {
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 
-		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list);
+		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list,
+		        folder.lastModified());
 		// utility.getCompleteProductRateList(list);
 		Gson gson = new Gson();
 		return gson.toJson(uiMap);
