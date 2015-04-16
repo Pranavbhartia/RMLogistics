@@ -935,7 +935,10 @@ public class ApplicationFormRestService {
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
 			teaserRateResponseVO.setLoanNumber(loanNumber);
+			
+			if(teaserRateList!=null)
 			teaserRateList.add(0, teaserRateResponseVO);
+			
 
 		} catch (JSONException e) {
 			e.printStackTrace();

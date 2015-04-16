@@ -288,25 +288,27 @@ function capitalizeFirstLetter(string) {
 
 
 function removedDoller(inputData) {
-    var processData = inputData;
+    var processData = inputData+"";
    
     if(processData == undefined)
  	   return null;
     
-    if (inputData.indexOf('$') >= 0)     
-     processData = inputData.split("$")[1];
+    if (processData.indexOf('$') >= 0)     
+     processData = processData.split("$")[1];
 
       return processData;
 }
 
 function removedComma(inputData) {
-   if(inputData == undefined)
+	
+	var processData = inputData+"";
+	if(processData == undefined)
 	   return null;
 	
-	if (inputData.indexOf(',') >= 0) 
-       return inputData.replace(/,/g, "");
-   else
-      return inputData;
+	if (processData.indexOf(',') >= 0) 
+		processData = processData.replace(/,/g, "");
+     
+	return processData;
 }
 
 
@@ -314,4 +316,20 @@ function getFloatValue(inputData){
 	
 	return parseFloat(removedDoller(removedComma(inputData)));
 	
+}
+
+
+function getRoundValue(inputData) {
+
+    return Math.round(removedDoller(removedComma(inputData)));
+
+}
+
+function numberWithCommasAndDoller(x) {
+    return "$"+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function showValue(number) {
+    return numberWithCommasAndDoller(getRoundValue(number));
+
 }
