@@ -43,9 +43,11 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
@@ -57,6 +59,7 @@ import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -112,6 +115,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	NeedsListService needsListService;
+
+	@Autowired
+	NotificationService notificationService;
 
 	List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
 
@@ -362,6 +368,12 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Check whether purchase document is about to expire");
 		if (checkPurchaseDocumentExpiry(loan)) {
 			LOGGER.debug("Purchase Docuement Is About To Expire ");
+			NotificationVO notificationVO = new NotificationVO(
+			        loan.getId(),
+			        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+			                .getNotificationTypeName(),
+			        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
+			notificationService.createNotification(notificationVO);
 		}
 	}
 
@@ -405,12 +417,16 @@ public class ThreadManager implements Runnable {
 	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
 	        int currentLoanStatus) {
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
-			LOGGER.debug("Putting the item in execution ");
-			String params = Utils.convertMapToJson(getParamsBasedOnStatus(
-			        currentLoanStatus, workflowItemExec.getId()));
-			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-			        params);
-			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+			if (!workflowItemExec.getStatus().equalsIgnoreCase(
+			        WorkItemStatus.COMPLETED.getStatus())) {
+				LOGGER.debug("Putting the item in execution ");
+				String params = Utils.convertMapToJson(getParamsBasedOnStatus(
+				        currentLoanStatus, workflowItemExec.getId()));
+				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+				        params);
+				engineTrigger.startWorkFlowItemExecution(workflowItemExec
+				        .getId());
+			}
 		}
 	}
 
@@ -519,13 +535,17 @@ public class ThreadManager implements Runnable {
 		List<WorkflowItemExec> itemsToExecute = itemToExecute(
 		        workflowItemTypeList, workflowItemExecList);
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
-			LOGGER.debug("Putting the item in execution ");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-			String params = Utils.convertMapToJson(map);
-			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-			        params);
-			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+			if (!workflowItemExec.getStatus().equalsIgnoreCase(
+			        WorkItemStatus.COMPLETED.getStatus())) {
+				LOGGER.debug("Putting the item in execution ");
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+				String params = Utils.convertMapToJson(map);
+				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+				        params);
+				engineTrigger.startWorkFlowItemExecution(workflowItemExec
+				        .getId());
+			}
 		}
 
 	}
@@ -538,17 +558,21 @@ public class ThreadManager implements Runnable {
 		List<WorkflowItemExec> itemsToExecute = itemToExecute(
 		        workflowItemTypeList, workflowItemExecList);
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
-			LOGGER.debug("Putting the item in execution ");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
-			        workflowItemExec.getId());
-			map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
-			        paymentStatus);
-			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
-			String params = Utils.convertMapToJson(map);
-			workflowService.saveParamsInExecTable(workflowItemExec.getId(),
-			        params);
-			engineTrigger.startWorkFlowItemExecution(workflowItemExec.getId());
+			if (!workflowItemExec.getStatus().equalsIgnoreCase(
+			        WorkItemStatus.COMPLETED.getStatus())) {
+				LOGGER.debug("Putting the item in execution ");
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
+				        workflowItemExec.getId());
+				map.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
+				        paymentStatus);
+				map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+				String params = Utils.convertMapToJson(map);
+				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
+				        params);
+				engineTrigger.startWorkFlowItemExecution(workflowItemExec
+				        .getId());
+			}
 		}
 
 	}
