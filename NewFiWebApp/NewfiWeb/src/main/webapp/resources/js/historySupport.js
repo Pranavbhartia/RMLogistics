@@ -343,11 +343,12 @@ function retrieveState() {
 	// If customer is logged in. Skipping this module for now.
 	switch (primary) {
 	case PNEnum.PROFILE:
-		$("#lp-customer-profile").click();
+		showCustomerProfilePage();
 		break;
 
 	case PNEnum.TEAM:
 		console.log('TEAM view');
+		changeLeftPanel(1);
 		break;
 
 	case PNEnum.MY_LOAN:
@@ -355,23 +356,23 @@ function retrieveState() {
 		switch (secondary) {
 		case SNEnum[1]:
 			 console.log('GETTINGTOKNOWNEWFI view');
-			 $("#lp-step1").click();
+			 changeSecondaryLeftPanel(1);
 			 break;
 		case SNEnum[2]:
 			console.log('COMPLETEAPPLICATION view');
-			$("#lp-step2").click();
+			changeSecondaryLeftPanel(2);
 			break;
 		case SNEnum[3]:
 			console.log('LOCKRATE view');
-			$("#lp-step3").click();
+			changeSecondaryLeftPanel(3);
 			break;
 		case SNEnum[4]:
 			console.log('UPLOAD view');
-			$("#lp-step4").click();
+			changeSecondaryLeftPanel(4);
 			break;
 		case SNEnum[5]:
 			console.log('LOANPROGRESS view');
-			$("#lp-step5").click();
+			changeSecondaryLeftPanel(5);
 			break;
 
 		default:
@@ -392,5 +393,5 @@ globalSNBinder();
 window.addEventListener("hashchange", function() {
 	// console.log("Hash changed to", window.location.hash);
 	// console.log("History State is : "+window.history.state);
-	retrieveState();
+	//retrieveState();
 });

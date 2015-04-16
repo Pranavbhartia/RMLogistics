@@ -397,10 +397,10 @@ function appendCustomers(elementId, customers) {
 			resetSelectedUserDetailObject(event.data.customer);
 			if (userIsRealtor()) {
 				saveState('loan', selectedUserDetail.loanID, "team");
-				entryPointForAgentView(selectedUserDetail.loanID, '0')
+				entryPointForAgentView(selectedUserDetail.loanID, '0');
 			} else {
 				saveState('loan', selectedUserDetail.loanID, "detail");
-				entryPointForAgentView(selectedUserDetail.loanID, '2')
+				entryPointForAgentView(selectedUserDetail.loanID, '2');
 			}
 
 			// getLoanDetails(loanID);

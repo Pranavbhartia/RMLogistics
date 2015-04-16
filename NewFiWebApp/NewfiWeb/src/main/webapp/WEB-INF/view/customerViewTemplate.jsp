@@ -95,7 +95,7 @@
 	            }
 	            retrieveState();
 	        };
-			if(location.search.trim()!='' ){
+			if(location.hash.trim()!='' ){
 	            historyCallback= true;
 	            refreshSupport=true;
 	            retrieveState();
