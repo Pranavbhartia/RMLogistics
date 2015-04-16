@@ -12,6 +12,7 @@ import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 
 
 
+
  
  
 public class TeaserRateHandler extends DefaultHandler {
@@ -87,11 +88,7 @@ public class TeaserRateHandler extends DefaultHandler {
     		}
     		
     		if((qName.equalsIgnoreCase("RateOption") || qName.equalsIgnoreCase("ClosingCost")) && eligibilityFlag== true ) {
-    			
-    			
-    				
-    			
-    			
+    	 			
     			
     			if(qName.equalsIgnoreCase("RateOption")){
     				
@@ -124,7 +121,6 @@ public class TeaserRateHandler extends DefaultHandler {
     				tempRateVo.setPayment(tempMap.get("Payment"));
     				tempRateVo.setPoint(tempMap.get("Point"));
     				tempRateVo.setLenderFee813(tempMap.get("lenderFee813"));
-    				tempRateVo.setLoanOriginationFee801(tempMap.get("loanOriginationFee801"));
     				tempRateVo.setCreditOrCharge802(tempMap.get("creditOrCharge802"));
     				tempRateVo.setAppraisalFee804(tempMap.get("appraisalFee804"));
     				tempRateVo.setCreditReport805(tempMap.get("creditReport805"));
@@ -138,9 +134,10 @@ public class TeaserRateHandler extends DefaultHandler {
     				tempRateVo.setHazIns903(tempMap.get("hazIns903"));
     				tempRateVo.setTaxResrv1004(tempMap.get("taxResrv1004"));
     				tempRateVo.setHazInsReserve1002(tempMap.get("hazInsReserve1002"));
+    				tempRateVo.setOwnersTitleInsurance1103(tempMap.get("ownersTitleInsurance1103"));
     								
     			//	System.out.println("Setting rate VO list tempRateVo values is "+tempRateVo.getClosingCost()+"  "+tempRateVo.getTeaserRate());
-    				
+    				tempRateVo= emptyClosingCost(tempRateVo);
     				rateVoList.add(tempRateVo);
     					
     				tempMap.clear();
@@ -166,71 +163,22 @@ public class TeaserRateHandler extends DefaultHandler {
         			rateVo.setlLpTemplateId(attributes.getValue("lLpTemplateId"));
         			rateVo.setPayment(attributes.getValue("Payment"));
         			rateVo.setPoint(attributes.getValue("Point"));
-        			
-        			
-        			
-    				//rateVoList.add(rateVo);
-    				}
-    				
-    				
-    				
-    				
-    			}
+        				}
+    					}
     			
     			}
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			if(qName.equalsIgnoreCase("ClosingCost") && bypassFlag == false){
+    					if(qName.equalsIgnoreCase("ClosingCost") && bypassFlag == false){
         			
     				rateVo = setClosingCost(attributes,rateVo);
     								
     			}else{
     				
-    				//tempMap
-    				
     				tempMap = setClosingCostTempMapValue(attributes,tempMap);
-    			}
-    			
-    			
-    			
-    			
-    		
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    			
-    		}
-    		
-    		
-    		/*
-    		if(qName.equalsIgnoreCase("ClosingCost")) {
-    			
-				System.out.println("Line is "+attributes.getValue("Line"));
-				System.out.println("Closing Cost "+attributes.getValue("Amount"));
-			}*/
-    		
-    	}
+    			} 			
+    	   		}
+    		 	}
     
-    
-    
-    
-    
-    
-
-	
+   
 	
 	
 private LqbTeaserRateVo setClosingCost(Attributes attributes, LqbTeaserRateVo rateVO){
@@ -238,10 +186,6 @@ private LqbTeaserRateVo setClosingCost(Attributes attributes, LqbTeaserRateVo ra
 
     if("813".equalsIgnoreCase(attributes.getValue("Line")))
 		rateVo.setLenderFee813(attributes.getValue("Amount"));
-			
-	
-	if("801".equalsIgnoreCase(attributes.getValue("Line")))
-	rateVo.setLoanOriginationFee801(attributes.getValue("Amount"));
 	
 	
 	if("802".equalsIgnoreCase(attributes.getValue("Line")))
@@ -294,6 +238,9 @@ private LqbTeaserRateVo setClosingCost(Attributes attributes, LqbTeaserRateVo ra
 	
 	if("1002".equalsIgnoreCase(attributes.getValue("Line")))
 		rateVo.setHazInsReserve1002(attributes.getValue("Amount"));
+	
+	if("1103".equalsIgnoreCase(attributes.getValue("Line")))
+		rateVo.setOwnersTitleInsurance1103(attributes.getValue("Amount"));
 
 return rateVO;
 
@@ -376,6 +323,11 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
 	if("1002".equalsIgnoreCase(attributes.getValue("Line")))
 		tempMap.put("hazInsReserve1002",attributes.getValue("Amount"));
 		
+	
+	if("1103".equalsIgnoreCase(attributes.getValue("Line")))
+		tempMap.put("ownersTitleInsurance1103",attributes.getValue("Amount"));
+	
+	
 	return tempMap;
 	
 } 
@@ -390,8 +342,9 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
     		String qName) throws SAXException {
     	//System.out.println("end Element  qName # "+qName);
     	
-    	if(qName.equalsIgnoreCase("RateOption") && rateVo != null) {
-    	rateVoList.add(rateVo);
+    	if(qName.equalsIgnoreCase("RateOption") && rateVo != null && rateVoList!=null && rateVoList.size()<=5) {
+    		rateVo= emptyClosingCost(rateVo);
+    		rateVoList.add(rateVo);
     	}
     	
     	
@@ -408,6 +361,47 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
    		}
 
  
+    
+    
+   private LqbTeaserRateVo emptyClosingCost(LqbTeaserRateVo rateVo){
+	   
+	   
+	   
+	    if(rateVo.getLenderFee813() == null)
+	    rateVo.setLenderFee813("0");
+	    if(rateVo.getCreditOrCharge802() == null)
+	    rateVo.setCreditOrCharge802("0");
+	    if(rateVo.getAppraisalFee804() == null)
+	    rateVo.setAppraisalFee804("0");
+	    if(rateVo.getCreditReport805() == null)
+	    rateVo.setCreditReport805("0");
+	    if(rateVo.getFloodCertification807() == null)
+	    rateVo.setFloodCertification807("0");
+	    if(rateVo.getWireFee812() == null)
+	    rateVo.setWireFee812("0");
+	    if(rateVo.getLendersTitleInsurance1104() == null)
+	    rateVo.setLendersTitleInsurance1104("0");
+	    if(rateVo.getClosingEscrowFee1102() == null)
+	    rateVo.setClosingEscrowFee1102("0");
+	    if(rateVo.getRecordingFees1201() == null)
+	    rateVo.setRecordingFees1201("125");
+	    if(rateVo.getCityCountyTaxStamps1204() == null)
+	    rateVo.setCityCountyTaxStamps1204("0");
+	    if(rateVo.getInterest901() == null)
+	    rateVo.setInterest901("0");
+	    if(rateVo.getHazIns903() == null)
+	    rateVo.setHazIns903("0");
+	    if(rateVo.getTaxResrv1004() == null)
+	    rateVo.setTaxResrv1004("0");
+	    if(rateVo.getHazInsReserve1002() == null)
+	    rateVo.setHazInsReserve1002("0");
+		if(rateVo.getOwnersTitleInsurance1103() == null)
+	    rateVo.setOwnersTitleInsurance1103("0");
+	   
+	   
+	   
+	   return rateVo;
+   }
  
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {

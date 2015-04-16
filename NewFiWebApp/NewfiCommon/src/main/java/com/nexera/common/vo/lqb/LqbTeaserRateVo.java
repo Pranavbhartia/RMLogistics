@@ -1,5 +1,6 @@
 package com.nexera.common.vo.lqb;
 
+
 public class LqbTeaserRateVo {
 
 	private String teaserRate; 
@@ -9,7 +10,6 @@ public class LqbTeaserRateVo {
 	private String lLpTemplateId;
 	private String point;
 	private String lenderFee813;
-	private String loanOriginationFee801;
 	private String creditOrCharge802;
 	private String appraisalFee804;
 	private String creditReport805;
@@ -23,6 +23,7 @@ public class LqbTeaserRateVo {
 	private String hazIns903;
 	private String taxResrv1004;
 	private String hazInsReserve1002;
+	private String ownersTitleInsurance1103;
 	
 	
 	
@@ -72,12 +73,6 @@ public class LqbTeaserRateVo {
 	}
 	public void setLenderFee813(String lenderFee813) {
 		this.lenderFee813 = lenderFee813;
-	}
-	public String getLoanOriginationFee801() {
-		return loanOriginationFee801;
-	}
-	public void setLoanOriginationFee801(String loanOriginationFee801) {
-		this.loanOriginationFee801 = loanOriginationFee801;
 	}
 	public String getCreditOrCharge802() {
 		return creditOrCharge802;
@@ -156,6 +151,12 @@ public class LqbTeaserRateVo {
 	}
 	public void setHazInsReserve1002(String hazInsReserve1002) {
 		this.hazInsReserve1002 = hazInsReserve1002;
+	}
+	public String getOwnersTitleInsurance1103() {
+		return ownersTitleInsurance1103;
+	}
+	public void setOwnersTitleInsurance1103(String ownersTitleInsurance1103) {
+		this.ownersTitleInsurance1103 = ownersTitleInsurance1103;
 	}
 	
 	
