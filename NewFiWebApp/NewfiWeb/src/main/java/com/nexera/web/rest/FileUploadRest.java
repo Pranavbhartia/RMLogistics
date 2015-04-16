@@ -241,10 +241,13 @@ public class FileUploadRest {
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		List<LoanNeedsListVO> loanNeedsVO;
 		List<UploadedFilesListVO> uploadedFilesList;
-
 		Map<String, List<LoanNeedsListVO>> listLoanNeedsListMap;
 		UploadFileScreenVO uploadFileScreenVO = new UploadFileScreenVO();
+
 		try {
+			
+			uploadFileScreenVO.setLoanEmailID(loanService.getLoanByID(loanId).getLoanEmailId());
+			
 			loanNeedsVO = needsListService.getLoanNeedsList(loanId);
 			listLoanNeedsListMap = needsListService.getLoanNeedsMap(loanId);
 

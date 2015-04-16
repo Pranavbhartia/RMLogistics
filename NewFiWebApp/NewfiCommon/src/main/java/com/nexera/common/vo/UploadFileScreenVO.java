@@ -15,6 +15,9 @@ public class UploadFileScreenVO implements Serializable {
 	List<LoanNeedsListVO> listLoanNeedsListVO;
 	List<UploadedFilesListVO> listUploadedFilesListVO;
 	private NeededItemScoreVO neededItemScoreVO;
+	private String loanEmailID;
+	
+	
 	
 	public List<LoanNeedsListVO> getListLoanNeedsListVO() {
 		return listLoanNeedsListVO;
@@ -47,5 +50,13 @@ public class UploadFileScreenVO implements Serializable {
 	public void setNeededItemScoreVO(NeededItemScoreVO neededItemScoreVO) {
 		this.neededItemScoreVO = neededItemScoreVO;
 	}
+
+	public String getLoanEmailID() {
+	    return loanEmailID;
+    }
+
+	public void setLoanEmailID(String loanEmailID) {
+	    this.loanEmailID = loanEmailID;
+    }
 
 }
