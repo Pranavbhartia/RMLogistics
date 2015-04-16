@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -24,10 +26,12 @@ import com.nexera.core.helper.USStateLookUp;
 
 @Component
 public class USStateLookupImpl implements USStateLookUp {
-	
+
 	@Autowired
 	@Qualifier("genericDaoImpl")
 	private GenericDao genericDao;
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(USStateLookupImpl.class);
 
 	@Override
 	@Transactional
@@ -43,11 +47,10 @@ public class USStateLookupImpl implements USStateLookUp {
 			JsonParser jParser = jfactory.createParser(arg0);
 			// loop until token equal to "}"
 			HashMap<String, String> hashMap = new HashMap<String, String>();
-			
+
 			String stateName = null;
 			String stateAbbr = null;
 			while (jParser.nextToken() != JsonToken.END_ARRAY) {
-				
 
 				String fieldname = jParser.getCurrentName();
 				if ("name".equals(fieldname)) {
@@ -68,40 +71,38 @@ public class USStateLookupImpl implements USStateLookUp {
 					stateAbbr = jParser.getText();
 					System.out.println(stateAbbr);
 					hashMap.put(stateAbbr, stateName);
-					
 
 				}
-				
 
 			}
 			Set<String> set = hashMap.keySet();
 			List<StateLookup> stateLookups = new ArrayList<StateLookup>();
-			
+
 			for (String key : set) {
-	            System.out.println("Key: "+key+ " value:"+hashMap.get(key));
-	            StateLookup lookup = new StateLookup();
-	            lookup.setStatecode(key);
-	            lookup.setStatename(hashMap.get(key));
-	            stateLookups.add(lookup);
-            }
+				System.out
+				        .println("Key: " + key + " value:" + hashMap.get(key));
+				StateLookup lookup = new StateLookup();
+				lookup.setStatecode(key);
+				lookup.setStatename(hashMap.get(key));
+				stateLookups.add(lookup);
+			}
 			genericDao.saveAll(stateLookups);
 			jParser.close();
 
 		} catch (JsonGenerationException e) {
 
-			e.printStackTrace();
+			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 
 		} catch (JsonMappingException e) {
 
-			e.printStackTrace();
+			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 
 		} catch (IOException e) {
 
-			e.printStackTrace();
+			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 
 		}
 
 	}
 
-	
 }

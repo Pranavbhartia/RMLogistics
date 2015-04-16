@@ -17,35 +17,29 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.vo.NotificationVO;
 
-
-
 public class TriggerNotification extends Thread {
 	private final String USER_AGENT = "Mozilla/5.0";
 	private HashMap<String, String> params = new HashMap<String, String>();
 	private String url;
-	public static void main(String[] args) {
-		NotificationVO notificationVo = new NotificationVO();
-		notificationVo.setId(2);
-		notificationVo.setLoanID(1);
-		TriggerNotification.triggerDismissNotofication(notificationVo,
-		        "http://localhost:8080/PushNotification/pushServlet/");
-		// TriggerNotification triggernotification = new TriggerNotification();
-		// triggernotification.start();
-	}
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(TriggerNotification.class);
 
 	private TriggerNotification(HashMap<String, String> params, String url) {
 		this.params = params;
 		this.url = url;
 	}
+
+	@Override
 	public void run() {
-		// String url = "http://localhost:8080/PushNotification/pushServlet/";
-		// String urlParameters = "task=notification&taskId=1&data=tstin";
+
 		try {
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
@@ -60,26 +54,26 @@ public class TriggerNotification extends Thread {
 			post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 			HttpResponse response = client.execute(post);
-			System.out.println("\nSending 'POST' request to URL : " + url);
-			System.out.println("Post parameters : " + post.getEntity());
-			System.out.println("Response Code : "
-					+ response.getStatusLine().getStatusCode());
+
+			LOGGER.debug("Post parameters : " + post.getEntity());
+			LOGGER.debug("Response Code : "
+			        + response.getStatusLine().getStatusCode());
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+			        response.getEntity().getContent()));
 
 			StringBuffer result = new StringBuffer();
 			String line = "";
 			while ((line = rd.readLine()) != null) {
 				result.append(line);
 			}
-			System.out.println(result.toString());
+			LOGGER.debug("Result is " + result.toString());
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 
 	}
@@ -90,16 +84,16 @@ public class TriggerNotification extends Thread {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("action", "new");
 		map.put("data", notificationVo);
-		ObjectMapper mapper=new ObjectMapper();
-		StringWriter sw=new StringWriter();
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
@@ -124,11 +118,11 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
@@ -153,11 +147,11 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception caught " + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
