@@ -40,6 +40,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 		        LoanStatus.creditScoreMessage);
 		sendEmail(objectMap);
+
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
@@ -55,7 +56,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        iWorkflowService.getCreditDisplayScore(userID));
 		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-		        needsListService.checkCreditReport(loanID));
+				needsListService.checkCreditReport(loanID));
 		// TO Remove------ end
 
 		return utils.getJsonStringOfMap(map);
@@ -63,15 +64,13 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Do Nothing
-		// The credit scores come from LQB via Batch only - So Batch will keep
-		// the WorkItem status clean
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// Do Nothing
+		// TODO Auto-generated method stub
 		return null;
 	}
 

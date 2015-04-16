@@ -10,7 +10,6 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
 import com.nexera.workflow.engine.EngineTrigger;
-import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -44,8 +43,8 @@ public class BankConnectionManager implements IWorkflowTaskExecutor {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger
-					.changeStateOfWorkflowItemExec(workflowItemExecId,WorkItemStatus.STARTED.toString());
-			return WorkItemStatus.STARTED.toString();
+					.changeStateOfWorkflowItemExec(workflowItemExecId, "3");
+			return "3";
 		}
 		return null;
 	}

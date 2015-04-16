@@ -1,21 +1,18 @@
 package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanApplicationFee;
-import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.TransactionDetails;
-import com.nexera.common.enums.Milestones;
+import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -33,37 +30,47 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	private TransactionService transactionService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
-	private static final Logger LOG = LoggerFactory
-	        .getLogger(PaymentManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-
-		return WorkItemStatus.NOT_STARTED.getStatus();
+		if (objectMap != null) {
+			int loanId = Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			String status = objectMap.get(
+			        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
+			        .toString();
+			if (status.equals(LoanStatus.APP_PAYMENT_SUCCESS)) {
+				dismissAllPaymentAlerts(loanId);
+				createAlertToLockRates(objectMap);
+				return WorkItemStatus.COMPLETED.getStatus();
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		String status = LoanStatus.APP_PAYMENT_PENDING;
-		try {
-			Loan loan = new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
-			        Milestones.APP_FEE.getMilestoneKey());
-			if (mileStone != null && mileStone.getComments() != null) {
-				status = mileStone.getComments().toString();
-			}
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			status = "";
-		}
-		return status;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Dont do anything in this check Status : Let Batch Take care of it
+		// TODO check payment status
+		int userId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		UserVO user = new UserVO();
+		user.setId(userId);
+		LoanVO loan = loanService.getActiveLoanOfUser(user);
+		LoanApplicationFee loanApplicationFee = transactionService
+		        .findByLoan(loan);
+		if (loanApplicationFee.getPaymentDate() != null) {
+			int workflowItemExecId = Integer.parseInt(inputMap.get(
+			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
+			        WorkItemStatus.COMPLETED.toString());
+			return WorkItemStatus.COMPLETED.toString();
+		}
 		return null;
 	}
 
@@ -71,6 +78,24 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	private void dismissAllPaymentAlerts(int loanID) {
+		iWorkflowService.dismissReadNotifications(loanID,
+		        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_OVERDUE_TYPE);
+		iWorkflowService.dismissReadNotifications(loanID,
+		        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE);
+	}
+
+	private void createAlertToLockRates(HashMap<String, Object> objectMap) {
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.LOCK_RATE_CUST_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String notificationReminderContent = WorkflowConstants.LOCK_RATE_CUST_NOTIFICATION_CONTENT;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+		        notificationType, loanId, notificationReminderContent);
+		createReminderVo.setForCustomer(true);
+		iWorkflowService.createAlertOfType(createReminderVo);
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {

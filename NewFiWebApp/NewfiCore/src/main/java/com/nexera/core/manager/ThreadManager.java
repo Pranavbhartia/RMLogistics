@@ -28,7 +28,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.LoadConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -471,15 +470,15 @@ public class ThreadManager implements Runnable {
 			try {
 				if (braintreePaymentGatewayService.checkAndUpdateTransactions(
 				        transactionDetails).equalsIgnoreCase(
-				        LoanStatus.APP_PAYMENT_SUCCESS)) {
+				        WorkflowDisplayConstants.PAYMENT_SUCCESSFUL)) {
 					LOGGER.debug("Transaction has been successful");
-					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
+					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_SUCCESSFUL);
 				} else if (braintreePaymentGatewayService
 				        .checkAndUpdateTransactions(transactionDetails)
 				        .equalsIgnoreCase(
-				        		LoanStatus.APP_PAYMENT_FAILURE)) {
+				                WorkflowDisplayConstants.PAYMENT_FAILURE)) {
 					LOGGER.debug("Transaction has failed");
-					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_FAILURE);
+					invokeApplicationFeeMilestone(WorkflowDisplayConstants.PAYMENT_FAILURE);
 				}
 			} catch (NoRecordsFetchedException | InvalidInputException e) {
 				LOGGER.error("Exception received for this transaction "

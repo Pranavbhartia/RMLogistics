@@ -29,7 +29,7 @@ import com.braintreegateway.exceptions.NotFoundException;
 import com.braintreegateway.exceptions.UnexpectedException;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
-import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.TransactionDetailsDao;
 import com.nexera.common.entity.Loan;
@@ -37,7 +37,6 @@ import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.CreditCardException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -264,9 +263,6 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 		LOG.debug("Updating database with the new transaction details record!");
 		transactionDetailsDao.save(transactionDetails);
-		loanSerivce.saveLoanMilestone(loanId,
-		        Milestones.APP_FEE.getMilestoneID(),
-		        LoanStatus.APP_PAYMENT_PENDING);
 		LOG.info("Transaction details successfully updated!");
 	}
 
@@ -351,7 +347,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 	        TransactionDetails transactionDetails)
 	        throws NoRecordsFetchedException, InvalidInputException {
 
-		String paymentStatus = LoanStatus.APP_PAYMENT_PENDING;
+		String paymentStatus = WorkflowDisplayConstants.PAYMENT_PENDING;
 		if (transactionDetails.getTransaction_id() == null) {
 			throw new InvalidInputException(
 			        "The transaction details object has empty transaction id entity");
@@ -421,7 +417,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
 			        receiptPdfService.generateReceipt(LoanApplicationFee
 			                .convertEntityToVO(applicationFee)));
-			paymentStatus = LoanStatus.APP_PAYMENT_SUCCESS;
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_SUCCESSFUL;
 		} else if (transaction.getStatus() == Transaction.Status.AUTHORIZATION_EXPIRED
 		        || transaction.getStatus() == Transaction.Status.FAILED
 		        || transaction.getStatus() == Transaction.Status.GATEWAY_REJECTED
@@ -439,14 +435,14 @@ public class BraintreePaymentGatewayServiceImpl implements
 			transactionDetails
 			        .setStatus(CommonConstants.TRANSACTION_STATUS_FAILED);
 			loanDao.update(transactionDetails);
-			paymentStatus = LoanStatus.APP_PAYMENT_FAILURE;
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_FAILURE;
 		} else {
 			// We dont do anything and just poll it the next time to check the
 			// status as the transaction is pending.
 			LOG.debug("The transaction with id : "
 			        + transactionDetails.getTransaction_id()
 			        + " is pending for settlement");
-			paymentStatus = LoanStatus.APP_PAYMENT_PENDING;
+			paymentStatus = WorkflowDisplayConstants.PAYMENT_PENDING;
 		}
 		return paymentStatus;
 	}
