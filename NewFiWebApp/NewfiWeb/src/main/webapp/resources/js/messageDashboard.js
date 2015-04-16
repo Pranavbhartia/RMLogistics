@@ -153,7 +153,13 @@ function saveMessageCall(message) {
 
 function successCallBackSaveMessage() {
 	console.info("successCallBackSaveMessage saved method claeed ");
-	showMessageDashboard();
+	if(selectedUserDetail != undefined){
+		showAgentMessageDashboard();
+	}else{
+		showMessageDashboard();
+	}
+	
+
 }
 
 function getConversationsofUser() {

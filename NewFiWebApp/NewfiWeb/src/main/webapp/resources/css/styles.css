@@ -1586,7 +1586,7 @@ input[type="button"]:focus, button:focus {
 	line-height: 30px;
 	margin: 7.5px 0;
 	margin-left: 20px;
-	padding-left: 20px;
+	padding-left: 8px;
 	background: url(../images/down-arrow.png) no-repeat right center;
 	background-color: #fff;
 	border-radius: 3px;
