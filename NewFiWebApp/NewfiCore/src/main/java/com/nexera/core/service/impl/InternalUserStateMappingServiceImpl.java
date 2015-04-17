@@ -16,28 +16,28 @@ import com.nexera.core.service.InternalUserStateMappingService;
 
 @Component
 public class InternalUserStateMappingServiceImpl implements
-		InternalUserStateMappingService {
+        InternalUserStateMappingService {
 
 	@Autowired
 	private InternalUserStateMappingDao mappingDao;
 
 	@Override
-
+	@Transactional
 	public void saveOrUpdateUserStates(
-			List<InternalUserStateMappingVO> internalUserStateMappings) {
+	        List<InternalUserStateMappingVO> internalUserStateMappings) {
 		mappingDao
-				.saveOrUpdateUserStates(fillListInternalUserStateVOToObj(internalUserStateMappings));
+		        .saveOrUpdateUserStates(fillListInternalUserStateVOToObj(internalUserStateMappings));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InternalUserStateMappingVO> retrieveStatesForUser(Integer userId) {
 		return fillListInternalUserStateObjToVO(mappingDao
-				.retrieveStatesForUser(userId));
+		        .retrieveStatesForUser(userId));
 	}
 
 	List<InternalUserStateMapping> fillListInternalUserStateVOToObj(
-			List<InternalUserStateMappingVO> internalUserStateMappings) {
+	        List<InternalUserStateMappingVO> internalUserStateMappings) {
 		List<InternalUserStateMapping> stateMappings = new ArrayList<InternalUserStateMapping>();
 		InternalUserStateMapping stateMapping = null;
 		for (InternalUserStateMappingVO internalUserStateMapping : internalUserStateMappings) {
@@ -45,14 +45,14 @@ public class InternalUserStateMappingServiceImpl implements
 			if (internalUserStateMapping.getId() != null)
 				stateMapping.setId(internalUserStateMapping.getId());
 			stateMapping.setStateLookup(new StateLookup(
-					internalUserStateMapping.getStateId()));
+			        internalUserStateMapping.getStateId()));
 			stateMapping
-					.setUser(new User(internalUserStateMapping.getUserId()));
-			if(!internalUserStateMapping.getIsChecked()){
-					if( internalUserStateMapping.getId()!=null)
-						mappingDao.deleteObj(stateMapping);
-			}else{
-				if(internalUserStateMapping.getIsChecked())
+			        .setUser(new User(internalUserStateMapping.getUserId()));
+			if (!internalUserStateMapping.getIsChecked()) {
+				if (internalUserStateMapping.getId() != null)
+					mappingDao.deleteObj(stateMapping);
+			} else {
+				if (internalUserStateMapping.getIsChecked())
 					stateMappings.add(stateMapping);
 			}
 		}
@@ -60,14 +60,14 @@ public class InternalUserStateMappingServiceImpl implements
 	}
 
 	List<InternalUserStateMappingVO> fillListInternalUserStateObjToVO(
-			List<InternalUserStateMapping> internalUserStateMappings) {
+	        List<InternalUserStateMapping> internalUserStateMappings) {
 		List<InternalUserStateMappingVO> stateMappings = new ArrayList<InternalUserStateMappingVO>();
 		InternalUserStateMappingVO stateMapping = null;
 		for (InternalUserStateMapping internalUserStateMapping : internalUserStateMappings) {
 			stateMapping = new InternalUserStateMappingVO();
 			stateMapping.setId(internalUserStateMapping.getId());
 			stateMapping.setStateId(internalUserStateMapping.getStateLookup()
-					.getId());
+			        .getId());
 			stateMapping.setUserId(internalUserStateMapping.getUser().getId());
 			stateMapping.setIsChecked(true);
 			stateMappings.add(stateMapping);
