@@ -1,12 +1,12 @@
 
 var active = 0;
-
+var message="Field cannot be empty";
 var buyHomeTeaserRate = new Object();
 var purchaseDetails = new Object();
 buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 //buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 
-var buyHomeitemsList = [ "Your priority", "Loan Amount",
+var buyHomeitemsList = [ "Loan Purpose", "Loan Amount","Home Information",
 		"Zip Code", "Your Rates"];
 
 function getBuyHomeLeftPanel() {
@@ -49,6 +49,7 @@ function getbuyHomeLeftPanelItem(itemTxt, stepNo, itemCompletionStage) {
 
 function paintBuyHomeContainer() {
 
+	refinanceTeaserRate = {};
 	buyHomeTeaserRate.loanType = "PUR";
 	$('#ce-main-container').html('');
 	var wrapper = $('<div>').attr({
@@ -140,7 +141,7 @@ function paintBuyHomEachMonthrent() {
 	var optionContainer1 = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "rentPerMonth"
@@ -177,8 +178,8 @@ function paintBuyHomEachMonthrent() {
 		"name" : "liveEarlier"
 	});*/
 
-	optionContainer1.append(inputBox1);
-	optionContainer2.append(inputBox2);
+	optionContainer1.append(inputBox1).append(errFeild);
+	optionContainer2.append(inputBox2).append(errFeild);
 	//optionContainer3.append(inputBox3);
 
 	quesTextCont1.append(optionContainer1);
@@ -194,8 +195,14 @@ function paintBuyHomEachMonthrent() {
 				buyHomeTeaserRate["rentPerMonth"] = $('input[name="rentPerMonth"]').val();
 				buyHomeTeaserRate["startLiving"] = $('input[name="startLiving"]').val();
 				buyHomeTeaserRate["liveEarlier"] = $('input[name="liveEarlier"]').val();
-
-				paintPlanToBuyYourHouse();
+                var questionOne=validateInput($('input[name="rentPerMonth"]').val(),message);
+                alert(questionOne);
+                if(questionOne){
+                	paintPlanToBuyYourHouse();
+                }else{
+                	return false;
+                }
+				
 				// paintBuyHomeStartMilitaryloans();
 			});
 
@@ -301,8 +308,20 @@ function paintloanamount(){
           	 buyHomeTeaserRate.purchaseDetails.loanAmount=$('input[name="loanAmount"]').val();
           	// buyHomeTeaserRate.purchaseDetails.estimatedPrice=$('input[name="estimatedPurchasePrice"]').val();
           	// buyHomeTeaserRate.purchaseDetails.isTax&InsuranceInLoanAmt=$('input[name="isIncludeTaxes"]').val();
+	 		var questionOne=validateInput($('input[name="housePrice"]').val(),message);
+	 		var questionTwo=validateInput($('input[name="loanAmount"]').val(),message);
+	 		if(questionOne && questionTwo){
+	 			if(quesContxts[2].value=="Yes"|| quesContxts[2].value=="No"){
+	 				paintNewResidenceTypeQues();
+	 			}else{
+	 				showErrorToastMessage("Please  answer the question");
+	 				return false;
+	 			}
 	 		
-	 			paintHomeZipCode();
+	 		}else{
+	 			return false;
+	 		}
+	 			
 	 		       });
 	 		
 	 	$('#ce-refinance-cp').append(saveAndContinueButton);
@@ -595,13 +614,13 @@ function getBuyHomeMultiTextQuestion(quesText) {
 	var quesTextCont1 = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
 	}).html("Before Tax");
-
+	var errFeild=appendErrorMessage();
 	var inputBox1 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "beforeTax",
 	});
 
-	quesTextCont1.append(inputBox1);
+	quesTextCont1.append(inputBox1).append(errFeild);
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -612,7 +631,7 @@ function getBuyHomeMultiTextQuestion(quesText) {
 		"name" : "workPlace"
 	});
 
-	quesTextCont2.append(inputBox2);
+	quesTextCont2.append(inputBox2).append(errFeild);
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -623,7 +642,7 @@ function getBuyHomeMultiTextQuestion(quesText) {
 		"name" : "startWorking"
 	});
 
-	quesTextCont3.append(inputBox3);
+	quesTextCont3.append(inputBox3).append(errFeild);
 
 	optionContainer.append(quesTextCont1).append(quesTextCont2).append(
 			quesTextCont3);
@@ -643,7 +662,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : name,
@@ -663,7 +682,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 		
 	});
 
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -675,7 +694,31 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 		
 		buyHomeTeaserRate[key] = $('input[name="' + key + '"]').val();
 		buyHomeTeaserRate.purchaseDetails[key]= $('input[name="' + key + '"]').val();
-		event.data.clickEvent();
+		if($('input[name="zipCode"]').val()==key){
+       	 var isSuccess=validateInput($('input[name="zipCode"]').val(),message);
+            if(isSuccess){
+           	 if($('input[name="zipCode"]').val().length>5 ||$('input[name="zipCode"]').val().length<5){
+           		 $('.ce-input').next('.err-msg').html("Please Enter a valid 5-digit zipcode").show();
+           		 $('.ce-input').addClass('ce-err-input').show();
+           		 return false;
+           	 }else{
+           		 event.data.clickEvent();
+           	 }
+            	
+            }else{
+            	return false;
+            }
+       }else{
+    	   var isSuccess=validateInput($('input[name="' + key + '"]').val(),message);
+    	   if(isSuccess){
+    		   event.data.clickEvent();
+    	   }else{
+    		   return false;
+    	   }
+            	
+
+       }
+		
 	});
 
 	return container.append(quesTextCont).append(optionContainer).append(
@@ -705,13 +748,13 @@ function paintBuyHomeSelfEmployed(divId) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "selfEmployed"
 	});
 
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 	container.append(quesTextCont).append(optionContainer);
 
 	$('#ce-option_' + divId).toggle();
@@ -733,13 +776,13 @@ function paintbuyHomeDisability(divId) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "disability"
 	});
 
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 	container.append(quesTextCont).append(optionContainer);
 
 	$('#ce-option_' + divId).toggle();
@@ -761,13 +804,13 @@ function paintBuyHomePension(divId) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "pension"
 	});
 
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 	container.append(quesTextCont).append(optionContainer);
 
 	$('#ce-option_' + divId).toggle();

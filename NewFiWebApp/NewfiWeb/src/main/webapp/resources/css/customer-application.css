@@ -193,3 +193,7 @@
 	border: 1px solid #d4d4d4;
 	border-radius: 50%;
 }
+
+.ce-err-input{
+	  border: 1px solid #dd4b39;
+}
