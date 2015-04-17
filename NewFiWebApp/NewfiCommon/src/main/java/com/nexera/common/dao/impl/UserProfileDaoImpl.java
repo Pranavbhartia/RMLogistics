@@ -97,10 +97,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
-			if (user.getRealtorDetail() != null) {
-				Hibernate.initialize(user.getRealtorDetail());
-			}
-
 			return (User) obj;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
