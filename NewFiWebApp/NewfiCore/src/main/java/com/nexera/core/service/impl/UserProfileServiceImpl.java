@@ -197,10 +197,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (userVODetails.getPhotoImageUrl() != null) {
 			userVO.setPhotoImageUrl(userVODetails.getPhotoImageUrl());
 		}
-		if (userVO.getInternalUserStateMappingVOs() != null) {
-			internalUserStateMappingService.saveOrUpdateUserStates(userVO
-			        .getInternalUserStateMappingVOs());
-		}
+
 		// calling another service method
 		Integer customerDetailsUpdateCount = updateCustomerDetails(userVO);
 		if (customerDetailsUpdateCount < 0) {
@@ -210,22 +207,22 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// TODO update realtor
 		String loanManagerEmail = userVO.getLoanManagerEmail();
-		if (user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+		if (userVODetails.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
 			if (loanManagerEmail != null) {
 				User userDetails = findUserByMail(loanManagerEmail);
 				if (userDetails != null) {
 
 					if (userDetails.getUserRole().getId() == UserRolesEnum.INTERNAL
 					        .getRoleId()) {
-						user.getRealtorDetail().setDefaultLoanManager(
-						        userDetails);
+						userVODetails.getRealtorDetail().setUser(User.convertFromEntityToVO(userDetails));
 						Integer updateCount = userProfileDao
-						        .updateRealtorDetails(user.getRealtorDetail());
+						        .updateRealtorDetails(RealtorDetail.convertFromVOToEntity(userVODetails.getRealtorDetail()));
 						if (updateCount < 0) {
 							throw new NonFatalException(
 							        ErrorConstants.UPDATE_ERROR_CUSTOMER);
 						}
 					} else {
+						
 						throw new InputValidationException(
 						        new GenericErrorCode(
 						                ServiceCodes.USER_PROFILE_SERVICE
@@ -233,28 +230,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 						                ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST),
 						        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
 					}
-				} else {
-					throw new InputValidationException(new GenericErrorCode(
-					        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
-					        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST),
-					        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
-				}
+				} 
 
 			}
 
 		}
 
+
 		return userVOObj;
 	}
 
-	@Override
-	@Transactional
-	public void updateRealtorDetails(UserVO user) {
-		RealtorDetail realtor = RealtorDetail.convertFromVOToEntity(user
-		        .getRealtorDetail());
-		userProfileDao.updateRealtorDetails(realtor);
 
-	}
 
 	@Override
 	@Transactional

@@ -89,6 +89,5 @@ public interface UserProfileService {
 
 	public List<String> getDefaultUsers(String userName);
 	
-	public void updateRealtorDetails(UserVO user);
 
 }
