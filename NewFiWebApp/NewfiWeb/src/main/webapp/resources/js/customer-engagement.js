@@ -3,87 +3,6 @@
 var message = "Please enter required fields";
 
 
-function getQuestionContextCEP(question, parentContainer) {
-    var contxt = {
-        type: question.type,
-        text: question.text,
-        name: question.name,
-        options: question.options,
-        container: undefined,
-        childContainers: {},
-        childContexts: {},
-        value: question.selected,
-        parentContainer: parentContainer,
-        drawQuestion: function(callback) {
-            var ob = this;
-            if (ob.type == "mcq") {
-                ob.container = getApplicationMultipleChoiceQues(ob);
-            } else if (ob.type == "desc") {
-                ob.container = getContextApplicationTextQuesCEP(ob);
-            } else if (ob.type == "select") {
-                ob.container = getContextApplicationSelectQues(ob);
-            } else if (ob.type == "yesno") {
-                ob.container = getContextApplicationYesNoQuesCEP(ob);
-            }else if (ob.type == "yearMonth") {
-                ob.container = getContextApplicationYearMonthCEP(ob);
-            }
-            // parentContainer.append(ob.container);
-        },
-        deleteContainer: function(callback) {},
-        clickHandler: function(newValue, callback) {
-            var ob = this;
-            if (ob.value != "" && ob.value != newValue) {
-                if (ob.type == "yesno") {
-                    for (var key in ob.childContainers) {
-                        var container = ob.childContainers[key];
-                        container.remove();
-                    }
-                    ob.childContainers = {};
-                    ob.childContexts = {};
-                }
-            }
-        },
-        clearChildren: function(callback) {},
-        drawChildQuestions: function(option, questions) {
-            var ob = this;
-            var childContainer = $('<div>');
-            ob.childContainers[option] = childContainer;
-            ob.childContexts[option] = [];
-            for (var i = 0; i < questions.length; i++) {
-                var question = questions[i];
-                var contxt = getQuestionContextCEP(question, childContainer, ob.valueSet);
-                contxt.drawQuestion();
-                ob.childContexts[option].push(contxt);
-            }
-            ob.container.after(childContainer);
-        },
-        changeHandler: function(newValue, callback) {
-            var ob = this;
-            if (ob.value != "" && ob.value != newValue) {
-                if (ob.type == "yesno") {
-                    for (var key in ob.childContainers) {
-                        var container = ob.childContainers[key];
-                        container.remove();
-                    }
-                    ob.childContainers = {};
-                    ob.childContexts = {};
-                }
-            }
-        },
-        mapValues: function(value) {
-            if (value == "Yes" || value == true) {
-                return "Yes";
-            } else if (value == "No" || value == false) {
-                return "No";
-            } else return value;
-        }
-    };
-    /*
-     * if(valueSet){ for(key in valueSet){ if(key==contxt.name){
-     * contxt.value=contxt.mapValues(valueSet[key]); break; } } }
-     */
-    return contxt;
-}
 
 function getContextApplicationTextQuesCEP(contxt) {
     var container = $('<div>').attr({
@@ -620,9 +539,9 @@ function paintRefinanceStep1b() {
 function paintRefinanceStep3() {
         // stages = 3;
 	   progressBaar(3);
-        quesContxts = [];
+        quesContxts = {};
         $('#ce-refinance-cp').html("");
-        var questions = [{
+            var questions = [{
             "type": "desc",
             "text": "What is your current mortgage payment?",
             "name": "currentMortgagePayment",
@@ -632,48 +551,37 @@ function paintRefinanceStep3() {
             "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
             "name": "isIncludeTaxes",
             "options": [{
-                "text": "Yes",
-                "addQuestions": [{
-                    "type": "yearMonth",
-                    "text": "How much are your property taxes?",
-                    "name": "annualPropertyTaxes",
-                    "value": ""
-                }, {
-                    "type": "yearMonth",
-                    "text": "How much is your homeowners insurance ?",
-                    "name": "annualHomeownersInsurance",
-                    "value": ""
-                }]
+                "text": "Yes"
             }, {
-                "text": "No",
-                "addQuestions": [{
-                    "type": "yearMonth",
-                    "text": "How much are your annual property taxes?",
-                    "name": "annualPropertyTaxes",
-                    "value": ""
-                }, {
-                    "type": "yearMonth",
-                    "text": "How much is your annual homeowners insurance ?",
-                    "name": "annualHomeownersInsurance",
-                    "value": ""
-                }]
+                "text": "No"
             }]
+        },{
+            "type": "yearMonth",
+            "text": "How much are your annual property taxes?",
+            "name": "propertyTaxesPaid",
+            "value": ""
+        }, {
+            "type": "yearMonth",
+            "text": "How much is your annual homeowners insurance ?",
+            "name": "annualHomeownersInsurance",
+            "value": ""
         }];
         for (var i = 0; i < questions.length; i++) {
             var question = questions[i];
-            var contxt = getQuestionContextCEP(question, $('#ce-refinance-cp'));
+            var contxt = getQuestionContext(question, $('#ce-refinance-cp'));
             contxt.drawQuestion();
-            quesContxts.push(contxt);
+            quesContxts[question.name]=contxt;
         }
         var saveAndContinueButton = $('<div>').attr({
             "class": "ce-save-btn"
         }).html("Save & continue").on('click', function() {
             
-        	refinanceTeaserRate.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();
-            refinanceTeaserRate.isIncludeTaxes = quesContxts[1].value;
-            refinanceTeaserRate.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
-            refinanceTeaserRate.annualHomeownersInsurance = $('input[name="annualHomeownersInsurance"]').val();
-            
+        	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
+            refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
+            refinanceTeaserRate.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
+            refinanceTeaserRate.annualHomeownersInsurance = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
+            refinanceTeaserRate.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
+            refinanceTeaserRate.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
            /* if(refinanceTeaserRate.currentMortgagePayment == "" || refinanceTeaserRate.currentMortgagePayment == null || refinanceTeaserRate.currentMortgagePayment == "$0" ){
             	
             	showToastMessage(message);
@@ -920,12 +828,15 @@ function paintApplyNow(inputCustomerDetails) {
             refinancedetails.currentMortgagePayment = inputCustomerDetails.currentMortgagePayment;
             refinancedetails.includeTaxes = inputCustomerDetails.isIncludeTaxes;
             
+
             propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
             propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
             propertyTypeMaster.homeWorthToday = inputCustomerDetails.homeWorthToday;
             propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
             
-            
+            propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly 
+            propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly
+
             appUserDetails.refinancedetails = refinancedetails;
             appUserDetails.propertyTypeMaster = propertyTypeMaster;
             

@@ -1377,16 +1377,36 @@ function getHeaderText(text) {
     return headerText;
 }
 
+function populateClosingCostHolder (inputObject)
+{	
+	var dynamicList = Object.keys(inputObject);
+	for (var attrCount = 0 ; attrCount <= dynamicList.length; attrCount++)
+	{
+		var currentAttribute = dynamicList[attrCount];
+		if (typeof inputObject[currentAttribute] == "object" && Object.keys(inputObject[currentAttribute]).length >0)
+		{
+			//if that itself is an oBject
+			populateClosingCostHolder(inputObject[currentAttribute]);
+		}
+		else if (inputObject[currentAttribute])
+		{
+			closingCostHolder[currentAttribute] = inputObject[currentAttribute];
+		}
+	}	
+}
+
 function getClosingCostSummaryContainer(valueSet) {
     closingCostHolder=getObContainer();
     if(typeof(newfiObject)!=='undefined'){
         //Code TO get loan type for loggedin user Hardcoded For Now
+    	//Rajeswari    	
         closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.description:"Purchase"):"Purchase";
     }else{
+    	
         if(buyHomeTeaserRate.loanType&&buyHomeTeaserRate.loanType=="PUR"){
-            closingCostHolder.loanType="Purchase";
+        	populateClosingCostHolder(buyHomeTeaserRate);
         }else if(refinanceTeaserRate){
-            closingCostHolder.loanType="Refinance";
+        	populateClosingCostHolder(refinanceTeaserRate);
         }
     }
     if(valueSet){
