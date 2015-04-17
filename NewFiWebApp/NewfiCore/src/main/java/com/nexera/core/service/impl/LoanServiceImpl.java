@@ -457,8 +457,7 @@ public class LoanServiceImpl implements LoanService {
 
 				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
 				        .getCarrierNameForEmail(customerDetail.getCarrierInfo());
-				customerDetailVO
-				        .setCarrierInfo(mobileCarrier.getCarrierName());
+				customerDetailVO.setCarrierInfo(mobileCarrier.getCarrierName());
 
 			}
 
@@ -1369,7 +1368,6 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.setExpiryDateToPurchaseDocument(loanId, date);
 	}
 
-
 	@Override
 	@Transactional
 	public String saveLoanMilestone(int loanId, int masterMileStoneId,
@@ -1393,5 +1391,11 @@ public class LoanServiceImpl implements LoanService {
 		}
 	}
 
+	@Override
+    public String saveLoanProgress(int loand,
+            LoanProgressStatusMaster progressValue) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
 
 }
