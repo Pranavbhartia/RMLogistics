@@ -769,4 +769,13 @@ public class NexeraUtility {
 		sendGridEmailService.sendExceptionEmail(email);
 
 	}
+	
+	public String asciiTrim(String string){
+		if(string == null){
+			return null;
+		}else{
+			return string.trim().replaceAll("[^\\x00-\\x7F]", "");
+		}
+		
+	}
 }
