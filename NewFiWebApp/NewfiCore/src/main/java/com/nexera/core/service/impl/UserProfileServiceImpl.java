@@ -51,6 +51,7 @@ import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.PropertyTypeMaster;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -178,6 +179,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 		Integer userVOObj = userProfileDao.updateUser(user);
 
 		return userVOObj;
+	}
+
+	@Override
+	@Transactional
+	public void updateRealtorDetails(UserVO user) {
+		RealtorDetail realtor = RealtorDetail.convertFromVOToEntity(user
+		        .getRealtorDetail());
+		userProfileDao.updateRealtorDetails(realtor);
+
 	}
 
 	@Override

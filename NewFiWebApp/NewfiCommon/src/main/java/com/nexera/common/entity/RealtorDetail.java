@@ -77,6 +77,7 @@ public class RealtorDetail implements Serializable {
 			realtorDetailVO.setId(inputEntity.getId());
 			realtorDetailVO.setLicenceInfo(inputEntity.getLicenceInfo());
 			realtorDetailVO.setProfileUrl(inputEntity.getProfileUrl());
+			realtorDetailVO.setUser(User.convertFromEntityToVO(inputEntity.getDefaultLoanManager()));
 		}
 		return realtorDetailVO;
 	}

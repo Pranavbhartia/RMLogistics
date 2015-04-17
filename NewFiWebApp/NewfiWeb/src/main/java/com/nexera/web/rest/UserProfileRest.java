@@ -30,10 +30,13 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MobileCarriersEnum;
+import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -42,6 +45,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -133,6 +137,17 @@ public class UserProfileRest {
 		String userprofile = null;
 		try {
 			userVO = userProfileService.findUser(userid);
+			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+			        .getRoleId()) {
+				if (userVO.getRealtorDetail() != null) {
+					if (userVO.getRealtorDetail().getUser() != null) {
+						userVO.setLoanManagerEmail(userVO.getRealtorDetail()
+						        .getUser().getEmailId());
+					}
+
+				}
+
+			}
 			userVO.setUserProfileBaseUrl(referalUrl);
 			userprofile = gson.toJson(userVO);
 
@@ -164,13 +179,18 @@ public class UserProfileRest {
 
 		Gson gson = new Gson();
 		UserVO userVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
+			String loanManagerEmail = userVO.getLoanManagerEmail();
 
 			Integer userUpdateCount = userProfileService.updateUser(userVO);
 
 			UserVO user = userProfileService.findUser(userVO.getId());
+
 			userVO.setUserRole(user.getUserRole());
+
 			if (userVO.getCustomerDetail() != null) {
 				userVO.getCustomerDetail().setProfileCompletionStatus(
 				        user.getCustomerDetail().getProfileCompletionStatus());
@@ -184,17 +204,42 @@ public class UserProfileRest {
 			}
 			Integer customerDetailsUpdateCount = userProfileService
 			        .updateCustomerDetails(userVO);
+			// TODO to check for realtor
+			if (user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+				if (loanManagerEmail != null) {
+					User userDetails = userProfileService
+					        .findUserByMail(loanManagerEmail);
+					if (userDetails != null) {
+
+						if (userDetails.getUserRole().getId() == UserRolesEnum.INTERNAL
+						        .getRoleId()) {
+
+							user.getRealtorDetail().setUser(
+							        User.convertFromEntityToVO(userDetails));
+							userProfileService.updateRealtorDetails(user);
+						} else {
+
+							error.setMessage(ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
+						}
+					} else {
+
+						error.setMessage(ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
+					}
+
+				}
+
+			}
 
 			if (userUpdateCount < 0 || customerDetailsUpdateCount < 0) {
 				LOG.error("Error while updataing the user datails ");
 			}
 
 		} catch (Exception e) {
-			LOG.error("Error while updataing the user datails ::",
-			        e.getMessage());
+			error.setMessage(e.getMessage());
 		}
-		CommonResponseVO commonResponseVO = new CommonResponseVO();
+
 		commonResponseVO.setResultObject("success");
+		commonResponseVO.setError(error);
 		return commonResponseVO;
 	}
 
