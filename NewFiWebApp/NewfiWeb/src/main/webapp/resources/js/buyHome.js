@@ -243,13 +243,13 @@ function paintloanamount(){
 			        "text": "what is the price of the house that you want to buy?",
 			        "name": "housePrice",
 			        "value": ""
-			    },
+						},
                      {
                          "type": "desc",
                          "text": "What is the loan amount you are looking for?",
                          "name": "loanAmount",
                          "value": ""
-                     },
+                     }/*,
                      {
                          "type": "yesno",
                          "text": "Do you prefer to include Taxes and Insurance as part of your loan payment? ",
@@ -270,7 +270,7 @@ function paintloanamount(){
                                  "text": "No"
                              }
                          ]
-                     }
+                     }*/
                  ];
 
 	 		for(var i=0;i<questions.length;i++){
@@ -288,18 +288,18 @@ function paintloanamount(){
 	 		buyHomeTeaserRate.homeWorthToday = $('input[name="housePrice"]').val();
             buyHomeTeaserRate.currentMortgageBalance = $('input[name="loanAmount"]').val();
             
-            if("Yes" == quesContxts[2].value){
+           /* if(quesContxts[2].value!= undefined && "Yes" == quesContxts[2].value){
     
             buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = true;
             }else{
               buyHomeTeaserRate.purchaseDetails.isTaxAndInsuranceInLoanAmt = false;
               }
             
-            buyHomeTeaserRate.estimatedPurchasePrice = $('input[name="estimatedPurchasePrice"]').val();
+            buyHomeTeaserRate.estimatedPurchasePrice = $('input[name="estimatedPurchasePrice"]').val();*/
           	
           	 buyHomeTeaserRate.purchaseDetails.housePrice=$('input[name="housePrice"]').val();;
           	 buyHomeTeaserRate.purchaseDetails.loanAmount=$('input[name="loanAmount"]').val();
-          	 buyHomeTeaserRate.purchaseDetails.estimatedPrice=$('input[name="estimatedPurchasePrice"]').val();
+          	// buyHomeTeaserRate.purchaseDetails.estimatedPrice=$('input[name="estimatedPurchasePrice"]').val();
           	// buyHomeTeaserRate.purchaseDetails.isTax&InsuranceInLoanAmt=$('input[name="isIncludeTaxes"]').val();
 	 		
 	 			paintHomeZipCode();
