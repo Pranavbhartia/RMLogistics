@@ -1843,6 +1843,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
         		var selectedCheck = $(this).attr("value");
         		$("#ce-option_"+selectedCheck+" :input").each(function() {
         			  $(this).val('');
+        			  
         		});
         		
         	}else{
