@@ -630,7 +630,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		        .eq("loanMilestoneMaster", loanMilestoneMaster));
 		criteria.addOrder(Order.desc("id"));
 		List<LoanMilestone> milestones = criteria.list();
-		
+
 		LoanMilestone latestMS = null;
 		if (milestones.size() > 0) {
 			latestMS = milestones.get(0);
@@ -842,25 +842,29 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	public void updateLoanAppFee(int loanId, BigDecimal newAppFee) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE Loan loan set loan.appFee = :APPFEE WHERE loan.id = :ID";
-		try {
-			Query query = session.createQuery(hql);
-			query.setParameter("APPFEE", newAppFee);
-			query.setParameter("ID", loanId);
-			query.executeUpdate();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		Query query = session.createQuery(hql);
+		query.setParameter("APPFEE", newAppFee);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
 	}
 
+	@Override
+	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
+		Session session = sessionFactory.getCurrentSession();
+		Loan loan = (Loan) this.load(Loan.class, loanId);
+		loan.setPurchaseDocumentExpiryDate(date);
+		session.save(loan);
+
+	}
 
 	@Override
-    public void setExpiryDateToPurchaseDocument(Integer loanId, Long date) {
-	    Session session = sessionFactory.getCurrentSession();
-	    
-	    Loan loan  = (Loan) this.load(Loan.class, loanId);
-	    loan.setPurchaseDocumentExpiryDate(date);
-	    session.save(loan);
-	    
-    }
-
+	public void updateLoanProgress(int loanId,
+	        LoanProgressStatusMaster loanProgressValue) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.loanProgressStatus = :PROGRESS WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("PROGRESS", loanProgressValue);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+	}
 }
