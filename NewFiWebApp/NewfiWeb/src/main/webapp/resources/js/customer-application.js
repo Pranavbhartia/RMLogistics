@@ -2283,14 +2283,6 @@ function paintCustomerApplicationPageStep4a() {
         "class": "app-ques-header-txt"
     });
 
-	
-	
-	
-	
-	
-	
-	
-	
 	var options = [ {
 		"text" : "No thank you. Let's move on",
 		"name" : "bypassoptional",
@@ -2302,7 +2294,9 @@ function paintCustomerApplicationPageStep4a() {
 
 	$('#app-right-panel').append(quesCont);
     
-
+	var optionalQuestion = appUserDetails.governmentquestion.skipOptionalQuestion;
+	
+	
     
     ///
     var questions = [{
@@ -2388,6 +2382,10 @@ function paintCustomerApplicationPageStep4a() {
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
 	
+	    if(optionalQuestion != undefined && optionalQuestion){
+			$(".ce-option-checkbox").click();
+			
+		}
 }
 
 
