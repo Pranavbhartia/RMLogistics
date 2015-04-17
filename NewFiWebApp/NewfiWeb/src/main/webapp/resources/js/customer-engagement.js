@@ -24,9 +24,9 @@ function getQuestionContextCEP(question, parentContainer) {
                 ob.container = getContextApplicationSelectQues(ob);
             } else if (ob.type == "yesno") {
                 ob.container = getContextApplicationYesNoQuesCEP(ob);
-            }/*else if (ob.type == "yearMonth") {
+            }else if (ob.type == "yearMonth") {
                 ob.container = getContextApplicationYearMonthCEP(ob);
-            }*/
+            }
             // parentContainer.append(ob.container);
         },
         deleteContainer: function(callback) {},
@@ -425,7 +425,7 @@ function paintRefinanceMainContainer() {
     $('#ce-main-container').append(wrapper);
     paintRefinanceQuest1();
 }
-var itemsList = ["Loan Purpose", "Your Mortgage", "Monthly Payment", "Home Value", "Zip Code", "Your Rates"];
+var itemsList = ["Loan Purpose", "Your Mortgage", "Monthly Payment", "Home Value","Home Information", "Zip Code", "Your Rates"];
 
 function getRefinanceLeftPanel() {
     var container = $('<div>').attr({
@@ -634,12 +634,12 @@ function paintRefinanceStep3() {
             "options": [{
                 "text": "Yes",
                 "addQuestions": [{
-                    "type": "desc",
+                    "type": "yearMonth",
                     "text": "How much are your property taxes?",
                     "name": "annualPropertyTaxes",
                     "value": ""
                 }, {
-                    "type": "desc",
+                    "type": "yearMonth",
                     "text": "How much is your homeowners insurance ?",
                     "name": "annualHomeownersInsurance",
                     "value": ""
@@ -647,12 +647,12 @@ function paintRefinanceStep3() {
             }, {
                 "text": "No",
                 "addQuestions": [{
-                    "type": "desc",
+                    "type": "yearMonth",
                     "text": "How much are your annual property taxes?",
                     "name": "annualPropertyTaxes",
                     "value": ""
                 }, {
-                    "type": "desc",
+                    "type": "yearMonth",
                     "text": "How much is your annual homeowners insurance ?",
                     "name": "annualHomeownersInsurance",
                     "value": ""
@@ -743,7 +743,7 @@ function paintRefinanceHomeInformation() {
         selected: ""
     }];
 
-    var questionsContainer = getQuestionsContainer(questions);
+    var questionsContainer = getQuestionContextCEP(questions);
     
    
     var saveAndContinueButton = $('<div>').attr({
@@ -1138,7 +1138,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                
                 $('#aprid').html(event.data.ratesArray[index].APR + " %");
                 $('#closingCostId').html(event.data.ratesArray[index].closingCost);
-                $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(2)+" %");
+                $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(3)+" %");
                
                 if(event.data.year =='5' || event.data.year =="7")
                 $('#loanprogramId').html(event.data.year +" Year ARM");
@@ -1214,7 +1214,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
          
             $('#aprid').html(gridArray[ui.value].APR +" %");
             $('#closingCostId').html(gridArray[ui.value].closingCost);
-            $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(2) +" %");
+            $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3) +" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
             teaseCalculation(inputCustomerDetails);

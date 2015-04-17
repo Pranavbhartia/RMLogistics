@@ -1292,24 +1292,6 @@ function paintMyIncome() {
     
     
     
-    var homeListPrice = $('input[name="homeListPrice"]').val();
-
-    	var homeMortgageBalance = $('input[name="homeMortgageBalance"]').val();
-
-    	var investmentInHome = $('input[name="investmentInHome"]').val();
-
-   
-
-    	
-
-    	 appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
-
-    	 appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
-
-    	 appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
-    
-    
-    
     var  customerEmploymentIncome = [];
      
      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
@@ -1380,9 +1362,14 @@ function paintMyIncome() {
        
       if(purchase == true){
             
-	        homelistprice = $('input[name="homelistprice"]').val();
-	        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
-	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+    	  homeListPrice = $('input[name="homelistprice"]').val();
+    	  homeMortgageBalance = $('input[name="homemortgagebalance"]').val();
+    	  investmentInHome = $('input[name="inverstInPurchase"]').val();
+	        
+	        
+	        appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
+	    	appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
+	   	    appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
 	        
 	        
 	        appUserDetails.customerBankAccountDetails = [];
@@ -2144,37 +2131,23 @@ function paintCustomerApplicationPageStep4a() {
     	isFederalDebt =  quesDeclarationContxts[5].value;
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
     	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
-    	//alert('myalert'+quesDeclarationContxts[7].value);
-    	//appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
-    	
     	isUSCitizen =  quesDeclarationContxts[9].value;
     	
-    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
-	    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
-	    	
-	    
-    		
-	       
-	     
-    
-    	//appUserDetails["isPermanentResidentAlien"] = null;
-    	//if(quesDeclarationContxts[9].childContexts.No != undefined)
-    		//isOccupyPrimaryResidence = quesDeclarationContxts[9].childContexts.No[0].value;
+    	
     	
     	 isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
     	 isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
-    	//appUserDetails["yourPrimaryResidence"] = null;
-    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	//appUserDetails["yourPrimaryResidence"] = quesDeclarationContxts[11].childContexts.Yes[0].value;
-    	
-    	//appUserDetails["propertyStatus"] =null;
-    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
-    	 ////alert(isOutstandingJudgments);
-    	 //delete appUserDetails.governmentquestion;
-    	 
+    	 typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
+     	if(typeOfPropertyOwned != undefined)
+     		typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+     	
+     	 propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
+     	if(propertyTitleStatus != undefined)
+     		propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+ 	    	
+ 	    
     	 governmentquestion = appUserDetails.governmentquestion;
     	 governmentquestion.typeOfPropertyOwned=typeOfPropertyOwned;
 	    governmentquestion.propertyTitleStatus=propertyTitleStatus;

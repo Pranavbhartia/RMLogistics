@@ -118,7 +118,7 @@ ADD COLUMN `prop_tax_mon_yrly` VARCHAR(45) NULL AFTER `residence_type_cd`;
 ALTER TABLE `newfi_schema`.`governmentquestion` 
 ADD COLUMN `isDownPaymentBorrowed` TINYINT(4) NULL AFTER `sex`,
 ADD COLUMN `typeOfPropertyOwned` VARCHAR(45) NULL AFTER `isDownPaymentBorrowed`,
-ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`;
+ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`,
 ADD COLUMN `skipOptionalQuestion` TINYINT(4) NULL AFTER `propertyTitleStatus`;
 
 
