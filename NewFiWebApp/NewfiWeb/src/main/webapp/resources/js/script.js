@@ -2035,7 +2035,7 @@ function getRatSlider(gridArray,appUserDetails) {
         value: index,
         change: function(event, ui) {
      
-            $('#lockrateaprid').html(gridArray[ui.value].APR);
+            $('#lockrateaprid').html(gridArray[ui.value].APR +" %");
             $('#lockClosingCost').html(showValue(gridArray[ui.value].closingCost));
             $('#lockInterestRate').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(2)+" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));

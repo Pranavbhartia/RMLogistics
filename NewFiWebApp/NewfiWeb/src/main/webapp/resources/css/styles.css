@@ -4573,4 +4573,20 @@ input.calc-input {
 	padding: 5px 0 5px 15px;    
 	cursor: pointer;
 }
+
+.per{
+    line-height: 40px;
+    margin: 0 10px;
+}
+
+.month-cont{
+  width: 100px !important;
+  position: relative
+}
+
+.month-cont .app-option-selected{
+	height: 40px !important;
+	line-height: 40px !important;
+}
+
 /*End*/

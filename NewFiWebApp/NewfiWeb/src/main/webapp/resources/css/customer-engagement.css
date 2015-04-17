@@ -305,3 +305,7 @@
 .ce-option:hover,.ce-save-btn:hover,.app-option-choice:hover{
 	background: #F6914D;
 }
+
+.ce-err-input{
+	  border: 1px solid #dd4b39;
+}
