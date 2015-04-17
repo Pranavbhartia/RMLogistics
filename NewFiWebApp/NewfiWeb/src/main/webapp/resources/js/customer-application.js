@@ -1379,9 +1379,9 @@ function paintMyIncome() {
     	  investmentInHome = $('input[name="inverstInPurchase"]').val();
 	        
 	        
-	        appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
-	    	appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
-	   	    appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
+	        appUserDetails.propertyTypeMaster.currentHomePrice=homeListPrice;
+	    	appUserDetails.propertyTypeMaster.currentHomeMortgageBalance=homeMortgageBalance;
+	   	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
 	        
 	        
 	        appUserDetails.customerBankAccountDetails = [];
@@ -1852,11 +1852,20 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         		//appUserDetails[name] = false;
+        		var selectedCheck = $(this).attr("value");
+        		$("#ce-option_"+selectedCheck+" :input").each(function() {
+        			  $(this).val('');
+        			  
+        		});
+        		
         	}else{
 	        	$(this).addClass('app-option-checked');
 	        	//appUserDetails[name] = true;
         	}
 			var key = event.data.name;
+			
+			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
+			
 			//appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
 		});
@@ -2144,6 +2153,7 @@ function paintCustomerApplicationPageStep4a() {
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
     	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
+    	
     	isUSCitizen =  quesDeclarationContxts[9].value;
     	
     	
@@ -2287,14 +2297,6 @@ function paintCustomerApplicationPageStep4a() {
         "class": "app-ques-header-txt"
     });
 
-	
-	
-	
-	
-	
-	
-	
-	
 	var options = [ {
 		"text" : "No thank you. Let's move on",
 		"name" : "bypassoptional",
@@ -2306,7 +2308,9 @@ function paintCustomerApplicationPageStep4a() {
 
 	$('#app-right-panel').append(quesCont);
     
-
+	var optionalQuestion = appUserDetails.governmentquestion.skipOptionalQuestion;
+	
+	
     
     ///
     var questions = [{
@@ -2392,6 +2396,10 @@ function paintCustomerApplicationPageStep4a() {
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
 	
+	    if(optionalQuestion != undefined && optionalQuestion){
+			$(".ce-option-checkbox").click();
+			
+		}
 }
 
 
