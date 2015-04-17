@@ -12,20 +12,20 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class UWDisplayManager implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-			.getLogger(UWDisplayManager.class);
+	        .getLogger(UWDisplayManager.class);
 
 	@Autowired
 	private LoanService loanService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// Do Nothing
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
@@ -33,9 +33,9 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
-					Milestones.UW.getMilestoneKey());
+			        Milestones.UW.getMilestoneKey());
 			return mileStone.getComments().toString();
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

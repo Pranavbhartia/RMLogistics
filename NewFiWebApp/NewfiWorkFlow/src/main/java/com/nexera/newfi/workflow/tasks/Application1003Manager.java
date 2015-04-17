@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.NotificationVO;
@@ -36,19 +38,20 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String returnStatus = null;
-
-		makeANote(
-		        Integer.parseInt(objectMap.get(
-		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-		        LoanStatus.submittedMessage);
-		sendEmail(objectMap);
-		createAlertForDisclosureDue(objectMap);
-		returnStatus = WorkItemStatus.COMPLETED.getStatus();
-
+		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
+		        .getLosStatusID() + "")) {
+			int loanID = Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			makeANote(loanID, LoanStatus.submittedMessage);
+			sendEmail(objectMap);
+			createAlertForDisclosureDue(objectMap);
+			returnStatus = WorkItemStatus.COMPLETED.getStatus();
+			loanService.saveLoanProgress(loanID, new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.IN_PROGRESS));
+		}
 		return returnStatus;
 	}
 

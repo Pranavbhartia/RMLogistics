@@ -759,7 +759,7 @@ public class NexeraUtility {
 
 	public void sendExceptionEmail(String exceptionMessage) {
 		String[] tos = new String[1];
-		tos[0] = CommonConstants.SENDER_EMAIL_ID;
+		tos[0] = CommonConstants.RAREMILE_SUPPORT_EMAIL_ID;
 		Email email = new Email();
 		String subject = "Exception Occured";
 		email.setText(exceptionMessage);
@@ -769,13 +769,13 @@ public class NexeraUtility {
 		sendGridEmailService.sendExceptionEmail(email);
 
 	}
-	
-	public String asciiTrim(String string){
-		if(string == null){
+
+	public String asciiTrim(String string) {
+		if (string == null) {
 			return null;
-		}else{
+		} else {
 			return string.trim().replaceAll("[^\\x00-\\x7F]", "");
 		}
-		
+
 	}
 }

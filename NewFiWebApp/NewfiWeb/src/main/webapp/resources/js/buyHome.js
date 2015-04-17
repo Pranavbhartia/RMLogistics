@@ -123,8 +123,8 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 }
 
 
-function paintBuyHomEachMonthrent() {
-	active = 3;
+/*function paintBuyHomEachMonthrent() {
+	active = 2;
 	homeProgressBaar(3);
 	var quesTxt1 = "How much do you pay each month for rent?";
 	var quesTxt2 = "When did you start living here?";
@@ -165,7 +165,7 @@ function paintBuyHomEachMonthrent() {
 		}
 	});
 
-	/*var quesTextCont3 = $('<div>').attr({
+	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-sub-ques-text"
 	}).html(quesTxt3);
 
@@ -176,7 +176,7 @@ function paintBuyHomEachMonthrent() {
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "liveEarlier"
-	});*/
+	});
 
 	optionContainer1.append(inputBox1).append(errFeild);
 	optionContainer2.append(inputBox2).append(errFeild);
@@ -217,21 +217,20 @@ function paintBuyHomEachMonthrent() {
 						quesTextCont4).append(saveBtn));
 	}
 
-}
+}*/
 
-function paintPlanToBuyYourHouse() {
+/*function paintPlanToBuyYourHouse() {
 
 	var quesTxt = "Where do you plan to buy your house.";
 	var quesCont = getBuyHomeTextQuestion(quesTxt,
 			paintBuyHomeStartMilitaryloans, "planToBuyYourHouseZip");
 	$('#ce-refinance-cp').html(quesCont);
-}
+}*/
 
 function paintRentOfYourHouse() {
 	active = 2;
 	homeProgressBaar(2);
-	buyHomeTeaserRate.purchaseDetails.livingSituation = 'renting';
-	
+	buyHomeTeaserRate.purchaseDetails.livingSituation = 'renting';	
 	var quesTxt = "How much do you pay each month for rent?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
 	$('#ce-refinance-cp').html(quesCont);
@@ -239,11 +238,11 @@ function paintRentOfYourHouse() {
 
 
 function paintloanamount(){
-	
+
 	
 	$('#ce-refinance-cp').html("");
 	
-	
+	quesContxts = [];
 	var questions = [
 						{
 			        "type": "desc",
@@ -308,11 +307,11 @@ function paintloanamount(){
           	 buyHomeTeaserRate.purchaseDetails.loanAmount=$('input[name="loanAmount"]').val();
           	// buyHomeTeaserRate.purchaseDetails.estimatedPrice=$('input[name="estimatedPurchasePrice"]').val();
           	// buyHomeTeaserRate.purchaseDetails.isTax&InsuranceInLoanAmt=$('input[name="isIncludeTaxes"]').val();
-	 		var questionOne=validateInput($('input[name="housePrice"]').val(),message);
+	 		/*var questionOne=validateInput($('input[name="housePrice"]').val(),message);
 	 		var questionTwo=validateInput($('input[name="loanAmount"]').val(),message);
 	 		if(questionOne && questionTwo){
 	 			if(quesContxts[2].value=="Yes"|| quesContxts[2].value=="No"){
-	 				paintNewResidenceTypeQues();
+	 				
 	 			}else{
 	 				showErrorToastMessage("Please  answer the question");
 	 				return false;
@@ -320,8 +319,8 @@ function paintloanamount(){
 	 		
 	 		}else{
 	 			return false;
-	 		}
-	 			
+	 		}*/
+	 		paintNewResidenceTypeQues();
 	 		       });
 	 		
 	 	$('#ce-refinance-cp').append(saveAndContinueButton);
@@ -341,7 +340,7 @@ function paintBuyHomeAnnualPropertyTaxes(){
 
 
 
-function paintBuyHomeSellHome() {
+/*function paintBuyHomeSellHome() {
 
 	var quesText = "Are you planning to sell your current home?";
 
@@ -392,7 +391,7 @@ function paintSellYourHome(quesText, options, name) {
 
 	return container.append(quesTextCont).append(optionContainer);
 }
-
+*/
 
 
 function saleYourCurrentHome() {
@@ -405,8 +404,8 @@ function saleYourCurrentHome() {
 
 
 function paintHomeZipCode() {
-	active = 3;
-	homeProgressBaar(3);
+	active = 4;
+	homeProgressBaar(4);
 	var quesTxt = "Do you know the city or ZIP code where you want to buy a home?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate,"zipCode");
 	$('#ce-refinance-cp').html(quesCont);
@@ -417,23 +416,17 @@ function paintHomeZipCode() {
 
 
 function paintBuyHomeSeeTeaserRate(parentContainer,teaserRateData,hideCreateAccountBtn) {
-        if(!parentContainer){
+      
+	 
+      stages = 5;
+      homeProgressBaar(5);
+	   if(!parentContainer){
             parentContainer=$('#ce-refinance-cp');
         }
         if(!teaserRateData){
             teaserRateData=buyHomeTeaserRate;
         }
-        
-       /* buyHomeTeaserRate.purchaseDetails.housePrice=buyHomeTeaserRate.housePrice;
-        buyHomeTeaserRate.purchaseDetails.loanAmount=buyHomeTeaserRate.loanAmount;
-		buyHomeTeaserRate.purchaseDetails.isIncludeTaxes=buyHomeTeaserRate.isIncludeTaxes;
-		buyHomeTeaserRate.purchaseDetails.estimatedPurchasePrice=buyHomeTeaserRate.estimatedPurchasePrice;
-		//buyHomeTeaserRate.rentPerMonth;	
-		buyHomeTeaserRate.purchaseDetails.zipCode=buyHomeTeaserRate.zipCode;*/
-		console.log('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
-        //alert('buyHomeTeaserRate'+JSON.stringify(buyHomeTeaserRate));
-        stages = 6;
-        progressBaar(6);
+       
         delete sessionStorage.refinaceData;
         var quesTxt = "Analyze & Adjust Your Numbers";
         var container = $('<div>').attr({
@@ -824,7 +817,7 @@ function paintBuyHomeOwner() {
 
 function homeProgressBaar(num) {
 
-	var count = 4;
+	var count = 5;
 	$("#homeProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
 	$('#homeStepNoId_' + num).html(num);
@@ -839,6 +832,8 @@ function homeProgressBaar(num) {
 				.removeClass('ce-lp-complete').addClass('ce-lp-not-started');
 		$('#homeStepNoId_' + i).html(i);
 	}
+	
+	 sessionStorage.refinaceData = JSON.stringify(buyHomeTeaserRate);
 }
 
 

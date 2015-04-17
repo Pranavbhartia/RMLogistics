@@ -436,10 +436,8 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				data.userID=workFlowContext.customer.id;
 				data.loanID = workFlowContext.loanId;
 			}
-			txtRow1.bind("click", function(e) {
-				milestoneChildEventHandler(e)
-			});
-			ob.stateInfoContainer=txtRow1
+			
+			ob.stateInfoContainer=txtRow1;
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
 				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
@@ -493,6 +491,9 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"||
 									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){
+								txtRow1.bind("click", function(e) {
+									milestoneChildEventHandler(e)
+								});
 								if(ob.workItem.stateInfo){
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
@@ -509,6 +510,9 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 
 							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
+								txtRow1.bind("click", function(e) {
+									milestoneChildEventHandler(e)
+								});
 								if(ob.workItem.stateInfo!="null"){
 									ob.stateInfoContainer.html(ob.workItem.stateInfo);
 								}else
@@ -519,10 +523,13 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
 								ob.workItem.workflowItemType=="CREDIT_SCORE"){
 								if(ob.workItem.stateInfo){
+									txtRow1.bind("click", function(e) {
+										milestoneChildEventHandler(e)
+									});
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
-											window.open(event.data.tempOb.url,"_blank")
+											window.open(generateDownloadURL(tempOb.url),"_blank")
 										})
 										$(ob.stateInfoContainer).addClass("cursor-pointer");
 									}
@@ -550,7 +557,6 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 function showAppFee (itemToAppendTo,workItem)
 {
 	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
-
 	var txtRow2 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" + " milestone-plain-text",
 	});
@@ -771,7 +777,7 @@ function getAppFeeEdit(workItem)
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
 	}).html("Click here to change fee").bind("click", function(e) {
-		milestoneChildEventHandler(e)
+		milestoneChildEventHandler(e);
 	});
 	return appFeeEditItem;
 }
@@ -1748,11 +1754,6 @@ function showLQBInfo (itemToAppendTo,workItem)
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("onclick","window.open('"+tempOb.url+"','_blank')");
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer‏");
 		}		
-	}
-	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-			&& workItem.status != COMPLETED)
-	{
-		itemToAppendTo.append(getAppFeeEdit(workItem));
 	}
 }
 

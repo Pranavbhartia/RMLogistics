@@ -9,6 +9,7 @@ import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
@@ -119,4 +120,6 @@ public interface LoanDao extends GenericDao {
 
 	public void setExpiryDateToPurchaseDocument(Integer loanId, Long date);
 
+	public void updateLoanProgress(int loanId,
+	        LoanProgressStatusMaster loanProgressValue);
 }

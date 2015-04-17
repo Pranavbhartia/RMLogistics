@@ -145,3 +145,6 @@ ADD COLUMN `newhome_budget_fromsale` VARCHAR(45) NULL AFTER `current_home_mortga
 #Rajeswari Added 17 April
 ALTER TABLE `newfi_schema`.`propertytypemaster` 
 ADD COLUMN `prop_ins_mon_yrly` VARCHAR(45) NULL DEFAULT NULL AFTER `newhome_budget_fromsale`;
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='36' WHERE `id`='21';
