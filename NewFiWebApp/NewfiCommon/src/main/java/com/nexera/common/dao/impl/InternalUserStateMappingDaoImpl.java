@@ -37,7 +37,9 @@ public class InternalUserStateMappingDaoImpl extends GenericDaoImpl implements I
 	@Override
 	public void deleteObj(InternalUserStateMapping stateMapping) {
 		Session session = sessionFactory.getCurrentSession();
-		session.delete(stateMapping);
+		InternalUserStateMapping internalUserStateMapping=new InternalUserStateMapping();
+		internalUserStateMapping=(InternalUserStateMapping) session.load(InternalUserStateMapping.class, stateMapping.getId());
+		session.delete(internalUserStateMapping);
 	}
 
 }

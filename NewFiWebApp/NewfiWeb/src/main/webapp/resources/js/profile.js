@@ -139,10 +139,14 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "cust-personal-info-header"
 	}).html("LQB Information");
 	if(!userIsRealtor()){
-		var lqbContainer = getLoanLqbInfoContainer(user);
+		if(newfiObject.user.userRole.id!=4){
+			var lqbContainer = getLoanLqbInfoContainer(user);
+			lqbWrapper.append(lqbHeader).append(lqbContainer);
 
-		lqbWrapper.append(lqbHeader).append(lqbContainer);
-		$('#loan-profile-main-container').append(lqbWrapper);
+			$('#loan-profile-main-container').append(lqbWrapper);
+		}
+	
+		
 	
 	}
 		appendChangePasswordContainer();
@@ -352,11 +356,8 @@ function updateLMDetails() {
 	userProfileJson.emailId = $("#priEmailId").val();
 	if(newfiObject.user.userRole.id==2){
 		userProfileJson.loanManagerEmail=$("#managerID").val();
-	    if($("#managerID").val()==""){
-	    	$("#managerID").next('.err-msg').html("Field cannot be empty").show();
-			$("#managerID").addClass('err-input').focus();
-			return ;
-	    }else{
+	 
+			if($("#managerID").val()!=""){
 	    	var isSuccess=emailValidation($("#managerID").val());
 	    	if(isSuccess){
 	    		$("#managerID").next('.err-msg').html("Invalid Email ID").show();
@@ -2006,8 +2007,12 @@ function appendUserStatesInLMProfile(element) {
 				"data-id" : key
 			}).bind('click',function(e){
 				var id = $(this).attr("data-id");
-				internalUserStates[id].isChecked = false;
+				/*internalUserStates[id].isChecked = false;*/
 				$(this).closest('.prof-form-input-textarea-block').remove();
+			var	internalUserStateMappingVO=internalUserStates[id];
+				if(internalUserStateMappingVO.isChecked!=typeof underdefined)
+					internalUserStateMappingVO.isChecked=false;
+				internalUserStates[id]=internalUserStateMappingVO;
 				$("#checkBox_"+id).addClass("doc-unchecked").removeClass("doc-checked");
 			});
 			

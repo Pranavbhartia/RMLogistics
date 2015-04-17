@@ -67,6 +67,7 @@ import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.CustomerDetailVO;
@@ -86,6 +87,7 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
+import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
@@ -137,6 +139,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Autowired
 	protected LoanAppFormService loanAppFormService;
 
+	@Autowired
+	private InternalUserStateMappingService internalUserStateMappingService;
+
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
 
@@ -173,11 +178,71 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional()
-	public Integer updateUser(UserVO userVO) {
+	public Integer updateUser(UserVO userVO) throws InputValidationException,
+	        NonFatalException {
 
+		// TODO update user details
 		User user = User.convertFromVOToEntity(userVO);
-
 		Integer userVOObj = userProfileDao.updateUser(user);
+
+		// TODO for update customer details
+		UserVO userVODetails = findUser(userVO.getId());
+		userVO.setUserRole(userVODetails.getUserRole());
+
+		if (userVO.getCustomerDetail() != null) {
+			userVO.getCustomerDetail().setProfileCompletionStatus(
+			        userVODetails.getCustomerDetail()
+			                .getProfileCompletionStatus());
+		}
+		if (userVODetails.getPhotoImageUrl() != null) {
+			userVO.setPhotoImageUrl(userVODetails.getPhotoImageUrl());
+		}
+		if (userVO.getInternalUserStateMappingVOs() != null) {
+			internalUserStateMappingService.saveOrUpdateUserStates(userVO
+			        .getInternalUserStateMappingVOs());
+		}
+		// calling another service method
+		Integer customerDetailsUpdateCount = updateCustomerDetails(userVO);
+		if (customerDetailsUpdateCount < 0) {
+
+			throw new NonFatalException(ErrorConstants.UPDATE_ERROR_CUSTOMER);
+		}
+
+		// TODO update realtor
+		String loanManagerEmail = userVO.getLoanManagerEmail();
+		if (user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+			if (loanManagerEmail != null) {
+				User userDetails = findUserByMail(loanManagerEmail);
+				if (userDetails != null) {
+
+					if (userDetails.getUserRole().getId() == UserRolesEnum.INTERNAL
+					        .getRoleId()) {
+						user.getRealtorDetail().setDefaultLoanManager(
+						        userDetails);
+						Integer updateCount = userProfileDao
+						        .updateRealtorDetails(user.getRealtorDetail());
+						if (updateCount < 0) {
+							throw new NonFatalException(
+							        ErrorConstants.UPDATE_ERROR_CUSTOMER);
+						}
+					} else {
+						throw new InputValidationException(
+						        new GenericErrorCode(
+						                ServiceCodes.USER_PROFILE_SERVICE
+						                        .getServiceID(),
+						                ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST),
+						        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
+					}
+				} else {
+					throw new InputValidationException(new GenericErrorCode(
+					        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
+					        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST),
+					        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
+				}
+
+			}
+
+		}
 
 		return userVOObj;
 	}
@@ -216,9 +281,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false) {
-						customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+					        .setProfileCompletionStatus(customerDetail
+					                .getProfileCompletionStatus()
+					                + ProfileCompletionStatus.ON_CREATE);
+						} 
 
+					}else if (userVO.getCustomerDetail()
+					        .getMobileAlertsPreference() == false
+					        && userVO.getPhotoImageUrl() != null
+					        && userVO.getPhoneNumber() == null) {
+						customerDetail
+						        .setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
 					}
 				}
 			} else {
@@ -237,7 +312,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 					                .getMobileAlertsPreference() == false) {
 						customerDetail
 						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus());
+						                .getProfileCompletionStatus()
+						                + ProfileCompletionStatus.ON_CREATE);
 					}
 				} else if (userVO.getPhoneNumber() != null
 				        && userVO.getCustomerDetail()
@@ -249,15 +325,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() != null) {
-					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+					if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+						customerDetail
+				        .setProfileCompletionStatus(customerDetail
+				                .getProfileCompletionStatus()
+				                + ProfileCompletionStatus.ON_CREATE);
+					} 
 
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() == null) {
 					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+					        .setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
 				}
 
 			}
@@ -1021,47 +1101,61 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 
-
-			
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
-			
-			if(loaAppFormVO.getPropertyTypeMaster() != null){
-			propertyTypeMasterVO.setHomeZipCode(loaAppFormVO.getPropertyTypeMaster().getHomeZipCode());
-			propertyTypeMasterVO.setHomeWorthToday(loaAppFormVO.getPropertyTypeMaster().getHomeWorthToday());
-			propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO.getPropertyTypeMaster().getPropertyInsuranceCost());
-			propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO.getPropertyTypeMaster().getPropertyTaxesPaid());
-			propertyTypeMasterVO.setPropTaxMonthlyOryearly(loaAppFormVO.getPropertyTypeMaster().getPropTaxMonthlyOryearly());
-			propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO.getPropertyTypeMaster().getPropInsMonthlyOryearly());
-			}
-			
-			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
-			
-            RefinanceVO refinanceVO = new RefinanceVO();
-            if(loaAppFormVO.getRefinancedetails() != null){
-            refinanceVO.setRefinanceOption(loaAppFormVO.getRefinancedetails().getRefinanceOption());
-            refinanceVO.setMortgageyearsleft(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
-            refinanceVO.setCashTakeOut(loaAppFormVO.getRefinancedetails().getCashTakeOut());
-            refinanceVO.setCurrentMortgageBalance(loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
-            refinanceVO.setCurrentMortgagePayment(loaAppFormVO.getRefinancedetails().getCurrentMortgagePayment());
-            refinanceVO.setIncludeTaxes(loaAppFormVO.getRefinancedetails().isIncludeTaxes());
-            }
-            
-			loanAppFormVO.setRefinancedetails(refinanceVO);		
 
+			if (loaAppFormVO.getPropertyTypeMaster() != null) {
+				propertyTypeMasterVO.setHomeZipCode(loaAppFormVO
+				        .getPropertyTypeMaster().getHomeZipCode());
+				propertyTypeMasterVO.setHomeWorthToday(loaAppFormVO
+				        .getPropertyTypeMaster().getHomeWorthToday());
+				propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO
+				        .getPropertyTypeMaster().getPropertyInsuranceCost());
+				propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO
+				        .getPropertyTypeMaster().getPropertyTaxesPaid());
+				propertyTypeMasterVO.setPropTaxMonthlyOryearly(loaAppFormVO
+				        .getPropertyTypeMaster().getPropTaxMonthlyOryearly());
+				propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO
+				        .getPropertyTypeMaster().getPropInsMonthlyOryearly());
+			}
+
+			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
+
+			RefinanceVO refinanceVO = new RefinanceVO();
+			if (loaAppFormVO.getRefinancedetails() != null) {
+				refinanceVO.setRefinanceOption(loaAppFormVO
+				        .getRefinancedetails().getRefinanceOption());
+				refinanceVO.setMortgageyearsleft(loaAppFormVO
+				        .getRefinancedetails().getMortgageyearsleft());
+				refinanceVO.setCashTakeOut(loaAppFormVO.getRefinancedetails()
+				        .getCashTakeOut());
+				refinanceVO.setCurrentMortgageBalance(loaAppFormVO
+				        .getRefinancedetails().getCurrentMortgageBalance());
+				refinanceVO.setCurrentMortgagePayment(loaAppFormVO
+				        .getRefinancedetails().getCurrentMortgagePayment());
+				refinanceVO.setIncludeTaxes(loaAppFormVO.getRefinancedetails()
+				        .isIncludeTaxes());
+			}
+
+			loanAppFormVO.setRefinancedetails(refinanceVO);
 
 			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
-			 if(loaAppFormVO.getPurchaseDetails() != null){
-			purchaseDetailsVO.setLivingSituation(loaAppFormVO.getPurchaseDetails().getLivingSituation());
-			purchaseDetailsVO.setHousePrice(loaAppFormVO.getPurchaseDetails().getHousePrice());
-			purchaseDetailsVO.setLoanAmount(loaAppFormVO.getPurchaseDetails().getLoanAmount());
-			purchaseDetailsVO.setTaxAndInsuranceInLoanAmt(loaAppFormVO.getPurchaseDetails().isTaxAndInsuranceInLoanAmt());
-			purchaseDetailsVO.setEstimatedPrice(loaAppFormVO.getPurchaseDetails().getEstimatedPrice());
-			purchaseDetailsVO.setBuyhomeZipPri(loaAppFormVO.getPurchaseDetails().getBuyhomeZipPri());
-			 }
-			
+			if (loaAppFormVO.getPurchaseDetails() != null) {
+				purchaseDetailsVO.setLivingSituation(loaAppFormVO
+				        .getPurchaseDetails().getLivingSituation());
+				purchaseDetailsVO.setHousePrice(loaAppFormVO
+				        .getPurchaseDetails().getHousePrice());
+				purchaseDetailsVO.setLoanAmount(loaAppFormVO
+				        .getPurchaseDetails().getLoanAmount());
+				purchaseDetailsVO.setTaxAndInsuranceInLoanAmt(loaAppFormVO
+				        .getPurchaseDetails().isTaxAndInsuranceInLoanAmt());
+				purchaseDetailsVO.setEstimatedPrice(loaAppFormVO
+				        .getPurchaseDetails().getEstimatedPrice());
+				purchaseDetailsVO.setBuyhomeZipPri(loaAppFormVO
+				        .getPurchaseDetails().getBuyhomeZipPri());
+			}
+
 			loanAppFormVO.setPurchaseDetails(purchaseDetailsVO);
-			
-			
+
 			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 

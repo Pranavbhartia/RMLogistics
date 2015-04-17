@@ -22,7 +22,7 @@ public class InternalUserStateMappingServiceImpl implements
 	private InternalUserStateMappingDao mappingDao;
 
 	@Override
-	@Transactional
+
 	public void saveOrUpdateUserStates(
 			List<InternalUserStateMappingVO> internalUserStateMappings) {
 		mappingDao

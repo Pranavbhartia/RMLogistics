@@ -40,6 +40,7 @@ import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
@@ -133,6 +134,7 @@ public class UserProfileRest {
 		User user = getUserObject();
 
 		Integer userid = user.getId();
+
 		UserVO userVO = null;
 		String userprofile = null;
 		try {
@@ -149,6 +151,7 @@ public class UserProfileRest {
 
 			}
 			userVO.setUserProfileBaseUrl(referalUrl);
+
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
@@ -181,65 +184,24 @@ public class UserProfileRest {
 		UserVO userVO = null;
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
+
+		userVO = gson.fromJson(updateUserInfo, UserVO.class);
+
+		Integer userUpdateCount = null;
 		try {
-			userVO = gson.fromJson(updateUserInfo, UserVO.class);
-			String loanManagerEmail = userVO.getLoanManagerEmail();
-
-			Integer userUpdateCount = userProfileService.updateUser(userVO);
-
-			UserVO user = userProfileService.findUser(userVO.getId());
-
-			userVO.setUserRole(user.getUserRole());
-
-			if (userVO.getCustomerDetail() != null) {
-				userVO.getCustomerDetail().setProfileCompletionStatus(
-				        user.getCustomerDetail().getProfileCompletionStatus());
+			userUpdateCount = userProfileService.updateUser(userVO);
+			if (userUpdateCount < 0) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
 			}
-			if (user.getPhotoImageUrl() != null) {
-				userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-			}
-			if (userVO.getInternalUserStateMappingVOs() != null) {
-				internalUserStateMappingService.saveOrUpdateUserStates(userVO
-				        .getInternalUserStateMappingVOs());
-			}
-			Integer customerDetailsUpdateCount = userProfileService
-			        .updateCustomerDetails(userVO);
-			// TODO to check for realtor
-			if (user.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
-				if (loanManagerEmail != null) {
-					User userDetails = userProfileService
-					        .findUserByMail(loanManagerEmail);
-					if (userDetails != null) {
-
-						if (userDetails.getUserRole().getId() == UserRolesEnum.INTERNAL
-						        .getRoleId()) {
-
-							user.getRealtorDetail().setUser(
-							        User.convertFromEntityToVO(userDetails));
-							userProfileService.updateRealtorDetails(user);
-						} else {
-
-							error.setMessage(ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
-						}
-					} else {
-
-						error.setMessage(ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
-					}
-
-				}
-
-			}
-
-			if (userUpdateCount < 0 || customerDetailsUpdateCount < 0) {
-				LOG.error("Error while updataing the user datails ");
-			}
-
-		} catch (Exception e) {
+			commonResponseVO.setResultObject("success");
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		}  catch (NonFatalException e) {
 			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
 		}
 
-		commonResponseVO.setResultObject("success");
-		commonResponseVO.setError(error);
 		return commonResponseVO;
 	}
 
