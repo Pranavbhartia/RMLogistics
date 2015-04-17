@@ -118,7 +118,7 @@ ADD COLUMN `prop_tax_mon_yrly` VARCHAR(45) NULL AFTER `residence_type_cd`;
 ALTER TABLE `newfi_schema`.`governmentquestion` 
 ADD COLUMN `isDownPaymentBorrowed` TINYINT(4) NULL AFTER `sex`,
 ADD COLUMN `typeOfPropertyOwned` VARCHAR(45) NULL AFTER `isDownPaymentBorrowed`,
-ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`;
+ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`,
 ADD COLUMN `skipOptionalQuestion` TINYINT(4) NULL AFTER `propertyTitleStatus`;
 
 
@@ -140,8 +140,3 @@ ALTER TABLE `newfi_schema`.`customerspousedetails`
 ADD COLUMN `current_home_price` VARCHAR(45) NULL ,
 ADD COLUMN `current_home_mortgage_balance` VARCHAR(45) NULL AFTER `current_home_price`,
 ADD COLUMN `newhome_budget_fromsale` VARCHAR(45) NULL AFTER `current_home_mortgage_balance`;
-
-
-#Rajeswari Added 17 April
-ALTER TABLE `newfi_schema`.`propertytypemaster` 
-ADD COLUMN `prop_ins_mon_yrly` VARCHAR(45) NULL DEFAULT NULL AFTER `newhome_budget_fromsale`;
