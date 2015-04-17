@@ -31,14 +31,7 @@ public class PropertyTypeMaster implements Serializable {
 	private String currentHomePrice;
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
-	
-	
-	 
-	
-	
-	
-	
-
+	private String propInsMonthlyOryearly;
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFeeMaster> loanApplicationFeeMasters;
@@ -92,8 +85,7 @@ public class PropertyTypeMaster implements Serializable {
 	public void setHomeZipCode(String homeZipCode) {
 		this.homeZipCode = homeZipCode;
 	}
-	
-	
+
 	@Column(name = "residence_type_cd")
 	public String getResidenceTypeCd() {
 		return residenceTypeCd;
@@ -112,8 +104,6 @@ public class PropertyTypeMaster implements Serializable {
 		this.propertyTaxesPaid = propertyTaxesPaid;
 	}
 
-	
-	
 	@Column(name = "prop_tax_mon_yrly")
 	public String getPropTaxMonthlyOryearly() {
 		return propTaxMonthlyOryearly;
@@ -214,12 +204,12 @@ public class PropertyTypeMaster implements Serializable {
 	}
 
 	public void setLoanApplicationFeeMasters(
-			List<LoanApplicationFeeMaster> loanapplicationfeemasters) {
+	        List<LoanApplicationFeeMaster> loanapplicationfeemasters) {
 		this.loanApplicationFeeMasters = loanapplicationfeemasters;
 	}
 
 	public LoanApplicationFeeMaster addLoanApplicationfeemaster(
-			LoanApplicationFeeMaster loanapplicationfeemaster) {
+	        LoanApplicationFeeMaster loanapplicationfeemaster) {
 		getLoanApplicationFeeMasters().add(loanapplicationfeemaster);
 		loanapplicationfeemaster.setPropertyTypeMaster(this);
 
@@ -227,7 +217,7 @@ public class PropertyTypeMaster implements Serializable {
 	}
 
 	public LoanApplicationFeeMaster removeLoanApplicationFeeMaster(
-			LoanApplicationFeeMaster loanapplicationfeemaster) {
+	        LoanApplicationFeeMaster loanapplicationfeemaster) {
 		getLoanApplicationFeeMasters().remove(loanapplicationfeemaster);
 		loanapplicationfeemaster.setPropertyTypeMaster(null);
 
@@ -245,7 +235,6 @@ public class PropertyTypeMaster implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	
 	@Column(name = "current_home_price")
 	public String getCurrentHomePrice() {
 		return currentHomePrice;
@@ -271,6 +260,15 @@ public class PropertyTypeMaster implements Serializable {
 
 	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
 		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
+	}
+
+	@Column(name = "prop_ins_mon_yrly")
+	public String getPropInsMonthlyOryearly() {
+		return propInsMonthlyOryearly;
+	}
+
+	public void setPropInsMonthlyOryearly(String propInsMonthlyOryearly) {
+		this.propInsMonthlyOryearly = propInsMonthlyOryearly;
 	}
 
 }

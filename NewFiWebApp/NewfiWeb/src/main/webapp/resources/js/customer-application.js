@@ -869,27 +869,22 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        childContainers:{},
 	        childContexts:{},
 	        value:question.selected,
+            yearMonthVal:"",
 	        parentContainer:parentContainer,
 	        valueSet:valueSet,
 	        drawQuestion:function(callback){
-	        
 	        	var ob=this;
-	        	if (ob.type == "mcq") {
-	        		ob.container = getApplicationMultipleChoiceQues(ob);
-	            } else if (ob.type == "desc") {
-	            	ob.container = getContextApplicationTextQues(ob);
-	            } else if (ob.type == "select") {
-	            	ob.container = getContextApplicationSelectQues(ob);
-	            	//ob.container = getApplicationSelectQues(ob);
-	            	
-	            } else if (ob.type == "yesno") {
-	          // alert('inside getQuestionContext yes no');
-	            	ob.container = getContextApplicationYesNoQues(ob);
-	            } else if (question.type == "yearMonth") {
-	                quesCont = getMonthYearTextQuestionContext(ob);
-	            }
-	        	
-	        	//parentContainer.append(ob.container);
+                if (ob.type == "mcq") {
+                    ob.container = getApplicationMultipleChoiceQues(ob);
+                } else if (ob.type == "desc") {
+                    ob.container = getContextApplicationTextQues(ob);
+                } else if (ob.type == "select") {
+                    ob.container = getContextApplicationSelectQues(ob);
+                } else if (ob.type == "yesno") {
+                    ob.container = getContextApplicationYesNoQues(ob);
+                } else if (question.type == "yearMonth") {
+                    ob.container = getMonthYearTextQuestionContext(ob);
+                }
 	        	
 	        },
 	        deleteContainer:function(callback){
@@ -959,33 +954,50 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        		}
 	        }
 	};
-	
-	
-	
-	
-	 if(valueSet){
-	 
-	     for(key in valueSet){
-	 	     	if(key==contxt.name){
-	     	 
-	     		contxt.value=contxt.mapValues(valueSet[key]);
-	     		 
-	     	     		
-	         	break;
-	         }
-	     }
-	 } 
-     if(!contxt.value){
-    
+    if(valueSet){
+        for(key in valueSet){
+            if(key==contxt.name){
+        		contxt.value=contxt.mapValues(valueSet[key]);     		
+         	break;
+            }
+        }
+    } 
+    if(!contxt.value){
         var res=mapDbDataForFrontend(contxt.name);
-     
         if(res!=undefined)
-            contxt.value=contxt.mapValues(res);
-     }
+            contxt.value=res;
+    }
+    if(question.type == "yearMonth"){
+        var res=getMappedYearMonthValue(contxt.name);
+        if(res!=undefined)
+            contxt.yearMonthVal=res;
+    }
 	return contxt;
 }
 
-
+function getMappedYearMonthValue(key){
+    switch(key){
+        case "propertyTaxesPaid":
+            var val;
+            if(typeof(newfiObject)!=='undefined'){
+                val=appUserDetails.purchaseDetails.propTaxMonthlyOryearly;
+                return val
+            }else{
+                return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propTaxMonthlyOryearly;
+            }
+        break;
+        case "annualHomeownersInsurance":
+            var val;
+            if(typeof(newfiObject)!=='undefined'){
+                val=appUserDetails.purchaseDetails.propInsMonthlyOryearly;
+                return val
+            }else{
+                return refinanceTeaserRate.propInsMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propInsMonthlyOryearly;
+            }
+        break;
+    }
+    return "Month";
+}
 
 var quesContxts=[];
 
@@ -3268,45 +3280,134 @@ function getMonthYearTextQuestion(question) {
 	 return container.append(quesTextCont).append(optionContainer);
 	}
 
+function getYearMonthOptionContainer(contxt){
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont",
+        "name": "yearMonth"
+    });
+
+    var selectedOption = $('<div>').attr({
+        "class": "app-option-selected"
+    }).html("Select One").on('click', function() {
+        $(this).parent().find('.app-dropdown-cont').toggle();
+    });
+
+    var dropDownContainer = $('<div>').attr({
+        "class": "app-dropdown-cont hide"
+    });
+    var selVal;
+    var options=[
+        {
+            value:"Month",
+            text:"Month"
+        },
+        {
+            value:"Year",
+            text:"Year"
+        }
+    ];
+    for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        
+        var optionCont = $('<div>').attr({
+                "class": "app-option-sel"
+            }).data({
+                "value": option.value
+            }).html(option.text)
+            .bind(
+                'click',{"contxt":contxt},
+                function(e) {
+                    var ctx=e.data.contxt;
+                    $(this).closest('.app-options-cont').find(
+                        '.app-option-selected').html($(this).html());
+                    $(this).closest('.app-options-cont').find(
+                    '.app-option-selected').data("value",$(this).data("value"));
+                    $(this).closest('.app-dropdown-cont').toggle();
+                    if(ctx.yearMonthVal!=$(this).data("value")){
+                        ctx.yearMonthVal=$(this).data("value");
+                        if($(this).data("value")=="Year"){
+                            var val=Math.round(getFloatValue(ctx.value)/12)
+                            ctx.value = val;
+                        }
+                    }
+                });
+            if(option.value==contxt.yearMonthVal)
+                selVal=optionCont;
+        dropDownContainer.append(optionCont);
+    }
+    optionsContainer.append(selectedOption).append(dropDownContainer);
+    if(selVal){
+        $(selVal).closest('.app-options-cont').find(
+                        '.app-option-selected').html($(selVal).html());
+        $(selVal).closest('.app-options-cont').find(
+        '.app-option-selected').data("value",$(selVal).data("value"));
+        contxt.yearMonthVal=$(selVal).data("value");
+    }
+    
+    return optionsContainer;
+}
+
 function getMonthYearTextQuestionContext(contxt) {
-	 var container = $('<div>').attr({
-	  "class" : "ce-ques-wrapper"
-	 });
-
-	 contxt.container=container;
-	 contxt.parentContainer.append(contxt.container);
-	 
-	 var quesTextCont = $('<div>').attr({
-	  "class" : "app-ques-text"
-	 }).html(contxt.text);
-
-	 var optionContainer = $('<div>').attr({
-	  "class" : "ce-options-cont"
-	 });
-
-	 var monthDropDown = $('<select>').attr({
-	  "class" : "ce-input width-75",
-	  "name" : contxt.name
-	 });
-	 
-	 for(var i=1;i<=12;i++){
-	  
-	  var option = $("<option>").html(i);
-	  monthDropDown.append(option);
-	 }
-	 
-	 var yearInput = $('<input>').attr({
-	  "class" : "ce-input width-150",
-	  "name" : contxt.name,
-	  "value" : "",
-	  "placeholder" : "YYYY"
-	 });
-
-	 optionContainer.append(monthDropDown).append(yearInput);
+    var container = $('<div>').attr({
+        "class": "ce-ques-wrapper"
+    });
+    contxt.container = container;
+    contxt.parentContainer.append(contxt.container);
+    var quesTextCont = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html(contxt.text);
+    var optionsContainer = $('<div>').attr({
+        "class": "ce-options-cont"
+    });
 
 
-	 return container.append(quesTextCont).append(optionContainer);
-	}
+    var optionCont = $('<input>').attr({
+        "class": "ce-input",
+        "name": contxt.name,
+        "value": contxt.value
+    }).bind("change", {
+        "contxt": contxt
+    }, function(event) {
+        var ctx = event.data.contxt;
+        if(ctx.yearMonthVal=="Month"){
+            ctx.value = $(this).val();
+        }else{
+            var val=Math.round(getFloatValue($(this).val())/12)
+            ctx.value = val;
+        }
+    }).on("load keydown", function(e) {
+        if (name != 'zipCode' && name != 'yearLeftOnMortgage') {
+            $('input[name=' + contxt.name + ']').maskMoney({
+                thousands: ',',
+                decimal: '.',
+                allowZero: true,
+                prefix: '$',
+                precision: 0,
+                allowNegative: false
+            });
+        }
+        
+        Math.abs($('input[name=' + contxt.name + ']').val());
+    });
+
+
+    var requird = $('<span>').attr({
+        "style": "padding-left:22px,padding-right:10px",
+    }).html("per");
+      
+
+    var selectedOption = getYearMonthOptionContainer(contxt);
+
+    if (contxt.value != undefined) {
+        if(contxt.yearMonthVal=="Year"){
+            optionCont.val((getFloatValue(contxt.value)*12));
+        }else{
+            optionCont.val(contxt.value);
+        }
+    }
+    optionsContainer.append(optionCont).append(requird).append(selectedOption);
+    return container.append(quesTextCont).append(optionsContainer);
+}
 
 
 function saveAndUpdateLoanAppForm(appUserDetails,callBack){
@@ -3650,6 +3751,7 @@ function getQuestionContextCEP(question,parentContainer,valueset){
 	        childContainers:{},
 	        childContexts:{},
 	        value:question.selected,
+            yearMonthVal:"",
             valueset:valueset,
 	        parentContainer:parentContainer,
 	        drawQuestion:function(callback){
@@ -4195,6 +4297,23 @@ function mapDbDataForFrontend(key){
             return appUserDetails.governmentquestion.occupyPrimaryResidence;
         case "isOwnershipInterestInProperty":
             return appUserDetails.governmentquestion.ownershipInterestInProperty;
+        case  "propertyTaxesPaid":
+            if(typeof(newfiObject)!=='undefined'){
+                var val=appUserDetails.purchaseDetails.propTaxMonthlyOryearly;
+                return val
+            }else{
+                return refinanceTeaserRate.propertyTaxesPaid;
+            }
+            break;
+        case "annualHomeownersInsurance":
+            var val;
+            if(typeof(newfiObject)!=='undefined'){
+                val=appUserDetails.purchaseDetails.propertyInsuranceCost;
+                return val
+            }else{
+                return refinanceTeaserRate.annualHomeownersInsurance;
+            }
+            break;
     /*    case "isDownPaymentBorrowed":
             return appUserDetails.governmentquestion.isDownPaymentBorrowed;
         case "typeOfPropertyOwned":

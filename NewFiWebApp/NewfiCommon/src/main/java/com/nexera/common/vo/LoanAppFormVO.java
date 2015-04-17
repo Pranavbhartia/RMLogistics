@@ -454,21 +454,19 @@ public class LoanAppFormVO implements Serializable {
 		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 
-		if(this.getLoanType() !=null ){
-		if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-			        LoanTypeMasterEnum.REF));
+		if (this.getLoanType() != null) {
+			if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
+				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+				        LoanTypeMasterEnum.REF));
+			} else {
+				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
+				        LoanTypeMasterEnum.PUR));
+			}
 		} else {
+
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-			        LoanTypeMasterEnum.PUR));
+			        LoanTypeMasterEnum.NONE));
 		}
-		}else{
-			
-			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
-		}
-	
-		
-		
 
 		loanAppForm
 		        .setPropertyTypeMaster(parseVOtoEntityPropertyTypeMaster(this
@@ -526,16 +524,15 @@ public class LoanAppFormVO implements Serializable {
 
 		loanAppForm.setUser(User.convertFromVOToEntity(this.getUser()));
 
-	
-		
-		
-		if(null!= this.getLoan() && null != this.getLoan().getLqbFileId()){
-			System.out.println("loanAppForm.getLoan().getLqbFileId()"+this.getLoan().getLqbFileId());
-		
-	     loanAppForm.setLoan(parseVOtoEntityLoan(this.getLoan()));
-		}else{
+		if (null != this.getLoan() && null != this.getLoan().getLqbFileId()) {
+			System.out.println("loanAppForm.getLoan().getLqbFileId()"
+			        + this.getLoan().getLqbFileId());
+
+			loanAppForm.setLoan(parseVOtoEntityLoan(this.getLoan()));
+		} else {
 			loanAppForm.setLoan(this.getLoan().convertToEntity());
-			System.out.println("loanAppForm.getLoan().getLqbFileId() inside else");
+			System.out
+			        .println("loanAppForm.getLoan().getLqbFileId() inside else");
 		}
 
 		/* save data in the purchase table */
@@ -543,30 +540,28 @@ public class LoanAppFormVO implements Serializable {
 		return loanAppForm;
 	}
 
-	
-	private Loan parseVOtoEntityLoan(LoanVO loanVO){
-		
+	private Loan parseVOtoEntityLoan(LoanVO loanVO) {
+
 		Loan loan = new Loan();
 		loan.setId(loanVO.getId());
 		loan.setLqbFileId(loanVO.getLqbFileId());
 
-		if(null != loanVO.getLoanType()  ){
-			
+		if (null != loanVO.getLoanType()) {
+
 			System.out.println();
-			if (loanVO.getLoanType().getLoanTypeCd()
-			        .equalsIgnoreCase("REF")) {
+			if (loanVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
 				System.out.println("loan type is REF");
 				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.REF));
 			} else {
 				System.out.println("loan type is PUR");
 				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
-				
+
 			}
-			}else{
-				System.out.println("loan type is NONE");
-				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
-			}
-		
+		} else {
+			System.out.println("loan type is NONE");
+			loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
+		}
+
 		loan.setCreatedDate(loanVO.getCreatedDate());
 		loan.setModifiedDate(loanVO.getModifiedDate());
 		loan.setLoanEmailId(loanVO.getLoanEmailId());
@@ -574,15 +569,13 @@ public class LoanAppFormVO implements Serializable {
 		        LoanProgressStatusMasterEnum.NEW_LOAN));
 		loan.setCustomerWorkflow(loanVO.getCustomerWorkflowID());
 		loan.setLoanManagerWorkflow(loanVO.getLoanManagerWorkflowID());
-		
-		
+
 		loan.setUser(User.convertFromVOToEntity(this.getUser()));
-		
+
 		return loan;
-		
+
 	}
-	
-	
+
 	private PurchaseDetails parseVOtoEntityPurchaseDetails(
 	        PurchaseDetailsVO purchaseDetailsVO) {
 
@@ -639,12 +632,14 @@ public class LoanAppFormVO implements Serializable {
 		governmentQuestion.setEthnicity(governmentQuestionVO.getEthnicity());
 		governmentQuestion.setRace(governmentQuestionVO.getRace());
 		governmentQuestion.setSex(governmentQuestionVO.getSex());
-		governmentQuestion.setIsDownPaymentBorrowed(governmentQuestionVO.getIsDownPaymentBorrowed());
-		governmentQuestion.setSkipOptionalQuestion(governmentQuestionVO.getSkipOptionalQuestion());
-		governmentQuestion.setTypeOfPropertyOwned(governmentQuestionVO.getTypeOfPropertyOwned());
-		governmentQuestion.setPropertyTitleStatus(governmentQuestionVO.getPropertyTitleStatus());
-		
-		
+		governmentQuestion.setIsDownPaymentBorrowed(governmentQuestionVO
+		        .getIsDownPaymentBorrowed());
+		governmentQuestion.setSkipOptionalQuestion(governmentQuestionVO
+		        .getSkipOptionalQuestion());
+		governmentQuestion.setTypeOfPropertyOwned(governmentQuestionVO
+		        .getTypeOfPropertyOwned());
+		governmentQuestion.setPropertyTitleStatus(governmentQuestionVO
+		        .getPropertyTitleStatus());
 
 		return governmentQuestion;
 
@@ -663,7 +658,7 @@ public class LoanAppFormVO implements Serializable {
 		refinanceDetails.setRefinanceOption(refinanceVO.getRefinanceOption());
 		refinanceDetails.setCurrentMortgagePayment(refinanceVO
 		        .getCurrentMortgagePayment());
-		
+
 		refinanceDetails.setIncludeTaxes(refinanceVO.isIncludeTaxes());
 		refinanceDetails.setSecondMortageBalance(refinanceVO
 		        .getSecondMortageBalance());
@@ -681,11 +676,6 @@ public class LoanAppFormVO implements Serializable {
 		PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
 		if (propertyTypeMasterVO == null)
 			return propertyTypeMaster;
-		// PropertyTypeMaster propertyTypeMaster = new PropertyTypeMaster();
-
-		System.out.println("propertyTypeMasterVO.getId()"
-		        + propertyTypeMasterVO.getId());
-
 		propertyTypeMaster.setId(propertyTypeMasterVO.getId());
 		propertyTypeMaster.setPropertyTypeCd(propertyTypeMasterVO
 		        .getPropertyTypeCd());
@@ -703,15 +693,16 @@ public class LoanAppFormVO implements Serializable {
 		        .getHomeWorthToday());
 		propertyTypeMaster
 		        .setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
-		propertyTypeMaster.setPropTaxMonthlyOryearly(propertyTypeMasterVO.getPropTaxMonthlyOryearly());
-		propertyTypeMaster.setCurrentHomePrice(propertyTypeMasterVO.getCurrentHomePrice());
-		propertyTypeMaster.setCurrentHomeMortgageBalance(propertyTypeMasterVO.getCurrentHomeMortgageBalance());
-		propertyTypeMaster.setNewHomeBudgetFromsale(propertyTypeMasterVO.getNewHomeBudgetFromsale());
-		
-		
-		
-	
-		
+		propertyTypeMaster.setPropTaxMonthlyOryearly(propertyTypeMasterVO
+		        .getPropTaxMonthlyOryearly());
+		propertyTypeMaster.setCurrentHomePrice(propertyTypeMasterVO
+		        .getCurrentHomePrice());
+		propertyTypeMaster.setCurrentHomeMortgageBalance(propertyTypeMasterVO
+		        .getCurrentHomeMortgageBalance());
+		propertyTypeMaster.setNewHomeBudgetFromsale(propertyTypeMasterVO
+		        .getNewHomeBudgetFromsale());
+		propertyTypeMaster.setPropInsMonthlyOryearly(propertyTypeMasterVO
+		        .getPropInsMonthlyOryearly());
 		return propertyTypeMaster;
 
 	}
@@ -1171,13 +1162,14 @@ public class LoanAppFormVO implements Serializable {
 			        customerSpouseDetailVO.getSpouseDateOfBirth()));
 		customerSpouseDetail.setSpouseSecPhoneNumber(customerSpouseDetailVO
 		        .getSpouseSecPhoneNumber());
-		customerSpouseDetail.setCurrentHomePrice(customerSpouseDetailVO.getCurrentHomePrice());
-		customerSpouseDetail.setCurrentHomeMortgageBalance(customerSpouseDetailVO.getCurrentHomeMortgageBalance());
-		customerSpouseDetail.setNewHomeBudgetFromsale(customerSpouseDetailVO.getNewHomeBudgetFromsale());
-		
-		
-		
-		
+		customerSpouseDetail.setCurrentHomePrice(customerSpouseDetailVO
+		        .getCurrentHomePrice());
+		customerSpouseDetail
+		        .setCurrentHomeMortgageBalance(customerSpouseDetailVO
+		                .getCurrentHomeMortgageBalance());
+		customerSpouseDetail.setNewHomeBudgetFromsale(customerSpouseDetailVO
+		        .getNewHomeBudgetFromsale());
+
 		return customerSpouseDetail;
 	}
 
@@ -1225,10 +1217,18 @@ public class LoanAppFormVO implements Serializable {
 		spouseGovernmentQuestions
 		        .setRace(spouseGovernmentQuestionsVO.getRace());
 		spouseGovernmentQuestions.setSex(spouseGovernmentQuestionsVO.getSex());
-		spouseGovernmentQuestions.setIsDownPaymentBorrowed(spouseGovernmentQuestionsVO.getIsDownPaymentBorrowed());
-		spouseGovernmentQuestions.setSkipOptionalQuestion(spouseGovernmentQuestionsVO.getSkipOptionalQuestion());
-		spouseGovernmentQuestions.setTypeOfPropertyOwned(spouseGovernmentQuestionsVO.getTypeOfPropertyOwned());
-		spouseGovernmentQuestions.setPropertyTitleStatus(spouseGovernmentQuestionsVO.getPropertyTitleStatus());
+		spouseGovernmentQuestions
+		        .setIsDownPaymentBorrowed(spouseGovernmentQuestionsVO
+		                .getIsDownPaymentBorrowed());
+		spouseGovernmentQuestions
+		        .setSkipOptionalQuestion(spouseGovernmentQuestionsVO
+		                .getSkipOptionalQuestion());
+		spouseGovernmentQuestions
+		        .setTypeOfPropertyOwned(spouseGovernmentQuestionsVO
+		                .getTypeOfPropertyOwned());
+		spouseGovernmentQuestions
+		        .setPropertyTitleStatus(spouseGovernmentQuestionsVO
+		                .getPropertyTitleStatus());
 
 		return spouseGovernmentQuestions;
 
@@ -1254,19 +1254,19 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public String getLoanMangerEmail() {
-	    return loanMangerEmail;
-    }
+		return loanMangerEmail;
+	}
 
 	public void setLoanMangerEmail(String loanMangerEmail) {
-	    this.loanMangerEmail = loanMangerEmail;
-    }
+		this.loanMangerEmail = loanMangerEmail;
+	}
 
 	public String getRealtorEmail() {
-	    return realtorEmail;
-    }
+		return realtorEmail;
+	}
 
 	public void setRealtorEmail(String realtorEmail) {
-	    this.realtorEmail = realtorEmail;
-    }
+		this.realtorEmail = realtorEmail;
+	}
 
 }

@@ -27,6 +27,7 @@
 	<script src="resources/js/common.js"></script>
 	<script src="resources/js/teaserRate.js"></script>
 	<script src="resources/js/script.js"></script>
+	<script src="resources/js/customer-application.js"></script>
 	<script src="resources/js/customer-engagement.js"></script>
 	<script src="resources/js/buyHome.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
