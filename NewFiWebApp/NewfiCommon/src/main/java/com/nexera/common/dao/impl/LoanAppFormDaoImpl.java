@@ -6,6 +6,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.LoanAppFormDao;
@@ -26,13 +28,17 @@ import com.nexera.common.entity.User;
 public class LoanAppFormDaoImpl extends GenericDaoImpl implements
         LoanAppFormDao {
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LoanAppFormDaoImpl.class);
+
 	@Override
 	public LoanAppForm findById(int appFormId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public LoanAppForm findByuserID(int userID) {
+	@Override
+    public LoanAppForm findByuserID(int userID) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanAppForm.class);
 		User user = new User();
@@ -42,7 +48,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		return loalAppForm;
 	}
 
-	public LoanAppForm findByLoan(Loan loan) {
+	@Override
+    public LoanAppForm findByLoan(Loan loan) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanAppForm.class);
 		criteria.add(Restrictions.eq("loan", loan));
@@ -114,7 +121,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			this.update(loanAppForm.getLoan());
 		
 	} catch (Exception e) {
-		e.printStackTrace();
+				LOG.error("Exception caught " + e.getMessage());
 	}
 			System.out
 	        .println("After saveOrUpdate(loanAppForm.loanAppForm.getLoan().getId()"
@@ -139,7 +146,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 					this.saveOrUpdate(loanAppForm.getCustomerspousedetail());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("Exception caught " + e.getMessage());
 			}
 			System.out
 			        .println("After saveOrUpdate(loanAppForm.getCustomerspousedetail"

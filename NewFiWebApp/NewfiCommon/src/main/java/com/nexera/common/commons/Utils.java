@@ -51,13 +51,13 @@ public class Utils {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 			return null;
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 			return null;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 			return null;
 		}
 		return sw.toString();
@@ -76,7 +76,7 @@ public class Utils {
 			return dateFormat.format(localeDate);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 		}
 		return null;
 	}
@@ -93,7 +93,7 @@ public class Utils {
 			return localeDate;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 		}
 		return null;
 	}
@@ -112,7 +112,7 @@ public class Utils {
 			return gmt;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception Caught " + e.getMessage());
 		}
 		return null;
 	}
