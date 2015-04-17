@@ -1,8 +1,128 @@
 //JavaScript functions for customer engagement pages
 
-var message = "Please enter required fields";
+var message = "Field Should not be empty";
 
 
+function appendErrorMessage(){
+	
+	var ErrMessage = $('<div>').attr({
+		"class" : "err-msg hide"
+	});
+	
+	return ErrMessage;
+}
+
+function validateInput(inputVal,message){
+
+	if(inputVal == undefined || inputVal == ""){
+		$('.ce-input').next('.err-msg').html(message).show();
+		$('.ce-input').addClass('ce-err-input').show();
+		return false;
+
+	}
+	else{
+		$('.ce-input').next('.err-msg').hide();
+		$('.ce-input').removeClass('ce-err-input');
+		return true;
+	}
+	
+	
+	
+}
+function validateInputs(inputVal,message){
+	if(inputVal == undefined || inputVal == ""){
+		$('.app-input').next('.err-msg').html(message).show();
+		$('.app-input').addClass('ce-err-input').show();
+		return false;
+
+	}
+	else{
+		$('.app-input').next('.err-msg').hide();
+		$('.app-input').removeClass('ce-err-input');
+		return true;
+	}
+}
+function getQuestionContextCEP(question, parentContainer) {
+    var contxt = {
+        type: question.type,
+        text: question.text,
+        name: question.name,
+        options: question.options,
+        container: undefined,
+        childContainers: {},
+        childContexts: {},
+        value: question.selected,
+        parentContainer: parentContainer,
+        drawQuestion: function(callback) {
+            var ob = this;
+            if (ob.type == "mcq") {
+                ob.container = getApplicationMultipleChoiceQues(ob);
+            } else if (ob.type == "desc") {
+                ob.container = getContextApplicationTextQuesCEP(ob);
+            } else if (ob.type == "select") {
+                ob.container = getContextApplicationSelectQues(ob);
+            } else if (ob.type == "yesno") {
+                ob.container = getContextApplicationYesNoQuesCEP(ob);
+            }else if (ob.type == "yearMonth") {
+                ob.container = getContextApplicationYearMonthCEP(ob);
+            }
+            // parentContainer.append(ob.container);
+        },
+        deleteContainer: function(callback) {},
+        clickHandler: function(newValue, callback) {
+            var ob = this;
+            if (ob.value != "" && ob.value != newValue) {
+                if (ob.type == "yesno") {
+                    for (var key in ob.childContainers) {
+                        var container = ob.childContainers[key];
+                        container.remove();
+                    }
+                    ob.childContainers = {};
+                    ob.childContexts = {};
+                }
+            }
+        },
+        clearChildren: function(callback) {},
+        drawChildQuestions: function(option, questions) {
+            var ob = this;
+            var childContainer = $('<div>');
+            ob.childContainers[option] = childContainer;
+            ob.childContexts[option] = [];
+            for (var i = 0; i < questions.length; i++) {
+                var question = questions[i];
+                var contxt = getQuestionContextCEP(question, childContainer, ob.valueSet);
+                contxt.drawQuestion();
+                ob.childContexts[option].push(contxt);
+            }
+            ob.container.after(childContainer);
+        },
+        changeHandler: function(newValue, callback) {
+            var ob = this;
+            if (ob.value != "" && ob.value != newValue) {
+                if (ob.type == "yesno") {
+                    for (var key in ob.childContainers) {
+                        var container = ob.childContainers[key];
+                        container.remove();
+                    }
+                    ob.childContainers = {};
+                    ob.childContexts = {};
+                }
+            }
+        },
+        mapValues: function(value) {
+            if (value == "Yes" || value == true) {
+                return "Yes";
+            } else if (value == "No" || value == false) {
+                return "No";
+            } else return value;
+        }
+    };
+    /*
+     * if(valueSet){ for(key in valueSet){ if(key==contxt.name){
+     * contxt.value=contxt.mapValues(valueSet[key]); break; } } }
+     */
+    return contxt;
+}
 
 function getContextApplicationTextQuesCEP(contxt) {
     var container = $('<div>').attr({
@@ -22,7 +142,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     }).html("*");
     
     quesTextCont.append(requird);
-    
+    var errFeild=appendErrorMessage();
     var optionCont = $('<input>').attr({
         "class": "ce-input",
         "name": contxt.name,
@@ -49,7 +169,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
     }
-    optionsContainer.append(optionCont);
+    optionsContainer.append(optionCont).append(errFeild);
     return container.append(quesTextCont).append(optionsContainer);
 }
 
@@ -69,7 +189,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
     }).html("*");
     
     quesTextCont.append(requird);
-    
+    var errFeild=appendErrorMessage();
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont",
         "name": contxt.name
@@ -92,7 +212,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
             var val = event.data.value;
             optionClicked($(this), ctx, opt, val);
         });
-        optionsContainer.append(optionCont);
+        optionsContainer.append(optionCont).append(errFeild);
         if (contxt.value == option.text) {
             optionClicked(optionCont, contxt, option, option.text, true);
         }
@@ -112,7 +232,7 @@ function getContextApplicationYearMonthCEP(contxt) {
 	        "class": "ce-rp-ques-text"
 	    }).html(contxt.text);
 	    var optionsContainer = $('<div>').attr({
-	        "class": "ce-options-cont"
+	        "class": "ce-options-cont clearfix"
 	    });
 	    
 	    
@@ -141,13 +261,13 @@ function getContextApplicationYearMonthCEP(contxt) {
 	    });
 	    
 	    
-	    var requird = $('<span>').attr({
-	        "style": "padding-left:22px,padding-right:10px",
-	    }).html("per");
+	    var requird = $('<div>').attr({
+	        "class": "per",
+	    }).html("pe42342r");
 	      
 	    
-	    var selectedOption = $('<span>').attr({
-	        "class": "app-option-selected"
+	    var selectedOption = $('<div>').attr({
+	        "class": "month-cont float-left"
 	    }).html("Select One").on('click', function() {
 	        $(this).parent().find('.app-dropdown-cont').toggle();
 	    });
@@ -330,7 +450,9 @@ function paintSelectLoanTypeQuestion() {
 }
 
 function paintRefinanceMainContainer() {
-    refinanceTeaserRate.loanType = "REF";
+    
+	buyHomeTeaserRate = {};
+	refinanceTeaserRate.loanType = "REF";
     $('#ce-main-container').html('');
     var wrapper = $('<div>').attr({
         "class": "ce-refinance-wrapper clearfix"
@@ -420,6 +542,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
     var optionContainer = $('<div>').attr({
         "class": "ce-options-cont"
     });
+    var errFeild=appendErrorMessage();
     for (var i = 0; i < options.length; i++) {
         var option = $('<div>').attr({
             "class": "ce-option",
@@ -432,7 +555,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
             refinanceTeaserRate[key] = event.data.option.value;
             event.data.option.onselect();
         });
-        optionContainer.append(option);
+        optionContainer.append(option).append(errFeild);
     }
     return container.append(quesTextCont).append(optionContainer);
 }
@@ -447,6 +570,7 @@ function getTextQuestion(quesText, clickEvent, name) {
         var optionContainer = $('<div>').attr({
             "class": "ce-options-cont"
         });
+        var errFeild=appendErrorMessage();
         var inputBox = $('<input>').attr({
             "class": "ce-input",
             "name": name,
@@ -463,7 +587,7 @@ function getTextQuestion(quesText, clickEvent, name) {
                 });
             }
         });
-        optionContainer.append(inputBox);
+        optionContainer.append(inputBox).append(errFeild);
         var saveBtn = $('<div>').attr({
             "class": "ce-save-btn"
         }).html("Save & Continue").bind('click', {
@@ -475,12 +599,34 @@ function getTextQuestion(quesText, clickEvent, name) {
             refinanceTeaserRate[key] = inputValue;
           //  alert('json'+JSON.stringify(refinanceTeaserRate));
             sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-          
-            if (inputValue != undefined && inputValue != "" && inputValue != "$0") {
+            if($('input[name="zipCode"]').val()==inputValue){
+            	 var isSuccess=validateInput(inputValue,message);
+                 if(isSuccess){
+                	 if(inputValue.length>5 ||inputValue.length<5){
+                		 $('.ce-input').next('.err-msg').html("Please Enter a valid 5-digit zipcode").show();
+                		 $('.ce-input').addClass('ce-err-input').show();
+                		 return false;
+                	 }else{
+                		 event.data.clickEvent();
+                	 }
+                 	
+                 }else{
+                 	return false;
+                 }
+            }else{
+            	 var isSuccess=validateInput(inputValue,message);
+                 if(isSuccess){
+                 	event.data.clickEvent();
+                 }else{
+                 	return false;
+                 }
+            }
+           
+            /*if (inputValue != undefined && inputValue != "" && inputValue != "$0") {
                 event.data.clickEvent();
             } else {
                 showToastMessage("Please give awnsers of the questions");
-            }
+            }*/
         });
         return container.append(quesTextCont).append(optionContainer).append(saveBtn);
     }
@@ -518,13 +664,20 @@ function paintRefinanceStep2() {
     }, function(event) {
         
     	refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
-        if(refinanceTeaserRate.currentMortgageBalance && refinanceTeaserRate.currentMortgageBalance !=="$0")
+
+    	var isSuccess=validateInput($('input[name="currentMortgageBalance"]').val(),message);
+    	if(isSuccess){
+    		paintRefinanceStep3();
+    	}else{
+    		return false;
+    	}
+        /*if(refinanceTeaserRate.currentMortgageBalance && refinanceTeaserRate.currentMortgageBalance !=="$0")
         {
         	paintRefinanceStep3();
         }else{
         	showToastMessage(message);
         	return false;
-        }
+        }*/
         
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
@@ -582,32 +735,103 @@ function paintRefinanceStep3() {
             refinanceTeaserRate.annualHomeownersInsurance = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
             refinanceTeaserRate.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
             refinanceTeaserRate.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
-           /* if(refinanceTeaserRate.currentMortgagePayment == "" || refinanceTeaserRate.currentMortgagePayment == null || refinanceTeaserRate.currentMortgagePayment == "$0" ){
+            var questionOne=validateInputs(refinanceTeaserRate.currentMortgagePayment,message);
+            var questionThree=validateInput( refinanceTeaserRate.propTaxMonthlyOryearly,message);
+            var questionFour=validateInput(refinanceTeaserRate.propInsMonthlyOryearly,message);
+            var questionFive=validateInput( refinanceTeaserRate.propInsMonthlyOryearly,message);
+           
+            if(questionOne &&  questionThree && questionFour && questionFive){
             	
-            	showToastMessage(message);
-        		return false;
-            }
-            else if(refinanceTeaserRate.isIncludeTaxes =="Yes" && (refinanceTeaserRate.propertyTaxesPaid == "" || refinanceTeaserRate.propertyTaxesPaid == null || refinanceTeaserRate.propertyTaxesPaid !="$0") && (refinanceTeaserRate.annualHomeownersInsurance == "" || refinanceTeaserRate.annualHomeownersInsurance == null || refinanceTeaserRate.annualHomeownersInsurance != "$0")){
-        		showToastMessage(message);
-        		return false;
-                
-        	}else{
-        		paintRefinanceHomeWorthToday();
-        	}
-        	*/
-            paintRefinanceHomeWorthToday();
+            	if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
+            		
+            		 paintRefinanceHomeWorthToday();
+            		}else{
+            			showErrorToastMessage("Please answer the question");
+            			return false;
+            		}
+            	}else{
+            		alert("in else");
+                   return false;
+            	}
+
         });
         $('#ce-refinance-cp').append(saveAndContinueButton);
     }
    
 
 function paintRefinanceHomeWorthToday() {
-        stages = 4;
-        progressBaar(4);
-        var quesTxt = "Approximately what is your home worth today?";
-        var quesCont = getTextQuestion(quesTxt, paintRefinanceHomeZipCode, "homeWorthToday");
-        $('#ce-refinance-cp').html(quesCont);
+    stages = 4;
+    progressBaar(4);
+    var quesTxt = "Approximately what is your home worth today?";
+    var quesCont = getTextQuestion(quesTxt, paintNewResidenceTypeQues, "homeWorthToday");
+    $('#ce-refinance-cp').html(quesCont);
+}
+function paintNewResidenceTypeQues(){
+
+    if(refinanceTeaserRate.loanType)
+        progressBaar(5);
+    if(buyHomeTeaserRate.loanType)
+        homeProgressBaar(2)
+
+    quesContxts = {};
+    $('#ce-refinance-cp').html("");
+    var questions = [{
+        type: "select",
+        text: "What type of property is this?",
+        name: "propertyType",
+        options: [{
+            text: "Single Family Residence",
+            value: "0"
+        }, {
+            text: "Condo",
+            value: "1"
+        }, {
+            text: "2-4 Units",
+            value: "2"
+        }],
+        selected: ""
+    }, {
+        type: "select",
+        text: "How do you use this home?",
+        name: "residenceType",
+        options: [{
+            text: "Primary Residence",
+            value: "0"
+        }, {
+            text: "Vacation Home",
+            value: "1"
+        }, {
+            text: "Second Home",
+            value: "2"
+        }],
+        selected: ""
+    }];
+
+    for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var contxt = getQuestionContext(question, $('#ce-refinance-cp'));
+        contxt.drawQuestion();
+        quesContxts[question.name]=contxt;
     }
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "ce-save-btn"
+    }).html("Save & continue").on('click', function() {
+        
+        if(refinanceTeaserRate.loanType){
+            refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
+            refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
+            
+            paintRefinanceHomeZipCode();
+        }
+        if(buyHomeTeaserRate.loanType){
+            buyHomeTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
+            buyHomeTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
+            
+            paintHomeZipCode();
+        }
+    });
+    $('#ce-refinance-cp').append(saveAndContinueButton);
+}
     
 
 function paintRefinanceHomeInformation() {
@@ -836,6 +1060,8 @@ function paintApplyNow(inputCustomerDetails) {
             
             propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly 
             propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly
+            propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType
+            propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType
 
             appUserDetails.refinancedetails = refinancedetails;
             appUserDetails.propertyTypeMaster = propertyTypeMaster;
@@ -852,6 +1078,10 @@ function paintApplyNow(inputCustomerDetails) {
 
    		 appUserDetails.monthlyRent = inputCustomerDetails.rentPerMonth;
    		 appUserDetails.purchaseDetails =purchaseDetails;
+         var propertyTypeMaster={};
+         propertyTypeMaster.propertyType=buyHomeTeaserRate.propertyType;
+         propertyTypeMaster.residenceType=buyHomeTeaserRate.residenceType;
+         appUserDetails.propertyTypeMaster = propertyTypeMaster;
         }
      
         appUserDetails.user = user;
@@ -1048,7 +1278,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 index = parseInt(event.data.ratesArray.length / 2);
                
                 $('#aprid').html(event.data.ratesArray[index].APR + " %");
-                $('#closingCostId').html(event.data.ratesArray[index].closingCost);
+                $('#closingCostId').html(showValue(event.data.ratesArray[index].closingCost));
                 $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(3)+" %");
                
                 if(event.data.year =='5' || event.data.year =="7")
@@ -1124,7 +1354,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
         change: function(event, ui) {
          
             $('#aprid').html(gridArray[ui.value].APR +" %");
-            $('#closingCostId').html(gridArray[ui.value].closingCost);
+            $('#closingCostId').html(showValue(gridArray[ui.value].closingCost));
             $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3) +" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
@@ -1160,14 +1390,17 @@ function teaseCalculation(inputCustomerDetails){
 	if($('#CalInsuranceID2').val() != "Calculate") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment)));  	
-    	
     
     var investment = (InsuranceTemp + taxesTemp)/12;
-	var monthlyPaymentTemp = monthlyPayment -investment ;
-	monthlyPayment = monthlyPaymentTemp.toFixed(2);
 	
-	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
-	var totalEstMonthlyPaymentId = (principalInterest + investment).toFixed(2);
+    if(inputCustomerDetails.isIncludeTaxes =="Yes"){
+    	monthlyPayment = monthlyPayment -investment ;
+    }
+    
+	
+	
+	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
+	var totalEstMonthlyPaymentId = (principalInterest + investment);
 	
 	$('#monthlyPaymentId').text(showValue(monthlyPayment));
 	$('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
@@ -1238,28 +1471,21 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     }
    
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(customerInputData.currentMortgagePayment))); 
-    var Insurance ="Calculate";
-    var tax = "Calculate";
     var principalInterest = parseFloat(removedDoller(removedComma(rateVO[index].payment)));
     var totalEstMonthlyPayment = principalInterest;
+    var Insurance =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
+	var tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     
     if(customerInputData.isIncludeTaxes =="Yes"){
-    	var InsuranceTemp =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
-    	var taxesTemp =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
-    	var investment = (InsuranceTemp + taxesTemp)/12;
-    	var monthlyPaymentTemp = monthlyPayment -investment ;
-    	monthlyPayment = monthlyPaymentTemp.toFixed(2);
     	
-    	
-    	 Insurance = customerInputData.annualHomeownersInsurance;
-    	 tax = customerInputData.propertyTaxesPaid;
-    	 
-    	 var totalEstMonthlyPaymentTemp  = principalInterest + investment;
-    	 totalEstMonthlyPayment = totalEstMonthlyPaymentTemp.toFixed(2);
+    	var investment = (Insurance + tax)/12;
+    	monthlyPayment = monthlyPayment -investment ;
+    	totalEstMonthlyPayment  = principalInterest + investment;
+  
     }
     
     
-    var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
+    var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
 
     
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
@@ -1280,9 +1506,9 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     });
     // add rows in right column
     var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(rateVO[index].payment),"principalIntId");
-    var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", tax,"calTaxID","calTaxID2",customerInputData);
+    var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", showValue(tax),"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
-    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",customerInputData);
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
    
     var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", showValue(monthlyPayment) ,"monthlyPaymentId");
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", showValue(monthlyPaymentDifference) ,"monthlyPaymentDifferenceId");
@@ -1468,8 +1694,15 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     		monthlyPayment =  parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.rentPerMonth)));*/
     	
     	var investment = (InsuranceTemp + taxesTemp)/12;
-    	var monthlyPaymentTemp = monthlyPayment - investment ;  	
-    	monthlyPayment = monthlyPaymentTemp.toFixed(2);
+    	
+    	if(customerInputData.isIncludeTaxes =="Yes"){
+    		
+    		monthlyPayment = monthlyPayment - investment ;  	
+        	
+        	
+    	}
+    	
+    	
     	
     	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
     	

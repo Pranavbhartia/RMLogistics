@@ -307,7 +307,7 @@ function getContextApplicationSelectQues(contxt) {
                 "value": option.value
             }).html(option.text);
         
-        optionCont.bind('click',{"contxt":contxt,"value":option.text,"option":option},
+        optionCont.bind('click',{"contxt":contxt,"value":option.value,"option":option},
                 function(event) {
         	      
                     $(this).closest('.app-options-cont').find(
@@ -325,8 +325,8 @@ function getContextApplicationSelectQues(contxt) {
         	        	}
                 	}
                 });
-                if(option.value==val)
-                selVal=optionCont;
+                if(option.value==contxt.value)
+                    selVal=optionCont;
         dropDownContainer.append(optionCont);
     }
  var val=contxt.value;
@@ -980,7 +980,7 @@ function getMappedYearMonthValue(key){
         case "propertyTaxesPaid":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.purchaseDetails.propTaxMonthlyOryearly;
+                val=appUserDetails.propertyTypeMaster.propTaxMonthlyOryearly;
                 return val
             }else{
                 return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propTaxMonthlyOryearly;
@@ -989,7 +989,7 @@ function getMappedYearMonthValue(key){
         case "annualHomeownersInsurance":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.purchaseDetails.propInsMonthlyOryearly;
+                val=appUserDetails.propertyTypeMaster.propInsMonthlyOryearly;
                 return val
             }else{
                 return refinanceTeaserRate.propInsMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propInsMonthlyOryearly;
@@ -1190,7 +1190,7 @@ function getContextApplicationTextQues(contxt) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
-
+    var errFeild=appendErrorMessage();
     var optionCont = $('<input>').attr({
         "class": "app-input",
         "name": contxt.name,
@@ -1217,7 +1217,7 @@ function getContextApplicationTextQues(contxt) {
         optionCont.val(contxt.value);
     }
 
-    optionsContainer.append(optionCont);
+    optionsContainer.append(optionCont).append(errFeild);
 
     return container.append(quesTextCont).append(optionsContainer);
 }
@@ -1379,9 +1379,9 @@ function paintMyIncome() {
     	  investmentInHome = $('input[name="inverstInPurchase"]').val();
 	        
 	        
-	        appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
-	    	appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
-	   	    appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
+	        appUserDetails.propertyTypeMaster.currentHomePrice=homeListPrice;
+	    	appUserDetails.propertyTypeMaster.currentHomeMortgageBalance=homeMortgageBalance;
+	   	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
 	        
 	        
 	        appUserDetails.customerBankAccountDetails = [];
@@ -1852,11 +1852,20 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         		//appUserDetails[name] = false;
+        		var selectedCheck = $(this).attr("value");
+        		$("#ce-option_"+selectedCheck+" :input").each(function() {
+        			  $(this).val('');
+        			  
+        		});
+        		
         	}else{
 	        	$(this).addClass('app-option-checked');
 	        	//appUserDetails[name] = true;
         	}
 			var key = event.data.name;
+			
+			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
+			
 			//appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
 		});
@@ -2144,6 +2153,7 @@ function paintCustomerApplicationPageStep4a() {
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
     	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
+    	
     	isUSCitizen =  quesDeclarationContxts[9].value;
     	
     	
@@ -2287,14 +2297,6 @@ function paintCustomerApplicationPageStep4a() {
         "class": "app-ques-header-txt"
     });
 
-	
-	
-	
-	
-	
-	
-	
-	
 	var options = [ {
 		"text" : "No thank you. Let's move on",
 		"name" : "bypassoptional",
@@ -2306,7 +2308,9 @@ function paintCustomerApplicationPageStep4a() {
 
 	$('#app-right-panel').append(quesCont);
     
-
+	var optionalQuestion = appUserDetails.governmentquestion.skipOptionalQuestion;
+	
+	
     
     ///
     var questions = [{
@@ -2392,6 +2396,10 @@ function paintCustomerApplicationPageStep4a() {
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
 	
+	    if(optionalQuestion != undefined && optionalQuestion){
+			$(".ce-option-checkbox").click();
+			
+		}
 }
 
 
@@ -3282,12 +3290,12 @@ function getMonthYearTextQuestion(question) {
 
 function getYearMonthOptionContainer(contxt){
     var optionsContainer = $('<div>').attr({
-        "class": "app-options-cont",
+        "class": "month-cont app-options-cont float-left",
         "name": "yearMonth"
     });
 
     var selectedOption = $('<div>').attr({
-        "class": "app-option-selected"
+    	 "class": "app-option-selected"
     }).html("Select One").on('click', function() {
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
@@ -3357,12 +3365,12 @@ function getMonthYearTextQuestionContext(contxt) {
         "class": "ce-rp-ques-text"
     }).html(contxt.text);
     var optionsContainer = $('<div>').attr({
-        "class": "ce-options-cont"
+        "class": "ce-options-cont clearfix"
     });
-
+    var errFeild=appendErrorMessage();
 
     var optionCont = $('<input>').attr({
-        "class": "ce-input",
+        "class": "ce-input float-left",
         "name": contxt.name,
         "value": contxt.value
     }).bind("change", {
@@ -3391,8 +3399,8 @@ function getMonthYearTextQuestionContext(contxt) {
     });
 
 
-    var requird = $('<span>').attr({
-        "style": "padding-left:22px,padding-right:10px",
+    var requird = $('<div>').attr({
+    	"class": "per float-left",
     }).html("per");
       
 
@@ -3405,7 +3413,7 @@ function getMonthYearTextQuestionContext(contxt) {
             optionCont.val(contxt.value);
         }
     }
-    optionsContainer.append(optionCont).append(requird).append(selectedOption);
+    optionsContainer.append(optionCont).append(errFeild).append(requird).append(selectedOption);
     return container.append(quesTextCont).append(optionsContainer);
 }
 
@@ -3659,7 +3667,7 @@ function paintRefinanceStep1b() {
 function paintRefinanceStep3() {
 //stages = 3;
 //progressBaar(3);
-	quesContxts = [];
+	quesContxts = {};
 	
 	$('#app-right-panel').html("");
 	
@@ -3677,27 +3685,24 @@ function paintRefinanceStep3() {
                          "selected":"",
                          "options": [
                              {
-                                 "text": "Yes",
-                                 "addQuestions": [
-                                     {
-                                         "type": "desc",
-                                         "text": "How much your property taxes?",
-                                         "name": "annualPropertyTaxes",
-                                         "selected":appUserDetails.propertyTypeMaster.propertyTaxesPaid
-                                     },
-                                     {
-                                         "type": "desc",
-                                         "text": "How much your homeowners insurance ?",
-                                         "name": "annualHomeownersInsurance",
-                                         "selected": appUserDetails.propertyTypeMaster.propertyInsuranceCost
-                                     }
-                                 ]
+                                 "text": "Yes"
                              },
                              {
                                  "text": "No"
                              }
                          ]
-                     }
+                    },
+                    {
+                        "type": "yearMonth",
+                        "text": "How much are your annual property taxes?",
+                        "name": "propertyTaxesPaid",
+                        "value": ""
+                    }, {
+                        "type": "yearMonth",
+                        "text": "How much is your annual homeowners insurance ?",
+                        "name": "annualHomeownersInsurance",
+                        "value": ""
+                    }
                  ];
     
     for(var i=0;i<questions.length;i++){
@@ -3705,20 +3710,23 @@ function paintRefinanceStep3() {
 		var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails.refinancedetails);
 		contxt.drawQuestion();
 		
-		quesContxts.push(contxt);
+		quesContxts[question.name]=contxt;
 	}
 	
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		
-			refinancedetails.currentMortgagePayment = $('input[name="currentMortgagePayment"]').val();		  
-			refinancedetails.includeTaxes = quesContxts[1].getValuesForDB();
+			refinancedetails.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val();		  
+			refinancedetails.includeTaxes = quesContxts["includeTaxes"].value;//quesContxts[1].getValuesForDB();
 			
-			propertyTypeMaster.propertyTaxesPaid = $('input[name="annualPropertyTaxes"]').val();
-			propertyTypeMaster.propertyInsuranceCost = $('input[name="annualHomeownersInsurance"]').val();
-		  appUserDetails.refinancedetails=refinancedetails;
-		  appUserDetails.propertyTypeMaster=propertyTypeMaster;
+			propertyTypeMaster.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
+			propertyTypeMaster.propertyInsuranceCost = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
+            propertyTypeMaster.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
+            propertyTypeMaster.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
+           
+		    appUserDetails.refinancedetails=refinancedetails;
+		    appUserDetails.propertyTypeMaster=propertyTypeMaster;
 		    saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1a());
 		    //paintCustomerApplicationPageStep1a();
 		
@@ -4299,7 +4307,7 @@ function mapDbDataForFrontend(key){
             return appUserDetails.governmentquestion.ownershipInterestInProperty;
         case  "propertyTaxesPaid":
             if(typeof(newfiObject)!=='undefined'){
-                var val=appUserDetails.purchaseDetails.propTaxMonthlyOryearly;
+                var val=appUserDetails.propertyTypeMaster.propertyTaxesPaid;
                 return val
             }else{
                 return refinanceTeaserRate.propertyTaxesPaid;
@@ -4308,12 +4316,37 @@ function mapDbDataForFrontend(key){
         case "annualHomeownersInsurance":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.purchaseDetails.propertyInsuranceCost;
+                val=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
                 return val
             }else{
                 return refinanceTeaserRate.annualHomeownersInsurance;
             }
             break;
+        case "propertyType":
+            var val;
+            if(typeof(newfiObject)!=='undefined'){
+                val=appUserDetails.propertyTypeMaster.propertyTypeCd;
+                return val
+            }else{
+                if(refinanceTeaserRate.propertyType)
+                    return refinanceTeaserRate.propertyType;
+                else if(buyHomeTeaserRate.propertyType)
+                    return buyHomeTeaserRate.propertyType;
+            }
+            break;
+        case "residenceType":
+            var val;
+            if(typeof(newfiObject)!=='undefined'){
+                val=appUserDetails.propertyTypeMaster.propertyTypeCd;
+                return val
+            }else{
+                if(refinanceTeaserRate.residenceType)
+                    return refinanceTeaserRate.residenceType;
+                else if(buyHomeTeaserRate.residenceType)
+                    return buyHomeTeaserRate.residenceType;
+            }
+            break;
+            
     /*    case "isDownPaymentBorrowed":
             return appUserDetails.governmentquestion.isDownPaymentBorrowed;
         case "typeOfPropertyOwned":

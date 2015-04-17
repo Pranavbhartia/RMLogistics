@@ -7,6 +7,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
@@ -153,4 +154,7 @@ public interface LoanService {
 
 	public String saveLoanMilestone(int loanId, int masterMileStoneId,
 	        String comments);
+
+	public String saveLoanProgress(int loand,
+	        LoanProgressStatusMaster progressValue);
 }

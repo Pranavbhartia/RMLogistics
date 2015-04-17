@@ -532,13 +532,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		JSONObject jsonChild = new JSONObject();
 		try {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
-			        documentVO.getsLoanNumber());
+					nexeraUtility.asciiTrim(documentVO.getsLoanNumber()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE,
-			        documentVO.getDocumentType());
+					nexeraUtility.asciiTrim(documentVO.getDocumentType()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_NOTES,
-			        documentVO.getNotes());
+					nexeraUtility.asciiTrim(documentVO.getNotes()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT,
-			        documentVO.getsDataContent());
+					nexeraUtility.asciiTrim(documentVO.getsDataContent()));
 
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
