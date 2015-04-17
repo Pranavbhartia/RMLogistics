@@ -18,6 +18,10 @@ public class SpouseGovernmentQuestionVO {
 	private String ethnicity;
 	private String race;
 	private String sex;
+	private Boolean isDownPaymentBorrowed;
+	private Boolean skipOptionalQuestion;
+	private String typeOfPropertyOwned;
+	private String propertyTitleStatus;
 
 	
 	public int getId() {
@@ -132,6 +136,31 @@ public class SpouseGovernmentQuestionVO {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+	
+	public Boolean getIsDownPaymentBorrowed() {
+		return isDownPaymentBorrowed;
+	}
+	public void setIsDownPaymentBorrowed(Boolean isDownPaymentBorrowed) {
+		this.isDownPaymentBorrowed = isDownPaymentBorrowed;
+	}
+	public Boolean getSkipOptionalQuestion() {
+		return skipOptionalQuestion;
+	}
+	public void setSkipOptionalQuestion(Boolean skipOptionalQuestion) {
+		this.skipOptionalQuestion = skipOptionalQuestion;
+	}
+	public String getTypeOfPropertyOwned() {
+		return typeOfPropertyOwned;
+	}
+	public void setTypeOfPropertyOwned(String typeOfPropertyOwned) {
+		this.typeOfPropertyOwned = typeOfPropertyOwned;
+	}
+	public String getPropertyTitleStatus() {
+		return propertyTitleStatus;
+	}
+	public void setPropertyTitleStatus(String propertyTitleStatus) {
+		this.propertyTitleStatus = propertyTitleStatus;
 	}
 	
 	

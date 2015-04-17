@@ -687,7 +687,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
             addQuestions: [{
                 type: "select",
                 text: "What type of property did you own? Select the choice that fits best.",
-                name: "yourPrimaryResidence",
+                name: "typeOfPropertyOwned",
                 options: [{
                     text: "Your Primary Residence",
                     value: "Your Primary Residence"
@@ -704,7 +704,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
             {
                 type: "select",
                 text: "What was your status on the title of that property",
-                name: "propertyStatus",
+                name: "propertyTitleStatus",
                 options: [{
                     text: "I was the sole title holder",
                     value: "I was the sole title holder"
@@ -750,11 +750,16 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	isObligatedLoan =  quesDeclarationContxts[4].value;
     	isFederalDebt =  quesDeclarationContxts[5].value;
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
+    	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
     	isUSCitizen =  quesDeclarationContxts[9].value;
     	isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
     	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
+    	  typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+	    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+	    
+    	  
     	  
     	 if(appUserDetails.spouseGovernmentQuestions){
     		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
@@ -762,6 +767,14 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	 else{
     		 spouseGovernmentQuestions = {};
     	 }
+    	 
+    	  if( isDownPaymentBorrowed =="Yes"){ 
+    		 spouseGovernmentQuestions.isDownPaymentBorrowed = true;
+ 		 }else if(isDownPaymentBorrowed =="No"){
+ 			spouseGovernmentQuestions.isDownPaymentBorrowed = false;
+ 		 }else{
+ 			spouseGovernmentQuestions.isDownPaymentBorrowed = null;
+ 		 }
     	 
     	 if( isOutstandingJudgments =="Yes"){ 
     		 spouseGovernmentQuestions.isOutstandingJudgments = true;
@@ -851,6 +864,8 @@ function paintSpouseCustomerApplicationPageStep4a() {
  			spouseGovernmentQuestions.isOwnershipInterestInProperty = null;
  		 }
     	 
+    	  spouseGovernmentQuestions.typeOfPropertyOwned=typeOfPropertyOwned;
+	    spouseGovernmentQuestions.propertyTitleStatus=propertyTitleStatus;
     	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
     	 
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);

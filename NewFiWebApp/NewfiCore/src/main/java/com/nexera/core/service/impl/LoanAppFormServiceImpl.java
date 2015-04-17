@@ -418,6 +418,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		customerSpouseDetailVO.setExperianScore(customerspousedetail.getExperianScore());
 		customerSpouseDetailVO.setEquifaxScore(customerspousedetail.getEquifaxScore());
 		customerSpouseDetailVO.setTransunionScore(customerspousedetail.getTransunionScore());
+		customerSpouseDetailVO.setCurrentHomePrice(customerspousedetail.getCurrentHomePrice());
+		customerSpouseDetailVO.setCurrentHomeMortgageBalance(customerspousedetail.getCurrentHomeMortgageBalance());
+		customerSpouseDetailVO.setNewHomeBudgetFromsale(customerspousedetail.getNewHomeBudgetFromsale());
+		
+		
+		
 	    return customerSpouseDetailVO;
     }
 
@@ -573,6 +579,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 propertyTypeMasterVO.setPropertyInsuranceCost(propertyTypeMaster.getPropertyInsuranceCost());
 		 propertyTypeMasterVO.setPropertyPurchaseYear(propertyTypeMaster.getPropertyPurchaseYear());
 		 propertyTypeMasterVO.setHomeWorthToday(propertyTypeMaster.getHomeWorthToday());
+		 propertyTypeMasterVO.setCurrentHomePrice(propertyTypeMaster.getCurrentHomePrice());
+		 propertyTypeMasterVO.setCurrentHomeMortgageBalance(propertyTypeMaster.getCurrentHomeMortgageBalance());
+		 propertyTypeMasterVO.setNewHomeBudgetFromsale(propertyTypeMaster.getNewHomeBudgetFromsale());
+		 propertyTypeMasterVO.setPropTaxMonthlyOryearly(propertyTypeMaster.getPropTaxMonthlyOryearly());
 		 
 		 return propertyTypeMasterVO;
 		 
@@ -602,6 +612,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 governmentQuestionVO.setEthnicity(governmentquestion.getEthnicity());
 		 governmentQuestionVO.setRace(governmentquestion.getRace());
 		 governmentQuestionVO.setSex(governmentquestion.getSex());
+		 governmentQuestionVO.setIsDownPaymentBorrowed(governmentquestion.getIsDownPaymentBorrowed());
+		 governmentQuestionVO.setPropertyTitleStatus(governmentquestion.getPropertyTitleStatus());
+		 governmentQuestionVO.setTypeOfPropertyOwned(governmentquestion.getTypeOfPropertyOwned());
+		 governmentQuestionVO.setSkipOptionalQuestion(governmentquestion.getSkipOptionalQuestion());
 		 	 
 	    return governmentQuestionVO;
     }
@@ -646,6 +660,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .getEthnicity());
 		spouseGovernmentQuestionVO.setRace(spouseGovernmentquestions.getRace());
 		spouseGovernmentQuestionVO.setSex(spouseGovernmentquestions.getSex());
+		spouseGovernmentQuestionVO.setIsDownPaymentBorrowed(spouseGovernmentquestions.getIsDownPaymentBorrowed());
+		spouseGovernmentQuestionVO.setPropertyTitleStatus(spouseGovernmentquestions.getPropertyTitleStatus());
+		spouseGovernmentQuestionVO.setTypeOfPropertyOwned(spouseGovernmentquestions.getTypeOfPropertyOwned());
+		spouseGovernmentQuestionVO.setSkipOptionalQuestion(spouseGovernmentquestions.getSkipOptionalQuestion());
 
 		return spouseGovernmentQuestionVO;
 	}

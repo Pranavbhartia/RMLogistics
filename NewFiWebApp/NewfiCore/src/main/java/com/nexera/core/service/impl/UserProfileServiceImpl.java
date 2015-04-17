@@ -1019,6 +1019,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			propertyTypeMasterVO.setHomeWorthToday(loaAppFormVO.getPropertyTypeMaster().getHomeWorthToday());
 			propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO.getPropertyTypeMaster().getPropertyInsuranceCost());
 			propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO.getPropertyTypeMaster().getPropertyTaxesPaid());
+			propertyTypeMasterVO.setPropTaxMonthlyOryearly(loaAppFormVO.getPropertyTypeMaster().getPropTaxMonthlyOryearly());
 			}
 			
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
@@ -1028,7 +1029,7 @@ public class UserProfileServiceImpl implements UserProfileService,
             refinanceVO.setRefinanceOption(loaAppFormVO.getRefinancedetails().getRefinanceOption());
             refinanceVO.setMortgageyearsleft(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
             refinanceVO.setCashTakeOut(loaAppFormVO.getRefinancedetails().getCashTakeOut());
-            refinanceVO.setCurrentMortgageBalance(loaAppFormVO.getRefinancedetails().getMortgageyearsleft());
+            refinanceVO.setCurrentMortgageBalance(loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
             refinanceVO.setCurrentMortgagePayment(loaAppFormVO.getRefinancedetails().getCurrentMortgagePayment());
             refinanceVO.setIncludeTaxes(loaAppFormVO.getRefinancedetails().isIncludeTaxes());
             }

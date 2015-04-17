@@ -220,7 +220,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var sellYourHouse ={
     	        type: "yesno",
     	        text: "Are you planing to sell your current home ?",
-    	        name: "isSellYourhome",
+    	        name: "homeToSell",
     	        options: [
                           {
                               "text": "Yes",
@@ -461,17 +461,17 @@ function paintSpouseSaleOfCurrentHome() {
 	        type: "desc",
 	        text: "Whats the listing price of your current home?",
 	        name: "spouseHomeListPrice",
-	        value: appUserDetails.user.customerDetail.addressState
+	        value: appUserDetails.customerSpouseDetail.currentHomePrice
 	    }, {
 	        type: "desc",
 	        text: "Whats the mortage balance of your current home?",
 	        name: "spouseHomeMortgageBalance",
-	        value: appUserDetails.user.customerDetail.addressCity
+	        value: appUserDetails.customerSpouseDetail.currentHomeMortgageBalance
 	    }, {
 	        type: "desc",
 	        text: "How much from this sale do you intend to purchase towards your new home ?",
 	        name: "spouseInvestmentInHome",
-	        value: appUserDetails.user.customerDetail.addressZipCode
+	        value: appUserDetails.customerSpouseDetail.newHomeBudgetFromsale
 	    }];
 	
 	    var hmSellContainer = getQuestionsContainer(questions);
@@ -517,6 +517,20 @@ function paintSpouseSaleOfCurrentHome() {
     }).html("Save & continue").on('click', function(event) {
     	
     	////This code added to get Customer Spouse employment Income///////
+    	
+    	
+    	
+    	var spouseHomeListPrice = $('input[name="spouseHomeListPrice"]').val();
+    	var spouseHomeMortgageBalance = $('input[name="spouseHomeMortgageBalance"]').val();
+    	var spouseInvestmentInHome = $('input[name="spouseInvestmentInHome"]').val();
+   
+    	
+    	 appUserDetails.customerSpouseDetail.currentHomePrice=spouseHomeListPrice;
+    	 appUserDetails.customerSpouseDetail.currentHomeMortgageBalance=spouseHomeMortgageBalance;
+    	 appUserDetails.customerSpouseDetail.newHomeBudgetFromsale=spouseInvestmentInHome;
+    	 
+    
+    	
     		
     		var  customerSpouseEmploymentIncome = [];
     		

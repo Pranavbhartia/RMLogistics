@@ -32,6 +32,13 @@ public class GovernmentQuestion implements Serializable{
 	private Boolean isUSCitizen;
 	private Boolean isOccupyPrimaryResidence;
 	private Boolean isOwnershipInterestInProperty;
+	private Boolean isDownPaymentBorrowed;
+	private Boolean skipOptionalQuestion;
+	private String typeOfPropertyOwned;
+	private String propertyTitleStatus;
+	
+	
+	
 	private String ethnicity;
 	private String race;
 	private String sex;
@@ -218,6 +225,48 @@ public class GovernmentQuestion implements Serializable{
 			loanappform.setGovernmentquestion(null);
 
 			return loanappform;
+		}
+
+		
+		@Column(name = "isDownPaymentBorrowed")
+		@Type(type = "org.hibernate.type.NumericBooleanType")
+		public Boolean getIsDownPaymentBorrowed() {
+			return isDownPaymentBorrowed;
+		}
+
+		public void setIsDownPaymentBorrowed(Boolean isDownPaymentBorrowed) {
+			this.isDownPaymentBorrowed = isDownPaymentBorrowed;
+		}
+
+		
+		@Column(name = "skipOptionalQuestion")
+		@Type(type = "org.hibernate.type.NumericBooleanType")
+		public Boolean getSkipOptionalQuestion() {
+			return skipOptionalQuestion;
+		}
+
+		public void setSkipOptionalQuestion(Boolean skipOptionalQuestion) {
+			this.skipOptionalQuestion = skipOptionalQuestion;
+		}
+		
+		
+		@Column(name = "typeOfPropertyOwned")
+		public String getTypeOfPropertyOwned() {
+			return typeOfPropertyOwned;
+		}
+
+		public void setTypeOfPropertyOwned(String typeOfPropertyOwned) {
+			this.typeOfPropertyOwned = typeOfPropertyOwned;
+		}
+		
+		
+		@Column(name = "propertyTitleStatus")
+		public String getPropertyTitleStatus() {
+			return propertyTitleStatus;
+		}
+
+		public void setPropertyTitleStatus(String propertyTitleStatus) {
+			this.propertyTitleStatus = propertyTitleStatus;
 		}
 	
 	
