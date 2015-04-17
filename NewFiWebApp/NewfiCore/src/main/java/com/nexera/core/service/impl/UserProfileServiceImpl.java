@@ -1020,6 +1020,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			propertyTypeMasterVO.setPropertyInsuranceCost(loaAppFormVO.getPropertyTypeMaster().getPropertyInsuranceCost());
 			propertyTypeMasterVO.setPropertyTaxesPaid(loaAppFormVO.getPropertyTypeMaster().getPropertyTaxesPaid());
 			propertyTypeMasterVO.setPropTaxMonthlyOryearly(loaAppFormVO.getPropertyTypeMaster().getPropTaxMonthlyOryearly());
+			propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO.getPropertyTypeMaster().getPropInsMonthlyOryearly());
 			}
 			
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
