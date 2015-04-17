@@ -89,6 +89,12 @@
 			$(document).on('click','#progressBaarId_5',function(){
 				if(stages>4){
 					progressBaar(5);
+					paintNewResidenceTypeQues();
+				}
+			});
+			$(document).on('click','#progressBaarId_6',function(){
+				if(stages>5){
+					progressBaar(6);
 					paintRefinanceHomeZipCode();
 				}
 			});
@@ -107,15 +113,16 @@
 			$(document).on('click','#homeProgressBaarId_3',function(){
 				if(active>2){
 					homeProgressBaar(3);
+					paintNewResidenceTypeQues();
+				}
+			});
+			 $(document).on('click','#homeProgressBaarId_4',function(){
+				if(active>3){
+					homeProgressBaar(4);
 					paintHomeZipCode();
 				}
 			});
-			/* $(document).on('click','#homeProgressBaarId_4',function(){
-				if(active>3){
-					homeProgressBaar(4);
-					paintBuyHomeMyIncome();
-				}
-			});
+			/*
 			$(document).on('click','#homeProgressBaarId_5',function(){
 				if(active>4){
 					homeProgressBaar(5);
