@@ -107,3 +107,36 @@ VALUES ('2','email_batch','email batch related exceptions');
 #Added by akash on 15th april
 Alter table  newfi_schema.loan
  add  purchase_document_expiry_date BIGINT(20) DEFAULT NULL;
+ 
+ 
+ 
+ 
+ Added by Shashank on 16th April 
+ ALTER TABLE `newfi_schema`.`propertytypemaster` 
+ADD COLUMN `prop_tax_mon_yrly` VARCHAR(45) NULL AFTER `residence_type_cd`;
+
+ALTER TABLE `newfi_schema`.`governmentquestion` 
+ADD COLUMN `isDownPaymentBorrowed` TINYINT(4) NULL AFTER `sex`,
+ADD COLUMN `typeOfPropertyOwned` VARCHAR(45) NULL AFTER `isDownPaymentBorrowed`,
+ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`,
+ADD COLUMN `skipOptionalQuestion` TINYINT(4) NULL AFTER `propertyTitleStatus`;
+
+
+ALTER TABLE `newfi_schema`.`spousegovernmentquestion` 
+ADD COLUMN `isDownPaymentBorrowed` TINYINT(4) NULL AFTER `sex`,
+ADD COLUMN `typeOfPropertyOwned` VARCHAR(45) NULL AFTER `isDownPaymentBorrowed`,
+ADD COLUMN `propertyTitleStatus` VARCHAR(45) NULL AFTER `typeOfPropertyOwned`,
+ADD COLUMN `skipOptionalQuestion` TINYINT(4) NULL AFTER `propertyTitleStatus`;
+
+
+
+ALTER TABLE `newfi_schema`.`propertytypemaster` 
+ADD COLUMN `current_home_price` VARCHAR(45) NULL AFTER `prop_tax_mon_yrly`,
+ADD COLUMN `current_home_mortgage_balance` VARCHAR(45) NULL AFTER `current_home_price`,
+ADD COLUMN `newhome_budget_fromsale` VARCHAR(45) NULL AFTER `current_home_mortgage_balance`;
+
+
+ALTER TABLE `newfi_schema`.`customerspousedetails` 
+ADD COLUMN `current_home_price` VARCHAR(45) NULL ,
+ADD COLUMN `current_home_mortgage_balance` VARCHAR(45) NULL AFTER `current_home_price`,
+ADD COLUMN `newhome_budget_fromsale` VARCHAR(45) NULL AFTER `current_home_mortgage_balance`;

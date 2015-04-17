@@ -639,6 +639,12 @@ public class LoanAppFormVO implements Serializable {
 		governmentQuestion.setEthnicity(governmentQuestionVO.getEthnicity());
 		governmentQuestion.setRace(governmentQuestionVO.getRace());
 		governmentQuestion.setSex(governmentQuestionVO.getSex());
+		governmentQuestion.setIsDownPaymentBorrowed(governmentQuestionVO.getIsDownPaymentBorrowed());
+		governmentQuestion.setSkipOptionalQuestion(governmentQuestionVO.getSkipOptionalQuestion());
+		governmentQuestion.setTypeOfPropertyOwned(governmentQuestionVO.getTypeOfPropertyOwned());
+		governmentQuestion.setPropertyTitleStatus(governmentQuestionVO.getPropertyTitleStatus());
+		
+		
 
 		return governmentQuestion;
 
@@ -697,6 +703,15 @@ public class LoanAppFormVO implements Serializable {
 		        .getHomeWorthToday());
 		propertyTypeMaster
 		        .setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
+		propertyTypeMaster.setPropTaxMonthlyOryearly(propertyTypeMasterVO.getPropTaxMonthlyOryearly());
+		propertyTypeMaster.setCurrentHomePrice(propertyTypeMasterVO.getCurrentHomePrice());
+		propertyTypeMaster.setCurrentHomeMortgageBalance(propertyTypeMasterVO.getCurrentHomeMortgageBalance());
+		propertyTypeMaster.setNewHomeBudgetFromsale(propertyTypeMasterVO.getNewHomeBudgetFromsale());
+		
+		
+		
+	
+		
 		return propertyTypeMaster;
 
 	}
@@ -1156,6 +1171,13 @@ public class LoanAppFormVO implements Serializable {
 			        customerSpouseDetailVO.getSpouseDateOfBirth()));
 		customerSpouseDetail.setSpouseSecPhoneNumber(customerSpouseDetailVO
 		        .getSpouseSecPhoneNumber());
+		customerSpouseDetail.setCurrentHomePrice(customerSpouseDetailVO.getCurrentHomePrice());
+		customerSpouseDetail.setCurrentHomeMortgageBalance(customerSpouseDetailVO.getCurrentHomeMortgageBalance());
+		customerSpouseDetail.setNewHomeBudgetFromsale(customerSpouseDetailVO.getNewHomeBudgetFromsale());
+		
+		
+		
+		
 		return customerSpouseDetail;
 	}
 
@@ -1203,6 +1225,10 @@ public class LoanAppFormVO implements Serializable {
 		spouseGovernmentQuestions
 		        .setRace(spouseGovernmentQuestionsVO.getRace());
 		spouseGovernmentQuestions.setSex(spouseGovernmentQuestionsVO.getSex());
+		spouseGovernmentQuestions.setIsDownPaymentBorrowed(spouseGovernmentQuestionsVO.getIsDownPaymentBorrowed());
+		spouseGovernmentQuestions.setSkipOptionalQuestion(spouseGovernmentQuestionsVO.getSkipOptionalQuestion());
+		spouseGovernmentQuestions.setTypeOfPropertyOwned(spouseGovernmentQuestionsVO.getTypeOfPropertyOwned());
+		spouseGovernmentQuestions.setPropertyTitleStatus(spouseGovernmentQuestionsVO.getPropertyTitleStatus());
 
 		return spouseGovernmentQuestions;
 

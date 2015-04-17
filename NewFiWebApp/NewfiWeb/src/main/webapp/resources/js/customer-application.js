@@ -297,8 +297,10 @@ function getContextApplicationSelectQues(contxt) {
         "class": "app-dropdown-cont hide"
     });
 
+
     for (var i = 0; i < contxt.options.length; i++) {
         var option = contxt.options[i];
+       // alert('option value is   '+ option.value);
         var optionCont = $('<div>').attr({
                 "class": "app-option-sel"
             }).data({
@@ -323,15 +325,22 @@ function getContextApplicationSelectQues(contxt) {
         	        	}
                 	}
                 });
+                if(option.value==val)
+                selVal=optionCont;
         dropDownContainer.append(optionCont);
     }
+ var val=contxt.value;
 
+    if(val)
+    	setDropDownData(selectedOption, contxt.options,val);
+    	
     optionsContainer.append(selectedOption).append(dropDownContainer);
 
     return container.append(quesTextCont).append(optionsContainer);
 }
 
 function getApplicationSelectQues(question,val) {
+
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -849,6 +858,8 @@ $('#app-right-panel').html("");
 
 
 function getQuestionContext(question,parentContainer,valueSet){
+//alert('getQuestionContext');
+
 	var contxt={
 			type: question.type,
 	        text: question.text,
@@ -861,6 +872,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        parentContainer:parentContainer,
 	        valueSet:valueSet,
 	        drawQuestion:function(callback){
+	        
 	        	var ob=this;
 	        	if (ob.type == "mcq") {
 	        		ob.container = getApplicationMultipleChoiceQues(ob);
@@ -868,7 +880,10 @@ function getQuestionContext(question,parentContainer,valueSet){
 	            	ob.container = getContextApplicationTextQues(ob);
 	            } else if (ob.type == "select") {
 	            	ob.container = getContextApplicationSelectQues(ob);
+	            	//ob.container = getApplicationSelectQues(ob);
+	            	
 	            } else if (ob.type == "yesno") {
+	          // alert('inside getQuestionContext yes no');
 	            	ob.container = getContextApplicationYesNoQues(ob);
 	            } else if (question.type == "yearMonth") {
 	                quesCont = getMonthYearTextQuestionContext(ob);
@@ -897,6 +912,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        	
 	        },
 	        drawChildQuestions:function(option,questions){
+	        
 	        	var ob=this;
 	        	var childContainer = $('<div>');
 	        	ob.childContainers[option]=childContainer;
@@ -904,6 +920,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        	for(var i=0;i<questions.length;i++){
 	        		var question=questions[i];
 	            	var contxt=getQuestionContext(question,childContainer,ob.valueSet);
+	            	
 	            	contxt.drawQuestion();
 	            	ob.childContexts[option].push(contxt);
 	        	}
@@ -927,28 +944,41 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        	}else if(value=="No"||value==false){
 	        		return "No";
 	        	}else
+	        	   { 
 	        		return value;
+	        		}
 	        },getValuesForDB:function(){
 	        	var value=this.value;
 	        	if(value=="Yes"||value==true){
 	        		return true;
 	        	}else if(value=="No"||value==false){
 	        		return false;
-	        	}else
+	        	}else{
+	        	
 	        		return value;
+	        		}
 	        }
 	};
 	
+	
+	
+	
 	 if(valueSet){
+	 
 	     for(key in valueSet){
-	     	if(key==contxt.name){
+	 	     	if(key==contxt.name){
+	     	 
 	     		contxt.value=contxt.mapValues(valueSet[key]);
+	     		 
+	     	     		
 	         	break;
 	         }
 	     }
-	 }
+	 } 
      if(!contxt.value){
+    
         var res=mapDbDataForFrontend(contxt.name);
+     
         if(res!=undefined)
             contxt.value=contxt.mapValues(res);
      }
@@ -1088,7 +1118,7 @@ function getContextApplicationYesNoQues(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
-
+//alert(contxt.name)
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont",
         "name": contxt.name
@@ -1262,7 +1292,6 @@ function paintMyIncome() {
     
     
     
-    
     var  customerEmploymentIncome = [];
      
      $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
@@ -1333,9 +1362,14 @@ function paintMyIncome() {
        
       if(purchase == true){
             
-	        homelistprice = $('input[name="homelistprice"]').val();
-	        homemortgagebalance = $('input[name="homemortgagebalance"]').val();
-	        inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+    	  homeListPrice = $('input[name="homelistprice"]').val();
+    	  homeMortgageBalance = $('input[name="homemortgagebalance"]').val();
+    	  investmentInHome = $('input[name="inverstInPurchase"]').val();
+	        
+	        
+	        appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
+	    	appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
+	   	    appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
 	        
 	        
 	        appUserDetails.customerBankAccountDetails = [];
@@ -2033,7 +2067,7 @@ function paintCustomerApplicationPageStep4a() {
             addQuestions: [{
                 type: "select",
                 text: "What type of property did you own? Select the choice that fits best.",
-                name: "yourPrimaryResidence",
+                name: "typeOfPropertyOwned",
                 options: [{
                     text: "Your Primary Residence",
                     value: "Your Primary Residence"
@@ -2050,7 +2084,7 @@ function paintCustomerApplicationPageStep4a() {
             {
                 type: "select",
                 text: "What was your status on the title of that property",
-                name: "propertyStatus",
+                name: "propertyTitleStatus",
                 options: [{
                     text: "I was the sole title holder",
                     value: "I was the sole title holder"
@@ -2096,29 +2130,27 @@ function paintCustomerApplicationPageStep4a() {
     	isObligatedLoan =  quesDeclarationContxts[4].value;
     	isFederalDebt =  quesDeclarationContxts[5].value;
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
-    	//appUserDetails["isDownPaymentBorrowed"] =quesDeclarationContxts[7].value;
+    	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
-    	
     	isUSCitizen =  quesDeclarationContxts[9].value;
-    
-    	//appUserDetails["isPermanentResidentAlien"] = null;
-    	//if(quesDeclarationContxts[9].childContexts.No != undefined)
-    		//isOccupyPrimaryResidence = quesDeclarationContxts[9].childContexts.No[0].value;
+    	
+    	
     	
     	 isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
     	 isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
-    	//appUserDetails["yourPrimaryResidence"] = null;
-    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	//appUserDetails["yourPrimaryResidence"] = quesDeclarationContxts[11].childContexts.Yes[0].value;
-    	
-    	//appUserDetails["propertyStatus"] =null;
-    	//if(quesDeclarationContxts[11].childContexts.Yes != undefined)
-    	//appUserDetails["propertyStatus"] = quesDeclarationContxts[11].childContexts.Yes[1].value;
-    	 ////alert(isOutstandingJudgments);
-    	 //delete appUserDetails.governmentquestion;
-    	 
+    	 typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
+     	if(typeOfPropertyOwned != undefined)
+     		typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+     	
+     	 propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
+     	if(propertyTitleStatus != undefined)
+     		propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+ 	    	
+ 	    
     	 governmentquestion = appUserDetails.governmentquestion;
+    	 governmentquestion.typeOfPropertyOwned=typeOfPropertyOwned;
+	    governmentquestion.propertyTitleStatus=propertyTitleStatus;
     	 if( isOutstandingJudgments =="Yes"){ 
     		 governmentquestion.isOutstandingJudgments = true;
  		 }else if(isOutstandingJudgments =="No"){
@@ -2126,6 +2158,18 @@ function paintCustomerApplicationPageStep4a() {
  		 }else{
  			governmentquestion.isOutstandingJudgments = null;
  		 }
+    	 
+    	 
+    	 
+    	 if( isDownPaymentBorrowed =="Yes"){ 
+    		 governmentquestion.isDownPaymentBorrowed = true;
+ 		 }else if(isDownPaymentBorrowed =="No"){
+ 			governmentquestion.isDownPaymentBorrowed = false;
+ 		 }else{
+ 			governmentquestion.isDownPaymentBorrowed = null;
+ 		 }
+    	 
+    	 
     	 
     	 if( isBankrupt =="Yes"){ 
     		 governmentquestion.isBankrupt = true;
@@ -2231,11 +2275,21 @@ function paintCustomerApplicationPageStep4a() {
         "class": "app-ques-header-txt"
     });
 
+	
+	
+	
+	
+	
+	
+	
+	
 	var options = [ {
 		"text" : "No thank you. Let's move on",
-		"name" : name,
+		"name" : "bypassoptional",
 		"value" : 0
 	}];
+	
+	//alert('name'+name)
 	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
 
 	$('#app-right-panel').append(quesCont);
@@ -2299,14 +2353,17 @@ function paintCustomerApplicationPageStep4a() {
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
+           dateOfBirth = $('input[name="birthday"]').val();
 	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
 	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
+	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
 	    	
 	    	governmentquestion.ethnicity = ethnicity;
 	    	governmentquestion.race = race;
 	    	governmentquestion.sex =sex;
+	    	governmentquestion.skipOptionalQuestion=skipOptionalQuestion;
 	    	
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	
@@ -4036,11 +4093,12 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
 	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
 	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
-	    	
+	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
 	    	
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;
 	    	spouseGovernmentQuestions.race = race;
 	    	spouseGovernmentQuestions.sex =sex;
+	    	spouseGovernmentQuestions.skipOptionalQuestion=skipOptionalQuestion;	
 	    	
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
@@ -4096,6 +4154,7 @@ function paintLockRate(lqbData, appUserDetails) {
  
 
 function mapDbDataForFrontend(key){
+//alert('isside mapDbDataForFrontend');
     switch(key){
         case "state":
             return appUserDetails.user.customerDetail.addressState;
@@ -4136,6 +4195,15 @@ function mapDbDataForFrontend(key){
             return appUserDetails.governmentquestion.occupyPrimaryResidence;
         case "isOwnershipInterestInProperty":
             return appUserDetails.governmentquestion.ownershipInterestInProperty;
+    /*    case "isDownPaymentBorrowed":
+            return appUserDetails.governmentquestion.isDownPaymentBorrowed;
+        case "typeOfPropertyOwned":
+            return appUserDetails.governmentquestion.typeOfPropertyOwned;
+          case "propertyTitleStatus":
+            return appUserDetails.governmentquestion.propertyTitleStatus;*/
+            
+            
+            
             
     }
 }

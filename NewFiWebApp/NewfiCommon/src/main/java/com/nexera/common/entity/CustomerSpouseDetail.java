@@ -42,6 +42,9 @@ public class CustomerSpouseDetail implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
+	private String currentHomePrice;
+	private String currentHomeMortgageBalance;
+	private String newHomeBudgetFromsale;
 
 	public CustomerSpouseDetail() {
 	}
@@ -185,5 +188,30 @@ public class CustomerSpouseDetail implements Serializable {
 	public void setTransunionScore(String transunionScore) {
 		this.transunionScore = transunionScore;
 	}
+	@Column(name = "current_home_price")
+	public String getCurrentHomePrice() {
+		return currentHomePrice;
+	}
 
+	public void setCurrentHomePrice(String currentHomePrice) {
+		this.currentHomePrice = currentHomePrice;
+	}
+
+	@Column(name = "current_home_mortgage_balance")
+	public String getCurrentHomeMortgageBalance() {
+		return currentHomeMortgageBalance;
+	}
+
+	public void setCurrentHomeMortgageBalance(String currentHomeMortgageBalance) {
+		this.currentHomeMortgageBalance = currentHomeMortgageBalance;
+	}
+
+	@Column(name = "newhome_budget_fromsale")
+	public String getNewHomeBudgetFromsale() {
+		return newHomeBudgetFromsale;
+	}
+
+	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
+		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
+	}
 }

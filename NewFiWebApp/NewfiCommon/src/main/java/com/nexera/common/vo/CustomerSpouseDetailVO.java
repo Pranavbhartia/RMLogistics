@@ -20,6 +20,9 @@ public class CustomerSpouseDetailVO implements Serializable {
 	private String experianScore;
 	private String equifaxScore;
 	private String transunionScore;
+	private String currentHomePrice;
+	private String currentHomeMortgageBalance;
+	private String newHomeBudgetFromsale;
 
 	public int getId() {
 		return id;
@@ -132,5 +135,29 @@ public class CustomerSpouseDetailVO implements Serializable {
 
 	public void setTransunionScore(String transunionScore) {
 		this.transunionScore = transunionScore;
+	}
+
+	public String getCurrentHomePrice() {
+		return currentHomePrice;
+	}
+
+	public void setCurrentHomePrice(String currentHomePrice) {
+		this.currentHomePrice = currentHomePrice;
+	}
+
+	public String getCurrentHomeMortgageBalance() {
+		return currentHomeMortgageBalance;
+	}
+
+	public void setCurrentHomeMortgageBalance(String currentHomeMortgageBalance) {
+		this.currentHomeMortgageBalance = currentHomeMortgageBalance;
+	}
+
+	public String getNewHomeBudgetFromsale() {
+		return newHomeBudgetFromsale;
+	}
+
+	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
+		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
 	}
 }

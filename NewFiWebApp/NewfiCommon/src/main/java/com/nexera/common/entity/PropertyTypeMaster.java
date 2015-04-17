@@ -27,6 +27,16 @@ public class PropertyTypeMaster implements Serializable {
 	private String propertyPurchaseYear;
 	private String homeWorthToday;
 	private String homeZipCode;
+	private String propTaxMonthlyOryearly;
+	private String currentHomePrice;
+	private String currentHomeMortgageBalance;
+	private String newHomeBudgetFromsale;
+	
+	
+	 
+	
+	
+	
 	
 
 	private List<Loan> loans;
@@ -100,6 +110,17 @@ public class PropertyTypeMaster implements Serializable {
 
 	public void setPropertyTaxesPaid(String propertyTaxesPaid) {
 		this.propertyTaxesPaid = propertyTaxesPaid;
+	}
+
+	
+	
+	@Column(name = "prop_tax_mon_yrly")
+	public String getPropTaxMonthlyOryearly() {
+		return propTaxMonthlyOryearly;
+	}
+
+	public void setPropTaxMonthlyOryearly(String propTaxMonthlyOryearly) {
+		this.propTaxMonthlyOryearly = propTaxMonthlyOryearly;
 	}
 
 	@Column(name = "propertyInsuranceProvider")
@@ -222,6 +243,34 @@ public class PropertyTypeMaster implements Serializable {
 
 	public void setModifiedBy(User modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	
+	@Column(name = "current_home_price")
+	public String getCurrentHomePrice() {
+		return currentHomePrice;
+	}
+
+	public void setCurrentHomePrice(String currentHomePrice) {
+		this.currentHomePrice = currentHomePrice;
+	}
+
+	@Column(name = "current_home_mortgage_balance")
+	public String getCurrentHomeMortgageBalance() {
+		return currentHomeMortgageBalance;
+	}
+
+	public void setCurrentHomeMortgageBalance(String currentHomeMortgageBalance) {
+		this.currentHomeMortgageBalance = currentHomeMortgageBalance;
+	}
+
+	@Column(name = "newhome_budget_fromsale")
+	public String getNewHomeBudgetFromsale() {
+		return newHomeBudgetFromsale;
+	}
+
+	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
+		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
 	}
 
 }

@@ -26,6 +26,11 @@ public class PropertyTypeMasterVO implements Serializable {
 	private List<LoanAppFormVO> loanAppForms;
 	private List<LoanApplicationFeeMasterVO> loanApplicationFeeMasters;
 	private UserVO modifiedBy;
+	private String propTaxMonthlyOryearly;
+	private String currentHomePrice;
+	private String currentHomeMortgageBalance;
+	private String newHomeBudgetFromsale;
+	
 	
 	
 	public int getId() {
@@ -99,6 +104,12 @@ public class PropertyTypeMasterVO implements Serializable {
 	public void setPropertyTaxesPaid(String propertyTaxesPaid) {
 		this.propertyTaxesPaid = propertyTaxesPaid;
 	}
+	public String getPropTaxMonthlyOryearly() {
+		return propTaxMonthlyOryearly;
+	}
+	public void setPropTaxMonthlyOryearly(String propTaxMonthlyOryearly) {
+		this.propTaxMonthlyOryearly = propTaxMonthlyOryearly;
+	}
 	public String getPropertyInsuranceProvider() {
 		return propertyInsuranceProvider;
 	}
@@ -123,5 +134,23 @@ public class PropertyTypeMasterVO implements Serializable {
 	}
 	public void setHomeWorthToday(String homeWorthToday) {
 		this.homeWorthToday = homeWorthToday;
+	}
+	public String getCurrentHomePrice() {
+		return currentHomePrice;
+	}
+	public void setCurrentHomePrice(String currentHomePrice) {
+		this.currentHomePrice = currentHomePrice;
+	}
+	public String getCurrentHomeMortgageBalance() {
+		return currentHomeMortgageBalance;
+	}
+	public void setCurrentHomeMortgageBalance(String currentHomeMortgageBalance) {
+		this.currentHomeMortgageBalance = currentHomeMortgageBalance;
+	}
+	public String getNewHomeBudgetFromsale() {
+		return newHomeBudgetFromsale;
+	}
+	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
+		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
 	}
 }
