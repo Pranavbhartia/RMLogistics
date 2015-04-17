@@ -153,6 +153,7 @@ function saveMessageCall(message) {
 
 function successCallBackSaveMessage() {
 	console.info("successCallBackSaveMessage saved method claeed ");
+	$("#conv-main-container").empty();
 	if(selectedUserDetail != undefined){
 		showAgentMessageDashboard();
 	}else{
