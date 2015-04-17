@@ -414,7 +414,7 @@ public class User implements Serializable, UserDetails {
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
-
+            userVO.setRealtorDetail(RealtorDetail.convertFromEntityToVO(user.getRealtorDetail()));
 			if (null != user.getInternalUserStateMappings()
 			        && !user.getInternalUserStateMappings().isEmpty()) {
 				List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
@@ -467,8 +467,7 @@ public class User implements Serializable, UserDetails {
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
-		if (userModel.getUserRole().getId() == UserRolesEnum.REALTOR
-		        .getRoleId()) {
+		if (userVO.getRealtorDetail()!=null) {
 			userModel.setRealtorDetail(RealtorDetail
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}

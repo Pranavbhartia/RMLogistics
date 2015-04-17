@@ -9,9 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UpdatePasswordVO;
@@ -21,7 +24,7 @@ public interface UserProfileService {
 
 	public UserVO findUser(Integer userid);
 
-	public Integer updateUser(UserVO userVO);
+	public Integer updateUser(UserVO userVO) throws InputValidationException, NonFatalException;
 
 	public Integer updateCustomerDetails(UserVO userVO);
 
@@ -85,5 +88,7 @@ public interface UserProfileService {
 	public String getLQBUrl(Integer userId, Integer loanId);
 
 	public List<String> getDefaultUsers(String userName);
+	
+	public void updateRealtorDetails(UserVO user);
 
 }
