@@ -413,12 +413,12 @@ function getCalculationFunctionForItem(key){
     			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
 		    		return closingCostHolder.valueSet[key];
 		    	else{
-		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){
-		    			var purchaseValue=getFloatValue(buyHomeTeaserRate.purchaseDetails.housePrice);
+		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){		    			
+		    			var purchaseValue=getFloatValue(closingCostHolder.housePrice);
 		    			var result=Math.round(.0035*purchaseValue)
 		    			return result;
 		    		}else{
-		    			var result=refinanceTeaserRate!=undefined?refinanceTeaserRate.annualHomeownersInsurance:"";
+		    			var result=refinanceTeaserRate!=undefined?closingCostHolder.annualHomeownersInsurance:"";
 		    			return result;
 		    		}
 		    	}
@@ -430,11 +430,11 @@ function getCalculationFunctionForItem(key){
 		    		return closingCostHolder.valueSet[key];
 		    	else{
 		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){
-		    			var purchaseValue=getFloatValue(buyHomeTeaserRate.purchaseDetails.housePrice);
+		    			var purchaseValue=getFloatValue(closingCostHolder.housePrice);
 		    			var result=Math.round((.0125*purchaseValue)/6);
 		    			return result;
 		    		}else{
-		    			var taxVal=getFloatValue(refinanceTeaserRate.propertyTaxesPaid);
+		    			var taxVal=getFloatValue(closingCostHolder.propertyTaxesPaid);
 		    			var result=Math.round(taxVal/6);
 		    			return result;
 		    		}
@@ -501,6 +501,7 @@ function getRowHolderObject(container,value,key){
     return rw;
 }
 function getObContainer(){
+	
 	var obj={
 		update:function(){
 			var ob=this;
