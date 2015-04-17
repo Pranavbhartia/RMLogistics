@@ -1840,11 +1840,19 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
         		//appUserDetails[name] = false;
+        		var selectedCheck = $(this).attr("value");
+        		$("#ce-option_"+selectedCheck+" :input").each(function() {
+        			  $(this).val('');
+        		});
+        		
         	}else{
 	        	$(this).addClass('app-option-checked');
 	        	//appUserDetails[name] = true;
         	}
 			var key = event.data.name;
+			
+			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
+			
 			//appUserDetails[key] = event.data.option.value;
 			event.data.option.onselect(event.data.option.value);
 		});
