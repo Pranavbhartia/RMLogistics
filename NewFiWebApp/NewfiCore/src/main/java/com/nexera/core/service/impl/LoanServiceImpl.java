@@ -1392,10 +1392,10 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-    public String saveLoanProgress(int loand,
-            LoanProgressStatusMaster progressValue) {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
+	@Transactional
+	public void saveLoanProgress(int loanId,
+	        LoanProgressStatusMaster progressValue) {
+		loanDao.updateLoanProgress(loanId, progressValue);
+	}
 
 }
