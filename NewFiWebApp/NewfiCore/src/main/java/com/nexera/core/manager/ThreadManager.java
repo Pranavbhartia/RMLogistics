@@ -44,6 +44,7 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.InvalidInputException;
@@ -367,22 +368,39 @@ public class ThreadManager implements Runnable {
 		invokeMilestonesWithReminder();
 
 		LOGGER.debug("Check whether purchase document is about to expire");
-		if (checkPurchaseDocumentExpiry(loan) <= 24) {
-			LOGGER.debug("Purchase Docuement Is About To Expire ");
-			NotificationVO notificationVO = new NotificationVO(
-			        loan.getId(),
-			        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-			                .getNotificationTypeName(),
-			        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
-			List<NotificationVO> notificationVOList = notificationService
-			        .findNotificationTypeListForLoan(
-			                loan.getId(),
-			                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-			                        .getNotificationTypeName(), false);
-			if (notificationVOList.isEmpty()) {
-				notificationVO = notificationService
-				        .createNotification(notificationVO);
+		if (loan.getLoanType() != null) {
+			String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
+			if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
+			        .toString())) {
+				if (checkPurchaseDocumentExpiry(loan) <= 24) {
+					LOGGER.debug("Purchase Docuement Is About To Expire ");
+					NotificationVO notificationVO = new NotificationVO(
+					        loan.getId(),
+					        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+					                .getNotificationTypeName(),
+					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
+					List<NotificationVO> notificationVOList = notificationService
+					        .findNotificationTypeListForLoan(
+					                loan.getId(),
+					                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+					                        .getNotificationTypeName(), false);
+					if (notificationVOList.isEmpty()) {
+						notificationVO = notificationService
+						        .createNotification(notificationVO);
+					}
+				}
 			}
+		} else {
+			LOGGER.error("No loan type master associated with this loan "
+			        + loan.getId());
+			nexeraUtility.putExceptionMasterIntoExecution(
+			        exceptionMaster,
+			        "No loan type master associated with this loan "
+			                + loan.getId());
+			nexeraUtility
+			        .sendExceptionEmail("No loan type master associated with this loan "
+			                + loan.getId());
+
 		}
 	}
 
@@ -480,8 +498,7 @@ public class ThreadManager implements Runnable {
 					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
 				} else if (braintreePaymentGatewayService
 				        .checkAndUpdateTransactions(transactionDetails)
-				        .equalsIgnoreCase(
-				        		LoanStatus.APP_PAYMENT_FAILURE)) {
+				        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_FAILURE)) {
 					LOGGER.debug("Transaction has failed");
 					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_FAILURE);
 				}
