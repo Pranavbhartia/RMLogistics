@@ -756,10 +756,16 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
     	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
     	
-    	  typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
-	    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+    	 
+    	
+    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
+	    if(typeOfPropertyOwned != undefined)	
+	    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+	    	
 	    
-    	  
+    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
+	    if(propertyTitleStatus != undefined)
+	    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
     	  
     	 if(appUserDetails.spouseGovernmentQuestions){
     		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
@@ -865,13 +871,12 @@ function paintSpouseCustomerApplicationPageStep4a() {
  		 }
     	 
     	  spouseGovernmentQuestions.typeOfPropertyOwned=typeOfPropertyOwned;
-	    spouseGovernmentQuestions.propertyTitleStatus=propertyTitleStatus;
+	     spouseGovernmentQuestions.propertyTitleStatus=propertyTitleStatus;
     	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
     	 
-    	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    	// //alert(JSON.stringify(appUserDetails));
+
     	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
-    	
+    
     	//paintCustomerApplicationPageStep4b();
     });
 
