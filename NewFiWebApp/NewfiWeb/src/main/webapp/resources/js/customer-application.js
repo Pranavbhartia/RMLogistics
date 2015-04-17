@@ -1367,9 +1367,9 @@ function paintMyIncome() {
     	  investmentInHome = $('input[name="inverstInPurchase"]').val();
 	        
 	        
-	        appUserDetails.propertytypemaster.currentHomePrice=homeListPrice;
-	    	appUserDetails.propertytypemaster.currentHomeMortgageBalance=homeMortgageBalance;
-	   	    appUserDetails.propertytypemaster.newHomeBudgetFromsale=investmentInHome;
+	        appUserDetails.propertyTypeMaster.currentHomePrice=homeListPrice;
+	    	appUserDetails.propertyTypeMaster.currentHomeMortgageBalance=homeMortgageBalance;
+	   	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
 	        
 	        
 	        appUserDetails.customerBankAccountDetails = [];
@@ -2132,6 +2132,7 @@ function paintCustomerApplicationPageStep4a() {
     	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
     	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
     	isEndorser =  quesDeclarationContxts[8].value;
+    	
     	isUSCitizen =  quesDeclarationContxts[9].value;
     	
     	

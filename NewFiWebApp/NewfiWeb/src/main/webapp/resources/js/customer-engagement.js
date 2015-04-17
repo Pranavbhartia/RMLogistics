@@ -1137,7 +1137,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 index = parseInt(event.data.ratesArray.length / 2);
                
                 $('#aprid').html(event.data.ratesArray[index].APR + " %");
-                $('#closingCostId').html(event.data.ratesArray[index].closingCost);
+                $('#closingCostId').html(showValue(event.data.ratesArray[index].closingCost));
                 $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(3)+" %");
                
                 if(event.data.year =='5' || event.data.year =="7")
@@ -1213,7 +1213,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
         change: function(event, ui) {
          
             $('#aprid').html(gridArray[ui.value].APR +" %");
-            $('#closingCostId').html(gridArray[ui.value].closingCost);
+            $('#closingCostId').html(showValue(gridArray[ui.value].closingCost));
             $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3) +" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
@@ -1249,14 +1249,17 @@ function teaseCalculation(inputCustomerDetails){
 	if($('#CalInsuranceID2').val() != "Calculate") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment)));  	
-    	
     
     var investment = (InsuranceTemp + taxesTemp)/12;
-	var monthlyPaymentTemp = monthlyPayment -investment ;
-	monthlyPayment = monthlyPaymentTemp.toFixed(2);
 	
-	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
-	var totalEstMonthlyPaymentId = (principalInterest + investment).toFixed(2);
+    if(inputCustomerDetails.isIncludeTaxes =="Yes"){
+    	monthlyPayment = monthlyPayment -investment ;
+    }
+    
+	
+	
+	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
+	var totalEstMonthlyPaymentId = (principalInterest + investment);
 	
 	$('#monthlyPaymentId').text(showValue(monthlyPayment));
 	$('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
@@ -1327,28 +1330,21 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     }
    
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(customerInputData.currentMortgagePayment))); 
-    var Insurance ="Calculate";
-    var tax = "Calculate";
     var principalInterest = parseFloat(removedDoller(removedComma(rateVO[index].payment)));
     var totalEstMonthlyPayment = principalInterest;
+    var Insurance =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
+	var tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     
     if(customerInputData.isIncludeTaxes =="Yes"){
-    	var InsuranceTemp =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
-    	var taxesTemp =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
-    	var investment = (InsuranceTemp + taxesTemp)/12;
-    	var monthlyPaymentTemp = monthlyPayment -investment ;
-    	monthlyPayment = monthlyPaymentTemp.toFixed(2);
     	
-    	
-    	 Insurance = customerInputData.annualHomeownersInsurance;
-    	 tax = customerInputData.propertyTaxesPaid;
-    	 
-    	 var totalEstMonthlyPaymentTemp  = principalInterest + investment;
-    	 totalEstMonthlyPayment = totalEstMonthlyPaymentTemp.toFixed(2);
+    	var investment = (Insurance + tax)/12;
+    	monthlyPayment = monthlyPayment -investment ;
+    	totalEstMonthlyPayment  = principalInterest + investment;
+  
     }
     
     
-    var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment)).toFixed(2);
+    var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
 
     
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
@@ -1369,9 +1365,9 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     });
     // add rows in right column
     var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(rateVO[index].payment),"principalIntId");
-    var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", tax,"calTaxID","calTaxID2",customerInputData);
+    var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", showValue(tax),"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
-    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", Insurance,"CalInsuranceID","CalInsuranceID2",customerInputData);
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
    
     var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", showValue(monthlyPayment) ,"monthlyPaymentId");
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", showValue(monthlyPaymentDifference) ,"monthlyPaymentDifferenceId");
@@ -1557,8 +1553,15 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     		monthlyPayment =  parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.rentPerMonth)));*/
     	
     	var investment = (InsuranceTemp + taxesTemp)/12;
-    	var monthlyPaymentTemp = monthlyPayment - investment ;  	
-    	monthlyPayment = monthlyPaymentTemp.toFixed(2);
+    	
+    	if(customerInputData.isIncludeTaxes =="Yes"){
+    		
+    		monthlyPayment = monthlyPayment - investment ;  	
+        	
+        	
+    	}
+    	
+    	
     	
     	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
     	
