@@ -27,7 +27,8 @@ public class GenericDaoImpl implements GenericDao {
 	@Autowired
 	protected SessionFactory sessionFactory;
 
-	public Object save(Object obj) throws DatabaseException {
+	@Override
+    public Object save(Object obj) throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
 
@@ -40,7 +41,8 @@ public class GenericDaoImpl implements GenericDao {
 
 	}
 
-	public void saveOrUpdate(Object obj) throws DatabaseException {
+	@Override
+    public void saveOrUpdate(Object obj) throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
 
@@ -53,7 +55,8 @@ public class GenericDaoImpl implements GenericDao {
 
 	}
 
-	public void update(Object obj) throws DatabaseException {
+	@Override
+    public void update(Object obj) throws DatabaseException {
 		Session session = sessionFactory.getCurrentSession();
 		try {
 			session.update(obj);
@@ -67,7 +70,8 @@ public class GenericDaoImpl implements GenericDao {
 	 * Use this method to load a plain object, i.e a class without any
 	 * associations. Load does not initialise the associations of a object.
 	 */
-	public Object load(@SuppressWarnings("rawtypes") Class cls, Integer id)
+	@Override
+    public Object load(@SuppressWarnings("rawtypes") Class cls, Integer id)
 	        throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
@@ -85,7 +89,8 @@ public class GenericDaoImpl implements GenericDao {
 	 * Use this method to load a plain object, i.e a class without any
 	 * associations. Load does not initialise the associations of a object.
 	 */
-	public List loadAll(@SuppressWarnings("rawtypes") Class cls)
+	@Override
+    public List loadAll(@SuppressWarnings("rawtypes") Class cls)
 	        throws DatabaseException {
 
 		Session session = sessionFactory.getCurrentSession();
@@ -114,7 +119,8 @@ public class GenericDaoImpl implements GenericDao {
 	 *             exception
 	 */
 
-	public List executeNamedQuery(final String namedQuery, final Map params)
+	@Override
+    public List executeNamedQuery(final String namedQuery, final Map params)
 	        throws DatabaseException {
 		final Session session = sessionFactory.getCurrentSession();
 		try {
@@ -132,7 +138,8 @@ public class GenericDaoImpl implements GenericDao {
 
 	}
 
-	@Transactional
+	@Override
+    @Transactional
 	public void saveAll(List data) throws DatabaseException {
 		Session session = null;
 
@@ -147,7 +154,7 @@ public class GenericDaoImpl implements GenericDao {
 			}
 
 			session.flush();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 
