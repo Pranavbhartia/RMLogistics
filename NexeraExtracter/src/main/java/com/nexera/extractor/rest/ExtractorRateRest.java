@@ -25,13 +25,14 @@ public class ExtractorRateRest {
 	@RequestMapping("/rates")
 	public @ResponseBody String readFilesFromDestinationRest() {
 
-		final File folder = new File("C:\\apps\\LQB");
+		final File folder = new File("C:\\apps\\LQB\\Price\\");
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
-		Long folderLastModfied =  folder.lastModified(); 
-		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list,folderLastModfied   );
+		Long folderLastModfied = folder.lastModified();
+		Map<String, List<UIEntity>> uiMap = utility.buildUIMap(list,
+		        folderLastModfied);
 		// utility.getCompleteProductRateList(list);
-		FileExtractorResposne fileResponse  = new FileExtractorResposne(); 
+		FileExtractorResposne fileResponse = new FileExtractorResposne();
 		fileResponse.setFileDetailList(uiMap);
 		fileResponse.setFolderTimeStamp(folderLastModfied);
 		Gson gson = new Gson();
