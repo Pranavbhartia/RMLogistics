@@ -138,6 +138,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 
                     var userId=newfiObject.user.id;
                     getAppDetailsForUser(userId,function(appUserDetailsTemp){
+                    	  $('#overlay-loader').show();
                         var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
                         if(LQBFileId){
                             paintFixYourRatePage();
