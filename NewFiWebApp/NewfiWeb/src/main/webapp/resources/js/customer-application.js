@@ -3420,24 +3420,28 @@ function getMonthYearTextQuestionContext(contxt) {
 
 
 function saveAndUpdateLoanAppForm(appUserDetails,callBack){
-	
-	$.ajax({
-		url:"rest/application/applyloan",
-		type:"POST",
-		data:{"appFormData" : JSON.stringify(appUserDetails)},
-		datatype : "application/json",
-		success:function(data){
-			
-			appUserDetails=data;
-            newfi.appUserDetails=JSON.stringify(appUserDetails);
-			console.log('appUserDetails'+appUserDetails);
-			callBack;
-		},
-		error:function(erro){
-			alert("error");
-		}
-		
-	});
+	var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+    if(!LQBFileId){
+    	$.ajax({
+    		url:"rest/application/applyloan",
+    		type:"POST",
+    		data:{"appFormData" : JSON.stringify(appUserDetails)},
+    		datatype : "application/json",
+    		success:function(data){
+    			
+    			appUserDetails=data;
+                newfi.appUserDetails=JSON.stringify(appUserDetails);
+    			console.log('appUserDetails'+appUserDetails);
+    			callBack;
+    		},
+    		error:function(erro){
+    			alert("error");
+    		}
+    		
+    	});
+    }else{
+        showToastMessage("Application form not editable");
+    }
 }
 
 
