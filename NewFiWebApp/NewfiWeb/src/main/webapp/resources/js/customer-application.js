@@ -2699,7 +2699,7 @@ function applicationFormSumbit(appUserDetails){
 var lqbData=[
     {
         "loanDuration": "sample",
-        "loanNumber": "D2015040065"
+        "loanNumber": "D2015040294"
     },
     {
         "loanDuration": "30 FIXED CONF YOSEMITE",
@@ -4238,7 +4238,8 @@ function paintSpouseCustomerApplicationPageStep4b(){
 function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
- $('#overlay-loader').show();
+	 //fixAndLoakYourRatePage(lqbData, appUserDetails);
+$('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
@@ -4269,7 +4270,6 @@ $.ajax({
 
 function paintLockRate(lqbData, appUserDetails) {
   // alert('lqbData'+lqbData);
-
     fixAndLoakYourRatePage(lqbData, appUserDetails);
 }
  
@@ -4489,13 +4489,15 @@ function paintTeaserRatePageBasedOnLoanType(appUserDet){
 }
 function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
     $('#overlay-loader').show();
+    loanAmount = getFloatValue(loanAmount);  
+    purchaseAmount = getFloatValue(purchaseAmount); 
     if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-        appUserDetails.purchaseDetails.loanAmount=amt;
-        appUserDetails.purchaseDetails.housePrice=amt1;
+        appUserDetails.purchaseDetails.loanAmount=loanAmount;
+        appUserDetails.purchaseDetails.housePrice=purchaseAmount;
     }else{
         var parentContainer=$('#center-panel-cont');
-        appUserDetails.refinancedetails.currentMortgageBalance=amt;
-        appUserDetails.refinancedetails.cashTakeOut=amt1;
+        appUserDetails.refinancedetails.currentMortgageBalance=loanAmount;
+        appUserDetails.refinancedetails.cashTakeOut=purchaseAmount;
     }
 
     $.ajax({
