@@ -154,24 +154,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		User user = userProfileDao.findByUserId(userid);
 		UserVO userListVO = User.convertFromEntityToVO(user);
-		/*
-		 * UserVO userVO = new UserVO();
-		 * 
-		 * userVO.setId(user.getId()); userVO.setFirstName(user.getFirstName());
-		 * userVO.setLastName(user.getLastName());
-		 * userVO.setEmailId(user.getEmailId());
-		 * userVO.setPhoneNumber(user.getPhoneNumber());
-		 * userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-		 * 
-		 * userVO.setUserRole(UserRole.convertFromEntityToVO(user.getUserRole()))
-		 * ;
-		 * 
-		 * CustomerDetail customerDetail = user.getCustomerDetail();
-		 * CustomerDetailVO customerDetailVO = CustomerDetail
-		 * .convertFromEntityToVO(customerDetail);
-		 * 
-		 * userVO.setCustomerDetail(customerDetailVO);
-		 */
 
 		return userListVO;
 	}
@@ -207,22 +189,26 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// TODO update realtor
 		String loanManagerEmail = userVO.getLoanManagerEmail();
-		if (userVODetails.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+		if (userVODetails.getUserRole().getId() == UserRolesEnum.REALTOR
+		        .getRoleId()) {
 			if (loanManagerEmail != null) {
 				User userDetails = findUserByMail(loanManagerEmail);
 				if (userDetails != null) {
 
 					if (userDetails.getUserRole().getId() == UserRolesEnum.INTERNAL
 					        .getRoleId()) {
-						userVODetails.getRealtorDetail().setUser(User.convertFromEntityToVO(userDetails));
+						userVODetails.getRealtorDetail().setUser(
+						        User.convertFromEntityToVO(userDetails));
 						Integer updateCount = userProfileDao
-						        .updateRealtorDetails(RealtorDetail.convertFromVOToEntity(userVODetails.getRealtorDetail()));
+						        .updateRealtorDetails(RealtorDetail
+						                .convertFromVOToEntity(userVODetails
+						                        .getRealtorDetail()));
 						if (updateCount < 0) {
 							throw new NonFatalException(
 							        ErrorConstants.UPDATE_ERROR_CUSTOMER);
 						}
 					} else {
-						
+
 						throw new InputValidationException(
 						        new GenericErrorCode(
 						                ServiceCodes.USER_PROFILE_SERVICE
@@ -230,17 +216,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 						                ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST),
 						        ErrorConstants.LOAN_MANAGER_DOESNOT_EXSIST);
 					}
-				} 
+				}
 
 			}
 
 		}
 
-
 		return userVOObj;
 	}
-
-
 
 	@Override
 	@Transactional
@@ -259,27 +242,39 @@ public class UserProfileServiceImpl implements UserProfileService,
 					if (userVO.getCustomerDetail().getMobileAlertsPreference()
 					        && userVO.getPhoneNumber() != null) {
 						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							customerDetail
-							        .setProfileCompletionStatus(customerDetail
-							                .getProfileCompletionStatus()
-							                + ProfileCompletionStatus.ON_CREATE);
+							if(userVO.getPhotoImageUrl()==null){
+								customerDetail
+						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+							}else{
+								customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                + ProfileCompletionStatus.ON_CREATE);
+							}
+							
 						}
 
 					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false) {
 						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							customerDetail
-					        .setProfileCompletionStatus(customerDetail
-					                .getProfileCompletionStatus()
-					                + ProfileCompletionStatus.ON_CREATE);
-						} 
+							if(userVO.getPhotoImageUrl()==null){
+								customerDetail
+						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+							}else{
+								customerDetail
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                + ProfileCompletionStatus.ON_CREATE);
+							}
+						}
 
-					}else if (userVO.getCustomerDetail()
+					} else if (userVO.getCustomerDetail()
 					        .getMobileAlertsPreference() == false
 					        && userVO.getPhotoImageUrl() != null
 					        && userVO.getPhoneNumber() == null) {
 						customerDetail
-						        .setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus());
 					}
 				}
 			} else {
@@ -313,17 +308,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        && userVO.getPhoneNumber() != null) {
 					if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
 						customerDetail
-				        .setProfileCompletionStatus(customerDetail
-				                .getProfileCompletionStatus()
-				                + ProfileCompletionStatus.ON_CREATE);
-					} 
+						        .setProfileCompletionStatus(customerDetail
+						                .getProfileCompletionStatus()
+						                + ProfileCompletionStatus.ON_CREATE);
+					}
 
 				} else if (userVO.getCustomerDetail()
 				        .getMobileAlertsPreference() == false
 				        && userVO.getPhotoImageUrl() != null
 				        && userVO.getPhoneNumber() == null) {
-					customerDetail
-					        .setProfileCompletionStatus(customerDetail.getProfileCompletionStatus());
+					customerDetail.setProfileCompletionStatus(customerDetail
+					        .getProfileCompletionStatus());
 				}
 
 			}
