@@ -29,13 +29,13 @@ public class NotificationServiceTest {
 
 	@Before
 	public void beforeTest() {
-		System.out.println("Starting to run test cases....");
+		//System.out.println("Starting to run test cases....");
 	}
 
 	@Test
 	public void getNotifications() {
 
-		System.out.println("Test started : getNotifications");
+		//System.out.println("Test started : getNotifications");
 		Integer userID = 1;
 		Integer loanID = 1;
 
@@ -58,7 +58,7 @@ public class NotificationServiceTest {
 		if (notifications != null)
 			for (NotificationVO not : notifications) {
 
-				System.out.println("Notif id : " + not.getId());
+				//System.out.println("Notif id : " + not.getId());
 
 			}
 
@@ -82,7 +82,7 @@ public class NotificationServiceTest {
 		NotificationVO vo = notificationService.createRoleBasedNotification(
 				notificationVO, userRoles, internalUserRoles);
 
-		System.out.println("Vo added for realtor : " + new Gson().toJson(vo));
+		//System.out.println("Vo added for realtor : " + new Gson().toJson(vo));
 
 		userRoles = new ArrayList<UserRolesEnum>();
 		userRoles.add(UserRolesEnum.INTERNAL);
@@ -95,7 +95,7 @@ public class NotificationServiceTest {
 		vo = notificationService.createRoleBasedNotification(notificationVO,
 				userRoles, internalUserRoles);
 
-		System.out.println("Vo added for internal user: " + new Gson().toJson(vo));
+		//System.out.println("Vo added for internal user: " + new Gson().toJson(vo));
 
 		Assert.assertTrue(true);
 	}

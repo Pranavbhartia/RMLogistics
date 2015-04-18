@@ -33,7 +33,7 @@ public class SendGridEmailServiceTest {
 	
 	@Test
 	public void testsendEmail(){
-		System.out.println("Test send email");
+
 		EmailVO emailVO = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		recipientVO.setRecipientTypeEnum(EmailRecipientTypeEnum.TO);

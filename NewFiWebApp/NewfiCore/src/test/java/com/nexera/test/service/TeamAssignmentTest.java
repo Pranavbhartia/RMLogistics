@@ -50,6 +50,6 @@ public class TeamAssignmentTest {
 		realtor.setId(12);
 		UserVO userVO = teamAssignmentHelper
 		        .getDefaultLoanManagerForRealtorUrl(realtor, "RI");
-		System.out.println("Loan manager will be: " + userVO);
+
 	}
 }

@@ -60,7 +60,6 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Override
 	@Transactional
 	public void save(LoanAppFormVO loaAppFormVO) {
-		System.out.println("Inside 5");
 		loanAppFormDao.saveOrUpdate(loaAppFormVO.convertToEntity());
 	}
 

@@ -156,7 +156,6 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		query.setParameter("read", true);
 		query.setParameter("id", notification.getId());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 
 	}

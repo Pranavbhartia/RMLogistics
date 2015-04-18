@@ -28,7 +28,7 @@ public class MileStoneTurnAroundTimeServiceTest {
 		
 			 List<MileStoneTurnAroundTimeVO> aroundTimeVOs=aroundTimeService.loadAllMileStoneTurnAround();
 			 for (MileStoneTurnAroundTimeVO mileStoneTurnAroundTimeVO : aroundTimeVOs) {
-				System.out.println("id:"+mileStoneTurnAroundTimeVO.getId()+" name:"+mileStoneTurnAroundTimeVO.getName());
+				//System.out.println("id:"+mileStoneTurnAroundTimeVO.getId()+" name:"+mileStoneTurnAroundTimeVO.getName());
 			}
 		
 	}

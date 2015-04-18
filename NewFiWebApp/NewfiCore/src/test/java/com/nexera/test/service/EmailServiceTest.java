@@ -38,7 +38,7 @@ public class EmailServiceTest {
 		emailEntity.setTemplateBased(false);
 
 //		sendEmailService.sendMail(emailEntity,false);
-		System.out.println("Email sent");
+	
 	}
 
 }
