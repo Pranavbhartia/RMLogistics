@@ -248,12 +248,8 @@ function getLoanPersonalInfoContainer(user) {
 				states.push(userStateMappingVOs[i].stateId.toString());
 				internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
 	        }
-		var stateTextRow = getStateTextRow();
-		container.append(stateTextRow);
-	
 	}
- 		
- 
+ 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateLMDetails()"
@@ -982,8 +978,13 @@ function getManagerStateRow(user) {
 		"class" : "prof-form-row-desc float-left"
 	}).html("State");
 	var rowCol2 = $('<div>').attr({
-		"class" : "prof-form-rc float-left"
+		"class" : "prof-form-rc float-left clearfix"
 	});
+	
+	var stateWrapper = $('<div>').attr({
+		"class" : "float-left"
+	});
+	
 	var stateInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-statedropdown prof-form-input-select uppercase",
 		"id" : "stateId"
@@ -1012,7 +1013,11 @@ function getManagerStateRow(user) {
 		"class" : "state-dropdown-wrapper hide"
 	});
 	
-	rowCol2.append(stateInput).append(dropDownWrapper);
+	stateWrapper.append(stateInput).append(dropDownWrapper);
+	
+	var stateTextRow = getStateTextRow();
+	
+	rowCol2.append(stateWrapper).append(stateTextRow);
 	return row.append(rowCol1).append(rowCol2);
 }
 function zipCodeLookUpListCallBack(response) {
@@ -1958,33 +1963,15 @@ function saveEditUserProfile(user){
 
 
 function getStateTextRow() {
-	var row = $('<div>').attr({
-		"class" : "prof-form-row clearfix"
-	});
-	var rowCol1 = $('<div>').attr({
-		"class" : "prof-form-row-desc float-left"
-	});
-	
-	var rowCol2 = $('<div>').attr({
-		"class" : "prof-form-rc float-left"
-	});
-
-	var inputCont = $('<div>').attr({
-		"class" : "prof-form-input-cont"
-	});
-	
 	
 	var userStates = $('<div>').attr({
-		"class" : "prof-form-input-textarea clearfix",
+		"class" : "prof-form-input-textarea float-left clearfix",
 		"id" : "inputTextarea"
  	});
 	
 	appendUserStatesInLMProfile(userStates);
 	
-	inputCont.append(userStates);
-	
-	rowCol2.append(inputCont);
-	return row.append(rowCol1).append(rowCol2);
+	return userStates;
 }
 
 function appendUserStatesInLMProfile(element) {
