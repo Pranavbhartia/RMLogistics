@@ -330,7 +330,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         teaserRateData = buyHomeTeaserRate;
     }
     delete sessionStorage.refinaceData;
-    var quesTxt = "Analyze & Adjust Your Numbers";
+    var quesTxt = "Loan Rates and Fees";
     var container = $('<div>').attr({
         "class": "ce-rate-main-container"
     });

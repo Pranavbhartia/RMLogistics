@@ -194,11 +194,11 @@
 								</div>
 							</div>
 							<div class="cp-header-text">
-								Quoted Rates are not guarteed. You may use this tool to check current rates or request a  rate lock. APR is an 		        						   estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual will beon your Good Faith 								Estimate after Loan Amount and Income are Verified.
+								Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.
 							</div>
 						</div>
 						<div class="closing-cost-wrapper">
-							<div class="closing-cost-header uppercase">CLOSING COST SUMMARY</div>
+							<div class="closing-cost-header uppercase">Based on the information you have provided, below is a summary of your estimated closing costs:</div>
 							<div class="cp-header-text">
 								Based on the loan you selected your application, credit report and the estimated closing date of 													<span class="bold">02/09/2015</span>,your estimated lender and third party costs are:
 							</div>

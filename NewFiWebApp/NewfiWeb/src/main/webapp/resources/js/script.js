@@ -1471,7 +1471,7 @@ function getClosingCostTopConatiner() {
     });
     var headerCon1 = getClosingCostConatinerHeader("Estimated Lender Costs");
     var row1Con1 = getClosingCostContainerRow(1, "Lender Fee", "$ 1,495.00");
-    var row2Con1 = getClosingCostContainerRow(2, "Credit/Charge", "$ 5,128.75");
+    var row2Con1 = getClosingCostContainerRow(2, "This is your cost or credit based on rate selected", "$ 5,128.75");
     var row3Con1 = getClosingCostContainerLastRow(3, "Estimated Lender Costs", "$ 6,623.75");
     container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
     var container2 = $('<div>').attr({

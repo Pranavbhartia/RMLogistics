@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Forget Password</title>
+<title>Reset Password</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
@@ -19,20 +19,21 @@
 	<div class="home-container container">
 		<div class="login-container container">
 				<div class="container-row row clearfix">
-					<div class="reg-display-title">A New way to Finance your home</div>
+					<div class="reg-display-title">Reset Password</div>
 					<div class="reg-display-title-subtxt">Lorem Ipsum is also known
 						as: Greeked Text, blind text, placeholder text, dummy content,
 						filter text, lipsum, and mock-content.</div>
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm" action="#" method="POST">
-							<div class="reg-input-cont reg-email" id="email-container">
+						   
+							<div class="reg-input-reset-password reg-email" id="email-container">
 					        <input class="reg-input" placeholder="Email" id="emailID" >	
-							<div class="err-msg hide" style="display: block;"></div>
-				</div>
+							<div class="err-msg hide"></div>
+				            </div>
 							<div class="reg-btn-wrapper clearfix">
-					<div class="reg-btn" onclick="$('#loginForm').submit();">Reset</div>
-
-				</div>													
+                                 <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
+					             <div class="reset-password float-right" onclick="$('#loginForm').submit();">Reset Password</div>
+				            </div>											
 						</form>
 					</div>
 				</div>
@@ -72,12 +73,13 @@ $('#loginForm').submit(function(event){
 	});
 
 function paintForgetPasswordResponse(data){
-	if(data.resultObject!=null){
+	if(data.resultObject!=null){		
+		$('#emailID').val('');		
+		window.location='./';
 		showToastMessage(data.resultObject);
-		$('#emailID').val('');
-		
 	}else{
-		showErrorToastMessage(data.error.message);
+		$("#emailID").next('.err-msg').html(data.error.message).show();
+		$(".reg-input-reset-password").addClass('err-input').focus();
 		$('#emailID').val('');
 	}
 }

@@ -176,3 +176,49 @@ k}
 .reg-input-row .reg-lname{
 	width: 175px;
 }
+
+.reset-password {
+    width: 160px;    
+    height: 40px;    
+    line-height: 40px;    
+    font-size: 16px;    
+    color: #fff;    
+    background-color: #6c9f2e;    
+    border-radius: 3px;    
+    text-align: center;    
+    text-transform: capitalize;    
+    cursor: pointer;    
+    font-family: 'opensanssemibold';
+}
+
+.cancel-btn {
+    width: 120px;    
+    height: 40px;    
+    line-height: 40px;    
+    font-size: 16px;    
+    color: #fff;    
+    background-color: #6c9f2e;    
+    border-radius: 3px;    
+    text-align: center;    
+    text-transform: capitalize;    
+    cursor: pointer;    
+    font-family: 'opensanssemibold';
+}
+
+.reg-input-reset-password{
+  width: 300px;
+  height: 45px;
+  line-height: 45px;
+  border: 1px solid #dcdcdc;
+  background-color: #fafafa;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  border-radius: 3px;
+  margin: 20px auto;
+  padding-left: 40px;
+  margin-bottom: 30px;
+}
+
+.err-input {
+  border: 1px solid #dd4b39;
+}
