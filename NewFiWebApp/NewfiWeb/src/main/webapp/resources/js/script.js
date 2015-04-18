@@ -1330,9 +1330,9 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
     	
     	var monthlyPaymentDifferenceTemp = Math.abs(principalInt - monthlyPayment);
-    	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(2);
+    	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(3);
     	
-    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(2);
+    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(3);
     	
     	
     	$('#monthlyPaymentId').text(showValue(monthlyPayment));
@@ -1401,7 +1401,7 @@ function getClosingCostSummaryContainer(valueSet) {
     if(typeof(newfiObject)!=='undefined'){
         //Code TO get loan type for loggedin user Hardcoded For Now
     	//Rajeswari    	
-        closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.description:"Purchase"):"Purchase";
+        closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
     }else{
     	
         if(buyHomeTeaserRate.loanType&&buyHomeTeaserRate.loanType=="PUR"){
@@ -1458,13 +1458,13 @@ function getClosingCostTopConatiner() {
     var row3Con2 = getClosingCostContainerRow(3, "Flood Certification", "$ 455.00");
     var row4Con2 = getClosingCostContainerRow(4, "Wire Fee", "$ 455.00");
     var row4_1Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase")
+    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
         row4_1Con2 = getClosingCostContainerRow(5, "Owners Title Insurance", "$ 450.00");
     var row5Con2 = getClosingCostContainerRow(5, "Lenders Title Insurance", "$ 450.00");
     var row6Con2 = getClosingCostContainerRow(6, "Closing/Escrow Fee", "$ 500.00");
     var row7Con2 = getClosingCostContainerRow(7, "Recording Fee", "$ 107.00");
     var row8Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase")
+    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
         row8Con2= getClosingCostContainerRow(8, "City/County Tax stamps", "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, "Total Estimated Third Party Costs", "$ 1,562.00");
     var row10Con2 = getClosingCostContainerLastRow(10, "Total Estimated Closing Cost", "$ 8,162.00");
@@ -2038,7 +2038,7 @@ function getRatSlider(gridArray,appUserDetails) {
      
             $('#lockrateaprid').html(gridArray[ui.value].APR +" %");
             $('#lockClosingCost').html(showValue(gridArray[ui.value].closingCost));
-            $('#lockInterestRate').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(2)+" %");
+            $('#lockInterestRate').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3)+" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
               lockratedata.IlpTemplateId =gridArray[ui.value].lLpTemplateId;
@@ -2058,7 +2058,7 @@ function getRatSlider(gridArray,appUserDetails) {
             "class": "rt-grid-item"
         }).css({
             "left": leftOffset + "%"
-        }).html(parseFloat(gridArray[i].teaserRate).toFixed(2) + "%");
+        }).html(parseFloat(gridArray[i].teaserRate).toFixed(3) + "%");
         gridItemCont.append(gridItem);
     }
     return container.append(gridItemCont);
@@ -2147,18 +2147,31 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
-    var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left",
-        "id": id
+   var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left clearfix"
+    });
+    
+    var col2Txt = $('<div>').attr({
+    	"class" : "float-left",
+    	"id" : id
     }).html(detail);
     
-    
     var dropdownarrow = $('<div>').attr({
-        "class": "dropdown-arrow"
+        "class": "dropdown-arrow float-left"
     }).bind('click', function() {
         $('#loan-amount-details').toggle();
     });
-    col2.append(dropdownarrow);
+    
+    var saveBtn = $('<div>').attr({
+    	"class" : "sm-save-btn float-right"
+    }).html("Save").on('click',function(){
+    	
+    	amt = $('#currentMorgtageId').val();
+    	amt1 = $('#cashOutId').val();
+    	modifiyTeaserRate(amt,amt1);
+    });
+    
+    col2.append(col2Txt).append(dropdownarrow).append(saveBtn);
     
     loanAmountCont.append(col1).append(col2);
     
@@ -2173,7 +2186,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
         "class": "loan-summary-sub-col-desc float-left"
     }).html(row1Desc);
     var col2row1 = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail float-left"
+        "class": "loan-summary-sub-col-detail float-left",
+        "id":"currentMorgtageId"
     }).val(row1Val)
     .keydown(function() {
     	$(this).maskMoney({
@@ -2193,7 +2207,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
         "class": "loan-summary-sub-col-desc float-left"
     }).html(row2Desc);
     var col2row2 = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail float-left"
+        "class": "loan-summary-sub-col-detail float-left",
+        "id":"cashOutId"
     }).val(row2Val)
     .keydown(function() {
     	$(this).maskMoney({
@@ -2225,7 +2240,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     		 loanAmt = (purAmt - dwnAmt);
     	}
     	
-    	ob.LoanAmtElement.text(showValue(loanAmt));
+    	$('#lockloanAmountid').text(showValue(loanAmt));
     };
     col2row1.keyup(purchaseTRate.change);
     col2row2.keyup(purchaseTRate.change);
