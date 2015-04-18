@@ -382,8 +382,11 @@ public class NeedsListServiceImpl implements NeedsListService {
 				}
 			}
 			for (LoanNeedsList need : existingNeeds.values()) {
-				removedList.add(need.getNeedsListMaster().getId());
-				needsDao.deleteLoanNeed(need);
+				if (!need.getNeedsListMaster().getNeedCategory()
+				        .equalsIgnoreCase("System")) {
+					removedList.add(need.getNeedsListMaster().getId());
+					needsDao.deleteLoanNeed(need);
+				}
 			}
 		} catch (Exception e) {
 			return 0;
