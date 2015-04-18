@@ -158,4 +158,7 @@ VALUES ('5','TEMPLATE_WORKFLOW_COMPLETION','Milestone Template','2015-04-10 12:5
 UPDATE `newfi_schema`.`workflowtaskconfigmaster`
 SET `params` = '{"EMAIL_TEMPLATE_NAME": "TEMPLATE_WORKFLOW_COMPLETION"}'
 WHERE `id` > '0';
+
+ALTER TABLE `newfi_schema`.`loanmilestone` 
+ADD COLUMN `order` INT(11) NULL DEFAULT -1 AFTER `status`;
 		
