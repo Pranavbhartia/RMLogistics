@@ -40,7 +40,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		String status = LoanStatus.APP_PAYMENT_PENDING;
+		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(

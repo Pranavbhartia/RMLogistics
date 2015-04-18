@@ -376,7 +376,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE" )
 			{				
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e);
+				});
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{

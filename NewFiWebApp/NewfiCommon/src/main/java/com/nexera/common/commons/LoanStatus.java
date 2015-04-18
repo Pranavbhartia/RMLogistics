@@ -32,6 +32,7 @@ public interface LoanStatus {
 	
 	String APP_PAYMENT_FAILURE = "Failure";
 	
+	String APP_PAYMENT_NOT_INITIATED = "Not Initiated";
 	String APP_PAYMENT_PENDING = "Pending";
 
 	String paymentPendingStatusMessage = "Pending";
