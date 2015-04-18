@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.UploadedFilesList;
@@ -42,6 +43,9 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements
 		criteria.createAlias("loan", "ls");
 		criteria.add(Restrictions.eq("ls.id", loanId));
 		criteria.add(Restrictions.eq("isActivate", true));
+		criteria.add(Restrictions.disjunction().add(Restrictions.isNull("documentType")).add(Restrictions.ne("documentType", CommonConstants.LQB_DOC_TYPE_CR)));
+		
+		LOG.info("criteria :"+criteria.toString() );
 		return criteria.list();
 	}
 

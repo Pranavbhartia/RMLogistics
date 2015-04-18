@@ -288,7 +288,7 @@ public class NexeraUtility {
 
 			File imageFileObj = new File(imageFile);
 			LOGGER.info("Image path for thumbnail : " + imageFile);
-			Thumbnails.of(new File(imageFile))
+			Thumbnails.of(imageFileObj)
 			        .size(Integer.parseInt("100"), Integer.parseInt("100"))
 			        .toFile(thumbpath);
 
