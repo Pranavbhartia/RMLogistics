@@ -1768,6 +1768,8 @@ function modifiedLQBJsonRes(LQBResponse) {
 
 function modifiyTeaserRate(amt,amt1) {
     if(amt){
+        amt=getFloatValue(amt);
+        amt1=getFloatValue(amt1);
         if(typeof(newfiObject)!=='undefined'){
             if(appUserDetails.loanType.description=="Purchase"){
                 var parentContainer=$('#center-panel-cont');

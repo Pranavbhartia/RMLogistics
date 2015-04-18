@@ -2168,7 +2168,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     	
     	amt = $('#currentMorgtageId').val();
     	amt1 = $('#cashOutId').val();
-    	modifiyTeaserRate(amt,amt1);
+        var loanVal=getFloatValue(amt)-getFloatValue(amt1);
+    	modifiyTeaserRate(loanVal,amt);
     });
     
     col2.append(col2Txt).append(dropdownarrow).append(saveBtn);
