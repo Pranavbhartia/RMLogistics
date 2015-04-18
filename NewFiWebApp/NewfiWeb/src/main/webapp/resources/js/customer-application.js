@@ -458,7 +458,7 @@ function getApplicationTextQues(question) {
         "value":question.value
     }).on("keyup", function(e){
           	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber'&& question.name != 'insuranceProvider' && question.name != 'ssn' && question.name != 'birthday') {
+        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday') {
 			$('input[name='+question.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -703,10 +703,10 @@ function paintCustomerApplicationPageStep1b() {
             text: "Primary Residence",
             value: "0"
         }, {
-            text: "Vacation Home",
+            text: "Vacation/Second Home",
             value: "1"
         }, {
-            text: "Second Home",
+            text: "Investment Property",
             value: "2"
         }],
         selected: ""
@@ -715,12 +715,8 @@ function paintCustomerApplicationPageStep1b() {
         text: "How much is paid in property taxes every year?",
         name: "taxesPaid",
         value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
-    }, {
-        type: "desc",
-        text: "Who provides homeowners insurance?",
-        name: "insuranceProvider",
-        value: appUserDetails.propertyTypeMaster.propertyInsuranceProvider
-    }, {
+    }, 
+     {
         type: "desc",
         text: "How much does homeowners insurance cost per year?",
         name: "insuranceCost",
@@ -742,19 +738,19 @@ function paintCustomerApplicationPageStep1b() {
     	propertyTypeCd = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
     	residenceTypeCd= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
     	propertyTaxesPaid = $('input[name="taxesPaid"]').val();
-    	propertyInsuranceProvider = $('input[name="insuranceProvider"]').val();
+    	//propertyInsuranceProvider = $('input[name="insuranceProvider"]').val();
     	propertyInsuranceCost = $('input[name="insuranceCost"]').val();
     	propertyPurchaseYear = $('input[name="purchaseTime"]').val();
     	
     	
     	
     	
-    	if(propertyTypeCd != undefined && propertyTypeCd != "" && residenceTypeCd != undefined && residenceTypeCd != ""  && propertyTaxesPaid != undefined && propertyTaxesPaid != ""  && propertyInsuranceProvider != undefined && propertyInsuranceProvider != "" && propertyInsuranceCost != undefined && propertyInsuranceCost != ""  && propertyPurchaseYear != undefined && propertyPurchaseYear != ""  ){
+    	if(propertyTypeCd != undefined && propertyTypeCd != "" && residenceTypeCd != undefined && residenceTypeCd != ""  && propertyTaxesPaid != undefined && propertyTaxesPaid != ""  && propertyInsuranceCost != undefined && propertyInsuranceCost != ""  && propertyPurchaseYear != undefined && propertyPurchaseYear != ""  ){
     		
     		propertyTypeMaster.propertyTypeCd = propertyTypeCd;
         	propertyTypeMaster.residenceTypeCd = residenceTypeCd;
         	propertyTypeMaster.propertyTaxesPaid = propertyTaxesPaid;
-        	propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
+        	//propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
         	propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
         	propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
           //	propertyTypeMaster.homeWorthToday = homeWorthToday ;

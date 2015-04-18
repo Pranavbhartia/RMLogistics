@@ -1,5 +1,7 @@
 package com.nexera.common.vo.lqb;
 
+import com.nexera.common.entity.PurchaseDetails;
+
 public class TeaserRateVO {
 
 	
@@ -34,6 +36,11 @@ public class TeaserRateVO {
 	   private String liveEarlier;
 	   private String sellYourHome;
 	   private String purchaseforNewHome;
+	   private String propertyType;
+	   private String residenceType;
+	   private String loanType;
+	   private PurchaseDetails purchaseDetails;
+	   
 	public String getRefinanceOption() {
 		return refinanceOption;
 	}
@@ -219,6 +226,30 @@ public class TeaserRateVO {
 	}
 	public void setPurchaseforNewHome(String purchaseforNewHome) {
 		this.purchaseforNewHome = purchaseforNewHome;
+	}
+	public String getPropertyType() {
+		return propertyType;
+	}
+	public void setPropertyType(String propertyType) {
+		this.propertyType = propertyType;
+	}
+	public String getResidenceType() {
+		return residenceType;
+	}
+	public void setResidenceType(String residenceType) {
+		this.residenceType = residenceType;
+	}
+	public String getLoanType() {
+		return loanType;
+	}
+	public void setLoanType(String loanType) {
+		this.loanType = loanType;
+	}
+	public PurchaseDetails getPurchaseDetails() {
+		return purchaseDetails;
+	}
+	public void setPurchaseDetails(PurchaseDetails purchaseDetails) {
+		this.purchaseDetails = purchaseDetails;
 	}
 	   
 	

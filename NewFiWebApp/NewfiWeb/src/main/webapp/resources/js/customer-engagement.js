@@ -774,7 +774,7 @@ function paintNewResidenceTypeQues(){
     $('#ce-refinance-cp').html("");
     var questions = [{
         type: "select",
-        text: "What type of property is this?",
+        text: "Property Type?",
         name: "propertyType",
         options: [{
             text: "Single Family Residence",
@@ -789,16 +789,16 @@ function paintNewResidenceTypeQues(){
         selected: ""
     }, {
         type: "select",
-        text: "How do you use this home?",
+        text: "Property Use?",
         name: "residenceType",
         options: [{
             text: "Primary Residence",
             value: "0"
         }, {
-            text: "Vacation Home",
+            text: "Vacation/Second Home",
             value: "1"
         }, {
-            text: "Second Home",
+            text: "Investment Property",
             value: "2"
         }],
         selected: ""

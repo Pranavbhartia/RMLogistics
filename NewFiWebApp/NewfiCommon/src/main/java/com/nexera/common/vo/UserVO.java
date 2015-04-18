@@ -34,6 +34,7 @@ public class UserVO implements Serializable {
 	private List<UserEmailVO> userEmails;
 	private CustomerEnagagement customerEnagagement;
 	private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
+	private String loanManagerEmail;
 
 	public UserVO() {
 
@@ -245,5 +246,13 @@ public class UserVO implements Serializable {
 	public void setUserProfileBaseUrl(String userProfileBaseUrl) {
 		this.userProfileBaseUrl = userProfileBaseUrl;
 	}
+
+	public String getLoanManagerEmail() {
+	    return loanManagerEmail;
+    }
+
+	public void setLoanManagerEmail(String loanManagerEmail) {
+	    this.loanManagerEmail = loanManagerEmail;
+    }
 
 }

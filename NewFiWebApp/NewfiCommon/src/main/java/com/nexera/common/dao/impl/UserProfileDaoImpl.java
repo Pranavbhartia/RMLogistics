@@ -27,6 +27,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanTeam;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -793,5 +794,20 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Integer updateRealtorDetails(RealtorDetail realtor) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE RealtorDetail realtor set realtor.licenceInfo = :licenceInfo,realtor.profileUrl=:profileUrl,realtor.defaultLoanManager=:defaultLoanManager WHERE realtor.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("licenceInfo", realtor.getLicenceInfo());
+		query.setParameter("profileUrl", realtor.getProfileUrl());
+		query.setParameter("defaultLoanManager",
+		        realtor.getDefaultLoanManager());
+		query.setParameter("id", realtor.getId());
+		int result = query.executeUpdate();
+		return result;
+
 	}
 }

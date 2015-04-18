@@ -139,10 +139,14 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "cust-personal-info-header"
 	}).html("LQB Information");
 	if(!userIsRealtor()){
-		var lqbContainer = getLoanLqbInfoContainer(user);
+		if(newfiObject.user.userRole.id!=4){
+			var lqbContainer = getLoanLqbInfoContainer(user);
+			lqbWrapper.append(lqbHeader).append(lqbContainer);
 
-		lqbWrapper.append(lqbHeader).append(lqbContainer);
-		$('#loan-profile-main-container').append(lqbWrapper);
+			$('#loan-profile-main-container').append(lqbWrapper);
+		}
+	
+		
 	
 	}
 		appendChangePasswordContainer();
@@ -189,7 +193,7 @@ function getLoanLqbInfoContainer(user){
 	var container = $('<div>').attr({
 		"class" : "loan-personal-info-container"
 	});
-	console.info("userName:"+user.internalUserDetail.lqbUsername);
+
 	var uploadRow = getLqbRow("User Name",user.internalUserDetail.lqbUsername,"lqb_userName");
 	container.append(uploadRow);
 
@@ -223,6 +227,11 @@ function getLoanPersonalInfoContainer(user) {
 
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
+	
+	var assignManager=getLoanManager(user);
+	if(user.userRole.id==2){
+		container.append(assignManager);	
+	}
 
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
@@ -252,7 +261,40 @@ function getLoanPersonalInfoContainer(user) {
 	container.append(saveBtn);
 	return container;
 }
+function getLoanManager(user){
 
+		
+		var row = $('<div>').attr({
+			"class" : "prof-form-row clearfix"
+		});
+		var rowCol1 = $('<div>').attr({
+			"class" : "prof-form-row-desc float-left"
+		}).html("Assign manager");
+		
+		
+		var rowCol2 = $('<div>').attr({
+			"class" : "prof-form-rc float-left"
+		});
+
+		var inputCont = $('<div>').attr({
+			"class" : "prof-form-input-cont"
+		});
+		
+		var emailInput = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-lg",
+			"value" : user.loanManagerEmail,
+			"id" : "managerID"
+		});
+		
+		var errMessage = $('<div>').attr({
+			"class" : "err-msg hide" 
+		});
+		
+		inputCont.append(emailInput).append(errMessage);
+		
+		rowCol2.append(inputCont);
+		return row.append(rowCol1).append(rowCol2);
+}
 function updateLqbLMDetails(){
 	var userProfileJson = new Object();
 	userProfileJson.id = $("#userid").val();
@@ -312,7 +354,19 @@ function updateLMDetails() {
 	userProfileJson.lastName = $("#lastNameId").val();
 	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
 	userProfileJson.emailId = $("#priEmailId").val();
-
+	if(newfiObject.user.userRole.id==2){
+		userProfileJson.loanManagerEmail=$("#managerID").val();
+	 
+			if($("#managerID").val()!=""){
+	    	var isSuccess=emailValidation($("#managerID").val());
+	    	if(isSuccess){
+	    		$("#managerID").next('.err-msg').html("Invalid Email ID").show();
+	    		$("#managerID").addClass('err-input').focus();
+	    		return ;
+	    	}
+	    }
+	}
+	
 	var customerDetails = new Object();
 
 	customerDetails.id = $("#customerDetailsId").val();
@@ -340,18 +394,24 @@ function updateLMDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-
-			$("#profileNameId").text($("#firstNameId").val());
-			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
-			showLoanManagerProfilePage();
+            if(data.error==null){
+            	$("#profileNameId").text($("#firstNameId").val());
+    			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+    			showToastMessage("Succesfully updated");
+    			showLoanManagerProfilePage();
+            }else{
+            	$("#managerID").val('');
+            	showErrorToastMessage(data.error.message);
+            }
+			
 		},
 		error : function(error) {
-			showToastMessage("Mandatory Fileds should not be empty");
+			showErrorToastMessage(error);
 		}
 	});
 
-	showToastMessage("Succesfully updated");}}else{
-		showToastMessage("Mandatory fields should not be empty");
+	}}else{
+		showErrorToastMessage("Mandatory fields should not be empty");
 	}
 }
 
@@ -1441,6 +1501,7 @@ $(document).on('blur','#firstNameId',function(){
 	}
 });
 
+
 $(document).on('blur','#lastNameId',function(){
 	if(!validateFormField('lastNameId', true, "Last name can not be empty", "","")){
 		isProfileFormValid = false;
@@ -1946,8 +2007,12 @@ function appendUserStatesInLMProfile(element) {
 				"data-id" : key
 			}).bind('click',function(e){
 				var id = $(this).attr("data-id");
-				internalUserStates[id].isChecked = false;
+				/*internalUserStates[id].isChecked = false;*/
 				$(this).closest('.prof-form-input-textarea-block').remove();
+			var	internalUserStateMappingVO=internalUserStates[id];
+				if(internalUserStateMappingVO.isChecked!=typeof underdefined)
+					internalUserStateMappingVO.isChecked=false;
+				internalUserStates[id]=internalUserStateMappingVO;
 				$("#checkBox_"+id).addClass("doc-unchecked").removeClass("doc-checked");
 			});
 			
