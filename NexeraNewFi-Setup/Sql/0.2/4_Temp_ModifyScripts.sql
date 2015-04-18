@@ -148,3 +148,14 @@ ADD COLUMN `prop_ins_mon_yrly` VARCHAR(45) NULL DEFAULT NULL AFTER `newhome_budg
 
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='36' WHERE `id`='21';
+
+#Anoop - All scripts above this are in sync with the 1_create script.
+
+#Utsav Added on 18th April, Already Added in 1_CreateTable.sql
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('5','TEMPLATE_WORKFLOW_COMPLETION','Milestone Template','2015-04-10 12:53:34','08986e4b-8407-4b44-9000-50c104db899c');
+
+UPDATE `newfi_schema`.`workflowtaskconfigmaster`
+SET `params` = '{"EMAIL_TEMPLATE_NAME": "TEMPLATE_WORKFLOW_COMPLETION"}'
+WHERE `id` > '0';
+		
