@@ -19,7 +19,7 @@
 }
 
 .ce-ques-option:hover {
-	background: #F6914D;
+	background: #F47521;
 }
 
 .ce-ques-options-container {
@@ -303,7 +303,7 @@
 }
 
 .ce-option:hover,.ce-save-btn:hover,.app-option-choice:hover{
-	background: #F6914D;
+	background: #F47521;
 }
 
 .ce-err-input{

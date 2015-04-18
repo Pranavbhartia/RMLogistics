@@ -180,12 +180,12 @@ function paintCustomerApplicationPurchasePageStep1a() {
 
     
     
-    var questions = [/*{
+    var questions = [{
         type: "desc",
         text: "Street Address",
         name: "streetAddress",
         value: ""
-    }, */{
+    }, {
         type: "desc",
         text: "Which State do you live in?",
         name: "state",
