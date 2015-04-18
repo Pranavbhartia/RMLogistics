@@ -871,6 +871,37 @@ public class ApplicationFormRestService {
 
 	}
 
+	@RequestMapping(value = "/changeLoanAmount", method = RequestMethod.POST)
+	public @ResponseBody
+	String changeLoanAmount(String appFormData) {
+		Gson gson = new Gson();
+		String lockRateData = null;
+		try {
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			        LoanAppFormVO.class);
+			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
+			System.out.println("createLoanResponse is" + loanNumber);
+			if (!"".equalsIgnoreCase(loanNumber)) {
+
+				String response = invokeRest((saveLoan(loanNumber, loaAppFormVO))
+				        .toString());
+				System.out.println("Save Loan Response is " + response);
+				// JSONObject jsonObject = new JSONObject(response);
+				// LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
+
+				if (response != null) {
+					lockRateData = loadLoanRateData(loanNumber);
+					System.out.println("lockRateData" + lockRateData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+		return lockRateData;
+
+	}
+
 	@RequestMapping(value = "/fetchLockRatedata/{loanNumber}", method = RequestMethod.POST)
 	public @ResponseBody String fetchLockRatedata(
 	        @PathVariable String loanNumber) {
