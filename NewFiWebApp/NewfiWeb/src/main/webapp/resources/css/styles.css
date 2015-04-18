@@ -638,7 +638,7 @@ input[type="button"]:focus, button:focus {
 
 .dropdown-arrow {
   width: 8px;
-  height: 8px;
+  height: 16px;
   margin-left: 10px;
   margin-bottom: 2px;
   display: inline-block;
@@ -4587,6 +4587,35 @@ input.calc-input {
 .month-cont .app-option-selected{
 	height: 40px !important;
 	line-height: 40px !important;
+}
+
+.sm-save-btn {
+	padding: 0 5px;
+	background: #6c9f2e;
+	color: #fff;
+	font-size: 10px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.sm-save-btn:hover {
+	background: #F37521;
+}
+
+.loan-summary-input-detail {
+	width: 75%;
+	height: 100%;
+	border: none;
+	line-height: inherit;
+}
+
+.loan-summary-input-detail:focus {
+	width: 100px;
+	padding: 0 10px;
+	color: #428bca;
+	font-family: 'opensanssemibold';
+	border: 1px solid #dcdcdc;
+	border-radius: 3px;
 }
 
 /*End*/
