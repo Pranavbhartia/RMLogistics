@@ -1084,7 +1084,8 @@ public class LoanServiceImpl implements LoanService {
 				                + loanId);
 			}
 
-			if (Integer.parseInt(purchaseDetails.getLoanAmount()) <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
+			if (Integer.parseInt(utils.unformatCurrencyField(purchaseDetails
+			        .getLoanAmount())) <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
 				if (propertyTypeMaster
 				        .getPropertyTypeCd()
 				        .equalsIgnoreCase(
@@ -1362,12 +1363,15 @@ public class LoanServiceImpl implements LoanService {
 				                + loanId);
 			}
 
-			int loanAmount = Integer.parseInt(refinanceDetails
-			        .getCurrentMortgageBalance());
+			int loanAmount = Integer.parseInt(utils
+			        .unformatCurrencyField(refinanceDetails
+			                .getCurrentMortgageBalance()));
 			if (refinanceDetails.getCashTakeOut() != null
 			        && !refinanceDetails.getCashTakeOut().isEmpty()) {
 				loanAmount = loanAmount
-				        + Integer.parseInt(refinanceDetails.getCashTakeOut());
+				        + Integer.parseInt(utils
+				                .unformatCurrencyField(refinanceDetails
+				                        .getCashTakeOut()));
 			}
 			if (loanAmount <= CommonConstants.LOAN_AMOUNT_THRESHOLD) {
 				if (propertyTypeMaster
