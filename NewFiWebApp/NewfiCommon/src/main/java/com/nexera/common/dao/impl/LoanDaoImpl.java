@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
@@ -484,8 +485,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(LoanNeedsList.class)
-		        .createAlias("loan", "loanList")
-		        .add(Restrictions.eq("loanList.id", loanId));
+		        .createAlias("loan", "loanList").createAlias("needsListMaster", "nlm")
+		        .add(Restrictions.eq("loanList.id", loanId)).add(Restrictions.ne("nlm.label", CommonConstants.LQB_DOC_TYPE_CR));
 		LOG.info("criteria : " + criteria);
 		Integer result = criteria.list().size();
 		LOG.info("criteria result: " + result);

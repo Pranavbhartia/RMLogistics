@@ -39,10 +39,16 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			
 			Loan loan = new Loan();
 			loan.setId(loanId);
+			
+			criteria.createAlias("needsListMaster","nlm");
+			
 			criteria.add(Restrictions.eq("loan", loan));
-
+			criteria.add(Restrictions.ne("nlm.label",
+			        CommonConstants.LQB_DOC_TYPE_CR));
+			
 			List<LoanNeedsList> loanNeeds = criteria.list();
 			return loanNeeds;
 		} catch (HibernateException hibernateException) {

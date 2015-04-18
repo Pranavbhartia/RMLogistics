@@ -62,6 +62,8 @@ public class FileUploadController {
 			        .fetchUsingFileUUID(uuid);
 			
 			fileURL = uplList.getS3ThumbPath();
+			if(fileURL == null)
+				return null;
 			byte[] bytes = s3FileUploadServiceImpl.getInputStreamOfFile(fileURL);
 			return bytes;
 			
