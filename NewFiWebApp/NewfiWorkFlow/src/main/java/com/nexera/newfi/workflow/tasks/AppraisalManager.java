@@ -8,10 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
+import com.nexera.common.vo.CreateReminderVo;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -45,7 +53,8 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.appraisalReceivedMessage);
-			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,LoanStatus.appraisalReceivedMessage);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+			        LoanStatus.appraisalReceivedMessage);
 			sendEmail(objectMap);
 		}
 		if (mileStoneStatus != null) {
@@ -77,7 +86,18 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APPRAISAL_NOTIFICATION_TYPE;
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_APP_FEE;
+		String notificationReminderContent = WorkflowConstants.APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+		        notificationType, loanId, workflowItemExecutionId,
+		        prevMilestoneKey, notificationReminderContent);
+		iWorkflowService.updateLMReminder(createReminderVo);
+
 		return null;
 	}
 

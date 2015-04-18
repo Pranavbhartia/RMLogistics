@@ -29,10 +29,11 @@ public interface LoanStatus {
 	String LM_Decision_Note_Message = "LM Decision Note Message";
 
 	String APP_PAYMENT_SUCCESS = "Success";
-	
+
 	String APP_PAYMENT_FAILURE = "Failure";
-	
+
 	String APP_PAYMENT_NOT_INITIATED = "Not Initiated";
+	String APP_PAYMENT_CLICK_TO_PAY = "Click here to pay";
 	String APP_PAYMENT_PENDING = "Pending";
 
 	String paymentPendingStatusMessage = "Pending";

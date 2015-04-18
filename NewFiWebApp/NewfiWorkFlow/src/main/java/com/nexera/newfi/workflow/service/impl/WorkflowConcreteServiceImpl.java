@@ -256,32 +256,29 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	public String getRenderInfoForApplicationFee(int loanID) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
-
-		LoanApplicationFee loanApplicationFee = transactionService
-		        .findByLoan(new LoanVO(loanID));
-		if (loanApplicationFee != null
-		        && loanApplicationFee.getPaymentDate() != null) {
-			status = LoanStatus.APP_PAYMENT_SUCCESS;
+		Loan loan = new Loan(loanID);
+		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.APP_FEE.getMilestoneKey());
+		if (mileStone != null && mileStone.getComments() != null) {
+			status = mileStone.getComments().toString();
+		}
+		int amount = 0;
+		BigDecimal configuredAmount = null;
+		try {
+			LoanVO loanVO = loanService.getLoanByID(loanID);
+			// Configured Amount : Loan Table App Fee - set my SM
+			configuredAmount = loanVO.getAppFee();
+			amount = loanService.getApplicationFee(loanID);
+		} catch (NoRecordsFetchedException e) {
+			amount = 0;
+		} catch (InvalidInputException e) {
+			amount = 0;
+		}
+		if (configuredAmount == null) {
+			map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, amount);
 		} else {
-			status = LoanStatus.APP_PAYMENT_PENDING;
-			int amount = 0;
-			BigDecimal configuredAmount = null;
-			try {
-				LoanVO loan = loanService.getLoanByID(loanID);
-				// Configured Amount : Loan Table App Fee - set my SM
-				configuredAmount = loan.getAppFee();
-				amount = loanService.getApplicationFee(loanID);
-			} catch (NoRecordsFetchedException e) {
-				amount = 0;
-			} catch (InvalidInputException e) {
-				amount = 0;
-			}
-			if (configuredAmount == null) {
-				map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, amount);
-			} else {
-				map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME,
-				        configuredAmount);
-			}
+			map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, configuredAmount);
+
 		}
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        status);
