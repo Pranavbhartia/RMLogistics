@@ -8,8 +8,7 @@ var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
 		this.loanId = loanId;
-		this.customer = customer;
-		
+		this.customer = customer;		
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
@@ -349,6 +348,9 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
 				$(ob.stateInfoContainer).addClass("cursor-pointer");
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
@@ -1435,6 +1437,7 @@ $(document).resize(function(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
+	removeNotificationPopup();
 });
 
 $(document).on('click',function(){
@@ -1442,6 +1445,7 @@ $(document).on('click',function(){
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
 	removeQCPopup();
+	removeNotificationPopup();
 });
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
