@@ -70,6 +70,9 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.7}")
 	private String regexPattern7;
 
+	@Value("${regex.pattern.8}")
+	private String regexPattern8;
+
 	@Autowired
 	NexeraUtility nexeraUtility;
 
@@ -158,6 +161,7 @@ public class EmailProcessor implements Runnable {
 					regexPatternStrings.add(regexPattern5);
 					regexPatternStrings.add(regexPattern6);
 					regexPatternStrings.add(regexPattern7);
+					regexPatternStrings.add(regexPattern8);
 					emailBody = extractMessage(emailBody, regexPatternStrings);
 
 					LOGGER.debug("Body of the email is " + emailBody);
