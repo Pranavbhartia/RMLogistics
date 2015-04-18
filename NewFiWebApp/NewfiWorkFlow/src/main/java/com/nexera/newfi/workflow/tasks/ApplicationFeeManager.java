@@ -47,6 +47,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String returnStatus = null;
+		String messageForNote = "";
 		if (objectMap != null) {
 			int loanId = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -57,20 +58,23 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				dismissAllPaymentAlerts(loanId);
 				createAlertToLockRates(objectMap);
 				returnStatus = WorkItemStatus.COMPLETED.getStatus();
-
+				messageForNote = LoanStatus.paymentSuccessStatusMessage;
 			} else if (status.equals(LoanStatus.APP_PAYMENT_FAILURE)) {
-
+				messageForNote = LoanStatus.paymentFailureStatusMessage;
 				return WorkItemStatus.NOT_STARTED.getStatus();
 			} else if (status.equals(LoanStatus.APP_PAYMENT_PENDING)) {
 				returnStatus = WorkItemStatus.STARTED.getStatus();
+				messageForNote = LoanStatus.paymentPendingStatusMessage;
 			}
 			if (status != null && !status.isEmpty()) {
 				loanService.saveLoanMilestone(loanId,
-				        Milestones.APP_FEE.getMilestoneID(),
-				        status);
+				        Milestones.APP_FEE.getMilestoneID(), status);
 				makeANote(Integer.parseInt(objectMap.get(
 				        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-				        status);
+				        messageForNote);
+				objectMap.put(
+				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+				        messageForNote);
 				sendEmail(objectMap);
 			}
 
@@ -101,7 +105,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .findByLoan(loanVO);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		if (loanApplicationFee != null && loanApplicationFee.getPaymentDate() != null) {
+		if (loanApplicationFee != null
+		        && loanApplicationFee.getPaymentDate() != null) {
 			inputMap.put(WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME,
 			        LoanStatus.APP_PAYMENT_SUCCESS);
 			// This means Brain Tree has approved the fee payment

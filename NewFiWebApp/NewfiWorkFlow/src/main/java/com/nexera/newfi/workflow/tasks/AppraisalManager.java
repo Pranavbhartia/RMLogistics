@@ -45,6 +45,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        LoanStatus.appraisalReceivedMessage);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,LoanStatus.appraisalReceivedMessage);
 			sendEmail(objectMap);
 		}
 		if (mileStoneStatus != null) {
