@@ -45,6 +45,22 @@ public class Utils {
 		return inputStr;
 	}
 
+	public String unformatCurrencyField(String field) {
+		String finalString = "";
+
+		if (field.contains("$") || field.contains(",")) {
+
+			for (int i = 0; i < field.length(); i++) {
+				if (field.charAt(i) != '$' && field.charAt(i) != ',')
+					finalString += field.charAt(i);
+			}
+			return finalString;
+		} else {
+			return field;
+		}
+
+	}
+
 	public String getJsonStringOfMap(Map<String, Object> map) {
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();

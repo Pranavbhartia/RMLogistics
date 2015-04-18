@@ -372,7 +372,7 @@ public class ThreadManager implements Runnable {
 			String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
 			if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
 			        .toString())) {
-				if (checkPurchaseDocumentExpiry(loan) <= 24) {
+				if (checkPurchaseDocumentExpiry(loan)) {
 					LOGGER.debug("Purchase Docuement Is About To Expire ");
 					NotificationVO notificationVO = new NotificationVO(
 					        loan.getId(),
@@ -404,18 +404,22 @@ public class ThreadManager implements Runnable {
 		}
 	}
 
-	private long checkPurchaseDocumentExpiry(Loan loan) {
-		long hoursLeft = 0;
+	private Boolean checkPurchaseDocumentExpiry(Loan loan) {
+		Boolean status = false;
 		if (loan.getPurchaseDocumentExpiryDate() != null) {
 			long expireDateInMilliseconds = loan
 			        .getPurchaseDocumentExpiryDate();
 			long currentDateInMilliseconds = new Date().getTime();
 			long timeLeft = expireDateInMilliseconds
 			        - currentDateInMilliseconds;
-			hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeft);
-
+			if (TimeUnit.MILLISECONDS.toHours(timeLeft) <= 24) {
+				status = true;
+			} else {
+				status = false;
+			}
 		}
-		return hoursLeft;
+		return status;
+
 	}
 
 	private List<String> getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(
@@ -948,6 +952,7 @@ public class ThreadManager implements Runnable {
 		loanMilestone.setStatusUpdateTime(date);
 		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
 		loanMilestone.setComments(loanStatus.getDisplayStatus());
+		loanMilestone.setOrder(loanStatus.getOrder());
 		saveLoanMilestone(loanMilestone);
 
 	}

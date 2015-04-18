@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.workflow.engine.EngineTrigger;
@@ -29,6 +30,8 @@ public class AlertManager extends NexeraWorkflowTask implements
 		makeANote(
 		        Integer.parseInt(objectMap.get(
 		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+		        LoanStatus.initialContactMadeMessage);
+		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 		        LoanStatus.initialContactMadeMessage);
 		sendEmail(objectMap);
 		return WorkItemStatus.COMPLETED.getStatus();

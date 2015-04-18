@@ -31,45 +31,43 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String completedStatus = null;
+		String displayMessage = "";
 		if (status.equals(String.valueOf(LOSLoanStatus.LQB_STATUS_FUNDED
 		        .getLosStatusID()))) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.loanFundedMessage);
-			sendEmail(objectMap);
+			displayMessage = LoanStatus.loanFundedMessage;
+
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED
 		                .getLosStatusID()))) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.loanSuspendedMessage);
-			sendEmail(objectMap);
+			displayMessage = LoanStatus.loanSuspendedMessage;
+
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status
 		        .equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
 		                .getLosStatusID()))) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.loanDeclinedMessage);
-			sendEmail(objectMap);
+			displayMessage = LoanStatus.loanDeclinedMessage;
+
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
 		                .getLosStatusID()))) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.loanFundedMessage);
-			sendEmail(objectMap);
+			displayMessage = LoanStatus.loanFundedMessage;
+
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
 		                .getLosStatusID()))) {
+			displayMessage = LoanStatus.loanArchivedMessage;
+			completedStatus = WorkItemStatus.COMPLETED.getStatus();
+		}
+		if (status != null && !status.isEmpty()) {
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.loanArchivedMessage);
+			        displayMessage);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+			        displayMessage);
 			sendEmail(objectMap);
-			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
 		return completedStatus;
 	}
