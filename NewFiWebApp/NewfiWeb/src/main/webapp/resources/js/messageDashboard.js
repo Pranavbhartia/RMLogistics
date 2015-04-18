@@ -76,7 +76,7 @@ function callBackpopupFunction() {
 	return false;
 }
 
-function doSavemessageAjaxCall(messageText) {
+function doSavemessageAjaxCall(messageText, callBack) {
 
 	var message = new Object();
 
@@ -84,15 +84,19 @@ function doSavemessageAjaxCall(messageText) {
 	createdUser.userID = newfiObject.user.id;
 	createdUser.userName = newfiObject.user.displayName;
 	createdUser.roleName = newfiObject.user.userRole.roleDescription;
-
-	message.loanId = currentUserAndLoanOnj.activeLoanId;
+	if (callBack) {
+		message.loanId = selectedUserDetail.loanID;
+	}else{
+		message.loanId = currentUserAndLoanOnj.activeLoanId;	
+	}
+	
 	message.parentId = parentId;
 	message.message = messageText;
 	message.createdUser = createdUser;
 	message.otherUsers = otherUsers;
 	message.links = new Array();
 	message.messageVOs = "null";
-	saveMessageCall(message);
+	saveMessageCall(message, callBack);
 }
 
 function addOtherUserObject(userId) {
@@ -145,21 +149,26 @@ function setReplyToMessageObject(messageText) {
 	doSavemessageAjaxCall(messageText);
 }
 
-function saveMessageCall(message) {
+function saveMessageCall(message, callBack) {
 	console.info(message);
-	ajaxRequest("rest/commlog/save", "POST", "json", JSON.stringify(message),
-			successCallBackSaveMessage);
+	if (callBack) {
+		ajaxRequest("rest/commlog/save", "POST", "json", JSON
+				.stringify(message), callBack);
+	} else {
+		ajaxRequest("rest/commlog/save", "POST", "json", JSON
+				.stringify(message), successCallBackSaveMessage);
+	}
+
 }
 
 function successCallBackSaveMessage() {
 	console.info("successCallBackSaveMessage saved method claeed ");
 	$("#conv-main-container").empty();
-	if(selectedUserDetail != undefined){
+	if (selectedUserDetail != undefined) {
 		showAgentMessageDashboard();
-	}else{
+	} else {
 		showMessageDashboard();
 	}
-	
 
 }
 
@@ -181,7 +190,8 @@ function paintCommunicationLog(response) {
 	$('#conv-container').html('');
 
 	if (response.error != undefined && response.error.code == 500) {
-		showDialogPopup("Connection issue",
+		showDialogPopup(
+				"Connection issue",
 				"Not able to connect.Please try again after some time.Click OK to continue.",
 				function() {
 					return false;

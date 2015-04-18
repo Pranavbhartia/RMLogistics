@@ -49,6 +49,9 @@ public class MessageVO {
 	// Self reference to the message structure to take care of recursive nesting
 	MessageVO messageVO;
 
+	// Set this if only interenal users need to see this.
+	private Boolean isPrivate;
+
 	public class MessageUserVO {
 
 		public MessageUserVO() {
@@ -103,8 +106,9 @@ public class MessageVO {
 	public static class FileVO {
 
 		public FileVO() {
-	        // TODO Auto-generated constructor stub
-        }
+			// TODO Auto-generated constructor stub
+		}
+
 		private String fileName;
 		private String url;
 
@@ -214,6 +218,14 @@ public class MessageVO {
 
 	public void setSortOrderDate(Date sortOrderDate) {
 		this.sortOrderDate = sortOrderDate;
+	}
+
+	public Boolean getIsPrivate() {
+		return isPrivate;
+	}
+
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 	@Override

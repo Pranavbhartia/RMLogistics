@@ -255,15 +255,15 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	@Override
 	public String getRenderInfoForApplicationFee(int loanID) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String status = null;
+		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
 
 		LoanApplicationFee loanApplicationFee = transactionService
 		        .findByLoan(new LoanVO(loanID));
 		if (loanApplicationFee != null
 		        && loanApplicationFee.getPaymentDate() != null) {
-			status = LoanStatus.paymentSuccessStatusMessage;
+			status = LoanStatus.APP_PAYMENT_SUCCESS;
 		} else {
-			status = LoanStatus.paymentPendingStatusMessage;
+			status = LoanStatus.APP_PAYMENT_PENDING;
 			int amount = 0;
 			BigDecimal configuredAmount = null;
 			try {
