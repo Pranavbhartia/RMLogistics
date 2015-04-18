@@ -930,9 +930,9 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        		}
 	        	}
 	        },mapValues:function(value){
-	        	if(value=="Yes"||value==true){
+	        	if(value==="Yes"||value===true){
 	        		return "Yes";
-	        	}else if(value=="No"||value==false){
+	        	}else if(value==="No"||value===false){
 	        		return "No";
 	        	}else
 	        	   { 
@@ -961,7 +961,7 @@ function getQuestionContext(question,parentContainer,valueSet){
     if(!contxt.value){
         var res=mapDbDataForFrontend(contxt.name);
         if(res!=undefined)
-            contxt.value=res;
+            contxt.value=contxt.mapValues(res);
     }
     if(question.type == "yearMonth"){
         var res=getMappedYearMonthValue(contxt.name);
@@ -2699,7 +2699,7 @@ function applicationFormSumbit(appUserDetails){
 var lqbData=[
     {
         "loanDuration": "sample",
-        "loanNumber": "D2015040065"
+        "loanNumber": "D2015040294"
     },
     {
         "loanDuration": "30 FIXED CONF YOSEMITE",
@@ -3360,13 +3360,17 @@ function getMonthYearTextQuestionContext(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "ce-rp-ques-text"
     }).html(contxt.text);
+    var newDiv=$('<div>').attr({
+    	
+    	"class":"month-options-cont float-left"
+    });
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont clearfix"
     });
     var errFeild=appendErrorMessage();
 
     var optionCont = $('<input>').attr({
-        "class": "ce-input float-left",
+        "class": "ce-input",
         "name": contxt.name,
         "value": contxt.value
     }).bind("change", {
@@ -3409,29 +3413,35 @@ function getMonthYearTextQuestionContext(contxt) {
             optionCont.val(contxt.value);
         }
     }
-    optionsContainer.append(optionCont).append(errFeild).append(requird).append(selectedOption);
+    newDiv.append(optionCont).append(errFeild);
+    optionsContainer.append(newDiv).append(requird).append(selectedOption);
     return container.append(quesTextCont).append(optionsContainer);
 }
 
 
 function saveAndUpdateLoanAppForm(appUserDetails,callBack){
-	
-	$.ajax({
-		url:"rest/application/applyloan",
-		type:"POST",
-		data:{"appFormData" : JSON.stringify(appUserDetails)},
-		datatype : "application/json",
-		success:function(data){
-			
-			appUserDetails=data;
-			console.log('appUserDetails'+appUserDetails);
-			callBack;
-		},
-		error:function(erro){
-			alert("error");
-		}
-		
-	});
+	var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+    if(!LQBFileId){
+    	$.ajax({
+    		url:"rest/application/applyloan",
+    		type:"POST",
+    		data:{"appFormData" : JSON.stringify(appUserDetails)},
+    		datatype : "application/json",
+    		success:function(data){
+    			
+    			appUserDetails=data;
+                newfi.appUserDetails=JSON.stringify(appUserDetails);
+    			console.log('appUserDetails'+appUserDetails);
+    			callBack;
+    		},
+    		error:function(erro){
+    			alert("error");
+    		}
+    		
+    	});
+    }else{
+        showToastMessage("Application form not editable");
+    }
 }
 
 
@@ -3818,9 +3828,9 @@ function getQuestionContextCEP(question,parentContainer,valueset){
 	        		}
 	        	}
 	        },mapValues:function(value){
-	        	if(value=="Yes"||value==true){
+	        	if(value==="Yes"||value===true){
 	        		return "Yes";
-	        	}else if(value=="No"||value==false){
+	        	}else if(value==="No"||value===false){
 	        		return "No";
 	        	}else
 	        		return value;
@@ -3961,7 +3971,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+	var errFeild=appendErrorMessage();
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : name,
@@ -3981,7 +3991,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		
 	});
 	
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -3994,14 +4004,19 @@ function getTextQuestion(quesText, clickEvent, name) {
 		inputValue= $('input[name="' + key + '"]').val();
 
 		appUserDetails.refinancedetails[key]  = inputValue;
-
+        var isSuccess=validateInput($('input[name="' + key + '"]').val(),message);
+        if(isSuccess){
+        	event.data.clickEvent();
+        }else{
+        	return false;
+        }
 		//sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-        if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
+       /* if(inputValue != undefined && inputValue != "" && inputValue != "$0"){
         	console.log("event.data.clickEvent");
         	event.data.clickEvent();
         }else{
         	showToastMessage("Please give awnsers of the questions");
-        }
+        }*/
 	});
 
 	return container.append(quesTextCont).append(optionContainer).append(saveBtn);
@@ -4223,7 +4238,8 @@ function paintSpouseCustomerApplicationPageStep4b(){
 function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
- $('#overlay-loader').show();
+	 //fixAndLoakYourRatePage(lqbData, appUserDetails);
+$('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
@@ -4254,7 +4270,6 @@ $.ajax({
 
 function paintLockRate(lqbData, appUserDetails) {
   // alert('lqbData'+lqbData);
-
     fixAndLoakYourRatePage(lqbData, appUserDetails);
 }
  
@@ -4471,4 +4486,35 @@ function paintTeaserRatePageBasedOnLoanType(appUserDet){
         var parentContainer=$('#center-panel-cont');
         paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet),true);
     }
+}
+function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
+    $('#overlay-loader').show();
+    loanAmount = getFloatValue(loanAmount);  
+    purchaseAmount = getFloatValue(purchaseAmount); 
+    if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
+        appUserDetails.purchaseDetails.loanAmount=loanAmount;
+        appUserDetails.purchaseDetails.housePrice=purchaseAmount;
+    }else{
+        var parentContainer=$('#center-panel-cont');
+        appUserDetails.refinancedetails.currentMortgageBalance=loanAmount;
+        appUserDetails.refinancedetails.cashTakeOut=purchaseAmount;
+    }
+
+    $.ajax({
+        url:"rest/application/changeLoanAmount",
+        type:"POST",
+        data:{"appFormData" : JSON.stringify(appUserDetails)},
+        datatype : "application/json",
+        success:function(data){
+        
+           // alert('createLoan data is '+data)
+            paintLockRate(JSON.parse(data), appUserDetails);
+             $('#overlay-loader').hide();
+        },
+        error:function(erro){
+            alert("error inside createLoan ");
+             $('#overlay-loader').hide();
+        }
+        
+    });
 }
