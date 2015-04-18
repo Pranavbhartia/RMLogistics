@@ -24,7 +24,7 @@ function paintMySpouseIncome() {
 
 	var quesTxt = "Spouse Details :Select all that apply";
 	var options = [ {
-		"text" : "Employed",
+		"text" : "W2 Employee",
 		"onselect" : paintSpouseRefinanceEmployed,
 		"name" : "isSpouseEmployed",
         "data" : employedData,
@@ -82,11 +82,11 @@ function paintSpouseRefinanceSelfEmployed(divId,value) {
 
 	    //appUserDetails.employed ="true";
 	    if(flag){
-	         var quesTxt = "How much do you make a year?";
-
 	         var wrapper = $('<div>').attr({
 	          "class" : "ce-option-ques-wrapper"
 	         });
+	         
+	         var quesTxt = "Monthly Income";
 	         
 	         var container = $('<div>').attr({
 	          "class" : "ce-ques-wrapper"
@@ -107,7 +107,31 @@ function paintSpouseRefinanceSelfEmployed(divId,value) {
 
 	         optionContainer.append(inputBox);
 	         container.append(quesTextCont).append(optionContainer);
-	         wrapper.append(container);
+	         
+	         
+	         var quesTxt1 = "Number of years";
+	         
+	         var container1 = $('<div>').attr({
+	          "class" : "ce-ques-wrapper"
+	         });
+
+	         var quesTextCont1 = $('<div>').attr({
+	          "class" : "ce-option-text"
+	         }).html(quesTxt1);
+
+	         var optionContainer1 = $('<div>').attr({
+	          "class" : "ce-options-cont"
+	         });
+	         var inputBox1 = $('<input>').attr({
+	          "class" : "ce-input",
+	          "name" : "",
+	          "value": ""
+	         });
+
+	         optionContainer1.append(inputBox1);
+	         container1.append(quesTextCont1).append(optionContainer1);
+	         
+	         wrapper.append(container).append(container1);
 	         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
 	          
 	          $('#ce-option_' + divId).prepend(wrapper); 
@@ -299,7 +323,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	  
 	  var addAccountBtn = $('<div>').attr({
 	   "class" : "add-btn add-account-btn"
-	  }).html("Add Income").bind('click',function(){
+	  }).html("Add additional source of income").bind('click',function(){
 	   
 	   var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 	   
@@ -315,7 +339,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	   
 	   $(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 	   
-	   var removeAccBtn = $('<div>').attr({
+	   /*var removeAccBtn = $('<div>').attr({
 	    "class" : "add-btn remove-account-btn"
 	   }).html("Remove Income")
 	   .bind('click',{"mainContainerId":mainContainerId},function(event){
@@ -325,9 +349,9 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	    if(parentDiv.children('.ce-option-ques-wrapper').length==1){
 	     parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 	    }
-	   });
+	   });*/
 	   
-	   $(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+	   $(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
 	  });
 	  
 	 
@@ -442,7 +466,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 		var quesTextCont1 = $('<div>').attr({
 			"class" : "ce-rp-ques-text",
-		}).html("Before Tax");
+		}).html("Monthly Income Before Taxes");
 
 
 	   var val="";
@@ -478,7 +502,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 		var quesTextCont2 = $('<div>').attr({
 			"class" : "ce-rp-ques-text"
-		}).html("Where Do You Work ?");
+		}).html("Employer");
 
 
 	    val="";
@@ -509,8 +533,22 @@ function getMultiTextQuestionSpouse(quesText,value) {
 		});
 
 		quesTextCont3.append(inputBox3);
+		
+		var quesTextCont4 = $('<div>').attr({
+			"class" : "ce-rp-ques-text"
+		}).html("Job Title");
+	    /*if(value&&value.employedSince)
+	        val=value.employedSince;*/
+		var inputBox4 = $('<input>').attr({
+			"class" : "ce-input",
+			"name" : ""
+		});
+		if(val!=""){
+			inputBox4.attr("value",val);
+		}
+		quesTextCont4.append(inputBox4);
 
-		optionContainer.append(quesTextCont0).append(quesTextCont1).append(quesTextCont2).append(
+		optionContainer/*.append(quesTextCont0)*/.append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(
 				quesTextCont3);
 
 		

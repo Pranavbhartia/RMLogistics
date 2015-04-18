@@ -544,12 +544,12 @@ function paintCustomerApplicationPageStep1a() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
-    var questions = [/*{
+    var questions = [{
         type: "desc",
         text: "Street Address",
         name: "streetAddress",
         value: ""
-    }, */{
+    }, {
         type: "desc",
         text: "Which State do you live in?",
         name: "state",
@@ -1242,7 +1242,7 @@ function incomesSelectALLThatApply() {
         prData={"selected":appUserDetails.ispensionOrRetirement,"data":appUserDetails.monthlyPension};
 
 	var options = [ {
-		"text" : "Employed",
+		"text" : "W2 Employee",
 		"onselect" : paintRefinanceEmployed,
 		"name" : "isEmployed",
         "data" : employedData,
@@ -1491,7 +1491,7 @@ function getMultiTextQuestion(quesText,value) {
 
 	var quesTextCont1 = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
-	}).html("Before Tax");
+	}).html("Monthly Income Before Taxes");
    
 	var val="";
    
@@ -1529,7 +1529,7 @@ function getMultiTextQuestion(quesText,value) {
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
-	}).html("Where Do You Work ?");
+	}).html("Employer");
     val="";
     if(value&&value.employedAt)
         val=value.employedAt;
@@ -1556,8 +1556,22 @@ function getMultiTextQuestion(quesText,value) {
 		inputBox3.attr("value",val);
 	}
 	quesTextCont3.append(inputBox3);
+	
+	var quesTextCont4 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("Job Title");
+    /*if(value&&value.employedSince)
+        val=value.employedSince;*/
+	var inputBox4 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : ""
+	});
+	if(val!=""){
+		inputBox4.attr("value",val);
+	}
+	quesTextCont4.append(inputBox4);
 
-	optionContainer.append(quesTextCont0).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
+	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
 	 container.append(quesTextCont).append(optionContainer); 
      return wrapper.append(container);
@@ -1609,7 +1623,6 @@ function paintRefinanceSelfEmployed(divId,value) {
     //appUserDetails.employed ="true";
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-    		var quesTxt = "How much do you make a year?";
     		var wrapper = $('<div>').attr({
     			"class" : "ce-option-ques-wrapper"
     		});
@@ -1618,7 +1631,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     		});
     		var quesTextCont = $('<div>').attr({
     			"class" : "ce-option-text"
-    		}).html(quesTxt);
+    		}).html("Monthly Income");
     		var optionContainer = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
@@ -1629,7 +1642,25 @@ function paintRefinanceSelfEmployed(divId,value) {
     		});
     		optionContainer.append(inputBox);
     		container.append(quesTextCont).append(optionContainer);
-    		wrapper.append(container);
+    		
+    		var container1 = $('<div>').attr({
+    			"class" : "ce-ques-wrapper"
+    		});
+    		var quesTextCont1 = $('<div>').attr({
+    			"class" : "ce-option-text"
+    		}).html("Number of years");
+    		var optionContainer1 = $('<div>').attr({
+    			"class" : "ce-options-cont"
+    		});
+    		var inputBox1 = $('<input>').attr({
+    			"class" : "ce-input",
+    			"name" : "",
+    			"value" : ""
+    		});
+    		optionContainer1.append(inputBox1);
+    		container1.append(quesTextCont1).append(optionContainer1);
+    		
+    		wrapper.append(container).append(container1);
     		$('#ce-option_' + divId).prepend(wrapper);
     	}
     	$('#ce-option_' + divId).toggle();
@@ -1798,7 +1829,7 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 function addRemoveButtons(element){
     $(element).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
     var mainContainerId = $(element).parent().attr("id");
-    var removeAccBtn = $('<div>').attr({
+    /*var removeAccBtn = $('<div>').attr({
         "class" : "add-btn remove-account-btn"
     }).html("Remove Income").bind('click',{"mainContainerId":mainContainerId},function(event){
         $(this).closest('.ce-option-ques-wrapper').remove();
@@ -1807,8 +1838,8 @@ function addRemoveButtons(element){
         if(parentDiv.children('.ce-option-ques-wrapper').length==1){
             parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
         }
-    });
-    $(element).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+    });*/
+    $(element).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn)*/
 }
 
 
@@ -1870,7 +1901,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		
 		var addAccountBtn = $('<div>').attr({
 			"class" : "add-btn add-account-btn"
-		}).html("Add Income").bind('click',function(){
+		}).html("Add additional source of income").bind('click',function(){
 			
 			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 			
@@ -1886,7 +1917,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			
 			$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 			
-			var removeAccBtn = $('<div>').attr({
+			/*var removeAccBtn = $('<div>').attr({
 				"class" : "add-btn remove-account-btn"
 			}).html("Remove Income")
 			.bind('click',{"mainContainerId":mainContainerId},function(event){
@@ -1896,9 +1927,9 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				if(parentDiv.children('.ce-option-ques-wrapper').length==1){
 					parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 				}
-			});
+			});*/
 			
-			$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
+			$(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
 		});
 	
 		if(i==0){
@@ -3290,9 +3321,23 @@ function getYearMonthOptionContainer(contxt){
         "name": "yearMonth"
     });
 
+    
+    var options=[
+         {
+             value:"Year",
+             text:"Year"
+         },
+         {
+             value:"Month",
+             text:"Month"
+         }
+   ];
+    
     var selectedOption = $('<div>').attr({
     	 "class": "app-option-selected"
-    }).html("Select One").on('click', function() {
+    }).data("value",options[0].value)
+    .text(options[0].text)
+    .on('click', function() {
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -3300,16 +3345,7 @@ function getYearMonthOptionContainer(contxt){
         "class": "app-dropdown-cont hide"
     });
     var selVal;
-    var options=[
-        {
-            value:"Month",
-            text:"Month"
-        },
-        {
-            value:"Year",
-            text:"Year"
-        }
-    ];
+    
     for (var i = 0; i < options.length; i++) {
         var option = options[i];
         

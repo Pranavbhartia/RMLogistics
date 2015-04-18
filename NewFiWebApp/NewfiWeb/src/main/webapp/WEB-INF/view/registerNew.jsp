@@ -28,40 +28,62 @@
 				<div class="reg-display-title-subtxt">Lorem Ipsum is also known
 						as: Greeked Text, blind text, placeholder text, dummy content,
 						filter text, lipsum, and mock-content.</div>
-				<div class="reg-select reg-input-cont" >
-					<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
-					<div class="reg-option-dropdown hide">
-						<div class="reg-select-option" id="customerID" role="cus">Customer</div>
-						<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
+				<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">I am here to register as a</div>
+					<div class="reg-row-rc float-left">
+						<div class="reg-select reg-input-cont">
+							<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
+							<div class="reg-option-dropdown hide">
+								<div class="reg-select-option" id="customerID" role="cus">Customer</div>
+								<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="reg-input-cont reg-fname">
 				
-					<input class="reg-input" placeholder="First Name" id="firstName">
-					
-				</div>
-				<div class="reg-input-cont reg-lname">
-				
-					<input class="reg-input" placeholder="Last Name" id="lastName">
-					
-				</div>
-				<div class="reg-input-cont reg-email">
-					
-					<input class="reg-input" placeholder="Email" id="emailID">
-                    			
-				</div>
-				<div class="reg-input-cont reg-email" id="loanManager-email">
-					<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" value="${loanManagerEmail}">	
-				</div>
-				<div class="reg-input-cont reg-email" id="realor-email">
-					<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId" value="${realtorEmail}">	
+				<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">Name</div>
+					<div class="reg-row-rc float-left clearfix">
+						<div class="reg-input-cont reg-fname float-left">
+							<input class="reg-input" placeholder="First Name" id="firstName">
+						</div>
+						<div class="reg-input-cont reg-lname float-left">
+							<input class="reg-input" placeholder="Last Name" id="lastName">
+						</div>
+					</div>
 				</div>
 				
+				<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">Your email id</div>
+					<div class="reg-row-rc float-left">
+						<div class="reg-input-cont reg-email">
+							<input class="reg-input" placeholder="Email" id="emailID">
+						</div>
+					</div>
+				</div>
+				
+				<div id="realor-email-cont" class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">Referral Realtor email</div>
+					<div class="reg-row-rc float-left">
+						<div class="reg-input-cont reg-email" id="realor-email">
+							<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" value="${loanManagerEmail}">
+						</div>
+					</div>
+				</div>
+				
+				<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">Referral Loan Manager email</div>
+					<div class="reg-row-rc float-left">
+						<div class="reg-input-cont reg-email" id="loanManager-email">
+							<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId" value="${realtorEmail}">	
+						</div>
+					</div>
+				</div>
+
 				<div class="reg-btn-wrapper clearfix">
 					<div class="reg-btn float-left" id="submitID">Submit</div>
 				</div>
-				
-			
+							
 			</div>			
 		</div>
 	</div>
