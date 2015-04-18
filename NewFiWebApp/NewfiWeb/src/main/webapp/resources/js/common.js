@@ -313,8 +313,17 @@ function removedComma(inputData) {
 
 
 function getFloatValue(inputData){
-	if(inputData)
-		return parseFloat(removedDoller(removedComma(inputData)));
+	if(inputData){
+		var negativeFlag=false;
+		if(inputData.indexOf("(")>=0){
+			negativeFlag=true;
+		}
+		if(negativeFlag){
+			return (-1*parseFloat(removedDoller(removedComma(inputData))));
+		}else{
+			return parseFloat(removedDoller(removedComma(inputData)));	
+		}
+	}
 	else
 		return 0;
 	
