@@ -3,7 +3,7 @@ package com.nexera.common.commons;
 public interface LoanStatus {
 	String inUnderwritingMessage = "In Underwriting";
 	String underwritingClearToCloseMessage = "Approved With Conditions";
-	String initialContactMadeMessage = "Initial Contack Made";
+	String initialContactMadeMessage = "Initial Contact Made";
 	String submittedMessage = "1003 submitted";
 	String appraisalReceivedMessage = "Appraisal Received";
 	String creditScoreMessage = "Credit information received";
@@ -37,4 +37,5 @@ public interface LoanStatus {
 	String paymentPendingStatusMessage = "Pending";
 
 	String paymentSuccessStatusMessage = "Payment Made";
+	String paymentFailureStatusMessage = "Failure";
 }

@@ -12,11 +12,13 @@ public class WorkflowDisplayConstants {
 	public static final String USER_ID_KEY_NAME = "userID";
 	public static final String WORKITEM_ID_KEY_NAME = "workflowItemExecId";
 	public static final String WORKITEM_STATUS_KEY_NAME = "workflowItemstatus";
+	public static final String WORKITEM_EMAIL_STATUS_INFO = "workflow-email-status";
 	public static final String WORKFLOW_RENDERSTATE_STATUS_KEY = "status";
 	public static final String WORKFLOW_LQB_FILE_KEY = "lqbKey";
 	public static final String APP_FEE_KEY_NAME = "appfee";
 	public static final String NOTIFICATION_VO_KEY_NAME = "notificationVo";
 	public static final String EMAIL_TEMPLATE_KEY_NAME = "EMAIL_TEMPLATE_NAME";
+	public static final String EMAIL_TEMPLATE_DEFAULT_ID = "08986e4b-8407-4b44-9000-50c104db899c";
 	public static final String EMAIL_RECIPIENT_KEY_NAME = "EMAIL_RECIPIENT";
 	public static final String EMAIL_RECIPIENT_NAME = "EMAIL_RECIPIENT_NAME";
 	public static final String SYSTEM_PARAM_KEY_NAME = "SYSTEM_PARAM";

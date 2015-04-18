@@ -72,6 +72,8 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		}
 		if (flag) {
 			makeANote(loanId, message);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+			        message);
 			sendEmail(objectMap);
 			// Dismiss any DISCLOSURE_AVAIL_NOTIFICATION_TYPE alerts
 			dismissDisclosureDueAlerts(objectMap);
