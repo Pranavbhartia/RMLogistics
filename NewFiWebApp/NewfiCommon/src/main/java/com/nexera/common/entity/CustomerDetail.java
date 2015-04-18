@@ -470,8 +470,6 @@ public class CustomerDetail implements Serializable {
 		CustomerDetail customerDetail = new CustomerDetail();
 
 		customerDetail.setSubscriptionsStatus(2);
-
-		System.out.println("inputEntity in customer entity" + inputEntity);
 		if (inputEntity != null) {
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
 			customerDetail.setAddressState(inputEntity.getAddressState());

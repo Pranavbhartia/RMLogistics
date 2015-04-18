@@ -135,7 +135,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -158,7 +157,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("id", customerDetail.getId());
 		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -200,7 +198,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("imagePath", s3ImagePath);
 		query.setParameter("id", userid);
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -351,7 +348,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -370,7 +366,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        customerDetail.getProfileCompletionStatus());
 		query.setParameter("id", customerDetail.getId());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -384,7 +379,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -400,7 +394,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("id", customerDetail.getId());
 		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
-		System.out.println("Rows affected: " + result);
 		return result;
 	}
 
@@ -412,7 +405,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		User user = (User) criteria.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getInternalUserDetail());
-			System.out.println("Test  : loadInternalUser");
 			if (user.getInternalUserDetail() != null)
 				Hibernate.initialize(user.getInternalUserDetail()
 				        .getInternaUserRoleMaster());
