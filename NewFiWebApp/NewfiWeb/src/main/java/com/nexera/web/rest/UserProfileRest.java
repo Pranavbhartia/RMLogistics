@@ -30,18 +30,23 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MobileCarriersEnum;
+import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -129,11 +134,24 @@ public class UserProfileRest {
 		User user = getUserObject();
 
 		Integer userid = user.getId();
+
 		UserVO userVO = null;
 		String userprofile = null;
 		try {
 			userVO = userProfileService.findUser(userid);
+			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+			        .getRoleId()) {
+				if (userVO.getRealtorDetail() != null) {
+					if (userVO.getRealtorDetail().getUser() != null) {
+						userVO.setLoanManagerEmail(userVO.getRealtorDetail()
+						        .getUser().getEmailId());
+					}
+
+				}
+
+			}
 			userVO.setUserProfileBaseUrl(referalUrl);
+
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
@@ -164,37 +182,26 @@ public class UserProfileRest {
 
 		Gson gson = new Gson();
 		UserVO userVO = null;
-		try {
-			userVO = gson.fromJson(updateUserInfo, UserVO.class);
-
-			Integer userUpdateCount = userProfileService.updateUser(userVO);
-
-			UserVO user = userProfileService.findUser(userVO.getId());
-			userVO.setUserRole(user.getUserRole());
-			if (userVO.getCustomerDetail() != null) {
-				userVO.getCustomerDetail().setProfileCompletionStatus(
-				        user.getCustomerDetail().getProfileCompletionStatus());
-			}
-			if (user.getPhotoImageUrl() != null) {
-				userVO.setPhotoImageUrl(user.getPhotoImageUrl());
-			}
-			if (userVO.getInternalUserStateMappingVOs() != null) {
-				internalUserStateMappingService.saveOrUpdateUserStates(userVO
-				        .getInternalUserStateMappingVOs());
-			}
-			Integer customerDetailsUpdateCount = userProfileService
-			        .updateCustomerDetails(userVO);
-
-			if (userUpdateCount < 0 || customerDetailsUpdateCount < 0) {
-				LOG.error("Error while updataing the user datails ");
-			}
-
-		} catch (Exception e) {
-			LOG.error("Error while updataing the user datails ::",
-			        e.getMessage());
-		}
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
-		commonResponseVO.setResultObject("success");
+		ErrorVO error = new ErrorVO();
+
+		userVO = gson.fromJson(updateUserInfo, UserVO.class);
+
+		Integer userUpdateCount = null;
+		try {
+			userUpdateCount = userProfileService.updateUser(userVO);
+			if (userUpdateCount < 0) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
+			}
+			commonResponseVO.setResultObject("success");
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		}  catch (NonFatalException e) {
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+
 		return commonResponseVO;
 	}
 

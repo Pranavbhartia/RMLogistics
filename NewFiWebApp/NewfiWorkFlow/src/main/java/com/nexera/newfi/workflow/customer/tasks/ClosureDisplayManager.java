@@ -12,6 +12,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
+import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
@@ -24,8 +25,7 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// Do NOthing
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
@@ -38,9 +38,10 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.LOAN_CLOSURE.getMilestoneKey());
 			if (mileStone != null && mileStone.getComments() != null) {
-				returnString.append(mileStone.getComments().toString());
+				returnString.append(mileStone.getComments());
+			}
+			if (mileStone != null && mileStone.getStatusUpdateTime() != null) {
 				returnString.append(" On " + mileStone.getStatusUpdateTime());
-
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

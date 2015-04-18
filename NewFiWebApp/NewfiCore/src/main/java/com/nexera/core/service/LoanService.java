@@ -155,6 +155,6 @@ public interface LoanService {
 	public String saveLoanMilestone(int loanId, int masterMileStoneId,
 	        String comments);
 
-	public String saveLoanProgress(int loand,
+	public void saveLoanProgress(int loand,
 	        LoanProgressStatusMaster progressValue);
 }

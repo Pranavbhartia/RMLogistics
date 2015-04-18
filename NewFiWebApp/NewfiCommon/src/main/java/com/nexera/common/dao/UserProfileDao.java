@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
+import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -87,4 +88,6 @@ public interface UserProfileDao extends GenericDao {
 	public void updateLMID(Integer realtorID, int loanManagerId);
 
 	public List<String> getDefaultUsers(String userName);
+	
+	public Integer updateRealtorDetails(RealtorDetail realtor);
 }
