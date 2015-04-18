@@ -8,10 +8,10 @@ public enum LOSLoanStatus {
 	        3), LQB_STATUS_PRE_PROCESSING(29), LQB_STATUS_PROCESSING(22), LQB_STATUS_DOCUMENT_CHECK(
 	        30), LQB_STATUS_DOCUMENT_CHECK_FAILED(31), LQB_STATUS_LOAN_SUBMITTED(
 	        28, "1003 Complete"), LQB_STATUS_PRE_UNDERWRITING(32), LQB_STATUS_IN_UNDERWRITING(
-	        13, "In Underwriting"), LQB_STATUS_PRE_APPROVED(2), LQB_STATUS_APPROVED(
+	        13, "In Underwriting", 1), LQB_STATUS_PRE_APPROVED(2), LQB_STATUS_APPROVED(
 	        4), LQB_STATUS_CONDITION_REVIEW(33), LQB_STATUS_FINAL_UNDER_WRITING(
 	        23), LQB_STATUS_PRE_DOC_QC(34), LQB_STATUS_CLEAR_TO_CLOSE(21,
-	        "Clear to close"), LQB_STATUS_DOCS_ORDERED(35), LQB_STATUS_DOCS_DRAWN(
+	        "Clear to close", 2), LQB_STATUS_DOCS_ORDERED(35), LQB_STATUS_DOCS_DRAWN(
 	        36), LQB_STATUS_DOCS_OUT(5), LQB_STATUS_DOCS_BACK(24), LQB_STATUS_FUNDING_CONDITIONS(
 	        25), LQB_STATUS_FUNDED(6, "Funded"), LQB_STATUS_RECORDED(19), LQB_STATUS_FINAL_DOCS(
 	        26), LQB_STATUS_LOAN_CLOSED(11), LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW(
@@ -34,25 +34,33 @@ public enum LOSLoanStatus {
 
 	private int losStatusID;
 	private String displayStatus;
+	private int order;
 
 	private LOSLoanStatus(int losStatusID) {
 		this.losStatusID = losStatusID;
 		this.displayStatus = String.valueOf(losStatusID);
-
+		this.order = -1;
 	}
 
 	private LOSLoanStatus(int losStatusID, String displayString) {
 		this.losStatusID = losStatusID;
 		this.displayStatus = displayString;
+		this.order = -1;
 
+	}
+
+	private LOSLoanStatus(int losStatusID, String displayString, int order) {
+		this.losStatusID = losStatusID;
+		this.displayStatus = displayString;
+		this.order = order;
+	}
+
+	public int getOrder() {
+		return order;
 	}
 
 	public int getLosStatusID() {
 		return losStatusID;
-	}
-
-	public void setLosStatusID(int losStatusID) {
-		this.losStatusID = losStatusID;
 	}
 
 	public static LOSLoanStatus getLOSStatus(int inputID) {

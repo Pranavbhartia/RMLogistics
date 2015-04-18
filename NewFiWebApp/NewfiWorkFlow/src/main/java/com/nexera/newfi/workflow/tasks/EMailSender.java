@@ -1,9 +1,6 @@
 package com.nexera.newfi.workflow.tasks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +12,6 @@ import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
-import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.UserVO;
-import com.nexera.common.vo.email.EmailRecipientVO;
-import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.SendGridEmailService;
@@ -50,38 +43,10 @@ public class EMailSender extends NexeraWorkflowTask implements
 		if (objectMap != null) {
 			int loanId = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-			LoanVO loanVo = loanService.getLoanByID(loanId);
-			String emailTemplate = objectMap.get(
-			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-			        .toString();
-			LOG.debug("Template name is " + emailTemplate);
-
-			EmailVO emailEntity = new EmailVO();
-			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
-			for (UserVO userVo : loanVo.getLoanTeam()) {
-				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-				emailRecipientVO.setEmailID(userVo.getEmailId());
-				emailRecipientVO.setRecipientName(userVo.getDisplayName());
-				recipients.add(emailRecipientVO);
-			}
-
-			emailEntity.setSenderEmailId("web@newfi.com");
-			emailEntity.setRecipients(recipients);
-
-			emailEntity.setSenderName("Newfi System");
-			emailEntity.setSubject("Nexera Newfi Portal");
-			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-			substitutions
-			        .put("-name-",
-			                new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
-			// emailEntity.setTemplateBased(true);
-			emailEntity.setTokenMap(substitutions);
-			emailEntity.setTemplateId(emailTemplate);
-
-			// sendEmailService.sendMail(emailEntity, false);
-			sendGridEmailService.sendAsyncMail(emailEntity);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+			        LoanStatus.sysEduMessage);
+			sendEmail(objectMap);
 			makeANote(loanId, LoanStatus.sysEduMessage);
-
 		}
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
