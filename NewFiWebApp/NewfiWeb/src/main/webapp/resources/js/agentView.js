@@ -4,8 +4,8 @@
 var isAgentTypeDashboard;
 var docData = [];
 var currentLoanType = null;
-var mobileCarrierNames=[];
-var stateLists=[];
+var mobileCarrierNames = [];
+var stateLists = [];
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -442,7 +442,8 @@ function appendCustomers(elementId, customers) {
 
 		var col7 = $('<div>').attr({
 			"class" : "leads-container-tc7 alert-col float-left"
-		}).bind('click',
+		}).bind(
+				'click',
 				{
 					"customer" : customer
 				},
@@ -524,6 +525,7 @@ function appendCustomerTableHeader(elementId) {
  *            container to which the it is to be appended
  */
 function appendCustomerDetailContianer(element, customer) {
+	resetSelectedUserDetailObject(customer);
 	var contxt = getContext(customer.loanID + "-notification");
 	if ($(element).next().hasClass("cust-detail-wrapper")) {
 		$('#cust-detail-wrapper').remove();
@@ -541,7 +543,8 @@ function appendCustomerDetailContianer(element, customer) {
 	$(element).after(wrapper);
 	appendRecentAlertContainer(contxt.loanNotificationList, contxt);
 	appendSchedulerContainer(contxt);
-	appendRecentNotesContainer(customer.notes);
+	repaintNotes(true);
+	// appendRecentNotesContainer(customer.loanID, customer.notes);
 	appendTakeNoteContainer(customer);
 }
 
@@ -793,10 +796,19 @@ function getSchedulerContainer(contxt, tempData) {
 	return wrapper;
 }
 
-function appendRecentNotesContainer(notes) {
-	var wrapper = $('<div>').attr({
-		"class" : "cust-detail-lw float-left"
-	});
+function appendRecentNotesContainer(loanId, notes) {
+	var existingWrapper = $("#" + loanId + "recentNotesContainer");
+	var wrapper;
+	if (existingWrapper.size() > 0) {
+		wrapper = existingWrapper;
+		existingWrapper.empty();
+	} else {
+		wrapper = $('<div>').attr({
+			"class" : "cust-detail-lw float-left",
+			"id" : loanId + "recentNotesContainer",
+		});
+	}
+
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
 	});
@@ -804,11 +816,11 @@ function appendRecentNotesContainer(notes) {
 		"class" : "cust-detail-header"
 	}).html("recent notes");
 
-	if (notes != undefined) {
-		header.append(" - " + notes.length + " NEW NOTES");
-	} else {
-		header.append(" - " + 0 + " NEW NOTES");
-	}
+//	if (notes != undefined) {
+//		header.append(" - " + notes.length + " NEW NOTES");
+//	} else {
+//		header.append(" - " + 0 + " NEW NOTES");
+//	}
 	container.append(header);
 
 	var recentNoteWrapper = $('<div>').attr({
@@ -818,9 +830,12 @@ function appendRecentNotesContainer(notes) {
 	if (notes != undefined) {
 		for (var i = 0; i < notes.length; i++) {
 			var noteData = notes[i];
-			var noteContainer = $('<div>').attr({
-				"class" : "note-conatiner"
-			});
+			var noteContainer = $('<div>').attr(
+					{
+						"class" : "note-conatiner",
+						"style" : "background-image:url(" + noteData.imgUrl
+								+ ") "
+					});
 
 			var cusName = $('<div>').attr({
 				"class" : "note-cus-name"
@@ -841,12 +856,17 @@ function appendRecentNotesContainer(notes) {
 	}
 	container.append(recentNoteWrapper);
 	wrapper.append(container);
-	$('#cust-detail-wrapper').append(wrapper);
+	if (existingWrapper.size() <= 0) {
+
+		$('#cust-detail-wrapper').append(wrapper);
+	}
+
 }
 
 function appendTakeNoteContainer(customer) {
 	var wrapper = $('<div>').attr({
-		"class" : "cust-detail-rw float-left"
+		"class" : "cust-detail-rw float-left",
+		"id" : customer.loanID + "takeNotesContainer"
 	});
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
@@ -858,7 +878,7 @@ function appendTakeNoteContainer(customer) {
 
 	var messageBox = $('<textarea>').attr({
 		"class" : "note-msg-textbox",
-		"id":customer.loanId+"_msgBody",
+		"id" : customer.loanID + "_msgBody",
 		"placeholder" : "Type your message here. When done click save."
 	});
 
@@ -876,29 +896,26 @@ function appendTakeNoteContainer(customer) {
 		"class" : "msg-btn-submit float-right"
 	}).html("Save");
 	col1.append(col1Btn);
-	col1Btn.bind(
-			"click",
-			{
-				customer : customer
-				
-			},
-			function(e) {
-				var text = $("#"+customer.loanId+"_msgBody").val();
-				resetSelectedUserDetailObject(e.data.customer);
-				if(text==null || text.trim()==""){
-					showToastMessage("Please enter a message");
-					return;
-				}
-				
-				doSavemessageAjaxCall(text,repaintNotes);
-						
-			});
-	
-	
+	col1Btn.bind("click", {
+		customer : customer
+
+	}, function(e) {
+		var text = $("#" + customer.loanID + "_msgBody").val();
+		$("#" + customer.loanID + "_msgBody").val('');
+		resetSelectedUserDetailObject(e.data.customer);
+		if (text == null || text.trim() == "") {
+			showToastMessage("Please enter a message");
+			return;
+		}
+
+		doSavemessageAjaxCall(text, repaintNotes);
+
+	});
+
 	var col2 = $('<div>').attr({
 		"class" : "msg-btn-col2 float-left"
 	}).html("or");
-
+	
 	var col3 = $('<div>').attr({
 		"class" : "msg-btn-col3 float-left clearfix"
 	});
@@ -907,6 +924,9 @@ function appendTakeNoteContainer(customer) {
 		"class" : "msg-btn-clear float-left"
 	}).html("Clear");
 	col3.append(col3Btn);
+	col3.click(function(e){
+		$("#" + customer.loanID + "_msgBody").val('');
+	});
 
 	buttonRow.append(col1).append(col2).append(col3);
 	container.append(buttonRow);
@@ -923,15 +943,42 @@ $(document).on('click', '.lp-t2-agent-item', function() {
 	changeAgentSecondaryLeftPanel(this.id);
 });
 
-function repaintNotes(){
-	showToastMessage("Message saved succesfully");
+function repaintNotes(hideToast) {
+	if (hideToast == undefined || hideToast == false) {
+		showToastMessage("Message saved succesfully");
+	}
+
+	synchronousAjaxRequest("rest/commlog/" + newfiObject.user.id + "/"
+			+ selectedUserDetail.loanID + "/0", "GET", "json", "",
+			paintRecentNotes, true);
+
+}
+function paintRecentNotes(response) {
+	var messages = response.resultObject.messageVOs;
+	var notes = new Array();
+	var loanId;
+	for (var i = 0; i < messages.length; i++) {
+		var obj = messages[i];
+		notes[i] = new Object();
+		notes[i].name = obj[0].createdUser.userName;
+		if(obj[0].createdUser.imgUrl==undefined || obj[0].createdUser.imgUrl==null){
+			notes[i].imgUrl = "./resources/images/person-placeholder.png";
+		}else{
+			notes[i].imgUrl = obj[0].createdUser.imgUrl;	
+		}
+		
+		notes[i].message = obj[0].message;
+		notes[i].time = obj[0].createdDate;
+		loanId = obj[0].loanId;
+	}
+	appendRecentNotesContainer(loanId, notes);
 }
 
 function paintMyLoansView() {
 	scrollToTop();
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
-	//$('.lp-item').removeClass('lp-item-active');
+	// $('.lp-item').removeClass('lp-item-active');
 	$('#lp-talk-wrapper').addClass('lp-item-active');
 	var rightPanelCont = $('<div>').attr({
 		"class" : "right-panel float-left"
@@ -976,7 +1023,7 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.emailId = userObject.emailId;
 
 	selectedUserDetail.customerId = userObject.customerDetail.id;
-	selectedUserDetail.carrierName=userObject.customerDetail.carrierInfo;
+	selectedUserDetail.carrierName = userObject.customerDetail.carrierInfo;
 	selectedUserDetail.city = userObject.customerDetail.addressCity;
 	selectedUserDetail.state = userObject.customerDetail.addressState;
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
@@ -989,7 +1036,6 @@ function resetSelectedUserDetailObject(userObject) {
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
 		selectedUserDetail.photoUrl = "./resources/images/person-placeholder.png";
-
 
 }
 
@@ -1198,32 +1244,37 @@ function appendCustomerLoanDetails(loanDetails) {
 			+ loanDetails.setSenderDomain);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
-	
-	if(loanDetails.lqbInformationAvailable){
-		appendLoanDetailsRow("Loan URL in LQB", "Open file in LQB",true,loanDetails.lqbUrl);	
-	}else{
-		appendLoanDetailsRow("Loan URL in LQB", "Click here to set your LQB credentials",true,"#lp-loan-manager-profile");
+
+	if (loanDetails.lqbInformationAvailable) {
+		appendLoanDetailsRow("Loan URL in LQB", "Open file in LQB", true,
+				loanDetails.lqbUrl);
+	} else {
+		appendLoanDetailsRow("Loan URL in LQB",
+				"Click here to set your LQB credentials", true,
+				"#lp-loan-manager-profile");
 	}
-	
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount){
+
+	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
 	}
-	
+
 	appendLoanDetailsRow("Lock Rate Details",
 			loanDetails.userLoanStatus.lockRate);
 	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
-	if(loanDetails.creditReportUrl==undefined || loanDetails.creditReportUrl == ""){
+	if (loanDetails.creditReportUrl == undefined
+			|| loanDetails.creditReportUrl == "") {
 		appendLoanDetailsRow("Credit",
-				loanDetails.userLoanStatus.creditInformation);	
-	}else{
+				loanDetails.userLoanStatus.creditInformation);
+	} else {
 		appendLoanDetailsRow("Credit Report",
-				loanDetails.userLoanStatus.creditInformation, true,loanDetails.creditReportUrl);
+				loanDetails.userLoanStatus.creditInformation, true,
+				loanDetails.creditReportUrl);
 	}
-	
-	//appendLoanDetailsRow("Credit Decision",
-		//	loanDetails.userLoanStatus.creditDecission);
+
+	// appendLoanDetailsRow("Credit Decision",
+	// loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
 		if (loanDetails.loanType.uploadedFiles != undefined) {
@@ -1964,17 +2015,21 @@ function appendCustomerEditProfilePopUp() {
 	// Upload photo row
 	appendCustomerProfUploadPhotoRow();
 	appendCustomerProfEditRow("Email", selectedUserDetail.emailId, "emailIdID");
-	
-/*	appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
-	appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode, "zipCodeID");*/
+
+	/*
+	 * appendCustomerProfEditRow("State", selectedUserDetail.state, "stateID");
+	 * appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode,
+	 * "zipCodeID");
+	 */
 	appendStateEditRow();
 	appendCityEditRow();
-	//appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
+	// appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
 	appendZipEditRow();
-	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo, "primaryPhoneID");
-	//To append carrier info
+	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
+			"primaryPhoneID");
+	// To append carrier info
 	appendCarrierNameDropDown();
-	
+
 	$('#emailIdID').attr("readonly", true)
 	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 
@@ -2020,11 +2075,11 @@ function appendCustomerEditProfilePopUp() {
 	}).html("save");
 
 	$('#cus-prof-container').append(saveBtn);
-    addStateCityZipLookUp();
+	addStateCityZipLookUp();
 
 }
 
-function appendCityEditRow(){
+function appendCityEditRow() {
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -2034,44 +2089,44 @@ function appendCityEditRow(){
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
-	
+
 	var cityInput = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value" :selectedUserDetail.city,
+		"value" : selectedUserDetail.city,
 		"id" : "cityId"
-	}).bind('keydown',function(e){
+	}).bind('keydown', function(e) {
 		e.stopPropagation();
 		var searchData = [];
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
+		for (var i = 0; i < currentZipcodeLookUp.length; i++) {
 			searchData[i] = currentZipcodeLookUp[i].cityName;
 		}
-		
-		var uniqueSearchData = searchData.filter(function(itm,i,a){
-		    return i==a.indexOf(itm);
+
+		var uniqueSearchData = searchData.filter(function(itm, i, a) {
+			return i == a.indexOf(itm);
 		});
-		
+
 		initializeCityLookup(uniqueSearchData);
-	}).bind('focus', function(){ 
+	}).bind('focus', function() {
 
 		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
+		$(this).autocomplete("search");
 	});
-	
+
 	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
+		"class" : "err-msg hide"
 	});
-	
+
 	inputCont.append(cityInput).append(errMessage);
-	
+
 	rowCol2.append(inputCont);
-    row.append(rowCol1).append(rowCol2);
-    $('#cus-prof-container').append(row);
+	row.append(rowCol1).append(rowCol2);
+	$('#cus-prof-container').append(row);
 }
-function appendStateEditRow(){
+function appendStateEditRow() {
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -2081,47 +2136,50 @@ function appendStateEditRow(){
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	var stateInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
-		"id" : "stateId",
-		"value":selectedUserDetail.state
-	}).bind('click',function(e){
-		e.stopPropagation();
-		if($('#state-dropdown-wrapper').css("display") == "none"){
-			appendStateDropDown('state-dropdown-wrapper',stateLists);
-			toggleStateDropDown();
-		}else{
-			toggleStateDropDown();
-		}
-	}).bind('keyup',function(e){
-		e.stopPropagation();
-		var searchTerm = "";
-		if(!$(this).val()){
-			return false;
-		}
-		searchTerm = $(this).val().trim();
-		var searchList = searchInStateArray(searchTerm);
-		appendStateDropDown('state-dropdown-wrapper',searchList);
-	});
-	
-	if(user.customerDetail.addressState){
+	var stateInput = $('<input>')
+			.attr(
+					{
+						"class" : "prof-form-input prof-form-input-sm prof-form-input-select uppercase",
+						"id" : "stateId",
+						"value" : selectedUserDetail.state
+					}).bind('click', function(e) {
+				e.stopPropagation();
+				if ($('#state-dropdown-wrapper').css("display") == "none") {
+					appendStateDropDown('state-dropdown-wrapper', stateLists);
+					toggleStateDropDown();
+				} else {
+					toggleStateDropDown();
+				}
+			}).bind('keyup', function(e) {
+				e.stopPropagation();
+				var searchTerm = "";
+				if (!$(this).val()) {
+					return false;
+				}
+				searchTerm = $(this).val().trim();
+				var searchList = searchInStateArray(searchTerm);
+				appendStateDropDown('state-dropdown-wrapper', searchList);
+			});
+
+	if (user.customerDetail.addressState) {
 		stateInput.val(user.customerDetail.addressState);
 		var stateCode = user.customerDetail.addressState.toUpperCase();
-		
+
 		var stateId = findStateIdForStateCode(stateCode);
-		ajaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+		ajaxRequest("rest/states/" + stateId + "/zipCode", "GET", "json", "",
+				zipCodeLookUpListCallBack);
 	}
-	
+
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "state-dropdown-wrapper",
 		"class" : "state-dropdown-wrapper hide"
 	});
-	
+
 	rowCol2.append(stateInput).append(dropDownWrapper);
-    row.append(rowCol1).append(rowCol2);
+	row.append(rowCol1).append(rowCol2);
 	$('#cus-prof-container').append(row);
 }
-function appendZipEditRow(){
+function appendZipEditRow() {
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -2131,87 +2189,92 @@ function appendZipEditRow(){
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-	
+
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
-	
+
 	var zipInput = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-sm",
 		"value" : selectedUserDetail.zipCode,
 		"id" : "zipcodeId"
-	}).bind('keydown',function(e){
+	}).bind('keydown', function(e) {
 		e.stopPropagation();
 		var selectedCity = $('#cityId').val();
 		var searchData = [];
 		var count = 0;
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			if(selectedCity == currentZipcodeLookUp[i].cityName){
-				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+		for (var i = 0; i < currentZipcodeLookUp.length; i++) {
+			if (selectedCity == currentZipcodeLookUp[i].cityName) {
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;
 			}
 		}
 		initializeZipcodeLookup(searchData);
-	}).bind('focus', function(){ 
+	}).bind('focus', function() {
 
 		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
+		$(this).autocomplete("search");
 	});
-	
+
 	var errMessage = $('<div>').attr({
-		"class" : "err-msg hide" 
+		"class" : "err-msg hide"
 	});
-	
+
 	inputCont.append(zipInput).append(errMessage);
-	
+
 	rowCol2.append(inputCont);
-	 row.append(rowCol1).append(rowCol2);
-	 $('#cus-prof-container').append(row);
+	row.append(rowCol1).append(rowCol2);
+	$('#cus-prof-container').append(row);
 }
-function appendCarrierNameDropDown(){
-	
+function appendCarrierNameDropDown() {
+
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix",
-		"id":"prof-form-row-custom-email"
+		"id" : "prof-form-row-custom-email"
 	});
 
 	var label = $('<div>').attr({
 		"class" : "cust-prof-edit-label float-left"
 	}).html("Carrier Name");
-	
+
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-			
-	var carrierinfo = $('<input>').attr({
-		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
-		"value" : selectedUserDetail.carrierName,
-		"placeholder":"Select Carrier",
-		"id" : "carrierInfoID"
-	}).bind('click',function(e){
-		e.stopPropagation();
-		if($('#carrier-dropdown-wrapper').css("display") == "none"){
-			appendCarrierNames('carrier-dropdown-wrapper',mobileCarrierNames);
-			toggleCarrierDropDown();
-		}else{
-			toggleCarrierDropDown();
-		}
-	});
-	
 
-	if(user.customerDetail.mobileAlertsPreference){
+	var carrierinfo = $('<input>')
+			.attr(
+					{
+						"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
+						"value" : selectedUserDetail.carrierName,
+						"placeholder" : "Select Carrier",
+						"id" : "carrierInfoID"
+					})
+			.bind(
+					'click',
+					function(e) {
+						e.stopPropagation();
+						if ($('#carrier-dropdown-wrapper').css("display") == "none") {
+							appendCarrierNames('carrier-dropdown-wrapper',
+									mobileCarrierNames);
+							toggleCarrierDropDown();
+						} else {
+							toggleCarrierDropDown();
+						}
+					});
+
+	if (user.customerDetail.mobileAlertsPreference) {
 		row.removeClass('hide');
-		
+
 	}
-	
+
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "carrier-dropdown-wrapper",
 		"class" : "carrier-dropdown-wrapper hide"
 	});
-	
+
 	rowCol2.append(carrierinfo).append(dropDownWrapper);
 	row.append(label).append(rowCol2);
 	$('#cus-prof-container').append(row);
-	
+
 }
 function updateUserProfile() {
 
@@ -2231,10 +2294,10 @@ function updateUserProfile() {
 	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
 
-    if($('#carrierInfoID').val()!=null || $('#carrierInfoID').val()!=""){
+	if ($('#carrierInfoID').val() != null || $('#carrierInfoID').val() != "") {
 
-    	customerDetails.carrierInfo=$('#carrierInfoID').val();
-    }
+		customerDetails.carrierInfo = $('#carrierInfoID').val();
+	}
 	userProfileJson.customerDetail = customerDetails;
 
 	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
@@ -3629,7 +3692,8 @@ $(document).on('click', '.pay-application-fee', function(event) {
 
 function entryPointForAgentView(loanID, viewName) {
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", listOfStates);
-	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierNameList);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json",
+			"", mobileCarrierNameList);
 	if (selectedUserDetail === undefined || selectedUserDetail.loanID != loanID)
 		ajaxRequest("rest/loan/" + loanID + "/retrieveDashboard", "GET",
 				"json", undefined, function(response) {
@@ -3641,14 +3705,14 @@ function entryPointForAgentView(loanID, viewName) {
 		entryPointAgentViewChangeNav(viewName)
 
 }
-function mobileCarrierNameList(response){
-	if(response.error==null){
-		mobileCarrierNames=response.resultObject;
+function mobileCarrierNameList(response) {
+	if (response.error == null) {
+		mobileCarrierNames = response.resultObject;
 	}
-	
+
 }
-function listOfStates(response){
-	if(response.error == null){
+function listOfStates(response) {
+	if (response.error == null) {
 		stateLists = response.resultObject;
 	}
 }

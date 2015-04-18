@@ -1073,6 +1073,7 @@ CREATE TABLE `loanmilestone` (
   `comments` tinytext,
   `status_update_time` datetime DEFAULT NULL,
   `status` varchar(300) DEFAULT NULL,
+  `order` int(11) DEFAULT '-1',
   PRIMARY KEY (`id`),
   KEY `fk_LoanMileStone_LoanMileStoneMaster1_idx` (`milestone`),
   KEY `fk_LoanMileStone_Loan1_idx` (`loan`),
@@ -2181,4 +2182,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-18 13:32:28
+-- Dump completed on 2015-04-18 18:00:15
