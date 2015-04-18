@@ -168,15 +168,20 @@ function getDocumentUploadColumn(listUploadedFiles) {
 	var neededItemListObj = neededItemListObject.resultObject.listLoanNeedsListVO;
 
 	for (i in neededItemListObj) {
-		var needsListMasterobj = neededItemListObj[i];
-		var option = $("<option>").attr({
-			"value" : needsListMasterobj.id
-		}).html(needsListMasterobj.needsListMaster.label);
+		
+		if(neededItemListObj[i].fileId == undefined){
 
-		if (needsListMasterobj.id == listUploadedFiles.needType) {
-			option.attr('selected', 'selected');
+			var needsListMasterobj = neededItemListObj[i];
+			var option = $("<option>").attr({
+				"value" : needsListMasterobj.id
+			}).html(needsListMasterobj.needsListMaster.label);
+
+			if (needsListMasterobj.id == listUploadedFiles.needType) {
+				option.attr('selected', 'selected');
+			}
+			docAssign.append(option);
 		}
-		docAssign.append(option);
+		
 	}
 
 	
@@ -250,16 +255,12 @@ function showFileLink(uploadedItems) {
 				var loanAssignments = new Object();
 				loanAssignments.needId = needId;
 				loanAssignments.loanId = loanNeed[i].id;
-				loanIdAssigned.push(loanAssignments);
+				
 			}
 			
 		}
 		
 	});
-	
-	for(i in loanIdAssigned){
-		$(".assign option[value='"+loanIdAssigned[i].loanId+"']").remove();
-	}
 	
 	
 }

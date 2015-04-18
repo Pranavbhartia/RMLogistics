@@ -421,6 +421,12 @@ public class NeedsListServiceImpl implements NeedsListService {
 		LoanNeedsListVO loanNeedsListVO = new LoanNeedsListVO();
 		loanNeedsListVO.setId(loanNeedsList.getId());
 		loanNeedsListVO.setActive(loanNeedsList.getActive());
+		UploadedFilesList fileMapped = loanNeedsList.getUploadFileId();
+		if(fileMapped!= null){
+			loanNeedsListVO.setFileId( fileMapped.getId().toString());
+		}
+		
+		
 		loanNeedsListVO
 		        .setNeedsListMaster(buildLoanNeedsListMasterVO(loanNeedsList
 		                .getNeedsListMaster()));
