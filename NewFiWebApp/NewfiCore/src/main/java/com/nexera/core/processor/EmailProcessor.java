@@ -21,6 +21,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,18 @@ public class EmailProcessor implements Runnable {
 	private Message message;
 
 	private ExceptionMaster exceptionMaster;
+
+	@Value("${regex.pattern.1}")
+	private String regexPattern1;
+
+	@Value("${regex.pattern.2}")
+	private String regexPattern2;
+
+	@Value("${regex.pattern.3}")
+	private String regexPattern3;
+
+	@Value("${regex.pattern.4}")
+	private String regexPattern4;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -127,6 +140,15 @@ public class EmailProcessor implements Runnable {
 					LoanVO loanVO = loanService.getLoanByID(Integer
 					        .valueOf(loanId));
 					String emailBody = getEmailBody(mimeMessage);
+
+					LOGGER.debug("Applying Regex On Email ");
+					List<String> regexPatternStrings = new ArrayList<String>();
+					regexPatternStrings.add(regexPattern1);
+					regexPatternStrings.add(regexPattern2);
+					regexPatternStrings.add(regexPattern3);
+					regexPatternStrings.add(regexPattern4);
+					emailBody = extractMessage(emailBody, regexPatternStrings);
+
 					LOGGER.debug("Body of the email is " + emailBody);
 					if (loanVO != null) {
 						if (uploadedByUser != null) {
@@ -199,6 +221,23 @@ public class EmailProcessor implements Runnable {
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 		return body;
+	}
+
+	public static String extractMessage(String originalMessage,
+	        List<String> regexPatternStrings) {
+		String cleanedMessage = null;
+		for (String regexPatternString : regexPatternStrings) {
+			Pattern PATTERN = Pattern.compile(regexPatternString,
+			        Pattern.MULTILINE | Pattern.DOTALL
+			                | Pattern.CASE_INSENSITIVE);
+			Matcher m = PATTERN.matcher(originalMessage);
+			if (m.find()) {
+				cleanedMessage = m.replaceAll("");
+
+			}
+		}
+
+		return cleanedMessage;
 	}
 
 	private void extractAttachmentAndUploadEverything(String emailBody,
