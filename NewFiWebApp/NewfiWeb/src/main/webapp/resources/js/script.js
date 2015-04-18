@@ -1045,7 +1045,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Years Fixed","loanprogramId");
     //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "lockloanAmountid","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3)+" %", "teaserRateId");
