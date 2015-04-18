@@ -525,14 +525,11 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setUser(User.convertFromVOToEntity(this.getUser()));
 
 		if (null != this.getLoan() && null != this.getLoan().getLqbFileId()) {
-			System.out.println("loanAppForm.getLoan().getLqbFileId()"
-			        + this.getLoan().getLqbFileId());
 
 			loanAppForm.setLoan(parseVOtoEntityLoan(this.getLoan()));
 		} else {
 			loanAppForm.setLoan(this.getLoan().convertToEntity());
-			System.out
-			        .println("loanAppForm.getLoan().getLqbFileId() inside else");
+
 		}
 
 		/* save data in the purchase table */
@@ -548,17 +545,16 @@ public class LoanAppFormVO implements Serializable {
 
 		if (null != loanVO.getLoanType()) {
 
-			System.out.println();
 			if (loanVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-				System.out.println("loan type is REF");
+
 				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.REF));
 			} else {
-				System.out.println("loan type is PUR");
+
 				loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.PUR));
 
 			}
 		} else {
-			System.out.println("loan type is NONE");
+
 			loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
 		}
 
@@ -608,7 +604,7 @@ public class LoanAppFormVO implements Serializable {
 			return governmentQuestion;
 
 		// GovernmentQuestion governmentQuestion = new GovernmentQuestion();
-		System.out.println(governmentQuestionVO.getId());
+
 		governmentQuestion.setId(governmentQuestionVO.getId());
 		governmentQuestion.setOutstandingJudgments(governmentQuestionVO
 		        .isOutstandingJudgments());
@@ -651,7 +647,6 @@ public class LoanAppFormVO implements Serializable {
 		if (refinanceVO == null)
 			return refinanceDetails;
 		// RefinanceDetails refinanceDetails = new RefinanceDetails();
-		System.out.println("refinanceVO.getId()" + refinanceVO.getId());
 		refinanceDetails.setId(refinanceVO.getId());
 		refinanceDetails.setCurrentMortgageBalance(refinanceVO
 		        .getCurrentMortgageBalance());
@@ -746,8 +741,7 @@ public class LoanAppFormVO implements Serializable {
 
 		customerDetail.setSecPhoneNumber(customerDetailVO.getSecPhoneNumber());
 		customerDetail.setSsn(customerDetailVO.getSsn());
-		System.out.println("customerDetail.setId(customerDetailVO.getId())"
-		        + customerDetailVO.getId());
+
 		customerDetail.setId(customerDetailVO.getId());
 		customerDetail.setMobileAlertsPreference(customerDetailVO
 		        .getMobileAlertsPreference());
@@ -782,19 +776,13 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerOtherAccountDetails;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerOtherAccountDetailsVO.size());
 		Iterator<CustomerOtherAccountDetailsVO> itr = customerOtherAccountDetailsVO
 		        .iterator();
 
 		while (itr.hasNext()) {
 			CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
 			CustomerOtherAccountDetailsVO custOtherAccDetVO = itr.next();
-			System.out
-			        .println("custOtherAccDetVO.getCustomerOtherAccountDetails()"
-			                + custOtherAccDetVO
-			                        .getCustomerOtherAccountDetails()
-			                        .getCurrentAccountBalance());
+
 			customerOtherAccountDetails.setId(custOtherAccDetVO
 			        .getCustomerOtherAccountDetails().getId());
 			customerOtherAccountDetails.setAccountSubType(custOtherAccDetVO
@@ -819,19 +807,13 @@ public class LoanAppFormVO implements Serializable {
 		if (null == customerRetirementAccountDetailsVO)
 			return null;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerRetirementAccountDetailsVO.size());
 		Iterator<CustomerRetirementAccountDetailsVO> itr = customerRetirementAccountDetailsVO
 		        .iterator();
 
 		while (itr.hasNext()) {
 			CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
 			CustomerRetirementAccountDetailsVO custRetAccDetVO = itr.next();
-			System.out
-			        .println("custBankAccDetVO.getCustomerRetirementAccountDetails  ().getCurrentAccountBalance()"
-			                + custRetAccDetVO
-			                        .getCustomerRetirementAccountDetails()
-			                        .getCurrentAccountBalance());
+
 			customerRetirementAccountDetails.setId(custRetAccDetVO
 			        .getCustomerRetirementAccountDetails().getId());
 			customerRetirementAccountDetails.setAccountSubType(custRetAccDetVO
@@ -860,18 +842,13 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerBankAccountDetails;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerBankAccountDetailsVO.size());
 		Iterator<CustomerBankAccountDetailsVO> itr = customerBankAccountDetailsVO
 		        .iterator();
 
 		while (itr.hasNext()) {
 			CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
 			CustomerBankAccountDetailsVO custBankAccDetVO = itr.next();
-			System.out
-			        .println("custBankAccDetVO.getCustomerBankAccountDetails().getCurrentAccountBalance()"
-			                + custBankAccDetVO.getCustomerBankAccountDetails()
-			                        .getCurrentAccountBalance());
+
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 
 			customerBankAccountDetails.setId(custBankAccDetVO
@@ -900,20 +877,13 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerEmploymentIncome;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerEmploymentIncomeVO.size());
 		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVO
 		        .iterator();
 
 		while (itr.hasNext()) {
 			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
 			CustomerEmploymentIncomeVO customeremploymentincomeVO = itr.next();
-			System.out.println("customeremploymentincomeVO.getEmployedAt()"
-			        + customeremploymentincomeVO.getCustomerEmploymentIncome()
-			                .getEmployedAt());
-			System.out.println("customeremploymentincomeVO.id is()"
-			        + customeremploymentincomeVO.getCustomerEmploymentIncome()
-			                .getId());
+
 			if (null != customeremploymentincomeVO
 			        .getCustomerEmploymentIncome()
 			        && customeremploymentincomeVO.getCustomerEmploymentIncome()
@@ -945,8 +915,6 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerOtherAccountDetails;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerSpouseOtherAccountDetailsVO.size());
 		Iterator<CustomerSpouseOtherAccountDetailsVO> itr = customerSpouseOtherAccountDetailsVO
 		        .iterator();
 
@@ -954,11 +922,7 @@ public class LoanAppFormVO implements Serializable {
 			CustomerSpouseOtherAccountDetails customerSpouseOtherAccountDetails = new CustomerSpouseOtherAccountDetails();
 			CustomerSpouseOtherAccountDetailsVO custSpouseOtherAccDetVO = itr
 			        .next();
-			System.out
-			        .println("custOtherAccDetVO.getCustomerOtherAccountDetails()"
-			                + custSpouseOtherAccDetVO
-			                        .getCustomerSpouseOtherAccountDetails()
-			                        .getCurrentAccountBalance());
+
 			customerSpouseOtherAccountDetails.setId(custSpouseOtherAccDetVO
 			        .getCustomerSpouseOtherAccountDetails().getId());
 			customerSpouseOtherAccountDetails
@@ -988,8 +952,6 @@ public class LoanAppFormVO implements Serializable {
 		if (null == customerSpouseRetirementAccountDetailsVO)
 			return null;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerSpouseRetirementAccountDetailsVO.size());
 		Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = customerSpouseRetirementAccountDetailsVO
 		        .iterator();
 
@@ -999,11 +961,6 @@ public class LoanAppFormVO implements Serializable {
 			CustomerSpouseRetirementAccountDetailsVO custSpouseRetAccDetVO = itr
 			        .next();
 
-			System.out
-			        .println("custSpouseRetAccDetVO.getCustomerSpouseRetirementAccountDetails().getCurrentAccountBalance()"
-			                + custSpouseRetAccDetVO
-			                        .getCustomerSpouseRetirementAccountDetails()
-			                        .getCurrentAccountBalance());
 			if (null != custSpouseRetAccDetVO
 			        .getCustomerSpouseRetirementAccountDetails()
 			        && custSpouseRetAccDetVO
@@ -1043,8 +1000,6 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerBankAccountDetails;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerSpouseBankAccountDetailsVO.size());
 		Iterator<CustomerSpouseBankAccountDetailsVO> itr = customerSpouseBankAccountDetailsVO
 		        .iterator();
 
@@ -1052,11 +1007,7 @@ public class LoanAppFormVO implements Serializable {
 			CustomerSpouseBankAccountDetails customerSpouseBankAccountDetails = new CustomerSpouseBankAccountDetails();
 			CustomerSpouseBankAccountDetailsVO custSpouseBankAccDetVO = itr
 			        .next();
-			System.out
-			        .println("(custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails().getCurrentAccountBalance()"
-			                + (custSpouseBankAccDetVO
-			                        .getCustomerSpouseBankAccountDetails()
-			                        .getCurrentAccountBalance()));
+
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 
 			customerSpouseBankAccountDetails.setId(custSpouseBankAccDetVO
@@ -1090,8 +1041,6 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerEmploymentIncome;
 
-		System.out.println("inside loan app form VO size is "
-		        + customerSpouseEmploymentIncomeVO.size());
 		Iterator<CustomerSpouseEmploymentIncomeVO> itr = customerSpouseEmploymentIncomeVO
 		        .iterator();
 
@@ -1100,11 +1049,6 @@ public class LoanAppFormVO implements Serializable {
 
 			CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO = itr
 			        .next();
-			System.out
-			        .println("customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt()"
-			                + customerSpouseEmploymentincomeVO
-			                        .getCustomerSpouseEmploymentIncome()
-			                        .getEmployedAt());
 
 			customerSpouseEmploymentIncome
 			        .setId(customerSpouseEmploymentincomeVO
@@ -1143,8 +1087,6 @@ public class LoanAppFormVO implements Serializable {
 		customerSpouseDetail.setSpouseName(customerSpouseDetailVO
 		        .getSpouseName());
 
-		System.out.println("customerSpouseDetailVO.getMonthlyPension()"
-		        + customerSpouseDetailVO.getMonthlyPension());
 		customerSpouseDetail.setIs_pension_or_retirement(customerSpouseDetailVO
 		        .isIspensionOrRetirement());
 		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO
@@ -1181,7 +1123,7 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 
 		// GovernmentQuestion governmentQuestion = new GovernmentQuestion();
-		System.out.println(spouseGovernmentQuestions.getId());
+
 		spouseGovernmentQuestions.setId(spouseGovernmentQuestionsVO.getId());
 		spouseGovernmentQuestions
 		        .setOutstandingJudgments(spouseGovernmentQuestionsVO

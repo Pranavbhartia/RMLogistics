@@ -322,12 +322,11 @@ public class NexeraUtility {
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
 				RenderedImage image = decoder.decodeAsRenderedImage();
-				System.out.println(image);
+
 				BufferedImage bimg = convertRenderedImage(image);
 				width = bimg.getWidth();
 				height = bimg.getHeight();
-				System.out.println("width : " + width);
-				System.out.println("height : " + height);
+
 			} else {
 				InputStream in = new FileInputStream(file);
 				BufferedImage bimg = ImageIO.read(in);
