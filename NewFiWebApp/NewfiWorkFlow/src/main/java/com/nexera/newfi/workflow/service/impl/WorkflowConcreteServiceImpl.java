@@ -243,7 +243,6 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			needsListMaster.setId(Integer.parseInt(needURLItem.getIndx()));
 			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
 			        loan, needsListMaster);
-			// TODO check column path
 			if (loanNeedsList != null
 			        && loanNeedsList.getUploadFileId() != null) {
 				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
