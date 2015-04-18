@@ -442,8 +442,7 @@ function appendCustomers(elementId, customers) {
 
 		var col7 = $('<div>').attr({
 			"class" : "leads-container-tc7 alert-col float-left"
-		}).bind(
-				'click',
+		}).bind('click',
 				{
 					"customer" : customer
 				},
@@ -458,7 +457,8 @@ function appendCustomers(elementId, customers) {
 				var alerts = $('<div>').attr({
 					"class" : "alerts-count"
 				}).html(ob.loanNotificationList.length);
-				col7.append(alerts);
+				ob.loanLstCntElement.html("");
+				ob.loanLstCntElement.append(alerts);
 			}
 		});
 
