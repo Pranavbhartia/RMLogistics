@@ -314,6 +314,7 @@ function removedComma(inputData) {
 
 function getFloatValue(inputData){
 	if(inputData){
+		inputData=inputData+"";
 		var negativeFlag=false;
 		if(inputData.indexOf("(")>=0){
 			negativeFlag=true;

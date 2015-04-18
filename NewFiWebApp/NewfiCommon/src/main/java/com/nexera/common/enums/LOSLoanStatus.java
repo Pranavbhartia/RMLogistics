@@ -39,13 +39,13 @@ public enum LOSLoanStatus {
 	private LOSLoanStatus(int losStatusID) {
 		this.losStatusID = losStatusID;
 		this.displayStatus = String.valueOf(losStatusID);
-		this.order = -1;
+		this.order = 0;
 	}
 
 	private LOSLoanStatus(int losStatusID, String displayString) {
 		this.losStatusID = losStatusID;
 		this.displayStatus = displayString;
-		this.order = -1;
+		this.order = 0;
 
 	}
 

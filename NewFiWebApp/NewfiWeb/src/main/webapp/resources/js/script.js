@@ -603,7 +603,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
        loan.lqbFileId=loanNumber;  
      //  alert('loan Number'+loanNumber);
         appUserDetails.loan.lqbFileId = loanNumber;
-    lockratedata.sLoanNumber=loanNumber;
+        lockratedata.sLoanNumber=loanNumber;
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         saveAndUpdateLoanAppForm(appUserDetails);
         
@@ -612,6 +612,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         var loanSummaryWrapper = getLoanSummaryWrapper(lqbData, appUserDetails);
         var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(lqbData));
         $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+       // $('#center-panel-cont').append(loanSummaryWrapper);
     }
     /*
 
@@ -1120,9 +1121,9 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var lcRow3 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3) +" %", "lockInterestRate");
     
     if(appUserDetails.refinancedetails.refinanceOption != "REFCO")
-    var lcRow4 = getLoanAmountRow("Loan Amount",showValue(loanAmount), "lockloanAmountid");
+    var lcRow4 = getLoanAmountRow("Loan Amount",showValue(loanAmount), "loanAmount");
     else
-        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "lockloanAmountid","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);
+        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);
 
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR, "lockrateaprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "lockClosingCost");
@@ -1166,7 +1167,7 @@ function getLaonSummaryApplyBtnRow() {
 }
 
 function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
-    var container = $('<div>').attr({
+	var container = $('<div>').attr({
         "class": "loan-summary-row"
     });
     var loanAmountCont = $('<div>').attr({
@@ -1176,67 +1177,40 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left",
-        "id": id
-    }).html(detail);
-    
-    
-   /* var dropdownarrow = $('<div>').attr({
-        "class": "dropdown-arrow"
-    }).bind('click', function() {
-        $('#loan-amount-details').toggle();
+        "class": "loan-summary-col-detail float-left clearfix",
     });
-    col2.append(dropdownarrow);*/
+   
+    var input = $('<input>').attr({
+        "class": "loan-summary-input-detail float-left",
+        "id": id
+    }).val(detail)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});		
+    }).on('keyup',function(e){
+    	if(e.which == 27){
+    		$(this).blur();
+    	}
+    });
+ 
+    
+    var saveBtn = $('<div>').attr({
+    	"class" : "sm-save-btn float-right"
+    }).html("Save").on('click',function(){
+    	
+    	amt = $('#loanAmount').val();
+    	modifiyLockRateLoanAmt(amt);
+    });
+    
+    col2.append(input).append(saveBtn);
     
     loanAmountCont.append(col1).append(col2);
-    
-   /* var loanAmountDetails = $('<div>').attr({
-        "id": "loan-amount-details",
-        "class": "loan-amount-details hide"
-    });
-    var row1 = $('<div>').attr({
-        "class": "loan-summary-sub-row clearfix"
-    });
-    var col1row1 = $('<div>').attr({
-        "class": "loan-summary-sub-col-desc float-left"
-    }).html(row1Desc);
-    var col2row1 = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail float-left"
-    }).val(row1Val)
-    .keydown(function() {
-    	$(this).maskMoney({
-			thousands:',',
-			decimal:'.',
-			allowZero:true,
-			prefix: '$',
-		    precision:0,
-		    allowNegative:true
-		});		
-    });
-    row1.append(col1row1).append(col2row1);
-    var row2 = $('<div>').attr({
-        "class": "loan-summary-sub-row clearfix"
-    });
-    var col1row2 = $('<div>').attr({
-        "class": "loan-summary-sub-col-desc float-left"
-    }).html(row2Desc);
-    var col2row2 = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail float-left"
-    }).val(row2Val)
-    .keydown(function() {
-    	$(this).maskMoney({
-			thousands:',',
-			decimal:'.',
-			allowZero:true,
-			prefix: '$',
-		    precision:0,
-		    allowNegative:true
-		});		
-    });
-    row2.append(col1row2).append(col2row2);
-    loanAmountDetails.append(row1).append(row2);*/
-    
-   // return container.append(loanAmountCont).append(loanAmountDetails);
     return container.append(loanAmountCont);
 }
 
@@ -2168,7 +2142,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     	
     	amt = $('#currentMorgtageId').val();
     	amt1 = $('#cashOutId').val();
-    	modifiyTeaserRate(amt,amt1);
+        var loanVal=getFloatValue(amt)-getFloatValue(amt1);
+    	modifiyTeaserRate(loanVal,amt);
     });
     
     col2.append(col2Txt).append(dropdownarrow).append(saveBtn);
@@ -2240,7 +2215,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     		 loanAmt = (purAmt - dwnAmt);
     	}
     	
-    	$('#lockloanAmountid').text(showValue(loanAmt));
+    	$('#loanAmount').text(showValue(loanAmt));
     };
     col2row1.keyup(purchaseTRate.change);
     col2row2.keyup(purchaseTRate.change);
