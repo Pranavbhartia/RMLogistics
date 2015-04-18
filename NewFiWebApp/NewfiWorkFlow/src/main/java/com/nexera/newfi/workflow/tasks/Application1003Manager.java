@@ -3,6 +3,7 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
@@ -46,6 +48,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			int loanID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			makeANote(loanID, LoanStatus.submittedMessage);
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,Milestones.App1003.getMilestoneKey());
 			sendEmail(objectMap);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
@@ -99,6 +102,19 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		return null;
+	}
+
+	@Override
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+		String[] ary = new String[1];
+		ary[0] = Milestones.App1003.getMilestoneKey();
+		substitutions.put("-status-", ary);
+		return substitutions;
 	}
 
 }
