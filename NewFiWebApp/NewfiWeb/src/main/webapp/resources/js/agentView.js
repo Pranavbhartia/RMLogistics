@@ -542,7 +542,7 @@ function appendCustomerDetailContianer(element, customer) {
 	appendRecentAlertContainer(contxt.loanNotificationList, contxt);
 	appendSchedulerContainer(contxt);
 	appendRecentNotesContainer(customer.notes);
-	appendTakeNoteContainer();
+	appendTakeNoteContainer(customer);
 }
 
 function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
@@ -844,7 +844,7 @@ function appendRecentNotesContainer(notes) {
 	$('#cust-detail-wrapper').append(wrapper);
 }
 
-function appendTakeNoteContainer() {
+function appendTakeNoteContainer(customer) {
 	var wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left"
 	});
@@ -858,6 +858,7 @@ function appendTakeNoteContainer() {
 
 	var messageBox = $('<textarea>').attr({
 		"class" : "note-msg-textbox",
+		"id":customer.loanId+"_msgBody",
 		"placeholder" : "Type your message here. When done click save."
 	});
 
@@ -875,7 +876,25 @@ function appendTakeNoteContainer() {
 		"class" : "msg-btn-submit float-right"
 	}).html("Save");
 	col1.append(col1Btn);
-
+	col1Btn.bind(
+			"click",
+			{
+				customer : customer
+				
+			},
+			function(e) {
+				var text = $("#"+customer.loanId+"_msgBody").val();
+				resetSelectedUserDetailObject(e.data.customer);
+				if(text==null || text.trim()==""){
+					showToastMessage("Please enter a message");
+					return;
+				}
+				
+				doSavemessageAjaxCall(text,repaintNotes);
+						
+			});
+	
+	
 	var col2 = $('<div>').attr({
 		"class" : "msg-btn-col2 float-left"
 	}).html("or");
@@ -903,6 +922,10 @@ function appendTakeNoteContainer() {
 $(document).on('click', '.lp-t2-agent-item', function() {
 	changeAgentSecondaryLeftPanel(this.id);
 });
+
+function repaintNotes(){
+	showToastMessage("Message saved succesfully");
+}
 
 function paintMyLoansView() {
 	scrollToTop();

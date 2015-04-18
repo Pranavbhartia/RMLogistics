@@ -108,7 +108,8 @@ public class CommunicationLogRestService {
 		try {
 			MessageVO messageVO = new Gson().fromJson(messageVOString,
 			        MessageVO.class);
-			// messageVO.setPrivateMessage(true);
+			LOG.debug("Saving a private message: " + messageVO);
+			messageVO.setIsPrivate(Boolean.TRUE);
 			String messageId = messageService.saveMessage(messageVO,
 			        MessageTypeEnum.NOTE.toString(), Boolean.TRUE);
 			response.setResultObject(messageId);
