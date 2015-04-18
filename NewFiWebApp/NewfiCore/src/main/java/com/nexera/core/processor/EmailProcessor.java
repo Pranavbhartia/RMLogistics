@@ -61,6 +61,15 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.4}")
 	private String regexPattern4;
 
+	@Value("${regex.pattern.5}")
+	private String regexPattern5;
+
+	@Value("${regex.pattern.6}")
+	private String regexPattern6;
+
+	@Value("${regex.pattern.7}")
+	private String regexPattern7;
+
 	@Autowired
 	NexeraUtility nexeraUtility;
 
@@ -130,7 +139,6 @@ public class EmailProcessor implements Runnable {
 								loanId = loanId.substring(0,
 								        loanId.indexOf("@"));
 							}
-							loanId = "15";
 							messageId = messageId.replace(
 							        CommonConstants.SENDER_NAME_REGEX, "");
 						}
@@ -147,6 +155,9 @@ public class EmailProcessor implements Runnable {
 					regexPatternStrings.add(regexPattern2);
 					regexPatternStrings.add(regexPattern3);
 					regexPatternStrings.add(regexPattern4);
+					regexPatternStrings.add(regexPattern5);
+					regexPatternStrings.add(regexPattern6);
+					regexPatternStrings.add(regexPattern7);
 					emailBody = extractMessage(emailBody, regexPatternStrings);
 
 					LOGGER.debug("Body of the email is " + emailBody);
@@ -236,7 +247,8 @@ public class EmailProcessor implements Runnable {
 
 			}
 		}
-
+		if (cleanedMessage == null)
+			cleanedMessage = originalMessage;
 		return cleanedMessage;
 	}
 
