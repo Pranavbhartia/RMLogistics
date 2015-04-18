@@ -76,10 +76,44 @@ public class RateCalculatorRestService {
 	}
 
 	private JSONObject createMapforJson(TeaserRateVO teaserRateVO) {
+		
+		
+		    
+		    
+		    
+		    
 		String loanAmount;
 		String loanPurpose;
 		String shopperCounty = "";
 		String stateFromAPI = "";
+		String sOccTPe="";
+		String subPropType="";
+		String loanType="";
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		if(teaserRateVO.getPropertyType()!=null){
+			sOccTPe= teaserRateVO.getResidenceType();
+			}
+		
+		if(teaserRateVO.getResidenceType()!=null){
+						
+					if("1".equalsIgnoreCase(teaserRateVO.getPropertyType())){
+						
+						subPropType = "2";
+					}else if("2".equalsIgnoreCase(teaserRateVO.getPropertyType())){
+						subPropType="8";
+					}else{
+					      subPropType ="0";
+					}				
+		}
+		
 
 		if ("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance())
 		        && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())) {
@@ -88,6 +122,8 @@ public class RateCalculatorRestService {
 			LOG.info("setting hardcoded calue for loan amount ");
 		}
 
+		
+		
 		if ("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
 			loanAmount = Integer.parseInt(unformatCurrencyField(teaserRateVO
@@ -100,15 +136,28 @@ public class RateCalculatorRestService {
 			        .getCurrentMortgageBalance());
 		}
 
-		if ("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())
-		        || "lowerMonthlyPayment".equalsIgnoreCase(teaserRateVO
-		                .getRefinanceOption())
-		        || "payOffMortgage".equalsIgnoreCase(teaserRateVO
-		                .getRefinanceOption())) {
+		
+		if(teaserRateVO.getLoanType() != null){
+			loanType = teaserRateVO.getLoanType();
+			if("PUR".equalsIgnoreCase(loanType)){
+				if(teaserRateVO.getPurchaseDetails()!=null){
+					
+					loanAmount =	""+(Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getHousePrice())) - Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getLoanAmount())));
+					
+					
+				}
+				
+			}
+			}
+		
+		if ("REFCO".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
-			loanPurpose = "1";
+			loanPurpose = "2";
 			LOG.info("Inside loan purpose " + loanPurpose);
-		} else {
+		} else if("REFLMP".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "REFMF".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+			loanPurpose = "1";
+		}
+		else {
 			loanPurpose = "0";
 			LOG.info("Inside loan purpose " + loanPurpose);
 		}
@@ -143,6 +192,10 @@ public class RateCalculatorRestService {
 		hashmap.put("stateFromAPI", stateFromAPI);
 		hashmap.put("city", shopperCounty);
 		hashmap.put("zipCode", teaserRateVO.getZipCode());
+		hashmap.put("OccType", sOccTPe);
+		hashmap.put("subPropType", subPropType);
+		hashmap.put("loanPurpose", loanPurpose);
+		
 		JSONObject jsonObject = new JSONObject(hashmap);
 		return jsonObject;
 	}

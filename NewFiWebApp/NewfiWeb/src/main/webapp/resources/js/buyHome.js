@@ -246,13 +246,13 @@ function paintloanamount(){
 	var questions = [
 						{
 			        "type": "desc",
-			        "text": "what is the price of the house that you want to buy?",
+			        "text": "Purchase Price?",
 			        "name": "housePrice",
 			        "value": ""
 						},
                      {
                          "type": "desc",
-                         "text": "What is the loan amount you are looking for?",
+                         "text": "Down Payment?",
                          "name": "loanAmount",
                          "value": ""
                      }/*,
@@ -406,7 +406,7 @@ function saleYourCurrentHome() {
 function paintHomeZipCode() {
 	active = 4;
 	homeProgressBaar(4);
-	var quesTxt = "Do you know the city or ZIP code where you want to buy a home?";
+	var quesTxt = "Zip Code For Home You Are Purchasing?";
 	var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate,"zipCode");
 	$('#ce-refinance-cp').html(quesCont);
 
@@ -684,12 +684,13 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	}, function(event) {
 		var key = event.data.name;
-		
+		 
 		buyHomeTeaserRate[key] = $('input[name="' + key + '"]').val();
 		buyHomeTeaserRate.purchaseDetails[key]= $('input[name="' + key + '"]').val();
 		if($('input[name="zipCode"]').val()==key){
        	 var isSuccess=validateInput($('input[name="zipCode"]').val(),message);
             if(isSuccess){
+           
            	 if($('input[name="zipCode"]').val().length>5 ||$('input[name="zipCode"]').val().length<5){
            		 $('.ce-input').next('.err-msg').html("Please Enter a valid 5-digit zipcode").show();
            		 $('.ce-input').addClass('ce-err-input').show();
