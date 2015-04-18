@@ -59,7 +59,7 @@ public class USStateLookupImpl implements USStateLookUp {
 					// move to next, which is "name"'s value
 					jParser.nextToken();
 					stateName = jParser.getText();
-					System.out.println(stateName);
+
 
 				}
 
@@ -69,7 +69,6 @@ public class USStateLookupImpl implements USStateLookUp {
 					// move to next, which is "name"'s value
 					jParser.nextToken();
 					stateAbbr = jParser.getText();
-					System.out.println(stateAbbr);
 					hashMap.put(stateAbbr, stateName);
 
 				}
@@ -79,8 +78,6 @@ public class USStateLookupImpl implements USStateLookUp {
 			List<StateLookup> stateLookups = new ArrayList<StateLookup>();
 
 			for (String key : set) {
-				System.out
-				        .println("Key: " + key + " value:" + hashMap.get(key));
 				StateLookup lookup = new StateLookup();
 				lookup.setStatecode(key);
 				lookup.setStatename(hashMap.get(key));

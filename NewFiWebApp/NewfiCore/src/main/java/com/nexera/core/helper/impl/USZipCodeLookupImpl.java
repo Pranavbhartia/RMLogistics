@@ -90,7 +90,6 @@ public class USZipCodeLookupImpl implements USZipCodeLookup {
 						// move to next, which is "name"'s value
 						jParser.nextToken();
 						zipCode = jParser.getText();
-						System.out.println(zipCode);
 
 					}
 					if ("County".equals(fieldname)) {

@@ -630,6 +630,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions
 		        .eq("loanMilestoneMaster", loanMilestoneMaster));
 		criteria.addOrder(Order.desc("id"));
+		criteria.addOrder(Order.desc("order"));
 		List<LoanMilestone> milestones = criteria.list();
 
 		LoanMilestone latestMS = null;

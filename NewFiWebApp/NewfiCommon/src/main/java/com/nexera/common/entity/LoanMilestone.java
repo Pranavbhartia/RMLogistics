@@ -31,6 +31,7 @@ public class LoanMilestone implements Serializable {
 	private String status;
 	private LoanMilestoneMaster loanMilestoneMaster;
 	private Loan loan;
+	private Integer order;
 
 	public LoanMilestone() {
 	}
@@ -91,6 +92,15 @@ public class LoanMilestone implements Serializable {
 
 	public void setStatusUpdateTime(Date statusUpdateTime) {
 		this.statusUpdateTime = statusUpdateTime;
+	}
+
+	@Column(name = "milestone_order")
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 
 }

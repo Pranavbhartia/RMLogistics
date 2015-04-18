@@ -40,7 +40,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 			if (userList != null && !userList.isEmpty()) {
 				return pickTheChosenOne(userList);
 			}
-			System.out.println("Hi");
+
 
 		}
 

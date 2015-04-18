@@ -532,13 +532,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		JSONObject jsonChild = new JSONObject();
 		try {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
-					nexeraUtility.asciiTrim(documentVO.getsLoanNumber()));
+			        nexeraUtility.asciiTrim(documentVO.getsLoanNumber()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_DOCUMENT_TYPE,
-					nexeraUtility.asciiTrim(documentVO.getDocumentType()));
+			        nexeraUtility.asciiTrim(documentVO.getDocumentType()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_NOTES,
-					nexeraUtility.asciiTrim(documentVO.getNotes()));
+			        nexeraUtility.asciiTrim(documentVO.getNotes()));
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_DATA_CONTENT,
-					nexeraUtility.asciiTrim(documentVO.getsDataContent()));
+			        nexeraUtility.asciiTrim(documentVO.getsDataContent()));
 
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
@@ -764,7 +764,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		}
 
 		for (LQBedocVO edoc : edocsList) {
-			if (edoc.getDoc_type().equalsIgnoreCase("CASE ASSIGNMENT")) {
+			if (edoc.getDoc_type().equalsIgnoreCase(unAssignedFolder)) {
 				LOG.debug("Ignoring files for this doc type ");
 				continue;
 			}

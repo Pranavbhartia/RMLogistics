@@ -8,8 +8,7 @@ var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
 		this.loanId = loanId;
-		this.customer = customer;
-		
+		this.customer = customer;		
 	},
 	itemsStatesToBeFetched:[],
 	customerWorkflowID : {},
@@ -276,11 +275,11 @@ var workFlowContext = {
 		
 	}
 };
-function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
+function getInternalEmployeeMileStoneContext( workItem) {
 
 	var internalEmployeeMileStoneContext = {
 		
-		mileStoneId : mileStoneId,
+		mileStoneId : workItem.id,
 		workItem : workItem,
 		stateInfoContainer:undefined,
 		updateMilestoneView:function(status,callback){
@@ -349,6 +348,9 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
 				$(ob.stateInfoContainer).addClass("cursor-pointer");
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
@@ -374,7 +376,10 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE" )
 			{				
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e);
+				});
 			}
 			else if (ob.workItem.workflowItemType=="UW_STATUS")
 			{
@@ -399,8 +404,6 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
-			
-			
 			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
 			{
 				ajaxURL = "";
@@ -490,11 +493,11 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 								}
 							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"||
-									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){
-								txtRow1.bind("click", function(e) {
-									milestoneChildEventHandler(e)
-								});
+									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){								
 								if(ob.workItem.stateInfo){
+									txtRow1.bind("click", function(e) {
+										milestoneChildEventHandler(e)
+									});
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
 										ob.stateInfoContainer.addClass("cursor-pointer");
@@ -546,10 +549,7 @@ function getInternalEmployeeMileStoneContext(mileStoneId, workItem) {
 			}else{
 				ob.stateInfoContainer.html(ob.workItem.stateInfo);
 			}	
-
-
-		}
-		
+		}		
 	};
 	return internalEmployeeMileStoneContext;
 }
@@ -615,10 +615,8 @@ function paintCustomerInfo ()
 {
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
-	});
-	
-	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();
-	
+	});	
+	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
 	}).html("Below is a detail list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, you can connect with a team member to discuss by clicking here.");
@@ -970,15 +968,9 @@ function paintAgentLoanProgressContainer() {
 		"class" : "loan-progress-milestone-wrapper"
 	});
 	$('#agent-loan-progress').append(loanProgressCont);
-
 	workFlowContext.init(selectedUserDetail.loanID,createNewfiUser());
-
 	workFlowContext.initialize("AGENT", function() {
 	});
-	
-	// Append agent page loan progress milestones
-
-	// adjustBorderMilestoneContainer();
 }
 function getProgressStatusClass(status) {
 	var progressClass = "m-not-started";
@@ -1032,9 +1024,6 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		data["workflowItemExecId"]=wf.id;
 		updateMileStoneElementState(url,data,callback,targetData)
 	}
-	/*if(callback){
-		callback({},targetData);
-	}*/
 }
 function updateMilestoneView(wf,data,targetData){
 	targetElement=targetData.targetElement;
@@ -1178,27 +1167,20 @@ function appendMilestoneItem(workflowItem, childList) {
 				var targetElement=$(this);
 				checkboxActionEvent(wf,targetElement,function(data,targetData){
 					updateMilestoneView(wf,data,targetData);
-				})
-				
+				})				
 			} 
-			
-			// getLoanDetails(loanID);
 		})
 	}else{
 		$(headerCheckBox).addClass("cursor-auto");
 	}
 	headerTxt.append(headerCheckBox);
 	header.append(headerTxt).append(headerIcn);
-
 	wrapper.append(rightBorder).append(header);
 	var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,header,workflowItem);
 	var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, workflowItem);
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
-	
-	
 	if (childList != null) {
-		for (index = 0; index < childList.length; index++) {
-			
+		for (index = 0; index < childList.length; index++) {			
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
@@ -1232,11 +1214,8 @@ function appendMilestoneItem(workflowItem, childList) {
 						var targetElement=$(this);
 						checkboxActionEvent(wf,targetElement,function(data,targetData){
 							updateMilestoneView(wf,data,targetData);
-						})
-						
+						})						
 					} 
-			
-			// getLoanDetails(loanID);
 				})
 			}else{
 				$(itemCheckBox).addClass("cursor-auto");
@@ -1245,8 +1224,7 @@ function appendMilestoneItem(workflowItem, childList) {
 			wrapper.append(childRow);
 			var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,childRow,childList[index]);
 			var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, childList[index]);
-			workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;
-			
+			workFlowContext.mileStoneContextList[childList[index].id]=WFContxt;			
 		}
 	}
 	$('#loan-progress-milestone-wrapper').append(wrapper);
@@ -1255,7 +1233,7 @@ function appendMilestoneItem(workflowItem, childList) {
 // this will add a "Information Link" that is clickable to the task.
 function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 {
-	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem.id,workflowItem);
+	var mileStoneStepContext = getInternalEmployeeMileStoneContext(workflowItem);
 	
 	mileStoneStepContext.getStateInfo(rightLeftClass,itemToAppendTo);
 	
@@ -1289,7 +1267,6 @@ function milestoneChildEventHandler(event) {
 	}
 	else if  ($(event.target).attr("data-text") == "MANAGE_TEAM") {
 		event.stopPropagation();
-		//var teamTable = getMilestoneTeamMembeTable();
 		var data = {};
 		data.milestoneID=$(event.target).attr("mileNotificationId");
 		data.OTHURL = "rest/workflow/invokeaction/"+data.milestoneID;
@@ -1299,8 +1276,6 @@ function milestoneChildEventHandler(event) {
 		var context=getCreateTitleCompanyContext(
 				workFlowContext.loanId);
 		context.createTitleCompanyPopup();
-
-				
 		context = getCreateHomeOwnInsCompanyContext(workFlowContext.loanId)
 		context.createTitleCompanyPopup();
 	}
@@ -1320,20 +1295,19 @@ function milestoneChildEventHandler(event) {
 	 		window.location.hash="#loan/"+workFlowContext.loanId+"/lock-rate"
 	 	}else{
 	 		window.location.hash="#myLoan/lock-my-rate"	
-	 	}
-		
+	 	}		
 	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
 	 	event.stopPropagation();
-	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
 			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}else if ($(event.target).attr("data-text") == "QC_STATUS") {
 	 	event.stopPropagation();
-	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
 			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}
 	else if ($(event.target).attr("data-text") == "APP_FEE") {
 	 	event.stopPropagation();
-	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!="3")
+	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
 	 	{
 			appendAppFeeEditPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	 	}
@@ -1404,13 +1378,10 @@ function removeLoanManagerPopup(){
 	$('#loan-manager-popup').remove();
 }
 
-function appendLoanManagerPopup(element,loanManagerArray){
-	
-	removeLoanManagerPopup();
-	
+function appendLoanManagerPopup(element,loanManagerArray){	
+	removeLoanManagerPopup();	
 	var leftOffset = $(element).offset().left;
-	var topOffset = $(element).offset().top;
-	
+	var topOffset = $(element).offset().top;	
 	var wrapper = $('<div>').attr({
 		"id" : "loan-manager-popup",
 		"class" : "loan-manager-popup"
@@ -1469,6 +1440,7 @@ $(document).resize(function(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
+	removeNotificationPopup();
 });
 
 $(document).on('click',function(){
@@ -1476,6 +1448,7 @@ $(document).on('click',function(){
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
 	removeQCPopup();
+	removeNotificationPopup();
 });
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
@@ -1575,7 +1548,7 @@ function appendLoanStatusPopup(element,milestoneId) {
 						showToastMessage(response.error.message)
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId]
-						contxt.updateMilestoneView("3")
+						contxt.updateMilestoneView(COMPLETED)
 						removeLoanStatusPopup();
 					}
 			},false);
@@ -1745,10 +1718,8 @@ function removeAppFeeEditPopup() {
 function showLQBInfo (itemToAppendTo,workItem)
 {
 	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
-
 	if(workItem.stateInfo){
-		var tempOb=JSON.parse(workItem.stateInfo);
-		
+		var tempOb=JSON.parse(workItem.stateInfo);		
 		if(tempOb.status){
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.lqbKey);
 			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("onclick","window.open('"+tempOb.url+"','_blank')");

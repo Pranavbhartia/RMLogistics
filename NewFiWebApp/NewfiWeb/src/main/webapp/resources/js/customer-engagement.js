@@ -662,7 +662,8 @@ function paintRefinanceStep2() {
         
     	refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
 
-    	var isSuccess=validateInput($('input[name="currentMortgageBalance"]').val(),message);
+    	var isSuccess=validateInputs($('input[name="currentMortgageBalance"]').val(),message);
+    
     	if(isSuccess){
     		paintRefinanceStep3();
     	}else{
@@ -728,24 +729,38 @@ function paintRefinanceStep3() {
             refinanceTeaserRate.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
            
             var questionOne=validateInputs(refinanceTeaserRate.currentMortgagePayment,message);
-            var questionThree=validateInput( refinanceTeaserRate.propTaxMonthlyOryearly,message);
-            var questionFour=validateInput(refinanceTeaserRate.propInsMonthlyOryearly,message);
-            var questionFive=validateInput( refinanceTeaserRate.propInsMonthlyOryearly,message);
-           
-            if(questionOne &&  questionThree && questionFour && questionFive){
-            	
-            	if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
-            		
-            		 paintRefinanceHomeWorthToday();
-            		}else{
-            			showErrorToastMessage("Please answer the question");
-            			return false;
-            		}
-            	}else{
-            		alert("in else");
-                   return false;
-            	}
+            var questionThree=validateInput(refinanceTeaserRate.propertyTaxesPaid,message);
+            var questionFour=validateInput(refinanceTeaserRate.propInsMonthlyOryearly ,message);
 
+          // alert(questionOne+""+questionThree+""+questionFour);
+            
+           if(questionOne){
+        	   if(questionThree){
+        		   if(questionFour){
+        			   if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
+                   		
+                   		 paintRefinanceHomeWorthToday();
+                   		}else{
+                   			showErrorToastMessage("Please answer the question");
+                   			return false;
+                   		}
+        		   }else{
+        			   $('.ce-input').next('.err-msg').html(message).show();
+        				$('.ce-input').addClass('ce-err-input').show();
+        				return false;
+        			   return false;
+        		   }
+        	   }else{
+        		   $('.ce-input').next('.err-msg').html(message).show();
+        			$('.ce-input').addClass('ce-err-input').show();
+        			return false;
+              		return false;
+        	   }
+           }else{
+
+        	   return false;
+           }
+           
         });
         $('#ce-refinance-cp').append(saveAndContinueButton);
     }
@@ -817,14 +832,22 @@ function paintNewResidenceTypeQues(){
         if(refinanceTeaserRate.loanType){
             refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
+            if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	paintRefinanceHomeZipCode();	
+            }else{
+            	showErrorToastMessage("Please answser the questions");
+            }
             
-            paintRefinanceHomeZipCode();
         }
         if(buyHomeTeaserRate.loanType){
             buyHomeTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             buyHomeTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
-            
-            paintHomeZipCode();
+            if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	paintHomeZipCode();	
+            }else{
+            	showErrorToastMessage("Please answser the questions");
+            }
+           // paintHomeZipCode();
         }
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
@@ -1055,10 +1078,10 @@ function paintApplyNow(inputCustomerDetails) {
             propertyTypeMaster.homeWorthToday = inputCustomerDetails.homeWorthToday;
             propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
             
-            propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly 
-            propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly
-            propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType
-            propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType
+            propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly; 
+            propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly;
+            propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType;
+            propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType;
 
             appUserDetails.refinancedetails = refinancedetails;
             appUserDetails.propertyTypeMaster = propertyTypeMaster;
@@ -1068,7 +1091,8 @@ function paintApplyNow(inputCustomerDetails) {
             //purchaseDetails
          purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
    		 purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
-   		 purchaseDetails.loanAmount = inputCustomerDetails.purchaseDetails.loanAmount;
+   		 var loanAmount = getFloatValue(inputCustomerDetails.purchaseDetails.housePrice) -getFloatValue(inputCustomerDetails.currentMortgageBalance);
+   		 purchaseDetails.loanAmount = loanAmount;
    		 purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
    		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
    		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
@@ -1334,7 +1358,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
 	
 	var rateArray = [];
     for (var i = 0; i < gridArray.length; i++) {
-        rateArray[i] = parseFloat(gridArray[i].teaserRate).toFixed(2);
+        rateArray[i] = parseFloat(gridArray[i].teaserRate).toFixed(3);
     }
     index = parseInt(rateArray.length / 2);
     var container = $('<div>').attr({
@@ -1369,7 +1393,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
             "class": "rt-grid-item"
         }).css({
             "left": leftOffset + "%"
-        }).html(parseFloat(gridArray[i].teaserRate).toFixed(2) + "%");
+        }).html(parseFloat(gridArray[i].teaserRate).toFixed(3) + "%");
         gridItemCont.append(gridItem);
     }
     return container.append(gridItemCont);
@@ -1490,9 +1514,9 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var lcRow3 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3)+" %", "teaserRateId");
     
     if(customerInputData.refinanceOption != "REFCO")
-    var lcRow4 = getLoanAmountRowCEP("Loan Amount", showValue(loanAmount));
+    var lcRow4 = getLoanAmountRowCEP("Loan Amount", showValue(loanAmount),"loanAmount");
     else
-    var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "lockloanAmountid","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);	
+    var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);	
     
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR +" %", "aprid");
     var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "closingCostId");
@@ -1528,8 +1552,8 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
 	
    
     var housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice)));   
-    var loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.loanAmount))) ;    
-    var downPayment = (housePrice-loanAmount);
+    var downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
+    var loanAmount = (housePrice-downPayment);
     
    /* var principalInterest = parseFloat(removedDoller(removedComma(rateVO[index].payment)));
     var totalEstMonthlyPayment = principalInterest;
@@ -1547,7 +1571,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     //var lcRow1 = getLaonSummaryApplyBtnRow();
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Year Fixed","loanprogramId");
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "lockloanAmountid","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3) +" %", "teaserRateId");
@@ -1585,10 +1609,39 @@ function getLoanAmountRowCEP(desc, detail, id) {
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left",
-        "id": id
-    }).html(detail);
+        "class": "loan-summary-col-detail float-left clearfix",
+    });
    
+    var input = $('<input>').attr({
+        "class": "loan-summary-input-detail float-left",
+        "id": id
+    }).val(detail)
+    .keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});		
+    }).on('keyup',function(e){
+    	if(e.which == 27){
+    		$(this).blur();
+    	}
+    });
+ 
+    
+    var saveBtn = $('<div>').attr({
+    	"class" : "sm-save-btn float-right"
+    }).html("Save").on('click',function(){
+    	
+    	amt = $('#loanAmount').val();
+    	modifiyTeaserRate(amt);
+    });
+    
+    col2.append(input).append(saveBtn);
+    
     loanAmountCont.append(col1).append(col2);
     return container.append(loanAmountCont);
 }
@@ -1671,8 +1724,8 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	var principalInt = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
     	
     	var monthlyPaymentDifferenceTemp = Math.abs(principalInt - monthlyPayment);
-    	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(2);
-    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(2);
+    	var monthlyPaymentDifference = monthlyPaymentDifferenceTemp.toFixed(3);
+    	var totalEstMonthlyPaymentId =  (principalInt + investment).toFixed(3);
     	
     	
     	$('#monthlyPaymentId').text(showValue(monthlyPayment));
@@ -1713,3 +1766,33 @@ function modifiedLQBJsonRes(LQBResponse) {
     return yearValues;
 }
 
+function modifiyTeaserRate(amt,amt1) {
+    if(amt){
+        amt=getFloatValue(amt);
+        amt1=getFloatValue(amt1);
+        if(typeof(newfiObject)!=='undefined'){
+            if(appUserDetails.loanType.description=="Purchase"){
+                var parentContainer=$('#center-panel-cont');
+                appUserDetails.purchaseDetails.loanAmount=amt;
+                appUserDetails.purchaseDetails.housePrice=amt1;
+                paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDetails),true);
+            }else{
+                var parentContainer=$('#center-panel-cont');
+                appUserDetails.refinancedetails.currentMortgageBalance=amt;
+                appUserDetails.refinancedetails.cashTakeOut=amt1;
+                paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDetails),true);
+            }
+        }else{
+            if (buyHomeTeaserRate.loanType){
+                buyHomeTeaserRate.purchaseDetails.loanAmount=amt;
+                buyHomeTeaserRate.purchaseDetails.housePrice=amt1;
+                paintBuyHomeSeeTeaserRate();
+            }else if(refinanceTeaserRate.loanType){
+                refinanceTeaserRate.currentMortgageBalance=amt;
+                refinanceTeaserRate.cashTakeOut=amt1;
+                paintRefinanceSeeRates();
+            }
+            }
+        }
+ }
+  

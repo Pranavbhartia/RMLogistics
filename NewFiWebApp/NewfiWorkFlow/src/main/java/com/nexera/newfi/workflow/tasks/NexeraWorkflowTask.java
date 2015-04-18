@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Template;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
@@ -17,6 +18,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 
 @Component
 public abstract class NexeraWorkflowTask {
@@ -27,6 +29,9 @@ public abstract class NexeraWorkflowTask {
 	@Autowired
 	private LoanService loanService;
 
+	@Autowired
+	private TemplateService templateService;
+
 	public void sendEmail(HashMap<String, Object> objectMap) {
 		if (objectMap != null) {
 			LoanVO loanVO = new LoanVO();
@@ -34,9 +39,15 @@ public abstract class NexeraWorkflowTask {
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanTeamListVO loanTeam = loanService
 			        .getLoanTeamListForLoan(loanVO);
-			String emailTemplate = objectMap.get(
+			String emailTemplateKey = objectMap.get(
 			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
 			        .toString();
+			String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+			Template template = templateService
+			        .getTemplateByKey(emailTemplateKey);
+			if (template != null) {
+				emailTemplate = template.getValue();
+			}
 			EmailVO emailEntity = new EmailVO();
 			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 			String[] names = new String[1];
@@ -49,32 +60,44 @@ public abstract class NexeraWorkflowTask {
 				recipients.add(getReceipientVO(teamMember));
 				if (teamMember.getUser().getCustomerDetail() != null
 				        && teamMember.getUser().getCustomerDetail()
-				                .getSecEmailId() != null && !teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId().isEmpty()) {
+				                .getSecEmailId() != null
+				        && !teamMember.getUser().getCustomerDetail()
+				                .getSecEmailId().isEmpty()) {
 					recipients.add(getReceipientVO(teamMember.getUser()
 					        .getCustomerDetail().getSecEmailId(), teamMember
 					        .getUser().getFirstName(), teamMember.getUser()
 					        .getLastName()));
 				}
-
 			}
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", names);
+			substitutions = doTemplateSubstitutions(substitutions, objectMap);
 			emailEntity.setSenderEmailId("web@newfi.com");
 			emailEntity.setRecipients(recipients);
 			emailEntity.setSenderName("Newfi System");
 			emailEntity.setSubject("Nexera Newfi Portal");
-			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-
-			substitutions.put("-name-", names);
-			for (String key : objectMap.keySet()) {
-				String[] ary = new String[1];
-				ary[0] = objectMap.get(key).toString();
-				substitutions.put("-" + key + "-", ary);
-			}
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(emailTemplate);
 			sendGridEmailService.sendAsyncMail(emailEntity);
-
 		}
+	}
+
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+		String[] ary = new String[1];
+		ary[0] = objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO).toString();
+		substitutions.put("-message-", ary);
+		for (String key : objectMap.keySet()) {
+			ary = new String[1];
+			ary[0] = objectMap.get(key).toString();
+			substitutions.put("-" + key + "-", ary);
+		}
+		return substitutions;
 	}
 
 	private EmailRecipientVO getReceipientVO(LoanTeamVO teamMember) {

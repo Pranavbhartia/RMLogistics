@@ -39,6 +39,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		        Integer.parseInt(objectMap.get(
 		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 		        LoanStatus.creditScoreMessage);
+		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+		        LoanStatus.creditScoreMessage);
 		sendEmail(objectMap);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}

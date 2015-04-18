@@ -40,7 +40,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		String status = LoanStatus.APP_PAYMENT_PENDING;
+		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
@@ -68,9 +68,10 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.APP_FEE.getMilestoneKey());
 		if (mileStone != null && mileStone.getComments() != null) {
-			if (mileStone.getComments().equals(LoanStatus.APP_PAYMENT_PENDING))
-			{
-				engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecutionId, WorkItemStatus.STARTED.getStatus());
+			if (mileStone.getComments().equals(LoanStatus.APP_PAYMENT_PENDING)) {
+				engineTrigger.changeStateOfWorkflowItemExec(
+				        workflowItemExecutionId,
+				        WorkItemStatus.STARTED.getStatus());
 				returnStatus = WorkItemStatus.STARTED.getStatus();
 			}
 		}

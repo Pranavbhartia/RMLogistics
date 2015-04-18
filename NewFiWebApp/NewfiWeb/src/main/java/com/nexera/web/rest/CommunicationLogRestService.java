@@ -99,4 +99,32 @@ public class CommunicationLogRestService {
 		return response;
 	}
 
+	@RequestMapping(value = "/savePrivate", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO savePrivateCommunicationLog(
+	        @RequestBody String messageVOString) {
+
+		CommonResponseVO response = new CommonResponseVO();
+
+		try {
+			MessageVO messageVO = new Gson().fromJson(messageVOString,
+			        MessageVO.class);
+			LOG.debug("Saving a private message: " + messageVO);
+			messageVO.setIsPrivate(Boolean.TRUE);
+			String messageId = messageService.saveMessage(messageVO,
+			        MessageTypeEnum.NOTE.toString(), Boolean.TRUE);
+			response.setResultObject(messageId);
+			LOG.info("saving communication complete.");
+		} catch (FatalException | NonFatalException e) {
+			// TODO Auto-generated catch block
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+			LOG.error("Error in retrieving communication log", e);
+
+		} catch (Exception e) {
+			LOG.error("Error in retrieving communication log", e);
+			e.printStackTrace();
+		}
+
+		return response;
+	}
 }

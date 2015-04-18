@@ -84,7 +84,7 @@ public interface CommonConstants {
 
 	public static final String SENDER_EMAIL_ID = "support@loan.newfi.com";
 
-	public static final String RAREMILE_SUPPORT_EMAIL_ID = "anoop@raremile.com";
+	public static final String RAREMILE_SUPPORT_EMAIL_ID = "";
 
 	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>"
 	        + "Newfi Team";
@@ -145,6 +145,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_NEW_NOTE = "NEW_NOTE_TEMPLATE";
 	public static final String TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_TEST_TEMPLATE = "TEST_EMAIL_TEMPLATE_ID";
+	public static final String TEMPLATE_WORKFLOW_COMPLETION = "TEMPLATE_WORKFLOW_COMPLETION";
 
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 
