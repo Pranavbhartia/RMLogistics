@@ -148,3 +148,5 @@ ADD COLUMN `prop_ins_mon_yrly` VARCHAR(45) NULL DEFAULT NULL AFTER `newhome_budg
 
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='36' WHERE `id`='21';
+
+#Anoop - All scripts above this are in sync with the 1_create script.
