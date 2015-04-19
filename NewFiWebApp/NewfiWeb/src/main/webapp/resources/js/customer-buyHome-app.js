@@ -7,7 +7,7 @@ buyHome = {};
 appUserDetails.buyHome = buyHome;
 quesContxts = [];
 
-function paintBuyHomeContainer() {
+function paintBuyHomeContainer(appUserDetails) {
 
 	
 	
@@ -27,20 +27,20 @@ function paintBuyHomeContainer() {
 	wrapper.append(centerPanel);
 	$('#app-right-panel').append(wrapper);
 	purchase = true;
-	paintBuyHomeQuest();
+	paintBuyHomeQuest(appUserDetails);
 }
 
 
 
 
-function paintBuyHomeQuest() {
+function paintBuyHomeQuest(appUserDetails) {
 	//homeProgressBaar(1);
-	
-	
-		appUserDetails = {};
-	
+//	alert('JSON.stringify(appUserDetails)'+JSON.stringify(appUserDetails));
+	if(JSON.stringify(appUserDetails) == "{}"){
+	appUserDetails = {};
 		appUserDetails = JSON.parse(newfi.appUserDetails);
 	
+	}
 
 		user.id = newfi.user.id;
 		customerDetail.id = newfi.user.customerDetail.id;
@@ -121,7 +121,7 @@ function paintBuyHomeQuest() {
 	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
 		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
 	} 
-	else{
+	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="homeOwner"){
 		
 		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
 	}
