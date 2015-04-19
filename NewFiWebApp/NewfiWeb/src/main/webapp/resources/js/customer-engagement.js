@@ -1106,20 +1106,13 @@ function paintApplyNow(inputCustomerDetails) {
          propertyTypeMaster.propertyType=buyHomeTeaserRate.propertyType;
          propertyTypeMaster.residenceType=buyHomeTeaserRate.residenceType;
          appUserDetails.propertyTypeMaster = propertyTypeMaster;
-        }
-     
-        appUserDetails.user = user;
-       
-        
-        // Where livingSituation should goes 
+        }   
+        appUserDetails.user = user;       
+       // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        
-       
-       
-        console.log(JSON.stringify(appUserDetails));
         validateUsersBeforeRegistration(appUserDetails);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
-        saveUserAndRedirect(appUserDetails);
+        //saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
     });
     regContainerGetStarted.append(regGetStarted);
@@ -1194,7 +1187,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 window.location.href = data;
             },
             error: function(erro) {
-                alert("error");
+                showerrorToastMessage("error");
             }
         });
     }
