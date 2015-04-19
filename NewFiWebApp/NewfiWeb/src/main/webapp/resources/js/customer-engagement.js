@@ -932,7 +932,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         stages = 7;
         progressBaar(7);
         delete sessionStorage.refinaceData;
-        var quesTxt = "Analyze & Adjust Your Numbers";
+        var quesTxt = "Loan Rates and Fees";
         var container = $('<div>').attr({
             "class": "ce-rate-main-container"
         });
@@ -942,6 +942,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         // alert(JSON.stringify(refinanceTeaserRate));
         container.append(quesTextCont);
         $(parentContainer).html(container);
+       
         $('#overlay-loader').show();
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
@@ -951,6 +952,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             },
             datatype: "application/json",
             success: function(data) {
+            	
                 $('#overlay-loader').hide();
                
                   paintFixYourRatePageCEP(JSON.parse(data), teaserRateData,parentContainer,hideCreateAccountBtn);
@@ -958,6 +960,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             },
             error: function(data) {
                 alert("error inside paintRefinanceSeeRates :" +data);
+                
                 $('#overlay-loader').hide();
             }
         });
@@ -1194,7 +1197,7 @@ function getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcc
     });
     
     var rateWrapper = getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
-    var bottomText = getHeaderText("Quoted Rates are not guaranteed. You may use this tool to check current rates or request a  rate lock. APR is an estimate based on an average $200,000 loan amount with 2% in total APR related fees. Actual ARP will be available on your Good Faith Estimate after Loan Amount and Income are Verified.");
+    var bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
    
     parentWrapper.append(loanSummaryWrapper).append(rateWrapper).append(bottomText);
     return parentWrapper;
@@ -1223,7 +1226,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     });
     var header = $('<div>').attr({
         "class": "lock-rate-slider-header"
-    }).html("select loan program");
+    }).html("Select Loan Program and Rate");
     var container = $('<div>').attr({
         "class": "lock-rate-slider-container"
     });
@@ -1237,13 +1240,13 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     if(!hideCreateAccountBtn){
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
-        }).html("Create Your Account").on('click', function() {
+        }).html("Create Newfi Account").on('click', function() {
             var mainContainer = paintApplyNow(inputCustomerDetails);
             $('#ce-main-container').html(mainContainer);
         });
         rateBtn2 = $('<div>').attr({
             "class": "rate-btn-alertRate"
-        }).html("Email My Number").on('click', function() {
+        }).html("Email This Quote").on('click', function() {
             var mainContainer = paintApplyNow(inputCustomerDetails);
             $('#ce-main-container').html(mainContainer);
         });
@@ -1549,7 +1552,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "closingCostId");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO[index].closingCost), "closingCostId");
     
     bottomLeftCol.append(bottomLcRow);
     
@@ -1557,7 +1560,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     	"class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);

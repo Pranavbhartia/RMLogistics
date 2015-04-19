@@ -4266,7 +4266,7 @@ input.calc-input {
 .rate-btn-alertRate {
 
     width: 200px;
-    text-align: center;
+    text-align: right;
     border-radius: 3px;
     margin: 0 auto;
     cursor:pointer;
@@ -4274,6 +4274,8 @@ input.calc-input {
     background-size: 28px;
     line-height: 31px;
     margin-top: 6px;
+    padding-right:40px;
+    
 }
 
 .loan-manager-popup {
