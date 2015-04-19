@@ -22,7 +22,7 @@ function paintMySpouseIncome() {
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 	
 
-	var quesTxt = "Spouse Details :Select all that apply";
+	var quesTxt = "Co-borrower Details :Select all that apply";
 	var options = [ {
 		"text" : "W2 Employee",
 		"onselect" : paintSpouseRefinanceEmployed,
@@ -35,19 +35,55 @@ function paintMySpouseIncome() {
 		"name" : "isSpouseSelfEmployed",
         "data" : selfEmployedData,
 		"value" : 1
-	}, {
-		"text" : "Social Security Income/Disability",
-		"onselect" : paintSpouseRefinanceDisability,
-		"name" :"isSpouseIncomeOrDisability",
-        "data" : ssiData,
-		"value" : 2
+	},/*, {
+	"text" : "Social Security Income/Disability",
+	"onselect" : paintRefinanceDisability,
+	"name" :"isssIncomeOrDisability",
+    "data" : ssiData,
+	"value" : 2
 	}, {
 		"text" : "Pension/Retirement/401(k)",
-		"onselect" : paintSpouseRefinancePension,
-		"name" : "isSpousePensionOrRetirement",
-        "data" : prData,
+		"onselect" : paintRefinancePension,
+		"name" : "ispensionOrRetirement",
+	    "data" : prData,
 		"value" : 3
-	} ];
+	}*/
+	{
+		"text" : "Child Support/Alimony",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+	    "data" : "",
+		"value" : 2
+	}, 
+	{
+		"text" : "Social Security Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+	    "data" : "",
+		"value" : 3
+	}, 
+	{
+		"text" : "Disability Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+	    "data" : "",
+		"value" : 4
+	}, 
+	{
+		"text" : "Pension Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+	    "data" : "",
+		"value" : 5
+	}, 
+	{
+		"text" : "Retirement Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+	    "data" : "",
+		"value" : 6
+	}];
+	
 	var quesCont = paintSpouseCustomerApplicationPageStep3(quesTxt, options, name);
 
 	
@@ -56,12 +92,12 @@ function paintMySpouseIncome() {
 		var questcontainer = $('#app-right-panel').append(quesCont);
 		
 		
-		for(var i=0;i<options.length;i++){
+		/*for(var i=0;i<options.length;i++){
             var option=options[i];
             if(option.onselect){
                 option.onselect(option.value,option.data);
             }
-        }
+        }*/
 		
 		console.log('purchase'+purchase);
 		if(purchase == true)
@@ -565,7 +601,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
 	quesDeclarationContxts = [];
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Spouse Declaration Questions";
+    var quesHeaderTxt = "Declaration for co-borrower";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -597,7 +633,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
         selected: ""
     }, {
         type: "yesno",
-        text: "Have you had property foreclosed upon or given title or deed in lieu thereof in the last 7 years?",
+        text: "Have you had property foreclosed upon or given title or deed in lieu of in the last 7 years?",
         name: "isPropertyForeclosed",
         options: [{
             text: "Yes",

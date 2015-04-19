@@ -797,7 +797,7 @@ $('#app-right-panel').html("");
                     
                      {
                          "type": "yesno",
-                         "text": "Do you have a second mortgage on this property? ?",
+                         "text": "Do you have a second mortgage on this property ?",
                          "name": "secondMortgage",
                          "options": [
                              {
@@ -1005,13 +1005,13 @@ function paintCustomerApplicationPageStep2() {
 	appProgressBaar(3); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Who's on the Loan?";
+    var quesHeaderTxt = "Co­borrower Information";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
    
-    var questions = [{
+    /*var questions = [{
         type: "yesno",
         text: "Are you married?",
         name: "maritalStatus",
@@ -1030,6 +1030,39 @@ function paintCustomerApplicationPageStep2() {
                     }]
                 }, {
                     text: "No"
+                }],
+                selected: ""
+            }]
+        }, {
+            text: "No"
+        }],
+        selected: ""
+    }];*/
+
+    var questions = [{
+        type: "yesno",
+        text: "Is there a co‐borrower?",
+        name: "",
+        options: [{
+            text: "Yes",
+            addQuestions:[{
+                type: "yesno",
+                text: "Is the co‐borrower your spouse?",
+                name: "",
+                options: [{
+                    text: "Yes",
+                    addQuestions:[{
+                        type: "desc",
+                        text: "Co‐borrower’s Name",
+                        name: ""
+                    }]
+                }, {
+                    text: "No",
+                    addQuestions:[{
+                        type: "desc",
+                        text: "Co‐borrower’s Name",
+                        name: ""
+                    }]
                 }],
                 selected: ""
             }]
@@ -1254,7 +1287,7 @@ function incomesSelectALLThatApply() {
 		"name" : "isselfEmployed",
         "data" : selfEmployedData,
 		"value" : 1
-	}, {
+	},/*, {
 		"text" : "Social Security Income/Disability",
 		"onselect" : paintRefinanceDisability,
 		"name" :"isssIncomeOrDisability",
@@ -1266,16 +1299,51 @@ function incomesSelectALLThatApply() {
 		"name" : "ispensionOrRetirement",
         "data" : prData,
 		"value" : 3
-	} ];
+	}*/
+	{
+		"text" : "Child Support/Alimony",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+        "data" : "",
+		"value" : 2
+	}, 
+	{
+		"text" : "Social Security Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+        "data" : "",
+		"value" : 3
+	}, 
+	{
+		"text" : "Disability Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+        "data" : "",
+		"value" : 4
+	}, 
+	{
+		"text" : "Pension Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+        "data" : "",
+		"value" : 5
+	}, 
+	{
+		"text" : "Retirement Income",
+		"onselect" : paintRefinancePension,
+		"name" :"",
+        "data" : "",
+		"value" : 6
+	}];
 	
 	    var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
         $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
-        for(var i=0;i<options.length;i++){
+        /*for(var i=0;i<options.length;i++){
             var option=options[i];
             if(option.onselect){
                 option.onselect(option.value,option.data);
             }
-        }
+        }*/
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1592,12 +1660,120 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     	var currentMonth = new Date().getMonth();
     	
     	if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
-    		$('#ce-option_0').find('.add-account-btn').trigger('click');
-    		var text = "Previous Employement Details";
-    		$('#ce-option_0').children('.ce-option-ques-wrapper').last().find('.ce-ques-wrapper').find('.ce-option-text').html(text);
+    		/*$('#ce-option_0').find('.add-account-btn').trigger('click');*/
+    		if($('#ce-option_0').children('.prev-employement-ques').length <= 0){
+    			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
+    		}
     	}
     });
 });
+
+function getPreviousEmployementQuestions(value) {
+	
+	var wrapper = $('<div>').attr({
+		"class" : "ce-option-ques-wrapper prev-employement-ques"
+	});
+	
+	
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper",
+	});
+
+	var quesTextCont = $('<div>').attr({
+		"class" : "ce-option-text",
+	}).html("Previous Employement Details");
+
+	var optionContainer = $('<div>').attr({
+		"class" : "ce-options-cont",
+	});
+
+	var quesTextCont1 = $('<div>').attr({
+		"class" : "ce-rp-ques-text",
+	}).html("Annual Income Before Tax");
+   
+	var val="";
+   
+	if(value&&value.employedIncomePreTax)
+        val=value.employedIncomePreTax;
+	
+	var inputBox1 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "beforeTax"
+	});
+	if(val!=""){
+		inputBox1.attr("value",val);
+	}
+
+	var quesTextCont0 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	});
+	
+	
+	var val="";
+	   
+	if(value && value.id)
+        val=value.id;
+	var inputBox0 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "customerEmploymentIncomeId",
+		"type":"hidden"
+	});
+	if(val!=""){
+		inputBox0.attr("value",val);
+	}
+	quesTextCont0.append(inputBox0);
+	
+	quesTextCont1.append(inputBox1);
+
+	var quesTextCont2 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("Name of Previous Employer");
+    val="";
+    if(value&&value.employedAt)
+        val=value.employedAt;
+	var inputBox2 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "workPlace"
+	});
+	if(val!=""){
+		inputBox2.attr("value",val);
+	}
+	quesTextCont2.append(inputBox2);
+
+	var quesTextCont3 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("Years of Employment");
+    val="";
+    if(value&&value.employedSince)
+        val=value.employedSince;
+	var inputBox3 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "startWorking"
+	});
+	if(val!=""){
+		inputBox3.attr("value",val);
+	}
+	quesTextCont3.append(inputBox3);
+	
+	var quesTextCont4 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html("Job Title");
+    /*if(value&&value.employedSince)
+        val=value.employedSince;*/
+	var inputBox4 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : ""
+	});
+	if(val!=""){
+		inputBox4.attr("value",val);
+	}
+	quesTextCont4.append(inputBox4);
+
+	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
+
+	 container.append(quesTextCont).append(optionContainer); 
+     return wrapper.append(container);
+}
 
 $('body').on('focus',"input[name='birthday']",function(){
 			
@@ -1898,51 +2074,50 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			event.data.option.onselect(event.data.option.value);
 		});
 
-	optionContainer.append(option);
+		optionContainer.append(option);
 		
-		var addAccountBtn = $('<div>').attr({
-			"class" : "add-btn add-account-btn"
-		}).html("Add additional source of income").bind('click',function(){
-			
-			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
-			
-			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
-				showToastMessage("Maximum 3 income needed");
-			     return false;
-			}
-			var quesTxt = "About how much do you make a year";
-    		var quesCont = getMultiTextQuestion(quesTxt);
-			/*var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
-			$(this).parent().find('.ce-option-ques-wrapper').unwrap();*/
-			$(this).before(quesCont);
-			
-			$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
-			
-			/*var removeAccBtn = $('<div>').attr({
-				"class" : "add-btn remove-account-btn"
-			}).html("Remove Income")
-			.bind('click',{"mainContainerId":mainContainerId},function(event){
-				$(this).closest('.ce-option-ques-wrapper').remove();
-				var parentDiv = $('#'+event.data.mainContainerId);
-				
-				if(parentDiv.children('.ce-option-ques-wrapper').length==1){
-					parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
-				}
-			});*/
-			
-			$(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
-		});
-	
 		if(i==0){
-		optionsWrapper.append(addAccountBtn);
+			var addAccountBtn = $('<div>').attr({
+				"class" : "add-btn add-account-btn"
+			}).html("Add additional source of income").bind('click',function(){
+				
+				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
+				
+				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
+					showToastMessage("Maximum 3 income needed");
+				     return false;
+				}
+				var quesTxt = "About how much do you make a year";
+	    		var quesCont = getMultiTextQuestion(quesTxt);
+				/*var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
+				$(this).parent().find('.ce-option-ques-wrapper').unwrap();*/
+				$(this).before(quesCont);
+				
+				//$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+				
+				/*var removeAccBtn = $('<div>').attr({
+					"class" : "add-btn remove-account-btn"
+				}).html("Remove Income")
+				.bind('click',{"mainContainerId":mainContainerId},function(event){
+					$(this).closest('.ce-option-ques-wrapper').remove();
+					var parentDiv = $('#'+event.data.mainContainerId);
+					
+					if(parentDiv.children('.ce-option-ques-wrapper').length==1){
+						parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+					}
+				});*/
+				
+				$(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
+			});
+			optionsWrapper.append(addAccountBtn);
 		}
+		
 		optionContainer.append(optionsWrapper);
 	}
 
-if(purchase ==true)
-{
-return container.append(quesTextCont).append(optionContainer);
-}
+	if(purchase ==true) {
+		return container.append(quesTextCont).append(optionContainer);
+	}
 
 	return container.append(quesTextCont).append(optionContainer);
 }
@@ -1988,7 +2163,7 @@ function paintCustomerApplicationPageStep4a() {
         selected: ""
     }, {
         type: "yesno",
-        text: "Have you had property foreclosed upon or given title or deed in lieu thereof in the last 7 years?",
+        text: "Have you had property foreclosed upon or given title or deed in lieu of in the last 7 years?",
         name: "isPropertyForeclosed",
         options: [{
             text: "Yes",
@@ -2326,7 +2501,7 @@ function paintCustomerApplicationPageStep4a() {
     });
 
 	var options = [ {
-		"text" : "No thank you. Let's move on",
+		"text" : "I decline to Provide",
 		"name" : "bypassoptional",
 		"value" : 0
 	}];
@@ -2547,7 +2722,7 @@ function paintCustomerApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "My Credit";
+    var quesHeaderTxt = "Credit for";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -2557,18 +2732,48 @@ function paintCustomerApplicationPageStep5() {
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
+    var socialSecurityWrapper = $('<div>').attr({
+    	"class" : "ce-options-cont"
+    });
+    
+    var isAuthorizedCheckBox = $('<div>').attr({
+    	"class" : "ce-option-checkbox"
+    }).html("I authorize Newfi to pull my credit report for the purposes of applying for a mortgage loan")
+    .bind('click',function(){
+    	if($(this).hasClass('ce-option-checked')){
+    		$(this).removeClass('ce-option-checked');
+    		$(this).parent().find('.ss-ques-wrapper').hide();
+    	}else{
+    		$(this).addClass('ce-option-checked');
+    		$(this).parent().find('.ss-ques-wrapper').show();
+    	}
+    });
+    
+    var socialSecurityQues = [{
+        type: "desc",
+        text: "Social Security Number",
+        name: "ssn",
+        value: appUserDetails.user.customerDetail.ssn
+    }];
+    
+    var socialSecurityQuesContainer = $('<div>').attr({
+    	"class" : "hide ss-ques-wrapper"
+    }).append(getQuestionsContainer(socialSecurityQues));
+    
+    socialSecurityWrapper.append(isAuthorizedCheckBox).append(socialSecurityQuesContainer);
+    
     var questions = [{
         type: "desc",
         text: "Birthday",
         name: "birthday",
         value: dob
-    },
+    }/*,
     {
         type: "desc",
         text: "Social Security Number",
         name: "ssn",
         value: appUserDetails.user.customerDetail.ssn
-    },
+    }*/,
     {
         type: "desc",
         text: "Phone Number",
@@ -2623,7 +2828,7 @@ function paintCustomerApplicationPageStep5() {
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
-        .append(saveAndContinueButton);
+        .append(socialSecurityWrapper).append(saveAndContinueButton);
 }
 
 
@@ -2635,7 +2840,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "My Spouse Credit";
+    var quesHeaderTxt = "Credit for co-borrower";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -4198,14 +4403,14 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Spouse Government Monitoring Questions";
+    var quesHeaderTxt = "Government Monitoring Questions for co-borrower";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     });
 
 	var options = [ {
-		"text" : "No thank you. Let's move on",
+		"text" : "I decline to Provide",
 		"name" : name,
 		"value" : 0
 	}];
