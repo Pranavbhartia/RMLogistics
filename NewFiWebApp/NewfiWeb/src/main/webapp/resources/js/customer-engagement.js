@@ -1117,6 +1117,7 @@ function paintApplyNow(inputCustomerDetails) {
        
        
         console.log(JSON.stringify(appUserDetails));
+        validateUsersBeforeRegistration(appUserDetails);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
@@ -1130,7 +1131,31 @@ function paintApplyNow(inputCustomerDetails) {
     regMainContainer.append(regContainerGetStarted);
     return parentWrapper.append(regMainContainer);
 }
+function validateUsersBeforeRegistration(registration){
+	$('#overlay-loader').show();
+    $.ajax({
+        url: "rest/shopper/userValidation",
+        type: "POST",
+        data: {
+            "registrationDetails": JSON.stringify(registration)
+        },
+        datatype: "application/json",
+        success: function(data) {
 
+            $('#overlay-loader').hide();
+            if(data.error==null){
+            	 saveUserAndRedirect(registration);
+            }else{
+            	showErrorToastMessage(data.error.message);
+            }
+           
+        },
+        error: function(data) {
+
+             $('#overlay-loader').hide();
+        }
+    });
+}
 function saveUserAndRedirect(registration) {
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
