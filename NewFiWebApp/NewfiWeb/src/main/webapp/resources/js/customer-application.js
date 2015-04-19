@@ -135,6 +135,7 @@ function applicationStatusPanelItem(itemTxt, stepNo, itemCompletionStage) {
 function paintCustomerApplicationPage() {
 	appUserDetails = {};
 	
+	//alert('newfi.appUserDetails'+JSON.stringify(newfi.appUserDetails));
 	appUserDetails = JSON.parse(newfi.appUserDetails);
 	
 
@@ -1196,7 +1197,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName'){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -3456,7 +3457,7 @@ function getMonthYearTextQuestionContext(contxt) {
 
 
 function saveAndUpdateLoanAppForm(appUserDetails,callBack){
-	var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(!LQBFileId){
     	$.ajax({
     		url:"rest/application/applyloan",
@@ -3525,7 +3526,9 @@ function showLoanAppFormContainer(formCompletionStatus){
 
 
 function paintSelectLoanTypeQuestion() {
-    
+    	appUserDetails = {};
+		appUserDetails = JSON.parse(newfi.appUserDetails);
+	
 	appProgressBaar(1);
 	console.log("Inside paintSelectLoanTypeQuestion ");
 	stages = 0;
@@ -3555,9 +3558,15 @@ function paintSelectLoanTypeQuestion() {
 	var option1 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
-		loanType.loanTypeCd = "REF";
-		appUserDetails.loanType= loanType;
-		paintPageBasedObLoanType();
+		//loanType.loanTypeCd = "REF";
+		appUserDetails.loanType.id= "2";
+		appUserDetails.loan.loanType.id = "2";
+		appUserDetails.loanType.loanTypeCd= "REF";
+		appUserDetails.loan.loanType.loanTypeCd = "REF";
+		appUserDetails.loanType.description= "Refinance";
+		appUserDetails.loan.loanType.description = "Refinance";
+		
+		paintPageBasedObLoanType(appUserDetails);
 	});
 	
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
@@ -3567,9 +3576,24 @@ function paintSelectLoanTypeQuestion() {
 	var option2 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Buy a home").on('click', function() {
-		loanType.loanTypeCd = "PUR";
-		appUserDetails.loanType= loanType;
-		paintPageBasedObLoanType();
+	
+	console.log('setting value as purchase');
+		
+	
+	
+	
+		//loanType.loanTypeCd = "PUR";
+		appUserDetails.loanType.id= "1";
+		appUserDetails.loan.loanType.id = "1";
+		appUserDetails.loanType.loanTypeCd= "PUR";
+		appUserDetails.loan.loanType.loanTypeCd = "PUR";
+		appUserDetails.loanType.description= "Purchase";
+		appUserDetails.loan.loanType.description = "Purchase";
+		
+		
+		
+		
+		paintPageBasedObLoanType(appUserDetails);
 	});
 
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
@@ -3588,9 +3612,10 @@ function paintSelectLoanTypeQuestion() {
 
 	$('#app-right-panel').append(wrapper);
 }
-function paintPageBasedObLoanType(){
+function paintPageBasedObLoanType(appUserDetails){
+
     if(appUserDetails.loanType.loanTypeCd == "PUR"){
-        paintBuyHomeContainer();
+        paintBuyHomeContainer(appUserDetails);
     }else if(appUserDetails.loanType.loanTypeCd == "REF"){
         paintRefinanceMainContainer();
     }
