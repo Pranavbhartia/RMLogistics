@@ -1127,7 +1127,7 @@ function paintApplyNow(inputCustomerDetails) {
 function validateUsersBeforeRegistration(registration){
 	$('#overlay-loader').show();
     $.ajax({
-        url: "rest/shopper/userValidation",
+        url: "rest/shopper/validate",
         type: "POST",
         data: {
             "registrationDetails": JSON.stringify(registration)
@@ -1144,7 +1144,7 @@ function validateUsersBeforeRegistration(registration){
            
         },
         error: function(data) {
-
+             showErrorToastMessage(data);
              $('#overlay-loader').hide();
         }
     });
@@ -1170,6 +1170,7 @@ function saveUserAndRedirect(registration) {
            // alert(data);
             $('#ce-main-container').html(data.toString());
             // $('#overlay-loader').hide();
+            showErrorToastMessage(data);
         }
     });
 }
@@ -1187,7 +1188,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 window.location.href = data;
             },
             error: function(erro) {
-                showerrorToastMessage("error");
+                showerrorToastMessage(erro);
             }
         });
     }
