@@ -239,92 +239,96 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.info("Checking for customer profile status of customers");
 			if (customerDetail.getProfileCompletionStatus() != null) {
 				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
-					if (userVO.getCustomerDetail().getMobileAlertsPreference()
-					        && userVO.getPhoneNumber() != null) {
-						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							if(userVO.getPhotoImageUrl()==null){
+					if (userVO.getCustomerDetail().getMobileAlertsPreference()) {
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_CREATE) {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD) {
+							if (userVO.getPhotoImageUrl() != null) {
 								customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-							}else{
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+							} else {
 								customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 							}
-							
-						}
 
-					} else if (userVO.getCustomerDetail()
-					        .getMobileAlertsPreference() == false) {
-						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							if(userVO.getPhotoImageUrl()==null){
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus());
+						}
+					} else {
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_CREATE) {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD) {
+							if (userVO.getPhotoImageUrl() != null) {
 								customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-							}else{
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+							} else {
 								customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
 							}
-						}
 
-					} else if (userVO.getCustomerDetail()
-					        .getMobileAlertsPreference() == false
-					        && userVO.getPhotoImageUrl() != null
-					        && userVO.getPhoneNumber() == null) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus());
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus());
+						}
 					}
+				} else {
+
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+
 				}
 			} else {
-				if (userVO.getPhotoImageUrl() == null) {
-					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
-					if (userVO.getPhoneNumber() != null
-					        && userVO.getCustomerDetail()
-					                .getMobileAlertsPreference()) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					} else if (userVO.getPhoneNumber() != null
-					        && userVO.getCustomerDetail()
-					                .getMobileAlertsPreference() == false) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					}
-				} else if (userVO.getPhoneNumber() != null
-				        && userVO.getCustomerDetail()
-				                .getMobileAlertsPreference()
-				        && userVO.getPhotoImageUrl() != null) {
-					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
-				} else if (userVO.getCustomerDetail()
-				        .getMobileAlertsPreference() == false
-				        && userVO.getPhotoImageUrl() != null
-				        && userVO.getPhoneNumber() != null) {
-					if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					}
-
-				} else if (userVO.getCustomerDetail()
-				        .getMobileAlertsPreference() == false
-				        && userVO.getPhotoImageUrl() != null
-				        && userVO.getPhoneNumber() == null) {
-					customerDetail.setProfileCompletionStatus(customerDetail
-					        .getProfileCompletionStatus());
-				}
-
-			}
-			if (customerDetail.getProfileCompletionStatus() > ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
 				customerDetail
-				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
+				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+					if (userVO.getCustomerDetail().getMobileAlertsPreference()) {
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_CREATE) {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD) {
+							if (userVO.getPhotoImageUrl() != null) {
+								customerDetail
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+							} else {
+								customerDetail
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+							}
+
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus());
+						}
+					} else {
+						if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_CREATE) {
+							customerDetail
+							        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD) {
+							if (userVO.getPhotoImageUrl() != null) {
+								customerDetail
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+							} else {
+								customerDetail
+								        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+							}
+
+						} else if (customerDetail.getProfileCompletionStatus() == ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
+							customerDetail
+							        .setProfileCompletionStatus(customerDetail
+							                .getProfileCompletionStatus());
+						}
+					}
+				} else {
+
+					customerDetail
+					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
+
+				}
 			}
 
 		}
@@ -1097,8 +1101,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getPropertyTypeMaster().getPropTaxMonthlyOryearly());
 				propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO
 				        .getPropertyTypeMaster().getPropInsMonthlyOryearly());
-				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO.getPropertyTypeMaster().getPropertyTypeCd());
-				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO.getPropertyTypeMaster().getResidenceTypeCd());
+				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO
+				        .getPropertyTypeMaster().getPropertyTypeCd());
+				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO
+				        .getPropertyTypeMaster().getResidenceTypeCd());
 			}
 
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
