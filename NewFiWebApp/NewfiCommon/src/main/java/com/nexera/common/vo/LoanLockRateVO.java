@@ -9,6 +9,8 @@ public class LoanLockRateVO implements Serializable {
 	private String IlpTemplateId;
 	private String requestedRate;
 	private String requestedFee;
+	private Integer loanId;
+	
 	public String getsLoanNumber() {
 		return sLoanNumber;
 	}
@@ -32,6 +34,12 @@ public class LoanLockRateVO implements Serializable {
 	}
 	public void setRequestedFee(String requestedFee) {
 		this.requestedFee = requestedFee;
+	}
+	public Integer getLoanId() {
+		return loanId;
+	}
+	public void setLoanId(Integer loanId) {
+		this.loanId = loanId;
 	}
 	
 

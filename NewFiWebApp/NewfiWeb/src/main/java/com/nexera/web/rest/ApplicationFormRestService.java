@@ -54,6 +54,7 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
+import com.nexera.core.service.LoanService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -64,6 +65,9 @@ public class ApplicationFormRestService {
 	        .getLogger(ApplicationFormRestService.class);
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+	
+	@Autowired
+	private LoanService loanService;
 
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
@@ -934,6 +938,7 @@ public class ApplicationFormRestService {
 			lockRateData = invokeRest(prepareLockLoanRateJson(loanLockRateVO)
 			        .toString());
 			System.out.println("lockLoanRate is" + lockRateData);
+			loanService.updateLoan(loanLockRateVO.getLoanId(), true);
 
 		} catch (Exception e) {
 			e.printStackTrace();

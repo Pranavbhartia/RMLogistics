@@ -874,4 +874,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		query.setParameter("ID", loanId);
 		query.executeUpdate();
 	}
+
+	@Override
+    public void updateLoan(Integer loanId, Boolean rateLocked) {
+	  
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.isRateLocked = :ISRATELOCKED WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("ISRATELOCKED", rateLocked);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+	    
+    }
 }

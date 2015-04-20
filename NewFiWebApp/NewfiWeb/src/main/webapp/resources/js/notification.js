@@ -209,7 +209,12 @@ function getNotificationContext(loanId,userId){
 		paintLoanNotification:function(notification,callback){
 			var ob=this;
 			var closebtn=(notification.dismissable==true?'<div class="lp-alert-close-btn float-right" onclick="removeNotification(\'LNID'+notification.id+'\')"></div>':'');
-			$("#"+ob.loanContainerId).append('<div class="lp-alert-item-container clearfix" id="LNID'+notification.id+'"><div class="lp-alert-item float-left">'+notification.content+'</div>'+closebtn+'</div>');
+			var customerName = "";
+			if (notification.loanID != 0)
+			{
+				customerName = notification.customerName;
+			}
+			$("#"+ob.loanContainerId).append('<div class="lp-alert-item-container clearfix" id="LNID'+notification.id+'"><div class="lp-alert-item float-left">'+notification.content+ ' - '+ customerName + '</div>'+closebtn+'</div>');
 			if(callback){
 				callback(ob);
 			}
@@ -597,11 +602,19 @@ function getAlertNotificationRow(notification,contxt){
 		"class" : "alert-popup-txt"
 	}).html(notification.content);
 	
+	var customerName = $('<div>').attr({
+		"class" : "alert-popup-txt"
+	}).html(" For : " + notification.customerName);
+	
 	var alertTime = $('<div>').attr({
 		"class" : "alert-popup-time"
 	}).html(getTimeElapsedString(notification.remindOn));
 	
-	alertTxtCont.append(alertTxt).append(alertTime);
+	alertTxtCont.append(alertTxt);
+	if(notification.customerName)
+		alertTxtCont.append(customerName);
+	if(notification.remindOn)
+		alertTxtCont.append(alertTime);
 	
 	container.append(alertIcn).append(alertTxtCont);
 	

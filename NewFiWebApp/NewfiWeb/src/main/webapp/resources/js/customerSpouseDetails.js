@@ -12,7 +12,7 @@ function paintMySpouseIncome() {
         employedData={"selected":true,"data":appUserDetails.customerSpouseEmploymentIncome};
    
    
-    var ssiData={};
+    var ssiData={};	
     if(appUserDetails)
         ssiData={"selected":appUserDetails.customerSpouseDetail.isssIncomeOrDisability,"data":appUserDetails.customerSpouseDetail.ssDisabilityIncome};
    
@@ -22,7 +22,7 @@ function paintMySpouseIncome() {
         prData={"selected":appUserDetails.customerSpouseDetail.ispensionOrRetirement,"data":appUserDetails.customerSpouseDetail.monthlyPension};
 	
 
-	var quesTxt = "Co-borrower Details :Select all that apply";
+	var quesTxt = "Co-borrowe details :Select all that apply";
 	var options = [ {
 		"text" : "W2 Employee",
 		"onselect" : paintSpouseRefinanceEmployed,
