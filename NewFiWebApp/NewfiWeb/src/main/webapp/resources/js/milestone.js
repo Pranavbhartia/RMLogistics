@@ -439,6 +439,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				data.userID=workFlowContext.customer.id;
 				data.loanID = workFlowContext.loanId;
 			}
+			else if(ob.workItem.workflowItemType=="LOAN_MANAGER_DECISION"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+				data.loanID = workFlowContext.loanId;
+			}
 			
 			ob.stateInfoContainer=txtRow1;
 			itemToAppendTo.append(txtRow1);
