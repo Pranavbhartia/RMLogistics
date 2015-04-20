@@ -130,6 +130,7 @@ public class WorkflowConstants {
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an agent? Please add him to NewFi Team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase doucments are about to expire within {\"24\":\"elapsed\"} hours ";
+	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC = "The purchase doucments are about to expire.";
 	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "INitial needs list not created";
 	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
 	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
