@@ -26,7 +26,7 @@
 					<div class="float-left">
 							<div class="clearfix ">
 									<div class="float-left">
-										<div> Landing rates as of : <span id="folderCurrentTimeStamp"></span></div>
+										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
 									</div>
 									<div class="float-right printIcon" >
 										<div class="print" onclick="window.print()" title="print"></div>

@@ -936,18 +936,34 @@ function getRatesTableRow(rateObj) {
 		"class" : "td"
 	}).html(fifteenYearValue);
 
+	if(fifteenYearValue != "-"){
+		col2.append("%");
+	}
+	
 	var col3 = $('<div>').attr({
 		"class" : "td"
 	}).html(thirtyYearValue);
 
+	if(thirtyYearValue != "-"){
+		col3.append("%");
+	}
+	
 	var col4 = $('<div>').attr({
 		"class" : "td"
 	}).html(fortyfiveYearValue);
 
+	if(fortyfiveYearValue != "-"){
+		col4.append("%");
+	}
+	
 	var col5 = $('<div>').attr({
 		"class" : "td"
 	}).html(sixtyYearValue);
 
+	if(sixtyYearValue != "-"){
+		col5.append("%");
+	}
+	
 	return container.append(col1).append(col2).append(col3).append(col4)
 			.append(col5);
 }
