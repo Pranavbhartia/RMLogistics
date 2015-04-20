@@ -309,11 +309,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		try {
 			// Create thumbnail of the file
 			thumbPath = nexeraUtility.convertPDFToThumbnail(file.getPath(),
-			        nexeraUtility.tomcatDirectoryPath());
+			        file.getAbsolutePath());
 
 		} catch (Exception e) {
 
-			LOG.error("Exception in s3PathThumbNail : " + e.getMessage());
+			LOG.error("Exception in s3PathThumbNail : " + e.getMessage(), e);
 		}
 
 		LOG.info("The thumbnail path for local  :  " + thumbPath);
@@ -399,7 +399,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				        contentType);
 				fileUpload = true;
 			} else if (contentType.equalsIgnoreCase("application/pdf")) {
-				localFilePath = nexeraUtility.uploadFileToLocal(file);
+				// localFilePath = nexeraUtility.uploadFileToLocal(file);
+				localFilePath = file.getAbsolutePath();
 				fileUpload = true;
 			}
 
