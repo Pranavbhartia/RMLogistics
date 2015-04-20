@@ -1230,7 +1230,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress'){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
