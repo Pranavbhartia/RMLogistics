@@ -60,7 +60,8 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		NeededItemScoreVO neededItemScoreVO = needsListService
 		        .getNeededItemsScore(loanId);
 		String status = null;
-		if (neededItemScoreVO.getTotalSubmittedItem() > 0) {
+		if (neededItemScoreVO.getTotalSubmittedItem() > 0
+		        || neededItemScoreVO.getNeededItemRequired() > 0) {
 			// Needed list created by Loan Manager
 			status = WorkItemStatus.PENDING.getStatus();
 			LoanVO loanVO = loanService.getLoanByID(loanId);
