@@ -146,13 +146,6 @@ public class TemplateController extends DefaultController {
 
 				} else {
 
-					if (userVO.getCustomerDetail().getMobileAlertsPreference() == null) {
-						userVO.getCustomerDetail().setMobileAlertsPreference(
-						        false);
-					} else {
-						userVO.getCustomerDetail().setMobileAlertsPreference(
-						        true);
-					}
 					userProfileService.updateCustomerDetails(userVO);
 				}
 			}

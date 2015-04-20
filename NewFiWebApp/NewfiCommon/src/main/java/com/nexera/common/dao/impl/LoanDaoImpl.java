@@ -248,7 +248,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 	}
 
-	public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
+	@Override
+    public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
 
 		try {
 
@@ -484,9 +485,13 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	public Integer getNeededItemsRequired(Integer loanId) {
 
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(LoanNeedsList.class)
-		        .createAlias("loan", "loanList").createAlias("needsListMaster", "nlm")
-		        .add(Restrictions.eq("loanList.id", loanId)).add(Restrictions.ne("nlm.label", CommonConstants.LQB_DOC_TYPE_CR));
+		Criteria criteria = session
+		        .createCriteria(LoanNeedsList.class)
+		        .createAlias("loan", "loanList")
+		        .createAlias("needsListMaster", "nlm")
+		        .add(Restrictions.eq("loanList.id", loanId))
+		        .add(Restrictions.ne("nlm.label",
+		                CommonConstants.LQB_DOC_TYPE_CR));
 		LOG.info("criteria : " + criteria);
 		Integer result = criteria.list().size();
 		LOG.info("criteria result: " + result);
@@ -629,8 +634,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		criteria.add(Restrictions.eq("loan", loan));
 		criteria.add(Restrictions
 		        .eq("loanMilestoneMaster", loanMilestoneMaster));
-		criteria.addOrder(Order.desc("id"));
 		criteria.addOrder(Order.desc("order"));
+		criteria.addOrder(Order.desc("id"));
 		List<LoanMilestone> milestones = criteria.list();
 
 		LoanMilestone latestMS = null;

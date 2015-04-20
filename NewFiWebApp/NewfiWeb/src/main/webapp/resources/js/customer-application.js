@@ -1230,7 +1230,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress'){
+		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -2790,13 +2790,17 @@ function paintCustomerApplicationPageStep5() {
     	dateOfBirth = $('input[name="birthday"]').val();
     	ssn =  $('input[name="ssn"]').val();
     	secPhoneNumber =  $('input[name="phoneNumber"]').val();
+    	var dat=new Date(dateOfBirth);
+        var dateNow=new Date();
+        dateNow.setFullYear(dateNow.getFullYear()-18);
+        var yearCount=(dateNow.getTime()-dat.getTime());
     	
-    	
-    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !=""){
+    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !="" && yearCount>=0){
     		
     		//appUserDetails.customerDetail
     		
     		customerDetailTemp =  appUserDetails.user.customerDetail;
+
     		customerDetailTemp.dateOfBirth= new Date(dateOfBirth).getTime();
     		customerDetailTemp.ssn = ssn;
     		customerDetailTemp.secPhoneNumber = secPhoneNumber;
@@ -2810,19 +2814,21 @@ function paintCustomerApplicationPageStep5() {
     /////alert(JSON.stringify(appUserDetails));
     		
     		
-    		if(appUserDetails.isSpouseOnLoan == true)
-				{
+    		if(appUserDetails.isSpouseOnLoan == true){
 				saveAndUpdateLoanAppForm(appUserDetails,paintCustomerSpouseApplicationPageStep5());
-				}else{
+			}else{
 				 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
-				}
+			}
     		
     		
     		
     		
     		
     	}else{
-    		showToastMessage("Please give the answers of the questions");
+            if(yearCount<0){
+                showToastMessage("You must be at least 18 years of age.");
+            }else
+    		  showToastMessage("Please give the answers of the questions.");
     	}
     	
     });
@@ -2877,9 +2883,12 @@ function paintCustomerSpouseApplicationPageStep5() {
     	dateOfBirth = $('input[name="birthday"]').val();
     	ssn =  $('input[name="ssn"]').val();
     	secPhoneNumber =  $('input[name="phoneNumber"]').val();
+    	var dat=new Date(dateOfBirth);
+        var dateNow=new Date();
+        dateNow.setFullYear(dateNow.getFullYear()-18);
+        var yearCount=(dateNow.getTime()-dat.getTime());
     	
-    	
-    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !=""){
+    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && secPhoneNumber != undefined && secPhoneNumber !="" && yearCount >=0){
     		
     		//appUserDetails.customerDetail
     		
@@ -2906,7 +2915,10 @@ function paintCustomerSpouseApplicationPageStep5() {
     		
     		
     	}else{
-    		showToastMessage("Please give the answers of the questions");
+            if(yearCount<0){
+                showToastMessage("You must be at least 18 years of age.");
+            }else
+    		  showToastMessage("Please give the answers of the questions.");
     	}
     	
     });
