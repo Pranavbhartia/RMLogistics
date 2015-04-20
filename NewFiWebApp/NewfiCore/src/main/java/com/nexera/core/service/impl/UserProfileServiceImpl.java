@@ -51,7 +51,6 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
-import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
@@ -234,99 +233,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 		CustomerDetail customerDetail = CustomerDetail
 		        .convertFromVOToEntity(customerDetailVO);
 
-		LOG.info("Checking if the user is a customer");
 		if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
-			LOG.info("Checking for customer profile status of customers");
-			if (customerDetail.getProfileCompletionStatus() != null) {
-				if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
-					if (userVO.getCustomerDetail().getMobileAlertsPreference()
-					        && userVO.getPhoneNumber() != null) {
-						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							if(userVO.getPhotoImageUrl()==null){
-								customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-							}else{
-								customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-							}
-							
-						}
+			float completionStatus = CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 
-					} else if (userVO.getCustomerDetail()
-					        .getMobileAlertsPreference() == false) {
-						if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-							if(userVO.getPhotoImageUrl()==null){
-								customerDetail
-						        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_PIC_UPLOAD);
-							}else{
-								customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-							}
-						}
-
-					} else if (userVO.getCustomerDetail()
-					        .getMobileAlertsPreference() == false
-					        && userVO.getPhotoImageUrl() != null
-					        && userVO.getPhoneNumber() == null) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus());
-					}
-				}
-			} else {
-				if (userVO.getPhotoImageUrl() == null) {
-					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_CREATE);
-					if (userVO.getPhoneNumber() != null
-					        && userVO.getCustomerDetail()
-					                .getMobileAlertsPreference()) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					} else if (userVO.getPhoneNumber() != null
-					        && userVO.getCustomerDetail()
-					                .getMobileAlertsPreference() == false) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					}
-				} else if (userVO.getPhoneNumber() != null
-				        && userVO.getCustomerDetail()
-				                .getMobileAlertsPreference()
-				        && userVO.getPhotoImageUrl() != null) {
-					customerDetail
-					        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
-				} else if (userVO.getCustomerDetail()
-				        .getMobileAlertsPreference() == false
-				        && userVO.getPhotoImageUrl() != null
-				        && userVO.getPhoneNumber() != null) {
-					if (customerDetail.getProfileCompletionStatus() != ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-						customerDetail
-						        .setProfileCompletionStatus(customerDetail
-						                .getProfileCompletionStatus()
-						                + ProfileCompletionStatus.ON_CREATE);
-					}
-
-				} else if (userVO.getCustomerDetail()
-				        .getMobileAlertsPreference() == false
-				        && userVO.getPhotoImageUrl() != null
-				        && userVO.getPhoneNumber() == null) {
-					customerDetail.setProfileCompletionStatus(customerDetail
-					        .getProfileCompletionStatus());
-				}
-
+			if (userVO.getPhotoImageUrl() != null) {
+				completionStatus = completionStatus
+				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
-			if (customerDetail.getProfileCompletionStatus() > ProfileCompletionStatus.ON_PROFILE_COMPLETE) {
-				customerDetail
-				        .setProfileCompletionStatus(ProfileCompletionStatus.ON_PROFILE_COMPLETE);
+			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+				completionStatus = completionStatus
+				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
-
+			customerDetail.setProfileCompletionStatus((int) Math
+			        .ceil(completionStatus));
 		}
 		Integer customerDetailVOObj = userProfileDao
 		        .updateCustomerDetails(customerDetail);
@@ -544,7 +463,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User newUser = User.convertFromVOToEntity(userVO);
 		if (newUser.getCustomerDetail() != null) {
 			newUser.getCustomerDetail().setProfileCompletionStatus(
-			        ProfileCompletionStatus.ON_CREATE);
+			        (int) Math.ceil(CommonConstants.PROFILE_STATUS_WEIGHTAGE));
 		}
 
 		LOG.debug("Done parsing, Setting a new random password");
@@ -1097,8 +1016,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getPropertyTypeMaster().getPropTaxMonthlyOryearly());
 				propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO
 				        .getPropertyTypeMaster().getPropInsMonthlyOryearly());
-				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO.getPropertyTypeMaster().getPropertyTypeCd());
-				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO.getPropertyTypeMaster().getResidenceTypeCd());
+				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO
+				        .getPropertyTypeMaster().getPropertyTypeCd());
+				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO
+				        .getPropertyTypeMaster().getResidenceTypeCd());
 			}
 
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);

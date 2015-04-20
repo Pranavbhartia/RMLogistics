@@ -24,10 +24,8 @@
 		<div class="container-row row clearfix">
 			<div id="reg-main-container" class="reg-main-container">
 				
-				<div class="reg-display-title">Lorem Ipsum Lorem Ipsum</div>
-				<div class="reg-display-title-subtxt">Lorem Ipsum is also known
-						as: Greeked Text, blind text, placeholder text, dummy content,
-						filter text, lipsum, and mock-content.</div>
+				<div class="reg-display-title">Get Started Now</div>
+				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
 				<div class="reg-input-row clearfix">
 					<div class="reg-row-lc float-left">I am here to register as a</div>
 					<div class="reg-row-rc float-left">
@@ -137,7 +135,7 @@
 					showErrorToastMessage("Email cannot be empty");
 					return;
 				}else if($("#emailID").val()!=null||$("#emailID").val()!=""){
-					var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+					var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
 	                if (!regex.test($("#emailID").val())) {
 		            showErrorToastMessage("Incorrect Email");
 					return;
@@ -146,14 +144,41 @@
 					showErrorToastMessage("Please Select the user");
 					return;
 				}
-				if($("#userTypeID").attr('value')=="Customer"){
-					createNewCustomer(LoanAppFormVO);
-				}else if($("#userTypeID").attr('value')=="Realtor"){
-					createNewRealtor(LoanAppFormVO);
-				}
+				validateUser(LoanAppFormVO);
+				
 				
 			});
 		});
+		
+		function validateUser(registration){
+			$('#overlay-loader').show();
+		    $.ajax({
+		        url: "rest/shopper/validate",
+		        type: "POST",
+		        data: {
+		            "registrationDetails": JSON.stringify(registration)
+		        },
+		        datatype: "application/json",
+		        success: function(data) {
+
+		            $('#overlay-loader').hide();
+		            if(data.error==null){
+		            	if($("#userTypeID").attr('value')=="Customer"){
+							createNewCustomer(registration);
+						}else if($("#userTypeID").attr('value')=="Realtor"){
+							createNewRealtor(registration);
+						}
+		            }else{
+		            	showErrorToastMessage(data.error.message);
+		            }
+		           
+		        },
+		        error: function(data) {
+		             showErrorToastMessage(data);
+		             $('#overlay-loader').hide();
+		        }
+		    });
+		}
 		function createNewCustomer(registration) {
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
