@@ -77,7 +77,7 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE;
+		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_APP_FEE;
 		String notificationReminderContent = WorkflowConstants.LOCK_RATE_CUST_NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,

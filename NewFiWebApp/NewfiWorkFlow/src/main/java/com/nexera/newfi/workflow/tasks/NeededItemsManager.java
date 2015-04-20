@@ -38,8 +38,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	private IWorkflowService iWorkflowService;
 
 	public String execute(HashMap<String, Object> objectMap) {
-
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
@@ -60,12 +59,11 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		NeededItemScoreVO neededItemScoreVO = needsListService
 		        .getNeededItemsScore(loanId);
-		if (neededItemScoreVO.getTotalSubmittedItem() > 0) {
-			String status = WorkItemStatus.PENDING.getStatus();
-			if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
-			        .getNeededItemRequired()) {
-				status = WorkItemStatus.COMPLETED.getStatus();
-			}
+		String status = null;
+		if (neededItemScoreVO.getTotalSubmittedItem() > 0
+		        || neededItemScoreVO.getNeededItemRequired() > 0) {
+			// Needed list created by Loan Manager
+			status = WorkItemStatus.PENDING.getStatus();
 			LoanVO loanVO = loanService.getLoanByID(loanId);
 			WorkflowExec workflowExec = new WorkflowExec();
 			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
@@ -73,21 +71,28 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 			        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_NEEDS_STATUS);
 			WorkflowItemExec managerNeedItem = workflowService
 			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-
 			workflowExec.setId(loanVO.getCustomerWorkflowID());
 			workflowItemMaster = workflowService
 			        .getWorkflowByType(WorkflowConstants.WORKFLOW_CUST_ITEM_NEEDS_STATUS);
-			WorkflowItemExec CustNeedItem = workflowService
-			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
-
-			engineTrigger.changeStateOfWorkflowItemExec(
-			        managerNeedItem.getId(), status);
-			engineTrigger.changeStateOfWorkflowItemExec(CustNeedItem.getId(),
-			        status);
-
-			return status;
+			if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
+			        .getNeededItemRequired()) { // If needs fullfilled -
+				                                // complete it
+				status = WorkItemStatus.COMPLETED.getStatus();
+				engineTrigger.startWorkFlowItemExecution(managerNeedItem
+				        .getId());
+			} else { // if in case a new need had come in - make it PEnding
+				     // again
+				status = WorkItemStatus.PENDING.getStatus();
+				WorkflowItemExec custNeedItem = workflowService
+				        .getWorkflowItemExecByType(workflowExec,
+				                workflowItemMaster);
+				engineTrigger.changeStateOfWorkflowItemExec(
+				        managerNeedItem.getId(), status);
+				engineTrigger.changeStateOfWorkflowItemExec(
+				        custNeedItem.getId(), status);
+			}
 		}
-		return null;
+		return status;
 	}
 
 	@Override
