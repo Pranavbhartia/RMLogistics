@@ -475,7 +475,7 @@ function getBuyHomeMultiTextQuestion(quesText) {
     });
     var quesTextCont1 = $('<div>').attr({
         "class": "ce-rp-ques-text",
-    }).html("Before Tax");
+    }).html("Monthly Income Before Taxes");
     var errFeild = appendErrorMessage();
     var inputBox1 = $('<input>').attr({
         "class": "ce-input",
@@ -484,7 +484,7 @@ function getBuyHomeMultiTextQuestion(quesText) {
     quesTextCont1.append(inputBox1).append(errFeild);
     var quesTextCont2 = $('<div>').attr({
         "class": "ce-rp-ques-text"
-    }).html("Where Do You Work ?");
+    }).html("Employer");
     var inputBox2 = $('<input>').attr({
         "class": "ce-input",
         "name": "workPlace"
@@ -574,25 +574,56 @@ function paintBuyHomeEmployed(divId) {
 }
 
 function paintBuyHomeSelfEmployed(divId) {
-    var quesTxt = "How much do you make a year?";
-    var container = $('<div>').attr({
-        "class": "ce-ques-wrapper"
-    });
-    var quesTextCont = $('<div>').attr({
-        "class": "ce-rp-ques-text"
-    }).html(quesTxt);
-    var optionContainer = $('<div>').attr({
-        "class": "ce-options-cont"
-    });
-    var errFeild = appendErrorMessage();
-    var inputBox = $('<input>').attr({
-        "class": "ce-input",
-        "name": "selfEmployed"
-    });
-    optionContainer.append(inputBox).append(errFeild);
-    container.append(quesTextCont).append(optionContainer);
-    $('#ce-option_' + divId).toggle();
-    $('#ce-option_' + divId).html(container);
+	var quesTxt = "Monthly Income";
+
+	var wrapper = $('<div>');
+	
+	var container = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+	});
+
+	var quesTextCont = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt);
+
+	var optionContainer = $('<div>').attr({
+		"class" : "ce-options-cont"
+	});
+	var errFeild=appendErrorMessage();
+	var inputBox = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : "selfEmployed"
+	});
+
+	optionContainer.append(inputBox).append(errFeild);
+	container.append(quesTextCont).append(optionContainer);
+	
+	var quesTxt1 = "Number of years";
+
+	var container1 = $('<div>').attr({
+		"class" : "ce-ques-wrapper"
+	});
+
+	var quesTextCont1 = $('<div>').attr({
+		"class" : "ce-rp-ques-text"
+	}).html(quesTxt1);
+
+	var optionContainer1 = $('<div>').attr({
+		"class" : "ce-options-cont"
+	});
+	var errFeild1=appendErrorMessage();
+	var inputBox1 = $('<input>').attr({
+		"class" : "ce-input",
+		"name" : ""
+	});
+
+	optionContainer1.append(inputBox1).append(errFeild1);
+	container1.append(quesTextCont1).append(optionContainer1);
+
+	wrapper.append(container).append(container1);
+	
+	$('#ce-option_' + divId).toggle();
+	$('#ce-option_' + divId).html(wrapper);
 }
 
 function paintbuyHomeDisability(divId) {
