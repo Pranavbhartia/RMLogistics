@@ -507,7 +507,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										ob.stateInfoContainer.addClass("cursor-pointer");
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
 											window.open(generateDownloadURL(tempOb.url),"_blank")
-										})
+										});
 									}
 									if(tempOb.status)
 									{
