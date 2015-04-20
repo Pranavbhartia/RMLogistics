@@ -39,7 +39,7 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = iWorkflowService.getNexeraMilestoneComments(loanId,
 		        Milestones.LM_DECISION);
-		return status == null ? "" : status;
+		return status == null ? "" : " "+ status;
 	}
 
 	@Override
