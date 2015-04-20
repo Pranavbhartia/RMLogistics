@@ -170,6 +170,7 @@ CREATE TABLE `customerdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `address_city` varchar(100) DEFAULT NULL,
   `address_state` varchar(100) DEFAULT NULL,
+  `address_street` MEDIUMTEXT DEFAULT NULL,
   `address_zip_code` varchar(10) DEFAULT NULL,
   `sec_phone_number` varchar(45) DEFAULT NULL,
   `sec_email_id` varchar(100) DEFAULT NULL,
