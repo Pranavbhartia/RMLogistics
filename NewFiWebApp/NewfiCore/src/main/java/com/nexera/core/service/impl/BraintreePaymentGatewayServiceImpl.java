@@ -390,7 +390,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 		}
 
 		// Now we check the different possible cases of the transaction status
-		if (transaction.getStatus() == Transaction.Status.SETTLED) {
+		if (transaction.getStatus() == Transaction.Status.SUBMITTED_FOR_SETTLEMENT) {
 
 			User sysAdmin = new User();
 			sysAdmin.setId(CommonConstants.SYSTEM_ADMIN_ID);

@@ -152,7 +152,11 @@ public class NotificationServiceImpl implements NotificationService {
 			vo.setCreatedForID(notification.getCreatedFor().getId());
 		if (notification.getLoan() != null)
 			vo.setLoanID(notification.getLoan().getId());
-
+		if (notification.getLoan() != null
+		        && notification.getLoan().getUser() != null) {
+			vo.setCustomerName(notification.getLoan().getUser().getFirstName()
+			        + " " + notification.getLoan().getUser().getLastName());
+		}
 		if (notification.getCreatedDate() != null)
 			vo.setCreatedDate(utils.getDateInUserLocale(
 			        notification.getCreatedDate()).getTime());
