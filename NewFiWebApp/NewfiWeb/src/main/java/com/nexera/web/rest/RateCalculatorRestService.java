@@ -54,11 +54,11 @@ public class RateCalculatorRestService {
 	public @ResponseBody String getTeaserRate(String teaseRate) {
 		Gson gson = new Gson();
 		LOG.info("findteaseratevalue - inout xml is" + teaseRate);
-		TeaserRateVO teaserRateVO = gson
-		        .fromJson(teaseRate, TeaserRateVO.class);
+		TeaserRateVO teaserRateVO = gson.fromJson(teaseRate, TeaserRateVO.class);
 		LOG.info("teaserRateVO" + teaserRateVO.getCity());
 		LOG.info("teaserRateVO" + teaserRateVO.getCurrentAddress());
 		LOG.info("teaserRateVO" + teaserRateVO.getCurrentMortgageBalance());
+		LOG.info("teaserRateVO" + teaserRateVO.getCashTakeOut());
 		LOG.info("teaserRateVO" + teaserRateVO.getCreditscore());
 
 		// String requestXML = CreateXmlForTeaserRate(teaserRateVO);
@@ -91,14 +91,7 @@ public class RateCalculatorRestService {
 		String loanType="";
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		if(teaserRateVO.getPropertyType()!=null){
+	 if(teaserRateVO.getPropertyType()!=null){
 			sOccTPe= teaserRateVO.getResidenceType();
 			}
 		
@@ -124,7 +117,7 @@ public class RateCalculatorRestService {
 
 		
 		
-		if ("takeCashOut".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
+		if ("REFCO".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
 			loanAmount = Integer.parseInt(unformatCurrencyField(teaserRateVO
 			        .getCashTakeOut()))
@@ -142,7 +135,7 @@ public class RateCalculatorRestService {
 			if("PUR".equalsIgnoreCase(loanType)){
 				if(teaserRateVO.getPurchaseDetails()!=null){
 					
-					loanAmount =	""+(Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getHousePrice())) - Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getLoanAmount())));
+					loanAmount =	""+Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getLoanAmount()));
 					
 					
 				}
@@ -186,8 +179,7 @@ public class RateCalculatorRestService {
 		}
 
 		HashMap<String, String> hashmap = new HashMap<String, String>();
-		hashmap.put("homeWorthToday",
-		        unformatCurrencyField(teaserRateVO.getHomeWorthToday()));
+		hashmap.put("homeWorthToday", unformatCurrencyField(teaserRateVO.getHomeWorthToday()));
 		hashmap.put("loanAmount", loanAmount);
 		hashmap.put("stateFromAPI", stateFromAPI);
 		hashmap.put("city", shopperCounty);

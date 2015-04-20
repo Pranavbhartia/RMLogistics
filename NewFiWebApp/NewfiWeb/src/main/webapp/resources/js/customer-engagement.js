@@ -1829,8 +1829,8 @@ function modifiyTeaserRate(amt,amt1) {
         if(typeof(newfiObject)!=='undefined'){
             if(appUserDetails.loanType.description=="Purchase"){
                 var parentContainer=$('#center-panel-cont');
-                appUserDetails.purchaseDetails.loanAmount=amt;
-                appUserDetails.purchaseDetails.housePrice=amt1;
+                appUserDetails.purchaseDetails.housePrice=amt;
+                appUserDetails.purchaseDetails.loanAmount=(amt-amt1);
                 paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDetails),true);
             }else{
                 var parentContainer=$('#center-panel-cont');
@@ -1840,8 +1840,8 @@ function modifiyTeaserRate(amt,amt1) {
             }
         }else{
             if (buyHomeTeaserRate.loanType){
-                buyHomeTeaserRate.purchaseDetails.loanAmount=amt;
-                buyHomeTeaserRate.purchaseDetails.housePrice=amt1;
+            	buyHomeTeaserRate.purchaseDetails.housePrice=amt;
+                buyHomeTeaserRate.purchaseDetails.loanAmount=(amt-amt1);
                 paintBuyHomeSeeTeaserRate();
             }else if(refinanceTeaserRate.loanType){
                 refinanceTeaserRate.currentMortgageBalance=amt;

@@ -658,6 +658,7 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
+		saveAllLoanTurnAroundTimeForLoan(loanId);
 		addDefaultLoanTeam(loanVO, loanId);
 		loanDao.updateLoanEmail(loanId, utils.generateLoanEmail(loanId));
 
