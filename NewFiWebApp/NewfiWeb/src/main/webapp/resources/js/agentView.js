@@ -70,6 +70,7 @@ function getAgentSecondaryLeftNavStep(step, text) {
 }
 
 function paintAgentDashboard(loanType) {
+	selectedUserDetail=undefined;
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -759,8 +760,8 @@ function getSchedulerContainer(contxt, tempData) {
 					data.remindOn = snoozeTime.getTime();
 					data.createdByID = newfiObject.user.id;
 					data.createdForID = newfiObject.user.id;
-					data.loanID = contxt.loanId;
-					data.customerName =contxt.customerName;
+					data.loanID = contxt.loanId;					
+					data.customerName =contxt.customerName;					
 					data.notificationType = "NOTIFICATION";
 					data.dismissable = true;
 					if (tempData) {
