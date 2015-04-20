@@ -206,15 +206,9 @@ public class NexeraUtility {
 		try {
 			byte[] bytes = FileUtils.readFileToByteArray(file);
 
-			// Creating the directory to store file
-
-			File dir = new File(this.tomcatDirectoryPath());
-			if (!dir.exists())
-				dir.mkdirs();
-
 			String fileName = file.getName();
 
-			filePath = dir.getAbsolutePath() + File.separator + fileName;
+			filePath = file.getAbsolutePath() + File.separator + fileName;
 			// Create the file on server
 			File serverFile = new File(filePath);
 			BufferedOutputStream stream = new BufferedOutputStream(
@@ -272,19 +266,16 @@ public class NexeraUtility {
 		args[2] = END_PAGE;
 		args[3] = PAGE_NUMBER;
 		args[4] = OUTPUT_PREFIX;
-		args[5] = imageFilePath + File.separator;
+		args[5] = imageFilePath;
 		args[6] = pdfFile;
 
 		try {
-			File file = new File(pdfFile);
-			String fileName = file.getName().replace(
-			        FilenameUtils.getExtension(file.getName()), "");
 			PDFToImage.main(args);
-			String imageFile = imageFilePath + File.separator + PAGE_NUMBER
-			        + "." + OUTPUT_FILENAME_EXT;
+			String imageFile = imageFilePath + PAGE_NUMBER + "."
+			        + OUTPUT_FILENAME_EXT;
 
-			String thumbpath = imageFilePath + File.separator
-			        + (PAGE_NUMBER + 1) + "." + OUTPUT_FILENAME_EXT;
+			String thumbpath = imageFilePath + (PAGE_NUMBER + 1) + "."
+			        + OUTPUT_FILENAME_EXT;
 
 			File imageFileObj = new File(imageFile);
 			LOGGER.info("Image path for thumbnail : " + imageFile);
@@ -296,7 +287,7 @@ public class NexeraUtility {
 				imageFileObj.delete();
 			}
 
-			return imageFile;
+			return thumbpath;
 
 		} catch (Exception e) {
 			throw new Exception();
@@ -355,7 +346,7 @@ public class NexeraUtility {
 			contentStream.close();
 			// in.close();
 
-			filepath = tomcatDirectoryPath()
+			filepath = file.getAbsolutePath()
 			        + File.separator
 			        + file.getName().replace(
 			                FilenameUtils.getExtension(file.getName()), "")
@@ -379,7 +370,14 @@ public class NexeraUtility {
 
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
-		File convFile = new File(tomcatDirectoryPath() + File.separator
+		String uniqueId = uuidString();
+		String folderName = tomcatDirectoryPath() + File.separator + uniqueId;
+		File directory = new File(folderName);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		File convFile = new File(directory.getAbsolutePath() + File.separator
 		        + multipart.getOriginalFilename());
 		multipart.transferTo(convFile);
 		return convFile;
