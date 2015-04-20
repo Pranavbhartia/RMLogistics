@@ -50,12 +50,12 @@ public class RestInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
-		if (utils.getLoggedInUser() == null) {
+		/*if (utils.getLoggedInUser() == null) {
 			LOG.error("User is not logged in");
 			LOG.debug(request.getServletPath() + "is a protected.... URL");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return false;
-		}
+		}*/
 
 		return true;
 	}

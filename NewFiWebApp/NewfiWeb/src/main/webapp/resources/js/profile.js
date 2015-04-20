@@ -46,6 +46,7 @@ function getUserProfileData() {
 //TODO changes for laon manger profile page
 
 function showLoanManagerProfilePage(){
+	selectedUserDetail = undefined;
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	$('.lp-right-arrow').remove();
