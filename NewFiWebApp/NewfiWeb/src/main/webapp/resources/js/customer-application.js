@@ -60,7 +60,7 @@ var formCompletionStatus = 1;
 
 var applicationItemsList = [ 
                              {
-							    "text":"My Priority",
+							    "text":"Loan Purpose",
 	                            "onselect" : paintSelectLoanTypeQuestion
 	                        },
 	                        /*{
@@ -797,7 +797,7 @@ $('#app-right-panel').html("");
                     
                      {
                          "type": "yesno",
-                         "text": "Do you have a second mortgage on this property ?",
+                         "text": "Do you have a second mortgage on this property?",
                          "name": "secondMortgage",
                          "options": [
                              {
@@ -805,7 +805,7 @@ $('#app-right-panel').html("");
                                  "addQuestions": [
                                      {
                                          "type": "desc",
-                                         "text": "What is the current balance for this additional mortgage??",
+                                         "text": "What is the current balance for this additional mortgage?",
                                          "name": "secondaryMortgageBalance",
                                          "selected": appUserDetails.refinancedetails.secondMortageBalance
                                      }
@@ -1005,11 +1005,11 @@ function paintCustomerApplicationPageStep2() {
 	appProgressBaar(3); // this is to show the bubble status in the left panel
 	quesContxts = []; // when ever call the above function clean the array object
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Co­borrower Information";
+    var quesHeaderTxt = "Co-borrower Information";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
-    }).html(quesHeaderTxt);
+    }).text(quesHeaderTxt);
    
     /*var questions = [{
         type: "yesno",
@@ -1041,26 +1041,26 @@ function paintCustomerApplicationPageStep2() {
 
     var questions = [{
         type: "yesno",
-        text: "Is there a co‐borrower?",
+        text: "Is there a co-borrower?",
         name: "",
         options: [{
             text: "Yes",
             addQuestions:[{
                 type: "yesno",
-                text: "Is the co‐borrower your spouse?",
+                text: "Is the co-borrower your spouse?",
                 name: "",
                 options: [{
                     text: "Yes",
                     addQuestions:[{
                         type: "desc",
-                        text: "Co‐borrower’s Name",
+                        text: "Co-borrower's name",
                         name: ""
                     }]
                 }, {
                     text: "No",
                     addQuestions:[{
                         type: "desc",
-                        text: "Co‐borrower’s Name",
+                        text: "Co-borrower's name",
                         name: ""
                     }]
                 }],
@@ -2738,7 +2738,7 @@ function paintCustomerApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).html("I authorize Newfi to pull my credit report for the purposes of applying for a mortgage loan")
+    }).text("I authorize Newfi To Pull My Credit Report For the Purposes of Appying for a Morgage Loan")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
@@ -2856,18 +2856,48 @@ function paintCustomerSpouseApplicationPageStep5() {
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
+    var socialSecurityWrapper = $('<div>').attr({
+    	"class" : "ce-options-cont"
+    });
+    
+    var isAuthorizedCheckBox = $('<div>').attr({
+    	"class" : "ce-option-checkbox"
+    }).text("I authorize Newfi To Pull My Credit Report For the Purposes of Appying for a Morgage Loan")
+    .bind('click',function(){
+    	if($(this).hasClass('ce-option-checked')){
+    		$(this).removeClass('ce-option-checked');
+    		$(this).parent().find('.ss-ques-wrapper').hide();
+    	}else{
+    		$(this).addClass('ce-option-checked');
+    		$(this).parent().find('.ss-ques-wrapper').show();
+    	}
+    });
+    
+    var socialSecurityQues = [{
+        type: "desc",
+        text: "Social Security Number",
+        name: "ssn",
+        value: appUserDetails.user.customerDetail.ssn
+    }];
+    
+    var socialSecurityQuesContainer = $('<div>').attr({
+    	"class" : "hide ss-ques-wrapper"
+    }).append(getQuestionsContainer(socialSecurityQues));
+    
+    socialSecurityWrapper.append(isAuthorizedCheckBox).append(socialSecurityQuesContainer);
+    
     var questions = [{
         type: "desc",
         text: "Birthday",
         name: "birthday",
         value: dob
-    },
+    }/*,
     {
         type: "desc",
         text: "Social Security Number",
         name: "ssn",
         value: appUserDetails.customerSpouseDetail.ssn
-    },
+    }*/,
     {
         type: "desc",
         text: "Phone Number",
@@ -2923,7 +2953,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     	
     });
 
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
+    $('#app-right-panel').append(quesHeaderTextCont).append(socialSecurityWrapper).append(questionsContainer)
         .append(saveAndContinueButton);
 }
 
@@ -3787,7 +3817,7 @@ function paintSelectLoanTypeQuestion() {
 	});
 	
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
-		option1.css("background","rgb(247, 72, 31)");
+		option1.css("background","rgb(244, 117, 34)");
 	}
 
 	var option2 = $('<div>').attr({
@@ -3814,7 +3844,7 @@ function paintSelectLoanTypeQuestion() {
 	});
 
 	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-		option2.css("background","rgb(247, 72, 31)");
+		option2.css("background","rgb(244, 117, 34)");
 	}
 	
 	optionsContainer.append(option1).append(option2);
@@ -3978,12 +4008,12 @@ function paintRefinanceStep3() {
                     },
                     {
                         "type": "yearMonth",
-                        "text": "How much are your annual property taxes?",
+                        "text": "How much are your property taxes?",
                         "name": "propertyTaxesPaid",
                         "value": ""
                     }, {
                         "type": "yearMonth",
-                        "text": "How much is your annual homeowners insurance ?",
+                        "text": "How much is your homeowners insurance?",
                         "name": "annualHomeownersInsurance",
                         "value": ""
                     }
@@ -4338,7 +4368,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 			event.data.option.onselect();
 		});
 		if(options[i].value==appUserDetails.refinancedetails.refinanceOption){
-			option.css("background","rgb(247, 72, 31)")
+			option.css("background","rgb(244, 117, 34)")
 		}
 		
 		

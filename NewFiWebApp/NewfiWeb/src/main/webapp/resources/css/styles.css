@@ -4433,7 +4433,7 @@ input.calc-input {
     background: #6c9f2e;
     border-radius:3px;
     color:#fff;
-    margin: -20px 10px 20px 0;
+    margin: 10px 10px 0 0;
     cursor: pointer;
 }
 
@@ -4601,12 +4601,12 @@ input.calc-input {
 	cursor: pointer;
 }
 
-.sm-save-btn:hover {
+.sm-save-btn:hover,.add-btn:hover,.app-save-btn:hover {
 	background: #F37521;
 }
 
 .loan-summary-input-detail {
-	width: 75%;
+	width: 70%;
 	height: 100%;
 	border: none;
 	line-height: inherit;
