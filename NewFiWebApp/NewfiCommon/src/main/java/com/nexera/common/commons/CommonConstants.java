@@ -155,4 +155,10 @@ public interface CommonConstants {
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
 	
 	public static final String FILE_DOWNLOAD_SERVLET = "readFileAsStream.do?uuid=";
+
+	public static final String elapsedPrependStr = "due in";
+
+	public static final String elapsedAppendStr = "hrs.";
+
+	public static final String elapsedOverDueStr = "Overdue.";
 	}

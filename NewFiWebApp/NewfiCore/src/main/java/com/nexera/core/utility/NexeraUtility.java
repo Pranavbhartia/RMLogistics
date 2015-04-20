@@ -346,7 +346,8 @@ public class NexeraUtility {
 			contentStream.close();
 			// in.close();
 
-			filepath = file.getAbsolutePath()
+			filepath = file.getAbsolutePath().substring(0,
+			        file.getAbsolutePath().lastIndexOf(File.separator))
 			        + File.separator
 			        + file.getName().replace(
 			                FilenameUtils.getExtension(file.getName()), "")
