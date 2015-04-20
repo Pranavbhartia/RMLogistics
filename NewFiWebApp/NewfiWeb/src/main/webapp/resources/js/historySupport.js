@@ -343,7 +343,7 @@ function retrieveState() {
 	// If customer is logged in. Skipping this module for now.
 	switch (primary) {
 	case PNEnum.PROFILE:
-		if(newfiObject.user.userRole=="INTERNAL"){
+		if(newfiObject.user.userRole.roleCd=="INTERNAL"){
 			showLoanManagerProfilePage();
 		}else if(userIsRealtor()){
 			showLoanManagerProfilePage();
