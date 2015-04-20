@@ -474,6 +474,7 @@ public class CustomerDetail implements Serializable {
 		customerDetail.setSubscriptionsStatus(2);
 		if (inputEntity != null) {
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
+			customerDetail.setAddressStreet(inputEntity.getAddressStreet());
 			customerDetail.setAddressState(inputEntity.getAddressState());
 			customerDetail.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
