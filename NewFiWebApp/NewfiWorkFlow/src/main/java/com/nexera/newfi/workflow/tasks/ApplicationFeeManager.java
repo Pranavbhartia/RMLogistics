@@ -154,7 +154,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
-		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_DISPLAY;
+		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
 		WorkflowExec workflowExec = new WorkflowExec();
 		workflowExec.setId(loanVO.getLoanManagerWorkflowID());
 		WorkflowItemMaster workflowItemMaster = workflowService
@@ -166,7 +166,6 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			LoanApplicationFee loanApplicationFee = transactionService
 			        .findByLoan(loanVO);
 			if (loanApplicationFee.getPaymentDate() == null) {
-
 				CreateReminderVo createReminderVo = new CreateReminderVo(
 				        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_OVERDUE_TYPE,
 				        loanId,
@@ -174,7 +173,10 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				createReminderVo.setForCustomer(true);
 				iWorkflowService.sendReminder(createReminderVo,
 				        workflowItemExecutionId, prevMilestone.getId());
-
+				// And change the status of the workItem to Over Due;
+				iWorkflowService.updateNexeraMilestone(loanId,
+				        Milestones.APP_FEE.getMilestoneID(),
+				        LoanStatus.APP_PAYMENT_OVERDUE);
 			}
 		}
 		return null;

@@ -57,6 +57,7 @@ public class CustomerDetail implements Serializable {
 	private String experianScore;
 	private String transunionScore;
 	private String carrierInfo;
+	private String addressStreet;
 
 	// private CustomerSpouseDetail customerSpouseDetail;
 
@@ -302,6 +303,7 @@ public class CustomerDetail implements Serializable {
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
 		if (inputEntity != null) {
 			customerDetailVO.setAddressCity(inputEntity.getAddressCity());
+			customerDetailVO.setAddressStreet(inputEntity.getAddressStreet());
 			customerDetailVO.setAddressState(inputEntity.getAddressState());
 			customerDetailVO.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
@@ -638,4 +640,12 @@ public class CustomerDetail implements Serializable {
 		this.carrierInfo = carrierInfo;
 	}
 
+	@Column(name = "address_street")
+	public String getAddressStreet() {
+		return addressStreet;
+	}
+
+	public void setAddressStreet(String addressStreet) {
+		this.addressStreet = addressStreet;
+	}
 }

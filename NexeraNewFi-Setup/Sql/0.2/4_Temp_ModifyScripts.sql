@@ -159,6 +159,9 @@ UPDATE `newfi_schema`.`workflowtaskconfigmaster`
 SET `params` = '{"EMAIL_TEMPLATE_NAME": "TEMPLATE_WORKFLOW_COMPLETION"}'
 WHERE `id` > '0';
 
+#Rajeswari 20 April
 ALTER TABLE `newfi_schema`.`loanmilestone` 
-ADD COLUMN `order` INT(11) NULL DEFAULT -1 AFTER `status`;
+CHANGE COLUMN `order` `milestone_order` INT(11) NULL DEFAULT 0 ;
 		
+ALTER TABLE `newfi_schema`.`customerdetails` 
+ADD COLUMN `address_street` MEDIUMTEXT NULL AFTER `carrier_info`;

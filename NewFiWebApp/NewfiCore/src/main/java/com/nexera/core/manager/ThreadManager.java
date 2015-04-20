@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,6 +21,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
@@ -122,6 +122,18 @@ public class ThreadManager implements Runnable {
 	NotificationService notificationService;
 
 	List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
+
+	@Value("${date.format.1}")
+	private String dateFormat1;
+
+	@Value("${date.format.2}")
+	private String dateFormat2;
+
+	@Value("${date.format.3}")
+	private String dateFormat3;
+
+	@Value("${date.format.4}")
+	private String dateFormat4;
 
 	@Override
 	public void run() {
@@ -257,7 +269,6 @@ public class ThreadManager implements Runnable {
 												if (currentDateString != null) {
 													Date currentDate = parseStringIntoDate(currentDateString);
 													if (currentDate != null) {
-														currentDate = formatDateIntoUTC(currentDate);
 														if (date.compareTo(currentDate) == 0) {
 															sameStatus = true;
 														} else {
@@ -273,7 +284,7 @@ public class ThreadManager implements Runnable {
 												if (currentDateString != null) {
 													Date currentDate = parseStringIntoDate(currentDateString);
 													if (currentDate != null) {
-														currentDate = formatDateIntoUTC(currentDate);
+
 														if (currentDate != null) {
 															updateLoanMilestone(loanMilestone);
 														}
@@ -378,7 +389,7 @@ public class ThreadManager implements Runnable {
 					        loan.getId(),
 					        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
 					                .getNotificationTypeName(),
-					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
+					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
 					List<NotificationVO> notificationVOList = notificationService
 					        .findNotificationTypeListForLoan(
 					                loan.getId(),
@@ -945,8 +956,7 @@ public class ThreadManager implements Runnable {
 		Date date = null;
 		if (dateTime != null && !dateTime.equals(""))
 			date = parseStringIntoDate(dateTime);
-		if (date != null && !dateTime.equals(""))
-			date = formatDateIntoUTC(date);
+
 		loanMilestone.setLoan(loan);
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);
@@ -1017,26 +1027,37 @@ public class ThreadManager implements Runnable {
 	}
 
 	public Date parseStringIntoDate(String dateTime) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		        "hh:mm a z-MM/dd/yyyy");
 		Date date = null;
-		try {
-			date = simpleDateFormat.parse(dateTime);
-		} catch (ParseException pe) {
+		for (SimpleDateFormat simpleDateFormat : fillSimpleDateFormatList()) {
+			try {
+				date = simpleDateFormat.parse(dateTime);
+				if (date != null)
+					break;
+			} catch (ParseException pe) {
+				LOGGER.error("This format not supported");
+			}
+		}
+		if (date == null) {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-			        pe.getMessage());
-			nexeraUtility.sendExceptionEmail(pe.getMessage());
+			        "No supported date format found");
+			nexeraUtility.sendExceptionEmail("No supported date format found");
 		}
 		return date;
 
 	}
 
-	private Date formatDateIntoUTC(Date date) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		        "hh:mm a z-MM/dd/yyyy");
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String formatedDate = simpleDateFormat.format(date);
-		return parseStringIntoDate(formatedDate);
+	private List<SimpleDateFormat> fillSimpleDateFormatList() {
+		List<SimpleDateFormat> simpleDateFormatList = new ArrayList<>();
+
+		SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat(dateFormat1);
+		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(dateFormat2);
+		SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat(dateFormat3);
+		SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(dateFormat4);
+		simpleDateFormatList.add(simpleDateFormat1);
+		simpleDateFormatList.add(simpleDateFormat2);
+		simpleDateFormatList.add(simpleDateFormat3);
+		simpleDateFormatList.add(simpleDateFormat4);
+		return simpleDateFormatList;
 	}
 
 	private List<WorkflowItemExec> itemToExecute(
@@ -1320,6 +1341,7 @@ public class ThreadManager implements Runnable {
 	        List<LoadResponseVO> loadResponseVOList) {
 		String date = "";
 		String time = "";
+		String dateTime = "";
 		for (LoadResponseVO loadResponseVO : loadResponseVOList) {
 			if (loadResponseVO.getFieldId().equalsIgnoreCase(dateField)) {
 				date = loadResponseVO.getFieldValue();
@@ -1329,15 +1351,20 @@ public class ThreadManager implements Runnable {
 			}
 		}
 
-		if (time != null && time.equals(""))
-			time = date;
-		else {
-
-			if (date != null && !date.equals(""))
-				time = time.concat("-").concat(date);
-
+		if (time != null && !time.equals("")) {
+			dateTime = time;
+			if (date != null && !date.equals("")) {
+				dateTime = time.concat("-").concat(date);
+			}
+		} else {
+			if (date != null && !date.equals("")) {
+				dateTime = date;
+			} else {
+				dateTime = null;
+			}
 		}
-		return time;
+
+		return dateTime;
 	}
 
 	public JSONObject createListEDocsByLoanNumberObject(String opName,

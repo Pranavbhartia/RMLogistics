@@ -453,6 +453,8 @@ public class LoanServiceImpl implements LoanService {
 		if (customerDetail != null) {
 			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
 			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO
+			        .setAddressStreet(customerDetail.getAddressStreet());
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
 			if (null != customerDetail.getCarrierInfo()) {

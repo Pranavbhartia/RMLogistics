@@ -2,8 +2,8 @@
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
 var SALES_MANAGER="Sales Manager";
-var COMPLETED = 3;
-var NOT_STARTED = 0;
+var COMPLETED = "3";
+var NOT_STARTED = "0";
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -437,6 +437,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.userID=workFlowContext.customer.id;
+				data.loanID = workFlowContext.loanId;
+			}
+			else if(ob.workItem.workflowItemType=="LOAN_MANAGER_DECISION"){
+				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
 				data.loanID = workFlowContext.loanId;
 			}
 			
@@ -1547,8 +1551,9 @@ function appendLoanStatusPopup(element,milestoneId) {
 					if (response.error) {
 						showToastMessage(response.error.message)
 					}else{
-						var contxt=workFlowContext.mileStoneContextList[milestoneId]
-						contxt.updateMilestoneView(COMPLETED)
+						var contxt=workFlowContext.mileStoneContextList[milestoneId];
+						contxt.updateMilestoneView(COMPLETED);
+						
 						removeLoanStatusPopup();
 					}
 			},false);
