@@ -160,5 +160,6 @@ SET `params` = '{"EMAIL_TEMPLATE_NAME": "TEMPLATE_WORKFLOW_COMPLETION"}'
 WHERE `id` > '0';
 
 ALTER TABLE `newfi_schema`.`loanmilestone` 
-ADD COLUMN `order` INT(11) NULL DEFAULT -1 AFTER `status`;
+CHANGE COLUMN `order` `milestone_order` INT(11) NULL DEFAULT 0 ;
+
 		

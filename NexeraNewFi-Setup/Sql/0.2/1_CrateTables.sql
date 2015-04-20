@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
+﻿CREATE DATABASE  IF NOT EXISTS `newfi_schema` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `newfi_schema`;
 -- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
@@ -1073,7 +1073,7 @@ CREATE TABLE `loanmilestone` (
   `comments` tinytext,
   `status_update_time` datetime DEFAULT NULL,
   `status` varchar(300) DEFAULT NULL,
-  `order` int(11) DEFAULT '-1',
+  `milestone_order` int(11) DEFAULT '-1',
   PRIMARY KEY (`id`),
   KEY `fk_LoanMileStone_LoanMileStoneMaster1_idx` (`milestone`),
   KEY `fk_LoanMileStone_Loan1_idx` (`loan`),
