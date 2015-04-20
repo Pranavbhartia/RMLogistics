@@ -12,6 +12,12 @@
 			<div class="header-container container">
 				<div class="header-row row clearfix">
 					<div class="header-logo float-left"></div>
+					<div class="addr-blustream float-right">
+						<div>Blustream Lending Website Pricing</div>
+						<div>2200 Powell Street, Suite 340</div>
+						<div>Emeryville, CA 94608</div>
+						<div>510-844-4003</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -19,9 +25,9 @@
 			<div class="container body-header-container">
 				<div class="body-header-row row clearfix">
 					<div class="float-left header-txt">
-						NOTE: INDICATIVE PRICING ONLY - BASED ON $300K LOAN AMOUNT<br />
+						NOTE: INDICATIVE PRICING ONLY <br />
 						PLEASE LOG INTO BLUSTREAM PORTAL TO OBTAIN LIVE LOCK
-						PRICING
+						PRICING - <a href="http://www.blustream.com">www.blustream.com</a>
 					</div>
 					<div class="float-left">
 							<div class="clearfix ">

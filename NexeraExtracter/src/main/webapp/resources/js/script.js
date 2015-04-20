@@ -129,8 +129,8 @@ function getLTVTable() {
 	row2.append(otherAdjustmentsTable);
 
 	var note = "All loan level price adjustments are cumulative\n"
-			+ "Prices are indicative and subject to change without notice. Please log into Blustream lending correspondent portal to obtain live lock pricing\n"
-			+ "Not all price adjustments are effective for all products. Please refer to Blustream lending product guide for complete eligibility rules.\n"
+			+ "Prices are indicative and subject to change without notice. Please log into Blustream Lending portal to obtain live lock pricing\n"
+			+ "Not all price adjustments are effective for all products. Please refer to Blustream Lending product guide for complete eligibility rules.\n"
 			+ "Intended for use by mortgage professionals only and should not be distributed to borrowers, as defined by Section 226.2 of Regulation Z";
 
 	var noteCont = $('<div>').attr({
@@ -932,12 +932,16 @@ function getRatesTableRow(rateObj) {
 		"class" : "td"
 	}).html(rateObj.rate);
 
+	if(rateObj.rate){
+		col1.html(parseFloat(rateObj.rate).toFixed(3) + "%");
+	}
+	
 	var col2 = $('<div>').attr({
 		"class" : "td"
 	}).html(fifteenYearValue);
 
 	if(fifteenYearValue != "-"){
-		col2.append("%");
+		col2.html(parseFloat(fifteenYearValue).toFixed(3));
 	}
 	
 	var col3 = $('<div>').attr({
@@ -945,7 +949,7 @@ function getRatesTableRow(rateObj) {
 	}).html(thirtyYearValue);
 
 	if(thirtyYearValue != "-"){
-		col3.append("%");
+		col3.html(parseFloat(thirtyYearValue).toFixed(3));
 	}
 	
 	var col4 = $('<div>').attr({
@@ -953,7 +957,7 @@ function getRatesTableRow(rateObj) {
 	}).html(fortyfiveYearValue);
 
 	if(fortyfiveYearValue != "-"){
-		col4.append("%");
+		col4.html(parseFloat(fortyfiveYearValue).toFixed(3));
 	}
 	
 	var col5 = $('<div>').attr({
@@ -961,7 +965,7 @@ function getRatesTableRow(rateObj) {
 	}).html(sixtyYearValue);
 
 	if(sixtyYearValue != "-"){
-		col5.append("%");
+		col5.html(parseFloat(sixtyYearValue).toFixed(3));
 	}
 	
 	return container.append(col1).append(col2).append(col3).append(col4)
