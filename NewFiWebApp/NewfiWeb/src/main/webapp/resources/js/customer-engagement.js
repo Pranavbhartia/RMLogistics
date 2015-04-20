@@ -997,10 +997,10 @@ function paintApplyNow(inputCustomerDetails) {
     });
     var regDisplayTitle = $('<div>').attr({
         "class": "reg-display-title"
-    }).html("Lorem Ipsum Lorem Ipsum");
+    }).html("Get Started Now");
     var regDisplaySubTitle = $('<div>').attr({
         "class": "reg-display-title-subtxt"
-    }).html("Lorem Ipsum is also knownas: Greeked Text, blind text, placeholder text, dummy content,filter text, lipsum, and mock-content");
+    }).html("Create a Newfi account now to access our powerful lending tool and take control on your terms");
     var regInputContainerFname = $('<div>').attr({
         "class": "reg-input-cont reg-fname"
     });
@@ -1033,7 +1033,7 @@ function paintApplyNow(inputCustomerDetails) {
     });
     var regGetStarted = $('<div>').attr({
         "class": "reg-btn float-left",
-    }).html("Get Started").bind('click', {
+    }).html("Create Account").bind('click', {
         "userDetails": registration
     }, function(event) {
         
@@ -1042,8 +1042,22 @@ function paintApplyNow(inputCustomerDetails) {
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
-        
-
+        if($('input[name="fname"]').val()==""){
+			showErrorToastMessage("Firstname cannot be empty");
+			return;
+	}else if($('input[name="lname"]').val()==""){
+			showErrorToastMessage("LastName cannot be empty");
+			return;
+	}else if($('input[name="email"]').val()==""){
+		showErrorToastMessage("Email cannot be empty");
+		return;
+	}else if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test($('input[name="email"]').val())) {
+        showErrorToastMessage("Incorrect Email");
+		return;
+        }
+	}
         var appUserDetails = new Object();
         var refinancedetails = new Object();
         var propertyTypeMaster = new Object();
