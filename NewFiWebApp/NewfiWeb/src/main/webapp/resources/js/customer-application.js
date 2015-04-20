@@ -475,8 +475,12 @@ function getApplicationTextQues(question) {
 			 // $('input[name="ssn"]').attr('type', 'password');
         }
 		
-	})keypress(function(key) {
-        if(key.charCode < 48 || key.charCode > 57) return false;
+	}).keypress(function(key) {
+		if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+			
+			  if(key.charCode < 48 || key.charCode > 57) return false;
+		}
+      
     });
 
     if (question.value != undefined) {
