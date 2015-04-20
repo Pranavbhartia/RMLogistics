@@ -142,9 +142,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
+		query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());
@@ -354,9 +355,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer completeCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
+		query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());
@@ -385,8 +387,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
+		query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
