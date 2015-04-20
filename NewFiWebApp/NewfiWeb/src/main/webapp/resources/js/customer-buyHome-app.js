@@ -119,11 +119,11 @@ function paintBuyHomeQuest(appUserDetails) {
 	
 	
 	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
-		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(247, 72, 31)");
+		$('.ce-options-cont').find('.ce-option').first().css("background","rgb(244, 117, 34)");
 	} 
 	if(appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="homeOwner"){
 		
-		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(247, 72, 31)");
+		$('.ce-options-cont').find('.ce-option').first().next().css("background","rgb(244, 117, 34)");
 	}
 }
 
@@ -349,9 +349,9 @@ function paintWhereYouLiveStep(){
 	
     var questions = [
                     
-                     {
+                     /*{
                          "type": "yesno",
-                         "text": "Do you know city or zip code where you want to buy a home ?",
+                         "text": "Please provide the zipcode where you want buy a home.",
                          "name": "isCityOrZipKnown",
                          "options": [
                              {
@@ -369,7 +369,13 @@ function paintWhereYouLiveStep(){
                                  "text": "No"
                              }
                          ]
-                     }
+                     }*/
+	                     {
+							"type" : "desc",
+							"text" : "Please provide the zipcode where you want buy a home.",
+							"name" : "buyhomeZipPri",
+							"value" : ""
+						}
                  ];
     
     for(var i=0;i<questions.length;i++){
@@ -411,7 +417,9 @@ function paintWhereYouLiveStep(){
 		
 	      });
 	
-    $('#app-right-panel').append(addRemoveRow).append(saveAndContinueButton);
+    $('#app-right-panel').find('.app-ques-wrapper').append(addRemoveRow);
+    
+    $('#app-right-panel').append(saveAndContinueButton);
 
 
 }
@@ -436,7 +444,7 @@ function addZipField(fieldName,element,value){
         var numberOfInputs = inputField.parent().parent().children('.app-options-cont').size();
         
         if(numberOfInputs<3){
-            inputField.parent().parent().append(inputCont);
+            inputField.parent().parent().find('.add-remove-row').before(inputCont);
             if(numberOfInputs >= 2){
                 $(element).hide();
             }
@@ -446,7 +454,7 @@ function addZipField(fieldName,element,value){
             if(numberOfInputs > 0){
             	var removeBtn = $('<div>').attr({
             		"class" : "remove-btn"
-            	}).html("-")
+            	}).text("Remove")
             	.bind('click',{"fieldName":fieldName},function(e){
             		var inputField = $('input[name="'+e.data.fieldName+'"]');
             		
