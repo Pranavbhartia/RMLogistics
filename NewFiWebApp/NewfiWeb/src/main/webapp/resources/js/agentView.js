@@ -384,6 +384,7 @@ function appendCustomers(elementId, customers) {
 		});
 		// code will execute if user is logged in
 		var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
+		loanNotificationCntxt.customerName = customer.name;
 		addContext(customer.loanID + "-notification", loanNotificationCntxt)
 		var cusName = $('<div>').attr({
 			"class" : "cus-name float-left",
@@ -541,6 +542,7 @@ function appendCustomerDetailContianer(element, customer) {
 		"class" : "cust-detail-wrapper clearfix"
 	});
 	$(element).after(wrapper);
+	
 	appendRecentAlertContainer(contxt.loanNotificationList, contxt);
 	appendSchedulerContainer(contxt);
 	repaintNotes(true);
@@ -758,6 +760,7 @@ function getSchedulerContainer(contxt, tempData) {
 					data.createdByID = newfiObject.user.id;
 					data.createdForID = newfiObject.user.id;
 					data.loanID = contxt.loanId;
+					data.customerName =contxt.customerName;
 					data.notificationType = "NOTIFICATION";
 					data.dismissable = true;
 					if (tempData) {

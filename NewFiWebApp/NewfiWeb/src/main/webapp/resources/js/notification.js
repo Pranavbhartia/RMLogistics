@@ -4,6 +4,7 @@ function getNotificationContext(loanId,userId){
 		loanId:loanId,
 		userId:userId,
 		loanLstCntElement:{},
+		customerName:"",
 		userContainerId:"",
 		loanContainerId:"notificationParentContainer",
 		userNotificationList:[],
