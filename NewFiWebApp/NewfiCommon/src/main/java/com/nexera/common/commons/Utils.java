@@ -5,7 +5,9 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -236,4 +238,15 @@ public class Utils {
 
 		return creditScore;
 	}
+
+	public List<String> getUnprotectedUrls() {
+
+		List<String> unprotectedUrls = new ArrayList<String>();
+		unprotectedUrls.add("/shopper/registration");
+		unprotectedUrls.add("/shopper/realtorRegistration");
+		unprotectedUrls.add("/userprofile/forgetPassword");
+		unprotectedUrls.add("/calculator/findteaseratevalue");
+		return unprotectedUrls;
+	}
+
 }

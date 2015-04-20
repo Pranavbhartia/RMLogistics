@@ -612,7 +612,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         var loanSummaryWrapper = getLoanSummaryWrapper(lqbData, appUserDetails);
         var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(lqbData));
         $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
-       // $('#center-panel-cont').append(loanSummaryWrapper);
+       //$('#center-panel-cont').append(loanSummaryWrapper);
     }
     /*
 
@@ -1111,8 +1111,8 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     if (appUserDetails.refinancedetails.refinanceOption == "REFCO"){
     	refinanceOpt = "Take cash out";
     	
-        var cashTakeOut = getFloatValue(customerInputData.cashTakeOut);
-        var currentMortgageBalance = getFloatValue(customerInputData.currentMortgageBalance);
+        var cashTakeOut = getFloatValue(appUserDetails.refinancedetails.cashTakeOut);
+        var currentMortgageBalance = getFloatValue(appUserDetails.refinancedetails.currentMortgageBalance);
     	loanAmount = cashTakeOut + currentMortgageBalance;
     }
     
@@ -1922,6 +1922,7 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
  //  lockratedata.IlpTemplateId ="1cca04b2-4f0d-4cc9-a67c-17210f95a5b2";
   // lockratedata.requestedRate = "4.750";
   // lockratedata.requestedFee = "0.075";
+    //	lockratedata.loanId = appUserDetails.loan.id;	
 
     		
     		//alert('lockratedata'+JSON.stringify(lockratedata));
@@ -2161,7 +2162,7 @@ function modifiedLQBJsonResponse(LQBResponse) {
 
 var purchaseTRate;
 
-function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val,cashOutCheck) {
+function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val,cashOutCheck,path) {
 	purchaseTRate={};
     var container = $('<div>').attr({
         "class": "loan-summary-row"
@@ -2189,13 +2190,17 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     
     var saveBtn = $('<div>').attr({
     	"class" : "sm-save-btn float-right"
-    }).html("Save").on('click',function(){
+    }).html("Save").on('click',{"path":path},function(){
     	
     	amt = $('#firstInput').val();
     	amt1 = $('#secondInput').val();
        // var loanVal=getFloatValue(amt)+getFloatValue(amt1);
     	//modifiyTeaserRate(loanVal,amt);
+    	if(path==="CEP")
     	modifiyTeaserRate(amt,amt1);
+    	else
+    	modifiyLockRateLoanAmt(amt1,amt);
+    	
     });
     
     col2.append(col2Txt).append(dropdownarrow).append(saveBtn);

@@ -65,7 +65,7 @@
 }
 .app-options-cont {
     position: relative;
-    width: 200px;
+    width: 250px;
 }
 .app-dropdown-cont {
     position: absolute;
@@ -183,15 +183,16 @@
 }
 
 .remove-btn {
-	font-size: 20px;
 	display: inline-block;
-	margin-left: 10px;
-	width: 35px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	border: 1px solid #d4d4d4;
-	border-radius: 50%;
+	padding: 0 10px;
+	font-size: 11px;
+	height: 25px;
+	line-height: 25px;
+	background: #6c9f2e;
+	border-radius: 3px;
+	color: #fff;
+	margin: 0px 10px 0 10px;
+	cursor: pointer;
 }
 
 .ce-err-input{

@@ -1501,7 +1501,7 @@ function getLoanSummaryHeaderCEP() {
 
 function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     
-	
+	var path = "CEP";
 	var yearValues = teaserRate;
    
 	var rateVO = yearValues[yearValues.length-1].rateVO;
@@ -1556,7 +1556,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     if(customerInputData.refinanceOption != "REFCO")
     var lcRow4 = getLoanAmountRowCEP("Loan Amount", showValue(loanAmount),"loanAmount");
     else
-    var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);	
+    var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true,path);	
     
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR +" %", "aprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "closingCostId");

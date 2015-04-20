@@ -15,7 +15,9 @@ public interface CommonConstants {
 	 */
 	public static final Integer RANDOM_PASSWORD_LENGTH = 8;
 	public static final int SYSTEM_ADMIN_ID = 1;
+	
 
+	public static final float PROFILE_STATUS_WEIGHTAGE=(100f/3f);
 	/**
 	 * Entity status
 	 */

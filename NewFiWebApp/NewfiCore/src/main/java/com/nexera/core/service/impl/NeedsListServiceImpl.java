@@ -25,6 +25,7 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.MasterNeedsEnum;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.LoanNeedsListVO;
@@ -422,11 +423,10 @@ public class NeedsListServiceImpl implements NeedsListService {
 		loanNeedsListVO.setId(loanNeedsList.getId());
 		loanNeedsListVO.setActive(loanNeedsList.getActive());
 		UploadedFilesList fileMapped = loanNeedsList.getUploadFileId();
-		if(fileMapped!= null){
-			loanNeedsListVO.setFileId( fileMapped.getId().toString());
+		if (fileMapped != null) {
+			loanNeedsListVO.setFileId(fileMapped.getId().toString());
 		}
-		
-		
+
 		loanNeedsListVO
 		        .setNeedsListMaster(buildLoanNeedsListMasterVO(loanNeedsList
 		                .getNeedsListMaster()));
