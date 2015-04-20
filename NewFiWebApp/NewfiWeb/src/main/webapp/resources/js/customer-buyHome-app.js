@@ -183,8 +183,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     var questions = [{
         type: "desc",
         text: "Street Address",
-        name: "streetAddress",
-        value: ""
+        name: "addressStreet",
+        value: appUserDetails.user.customerDetail.addressStreet
     }, {
         type: "desc",
         text: "Which State do you live in?",
@@ -250,7 +250,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    	
+    	var addressStreet = $('input[name="addressStreet"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
@@ -259,9 +259,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var isSellYourhome = quesContxts[4].value;
     	
     	//alert(isSellYourhome);
-    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
+    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != "" && addressStreet != undefined && addressStreet != "" ){
         	
-
+            customerDetail.addressStreet=addressStreet;
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
     		customerDetail.addressZipCode = zipCode;
