@@ -34,6 +34,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.web.rest.util.RestUtil;
 
 @RestController
 @RequestMapping(value = "/shopper")
@@ -84,28 +85,32 @@ public class ShopperRegistrationController {
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (Exception e) {
-			throw new FatalException("User exsit Please register with another emailID");
+			throw new FatalException(
+			        "User exsit Please register with another emailID");
 		}
 
 		return profileUrl + "home.do";
 	}
 
-	@RequestMapping(value = "/userValidation", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO UserValidation(
+	@RequestMapping(value = "/validate", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO validateUser(
 	        String registrationDetails) {
 		Gson gson = new Gson();
-		LOG.info("registrationDetails - inout xml is" + registrationDetails);
+		LOG.info("TO validate users before registration");
 		CommonResponseVO response = new CommonResponseVO();
-		ErrorVO error=new ErrorVO();
+		ErrorVO error = new ErrorVO();
 		LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
 		        LoanAppFormVO.class);
 		String emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
-		User user=userProfileService.findUserByMail(emailId);
-		if(user!=null){
-			response.setResultObject("success");
-		}else{
+		User user = userProfileService.findUserByMail(emailId);
+		if (user != null) {
+
 			error.setMessage(ErrorConstants.REGISTRATION_USER_EXSIST);
-			response.setResultObject(error);
+			response.setError(error);
+
+		} else {
+
+			response = RestUtil.wrapObjectForSuccess("success");
 		}
 		return response;
 
