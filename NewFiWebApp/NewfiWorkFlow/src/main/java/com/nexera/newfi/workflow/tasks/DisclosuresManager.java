@@ -93,7 +93,6 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-
 		String notificationReminderContent = WorkflowConstants.APP_FEE__NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, notificationReminderContent);
