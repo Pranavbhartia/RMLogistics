@@ -4333,7 +4333,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 			//user.customerEnagagement = customerEnagagement;					
 			//appUserDetails.user = user;	
 			refinancedetails.refinanceOption = event.data.option.value;
-						appUserDetails.refinancedetails = refinancedetails;	
+		    appUserDetails.refinancedetails = refinancedetails;	
 			
 			event.data.option.onselect();
 		});
@@ -4516,7 +4516,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
-	 //fixAndLoakYourRatePage(lqbData, appUserDetails);
+	//fixAndLoakYourRatePage(lqbData, appUserDetails);
 $('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",
@@ -4770,7 +4770,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
     loanAmount = getFloatValue(loanAmount);  
     purchaseAmount = getFloatValue(purchaseAmount); 
     if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-        appUserDetails.purchaseDetails.loanAmount=loanAmount;
+        appUserDetails.purchaseDetails.loanAmount=purchaseAmount-loanAmount;
         appUserDetails.purchaseDetails.housePrice=purchaseAmount;
     }else{
         var parentContainer=$('#center-panel-cont');
