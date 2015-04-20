@@ -183,8 +183,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     var questions = [{
         type: "desc",
         text: "Street Address",
-        name: "streetAddress",
-        value: ""
+        name: "addressStreet",
+        value: appUserDetails.user.customerDetail.addressStreet
     }, {
         type: "desc",
         text: "Which State do you live in?",
@@ -250,7 +250,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    	
+    	var addressStreet = $('input[name="addressStreet"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
@@ -259,9 +259,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var isSellYourhome = quesContxts[4].value;
     	
     	//alert(isSellYourhome);
-    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
+    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != "" && addressStreet != undefined && addressStreet != "" ){
         	
-
+            customerDetail.addressStreet=addressStreet;
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
     		customerDetail.addressZipCode = zipCode;
@@ -284,7 +284,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
     		//appUserDetails.buyHome = buyHome;
     		//alert(JSON.stringify(appUserDetails));
-    		saveAndUpdateLoanAppForm(appUserDetails ,paintWhereYouLiveStep());
+    		saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
     		
         	        	
         }else{
@@ -299,6 +299,47 @@ function paintCustomerApplicationPurchasePageStep1a() {
 }
 
 
+function paintloanamountBuyApp() {
+    $('#app-right-panel').html("");
+    quesContxts = [];
+    var dwnPaymnt=showValue(getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue(appUserDetails.purchaseDetails.loanAmount));
+    var questions = [{
+            "type": "desc",
+            "text": "Purchase Price?",
+            "name": "housePrice",
+            "value": ""
+        }, {
+            "type": "desc",
+            "text": "Down Payment?",
+            "name": "dwnPayment",
+            "value": dwnPaymnt
+        }
+    ];
+    for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var contxt = getQuestionContext(question, $('#app-right-panel'), appUserDetails.purchaseDetails);
+        contxt.drawQuestion();
+        quesContxts.push(contxt);
+    }
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "ce-save-btn"
+    }).html("Save & continue").on('click', function() {
+        appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
+        appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
+        
+        var questionOne=validateInputs($('input[name="housePrice"]').val(),message);
+        var questionTwo=validateInputs($('input[name="dwnPayment"]').val(),message);
+
+        if (questionOne && questionTwo) {
+            saveAndUpdateLoanAppForm(appUserDetails ,paintWhereYouLiveStep());
+        } else {
+            return false;
+        }
+
+    });
+    $('#app-right-panel').append(saveAndContinueButton);
+    //$('#ce-refinance-cp').html(quesCont);
+}
 
 
 function paintWhereYouLiveStep(){

@@ -865,7 +865,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        container :undefined,
 	        childContainers:{},
 	        childContexts:{},
-	        value:question.selected,
+	        value:question.selected==undefined?question.value:question.selected,
             yearMonthVal:"",
 	        parentContainer:parentContainer,
 	        valueSet:valueSet,
