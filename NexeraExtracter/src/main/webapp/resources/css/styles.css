@@ -405,3 +405,11 @@ table.adjuster-table{
 .cascade-adjustment-table4 th:nth-child(2),.cascade-adjustment-table4 td:nth-child(2){
 	width: 130px;
 }
+
+.addr-blustream{
+	margin-top: 10px;
+}
+
+.addr-blustream>div{
+	text-align: right;
+}
