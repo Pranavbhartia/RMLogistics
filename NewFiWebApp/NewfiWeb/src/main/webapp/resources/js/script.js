@@ -2191,10 +2191,11 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     	"class" : "sm-save-btn float-right"
     }).html("Save").on('click',function(){
     	
-    	amt = $('#currentMorgtageId').val();
-    	amt1 = $('#cashOutId').val();
-        var loanVal=getFloatValue(amt)-getFloatValue(amt1);
-    	modifiyTeaserRate(loanVal,amt);
+    	amt = $('#firstInput').val();
+    	amt1 = $('#secondInput').val();
+       // var loanVal=getFloatValue(amt)+getFloatValue(amt1);
+    	//modifiyTeaserRate(loanVal,amt);
+    	modifiyTeaserRate(amt,amt1);
     });
     
     col2.append(col2Txt).append(dropdownarrow).append(saveBtn);
@@ -2213,7 +2214,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     }).html(row1Desc);
     var col2row1 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left",
-        "id":"currentMorgtageId"
+        "id":"firstInput"
     }).val(row1Val)
     .keydown(function() {
     	$(this).maskMoney({
@@ -2234,7 +2235,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     }).html(row2Desc);
     var col2row2 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left",
-        "id":"cashOutId"
+        "id":"secondInput"
     }).val(row2Val)
     .keydown(function() {
     	$(this).maskMoney({
