@@ -378,7 +378,7 @@ public class ThreadManager implements Runnable {
 					        loan.getId(),
 					        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
 					                .getNotificationTypeName(),
-					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION);
+					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
 					List<NotificationVO> notificationVOList = notificationService
 					        .findNotificationTypeListForLoan(
 					                loan.getId(),
