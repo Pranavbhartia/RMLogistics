@@ -21,8 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.FatalException;
+import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserVO;
@@ -80,11 +84,31 @@ public class ShopperRegistrationController {
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FatalException("User exsit Please register with another emailID");
 		}
 
 		return profileUrl + "home.do";
+	}
+
+	@RequestMapping(value = "/userValidation", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO UserValidation(
+	        String registrationDetails) {
+		Gson gson = new Gson();
+		LOG.info("registrationDetails - inout xml is" + registrationDetails);
+		CommonResponseVO response = new CommonResponseVO();
+		ErrorVO error=new ErrorVO();
+		LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
+		        LoanAppFormVO.class);
+		String emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
+		User user=userProfileService.findUserByMail(emailId);
+		if(user!=null){
+			response.setResultObject("success");
+		}else{
+			error.setMessage(ErrorConstants.REGISTRATION_USER_EXSIST);
+			response.setResultObject(error);
+		}
+		return response;
+
 	}
 
 	@RequestMapping(value = "/realtorRegistration", method = RequestMethod.POST)

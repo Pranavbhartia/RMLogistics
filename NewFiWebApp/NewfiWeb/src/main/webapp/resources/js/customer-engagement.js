@@ -1106,19 +1106,13 @@ function paintApplyNow(inputCustomerDetails) {
          propertyTypeMaster.propertyType=buyHomeTeaserRate.propertyType;
          propertyTypeMaster.residenceType=buyHomeTeaserRate.residenceType;
          appUserDetails.propertyTypeMaster = propertyTypeMaster;
-        }
-     
-        appUserDetails.user = user;
-       
-        
-        // Where livingSituation should goes 
+        }   
+        appUserDetails.user = user;       
+       // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        
-       
-       
-        console.log(JSON.stringify(appUserDetails));
+        validateUsersBeforeRegistration(appUserDetails);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
-        saveUserAndRedirect(appUserDetails);
+        //saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
     });
     regContainerGetStarted.append(regGetStarted);
@@ -1130,7 +1124,31 @@ function paintApplyNow(inputCustomerDetails) {
     regMainContainer.append(regContainerGetStarted);
     return parentWrapper.append(regMainContainer);
 }
+function validateUsersBeforeRegistration(registration){
+	$('#overlay-loader').show();
+    $.ajax({
+        url: "rest/shopper/userValidation",
+        type: "POST",
+        data: {
+            "registrationDetails": JSON.stringify(registration)
+        },
+        datatype: "application/json",
+        success: function(data) {
 
+            $('#overlay-loader').hide();
+            if(data.error==null){
+            	 saveUserAndRedirect(registration);
+            }else{
+            	showErrorToastMessage(data.error.message);
+            }
+           
+        },
+        error: function(data) {
+
+             $('#overlay-loader').hide();
+        }
+    });
+}
 function saveUserAndRedirect(registration) {
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
@@ -1169,7 +1187,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 window.location.href = data;
             },
             error: function(erro) {
-                alert("error");
+                showerrorToastMessage("error");
             }
         });
     }
