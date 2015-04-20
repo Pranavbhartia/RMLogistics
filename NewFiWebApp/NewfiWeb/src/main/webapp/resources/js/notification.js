@@ -601,7 +601,9 @@ function getAlertNotificationRow(notification,contxt){
 		"class" : "alert-popup-time"
 	}).html(getTimeElapsedString(notification.remindOn));
 	
-	alertTxtCont.append(alertTxt).append(alertTime);
+	alertTxtCont.append(alertTxt);
+	if(notification.remindOn)
+		alertTxtCont.append(alertTime);
 	
 	container.append(alertIcn).append(alertTxtCont);
 	
