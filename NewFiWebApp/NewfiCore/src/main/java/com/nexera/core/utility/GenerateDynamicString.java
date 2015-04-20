@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.workflow.utils.Util;
 
 @Component
@@ -29,8 +30,16 @@ public class GenerateDynamicString {
 					long elapsed = (dateNow.getTime() - startedDate.getTime())
 							/ (1000 * 60 * 60);
 					long timeLeft = Long.parseLong(key) - elapsed;
-					resultStr.append(timeLeft);
-					resultStr.append(" ");
+					if (timeLeft <= 0) {
+						resultStr.append(" "
+						        + CommonConstants.elapsedOverDueStr);
+					} else {
+						resultStr.append(" "
+						        + CommonConstants.elapsedPrependStr + " ");
+						resultStr.append(timeLeft);
+						resultStr.append(" " + CommonConstants.elapsedAppendStr
+						        + " ");
+					}
 					break;
 				case "columnFetch":
 					String[] inputs = key.split("[&]");
