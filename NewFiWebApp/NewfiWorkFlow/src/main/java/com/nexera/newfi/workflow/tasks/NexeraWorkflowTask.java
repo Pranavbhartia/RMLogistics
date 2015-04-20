@@ -16,6 +16,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
@@ -28,6 +29,9 @@ public abstract class NexeraWorkflowTask {
 	public MessageServiceHelper messageServiceHelper;
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private SMSServiceHelper smsServiceHelper;
 
 	@Autowired
 	private TemplateService templateService;
@@ -79,6 +83,23 @@ public abstract class NexeraWorkflowTask {
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(emailTemplate);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+
+			// Sending sms to user now
+			if (loanVO.getUser() != null) {
+				if (loanVO.getUser().getCustomerDetail() != null) {
+					if (loanVO.getUser().getCustomerDetail().getCarrierInfo() != null) {
+						if (loanVO.getUser().getPhoneNumber() != null
+						        && loanVO.getUser().getPhoneNumber()
+						                .equalsIgnoreCase("")) {
+							smsServiceHelper.sendNotificationSMS(loanVO
+							        .getUser().getCustomerDetail()
+							        .getCarrierInfo(), Long.valueOf(loanVO
+							        .getUser().getPhoneNumber()));
+						}
+					}
+				}
+
+			}
 		}
 	}
 
