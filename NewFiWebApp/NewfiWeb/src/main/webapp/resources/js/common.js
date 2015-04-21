@@ -20,14 +20,22 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 		dataType : dataType,
 		data : data,
 		contentType: "application/json",
-		success : successCallBack,
-		complete:function(response){
+		success : function(response){
 			if(isPagination){
 				removePaginationScrollIcon(div);
 			}else{
 				hideOverlay();
 			}
+			successCallBack(response);
+		},
+		complete:function(response){
+			
 			if(completeCallback){
+				if(isPagination){
+					removePaginationScrollIcon(div);
+				}else{
+					hideOverlay();
+				}
 				var data={};
 				if(response.responseJSON)
 					data=response.responseJSON;
@@ -407,7 +415,6 @@ function getCalculationFunctionForItem(key){
     			var val1=getFloatValue(closingCostHolder.valueSet["lenderFee813"]);
     			var val2=getFloatValue(closingCostHolder.valueSet["creditOrCharge802"]);
     			var result=val1+val2;
-    			result = showValue(result);
     			return result;
     		};
     		break;
@@ -473,7 +480,6 @@ function getCalculationFunctionForItem(key){
     			var val8=getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
     			var val9=getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
     			var result=val1+val2+val3+val4+val5+val6+val7+val8+val9;
-    			result = showValue(result);
     			return result;
     		};
     		break;
@@ -482,7 +488,6 @@ function getCalculationFunctionForItem(key){
     			var val1=getFloatValue(closingCostHolder.valueSet["interest901"]);
     			var val2=getFloatValue(closingCostHolder.valueSet["hazIns903"]);
     			var result=val1+val2;
-    			result = showValue(result);
     			return result;
     		};
     		break;
@@ -507,7 +512,7 @@ function getRowHolderObject(container,value,key){
         updateFunction:getCalculationFunctionForItem(key),
         updateView:function(){
         	var ob=this;
-        	var getVal=ob.updateFunction();
+        	var getVal=showValue(ob.updateFunction());
         	$(ob.container).text(getVal);
         }
     };

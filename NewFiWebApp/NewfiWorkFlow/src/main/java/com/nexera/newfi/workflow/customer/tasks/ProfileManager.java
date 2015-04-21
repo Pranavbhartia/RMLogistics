@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +17,18 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 public class ProfileManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private UserProfileService userProfileService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(ProfileManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// This Task doesnt do anything -
-		// Only will update the status of the work item to success.
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method renderStateInfo");
 		Integer completionStatus = 0;
 		int userID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
@@ -38,18 +42,19 @@ public class ProfileManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method checkStatus");
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 

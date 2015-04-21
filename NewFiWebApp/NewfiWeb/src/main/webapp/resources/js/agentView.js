@@ -70,7 +70,7 @@ function getAgentSecondaryLeftNavStep(step, text) {
 }
 
 function paintAgentDashboard(loanType) {
-	selectedUserDetail=undefined;
+	selectedUserDetail = undefined;
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -543,7 +543,7 @@ function appendCustomerDetailContianer(element, customer) {
 		"class" : "cust-detail-wrapper clearfix"
 	});
 	$(element).after(wrapper);
-	
+
 	appendRecentAlertContainer(contxt.loanNotificationList, contxt);
 	appendSchedulerContainer(contxt);
 	repaintNotes(true);
@@ -760,8 +760,8 @@ function getSchedulerContainer(contxt, tempData) {
 					data.remindOn = snoozeTime.getTime();
 					data.createdByID = newfiObject.user.id;
 					data.createdForID = newfiObject.user.id;
-					data.loanID = contxt.loanId;					
-					data.customerName =contxt.customerName;					
+					data.loanID = contxt.loanId;
+					data.customerName = contxt.customerName;
 					data.notificationType = "NOTIFICATION";
 					data.dismissable = true;
 					if (tempData) {
@@ -820,11 +820,7 @@ function appendRecentNotesContainer(loanId, notes) {
 		"class" : "cust-detail-header"
 	}).html("recent notes");
 
-//	if (notes != undefined) {
-//		header.append(" - " + notes.length + " NEW NOTES");
-//	} else {
-//		header.append(" - " + 0 + " NEW NOTES");
-//	}
+	 
 	container.append(header);
 
 	var recentNoteWrapper = $('<div>').attr({
@@ -834,12 +830,10 @@ function appendRecentNotesContainer(loanId, notes) {
 	if (notes != undefined) {
 		for (var i = 0; i < notes.length; i++) {
 			var noteData = notes[i];
-			var noteContainer = $('<div>').attr(
-					{
-						"class" : "note-conatiner",
-						"style" : "background-image:url(" + noteData.imgUrl
-								+ ") "
-					});
+			var noteContainer = $('<div>').attr({
+				"class" : "note-conatiner",
+				"style" : "background-image:url(" + noteData.imgUrl + ") "
+			});
 
 			var cusName = $('<div>').attr({
 				"class" : "note-cus-name"
@@ -868,10 +862,12 @@ function appendRecentNotesContainer(loanId, notes) {
 }
 
 function appendTakeNoteContainer(customer) {
-	var wrapper = $('<div>').attr({
+
+	wrapper = $('<div>').attr({
 		"class" : "cust-detail-rw float-left",
 		"id" : customer.loanID + "takeNotesContainer"
 	});
+
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
 	});
@@ -919,7 +915,7 @@ function appendTakeNoteContainer(customer) {
 	var col2 = $('<div>').attr({
 		"class" : "msg-btn-col2 float-left"
 	}).html("or");
-	
+
 	var col3 = $('<div>').attr({
 		"class" : "msg-btn-col3 float-left clearfix"
 	});
@@ -928,7 +924,7 @@ function appendTakeNoteContainer(customer) {
 		"class" : "msg-btn-clear float-left"
 	}).html("Clear");
 	col3.append(col3Btn);
-	col3.click(function(e){
+	col3.click(function(e) {
 		$("#" + customer.loanID + "_msgBody").val('');
 	});
 
@@ -936,7 +932,9 @@ function appendTakeNoteContainer(customer) {
 	container.append(buttonRow);
 
 	wrapper.append(container);
+
 	$('#cust-detail-wrapper').append(wrapper);
+
 }
 
 /*
@@ -965,15 +963,19 @@ function paintRecentNotes(response) {
 		var obj = messages[i];
 		notes[i] = new Object();
 		notes[i].name = obj[0].createdUser.userName;
-		if(obj[0].createdUser.imgUrl==undefined || obj[0].createdUser.imgUrl==null){
+		if (obj[0].createdUser.imgUrl == undefined
+				|| obj[0].createdUser.imgUrl == null) {
 			notes[i].imgUrl = "./resources/images/person-placeholder.png";
-		}else{
-			notes[i].imgUrl = obj[0].createdUser.imgUrl;	
+		} else {
+			notes[i].imgUrl = obj[0].createdUser.imgUrl;
 		}
-		
+
 		notes[i].message = obj[0].message;
 		notes[i].time = obj[0].createdDate;
 		loanId = obj[0].loanId;
+	}
+	if(loanId==undefined){
+		loanId = selectedUserDetail.loanID;
 	}
 	appendRecentNotesContainer(loanId, notes);
 }
@@ -1069,6 +1071,7 @@ function getAppDetailsForUser(userId, callback) {
 					showToastMessage(response.error.message)
 				} else {
 					var appFormDetails = response.resultObject;
+					appUserDetails=JSON.parse(appFormDetails);
 					newfi.appUserDetails = appFormDetails;
 					if (callback) {
 						callback(JSON.parse(appFormDetails));
@@ -1105,6 +1108,17 @@ function changeAgentSecondaryLeftPanel(elementId) {
 		}
 		getLoanDetails(selectedUserDetail.loanID);
 	} else if (elementId == "lp-step3") {
+		var userId=selectedUserDetail.userID;
+        getAppDetailsForUser(userId,function(appUserDetailsTemp){
+        	  $('#overlay-loader').show();
+            var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+            if(LQBFileId){
+                paintFixYourRatePage();
+            }else{
+                //code to Paint teaser rate page
+                paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
+            }
+        });
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {

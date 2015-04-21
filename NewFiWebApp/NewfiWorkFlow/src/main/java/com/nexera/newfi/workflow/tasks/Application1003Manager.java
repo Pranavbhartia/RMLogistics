@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,21 +39,28 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	private IWorkflowService iworkflowService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(Application1003Manager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
+		LOG.info("Executing Concrete class with Application1003Manager with "
+		        + status);
 		String returnStatus = null;
-		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-		        .getLosStatusID() + "")) {
+		if (status.equals(String
+		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
+		                .getLosStatusID()))) {
 			int loanID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			makeANote(loanID, LoanStatus.submittedMessage);
-			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,Milestones.App1003.getMilestoneKey());
+			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
+			        Milestones.App1003.getMilestoneKey());
 			sendEmail(objectMap);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
+			LOG.info("Saving Loan as INprogres");
 			loanService.saveLoanProgress(loanID, new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.IN_PROGRESS));
 		}
@@ -62,11 +71,11 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.DISCLOSURE_AVAIL_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		LOG.info("Create Alert for Disclosure Due : for " + loanId);
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
 		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0
-		        || notificationList.get(0).getRead() == true) {
+		if (notificationList.size() == 0 || notificationList.get(0).getRead()) {
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(),
 			        WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
@@ -74,6 +83,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			userRoles.add(UserRolesEnum.INTERNAL);
 			List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
 			internalUserRoles.add(InternalUserRolesEum.LM);
+			LOG.info("Creating Alert for LM" + notificationVO);
 			notificationService.createRoleBasedNotification(notificationVO,
 			        userRoles, internalUserRoles);
 		}

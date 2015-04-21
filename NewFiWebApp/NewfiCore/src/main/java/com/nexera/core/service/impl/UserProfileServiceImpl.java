@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,12 +32,10 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.googlecode.ehcache.annotations.Cacheable;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.MessageUtils;
-import com.nexera.common.commons.ProfileCompletionStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
@@ -1098,7 +1095,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
+	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
@@ -1172,7 +1169,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Cacheable(cacheName = "lqbAuthToken")
+	// @Cacheable(cacheName = "lqbAuthToken")
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);

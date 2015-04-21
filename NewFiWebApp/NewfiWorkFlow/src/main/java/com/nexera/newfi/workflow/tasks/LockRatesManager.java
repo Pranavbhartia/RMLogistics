@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,35 +27,38 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LockRatesManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// Do Nothing
-		return null;
+		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.info("Getting State of Rate Locked");
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
-		if (loanVO != null)
+		if (loanVO != null) {
 			return loanVO.getLockedRate() + "";
+		}
 		return null;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		LOG.info("checkStatus Rate Locked");
 		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
-		UserVO user = new UserVO();
-		user.setId(userId);
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		UserVO user = new UserVO(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(user);
 		if (loan.getIsRateLocked()) {
+			LOG.info("Chaning Status to Completeed");
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
-					WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
-			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
-					WorkItemStatus.COMPLETED.getStatus());
+			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			return WorkItemStatus.COMPLETED.getStatus();
 		}
 		return null;
@@ -66,12 +71,15 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.LOCK_RATE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
-		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());		
 		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_APP_FEE;
+		LOG.debug("LockRatesManager : Updating Reminder" + loanId + " with Prev Mielstone as " + prevMilestoneKey);
 		String notificationReminderContent = WorkflowConstants.LOCK_RATE__NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,

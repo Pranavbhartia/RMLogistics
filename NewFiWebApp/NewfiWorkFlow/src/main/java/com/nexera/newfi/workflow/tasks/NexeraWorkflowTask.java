@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public abstract class NexeraWorkflowTask {
 
 	@Autowired
 	private TemplateService templateService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(NexeraWorkflowTask.class);
 
 	public void sendEmail(HashMap<String, Object> objectMap) {
 		if (objectMap != null) {
@@ -50,6 +54,7 @@ public abstract class NexeraWorkflowTask {
 			Template template = templateService
 			        .getTemplateByKey(emailTemplateKey);
 			if (template != null) {
+				LOG.info("Send Email Template Found " + template.getValue());
 				emailTemplate = template.getValue();
 			}
 			EmailVO emailEntity = new EmailVO();
@@ -91,6 +96,9 @@ public abstract class NexeraWorkflowTask {
 						if (loanVO.getUser().getPhoneNumber() != null
 						        && loanVO.getUser().getPhoneNumber()
 						                .equalsIgnoreCase("")) {
+							LOG.info("Sending SMS "
+							        + Long.valueOf(loanVO.getUser()
+							                .getPhoneNumber()));
 							smsServiceHelper.sendNotificationSMS(loanVO
 							        .getUser().getCustomerDetail()
 							        .getCarrierInfo(), Long.valueOf(loanVO

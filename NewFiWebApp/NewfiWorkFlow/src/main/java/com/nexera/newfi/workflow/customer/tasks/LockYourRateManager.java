@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,7 @@ import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -25,15 +28,21 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	private NotificationService notificationService;
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LockYourRateManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// DO Nothing
+		LOG.debug("Inside method execute");
 		return null;
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method renderStateInfo");
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
@@ -44,6 +53,7 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method checkStatus");
 		int userId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO user = new UserVO();
@@ -61,17 +71,21 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	}
 
 	public void dismissAllLockYourRateAlert(int loanId) {
-		iWorkflowService.dismissReadNotifications(loanId,
+
+		LOG.debug("Inside method dismissAllLockYourRateAlert");
+		notificationService.dismissReadNotifications(loanId,
 		        MilestoneNotificationTypes.LOCK_RATE_CUST_NOTIFICATION_TYPE);
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method updateReminder");
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.LOCK_RATE_CUST_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
