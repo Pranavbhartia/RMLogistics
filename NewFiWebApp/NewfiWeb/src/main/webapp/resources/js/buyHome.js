@@ -250,7 +250,10 @@ function paintloanamount() {
         var questionTwo=validateInputs($('input[name="currentMortgageBalance"]').val(),message);
 
         if (questionOne && questionTwo) {
-            paintNewResidenceTypeQues();
+        	if (validateDownPaymentOrPurchasePrice($('input[name="homeWorthToday"]'), $('input[name="currentMortgageBalance"]')))
+        	{
+        		paintNewResidenceTypeQues();
+        	}
         } else {
             return false;
         }
@@ -259,7 +262,19 @@ function paintloanamount() {
     $('#ce-refinance-cp').append(saveAndContinueButton);
     //$('#ce-refinance-cp').html(quesCont);
 }
-
+function validateDownPaymentOrPurchasePrice (purchasePriceElement, downPaymentElement)
+{
+	 var purchasePrice = purchasePriceElement.val();
+	 var downPayment = downPaymentElement.val();
+	if((getFloatValue(downPayment) < (0.03* getFloatValue(purchasePrice)))){
+		console.log("Eror");
+		downPaymentElement.next('.err-msg').html("Down Payment must be greater than 3% of Purchase Price.").show();
+		downPaymentElement.addClass('ce-err-input').show();		
+		return false;
+	}
+	return true;
+	
+}
 function paintBuyHomeAnnualPropertyTaxes() {
         var quesTxt = "Approximately what is your home worth today?";
         var quesCont = getTextQuestion(quesTxt, paintHomeZipCode, "annualPropertyTaxes");

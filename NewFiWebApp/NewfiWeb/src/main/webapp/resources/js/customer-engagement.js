@@ -34,7 +34,6 @@ function validateInputs(inputVal,message){
 		$('.app-input').next('.err-msg').html(message).show();
 		$('.app-input').addClass('ce-err-input').show();
 		return false;
-
 	}
 	else{
 		$('.app-input').next('.err-msg').hide();
@@ -42,6 +41,8 @@ function validateInputs(inputVal,message){
 		return true;
 	}
 }
+
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -635,6 +636,7 @@ function paintRefinanceStep1a() {
     var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2, "yearLeftOnMortgage");
     $('#ce-refinance-cp').html(quesCont);
 }
+
 var quesContxts = [];
 
 function paintRefinanceStep2() {
@@ -770,8 +772,22 @@ function paintRefinanceHomeWorthToday() {
     stages = 4;
     progressBaar(4);
     var quesTxt = "Approximately what is your home worth today?";
-    var quesCont = getTextQuestion(quesTxt, paintNewResidenceTypeQues, "homeWorthToday");
+    var quesCont = getTextQuestion(quesTxt, validateMortage, "homeWorthToday");
     $('#ce-refinance-cp').html(quesCont);
+}
+function validateMortage()
+{
+	var homeWorthToday =getFloatValue( $('input[name="homeWorthToday"]').val());
+	if (homeWorthToday > getFloatValue(refinanceTeaserRate.currentMortgagePayment))
+	{				
+		$('.ce-input').next('.err-msg').html("Home Worth cannot be greater than Mortage value " + refinanceTeaserRate.currentMortgagePayment).show();
+		$('.ce-input').addClass('ce-err-input').show();
+	}
+	else
+	{
+		paintNewResidenceTypeQues();
+	}
+	
 }
 function paintNewResidenceTypeQues(){
 
@@ -900,10 +916,7 @@ function paintRefinanceHomeInformation() {
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
-    	
-    	
-        
+    }).html("Save & continue").on('click', function() {    	       
     });
 
     var container = quesHeaderTextCont.append(questionsContainer).append(saveAndContinueButton);
