@@ -165,3 +165,11 @@ CHANGE COLUMN `order` `milestone_order` INT(11) NULL DEFAULT 0 ;
 		
 ALTER TABLE `newfi_schema`.`customerdetails` 
 ADD COLUMN `address_street` MEDIUMTEXT NULL AFTER `carrier_info`;
+
+
+#Rajeswari 21 April
+UPDATE `newfi_schema`.`workflowitemmaster` set on_success= NULL where on_success=28;
+
+DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='28';
+DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='23';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Your Loan Profile' WHERE `id`='27';
