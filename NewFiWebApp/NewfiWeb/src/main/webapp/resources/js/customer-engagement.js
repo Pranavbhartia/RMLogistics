@@ -1309,6 +1309,18 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
             var mainContainer = paintApplyNow(inputCustomerDetails);
             $('#ce-main-container').html(mainContainer);
         });
+    }else{
+        rateBtn1= $('<div>').attr({
+            "class": "rate-btn"
+        }).html("Complete Your Application").on('click', function() {
+            if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+                window.location.hash="#myLoan/my-application";
+                //changeSecondaryLeftPanel(2);//Commented since change in hash value does the job
+            }else{
+                window.location.hash="#loan/"+selectedUserDetail.loanID+"/application";
+                //changeAgentSecondaryLeftPanel("lp-step1");//Commented since change in hash value does the job
+            }
+        });
     }
     return wrapper.append(header).append(container).append(rateBtn1).append(rateBtn2);;
 }

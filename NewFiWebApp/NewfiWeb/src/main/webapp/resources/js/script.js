@@ -1019,7 +1019,7 @@ function getLoanSummaryHeader() {
 function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     
 	var yearValues = lqbData;
-    var rateVO = yearValues[yearValues.length-2].rateVO;
+    var rateVO = yearValues[yearValues.length-1].rateVO;
 	var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
 	
 	var livingSituation = capitalizeFirstLetter(appUserDetails.purchaseDetails.livingSituation);
@@ -1912,29 +1912,30 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
     var rateSlider = getRateSliderCont(lqbData,appUserDetails);
     
     container.append(tenureSlider).append(rateSlider);
-    var rateBtn = $('<div>').attr({
-        "class": "rate-btn"
-    }).html("Request Rate Lock").on('click', function(event) {
-    	
-    	
-    	$('input').attr("readonly","true");
-   
-   
-  // lockratedata.sLoanNumber="D2015040035";
- //  lockratedata.IlpTemplateId ="1cca04b2-4f0d-4cc9-a67c-17210f95a5b2";
-  // lockratedata.requestedRate = "4.750";
-  // lockratedata.requestedFee = "0.075";
-    //	lockratedata.loanId = appUserDetails.loan.id;	
-
-    		
-    		//alert('lockratedata'+JSON.stringify(lockratedata));
-    		lockLoanRate(lockratedata);
-    		
-        	        	
-        
-   	
-    });
+    var rateBtn = $('<div>');
+    getRequestRateLockStatus(rateBtn);
     return wrapper.append(header).append(container).append(rateBtn);
+}
+
+function getRequestRateLockStatus(element){
+    var loanId=appUserDetails.loan.id;
+    ajaxRequest("rest/loan/"+loanId+"/rateCheck","GET","json",undefined,function(response){
+        if(response.error){
+            showToastMessage(response.error.message)
+        }else{
+            var status=response.resultObject;
+            if(status){
+                element.addClass("rate-btn");
+                element.html("Request Rate Lock").on('click', function(event) {
+                        $('input').attr("readonly","true");
+                        lockLoanRate(lockratedata);
+                });
+            }else{
+                element.addClass("rate-btn");
+                element.html("Contact Your loan manager");
+            }
+        }
+    });
 }
 
 function getYearSliderCont(lqbData,appUserDetails) {
