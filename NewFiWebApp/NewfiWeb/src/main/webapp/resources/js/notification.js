@@ -211,16 +211,18 @@ function getNotificationContext(loanId,userId){
 			var ob=this;
 			var closebtn=(notification.dismissable==true?'<div class="lp-alert-close-btn float-right" onclick="removeNotification(\'LNID'+notification.id+'\')"></div>':'');
 			var customerName = "";
-			if (notification.loanID != 0 && newfiObject.user.userRole.roleCd !="CUSTOMER")
-			{
-				customerName = " - "+notification.customerName;
-			}
-			
-			else if (notification.loanID !=0 && selectedUserDetail && notification.loanID == selectedUserDetail.loanID)
+			if (notification.loanID !=0 && selectedUserDetail && notification.loanID == selectedUserDetail.loanID)
 			{
 				customerName = "";
 			}
-			
+			else if (notification.loanID != 0 && newfiObject.user.userRole.roleCd !="CUSTOMER")
+			{
+				customerName = " - "+notification.customerName;
+			}
+			else
+			{
+				customerName = "";
+			}
 			$("#"+ob.loanContainerId).append('<div class="lp-alert-item-container clearfix" id="LNID'+notification.id+'"><div class="lp-alert-item float-left">'+notification.content+  customerName + '</div>'+closebtn+'</div>');
 			if(callback){
 				callback(ob);
