@@ -241,16 +241,15 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.getId()" + cei.getId());
 				CustomerEmploymentIncome customeremploymentIncome = new CustomerEmploymentIncome();
 				customeremploymentIncome.setId(cei.getId());
-				;
+				customeremploymentIncome.setJobTitle(cei.getJobTitle());
 				customeremploymentIncome.setEmployedAt(cei.getEmployedAt());
-				customeremploymentIncome.setEmployedIncomePreTax(cei
-				        .getEmployedIncomePreTax());
-				customeremploymentIncome.setEmployedSince(cei
-				        .getEmployedSince());
+				customeremploymentIncome.setEmployedIncomePreTax(cei.getEmployedIncomePreTax());
+				customeremploymentIncome.setEmployedSince(cei.getEmployedSince());
 				customeremploymentIncome.setLoanAppForms(loanAppForm);
+				
 				this.saveOrUpdate(customeremploymentIncome);
-				LOG.info("custom engagement id is "
-				        + customeremploymentIncome.getId());
+				
+				LOG.info("custom engagement id is "+ customeremploymentIncome.getId());
 				LOG.info("custom engagement id is "+counter+":::"
 				        + loanAppForm.getCustomerEmploymentIncome().get(counter)
 				                .getId());

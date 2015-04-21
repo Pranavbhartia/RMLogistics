@@ -1,9 +1,7 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -30,7 +27,8 @@ public class CustomerEmploymentIncome implements Serializable{
 	private Integer      id;
 	private String   employedIncomePreTax;
 	private String   employedAt;
-	private String   employedSince; 
+	private String   employedSince;
+	private String   jobTitle;
 	private LoanAppForm loanAppForms;
 	
 	
@@ -94,6 +92,16 @@ public class CustomerEmploymentIncome implements Serializable{
 		this.loanAppForms = loanAppForms;
 	}
 
+	@Column(name = "job_title")
+	public String getJobTitle() {
+		return jobTitle;
+	}
 
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+   
 	
 }

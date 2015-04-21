@@ -869,16 +869,15 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	private List<CustomerEmploymentIncome> parseVOtoEntityCustomerEmploymentIncome(
-	        List<CustomerEmploymentIncomeVO> customerEmploymentIncomeVO) {
+	        List<CustomerEmploymentIncomeVO> customerEmploymentIncomeVOlist) {
 
 		List<CustomerEmploymentIncome> customerEmploymentIncomeList = new ArrayList();
 
-		if (null == customerEmploymentIncomeVO)
+		if (null == customerEmploymentIncomeVOlist)
 			return null;
 		// return customerEmploymentIncome;
 
-		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVO
-		        .iterator();
+		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVOlist.iterator();
 
 		while (itr.hasNext()) {
 			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
@@ -891,6 +890,8 @@ public class LoanAppFormVO implements Serializable {
 				customerEmploymentIncome.setId(customeremploymentincomeVO
 				        .getCustomerEmploymentIncome().getId());
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
+			customerEmploymentIncome.setJobTitle(customeremploymentincomeVO.getCustomerEmploymentIncome().getJobTitle());
+			
 			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO
 			        .getCustomerEmploymentIncome().getEmployedAt());
 			customerEmploymentIncome
