@@ -1,5 +1,5 @@
 var active = 0;
-var message = "Field cannot be empty";
+var message = "Invalid Entry";
 var buyHomeTeaserRate = new Object();
 var purchaseDetails = new Object();
 buyHomeTeaserRate.purchaseDetails = purchaseDetails;
