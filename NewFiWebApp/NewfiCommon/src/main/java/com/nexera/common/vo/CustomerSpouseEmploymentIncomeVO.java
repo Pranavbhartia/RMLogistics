@@ -7,7 +7,8 @@ public class CustomerSpouseEmploymentIncomeVO implements Serializable{
 	private int      id;
 	private String   employedIncomePreTax;
 	private String   employedAt;
-	private String   employedSince; 
+	private String   employedSince;
+	private String jobTitle;
 	private CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncome;
 	
 	public int getId() {
@@ -41,6 +42,12 @@ public class CustomerSpouseEmploymentIncomeVO implements Serializable{
 	public void setCustomerSpouseEmploymentIncome(
 			CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentIncome) {
 		this.customerSpouseEmploymentIncome = customerSpouseEmploymentIncome;
+	}
+	public String getJobTitle() {
+		return jobTitle;
+	}
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
 	}
 	
 	

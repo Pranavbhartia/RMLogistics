@@ -1,7 +1,7 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
 
 public class CustomerSpouseDetailVO implements Serializable {
 
@@ -14,15 +14,23 @@ public class CustomerSpouseDetailVO implements Serializable {
 	private boolean isSelfEmployed;
 	private boolean isssIncomeOrDisability;
 	private boolean ispensionOrRetirement;
-	private String selfEmployedIncome;
 	private String ssDisabilityIncome;
-	private String monthlyPension;
 	private String experianScore;
 	private String equifaxScore;
 	private String transunionScore;
 	private String currentHomePrice;
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
+	
+	
+	// Income page input
+	private String selfEmployedIncome;
+	private String selfEmployedNoYear; 
+	private String childSupportAlimony;
+	private String socialSecurityIncome;
+	private String  disabilityIncome;
+	private String monthlyPension;
+	private String retirementIncome;
 
 	public int getId() {
 		return id;
@@ -160,4 +168,48 @@ public class CustomerSpouseDetailVO implements Serializable {
 	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
 		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
 	}
+
+	public String getSelfEmployedNoYear() {
+		return selfEmployedNoYear;
+	}
+
+	public void setSelfEmployedNoYear(String selfEmployedNoYear) {
+		this.selfEmployedNoYear = selfEmployedNoYear;
+	}
+
+	public String getChildSupportAlimony() {
+		return childSupportAlimony;
+	}
+
+	public void setChildSupportAlimony(String childSupportAlimony) {
+		this.childSupportAlimony = childSupportAlimony;
+	}
+
+	public String getSocialSecurityIncome() {
+		return socialSecurityIncome;
+	}
+
+	public void setSocialSecurityIncome(String socialSecurityIncome) {
+		this.socialSecurityIncome = socialSecurityIncome;
+	}
+
+	public String getDisabilityIncome() {
+		return disabilityIncome;
+	}
+
+	public void setDisabilityIncome(String disabilityIncome) {
+		this.disabilityIncome = disabilityIncome;
+	}
+
+	public String getRetirementIncome() {
+		return retirementIncome;
+	}
+
+	public void setRetirementIncome(String retirementIncome) {
+		this.retirementIncome = retirementIncome;
+	}
+	
+	
+	
+	
 }

@@ -1264,22 +1264,33 @@ function incomesSelectALLThatApply() {
 
 	
 	var quesTxt = "Select all that apply";
+
     var selfEmployedData={};
-
-   //  alert('appUserDetails'+appUserDetails);
-    if(appUserDetails)
-        selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":appUserDetails.selfEmployedIncome};
-  //alert('selfEmployedData'+selfEmployedData);
-
+    if(appUserDetails && appUserDetails.isselfEmployed){
+        var tmpData={
+            monthlyIncome : appUserDetails.selfEmployedMonthlyIncome,
+            noOfYears : appUserDetails.selfEmployedNoYear
+        }
+        selfEmployedData={"selected":appUserDetails.isselfEmployed,"data":tmpData};
+    }
     var employedData={};
     if(appUserDetails && appUserDetails.customerEmploymentIncome)
         employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
-    var ssiData={};
-    if(appUserDetails)
-        ssiData={"selected":appUserDetails.isssIncomeOrDisability,"data":appUserDetails.ssDisabilityIncome};
-    var prData={};
-    if(appUserDetails)
-        prData={"selected":appUserDetails.ispensionOrRetirement,"data":appUserDetails.monthlyPension};
+    var childSupportIncome={};
+    if(appUserDetails && appUserDetails.receiveAlimonyChildSupport)
+        childSupportIncome={"selected":appUserDetails.receiveAlimonyChildSupport,"data":appUserDetails.childSupportAlimony};
+    var socialSecIncome={};
+    if(appUserDetails && appUserDetails.socialSecurityIncome)
+        socialSecIncome={"selected":(appUserDetails.socialSecurityIncome==undefined?false:true),"data":appUserDetails.socialSecurityIncome};
+    var socialSecDisabilityIncome={};
+    if(appUserDetails && appUserDetails.ssDisabilityIncome)
+        socialSecDisabilityIncome={"selected":(appUserDetails.ssDisabilityIncome==undefined?false:true),"data":appUserDetails.ssDisabilityIncome};
+    var pensionIncome={};
+    if(appUserDetails && appUserDetails.monthlyPension)
+        pensionIncome={"selected":(appUserDetails.monthlyPension==undefined?false:true),"data":appUserDetails.monthlyPension};
+    var retirementIncome={};
+    if(appUserDetails && appUserDetails.retirementIncome)
+        retirementIncome={"selected":(appUserDetails.retirementIncome==undefined?false:true),"data":appUserDetails.retirementIncome};
 
 	var options = [ {
 		"text" : "W2 Employee",
@@ -1309,47 +1320,47 @@ function incomesSelectALLThatApply() {
 	{
 		"text" : "Child Support/Alimony",
 		"onselect" : paintRefinancePension,
-		"name" :"",
-        "data" : "",
+		"name" :"childAlimonySupport",
+        "data" : childSupportIncome,
 		"value" : 2
 	}, 
 	{
 		"text" : "Social Security Income",
 		"onselect" : paintRefinancePension,
-		"name" :"",
-        "data" : "",
+		"name" :"socialSecurityIncome",
+        "data" : socialSecIncome,
 		"value" : 3
 	}, 
 	{
 		"text" : "Disability Income",
 		"onselect" : paintRefinancePension,
-		"name" :"",
-        "data" : "",
+		"name" :"disabilityIncome",
+        "data" : socialSecDisabilityIncome,
 		"value" : 4
 	}, 
 	{
 		"text" : "Pension Income",
 		"onselect" : paintRefinancePension,
-		"name" :"",
-        "data" : "",
+		"name" :"pensionIncome",
+        "data" : pensionIncome,
 		"value" : 5
 	}, 
 	{
 		"text" : "Retirement Income",
 		"onselect" : paintRefinancePension,
-		"name" :"",
-        "data" : "",
+		"name" :"retirementIncome",
+        "data" : retirementIncome,
 		"value" : 6
 	}];
 	
-	    var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
-        $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
-        for(var i=0;i<options.length;i++){
-            var option=options[i];
-            if(option.onselect){
-                option.onselect(option.value,option.data);
-            }
+    var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
+    $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
+    for(var i=0;i<options.length;i++){
+        var option=options[i];
+        if(option.onselect){
+            option.onselect(option.value,option.data,option.name);
         }
+    }
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1375,119 +1386,129 @@ function paintMyIncome() {
     
     
     
-    var  customerEmploymentIncome = [];
-     
-     $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
-      customerEmploymentIncome1 = {};
-     
-      id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
-      if(id ==""){
-    	  id = undefined;
-      }
-      
-      jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
-      EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
-      EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
-      EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
-     
-      customerEmploymentIncome1.id  = id;
-      customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
-      customerEmploymentIncome1.employedAt = EmployedAt;
-      customerEmploymentIncome1.employedSince = EmployedSince;
-      var termp = {};
-      termp.customerEmploymentIncome = customerEmploymentIncome1;
-      
-      customerEmploymentIncome.push(termp);
-     });
-     
-    // alert('customerEmploymentIncome.size');
-   
-   if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
-   appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
-   
-    			selfEmployedIncome = $('input[name="selfEmployed"]').val();
-		        
-		        ssDisabilityIncome = $('input[name="disability"]').val();
-				
-		        monthlyPension = $('input[name="pension"]').val();
+        var  customerEmploymentIncome = [];
+         
+        $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+            customerEmploymentIncome1 = {};
 
-		
-				if(monthlyPension != "" && monthlyPension != undefined){
-					appUserDetails.ispensionOrRetirement= true;
-					appUserDetails.monthlyPension =monthlyPension;
-				}else{
-                    appUserDetails.ispensionOrRetirement= false;
-                    appUserDetails.monthlyPension ="";
-                }
-				
-				
-				if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
-					
-					appUserDetails.isselfEmployed = true;
-					appUserDetails.selfEmployedIncome =selfEmployedIncome;
-				}else{
-                    appUserDetails.isselfEmployed = false;
-                    appUserDetails.selfEmployedIncome ="";
-                }
-				
-				if(ssDisabilityIncome !="" && ssDisabilityIncome != undefined){
-					
-					appUserDetails.isssIncomeOrDisability=true;
-					appUserDetails.ssDisabilityIncome = ssDisabilityIncome;
-				}else{
-                    appUserDetails.isssIncomeOrDisability=false;
-                    appUserDetails.ssDisabilityIncome = "";
-                }
-				
-				
-				//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-				
-			
-			
+            id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
+            if(id ==""){
+                id = undefined;
+            }
+
+            jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
+            EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
+            EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
+            EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+
+            customerEmploymentIncome1.id  = id;
+            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
+            customerEmploymentIncome1.jobTitle=jobTitle;
+            customerEmploymentIncome1.employedAt = EmployedAt;
+            customerEmploymentIncome1.employedSince = EmployedSince;
+            var termp = {};
+            termp.customerEmploymentIncome = customerEmploymentIncome1;
+
+            customerEmploymentIncome.push(termp);
+        });
+         
+        // alert('customerEmploymentIncome.size');
        
-      if(purchase == true){
-            
-    	  homeListPrice = $('input[name="homelistprice"]').val();
-    	  homeMortgageBalance = $('input[name="homemortgagebalance"]').val();
-    	  investmentInHome = $('input[name="inverstInPurchase"]').val();
-	        
-	        
-	        appUserDetails.propertyTypeMaster.currentHomePrice=homeListPrice;
-	    	appUserDetails.propertyTypeMaster.currentHomeMortgageBalance=homeMortgageBalance;
-	   	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
-	        
-	        
-	        appUserDetails.customerBankAccountDetails = [];
-	        appUserDetails.customerOtherAccountDetails = [];
-	        appUserDetails.customerRetirementAccountDetails = [];
-	        
-	        var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
-	        
-	        var bankContainer=assets[0];
-	        var retirementContainer=assets[1];
-	        var otherContainer=assets[2];
-	        
-	        if($(bankContainer).find('.app-option-checked')){
-	        	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-	        }
-			if($(retirementContainer).find('.app-option-checked')){
-				appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-		    }
-			if($(otherContainer).find('.app-option-checked')){
-				appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-			}
-			
-			
-	    }
-            
-        
+        if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
+            appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
        
+    	selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
+        selfEmployedYears = $('input[name="selfEmployedYears"]').val();
+        childAlimonySupport = $('input[name="childAlimonySupport"]').val();
+        socialSecurityIncome = $('input[name="socialSecurityIncome"]').val();
+        disabilityIncome = $('input[name="disabilityIncome"]').val();
+        pensionIncome = $('input[name="pensionIncome"]').val();
+        retirementIncome = $('input[name="retirementIncome"]').val();
+        appUserDetails.ispensionOrRetirement= false;
+        appUserDetails.isselfEmployed = false;
+        appUserDetails.receiveAlimonyChildSupport=false;
+        appUserDetails.isssIncomeOrDisability=false;
+    	if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
+            appUserDetails.isselfEmployed = true;
+    		appUserDetails.selfEmployedMonthlyIncome= selfEmployedIncome;
+    		appUserDetails.selfEmployedNoYear =selfEmployedYears;
+    	}else{
+            appUserDetails.selfEmployedMonthlyIncome= undefined;
+            appUserDetails.selfEmployedNoYear =undefined;
+        }
+    	if(childAlimonySupport != "" && childAlimonySupport != undefined){
+            appUserDetails.receiveAlimonyChildSupport=true;
+    		appUserDetails.childSupportAlimony =childAlimonySupport;
+    	}else{
+            appUserDetails.childSupportAlimony = undefined;
+        }
+    	if(socialSecurityIncome !="" && socialSecurityIncome != undefined){
+    		appUserDetails.isssIncomeOrDisability=true;
+    		appUserDetails.socialSecurityIncome = socialSecurityIncome;
+    	}else{
+            appUserDetails.socialSecurityIncome = undefined;
+        }
+    	if(disabilityIncome !="" && disabilityIncome != undefined){
+            appUserDetails.isssIncomeOrDisability=true;
+            appUserDetails.ssDisabilityIncome = disabilityIncome;
+        }else{
+            appUserDetails.ssDisabilityIncome = undefined;
+        }
+        if(pensionIncome !="" && pensionIncome != undefined){
+            appUserDetails.ispensionOrRetirement=true;
+            appUserDetails.monthlyPension = pensionIncome;
+        }else{
+            appUserDetails.monthlyPension = undefined;
+        }
+        if(retirementIncome !="" && retirementIncome != undefined){
+            appUserDetails.ispensionOrRetirement=true;
+            appUserDetails.retirementIncome = retirementIncome;
+        }else{
+            appUserDetails.retirementIncome = undefined;
+        }
+        if(purchase == true){
+            
+            homeListPrice = $('input[name="homelistprice"]').val();
+            homeMortgageBalance = $('input[name="homemortgagebalance"]').val();
+            investmentInHome = $('input[name="inverstInPurchase"]').val();
+
+            
+            appUserDetails.propertyTypeMaster.currentHomePrice=homeListPrice;
+        	appUserDetails.propertyTypeMaster.currentHomeMortgageBalance=homeMortgageBalance;
+       	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
+            
+            
+            appUserDetails.customerBankAccountDetails = [];
+            appUserDetails.customerOtherAccountDetails = [];
+            appUserDetails.customerRetirementAccountDetails = [];
+            
+            var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
+            
+            var bankContainer=assets[0];
+            var retirementContainer=assets[1];
+            var otherContainer=assets[2];
+            
+            if($(bankContainer).find('.app-option-checked')){
+            	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+            }
+    		if($(retirementContainer).find('.app-option-checked')){
+    			appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+    	    }
+    		if($(otherContainer).find('.app-option-checked')){
+    			appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+    		}
+    		
+    		
+        }
+                
+            
+           
         if (appUserDetails.isSpouseOnLoan == true) {
             saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome());
         } else {
             saveAndUpdateLoanAppForm(appUserDetails, paintCustomerApplicationPageStep4a());
         }
-        
+            
     });
     $('#app-right-panel').append(saveAndContinueButton);
 }
@@ -1614,7 +1635,7 @@ function getMultiTextQuestion(quesText, value) {
     var val = "";
 
     if (value && value.employedIncomePreTax)
-        val = value.employedIncomePreTax;
+        val = showValue(value.employedIncomePreTax);
 
     var inputBox1 = $('<input>').attr({
         "class": "ce-input",
@@ -1671,6 +1692,7 @@ function getMultiTextQuestion(quesText, value) {
     optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
     container.append(quesTextCont).append(optionContainer);
+
     return wrapper.append(container);
 }
 
@@ -1840,10 +1862,14 @@ function paintRefinanceSelfEmployed(divId,value) {
     		var optionContainer = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
+            var val="";
+            if(value&&value.data&&value.data.monthlyIncome){
+                val=showValue(value.data.monthlyIncome);
+            }
     		var inputBox = $('<input>').attr({
     			"class" : "ce-input",
-    			"name" : "selfEmployed",
-    			"value" : appUserDetails.selfEmployedIncome
+    			"name" : "selfEmployedIncome",
+    			"value" : val
     		});
     		optionContainer.append(inputBox);
     		container.append(quesTextCont).append(optionContainer);
@@ -1857,10 +1883,14 @@ function paintRefinanceSelfEmployed(divId,value) {
     		var optionContainer1 = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
+            val="";
+            if(value&&value.data&&value.data.noOfYears){
+                val=value.data.noOfYears;
+            }
     		var inputBox1 = $('<input>').attr({
     			"class" : "ce-input",
-    			"name" : "",
-    			"value" : ""
+    			"name" : "selfEmployedYears",
+    			"value" : val
     		});
     		optionContainer1.append(inputBox1);
     		container1.append(quesTextCont1).append(optionContainer1);
@@ -1870,7 +1900,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     	}
     	$('#ce-option_' + divId).toggle();
     	
-    	putCurrencyFormat("selfEmployed");
+    	putCurrencyFormat("selfEmployedIncome");
     }
 }
 
@@ -1913,7 +1943,7 @@ function paintRefinanceDisability(divId,value) {
     }
 }
 
-function paintRefinancePension(divId,value) {
+function paintRefinancePension(divId,value,name) {
     var flag=true;
     if(value&&!value.selected)
         flag=false;
@@ -1921,7 +1951,10 @@ function paintRefinancePension(divId,value) {
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var quesTxt = "About how much do you get monthly?";
-    	
+            var inputElementName="pension";
+            if(name){
+                inputElementName=name;
+            }
     		var wrapper = $('<div>').attr({
     			"class" : "ce-option-ques-wrapper"
     		});
@@ -1937,20 +1970,24 @@ function paintRefinancePension(divId,value) {
     		var optionContainer = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
-    	
+    	    var val="";
+            if(value&&value.data){
+                val=showValue(value.data);
+            }
     		var inputBox = $('<input>').attr({
     			"class" : "ce-input",
-    			"name" : "pension",
-    			"value": appUserDetails.monthlyPension
+    			"name" : inputElementName,
+    			"value": val
     		});
     	
     		optionContainer.append(inputBox);
     		container.append(quesTextCont).append(optionContainer);
     		wrapper.append(container);
     		$('#ce-option_' + divId).prepend(wrapper);
+    		putCurrencyFormat(inputElementName);
     	}
     	$('#ce-option_' + divId).toggle();
-    	putCurrencyFormat("pension");
+    	
     }
 }
 
@@ -2079,7 +2116,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
-			"name" : options[i].name
+			"name" : options[i].name+"-CHK"
 		}, function(event) {
 			if($(this).hasClass('app-option-checked')){
         		$(this).removeClass('app-option-checked');
@@ -2099,7 +2136,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
 			
 			//appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value);
+			event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
 		});
 
 		optionContainer.append(option);
@@ -2111,8 +2148,8 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 				
-				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 3){
-					showToastMessage("Maximum 3 income needed");
+				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
+					showToastMessage("Maximum 2 income needed");
 				     return false;
 				}
 				var quesTxt = "About how much do you make a year";

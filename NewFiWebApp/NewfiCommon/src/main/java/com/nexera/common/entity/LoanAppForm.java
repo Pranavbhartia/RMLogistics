@@ -1,6 +1,7 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -38,7 +39,7 @@ public class LoanAppForm implements Serializable {
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
 	private Boolean ispensionOrRetirement;
-	private String monthlyPension;
+	
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
@@ -46,7 +47,18 @@ public class LoanAppForm implements Serializable {
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
+	
+	
+	
+	private BigDecimal monthlyIncome;
+	private Integer  selfEmployedNoYear;
+	private BigDecimal childSupportAlimony;
+	private BigDecimal  socialSecurityIncome;
 	private String ssDisabilityIncome;
+	private String monthlyPension;
+	private BigDecimal  retirementIncome;
+	
+	
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
 	private String monthlyRent;
@@ -516,6 +528,53 @@ public class LoanAppForm implements Serializable {
 		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
 	}
 
+	@Column(name = "monthly_income")
+	public BigDecimal getMonthlyIncome() {
+		return monthlyIncome;
+	}
+
+	public void setMonthlyIncome(BigDecimal monthlyIncome) {
+		this.monthlyIncome = monthlyIncome;
+	}
+
+	@Column(name = "self_employed_no_year")
+	public Integer getSelfEmployedNoYear() {
+		return selfEmployedNoYear;
+	}
+
+	public void setSelfEmployedNoYear(Integer selfEmployedNoYear) {
+		this.selfEmployedNoYear = selfEmployedNoYear;
+	}
+
+	@Column(name = "child_support_alimony")
+	public BigDecimal getChildSupportAlimony() {
+		return childSupportAlimony;
+	}
+
+	public void setChildSupportAlimony(BigDecimal childSupportAlimony) {
+		this.childSupportAlimony = childSupportAlimony;
+	}
+
+	@Column(name = "social_security_income")
+	public BigDecimal getSocialSecurityIncome() {
+		return socialSecurityIncome;
+	}
+
+	public void setSocialSecurityIncome(BigDecimal socialSecurityIncome) {
+		this.socialSecurityIncome = socialSecurityIncome;
+	}
+
+	@Column(name = "retirement_income")
+	public BigDecimal getRetirementIncome() {
+		return retirementIncome;
+	}
+
+	public void setRetirementIncome(BigDecimal retirementIncome) {
+		this.retirementIncome = retirementIncome;
+	}
+
+	
+	
 	/*
 	 * @OneToOne(fetch = FetchType.LAZY)
 	 * 

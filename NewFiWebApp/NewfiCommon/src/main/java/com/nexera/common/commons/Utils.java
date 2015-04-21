@@ -2,6 +2,7 @@ package com.nexera.common.commons;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,7 @@ public class Utils {
 		return inputStr;
 	}
 
-	public String unformatCurrencyField(String field) {
+	public static String unformatCurrencyField(String field) {
 		String finalString = "";
 
 		if (field.contains("$") || field.contains(",")) {
@@ -249,4 +250,65 @@ public class Utils {
 		return unprotectedUrls;
 	}
 
+	
+	/*public static void main(String[] args) {
+		String a  ="$100,2313";
+		BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(a));
+		System.out.println(myBigNum);
+		
+    }*/
+	
+	public static BigDecimal convertToBigDecimal(String input){
+		
+		if(null != input){
+			BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(input));
+			return myBigNum;
+			
+		}
+		
+		return null;
+		
+	}
+	
+	
+		public static Integer convertToInteger(String input){
+		
+		if(null != input){
+			Integer myInt = Integer.parseInt(input);
+			return myInt;
+			
+		}
+		
+		return null;
+		
+	}
+		
+		public static String convertToString(Integer input){
+			
+			if(null != input){
+			return String.valueOf(input);
+			}
+			
+			return null;
+		}
+		
+		
+		public static String convertToString(BigDecimal input){
+			
+			if(null != input){
+				return String.valueOf(input);
+				}
+				
+				return null;
+		}
+		
+		
+		/*public static void main(String[] args) {
+	        
+			BigDecimal ab = new BigDecimal(23.31321);
+			
+			System.out.println(convertToString(ab));
+			
+        }
+	*/
 }

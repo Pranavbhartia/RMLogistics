@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import com.nexera.common.commons.Utils;
 
 import com.google.gson.Gson;
 import com.nexera.common.entity.CustomerBankAccountDetails;
@@ -1094,16 +1095,16 @@ public class ApplicationFormRestService {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
 			hashmap.put("loanPurpose", "2");
-			hashmap.put("loanPurchasePrice", unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
+			hashmap.put("loanPurchasePrice", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
 			
 			
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getDescription())) {
-				hashmap.put("loanApprovedValue", unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
+				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
 				        .getLoanAmount()));
 			} else {
 
-				hashmap.put("loanApprovedValue", unformatCurrencyField(loanAppFormVO.getRefinancedetails()
+				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getRefinancedetails()
 				        .getCurrentMortgageBalance()));
 			}
 
@@ -1125,7 +1126,7 @@ public class ApplicationFormRestService {
 			hashmap.put("jobExpenses", "1000");
 			if (loanAppFormVO.getCustomerEmploymentIncome() != null
 			        && loanAppFormVO.getCustomerEmploymentIncome().size() > 0) {
-				hashmap.put("jobRelatedPayment", unformatCurrencyField(loanAppFormVO
+				hashmap.put("jobRelatedPayment", Utils.unformatCurrencyField(loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome()
 				        .getEmployedIncomePreTax()));
@@ -1134,7 +1135,7 @@ public class ApplicationFormRestService {
 			}
 			hashmap.put("userSSNnumber", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
-			hashmap.put("baseIncome", unformatCurrencyField(loanAppFormVO
+			hashmap.put("baseIncome", Utils.unformatCurrencyField(loanAppFormVO
 			        .getCustomerEmploymentIncome().get(0)
 			        .getCustomerEmploymentIncome().getEmployedIncomePreTax()));
 			hashmap.put("ProdLckdDays", "30");
@@ -1143,11 +1144,11 @@ public class ApplicationFormRestService {
 			
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getDescription())) {
-				hashmap.put("loanAmount", unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
+				hashmap.put("loanAmount", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
 				        .getLoanAmount()));
 			} else {
 
-				hashmap.put("loanAmount", unformatCurrencyField(loanAppFormVO.getRefinancedetails()
+				hashmap.put("loanAmount", Utils.unformatCurrencyField(loanAppFormVO.getRefinancedetails()
 				        .getCurrentMortgageBalance()));
 			}
 			hashmap.put("applicantCity", loanAppFormVO.getUser()
@@ -1190,21 +1191,7 @@ public class ApplicationFormRestService {
 	}
 	
 	
-	private String unformatCurrencyField(String field) {
-		String finalString = "";
-
-		if (field.contains("$") || field.contains(",")) {
-
-			for (int i = 0; i < field.length(); i++) {
-				if (field.charAt(i) != '$' && field.charAt(i) != ',')
-					finalString += field.charAt(i);
-			}
-			return finalString;
-		} else {
-			return field;
-		}
-
-	}
+	
 
 
 }

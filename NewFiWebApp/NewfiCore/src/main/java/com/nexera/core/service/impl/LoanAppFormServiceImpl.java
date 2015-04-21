@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -496,14 +497,31 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .isSelfEmployed());
 		customerSpouseDetailVO.setIsssIncomeOrDisability(customerspousedetail
 		        .isIsssIncomeOrDisability());
-		customerSpouseDetailVO.setIspensionOrRetirement(customerspousedetail
-		        .isIs_pension_or_retirement());
-		customerSpouseDetailVO.setSelfEmployedIncome(customerspousedetail
-		        .getSelfEmployedIncome());
-		customerSpouseDetailVO.setSsDisabilityIncome(customerspousedetail
-		        .getSsDisabilityIncome());
-		customerSpouseDetailVO.setMonthlyPension(customerspousedetail
-		        .getMonthlyPension());
+		customerSpouseDetailVO.setIspensionOrRetirement(customerspousedetail.isIs_pension_or_retirement());
+		
+		// income : start
+		if(null!= customerspousedetail.getSelfEmployedIncome())
+		customerSpouseDetailVO.setSelfEmployedIncome(customerspousedetail.getSelfEmployedIncome().toString());
+		
+		if(null != customerspousedetail.getSelfEmployedNoYear())
+		customerSpouseDetailVO.setSelfEmployedNoYear(customerspousedetail.getSelfEmployedNoYear().toString());
+		
+		if(null != customerspousedetail.getChildSupportAlimony())
+		customerSpouseDetailVO.setChildSupportAlimony(customerspousedetail.getChildSupportAlimony().toString());
+		
+		if(null!= customerspousedetail.getSocialSecurityIncome())
+			customerSpouseDetailVO.setSocialSecurityIncome(customerspousedetail.getSocialSecurityIncome().toString());
+		
+		if(null!= customerspousedetail.getDisabilityIncome())
+			customerSpouseDetailVO.setDisabilityIncome(customerspousedetail.getDisabilityIncome().toString());
+		
+		if(null!= customerspousedetail.getMonthlyPension() )
+			customerSpouseDetailVO.setMonthlyPension(customerspousedetail.getMonthlyPension().toString());
+		
+		if(null!= customerspousedetail.getRetirementIncome() )
+			customerSpouseDetailVO.setRetirementIncome(customerspousedetail.getRetirementIncome().toString());
+		
+		// income ends:
 		customerSpouseDetailVO.setExperianScore(customerspousedetail
 		        .getExperianScore());
 		customerSpouseDetailVO.setEquifaxScore(customerspousedetail
@@ -556,6 +574,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 
 		customerSpouseEmploymentIncomeVOTemp
 		        .setId(customerSpouseEmploymentIncome.getId());
+		customerSpouseEmploymentIncomeVOTemp
+        .setJobTitle(customerSpouseEmploymentIncome.getJobTitle());
 		customerSpouseEmploymentIncomeVOTemp
 		        .setEmployedSince(customerSpouseEmploymentIncome
 		                .getEmployedSince());
@@ -676,6 +696,25 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO.setLoanAppFormCompletionStatus(loanAppForm
 		        .getLoanAppFormCompletionStatus());
 		loanAppFormVO.setMonthlyRent(loanAppForm.getMonthlyRent());
+	
+		// Customer Income details: Start
+		if(null!= loanAppForm.getMonthlyIncome())
+		loanAppFormVO.setSelfEmployedMonthlyIncome(loanAppForm.getMonthlyIncome().toString());
+		if(null!= loanAppForm.getSelfEmployedNoYear())
+		loanAppFormVO.setSelfEmployedNoYear(loanAppForm.getSelfEmployedNoYear().toString());
+		if(null!= loanAppForm.getChildSupportAlimony())
+		loanAppFormVO.setChildSupportAlimony(loanAppForm.getChildSupportAlimony().toString());
+		if(null!= loanAppForm.getSocialSecurityIncome())
+		loanAppFormVO.setSocialSecurityIncome(loanAppForm.getSocialSecurityIncome().toString());
+		if(null!= loanAppForm.getSsDisabilityIncome())
+		loanAppFormVO.setSsDisabilityIncome(loanAppForm.getSsDisabilityIncome());
+		if(null!= loanAppForm.getMonthlyPension())
+		loanAppFormVO.setMonthlyPension(loanAppForm.getMonthlyPension());
+		if(null!= loanAppForm.getRetirementIncome())
+		loanAppFormVO.setRetirementIncome(loanAppForm.getRetirementIncome().toString());
+		
+		// Customer Income Detaisl : ends
+		
 		return loanAppFormVO;
 
 	}

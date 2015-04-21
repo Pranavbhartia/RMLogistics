@@ -1,6 +1,7 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +36,7 @@ public class CustomerSpouseDetail implements Serializable {
 	private boolean isSelfEmployed;
 	private boolean isssIncomeOrDisability;
 	private boolean is_pension_or_retirement;
-	private String selfEmployedIncome;
-	private String ssDisabilityIncome;
-	private String monthlyPension;
+	
 	private List<LoanAppForm> loanAppForms;
 	private String equifaxScore;
 	private String experianScore;
@@ -45,6 +44,15 @@ public class CustomerSpouseDetail implements Serializable {
 	private String currentHomePrice;
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
+	
+	// Income page input
+	private BigDecimal selfEmployedIncome;
+	private Integer selfEmployedNoYear; 
+	private BigDecimal childSupportAlimony;
+	private BigDecimal socialSecurityIncome;
+	private BigDecimal  disabilityIncome;
+	private BigDecimal monthlyPension;
+	private BigDecimal retirementIncome;
 
 	public CustomerSpouseDetail() {
 	}
@@ -117,32 +125,33 @@ public class CustomerSpouseDetail implements Serializable {
 	}
 
 	@Column(name = "self_employed_income")
-	public String getSelfEmployedIncome() {
+	public BigDecimal getSelfEmployedIncome() {
 		return selfEmployedIncome;
 	}
 
-	public void setSelfEmployedIncome(String selfEmployedIncome) {
+	public void setSelfEmployedIncome(BigDecimal selfEmployedIncome) {
 		this.selfEmployedIncome = selfEmployedIncome;
 	}
-
-	@Column(name = "ss_disability_income")
-	public String getSsDisabilityIncome() {
-		return ssDisabilityIncome;
-	}
-
-	public void setSsDisabilityIncome(String ssDisabilityIncome) {
-		this.ssDisabilityIncome = ssDisabilityIncome;
-	}
-
+	
 	@Column(name = "monthly_pension")
-	public String getMonthlyPension() {
+	public BigDecimal getMonthlyPension() {
 		return monthlyPension;
 	}
-
-	public void setMonthlyPension(String monthlyPension) {
+	public void setMonthlyPension(BigDecimal monthlyPension) {
 		this.monthlyPension = monthlyPension;
 	}
 
+	@Column(name = "disability_income")
+	public BigDecimal getDisabilityIncome() {
+		return disabilityIncome;
+	}
+
+	
+	public void setDisabilityIncome(BigDecimal disabilityIncome) {
+		this.disabilityIncome = disabilityIncome;
+	}
+
+	
 	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public boolean isIs_pension_or_retirement() {
@@ -214,4 +223,42 @@ public class CustomerSpouseDetail implements Serializable {
 	public void setNewHomeBudgetFromsale(String newHomeBudgetFromsale) {
 		this.newHomeBudgetFromsale = newHomeBudgetFromsale;
 	}
+
+	@Column(name = "self_employed_no_year")
+	public Integer getSelfEmployedNoYear() {
+		return selfEmployedNoYear;
+	}
+
+	public void setSelfEmployedNoYear(Integer selfEmployedNoYear) {
+		this.selfEmployedNoYear = selfEmployedNoYear;
+	}
+
+	@Column(name = "child_support_alimony")
+	public BigDecimal getChildSupportAlimony() {
+		return childSupportAlimony;
+	}
+
+	public void setChildSupportAlimony(BigDecimal childSupportAlimony) {
+		this.childSupportAlimony = childSupportAlimony;
+	}
+
+	@Column(name = "social_security_income")
+	public BigDecimal getSocialSecurityIncome() {
+		return socialSecurityIncome;
+	}
+
+	public void setSocialSecurityIncome(BigDecimal socialSecurityIncome) {
+		this.socialSecurityIncome = socialSecurityIncome;
+	}
+
+	@Column(name = "retirement_income")
+	public BigDecimal getRetirementIncome() {
+		return retirementIncome;
+	}
+
+	public void setRetirementIncome(BigDecimal retirementIncome) {
+		this.retirementIncome = retirementIncome;
+	}
+	
+	
 }
