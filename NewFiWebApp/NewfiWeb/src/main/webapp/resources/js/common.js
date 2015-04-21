@@ -479,6 +479,10 @@ function getCalculationFunctionForItem(key){
     			var val7=getFloatValue(closingCostHolder.valueSet["closingEscrowFee1102"]);
     			var val8=getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
     			var val9=getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
+    			if (isNaN(val9))
+    			{
+    				val9=0;
+    			}
     			var result=val1+val2+val3+val4+val5+val6+val7+val8+val9;
     			return result;
     		};
@@ -498,6 +502,14 @@ function getCalculationFunctionForItem(key){
     			var result=val1+val2;
     			return result;
     		};
+    		break;
+    	case "cityCountyTaxStamps1204":
+    		fun=function(){
+        		if(closingCostHolder.valueSet[key] && closingCostHolder.valueSet[key]!= "0" )
+	        		return closingCostHolder.valueSet[key];
+	        	else
+	        		return "Varies by Location";
+	        };
     		break;
     }
     return fun;
