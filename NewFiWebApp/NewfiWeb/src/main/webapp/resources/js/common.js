@@ -20,14 +20,22 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 		dataType : dataType,
 		data : data,
 		contentType: "application/json",
-		success : successCallBack,
-		complete:function(response){
+		success : function(response){
 			if(isPagination){
 				removePaginationScrollIcon(div);
 			}else{
 				hideOverlay();
 			}
+			successCallBack(response);
+		},
+		complete:function(response){
+			
 			if(completeCallback){
+				if(isPagination){
+					removePaginationScrollIcon(div);
+				}else{
+					hideOverlay();
+				}
 				var data={};
 				if(response.responseJSON)
 					data=response.responseJSON;

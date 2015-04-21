@@ -1071,6 +1071,7 @@ function getAppDetailsForUser(userId, callback) {
 					showToastMessage(response.error.message)
 				} else {
 					var appFormDetails = response.resultObject;
+					appUserDetails=JSON.parse(appFormDetails);
 					newfi.appUserDetails = appFormDetails;
 					if (callback) {
 						callback(JSON.parse(appFormDetails));
@@ -1107,6 +1108,17 @@ function changeAgentSecondaryLeftPanel(elementId) {
 		}
 		getLoanDetails(selectedUserDetail.loanID);
 	} else if (elementId == "lp-step3") {
+		var userId=selectedUserDetail.userID;
+        getAppDetailsForUser(userId,function(appUserDetailsTemp){
+        	  $('#overlay-loader').show();
+            var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+            if(LQBFileId){
+                paintFixYourRatePage();
+            }else{
+                //code to Paint teaser rate page
+                paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
+            }
+        });
 	} else if (elementId == "lp-step4") {
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {
