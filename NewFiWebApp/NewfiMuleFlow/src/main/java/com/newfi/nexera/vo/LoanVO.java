@@ -27,6 +27,8 @@ public class LoanVO
 
     private String documentType;
 
+    private String condition;
+
     private String notes;
 
     private Integer format;
@@ -291,6 +293,24 @@ public class LoanVO
     public void setDocId( String docId )
     {
         this.docId = docId;
+    }
+
+
+    /**
+     * @return the condition
+     */
+    public String getCondition()
+    {
+        return condition;
+    }
+
+
+    /**
+     * @param condition the condition to set
+     */
+    public void setCondition( String condition )
+    {
+        this.condition = condition;
     }
 
 }
