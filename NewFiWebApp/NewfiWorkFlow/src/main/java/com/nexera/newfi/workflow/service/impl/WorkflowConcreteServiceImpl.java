@@ -97,22 +97,12 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 				sendReminder(createReminderVo, currMilestone, prevMilestone);
 			}
 		} else {
-			dismissReadNotifications(createReminderVo.getLoanId(),
+			notificationService.dismissReadNotifications(
+			        createReminderVo.getLoanId(),
 			        createReminderVo.getNotificationType());
 		}
 
 		return null;
-	}
-
-	@Override
-	public void dismissReadNotifications(int loanID,
-	        MilestoneNotificationTypes noticationType) {
-		List<NotificationVO> notificationList = notificationService
-		        .findNotificationTypeListForLoan(loanID,
-		                noticationType.getNotificationTypeName(), true);
-		for (NotificationVO notificationVO : notificationList) {
-			notificationService.dismissNotification(notificationVO.getId());
-		}
 	}
 
 	private void sendReminder(CreateReminderVo createReminderVo,

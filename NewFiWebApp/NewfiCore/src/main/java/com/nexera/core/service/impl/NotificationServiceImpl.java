@@ -16,6 +16,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
@@ -323,4 +324,13 @@ public class NotificationServiceImpl implements NotificationService {
 		return notList;
 	}
 
+	@Override
+	public void dismissReadNotifications(int loanID,
+	        MilestoneNotificationTypes noticationType) {
+		List<NotificationVO> notificationList = findNotificationTypeListForLoan(
+		        loanID, noticationType.getNotificationTypeName(), true);
+		for (NotificationVO notificationVO : notificationList) {
+			dismissNotification(notificationVO.getId());
+		}
+	}
 }
