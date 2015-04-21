@@ -12,6 +12,7 @@ import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -25,6 +26,8 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	private NotificationService notificationService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -61,7 +64,7 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	}
 
 	public void dismissAllLockYourRateAlert(int loanId) {
-		iWorkflowService.dismissReadNotifications(loanId,
+		notificationService.dismissReadNotifications(loanId,
 		        MilestoneNotificationTypes.LOCK_RATE_CUST_NOTIFICATION_TYPE);
 	}
 

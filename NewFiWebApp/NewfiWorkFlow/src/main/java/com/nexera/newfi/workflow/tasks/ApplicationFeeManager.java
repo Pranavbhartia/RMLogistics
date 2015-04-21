@@ -20,6 +20,7 @@ import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
@@ -43,6 +44,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private EngineTrigger engineTrigger;
+	@Autowired
+	private NotificationService notificationService;
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
@@ -183,9 +186,9 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	}
 
 	private void dismissAllPaymentAlerts(int loanID) {
-		iWorkflowService.dismissReadNotifications(loanID,
+		notificationService.dismissReadNotifications(loanID,
 		        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_OVERDUE_TYPE);
-		iWorkflowService.dismissReadNotifications(loanID,
+		notificationService.dismissReadNotifications(loanID,
 		        MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE);
 	}
 

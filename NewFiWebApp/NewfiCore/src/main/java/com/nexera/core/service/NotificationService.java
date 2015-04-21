@@ -3,6 +3,7 @@ package com.nexera.core.service;
 import java.util.List;
 
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
@@ -21,11 +22,14 @@ public interface NotificationService {
 	NotificationVO createNotificationAsync(NotificationVO notificationVO);
 
 	NotificationVO createRoleBasedNotification(NotificationVO notificationVO,
-			List<UserRolesEnum> userRoles,
-			List<InternalUserRolesEum> internalUserRoles);
-	
-	List<NotificationVO> findNotificationTypeListForUser(int userId,String type);
+	        List<UserRolesEnum> userRoles,
+	        List<InternalUserRolesEum> internalUserRoles);
+
+	List<NotificationVO> findNotificationTypeListForUser(int userId, String type);
 
 	List<NotificationVO> findNotificationTypeListForLoan(int loanId,
-			String type, Boolean isRead);
+	        String type, Boolean isRead);
+
+	public void dismissReadNotifications(int loanID,
+	        MilestoneNotificationTypes noticationType);
 }

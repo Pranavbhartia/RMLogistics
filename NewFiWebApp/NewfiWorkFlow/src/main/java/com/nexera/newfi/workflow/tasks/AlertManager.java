@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.NotificationService;
 import com.nexera.workflow.engine.EngineTrigger;
