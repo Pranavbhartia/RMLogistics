@@ -820,11 +820,7 @@ function appendRecentNotesContainer(loanId, notes) {
 		"class" : "cust-detail-header"
 	}).html("recent notes");
 
-	// if (notes != undefined) {
-	// header.append(" - " + notes.length + " NEW NOTES");
-	// } else {
-	// header.append(" - " + 0 + " NEW NOTES");
-	// }
+	 
 	container.append(header);
 
 	var recentNoteWrapper = $('<div>').attr({
@@ -866,16 +862,11 @@ function appendRecentNotesContainer(loanId, notes) {
 }
 
 function appendTakeNoteContainer(customer) {
-	var existingWrapper = $('#' + customer.loanID + "takeNotesContainer");
-	var wrapper;
-	if (existingWrapper.length > 0) {
-		wrapper = $('<div>').attr({
-			"class" : "cust-detail-rw float-left",
-			"id" : customer.loanID + "takeNotesContainer"
-		});
-	} else {
-		wrapper = existingWrapper;
-	}
+
+	wrapper = $('<div>').attr({
+		"class" : "cust-detail-rw float-left",
+		"id" : customer.loanID + "takeNotesContainer"
+	});
 
 	var container = $('<div>').attr({
 		"class" : "cust-detail-container"
@@ -941,9 +932,8 @@ function appendTakeNoteContainer(customer) {
 	container.append(buttonRow);
 
 	wrapper.append(container);
-	if (existingWrapper.length <= 0) {
-		$('#cust-detail-wrapper').append(wrapper);
-	}
+
+	$('#cust-detail-wrapper').append(wrapper);
 
 }
 
@@ -983,6 +973,9 @@ function paintRecentNotes(response) {
 		notes[i].message = obj[0].message;
 		notes[i].time = obj[0].createdDate;
 		loanId = obj[0].loanId;
+	}
+	if(loanId==undefined){
+		loanId = selectedUserDetail.loanID;
 	}
 	appendRecentNotesContainer(loanId, notes);
 }
