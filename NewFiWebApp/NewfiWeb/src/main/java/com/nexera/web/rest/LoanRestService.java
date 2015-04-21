@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.LoanTypeMasterEnum;
@@ -39,6 +40,11 @@ import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.web.rest.util.RestUtil;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
+import com.nexera.workflow.enums.WorkItemStatus;
+import com.nexera.workflow.service.WorkflowService;
 
 @RestController
 @RequestMapping(value = "/loan/*")
@@ -56,6 +62,9 @@ public class LoanRestService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private WorkflowService workflowService;
 
 	@Autowired
 	private NeedsListService needsListService;
@@ -251,6 +260,73 @@ public class LoanRestService {
 		loan.setId(loanID);
 		List<UserVO> team = loanService.retreiveLoanTeam(loan);
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(team);
+
+		return responseVO;
+	}
+
+	@RequestMapping(value = "/{loanID}/rateCheck", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO canRateBeLocked(
+	        @PathVariable Integer loanID) {
+		boolean status = false;
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			Integer loanManagerWorkflowExecId = loanVO
+			        .getLoanManagerWorkflowID();
+			if (loanManagerWorkflowExecId != null) {
+				WorkflowExec workflowExec = workflowService
+				        .getWorkflowExecFromId(loanManagerWorkflowExecId);
+				if (workflowExec != null) {
+
+					WorkflowItemMaster initialContactWorkflow = workflowService
+					        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT);
+					if (initialContactWorkflow != null) {
+						WorkflowItemExec workflowItemExec = workflowService
+						        .getWorkflowItemExecByType(workflowExec,
+						                initialContactWorkflow);
+						if (workflowItemExec != null) {
+							if (workflowItemExec.getStatus().equalsIgnoreCase(
+							        WorkItemStatus.COMPLETED.getStatus())) {
+								WorkflowItemMaster WorkflowItem = workflowService
+								        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE);
+								if (WorkflowItem != null) {
+									WorkflowItemExec workitemExec = workflowService
+									        .getWorkflowItemExecByType(
+									                workflowExec, WorkflowItem);
+									if (workitemExec != null) {
+										if (workitemExec
+										        .getStatus()
+										        .equalsIgnoreCase(
+										                WorkItemStatus.COMPLETED
+										                        .getStatus())) {
+											status = true;
+										} else {
+											status = false;
+										}
+									} else {
+										status = false;
+									}
+								} else {
+									status = false;
+								}
+							} else {
+								status = false;
+							}
+						} else {
+							status = false;
+						}
+					} else {
+						status = false;
+					}
+				} else {
+					status = false;
+				}
+			} else {
+				status = false;
+			}
+		} else {
+			status = false;
+		}
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(status);
 
 		return responseVO;
 	}
