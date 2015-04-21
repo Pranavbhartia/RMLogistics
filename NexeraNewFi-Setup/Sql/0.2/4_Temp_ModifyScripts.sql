@@ -173,3 +173,7 @@ UPDATE `newfi_schema`.`workflowitemmaster` set on_success= NULL where on_success
 DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='28';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='23';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Your Loan Profile' WHERE `id`='27';
+
+
+#Abhishek 21 april
+alter table newfi_schema.customeremploymentincome add column job_title varchar (20);
