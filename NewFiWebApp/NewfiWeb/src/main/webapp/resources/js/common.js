@@ -407,6 +407,7 @@ function getCalculationFunctionForItem(key){
     			var val1=getFloatValue(closingCostHolder.valueSet["lenderFee813"]);
     			var val2=getFloatValue(closingCostHolder.valueSet["creditOrCharge802"]);
     			var result=val1+val2;
+    			result = showValue(result);
     			return result;
     		};
     		break;
@@ -472,6 +473,7 @@ function getCalculationFunctionForItem(key){
     			var val8=getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
     			var val9=getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
     			var result=val1+val2+val3+val4+val5+val6+val7+val8+val9;
+    			result = showValue(result);
     			return result;
     		};
     		break;
@@ -480,6 +482,7 @@ function getCalculationFunctionForItem(key){
     			var val1=getFloatValue(closingCostHolder.valueSet["interest901"]);
     			var val2=getFloatValue(closingCostHolder.valueSet["hazIns903"]);
     			var result=val1+val2;
+    			result = showValue(result);
     			return result;
     		};
     		break;

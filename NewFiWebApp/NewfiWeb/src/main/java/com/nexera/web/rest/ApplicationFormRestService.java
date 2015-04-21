@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.StringReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1093,8 +1094,20 @@ public class ApplicationFormRestService {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
 			hashmap.put("loanPurpose", "2");
-			hashmap.put("loanPurchasePrice", "400,000.00");
-			hashmap.put("loanApprovedValue", "400,000.00");
+			hashmap.put("loanPurchasePrice", unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
+			
+			
+			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			        .getDescription())) {
+				hashmap.put("loanApprovedValue", unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
+				        .getLoanAmount()));
+			} else {
+
+				hashmap.put("loanApprovedValue", unformatCurrencyField(loanAppFormVO.getRefinancedetails()
+				        .getCurrentMortgageBalance()));
+			}
+
+			
 			hashmap.put("applicantId", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
 			hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
@@ -1103,36 +1116,39 @@ public class ApplicationFormRestService {
 			        .getLastName());
 			hashmap.put("lastName", loanAppFormVO.getLoan().getUser()
 			        .getLastName());
-			hashmap.put("dateOfBirth", loanAppFormVO.getUser()
-			        .getCustomerDetail().getDateOfBirth().toString());
+			hashmap.put("dateOfBirth", new Date(loanAppFormVO.getUser()
+			        .getCustomerDetail().getDateOfBirth()).toString());
 			hashmap.put("propertyState", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressState());
 			hashmap.put("alimonyName", "NONE");
 			hashmap.put("alimonyPayment", "1000");
-			hashmap.put("jobExpenses", "100");
+			hashmap.put("jobExpenses", "1000");
 			if (loanAppFormVO.getCustomerEmploymentIncome() != null
 			        && loanAppFormVO.getCustomerEmploymentIncome().size() > 0) {
-				hashmap.put("jobRelatedPayment", loanAppFormVO
+				hashmap.put("jobRelatedPayment", unformatCurrencyField(loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome()
-				        .getEmployedIncomePreTax());
+				        .getEmployedIncomePreTax()));
 			} else {
 				hashmap.put("jobRelatedPayment", "1000");
 			}
 			hashmap.put("userSSNnumber", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
-			hashmap.put("baseIncome", loanAppFormVO
+			hashmap.put("baseIncome", unformatCurrencyField(loanAppFormVO
 			        .getCustomerEmploymentIncome().get(0)
-			        .getCustomerEmploymentIncome().getEmployedIncomePreTax());
+			        .getCustomerEmploymentIncome().getEmployedIncomePreTax()));
 			hashmap.put("ProdLckdDays", "30");
+			
+			
+			
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getDescription())) {
-				hashmap.put("loanAmount", loanAppFormVO.getPurchaseDetails()
-				        .getLoanAmount());
+				hashmap.put("loanAmount", unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
+				        .getLoanAmount()));
 			} else {
 
-				hashmap.put("loanAmount", loanAppFormVO.getRefinancedetails()
-				        .getCurrentMortgageBalance());
+				hashmap.put("loanAmount", unformatCurrencyField(loanAppFormVO.getRefinancedetails()
+				        .getCurrentMortgageBalance()));
 			}
 			hashmap.put("applicantCity", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressCity());
@@ -1146,7 +1162,7 @@ public class ApplicationFormRestService {
 			hashmap.put("equifaxStatus", "Y");
 			hashmap.put("experianStatus", "Y");
 			hashmap.put("transunionStatus", "Y");
-			hashmap.put("applicantAddress", "888Appleroad");
+			hashmap.put("applicantAddress", "888 Apple road");
 
 			hashmap.put("prodCashOut", "40000");
 
@@ -1172,5 +1188,23 @@ public class ApplicationFormRestService {
 		}
 
 	}
+	
+	
+	private String unformatCurrencyField(String field) {
+		String finalString = "";
+
+		if (field.contains("$") || field.contains(",")) {
+
+			for (int i = 0; i < field.length(); i++) {
+				if (field.charAt(i) != '$' && field.charAt(i) != ',')
+					finalString += field.charAt(i);
+			}
+			return finalString;
+		} else {
+			return field;
+		}
+
+	}
+
 
 }

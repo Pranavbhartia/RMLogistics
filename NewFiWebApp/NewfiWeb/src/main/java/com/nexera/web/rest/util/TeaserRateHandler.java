@@ -114,7 +114,7 @@ public class TeaserRateHandler extends DefaultHandler {
     				{
     			//	System.out.println("TotalClosingCost is not equal to space hence setting cost as 0");
     				LqbTeaserRateVo tempRateVo = new LqbTeaserRateVo();
-    				tempRateVo.setClosingCost("0");
+    				tempRateVo.setClosingCost("$0.00");
     				tempRateVo.setTeaserRate(tempMap.get("Rate"));
     				tempRateVo.setAPR(tempMap.get("APR"));
     				tempRateVo.setlLpTemplateId(tempMap.get("lLpTemplateId"));
@@ -368,35 +368,35 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
 	   
 	   
 	    if(rateVo.getLenderFee813() == null)
-	    rateVo.setLenderFee813("0");
+	    rateVo.setLenderFee813("$0.00");
 	    if(rateVo.getCreditOrCharge802() == null)
-	    rateVo.setCreditOrCharge802("0");
+	    rateVo.setCreditOrCharge802("$0.00");
 	    if(rateVo.getAppraisalFee804() == null)
-	    rateVo.setAppraisalFee804("0");
+	    rateVo.setAppraisalFee804("$0.00");
 	    if(rateVo.getCreditReport805() == null)
-	    rateVo.setCreditReport805("0");
+	    rateVo.setCreditReport805("$0.00");
 	    if(rateVo.getFloodCertification807() == null)
-	    rateVo.setFloodCertification807("0");
+	    rateVo.setFloodCertification807("$0.00");
 	    if(rateVo.getWireFee812() == null)
-	    rateVo.setWireFee812("0");
+	    rateVo.setWireFee812("$0.00");
 	    if(rateVo.getLendersTitleInsurance1104() == null)
-	    rateVo.setLendersTitleInsurance1104("0");
+	    rateVo.setLendersTitleInsurance1104("$0.00");
 	    if(rateVo.getClosingEscrowFee1102() == null)
-	    rateVo.setClosingEscrowFee1102("0");
+	    rateVo.setClosingEscrowFee1102("$0.00");
 	    if(rateVo.getRecordingFees1201() == null)
 	    rateVo.setRecordingFees1201("125");
 	    if(rateVo.getCityCountyTaxStamps1204() == null)
-	    rateVo.setCityCountyTaxStamps1204("0");
+	    rateVo.setCityCountyTaxStamps1204("$0.00");
 	    if(rateVo.getInterest901() == null)
-	    rateVo.setInterest901("0");
+	    rateVo.setInterest901("$0.00");
 	    if(rateVo.getHazIns903() == null)
-	    rateVo.setHazIns903("0");
+	    rateVo.setHazIns903("$0.00");
 	    if(rateVo.getTaxResrv1004() == null)
-	    rateVo.setTaxResrv1004("0");
+	    rateVo.setTaxResrv1004("$0.00");
 	    if(rateVo.getHazInsReserve1002() == null)
-	    rateVo.setHazInsReserve1002("0");
+	    rateVo.setHazInsReserve1002("$0.00");
 		if(rateVo.getOwnersTitleInsurance1103() == null)
-	    rateVo.setOwnersTitleInsurance1103("0");
+	    rateVo.setOwnersTitleInsurance1103("$0.00");
 	   
 	   
 	   

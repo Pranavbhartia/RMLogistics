@@ -1447,12 +1447,14 @@ function getClosingCostSummaryContainer(valueSet) {
     var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
     var closingDate = $('<span>').attr({
         "class": "semibold"
-    }).html("02/09/2015");
-    descText.append(closingDate).append(" ,your estimated lender and third party costs are:");
+    });
+    descText.append(closingDate);
     var topContainer = getClosingCostTopConatiner();
     var bottomContainer = getClosingCostBottomConatiner();
     return parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
 }
+
+
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
@@ -1520,7 +1522,7 @@ function getClosingCostBottomConatiner() {
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row"
-    }).html("Note :-Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+    }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
     return wrapper.append(container1).append(container2).append(bottomSubText);
 }
 
