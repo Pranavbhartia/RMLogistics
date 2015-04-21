@@ -24,7 +24,6 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.MasterNeedsEnum;
-import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -108,26 +107,14 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 				sendReminder(createReminderVo, currMilestone, prevMilestone);
 			}
 		} else {
+
 			LOG.debug("Current Milestone already started  hence dismissing this notification");
-			dismissReadNotifications(createReminderVo.getLoanId(),
+			notificationService.dismissReadNotifications(
+			        createReminderVo.getLoanId(),
 			        createReminderVo.getNotificationType());
 		}
 
 		return null;
-	}
-
-	@Override
-	public void dismissReadNotifications(int loanID,
-	        MilestoneNotificationTypes noticationType) {
-		LOG.debug("Dismissing notification for this loan " + loanID);
-		List<NotificationVO> notificationList = notificationService
-		        .findNotificationTypeListForLoan(loanID,
-		                noticationType.getNotificationTypeName(), true);
-		for (NotificationVO notificationVO : notificationList) {
-			LOG.debug("Dismissing notification "
-			        + notificationVO.getNotificationType());
-			notificationService.dismissNotification(notificationVO.getId());
-		}
 	}
 
 	private void sendReminder(CreateReminderVo createReminderVo,

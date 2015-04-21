@@ -14,6 +14,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -36,6 +37,8 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	private LoanService loanService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	private NotificationService notificationService;
 
 	public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
@@ -128,7 +131,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 			        prevMilestone.getId());
 
 		} else {
-			iWorkflowService.dismissReadNotifications(
+			notificationService.dismissReadNotifications(
 			        createReminderVo.getLoanId(), notificationType);
 		}
 		return null;
