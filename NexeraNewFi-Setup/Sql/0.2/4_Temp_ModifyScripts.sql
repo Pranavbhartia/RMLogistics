@@ -177,3 +177,7 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Your Loan
 
 #Abhishek 21 april
 alter table newfi_schema.customeremploymentincome add column job_title varchar (20);
+##############
+### Anoop - Moved all the above to the 1_create script
+##############
+
