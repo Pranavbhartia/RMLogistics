@@ -505,7 +505,7 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "cityCountyTaxStamps1204":
     		fun=function(){
-        		if(closingCostHolder.valueSet[key] && closingCostHolder.valueSet[key]!= "0" )
+        		if(closingCostHolder.valueSet[key] && getFloatValue(closingCostHolder.valueSet[key])!= "0" )
 	        		return closingCostHolder.valueSet[key];
 	        	else
 	        		return "Varies by Location";
@@ -524,7 +524,10 @@ function getRowHolderObject(container,value,key){
         updateFunction:getCalculationFunctionForItem(key),
         updateView:function(){
         	var ob=this;
-        	var getVal=showValue(ob.updateFunction());
+        	var getVal=ob.updateFunction();
+        	if(!isNaN(getVal)){
+        		getVal=showValue(getVal);
+        	}
         	$(ob.container).text(getVal);
         }
     };
