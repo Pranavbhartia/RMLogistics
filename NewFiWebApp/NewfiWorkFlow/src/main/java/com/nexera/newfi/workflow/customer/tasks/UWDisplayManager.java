@@ -25,12 +25,14 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		try {
+			LOG.debug("Inside method renderStateInfo");
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
@@ -45,17 +47,19 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method checkStatus");
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 

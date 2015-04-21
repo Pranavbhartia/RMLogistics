@@ -29,17 +29,19 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	private TransactionService transactionService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(PaymentManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method renderStateInfo");
 		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
 		try {
 			Loan loan = new Loan();
@@ -59,6 +61,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method checkStatus");
 		String returnStatus = null;
 		Loan loan = new Loan();
 		loan.setId(Integer.parseInt(inputMap.get(
@@ -80,12 +83,13 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 }

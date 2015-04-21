@@ -18,7 +18,6 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
-import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -76,16 +75,22 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String updateLMReminder(CreateReminderVo createReminderVo) {
+		LOG.debug("Inside method updateLMReminder ");
 		WorkflowItemExec currMilestone = workflowService
 		        .getWorkflowExecById(createReminderVo
 		                .getWorkflowItemExecutionId());
+		LOG.debug("Current Milestone is  " + currMilestone.getId() + " "
+		        + currMilestone.getWorkflowItemMaster().getWorkflowItemType());
 		if (currMilestone.getStatus().equals(
 		        WorkItemStatus.NOT_STARTED.getStatus())) {
+			LOG.debug("This milestone has not yet started "
+			        + currMilestone.getId());
 			LoanVO loanVO = loanService.getLoanByID(createReminderVo
 			        .getLoanId());
 			if (createReminderVo.isForCustomer())
-				createReminderVo.setUserID(loanVO.getUser() != null ? loanVO
-				        .getUser().getId() : 0);
+				LOG.debug("Creating reminder for customer");
+			createReminderVo.setUserID(loanVO.getUser() != null ? loanVO
+			        .getUser().getId() : 0);
 			WorkflowExec workflowExec = new WorkflowExec();
 			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
 			WorkflowItemMaster workflowItemMaster = workflowService
@@ -94,9 +99,16 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
 			if (prevMilestone.getStatus().equals(
 			        WorkItemStatus.COMPLETED.getStatus())) {
+				LOG.debug("previous milestone "
+				        + prevMilestone.getId()
+				        + " "
+				        + prevMilestone.getWorkflowItemMaster()
+				                .getWorkflowItemType()
+				        + " is complete hence sending a reminder ");
 				sendReminder(createReminderVo, currMilestone, prevMilestone);
 			}
 		} else {
+			LOG.debug("Current Milestone already started  hence dismissing this notification");
 			dismissReadNotifications(createReminderVo.getLoanId(),
 			        createReminderVo.getNotificationType());
 		}
@@ -107,25 +119,28 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	@Override
 	public void dismissReadNotifications(int loanID,
 	        MilestoneNotificationTypes noticationType) {
+		LOG.debug("Dismissing notification for this loan " + loanID);
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanID,
 		                noticationType.getNotificationTypeName(), true);
 		for (NotificationVO notificationVO : notificationList) {
+			LOG.debug("Dismissing notification "
+			        + notificationVO.getNotificationType());
 			notificationService.dismissNotification(notificationVO.getId());
 		}
 	}
 
 	private void sendReminder(CreateReminderVo createReminderVo,
 	        WorkflowItemExec currMilestone, WorkflowItemExec prevMilestone) {
-
+		LOG.debug("Inside method sendReminder");
 		long noOfHours = (prevMilestone.getEndTime().getTime() - new Date()
 		        .getTime()) / (1000 * 60 * 60);
-
+		LOG.debug("total number of hours left " + noOfHours);
 		LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 		        .retrieveTurnAroundTimeByLoan(createReminderVo.getLoanId(),
 		                currMilestone.getWorkflowItemMaster().getId());
 		long turnaroundTime = loanTurnAroundTimeVO.getHours();
-
+		LOG.debug("total turnaroundtime left " + turnaroundTime);
 		if (noOfHours >= turnaroundTime) {
 			createAlertOfType(createReminderVo);
 		}
@@ -133,19 +148,24 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public void createAlertOfType(CreateReminderVo createReminderVo) {
+		LOG.debug("Inside method createAlertOfType");
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(createReminderVo.getLoanId(),
 		                createReminderVo.getNotificationType()
 		                        .getNotificationTypeName(), null);
 		if (notificationList.size() == 0
 		        || notificationList.get(0).getRead() == true) {
+			LOG.debug("Creating new notification "
+			        + createReminderVo.getNotificationType());
 			NotificationVO notificationVO = new NotificationVO(
 			        createReminderVo.getLoanId(), createReminderVo
 			                .getNotificationType().getNotificationTypeName(),
 			        createReminderVo.getNotificationReminderContent());
-			if (!createReminderVo.isForCustomer())
+			if (!createReminderVo.isForCustomer()) {
+				LOG.debug("Creating reminder for customer");
 				createNotificationForLM(notificationVO);
-			else {
+			} else {
+				LOG.debug("This notification of for loanmanager");
 				notificationVO.setCreatedForID(createReminderVo.getUserID());
 				notificationVO.setTimeOffset(new Date().getTimezoneOffset());
 				notificationService.createNotification(notificationVO);
@@ -154,6 +174,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	}
 
 	private void createNotificationForLM(NotificationVO notificationVO) {
+		LOG.debug("Inside method createNotificationForLM");
 		List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
 		userRoles.add(UserRolesEnum.INTERNAL);
 		List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
@@ -165,6 +186,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	@Override
 	public void sendReminder(CreateReminderVo createReminderVo,
 	        int currMilestoneID, int prevMilestoneID) {
+		LOG.debug("Inside method sendReminder");
 		WorkflowItemExec currMilestone = workflowService
 		        .getWorkflowExecById(createReminderVo
 		                .getWorkflowItemExecutionId());
@@ -181,6 +203,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	@Override
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments) {
+		LOG.debug("Inside method upadteNexeraMilestone ");
 		String status = null;
 		try {
 			Loan loan = new Loan(loanId);
@@ -191,11 +214,12 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
 			mileStone.setComments(comments);
 			mileStone.setStatusUpdateTime(new Date());
+			LOG.debug("Saving milestone in database ");
 			loanService.saveLoanMilestone(mileStone);
 			status = WorkItemStatus.COMPLETED.getStatus();
 			return status;
 		} catch (Exception e) {
-			LOG.error(e.getMessage());
+			LOG.error("Exception caught " + e.getMessage());
 			return status;
 		}
 	}
@@ -203,33 +227,40 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	@Override
 	public String getNexeraMilestoneComments(int loanId, Milestones milestone) {
 		String comments = null;
+		LOG.debug("Inside method getNexeraMilestoneComments");
 		Loan loan = new Loan(loanId);
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        milestone.getMilestoneKey());
-		if (mileStone != null)
-			comments = mileStone.getComments().toString();
+		if (mileStone != null) {
+			if (mileStone.getComments() != null)
+				comments = mileStone.getComments().toString();
+		}
 		return comments;
 	}
 
 	@Override
 	public String getCreditDisplayScore(int userID) {
+		LOG.debug("Inside method getCreditDisplayScore");
 		String creditDisplay = "";
 		UserVO user = userProfileService.findUser(userID);
-		if (user.getCustomerDetail() != null) {
-			creditDisplay = utils.constrtCreditScore(CustomerDetail
-			        .convertFromVOToEntity(user.getCustomerDetail()));
+		if (user != null) {
+			if (user.getCustomerDetail() != null) {
+				creditDisplay = utils.constrtCreditScore(CustomerDetail
+				        .convertFromVOToEntity(user.getCustomerDetail()));
+			}
 		}
-
 		return creditDisplay;
 	}
 
 	@Override
 	public String getRenderInfoForDisclosure(int loanID) {
+		LOG.debug("Inside method getRenderStateInfoForDisclosure");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Loan loan = new Loan(loanID);
 		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.DISCLOSURE.getMilestoneKey());
 		String status = loanMilestone.getComments().toString();
+		LOG.debug("Status is " + status);
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        status);
 		MasterNeedsEnum needURLItem = null;
@@ -254,6 +285,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String getRenderInfoForApplicationFee(int loanID) {
+		LOG.debug("Inside method getRenderStateInfoForApplicationFee ");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
 		Loan loan = new Loan(loanID);
@@ -269,10 +301,13 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			// Configured Amount : Loan Table App Fee - set my SM
 			configuredAmount = loanVO.getAppFee();
 			amount = loanService.getApplicationFee(loanID);
+			LOG.debug("Application fee is " + amount);
 		} catch (NoRecordsFetchedException e) {
 			amount = 0;
+			LOG.error("Exception Caught " + e.getMessage());
 		} catch (InvalidInputException e) {
 			amount = 0;
+			LOG.error("Exception Caught " + e.getMessage());
 		}
 		if (configuredAmount == null) {
 			map.put(WorkflowDisplayConstants.APP_FEE_KEY_NAME, amount);
@@ -288,7 +323,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String getRenderInfoFor1003(int loanID, int userID) {
-
+		LOG.debug("Inside method getRenderStateInfoFor1003");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Loan loan = new Loan(loanID);
 
@@ -314,6 +349,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 
 	@Override
 	public String getRenderInfoForAppraisal(int loanID) {
+		LOG.debug("Inside method getRenderStateInfoForAppraisal");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Loan loan = new Loan(loanID);
 		LoanMilestone loanMilestone = loanService.findLoanMileStoneByLoan(loan,

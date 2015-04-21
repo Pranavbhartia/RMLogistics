@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,20 +23,24 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private UserProfileService userProfileService;
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(ProfilePhotoManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method renderStateInfo");
 		return null;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method checkStatus");
 		int userId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO userVo = userProfileService.findUser(userId);
@@ -42,6 +48,7 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 		        && !userVo.getPhotoImageUrl().equals("")) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			LOG.debug("Triggering workflow " + workflowItemExecId);
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 			        WorkItemStatus.COMPLETED.getStatus());
@@ -52,12 +59,13 @@ public class ProfilePhotoManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 

@@ -3,6 +3,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,10 +35,15 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 	@Autowired
 	private LoanService loanService;
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(Application1003DisplayManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method execute ");
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
+		LOG.debug("Status is " + status);
 		String returnStatus = null;
 		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
 		        .getLosStatusID() + "")) {
@@ -56,16 +63,18 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method checkStatus ");
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method invokeAction ");
 		return null;
 	}
 
 	private void createAlertForAgentAddition(int loanId) {
+		LOG.debug("Inside method createAlertForAgentAddition ");
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
 
 		List<NotificationVO> notificationList = notificationService
@@ -73,6 +82,8 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 		                notificationType.getNotificationTypeName(), null);
 		if (notificationList.size() == 0
 		        || notificationList.get(0).getRead() == true) {
+			LOG.debug("Creating new notification for "
+			        + notificationType.getNotificationTypeName());
 			LoanVO loanVO = new LoanVO(loanId);
 			boolean agentFound = false;
 			ExtendedLoanTeamVO extendedLoanTeamVO = loanService
@@ -86,6 +97,7 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 					                .getRoleCd()
 					                .equalsIgnoreCase(
 					                        UserRolesEnum.REALTOR.getName())) {
+						LOG.debug("Agent found ");
 						agentFound = true;
 						break;
 
@@ -93,16 +105,19 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 				}
 			}
 			if (!agentFound) {
+				LOG.debug("Not able to find any agent associated ");
 				NotificationVO notificationVO = new NotificationVO(loanId,
 				        notificationType.getNotificationTypeName(),
 				        WorkflowConstants.AGENT_ADD_NOTIFICATION_CONTENT);
+				LOG.debug("Creating new notification to add agent ");
 				notificationService.createNotificationAsync(notificationVO);
 			}
 		}
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("inside method updateReminder");
 		return null;
 	}
 
