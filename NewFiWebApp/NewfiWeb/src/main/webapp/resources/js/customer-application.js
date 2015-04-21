@@ -1344,12 +1344,12 @@ function incomesSelectALLThatApply() {
 	
 	    var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
         $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
-        /*for(var i=0;i<options.length;i++){
+        for(var i=0;i<options.length;i++){
             var option=options[i];
             if(option.onselect){
                 option.onselect(option.value,option.data);
             }
-        }*/
+        }
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1384,6 +1384,8 @@ function paintMyIncome() {
       if(id ==""){
     	  id = undefined;
       }
+      
+      jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
       EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
       EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
       EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
@@ -1545,111 +1547,131 @@ function paintRefinanceEmployed(divId,value) {
     putCurrencyFormat("beforeTax");
 }
 
-function getMultiTextQuestion(quesText,value) {
-	
-	var wrapper = $('<div>').attr({
-		"class" : "ce-option-ques-wrapper"
-	});
-	
-	
-	var container = $('<div>').attr({
-		"class" : "ce-ques-wrapper",
-	});
+function getMultiTextQuestion(quesText, value) {
 
-	var quesTextCont = $('<div>').attr({
-		"class" : "ce-option-text",
-	}).html(quesText);
+    var wrapper = $('<div>').attr({
+        "class": "ce-option-ques-wrapper"
+    });
 
-	var optionContainer = $('<div>').attr({
-		"class" : "ce-options-cont",
-	});
 
-	var quesTextCont1 = $('<div>').attr({
-		"class" : "ce-rp-ques-text",
-	}).html("Monthly Income Before Taxes");
+    var container = $('<div>').attr({
+        "class": "ce-ques-wrapper",
+    });
+
+    var quesTextCont = $('<div>').attr({
+        "class": "ce-option-text",
+    }).html(quesText);
+
+    var optionContainer = $('<div>').attr({
+        "class": "ce-options-cont",
+    });
+    
+    // id in hidden form 
+    var quesTextCont0 = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    });
+
+    var val = "";
+
+    if (value && value.id)
+        val = value.id;
+    var inputBox0 = $('<input>').attr({
+        "class": "ce-input",
+        "name": "customerEmploymentIncomeId",
+        "type": "hidden"
+    });
+    if (val != "") {
+        inputBox0.attr("value", val);
+    }
+    quesTextCont0.append(inputBox0);
+    
+    
+    // Job title
+    var quesTextCont4 = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html("Job Title");
+
+    var val = "";
+    
+    if (value && value.jobTitle)
+        val = value.jobTitle;
+    
+    var inputBox4 = $('<input>').attr({
+        "class": "ce-input",
+        "name": "jobTitle"
+    });
+    if (val != "") {
+        inputBox4.attr("value", val);
+    }
+    quesTextCont4.append(inputBox4);
+    
+
+    // Monthly income
+    var quesTextCont1 = $('<div>').attr({
+        "class": "ce-rp-ques-text",
+    }).html("Monthly Income Before Taxes");
+
+    var val = "";
+
+    if (value && value.employedIncomePreTax)
+        val = value.employedIncomePreTax;
+
+    var inputBox1 = $('<input>').attr({
+        "class": "ce-input",
+        "name": "beforeTax"
+    });
+    if (val != "") {
+        inputBox1.attr("value", val);
+    }
+  
+    quesTextCont1.append(inputBox1);
+    
+    
+    // Employer
+
+    var quesTextCont2 = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html("Employer");
+    
+    val = "";
+    
+    if (value && value.employedAt)
+        val = value.employedAt;
+    var inputBox2 = $('<input>').attr({
+        "class": "ce-input",
+        "name": "workPlace"
+    });
+    if (val != "") {
+        inputBox2.attr("value", val);
+    }
+    quesTextCont2.append(inputBox2);
+    
+    
+   // Start working 
+    
+    var quesTextCont3 = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html("When Did You Start Working ?");
+    
+    val = "";
+    
+    if (value && value.employedSince)
+        val = value.employedSince;
+    var inputBox3 = $('<input>').attr({
+        "class": "ce-input",
+        "name": "startWorking"
+    });
+    if (val != "") {
+        inputBox3.attr("value", val);
+    }
+    quesTextCont3.append(inputBox3);
+
    
-	var val="";
-   
-	if(value&&value.employedIncomePreTax)
-        val=value.employedIncomePreTax;
-	
-	var inputBox1 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "beforeTax"
-	});
-	if(val!=""){
-		inputBox1.attr("value",val);
-	}
 
-	var quesTextCont0 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	});
-	
-	
-	var val="";
-	   
-	if(value && value.id)
-        val=value.id;
-	var inputBox0 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "customerEmploymentIncomeId",
-		"type":"hidden"
-	});
-	if(val!=""){
-		inputBox0.attr("value",val);
-	}
-	quesTextCont0.append(inputBox0);
-	
-	quesTextCont1.append(inputBox1);
+    optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
-	var quesTextCont2 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html("Employer");
-    val="";
-    if(value&&value.employedAt)
-        val=value.employedAt;
-	var inputBox2 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "workPlace"
-	});
-	if(val!=""){
-		inputBox2.attr("value",val);
-	}
-	quesTextCont2.append(inputBox2);
-
-	var quesTextCont3 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html("When Did You Start Working ?");
-    val="";
-    if(value&&value.employedSince)
-        val=value.employedSince;
-	var inputBox3 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : "startWorking"
-	});
-	if(val!=""){
-		inputBox3.attr("value",val);
-	}
-	quesTextCont3.append(inputBox3);
-	
-	var quesTextCont4 = $('<div>').attr({
-		"class" : "ce-rp-ques-text"
-	}).html("Job Title");
-    /*if(value&&value.employedSince)
-        val=value.employedSince;*/
-	var inputBox4 = $('<input>').attr({
-		"class" : "ce-input",
-		"name" : ""
-	});
-	if(val!=""){
-		inputBox4.attr("value",val);
-	}
-	quesTextCont4.append(inputBox4);
-
-	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
-
-	 container.append(quesTextCont).append(optionContainer); 
-     return wrapper.append(container);
+    container.append(quesTextCont).append(optionContainer);
+    return wrapper.append(container);
 }
 
 $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(){
