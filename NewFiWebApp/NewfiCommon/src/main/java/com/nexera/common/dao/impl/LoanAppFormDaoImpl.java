@@ -279,6 +279,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.cei.getId()()" + cei.getId());
 				CustomerSpouseEmploymentIncome customerSpouseEmploymentIncome = new CustomerSpouseEmploymentIncome();
 				customerSpouseEmploymentIncome.setId(cei.getId());
+				customerSpouseEmploymentIncome.setJobTitle(cei.getJobTitle());
 				customerSpouseEmploymentIncome.setEmployedAt(cei
 				        .getEmployedAt());
 				customerSpouseEmploymentIncome.setEmployedIncomePreTax(cei

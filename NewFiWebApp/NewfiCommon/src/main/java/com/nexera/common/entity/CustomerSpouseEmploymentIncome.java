@@ -19,11 +19,13 @@ import javax.persistence.Table;
 @Table(name = "customerspouseemploymentincome")
 @NamedQuery(name = "CustomerSpouseEmploymentIncome.findAll", query = "SELECT csi FROM CustomerSpouseEmploymentIncome csi")
 public class CustomerSpouseEmploymentIncome {
+	
 	private static final long serialVersionUID = 1L;
 	private int      id;
 	private String   employedIncomePreTax;
 	private String   employedAt;
 	private String   employedSince; 
+	private String   jobTitle;
 	private LoanAppForm loanAppForms;
 	
 	
@@ -75,6 +77,17 @@ public class CustomerSpouseEmploymentIncome {
 
 	public void setLoanAppForms(LoanAppForm loanAppForms) {
 		this.loanAppForms = loanAppForms;
+	}
+
+	
+	@Column(name = "job_title")
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
 	}
 	
 	

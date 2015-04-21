@@ -1,11 +1,13 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerEmploymentIncome;
@@ -43,18 +45,29 @@ public class LoanAppFormVO implements Serializable {
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
 	private Boolean ispensionOrRetirement;
-	private String monthlyPension;
+
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
-	private String ssDisabilityIncome;
+
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
 	private String monthlyRent;
 	private Boolean paySecondMortgage;
+	
+	private String selfEmployedMonthlyIncome;
+	private String selfEmployedNoYear;
+	private String childSupportAlimony;
+	private String socialSecurityIncome;
+	private String ssDisabilityIncome;
+	private String monthlyPension;
+	private String retirementIncome;
+	
+	
+	
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
 	private GovernmentQuestionVO governmentquestion;
@@ -306,6 +319,52 @@ public class LoanAppFormVO implements Serializable {
 	public void setMonthlyRent(String monthlyRent) {
 		this.monthlyRent = monthlyRent;
 	}
+	
+	
+	
+
+
+	public String getSelfEmployedMonthlyIncome() {
+		return selfEmployedMonthlyIncome;
+	}
+
+	public void setSelfEmployedMonthlyIncome(String selfEmployedMonthlyIncome) {
+		this.selfEmployedMonthlyIncome = selfEmployedMonthlyIncome;
+	}
+
+	public String getChildSupportAlimony() {
+		return childSupportAlimony;
+	}
+
+	public void setChildSupportAlimony(String childSupportAlimony) {
+		this.childSupportAlimony = childSupportAlimony;
+	}
+
+	public String getSocialSecurityIncome() {
+		return socialSecurityIncome;
+	}
+
+	public void setSocialSecurityIncome(String socialSecurityIncome) {
+		this.socialSecurityIncome = socialSecurityIncome;
+	}
+
+	public String getRetirementIncome() {
+		return retirementIncome;
+	}
+
+	public void setRetirementIncome(String retirementIncome) {
+		this.retirementIncome = retirementIncome;
+	}
+
+	public String getSelfEmployedNoYear() {
+		return selfEmployedNoYear;
+	}
+
+	public void setSelfEmployedNoYear(String selfEmployedNoYear) {
+		this.selfEmployedNoYear = selfEmployedNoYear;
+	}
+
+
 
 	public RefinanceVO getRefinancedetails() {
 		return refinancedetails;
@@ -437,7 +496,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setMaritalStatus(this.maritalStatus);
 		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
 		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
-		loanAppForm.setMonthlyPension(this.monthlyPension);
+	
 		loanAppForm
 		        .setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
 		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
@@ -446,12 +505,23 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setIsselfEmployed(this.isselfEmployed);
 		loanAppForm.setSelfEmployedIncome(this.selfEmployedIncome);
 		loanAppForm.setIsssIncomeOrDisability(this.isssIncomeOrDisability);
-		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
+		
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setMonthlyRent(this.getMonthlyRent());
-		loanAppForm
-		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
+		
+		// User Income page : Starts
+		loanAppForm.setMonthlyIncome(Utils.convertToBigDecimal(this.selfEmployedMonthlyIncome));
+		loanAppForm.setSelfEmployedNoYear(Utils.convertToInteger(this.selfEmployedNoYear));
+		loanAppForm.setChildSupportAlimony(Utils.convertToBigDecimal(this.childSupportAlimony));
+		loanAppForm.setSocialSecurityIncome(Utils.convertToBigDecimal(this.socialSecurityIncome));
+		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
+		loanAppForm.setMonthlyPension(this.monthlyPension);
+		loanAppForm.setRetirementIncome(Utils.convertToBigDecimal(this.retirementIncome));
+		// User Income Page : Ends
+		
+		
+		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 
 		if (this.getLoanType() != null) {
@@ -1055,6 +1125,9 @@ public class LoanAppFormVO implements Serializable {
 			        .setId(customerSpouseEmploymentincomeVO
 			                .getCustomerSpouseEmploymentIncome().getId());
 			customerSpouseEmploymentIncome
+	        .setJobTitle(customerSpouseEmploymentincomeVO
+	                .getCustomerSpouseEmploymentIncome().getJobTitle());
+			customerSpouseEmploymentIncome
 			        .setEmployedAt(customerSpouseEmploymentincomeVO
 			                .getCustomerSpouseEmploymentIncome()
 			                .getEmployedAt());
@@ -1092,14 +1165,19 @@ public class LoanAppFormVO implements Serializable {
 		        .isIspensionOrRetirement());
 		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO
 		        .isIsssIncomeOrDisability());
-		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO
-		        .isSelfEmployed());
-		customerSpouseDetail.setMonthlyPension(customerSpouseDetailVO
-		        .getMonthlyPension());
-		customerSpouseDetail.setSelfEmployedIncome(customerSpouseDetailVO
-		        .getSelfEmployedIncome());
-		customerSpouseDetail.setSsDisabilityIncome(customerSpouseDetailVO
-		        .getSsDisabilityIncome());
+		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO.isSelfEmployed());
+		
+		// income Start:
+		customerSpouseDetail.setSelfEmployedIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getSelfEmployedIncome()));
+		customerSpouseDetail.setSelfEmployedNoYear(Utils.convertToInteger(customerSpouseDetailVO.getSelfEmployedNoYear()));
+		customerSpouseDetail.setChildSupportAlimony(Utils.convertToBigDecimal(customerSpouseDetailVO.getChildSupportAlimony()));
+		customerSpouseDetail.setSocialSecurityIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getSocialSecurityIncome()));
+		customerSpouseDetail.setDisabilityIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getDisabilityIncome()));
+		customerSpouseDetail.setMonthlyPension(Utils.convertToBigDecimal(customerSpouseDetailVO.getMonthlyPension()));
+		customerSpouseDetail.setRetirementIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getRetirementIncome()));
+
+		// income ends
+		
 		if (customerSpouseDetailVO.getSpouseDateOfBirth() != null)
 			customerSpouseDetail.setSpouseDateOfBirth(new Date(
 			        customerSpouseDetailVO.getSpouseDateOfBirth()));
