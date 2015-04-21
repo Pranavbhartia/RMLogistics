@@ -34,6 +34,7 @@ import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.common.vo.NeedsListMasterVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.utility.CoreCommonConstants;
 
 @Component
@@ -56,6 +57,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
+	@Autowired
+	private NotificationService notificationService;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NeedsListServiceImpl.class);
@@ -389,6 +392,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 					needsDao.deleteLoanNeed(need);
 				}
 			}
+			notificationService.dismissReadNotifications(loanId,
+			        MilestoneNotificationTypes.NEEDED_ITEMS_NOTIFICATION_TYPE);
 		} catch (Exception e) {
 			return 0;
 		}

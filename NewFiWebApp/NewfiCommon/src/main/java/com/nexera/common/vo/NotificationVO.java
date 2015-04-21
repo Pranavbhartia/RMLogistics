@@ -167,4 +167,18 @@ public class NotificationVO implements Serializable {
 		this.visibleToInternalUserRoles = visibleToInternalUserRoles;
 	}
 
+	@Override
+	public String toString() {
+		return "NotificationVO [id=" + id + ", content=" + content
+		        + ", createdDate=" + createdDate + ", dismissable="
+		        + dismissable + ", notificationType=" + notificationType
+		        + ", priority=" + priority + ", read=" + read + ", remindOn="
+		        + remindOn + ", title=" + title + ", createdByID="
+		        + createdByID + ", loanID=" + loanID + ", createdForID="
+		        + createdForID + ", timeOffset=" + timeOffset
+		        + ", visibleToUserRoles=" + visibleToUserRoles
+		        + ", visibleToInternalUserRoles=" + visibleToInternalUserRoles
+		        + ", customerName=" + customerName + "]";
+	}
+
 }

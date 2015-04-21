@@ -3,6 +3,8 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +25,11 @@ public class AlertManager extends NexeraWorkflowTask implements
 	NotificationService notificationService;
 	@Autowired
 	private EngineTrigger engineTrigger;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(AlertManager.class);
 
 	public String execute(HashMap<String, Object> objectMap) {
-
+		LOG.debug(" Executing concrete class " + objectMap);
 		makeANote(
 		        Integer.parseInt(objectMap.get(
 		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -37,17 +41,21 @@ public class AlertManager extends NexeraWorkflowTask implements
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-
+		LOG.debug("Rendering State "
+		        + inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME));
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get("loanID").toString());
+		LOG.debug("Checking State " + loanId);
 		String status = null;
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
 		                WorkflowDisplayConstants.CUSTOM_NOTIFICATION, null);
 		if (notificationList.size() > 0) {
+			LOG.debug("Alert manager : Marking as "
+			        + WorkItemStatus.PENDING.getStatus());
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
@@ -70,7 +78,7 @@ public class AlertManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing - since this does NOT need a Reminder.
 		return null;
 	}
 

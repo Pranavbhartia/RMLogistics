@@ -35,15 +35,20 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Getting the Loan Manager Decision ");
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = iWorkflowService.getNexeraMilestoneComments(loanId,
 		        Milestones.LM_DECISION);
-		return status == null ? "" : " "+ status;
+		LOG.debug("Getting the Loan Manager Decision " + status);
+		return status == null ? "" : " " + status;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		// Do nothing
+		// This milestone is controlled by the Mile Stone screen only - So no
+		// need to check Status
 		return null;
 	}
 
@@ -57,6 +62,7 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 		String comment = inputMap.get(
 		        WorkflowDisplayConstants.WORKFLOW_LM_DECISION_COMMENT)
 		        .toString();
+		LOG.info("Going to Update Nexera Milestone" + decision);
 		iWorkflowService.updateNexeraMilestone(loanId,
 		        Milestones.LM_DECISION.getMilestoneID(), decision);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
@@ -77,7 +83,7 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing - No reminders to be generated
 		return null;
 	}
 }

@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,30 +18,38 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class QCDecisionManager extends NexeraWorkflowTask implements
-		IWorkflowTaskExecutor {
+        IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(QCDecisionManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Just Return DONE
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = iWorkflowService.getNexeraMilestoneComments(loanId,
-				Milestones.QC);
+		        Milestones.QC);
+		LOG.info("QC Manager : Display" + status);
 		return status == null ? "" : status;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		// Do Nothing : This Milestone is completely Controlled by The Milestone
+		// Page
+		// So No need to show anything on the Check Status
 		return null;
 	}
 
@@ -47,18 +57,17 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		String status = null;
 		int loanId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String comment = inputMap.get(
-				WorkflowDisplayConstants.WORKFLOW_QC_COMMENT)
-				.toString();
+		        WorkflowDisplayConstants.WORKFLOW_QC_COMMENT).toString();
 		iWorkflowService.updateNexeraMilestone(loanId,
-				Milestones.QC.getMilestoneID(), comment);
+		        Milestones.QC.getMilestoneID(), comment);
 		int workflowItemExecId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 		status = WorkItemStatus.COMPLETED.getStatus();
 		int userId = Integer.parseInt(inputMap.get(
-				WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
+		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
 		makeANote(loanId, comment, user);
@@ -67,11 +76,11 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 
 	private void makeANote(int loanId, String message, User createdBy) {
 		messageServiceHelper.generatePrivateMessage(loanId, message, createdBy,
-				false);
+		        false);
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing : 
 		return null;
 	}
 }

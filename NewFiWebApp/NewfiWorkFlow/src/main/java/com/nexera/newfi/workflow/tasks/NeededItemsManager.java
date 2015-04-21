@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,8 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	private IWorkflowService iWorkflowService;
 	@Autowired
 	private NotificationService notificationService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(NeededItemsManager.class);
 
 	public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
@@ -47,6 +51,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		LOG.debug("Render State info of NeededItemsManager" + loanId);
 		// Make a service call to get the number of needed items' assigned
 		// against the
 		NeededItemScoreVO neededItemScoreVO = needsListService
@@ -65,8 +70,10 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		String status = null;
 		if (neededItemScoreVO.getTotalSubmittedItem() > 0
 		        || neededItemScoreVO.getNeededItemRequired() > 0) {
+
 			// Needed list created by Loan Manager
 			status = WorkItemStatus.PENDING.getStatus();
+			LOG.debug("Making needs list as Pending" + status);
 			LoanVO loanVO = loanService.getLoanByID(loanId);
 			WorkflowExec workflowExec = new WorkflowExec();
 			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
@@ -81,11 +88,13 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 			        .getNeededItemRequired()) { // If needs fullfilled -
 				                                // complete it
 				status = WorkItemStatus.COMPLETED.getStatus();
+				LOG.debug("Making needs list as " + status);
 				engineTrigger.startWorkFlowItemExecution(managerNeedItem
 				        .getId());
 			} else { // if in case a new need had come in - make it PEnding
 				     // again
 				status = WorkItemStatus.PENDING.getStatus();
+				LOG.debug("Making needs list as " + status);
 				WorkflowItemExec custNeedItem = workflowService
 				        .getWorkflowItemExecByType(workflowExec,
 				                workflowItemMaster);
@@ -105,6 +114,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("updateReminder of Needs items " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDED_ITEMS_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -118,6 +128,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		NeededItemScoreVO neededItemScoreVO = needsListService
 		        .getNeededItemsScore(loanId);
 		if (neededItemScoreVO.getNeededItemRequired() <= 0) {
+			LOG.debug("Seding out reminders ince intial needs not created  ");
 			LoanVO loanVO = loanService.getLoanByID(createReminderVo
 			        .getLoanId());
 			WorkflowExec workflowExec = new WorkflowExec();

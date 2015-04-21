@@ -3,6 +3,8 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +38,8 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 @Component
 public class LoanTeamManager extends NexeraWorkflowTask implements
         IWorkflowTaskExecutor {
-
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LoanTeamManager.class);
 	@Autowired
 	LoanService loanService;
 
@@ -58,7 +61,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-
+		LOG.debug("RenderStateInfo of LoanTeamManager" + inputMap);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
@@ -70,6 +73,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	public String checkStatus(HashMap<String, Object> inputMap) {
+		
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
@@ -77,6 +81,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		ExtendedLoanTeamVO extendedLoanTeamVO = loanService
 		        .findExtendedLoanTeam(loanVO);
 		if (extendedLoanTeamVO.getUsers().size() > 1) {
+			LOG.debug("Changing the Status to Pending in Check Status");
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
@@ -117,6 +122,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		String message = null;
 		if (userID != null && userID > 0) {
+			LOG.debug("Adding user to Loan "+ userID);
 			UserVO user = new UserVO(userID);
 			boolean result = loanService.addToLoanTeam(loanVO, user);
 			if (result) {
@@ -135,16 +141,19 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			        + user.getDisplayName() + " Role : "
 			        + user.getUserRole().getRoleDescription();
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
+			LOG.debug("Adding TitleCompanyMasterVO to Loan "+ titleCompanyID);
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
 			editLoanTeamVO.setTitleCompany(company);
 			editLoanTeamVO.setOperationResult(true);
+			
 			changeState(loanID);
 			message = LoanStatus.titleCompanyAddedMessage + " Name : "
 			        + company.getName();
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
+			LOG.debug("Adding homeOwnInsCompanyID to Loan "+ homeOwnInsCompanyID);
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
@@ -167,6 +176,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	private void dismissAgentAddAlert(int loanId) {
+		LOG.debug("Dismissing Agent Alert" + loanId);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
@@ -177,6 +187,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	private void changeState(int loanID) {
+		LOG.debug("Changing State of a Loan" + loanID);
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		WorkflowExec workflowExec = new WorkflowExec();
 		workflowExec.setId(loanVO.getLoanManagerWorkflowID());
@@ -197,7 +208,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing - No reminders were part of this
 		return null;
 	}
 

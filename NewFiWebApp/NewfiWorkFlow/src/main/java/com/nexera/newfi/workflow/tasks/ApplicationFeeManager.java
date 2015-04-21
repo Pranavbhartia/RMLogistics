@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,17 +48,22 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	private EngineTrigger engineTrigger;
 	@Autowired
 	private NotificationService notificationService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(ApplicationFeeManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String returnStatus = null;
 		String messageForNote = "";
+		LOG.info("Execute Concrete Class for ApplicationFeeManager "
+		        + objectMap);
 		if (objectMap != null) {
 			int loanId = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			String status = objectMap.get(
 			        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME)
 			        .toString();
+			LOG.info("Status for Application Fee Manager is " + status);
 			if (status.equals(LoanStatus.APP_PAYMENT_SUCCESS)) {
 				dismissAllPaymentAlerts(loanId);
 				createAlertToLockRates(objectMap);
@@ -70,6 +77,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				messageForNote = LoanStatus.paymentPendingStatusMessage;
 			}
 			if (status != null && !status.isEmpty()) {
+				LOG.info("Making Milestone chagne for App Fee with" + status);
 				loanService.saveLoanMilestone(loanId,
 				        Milestones.APP_FEE.getMilestoneID(), status);
 				makeANote(Integer.parseInt(objectMap.get(
@@ -87,6 +95,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.info("Render State Info for Application Fee Manager" + inputMap);
 		// First Check if Payment Made
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -100,7 +109,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		// Since The Transaction and App Fee tables are updated only by Batch
 		// Batch will take care to update the WorkflowItem as correct status
 		// Keeping it for an additional fall back - but not required
-
+		LOG.info("Checking Status for Application Fee Manager" + inputMap);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO(loanID);
@@ -152,6 +161,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.info("Creating a Reminder with input" + objectMap);
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		int loanId = Integer.parseInt(objectMap.get(
@@ -166,6 +176,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
 		if (prevMilestone.getStatus().equals(
 		        WorkItemStatus.COMPLETED.getStatus())) {
+			LOG.info("The previous Milestone was completed");
 			LoanApplicationFee loanApplicationFee = transactionService
 			        .findByLoan(loanVO);
 			if (loanApplicationFee.getPaymentDate() == null) {
@@ -174,9 +185,12 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        loanId,
 				        WorkflowConstants.APP_FEE_OVERDUE_NOTIFICATION_CONTENT);
 				createReminderVo.setForCustomer(true);
+				LOG.info("Creating a Reminder" + createReminderVo);
 				iWorkflowService.sendReminder(createReminderVo,
 				        workflowItemExecutionId, prevMilestone.getId());
 				// And change the status of the workItem to Over Due;
+				LOG.info("The previous Milestone was completed .. So creating this Milestone"
+				        + LoanStatus.APP_PAYMENT_OVERDUE);
 				iWorkflowService.updateNexeraMilestone(loanId,
 				        Milestones.APP_FEE.getMilestoneID(),
 				        LoanStatus.APP_PAYMENT_OVERDUE);
@@ -193,6 +207,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	}
 
 	private void createAlertToLockRates(HashMap<String, Object> objectMap) {
+		LOG.info("createAlertToLockRates" + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.LOCK_RATE_CUST_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());

@@ -50,6 +50,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		}
 		// TODO add alert code here
 		if (!message.equals("")) {
+			LOG.debug("Taking a Note for UW Status " + objectMap);
 			makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
 			        message);
@@ -57,23 +58,29 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 			        message);
 			sendEmail(objectMap);
 		}
-
+		LOG.debug("UW Status is " + milestoneStatus);
 		return milestoneStatus;
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		String returnStatus = "";
 		try {
+
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.UW.getMilestoneKey());
-			return mileStone.getComments().toString();
+			LOG.debug("Showing UW Status is " + returnStatus);
+			if (mileStone != null) {
+				returnStatus = mileStone.getComments();
+			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			return "";
+			returnStatus = "";
 		}
+		return returnStatus;
 	}
 
 	@Override
@@ -88,6 +95,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("updateReminder of UW  " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.UW_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());

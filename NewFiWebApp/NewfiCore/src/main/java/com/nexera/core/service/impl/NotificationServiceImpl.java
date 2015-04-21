@@ -28,7 +28,7 @@ import com.nexera.core.utility.GenerateDynamicString;
 import com.nexera.core.utility.TriggerNotification;
 
 @Component
-@Transactional
+
 public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
@@ -273,6 +273,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * @see com.nexera.core.service.NotificationService#dismissNotification(int)
 	 */
 	@Override
+	@Transactional
 	public int dismissNotification(int notificationId) {
 		int result = 0;
 		Notification notification = new Notification();
@@ -292,6 +293,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
+	@Transactional
 	public NotificationVO updateNotification(NotificationVO notificationVO) {
 		return buildNotificationVO(notificationDao
 		        .updateNotification(parseNotificationModel(notificationVO)));
@@ -305,6 +307,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * (com.nexera.common.vo.UserVO)
 	 */
 	@Override
+	@Transactional(readOnly=true)
 	public List<NotificationVO> findNotificationTypeListForUser(int userId,
 	        String type) {
 		User user = new User();
@@ -315,6 +318,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<NotificationVO> findNotificationTypeListForLoan(int loanId,
 	        String type, Boolean isRead) {
 		Loan loan = new Loan();
@@ -325,6 +329,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
+	@Transactional
 	public void dismissReadNotifications(int loanID,
 	        MilestoneNotificationTypes noticationType) {
 		List<NotificationVO> notificationList = findNotificationTypeListForLoan(

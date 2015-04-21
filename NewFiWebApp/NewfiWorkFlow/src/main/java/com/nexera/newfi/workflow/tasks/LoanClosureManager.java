@@ -21,7 +21,7 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 public class LoanClosureManager extends NexeraWorkflowTask implements
         IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
-	        .getLogger(UWStatusManager.class);
+	        .getLogger(LoanClosureManager.class);
 
 	@Autowired
 	private LoanService loanService;
@@ -77,7 +77,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		StringBuffer returnString = new StringBuffer();
 
 		try {
-
+			LOG.debug("Getting the closure Status");
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
@@ -98,7 +98,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Do Nothing
+		// Do Nothing : 
 		return null;
 	}
 
@@ -109,7 +109,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing : No Reminders
 		return null;
 	}
 
