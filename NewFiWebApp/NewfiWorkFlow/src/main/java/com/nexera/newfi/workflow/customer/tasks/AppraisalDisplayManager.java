@@ -22,13 +22,18 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(AppraisalDisplayManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method execute ");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method renderStateInfo");
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		return iWorkflowService.getRenderInfoForAppraisal(loanId);
@@ -36,18 +41,19 @@ public class AppraisalDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method checkStatus");
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 

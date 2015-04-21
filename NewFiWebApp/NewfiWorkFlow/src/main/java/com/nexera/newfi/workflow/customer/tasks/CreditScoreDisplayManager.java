@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +25,18 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private Utils utils;
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(CreditScoreDisplayManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-		// Do Nothing
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
+		LOG.debug("Inside method renderStateInfo");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Loan loan = new Loan();
 		loan.setId(Integer.parseInt(inputMap.get(
@@ -45,19 +51,19 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Do nothing - 
-		//Since this value only from Batch : It will surely be kept up-to-date
+		LOG.debug("Inside method checkStatus");
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 

@@ -3,6 +3,8 @@ package com.nexera.newfi.workflow.customer.tasks;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,37 +29,43 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private EngineTrigger engineTrigger;
 
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LMContactManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method execute");
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method renderStateInfo");
 		return null;
 	}
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method checkStatus");
 		int userId = Integer.parseInt(inputMap.get("userId").toString());
 		UserVO userVo = new UserVO();
 		userVo.setId(userId);
 		LoanVO loanVo = loanService.getActiveLoanOfUser(userVo);
 		int workflowId = loanVo.getLoanManagerWorkflowID();
-		// TODO In Engine trigger add a method to get execitem by type
+
 		List<WorkflowItemExec> list = engineTrigger
-				.getWorkflowItemExecByWorkflowMasterExec(workflowId);
+		        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
 		for (WorkflowItemExec workflowItem : list) {
 			if (workflowItem.getWorkflowItemMaster().getWorkflowItemType()
-					.equals("INITIAL_CONTACT")) {
-				if (workflowItem.getStatus().trim().equals("3")) {
+			        .equals("INITIAL_CONTACT")) {
+				if (workflowItem.getStatus().trim()
+				        .equals(WorkItemStatus.COMPLETED.getStatus())) {
 					int workflowItemExecId = Integer.parseInt(inputMap.get(
-							"workflowItemExecId").toString());
+					        "workflowItemExecId").toString());
 					engineTrigger.changeStateOfWorkflowItemExec(
-							workflowItemExecId, "3");
-					return "3";
+					        workflowItemExecId,
+					        WorkItemStatus.COMPLETED.getStatus());
+					return WorkItemStatus.COMPLETED.getStatus();
 				} else
 					break;
 			}
@@ -68,12 +76,13 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		LOG.debug("Inside method invokeAction");
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
-		// TODO Auto-generated method stub
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Inside method updateReminder");
 		return null;
 	}
 
