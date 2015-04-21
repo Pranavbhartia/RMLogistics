@@ -92,7 +92,7 @@ CREATE TABLE `batchjobexecution` (
   PRIMARY KEY (`id`),
   KEY `fk_batchjob_id_idx` (`batchjob_id`),
   CONSTRAINT `fk_batchjob_id` FOREIGN KEY (`batchjob_id`) REFERENCES `batchjobmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +204,7 @@ CREATE TABLE `customerdetails` (
   KEY `FK_be157f2965534e6a8624f5d551c` (`customerspousedetails`),
   CONSTRAINT `fk_customerotheraccountdetails` FOREIGN KEY (`customer_other_ac_details`) REFERENCES `CustomerOtherAccountDetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_customerretirementaccontdetails` FOREIGN KEY (`customer_retirement_ac_details`) REFERENCES `CustomerRetirementAccountDetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,10 +229,11 @@ CREATE TABLE `customeremploymentincome` (
   `employed_at` varchar(45) DEFAULT NULL,
   `employed_since` varchar(45) DEFAULT NULL,
   `cust_emp_income` int(11) DEFAULT NULL,
+  `job_title` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_custempincomeLinkedToloanAppForm_idx` (`cust_emp_income`),
   CONSTRAINT `fk_custempincomeLinkedToloanAppForm` FOREIGN KEY (`cust_emp_income`) REFERENCES `loanappform` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=579431 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -362,7 +363,7 @@ CREATE TABLE `customerspousedetails` (
   `current_home_mortgage_balance` varchar(45) DEFAULT NULL,
   `newhome_budget_fromsale` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -390,7 +391,7 @@ CREATE TABLE `customerspouseemploymentincome` (
   PRIMARY KEY (`id`),
   KEY `FK_aff8110592e346c0975c32955a7` (`loanapp_formid`),
   CONSTRAINT `FK_aff8110592e346c0975c32955a7` FOREIGN KEY (`loanapp_formid`) REFERENCES `loanappform` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -568,7 +569,7 @@ CREATE TABLE `governmentquestion` (
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -631,7 +632,7 @@ CREATE TABLE `internaluserdetails` (
   KEY `fk_internalUserRole_idx` (`user_role`),
   CONSTRAINT `fk_internalUserManager` FOREIGN KEY (`manager`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_internalUserRole` FOREIGN KEY (`user_role`) REFERENCES `internaluserrolemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -685,7 +686,7 @@ CREATE TABLE `internaluserstatemapping` (
   KEY `fk_state_user_mapping` (`state_id`),
   CONSTRAINT `fk_internaluser_mapping` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_state_user_mapping` FOREIGN KEY (`state_id`) REFERENCES `statelookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -802,7 +803,7 @@ CREATE TABLE `loan` (
   CONSTRAINT `fk_Loan_PropertyType1` FOREIGN KEY (`property_type`) REFERENCES `propertytypemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToLoanDetail` FOREIGN KEY (`loan_detail`) REFERENCES `loandetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanMappedToMilestoneCurr` FOREIGN KEY (`current_milestone`) REFERENCES `loanmilestonemaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -883,7 +884,7 @@ CREATE TABLE `loanappform` (
   CONSTRAINT `fk_loanAppFormLinkedToRefDetails` FOREIGN KEY (`ref_detail`) REFERENCES `refinancedetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToSpouseGovtQuest` FOREIGN KEY (`spousegov_quest`) REFERENCES `spousegovernmentquestion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_loanAppFormLinkedToUser` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1145,7 +1146,7 @@ CREATE TABLE `loanneedslist` (
   CONSTRAINT `FK_loanneedslist_uploadedfileslist_id` FOREIGN KEY (`file_id`) REFERENCES `uploadedfileslist` (`id`),
   CONSTRAINT `fk_User_Attachment_Attachment_Type1` FOREIGN KEY (`need_type`) REFERENCES `needslistmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_User_Attachment_Loan_File1` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1489;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1489;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1336,7 +1337,7 @@ CREATE TABLE `loanteam` (
   CONSTRAINT `FK_loanFileTeamAddedBy` FOREIGN KEY (`assigned_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanFileTeamLinkedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_loanTeamLinkedToMember` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1501,7 +1502,7 @@ CREATE TABLE `propertytypemaster` (
   PRIMARY KEY (`id`),
   KEY `FK_propertyTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_propertyTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1531,7 +1532,7 @@ CREATE TABLE `purchasedetails` (
   `buyhomeZip2` varchar(45) DEFAULT NULL,
   `buyhomeZip3` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1558,7 +1559,7 @@ CREATE TABLE `realtordetails` (
   PRIMARY KEY (`id`),
   KEY `fk_realtor_loanmanager_idx` (`loanmanager_id`),
   CONSTRAINT `fk_realtor_loanmanager` FOREIGN KEY (`loanmanager_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1587,7 +1588,7 @@ CREATE TABLE `refinancedetails` (
   `cashTakeOut` varchar(45) DEFAULT NULL,
   `secondMortageBalance` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1627,7 +1628,7 @@ CREATE TABLE `spousegovernmentquestion` (
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1817,7 +1818,7 @@ CREATE TABLE `uploadedfileslist` (
   KEY `fk_uploadedFilesMappedToUploader_idx` (`uploaded_by`),
   CONSTRAINT `fk_uploadedFilesMappedToLoan` FOREIGN KEY (`loan`) REFERENCES `loan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_uploadedFilesMappedToUploader` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=5461;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=5461;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1864,7 +1865,7 @@ CREATE TABLE `user` (
   CONSTRAINT `fk_userMappedToCustDetail` FOREIGN KEY (`customer_detail`) REFERENCES `customerdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToInternalUsrDetail` FOREIGN KEY (`internal_user_detail`) REFERENCES `internaluserdetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userMappedToRealtorDetail` FOREIGN KEY (`realtor_detail`) REFERENCES `realtordetails` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2003,7 +2004,7 @@ CREATE TABLE `workflowexec` (
   KEY `FK_39cc50c2ddeb47b686090e6ab75` (`current_executing_item`),
   CONSTRAINT `FK_39cc50c2ddeb47b686090e6ab75` FOREIGN KEY (`current_executing_item`) REFERENCES `workflowitemexec` (`id`),
   CONSTRAINT `fk_workflowExMappedToWf` FOREIGN KEY (`workflow_master`) REFERENCES `workflowmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2050,7 +2051,7 @@ CREATE TABLE `workflowitemexec` (
   CONSTRAINT `fk_wfItem_linkedToWfItemExec` FOREIGN KEY (`parent_workflow_itemexec`) REFERENCES `workflowitemexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfItem_successOfWfItemExec` FOREIGN KEY (`on_success_item`) REFERENCES `workflowitemexec` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_wfitemExMappedToItem` FOREIGN KEY (`workflow_item_master`) REFERENCES `workflowitemmaster` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2111,7 +2112,7 @@ CREATE TABLE `workflowitemmaster` (
 
 LOCK TABLES `workflowitemmaster` WRITE;
 /*!40000 ALTER TABLE `workflowitemmaster` DISABLE KEYS */;
-INSERT INTO `workflowitemmaster` VALUES (1,'INITIAL_CONTACT','Make Initial Contact',1,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,28,NULL,NULL,NULL,0,1,NULL,NULL,1,1,NULL,0),(2,'SYSTEM_EDU','System Education',2,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,NULL,'',0,2,5,0),(3,'RATES_EDU','Rates',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,3,NULL,0),(4,'APP_EDU','Application',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,4,1,0),(5,'COMM_EDU','Communication',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,5,NULL,0),(6,'NEEDS_EDU','Needs',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,6,2,0),(7,'LOAN_PROGRESS','Loan Progress',33,1,'2015-02-28 14:17:14',-1,'2015-02-28 14:17:14',0,NULL,NULL,NULL,NULL,0,1,2,'',1,7,NULL,0),(8,'PROFILE_INFO','Profile',33,1,'2015-02-28 14:17:14',-1,'2015-02-28 14:17:14',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,8,NULL,0),(9,'1003_COMPLETE','1003 Complete',3,1,'2015-02-28 14:20:47',-1,'2015-02-28 14:20:47',-1,27,NULL,NULL,NULL,0,1,NULL,NULL,1,9,6,0),(10,'CREDIT_BUREAU','Credit Bureau',4,1,'2015-02-28 14:23:02',-1,'2015-02-28 14:23:02',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,10,NULL,0),(11,'CREDIT_SCORE','Credit Score',4,1,'2015-02-28 14:23:02',-1,'2015-02-28 14:23:02',-1,30,NULL,NULL,NULL,0,1,10,NULL,0,11,7,0),(12,'AUS_STATUS','AUS ( Automated Underwriting)',5,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,10,NULL,0,12,8,0),(13,'QC_STATUS','QC',15,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,10,NULL,1,13,NULL,0),(14,'NEEDS_STATUS','Needed Items',6,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,41,NULL,NULL,NULL,0,1,NULL,NULL,0,14,NULL,0),(15,'TEAM_STATUS','Add Team',7,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,31,NULL,NULL,NULL,0,1,NULL,NULL,1,15,NULL,0),(16,'DISCLOSURE_STATUS','Disclosures/ Intent to Proceed',8,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,40,NULL,NULL,NULL,0,1,NULL,NULL,0,16,9,0),(17,'APP_FEE','Application Fee',9,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,32,NULL,NULL,NULL,0,1,NULL,NULL,0,17,3,0),(18,'APPRAISAL_STATUS','Appraisal',10,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,34,NULL,NULL,NULL,0,1,NULL,'90d97262-7213-4a3a-86c6-8402a1375416',0,18,10,0),(19,'LOCK_RATE','Lock Rate',11,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,19,4,0),(20,'UW_STATUS','Underwriting Status',12,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,35,NULL,NULL,NULL,0,1,NULL,NULL,0,20,NULL,0),(21,'CLOSURE_STATUS','Loan Closure Status',13,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,36,NULL,NULL,NULL,0,1,NULL,NULL,0,21,NULL,0),(22,'MANAGE_PROFILE','My Profile',16,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,1,NULL,0),(23,'MANAGE_ACCOUNT','Account',17,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,22,NULL,0,2,NULL,0),(24,'SMS_TEXTING_PREF','SMS Texting Preference',18,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,22,NULL,0,3,NULL,0),(25,'MANAGE_PHOTO','Photo',19,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,22,NULL,0,4,NULL,0),(26,'MANAGE_APP_STATUS','Application Status',20,2,'2015-03-19 17:14:27',-1,'2015-03-19 17:14:38',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,5,NULL,0),(27,'CONNECT_ONLINE_APP','Complete Your Online Application',21,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,26,NULL,0,6,NULL,0),(28,'CONTACT_LOAN_MANAGER','Contact Your Loan Manager',23,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,26,NULL,0,7,NULL,0),(30,'MANAGE_CREDIT_STATUS','Credit Status',24,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,9,NULL,0),(31,'MANAGE_TEAM','Team',25,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,11,NULL,0),(32,'MANAGE_APP_FEE','Application Fee',26,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,12,NULL,0),(33,'LOCK_YOUR_RATE','Lock Rate',27,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,13,NULL,0),(34,'VIEW_APPRAISAL','Appraisal',28,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,15,NULL,0),(35,'VIEW_UW','Underwriting',29,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,14,11,0),(36,'VIEW_CLOSING','Closing Status',30,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,17,12,0),(39,'LOAN_MANAGER_DECISION','Loan Manager Decision',14,1,'2015-03-19 15:43:49',-1,'2015-03-19 15:44:02',NULL,NULL,NULL,NULL,NULL,0,1,10,NULL,0,16,NULL,0),(40,'DISCLOSURE_DISPLAY','Disclosures',32,2,'2015-03-19 15:43:49',-1,'2015-03-19 15:43:49',NULL,NULL,NULL,NULL,NULL,0,0,NULL,NULL,0,14,NULL,0),(41,'VIEW_NEEDS','Needed Items',6,2,'2015-03-19 15:43:49',-1,'2015-03-19 15:43:49',NULL,NULL,NULL,NULL,NULL,0,0,NULL,NULL,0,11,NULL,0);
+INSERT INTO `workflowitemmaster` VALUES (1,'INITIAL_CONTACT','Make Initial Contact',1,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,1,1,NULL,1),(2,'SYSTEM_EDU','System Education',2,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,NULL,'',0,2,5,1),(3,'RATES_EDU','Rates',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,3,NULL,1),(4,'APP_EDU','Application',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,4,1,1),(5,'COMM_EDU','Communication',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,5,NULL,1),(6,'NEEDS_EDU','Needs',33,1,'2015-02-28 14:15:00',-1,'2015-02-28 14:15:00',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,6,2,1),(7,'LOAN_PROGRESS','Loan Progress',33,1,'2015-02-28 14:17:14',-1,'2015-02-28 14:17:14',0,NULL,NULL,NULL,NULL,0,1,2,'',1,7,NULL,1),(8,'PROFILE_INFO','Profile',33,1,'2015-02-28 14:17:14',-1,'2015-02-28 14:17:14',-1,NULL,NULL,NULL,NULL,0,1,2,'',1,8,NULL,1),(9,'1003_COMPLETE','1003 Complete',3,1,'2015-02-28 14:20:47',-1,'2015-02-28 14:20:47',-1,27,NULL,NULL,NULL,0,1,NULL,NULL,1,9,6,1),(10,'CREDIT_BUREAU','Credit Bureau',4,1,'2015-02-28 14:23:02',-1,'2015-02-28 14:23:02',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,10,NULL,1),(11,'CREDIT_SCORE','Credit Score',4,1,'2015-02-28 14:23:02',-1,'2015-02-28 14:23:02',-1,30,NULL,NULL,NULL,0,1,10,NULL,0,11,7,1),(12,'AUS_STATUS','AUS ( Automated Underwriting)',5,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,10,NULL,0,12,8,1),(13,'QC_STATUS','QC',15,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,10,NULL,1,13,NULL,1),(14,'NEEDS_STATUS','Needed Items',6,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,41,NULL,NULL,NULL,0,1,NULL,NULL,0,14,NULL,1),(15,'TEAM_STATUS','Add Team',7,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,31,NULL,NULL,NULL,0,1,NULL,NULL,1,15,NULL,1),(16,'DISCLOSURE_STATUS','Disclosures/ Intent to Proceed',8,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,40,NULL,NULL,NULL,0,1,NULL,NULL,0,16,9,1),(17,'APP_FEE','Application Fee',9,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,32,NULL,NULL,NULL,0,1,NULL,NULL,0,17,3,1),(18,'APPRAISAL_STATUS','Appraisal',10,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,34,NULL,NULL,NULL,0,1,NULL,'90d97262-7213-4a3a-86c6-8402a1375416',0,18,10,1),(19,'LOCK_RATE','Lock Rate',11,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,19,4,1),(20,'UW_STATUS','Underwriting Status',12,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,35,NULL,NULL,NULL,0,1,NULL,NULL,0,20,NULL,1),(21,'CLOSURE_STATUS','Loan Closure Status',13,1,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,36,NULL,NULL,NULL,0,1,NULL,NULL,0,21,NULL,1),(22,'MANAGE_PROFILE','My Profile',16,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,1,NULL,1),(23,'MANAGE_ACCOUNT','Account',17,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',-1,NULL,NULL,NULL,NULL,0,1,22,NULL,0,2,NULL,1),(24,'SMS_TEXTING_PREF','SMS Texting Preference',18,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,22,NULL,0,3,NULL,1),(25,'MANAGE_PHOTO','Photo',19,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,22,NULL,0,4,NULL,1),(26,'MANAGE_APP_STATUS','Application Status',20,2,'2015-03-19 17:14:27',-1,'2015-03-19 17:14:38',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,5,NULL,1),(27,'CONNECT_ONLINE_APP','Complete Your Loan Profile',21,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,26,NULL,0,6,NULL,1),(30,'MANAGE_CREDIT_STATUS','Credit Status',24,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,9,NULL,1),(31,'MANAGE_TEAM','Team',25,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,11,NULL,1),(32,'MANAGE_APP_FEE','Application Fee',26,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,12,NULL,1),(33,'LOCK_YOUR_RATE','Lock Rate',27,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,13,NULL,1),(34,'VIEW_APPRAISAL','Appraisal',28,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,15,NULL,1),(35,'VIEW_UW','Underwriting',29,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,14,11,1),(36,'VIEW_CLOSING','Closing Status',30,2,'2015-02-28 14:23:35',-1,'2015-02-28 14:23:35',NULL,NULL,NULL,NULL,NULL,0,1,NULL,NULL,0,17,12,1),(39,'LOAN_MANAGER_DECISION','Loan Manager Decision',14,1,'2015-03-19 15:43:49',-1,'2015-03-19 15:44:02',NULL,NULL,NULL,NULL,NULL,0,1,10,NULL,0,16,NULL,1),(40,'DISCLOSURE_DISPLAY','Disclosures',32,2,'2015-03-19 15:43:49',-1,'2015-03-19 15:43:49',NULL,NULL,NULL,NULL,NULL,0,0,NULL,NULL,0,14,NULL,1),(41,'VIEW_NEEDS','Needed Items',6,2,'2015-03-19 15:43:49',-1,'2015-03-19 15:43:49',NULL,NULL,NULL,NULL,NULL,0,0,NULL,NULL,0,11,NULL,1);
 /*!40000 ALTER TABLE `workflowitemmaster` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2170,7 +2171,7 @@ CREATE TABLE `workflowtaskconfigmaster` (
 
 LOCK TABLES `workflowtaskconfigmaster` WRITE;
 /*!40000 ALTER TABLE `workflowtaskconfigmaster` DISABLE KEYS */;
-INSERT INTO `workflowtaskconfigmaster` VALUES (1,'com.nexera.newfi.workflow.tasks.AlertManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(2,'com.nexera.newfi.workflow.tasks.EMailSender',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(3,'com.nexera.newfi.workflow.tasks.Application1003Manager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(4,'com.nexera.newfi.workflow.tasks.CreditScoreManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(5,'com.nexera.newfi.workflow.tasks.UWStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(6,'com.nexera.newfi.workflow.tasks.NeededItemsManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(7,'com.nexera.newfi.workflow.tasks.LoanTeamManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(8,'com.nexera.newfi.workflow.tasks.DisclosuresManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(9,'com.nexera.newfi.workflow.tasks.ApplicationFeeManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(10,'com.nexera.newfi.workflow.tasks.AppraisalManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(11,'com.nexera.newfi.workflow.tasks.LockRatesManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(12,'com.nexera.newfi.workflow.tasks.UWStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(13,'com.nexera.newfi.workflow.tasks.LoanClosureManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(14,'com.nexera.newfi.workflow.tasks.LMDecisionManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(15,'com.nexera.newfi.workflow.tasks.QCDecisionManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(16,'com.nexera.newfi.workflow.customer.tasks.ProfileManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(17,'com.nexera.newfi.workflow.customer.tasks.AccountStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(18,'com.nexera.newfi.workflow.customer.tasks.SMSPreferenceManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(19,'com.nexera.newfi.workflow.customer.tasks.ProfilePhotoManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(20,'com.nexera.newfi.workflow.customer.tasks.ApplicationFormStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(21,'com.nexera.newfi.workflow.customer.tasks.Application1003DisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(22,'ManageCustomAppForm',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(23,'com.nexera.newfi.workflow.customer.tasks.LMContactManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(24,'com.nexera.newfi.workflow.customer.tasks.CreditScoreDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(25,'com.nexera.newfi.workflow.tasks.LoanTeamManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(26,'com.nexera.newfi.workflow.customer.tasks.PaymentManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(27,'com.nexera.newfi.workflow.customer.tasks.LockYourRateManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(28,'com.nexera.newfi.workflow.customer.tasks.AppraisalDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(29,'com.nexera.newfi.workflow.customer.tasks.UWDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(30,'com.nexera.newfi.workflow.customer.tasks.ClosureDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(32,'com.nexera.newfi.workflow.customer.tasks.DisclosuresDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(33,'com.nexera.newfi.workflow.tasks.SystemEduTask',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}');
+INSERT INTO `workflowtaskconfigmaster` VALUES (1,'com.nexera.newfi.workflow.tasks.AlertManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(2,'com.nexera.newfi.workflow.tasks.EMailSender',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(3,'com.nexera.newfi.workflow.tasks.Application1003Manager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(4,'com.nexera.newfi.workflow.tasks.CreditScoreManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(5,'com.nexera.newfi.workflow.tasks.UWStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(6,'com.nexera.newfi.workflow.tasks.NeededItemsManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(7,'com.nexera.newfi.workflow.tasks.LoanTeamManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(8,'com.nexera.newfi.workflow.tasks.DisclosuresManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(9,'com.nexera.newfi.workflow.tasks.ApplicationFeeManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(10,'com.nexera.newfi.workflow.tasks.AppraisalManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(11,'com.nexera.newfi.workflow.tasks.LockRatesManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(12,'com.nexera.newfi.workflow.tasks.UWStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(13,'com.nexera.newfi.workflow.tasks.LoanClosureManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(14,'com.nexera.newfi.workflow.tasks.LMDecisionManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(15,'com.nexera.newfi.workflow.tasks.QCDecisionManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(16,'com.nexera.newfi.workflow.customer.tasks.ProfileManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(17,'com.nexera.newfi.workflow.customer.tasks.AccountStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(18,'com.nexera.newfi.workflow.customer.tasks.SMSPreferenceManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(19,'com.nexera.newfi.workflow.customer.tasks.ProfilePhotoManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(20,'com.nexera.newfi.workflow.customer.tasks.ApplicationFormStatusManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(21,'com.nexera.newfi.workflow.customer.tasks.Application1003DisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(22,'ManageCustomAppForm',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(24,'com.nexera.newfi.workflow.customer.tasks.CreditScoreDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(25,'com.nexera.newfi.workflow.tasks.LoanTeamManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(26,'com.nexera.newfi.workflow.customer.tasks.PaymentManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(27,'com.nexera.newfi.workflow.customer.tasks.LockYourRateManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(28,'com.nexera.newfi.workflow.customer.tasks.AppraisalDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(29,'com.nexera.newfi.workflow.customer.tasks.UWDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(30,'com.nexera.newfi.workflow.customer.tasks.ClosureDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(32,'com.nexera.newfi.workflow.customer.tasks.DisclosuresDisplayManager',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}'),(33,'com.nexera.newfi.workflow.tasks.SystemEduTask',NULL,'{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}');
 /*!40000 ALTER TABLE `workflowtaskconfigmaster` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2183,4 +2184,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-20 16:13:40
+-- Dump completed on 2015-04-21 19:30:54

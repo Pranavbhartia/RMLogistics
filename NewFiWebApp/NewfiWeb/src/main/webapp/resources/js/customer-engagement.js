@@ -1,6 +1,6 @@
 //JavaScript functions for customer engagement pages
 
-var message = "Field Should not be empty";
+var message = "Invalid Entry";
 
 
 function appendErrorMessage(){
@@ -34,7 +34,6 @@ function validateInputs(inputVal,message){
 		$('.app-input').next('.err-msg').html(message).show();
 		$('.app-input').addClass('ce-err-input').show();
 		return false;
-
 	}
 	else{
 		$('.app-input').next('.err-msg').hide();
@@ -42,6 +41,8 @@ function validateInputs(inputVal,message){
 		return true;
 	}
 }
+
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -512,15 +513,15 @@ function paintRefinanceQuest1() {
     progressBaar(1);
     var quesText = "Why do you want to refinance?";
     var options = [{
-        "text": "Lower My Monthly Payment",
+        "text": "Lower my monthly payment",
         "onselect": paintRefinanceStep2,
         "value": "REFLMP"
     }, {
-        "text": "Pay Off My Mortgage Faster",
+        "text": "Pay off mortgage faster",
         "onselect": paintRefinanceStep1a,
         "value": "REFMF"
     }, {
-        "text": "Take Cash Out of My Home",
+        "text": "Take cash out",
         "onselect": paintRefinanceStep1b,
         "value": "REFCO"
     }];
@@ -605,7 +606,7 @@ function getTextQuestion(quesText, clickEvent, name) {
             	 var isSuccess=validateInput(inputValue,message);
                  if(isSuccess){
                 	 if(inputValue.length >5 ||inputValue.length < 5){
-                		 $('.ce-input').next('.err-msg').html("Please Enter a valid 5-digit zipcode").show();
+                		 $('.ce-input').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
                 		 $('.ce-input').addClass('ce-err-input').show();
                 		 return false;
                 	 }else{
@@ -635,6 +636,7 @@ function paintRefinanceStep1a() {
     var quesCont = getTextQuestion(quesTxt, paintRefinanceStep2, "yearLeftOnMortgage");
     $('#ce-refinance-cp').html(quesCont);
 }
+
 var quesContxts = [];
 
 function paintRefinanceStep2() {
@@ -770,8 +772,22 @@ function paintRefinanceHomeWorthToday() {
     stages = 4;
     progressBaar(4);
     var quesTxt = "Approximately what is your home worth today?";
-    var quesCont = getTextQuestion(quesTxt, paintNewResidenceTypeQues, "homeWorthToday");
+    var quesCont = getTextQuestion(quesTxt, validateMortage, "homeWorthToday");
     $('#ce-refinance-cp').html(quesCont);
+}
+function validateMortage()
+{
+	var homeWorthToday =getFloatValue( $('input[name="homeWorthToday"]').val());
+	if (homeWorthToday > getFloatValue(refinanceTeaserRate.currentMortgageBalance))
+	{				
+		$('.ce-input').next('.err-msg').html("Property value can not be less than requested loan amount " + refinanceTeaserRate.currentMortgageBalance).show();
+		$('.ce-input').addClass('ce-err-input').show();
+	}
+	else
+	{
+		paintNewResidenceTypeQues();
+	}
+	
 }
 function paintNewResidenceTypeQues(){
 
@@ -900,10 +916,7 @@ function paintRefinanceHomeInformation() {
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {
-    	
-    	
-        
+    }).html("Save & continue").on('click', function() {    	       
     });
 
     var container = quesHeaderTextCont.append(questionsContainer).append(saveAndContinueButton);
@@ -1000,7 +1013,7 @@ function paintApplyNow(inputCustomerDetails) {
     }).html("Get Started Now");
     var regDisplaySubTitle = $('<div>').attr({
         "class": "reg-display-title-subtxt"
-    }).html("Create a Newfi account now to access our powerful lending tool and take control on your terms");
+    }).html("Create a newfi account now to access our powerful lending tool and take control on your terms");
     var regInputContainerFname = $('<div>').attr({
         "class": "reg-input-cont reg-fname"
     });

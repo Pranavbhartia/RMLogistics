@@ -174,9 +174,13 @@ DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='28';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='23';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Your Loan Profile' WHERE `id`='27';
 
+##############
+### Anoop - Moved all the above to the 1_create script
+##############
 
 #Abhishek 21 april
 alter table newfi_schema.customeremploymentincome add column job_title varchar (20);
+
 alter table newfi_schema.customerspouseemploymentincome add column job_title varchar (20);
 
 alter table newfi_schema.loanappform add column monthly_income bigint (20), add column self_employed_no_year int (10),add column social_security_income bigint(20),add column child_support_alimony bigint (20), add column retirement_income bigint (20);
@@ -185,4 +189,7 @@ ALTER TABLE newfi_schema.customerspousedetails MODIFY  COLUMN self_employed_inco
 ALTER TABLE newfi_schema.customerspousedetails MODIFY  COLUMN  monthly_pension  bigint(20);
 
 alter table newfi_schema.customerspousedetails add column self_employed_no_year int (10),add column social_security_income bigint(20),add column child_support_alimony bigint (20), add column retirement_income bigint (20),add column disability_income bigint (20)
+
+
+
 

@@ -50,9 +50,9 @@ function getCustomerSecondaryLeftNav() {
     });
     var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
     var step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
-    var step3 = getCustomerSecondaryLeftNavStep(3, "lock<br />your rate");
+    var step3 = getCustomerSecondaryLeftNavStep(3, "your<br />rate options");
     var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
-    var step5 = getCustomerSecondaryLeftNavStep(5, "loan<br />progress");
+    var step5 = getCustomerSecondaryLeftNavStep(5, "your <br /> loan progress");
     return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
 }
 
