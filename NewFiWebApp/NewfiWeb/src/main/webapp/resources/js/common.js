@@ -491,6 +491,14 @@ function getCalculationFunctionForItem(key){
     			return result;
     		};
     		break;
+    	case "cityCountyTaxStamps1204":
+    		fun=function(){
+        		if(closingCostHolder.valueSet[key] && closingCostHolder.valueSet[key]!= "0" )
+	        		return closingCostHolder.valueSet[key];
+	        	else
+	        		return "Varies by Location";
+	        };
+    		break;
     }
     return fun;
 }
