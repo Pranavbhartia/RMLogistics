@@ -2,6 +2,8 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +34,12 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	NeedsListService needsListService;
 	@Autowired
 	Utils utils;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(CreditScoreManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Execute Concrete class : CreditScoreManager" + objectMap);
 		makeANote(
 		        Integer.parseInt(objectMap.get(
 		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -48,7 +53,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
+		LOG.debug("Render State Info " + inputMap);
 		int userID = (Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString()));
 		int loanID = (Integer.parseInt(inputMap.get(
@@ -59,7 +64,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
 		        needsListService.checkCreditReport(loanID));
 		// TO Remove------ end
-
+		
 		return utils.getJsonStringOfMap(map);
 	}
 
@@ -78,6 +83,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.CREDIT_SCORE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -88,6 +94,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,
 		        prevMilestoneKey, notificationReminderContent);
+		LOG.debug("Creating LM Reminder for ..Credit Score Manager for Prev MS :" +prevMilestoneKey);
 		iWorkflowService.updateLMReminder(createReminderVo);
 		return null;
 	}

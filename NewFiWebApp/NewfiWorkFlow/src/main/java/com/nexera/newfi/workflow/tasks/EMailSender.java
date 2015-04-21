@@ -40,6 +40,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 
 	public String execute(HashMap<String, Object> objectMap) {
 		// Call the Email Sender here.
+		LOG.debug("Sending System Education Email");
 		if (objectMap != null) {
 			int loanId = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -73,6 +74,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug(" Updating Reminder " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.SYS_EDU_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -80,6 +82,7 @@ public class EMailSender extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT;
 		String notificationReminderContent = WorkflowConstants.SYS_EDU_NOTIFICATION_CONTENT;
+		LOG.debug(" prevMilestoneKey is " + prevMilestoneKey);
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,
 		        prevMilestoneKey, notificationReminderContent);

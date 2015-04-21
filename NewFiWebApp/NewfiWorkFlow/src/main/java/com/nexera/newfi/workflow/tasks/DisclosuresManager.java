@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +37,12 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	private NeedsListService needsListService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(DisclosuresManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		LOG.debug("Executing Disclosures Manager" + objectMap);
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		boolean flag = false;
@@ -62,15 +67,22 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			                .getIdentifier());
 			List<NeedsListMaster> masterNeedsList = new ArrayList<NeedsListMaster>();
 			masterNeedsList.add(appraisalMasterNeed);
+			LOG.debug("Making Disclosure Managers as " + mileStoneStatus
+			        + "Saving Appraisal Need");
+
 			needsListService.saveMasterNeedsForLoan(loanId, masterNeedsList);
+			LOG.debug("Saved Appraiasl Need");
 			createAppilcationPaymentAlert(objectMap);
 		}
 		if (mileStoneStatus != null) {
-
+			LOG.debug("Updating MS entries for " + loanId
+			        + " mileStoneStatus as " + mileStoneStatus);
 			iWorkflowService.updateNexeraMilestone(loanId,
 			        Milestones.DISCLOSURE.getMilestoneID(), mileStoneStatus);
 		}
 		if (flag) {
+			LOG.debug("Sending Note from Disclosures Manager" + loanId
+			        + " Status as " + returnStatus);
 			makeANote(loanId, message);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
@@ -90,6 +102,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	}
 
 	private void createAppilcationPaymentAlert(HashMap<String, Object> objectMap) {
+		LOG.debug("Creating Application Payment Alert " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APP_FEE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -100,6 +113,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	}
 
 	private void dismissDisclosureDueAlerts(HashMap<String, Object> objectMap) {
+		LOG.debug(" Dimiss Disclosure Due Alerts" + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.DISCLOSURE_AVAIL_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -113,17 +127,18 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothing
 		return null;
 	}
 
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
+		// Do Nothiing
 		return null;
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		// Do Nothing - No need to generate any Reminder..
 		return null;
 	}
 

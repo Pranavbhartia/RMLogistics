@@ -10,16 +10,11 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
-import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
-import com.nexera.workflow.bean.WorkflowExec;
-import com.nexera.workflow.bean.WorkflowItemExec;
-import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -34,20 +29,19 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	private WorkflowService workflowService;
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(AppraisalManager.class);
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
-
+		LOG.debug("Execute Appraisal Manager " + objectMap);
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
-		boolean flag = false;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-
 		String returnStatus = "";
 		String mileStoneStatus = null;
 		if (status.equals(LoanStatus.appraisalAvailable)) {
-			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.appraisalAvailable;
 			makeANote(Integer.parseInt(objectMap.get(
@@ -58,12 +52,11 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 			sendEmail(objectMap);
 		}
 		if (mileStoneStatus != null) {
+			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);
 			iWorkflowService.updateNexeraMilestone(loanId,
 			        Milestones.APPRAISAL.getMilestoneID(), mileStoneStatus);
 		}
-
 		return returnStatus;
-
 	}
 
 	@Override
@@ -86,6 +79,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	}
 
 	public String updateReminder(HashMap<String, Object> objectMap) {
+		LOG.debug("Updating Reminders for Appraisal " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APPRAISAL_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
