@@ -426,7 +426,7 @@ public class ApplicationFormRestService {
 			}
 
 			if (cache.get("purchaseDetails") != null
-			        && loaAppFormVO.getPurchaseDetails().getId() == 0
+			        && loaAppFormVO.getPurchaseDetails() != null &&loaAppFormVO.getPurchaseDetails().getId() == 0
 			        && cache.get("purchaseDetails") != 0) {
 				loaAppFormVO.getPurchaseDetails().setId(
 				        cache.get("purchaseDetails"));
@@ -1095,7 +1095,7 @@ public class ApplicationFormRestService {
 	private JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO) {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
-			
+			String condition = "";
 			
 			String loanPurpose ="";
 			
@@ -1175,21 +1175,73 @@ public class ApplicationFormRestService {
 			        .getCustomerDetail().getAddressState());
 			hashmap.put("applicantZipCode", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressZipCode());
-			hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-			hashmap.put("LOGIN_NAME", "testact");
-			hashmap.put("PASSWORD", "1234nexera");
-			hashmap.put("equifaxStatus", "Y");
-			hashmap.put("experianStatus", "Y");
-			hashmap.put("transunionStatus", "Y");
+			
 			hashmap.put("applicantAddress", "888 Apple road");
 
 			hashmap.put("prodCashOut", "40000");
 
+			
+			
+			
+			
+			//"condition": "coborrowerWithSSNBoth",
+			
+			
+			if(loanAppFormVO.getIsCoborrowerPresent() == false && loanAppFormVO.getSsnProvided() == true){
+				hashmap = getBorrowerCredit(hashmap);
+				condition= "noCoBorrowerWithSSN";
+			}
+			
+			if(loanAppFormVO.getIsCoborrowerPresent() == false && loanAppFormVO.getSsnProvided() == false){
+				hashmap.put("applicantId", " ");
+				hashmap.put("userSSNnumber", "000000");
+				condition= "noCoBorrowerWithoutSSN";
+			}
+			
+			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== true && loanAppFormVO.getSsnProvided() == true && loanAppFormVO.getCbSsnProvided() == true ){
+				hashmap = getBorrowerCredit(hashmap);
+				hashmap = appendSpouseCoBorrowerDetails(hashmap);
+				condition = "coborrowerIsWifeWithSSNBoth";
+			}
+
+			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== true && loanAppFormVO.getSsnProvided() == false && loanAppFormVO.getCbSsnProvided() == false ){
+				
+				hashmap = appendSpouseCoBorrowerDetails(hashmap);
+				hashmap.put("applicantId", " ");
+				hashmap.put("userSSNnumber", "000000000");
+				hashmap.put("userCoborrowerSSNnumber","000000000");
+				condition = "coborrowerIsWifeWithoutSSNBoth";
+			}
+			
+			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== false && loanAppFormVO.getSsnProvided() == true && loanAppFormVO.getCbSsnProvided() == true ){
+				hashmap = getBorrowerCredit(hashmap);
+				hashmap = appendCoBorrowerDetails(hashmap);
+				hashmap = getCoBorrowerCredit(hashmap);
+				condition = "coborrowerWithSSNBoth";
+			}
+		    
+			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== false && loanAppFormVO.getSsnProvided() == false && loanAppFormVO.getCbSsnProvided() == false ){
+				hashmap = appendCoBorrowerDetails(hashmap);
+				hashmap.put("applicantId", " ");
+				hashmap.put("userSSNnumber", "000000000");
+				hashmap.put("userCoborrowerSSNnumber","000000000");
+				hashmap.put("ApplicantCoBorrowerId","000000000");
+				condition = "coborrowerWithoutSSNBoth";
+			}
+			
+			
+		   
 			JSONObject jsonObject = new JSONObject(hashmap);
 
 			JSONObject json = new JSONObject();
 			JSONObject jsonChild = new JSONObject();
-
+		  
+		    
+		    
+			
+			
+			
+			jsonChild.put("condition", condition);
 			jsonChild.put("sLoanNumber", loanNumber);
 			jsonChild.put("sDataContentMap", jsonObject);
 			jsonChild.put("format", "0");
@@ -1210,6 +1262,63 @@ public class ApplicationFormRestService {
 	
 	
 	
+	HashMap<String, String> appendSpouseCoBorrowerDetails(HashMap<String, String> hashmap){
+		hashmap.put("firstCoborrowerName","Jacob");
+		hashmap.put("middleCoborrowerName","B");
+		hashmap.put("lastCoborrowerName","TESTCASE");
+		hashmap.put("dateOfCoborrowerBirth","1980-05-27");
+		hashmap.put("baseCoborrowerIncome","100000");
+		hashmap.put("applicantCoborrowerAddress","123 Love AVE");
+		hashmap.put("userCoborrowerSSNnumber","000-00-0016");
+		
+		return hashmap;
+	}
+	
+	
+	
+	HashMap<String, String> appendCoBorrowerDetails(HashMap<String, String> hashmap){
+		
+		hashmap.put("firstCoborrowerName","Jacob");
+		hashmap.put( "middleCoborrowerName","B");
+		hashmap.put( "lastCoborrowerName","TESTCASE");
+		hashmap.put("dateOfCoborrowerBirth","1980-05-27");
+		hashmap.put( "baseCoborrowerIncome","100000");
+		hashmap.put("applicantCoborrowerAddress","123 Love AVE");
+		hashmap.put("userCoborrowerSSNnumber","000-00-0016");
+		hashmap.put( "ApplicantCoBorrowerId","000-00-0016");
+		hashmap.put( "alimonyCoborrowerName","NONE");
+		hashmap.put("alimonyCoborrowerPayment","1000");
+		hashmap.put( "jobCoborrowerExpenses","1000");
+		hashmap.put( "jobRelatedCoborrowerPayment","100000");
+		hashmap.put( "applicantCoborrowerCity","ANTHILL");
+		hashmap.put("applicantCoborrowerState","MO");
+		hashmap.put( "applicantCoborrowerZipCode","65488");	
+		return hashmap;
+		
+	}
+	
+	
+	HashMap<String, String> getBorrowerCredit(HashMap<String, String> hashmap){
+		
+		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
+		hashmap.put("LOGIN_NAME", "testact");
+		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("equifaxStatus", "Y");
+		hashmap.put("experianStatus", "Y");
+		hashmap.put("transunionStatus", "Y");
+		
+		return hashmap;
+	}
 
+	HashMap<String, String> getCoBorrowerCredit(HashMap<String, String> hashmap){
+		hashmap.put("creditCoborrowerCardId","eb228885-b484-404a-99ff-b28511dd3e38");
+		hashmap.put("equifaxCoborrowerStatus","Y");
+		hashmap.put("experianCoborrowerStatus","Y");
+		hashmap.put("LOGIN_Coborrower_NAME","testact");
+		hashmap.put("PASS_COBORROWER_WORD","1234nexera");
+		hashmap.put("transunionCoborrowerStatus","Y");
+		
+		return hashmap;
+	}
 
 }
