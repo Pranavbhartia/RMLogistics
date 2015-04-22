@@ -805,8 +805,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 
 	}
-	
-	
+
 	@Override
 	public Integer UpdateUserProfile(String phoneNumber, Integer userId) {
 		Session session = sessionFactory.getCurrentSession();
@@ -816,5 +815,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("ID", userId);
 		int result = query.executeUpdate();
 		return result;
+	}
+
+	@Override
+	public User findByToken(String token) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("emailEncryptionToken", token));
+		User user = (User) criteria.uniqueResult();
+		return user;
+
 	}
 }

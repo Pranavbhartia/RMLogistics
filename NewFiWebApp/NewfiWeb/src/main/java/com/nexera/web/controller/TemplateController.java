@@ -222,7 +222,7 @@ public class TemplateController extends DefaultController {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Resettting password for" + identifier);
 		String deHashedEmail = identifier;
-		User userDetail = userProfileService.findUserByMail(deHashedEmail);
+		User userDetail = userProfileService.findUserByToken(deHashedEmail);
 		if (userDetail == null) {
 			// Re direct to error page
 			throw new InvalidInputException("Invalid URL");			

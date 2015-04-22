@@ -123,13 +123,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private SecureRandom randomGenerator;
 
 	@Autowired
+	NexeraUtility nexeraUtility;
+
+	@Autowired
 	private LoanService loanService;
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
-
-	@Autowired
-	NexeraUtility nexeraUtility;
 
 	@Autowired
 	private Utils utils;
@@ -429,7 +429,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getEmailId() });
-		substitutions.put("-password-", new String[] { user.getPassword() });
+		substitutions.put("-password-",
+		        new String[] { user.getEmailEncryptionToken() });
 
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -1114,16 +1115,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("function to generate random password and save");
 		String password = generateRandomPassword();
 		user.setPassword(password);
+		user.setEmailEncryptionToken(nexeraUtility.encryptEmailAddress(user
+		        .getEmailId()));
+
 		UserVO userVO = User.convertFromEntityToVO(user);
 		UpdatePasswordVO updatePasswordVO = new UpdatePasswordVO();
 		updatePasswordVO.setNewPassword(userVO.getPassword());
 		updatePasswordVO.setUserId(userVO.getId());
 		LOG.info("sending reset password to the user");
-		sendResetLinkToUser(user);
+		sendResetLinkToUser(userVO);
 
 	}
 
-	private void sendNewPasswordToUser(User user) throws InvalidInputException,
+	private void sendResetLinkToUser(UserVO user) throws InvalidInputException,
 	        UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
@@ -1136,34 +1140,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getUsername() });
-		substitutions.put("-password-", new String[] { user.getPassword() });
-
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
-		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Your password has been reset");
-		emailEntity.setTokenMap(substitutions);
-		emailEntity.setTemplateId(template.getValue());
-
-		sendGridEmailService.sendMail(emailEntity);
-	}
-
-	private void sendResetLinkToUser(User user) throws InvalidInputException,
-	        UndeliveredEmailException {
-
-		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
-		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
-
-		// We create the substitutions map
-		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-name-", new String[] { user.getFirstName() + " "
-		        + user.getLastName() });
-		substitutions.put("-username-", new String[] { user.getUsername() });
-		String uniqueURL = baseUrl + "reset.do?reference=" + user.getEmailId();
+		String uniqueURL = baseUrl + "reset.do?reference="
+		        + user.getEmailEncryptionToken();
 		substitutions.put("-password-", new String[] { uniqueURL });
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -1301,6 +1279,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public List<String> getDefaultUsers(String userName) {
 		// TODO Auto-generated method stub
 		return userProfileDao.getDefaultUsers(userName);
+	}
+
+	@Override
+	public User findUserByToken(String userToken) {
+
+		return userProfileDao.findByToken(userToken);
 	}
 
 }

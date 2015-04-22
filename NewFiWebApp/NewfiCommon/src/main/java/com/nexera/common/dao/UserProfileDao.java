@@ -18,6 +18,8 @@ public interface UserProfileDao extends GenericDao {
 	public User findByUserName(String userName)
 	        throws NoRecordsFetchedException, DatabaseException;
 
+	public User findByToken(String token);
+
 	public User findByUserId(Integer userId);
 
 	public Integer updateUser(User user);
@@ -88,7 +90,7 @@ public interface UserProfileDao extends GenericDao {
 	public void updateLMID(Integer realtorID, int loanManagerId);
 
 	public List<String> getDefaultUsers(String userName);
-	
+
 	public Integer updateRealtorDetails(RealtorDetail realtor);
 
 	public Integer UpdateUserProfile(String phoneNumber, Integer userId);

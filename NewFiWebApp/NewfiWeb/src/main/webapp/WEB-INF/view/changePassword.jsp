@@ -56,14 +56,14 @@
 
 $('#changePwdForm').submit(function(event){	
 	event.preventDefault();
-	var user = new Object();
-	user.newPassword = $('#pwd').val();
-	user.userId=currentUser.userId;
+	var changePasswordData = new Object();
+	changePasswordData.newPassword = $('#pwd').val();
+	changePasswordData.userId=currentUser.userId;
 	var dateVar = new Date();
 	var timezone = dateVar.getTimezoneOffset();
-	user.emailID = currentUser.emailID+ ":"+timezone;
+	changePasswordData.emailID = currentUser.emailID+ ":"+timezone;
 	console.log("Create user button clicked. User : "
-					+ JSON.stringify(user));
+					+ JSON.stringify(changePasswordData));
 	if($('#pwd').val()==""||$('#pwd').val()==null){
 		showErrorToastMessage("Password cannot be empty");
 			return;		
@@ -72,7 +72,7 @@ $('#changePwdForm').submit(function(event){
 		showErrorToastMessage("Confirm Password cannot be empty");
 			return;		
 	}
-	if($('#confirmPwd').val() != $('#confirmPwd').val()==null){
+	if($('#pwd').val() != $('#confirmPwd').val()){
 		showErrorToastMessage("Passwords don't match");
 			return;		
 	}	
@@ -80,24 +80,19 @@ $('#changePwdForm').submit(function(event){
         url: "/NewfiWeb/rest/userprofile/password",
         type: "POST",       
         data: {
-                 "changePasswordData": JSON.stringify(user)
-        },        
-        datatype: "application/json",
-        success: function(data) {
-            // $('#overlay-loader').hide();
-            $('#overlay-loader').hide();
-            // alert (data);
-            window.location.href = data;
-            // printMedianRate(data,container);
+                 "changePasswordData": JSON.stringify(changePasswordData)
         },
-        error: function(data) {
-           // alert(data);
+        datatype: "json",
+        success: function(data) {            
+            $('#overlay-loader').hide();            
+            window.location.href = data;            
+        },
+        error: function(data) {           
             showErrorToastMessage("error while creating user");
             $('#overlay-loader').hide();
         }
     });
-	//ajaxRequest("rest/userprofile/password", "POST", "application/json", JSON.stringify(user),
-		//		  paintForgetPasswordResponse);	
+	
 	});
 
 function paintForgetPasswordResponse(data){
