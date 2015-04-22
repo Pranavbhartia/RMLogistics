@@ -445,7 +445,6 @@ public class User implements Serializable, UserDetails {
 
 		userModel.setUsername(userVO.getEmailId());
 		userModel.setEmailId(userVO.getEmailId());
-		userModel.setEmailEncryptionToken(userVO.getEmailEncryptionToken());
 		userModel.setCreatedDate(new Date(System.currentTimeMillis()));
 		// if (userVO.getEmailId() != null) {
 		// userModel.setUsername(userVO.getEmailId().split(":")[0]);
