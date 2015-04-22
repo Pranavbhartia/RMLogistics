@@ -141,6 +141,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
 
+	@Value("${profile.url}")
+	private String baseUrl;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
 
@@ -299,23 +301,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
 				        ErrorConstants.NULL_PASSWORD),
 				        ErrorConstants.NULL_PASSWORD);
-
 			}
-
 			return userProfileDao.changeUserPassword(updatePasswordVO);
 		}
-
 		catch (HibernateException hibernateException) {
-
 			throw new FatalException("Error in updating the password",
 			        hibernateException);
-
 		}
-
 		catch (DatabaseException databaseException)
-
 		{
-
 			throw new FatalException("Error in updating the password",
 			        databaseException);
 		}
@@ -1113,25 +1107,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	public void forgetPassword(User user) throws InvalidInputException,
+	public void resetPassword(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
 		LOG.info("function to generate random password and save");
-		CommonResponseVO response = new CommonResponseVO();
-		ErrorVO error = new ErrorVO();
 		String password = generateRandomPassword();
 		user.setPassword(password);
 		UserVO userVO = User.convertFromEntityToVO(user);
 		UpdatePasswordVO updatePasswordVO = new UpdatePasswordVO();
 		updatePasswordVO.setNewPassword(userVO.getPassword());
 		updatePasswordVO.setUserId(userVO.getId());
-
-		boolean isSuccess = userProfileDao.changeUserPassword(updatePasswordVO);
-		if (isSuccess) {
-
-			LOG.info("sending reset password to the user");
-			sendNewPasswordToUser(user);
-
-		}
+		LOG.info("sending reset password to the user");
+		sendResetLinkToUser(user);
 
 	}
 
@@ -1159,6 +1145,33 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
+		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	private void sendResetLinkToUser(User user) throws InvalidInputException,
+	        UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
+
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		substitutions.put("-username-", new String[] { user.getUsername() });
+		String uniqueURL = baseUrl + "reset.do?reference="
+		        + user.getEmailId();
+		substitutions.put("-password-", new String[] { uniqueURL });
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Your password has been reset");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
 		sendGridEmailService.sendMail(emailEntity);
 	}
 

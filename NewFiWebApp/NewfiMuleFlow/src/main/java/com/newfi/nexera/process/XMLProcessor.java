@@ -6,6 +6,7 @@ package com.newfi.nexera.process;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -269,29 +270,38 @@ public class XMLProcessor
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource( doc );
-        File appDir = new File( "apps" );
-        if ( !appDir.exists() ) {
-            try {
-                appDir.mkdir();
-                status = true;
-            } catch ( SecurityException se ) {
-                status = false;
-                LOG.error( "Cannot create directory " + se.getLocalizedMessage() );
-            }
-        }
-        if ( status ) {
-            file = new File( getRootDirectory() + File.separator + "apps" + File.separator + "file.xml" );
-            file.createNewFile();
-            StreamResult result = new StreamResult( file );
-            transformer.transform( source, result );
-        }
+
+        file = new File( getRootDirectory() + File.separator + randomStringOfLength() + ".xml" );
+        file.createNewFile();
+        StreamResult result = new StreamResult( file );
+        transformer.transform( source, result );
+
         return file;
     }
 
 
     private String getRootDirectory()
     {
-        return File.listRoots()[0].getAbsolutePath();
+        return System.getProperty( "java.io.tmpdir" );
+    }
+
+
+    public String randomStringOfLength()
+    {
+        Integer length = 30;
+        StringBuffer buffer = new StringBuffer();
+        while ( buffer.length() < length ) {
+            buffer.append( uuidString() );
+        }
+
+        // this part controls the length of the returned string
+        return buffer.substring( 0, length );
+    }
+
+
+    private String uuidString()
+    {
+        return UUID.randomUUID().toString();
     }
 
 
