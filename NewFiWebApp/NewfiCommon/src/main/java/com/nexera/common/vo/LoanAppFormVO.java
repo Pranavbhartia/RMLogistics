@@ -65,8 +65,9 @@ public class LoanAppFormVO implements Serializable {
 	private String ssDisabilityIncome;
 	private String monthlyPension;
 	private String retirementIncome;
-	
-	
+	private Boolean isCoborrowerPresent;
+	private Boolean ssnProvided;
+	private Boolean cbSsnProvided;
 	
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
@@ -127,6 +128,20 @@ public class LoanAppFormVO implements Serializable {
 		this.homeToSell = homeToSell;
 	}
 
+	
+
+	
+	
+	public Boolean getIsCoborrowerPresent() {
+		return isCoborrowerPresent;
+	}
+
+	public void setIsCoborrowerPresent(Boolean isCoborrowerPresent) {
+		this.isCoborrowerPresent = isCoborrowerPresent;
+	}
+
+	
+	
 	public String getMaritalStatus() {
 		return maritalStatus;
 	}
@@ -374,6 +389,22 @@ public class LoanAppFormVO implements Serializable {
 		this.refinancedetails = refinancedetails;
 	}
 
+	public Boolean getSsnProvided() {
+		return ssnProvided;
+	}
+
+	public void setSsnProvided(Boolean ssnProvided) {
+		this.ssnProvided = ssnProvided;
+	}
+
+	public Boolean getCbSsnProvided() {
+		return cbSsnProvided;
+	}
+
+	public void setCbSsnProvided(Boolean cbSsnProvided) {
+		this.cbSsnProvided = cbSsnProvided;
+	}
+
 	public PurchaseDetailsVO getPurchaseDetails() {
 		return purchaseDetails;
 	}
@@ -506,6 +537,10 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setSelfEmployedIncome(this.selfEmployedIncome);
 		loanAppForm.setIsssIncomeOrDisability(this.isssIncomeOrDisability);
 		
+		
+		loanAppForm.setSsnProvided(this.ssnProvided);
+		loanAppForm.setCbSsnProvided(this.cbSsnProvided);
+		loanAppForm.setIsCoborrowerPresent(this.isCoborrowerPresent);
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setMonthlyRent(this.getMonthlyRent());
@@ -1190,6 +1225,9 @@ public class LoanAppFormVO implements Serializable {
 		                .getCurrentHomeMortgageBalance());
 		customerSpouseDetail.setNewHomeBudgetFromsale(customerSpouseDetailVO
 		        .getNewHomeBudgetFromsale());
+		
+		
+		
 
 		return customerSpouseDetail;
 	}

@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,8 +32,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import com.nexera.common.commons.Utils;
 
+import com.nexera.common.commons.Utils;
 import com.google.gson.Gson;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
@@ -1094,20 +1095,37 @@ public class ApplicationFormRestService {
 	private JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO) {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
-			hashmap.put("loanPurpose", "2");
+			
+			
+			String loanPurpose ="";
+			
+			
+			if ("PUR".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())) {
+				loanPurpose = "0";
+			} else if ("REFCO".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())){
+				loanPurpose = "2";
+				
+			}else {
+				loanPurpose = "1";
+				
+			}
+			
+			hashmap.put("loanPurpose", loanPurpose);
 			hashmap.put("loanPurchasePrice", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
+			
 			
 			
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getDescription())) {
-				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails()
-				        .getLoanAmount()));
+				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
 			} else {
 
-				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getRefinancedetails()
-				        .getCurrentMortgageBalance()));
+				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getPropertyTypeMaster().getHomeWorthToday()));
 			}
 
+			
+			
+			
 			
 			hashmap.put("applicantId", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
@@ -1117,8 +1135,8 @@ public class ApplicationFormRestService {
 			        .getLastName());
 			hashmap.put("lastName", loanAppFormVO.getLoan().getUser()
 			        .getLastName());
-			hashmap.put("dateOfBirth", new Date(loanAppFormVO.getUser()
-			        .getCustomerDetail().getDateOfBirth()).toString());
+			hashmap.put("dateOfBirth", new SimpleDateFormat("yyyy-MM-dd").format(new Date(loanAppFormVO.getUser()
+			        .getCustomerDetail().getDateOfBirth())));
 			hashmap.put("propertyState", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressState());
 			hashmap.put("alimonyName", "NONE");

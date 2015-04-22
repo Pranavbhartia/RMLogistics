@@ -1073,6 +1073,7 @@ function getAppDetailsForUser(userId, callback) {
 					var appFormDetails = response.resultObject;
 					appUserDetails=JSON.parse(appFormDetails);
 					newfi.appUserDetails = appFormDetails;
+					
 					if (callback) {
 						callback(JSON.parse(appFormDetails));
 					}

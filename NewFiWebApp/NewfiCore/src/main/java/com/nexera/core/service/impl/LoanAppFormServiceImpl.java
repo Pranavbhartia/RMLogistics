@@ -668,6 +668,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO.setIsEmployed(loanAppForm.getIsEmployed());
 		loanAppFormVO.setEmployedIncomePreTax(loanAppForm
 		        .getEmployedIncomePreTax());
+		loanAppFormVO.setSsnProvided(loanAppForm.getSsnProvided());
+		loanAppFormVO.setCbSsnProvided(loanAppForm.getCbSsnProvided());
 		loanAppFormVO.setEmployedAt(loanAppForm.getEmployedAt());
 		loanAppFormVO.setEmployedSince(loanAppForm.getEmployedSince());
 		loanAppFormVO.setHoaDues(loanAppForm.getHoaDues());
@@ -691,6 +693,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO
 		        .setSsDisabilityIncome(loanAppForm.getSsDisabilityIncome());
 		loanAppFormVO.setIsSpouseOnLoan(loanAppForm.getIsSpouseOnLoan());
+		loanAppFormVO.setIsCoborrowerPresent(loanAppForm.getIsCoborrowerPresent());	
 		loanAppFormVO.setSpouseName(loanAppForm.getSpouseName());
 		loanAppFormVO.setPaySecondMortgage(loanAppForm.getPaySecondMortgage());
 		loanAppFormVO.setLoanAppFormCompletionStatus(loanAppForm

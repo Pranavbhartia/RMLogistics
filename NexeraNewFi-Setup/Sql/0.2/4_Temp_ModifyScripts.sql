@@ -191,5 +191,10 @@ ALTER TABLE newfi_schema.customerspousedetails MODIFY  COLUMN  monthly_pension  
 alter table newfi_schema.customerspousedetails add column self_employed_no_year int (10),add column social_security_income bigint(20),add column child_support_alimony bigint (20), add column retirement_income bigint (20),add column disability_income bigint (20)
 
 
+# Added bY shashank 
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `iscoborrower_present` TINYINT(4) NULL AFTER `retirement_income`;
 
-
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `ssn_provided` TINYINT(4) NULL AFTER `iscoborrower_present`,
+ADD COLUMN `cb_ssn_provided` TINYINT(4) NULL;
