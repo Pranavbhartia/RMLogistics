@@ -1111,19 +1111,26 @@ public class ApplicationFormRestService {
 			
 			if ("PUR".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())) {
 				loanPurpose = "0";
+				hashmap.put("loanPurchasePrice", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPurchaseDetails().getHousePrice()));
 			} else if ("REFCO".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())){
 				loanPurpose = "2";
-				
+				hashmap.put("loanPurchasePrice", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPropertyTypeMaster().getCurrentHomePrice()));
 			}else {
 				loanPurpose = "1";
-				
+				hashmap.put("loanPurchasePrice", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPropertyTypeMaster().getCurrentHomePrice()));
 			}
 			
 			hashmap.put("loanPurpose", loanPurpose);
-			hashmap.put("loanPurchasePrice", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
 			
 			
 			
+
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getDescription())) {
 				hashmap.put("loanApprovedValue", Utils.unformatCurrencyField(loanAppFormVO.getPurchaseDetails().getHousePrice()));
