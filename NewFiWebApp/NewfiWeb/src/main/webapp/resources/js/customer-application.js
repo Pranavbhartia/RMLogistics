@@ -4684,13 +4684,21 @@ function mapDbDataForFrontend(key){
 //alert('isside mapDbDataForFrontend');
     switch(key){
         case "state":
-            return appUserDetails.user.customerDetail.addressState;
+            if(appUserDetails.user&&appUserDetails.user.customerDetail)
+                return appUserDetails.user.customerDetail.addressState;
+            break;
         case "city":
-            return appUserDetails.user.customerDetail.addressCity;
+            if(appUserDetails.user&&appUserDetails.user.customerDetail)
+                return appUserDetails.user.customerDetail.addressCity;
+            break;
         case "zipCode":
-            return appUserDetails.user.customerDetail.addressZipCode;
+            if(appUserDetails.user&&appUserDetails.user.customerDetail)
+                return appUserDetails.user.customerDetail.addressZipCode;
+            break;
         case "startLivingTime":
-            return appUserDetails.user.customerDetail.livingSince;
+            if(appUserDetails.user&&appUserDetails.user.customerDetail)
+                return appUserDetails.user.customerDetail.livingSince;
+            break;
         case "rentPerMonth":
             return appUserDetails.monthlyRent;
         case "isCoBorrower":
@@ -4698,36 +4706,62 @@ function mapDbDataForFrontend(key){
         case "isSpouseCoBorrower":
             return appUserDetails.isSpouseOnLoan;
         case "coBorrowerName":
-            return appUserDetails.customerSpouseDetail.spouseName;
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.spouseName;
+            break;
         case "isCityOrZipKnown":
-            if(appUserDetails.purchaseDetails.buyhomeZipPri&&appUserDetails.purchaseDetails.buyhomeZipPri!="")
+            if(appUserDetails.purchaseDetails&&appUserDetails.purchaseDetails.buyhomeZipPri&&appUserDetails.purchaseDetails.buyhomeZipPri!="")
                 return true;
             else
                 return false;
         case "buyhomeZipPri":
-            return appUserDetails.purchaseDetails.buyhomeZipPri;
+            if(appUserDetails.purchaseDetails)
+                return appUserDetails.purchaseDetails.buyhomeZipPri;
+            break;
         case "isOutstandingJudgments":
-            return appUserDetails.governmentquestion.outstandingJudgments;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.outstandingJudgments;
+            break;
         case "isBankrupt":
-            return appUserDetails.governmentquestion.bankrupt;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.bankrupt;
+            break;
         case "isPropertyForeclosed":
-            return appUserDetails.governmentquestion.propertyForeclosed;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.propertyForeclosed;
+            break;
         case "isLawsuit":
-            return appUserDetails.governmentquestion.lawsuit;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.lawsuit;
+            break;
         case "isObligatedLoan":
-            return appUserDetails.governmentquestion.obligatedLoan;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.obligatedLoan;
+            break;
         case "isFederalDebt":
-            return appUserDetails.governmentquestion.federalDebt;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.federalDebt;
+            break;
         case "isObligatedToPayAlimony":
-            return appUserDetails.governmentquestion.obligatedToPayAlimony;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.obligatedToPayAlimony;
+            break;
         case "isEndorser":
-            return appUserDetails.governmentquestion.endorser;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.endorser;
+            break;
         case "isUSCitizen":
-            return appUserDetails.governmentquestion.uscitizen;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.uscitizen;
+            break;
         case "isOccupyPrimaryResidence":
-            return appUserDetails.governmentquestion.occupyPrimaryResidence;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.occupyPrimaryResidence;
+            break;
         case "isOwnershipInterestInProperty":
-            return appUserDetails.governmentquestion.ownershipInterestInProperty;
+            if(appUserDetails.governmentquestion)
+                return appUserDetails.governmentquestion.ownershipInterestInProperty;
+            break;
         case  "propertyTaxesPaid":
             if(typeof(newfiObject)!=='undefined'){
                 var val=appUserDetails.propertyTypeMaster.propertyTaxesPaid;
@@ -4739,7 +4773,8 @@ function mapDbDataForFrontend(key){
         case "annualHomeownersInsurance":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+                if(appUserDetails.propertyTypeMaster)
+                    val=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
                 return val
             }else{
                 return refinanceTeaserRate.annualHomeownersInsurance;
@@ -4748,7 +4783,8 @@ function mapDbDataForFrontend(key){
         case "propertyType":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.propertyTypeMaster.propertyTypeCd;
+                if(appUserDetails.propertyTypeMaster)
+                    val=appUserDetails.propertyTypeMaster.propertyTypeCd;
                 return val
             }else{
                 if(refinanceTeaserRate.propertyType)
@@ -4760,7 +4796,8 @@ function mapDbDataForFrontend(key){
         case "residenceType":
             var val;
             if(typeof(newfiObject)!=='undefined'){
-                val=appUserDetails.propertyTypeMaster.propertyTypeCd;
+                if(appUserDetails.propertyTypeMaster)
+                    val=appUserDetails.propertyTypeMaster.propertyTypeCd;
                 return val
             }else{
                 if(refinanceTeaserRate.residenceType)
@@ -4777,9 +4814,7 @@ function mapDbDataForFrontend(key){
           case "propertyTitleStatus":
             return appUserDetails.governmentquestion.propertyTitleStatus;*/
             
-            
-            
-            
+        return undefined; 
     }
 }
 
