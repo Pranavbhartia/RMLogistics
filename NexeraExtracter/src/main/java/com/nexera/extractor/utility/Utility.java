@@ -21,6 +21,7 @@ import au.com.bytecode.opencsv.bean.CsvToBean;
 
 import com.nexera.extractor.entity.FileProductPointRate;
 import com.nexera.extractor.entity.ProductPointRate;
+import com.nexera.extractor.entity.RestResponse;
 import com.nexera.extractor.entity.UIEntity;
 import com.nexera.extractor.entity.YearBasedRate;
 
@@ -464,30 +465,43 @@ public class Utility {
 
 	}
 
-	public Map<String, List<UIEntity>> buildUIMap(
-	        List<FileProductPointRate> list, long fileTimeStamp) {
+	public RestResponse buildUIMap(List<FileProductPointRate> list,
+	        long fileTimeStamp) {
 
 		System.out.println("Last modified time: " + fileTimeStamp);
+		RestResponse response = new RestResponse();
 		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
 		if (fromCache != null) {
 			System.out.println("Returning from cache instance");
-			return fromCache;
+			response.setData(fromCache);
+			response.setTimestamp(fileTimeStamp);
+			return response;
 		} else {
 			Map<String, List<UIEntity>> lastData = new HashMap<String, List<UIEntity>>();
-			if (cache.get(0) != null) {
-				// Then we have the past run data. send this as a response if
-				// any of the files have error
-				lastData = cache.get(0);
-				System.out.println("Cache has data.");
+			if (cache.entrySet() != null) {
+				try {
+					Map.Entry<Long, Map<String, List<UIEntity>>> entry = cache
+					        .entrySet().iterator().next();
+					if (entry != null) {
+						lastData = entry.getValue();
+						System.out.println("Cache has data");
+						long time = entry.getKey();
+						response.setTimestamp(time);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			}
 			Map<String, List<UIEntity>> data = populateMap(list);
 			System.out.println("New list size: " + data.size());
 			System.out.println("lastData size: " + lastData.size());
-			if (data.size() != lastData.size() && lastData.size() > 0) {
+			if (data.size() < lastData.size() && lastData.size() > 0) {
 				// This is the case if there is any issue in extraction logic
 				System.out
 				        .println("Size is different, hence returning cached data");
-				return lastData;
+				response.setData(lastData);
+				return response;
 			}
 			System.out.println("Updating cache since there is a new data set");
 			cache = new HashMap<Long, Map<String, List<UIEntity>>>();
@@ -498,7 +512,9 @@ public class Utility {
 				System.out.println("Too many elements in cache. Removing.");
 				clearCache();
 			}
-			return data;
+			response.setTimestamp(fileTimeStamp);
+			response.setData(data);
+			return response;
 		}
 
 	}
