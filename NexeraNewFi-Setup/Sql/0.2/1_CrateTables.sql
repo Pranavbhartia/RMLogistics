@@ -355,13 +355,18 @@ CREATE TABLE `customerspousedetails` (
   `transunion_score` int(5) DEFAULT NULL,
   `experian_score` int(5) DEFAULT NULL,
   `is_pension_or_retirement` tinyint(4) DEFAULT NULL,
-  `monthly_pension` varchar(45) DEFAULT NULL,
+  `monthly_pension` bigint(20) DEFAULT NULL,
   `spouse_sec_phoneNumber` varchar(255) DEFAULT NULL,
-  `self_employed_income` varchar(255) DEFAULT NULL,
+  `self_employed_income` bigint(20) DEFAULT NULL,
   `spouse_sec_phone_number` varchar(255) DEFAULT NULL,
   `current_home_price` varchar(45) DEFAULT NULL,
   `current_home_mortgage_balance` varchar(45) DEFAULT NULL,
   `newhome_budget_fromsale` varchar(45) DEFAULT NULL,
+  `self_employed_no_year` int(10) DEFAULT NULL,
+  `social_security_income` bigint(20) DEFAULT NULL,
+  `child_support_alimony` bigint(20) DEFAULT NULL,
+  `retirement_income` bigint(20) DEFAULT NULL,
+  `disability_income` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -388,6 +393,7 @@ CREATE TABLE `customerspouseemploymentincome` (
   `employed_at` varchar(45) DEFAULT NULL,
   `employed_since` varchar(46) DEFAULT NULL,
   `loanapp_formid` int(11) DEFAULT NULL,
+  `job_title` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_aff8110592e346c0975c32955a7` (`loanapp_formid`),
   CONSTRAINT `FK_aff8110592e346c0975c32955a7` FOREIGN KEY (`loanapp_formid`) REFERENCES `loanappform` (`id`)
@@ -861,6 +867,14 @@ CREATE TABLE `loanappform` (
   `purchasedetails` int(11) DEFAULT NULL,
   `spousegov_quest` int(11) DEFAULT NULL,
   `customerspousedetails` int(11) DEFAULT NULL,
+  `monthly_income` bigint(20) DEFAULT NULL,
+  `self_employed_no_year` int(10) DEFAULT NULL,
+  `social_security_income` bigint(20) DEFAULT NULL,
+  `child_support_alimony` bigint(20) DEFAULT NULL,
+  `retirement_income` bigint(20) DEFAULT NULL,
+  `iscoborrower_present` tinyint(4) DEFAULT NULL,
+  `ssn_provided` tinyint(4) DEFAULT NULL,
+  `cb_ssn_provided` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_loanAppFormLinkedToUser_idx` (`user`),
   KEY `fk_loanAppFormLinkedToPropertyType_idx` (`property_type`),
@@ -2184,4 +2198,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-21 19:30:54
+-- Dump completed on 2015-04-22 15:57:09

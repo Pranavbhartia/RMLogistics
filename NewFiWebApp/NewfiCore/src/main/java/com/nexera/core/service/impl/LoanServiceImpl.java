@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +67,8 @@ import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
+import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.workflow.enums.WorkItemStatus;
 
@@ -98,8 +101,20 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private TeamAssignmentHelper assignmentHelper;
+
+	@Autowired
+	private NeedsListService needListService;
+
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
+
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+	@Value("${profile.url}")
+	private String systemBaseUrl;
+
+	@Value("${lqb.defaulturl}")
+	private String lqbDefaultUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
@@ -1620,7 +1635,7 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateLoan(loanId, rateLocked);
 
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateLoan(Loan loan) {
@@ -1746,4 +1761,40 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateLoanProgress(loanId, progressValue);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public LoanVO wrapperCallForDashboard(Integer loanID) {
+		LoanVO loanVO = this.getLoanByID(loanID);
+		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
+		if (loanVO.getLoanType().getLoanTypeCd()
+		        .equals(LoanTypeMasterEnum.PUR.toString())) {
+			UploadedFilesList file = needListService
+			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
+			loanVO.getLoanType().setUploadedFiles(
+			        uploadedFilesListService.buildUpdateFileVo(file));
+		}
+
+		if (loanVO != null) {
+			loanVO.setLoanTeam(this.retreiveLoanTeam(loanVO));
+			loanVO.setExtendedLoanTeam(this.findExtendedLoanTeam(loanVO));
+			loanVO.setUserLoanStatus(this.getUserLoanStaus(loanVO));
+			String lqbUrl = userProfileService.getLQBUrl(utils
+			        .getLoggedInUser().getId(), loanID);
+			if (lqbUrl.equals(lqbDefaultUrl)) {
+				loanVO.setLqbInformationAvailable(Boolean.FALSE);
+			} else {
+				loanVO.setLqbInformationAvailable(Boolean.TRUE);
+			}
+
+			String docId = needListService.checkCreditReport(loanID);
+			if (docId != null && !docId.isEmpty()) {
+				loanVO.setCreditReportUrl(systemBaseUrl
+				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId);
+			} else {
+				loanVO.setCreditReportUrl("");
+			}
+
+		}
+		return loanVO;
+	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
-import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
@@ -71,12 +67,6 @@ public class LoanRestService {
 
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
-
-	@Value("${profile.url}")
-	private String systemBaseUrl;
-
-	@Value("${lqb.defaulturl}")
-	private String lqbDefaultUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanRestService.class);
@@ -130,35 +120,7 @@ public class LoanRestService {
 	public @ResponseBody CommonResponseVO getLoanByID(
 	        @PathVariable Integer loanID) {
 
-		LoanVO loanVO = loanService.getLoanByID(loanID);
-		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
-		if (loanVO.getLoanType().getLoanTypeCd()
-		        .equals(LoanTypeMasterEnum.PUR.toString())) {
-			UploadedFilesList file = needsListService
-			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
-			loanVO.getLoanType().setUploadedFiles(
-			        uploadedFilesListService.buildUpdateFileVo(file));
-		}
-
-		if (loanVO != null) {
-			loanVO.setLoanTeam(loanService.retreiveLoanTeam(loanVO));
-			loanVO.setExtendedLoanTeam(loanService.findExtendedLoanTeam(loanVO));
-			loanVO.setUserLoanStatus(loanService.getUserLoanStaus(loanVO));
-			String lqbUrl = userProfileService.getLQBUrl(utils
-			        .getLoggedInUser().getId(), loanID);
-			if (lqbUrl.equals(lqbDefaultUrl)) {
-				loanVO.setLqbInformationAvailable(Boolean.FALSE);
-			}
-
-			String docId = needsListService.checkCreditReport(loanID);
-			if (docId != null && !docId.isEmpty()) {
-				loanVO.setCreditReportUrl(systemBaseUrl
-				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId);
-			} else {
-				loanVO.setCreditReportUrl("");
-			}
-
-		}
+		LoanVO loanVO = loanService.wrapperCallForDashboard(loanID);
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
 		return responseVO;
