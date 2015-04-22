@@ -1862,6 +1862,7 @@ CREATE TABLE `user` (
   `user_role` int(11) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
   `photo_image_url` varchar(500) DEFAULT NULL,
+`email_encryption_token` varchar(200) DEFAULT NULL,
   `customer_detail` int(11) DEFAULT NULL,
   `realtor_detail` int(11) DEFAULT NULL,
   `internal_user_detail` int(11) DEFAULT NULL,

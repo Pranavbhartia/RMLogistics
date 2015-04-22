@@ -43,6 +43,7 @@ import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -1675,8 +1676,7 @@ public class LoanServiceImpl implements LoanService {
 		} else {
 			loanStatus.setCreditInformation("-");
 		}
-		// TODO: Currently hard coding
-		loanStatus.setCreditDecission("N.A");
+
 		if (loan.getLockedRate() != null) {
 			loanStatus.setLockRate(loan.getLockedRate().toString());
 		} else {
@@ -1764,7 +1764,8 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional(readOnly = true)
 	public LoanVO wrapperCallForDashboard(Integer loanID) {
-		LoanVO loanVO = this.getLoanByID(loanID);
+		Loan loan = this.fetchLoanById(loanID);
+		LoanVO loanVO = Loan.convertFromEntityToVO(loan);
 		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
 		if (loanVO.getLoanType().getLoanTypeCd()
 		        .equals(LoanTypeMasterEnum.PUR.toString())) {
@@ -1777,13 +1778,21 @@ public class LoanServiceImpl implements LoanService {
 		if (loanVO != null) {
 			loanVO.setLoanTeam(this.retreiveLoanTeam(loanVO));
 			loanVO.setExtendedLoanTeam(this.findExtendedLoanTeam(loanVO));
-			loanVO.setUserLoanStatus(this.getUserLoanStaus(loanVO));
+			UserLoanStatus loanStatus = this.getUserLoanStaus(loanVO);
+
+			LoanMilestone loanMilestone = findLoanMileStoneByLoan(loan,
+			        Milestones.LM_DECISION.getMilestoneKey());
+			if (loanMilestone != null) {
+				loanStatus.setCreditDecission(loanMilestone.getComments());
+			}
+			loanVO.setUserLoanStatus(loanStatus);
 			String lqbUrl = userProfileService.getLQBUrl(utils
 			        .getLoggedInUser().getId(), loanID);
-			if (lqbUrl.equals(lqbDefaultUrl)) {
+			if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
 				loanVO.setLqbInformationAvailable(Boolean.FALSE);
 			} else {
 				loanVO.setLqbInformationAvailable(Boolean.TRUE);
+				loanVO.setLqbUrl(lqbUrl);
 			}
 
 			String docId = needListService.checkCreditReport(loanID);

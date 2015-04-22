@@ -1220,7 +1220,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
 		}
-		return url;
+		return url == null ? lqbDefaultUrl : url;
 
 	}
 
