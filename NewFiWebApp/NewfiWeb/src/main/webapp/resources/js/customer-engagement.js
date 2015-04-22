@@ -1381,7 +1381,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 $(this).parent().find('.yr-grid-item').hide();
                 $(this).parent().find('.yr-grid-item-selected').show();
                 $('#rate-slider-cont').find('.rt-slider').remove();
-                var rateSlider = getRatSliderCEP(event.data.ratesArray,inputCustomerDetails);
+                var rateSlider = getRatSliderCEP(event.data.ratesArray,inputCustomerDetails,event.data.year);
                 $('#rate-slider-cont').append(rateSlider);
                 index = parseInt(event.data.ratesArray.length / 2);
                
@@ -1395,7 +1395,9 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 $('#loanprogramId').html(event.data.year +" Year Fixed");
                 
                 $('#principalIntId').html(showValue(event.data.ratesArray[index].payment));
-                 updateOnSlide(event.data.ratesArray[index]);
+                var ratVo=event.data.ratesArray[index];
+                ratVo.yearData=event.data.year
+                updateOnSlide(ratVo);
                 
                 teaseCalculation(inputCustomerDetails);
             }
@@ -1435,12 +1437,12 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
     index = parseInt(rateArray.length / 2);
-    var silderCont = getRatSliderCEP(rateArray,inputCustomerDetails);
+    var silderCont = getRatSliderCEP(rateArray,inputCustomerDetails,yearValues[yearValues.length-1].value);
     
     return wrapper.append(headerTxt).append(silderCont);
 }
 
-function getRatSliderCEP(gridArray,inputCustomerDetails) {
+function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
     
 	
 	var rateArray = [];
@@ -1467,7 +1469,9 @@ function getRatSliderCEP(gridArray,inputCustomerDetails) {
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
             teaseCalculation(inputCustomerDetails);
-            updateOnSlide(gridArray[ui.value]);
+            var ratVo=gridArray[ui.value];
+            ratVo.yearData=yearValue
+            updateOnSlide(ratVo);
         }
     });
     container.append(tsIcon);
