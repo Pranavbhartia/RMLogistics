@@ -270,11 +270,11 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		appUserDetails.monthlyRent = monthlyRent;
     		//appUserDetails.isSellYourhome = isSellYourhome;
     		
-    		user.customerDetail = customerDetail;
+    		//user.customerDetail = customerDetail;
     		
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		
-    		appUserDetails.user = user;
+    		appUserDetails.user.customerDetail = customerDetail;
     		
     		
     		if(isSellYourhome =='Yes')

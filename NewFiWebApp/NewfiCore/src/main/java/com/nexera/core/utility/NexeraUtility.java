@@ -779,7 +779,7 @@ public class NexeraUtility {
 
 	}
 
-	public static String encryptEmailAddress(String emailId) {
+	public String encryptEmailAddress(String emailId) {
 		MessageDigest messageDigest = null;
 		StringBuffer sb = new StringBuffer();
 		try {

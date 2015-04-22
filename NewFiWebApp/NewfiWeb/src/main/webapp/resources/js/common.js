@@ -47,7 +47,11 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
             adjustAgentDashboardOnResize();
 		},
 		error : function(){
-			
+			if(isPagination){
+				removePaginationScrollIcon(div);
+			}else{
+				hideOverlay();
+			}
 		}
 	});
 }
@@ -566,7 +570,13 @@ function updateOnSlide(valueSet){
 }
 
 function getLQBObj(yearValues){
-    var rateVO = yearValues[yearValues.length-1].rateVO;
-    var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
-    return rateVO[index];
+	if(!appUserDetails.loan||!appUserDetails.loan.isRateLocked){
+	    var rateVO = yearValues[yearValues.length-1].rateVO;
+	    var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
+	    var ob=rateVO[index];
+	    ob.yearData=yearValues[yearValues.length-1].value;
+	    return rateVO[index];
+	}else{
+		return JSON.parse(appUserDetails.loan.lockedRateData);
+	}
 }
