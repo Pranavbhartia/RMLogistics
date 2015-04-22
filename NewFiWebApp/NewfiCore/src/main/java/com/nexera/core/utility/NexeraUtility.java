@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -776,4 +778,29 @@ public class NexeraUtility {
 		}
 
 	}
+
+	public static String encryptEmailAddress(String emailId) {
+		MessageDigest messageDigest = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			messageDigest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+
+			LOGGER.error("Unable to fetch the encryption algorithm ");
+		}
+		if (messageDigest != null) {
+			messageDigest.reset();
+			messageDigest.update(emailId.getBytes());
+			byte[] byteData = messageDigest.digest();
+			// convert the byte to hex format method 1
+
+			for (int i = 0; i < byteData.length; i++) {
+				sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16)
+				        .substring(1));
+			}
+		}
+		return sb.toString();
+
+	}
+
 }

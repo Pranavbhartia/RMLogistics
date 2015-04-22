@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class UserVO implements Serializable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
@@ -16,6 +15,7 @@ public class UserVO implements Serializable {
 	private String userProfileBaseUrl;
 	private Boolean status;
 	private String emailId;
+	private String emailEncryptionToken;
 	private String firstName;
 	private String lastName;
 	private String displayName;
@@ -248,11 +248,19 @@ public class UserVO implements Serializable {
 	}
 
 	public String getLoanManagerEmail() {
-	    return loanManagerEmail;
-    }
+		return loanManagerEmail;
+	}
 
 	public void setLoanManagerEmail(String loanManagerEmail) {
-	    this.loanManagerEmail = loanManagerEmail;
-    }
+		this.loanManagerEmail = loanManagerEmail;
+	}
+
+	public String getEmailEncryptionToken() {
+		return emailEncryptionToken;
+	}
+
+	public void setEmailEncryptionToken(String emailEncryptionToken) {
+		this.emailEncryptionToken = emailEncryptionToken;
+	}
 
 }
