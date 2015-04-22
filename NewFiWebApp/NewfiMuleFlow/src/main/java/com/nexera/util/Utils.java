@@ -81,10 +81,12 @@ public class Utils
             Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
             while ( entries.hasNext() ) {
                 Map.Entry<String, String> entry = entries.next();
-                System.out.println( "Key = " + entry.getKey() + ", Value = " + entry.getValue() );
-
                 if ( fileData.contains( entry.getKey() ) ) {
-                    fileData = fileData.replace( entry.getKey(), entry.getValue() );
+                    if ( entry.getValue() == null ) {
+
+                    } else {
+                        fileData = fileData.replace( entry.getKey(), entry.getValue() );
+                    }
                 }
             }
         }

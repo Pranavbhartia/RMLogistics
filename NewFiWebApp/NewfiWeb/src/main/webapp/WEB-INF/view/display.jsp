@@ -133,7 +133,7 @@
 						</div>
 						<div class="loan-summary-wrapper">
 							<div class="loan-summary-header clearfix">
-								<div class="loan-summary-header-col1 float-left uppercase">MY LOAN SUMMARY</div>
+								<div class="loan-summary-header-col1 float-left capitalize">My Loan Summary</div>
 								<div class="loan-summary-header-col2 float-left">Rates as of 1/16/2015 8:13:52 AM</div>
 							</div>
 							<div class="loan-summary-container clearfix">

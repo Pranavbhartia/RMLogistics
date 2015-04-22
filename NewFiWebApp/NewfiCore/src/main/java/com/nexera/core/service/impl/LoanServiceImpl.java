@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -66,6 +68,8 @@ import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
+import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.workflow.enums.WorkItemStatus;
 
@@ -98,8 +102,20 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private TeamAssignmentHelper assignmentHelper;
+
+	@Autowired
+	private NeedsListService needListService;
+
+	@Autowired
+	private UploadedFilesListService uploadedFilesListService;
+
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+	@Value("${profile.url}")
+	private String systemBaseUrl;
+
+	@Value("${lqb.defaulturl}")
+	private String lqbDefaultUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanServiceImpl.class);
@@ -1620,7 +1636,7 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateLoan(loanId, rateLocked, rateVo);
 
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateLoan(Loan loan) {
@@ -1660,8 +1676,7 @@ public class LoanServiceImpl implements LoanService {
 		} else {
 			loanStatus.setCreditInformation("-");
 		}
-		// TODO: Currently hard coding
-		loanStatus.setCreditDecission("N.A");
+
 		if (loan.getLockedRate() != null) {
 			loanStatus.setLockRate(loan.getLockedRate().toString());
 		} else {
@@ -1746,4 +1761,49 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateLoanProgress(loanId, progressValue);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public LoanVO wrapperCallForDashboard(Integer loanID) {
+		Loan loan = this.fetchLoanById(loanID);
+		LoanVO loanVO = Loan.convertFromEntityToVO(loan);
+		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
+		if (loanVO.getLoanType().getLoanTypeCd()
+		        .equals(LoanTypeMasterEnum.PUR.toString())) {
+			UploadedFilesList file = needListService
+			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
+			loanVO.getLoanType().setUploadedFiles(
+			        uploadedFilesListService.buildUpdateFileVo(file));
+		}
+
+		if (loanVO != null) {
+			loanVO.setLoanTeam(this.retreiveLoanTeam(loanVO));
+			loanVO.setExtendedLoanTeam(this.findExtendedLoanTeam(loanVO));
+			UserLoanStatus loanStatus = this.getUserLoanStaus(loanVO);
+
+			LoanMilestone loanMilestone = findLoanMileStoneByLoan(loan,
+			        Milestones.LM_DECISION.getMilestoneKey());
+			if (loanMilestone != null) {
+				loanStatus.setCreditDecission(loanMilestone.getComments());
+			}
+			loanVO.setUserLoanStatus(loanStatus);
+			String lqbUrl = userProfileService.getLQBUrl(utils
+			        .getLoggedInUser().getId(), loanID);
+			if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
+				loanVO.setLqbInformationAvailable(Boolean.FALSE);
+			} else {
+				loanVO.setLqbInformationAvailable(Boolean.TRUE);
+				loanVO.setLqbUrl(lqbUrl);
+			}
+
+			String docId = needListService.checkCreditReport(loanID);
+			if (docId != null && !docId.isEmpty()) {
+				loanVO.setCreditReportUrl(systemBaseUrl
+				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId);
+			} else {
+				loanVO.setCreditReportUrl("");
+			}
+
+		}
+		return loanVO;
+	}
 }

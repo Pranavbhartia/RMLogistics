@@ -4,7 +4,6 @@
 package com.newfi.nexera.rest;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
 
@@ -80,7 +79,7 @@ public class RestInterceptor implements Callable
     }
 
 
-    public Object[] getAllParameters( RestParameters restParameters ) throws IOException
+    public Object[] getAllParameters( RestParameters restParameters ) throws Exception
     {
         File file = null;
         try {
@@ -165,8 +164,10 @@ public class RestInterceptor implements Callable
                         if ( file != null ) {
                             LOG.info( "File got created succesfully " + file.getName() );
                             LOG.info( "File got created succesfully " + file.getAbsolutePath() );
+                        } else {
+                            LOG.error( "Unable to create file" );
+                            throw new Exception( "Unable to create file " );
                         }
-                        LOG.error( "Unable to create file" );
 
                     } catch ( SAXException e ) {
                         LOG.error( "Exception Caught " + e.getMessage() );
@@ -177,8 +178,9 @@ public class RestInterceptor implements Callable
                     }
                 }
                 String saveDefault = Utils.readFileAsStringFromPath( file.getAbsolutePath() );
-                if ( restParameters.getLoanVO().getsDataContentMap() != null )
+                if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
                     saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
+                }
                 inputParams[2] = saveDefault;
                 inputParams[3] = restParameters.getLoanVO().getFormat();
 

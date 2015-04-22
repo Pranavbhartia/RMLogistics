@@ -1,7 +1,6 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -670,7 +669,7 @@ public class LoanAppFormVO implements Serializable {
 		        LoanProgressStatusMasterEnum.NEW_LOAN));
 		loan.setCustomerWorkflow(loanVO.getCustomerWorkflowID());
 		loan.setLoanManagerWorkflow(loanVO.getLoanManagerWorkflowID());
-
+		loan.setLockedRateData(loanVO.getLockedRateData());
 		loan.setUser(User.convertFromVOToEntity(this.getUser()));
 
 		return loan;

@@ -159,4 +159,8 @@ public interface LoanService {
 	        LoanProgressStatusMaster progressValue);
 	
 	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo);
+
+
+	public LoanVO wrapperCallForDashboard(Integer loanID);
+
 }

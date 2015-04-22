@@ -68,7 +68,7 @@ public class Loan implements Serializable {
 	private BigDecimal lockedRate;
 	private BigDecimal appFee;
 	private Long purchaseDocumentExpiryDate;
-	
+	private String lockedRateData;
 	
 	
 	
@@ -479,6 +479,7 @@ public class Loan implements Serializable {
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setAppFee(loan.getAppFee());
 		loanVo.setName(loan.getName());
+		loanVo.setLockedRateData(loan.getLockedRateData());
 		loanVo.setPurchaseDocumentExpiryDate(loan.getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
 			loanVo.setStatus(loan.getLoanProgressStatus()
@@ -551,6 +552,15 @@ public class Loan implements Serializable {
 
 	public void setPurchaseDocumentExpiryDate(Long purchaseDocumentExpiryDate) {
 	    this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
+    }
+
+	@Column(name = "locked_rate_data")
+	public String getLockedRateData() {
+	    return lockedRateData;
+    }
+
+	public void setLockedRateData(String lockedRateData) {
+	    this.lockedRateData = lockedRateData;
     }
 
 }
