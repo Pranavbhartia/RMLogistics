@@ -5,6 +5,7 @@ package com.newfi.nexera.process;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,12 +36,12 @@ public class XMLProcessor
     private static final Logger LOG = Logger.getLogger( XMLProcessor.class );
 
 
-    public static File parseXML( String filePath, String condition ) throws SAXException, IOException,
+    public File parseXML( InputStream inputStream, String condition ) throws SAXException, IOException,
         ParserConfigurationException, TransformerException
     {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document doc = docBuilder.parse( filePath );
+        Document doc = docBuilder.parse( inputStream );
         Node loan = doc.getElementsByTagName( "loan" ).item( 0 );
         if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_NO_CO_BORROWER_WITH_SSN ) ) {
             LOG.debug( "DO Nothing ,default case  " );
@@ -208,7 +209,7 @@ public class XMLProcessor
             Element applicantZip = createNewElement( doc, "field", "aBZip", "coborrower_applicantZipCode" );
             newApplicant.appendChild( applicantZip );
             loan.appendChild( newApplicant );
-        }  else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH ) ) {
+        } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH ) ) {
             NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
             Node newApplicant = newApplicantList.item( 0 );
             Element firstName = createNewElement( doc, "field", "aCFirstNm", "coborrower_firstName" );
@@ -250,7 +251,7 @@ public class XMLProcessor
     }
 
 
-    private static Element createNewElement( Document doc, String fieldName, String attributeName, String textContent )
+    private Element createNewElement( Document doc, String fieldName, String attributeName, String textContent )
     {
         Element element = doc.createElement( fieldName );
         element.setAttribute( "id", attributeName );
@@ -259,12 +260,12 @@ public class XMLProcessor
     }
 
 
-    private static File writeContentToXMLFile( Document doc ) throws IOException, TransformerException
+    private File writeContentToXMLFile( Document doc ) throws IOException, TransformerException
     {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource( doc );
-        File file = new File( "src/main/resources/file.xml" );
+        File file = new File( "file.xml" );
         file.createNewFile();
         StreamResult result = new StreamResult( file );
         transformer.transform( source, result );
@@ -272,22 +273,4 @@ public class XMLProcessor
     }
 
 
-    public static void main( String[] args )
-    {
-        try {
-            parseXML( "src/main/resources/save.xml", NewFiConstants.CONSTANT_CONDITION_NO_CO_BORROWER_WITHOUT_SSN );
-        } catch ( SAXException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( IOException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( ParserConfigurationException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch ( TransformerException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }
