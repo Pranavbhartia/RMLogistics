@@ -1256,8 +1256,8 @@ function getLoanSummaryHeaderCEP() {
             "class": "loan-summary-header clearfix"
         });
         var col1 = $('<div>').attr({
-            "class": "loan-summary-header-col1 float-left uppercase"
-        }).html('MY LOAN SUMMARY');
+            "class": "loan-summary-header-col1 float-left capitalize"
+        }).html('My Loan Summary');
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
         }).html(currentDateTime);
@@ -1541,8 +1541,8 @@ function getLoanSummaryHeaderCEP() {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left uppercase"
-    }).html('MY LOAN SUMMARY');
+        "class": "loan-summary-header-col1 float-left capitalize"
+    }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate());
