@@ -574,7 +574,7 @@ CREATE TABLE `governmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
-  `isPermanentResidentAlien` tinyint(4) DEFAULT NULL,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1643,7 +1643,7 @@ CREATE TABLE `spousegovernmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
-  `isPermanentResidentAlien` tinyint(4) DEFAULT NULL,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

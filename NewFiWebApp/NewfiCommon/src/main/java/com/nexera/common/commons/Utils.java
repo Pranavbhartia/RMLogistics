@@ -12,12 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +51,9 @@ public class Utils {
 	public static String unformatCurrencyField(String field) {
 		String finalString = "";
 
+		if (field == null) {
+			return finalString;
+		}
 		if (field.contains("$") || field.contains(",")) {
 
 			for (int i = 0; i < field.length(); i++) {
