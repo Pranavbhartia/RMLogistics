@@ -30,6 +30,7 @@ public class GovernmentQuestion implements Serializable{
 	private Boolean isObligatedToPayAlimony;
 	private Boolean isEndorser;
 	private Boolean isUSCitizen;
+	private Boolean permanentResidentAlien;
 	private Boolean isOccupyPrimaryResidence;
 	private Boolean isOwnershipInterestInProperty;
 	private Boolean isDownPaymentBorrowed;
@@ -267,6 +268,15 @@ public class GovernmentQuestion implements Serializable{
 
 		public void setPropertyTitleStatus(String propertyTitleStatus) {
 			this.propertyTitleStatus = propertyTitleStatus;
+		}
+
+		@Column(name = "isPermanentResidentAlien")
+		public Boolean getPermanentResidentAlien() {
+			return permanentResidentAlien;
+		}
+
+		public void setPermanentResidentAlien(Boolean permanentResidentAlien) {
+			this.permanentResidentAlien = permanentResidentAlien;
 		}
 	
 	
