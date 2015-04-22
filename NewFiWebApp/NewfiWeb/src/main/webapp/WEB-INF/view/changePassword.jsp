@@ -26,11 +26,11 @@
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   
-							<div class="reg-input-reset-password reg-email" id="email-container">
-					        <input class="reg-input" placeholder="Password" id="pwd" >	
+							<div class="reg-input-reset-password reg-email" id="email-container" >
+					        <input type="password" class="reg-input" placeholder="Password" id="pwd" >	
 					        </div>
 					        <div class="reg-input-reset-password reg-email" id="email-container">
-					        <input class="reg-input" placeholder="Confirm" id="confirmPwd" >	
+					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmPwd" >	
 							<div class="err-msg hide"></div>
 				            </div>
 							<div class="reg-btn-wrapper clearfix">
@@ -58,7 +58,6 @@ $('#changePwdForm').submit(function(event){
 	event.preventDefault();
 	var user = new Object();
 	user.newPassword = $('#pwd').val();
-	user.changePwd = $('#confirmPwd').val();
 	user.userId=currentUser.userId;
 	var dateVar = new Date();
 	var timezone = dateVar.getTimezoneOffset();
@@ -81,7 +80,7 @@ $('#changePwdForm').submit(function(event){
         url: "/NewfiWeb/rest/userprofile/password",
         type: "POST",       
         data: {
-                 "userInfo": JSON.stringify(user)
+                 "changePasswordData": JSON.stringify(user)
         },        
         datatype: "application/json",
         success: function(data) {
