@@ -1095,7 +1095,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
 	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
+	// @CacheEvict(allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
@@ -1169,7 +1171,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	// @Cacheable(cacheName = "lqbAuthToken")
+	// @Cacheable(value = "lqbAuthToken")
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);
@@ -1218,7 +1220,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
 		}
-		return url;
+		return url == null ? lqbDefaultUrl : url;
 
 	}
 
