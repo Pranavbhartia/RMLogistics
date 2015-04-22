@@ -1007,8 +1007,8 @@ function getLoanSummaryHeader() {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left uppercase"
-    }).html('MY LOAN SUMMARY');
+        "class": "loan-summary-header-col1 float-left capitalize"
+    }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html("Rates as of 1/16/2015 8:13:52 AM");
@@ -1443,7 +1443,7 @@ function getClosingCostSummaryContainer(valueSet) {
     var parentWrapper = $('<div>').attr({
         "class": "closing-cost-wrapper"
     });
-    var header = getClosingCostHeader("CLOSING COST SUMMARY");
+    var header = getClosingCostHeader("Closing Coast Summary");
     var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
     var closingDate = $('<span>').attr({
         "class": "semibold"
@@ -1458,7 +1458,7 @@ function getClosingCostSummaryContainer(valueSet) {
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
-        "class": "closing-cost-header uppercase"
+        "class": "closing-cost-header capitalize"
     }).html(text);
     return header;
 }

@@ -4140,7 +4140,7 @@ input.calc-input {
 .lock-rate-slider-header {
     text-align: center;
     font-size: 14px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     line-height: 30px;
 }
 
