@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -1099,7 +1097,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
-	@CacheEvict(allEntries = true)
+	// @CacheEvict(allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
@@ -1173,7 +1171,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Cacheable(value = "lqbAuthToken")
+	// @Cacheable(value = "lqbAuthToken")
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);
