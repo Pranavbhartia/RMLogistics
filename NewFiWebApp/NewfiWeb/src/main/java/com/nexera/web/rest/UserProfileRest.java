@@ -214,7 +214,7 @@ public class UserProfileRest {
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
 	public @ResponseBody String changeUserPassword(
-	        @RequestBody String changePasswordData, HttpServletRequest request,
+	        @RequestParam String changePasswordData, HttpServletRequest request,
 	        HttpServletResponse response) {
 		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
