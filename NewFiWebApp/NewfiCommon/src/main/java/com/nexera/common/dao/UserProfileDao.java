@@ -90,4 +90,6 @@ public interface UserProfileDao extends GenericDao {
 	public List<String> getDefaultUsers(String userName);
 	
 	public Integer updateRealtorDetails(RealtorDetail realtor);
+
+	public Integer UpdateUserProfile(String phoneNumber, Integer userId);
 }

@@ -1604,7 +1604,7 @@ function appendQCPopup(element,milestoneId) {
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn"
 	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
-		e.stopPropagation();
+		event.stopPropagation();
 		var comment=event.data.comment.val();
 		var milestoneId=event.data.milestoneId;
 		if(comment){

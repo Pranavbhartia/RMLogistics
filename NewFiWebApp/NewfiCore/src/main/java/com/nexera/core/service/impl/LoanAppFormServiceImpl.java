@@ -1,6 +1,5 @@
 package com.nexera.core.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.dao.LoanAppFormDao;
+import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.entity.CustomerOtherAccountDetails;
@@ -57,6 +57,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 
 	@Autowired
 	private LoanService loanService;
+	
+	@Autowired
+	private UserProfileDao userProfileDao;
 
 	@Override
 	@Transactional
@@ -79,6 +82,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
 		LoanAppForm loanAppForm = loanAppFormDao
 		        .saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
+		// updating the user table coloum phone number
+		userProfileDao.UpdateUserProfile(loaAppFormVO.getUser().getPhoneNumber(), loaAppFormVO.getUser().getId());
 
 		return loanAppForm;
 		/*
