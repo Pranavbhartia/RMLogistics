@@ -47,7 +47,11 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
             adjustAgentDashboardOnResize();
 		},
 		error : function(){
-			
+			if(isPagination){
+				removePaginationScrollIcon(div);
+			}else{
+				hideOverlay();
+			}
 		}
 	});
 }
