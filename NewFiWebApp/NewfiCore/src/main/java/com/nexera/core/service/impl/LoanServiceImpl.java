@@ -1632,8 +1632,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-	public void updateLoan(Integer loanId, Boolean rateLocked) {
-		loanDao.updateLoan(loanId, rateLocked);
+	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo) {
+		loanDao.updateLoan(loanId, rateLocked, rateVo);
 
 	}
 

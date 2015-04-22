@@ -123,5 +123,5 @@ public interface LoanDao extends GenericDao {
 	public void updateLoanProgress(int loanId,
 	        LoanProgressStatusMaster loanProgressValue);
 	
-	public void updateLoan(Integer loanId ,Boolean rateLocked);
+	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo);
 }

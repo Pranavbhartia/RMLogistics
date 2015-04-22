@@ -53,6 +53,7 @@ public class LoanVO implements Serializable {
 
 	private Long purchaseDocumentExpiryDate;
 	private String lqbUrl;
+	private String lockedRateData;
 
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
@@ -381,4 +382,12 @@ public class LoanVO implements Serializable {
 	public Boolean getLqbInformationAvailable() {
 		return lqbInformationAvailable;
 	}
+
+	public String getLockedRateData() {
+	    return lockedRateData;
+    }
+
+	public void setLockedRateData(String lockedRateData) {
+	    this.lockedRateData = lockedRateData;
+    }
 }
