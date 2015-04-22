@@ -269,7 +269,7 @@ public class XMLProcessor
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource( doc );
 
-        File file = new File( getRootDirectory() + File.separator +"tmpFolder" + File.separator+ "file.xml" );
+        File file = new File( getRootDirectory() + File.separator +"apps" + File.separator+ "file.xml" );
         file.createNewFile();
         StreamResult result = new StreamResult( file );
         transformer.transform( source, result );
