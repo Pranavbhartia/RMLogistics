@@ -48,18 +48,7 @@ public class XMLProcessor
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_NO_CO_BORROWER_WITHOUT_SSN ) ) {
             LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
-            NodeList fieldList = doc.getElementsByTagName( "field" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
-            for ( int i = 0; i < fieldList.getLength(); i++ ) {
-                Node node = fieldList.item( i );
-                if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-                    Element element = (Element) node;
-                    String value = element.getAttribute( "id" );
-                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
-                        element.getParentNode().removeChild( element );
-                    }
-                }
-            }
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITH_SSN_BOTH ) ) {
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
@@ -107,17 +96,7 @@ public class XMLProcessor
             LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
-            NodeList fieldList = doc.getElementsByTagName( "field" );
-            for ( int i = 0; i < fieldList.getLength(); i++ ) {
-                Node node = fieldList.item( i );
-                if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-                    Element element = (Element) node;
-                    String value = element.getAttribute( "id" );
-                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
-                        element.getParentNode().removeChild( element );
-                    }
-                }
-            }
+
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
             Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
@@ -132,6 +111,8 @@ public class XMLProcessor
             newApplicant.appendChild( baseIncome );
             Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
+            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
@@ -164,6 +145,8 @@ public class XMLProcessor
             newApplicant.appendChild( baseIncome );
             Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
+            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
@@ -185,17 +168,7 @@ public class XMLProcessor
             LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
-            NodeList fieldList = doc.getElementsByTagName( "field" );
-            for ( int i = 0; i < fieldList.getLength(); i++ ) {
-                Node node = fieldList.item( i );
-                if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-                    Element element = (Element) node;
-                    String value = element.getAttribute( "id" );
-                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
-                        element.getParentNode().removeChild( element );
-                    }
-                }
-            }
+
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoborrowerId" );
             Element credit = doc.createElement( "credit" );
@@ -260,17 +233,6 @@ public class XMLProcessor
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
             NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
             Node newApplicant = newApplicantList.item( 0 );
-            NodeList fieldList = doc.getElementsByTagName( "field" );
-            for ( int i = 0; i < fieldList.getLength(); i++ ) {
-                Node node = fieldList.item( i );
-                if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-                    Element element = (Element) node;
-                    String value = element.getAttribute( "id" );
-                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
-                        element.getParentNode().removeChild( element );
-                    }
-                }
-            }
             Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
             Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
