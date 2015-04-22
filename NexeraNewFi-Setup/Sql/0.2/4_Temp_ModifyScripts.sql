@@ -208,3 +208,7 @@ alter table newfi_schema.spousegovernmentquestion add column isPermanentResident
 ### Anoop - Moved all the above to the 1_create script
 ##############
 
+
+# Added bY Charu
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `locked_rate_data` VARCHAR(1000) NULL AFTER `purchase_document_expiry_date`;

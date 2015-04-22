@@ -33,8 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.nexera.common.commons.Utils;
 import com.google.gson.Gson;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.entity.CustomerOtherAccountDetails;
@@ -55,6 +55,7 @@ import com.nexera.common.vo.CustomerSpouseOtherAccountDetailsVO;
 import com.nexera.common.vo.CustomerSpouseRetirementAccountDetailsVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
@@ -847,7 +848,8 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
-	public @ResponseBody String createLoan(String appFormData) {
+	public @ResponseBody
+	String createLoan(String appFormData, HttpServletRequest httpServletRequest) {
 		System.out.println("Inside createLoan" + appFormData);
 		Gson gson = new Gson();
 		String lockRateData = null;
@@ -862,6 +864,12 @@ public class ApplicationFormRestService {
 				String response = invokeRest((saveLoan(loanNumber, loaAppFormVO))
 				        .toString());
 				System.out.println("Save Loan Response is " + response);
+				if (null != loaAppFormVO.getLoan()) {
+					LoanVO loan = loaAppFormVO.getLoan();
+					loan.setLqbFileId(loanNumber);
+					String loanAppFrm = gson.toJson(loaAppFormVO);
+					createApplication(loanAppFrm, httpServletRequest);
+				}
 				// JSONObject jsonObject = new JSONObject(response);
 				// LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
 
@@ -941,7 +949,8 @@ public class ApplicationFormRestService {
 			lockRateData = invokeRest(prepareLockLoanRateJson(loanLockRateVO)
 			        .toString());
 			System.out.println("lockLoanRate is" + lockRateData);
-			loanService.updateLoan(loanLockRateVO.getLoanId(), true);
+			loanService.updateLoan(loanLockRateVO.getLoanId(), true,
+			        loanLockRateVO.getRateVo());
 
 		} catch (Exception e) {
 			e.printStackTrace();
