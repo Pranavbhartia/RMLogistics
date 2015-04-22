@@ -1064,8 +1064,8 @@ public class ApplicationFormRestService {
 		try {
 			jsonChild.put("sLoanNumber", loanLockRateVO.getsLoanNumber());
 			jsonChild.put("IlpTemplateId", loanLockRateVO.getIlpTemplateId());
-			jsonChild.put("requestedRate", loanLockRateVO.getRequestedFee());
-			jsonChild.put("requestedFee", loanLockRateVO.getRequestedRate());
+			jsonChild.put("requestedFee", loanLockRateVO.getRequestedFee());
+			jsonChild.put("requestedRate", loanLockRateVO.getRequestedRate());
 			json.put("opName", "LockLoanProgram");
 
 			json.put("loanVO", jsonChild);
