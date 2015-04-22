@@ -6,6 +6,8 @@ package com.newfi.nexera.process;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -265,13 +268,18 @@ public class XMLProcessor
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource( doc );
-        String currentDirectory = System.getProperty( "user.dir" );
-        
-        File file = new File( currentDirectory + "../tmpfolder"+ File.separator + "file.xml" );
+
+        File file = new File( getRootDirectory() + File.separator +"tmpFolder" + File.separator+ "file.xml" );
         file.createNewFile();
         StreamResult result = new StreamResult( file );
         transformer.transform( source, result );
         return file;
+    }
+
+
+    private String getRootDirectory()
+    {
+        return File.listRoots()[0].getAbsolutePath();
     }
 
 
