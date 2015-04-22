@@ -198,6 +198,13 @@ ADD COLUMN `iscoborrower_present` TINYINT(4) NULL AFTER `retirement_income`;
 ALTER TABLE `newfi_schema`.`loanappform` 
 ADD COLUMN `ssn_provided` TINYINT(4) NULL AFTER `iscoborrower_present`,
 ADD COLUMN `cb_ssn_provided` TINYINT(4) NULL;
+
+
+# 22 april Added bY Abhishek 
+alter table newfi_schema.governmentquestion add column isPermanentResidentAlien TINYINT(4);
+alter table newfi_schema.spousegovernmentquestion add column isPermanentResidentAlien TINYINT(4);
+
 ##############
 ### Anoop - Moved all the above to the 1_create script
 ##############
+

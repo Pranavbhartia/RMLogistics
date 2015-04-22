@@ -724,6 +724,7 @@ public class LoanAppFormVO implements Serializable {
 		        .isObligatedToPayAlimony());
 		governmentQuestion.setEndorser(governmentQuestionVO.isEndorser());
 		governmentQuestion.setUSCitizen(governmentQuestionVO.isUSCitizen());
+		governmentQuestion.setPermanentResidentAlien(governmentQuestionVO.getPermanentResidentAlien());
 		governmentQuestion.setOccupyPrimaryResidence(governmentQuestionVO
 		        .isOccupyPrimaryResidence());
 		governmentQuestion.setOwnershipInterestInProperty(governmentQuestionVO
@@ -1263,6 +1264,9 @@ public class LoanAppFormVO implements Serializable {
 		        .isEndorser());
 		spouseGovernmentQuestions.setUSCitizen(spouseGovernmentQuestionsVO
 		        .isUSCitizen());
+		
+		spouseGovernmentQuestions.setPermanentResidentAlien(spouseGovernmentQuestionsVO.isPermanentResidentAlien());
+		
 		spouseGovernmentQuestions
 		        .setOccupyPrimaryResidence(spouseGovernmentQuestionsVO
 		                .isOccupyPrimaryResidence());

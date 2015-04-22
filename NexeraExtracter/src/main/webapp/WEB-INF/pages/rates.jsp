@@ -27,7 +27,7 @@
 					<div class="float-left header-txt">
 						NOTE: INDICATIVE PRICING ONLY <br />
 						PLEASE LOG INTO BLUSTREAM PORTAL TO OBTAIN LIVE LOCK
-						PRICING - <a href="http://www.blustream.com">www.blustream.com</a>
+						PRICING - <a target="_blank" href="http://www.blustream.com">www.blustream.com</a>
 					</div>
 					<div class="float-left">
 							<div class="clearfix ">

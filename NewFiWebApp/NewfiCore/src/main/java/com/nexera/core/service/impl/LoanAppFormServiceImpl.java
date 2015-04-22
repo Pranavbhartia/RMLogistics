@@ -785,6 +785,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		governmentQuestionVO.setFederalDebt(governmentquestion.isFederalDebt());
 		governmentQuestionVO.setEndorser(governmentquestion.isEndorser());
 		governmentQuestionVO.setUSCitizen(governmentquestion.isUSCitizen());
+		
+		governmentQuestionVO.setPermanentResidentAlien(governmentquestion.getPermanentResidentAlien());
 		governmentQuestionVO.setOccupyPrimaryResidence(governmentquestion
 		        .isOccupyPrimaryResidence());
 		governmentQuestionVO.setOwnershipInterestInProperty(governmentquestion
@@ -834,6 +836,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .isEndorser());
 		spouseGovernmentQuestionVO.setUSCitizen(spouseGovernmentquestions
 		        .isUSCitizen());
+		
+		spouseGovernmentQuestionVO.setPermanentResidentAlien(spouseGovernmentquestions.isPermanentResidentAlien());
+		
 		spouseGovernmentQuestionVO
 		        .setOccupyPrimaryResidence(spouseGovernmentquestions
 		                .isOccupyPrimaryResidence());

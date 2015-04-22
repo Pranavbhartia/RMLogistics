@@ -13,7 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +40,7 @@ import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
@@ -78,8 +83,12 @@ public class UserProfileRest {
 	@Autowired
 	private PropertyFileReader propertyFileReader;
 
+	@Autowired
+	protected AuthenticationManager authenticationManager;
 	@Value("${referal.url}")
 	private String referalUrl;
+	@Value("${profile.url}")
+	private String profileUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileRest.class);
@@ -98,7 +107,6 @@ public class UserProfileRest {
 	@RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getNewPassword(
 	        @RequestBody String user) {
-
 		LOG.info("Forget password call");
 		LOG.info("To know if there a user exsists for the emailID");
 		UserVO userVO = new Gson().fromJson(user, UserVO.class);
@@ -106,13 +114,12 @@ public class UserProfileRest {
 		        .findUserByMail(userVO.getEmailId());
 		CommonResponseVO commonResponse = new CommonResponseVO();
 		ErrorVO errors = new ErrorVO();
-
 		if (userDetail != null) {
-
 			try {
-				userProfileService.forgetPassword(userDetail);
+				userProfileService.resetPassword(userDetail);
 				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
 				commonResponse.setResultObject(successMessage);
+
 			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
 				errors.setMessage(e.getMessage());
@@ -197,7 +204,7 @@ public class UserProfileRest {
 		} catch (InputValidationException e) {
 			error.setMessage(e.getDebugMessage());
 			commonResponseVO.setError(error);
-		}  catch (NonFatalException e) {
+		} catch (NonFatalException e) {
 			error.setMessage(e.getMessage());
 			commonResponseVO.setError(error);
 		}
@@ -206,33 +213,36 @@ public class UserProfileRest {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO changeUserPassword(
-	        @RequestBody String changePasswordData) {
+	public @ResponseBody String changeUserPassword(
+	        @RequestBody String changePasswordData, HttpServletRequest request,
+	        HttpServletResponse response) {
 		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
-
 		UpdatePasswordVO updatePassword = gson.fromJson(changePasswordData,
 		        UpdatePasswordVO.class);
-
-		CommonResponseVO commonResponseVO = new CommonResponseVO();
-		ErrorVO errors = new ErrorVO();
-
 		try {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
 			if (passwordChanged == true) {
-				commonResponseVO
-				        .setResultObject("Password successfully changed");
-				return commonResponseVO;
+				String emailId = updatePassword.getEmailID();
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+				        emailId, updatePassword.getNewPassword());
+				token.setDetails(new WebAuthenticationDetails(request));
+				Authentication authenticatedUser = authenticationManager
+				        .authenticate(token);
+				SecurityContextHolder.getContext().setAuthentication(
+				        authenticatedUser);
+
 			}
 		} catch (InputValidationException inputValidation) {
-			errors.setMessage(inputValidation.getDebugMessage());
-			LOG.info(inputValidation.getDebugMessage());
-			commonResponseVO.setError(errors);
+			throw inputValidation;
+
+		} catch (Exception inputValidation) {
+			throw new FatalException("Could not login user");
 
 		}
-		return commonResponseVO;
+		return profileUrl + "home.do";
 
 	}
 
