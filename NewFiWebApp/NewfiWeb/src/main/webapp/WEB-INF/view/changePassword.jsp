@@ -26,10 +26,10 @@
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   
-							<div class="reg-input-reset-password reg-email" id="email-container" >
+							<div class="reg-input-reset-password" id="email-container" >
 					        <input type="password" class="reg-input" placeholder="Password" id="pwd" >	
 					        </div>
-					        <div class="reg-input-reset-password reg-email" id="email-container">
+					        <div class="reg-input-reset-password" id="email-container">
 					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmPwd" >	
 							<div class="err-msg hide"></div>
 				            </div>
