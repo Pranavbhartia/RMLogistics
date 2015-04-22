@@ -54,7 +54,8 @@ public class XMLProcessor
                 Node node = fieldList.item( i );
                 if ( node.getNodeType() == Node.ELEMENT_NODE ) {
                     Element element = (Element) node;
-                    if ( element.hasAttribute( "aBSsn" ) ) {
+                    String value = element.getAttribute( "id" );
+                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
                         element.getParentNode().removeChild( element );
                     }
                 }
@@ -111,7 +112,8 @@ public class XMLProcessor
                 Node node = fieldList.item( i );
                 if ( node.getNodeType() == Node.ELEMENT_NODE ) {
                     Element element = (Element) node;
-                    if ( element.hasAttribute( "aBSsn" ) ) {
+                    String value = element.getAttribute( "id" );
+                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
                         element.getParentNode().removeChild( element );
                     }
                 }
@@ -188,7 +190,8 @@ public class XMLProcessor
                 Node node = fieldList.item( i );
                 if ( node.getNodeType() == Node.ELEMENT_NODE ) {
                     Element element = (Element) node;
-                    if ( element.hasAttribute( "aBSsn" ) ) {
+                    String value = element.getAttribute( "id" );
+                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
                         element.getParentNode().removeChild( element );
                     }
                 }
@@ -257,6 +260,17 @@ public class XMLProcessor
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
             NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
             Node newApplicant = newApplicantList.item( 0 );
+            NodeList fieldList = doc.getElementsByTagName( "field" );
+            for ( int i = 0; i < fieldList.getLength(); i++ ) {
+                Node node = fieldList.item( i );
+                if ( node.getNodeType() == Node.ELEMENT_NODE ) {
+                    Element element = (Element) node;
+                    String value = element.getAttribute( "id" );
+                    if ( value.equalsIgnoreCase( "aBSsn" ) ) {
+                        element.getParentNode().removeChild( element );
+                    }
+                }
+            }
             Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
             Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
@@ -269,6 +283,8 @@ public class XMLProcessor
             newApplicant.appendChild( baseIncome );
             Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
+            newApplicant.appendChild( userSSN );
         }
         File file = writeContentToXMLFile( doc );
         return file;
