@@ -51,6 +51,7 @@ public class User implements Serializable, UserDetails {
 	private String photoImageUrl;
 	private String username;
 	private UserRole userRole;
+	private String emailEncryptionToken;
 
 	private CustomerDetail customerDetail;
 	private InternalUserDetail internalUserDetail;
@@ -406,6 +407,7 @@ public class User implements Serializable, UserDetails {
 			userVO.setUserRole(UserRole.convertFromEntityToVO(user
 			        .getUserRole()));
 			userVO.setEmailId(user.getEmailId());
+			userVO.setEmailEncryptionToken(user.getEmailEncryptionToken());
 			userVO.setDisplayName(user.firstName + " " + user.lastName);
 			userVO.setEmailId(user.getEmailId());
 			userVO.setDisplayName(user.getFirstName() + " "
@@ -414,7 +416,8 @@ public class User implements Serializable, UserDetails {
 			        .getCustomerDetail()));
 			userVO.setInternalUserDetail(InternalUserDetail
 			        .convertFromEntityToVO(user.getInternalUserDetail()));
-            userVO.setRealtorDetail(RealtorDetail.convertFromEntityToVO(user.getRealtorDetail()));
+			userVO.setRealtorDetail(RealtorDetail.convertFromEntityToVO(user
+			        .getRealtorDetail()));
 			if (null != user.getInternalUserStateMappings()
 			        && !user.getInternalUserStateMappings().isEmpty()) {
 				List<InternalUserStateMappingVO> internalUserStateMappingVOs = new ArrayList<InternalUserStateMappingVO>();
@@ -465,7 +468,7 @@ public class User implements Serializable, UserDetails {
 		}
 		userModel.setInternalUserDetail(InternalUserDetail
 		        .convertFromVOToEntity(userVO.getInternalUserDetail()));
-		if (userVO.getRealtorDetail()!=null) {
+		if (userVO.getRealtorDetail() != null) {
 			userModel.setRealtorDetail(RealtorDetail
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}
@@ -476,6 +479,15 @@ public class User implements Serializable, UserDetails {
 	public void setInternalUserStateMappings(
 	        List<InternalUserStateMapping> internalUserStateMappings) {
 		this.internalUserStateMappings = internalUserStateMappings;
+	}
+
+	@Column(name = "email_encryption_token")
+	public String getEmailEncryptionToken() {
+		return emailEncryptionToken;
+	}
+
+	public void setEmailEncryptionToken(String emailEncryptionToken) {
+		this.emailEncryptionToken = emailEncryptionToken;
 	}
 
 }

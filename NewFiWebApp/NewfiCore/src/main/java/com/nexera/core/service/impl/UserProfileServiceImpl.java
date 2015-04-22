@@ -65,9 +65,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.CustomerDetailVO;
-import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -91,6 +89,7 @@ import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
@@ -128,6 +127,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
+
+	@Autowired
+	NexeraUtility nexeraUtility;
 
 	@Autowired
 	private Utils utils;
@@ -303,13 +305,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        ErrorConstants.NULL_PASSWORD);
 			}
 			return userProfileDao.changeUserPassword(updatePasswordVO);
-		}
-		catch (HibernateException hibernateException) {
+		} catch (HibernateException hibernateException) {
 			throw new FatalException("Error in updating the password",
 			        hibernateException);
-		}
-		catch (DatabaseException databaseException)
-		{
+		} catch (DatabaseException databaseException) {
 			throw new FatalException("Error in updating the password",
 			        databaseException);
 		}
@@ -452,6 +451,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 
 		User newUser = User.convertFromVOToEntity(userVO);
+		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
+		        .getEmailId());
+		newUser.setEmailEncryptionToken(encryptedMailId);
 		if (newUser.getCustomerDetail() != null) {
 			newUser.getCustomerDetail().setProfileCompletionStatus(
 			        (int) Math.ceil(CommonConstants.PROFILE_STATUS_WEIGHTAGE));
@@ -1089,7 +1091,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
 	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
+	// @CacheEvict(allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
@@ -1159,8 +1163,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getUsername() });
-		String uniqueURL = baseUrl + "reset.do?reference="
-		        + user.getEmailId();
+		String uniqueURL = baseUrl + "reset.do?reference=" + user.getEmailId();
 		substitutions.put("-password-", new String[] { uniqueURL });
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -1182,7 +1185,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	// @Cacheable(cacheName = "lqbAuthToken")
+	// @Cacheable(value = "lqbAuthToken")
 	public String getLQBUrl(Integer userId, Integer loanId) {
 
 		LOG.info("user id of this user is : " + userId);
@@ -1231,7 +1234,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
 		}
-		return url;
+		return url == null ? lqbDefaultUrl : url;
 
 	}
 

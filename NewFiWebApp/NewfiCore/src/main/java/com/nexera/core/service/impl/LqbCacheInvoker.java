@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.googlecode.ehcache.annotations.Cacheable;
 import com.nexera.core.service.LqbInterface;
 
 @Component
@@ -21,7 +20,7 @@ public class LqbCacheInvoker implements LqbInterface {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LqbCacheInvoker.class);
 
-	@Cacheable(cacheName = "teaserRate")
+	// @Cacheable(cacheName = "teaserRate")
 	@Override
 	public String invokeRest(String appFormData) {
 

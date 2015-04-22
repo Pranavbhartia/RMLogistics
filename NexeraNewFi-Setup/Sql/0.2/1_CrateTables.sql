@@ -355,13 +355,18 @@ CREATE TABLE `customerspousedetails` (
   `transunion_score` int(5) DEFAULT NULL,
   `experian_score` int(5) DEFAULT NULL,
   `is_pension_or_retirement` tinyint(4) DEFAULT NULL,
-  `monthly_pension` varchar(45) DEFAULT NULL,
+  `monthly_pension` bigint(20) DEFAULT NULL,
   `spouse_sec_phoneNumber` varchar(255) DEFAULT NULL,
-  `self_employed_income` varchar(255) DEFAULT NULL,
+  `self_employed_income` bigint(20) DEFAULT NULL,
   `spouse_sec_phone_number` varchar(255) DEFAULT NULL,
   `current_home_price` varchar(45) DEFAULT NULL,
   `current_home_mortgage_balance` varchar(45) DEFAULT NULL,
   `newhome_budget_fromsale` varchar(45) DEFAULT NULL,
+  `self_employed_no_year` int(10) DEFAULT NULL,
+  `social_security_income` bigint(20) DEFAULT NULL,
+  `child_support_alimony` bigint(20) DEFAULT NULL,
+  `retirement_income` bigint(20) DEFAULT NULL,
+  `disability_income` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -388,6 +393,7 @@ CREATE TABLE `customerspouseemploymentincome` (
   `employed_at` varchar(45) DEFAULT NULL,
   `employed_since` varchar(46) DEFAULT NULL,
   `loanapp_formid` int(11) DEFAULT NULL,
+  `job_title` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_aff8110592e346c0975c32955a7` (`loanapp_formid`),
   CONSTRAINT `FK_aff8110592e346c0975c32955a7` FOREIGN KEY (`loanapp_formid`) REFERENCES `loanappform` (`id`)
@@ -568,6 +574,7 @@ CREATE TABLE `governmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -789,6 +796,7 @@ CREATE TABLE `loan` (
   `rate_locked` tinyint(1) DEFAULT '0',
   `locked_rate` decimal(7,2) DEFAULT NULL,
   `purchase_document_expiry_date` bigint(20) DEFAULT NULL,
+  `locked_rate_data` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_loanMappedToUser_idx` (`user`),
   KEY `FK_loanMappedToType_idx` (`loan_type`),
@@ -861,6 +869,14 @@ CREATE TABLE `loanappform` (
   `purchasedetails` int(11) DEFAULT NULL,
   `spousegov_quest` int(11) DEFAULT NULL,
   `customerspousedetails` int(11) DEFAULT NULL,
+  `monthly_income` bigint(20) DEFAULT NULL,
+  `self_employed_no_year` int(10) DEFAULT NULL,
+  `social_security_income` bigint(20) DEFAULT NULL,
+  `child_support_alimony` bigint(20) DEFAULT NULL,
+  `retirement_income` bigint(20) DEFAULT NULL,
+  `iscoborrower_present` tinyint(4) DEFAULT NULL,
+  `ssn_provided` tinyint(4) DEFAULT NULL,
+  `cb_ssn_provided` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_loanAppFormLinkedToUser_idx` (`user`),
   KEY `fk_loanAppFormLinkedToPropertyType_idx` (`property_type`),
@@ -1627,6 +1643,7 @@ CREATE TABLE `spousegovernmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1854,6 +1871,7 @@ CREATE TABLE `user` (
   `is_profile_complete` tinyint(4) DEFAULT '0',
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `login_time` timestamp NULL DEFAULT NULL,
+  `email_encryption_token` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_id_UNIQUE` (`email_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
@@ -1874,7 +1892,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support@loan.newfi.com','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL),(2,'Pat','McCauley','pat@raremile.com','pat@raremile.com','1234',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL);
+INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support@loan.newfi.com','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL,NULL),(2,'Pat','McCauley','pat@raremile.com','pat@raremile.com','1234',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2184,4 +2202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-21 19:30:54
+-- Dump completed on 2015-04-22 17:54:37

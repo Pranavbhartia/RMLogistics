@@ -157,6 +157,8 @@ public interface LoanService {
 
 	public void saveLoanProgress(int loand,
 	        LoanProgressStatusMaster progressValue);
-	
+
 	public void updateLoan(Integer loanId, Boolean rateLocked);
+
+	public LoanVO wrapperCallForDashboard(Integer loanID);
 }

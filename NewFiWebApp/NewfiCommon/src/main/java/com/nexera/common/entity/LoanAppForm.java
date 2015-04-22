@@ -57,8 +57,13 @@ public class LoanAppForm implements Serializable {
 	private String ssDisabilityIncome;
 	private String monthlyPension;
 	private BigDecimal  retirementIncome;
+	private Boolean isCoborrowerPresent;
+	private Boolean ssnProvided;
+	private Boolean cbSsnProvided;
 	
 	
+	
+
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
 	private String monthlyRent;
@@ -197,6 +202,22 @@ public class LoanAppForm implements Serializable {
 	public void setSecondMortgage(Boolean secondMortgage) {
 		this.secondMortgage = secondMortgage;
 	}
+	
+	
+	
+	
+
+	@Column(name = "iscoborrower_present", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsCoborrowerPresent() {
+		return isCoborrowerPresent;
+	}
+
+	public void setIsCoborrowerPresent(Boolean isCoborrowerPresent) {
+		this.isCoborrowerPresent = isCoborrowerPresent;
+	}
+	
+	
 
 	@Column(name = "pay_sec_mortgage", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -216,6 +237,30 @@ public class LoanAppForm implements Serializable {
 
 	public void setIsSpouseOnLoan(Boolean isSpouseOnLoan) {
 		this.isSpouseOnLoan = isSpouseOnLoan;
+	}
+
+	
+	
+	
+	@Column(name = "ssn_provided")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getSsnProvided() {
+		return ssnProvided;
+	}
+
+	public void setSsnProvided(Boolean ssnProvided) {
+		this.ssnProvided = ssnProvided;
+	}
+
+	
+	@Column(name = "cb_ssn_provided")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getCbSsnProvided() {
+		return cbSsnProvided;
+	}
+
+	public void setCbSsnProvided(Boolean cbSsnProvided) {
+		this.cbSsnProvided = cbSsnProvided;
 	}
 
 	@Column(name = "spouse_name")

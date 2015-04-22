@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -92,6 +93,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			        + loanAppForm.getUser().getId());
 			// sessionFactory.getCurrentSession().flush();
 		}
+		
 		
 		LOG.info("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan()"+loanAppForm.getLoan());
 		if(loanAppForm.getLoan() != null){
@@ -533,4 +535,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 
 		return loanAppForm;
 	}
+	
+	
+	
 }

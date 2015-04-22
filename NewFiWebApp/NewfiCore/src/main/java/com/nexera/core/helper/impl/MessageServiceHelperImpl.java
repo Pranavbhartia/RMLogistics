@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,7 @@ import com.nexera.core.service.MasterDataService;
 import com.nexera.core.service.MessageService;
 
 @Component
+@DependsOn(value = "needsListServiceImpl")
 public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	private static final String NEW_LINE_CHARACTER = "{0}\n > {1}";

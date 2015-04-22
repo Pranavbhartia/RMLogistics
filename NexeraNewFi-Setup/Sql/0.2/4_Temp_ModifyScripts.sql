@@ -174,9 +174,9 @@ DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='28';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='23';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Your Loan Profile' WHERE `id`='27';
 
-##############
+
 ### Anoop - Moved all the above to the 1_create script
-##############
+
 
 #Abhishek 21 april
 alter table newfi_schema.customeremploymentincome add column job_title varchar (20);
@@ -191,5 +191,20 @@ ALTER TABLE newfi_schema.customerspousedetails MODIFY  COLUMN  monthly_pension  
 alter table newfi_schema.customerspousedetails add column self_employed_no_year int (10),add column social_security_income bigint(20),add column child_support_alimony bigint (20), add column retirement_income bigint (20),add column disability_income bigint (20)
 
 
+# Added bY shashank 
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `iscoborrower_present` TINYINT(4) NULL AFTER `retirement_income`;
 
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `ssn_provided` TINYINT(4) NULL AFTER `iscoborrower_present`,
+ADD COLUMN `cb_ssn_provided` TINYINT(4) NULL;
+
+
+# 22 april Added bY Abhishek 
+alter table newfi_schema.governmentquestion add column isPermanentResidentAlien TINYINT(4);
+alter table newfi_schema.spousegovernmentquestion add column isPermanentResidentAlien TINYINT(4);
+
+##############
+### Anoop - Moved all the above to the 1_create script
+##############
 

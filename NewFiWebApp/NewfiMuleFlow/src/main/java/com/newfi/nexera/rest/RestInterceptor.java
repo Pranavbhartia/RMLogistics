@@ -4,7 +4,8 @@
 package com.newfi.nexera.rest;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -78,7 +79,7 @@ public class RestInterceptor implements Callable
     }
 
 
-    public Object[] getAllParameters( RestParameters restParameters ) throws IOException
+    public Object[] getAllParameters( RestParameters restParameters ) throws Exception
     {
         File file = null;
         try {
@@ -151,12 +152,23 @@ public class RestInterceptor implements Callable
                 inputParams = new Object[4];
                 inputParams[0] = NewFiManager.userTicket;
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-                file = new File( "src/main/resources/save.xml" );
+
+
+                InputStream inputStream = getResource( "save.xml" );
+                LOG.debug( "InputStream of save.xml received " + inputParams.toString() );
                 String condition = restParameters.getLoanVO().getCondition();
                 if ( condition == null || condition.equals( "" ) ) {
                 } else {
                     try {
-                        file = xmlProcessor.parseXML( file.getAbsolutePath(), condition );
+                        file = xmlProcessor.parseXML( inputStream, condition );
+                        if ( file != null ) {
+                            LOG.info( "File got created succesfully " + file.getName() );
+                            LOG.info( "File got created succesfully " + file.getAbsolutePath() );
+                        } else {
+                            LOG.error( "Unable to create file" );
+                            throw new Exception( "Unable to create file " );
+                        }
+
                     } catch ( SAXException e ) {
                         LOG.error( "Exception Caught " + e.getMessage() );
                     } catch ( ParserConfigurationException e ) {
@@ -165,23 +177,13 @@ public class RestInterceptor implements Callable
                         LOG.error( "Exception Caught " + e.getMessage() );
                     }
                 }
-                String saveDefault = Utils.readFileAsString( file.getName() );
-                if ( restParameters.getLoanVO().getsDataContentMap() != null )
+                String saveDefault = Utils.readFileAsStringFromPath( file.getAbsolutePath() );
+                if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
                     saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
+                }
                 inputParams[2] = saveDefault;
                 inputParams[3] = restParameters.getLoanVO().getFormat();
 
-                LOG.info( "saveDefault xmls is" + saveDefault );
-            } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_CO_BORROWER_SAVE ) ) {
-                LOG.debug( "Operation Chosen Was Save " );
-                inputParams = new Object[4];
-                inputParams[0] = NewFiManager.userTicket;
-                inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
-                String saveDefault = Utils.readFileAsString( "coborrowersave.xml" );
-                if ( restParameters.getLoanVO().getsDataContentMap() != null )
-                    saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
-                inputParams[2] = saveDefault;
-                inputParams[3] = restParameters.getLoanVO().getFormat();
                 LOG.info( "saveDefault xmls is" + saveDefault );
             } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER ) ) {
                 LOG.debug( "Operation Chosen Was ListEDocsByLoanNumber " );
@@ -213,6 +215,20 @@ public class RestInterceptor implements Callable
                 }
             }
         }
+    }
+
+
+    public InputStream getResource( String fileName ) throws NoSuchFileException
+    {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+
+        InputStream inputStream = classLoader.getResourceAsStream( fileName );
+
+        if ( inputStream == null ) {
+            throw new NoSuchFileException( "Resource file not found. Note that the current directory is the source folder!" );
+        }
+
+        return inputStream;
     }
 
 
