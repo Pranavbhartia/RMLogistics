@@ -805,4 +805,16 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 
 	}
+	
+	
+	@Override
+	public Integer UpdateUserProfile(String phoneNumber, Integer userId) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.phoneNumber = :PHONENUMBER WHERE usr.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("PHONENUMBER", phoneNumber);
+		query.setParameter("ID", userId);
+		int result = query.executeUpdate();
+		return result;
+	}
 }
