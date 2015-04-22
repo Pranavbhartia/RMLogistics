@@ -429,8 +429,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getEmailId() });
-		substitutions.put("-password-",
-		        new String[] { user.getEmailEncryptionToken() });
+		String uniqueURL = baseUrl + "reset.do?reference="
+		        + user.getEmailEncryptionToken();
+		substitutions.put("-password-", new String[] { uniqueURL });
 
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -1139,7 +1140,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
-		substitutions.put("-username-", new String[] { user.getUsername() });
+		substitutions.put("-username-", new String[] { user.getEmailId() });
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-password-", new String[] { uniqueURL });
