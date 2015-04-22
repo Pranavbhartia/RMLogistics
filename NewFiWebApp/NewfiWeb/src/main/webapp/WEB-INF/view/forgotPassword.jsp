@@ -75,7 +75,6 @@ $('#loginForm').submit(function(event){
 function paintForgetPasswordResponse(data){
 	if(data.resultObject!=null){		
 		$('#emailID').val('');		
-		window.location='./';
 		showToastMessage(data.resultObject);
 	}else{
 		$("#emailID").next('.err-msg').html(data.error.message).show();

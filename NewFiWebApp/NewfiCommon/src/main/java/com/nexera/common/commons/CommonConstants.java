@@ -18,6 +18,7 @@ public interface CommonConstants {
 	
 
 	public static final float PROFILE_STATUS_WEIGHTAGE=(100f/3f);
+	public static final String CSV_UPLOAD_SUCCESS="CSV file uploaded successfully";
 	/**
 	 * Entity status
 	 */
@@ -92,7 +93,7 @@ public interface CommonConstants {
 	        + "Newfi Team";
 
 	public static final String SENDER_DOMAIN = "@loan.newfi.com";
-	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE = "Password updated successfully.Please Check your mail";
+	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE = "Please Check your mail for reset password";
 
 	/*
 	 * Constants for email subjects
