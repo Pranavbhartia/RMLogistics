@@ -18,13 +18,6 @@ LOAN_ENUM = {
 	DECLINED : "DECLINED"
 };
 
-function adjustCustomerNameWidth() {
-	var cusNameColWidth = $('.leads-container-tc1').width();
-	var statusIcnWidth = $('.onl-status-icn').width();
-	var cusImgWidth = $('.cus-img-icn').width();
-	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 5;
-	$('.cus-name').outerWidth(cusNameWidth);
-}
 
 function getAgentSecondaryLeftNav() {
 	var leftTab2Wrapper = $('<div>').attr({

@@ -1,18 +1,21 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class UpdatePasswordVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	int userId;
-	
+	String emailID;
 	String newPassword;
+
+	public String getEmailID() {
+		return emailID;
+	}
+
+	public void setEmailID(String emailID) {
+		this.emailID = emailID;
+	}
 
 	public int getUserId() {
 		return userId;
@@ -29,6 +32,5 @@ public class UpdatePasswordVO implements Serializable {
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}
-	
 
 }

@@ -12,8 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -250,65 +254,54 @@ public class Utils {
 		return unprotectedUrls;
 	}
 
-	
-	/*public static void main(String[] args) {
-		String a  ="$100,2313";
-		BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(a));
-		System.out.println(myBigNum);
-		
-    }*/
-	
-	public static BigDecimal convertToBigDecimal(String input){
-		
-		if(null != input){
+	/*
+	 * public static void main(String[] args) { String a ="$100,2313";
+	 * BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(a));
+	 * System.out.println(myBigNum);
+	 * 
+	 * }
+	 */
+
+	public static BigDecimal convertToBigDecimal(String input) {
+
+		if (null != input) {
 			BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(input));
 			return myBigNum;
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
-	
-	
-		public static Integer convertToInteger(String input){
-		
-		if(null != input){
+
+	public static Integer convertToInteger(String input) {
+
+		if (null != input) {
 			Integer myInt = Integer.parseInt(input);
 			return myInt;
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
-		
-		public static String convertToString(Integer input){
-			
-			if(null != input){
+
+	public static String convertToString(Integer input) {
+
+		if (null != input) {
 			return String.valueOf(input);
-			}
-			
-			return null;
 		}
-		
-		
-		public static String convertToString(BigDecimal input){
-			
-			if(null != input){
-				return String.valueOf(input);
-				}
-				
-				return null;
+
+		return null;
+	}
+
+	public static String convertToString(BigDecimal input) {
+
+		if (null != input) {
+			return String.valueOf(input);
 		}
-		
-		
-		/*public static void main(String[] args) {
-	        
-			BigDecimal ab = new BigDecimal(23.31321);
-			
-			System.out.println(convertToString(ab));
-			
-        }
-	*/
+
+		return null;
+	}
+
 }

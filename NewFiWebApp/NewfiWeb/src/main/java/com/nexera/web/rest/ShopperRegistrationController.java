@@ -230,19 +230,11 @@ public class ShopperRegistrationController {
 
 	private void authenticateUserAndSetSession(String emailId, String password,
 	        HttpServletRequest request) {
-
-		// String username = userVO.getUsername();
-		// String password = userVO.getPassword();
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 		        emailId, password);
-
-		// generate session if one doesn't exist
-		// request.getSession();
-
 		token.setDetails(new WebAuthenticationDetails(request));
 		Authentication authenticatedUser = authenticationManager
 		        .authenticate(token);
-
 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 	}
 
