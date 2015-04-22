@@ -13,6 +13,7 @@ public class GovernmentQuestionVO {
 	private Boolean isObligatedToPayAlimony;
 	private Boolean isEndorser;
 	private Boolean isUSCitizen;
+	private Boolean permanentResidentAlien;
 	private Boolean isOccupyPrimaryResidence;
 	private Boolean isOwnershipInterestInProperty;
 	private String ethnicity;
@@ -159,6 +160,12 @@ public class GovernmentQuestionVO {
 	}
 	public void setPropertyTitleStatus(String propertyTitleStatus) {
 		this.propertyTitleStatus = propertyTitleStatus;
+	}
+	public Boolean getPermanentResidentAlien() {
+		return permanentResidentAlien;
+	}
+	public void setPermanentResidentAlien(Boolean permanentResidentAlien) {
+		this.permanentResidentAlien = permanentResidentAlien;
 	}
 	
 	
