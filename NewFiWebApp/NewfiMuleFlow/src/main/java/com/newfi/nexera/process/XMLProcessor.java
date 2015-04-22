@@ -265,7 +265,9 @@ public class XMLProcessor
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource( doc );
-        File file = new File( "file.xml" );
+        String currentDirectory = System.getProperty( "user.dir" );
+        
+        File file = new File( currentDirectory + "../tmpfolder"+ File.separator + "file.xml" );
         file.createNewFile();
         StreamResult result = new StreamResult( file );
         transformer.transform( source, result );

@@ -11,7 +11,6 @@ import java.nio.file.NoSuchFileException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -157,11 +156,18 @@ public class RestInterceptor implements Callable
 
 
                 InputStream inputStream = getResource( "save.xml" );
+                LOG.debug( "InputStream of save.xml received " + inputParams.toString() );
                 String condition = restParameters.getLoanVO().getCondition();
                 if ( condition == null || condition.equals( "" ) ) {
                 } else {
                     try {
                         file = xmlProcessor.parseXML( inputStream, condition );
+                        if ( file != null ) {
+                            LOG.info( "File got created succesfully " + file.getName() );
+                            LOG.info( "File got created succesfully " + file.getAbsolutePath() );
+                        }
+                        LOG.error( "Unable to create file" );
+
                     } catch ( SAXException e ) {
                         LOG.error( "Exception Caught " + e.getMessage() );
                     } catch ( ParserConfigurationException e ) {
@@ -170,7 +176,7 @@ public class RestInterceptor implements Callable
                         LOG.error( "Exception Caught " + e.getMessage() );
                     }
                 }
-                String saveDefault = FileUtils.readFileToString( file );
+                String saveDefault = Utils.readFileAsStringFromPath( file.getAbsolutePath() );
                 if ( restParameters.getLoanVO().getsDataContentMap() != null )
                     saveDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(), saveDefault );
                 inputParams[2] = saveDefault;
