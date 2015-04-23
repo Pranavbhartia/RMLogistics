@@ -439,7 +439,7 @@ function getApplicationTextQues(question) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
-
+    var errFeild=appendErrorMessage();
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(question.text);
@@ -488,7 +488,7 @@ function getApplicationTextQues(question) {
     }
 
     quesTextCont.append(requird);
-    optionsContainer.append(optionCont);
+    optionsContainer.append(optionCont).append(errFeild);
 
     return container.append(quesTextCont).append(optionsContainer);
 }
@@ -603,7 +603,7 @@ function paintCustomerApplicationPageStep1a() {
     		
         	        	
         }else{
-        	showToastMessage("Please give answer of the questions");
+        showErrorToastMessage("Please answer the questions");
         }
    	
     });
@@ -749,7 +749,19 @@ function paintCustomerApplicationPageStep1b() {
     	propertyInsuranceCost = $('input[name="insuranceCost"]').val();
     	propertyPurchaseYear = $('input[name="purchaseTime"]').val();
     	
-    	
+    	var questionOne=validateInput($('input[name="taxesPaid"]'),propertyTaxesPaid,message);
+    	var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
+    	var questionThree=validateInput($('input[name="purchaseTime"]'),propertyPurchaseYear,message);
+    	if(propertyTypeCd=="" && residenceTypeCd==""){
+    		showErrorToastMessage("Please give answers for the questions");
+    		return false;
+    	}else if(!questionOne){
+    		return false;
+    	}else if(!questionTwo){
+    		return false;
+    	}else if(!questionThree){
+    		return false;
+    	}
     	
     	
     	if(propertyTypeCd != undefined && propertyTypeCd != "" && residenceTypeCd != undefined && residenceTypeCd != ""  && propertyTaxesPaid != undefined && propertyTaxesPaid != ""  && propertyInsuranceCost != undefined && propertyInsuranceCost != ""  && propertyPurchaseYear != undefined && propertyPurchaseYear != ""  ){
@@ -770,11 +782,8 @@ function paintCustomerApplicationPageStep1b() {
         	saveAndUpdateLoanAppForm(appUserDetails ,paintSecondPropertyStep());
     		
     		//paintCustomerApplicationPageStep2();
-    	}else{
-    		showToastMessage("Please give answer of the questions");
+    	
     	}
-    	
-    	
         
     });
 
@@ -838,18 +847,23 @@ $('#app-right-panel').html("");
 	}).html("Save & continue").on('click', function() {
 		
 		   isSecondaryMortgage = quesContxts[0].value;
-		   if(isSecondaryMortgage =='Yes')
-			   appUserDetails.secondMortgage = true;
-		   else{
-			   appUserDetails.secondMortgage = false;
-		   }
-		   
-		   
-		   refinancedetails.secondMortageBalance = $('input[name="secondaryMortgageBalance"]').val();
-		   
-		   appUserDetails.refinancedetails = refinancedetails;
+
+
+			   if(isSecondaryMortgage =='Yes')
+				   appUserDetails.secondMortgage = true;
+			   
+			   else{
+				   appUserDetails.secondMortgage = false;
+			   }
+			   
+			  
+			   refinancedetails.secondMortageBalance = $('input[name="secondaryMortgageBalance"]').val();
+			   
+			   appUserDetails.refinancedetails = refinancedetails;
+			  
+			   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
+
 		  
-		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
 		
 	      });
 	
@@ -1118,11 +1132,11 @@ function paintCustomerApplicationPageStep2() {
     		    			appUserDetails.isSpouseOnLoan =false;
     		    			appUserDetails.spouseName  = "";
     		    		}else{
-    		    			 showToastMessage("Please give the answers of the questions");
+    		    			 showErrorToastMessage("Please give the answers of the questions");
     	    		    	 return false;
     		    		}
     		     }else{
-    		    	 showToastMessage("Please give the answers of the questions");
+    		    	 showErrorToastMessage("Please give the answers of the questions");
     		    	 return false;
     		     }
     			 
@@ -1132,7 +1146,10 @@ function paintCustomerApplicationPageStep2() {
 	    		 appUserDetails.spouseName  = "";
     		 }
 	    	
-	    	
+	    	var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+	    	if(!question){
+	    		return false;
+	    	}
 	    	// this is the condition when spouseName is in the loan
             if(!appUserDetails.customerSpouseDetail)
                 appUserDetails.customerSpouseDetail={};
@@ -1585,7 +1602,7 @@ function paintRefinanceEmployed(divId,value) {
 }
 
 function getMultiTextQuestion(quesText, value) {
-
+	var errFeild=appendErrorMessage();
     var wrapper = $('<div>').attr({
         "class": "ce-option-ques-wrapper"
     });
@@ -1620,7 +1637,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox0.attr("value", val);
     }
-    quesTextCont0.append(inputBox0);
+    quesTextCont0.append(inputBox0).append(errFeild);
     
     
     // Job title
@@ -1640,7 +1657,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox4.attr("value", val);
     }
-    quesTextCont4.append(inputBox4);
+    quesTextCont4.append(inputBox4).append(errFeild);
     
 
     // Monthly income
@@ -1661,7 +1678,7 @@ function getMultiTextQuestion(quesText, value) {
         inputBox1.attr("value", val);
     }
   
-    quesTextCont1.append(inputBox1);
+    quesTextCont1.append(inputBox1).append(errFeild);
     
     
     // Employer
@@ -1681,7 +1698,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox2.attr("value", val);
     }
-    quesTextCont2.append(inputBox2);
+    quesTextCont2.append(inputBox2).append(errFeild);
     
     
    // Start working 
@@ -1701,7 +1718,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox3.attr("value", val);
     }
-    quesTextCont3.append(inputBox3);
+    quesTextCont3.append(inputBox3).append(errFeild);
 
    
 
@@ -1735,7 +1752,7 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
 });
 
 function getPreviousEmployementQuestions(value) {
-	
+	var errFeild=appendErrorMessage();
 	var wrapper = $('<div>').attr({
 		"class" : "ce-option-ques-wrapper prev-employement-ques"
 	});
@@ -1787,9 +1804,9 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox0.attr("value",val);
 	}
-	quesTextCont0.append(inputBox0);
+	quesTextCont0.append(inputBox0).append(errFeild);
 	
-	quesTextCont1.append(inputBox1);
+	quesTextCont1.append(inputBox1).append(errFeild);
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -1804,7 +1821,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox2.attr("value",val);
 	}
-	quesTextCont2.append(inputBox2);
+	quesTextCont2.append(inputBox2).append(errFeild);
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -1819,7 +1836,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox3.attr("value",val);
 	}
-	quesTextCont3.append(inputBox3);
+	quesTextCont3.append(inputBox3).append(errFeild);
 	
 	var quesTextCont4 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -1833,7 +1850,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox4.attr("value",val);
 	}
-	quesTextCont4.append(inputBox4);
+	quesTextCont4.append(inputBox4).append(errFeild);
 
 	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
@@ -1864,6 +1881,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     if(value&&!value.selected)
         flag=false;
     //appUserDetails.employed ="true";
+    var errFeild=appendErrorMessage();
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var wrapper = $('<div>').attr({
@@ -1921,6 +1939,7 @@ function paintRefinanceSelfEmployed(divId,value) {
 }
 
 function paintRefinanceDisability(divId,value) {
+	var errFeild=appendErrorMessage();
     var flag=true;
     if(value&&!value.selected)
         flag=false;
@@ -1949,7 +1968,7 @@ function paintRefinanceDisability(divId,value) {
     			"value" : appUserDetails.ssDisabilityIncome
     		});
 
-    		optionContainer.append(inputBox);
+    		optionContainer.append(inputBox).append(errFeild);
     		container.append(quesTextCont).append(optionContainer);
     		wrapper.append(container);
     		$('#ce-option_' + divId).prepend(wrapper);
@@ -1960,6 +1979,7 @@ function paintRefinanceDisability(divId,value) {
 }
 
 function paintRefinancePension(divId,value,name) {
+	var errFeild=appendErrorMessage();
     var flag=true;
     if(value&&!value.selected)
         flag=false;
@@ -1996,7 +2016,7 @@ function paintRefinancePension(divId,value,name) {
     			"value": val
     		});
     	
-    		optionContainer.append(inputBox);
+    		optionContainer.append(inputBox).append(errFeild);
     		container.append(quesTextCont).append(optionContainer);
     		wrapper.append(container);
     		$('#ce-option_' + divId).prepend(wrapper);
@@ -2051,6 +2071,7 @@ function paintRefinancePension(divId,value,name) {
 
 
 function getAppDetialsTextQuestion(quesText, clickEvent, name) {
+	var errFeild=appendErrorMessage();
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -2068,7 +2089,7 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 		"name" : name
 	});
 
-	optionContainer.append(inputBox);
+	optionContainer.append(inputBox).append(errFeild);
 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
@@ -3942,7 +3963,13 @@ var questions = [
 			
 			refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
 			 appUserDetails.refinancedetails = refinancedetails;
-			paintRefinanceStep3();
+			var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),refinancedetails.currentMortgageBalance ,message);
+			if(isSuccess){
+				paintRefinanceStep3();
+			}else{
+				return false;
+			}
+		
 			
 			//paintCustomerApplicationPageStep1a();
 		   });
@@ -4018,7 +4045,19 @@ function paintRefinanceStep3() {
 			propertyTypeMaster.propertyInsuranceCost = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
             propertyTypeMaster.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
             propertyTypeMaster.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
-           
+             var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinancedetails.currentMortgagePayment ,message);
+             var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),propertyTypeMaster.propertyTaxesPaid,message);
+             var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),propertyTypeMaster.propertyInsuranceCost,message);
+             alert("mess"+questionOne+""+questionTwo+""+questionThree);
+             if(!questionOne){
+            	 return false;
+             }else if(!questionTwo){
+            	 return false;
+             }else if(!questionThree){
+            	 return false;
+             }else if(quesContxts["includeTaxes"].value==null||quesContxts["includeTaxes"].value==""){
+            	 return false;
+             }
 		    appUserDetails.refinancedetails=refinancedetails;
 		    appUserDetails.propertyTypeMaster=propertyTypeMaster;
 		    saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1a());
@@ -4139,6 +4178,7 @@ function getQuestionContextCEP(question,parentContainer,valueset){
 
 
 function getContextApplicationTextQuesCEP(contxt) {
+	var errFeild=appendErrorMessage();
     var container = $('<div>').attr({
         "class": "ce-ques-wrapper"
     });
@@ -4178,7 +4218,7 @@ function getContextApplicationTextQuesCEP(contxt) {
         optionCont.val(contxt.value);
     }
 
-    optionsContainer.append(optionCont);
+    optionsContainer.append(optionCont).append(errFeild);
 
     return container.append(quesTextCont).append(optionsContainer);
 }
@@ -4290,9 +4330,9 @@ function getTextQuestion(quesText, clickEvent, name) {
 		var key = event.data.name;
 		console.log('key'+key);
 		inputValue= $('input[name="' + key + '"]').val();
-
+        var className=$('input[name="' + key + '"]');
 		appUserDetails.refinancedetails[key]  = inputValue;
-        var isSuccess=validateInput($('input[name="' + key + '"]').val(),message);
+        var isSuccess=validateInput(className,$('input[name="' + key + '"]').val(),message);
         if(isSuccess){
         	event.data.clickEvent();
         }else{
