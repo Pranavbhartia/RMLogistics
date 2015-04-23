@@ -128,7 +128,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                     if(!appUserDetailsTemp.loan.lqbFileId){
                         paintCustomerApplicationPage();
                     }else{
-                        $('#center-panel-cont').html("Application have been submitted.");
+                        $('#center-panel-cont').html("Application already submitted.");
                     }
 	            });
 	            //paintSelecedOption();

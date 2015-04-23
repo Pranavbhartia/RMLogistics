@@ -567,7 +567,6 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
             var isSuccess = validateInput(className,$('input[name="zipCode"]').val(), errorMessageForZipcode);
        
             if (isSuccess) {
-            	alert("length"+$('input[name="zipCode"]').val().length);
                 if ($('input[name="zipCode"]').val().length > 5 || $('input[name="zipCode"]').val().length < 5) {
                 	 $('input[name="' + key + '"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
             		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
