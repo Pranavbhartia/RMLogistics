@@ -1211,6 +1211,7 @@ public class ApplicationFormRestService {
 			if(loanAppFormVO.getIsCoborrowerPresent() == false && loanAppFormVO.getSsnProvided() == false){
 				hashmap.put("applicantId", " ");
 				hashmap.put("userSSNnumber", "000000");
+				hashmap = appendBorrowerDefCredScore(hashmap);
 				condition= "noCoBorrowerWithoutSSN";
 			}
 			
@@ -1226,6 +1227,8 @@ public class ApplicationFormRestService {
 				hashmap.put("applicantId", " ");
 				hashmap.put("userSSNnumber", "000000000");
 				hashmap.put("userCoborrowerSSNnumber","000000000");
+				hashmap= appendBorrowerDefCredScore(hashmap);
+				hashmap = appendSpCBDefCredScore(hashmap);
 				condition = "coborrowerIsWifeWithoutSSNBoth";
 			}
 			
@@ -1242,6 +1245,8 @@ public class ApplicationFormRestService {
 				hashmap.put("userSSNnumber", "000000000");
 				hashmap.put("userCoborrowerSSNnumber","000000000");
 				hashmap.put("ApplicantCoBorrowerId","000000000");
+				hashmap= appendBorrowerDefCredScore(hashmap);
+				hashmap=appendCBDefCredScore(hashmap);
 				condition = "coborrowerWithoutSSNBoth";
 			}
 			
@@ -1290,18 +1295,45 @@ public class ApplicationFormRestService {
 		return hashmap;
 	}
 	
+	HashMap<String, String> appendBorrowerDefCredScore(HashMap<String, String> hashmap){
+		
+		hashmap.put("borrowerExperianScore", "800");
+		hashmap.put("borrowerEquifaxScore", "800");
+		hashmap.put("borrowerTransUnionScore", "800");
+		return   hashmap; 
+	}
 	
 	
+	HashMap<String, String> appendSpCBDefCredScore(HashMap<String, String> hashmap){
+	
+		hashmap.put("ExperianCoborrowerWifeScore", "800");
+		hashmap.put("EquifaxCoborrowerWifeScore", "800");
+		hashmap.put("TransUnionCoborrowerWifeScore", "800");
+		return   hashmap; 
+	}
+	
+	
+	HashMap<String, String> appendCBDefCredScore(HashMap<String, String> hashmap){
+		
+		hashmap.put("ExperianCoborrowerScore", "800");
+		hashmap.put("EquifaxCoborrowerScore", "800");
+		hashmap.put("TransUnionCoborrowerScore", "800");
+		return   hashmap; 
+	}
+	
+	   
+    
+    
 	HashMap<String, String> appendCoBorrowerDetails(HashMap<String, String> hashmap){
 		
-		hashmap.put("firstCoborrowerName","Jacob");
-		hashmap.put( "middleCoborrowerName","B");
+		hashmap.put("firstCoborrowerName","JANET");
+		hashmap.put( "middleCoborrowerName","X");
 		hashmap.put( "lastCoborrowerName","TESTCASE");
-		hashmap.put("dateOfCoborrowerBirth","1980-05-27");
+		hashmap.put("dateOfCoborrowerBirth","1947-01-22");
 		hashmap.put( "baseCoborrowerIncome","100000");
-		hashmap.put("applicantCoborrowerAddress","123 Love AVE");
-		hashmap.put("userCoborrowerSSNnumber","000-00-0016");
-		hashmap.put( "ApplicantCoBorrowerId","000-00-0016");
+		hashmap.put("applicantCoborrowerAddress","19 FOREST DR");
+		hashmap.put("userCoborrowerSSNnumber","000-00-0003");
+		hashmap.put( "ApplicantCoBorrowerId","000-00-0003");
 		hashmap.put( "alimonyCoborrowerName","NONE");
 		hashmap.put("alimonyCoborrowerPayment","1000");
 		hashmap.put( "jobCoborrowerExpenses","1000");
@@ -1312,6 +1344,7 @@ public class ApplicationFormRestService {
 		return hashmap;
 		
 	}
+	
 	
 	
 	HashMap<String, String> getBorrowerCredit(HashMap<String, String> hashmap){

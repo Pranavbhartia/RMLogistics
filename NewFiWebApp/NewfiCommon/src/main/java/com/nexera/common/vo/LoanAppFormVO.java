@@ -1265,7 +1265,11 @@ public class LoanAppFormVO implements Serializable {
 		spouseGovernmentQuestions.setUSCitizen(spouseGovernmentQuestionsVO
 		        .isUSCitizen());
 		
+		if(spouseGovernmentQuestionsVO.isUSCitizen()!=null && "No".equalsIgnoreCase(spouseGovernmentQuestionsVO
+		        .isUSCitizen().toString()) || spouseGovernmentQuestionsVO
+		        .isUSCitizen() == false){
 		spouseGovernmentQuestions.setPermanentResidentAlien(spouseGovernmentQuestionsVO.isPermanentResidentAlien());
+		}
 		
 		spouseGovernmentQuestions
 		        .setOccupyPrimaryResidence(spouseGovernmentQuestionsVO

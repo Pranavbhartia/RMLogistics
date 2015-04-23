@@ -2887,13 +2887,14 @@ function paintCustomerApplicationPageStep5() {
     	var ssnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
     	//alert('ssnProvided'+ssnProvided);
     	
-    	if(dateOfBirth != undefined && dateOfBirth !="" && ssn != undefined && ssn !="" && phoneNumber != undefined && phoneNumber !="" && yearCount>=0){
+    	if(dateOfBirth != undefined && dateOfBirth !=""  && phoneNumber != undefined && phoneNumber !="" && yearCount>=0){
     		
     		//appUserDetails.customerDetail
     		
     		customerDetailTemp =  appUserDetails.user.customerDetail;
             userTemp = appUserDetails.user;
     		customerDetailTemp.dateOfBirth= new Date(dateOfBirth).getTime();
+    		
     		customerDetailTemp.ssn = ssn;
     		//customerDetailTemp.secPhoneNumber = secPhoneNumber;
     		userTemp.phoneNumber = phoneNumber;
