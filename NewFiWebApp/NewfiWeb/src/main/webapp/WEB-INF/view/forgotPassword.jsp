@@ -25,7 +25,7 @@
 						filter text, lipsum, and mock-content.</div>
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm" action="#" method="POST">
-						   
+						    <div class="reset-error hide" id="errorMessage"></div>
 							<div class="reg-input-reset-password reg-email" id="email-container">
 					        <input class="reg-input" placeholder="Email" id="emailID" >	
 							<div class="err-msg hide"></div>
@@ -49,6 +49,15 @@
 	
 </body>
 <script>
+
+$(document).ready(function(e){
+
+	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
+		/* $("#errorMessage").text("${error}");
+		$("#errorMessage").show(); */
+		showErrorToastMessage("${error}");
+	}
+});
 var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]\.[0-9]\.[0-9]\.[0-9]\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]+))$/;
 
 $('#loginForm').submit(function(event){
