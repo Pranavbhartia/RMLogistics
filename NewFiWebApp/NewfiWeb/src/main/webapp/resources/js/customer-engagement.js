@@ -97,6 +97,7 @@ function getContextApplicationTextQuesCEP(contxt) {
         "class": "ce-options-cont"
     });
     
+
     var errFeild=appendErrorMessage();
     var optionCont = $('<input>').attr({
         "class": "ce-input",
@@ -1450,7 +1451,7 @@ function teaseCalculation(inputCustomerDetails){
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment)));  	
     
-    var investment = (InsuranceTemp + taxesTemp)/12;
+    var investment = (InsuranceTemp + taxesTemp);
 	
     if(inputCustomerDetails.isIncludeTaxes =="Yes"){
     	monthlyPayment = monthlyPayment -investment ;
@@ -1541,7 +1542,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     
     if(customerInputData.isIncludeTaxes =="Yes"){
     	
-    	var investment = (Insurance + tax)/12;
+    	var investment = (Insurance + tax);
     	monthlyPayment = monthlyPayment -investment ;
     	totalEstMonthlyPayment  = principalInterest + investment;
   
@@ -1638,7 +1639,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     //var lcRow1 = getLaonSummaryApplyBtnRow();
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Year Fixed","loanprogramId");
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+showValue(housePrice), " Down Payment","$ "+showValue(downPayment));
     //var lcRow4 = getLoanSummaryRow("Down Payment", "");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3) +" %", "teaserRateId");
@@ -1801,7 +1802,7 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	/*else
     		monthlyPayment =  parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.rentPerMonth)));*/
     	
-    	var investment = (InsuranceTemp + taxesTemp)/12;
+    	var investment = (InsuranceTemp + taxesTemp);
     	
     	if(customerInputData.isIncludeTaxes =="Yes"){
     		

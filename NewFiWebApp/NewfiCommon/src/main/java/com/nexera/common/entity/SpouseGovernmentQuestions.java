@@ -30,7 +30,7 @@ public class SpouseGovernmentQuestions implements Serializable{
 	private Boolean isObligatedToPayAlimony;
 	private Boolean isEndorser;
 	private Boolean isUSCitizen;
-	private boolean permanentResidentAlien;
+	private Boolean permanentResidentAlien;
 	private Boolean isOccupyPrimaryResidence;
 	private Boolean isOwnershipInterestInProperty;
 	private String ethnicity;

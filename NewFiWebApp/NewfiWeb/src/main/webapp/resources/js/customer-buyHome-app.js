@@ -542,7 +542,7 @@ function paintSpouseSaleOfCurrentHome() {
     questionsContainer.append(quesHeaderTextCont2);
 
     var skipQuestions = $('<div>').attr({
-    	"class" : "ce-option-checkbox"
+    	"class" : "ce-option-checkbox myassets"
     }).html("No Thanks, Let's move on")
     .bind('click',function(){
 	   	 if($(this).hasClass('app-option-checked')){
@@ -970,11 +970,13 @@ function paintSaleOfCurrentHome() {
      var quesMyAssetsCont = $('<div>').attr({
         "class": "app-ques-header-txt"
      }).html(quesHeaderAssets);
+     
+   
    
      questionsContainer.append(quesMyAssetsCont);
      
      var skipQuestions = $('<div>').attr({
-    	"class" : "ce-option-checkbox" 
+    	"class" : "ce-option-checkbox myassets" 
      }).html("No Thanks, Let's move on")
      .bind('click',function(){
     	 if($(this).hasClass('app-option-checked')){

@@ -1091,7 +1091,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVoObj.yearData +" Years Fixed","loanprogramId");
     //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+housePrice, " Down Payment","$ "+downPayment);
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+showValue(housePrice), " Down Payment","$ "+showValue(downPayment));
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVoObj.teaserRate).toFixed(3)+" %", "teaserRateId");
@@ -1168,7 +1168,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     
     if(appUserDetails.refinancedetails.includeTaxes ==true){
     	
-    	var investment = (Insurance + tax)/12;
+    	var investment = (Insurance + tax);
     	monthlyPayment= monthlyPayment - investment ;
     	
     	totalEstMonthlyPayment  = principalInterest + Insurance + tax;
@@ -1386,7 +1386,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
           monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
         
     	
-    	var investment = (InsuranceTemp + taxesTemp)/12;
+    	var investment = (InsuranceTemp + taxesTemp);
     	
     	
     	if(appUserDetails.refinancedetails.includeTaxes ==true){
@@ -2171,7 +2171,7 @@ function lockRateCalculation(appUserDetails){
       monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
     
 	
-    var investment = (InsuranceTemp + taxesTemp)/12;
+    var investment = (InsuranceTemp + taxesTemp);
    
     if(appUserDetails.refinancedetails.includeTaxes ==true){
     	monthlyPayment = monthlyPayment -investment ;
