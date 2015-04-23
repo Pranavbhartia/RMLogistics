@@ -53,9 +53,9 @@
 $(document).ready(function(e){
 
 	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
-		/* $("#errorMessage").text("${error}");
-		$("#errorMessage").show(); */
-		showErrorToastMessage("${error}");
+        $("#errorMessage").text("${error}");
+		$("#errorMessage").show(); 
+
 	}
 });
 var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]\.[0-9]\.[0-9]\.[0-9]\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]+))$/;
