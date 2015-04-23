@@ -4048,7 +4048,7 @@ function paintRefinanceStep3() {
              var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinancedetails.currentMortgagePayment ,message);
              var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),propertyTypeMaster.propertyTaxesPaid,message);
              var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),propertyTypeMaster.propertyInsuranceCost,message);
-             alert("mess"+questionOne+""+questionTwo+""+questionThree);
+            
              if(!questionOne){
             	 return false;
              }else if(!questionTwo){
