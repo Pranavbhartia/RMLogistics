@@ -192,12 +192,25 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public Integer updateUser(String s3ImagePath, Integer userid) {
+	public Integer updatePhotoURL(String s3ImagePath, Integer userid) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.photoImageUrl = :imagePath WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("imagePath", s3ImagePath);
 		query.setParameter("id", userid);
+		int result = query.executeUpdate();
+		return result;
+	}
+
+	@Override
+	public Integer updateTokenDetails(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.emailEncryptionToken = :emailEncryptionToken , usr.tokenGeneratedTime =:tokenGeneratedTime WHERE usr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("emailEncryptionToken",
+		        user.getEmailEncryptionToken());
+		query.setParameter("tokenGeneratedTime", user.getTokenGeneratedTime());
+		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		return result;
 	}

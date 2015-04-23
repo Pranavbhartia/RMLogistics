@@ -19,11 +19,14 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -793,7 +796,6 @@ public class NexeraUtility {
 			messageDigest.update(emailId.getBytes());
 			byte[] byteData = messageDigest.digest();
 			// convert the byte to hex format method 1
-
 			for (int i = 0; i < byteData.length; i++) {
 				sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16)
 				        .substring(1));
@@ -802,6 +804,15 @@ public class NexeraUtility {
 			sb.append(milliSecond);
 		}
 		return sb.toString();
+
+	}
+
+	public boolean hasLinkExpired(Date inputTime, Locale locale) {
+		Calendar tokenGenerationTime = Calendar.getInstance();
+		tokenGenerationTime.setTimeInMillis(inputTime.getTime());
+		tokenGenerationTime.add(Calendar.DAY_OF_MONTH, 3);
+		Date today = new Date(System.currentTimeMillis());
+		return tokenGenerationTime.after(today);
 
 	}
 
