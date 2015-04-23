@@ -1,8 +1,9 @@
-function paintMySpouseIncome(coborrowerName) {
-
+function paintMySpouseIncome() {
+   
+	var coborrowerName = appUserDetails.customerSpouseDetail.spouseName;
 	if(coborrowerName)
 	var quesTxt =coborrowerName+ " details :Select all that apply";
-	//appProgressBaar(3);
+	
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.selfEmployedIncome){
         var tmpData={
@@ -84,9 +85,9 @@ function paintMySpouseIncome(coborrowerName) {
 	var questcontainer = $('#app-right-panel').append(quesCont);
 		
 	console.log('purchase'+purchase);
-	if(purchase == true)
-    {
-	    var questionsContainer10 = paintSpouseSaleOfCurrentHome();
+	if(purchase == true){
+	    
+		var questionsContainer10 = paintSpouseSaleOfCurrentHome();
 		questcontainer.append(questionsContainer10);
     }
 
@@ -477,7 +478,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	}
 	
 
-	container.append(quesTextCont).append(optionContainer)
+	container.append(quesTextCont).append(optionContainer);
  
 	return container;
 }
@@ -983,10 +984,12 @@ function paintSpouseCustomerApplicationPageStep4a(coborrowerName) {
 
 function paintSpouseCustomerApplicationPageStep4b(){
 	
-	
+	var coborrower ="co-borrower";
+	if(appUserDetails.customerSpouseDetail.spouseName)
+	coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Government Monitoring Questions for co-borrower";
+    var quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"

@@ -26,12 +26,14 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateCustomerDetails(CustomerDetail CustomerDetail);
 
+	public Integer updateTokenDetails(User user);
+
 	public Integer updateCustomerScore(CustomerDetail CustomerDetail);
 
 	public Integer updateCustomerSpouseScore(
 	        CustomerSpouseDetail CustomerSpouseDetail);
 
-	public Integer updateUser(String s3ImagePath, Integer userid);
+	public Integer updatePhotoURL(String s3ImagePath, Integer userid);
 
 	public Integer competeUserProfile(User user);
 

@@ -119,13 +119,11 @@ public class UserProfileRest {
 				userProfileService.resetPassword(userDetail);
 				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
 				commonResponse.setResultObject(successMessage);
-
 			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
 				errors.setMessage(e.getMessage());
 				commonResponse.setError(errors);
 			}
-
 		} else {
 			errors.setMessage(ErrorConstants.FORGET_PASSWORD_USER_EMPTY);
 			commonResponse.setError(errors);

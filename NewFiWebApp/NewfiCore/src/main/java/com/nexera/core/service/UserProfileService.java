@@ -28,7 +28,9 @@ public interface UserProfileService {
 
 	public Integer updateCustomerDetails(UserVO userVO);
 
-	public Integer updateUser(String s3ImagePath, Integer userid);
+	public Integer updatePhotoURL(String s3ImagePath, Integer userid);
+
+	public void updateTokenDetails(User user);
 
 	public Integer competeUserProfile(UserVO userVO);
 
@@ -90,5 +92,8 @@ public interface UserProfileService {
 	public String getLQBUrl(Integer userId, Integer loanId);
 
 	public List<String> getDefaultUsers(String userName);
+
+	public User validateRegistrationLink(String userToken)
+	        throws InvalidInputException;
 
 }

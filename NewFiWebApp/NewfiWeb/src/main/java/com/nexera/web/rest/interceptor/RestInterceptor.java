@@ -12,7 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.common.commons.Utils;
-import com.nexera.web.rest.RateCalculatorRestService;
 
 public class RestInterceptor implements HandlerInterceptor {
 
@@ -50,13 +49,12 @@ public class RestInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
-		/*if (utils.getLoggedInUser() == null) {
-			LOG.error("User is not logged in");
-			LOG.debug(request.getServletPath() + "is a protected.... URL");
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return false;
-		}*/
-
+		/*
+		 * if (utils.getLoggedInUser() == null) {
+		 * LOG.error("User is not logged in");
+		 * LOG.debug(request.getServletPath() + "is a protected.... URL");
+		 * response.sendRedirect("/NewfiWeb"); return false; }
+		 */
 		return true;
 	}
 

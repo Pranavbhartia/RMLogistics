@@ -106,6 +106,14 @@ public class Utils {
 	public Date getDateInUserLocale(Date date) {
 
 		Integer offSetFromUser = getOffsetFromUserObject();
+		return getDateInUserLocale(date, offSetFromUser);
+	}
+
+	public Date getDateInUserLocale(Date date, Integer offSetFromUser) {
+		if (offSetFromUser == null) {
+			offSetFromUser = getOffsetFromUserObject();
+		}
+
 		Date localeDate = null;
 		try {
 
