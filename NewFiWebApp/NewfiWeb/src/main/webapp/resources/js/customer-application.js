@@ -785,6 +785,14 @@ function paintCustomerApplicationPageStep1b() {
         selected: ""
     }, {
         type: "desc",
+        text: "When did you purchase this property?",
+        name: "purchaseTime",
+        value: appUserDetails.propertyTypeMaster.propertyPurchaseYear
+    }];
+
+    /*Commented These questions since these are being asked on previous step
+    {
+        type: "desc",
         text: "How much is paid in property taxes every year?",
         name: "taxesPaid",
         value: appUserDetails.propertyTypeMaster.propertyTaxesPaid
@@ -794,13 +802,7 @@ function paintCustomerApplicationPageStep1b() {
         text: "How much does homeowners insurance cost per year?",
         name: "insuranceCost",
         value: appUserDetails.propertyTypeMaster.propertyInsuranceCost
-    }, {
-        type: "desc",
-        text: "When did you purchase this property?",
-        name: "purchaseTime",
-        value: appUserDetails.propertyTypeMaster.propertyPurchaseYear
-    }];
-
+    }*/
     var questionsContainer = getQuestionsContainer(questions);
     
    
@@ -810,33 +812,35 @@ function paintCustomerApplicationPageStep1b() {
     	
     	propertyTypeCd = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
     	residenceTypeCd= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
-    	propertyTaxesPaid = $('input[name="taxesPaid"]').val();
+    	//propertyTaxesPaid = $('input[name="taxesPaid"]').val();
     	//propertyInsuranceProvider = $('input[name="insuranceProvider"]').val();
-    	propertyInsuranceCost = $('input[name="insuranceCost"]').val();
+    	//propertyInsuranceCost = $('input[name="insuranceCost"]').val();
     	propertyPurchaseYear = $('input[name="purchaseTime"]').val();
     	
-    	var questionOne=validateInput($('input[name="taxesPaid"]'),propertyTaxesPaid,message);
-    	var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
+    	//var questionOne=validateInput($('input[name="taxesPaid"]'),propertyTaxesPaid,message);
+    	//var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
     	var questionThree=validateInput($('input[name="purchaseTime"]'),propertyPurchaseYear,message);
     	if(propertyTypeCd==undefined && residenceTypeCd==undefined){
     		showErrorToastMessage(yesyNoErrorMessage);
     		return false;
-    	}else if(!questionOne){
+    	}else if(!questionThree){
+            return false;
+        }
+
+        /*else if(!questionOne){
     		return false;
     	}else if(!questionTwo){
     		return false;
-    	}else if(!questionThree){
-    		return false;
-    	}
+    	}*/
     	
     	
     	
     		
     		propertyTypeMaster.propertyTypeCd = propertyTypeCd;
         	propertyTypeMaster.residenceTypeCd = residenceTypeCd;
-        	propertyTypeMaster.propertyTaxesPaid = propertyTaxesPaid;
+        	//propertyTypeMaster.propertyTaxesPaid = propertyTaxesPaid;
         	//propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
-        	propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
+        	//propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
         	propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
           //	propertyTypeMaster.homeWorthToday = homeWorthToday ;
         	  	
@@ -3841,7 +3845,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
     		datatype : "application/json",
     		success:function(data){
     			
-    			appUserDetails=data;
+    			//appUserDetails=data;
                 newfi.appUserDetails=JSON.stringify(appUserDetails);
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
