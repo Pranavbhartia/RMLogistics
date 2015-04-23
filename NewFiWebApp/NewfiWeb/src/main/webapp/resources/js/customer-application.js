@@ -1222,10 +1222,7 @@ function paintCustomerApplicationPageStep2() {
     	    		    	 return false;
     		    		}
     		     }else{
-                   if(isSpouseCoBorrower!="Yes" || isSpouseCoBorrower!="No"){
-                	   showErrorToastMessage(yesyNoErrorMessage);
-                	   
-                   }
+
     		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
     			    	if(!question){
     			    		return false;
