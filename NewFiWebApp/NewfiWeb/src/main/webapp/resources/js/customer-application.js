@@ -1391,28 +1391,28 @@ function incomesSelectALLThatApply() {
 		"value" : 3
 	}*/
 	{
-		"text" : "Child support/alimony",
+		"text" : "Child Support/alimony",
 		"onselect" : paintRefinancePension,
 		"name" :"childAlimonySupport",
         "data" : childSupportIncome,
 		"value" : 2
 	}, 
 	{
-		"text" : "Social security income",
+		"text" : "Social Security income",
 		"onselect" : paintRefinancePension,
 		"name" :"socialSecurityIncome",
         "data" : socialSecIncome,
 		"value" : 3
 	}, 
 	{
-		"text" : "Disability Income",
+		"text" : "Disability Income",
 		"onselect" : paintRefinancePension,
 		"name" :"disabilityIncome",
         "data" : socialSecDisabilityIncome,
 		"value" : 4
 	}, 
 	{
-		"text" : "Pension Income",
+		"text" : "Pension Income",
 		"onselect" : paintRefinancePension,
 		"name" :"pensionIncome",
         "data" : pensionIncome,
@@ -1575,7 +1575,7 @@ function paintMyIncome() {
         }
                 
         if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
-            saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome(appUserDetails.customerSpouseDetail.spouseName));
+            saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome());
         } else {
             saveAndUpdateLoanAppForm(appUserDetails, paintCustomerApplicationPageStep4a());
         }
