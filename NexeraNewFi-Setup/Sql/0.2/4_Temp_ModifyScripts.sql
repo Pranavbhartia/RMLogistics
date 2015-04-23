@@ -212,3 +212,8 @@ alter table newfi_schema.spousegovernmentquestion add column isPermanentResident
 # Added bY Charu
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `locked_rate_data` VARCHAR(1000) NULL AFTER `purchase_document_expiry_date`;
+
+
+# 23 April by Abhishek
+alter table newfi_schema.loanappform add column skip_my_assets TINYINT(4);
+alter table newfi_schema.customerspousedetails add column skip_my_assets TINYINT(4);

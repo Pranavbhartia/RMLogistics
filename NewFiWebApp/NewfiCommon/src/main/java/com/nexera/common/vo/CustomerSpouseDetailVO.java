@@ -32,6 +32,9 @@ public class CustomerSpouseDetailVO implements Serializable {
 	private String monthlyPension;
 	private String retirementIncome;
 
+	//My Assets
+	private Boolean skipMyAssets;
+	
 	public int getId() {
 		return id;
 	}
@@ -207,6 +210,14 @@ public class CustomerSpouseDetailVO implements Serializable {
 
 	public void setRetirementIncome(String retirementIncome) {
 		this.retirementIncome = retirementIncome;
+	}
+
+	public Boolean getSkipMyAssets() {
+		return skipMyAssets;
+	}
+
+	public void setSkipMyAssets(Boolean skipMyAssets) {
+		this.skipMyAssets = skipMyAssets;
 	}
 	
 	

@@ -33,9 +33,9 @@ public class CustomerSpouseDetail implements Serializable {
 	private String spouseSsn;
 	private String spouseSecPhoneNumber;
 	private String spouseName;
-	private boolean isSelfEmployed;
-	private boolean isssIncomeOrDisability;
-	private boolean is_pension_or_retirement;
+	private Boolean isSelfEmployed;
+	private Boolean isssIncomeOrDisability;
+	private Boolean is_pension_or_retirement;
 	
 	private List<LoanAppForm> loanAppForms;
 	private String equifaxScore;
@@ -54,6 +54,9 @@ public class CustomerSpouseDetail implements Serializable {
 	private BigDecimal monthlyPension;
 	private BigDecimal retirementIncome;
 
+	//skip my assests
+	private Boolean skipMyAssets;
+	
 	public CustomerSpouseDetail() {
 	}
 
@@ -106,21 +109,21 @@ public class CustomerSpouseDetail implements Serializable {
 
 	@Column(name = "is_self_employed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public boolean isSelfEmployed() {
+	public Boolean isSelfEmployed() {
 		return isSelfEmployed;
 	}
 
-	public void setSelfEmployed(boolean isSelfEmployed) {
+	public void setSelfEmployed(Boolean isSelfEmployed) {
 		this.isSelfEmployed = isSelfEmployed;
 	}
 
 	@Column(name = "is_ssincome_or_disability", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public boolean isIsssIncomeOrDisability() {
+	public Boolean isIsssIncomeOrDisability() {
 		return isssIncomeOrDisability;
 	}
 
-	public void setIsssIncomeOrDisability(boolean isssIncomeOrDisability) {
+	public void setIsssIncomeOrDisability(Boolean isssIncomeOrDisability) {
 		this.isssIncomeOrDisability = isssIncomeOrDisability;
 	}
 
@@ -154,11 +157,11 @@ public class CustomerSpouseDetail implements Serializable {
 	
 	@Column(name = "is_pension_or_retirement", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public boolean isIs_pension_or_retirement() {
+	public Boolean isIs_pension_or_retirement() {
 		return is_pension_or_retirement;
 	}
 
-	public void setIs_pension_or_retirement(boolean is_pension_or_retirement) {
+	public void setIs_pension_or_retirement(Boolean is_pension_or_retirement) {
 		this.is_pension_or_retirement = is_pension_or_retirement;
 	}
 
@@ -260,5 +263,12 @@ public class CustomerSpouseDetail implements Serializable {
 		this.retirementIncome = retirementIncome;
 	}
 	
-	
+	@Column(name = "skip_my_assets")
+	public Boolean getSkipMyAssets() {
+		return skipMyAssets;
+	}
+
+	public void setSkipMyAssets(Boolean skipMyAssets) {
+		this.skipMyAssets = skipMyAssets;
+	}
 }

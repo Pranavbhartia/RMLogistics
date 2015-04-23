@@ -965,6 +965,13 @@ function paintSaleOfCurrentHome() {
      var quesMyAssetsCont = $('<div>').attr({
         "class": "app-ques-header-txt"
      }).html(quesHeaderAssets);
+     
+     var options = [ {
+ 		"text" : "No Thanks, Let's move on",
+ 		"name" : "bypassoptional",
+ 		"value" : 0
+ 	}];
+     
    
      questionsContainer.append(quesMyAssetsCont);
      

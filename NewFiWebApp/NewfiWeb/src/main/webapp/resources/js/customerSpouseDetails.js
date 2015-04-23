@@ -1119,10 +1119,11 @@ function paintSpouseGovernmentMonitoringQuestions(quesText, options, name) {
 
 function paintCustomerSpouseApplicationPageStep5() {
 	
-	
+	var coborrower = "co borrower";
+	 coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for co-borrower";
+    var quesHeaderTxt = "Credit for "+coborrower;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"

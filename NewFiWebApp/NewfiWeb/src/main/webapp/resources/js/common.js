@@ -580,3 +580,14 @@ function getLQBObj(yearValues){
 		return JSON.parse(appUserDetails.loan.lockedRateData);
 	}
 }
+
+
+function clickEnter(name){
+	
+	$('input[name='+name+']').on("keypress",function(e){
+		if(e.keyCode == 13){
+	        $(".ce-save-btn").click();
+		}
+		
+	});
+}
