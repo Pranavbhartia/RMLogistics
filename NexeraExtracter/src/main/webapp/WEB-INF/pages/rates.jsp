@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div class="">
-		<div class="header-wrapper">
+		<div id="header-wrapper" class="header-wrapper">
 			<div class="header-container container">
 				<div class="header-row row clearfix">
 					<div id="blu-stream-link" class="header-logo float-left"></div>
@@ -20,8 +20,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="body-wrapper">
 			<div class="container body-header-container">
 				<div class="body-header-row row clearfix">
 					<div class="float-left header-txt">
@@ -29,7 +27,7 @@
 						PLEASE LOG INTO BLUSTREAM PORTAL TO OBTAIN LIVE LOCK
 						PRICING - <a target="_blank" href="http://www.blustream.com">www.blustream.com</a>
 					</div>
-					<div class="float-left">
+					<div class="">
 							<div class="clearfix ">
 									<div class="float-left">
 										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
@@ -38,15 +36,11 @@
 										<div class="print" onclick="window.print()" title="print"></div>
 									</div>
 							</div>
-					
 					</div>
-					
-					
-					
 				</div>
 			</div>
-
-
+		</div>
+		<div class="body-wrapper">
 			<div id="main-container" class="main-container container"></div>
 		</div>
 	</div>

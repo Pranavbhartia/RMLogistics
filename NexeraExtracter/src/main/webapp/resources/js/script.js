@@ -424,6 +424,10 @@ function appendFNMAConventionalARMTableWrapper(element) {
 		"class" : "table-wrapper clearfix"
 	});
 
+	var pageHeader = $('<div>').attr({
+		"class" : "hide print-page-header"
+	}).html($('#header-wrapper').html());
+	
 	var header = $('<div>').attr({
 		"class" : "table-wrapper-header"
 	}).html("FNMA CONVENTIONAL ARM PRODUCTS");
@@ -444,7 +448,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 			"Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
 
 	tableCont.append(table1).append(table2).append(table3).append(table4);
-	wrapper.append(header).append(tableCont);
+	wrapper.append(pageHeader).append(header).append(tableCont);
 
 	// TODO:Price Adjustment tables
 	$(element).append(wrapper);
@@ -459,6 +463,10 @@ function appendMAMMOTHTableWrapper(element) {
 		"class" : "table-wrapper clearfix"
 	});
 
+	var pageHeader = $('<div>').attr({
+		"class" : "hide print-page-header"
+	}).html($('#header-wrapper').html());
+	
 	var header = $('<div>').attr({
 		"class" : "table-wrapper-header"
 	}).html("MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS");
@@ -478,7 +486,7 @@ function appendMAMMOTHTableWrapper(element) {
 			"Mammoth Non Agency Hybrid 5/1 ARM IO");
 
 	tableCont.append(table1).append(table2).append(table3).append(table4);
-	wrapper.append(header).append(tableCont);
+	wrapper.append(pageHeader).append(header).append(tableCont);
 
 	// TODO:Price Adjustment tables
 	$(element).append(wrapper);
@@ -685,6 +693,10 @@ function appendCASCADESTableWrapper(element) {
 		"class" : "table-wrapper clearfix"
 	});
 
+	var pageHeader = $('<div>').attr({
+		"class" : "hide print-page-header"
+	}).html($('#header-wrapper').html());
+	
 	var header = $('<div>').attr({
 		"class" : "table-wrapper-header"
 	}).html("CASCADES JUMBO FIXED PRODUCTS");
@@ -699,7 +711,7 @@ function appendCASCADESTableWrapper(element) {
 			"Cascades Jumbo 15 YR Fixed");
 
 	tableCont.append(table1).append(table2);
-	wrapper.append(header).append(tableCont);
+	wrapper.append(pageHeader).append(header).append(tableCont);
 
 	// TODO : Price Adjustment tables
 	$(element).append(wrapper);
