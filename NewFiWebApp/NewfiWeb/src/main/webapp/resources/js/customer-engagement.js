@@ -914,8 +914,12 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             success: function(data) {
             	
                 $('#overlay-loader').hide();
-               
-                  paintFixYourRatePageCEP(JSON.parse(data), teaserRateData,parentContainer,hideCreateAccountBtn);
+                if(data==""){
+                    $('#parentContainer').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");
+                }else{
+                    paintFixYourRatePageCEP(JSON.parse(data), teaserRateData,parentContainer,hideCreateAccountBtn);
+                }
+                  
                  
             },
             error: function(data) {

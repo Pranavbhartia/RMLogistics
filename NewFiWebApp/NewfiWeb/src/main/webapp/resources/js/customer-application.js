@@ -1033,7 +1033,7 @@ function getMappedYearMonthValue(key){
                 val=appUserDetails.propertyTypeMaster.propTaxMonthlyOryearly;
                 return val
             }else{
-                return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propTaxMonthlyOryearly;
+                return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Year":refinanceTeaserRate.propTaxMonthlyOryearly;
             }
         break;
         case "annualHomeownersInsurance":
@@ -3723,7 +3723,7 @@ function getMonthYearTextQuestionContext(contxt) {
 
     var selectedOption = getYearMonthOptionContainer(contxt);
 
-    if (contxt.value != undefined) {
+    if (contxt.value != undefined && contxt.value != "") {
         if(contxt.yearMonthVal=="Year"){
             optionCont.val((getFloatValue(contxt.value)*12));
         }else{
