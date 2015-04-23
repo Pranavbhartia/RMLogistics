@@ -58,6 +58,8 @@ public class CustomerDetail implements Serializable {
 	private String transunionScore;
 	private String carrierInfo;
 	private String addressStreet;
+	
+	private Boolean selectedProperty;
 
 	// private CustomerSpouseDetail customerSpouseDetail;
 
@@ -513,6 +515,10 @@ public class CustomerDetail implements Serializable {
 				                .getCustomerRetirementAccountDetails()));
 
 			}
+			
+			// selected Property : start
+			customerDetail.setSelectedProperty(inputEntity.getSelectedProperty());
+			
 		}
 		return customerDetail;
 	}
@@ -649,4 +655,16 @@ public class CustomerDetail implements Serializable {
 	public void setAddressStreet(String addressStreet) {
 		this.addressStreet = addressStreet;
 	}
+
+	@Column(name = "is_selected_property")
+	public Boolean getSelectedProperty() {
+		return selectedProperty;
+	}
+
+	public void setSelectedProperty(Boolean selectedProperty) {
+		this.selectedProperty = selectedProperty;
+	}
+	
+	
+	
 }
