@@ -1068,10 +1068,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
 	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
 	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-	    	if(ethnicity==undefined && race==undefined && sex==undefined){
-	    		showErrorToastMessage(yesyNoErrorMessage);
-	    		return false;
-	    	} 
+
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
