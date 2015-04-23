@@ -4047,7 +4047,7 @@ function paintRefinanceStep3() {
             propertyTypeMaster.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
              var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinancedetails.currentMortgagePayment ,message);
              var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),propertyTypeMaster.propertyTaxesPaid,message);
-
+             var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),propertyTypeMaster.propertyInsuranceCost,message);
              alert("mess"+questionOne+""+questionTwo+""+questionThree);
              if(!questionOne){
             	 return false;
