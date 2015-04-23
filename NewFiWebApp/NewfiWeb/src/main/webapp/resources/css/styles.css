@@ -564,11 +564,21 @@ input[type="button"]:focus, button:focus {
 	padding: 0 15px 0 30px;
 }
 
-.loan-summary-col-desc,.loan-summary-col-detail {
+.loan-summary-col-desc,.loan-summary-col-detail,.loan-summary-green-col-detail,.loan-summary-red-col-detail {
 	font-family: 'opensanssemibold';
 }
 
 .loan-summary-col-detail {
+	width: 50%;
+	color: #428bca;
+}
+
+.loan-summary-green-col-detail {
+	width: 50%;
+	color: #428bca;
+}
+
+.loan-summary-red-col-detail {
 	width: 50%;
 	color: #428bca;
 }
@@ -596,6 +606,24 @@ input[type="button"]:focus, button:focus {
 	padding: 5px 10px;
   	border-radius: 3px;
 }
+
+.loan-summary-last-row .loan-summary-red-col-detail{
+	width: auto;
+	color:#fff;
+	font-size: 15px;
+	background: #AB1010;
+	padding: 5px 10px;
+  	border-radius: 3px;
+}
+.loan-summary-last-row .loan-summary-green-col-detail{
+	width: auto;
+	color:#fff;
+	font-size: 15px;
+	background: #2DB018;
+	padding: 5px 10px;
+  	border-radius: 3px;
+}
+
 
 .semi-bold {
 	font-family: 'opensanssemibold';
