@@ -97,11 +97,6 @@ function getContextApplicationTextQuesCEP(contxt) {
         "class": "ce-options-cont"
     });
     
-    var requird = $('<span>').attr({
-        "style": "color:red",
-    }).html("*");
-    
-    quesTextCont.append(requird);
     var errFeild=appendErrorMessage();
     var optionCont = $('<input>').attr({
         "class": "ce-input",
@@ -143,12 +138,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "ce-rp-ques-text"
     }).html(contxt.text);
-   
-    var requird = $('<span>').attr({
-        "style": "color:red",
-    }).html("*");
-    
-    quesTextCont.append(requird);
+
     var errFeild=appendErrorMessage();
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont",
@@ -656,7 +646,7 @@ function paintRefinanceStep3() {
             "value": ""
         }, {
             "type": "yesno",
-            "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
+            "text": "Does the payment entered above include property taxes and/or homeowners insurance?",
             "name": "isIncludeTaxes",
             "options": [{
                 "text": "Yes"
@@ -670,7 +660,7 @@ function paintRefinanceStep3() {
             "value": ""
         }, {
             "type": "yearMonth",
-            "text": "How much is your homeowners insurance ?",
+            "text": "How much is your homeowners insurance?",
             "name": "annualHomeownersInsurance",
             "value": ""
         }];

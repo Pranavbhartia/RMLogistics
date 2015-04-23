@@ -448,9 +448,7 @@ function getApplicationTextQues(question) {
         "class": "app-options-cont"
     });
 
-    var requird = $('<span>').attr({
-        "style": "color:red",
-    }).html("*");
+
     
     
     var optionCont = $('<input>').attr({
@@ -487,7 +485,7 @@ function getApplicationTextQues(question) {
         optionCont.val(question.value);
     }
 
-    quesTextCont.append(requird);
+
     optionsContainer.append(optionCont).append(errFeild);
 
     return container.append(quesTextCont).append(optionsContainer);
@@ -543,6 +541,7 @@ function paintHomeInfoPage(){
 function paintCustomerApplicationPageStep1a() {
     
 	
+	
 	appProgressBaar(2);
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Residential Address";
@@ -551,6 +550,8 @@ function paintCustomerApplicationPageStep1a() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
+    var row=paintCheckBox();
+    
     var questions = [{
         type: "desc",
         text: "Street Address",
@@ -573,8 +574,12 @@ function paintCustomerApplicationPageStep1a() {
         value: appUserDetails.user.customerDetail.addressZipCode
     }];
 
-    var questionsContainer = getQuestionsContainer(questions);
 
+     
+
+    var questionsContainer = getQuestionsContainer(questions);
+    //var mainClassName=questionsContainer.attr('class');
+    //$('').append(row);
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
@@ -608,9 +613,37 @@ function paintCustomerApplicationPageStep1a() {
    	
     });
 
-    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
+    $('#app-right-panel').append(quesHeaderTextCont).append(row).append(questionsContainer)
         .append(saveAndContinueButton);
     addStateCityZipLookUp();
+}
+
+function paintCheckBox(){
+    
+
+	var wrapper=$('<div>').attr({
+		"class":"app-ques-wrapper"
+	});
+	var optionContainer = $('<div>').attr({
+		"class" : "app-options-cont"
+	});
+
+	var checkbox=$('<div>').attr({
+		"class":"ce-option-checkbox"
+	}).html("I have not yet selected a  property").bind('click',function(event){
+		if($(this).hasClass('app-option-checked')){
+    		$(this).removeClass('app-option-checked');
+    		$('input[name=streetAddress]').parent().parent().show();
+    		
+    	}else{
+        	$(this).addClass('app-option-checked');
+        	$('input[name=streetAddress]').parent().parent().hide();
+    	}
+		
+	});
+	optionContainer.append(checkbox) ;
+	return wrapper.append(optionContainer);
+
 }
 
 function addStateCityZipLookUp(){
@@ -764,7 +797,7 @@ function paintCustomerApplicationPageStep1b() {
     	}
     	
     	
-    	if(propertyTypeCd != undefined && propertyTypeCd != "" && residenceTypeCd != undefined && residenceTypeCd != ""  && propertyTaxesPaid != undefined && propertyTaxesPaid != ""  && propertyInsuranceCost != undefined && propertyInsuranceCost != ""  && propertyPurchaseYear != undefined && propertyPurchaseYear != ""  ){
+    	
     		
     		propertyTypeMaster.propertyTypeCd = propertyTypeCd;
         	propertyTypeMaster.residenceTypeCd = residenceTypeCd;
@@ -783,7 +816,7 @@ function paintCustomerApplicationPageStep1b() {
     		
     		//paintCustomerApplicationPageStep2();
     	
-    	}
+    
         
     });
 
@@ -4001,7 +4034,7 @@ function paintRefinanceStep3() {
                      },
                      {
                          "type": "yesno",
-                         "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
+                         "text": "Does the payment entered above include property taxes and/or homeowners insurance?",
                          "name": "includeTaxes",
                          "selected":"",
                          "options": [
