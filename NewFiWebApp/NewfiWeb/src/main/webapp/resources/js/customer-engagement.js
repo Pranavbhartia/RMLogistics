@@ -1750,12 +1750,12 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
         "class": "loan-summary-col-detail float-left"
     });
     
-    var col2Txt = $('<div>').attr({
+   /* var col2Txt = $('<input>').attr({
     	"class" : "calculate-btn",
     	"id":id
 
     }).html(detail)
-    .bind('click',{"valueData":$(this).text()},function(event){
+    .bind('click',{"valueData":$(this).html()},function(event){
     	var prevVal = $(this).text();
     	if(prevVal!="Calculate")
     		$(this).next('input').show().focus().val(prevVal);
@@ -1764,10 +1764,10 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	}
     	$(this).hide();
     	
-    });
+    });*/
     
     var inputBox = $('<input>').attr({
-    	"class" : "loan-summary-sub-col-detail hide",
+    	"class" : "loan-summary-sub-col-detail",
     	"id":id2
     }).bind('keyup',{"customerInputData":customerInputData},function(e){
     	
@@ -1780,21 +1780,24 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
 		    allowNegative:false
 		});	
     	
-    	if(e.which == 27){
+    	/*if(e.which == 27){
     		var prevVal = $(this).prev('.calculate-btn').text();
     		if($(this).val() == undefined || $(this).val() == prevVal){
     			$(this).hide();
     			$(this).prev('.calculate-btn').show();
     		}
-    	}
+    	}*/
     	
     	var taxesTemp = 0;
     	if($('#calTaxID2').val() !="Calculate")
     	 taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
+    	customerInputData.propertyTaxesPaid = taxesTemp;
     	
     	var InsuranceTemp = 0;
     	if($('#CalInsuranceID2').val() !="Calculate")
     	 InsuranceTemp = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
+    	
+    	customerInputData.annualHomeownersInsurance = InsuranceTemp; 
     	
     	var monthlyPayment  = 0;
     	if(customerInputData.loanType =="REF")
@@ -1828,7 +1831,7 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     });
     $(inputBox).val(detail);
     
-    col2.append(col2Txt).append(inputBox);
+    col2.append(inputBox);
     container.append(col1).append(col2);
     return container;
 }

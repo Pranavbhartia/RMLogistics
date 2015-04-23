@@ -548,24 +548,26 @@ function paintCustomerApplicationPageStep1a() {
 
     var row=paintCheckBox();
     
+    var selectedProperty = appUserDetails.user.customerDetail.selectedProperty;
+    
     var questions = [{
         type: "desc",
         text: "Street Address",
         name: "streetAddress",
-        value: ""
+        value: appUserDetails.user.customerDetail.addressStreet
     }, {
         type: "desc",
-        text: "Which State do you live in?",
+        text: "Which state do you live in?",
         name: "state",
         value: appUserDetails.user.customerDetail.addressState
     }, {
         type: "desc",
-        text: "Which City do you belong?",
+        text: "Which city do you belong?",
         name: "city",
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
-        text: "What is your Zip Code?",
+        text: "What is your cip code?",
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     }];
@@ -583,7 +585,9 @@ function paintCustomerApplicationPageStep1a() {
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
-   
+    	var addressStreet =   $('input[name="streetAddress"]').val();
+    	
+        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
     	
     	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
         	
@@ -591,7 +595,8 @@ function paintCustomerApplicationPageStep1a() {
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
     		customerDetail.addressZipCode = zipCode;
-
+    		customerDetail.addressStreet = addressStreet;
+    		customerDetail.selectedProperty = selectedProperty;
     		
     		user.customerDetail = customerDetail;
     		
@@ -611,6 +616,11 @@ function paintCustomerApplicationPageStep1a() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(row).append(questionsContainer)
         .append(saveAndContinueButton);
+    if(selectedProperty){
+    	
+    	$(".ce-option-checkbox").click();
+    }
+    
     addStateCityZipLookUp();
 }
 
@@ -1381,14 +1391,14 @@ function incomesSelectALLThatApply() {
 		"value" : 3
 	}*/
 	{
-		"text" : "Child Support/Alimony",
+		"text" : "Child support/alimony",
 		"onselect" : paintRefinancePension,
 		"name" :"childAlimonySupport",
         "data" : childSupportIncome,
 		"value" : 2
 	}, 
 	{
-		"text" : "Social Security Income",
+		"text" : "Social security income",
 		"onselect" : paintRefinancePension,
 		"name" :"socialSecurityIncome",
         "data" : socialSecIncome,

@@ -2250,22 +2250,23 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
         $('#loan-amount-details').toggle();
     });
     
+    
+    col2.append(col2Txt).append(dropdownarrow);
+    
+    
     var saveBtn = $('<div>').attr({
     	"class" : "sm-save-btn float-right"
     }).html("Save").on('click',{"path":path},function(){
     	
     	amt = $('#firstInput').val();
     	amt1 = $('#secondInput').val();
-       // var loanVal=getFloatValue(amt)+getFloatValue(amt1);
-    	//modifiyTeaserRate(loanVal,amt);
+      
     	if(path==="CEP")
     	modifiyTeaserRate(amt,amt1);
     	else
     	modifiyLockRateLoanAmt(amt1,amt);
     	
     });
-    
-    col2.append(col2Txt).append(dropdownarrow).append(saveBtn);
     
     loanAmountCont.append(col1).append(col2);
     
@@ -2282,7 +2283,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     var col2row1 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left",
         "id":"firstInput"
-    }).val(row1Val)
+    }).val(showValue(row1Val))
     .keydown(function() {
     	$(this).maskMoney({
 			thousands:',',
@@ -2303,7 +2304,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     var col2row2 = $('<input>').attr({
         "class": "loan-summary-sub-col-detail float-left",
         "id":"secondInput"
-    }).val(row2Val)
+    }).val(showValue(row2Val))
     .keydown(function() {
     	$(this).maskMoney({
 			thousands:',',
@@ -2314,7 +2315,12 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 		    allowNegative:false
 		});		
     });
-    row2.append(col1row2).append(col2row2);
+    row2.append(col1row2).append(saveBtn).append(col2row2);
+    
+    
+    
+  
+    
     loanAmountDetails.append(row1).append(row2);
     
     purchaseTRate.purAmtElement=col2row1;

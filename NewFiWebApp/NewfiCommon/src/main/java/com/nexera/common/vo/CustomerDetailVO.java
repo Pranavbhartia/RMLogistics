@@ -30,6 +30,8 @@ public class CustomerDetailVO implements Serializable {
 	private String transunionScore;
 	private String carrierInfo;
 	private String addressStreet;
+	
+	private Boolean selectedProperty;
 
 	// private CustomerSpouseDetailVO customerSpouseDetail;
 
@@ -264,7 +266,11 @@ public class CustomerDetailVO implements Serializable {
 		customerDetailVO.setSubscriptionsStatus(customerDetail
 		        .getSubscriptionsStatus());
 		customerDetailVO.setCarrierInfo(customerDetail.getCarrierInfo());
-		customerDetailVO.setLivingSince(customerDetail.getLivingSince());		
+		customerDetailVO.setLivingSince(customerDetail.getLivingSince());	
+		
+		// seleted property 
+		customerDetailVO.setSelectedProperty(customerDetail.getSelectedProperty());
+		
 		return customerDetailVO;
 
 	}
@@ -308,4 +314,15 @@ public class CustomerDetailVO implements Serializable {
 	public void setAddressStreet(String addressStreet) {
 		this.addressStreet = addressStreet;
 	}
+
+	public Boolean getSelectedProperty() {
+		return selectedProperty;
+	}
+
+	public void setSelectedProperty(Boolean selectedProperty) {
+		this.selectedProperty = selectedProperty;
+	}
+	
+	
+	
 }
