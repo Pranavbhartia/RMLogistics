@@ -1200,7 +1200,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     if(appUserDetails.refinancedetails.refinanceOption != "REFCO")
     var lcRow4 = getLoanAmountRow("Loan Amount",showValue(loanAmount), "loanAmount");
     else
-        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+currentMortgageBalance, "Cashout","$ "+cashTakeOut,true);
+        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+showValue(currentMortgageBalance), "Cashout","$ "+showValue(cashTakeOut),true);
 
     var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR, "lockrateaprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "lockClosingCost");
@@ -1347,7 +1347,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
         "class": "loan-summary-col-detail float-left"
     });
     
-    var col2Txt = $('<div>').attr({
+   /* var col2Txt = $('<div>').attr({
     	"class" : "calculate-btn",
     	"id":id
 
@@ -1365,20 +1365,30 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	}
     	$(this).hide();
     	
-    });
+    });*/
     
     var inputBox = $('<input>').attr({
-    	"class" : "loan-summary-sub-col-detail hide",
+    	"class" : "loan-summary-sub-col-detail",
     	"id":id2
     }).bind('keyup',{"appUserDetails":appUserDetails},function(e){
     	
-    	if(e.which == 27){
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});	
+    	
+    	
+    	/*if(e.which == 27){
     		var prevVal = $(this).prev('.calculate-btn').text();
     		if($(this).val() == undefined || $(this).val() == prevVal){
     			$(this).hide();
     			$(this).prev('.calculate-btn').show();
     		}
-    	}
+    	}*/
     	
     	
     	//
@@ -1424,7 +1434,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     });
     $(inputBox).val(detail);
     
-    col2.append(col2Txt).append(inputBox);
+    col2.append(inputBox);
     container.append(col1).append(col2);
     return container;
 }
