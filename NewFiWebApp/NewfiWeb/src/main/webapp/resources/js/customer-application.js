@@ -1439,7 +1439,7 @@ function incomesSelectALLThatApply() {
 		"value" : 2
 	}, 
 	{
-		"text" : "Social Security income",
+		"text" : "Social Security Income",
 		"onselect" : paintRefinancePension,
 		"name" :"socialSecurityIncome",
         "data" : socialSecIncome,
@@ -2789,8 +2789,11 @@ function paintCustomerApplicationPageStep4a() {
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
-	    		showErrorToastMessage(yesyNoErrorMessage);
-	    		return false;
+	    		if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
+		    		showErrorToastMessage(yesyNoErrorMessage);
+		    		return false;
+		    	} 
+	    		
 	    	}
 	    	governmentquestion.ethnicity = ethnicity;
 	    	governmentquestion.race = race;
@@ -2935,7 +2938,7 @@ function paintCustomerApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for";
+    var quesHeaderTxt = "Credit for";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -3025,8 +3028,11 @@ function paintCustomerApplicationPageStep5() {
     			return false;
     		}
     	}else{
-    		showErrorToastMessage(yesyNoErrorMessage);
-    		return false;
+    		if(!questionOne){
+        		return false;
+        	}else if(!questionTwo){
+        		return false;
+        	}
     	}
     	//alert('ssnProvided'+ssnProvided);
     	

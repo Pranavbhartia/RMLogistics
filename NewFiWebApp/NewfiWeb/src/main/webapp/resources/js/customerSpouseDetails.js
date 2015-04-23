@@ -1075,8 +1075,10 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
-	    		showErrorToastMessage(yesyNoErrorMessage);
-	    		return false;
+	    		if(ethnicity==undefined && race==undefined && sex==undefined){
+		    		showErrorToastMessage(yesyNoErrorMessage);
+		    		return false;
+		    	} 
 	    	}
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;
 	    	spouseGovernmentQuestions.race = race;
@@ -1230,14 +1232,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     	
        var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
        var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
-       if(!questionOne){
-    	   return false;
-       }else if(!questionTwo){
-    	   return false;
-       }else if(yearCount<0){
-    	   showErrorToastMessage("You must be at least 18 years of age.");
-    	   return false;
-       }
+      
        if($('.ce-option-checkbox').hasClass("ce-option-checked")){
     	   var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
     	   if(!isSuccess){
@@ -1245,8 +1240,14 @@ function paintCustomerSpouseApplicationPageStep5() {
     	   }
     	   
        }else{
-    	   showErrorToastMessage(yesyNoErrorMessage);
-    	  return false;
+    	   if(!questionOne){
+        	   return false;
+           }else if(!questionTwo){
+        	   return false;
+           }else if(yearCount<0){
+        	   showErrorToastMessage("You must be at least 18 years of age.");
+        	   return false;
+           }
        }
 
     		customerDetailTemp =  appUserDetails.customerSpouseDetail;
