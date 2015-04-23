@@ -124,8 +124,12 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            // getting to know newfi page
 	        } else if (secondary == 2) {
 	            var userId=newfiObject.user.id;
-	            getAppDetailsForUser(userId,function(){
-	                paintCustomerApplicationPage();
+	            getAppDetailsForUser(userId,function(appUserDetailsTemp){
+                    if(!appUserDetailsTemp.loan.lqbFileId){
+                        paintCustomerApplicationPage();
+                    }else{
+                        $('#center-panel-cont').html("Application have been submitted.");
+                    }
 	            });
 	            //paintSelecedOption();
 	        } else if (secondary == 3) {
@@ -413,6 +417,7 @@ function lockLoanRate(lockratedata){
 //alert('final lockratedata'+JSON.stringify(lockratedata));
     lockratedata.IlpTemplateId =closingCostHolder.valueSet.lLpTemplateId;
     lockratedata.requestedRate = closingCostHolder.valueSet.teaserRate;
+    lockratedata.loanId=appUserDetails.loan.id;
     lockratedata.requestedFee = closingCostHolder.valueSet.point;
     lockratedata.rateVo=JSON.stringify(closingCostHolder.valueSet);
     $('#overlay-loader').show();
@@ -425,10 +430,34 @@ function lockLoanRate(lockratedata){
         datatype: "application/json",
         success: function(data) {
             $('#overlay-loader').hide();
+            var status="";
+            var message="Something Went Wrong";
+            var ie=checkIfIE();
+            var result;
+            if(ie){
+                //this part of CODE not tested Need to be tested in IE
+                xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async=false;
+                result=xmlDoc.loadXML(data); 
+            }else{
+                var dom=new DOMParser(data)
+                result=dom.parseFromString(data, "application/xml");
+            }
+            if(result){
+                status=$(result.documentElement).attr("status");
+                message=result.documentElement.childNodes[0].innerHTML;
+            }
+            if(status=="Error"){
+                if(message.indexOf("HOUR_CUTOFF")>=0){
+                    message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
+                }
+                alert(message);
+            }else
+                alert('loan is locked');
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
             //paintLockRate(JSON.parse(data), appUserDetails);
-            alert('loan is locked');
+            
             //need to redirect to milestone page/reload the page
         },
         error: function() {

@@ -580,3 +580,11 @@ function getLQBObj(yearValues){
 		return JSON.parse(appUserDetails.loan.lockedRateData);
 	}
 }
+function checkIfIE(){
+	var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    if (msie > 0)
+        return true;
+    else
+        return false;
+}
