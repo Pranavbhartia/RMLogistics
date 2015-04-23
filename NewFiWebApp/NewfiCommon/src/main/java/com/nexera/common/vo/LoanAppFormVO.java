@@ -68,6 +68,8 @@ public class LoanAppFormVO implements Serializable {
 	private Boolean ssnProvided;
 	private Boolean cbSsnProvided;
 	
+	private Boolean skipMyAssets; 
+	
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
 	private GovernmentQuestionVO governmentquestion;
@@ -554,6 +556,10 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setRetirementIncome(Utils.convertToBigDecimal(this.retirementIncome));
 		// User Income Page : Ends
 		
+		// Skip My Assets: Starts
+		loanAppForm.setSkipMyAssets(this.skipMyAssets);
+		
+		// Ends
 		
 		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
@@ -1213,6 +1219,12 @@ public class LoanAppFormVO implements Serializable {
 
 		// income ends
 		
+		// My Assets: Start
+		
+		customerSpouseDetail.setSkipMyAssets(customerSpouseDetailVO.getSkipMyAssets());
+		
+		// My Assets:Ends 
+		
 		if (customerSpouseDetailVO.getSpouseDateOfBirth() != null)
 			customerSpouseDetail.setSpouseDateOfBirth(new Date(
 			        customerSpouseDetailVO.getSpouseDateOfBirth()));
@@ -1335,4 +1347,15 @@ public class LoanAppFormVO implements Serializable {
 		this.realtorEmail = realtorEmail;
 	}
 
+	public Boolean getSkipMyAssets() {
+		return skipMyAssets;
+	}
+
+	public void setSkipMyAssets(Boolean skipMyAssets) {
+		this.skipMyAssets = skipMyAssets;
+	}
+
+	
+	
+	
 }
