@@ -11,7 +11,7 @@
 		<div class="header-wrapper">
 			<div class="header-container container">
 				<div class="header-row row clearfix">
-					<div class="header-logo float-left"></div>
+					<div id="blu-stream-link" class="header-logo float-left"></div>
 					<div class="addr-blustream float-right">
 						<div>Blustream Lending Website Pricing</div>
 						<div>2200 Powell Street, Suite 340</div>
@@ -64,6 +64,11 @@
 				paintRatesTablePage(JSON.parse(data));
 			});
 
+			
+			$('#blu-stream-link').click(function(){
+				window.open('http://www.blustream.com','_blank');
+			});
+			
 		});
 	</script>
 </body>

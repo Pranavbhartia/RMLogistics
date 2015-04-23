@@ -79,6 +79,25 @@ function appendFNMAConventionalFIXEDTableWrapper(element) {
 
 function getPriceAdjustmentWrapper() {
 	var wrapper = $('<div>').attr({
+		"class" : "price-table-wrapper price-table-page-1"
+	});
+
+	var header = $('<div>').attr({
+		"class" : "price-table-wrapper-header"
+	}).html("PRICE ADJUSTMENTS");
+
+	var container = $('<div>').attr({
+		"class" : "price-table-cont-wrapper"
+	});
+
+	container.append(getLTVTable());
+
+	return wrapper.append(header).append(container);
+
+}
+
+function getPriceAdjustmentWrapper1() {
+	var wrapper = $('<div>').attr({
 		"class" : "price-table-wrapper"
 	});
 
@@ -339,7 +358,7 @@ function getDateByNumberOfDaysFolderDays(days) {
 	var mm = someDate.getMonth() + 1;
 	var y = someDate.getFullYear();
 
-	var someFormattedDate = dd + '/' + mm + '/' + y;
+	var someFormattedDate = mm + '/' + dd + '/' + y;
 	return someFormattedDate;
 }
 
@@ -430,7 +449,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 	// TODO:Price Adjustment tables
 	$(element).append(wrapper);
 
-	var priceWrapper = getPriceAdjustmentWrapper();
+	var priceWrapper = getPriceAdjustmentWrapper1();
 	$(element).append(priceWrapper);
 }
 
@@ -479,7 +498,7 @@ function getMammothAdjusters() {
 
 	var fixedAdjusterHeader = $('<div>').attr({
 		"class" : "price-table-wrapper-header"
-	}).html("MAMMOTH FIXED ADJUSTERS");
+	}).html("MAMMOTH FIXED PRICE ADJUSTMENTS");
 
 	var fixedAdjusterRow = $('<div>').attr({
 		"class" : "mammoth-adjustment-row clearfix"
@@ -498,7 +517,7 @@ function getMammothAdjusters() {
 
 	var armAdjusterHeader = $('<div>').attr({
 		"class" : "price-table-wrapper-header"
-	}).html("MAMMOTH ARM ADJUSTERS");
+	}).html("MAMMOTH ARM PRICE ADJUSTMENTS");
 
 	var armAdjusterRow = $('<div>').attr({
 		"class" : "mammoth-adjustment-row clearfix"
@@ -696,7 +715,7 @@ function getCascadeAdjusters() {
 
 	var header = $('<div>').attr({
 		"class" : "price-table-wrapper-header"
-	}).html("Jumbo & LTV Plus LLPAs");
+	}).html("CASCADES PRICE ADJUSTMENTS");
 
 	var row1 = $('<div>').attr({
 		"class" : "clearfix cascade-row1"
