@@ -16,7 +16,7 @@ var customerOtherAccountDetails = new Object();
 //customerDetail.customerOtherAccountDetails = customerOtherAccountDetails;
 
 user.customerDetail = customerDetail;
-var yesyNoErrorMessage="Please give awnsers of the questions";
+var yesyNoErrorMessage="Please give answers of the questions";
 
 var customerEnagagement = new Object();
 
