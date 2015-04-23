@@ -74,9 +74,10 @@
                 adjustCustomerApplicationPageOnResize();
 			});
 
+			var initialText = newfiObject.user.firstName.charAt(0) + newfiObject.user.lastName.charAt(0);
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
-				$("#myProfilePicture").addClass("lp-pic float-left");
-				
+				//$("#myProfilePicture").addClass("lp-pic float-left");
+				$("#myProfilePicture").addClass("lp-initial-pic float-left").text(initialText);
 			}else{
 				 $("#myProfilePicture").addClass("lp-pic float-left").css({"background-image": "url("+newfiObject.user.photoImageUrl+")","background-size": "cover"});
 			}

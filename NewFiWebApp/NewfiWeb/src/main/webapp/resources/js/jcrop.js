@@ -78,7 +78,7 @@ function initiateJcrop(input) {
 							
 							if(newfiObject.user.id==userid){
 							newfiObject.user.photoImageUrl = data;
-							$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"});
+							$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"}).text('');
 							 
 							$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});}
 							else{
