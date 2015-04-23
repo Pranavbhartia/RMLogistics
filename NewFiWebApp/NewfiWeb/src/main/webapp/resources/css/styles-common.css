@@ -219,6 +219,20 @@ k}
   margin-bottom: 30px;
 }
 
+.change-input-reset-password{
+
+  width: 300px;
+  height: 50px;
+  line-height: 50pxpx;
+  border: 1px solid #dcdcdc;
+  background-color: #fafafa;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  margin: 20px auto;
+  padding-left: 40px;
+  margin-bottom: 30px;
+  background-size: 16px auto;
+}
 .err-input {
   border: 1px solid #dd4b39;
 }

@@ -949,8 +949,10 @@ public class ApplicationFormRestService {
 			lockRateData = invokeRest(prepareLockLoanRateJson(loanLockRateVO)
 			        .toString());
 			System.out.println("lockLoanRate is" + lockRateData);
-			loanService.updateLoan(loanLockRateVO.getLoanId(), true,
-			        loanLockRateVO.getRateVo());
+			if (!lockRateData.contains("status=\"Error\"")) {
+				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
+				        loanLockRateVO.getRateVo());
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

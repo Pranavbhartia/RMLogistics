@@ -1,46 +1,5 @@
 //JavaScript functions for customer engagement pages
 
-var message = "Invalid Entry";
-
-
-function appendErrorMessage(){
-	
-	var ErrMessage = $('<div>').attr({
-		"class" : "err-msg hide"
-	});
-	
-	return ErrMessage;
-}
-
-function validateInput(inputVal,message){
-
-	if(inputVal == undefined || inputVal == ""){
-		$('.ce-input').next('.err-msg').html(message).show();
-		$('.ce-input').addClass('ce-err-input').show();
-		return false;
-
-	}
-	else{
-		$('.ce-input').next('.err-msg').hide();
-		$('.ce-input').removeClass('ce-err-input');
-		return true;
-	}
-	
-	
-	
-}
-function validateInputs(inputVal,message){
-	if(inputVal == undefined || inputVal == ""){
-		$('.app-input').next('.err-msg').html(message).show();
-		$('.app-input').addClass('ce-err-input').show();
-		return false;
-	}
-	else{
-		$('.app-input').next('.err-msg').hide();
-		$('.app-input').removeClass('ce-err-input');
-		return true;
-	}
-}
 
 
 function getQuestionContextCEP(question, parentContainer) {
@@ -138,11 +97,7 @@ function getContextApplicationTextQuesCEP(contxt) {
         "class": "ce-options-cont"
     });
     
-   /* var requird = $('<span>').attr({
-        "style": "color:red",
-    }).html("*");*/
-    
-   // quesTextCont.append(requird);
+
     var errFeild=appendErrorMessage();
     var optionCont = $('<input>').attr({
         "class": "ce-input",
@@ -184,12 +139,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "ce-rp-ques-text"
     }).html(contxt.text);
-   
-  /*  var requird = $('<span>').attr({
-        "style": "color:red",
-    }).html("*");*/
-    
-  //  quesTextCont.append(requird);
+
     var errFeild=appendErrorMessage();
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont",
@@ -601,13 +551,15 @@ function getTextQuestion(quesText, clickEvent, name) {
             var key = event.data.name;
             inputValue = $('input[name="' + key + '"]').val();
             refinanceTeaserRate[key] = inputValue;
-        
+            var classname=$('input[name="' + key + '"]');
+           
             if($('input[name="zipCode"]').val()==inputValue){
-            	 var isSuccess=validateInput(inputValue,message);
+            	 var isSuccess=validateInput(classname,inputValue,errorMessageForZipcode);
                  if(isSuccess){
                 	 if(inputValue.length >5 ||inputValue.length < 5){
-                		 $('.ce-input').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
-                		 $('.ce-input').addClass('ce-err-input').show();
+
+                		 $('input[name="' + key + '"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+                		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                 		 return false;
                 	 }else{
                 		 event.data.clickEvent();
@@ -617,7 +569,7 @@ function getTextQuestion(quesText, clickEvent, name) {
                  	return false;
                  }
             }else{
-            	 var isSuccess=validateInput(inputValue,message);
+            	 var isSuccess=validateInput(classname,inputValue,message);
                  if(isSuccess){
                  	event.data.clickEvent();
                  }else{
@@ -663,8 +615,8 @@ function paintRefinanceStep2() {
     }, function(event) {
         
     	refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
-
-    	var isSuccess=validateInputs($('input[name="currentMortgageBalance"]').val(),message);
+        var className=$('input[name="currentMortgageBalance"]');
+    	var isSuccess=validateInput(className,$('input[name="currentMortgageBalance"]').val(),message);
     
     	if(isSuccess){
     		paintRefinanceStep3();
@@ -695,7 +647,7 @@ function paintRefinanceStep3() {
             "value": ""
         }, {
             "type": "yesno",
-            "text": "Does the payment entered above include property taxes and/or homeowner insuranace ?",
+            "text": "Does the payment entered above include property taxes and/or homeowners insurance?",
             "name": "isIncludeTaxes",
             "options": [{
                 "text": "Yes"
@@ -709,7 +661,7 @@ function paintRefinanceStep3() {
             "value": ""
         }, {
             "type": "yearMonth",
-            "text": "How much is your homeowners insurance ?",
+            "text": "How much is your homeowners insurance?",
             "name": "annualHomeownersInsurance",
             "value": ""
         }];
@@ -730,9 +682,9 @@ function paintRefinanceStep3() {
             refinanceTeaserRate.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
             refinanceTeaserRate.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
            
-            var questionOne=validateInputs(refinanceTeaserRate.currentMortgagePayment,message);
-            var questionThree=validateInput(refinanceTeaserRate.propertyTaxesPaid,message);
-            var questionFour=validateInput(refinanceTeaserRate.propInsMonthlyOryearly ,message);
+            var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinanceTeaserRate.currentMortgagePayment,message);
+            var questionThree=validateInput($('input[name="propertyTaxesPaid"]'),refinanceTeaserRate.propertyTaxesPaid,message);
+            var questionFour=validateInput($('input[name="annualHomeownersInsurance"]'),refinanceTeaserRate.annualHomeownersInsurance ,message);
 
           // alert(questionOne+""+questionThree+""+questionFour);
             
@@ -747,15 +699,11 @@ function paintRefinanceStep3() {
                    			return false;
                    		}
         		   }else{
-        			   $('.ce-input').next('.err-msg').html(message).show();
-        				$('.ce-input').addClass('ce-err-input').show();
-        				return false;
+
         			   return false;
         		   }
         	   }else{
-        		   $('.ce-input').next('.err-msg').html(message).show();
-        			$('.ce-input').addClass('ce-err-input').show();
-        			return false;
+
               		return false;
         	   }
            }else{
@@ -1621,12 +1569,12 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
         "class": "loan-summary-rp float-right"
     });
     // add rows in right column
-    var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(rateVO[index].payment),"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Proposed Principal & Interest",showValue(rateVO[index].payment),"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", showValue(tax),"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
    
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", showValue(monthlyPayment) ,"monthlyPaymentId");
+    var rcRow6 = getLoanSummaryRow("Current Principal & Interest ", showValue(monthlyPayment) ,"monthlyPaymentId");
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", showValue(monthlyPaymentDifference) ,"monthlyPaymentDifferenceId");
     //var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     
@@ -1705,8 +1653,8 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     // add rows in right column
     var rcRow1 ="";
     if(customerInputData.livingSituation != "homeOwner")
-         rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(customerInputData.purchaseDetails.rentPerMonth));
-    var rcRow2 = getLoanSummaryRow("Principal Interest", showValue(rateVO[index].payment),"principalIntId");
+         rcRow1 = getLoanSummaryRow("Current Principal & Interest", showValue(customerInputData.purchaseDetails.rentPerMonth));
+    var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVO[index].payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "Calculate","calTaxID","calTaxID2",customerInputData);
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "Calculate","CalInsuranceID","CalInsuranceID2",customerInputData);

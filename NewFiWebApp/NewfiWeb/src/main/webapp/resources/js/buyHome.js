@@ -7,7 +7,7 @@ buyHomeTeaserRate.purchaseDetails = purchaseDetails;
 var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information",
     "Zip Code", "Your Rates"
 ];
-
+var errorMessageForZipcode="Please enter a valid 5-digit zipcode";
 function getBuyHomeLeftPanel() {
     var container = $('<div>').attr({
         "class": "ce-lp float-left"
@@ -246,18 +246,24 @@ function paintloanamount() {
         buyHomeTeaserRate.purchaseDetails.loanAmount = (getFloatValue($('input[name="homeWorthToday"]').val()) -getFloatValue($('input[name="currentMortgageBalance"]').val()));
         
         
-        var questionOne=validateInputs($('input[name="homeWorthToday"]').val(),message);
-        var questionTwo=validateInputs($('input[name="currentMortgageBalance"]').val(),message);
+        var questionOne=validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
+      
 
-        if (questionOne && questionTwo) {
-        	if (validateDownPaymentOrPurchasePrice($('input[name="homeWorthToday"]'), $('input[name="currentMortgageBalance"]')))
-        	{
-        		paintNewResidenceTypeQues();
-        	}
+        if (questionOne) {
+        	  var questionTwo=validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
+        	  if(questionTwo){
+        		  if (validateDownPaymentOrPurchasePrice($('input[name="homeWorthToday"]'), $('input[name="currentMortgageBalance"]')))
+              	{
+              		paintNewResidenceTypeQues();
+              	} 
+        	  }else{
+        		  return false;
+        	  }
+        	
         } else {
             return false;
         }
-
+       
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
     //$('#ce-refinance-cp').html(quesCont);
@@ -555,21 +561,27 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
         var key = event.data.name;
         buyHomeTeaserRate[key] = $('input[name="' + key + '"]').val();
         buyHomeTeaserRate.purchaseDetails[key] = $('input[name="' + key + '"]').val();
-        if ($('input[name="zipCode"]').val() == key) {
-            var isSuccess = validateInput($('input[name="zipCode"]').val(), message);
+        var className=$('input[name="' + key + '"]');
+       
+        if ("zipCode"== key) {
+            var isSuccess = validateInput(className,$('input[name="zipCode"]').val(), errorMessageForZipcode);
+       
             if (isSuccess) {
+            	alert("length"+$('input[name="zipCode"]').val().length);
                 if ($('input[name="zipCode"]').val().length > 5 || $('input[name="zipCode"]').val().length < 5) {
-                    $('.ce-input').next('.err-msg').html("Please Enter a valid 5-digit zipcode").show();
-                    $('.ce-input').addClass('ce-err-input').show();
+                	 $('input[name="' + key + '"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+            		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                     return false;
                 } else {
+                	
                     event.data.clickEvent();
                 }
             } else {
                 return false;
             }
         } else {
-            var isSuccess = validateInput($('input[name="' + key + '"]').val(), message);
+        	
+            var isSuccess = validateInput(className,$('input[name="' + key + '"]').val(), message);
             if (isSuccess) {
                 event.data.clickEvent();
             } else {

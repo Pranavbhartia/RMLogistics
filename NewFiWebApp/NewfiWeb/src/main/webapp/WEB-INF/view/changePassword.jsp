@@ -26,10 +26,10 @@
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   
-							<div class="reg-input-reset-password" id="email-container" >
+							<div class="change-input-reset-password login-input-pwd" id="email-container" >
 					        <input type="password" class="reg-input" placeholder="Password" id="pwd" >	
 					        </div>
-					        <div class="reg-input-reset-password" id="email-container">
+					        <div class="change-input-reset-password login-input-pwd" id="email-container">
 					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmPwd" >	
 							<div class="err-msg hide"></div>
 				            </div>
@@ -52,8 +52,6 @@
 	
 </body>
 <script>
-
-
 $('#changePwdForm').submit(function(event){	
 	event.preventDefault();
 	var changePasswordData = new Object();
@@ -94,7 +92,6 @@ $('#changePwdForm').submit(function(event){
     });
 	
 	});
-
 function paintForgetPasswordResponse(data){
 	if(data!=null){		
         $('#overlay-loader').hide();

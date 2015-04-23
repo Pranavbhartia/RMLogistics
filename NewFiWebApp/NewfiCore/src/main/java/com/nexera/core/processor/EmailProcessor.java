@@ -148,45 +148,63 @@ public class EmailProcessor implements Runnable {
 
 					}
 
-					LoanVO loanVO = loanService.getLoanByID(Integer
-					        .valueOf(loanId));
-					String emailBody = getEmailBody(mimeMessage);
+					int loanIdInt = -1;
+					try {
+						loanIdInt = Integer.parseInt(loanId);
+					} catch (NumberFormatException ne) {
+						LOGGER.error("Not a valid loan entry ");
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster, "invalid loan information"
+						                + ne.getMessage());
+						nexeraUtility
+						        .sendExceptionEmail("Invalid loan id for this email "
+						                + ne.getMessage());
+					}
 
-					LOGGER.debug("Applying Regex On Email ");
-					List<String> regexPatternStrings = new ArrayList<String>();
-					regexPatternStrings.add(regexPattern1);
-					regexPatternStrings.add(regexPattern2);
-					regexPatternStrings.add(regexPattern3);
-					regexPatternStrings.add(regexPattern4);
-					regexPatternStrings.add(regexPattern5);
-					regexPatternStrings.add(regexPattern6);
-					regexPatternStrings.add(regexPattern7);
-					regexPatternStrings.add(regexPattern8);
-					emailBody = extractMessage(emailBody, regexPatternStrings);
+					if (loanIdInt != -1) {
+						LoanVO loanVO = loanService.getLoanByID(loanIdInt);
+						String emailBody = getEmailBody(mimeMessage);
 
-					LOGGER.debug("Body of the email is " + emailBody);
-					if (loanVO != null) {
-						if (uploadedByUser != null) {
+						LOGGER.debug("Applying Regex On Email ");
+						List<String> regexPatternStrings = new ArrayList<String>();
+						regexPatternStrings.add(regexPattern1);
+						regexPatternStrings.add(regexPattern2);
+						regexPatternStrings.add(regexPattern3);
+						regexPatternStrings.add(regexPattern4);
+						regexPatternStrings.add(regexPattern5);
+						regexPatternStrings.add(regexPattern6);
+						regexPatternStrings.add(regexPattern7);
+						regexPatternStrings.add(regexPattern8);
+						emailBody = extractMessage(emailBody,
+						        regexPatternStrings);
 
-							extractAttachmentAndUploadEverything(emailBody,
-							        loanVO, uploadedByUser, loanVO.getUser(),
-							        mimeMessage, messageId, sendEmail);
+						LOGGER.debug("Body of the email is " + emailBody);
+						if (loanVO != null) {
+							if (uploadedByUser != null) {
 
+								extractAttachmentAndUploadEverything(emailBody,
+								        loanVO, uploadedByUser,
+								        loanVO.getUser(), mimeMessage,
+								        messageId, sendEmail);
+
+							} else {
+								LOGGER.error("user who uploaded not found in database");
+								nexeraUtility
+								        .putExceptionMasterIntoExecution(
+								                exceptionMaster,
+								                "User who uploaded this, not found in the database ");
+								nexeraUtility
+								        .sendExceptionEmail("Uploaded By User Not Found For This Email ");
+							}
 						} else {
-							LOGGER.error("user who uploaded not found in database");
+							LOGGER.error("Not a valid loan entry ");
 							nexeraUtility
 							        .putExceptionMasterIntoExecution(
 							                exceptionMaster,
-							                "User who uploaded this, not found in the database ");
+							                "invalid loan information");
 							nexeraUtility
-							        .sendExceptionEmail("Uploaded By User Not Found For This Email ");
+							        .sendExceptionEmail("Invalid loan id for this email ");
 						}
-					} else {
-						LOGGER.error("Not a valid loan entry ");
-						nexeraUtility.putExceptionMasterIntoExecution(
-						        exceptionMaster, "invalid loan information");
-						nexeraUtility
-						        .sendExceptionEmail("Invalid loan id for this email ");
 					}
 				}
 			} else {

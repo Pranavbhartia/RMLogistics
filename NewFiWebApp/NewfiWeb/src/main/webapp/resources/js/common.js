@@ -582,6 +582,7 @@ function getLQBObj(yearValues){
 }
 
 
+
 function clickEnter(name){
 	
 	$('input[name='+name+']').on("keypress",function(e){
@@ -591,3 +592,13 @@ function clickEnter(name){
 		
 	});
 }
+
+function checkIfIE(){
+	var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    if (msie > 0)
+        return true;
+    else
+        return false;
+}
+
