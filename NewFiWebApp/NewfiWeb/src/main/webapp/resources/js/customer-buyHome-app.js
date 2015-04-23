@@ -270,9 +270,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		return false;
     	}else if(!questionTwo){
     		return false;
-    	}else if(!questionfour){
+    	}/*else if(!questionfour){
     		return false;
-    	}
+    	}*/
     	if($('.ce-option-checkbox').hasClass('app-option-checked')){
     		
     	}else{
@@ -283,10 +283,10 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	}
     	//alert(isSellYourhome);
     	
-        	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+        /*	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
         	if(!question){
         		return false;
-        	}
+        	}*/
             customerDetail.addressStreet=addressStreet;
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
