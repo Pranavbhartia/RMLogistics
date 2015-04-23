@@ -535,7 +535,7 @@ function paintSpouseSaleOfCurrentHome() {
     });
 	if(appUserDetails.homeToSell == true){
 		
-		var quesHeaderTxt = "Sale Of Your Current Home";
+		var quesHeaderTxt = "Sale of your current home";
 	
 	    var quesHeaderTextCont = $('<div>').attr({
 	        "class": "app-ques-header-txt"
