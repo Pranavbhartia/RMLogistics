@@ -1078,7 +1078,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     if(appUserDetails.purchaseDetails.livingSituation != "homeOwner")
      rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
     
-    var rcRow2 = getLoanSummaryRow("Principal Interest", showValue(rateVoObj.payment),"principalIntId");
+    var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVoObj.payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Edit","calTaxID","calTaxID2",appUserDetails);
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",appUserDetails);
@@ -1182,7 +1182,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
         "class": "loan-summary-rp float-right"
     });
     
-    var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(principalInterest) ,"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Proposed Principal & Interest",showValue(principalInterest) ,"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", showValue(tax),"calTaxID","calTaxID2",appUserDetails);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",appUserDetails);
@@ -1458,7 +1458,7 @@ function getClosingCostSummaryContainer(valueSet) {
     var parentWrapper = $('<div>').attr({
         "class": "closing-cost-wrapper"
     });
-    var header = getClosingCostHeader("Closing Coast Summary");
+    var header = getClosingCostHeader("Closing Cost Summary");
     var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
     var closingDate = $('<span>').attr({
         "class": "semibold"
