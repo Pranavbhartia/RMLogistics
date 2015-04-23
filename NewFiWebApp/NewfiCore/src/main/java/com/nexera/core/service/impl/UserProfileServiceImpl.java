@@ -1103,7 +1103,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("function to generate random password and save");
 		user.setEmailEncryptionToken(nexeraUtility.encryptEmailAddress(user
 		        .getEmailId()));
-		user.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
+
+		user.setTokenGeneratedTime(utils.convertCurrentDateToUtc());
 		updateTokenDetails(user);
 		UserVO userVO = User.convertFromEntityToVO(user);
 		LOG.info("Sending reset password to the user");
@@ -1265,14 +1266,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	public User validateRegistrationLink(String userToken)
+	public User validateRegistrationLink(String userToken, int clientRawOffset)
 	        throws InvalidInputException {
 		User userDetail = findUserByToken(userToken);
 		if (userDetail == null) {
 			throw new InvalidInputException("Invalid URL");
 		}
-		if (nexeraUtility.hasLinkExpired(
-		        userDetail.getTokenGeneratedTime(), null)) {
+		if (utils.hasLinkExpired(userDetail.getTokenGeneratedTime(),
+		        clientRawOffset)) {
 			throw new InvalidInputException(
 			        "Token Expired - Please use the Reset password link to generate again");
 		}

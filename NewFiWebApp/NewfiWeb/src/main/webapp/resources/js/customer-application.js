@@ -920,6 +920,7 @@ $('#app-right-panel').html("");
 
 		   
 		   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
+			   showErrorToastMessage(yesyNoErrorMessage);
 			   return false;
 		   }
 
@@ -1208,9 +1209,11 @@ function paintCustomerApplicationPageStep2() {
     		    		if( isSpouseOnLoan =="Yes" && coBorrowerName!="" && coBorrowerName){ 
     		    			appUserDetails.isSpouseOnLoan =true;
     		    		}else if(isSpouseOnLoan =="No" && coBorrowerName!="" && coBorrowerName){
+    		    			
     		    			appUserDetails.isSpouseOnLoan =false;
     		    			appUserDetails.spouseName  = "";
     		    		}else{
+    		    			
     		    			var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
     		    	    	if(!question){
     		    	    		return false;
@@ -1219,15 +1222,16 @@ function paintCustomerApplicationPageStep2() {
     	    		    	 return false;
     		    		}
     		     }else{
+
     		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
     			    	if(!question){
     			    		return false;
     			    	}
-    		    	 showErrorToastMessage(yesyNoErrorMessage);
-    		    	 return false;
+
     		     }
     			 
     		 }else{
+    			
     		  appUserDetails.isCoborrowerPresent = false;
     			 appUserDetails.isSpouseOnLoan =false;
 	    		 appUserDetails.spouseName  = "";
@@ -1264,7 +1268,7 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	
     	}else{
-    		showToastMessage(yesyNoErrorMessage);
+    		showErrorToastMessage(yesyNoErrorMessage);
     	}
          ////alert(JSON.stringify(appUserDetails));
     	//paintCustomerApplicationPageStep3();
@@ -2786,10 +2790,7 @@ function paintCustomerApplicationPageStep4a() {
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
 	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-	    	if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
-	    		showErrorToastMessage(yesyNoErrorMessage);
-	    		return false;
-	    	} 
+
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
