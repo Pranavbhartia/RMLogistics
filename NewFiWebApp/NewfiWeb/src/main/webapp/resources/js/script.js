@@ -650,7 +650,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         appUserDetails.loan.lqbFileId = loanNumber;
         lockratedata.sLoanNumber=loanNumber;
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
-        saveAndUpdateLoanAppForm(appUserDetails);
+        //saveAndUpdateLoanAppForm(appUserDetails);
         
         var lqbData =  modifiedLQBJsonResponse(lqbData);
         //alert('script lqbdata'+JSON.stringify(lqbData));
