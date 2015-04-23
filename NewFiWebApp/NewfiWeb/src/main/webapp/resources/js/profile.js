@@ -587,15 +587,15 @@ function getCustomerUploadPhotoRow(user) {
 			|| user.photoImageUrl == 'undefined') {
 		uploadPicPlaceholder = $('<div>').attr({
 			"id" : "profilePic",
-			"class" : "lp-initial-pic float-left"			
-		}).text(initialText);
+			"class" : "upload-prof-pic-icn float-left"			
+		}).click(uploadeImage);
 
 	} else {
 		uploadPicPlaceholder = $('<div>').attr({
 			"id" : "profilePic",
 			"class" : "prof-pic-upload-placeholder float-left",
 			"style" : "background-image:url(" + user.photoImageUrl + ")"
-		});
+		}).click(uploadeImage);
 	}
 
 	
@@ -603,7 +603,7 @@ function getCustomerUploadPhotoRow(user) {
 		"class" : "upload-prof-pic-icn"
 	}).click(uploadeImage);
 	
-	uploadPicPlaceholder.append(uploadIcn);
+	//uploadPicPlaceholder.append(uploadIcn);
 	
 	var uploadBottomContianer = $('<div>').attr({
 		"class" : "clearfix"

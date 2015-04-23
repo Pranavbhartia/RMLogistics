@@ -178,13 +178,12 @@ input[type="button"]:focus, button:focus {
 }
 .lp-initial-pic
 {
-	font-size: 20px;
+  font-size: 19px;
   border: 1px solid;
-  border-radius: 38px;
-  height: 53px;
-  width: 53px;
-  line-height: 25px;
-  padding: 12px;
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+  padding: 16px;
 }
 .lp-pic {
 	background: url(../images/person-placeholder.png) no-repeat center #fff;
@@ -564,11 +563,21 @@ input[type="button"]:focus, button:focus {
 	padding: 0 15px 0 30px;
 }
 
-.loan-summary-col-desc,.loan-summary-col-detail {
+.loan-summary-col-desc,.loan-summary-col-detail,.loan-summary-green-col-detail,.loan-summary-red-col-detail {
 	font-family: 'opensanssemibold';
 }
 
 .loan-summary-col-detail {
+	width: 50%;
+	color: #428bca;
+}
+
+.loan-summary-green-col-detail {
+	width: 50%;
+	color: #428bca;
+}
+
+.loan-summary-red-col-detail {
 	width: 50%;
 	color: #428bca;
 }
@@ -596,6 +605,24 @@ input[type="button"]:focus, button:focus {
 	padding: 5px 10px;
   	border-radius: 3px;
 }
+
+.loan-summary-last-row .loan-summary-red-col-detail{
+	width: auto;
+	color:#fff;
+	font-size: 15px;
+	background: #AB1010;
+	padding: 5px 10px;
+  	border-radius: 3px;
+}
+.loan-summary-last-row .loan-summary-green-col-detail{
+	width: auto;
+	color:#fff;
+	font-size: 15px;
+	background: #2DB018;
+	padding: 5px 10px;
+  	border-radius: 3px;
+}
+
 
 .semi-bold {
 	font-family: 'opensanssemibold';
@@ -2563,22 +2590,23 @@ input.calc-input {
 }
 
 .upload-pic-desc{
-	line-height: 100px;
+	line-height: 84px;
 }
 
 .upload-prof-pic-icn{
-	position:absolute;
-	bottom:0;
-	right:0;
-	width: 30px;
-	height: 30px;
-	border: 1px solid #fff;
+	position: relative;
 	border-radius: 50%;
-	background: url(../images/upload-pic.png) no-repeat center #fff;
+	background: url(../images/upload-pic.png) no-repeat center;
 	background-size: cover;
 	cursor:pointer;
 	opacity:0.8;
 	z-index: 2;
+	
+  	width: 88px;
+  	height: 88px;
+  	margin-bottom: 10px;
+  	background-size: cover;
+	
 }
 
 .upload-prof-pic-icn:hover{

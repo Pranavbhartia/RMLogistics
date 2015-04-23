@@ -178,7 +178,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
-    
+    var row=paintCheckBox();
     
     var questions = [{
         type: "desc",
@@ -237,7 +237,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	
     }
     
-    $('#app-right-panel').append(quesHeaderTextCont);
+    $('#app-right-panel').append(quesHeaderTextCont).append(row);
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
@@ -258,8 +258,31 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var monthlyRent =  $('input[name="rentPerMonth"]').val();
     	var isSellYourhome = quesContxts[4].value;
     	
+    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
+    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
+    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+    	
+    	if(inputState=="" || inputState==undefined){
+    		showErrorToastMessage(yesyNoErrorMessage);
+    		return false;
+    	}else if(!questionOne){
+    		return false;
+    	}else if(!questionTwo){
+    		return false;
+    	}else if(!questionfour){
+    		return false;
+    	}
+    	if($('.ce-option-checkbox').hasClass('app-option-checked')){
+    		
+    	}else{
+    		var isSuccess=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
+    		if(!isSuccess){
+    			return false;
+    		}
+    	}
     	//alert(isSellYourhome);
-    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != "" && addressStreet != undefined && addressStreet != "" ){
+    	
         	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
         	if(!question){
         		return false;
@@ -290,9 +313,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
     		
         	        	
-        }else{
-        	showErrorToastMessage("Please give answer of the questions");
-        }
+       
    	
     });
 
@@ -331,7 +352,7 @@ function paintloanamountBuyApp() {
         appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
         
         var questionOne=validateInput($('input[name="housePrice"]'),$('input[name="housePrice"]').val(),message);
-        var questionTwo=validateInput($('input[name="housePrice"]'),$('input[name="dwnPayment"]').val(),message);
+        var questionTwo=validateInput($('input[name="dwnPayment"]'),$('input[name="dwnPayment"]').val(),message);
      if(!questionOne){
     	 return false;
      }else if(!questionTwo){
@@ -403,7 +424,17 @@ function paintWhereYouLiveStep(){
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "ce-save-btn"
 	}).html("Save & continue").on('click', function() {
-		
+		 var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
+		    if(!isSuccess){
+		    	return false;
+		    }else{
+		    	 if($('input[name="buyhomeZipPri"]').val().length >5 ||$('input[name="buyhomeZipPri"]').val().length < 5){
+
+		    		 $('input[name="buyhomeZipPri"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+		    		 $('input[name="buyhomeZipPri"]').addClass('ce-err-input').show();
+            		 return false;
+            	 }
+		    }
 		  isCityOrZipKnown =quesContxts[0].value; 
 		  buyhomeZipPri = $('input[name="buyhomeZipPri"]').val();
 		   buyhomeZipSec = $('input[name="buyhomeZipPri1"]').val();
@@ -542,7 +573,7 @@ function paintSpouseSaleOfCurrentHome() {
     questionsContainer.append(quesHeaderTextCont2);
 
     var skipQuestions = $('<div>').attr({
-    	"class" : "ce-option-checkbox"
+    	"class" : "ce-option-checkbox myassets"
     }).html("No Thanks, Let's move on")
     .bind('click',function(){
 	   	 if($(this).hasClass('app-option-checked')){
@@ -970,11 +1001,13 @@ function paintSaleOfCurrentHome() {
      var quesMyAssetsCont = $('<div>').attr({
         "class": "app-ques-header-txt"
      }).html(quesHeaderAssets);
+     
+   
    
      questionsContainer.append(quesMyAssetsCont);
      
      var skipQuestions = $('<div>').attr({
-    	"class" : "ce-option-checkbox" 
+    	"class" : "ce-option-checkbox myassets" 
      }).html("No Thanks, Let's move on")
      .bind('click',function(){
     	 if($(this).hasClass('app-option-checked')){

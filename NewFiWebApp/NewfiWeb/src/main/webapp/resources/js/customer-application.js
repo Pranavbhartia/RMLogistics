@@ -17,6 +17,8 @@ var customerOtherAccountDetails = new Object();
 
 user.customerDetail = customerDetail;
 var yesyNoErrorMessage="Please give answers of the questions";
+var stateErrorMessage="Please select your state";
+var gonernamentQuestionErrorMessage="Please give answers of all the questions";
 
 var customerEnagagement = new Object();
 
@@ -447,10 +449,7 @@ function getApplicationTextQues(question) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
-
-
-    
-    
+  
     var optionCont = $('<input>').attr({
         "class": "app-input",
         "name": question.name,
@@ -484,7 +483,6 @@ function getApplicationTextQues(question) {
     if (question.value != undefined) {
         optionCont.val(question.value);
     }
-
 
     optionsContainer.append(optionCont).append(errFeild);
 
@@ -583,15 +581,30 @@ function paintCustomerApplicationPageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    	
+    	var address= $('input[name="streetAddress"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
    
-    	
-    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
-        	
-
+    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
+    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+   
+    	if(inputState==""||inputState==undefined){
+    		showErrorToastMessage(stateErrorMessage);
+    		return false;
+    	}else if(!cityStatus){
+    		return false;
+    	}else if(!zipcodeStatus){
+    		return false;
+    	}   
+       if($('.ce-option-checkbox').hasClass('app-option-checked')){
+    		
+    	}else{
+    		var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
+    		if(!isSuccess){
+    			return false;
+    		}
+    	}
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
     		customerDetail.addressZipCode = zipCode;
@@ -607,9 +620,9 @@ function paintCustomerApplicationPageStep1a() {
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		
         	        	
-        }else{
+       /* }else{
         showErrorToastMessage(yesyNoErrorMessage);
-        }
+        }*/
    	
     });
 
@@ -633,11 +646,16 @@ function paintCheckBox(){
 	}).html("I have not yet selected a  property").bind('click',function(event){
 		if($(this).hasClass('app-option-checked')){
     		$(this).removeClass('app-option-checked');
+    		$('input[name=streetAddress]').val('');
     		$('input[name=streetAddress]').parent().parent().show();
+    		$('input[name=addressStreet]').parent().parent().show();
+    	
     		
     	}else{
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
+        	$('input[name=addressStreet]').parent().parent().hide();
+        	
     	}
 		
 	});
@@ -785,7 +803,7 @@ function paintCustomerApplicationPageStep1b() {
     	var questionOne=validateInput($('input[name="taxesPaid"]'),propertyTaxesPaid,message);
     	var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
     	var questionThree=validateInput($('input[name="purchaseTime"]'),propertyPurchaseYear,message);
-    	if(propertyTypeCd=="" && residenceTypeCd==""){
+    	if(propertyTypeCd==undefined && residenceTypeCd==undefined){
     		showErrorToastMessage(yesyNoErrorMessage);
     		return false;
     	}else if(!questionOne){
@@ -881,10 +899,19 @@ $('#app-right-panel').html("");
 		
 		   isSecondaryMortgage = quesContxts[0].value;
 
+		   
+		   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
+			   return false;
+		   }
 
-			   if(isSecondaryMortgage =='Yes')
+			   if(isSecondaryMortgage =='Yes'){
 				   appUserDetails.secondMortgage = true;
-			   
+				   var isSuccess=validateInput( $('input[name="secondaryMortgageBalance"]'), $('input[name="secondaryMortgageBalance"]').val(),message);
+				   if(!isSuccess){
+					   return;
+				   } 
+			   }
+				   
 			   else{
 				   appUserDetails.secondMortgage = false;
 			   }
@@ -1033,7 +1060,7 @@ function getMappedYearMonthValue(key){
                 val=appUserDetails.propertyTypeMaster.propTaxMonthlyOryearly;
                 return val
             }else{
-                return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propTaxMonthlyOryearly;
+                return refinanceTeaserRate.propTaxMonthlyOryearly==undefined?"Year":refinanceTeaserRate.propTaxMonthlyOryearly;
             }
         break;
         case "annualHomeownersInsurance":
@@ -1165,10 +1192,18 @@ function paintCustomerApplicationPageStep2() {
     		    			appUserDetails.isSpouseOnLoan =false;
     		    			appUserDetails.spouseName  = "";
     		    		}else{
+    		    			var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+    		    	    	if(!question){
+    		    	    		return false;
+    		    	    	}
     		    			 showErrorToastMessage(yesyNoErrorMessage);
     	    		    	 return false;
     		    		}
     		     }else{
+    		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+    			    	if(!question){
+    			    		return false;
+    			    	}
     		    	 showErrorToastMessage(yesyNoErrorMessage);
     		    	 return false;
     		     }
@@ -1179,10 +1214,7 @@ function paintCustomerApplicationPageStep2() {
 	    		 appUserDetails.spouseName  = "";
     		 }
 	    	
-	    	var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
-	    	if(!question){
-	    		return false;
-	    	}
+	    	
 	    	// this is the condition when spouseName is in the loan
             if(!appUserDetails.customerSpouseDetail)
                 appUserDetails.customerSpouseDetail={};
@@ -1297,7 +1329,7 @@ function getContextApplicationTextQues(contxt) {
     var optionCont = $('<input>').attr({
         "class": "app-input",
         "name": contxt.name,
-        "value":contxt.value
+        "value":showValue(contxt.value)
     }).bind("change",{"contxt":contxt},function(event){
     	var ctx=event.data.contxt;
     	ctx.value=$(this).val();
@@ -1444,7 +1476,7 @@ function paintMyIncome() {
 		  questcontainer.append(questionsContainer10);
     }
    
-   
+   var skipMyAssets = appUserDetails.skipMyAssets;
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
@@ -1478,7 +1510,6 @@ function paintMyIncome() {
             customerEmploymentIncome.push(termp);
         });
          
-        // alert('customerEmploymentIncome.size');
        
         if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
             appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
@@ -1547,6 +1578,9 @@ function paintMyIncome() {
             appUserDetails.customerBankAccountDetails = [];
             appUserDetails.customerOtherAccountDetails = [];
             appUserDetails.customerRetirementAccountDetails = [];
+          
+            
+            appUserDetails.skipMyAssets = $('.myassets').hasClass("app-option-checked");
             
             var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
             
@@ -1564,11 +1598,8 @@ function paintMyIncome() {
     			appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
     		}
     		
-    		
         }
                 
-            
-           
         if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
             saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome(appUserDetails.customerSpouseDetail.spouseName));
         } else {
@@ -1576,6 +1607,11 @@ function paintMyIncome() {
         }
             
     });
+    
+    if(skipMyAssets != undefined && skipMyAssets){
+		$(".myassets").click();
+		
+	}
     $('#app-right-panel').append(saveAndContinueButton);
 }
  
@@ -1906,7 +1942,9 @@ $('body').on('focus',"input[name='ssn']",function(){
 	$(this).mask("***-**-****");
 		
 });
-
+$('body').on('focus',"input[name='phoneNumber']",function(){
+    $(this).mask("(999) 999-9999");
+});
 
 
 function paintRefinanceSelfEmployed(divId,value) {
@@ -2219,7 +2257,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 				
 				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
-					showToastMessage("Maximum 2 income needed");
+					showErrorToastMessage("Maximum 2 income needed");
 				     return false;
 				}
 				var quesTxt = "About how much do you make a year";
@@ -2481,7 +2519,12 @@ function paintCustomerApplicationPageStep4a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
-    	
+    	for(var i=0;i<quesDeclarationContxts.length;i++){
+    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
+    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+    			return;
+    		}
+    	}
     	isOutstandingJudgments =  quesDeclarationContxts[0].value;
     	isBankrupt =  quesDeclarationContxts[1].value;
     	isPropertyForeclosed =  quesDeclarationContxts[2].value;
@@ -2612,6 +2655,10 @@ function paintCustomerApplicationPageStep4a() {
     	 
     	 if( isOwnershipInterestInProperty =="Yes"){ 
     		 governmentquestion.isOwnershipInterestInProperty = true;
+    		 if(typeOfPropertyOwned==undefined && propertyTitleStatus==undefined){
+    			 showErrorToastMessage(yesyNoErrorMessage);
+    			 return;
+    		 }
  		 }else if(isOwnershipInterestInProperty =="No"){
  			governmentquestion.isOwnershipInterestInProperty = false;
  		 }else{
@@ -2648,7 +2695,7 @@ function paintCustomerApplicationPageStep4a() {
 		"value" : 0
 	}];
 	
-	//alert('name'+name)
+
 	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
 
 	$('#app-right-panel').append(quesCont);
@@ -2720,7 +2767,16 @@ function paintCustomerApplicationPageStep4a() {
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
 	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-	    	
+	    	if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	} 
+	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+	    		
+	    	}else{
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	}
 	    	governmentquestion.ethnicity = ethnicity;
 	    	governmentquestion.race = race;
 	    	governmentquestion.sex =sex;
@@ -2767,7 +2823,7 @@ function paintGovernmentMonitoringQuestions(quesText, options, name) {
 
 		var optionIncome = $('<div>').attr({
 			"class" : "hide ce-option-ques-wrapper"
-			//"id" : "ce-option_" + i
+			
 		});
 
 		var option = $('<div>').attr({
@@ -2937,8 +2993,26 @@ function paintCustomerApplicationPageStep5() {
         dateNow.setFullYear(dateNow.getFullYear()-18);
         var yearCount=(dateNow.getTime()-dat.getTime());
     	
-    	
+    	var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
+    	var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
+    	if(!questionOne){
+    		return false;
+    	}else if(!questionTwo){
+    		return false;
+    	}
     	var ssnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
+    	if( $('.ce-option-checkbox').hasClass("ce-option-checked")){
+    		
+    		var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
+    		
+    		if(!isSuccess){
+    			
+    			return false;
+    		}
+    	}else{
+    		showErrorToastMessage(yesyNoErrorMessage);
+    		return false;
+    	}
     	//alert('ssnProvided'+ssnProvided);
     	
     	if(dateOfBirth != undefined && dateOfBirth !=""  && phoneNumber != undefined && phoneNumber !="" && yearCount>=0){
@@ -3723,7 +3797,7 @@ function getMonthYearTextQuestionContext(contxt) {
 
     var selectedOption = getYearMonthOptionContainer(contxt);
 
-    if (contxt.value != undefined) {
+    if (contxt.value != undefined && contxt.value != "") {
         if(contxt.yearMonthVal=="Year"){
             optionCont.val((getFloatValue(contxt.value)*12));
         }else{

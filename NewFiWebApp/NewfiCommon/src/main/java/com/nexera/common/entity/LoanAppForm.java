@@ -62,7 +62,7 @@ public class LoanAppForm implements Serializable {
 	private Boolean cbSsnProvided;
 	
 	
-	
+	private Boolean skipMyAssets;
 
 	private Boolean isSpouseOnLoan;
 	private String spouseName;
@@ -618,8 +618,14 @@ public class LoanAppForm implements Serializable {
 		this.retirementIncome = retirementIncome;
 	}
 
-	
-	
+	@Column(name = "skip_my_assets")
+	public Boolean getSkipMyAssets() {
+		return skipMyAssets;
+	}
+
+	public void setSkipMyAssets(Boolean skipMyAssets) {
+		this.skipMyAssets = skipMyAssets;
+	}
 	/*
 	 * @OneToOne(fetch = FetchType.LAZY)
 	 * 
