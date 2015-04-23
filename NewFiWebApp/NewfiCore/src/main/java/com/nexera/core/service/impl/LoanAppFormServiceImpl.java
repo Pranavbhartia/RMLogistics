@@ -540,6 +540,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		                .getCurrentHomeMortgageBalance());
 		customerSpouseDetailVO.setNewHomeBudgetFromsale(customerspousedetail
 		        .getNewHomeBudgetFromsale());
+		
+		// skip my assest
+		customerSpouseDetailVO.setSkipMyAssets(customerspousedetail.getSkipMyAssets());
 
 		return customerSpouseDetailVO;
 	}
@@ -722,6 +725,11 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO.setRetirementIncome(loanAppForm.getRetirementIncome().toString());
 		
 		// Customer Income Detaisl : ends
+		
+		// skip my assets: Start
+		loanAppFormVO.setSkipMyAssets(loanAppForm.getSkipMyAssets());
+		
+		// skip my assets : Ends
 		
 		return loanAppFormVO;
 

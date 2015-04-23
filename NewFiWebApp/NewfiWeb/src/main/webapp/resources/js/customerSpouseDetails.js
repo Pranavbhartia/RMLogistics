@@ -90,7 +90,8 @@ function paintMySpouseIncome(coborrowerName) {
 		questcontainer.append(questionsContainer10);
     }
 
-
+	var skipMyAssets = appUserDetails.customerSpouseDetail.skipMyAssets;
+	 
 	var saveBtn = $('<div>').attr({
 		"class" : "ce-save-btn"
 	}).html("Save & Continue").bind('click',function() {
@@ -168,6 +169,9 @@ function paintMySpouseIncome(coborrowerName) {
 			homelistprice = $('input[name="homelistprice"]').val();
 			homemortgagebalance = $('input[name="homemortgagebalance"]').val();
 			inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+			
+			appUserDetails.customerSpouseDetail.skipMyAssets = $('.myassets').hasClass("app-option-checked");
+			
 			appUserDetails.customerSpouseBankAccountDetails = [];
 			appUserDetails.customerSpouseRetirementAccountDetails = [];
 			appUserDetails.customerSpouseOtherAccountDetails = [];
@@ -188,6 +192,12 @@ function paintMySpouseIncome(coborrowerName) {
 		saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a());
 		//paintCustomerApplicationPageStep4a();
 	});
+	
+	if(skipMyAssets != undefined && skipMyAssets){
+		$(".myassets").click();
+		
+	}
+	
 	questcontainer.append(saveBtn);
 	
 	for(var i=0;i<options.length;i++){

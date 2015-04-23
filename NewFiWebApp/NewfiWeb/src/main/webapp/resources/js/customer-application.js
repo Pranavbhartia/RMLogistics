@@ -448,10 +448,10 @@ function getApplicationTextQues(question) {
         "class": "app-options-cont"
     });
 
-    var requird = $('<span>').attr({
+  /*  var requird = $('<span>').attr({
         "style": "color:red",
     }).html("*");
-    
+    */
     
     var optionCont = $('<input>').attr({
         "class": "app-input",
@@ -487,7 +487,7 @@ function getApplicationTextQues(question) {
         optionCont.val(question.value);
     }
 
-    quesTextCont.append(requird);
+   
     optionsContainer.append(optionCont);
 
     return container.append(quesTextCont).append(optionsContainer);
@@ -1247,7 +1247,7 @@ function getContextApplicationTextQues(contxt) {
     var optionCont = $('<input>').attr({
         "class": "app-input",
         "name": contxt.name,
-        "value":contxt.value
+        "value":showValue(contxt.value)
     }).bind("change",{"contxt":contxt},function(event){
     	var ctx=event.data.contxt;
     	ctx.value=$(this).val();
@@ -1394,7 +1394,7 @@ function paintMyIncome() {
 		  questcontainer.append(questionsContainer10);
     }
    
-   
+   var skipMyAssets = appUserDetails.skipMyAssets;
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
@@ -1428,7 +1428,6 @@ function paintMyIncome() {
             customerEmploymentIncome.push(termp);
         });
          
-        // alert('customerEmploymentIncome.size');
        
         if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
             appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
@@ -1497,6 +1496,9 @@ function paintMyIncome() {
             appUserDetails.customerBankAccountDetails = [];
             appUserDetails.customerOtherAccountDetails = [];
             appUserDetails.customerRetirementAccountDetails = [];
+          
+            
+            appUserDetails.skipMyAssets = $('.myassets').hasClass("app-option-checked");
             
             var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
             
@@ -1514,11 +1516,8 @@ function paintMyIncome() {
     			appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
     		}
     		
-    		
         }
                 
-            
-           
         if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
             saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome(appUserDetails.customerSpouseDetail.spouseName));
         } else {
@@ -1526,6 +1525,11 @@ function paintMyIncome() {
         }
             
     });
+    
+    if(skipMyAssets != undefined && skipMyAssets){
+		$(".myassets").click();
+		
+	}
     $('#app-right-panel').append(saveAndContinueButton);
 }
  
@@ -2594,7 +2598,7 @@ function paintCustomerApplicationPageStep4a() {
 		"value" : 0
 	}];
 	
-	//alert('name'+name)
+
 	var quesCont = paintGovernmentMonitoringQuestions(quesHeaderTxt, options, name);
 
 	$('#app-right-panel').append(quesCont);
@@ -2713,7 +2717,7 @@ function paintGovernmentMonitoringQuestions(quesText, options, name) {
 
 		var optionIncome = $('<div>').attr({
 			"class" : "hide ce-option-ques-wrapper"
-			//"id" : "ce-option_" + i
+			
 		});
 
 		var option = $('<div>').attr({

@@ -1347,4 +1347,15 @@ public class LoanAppFormVO implements Serializable {
 		this.realtorEmail = realtorEmail;
 	}
 
+	public Boolean getSkipMyAssets() {
+		return skipMyAssets;
+	}
+
+	public void setSkipMyAssets(Boolean skipMyAssets) {
+		this.skipMyAssets = skipMyAssets;
+	}
+
+	
+	
+	
 }
