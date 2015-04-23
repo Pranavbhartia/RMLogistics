@@ -107,6 +107,7 @@ a,a:hover,a:visited {
 	height: 100px;
 	width: 200px;
 	background: url(../images/image003.png) no-repeat center;
+	cursor: pointer;
 }
 
 .rate-table-wrapper-cont {
@@ -335,6 +336,7 @@ a,a:hover,a:visited {
 .note-txt {
     white-space: pre-line;
     font-family: 'opensanssemibold';
+    clear: both;
 }
 
 .mammoth-table2 {
@@ -384,8 +386,8 @@ table.adjuster-table{
 
 .adjuster-table th{
 	font-family: 'opensansbold';
-	background: #0D056F;
-	color: #fff;
+	/* background: #0D056F;
+	color: #fff; */
 }
 
 .adjuster-table th:first-child{

@@ -50,6 +50,20 @@ public class XMLProcessor
             LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
+            
+            NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
+            Node newApplicant = newApplicantList.item( 0 );
+                
+            Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
+            Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );
+            Element aBTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "borrowerTransUnionScore" );
+            newApplicant.appendChild( aBExperianScore );
+            newApplicant.appendChild( aBEquifax );
+            newApplicant.appendChild( aBTransUnionScore );
+            
+            
+            
+            
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITH_SSN_BOTH ) ) {
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
@@ -98,6 +112,18 @@ public class XMLProcessor
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
 
+            
+            NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
+            Node newApplicantB = newApplicantList.item( 0 );
+                
+            Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
+            Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );
+            Element aBTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "borrowerTransUnionScore" );
+            newApplicantB.appendChild( aBExperianScore );
+            newApplicantB.appendChild( aBEquifax );
+            newApplicantB.appendChild( aBTransUnionScore );
+            //loan.appendChild( newApplicantB );
+            
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
             Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
@@ -130,6 +156,12 @@ public class XMLProcessor
             newApplicant.appendChild( applicantState );
             Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
+            Element aBCoBorrowerExperianScore = createNewElement( doc, "field", "aBExperianScore", "800" );
+            Element aBCoBorrowerEquifax = createNewElement( doc, "field", "aBEquifaxScore", "800" );
+            Element aBCoBorrowerTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "800" );
+            newApplicant.appendChild( aBCoBorrowerExperianScore );
+            newApplicant.appendChild( aBCoBorrowerEquifax );
+            newApplicant.appendChild( aBCoBorrowerTransUnionScore );
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN ) ) {
             Element newApplicant = doc.createElement( "applicant" );
@@ -247,6 +279,21 @@ public class XMLProcessor
             Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
             Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
+            
+            Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
+            Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );
+            Element aBTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "borrowerTransUnionScore" );
+            
+            Element aCExperianScore = createNewElement( doc, "field", "aCExperianScore", "ExperianCoborrowerWifeScore" );
+            Element aCEquifax = createNewElement( doc, "field", "aCEquifaxScore", "EquifaxCoborrowerWifeScore" );
+            Element aCTransUnionScore = createNewElement( doc, "field", "aCTransUnionScore", "TransUnionCoborrowerWifeScore" );
+            newApplicant.appendChild( aBExperianScore );
+            newApplicant.appendChild( aBEquifax );
+            newApplicant.appendChild( aBTransUnionScore );
+            newApplicant.appendChild( aCExperianScore );
+            newApplicant.appendChild( aCEquifax );
+            newApplicant.appendChild( aCTransUnionScore );
+            loan.appendChild( newApplicant );
             newApplicant.appendChild( userSSN );
         }
         File file = writeContentToXMLFile( doc );
