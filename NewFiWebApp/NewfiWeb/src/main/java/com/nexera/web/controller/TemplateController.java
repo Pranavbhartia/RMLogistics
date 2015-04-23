@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -135,7 +136,7 @@ public class TemplateController extends DefaultController {
 			// Changed for loan profile bug fix
 			editUserPhoto(s3Path, userid);
 			// save the s3 url in the data base
-			Integer num = userProfileService.updateUser(s3Path, userid);
+			Integer num = userProfileService.updatePhotoURL(s3Path, userid);
 
 			UserVO userVO = userProfileService.findUser(userid);
 			if (userVO.getUserRole().getId() == 1) {
@@ -218,21 +219,27 @@ public class TemplateController extends DefaultController {
 
 	@RequestMapping(value = "/reset.do")
 	public ModelAndView resetPassword(
-	        @RequestParam(value = "reference", required = false) String identifier) throws InvalidInputException{
+	        @RequestParam(value = "reference", required = false) String identifier)
+	        throws InvalidInputException {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Resettting password for" + identifier);
-		String deHashedEmail = identifier;
-		User userDetail = userProfileService.findUserByToken(deHashedEmail);
-		if (userDetail == null) {
-			// Re direct to error page
-			throw new InvalidInputException("Invalid URL");			
+		try {
+			User userDetail = userProfileService
+			        .validateRegistrationLink(identifier);
+			if (userDetail == null) {
+				// Re direct to error page
+				throw new InvalidInputException("Invalid URL");
+			} else {
+				// Show him the change password page and auto login him
+				mav.addObject("user", userDetail.getId());
+				mav.addObject("emailID", userDetail.getEmailId());
+				mav.setViewName("changePassword");
+			}
+		} catch (InvalidInputException invalid) {
+			// Stay on same page
+			mav.addObject("error", ErrorConstants.LINK_EXPIRED_ERROR);
+			mav.setViewName("forgotPassword");
 		}
-		else {
-			// Show him the change password page and auto login him
-			mav.addObject("user", userDetail.getId());
-			mav.addObject("emailID", userDetail.getEmailId());
-			mav.setViewName("changePassword");			
-		}		
 		return mav;
 	}
 

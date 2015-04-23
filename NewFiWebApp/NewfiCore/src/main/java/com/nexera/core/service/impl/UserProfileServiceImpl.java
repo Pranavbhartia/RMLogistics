@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -255,18 +256,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public Integer updateUser(String s3ImagePath, Integer userid) {
-
-		Integer number = userProfileDao.updateUser(s3ImagePath, userid);
+	public Integer updatePhotoURL(String s3ImagePath, Integer userid) {
+		Integer number = userProfileDao.updatePhotoURL(s3ImagePath, userid);
 		return number;
 	}
 
 	@Override
 	public List<UserVO> searchUsers(UserVO userVO) {
-
 		return this.buildUserVOList(userProfileDao.searchUsers(User
 		        .convertFromVOToEntity(userVO)));
-
 	}
 
 	@Override
@@ -455,6 +453,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User newUser = User.convertFromVOToEntity(userVO);
 		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
 		        .getEmailId());
+		newUser.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
 		newUser.setEmailEncryptionToken(encryptedMailId);
 		if (newUser.getCustomerDetail() != null) {
 			newUser.getCustomerDetail().setProfileCompletionStatus(
@@ -474,7 +473,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saving the user to the database");
 		int userID = userProfileDao.saveUserWithDetails(newUser);
 		LOG.debug("Saved, sending the email");
-		// sendNewUserEmail(newUser);
 		try {
 			sendNewUserEmail(newUser);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
@@ -483,19 +481,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
 
-		// We set password to null so that it isnt sent back to the front end
-		// newUser.setPassword(null);
-
-		// newUser = null;
-		// if (userID > 0) {
-		// // && newUser.getUserRole().getId() == UserRolesEnum.INTERNAL
-		// // .getRoleId()) {
-		// newUser = userProfileDao.findInternalUser(userID);
-		// return User.convertFromEntityToVO(newUser);
-		// }
-		// LOG.info("Returning the userVO"+newUser.getCustomerDetail().getCustomerSpouseDetail());
 		userVO.setPassword(newUser.getPassword());
-
 		// reset this value so that two objects are not created
 		userVO.setCustomerDetail(null);
 		userVO.setId(userID);
@@ -1111,21 +1097,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
 	public void resetPassword(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
 		LOG.info("function to generate random password and save");
-		String password = generateRandomPassword();
-		user.setPassword(password);
 		user.setEmailEncryptionToken(nexeraUtility.encryptEmailAddress(user
 		        .getEmailId()));
-
+		user.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
+		updateTokenDetails(user);
 		UserVO userVO = User.convertFromEntityToVO(user);
-		UpdatePasswordVO updatePasswordVO = new UpdatePasswordVO();
-		updatePasswordVO.setNewPassword(userVO.getPassword());
-		updatePasswordVO.setUserId(userVO.getId());
-		LOG.info("sending reset password to the user");
+		LOG.info("Sending reset password to the user");
 		sendResetLinkToUser(userVO);
-
 	}
 
 	private void sendResetLinkToUser(UserVO user) throws InvalidInputException,
@@ -1240,15 +1222,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.error("Unable to fetch the url ");
 		}
 		return url;
-
 	}
 
 	public JSONObject createUrlObject(String opName, String sTicket,
 	        String sLoanName) {
 		JSONObject json = new JSONObject();
-
 		try {
-
 			json.put(WebServiceMethodParameters.PARAMETER_S_TICKET, sTicket);
 			json.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NAME,
 			        sLoanName);
@@ -1263,9 +1242,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public JSONObject createAuthObject(String opName, String userName,
 	        String password) {
 		JSONObject json = new JSONObject();
-
 		try {
-
 			json.put(WebServiceMethodParameters.PARAMETER_USERNAME, userName);
 			json.put(WebServiceMethodParameters.PARAMETER_PASSWORD, password);
 			json.put("opName", opName);
@@ -1278,7 +1255,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	public List<String> getDefaultUsers(String userName) {
-		// TODO Auto-generated method stub
 		return userProfileDao.getDefaultUsers(userName);
 	}
 
@@ -1288,4 +1264,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return userProfileDao.findByToken(userToken);
 	}
 
+	@Override
+	public User validateRegistrationLink(String userToken)
+	        throws InvalidInputException {
+		User userDetail = findUserByToken(userToken);
+		if (userDetail == null) {
+			throw new InvalidInputException("Invalid URL");
+		}
+		if (nexeraUtility.hasLinkExpired(
+		        userDetail.getTokenGeneratedTime(), null)) {
+			throw new InvalidInputException(
+			        "Token Expired - Please use the Reset password link to generate again");
+		}
+		return userDetail;
+	}
+
+	@Override
+	@Transactional
+	public void updateTokenDetails(User user) {
+		userProfileDao.updateTokenDetails(user);
+		return;
+	}
 }
