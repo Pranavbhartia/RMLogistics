@@ -260,7 +260,10 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	
     	//alert(isSellYourhome);
     	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != "" && addressStreet != undefined && addressStreet != "" ){
-        	
+        	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+        	if(!question){
+        		return false;
+        	}
             customerDetail.addressStreet=addressStreet;
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
@@ -288,7 +291,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
         	        	
         }else{
-        	showToastMessage("Please give answer of the questions");
+        	showErrorToastMessage("Please give answer of the questions");
         }
    	
     });
@@ -327,14 +330,16 @@ function paintloanamountBuyApp() {
         appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
         appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
         
-        var questionOne=validateInputs($('input[name="housePrice"]').val(),message);
-        var questionTwo=validateInputs($('input[name="dwnPayment"]').val(),message);
-
-        if (questionOne && questionTwo) {
+        var questionOne=validateInput($('input[name="housePrice"]'),$('input[name="housePrice"]').val(),message);
+        var questionTwo=validateInput($('input[name="housePrice"]'),$('input[name="dwnPayment"]').val(),message);
+     if(!questionOne){
+    	 return false;
+     }else if(!questionTwo){
+    	 return false;
+     }
+       
             saveAndUpdateLoanAppForm(appUserDetails ,paintWhereYouLiveStep());
-        } else {
-            return false;
-        }
+        
 
     });
     $('#app-right-panel').append(saveAndContinueButton);
