@@ -212,3 +212,8 @@ alter table newfi_schema.spousegovernmentquestion add column isPermanentResident
 # Added bY Charu
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `locked_rate_data` VARCHAR(1000) NULL AFTER `purchase_document_expiry_date`;
+
+
+#Added by Rajeswari 23 April
+ALTER TABLE `newfi_schema`.`user` 
+ADD COLUMN `token_generation_time` DATETIME NULL DEFAULT NULL ;
