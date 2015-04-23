@@ -1578,12 +1578,12 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
         "class": "loan-summary-rp float-right"
     });
     // add rows in right column
-    var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(rateVO[index].payment),"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Proposed Principal & Interest",showValue(rateVO[index].payment),"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtnCEP("Tax", showValue(tax),"calTaxID","calTaxID2",customerInputData);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
    
-    var rcRow6 = getLoanSummaryRow("Current Monthly Payment ", showValue(monthlyPayment) ,"monthlyPaymentId");
+    var rcRow6 = getLoanSummaryRow("Current Principal & Interest ", showValue(monthlyPayment) ,"monthlyPaymentId");
     var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", showValue(monthlyPaymentDifference) ,"monthlyPaymentDifferenceId");
     //var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     
@@ -1662,8 +1662,8 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     // add rows in right column
     var rcRow1 ="";
     if(customerInputData.livingSituation != "homeOwner")
-         rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(customerInputData.purchaseDetails.rentPerMonth));
-    var rcRow2 = getLoanSummaryRow("Principal Interest", showValue(rateVO[index].payment),"principalIntId");
+         rcRow1 = getLoanSummaryRow("Current Principal & Interest", showValue(customerInputData.purchaseDetails.rentPerMonth));
+    var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVO[index].payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "Calculate","calTaxID","calTaxID2",customerInputData);
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "Calculate","CalInsuranceID","CalInsuranceID2",customerInputData);

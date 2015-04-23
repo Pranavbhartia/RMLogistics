@@ -582,12 +582,13 @@ function getCustomerUploadPhotoRow(user) {
 	});
 
 	var uploadPicPlaceholder;
+	var initialText = user.firstName.charAt(0) + " " + user.lastName.charAt(0);
 	if (user.photoImageUrl == "" || user.photoImageUrl == null
 			|| user.photoImageUrl == 'undefined') {
 		uploadPicPlaceholder = $('<div>').attr({
 			"id" : "profilePic",
-			"class" : "prof-pic-upload-placeholder float-left"
-		});
+			"class" : "lp-initial-pic float-left"			
+		}).text(initialText);
 
 	} else {
 		uploadPicPlaceholder = $('<div>').attr({
