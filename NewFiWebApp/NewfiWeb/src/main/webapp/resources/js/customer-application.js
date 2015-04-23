@@ -4468,8 +4468,12 @@ $.ajax({
 		success:function(data){
 		
            // alert('createLoan data is '+data)
-			paintLockRate(JSON.parse(data), appUserDetails);
-			 $('#overlay-loader').hide();
+			if(data==""){
+                $('#center-panel-cont').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");
+            }else{
+                paintLockRate(JSON.parse(data), appUserDetails);
+            }
+            $('#overlay-loader').hide();
 		},
 		error:function(erro){
 			alert("error inside createLoan ");

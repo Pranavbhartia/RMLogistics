@@ -47,9 +47,9 @@
 			});
 			
 			//TODO added for loan profile page		
-
+			var initialText = newfi.user.firstName.charAt(0) + newfi.user.lastName.charAt(0);
              if(newfi.user.photoImageUrl == "" || newfi.user.photoImageUrl == null){
-				$("#myProfilePicture").addClass("lp-pic float-left");
+            	 $("#myProfilePicture").addClass("lp-initial-pic float-left").text(initialText);
 				
 			}else{
 				

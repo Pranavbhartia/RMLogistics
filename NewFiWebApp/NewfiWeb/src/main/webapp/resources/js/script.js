@@ -124,8 +124,12 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            // getting to know newfi page
 	        } else if (secondary == 2) {
 	            var userId=newfiObject.user.id;
-	            getAppDetailsForUser(userId,function(){
-	                paintCustomerApplicationPage();
+	            getAppDetailsForUser(userId,function(appUserDetailsTemp){
+                    if(!appUserDetailsTemp.loan.lqbFileId){
+                        paintCustomerApplicationPage();
+                    }else{
+                        $('#center-panel-cont').html("Application have been submitted.");
+                    }
 	            });
 	            //paintSelecedOption();
 	        } else if (secondary == 3) {
@@ -413,6 +417,7 @@ function lockLoanRate(lockratedata){
 //alert('final lockratedata'+JSON.stringify(lockratedata));
     lockratedata.IlpTemplateId =closingCostHolder.valueSet.lLpTemplateId;
     lockratedata.requestedRate = closingCostHolder.valueSet.teaserRate;
+    lockratedata.loanId=appUserDetails.loan.id;
     lockratedata.requestedFee = closingCostHolder.valueSet.point;
     lockratedata.rateVo=JSON.stringify(closingCostHolder.valueSet);
     $('#overlay-loader').show();
@@ -425,10 +430,34 @@ function lockLoanRate(lockratedata){
         datatype: "application/json",
         success: function(data) {
             $('#overlay-loader').hide();
+            var status="";
+            var message="Something Went Wrong";
+            var ie=checkIfIE();
+            var result;
+            if(ie){
+                //this part of CODE not tested Need to be tested in IE
+                xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async=false;
+                result=xmlDoc.loadXML(data); 
+            }else{
+                var dom=new DOMParser(data)
+                result=dom.parseFromString(data, "application/xml");
+            }
+            if(result){
+                status=$(result.documentElement).attr("status");
+                message=result.documentElement.childNodes[0].innerHTML;
+            }
+            if(status=="Error"){
+                if(message.indexOf("HOUR_CUTOFF")>=0){
+                    message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
+                }
+                alert(message);
+            }else
+                alert('loan is locked');
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
             //paintLockRate(JSON.parse(data), appUserDetails);
-            alert('loan is locked');
+            
             //need to redirect to milestone page/reload the page
         },
         error: function() {
@@ -1078,7 +1107,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     if(appUserDetails.purchaseDetails.livingSituation != "homeOwner")
      rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
     
-    var rcRow2 = getLoanSummaryRow("Principal Interest", showValue(rateVoObj.payment),"principalIntId");
+    var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVoObj.payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Edit","calTaxID","calTaxID2",appUserDetails);
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",appUserDetails);
@@ -1182,7 +1211,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
         "class": "loan-summary-rp float-right"
     });
     
-    var rcRow1 = getLoanSummaryRow("Principal Interest",showValue(principalInterest) ,"principalIntId");
+    var rcRow1 = getLoanSummaryRow("Proposed Principal & Interest",showValue(principalInterest) ,"principalIntId");
     var rcRow2 = getLoanSummaryRowCalculateBtn("Tax", showValue(tax),"calTaxID","calTaxID2",appUserDetails);
     rcRow2.addClass("no-border-bottom");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",appUserDetails);
@@ -1458,7 +1487,7 @@ function getClosingCostSummaryContainer(valueSet) {
     var parentWrapper = $('<div>').attr({
         "class": "closing-cost-wrapper"
     });
-    var header = getClosingCostHeader("Closing Coast Summary");
+    var header = getClosingCostHeader("Closing Cost Summary");
     var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
     var closingDate = $('<span>').attr({
         "class": "semibold"
