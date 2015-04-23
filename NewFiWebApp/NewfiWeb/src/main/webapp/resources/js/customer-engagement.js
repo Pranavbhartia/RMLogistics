@@ -1706,7 +1706,7 @@ function getLoanAmountRowCEP(desc, detail, id) {
     });
    
     var input = $('<input>').attr({
-        "class": "loan-summary-input-detail float-left",
+        "class": "loan-summary-sub-col-detail float-left",
         "id": id
     }).val(detail)
     .keydown(function() {
@@ -1718,11 +1718,11 @@ function getLoanAmountRowCEP(desc, detail, id) {
 		    precision:0,
 		    allowNegative:false
 		});		
-    }).on('keyup',function(e){
+    });/*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
     	}
-    });
+    });*/
  
     
     var saveBtn = $('<div>').attr({
