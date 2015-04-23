@@ -16,7 +16,7 @@ var customerOtherAccountDetails = new Object();
 //customerDetail.customerOtherAccountDetails = customerOtherAccountDetails;
 
 user.customerDetail = customerDetail;
-
+var yesyNoErrorMessage="Please give answers of the questions";
 
 var customerEnagagement = new Object();
 
@@ -603,7 +603,7 @@ function paintCustomerApplicationPageStep1a() {
     		
         	        	
         }else{
-        showErrorToastMessage("Please answer the questions");
+        showErrorToastMessage(yesyNoErrorMessage);
         }
    	
     });
@@ -753,7 +753,7 @@ function paintCustomerApplicationPageStep1b() {
     	var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
     	var questionThree=validateInput($('input[name="purchaseTime"]'),propertyPurchaseYear,message);
     	if(propertyTypeCd=="" && residenceTypeCd==""){
-    		showErrorToastMessage("Please give answers for the questions");
+    		showErrorToastMessage(yesyNoErrorMessage);
     		return false;
     	}else if(!questionOne){
     		return false;
@@ -1132,11 +1132,11 @@ function paintCustomerApplicationPageStep2() {
     		    			appUserDetails.isSpouseOnLoan =false;
     		    			appUserDetails.spouseName  = "";
     		    		}else{
-    		    			 showErrorToastMessage("Please give the answers of the questions");
+    		    			 showErrorToastMessage(yesyNoErrorMessage);
     	    		    	 return false;
     		    		}
     		     }else{
-    		    	 showErrorToastMessage("Please give the answers of the questions");
+    		    	 showErrorToastMessage(yesyNoErrorMessage);
     		    	 return false;
     		     }
     			 
@@ -1180,7 +1180,7 @@ function paintCustomerApplicationPageStep2() {
 	    	
 	    	
     	}else{
-    		showToastMessage("Please give the answers of the questions");
+    		showToastMessage(yesyNoErrorMessage);
     	}
          ////alert(JSON.stringify(appUserDetails));
     	//paintCustomerApplicationPageStep3();
@@ -2945,7 +2945,7 @@ function paintCustomerApplicationPageStep5() {
             if(yearCount<0){
                 showToastMessage("You must be at least 18 years of age.");
             }else
-    		  showToastMessage("Please give the answers of the questions.");
+    		  showErrorToastMessage(yesyNoErrorMessage);
     	}
     	
     });
@@ -4048,7 +4048,7 @@ function paintRefinanceStep3() {
              var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinancedetails.currentMortgagePayment ,message);
              var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),propertyTypeMaster.propertyTaxesPaid,message);
              var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),propertyTypeMaster.propertyInsuranceCost,message);
-             alert("mess"+questionOne+""+questionTwo+""+questionThree);
+            
              if(!questionOne){
             	 return false;
              }else if(!questionTwo){
