@@ -367,6 +367,7 @@ CREATE TABLE `customerspousedetails` (
   `child_support_alimony` bigint(20) DEFAULT NULL,
   `retirement_income` bigint(20) DEFAULT NULL,
   `disability_income` bigint(20) DEFAULT NULL,
+  `skip_my_assets` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -574,7 +575,7 @@ CREATE TABLE `governmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
-  `isPermanentResidentAlien` tinyint(4) DEFAULT 0,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -877,6 +878,7 @@ CREATE TABLE `loanappform` (
   `iscoborrower_present` tinyint(4) DEFAULT NULL,
   `ssn_provided` tinyint(4) DEFAULT NULL,
   `cb_ssn_provided` tinyint(4) DEFAULT NULL,
+  `skip_my_assets` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_loanAppFormLinkedToUser_idx` (`user`),
   KEY `fk_loanAppFormLinkedToPropertyType_idx` (`property_type`),
@@ -1643,7 +1645,7 @@ CREATE TABLE `spousegovernmentquestion` (
   `typeOfPropertyOwned` varchar(45) DEFAULT NULL,
   `propertyTitleStatus` varchar(45) DEFAULT NULL,
   `skipOptionalQuestion` tinyint(4) DEFAULT NULL,
-  `isPermanentResidentAlien` tinyint(4) DEFAULT 0,
+  `isPermanentResidentAlien` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2202,4 +2204,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-22 17:54:37
+-- Dump completed on 2015-04-23  9:21:34

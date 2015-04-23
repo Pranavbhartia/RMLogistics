@@ -15,10 +15,9 @@ public interface CommonConstants {
 	 */
 	public static final Integer RANDOM_PASSWORD_LENGTH = 8;
 	public static final int SYSTEM_ADMIN_ID = 1;
-	
 
-	public static final float PROFILE_STATUS_WEIGHTAGE=(100f/3f);
-	public static final String CSV_UPLOAD_SUCCESS="CSV file uploaded successfully";
+	public static final float PROFILE_STATUS_WEIGHTAGE = (100f / 3f);
+	public static final String CSV_UPLOAD_SUCCESS = "CSV file uploaded successfully";
 	/**
 	 * Entity status
 	 */
@@ -154,7 +153,7 @@ public interface CommonConstants {
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
-	
+
 	public static final String FILE_DOWNLOAD_SERVLET = "readFileAsStream.do?uuid=";
 
 	public static final String elapsedPrependStr = "due in";
@@ -162,4 +161,5 @@ public interface CommonConstants {
 	public static final String elapsedAppendStr = "hrs.";
 
 	public static final String elapsedOverDueStr = "Overdue.";
-	}
+	public static final String THUMBNAIL_PARAM = "&isThumb=0";
+}

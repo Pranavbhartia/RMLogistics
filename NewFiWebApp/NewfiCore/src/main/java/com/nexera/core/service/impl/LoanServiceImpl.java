@@ -1798,7 +1798,8 @@ public class LoanServiceImpl implements LoanService {
 			String docId = needListService.checkCreditReport(loanID);
 			if (docId != null && !docId.isEmpty()) {
 				loanVO.setCreditReportUrl(systemBaseUrl
-				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId);
+				        + CommonConstants.FILE_DOWNLOAD_SERVLET + docId
+				        + CommonConstants.THUMBNAIL_PARAM);
 			} else {
 				loanVO.setCreditReportUrl("");
 			}
