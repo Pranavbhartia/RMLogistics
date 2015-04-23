@@ -363,8 +363,15 @@ function numberWithCommasAndDoller(x) {
 }
 
 function showValue(number) {
-    return numberWithCommasAndDoller(getRoundValue(number));
-
+	var temp=removedDoller(removedComma(number));
+	if(number&&number!=""&&!isNaN(temp))
+    	return numberWithCommasAndDoller(getRoundValue(number));
+	else{
+		if(isNaN(temp))
+			return number;
+		else
+			return "";
+	}
 }
 
 

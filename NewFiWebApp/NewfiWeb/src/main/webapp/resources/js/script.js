@@ -1095,7 +1095,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVoObj.yearData +" Years Fixed","loanprogramId");
     //var lcRow3 = getLoanSummaryRow("Loan Amount", loanAmount);
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount","$ "+showValue(housePrice), " Down Payment","$ "+showValue(downPayment));
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment));
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVoObj.teaserRate).toFixed(3)+" %", "teaserRateId");
@@ -1200,7 +1200,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     if(appUserDetails.refinancedetails.refinanceOption != "REFCO")
     var lcRow4 = getLoanAmountRow("Loan Amount",showValue(loanAmount), "loanAmount");
     else
-        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout","$ "+showValue(currentMortgageBalance), "Cashout","$ "+showValue(cashTakeOut),true);
+        var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout",showValue(currentMortgageBalance), "Cashout",showValue(cashTakeOut),true);
 
     var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR, "lockrateaprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "lockClosingCost");
