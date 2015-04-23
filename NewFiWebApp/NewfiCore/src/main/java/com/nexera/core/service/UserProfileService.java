@@ -93,7 +93,7 @@ public interface UserProfileService {
 
 	public List<String> getDefaultUsers(String userName);
 
-	public User validateRegistrationLink(String userToken)
+	public User validateRegistrationLink(String userToken, int clientRawOffset)
 	        throws InvalidInputException;
 
 }
