@@ -26,10 +26,10 @@
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   
-							<div class="reg-input-reset-password" id="email-container" >
+							<div class="change-input-reset-password login-input-pwd" id="email-container" >
 					        <input type="password" class="reg-input" placeholder="Password" id="pwd" >	
 					        </div>
-					        <div class="reg-input-reset-password" id="email-container">
+					        <div class="change-input-reset-password login-input-pwd" id="email-container">
 					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmPwd" >	
 							<div class="err-msg hide"></div>
 				            </div>
@@ -63,7 +63,7 @@ $('#changePwdForm').submit(function(event){
 	var timezone = dateVar.getTimezoneOffset();
 	changePasswordData.emailID = currentUser.emailID+ ":"+timezone;
 	console.log("Create user button clicked. User : "
-					+ JSON.stringify(changePasswordData));
+					+ JSON.stringify(user));
 	if($('#pwd').val()==""||$('#pwd').val()==null){
 		showErrorToastMessage("Password cannot be empty");
 			return;		
@@ -72,7 +72,7 @@ $('#changePwdForm').submit(function(event){
 		showErrorToastMessage("Confirm Password cannot be empty");
 			return;		
 	}
-	if($('#pwd').val() != $('#confirmPwd').val()){
+	if($('#confirmPwd').val() != $('#confirmPwd').val()==null){
 		showErrorToastMessage("Passwords don't match");
 			return;		
 	}	
@@ -80,19 +80,25 @@ $('#changePwdForm').submit(function(event){
         url: "/NewfiWeb/rest/userprofile/password",
         type: "POST",       
         data: {
-                 "changePasswordData": JSON.stringify(changePasswordData)
-        },
+                 "changePasswordData":JSON.stringify(user)
+        },        
         datatype: "json",
-        success: function(data) {            
-            $('#overlay-loader').hide();            
-            window.location.href = data;            
+        contentType: "application/json",
+        success: function(data) {
+            // $('#overlay-loader').hide();
+            $('#overlay-loader').hide();
+            // alert (data);
+            window.location.href = data;
+            // printMedianRate(data,container);
         },
-        error: function(data) {           
+        error: function(data) {
+           // alert(data);
             showErrorToastMessage("error while creating user");
             $('#overlay-loader').hide();
         }
     });
-	
+	//ajaxRequest("rest/userprofile/password", "POST", "application/json", JSON.stringify(user),
+		//		  paintForgetPasswordResponse);	
 	});
 
 function paintForgetPasswordResponse(data){
