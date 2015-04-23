@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,16 @@ public class Utils {
 
 	}
 
+	public boolean hasLinkExpired(Date inputTime, int rawOffSet) {
+
+		Calendar tokenGenerationTime = Calendar.getInstance();
+		tokenGenerationTime.setTimeInMillis(inputTime.getTime() + rawOffSet);
+		tokenGenerationTime.add(Calendar.DAY_OF_MONTH, 3);
+		Date today = new Date(System.currentTimeMillis());
+		return tokenGenerationTime.after(today);
+
+	}
+
 	// To be used by all modules to fetch the currently logged in user
 	public User getLoggedInUser() {
 
@@ -309,6 +320,15 @@ public class Utils {
 		}
 
 		return null;
+	}
+
+	public Date convertCurrentDateToUtc() {
+		Date date = new Date();
+		TimeZone timeZone = TimeZone.getDefault();
+		int offset = timeZone.getOffset(date.getTime());
+		long utcMilliSeconds = date.getTime() - offset;
+		Date utcDate = new Date(utcMilliSeconds);
+		return utcDate;
 	}
 
 }

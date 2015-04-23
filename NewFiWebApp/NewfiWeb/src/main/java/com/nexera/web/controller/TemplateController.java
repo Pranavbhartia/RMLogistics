@@ -4,7 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -219,13 +222,18 @@ public class TemplateController extends DefaultController {
 
 	@RequestMapping(value = "/reset.do")
 	public ModelAndView resetPassword(
-	        @RequestParam(value = "reference", required = false) String identifier)
-	        throws InvalidInputException {
+	        @RequestParam(value = "reference", required = false) String identifier,
+	        HttpServletRequest request) throws InvalidInputException {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Resettting password for" + identifier);
 		try {
-			User userDetail = userProfileService
-			        .validateRegistrationLink(identifier);
+			// Getting user locale
+			Locale clientLocale = request.getLocale();
+			Calendar calendar = Calendar.getInstance(clientLocale);
+			TimeZone clientTimeZone = calendar.getTimeZone();
+			int rawOffSet = clientTimeZone.getRawOffset();
+			User userDetail = userProfileService.validateRegistrationLink(
+			        identifier, rawOffSet);
 			if (userDetail == null) {
 				// Re direct to error page
 				throw new InvalidInputException("Invalid URL");

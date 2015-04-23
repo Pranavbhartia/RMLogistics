@@ -1,7 +1,6 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -75,7 +74,7 @@ public class User implements Serializable, UserDetails {
 	private Boolean isProfileComplete;
 	private Date createdDate;
 	private Date lastLoginDate;
-	private Timestamp tokenGeneratedTime;
+	private Date tokenGeneratedTime;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -493,11 +492,11 @@ public class User implements Serializable, UserDetails {
 	}
 
 	@Column(name = "token_generation_time")
-	public Timestamp getTokenGeneratedTime() {
+	public Date getTokenGeneratedTime() {
 		return tokenGeneratedTime;
 	}
 
-	public void setTokenGeneratedTime(Timestamp tokenGeneratedTime) {
+	public void setTokenGeneratedTime(Date tokenGeneratedTime) {
 		this.tokenGeneratedTime = tokenGeneratedTime;
 	}
 

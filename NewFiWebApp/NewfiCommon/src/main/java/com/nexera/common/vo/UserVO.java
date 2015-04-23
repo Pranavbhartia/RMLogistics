@@ -1,6 +1,7 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class UserVO implements Serializable {
 	private CustomerEnagagement customerEnagagement;
 	private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
 	private String loanManagerEmail;
+	private Date tokenGeneratedTime;
 
 	public UserVO() {
 
@@ -261,6 +263,14 @@ public class UserVO implements Serializable {
 
 	public void setEmailEncryptionToken(String emailEncryptionToken) {
 		this.emailEncryptionToken = emailEncryptionToken;
+	}
+
+	public Date getTokenGeneratedTime() {
+		return tokenGeneratedTime;
+	}
+
+	public void setTokenGeneratedTime(Date tokenGeneratedTime) {
+		this.tokenGeneratedTime = tokenGeneratedTime;
 	}
 
 }
