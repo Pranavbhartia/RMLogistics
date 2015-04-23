@@ -30,6 +30,7 @@
 	<script src="resources/js/customer-application.js"></script>
 	<script src="resources/js/customer-engagement.js"></script>
 	<script src="resources/js/buyHome.js"></script>
+	<script src="resources/js/validation.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script>
 		$(document).ready(function() {
