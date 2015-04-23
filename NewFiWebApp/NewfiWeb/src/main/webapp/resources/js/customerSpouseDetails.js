@@ -821,7 +821,12 @@ function paintSpouseCustomerApplicationPageStep4a(coborrowerName) {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
-    	
+    	for(var i=0;i<quesDeclarationContxts.length;i++){
+    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
+    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+    			return;
+    		}
+    	}
     	isOutstandingJudgments =  quesDeclarationContxts[0].value;
     	isBankrupt =  quesDeclarationContxts[1].value;
     	isPropertyForeclosed =  quesDeclarationContxts[2].value;
@@ -952,6 +957,10 @@ function paintSpouseCustomerApplicationPageStep4a(coborrowerName) {
     	 
     	 if( isOwnershipInterestInProperty =="Yes"){ 
     		 spouseGovernmentQuestions.isOwnershipInterestInProperty = true;
+    		 if(typeOfPropertyOwned==undefined && propertyTitleStatus==undefined){
+    			 showErrorToastMessage(yesyNoErrorMessage);
+    			 return;
+    		 }
  		 }else if(isOwnershipInterestInProperty =="No"){
  			spouseGovernmentQuestions.isOwnershipInterestInProperty = false;
  		 }else{
@@ -1059,7 +1068,16 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
 	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
 	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-	    	
+	    	if(ethnicity==undefined && race==undefined && sex==undefined){
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	} 
+	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+	    		
+	    	}else{
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	}
 	    	spouseGovernmentQuestions.ethnicity = ethnicity;
 	    	spouseGovernmentQuestions.race = race;
 	    	spouseGovernmentQuestions.sex =sex;
@@ -1210,10 +1228,27 @@ function paintCustomerSpouseApplicationPageStep5() {
         var yearCount=(dateNow.getTime()-dat.getTime());
        var cbSsnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
     	
-    	if(dateOfBirth != undefined && dateOfBirth !="" && secPhoneNumber != undefined && secPhoneNumber !="" && yearCount >=0){
-    		
-    		//appUserDetails.customerDetail
-    		
+       var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
+       var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
+       if(!questionOne){
+    	   return false;
+       }else if(!questionTwo){
+    	   return false;
+       }else if(yearCount<0){
+    	   showErrorToastMessage("You must be at least 18 years of age.");
+    	   return false;
+       }
+       if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+    	   var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
+    	   if(!isSuccess){
+    		   return false;
+    	   }
+    	   
+       }else{
+    	   showErrorToastMessage(yesyNoErrorMessage);
+    	  return false;
+       }
+
     		customerDetailTemp =  appUserDetails.customerSpouseDetail;
     		customerDetailTemp.spouseDateOfBirth= new Date(dateOfBirth).getTime();
     		customerDetailTemp.spouseSsn = ssn;
@@ -1222,27 +1257,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     		appUserDetails.cbSsnProvided = cbSsnProvided;
     		appUserDetails.customerSpouseDetail = customerDetailTemp;
-    		////alert(JSON.stringify(customerDetail));
-    		
-    		
-    /////alert(JSON.stringify(appUserDetails));
-    		
-    		
-    	
-				 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
-				
-    		
-    		
-    		
-    		
-    		
-    	}else{
-            if(yearCount<0){
-                showToastMessage("You must be at least 18 years of age.");
-            }else
-    		  showToastMessage("Please give the answers of the questions.");
-    	}
-    	
+			saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));   	
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(socialSecurityWrapper)

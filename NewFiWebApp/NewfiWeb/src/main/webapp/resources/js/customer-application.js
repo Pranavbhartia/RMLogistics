@@ -17,6 +17,8 @@ var customerOtherAccountDetails = new Object();
 
 user.customerDetail = customerDetail;
 var yesyNoErrorMessage="Please give answers of the questions";
+var stateErrorMessage="Please select your state";
+var gonernamentQuestionErrorMessage="Please give answers of all the questions";
 
 var customerEnagagement = new Object();
 
@@ -581,16 +583,36 @@ function paintCustomerApplicationPageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    	
+    	var address= $('input[name="streetAddress"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
+
     	var addressStreet =   $('input[name="streetAddress"]').val();
     	
         var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
     	
-    	if(inputState != undefined && inputState != "" && city != undefined && city != ""  && zipCode != undefined && zipCode != ""  ){
-        	
+
+   
+    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
+    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+   
+    	if(inputState==""||inputState==undefined){
+    		showErrorToastMessage(stateErrorMessage);
+    		return false;
+    	}else if(!cityStatus){
+    		return false;
+    	}else if(!zipcodeStatus){
+    		return false;
+    	}   
+       if($('.ce-option-checkbox').hasClass('app-option-checked')){
+    		
+    	}else{
+    		var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
+    		if(!isSuccess){
+    			return false;
+    		}
+    	}
 
     		customerDetail.addressCity = city;
     		customerDetail.addressState = inputState;
@@ -608,9 +630,9 @@ function paintCustomerApplicationPageStep1a() {
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		
         	        	
-        }else{
+       /* }else{
         showErrorToastMessage(yesyNoErrorMessage);
-        }
+        }*/
    	
     });
 
@@ -639,11 +661,16 @@ function paintCheckBox(){
 	}).html("I have not yet selected a  property").bind('click',function(event){
 		if($(this).hasClass('app-option-checked')){
     		$(this).removeClass('app-option-checked');
+    		$('input[name=streetAddress]').val('');
     		$('input[name=streetAddress]').parent().parent().show();
+    		$('input[name=addressStreet]').parent().parent().show();
+    	
     		
     	}else{
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
+        	$('input[name=addressStreet]').parent().parent().hide();
+        	
     	}
 		
 	});
@@ -791,7 +818,7 @@ function paintCustomerApplicationPageStep1b() {
     	var questionOne=validateInput($('input[name="taxesPaid"]'),propertyTaxesPaid,message);
     	var questionTwo=validateInput($('input[name="insuranceCost"]'),propertyInsuranceCost,message);
     	var questionThree=validateInput($('input[name="purchaseTime"]'),propertyPurchaseYear,message);
-    	if(propertyTypeCd=="" && residenceTypeCd==""){
+    	if(propertyTypeCd==undefined && residenceTypeCd==undefined){
     		showErrorToastMessage(yesyNoErrorMessage);
     		return false;
     	}else if(!questionOne){
@@ -887,10 +914,19 @@ $('#app-right-panel').html("");
 		
 		   isSecondaryMortgage = quesContxts[0].value;
 
+		   
+		   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
+			   return false;
+		   }
 
-			   if(isSecondaryMortgage =='Yes')
+			   if(isSecondaryMortgage =='Yes'){
 				   appUserDetails.secondMortgage = true;
-			   
+				   var isSuccess=validateInput( $('input[name="secondaryMortgageBalance"]'), $('input[name="secondaryMortgageBalance"]').val(),message);
+				   if(!isSuccess){
+					   return;
+				   } 
+			   }
+				   
 			   else{
 				   appUserDetails.secondMortgage = false;
 			   }
@@ -1171,10 +1207,18 @@ function paintCustomerApplicationPageStep2() {
     		    			appUserDetails.isSpouseOnLoan =false;
     		    			appUserDetails.spouseName  = "";
     		    		}else{
+    		    			var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+    		    	    	if(!question){
+    		    	    		return false;
+    		    	    	}
     		    			 showErrorToastMessage(yesyNoErrorMessage);
     	    		    	 return false;
     		    		}
     		     }else{
+    		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+    			    	if(!question){
+    			    		return false;
+    			    	}
     		    	 showErrorToastMessage(yesyNoErrorMessage);
     		    	 return false;
     		     }
@@ -1185,10 +1229,7 @@ function paintCustomerApplicationPageStep2() {
 	    		 appUserDetails.spouseName  = "";
     		 }
 	    	
-	    	var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
-	    	if(!question){
-	    		return false;
-	    	}
+	    	
 	    	// this is the condition when spouseName is in the loan
             if(!appUserDetails.customerSpouseDetail)
                 appUserDetails.customerSpouseDetail={};
@@ -2231,7 +2272,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 				
 				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
-					showToastMessage("Maximum 2 income needed");
+					showErrorToastMessage("Maximum 2 income needed");
 				     return false;
 				}
 				var quesTxt = "About how much do you make a year";
@@ -2493,7 +2534,12 @@ function paintCustomerApplicationPageStep4a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function() {
-    	
+    	for(var i=0;i<quesDeclarationContxts.length;i++){
+    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
+    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+    			return;
+    		}
+    	}
     	isOutstandingJudgments =  quesDeclarationContxts[0].value;
     	isBankrupt =  quesDeclarationContxts[1].value;
     	isPropertyForeclosed =  quesDeclarationContxts[2].value;
@@ -2624,6 +2670,10 @@ function paintCustomerApplicationPageStep4a() {
     	 
     	 if( isOwnershipInterestInProperty =="Yes"){ 
     		 governmentquestion.isOwnershipInterestInProperty = true;
+    		 if(typeOfPropertyOwned==undefined && propertyTitleStatus==undefined){
+    			 showErrorToastMessage(yesyNoErrorMessage);
+    			 return;
+    		 }
  		 }else if(isOwnershipInterestInProperty =="No"){
  			governmentquestion.isOwnershipInterestInProperty = false;
  		 }else{
@@ -2732,7 +2782,16 @@ function paintCustomerApplicationPageStep4a() {
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
 	    	
 	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-	    	
+	    	if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	} 
+	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+	    		
+	    	}else{
+	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		return false;
+	    	}
 	    	governmentquestion.ethnicity = ethnicity;
 	    	governmentquestion.race = race;
 	    	governmentquestion.sex =sex;
@@ -2949,8 +3008,26 @@ function paintCustomerApplicationPageStep5() {
         dateNow.setFullYear(dateNow.getFullYear()-18);
         var yearCount=(dateNow.getTime()-dat.getTime());
     	
-    	
+    	var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
+    	var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
+    	if(!questionOne){
+    		return false;
+    	}else if(!questionTwo){
+    		return false;
+    	}
     	var ssnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
+    	if( $('.ce-option-checkbox').hasClass("ce-option-checked")){
+    		
+    		var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
+    		
+    		if(!isSuccess){
+    			
+    			return false;
+    		}
+    	}else{
+    		showErrorToastMessage(yesyNoErrorMessage);
+    		return false;
+    	}
     	//alert('ssnProvided'+ssnProvided);
     	
     	if(dateOfBirth != undefined && dateOfBirth !=""  && phoneNumber != undefined && phoneNumber !="" && yearCount>=0){

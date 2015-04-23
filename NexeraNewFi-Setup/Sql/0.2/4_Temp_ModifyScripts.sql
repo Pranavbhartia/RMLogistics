@@ -214,8 +214,18 @@ ALTER TABLE `newfi_schema`.`loan`
 ADD COLUMN `locked_rate_data` VARCHAR(1000) NULL AFTER `purchase_document_expiry_date`;
 
 
+
+
+
 # 23 April by Abhishek
 alter table newfi_schema.loanappform add column skip_my_assets TINYINT(4);
 alter table newfi_schema.customerspousedetails add column skip_my_assets TINYINT(4);
 
+
 alter table newfi_schema.customerdetails add column is_selected_property TINYINT(4);
+
+
+#Added by Rajeswari 23 April
+ALTER TABLE `newfi_schema`.`user` 
+ADD COLUMN `token_generation_time` DATETIME NULL DEFAULT NULL ;
+
