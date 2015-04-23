@@ -1906,7 +1906,9 @@ $('body').on('focus',"input[name='ssn']",function(){
 	$(this).mask("***-**-****");
 		
 });
-
+$('body').on('focus',"input[name='phoneNumber']",function(){
+    $(this).mask("(999) 999-9999");
+});
 
 
 function paintRefinanceSelfEmployed(divId,value) {
