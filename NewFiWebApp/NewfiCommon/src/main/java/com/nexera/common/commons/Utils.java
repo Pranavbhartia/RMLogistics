@@ -176,11 +176,14 @@ public class Utils {
 
 	public boolean hasLinkExpired(Date inputTime, int rawOffSet) {
 
-		Calendar tokenGenerationTime = Calendar.getInstance();
-		tokenGenerationTime.setTimeInMillis(inputTime.getTime() + rawOffSet);
-		tokenGenerationTime.add(Calendar.DAY_OF_MONTH, 3);
-		Date today = new Date(System.currentTimeMillis());
-		return tokenGenerationTime.after(today);
+		Calendar tokenExpirationTime = Calendar.getInstance();
+		tokenExpirationTime.setTimeInMillis(inputTime.getTime() + rawOffSet);
+		tokenExpirationTime.add(Calendar.DAY_OF_MONTH, 3);
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(System.currentTimeMillis());
+		LOG.debug(""+tokenExpirationTime.compareTo(today));
+		LOG.debug("Has Token Expired"+tokenExpirationTime.before(today));
+		return tokenExpirationTime.before(today);
 
 	}
 
