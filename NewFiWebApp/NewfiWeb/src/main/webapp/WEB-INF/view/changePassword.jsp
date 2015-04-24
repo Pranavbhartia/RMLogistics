@@ -52,6 +52,7 @@
 	
 </body>
 <script>
+
 $('#changePwdForm').submit(function(event){	
 	event.preventDefault();
 	var changePasswordData = new Object();
@@ -70,28 +71,83 @@ $('#changePwdForm').submit(function(event){
 		showErrorToastMessage("Confirm Password cannot be empty");
 			return;		
 	}
-	if($('#pwd').val() != $('#confirmPwd').val()){
+/* 	if($('#pwd').val() != $('#confirmPwd').val()){
 		showErrorToastMessage("Passwords don't match");
 			return;		
-	}	
-	$.ajax({
-        url: "/NewfiWeb/rest/userprofile/password",
-        type: "POST",       
-        data: {
-                 "changePasswordData": JSON.stringify(changePasswordData)
-        },
-        datatype: "json",
-        success: function(data) {            
-            $('#overlay-loader').hide();            
-            window.location.href = data;            
-        },
-        error: function(data) {           
-            showErrorToastMessage("error while creating user");
-            $('#overlay-loader').hide();
-        }
-    });
+	} */
+	var password=$('#pwd').val();
+	var confirmPassword=$('#confirmPwd').val();
+	var isSuccess=validatePassword(password,confirmPassword);
+	if(isSuccess){
+		$.ajax({
+	        url: "/NewfiWeb/rest/userprofile/password",
+	        type: "POST",       
+	        data: {
+	                 "changePasswordData": JSON.stringify(changePasswordData)
+	        },
+	        datatype: "json",
+	        success: function(data) {            
+	            $('#overlay-loader').hide();            
+	            window.location.href = data;            
+	        },
+	        error: function(data) {           
+	            showErrorToastMessage("error while creating user");
+	            $('#overlay-loader').hide();
+	        }
+	    });
+	}
+	
 	
 	});
+	function validatePassword(password,confirmPassword){
+	
+		var regex=/(?=.*[a-z])(?=.*[A-Z])/;
+        
+		if(password!=confirmPassword){
+			showErrorToastMessage("Passwords donot match");
+			return false;
+		}else{
+			if(password.length<8){
+				showErrorToastMessage("Password length should be atleast 8-digit");
+				return false;
+			}
+            if(password.indexOf(currentUser.firstName) > -1){
+				showErrorToastMessage("Password should not contain firstname or lastname");
+				return false;
+			}
+			 if(regex.test(password)==false){
+				showErrorToastMessage("Password should have atleast one upercase and one lowercase character");
+				return false;
+			}
+              if(password.indexOf(currentUser.firstName) == -1){
+				var lowercase=password.toLowerCase();
+				if(lowercase.length>3){
+				if(lowercase.indexOf(currentUser.firstName) > -1){
+					showErrorToastMessage("Password should not contain firstname or lastname");
+					return false;
+				}
+				}
+				
+			}
+             if(password.indexOf(currentUser.lastName) > -1){
+				showErrorToastMessage("Password should not contain firstname or lastname");
+				return false;
+			}
+             if(password.indexOf(currentUser.lastName) == -1){
+			
+				var lowercase=password.toLowerCase();
+			if(lowercase.length>3){
+				if(lowercase.indexOf(currentUser.lastName) > -1){
+					showErrorToastMessage("Password should not contain firstname or lastname");
+					return false;
+				}
+			}
+				
+				
+			}
+		}
+		return true;
+	}
 function paintForgetPasswordResponse(data){
 	if(data!=null){		
         $('#overlay-loader').hide();
@@ -104,8 +160,12 @@ function paintForgetPasswordResponse(data){
 }
 var currentUser={};
 $(document).ready(function() {
-	currentUser.userId=${user};
-	currentUser.emailID="${emailID}";	
+
+	currentUser.emailID="${userVO.emailId}";
+    currentUser.firstName="${userVO.firstName}";
+    currentUser.lastName="${userVO.lastName}";
+    currentUser.userId= "${userVO.id}";
+
 });
 </script>
 
