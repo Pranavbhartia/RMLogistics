@@ -1158,7 +1158,8 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	});
 	if (custHeaderDetails.photoUrl == undefined || custHeaderDetails.photoUrl=="") {
 		cusProfPic.addClass("cus-img-icn-default float-left");
-		cusProfPic.text("XX")
+		var initials = custHeaderDetails.name.split(" ");		
+		cusProfPic.text(initials[0].charAt(0).toUpperCase() + initials[1].charAt(0).toUpperCase());
 	}
 	else
 	{

@@ -356,7 +356,7 @@ function getAssignedAgentContainer(id, agentName, agentRole, contactNo,
 	{
 		imgCont.addClass("assigned-agent-default-img");
 		var initials = agentName.split(" ");
-		imgCont.text(initials[0].charAt(0)+initials[1].charAt(0));
+		imgCont.text(initials[0].charAt(0).toUpperCase()+initials[1].charAt(0).toUpperCase());
 	}
 
 	var onlineStatus = $('<div>').attr({
@@ -420,7 +420,7 @@ function paintConversations(conversations) {
 			"class" : "conv-prof-image float-left"
 		});
 
-		if (data.createdUser.imgUrl != undefined) {
+		if (data.createdUser.imgUrl != undefined &&  data.createdUser.imgUrl != "") {
 			
 			col1.addClass("conv-prof-image float-left");
 			col1.attr({
