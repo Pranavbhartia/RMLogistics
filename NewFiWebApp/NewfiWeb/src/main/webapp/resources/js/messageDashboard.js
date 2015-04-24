@@ -475,7 +475,8 @@ function paintConversations(conversations) {
 				}
 				else
 				{
-					var initialText = otherUserBinded[k].firstName.charAt(0) +  otherUserBinded[k].lastName.charAt(0);
+					var initials = otherUserBinded[k].userName.split(" ");
+					var initialText = initials[0].charAt(0) +  initials[1].charAt(0);
 					userImage.text(initialText);
 				}
 
