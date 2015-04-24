@@ -2012,8 +2012,10 @@ function getRequestRateLockStatus(element){
                             lockLoanRate(lockratedata);
                     });
                 }else{
-                    element.addClass("rate-btn");
-                    element.html("Contact Your loan manager");
+                	element.addClass("rate-btn");
+                    element.html("Contact Your loan manager").on('click',function(){
+                     changeLeftPanel(1);
+                    });
                 }
             }
         });
