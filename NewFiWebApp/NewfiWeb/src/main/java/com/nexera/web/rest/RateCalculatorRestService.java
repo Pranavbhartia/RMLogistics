@@ -316,7 +316,8 @@ public class RateCalculatorRestService {
 	}
 
 	private String unformatCurrencyField(String field) {
-		String finalString = "";
+		if (null == field)
+			return "";
 		field=field.replaceAll("[$,]", "");
 		return field;
 	}
