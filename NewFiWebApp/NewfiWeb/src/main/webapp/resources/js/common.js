@@ -414,7 +414,7 @@ function objectKeyMakerFunction(item){
 			return "totPrepaids";
 		case "Tax Reserve - Estimated 2 Month(s)":
 			return "taxResrv1004";
-		case "Haz ins. Reserve - Estimated 2 Month(s)":
+		case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
 			return "hazInsReserve1002";
 		case "Total Estimated Reserves Deposited in Escrow Account":
 			return "totEstResDepWthLen";

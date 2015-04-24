@@ -556,36 +556,29 @@ function paintCustomerApplicationPageStep1a() {
     
     var questions = [{
         type: "desc",
-        text: "Street Address",
+        text: "Street address",
         name: "streetAddress",
         value: appUserDetails.user.customerDetail.addressStreet
     }, {
         type: "desc",
-        text: "Which state do you live in?",
+        text: "State",
         name: "state",
         value: appUserDetails.user.customerDetail.addressState
     }, {
         type: "desc",
-        text: "Which city do you belong?",
+        text: "City",
         name: "city",
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
-        text: "What is your zip code?",
+        text: "Zip code",
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     }];
 
 
-     
-    
-  
-
-
     var questionsContainer = getQuestionsContainer(questions);
    
-    //var mainClassName=questionsContainer.attr('class');
-    //$('').append(row);
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
@@ -633,17 +626,8 @@ function paintCustomerApplicationPageStep1a() {
     		
     		appUserDetails.user = user;
     		
-    		
-    		
-    	
-    		
-    		////alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
-    		
-        	        	
-       /* }else{
-        showErrorToastMessage(yesyNoErrorMessage);
-        }*/
+  
    	
     });
 
@@ -842,7 +826,7 @@ function paintCustomerApplicationPageStep1b() {
         text: "What type of property is this?",
         name: "propertyType",
         options: [{
-            text: "Single Family Residence",
+            text: "Single family residence",
             value: "0"
         }, {
             text: "Condo",
@@ -857,13 +841,13 @@ function paintCustomerApplicationPageStep1b() {
         text: "How do you use this home?",
         name: "residenceType",
         options: [{
-            text: "Primary Residence",
+            text: "Primary residence",
             value: "0"
         }, {
-            text: "Vacation/Second Home",
+            text: "Vacation/Second home",
             value: "1"
         }, {
-            text: "Investment Property",
+            text: "Investment property",
             value: "2"
         }],
         selected: ""
@@ -1246,22 +1230,22 @@ function paintCustomerApplicationPageStep2() {
                         name: "coBorrowerLastName"
                     },{
                         type: "desc",
-                        text: "Co-borrower's Street Address",
+                        text: "Co-borrower's street address",
                         name: "coBorrowerStreetAddress",
                         //value: appUserDetails.user.customerDetail.addressStreet
                     }, {
                         type: "desc",
-                        text: "Co-borrower's State",
+                        text: "Co-borrower's state",
                         name: "coBorrowerState",
                         //value: appUserDetails.user.customerDetail.addressState
                     }, {
                         type: "desc",
-                        text: "Co-borrower's City",
+                        text: "Co-borrower's city",
                         name: "coBorrowerCity",
                         //value: appUserDetails.user.customerDetail.addressCity
                     }, {
                         type: "desc",
-                        text: "Co-borrower's Zip Code",
+                        text: "Co-borrower's zip code",
                         name: "coBorrowerZipCode",
                         //value: appUserDetails.user.customerDetail.addressZipCode
                     }]
@@ -1278,22 +1262,22 @@ function paintCustomerApplicationPageStep2() {
                         name: "coBorrowerLastName"
                     },{
                         type: "desc",
-                        text: "Co-borrower's Street Address",
+                        text: "Co-borrower's street address",
                         name: "coBorrowerStreetAddress",
                         //value: appUserDetails.user.customerDetail.addressStreet
                     }, {
                         type: "desc",
-                        text: "Co-borrower's State",
+                        text: "Co-borrower's state",
                         name: "coBorrowerState",
                         //value: appUserDetails.user.customerDetail.addressState
                     }, {
                         type: "desc",
-                        text: "Co-borrower's City",
+                        text: "Co-borrower's city",
                         name: "coBorrowerCity",
                         //value: appUserDetails.user.customerDetail.addressCity
                     }, {
                         type: "desc",
-                        text: "Co-borrower's Zip Code",
+                        text: "Co-borrower's zip code",
                         name: "coBorrowerZipCode",
                         //value: appUserDetails.user.customerDetail.addressZipCode
                     }]
@@ -1943,7 +1927,7 @@ function getMultiTextQuestion(quesText, value) {
     // Job title
     var quesTextCont4 = $('<div>').attr({
         "class": "ce-rp-ques-text"
-    }).html("Job Title");
+    }).html("Job title");
 
     var val = "";
     
@@ -1963,7 +1947,7 @@ function getMultiTextQuestion(quesText, value) {
     // Monthly income
     var quesTextCont1 = $('<div>').attr({
         "class": "ce-rp-ques-text",
-    }).html("Monthly Income Before Taxes");
+    }).html("Monthly Income before taxes");
 
     var val = "";
 
@@ -2005,7 +1989,7 @@ function getMultiTextQuestion(quesText, value) {
     
     var quesTextCont3 = $('<div>').attr({
         "class": "ce-rp-ques-text"
-    }).html("When Did You Start Working ?");
+    }).html("When did you start working ?");
     
     val = "";
     
@@ -2064,7 +2048,7 @@ function getPreviousEmployementQuestions(value) {
 
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-option-text",
-	}).html("Previous Employement Details");
+	}).html("Previous employement details");
 
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont",
@@ -2072,7 +2056,7 @@ function getPreviousEmployementQuestions(value) {
 
 	var quesTextCont1 = $('<div>').attr({
 		"class" : "ce-rp-ques-text",
-	}).html("Annual Income Before Tax");
+	}).html("Annual income before tax");
    
 	var val="";
    
@@ -2110,7 +2094,7 @@ function getPreviousEmployementQuestions(value) {
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
-	}).html("Name of Previous Employer");
+	}).html("Name of previous employer");
     val="";
     if(value&&value.employedAt)
         val=value.employedAt;
@@ -2125,7 +2109,7 @@ function getPreviousEmployementQuestions(value) {
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
-	}).html("Years of Employment");
+	}).html("Years of employment");
     val="";
     if(value&&value.employedSince)
         val=value.employedSince;
@@ -2140,7 +2124,7 @@ function getPreviousEmployementQuestions(value) {
 	
 	var quesTextCont4 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
-	}).html("Job Title");
+	}).html("Job title");
     /*if(value&&value.employedSince)
         val=value.employedSince;*/
 	var inputBox4 = $('<input>').attr({
@@ -2194,7 +2178,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     		});
     		var quesTextCont = $('<div>').attr({
     			"class" : "ce-option-text"
-    		}).html("Monthly Income");
+    		}).html("Monthly income");
     		var optionContainer = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
@@ -2248,7 +2232,7 @@ function paintRefinanceDisability(divId,value) {
     //appUserDetails.employed ="true";
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-    		var quesTxt = "About how much do you get monthly?";
+    		var quesTxt = "Monthly income";
     		var wrapper = $('<div>').attr({
     			"class" : "ce-option-ques-wrapper"
     		});
@@ -2288,7 +2272,7 @@ function paintRefinancePension(divId,value,name) {
     //appUserDetails.employed ="true";
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-    		var quesTxt = "About how much do you get monthly?";
+    		var quesTxt = "Monthly income";
             var inputElementName="pension";
             if(name){
                 inputElementName=name;
@@ -2921,7 +2905,7 @@ function paintCustomerApplicationPageStep4a() {
     });
 
 	var options = [ {
-		"text" : "I decline to Provide",
+		"text" : "I decline to provide",
 		"name" : "bypassoptional",
 		"value" : 0
 	}];
@@ -3148,10 +3132,11 @@ function goverementOptionalQues() {
 
 function paintCustomerApplicationPageStep5() {
 	
+	var userName = appUserDetails.user.firstName;
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for";
+    var quesHeaderTxt = "Credit for " +userName;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -3167,7 +3152,7 @@ function paintCustomerApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).text("I authorize Newfi To Pull My Credit Report For the Purposes of Appying for a Morgage Loan")
+    }).text("I authorize newfi to pull my credit report for the purposes of appying for a morgage loan")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
@@ -4131,7 +4116,7 @@ function paintSelectLoanTypeQuestion() {
 	var titleText = $('<div>').attr({
 		"class" : "ce-title",
 		"style":"text-align: left"
-	}).html("Choose your loan type");
+	}).html("Choose your loan purpose");
 
 	//$('#app-right-panel').append(rateIcon).append(titleText);
 	$('#app-right-panel').append(titleText);
@@ -4238,15 +4223,15 @@ function paintRefinanceQuest1() {
 	var quesText = "Why do you want to refinance?";
 
 	var options = [ {
-		"text" : "Lower My Monthly Payment",
+		"text" : "Lower my monthly payment",
 		"onselect" : paintRefinanceStep2,
 		"value" : "REFLMP"
 	}, {
-		"text" : "Pay Off My Mortgage Faster",
+		"text" : "Pay off my mortgage faster",
 		"onselect" : paintRefinanceStep1a,
 		"value" : "REFMF"
 	}, {
-		"text" : "Take Cash Out of My Home",
+		"text" : "Take cash out of my home",
 		"onselect" : paintRefinanceStep1b,
 		"value" : "REFCO"
 	} ];
@@ -4975,6 +4960,11 @@ function mapDbDataForFrontend(key){
             if(appUserDetails.refinancedetails)
                 return appUserDetails.refinancedetails.cashTakeOut;
             break;
+        case "mortgageyearsleft":
+            if(appUserDetails.refinancedetails)
+                return appUserDetails.refinancedetails.mortgageyearsleft;
+            break;
+            
             
     /*    case "isDownPaymentBorrowed":
             return appUserDetails.governmentquestion.isDownPaymentBorrowed;

@@ -1109,7 +1109,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     
     var rcRow1 ="";
     if(appUserDetails.purchaseDetails.livingSituation != "homeOwner")
-     rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
+     rcRow1 = getLoanSummaryRow("Current Rental Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
     
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVoObj.payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "","calTaxID","calTaxID2",appUserDetails);
@@ -2017,11 +2017,11 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
         container= $('<div>').attr({
             "class": "lock-rate-slider-container"
         });
-        container.append(tenureSlider).append(rateSlider);
+        container.append(header).append(tenureSlider).append(rateSlider);
     }
     var rateBtn = $('<div>');
     getRequestRateLockStatus(rateBtn);
-    return wrapper.append(header).append(container).append(rateBtn);
+    return wrapper.append(container).append(rateBtn);
 }
 
 function getRequestRateLockStatus(element){

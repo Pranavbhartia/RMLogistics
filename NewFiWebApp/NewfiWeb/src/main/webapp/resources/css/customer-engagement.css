@@ -186,7 +186,7 @@
 	background: url(../images/check_box_unchecked.png) no-repeat left 14px;
 	font-size: 16px;
 	font-family: 'opensanssemibold';
-	text-transform: capitalize;
+	/*text-transform: capitalize;*/
 	cursor: pointer;
 	overflow: hidden;
 	word-break: break-word;
