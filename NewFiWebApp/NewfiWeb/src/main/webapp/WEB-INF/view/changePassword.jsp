@@ -121,9 +121,11 @@ $('#changePwdForm').submit(function(event){
 			}
               if(password.indexOf(currentUser.firstName) == -1){
 				var lowercase=password.toLowerCase();
+				if(lowercase.length>3){
 				if(lowercase.indexOf(currentUser.firstName) > -1){
 					showErrorToastMessage("Password should not contain firstname or lastname");
 					return false;
+				}
 				}
 				
 			}
@@ -134,11 +136,13 @@ $('#changePwdForm').submit(function(event){
              if(password.indexOf(currentUser.lastName) == -1){
 			
 				var lowercase=password.toLowerCase();
-			
+			if(lowercase.length>3){
 				if(lowercase.indexOf(currentUser.lastName) > -1){
 					showErrorToastMessage("Password should not contain firstname or lastname");
 					return false;
 				}
+			}
+				
 				
 			}
 		}
