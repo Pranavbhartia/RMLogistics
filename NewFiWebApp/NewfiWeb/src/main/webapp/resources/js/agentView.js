@@ -366,16 +366,7 @@ function appendCustomers(elementId, customers) {
 		var onlineStatus = $('<div>').attr({
 			"class" : "onl-status-icn float-left"
 		});
-		// TODO customer prof default pic to be set correctly
-		if (customer.prof_image == undefined || customer.prof_image == ""
-				|| customer.prof_image == null) {
-			customer.prof_image = "resources/images/person-placeholder.png";
-		}
-		var profImage = $('<div>').attr({
-			"class" : "cus-img-icn float-left",
-			"style" : "background-image:url(" + customer.prof_image + ")"
-
-		});
+		
 		// code will execute if user is logged in
 		var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
 		loanNotificationCntxt.customerName = customer.name;
@@ -408,6 +399,25 @@ function appendCustomers(elementId, customers) {
 		 * paintMyLoansView(); changeAgentSecondaryLeftPanel("lp-step2");
 		 * getLoanDetails(loanID); });
 		 */
+		var profImage = $('<div>').attr({
+			
+
+		});
+		// TODO customer prof default pic to be set correctly
+		if (customer.prof_image == undefined || customer.prof_image == ""
+			|| customer.prof_image == null) {
+			profImage.addClass("lp-initial-pic float-left");
+			profImage.css("background-image:url(resources/images/person-placeholder.png");
+			//customer.prof_image = "resources/images/person-placeholder.png";
+			var initials = customer.name.split(" ");
+			profImage.text(initials[0].charAt(0) + initials[1].charAt(0));		
+		}
+		else
+		{
+			profImage.addClass("cus-img-icn float-left");
+			profImage.css("background-image", "url('" + customer.prof_image + "')");
+			
+		}
 
 		col1.append(onlineStatus).append(profImage).append(cusName);
 		var phone_num = "NA";
@@ -1034,7 +1044,7 @@ function resetSelectedUserDetailObject(userObject) {
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
 	else
-		selectedUserDetail.photoUrl = "./resources/images/person-placeholder.png";
+		selectedUserDetail.photoUrl = "";
 
 }
 
@@ -1141,13 +1151,22 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var cusProfLeftContainer = $('<div>').attr({
 		"class" : "cus-prof-detail-lc float-left clearfix"
 	});
-
 	var cusProfPic = $('<div>').attr({
-		"class" : "cus-img-icn float-left",
-		"style" : "background-image:url(" + custHeaderDetails.photoUrl + ")",
+		
 		"id" : "cusProfPicID"
 
 	});
+	if (custHeaderDetails.photoUrl == undefined || custHeaderDetails.photoUrl=="") {
+		cusProfPic.addClass("cus-img-icn-default float-left");
+		cusProfPic.text("XX")
+	}
+	else
+	{
+		cusProfPic.addClass("cus-img-icn float-left");
+		cusProfPic.css("background-image", "url('" + custHeaderDetails.photoUrl + "')");
+		
+	}
+	
 
 	var cusProfText = $('<div>').attr({
 		"class" : "cus-prof-pic-txt float-left"
