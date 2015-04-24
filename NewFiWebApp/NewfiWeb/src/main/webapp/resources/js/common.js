@@ -418,6 +418,8 @@ function objectKeyMakerFunction(item){
 			return "hazInsReserve1002";
 		case "Total Estimated Reserves Deposited in Escrow Account":
 			return "totEstResDepWthLen";
+		case "Total Estimated Closing Cost":
+			return "totEstimatedClosingCost";	
     }
     return undefined;
 }
@@ -530,6 +532,14 @@ function getCalculationFunctionForItem(key){
 	        		return "Varies by Location";
 	        };
     		break;
+    	case "totEstimatedClosingCost":
+    		fun=function(){
+    			var val1=getFloatValue(closingCostHolder["TotEstLenCost"].getValueForItem());
+    			var val2=getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
+    			var result=val1+val2;
+        		return result;
+	        };
+    		break;
     }
     return fun;
 }
@@ -541,12 +551,17 @@ function getRowHolderObject(container,value,key){
         value:value,
         key:key,
         updateFunction:getCalculationFunctionForItem(key),
-        updateView:function(){
-        	var ob=this;
+        getValueForItem:function(){
+			var ob=this;
         	var getVal=ob.updateFunction();
         	if(!isNaN(getVal)){
         		getVal=showValue(getVal);
         	}
+        	return getVal;
+        },
+        updateView:function(){
+        	var ob=this;
+        	var getVal=ob.getValueForItem();
         	$(ob.container).text(getVal);
         }
     };

@@ -1579,10 +1579,10 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Insurance", showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
    
     var rcRow6 = getLoanSummaryRow("Current Principal & Interest ", showValue(monthlyPayment) ,"monthlyPaymentId");
-    var rcRow7 = getLoanSummaryRow("Monthly Payment Difference  ", showValue(monthlyPaymentDifference) ,"monthlyPaymentDifferenceId");
+    
     //var rcRow8 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     
-    rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6).append(rcRow7);
+    rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow6);
     container.append(leftCol).append(rightCol);
     
     var bottomRow = $('<div>').attr({
@@ -1602,6 +1602,16 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     
     var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
+
+    var hgLow="";
+     if(totalEstMonthlyPayment<monthlyPayment){
+        hgLow='<font color="green"><b>Lower</b></font>';
+    }else{
+        hgLow='<font color="red"><b>Higher</b></font>';
+    }
+    var rcRow7 = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
+    bottomRightCol.append(rcRow7)
+
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);
     
@@ -1611,6 +1621,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
 
 function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     
+	var path = "CEP";
 	var livingSituation = capitalizeFirstLetter(customerInputData.livingSituation);
 	
 	var yearValues = teaserRate;
@@ -1643,7 +1654,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     //var lcRow1 = getLaonSummaryApplyBtnRow();
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Year Fixed","loanprogramId");
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment));
+    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false,path);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3) +" %", "teaserRateId");
@@ -1692,6 +1703,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
 
 function getLoanAmountRowCEP(desc, detail, id) {
    
+	var flag = false;
 	var container = $('<div>').attr({
         "class": "loan-summary-row"
     });
@@ -1717,7 +1729,9 @@ function getLoanAmountRowCEP(desc, detail, id) {
 			prefix: '$',
 		    precision:0,
 		    allowNegative:false
-		});		
+		});	
+    	
+    	flag = true;
     });/*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
@@ -1727,10 +1741,12 @@ function getLoanAmountRowCEP(desc, detail, id) {
     
     var saveBtn = $('<div>').attr({
     	"class" : "sm-save-btn float-right"
-    }).html("Save").on('click',function(){
-    	
-    	amt = $('#loanAmount').val();
-    	modifiyTeaserRate(amt);
+    }).html("Save").on('click',{"flag":flag},function(){
+    
+    	if(flag){
+    		amt = $('#loanAmount').val();
+    		modifiyTeaserRate(amt);
+    	}
     });
     
     col2.append(input).append(saveBtn);
@@ -1831,6 +1847,25 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	$('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
     	$('#totalEstMonthlyPaymentId').text(showValue(totalEstMonthlyPaymentId));
     	
+        var hgLow="";
+        if(totalEstMonthlyPaymentId<monthlyPayment){
+            hgLow='<font color="green"><b>Lower</b></font>';
+        }else{
+            hgLow='<font color="red"><b>Higher</b></font>';
+        }
+        var itm=$("#monthlyPaymentDifferenceId").parent()[0]
+        $(itm).find(".loan-summary-col-desc").html('This Monthly<br/> Payment is '+hgLow+' by');
+        if(hgLow=='<font color="green"><b>Lower</b></font>'){
+            if(!($("#monthlyPaymentDifferenceId").hasClass("loan-summary-green-col-detail"))){
+                $("#monthlyPaymentDifferenceId").removeClass("loan-summary-red-col-detail");
+                $("#monthlyPaymentDifferenceId").addClass("loan-summary-green-col-detail");
+            }
+        }else{
+            if(!($("#monthlyPaymentDifferenceId").hasClass("loan-summary-red-col-detail"))){
+                $("#monthlyPaymentDifferenceId").removeClass("loan-summary-green-col-detail");
+                $("#monthlyPaymentDifferenceId").addClass("loan-summary-red-col-detail");
+            }
+        }
     	
     });
     $(inputBox).val(detail);
@@ -1885,6 +1920,7 @@ function modifiyTeaserRate(amt,amt1) {
             if (buyHomeTeaserRate.loanType){
             	buyHomeTeaserRate.purchaseDetails.housePrice=amt;
                 buyHomeTeaserRate.purchaseDetails.loanAmount=(amt-amt1);
+                buyHomeTeaserRate.currentMortgageBalance = amt1;
                 paintBuyHomeSeeTeaserRate();
             }else if(refinanceTeaserRate.loanType){
                 refinanceTeaserRate.currentMortgageBalance=amt;

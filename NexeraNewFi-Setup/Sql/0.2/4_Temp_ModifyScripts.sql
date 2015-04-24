@@ -234,11 +234,12 @@ ADD COLUMN `token_generation_time` DATETIME NULL DEFAULT NULL ;
 #Added by Shashank 23 April
 
 ALTER TABLE `newfi_schema`.`customerspousedetails` 
-ADD COLUMN `street_address` VARCHAR(200) NULL AFTER `skip_my_assets`,
-ADD COLUMN `state` VARCHAR(45) NULL AFTER `streetAddress`,
-ADD COLUMN `city` VARCHAR(45) NULL AFTER `State`,
-ADD COLUMN `zip` VARCHAR(45) NULL AFTER `City`,
+ADD COLUMN `street_address` VARCHAR(200) ,
+ADD COLUMN `state` VARCHAR(45) ,
+ADD COLUMN `city` VARCHAR(45),
+ADD COLUMN `zip` VARCHAR(45) ,
 ADD COLUMN `spouse_last_name` VARCHAR(45) NULL ;
+
 
 
 
