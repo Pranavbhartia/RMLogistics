@@ -408,9 +408,8 @@ function appendCustomers(elementId, customers) {
 			|| customer.prof_image == null) {
 			profImage.addClass("lp-initial-pic float-left");
 			profImage.css("background-image:url(resources/images/person-placeholder.png");
-			//customer.prof_image = "resources/images/person-placeholder.png";
-			var initials = customer.name.split(" ");
-			profImage.text(initials[0].charAt(0) + initials[1].charAt(0));		
+			//customer.prof_image = "resources/images/person-placeholder.png";			
+			profImage.text(getInitialsFromFullName(customer.name));		
 		}
 		else
 		{
@@ -1157,9 +1156,8 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 
 	});
 	if (custHeaderDetails.photoUrl == undefined || custHeaderDetails.photoUrl=="") {
-		cusProfPic.addClass("cus-img-icn-default float-left");
-		var initials = custHeaderDetails.name.split(" ");		
-		cusProfPic.text(initials[0].charAt(0).toUpperCase() + initials[1].charAt(0).toUpperCase());
+		cusProfPic.addClass("cus-img-icn-default float-left");		
+		cusProfPic.text(getInitialsFromFullName(custHeaderDetails.name));
 	}
 	else
 	{

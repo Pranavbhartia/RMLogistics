@@ -74,7 +74,7 @@
                 adjustCustomerApplicationPageOnResize();
 			});
 
-			var initialText = newfiObject.user.firstName.charAt(0) + newfiObject.user.lastName.charAt(0);
+			var initialText = getInitials(newfiObject.user.firstName,newfiObject.user.lastName);
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				//$("#myProfilePicture").addClass("lp-pic float-left");
 				$("#myProfilePicture").addClass("lp-initial-pic float-left").text(initialText);
