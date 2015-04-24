@@ -1172,7 +1172,7 @@ function getMappedYearMonthValue(key){
                 val=appUserDetails.propertyTypeMaster.propInsMonthlyOryearly;
                 return val
             }else{
-                return refinanceTeaserRate.propInsMonthlyOryearly==undefined?"Month":refinanceTeaserRate.propInsMonthlyOryearly;
+                return refinanceTeaserRate.propInsMonthlyOryearly==undefined?"Year":refinanceTeaserRate.propInsMonthlyOryearly;
             }
         break;
     }
@@ -4018,9 +4018,9 @@ function getMonthYearTextQuestionContext(contxt) {
 
     if (contxt.value != undefined && contxt.value != "") {
         if(contxt.yearMonthVal=="Year"){
-            optionCont.val((getFloatValue(contxt.value)*12));
+            optionCont.val(showValue(getFloatValue(contxt.value)*12));
         }else{
-            optionCont.val(contxt.value);
+            optionCont.val(showValue(contxt.value));
         }
     }
     newDiv.append(optionCont).append(errFeild);
@@ -5087,8 +5087,8 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
     loanAmount = getFloatValue(loanAmount);  
     purchaseAmount = getFloatValue(purchaseAmount); 
     if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-        appUserDetails.purchaseDetails.loanAmount=purchaseAmount-loanAmount;
-        appUserDetails.purchaseDetails.housePrice=purchaseAmount;
+        appUserDetails.purchaseDetails.loanAmount=loanAmount-purchaseAmount;
+        appUserDetails.purchaseDetails.housePrice=loanAmount;
     }else{
         var parentContainer=$('#center-panel-cont');
         appUserDetails.refinancedetails.currentMortgageBalance=loanAmount;
