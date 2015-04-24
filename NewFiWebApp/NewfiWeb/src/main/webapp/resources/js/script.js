@@ -1112,9 +1112,9 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
      rcRow1 = getLoanSummaryRow("Current Monthly Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
     
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVoObj.payment),"principalIntId");
-    var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "Edit","calTaxID","calTaxID2",appUserDetails);
+    var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "","calTaxID","calTaxID2",appUserDetails);
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "Edit","CalInsuranceID","CalInsuranceID2",appUserDetails);
+    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "","CalInsuranceID","CalInsuranceID2",appUserDetails);
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal & interest payment");
     //var rcRow6 = getLoanSummaryLastRow("Estimated<br/>Monthly Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
@@ -1401,11 +1401,11 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	//
     	
     	var taxesTemp = 0;
-    	if($('#calTaxID2').val() !="Calculate" && $('#calTaxID2').val() !="Edit")
+    	if($('#calTaxID2').val() !="" )
     	 taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
     	
     	var InsuranceTemp = 0;
-    	if($('#CalInsuranceID2').val() !="Calculate" && $('#CalInsuranceID2').val() !="Edit")
+    	if($('#CalInsuranceID2').val() !="")
     	 InsuranceTemp = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     	
     	var  monthlyPayment = 0;
@@ -2214,10 +2214,10 @@ function lockRateCalculation(appUserDetails){
 	var InsuranceTemp = 0;
 	var principalInterest = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
 	
-	if($('#calTaxID2').val() != "Edit") 
+	if($('#calTaxID2').val() != "") 
 	taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));
     
-	if($('#CalInsuranceID2').val() != "Edit") 
+	if($('#CalInsuranceID2').val() != "") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
 	
 	var  monthlyPayment = 0;
