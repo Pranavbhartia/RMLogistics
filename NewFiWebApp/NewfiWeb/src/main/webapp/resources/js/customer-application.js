@@ -19,7 +19,7 @@ user.customerDetail = customerDetail;
 var yesyNoErrorMessage="Please give answers of the questions";
 var stateErrorMessage="Please select your state";
 var gonernamentQuestionErrorMessage="Please give answers of all the questions";
-var selectQuestionErrorMessage="Please select  that  applies";
+var selectQuestionErrorMessage="Please select any one that applies";
 
 var customerEnagagement = new Object();
 
