@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
+import com.mongodb.util.JSON;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -234,13 +235,15 @@ public class TemplateController extends DefaultController {
 			int rawOffSet = clientTimeZone.getRawOffset();
 			User userDetail = userProfileService.validateRegistrationLink(
 			        identifier, rawOffSet);
+			UserVO userVO = User.convertFromEntityToVO(userDetail);
+
 			if (userDetail == null) {
 				// Re direct to error page
 				throw new InvalidInputException("Invalid URL");
 			} else {
 				// Show him the change password page and auto login him
-				mav.addObject("user", userDetail.getId());
-				mav.addObject("emailID", userDetail.getEmailId());
+
+				mav.addObject("userVO", userVO);
 				mav.setViewName("changePassword");
 			}
 		} catch (InvalidInputException invalid) {
