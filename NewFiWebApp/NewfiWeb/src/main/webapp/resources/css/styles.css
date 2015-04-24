@@ -3611,6 +3611,16 @@ input.calc-input {
 	border-radius: 50%;
 }
 
+.ms-cust-prof-img-default {
+	width: 50px;
+	height: 50px;	
+	border:1px solid #d4d4d4;
+	border-radius: 50%;
+	font-size: 12px;
+   line-height: 50px;
+   text-align: center;
+  margin-bottom: 5px;
+}
 .ms-cust-prof-txt-cont {
 	margin-left: 10px;
 }
