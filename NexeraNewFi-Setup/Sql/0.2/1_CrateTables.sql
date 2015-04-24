@@ -195,6 +195,7 @@ CREATE TABLE `customerdetails` (
   `transunion_score` int(5) DEFAULT NULL,
   `carrier_info` varchar(45) DEFAULT NULL,
   `experian_score` int(5) DEFAULT NULL,
+  `is_selected_property` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_cd7ff675c59f4f14b3360ac9813` (`customerbankaccountdetails`),
   KEY `FK_7c1de5aeaa2c4777b0ad5217e13` (`customeremploymentincome`),
@@ -368,6 +369,11 @@ CREATE TABLE `customerspousedetails` (
   `retirement_income` bigint(20) DEFAULT NULL,
   `disability_income` bigint(20) DEFAULT NULL,
   `skip_my_assets` tinyint(4) DEFAULT NULL,
+  `street_address` varchar(200) DEFAULT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `zip` varchar(45) DEFAULT NULL,
+  `spouse_last_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1517,6 +1523,9 @@ CREATE TABLE `propertytypemaster` (
   `current_home_mortgage_balance` varchar(45) DEFAULT NULL,
   `newhome_budget_fromsale` varchar(45) DEFAULT NULL,
   `prop_ins_mon_yrly` varchar(45) DEFAULT NULL,
+  `property_street_address` varchar(100) DEFAULT NULL,
+  `property_city` varchar(45) DEFAULT NULL,
+  `property_state` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_propertyTypeModfdUser_idx` (`modified_by`),
   CONSTRAINT `FK_propertyTypeModfdUser` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -1874,6 +1883,7 @@ CREATE TABLE `user` (
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `login_time` timestamp NULL DEFAULT NULL,
   `email_encryption_token` varchar(200) DEFAULT NULL,
+  `token_generation_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_id_UNIQUE` (`email_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
@@ -1894,7 +1904,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support@loan.newfi.com','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL,NULL),(2,'Pat','McCauley','pat@raremile.com','pat@raremile.com','1234',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL,NULL);
+INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support@loan.newfi.com','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL,NULL,NULL),(2,'Pat','McCauley','pat@raremile.com','pat@raremile.com','1234',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2204,4 +2214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-23  9:21:34
+-- Dump completed on 2015-04-24 12:22:46
