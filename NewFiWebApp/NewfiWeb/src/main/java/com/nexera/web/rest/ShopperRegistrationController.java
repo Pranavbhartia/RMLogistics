@@ -79,7 +79,7 @@ public class ShopperRegistrationController {
 			// loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
 			LOG.info("calling UserName : "
 			        + loaAppFormVO.getUser().getFirstName());
-			
+
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
@@ -141,6 +141,9 @@ public class ShopperRegistrationController {
 				if (userDetail != null) {
 					RealtorDetailVO realtor = new RealtorDetailVO();
 					realtor.setUser(User.convertFromEntityToVO(userDetail));
+					loanAppFormVO.getUser().setRealtorDetail(realtor);
+				} else {
+					RealtorDetailVO realtor = new RealtorDetailVO();
 					loanAppFormVO.getUser().setRealtorDetail(realtor);
 				}
 
