@@ -316,19 +316,10 @@ public class RateCalculatorRestService {
 	}
 
 	private String unformatCurrencyField(String field) {
-		String finalString = "";
-
-		if (field.contains("$") || field.contains(",")) {
-
-			for (int i = 0; i < field.length(); i++) {
-				if (field.charAt(i) != '$' && field.charAt(i) != ',')
-					finalString += field.charAt(i);
-			}
-			return finalString;
-		} else {
-			return field;
-		}
-
+		if (null == field)
+			return "";
+		field=field.replaceAll("[$,]", "");
+		return field;
 	}
 
 }

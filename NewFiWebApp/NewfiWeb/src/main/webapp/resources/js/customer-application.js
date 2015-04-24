@@ -19,6 +19,7 @@ user.customerDetail = customerDetail;
 var yesyNoErrorMessage="Please give answers of the questions";
 var stateErrorMessage="Please select your state";
 var gonernamentQuestionErrorMessage="Please give answers of all the questions";
+var selectQuestionErrorMessage="Please select any one that applies";
 
 var customerEnagagement = new Object();
 
@@ -1697,7 +1698,21 @@ function paintMyIncome() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    
+    	//TODO validation
+        var isStatus=[];
+        for(var i=0;i<$('.ce-option-checkbox').length;i++){
+      	  isStatus  =validateCheckbox('ce-option-checkbox','app-option-checked');
+      	  
+        }
+     
+        if(isStatus==null||isStatus==""){
+      	  showErrorToastMessage(selectQuestionErrorMessage);
+      	  return false;
+        }
+        
+        
+        
+      //End of validation
     
     
         var  customerEmploymentIncome = [];

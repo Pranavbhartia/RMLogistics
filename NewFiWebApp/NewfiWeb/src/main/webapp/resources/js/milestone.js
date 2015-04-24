@@ -4,6 +4,8 @@ var LOAN_MANAGER="Loan Manager";
 var SALES_MANAGER="Sales Manager";
 var COMPLETED = "3";
 var NOT_STARTED = "0";
+var RENDER_RIGHT = "RIGHT";
+var RENDER_LEFT = "LEFT";
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -852,7 +854,18 @@ function getMilestoneTeamMembeTable(input,workItem) {
 	return tableContainer;
 }
 
-function getMilestoneTeamMembeTableRow(user,floatCls){
+function getMilestoneTeamMembeTableRow(user,floatCls){	
+	if(!floatCls)
+	{
+		var teamWorkItem = workFlowContext.milestoneStepsLookup["TEAM_STATUS"];
+		if(!teamWorkItem)
+		{
+			teamWorkItem = workFlowContext.milestoneStepsLookup["MANAGE_TEAM"]
+		}
+		floatCls = getRightLeftReference(teamWorkItem.id);
+				
+	}
+	console.log(floatCls);
 	if(user.lastName==undefined)user.lastName="";
 	var dispName = user.firstName+" "+user.lastName;
 	var userRole = user.userRole;
@@ -865,8 +878,19 @@ function getMilestoneTeamMembeTableRow(user,floatCls){
 	}
 	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls);
 }
+
+function getRightLeftReference (workItemId)
+{		
+	var rightLeftIdenfier = RENDER_RIGHT;
+	if (workFlowContext.mileStoneContextList[workItemId].workItem.rightLeftReference)
+	{
+		rightLeftIdenfier = workFlowContext.mileStoneContextList[workItemId].workItem.rightLeftReference;
+	}
+	return rightLeftIdenfier;	
+}
 // Function to get milestone team member table header
 function getMilestoneTeamMembeTableHeader(floatCls) {
+	
 	var row = $('<div>').attr({
 		"class" : "ms-team-member-th clearfix "+floatCls
 	});
@@ -1098,6 +1122,8 @@ function getContainerLftRghtClass(container){
 	else if(container.hasClass("milestone-rc"))
 		return "milestone-rc";
 }
+
+
 function changeContainerClassBasedOnStatus(container,status){
 	clearStatusClass(container);
 	container.addClass(getParentStatusClass(status));
@@ -1122,12 +1148,16 @@ function addClicableClassToElement(element,workflowItem){
 function appendMilestoneItem(workflowItem, childList) {
 
 	countOfTasks++;
+	var rightLeftReference = RENDER_RIGHT;
+	if (countOfTasks % 2 == 1) {
+		rightLeftReference = RENDER_LEFT;
+	}
 	var floatClass = "float-right";
 	if(workflowItem.status!=3||workflowItem.workflowItemType=="NEEDS_STATUS"||workflowItem.workflowItemType=="VIEW_NEEDS")//force status checking for needed list
 		workFlowContext.itemsStatesToBeFetched.push(workflowItem.id);
 	var progressClass = getProgressStatusClass(workflowItem.status);
 	var rightLeftClass = "milestone-lc";
-	if (countOfTasks % 2 == 1) {
+	if (rightLeftReference == RENDER_LEFT) {
 		rightLeftClass = "milestone-lc";
 		floatClass = "float-right";
 	} else {
@@ -1184,6 +1214,9 @@ function appendMilestoneItem(workflowItem, childList) {
 	var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, workflowItem);
 	workFlowContext.mileStoneContextList[workflowItem.id]=WFContxt;
 	if (childList != null) {
+		// It has children 
+		// to the workItem put the rightLeft Attribute
+		workflowItem.rightLeftReference=floatClass;
 		for (index = 0; index < childList.length; index++) {			
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text"+" clearfix",
