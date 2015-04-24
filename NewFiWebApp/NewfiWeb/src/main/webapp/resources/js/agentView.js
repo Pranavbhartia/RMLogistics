@@ -406,11 +406,8 @@ function appendCustomers(elementId, customers) {
 		// TODO customer prof default pic to be set correctly
 		if (customer.prof_image == undefined || customer.prof_image == ""
 			|| customer.prof_image == null) {
-			profImage.addClass("lp-initial-pic float-left");
-			profImage.css("background-image:url(resources/images/person-placeholder.png");
-			//customer.prof_image = "resources/images/person-placeholder.png";
-			var initials = customer.name.split(" ");
-			profImage.text(initials[0].charAt(0) + initials[1].charAt(0));		
+			profImage.addClass("lp-initial-pic float-left");				
+			profImage.text(getInitialsFromFullName(customer.name));		
 		}
 		else
 		{
@@ -968,7 +965,7 @@ function paintRecentNotes(response) {
 		notes[i].name = obj[0].createdUser.userName;
 		if (obj[0].createdUser.imgUrl == undefined
 				|| obj[0].createdUser.imgUrl == null) {
-			notes[i].imgUrl = "./resources/images/person-placeholder.png";
+			notes[i].imgUrl = "";
 		} else {
 			notes[i].imgUrl = obj[0].createdUser.imgUrl;
 		}
@@ -1157,9 +1154,8 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 
 	});
 	if (custHeaderDetails.photoUrl == undefined || custHeaderDetails.photoUrl=="") {
-		cusProfPic.addClass("cus-img-icn-default float-left");
-		var initials = custHeaderDetails.name.split(" ");		
-		cusProfPic.text(initials[0].charAt(0).toUpperCase() + initials[1].charAt(0).toUpperCase());
+		cusProfPic.addClass("cus-img-icn-default float-left");		
+		cusProfPic.text(getInitialsFromFullName(custHeaderDetails.name));
 	}
 	else
 	{

@@ -624,7 +624,22 @@ function checkIfIE(){
         return false;
 }
 
+function getInitialsFromFullName (fullName)
+{
+	var initials  = fullName.split(" ");
+	var initialsText = initials[0].charAt(0).toUpperCase() + initials[1].charAt(0).toUpperCase();
+	return initialsText;
+}
+
+function getInitials (firstName, lastName)
+{
+	var initialsText = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+	return initialsText;
+}
+
 
 $('#alert-popup-wrapper').perfectScrollbar({
 	suppressScrollX : true
 });
+
+

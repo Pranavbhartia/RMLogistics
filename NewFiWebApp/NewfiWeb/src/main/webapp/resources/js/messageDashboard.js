@@ -354,9 +354,8 @@ function getAssignedAgentContainer(id, agentName, agentRole, contactNo,
 	}
 	else
 	{
-		imgCont.addClass("assigned-agent-default-img");
-		var initials = agentName.split(" ");
-		imgCont.text(initials[0].charAt(0).toUpperCase()+initials[1].charAt(0).toUpperCase());
+		imgCont.addClass("assigned-agent-default-img");		
+		imgCont.text(getInitialsFromFullName(agentName));
 	}
 
 	var onlineStatus = $('<div>').attr({
@@ -417,7 +416,7 @@ function paintConversations(conversations) {
 		});
 
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left"
+			
 		});
 
 		if (data.createdUser.imgUrl != undefined &&  data.createdUser.imgUrl != "") {
@@ -430,9 +429,8 @@ function paintConversations(conversations) {
 		}
 		else
 		{
-			var intials = data.createdUser.userName.split("0");
 			col1.addClass("conv-prof-image-default float-left");
-			col1.text(intials[0].charAt(0)+initials[1].charAt(1));
+			col1.text(getInitialsFromFullName(data.createdUser.userName));
 		}
 
 		var col2 = $('<div>').attr({
@@ -463,20 +461,21 @@ function paintConversations(conversations) {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({
-					"class" : "conv-prof-image float-left",
+					
 					"id" : otherUserBinded[k].userID
 				});
 
 				if (otherUserBinded[k].imgUrl != undefined) {
+					userImage.addClass("conv-prof-image float-left");
 					userImage.attr({
 						"style" : "background-image:url('"
 								+ otherUserBinded[k].imgUrl + "')"
 					});
 				}
 				else
-				{
-					var initials = otherUserBinded[k].userName.split(" ");
-					var initialText = initials[0].charAt(0) +  initials[1].charAt(0);
+				{	
+					userImage.addClass("conv-prof-image-default float-left");
+					var initialText =getInitialsFromFullName (otherUserBinded[k].userName); 
 					userImage.text(initialText);
 				}
 
