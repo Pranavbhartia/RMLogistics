@@ -31,3 +31,12 @@ function validateInput(element,inputVal,message){
 	
 	
 }
+
+function validateCheckbox(className,isCheckedClassName){
+	//$('.ce-option-checkbox[value=0]').hasClass('app-option-checked');
+	var checkedList=[];
+	if($('.'+className).hasClass(isCheckedClassName)){
+		checkedList=$('.'+className);
+	}
+	return checkedList;
+}
