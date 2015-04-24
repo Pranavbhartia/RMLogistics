@@ -624,3 +624,7 @@ function checkIfIE(){
         return false;
 }
 
+
+$('#alert-popup-wrapper').perfectScrollbar({
+	suppressScrollX : true
+});
