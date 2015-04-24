@@ -145,21 +145,32 @@ public class DefaultController implements InitializingBean {
 				        .getLoanTeamListForLoan(loanVO);
 				List<LoanTeamVO> userList = loanTeamListVO.getLoanTeamList();
 				List<String> imageList = new ArrayList<String>();
+				List<String> intialsList = new ArrayList<String>();
 				for (LoanTeamVO loanTeamVO : userList) {
+					if (loanTeamVO.getUser() != null
+					        && loanTeamVO.getUser().getFirstName() != null
+					        && loanTeamVO.getUser().getLastName() != null) {
+						intialsList.add(loanTeamVO.getUser().getFirstName()
+						        .charAt(0)
+						        + ""
+						        + loanTeamVO.getUser().getLastName().charAt(0));
+					} else {
+						intialsList.add(" ");
+					}
 					if (loanTeamVO.getUser().getInternalUserDetail() != null) {
 						if (InternalUserRolesEum.LM.equals(loanTeamVO.getUser()
 						        .getInternalUserDetail()
 						        .getInternalUserRoleMasterVO().getRoleName())) {
 							imageList.add(loanTeamVO.getUser()
 							        .getPhotoImageUrl());
+
 						}
 					} else {
 						imageList.add(loanTeamVO.getUser().getPhotoImageUrl());
 					}
-
 				}
-
 				model.addAttribute("loanTeamImage", imageList);
+				model.addAttribute("initialsList", intialsList);
 				newfi.put("formCompletionStatus", formCompletionStatus);
 				newfi.put("loanAppFormid", loanAppFormVO.getId());
 				newfi.put("appUserDetails", gson.toJson(loanAppFormVO));

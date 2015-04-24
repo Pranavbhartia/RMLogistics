@@ -178,13 +178,30 @@ input[type="button"]:focus, button:focus {
 }
 .lp-initial-pic
 {
-  font-size: 19px;
+ 
   border: 1px solid;
   border-radius: 50%;
-  height: 60px;
-  width: 60px;
-  padding: 16px;
+  
+
+  
+ font-size: 12px;
+  border: 1px solid;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  line-height: 35px;
+  text-align: center;
 }
+.lp-initial-pic-small {
+  font-size: 12px; 
+  float: left;
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  border: 1px solid;
+  padding: 4px;
+}
+
 .lp-pic {
 	background: url(../images/person-placeholder.png) no-repeat center #fff;
 	width: 60px;
@@ -1239,6 +1256,18 @@ input[type="button"]:focus, button:focus {
 	border: 2px #428BCB solid;
 }
 
+
+.assigned-agent-default-img {
+	font-size: 12px;
+  border: 1px solid;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  line-height: 45px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
 .assigned-agent-online-status {
 	height: 15px;
 	line-height: 15px;
@@ -1355,6 +1384,18 @@ input[type="button"]:focus, button:focus {
 	background-size: cover;
 }
 
+.conv-prof-image-default {
+	font-size: 12px;
+  border: 1px solid;
+  border-radius: 50%;
+  
+  line-height: 45px;
+  text-align: center;
+  margin-bottom: 5px;
+	width: 45px;
+	height: 45px;
+	
+}
 .con-prof-name {
 	color: #3f86c3;
 	font-size: 14px;
@@ -1582,7 +1623,18 @@ input[type="button"]:focus, button:focus {
 	margin-top: -5px;
 	background-size: 35px auto;
 }
-
+.cus-img-icn-default {
+	font-size: 12px;
+  border: 1px solid;
+  border-radius: 50%;
+  
+  line-height: 35px;
+  text-align: center;
+  margin-bottom: 5px;
+	width: 35px;
+	height: 35px;
+	
+}
 .cus-name {
 	padding-left: 20px;
 	color: #428bca;
