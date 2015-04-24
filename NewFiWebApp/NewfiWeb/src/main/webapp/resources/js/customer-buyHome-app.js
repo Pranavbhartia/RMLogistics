@@ -188,17 +188,17 @@ function paintCustomerApplicationPurchasePageStep1a() {
         value: appUserDetails.user.customerDetail.addressStreet
     }, {
         type: "desc",
-        text: "Which State do you live in?",
+        text: "State",
         name: "state",
         value: appUserDetails.user.customerDetail.addressState
     }, {
         type: "desc",
-        text: "Which City do you belong?",
+        text: "City",
         name: "city",
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
-        text: "What is your Zip Code?",
+        text: "Zip code",
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     },{
@@ -241,22 +241,22 @@ function paintCustomerApplicationPurchasePageStep1a() {
     
     var propQuestions = [{
         type: "desc",
-        text: "Property Street Address",
+        text: "Property street address",
         name: "propStreetAddress",
         value: appUserDetails.propertyTypeMaster.propStreetAddress
     }, {
         type: "desc",
-        text: "Property State",
+        text: "Property state",
         name: "propState",
         value: appUserDetails.propertyTypeMaster.propState
     }, {
         type: "desc",
-        text: "Property City",
+        text: "Property city",
         name: "propCity",
         value: appUserDetails.propertyTypeMaster.propCity
     }, {
         type: "desc",
-        text: "Property Zip Code",
+        text: "Property zip code",
         name: "propZipCode",
         value: appUserDetails.propertyTypeMaster.homeZipCode
     }];
@@ -402,12 +402,12 @@ function paintloanamountBuyApp() {
     var dwnPaymnt=showValue(getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue(appUserDetails.purchaseDetails.loanAmount));
     var questions = [{
             "type": "desc",
-            "text": "Purchase Price?",
+            "text": "Purchase price?",
             "name": "housePrice",
             "value": ""
         }, {
             "type": "desc",
-            "text": "Down Payment?",
+            "text": "Down payment?",
             "name": "dwnPayment",
             "value": dwnPaymnt
         }
@@ -621,12 +621,12 @@ function paintSpouseSaleOfCurrentHome() {
 	    var questions = [
 	    {
 	        type: "desc",
-	        text: "Whats the listing price of your current home?",
+	        text: "What's the listing price of your current home?",
 	        name: "spouseHomeListPrice",
 	        value: appUserDetails.customerSpouseDetail.currentHomePrice
 	    }, {
 	        type: "desc",
-	        text: "Whats the mortage balance of your current home?",
+	        text: "What's the mortage balance of your current home?",
 	        name: "spouseHomeMortgageBalance",
 	        value: appUserDetails.customerSpouseDetail.currentHomeMortgageBalance
 	    }, {
@@ -651,7 +651,7 @@ function paintSpouseSaleOfCurrentHome() {
 
     var skipQuestions = $('<div>').attr({
     	"class" : "ce-option-checkbox myassets"
-    }).html("No Thanks, Let's move on")
+    }).html("No thanks, let's move on")
     .bind('click',function(){
 	   	 if($(this).hasClass('app-option-checked')){
 			 $(this).removeClass('app-option-checked');
@@ -718,7 +718,7 @@ function getPopupQuestionsContainer(questions,value) {
 
 function saleYourCurrentHome(){
 	
-	var quesHeaderTxt = "Sale Of Your Current Home";
+	var quesHeaderTxt = "Sale of your current home";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -729,12 +729,12 @@ function saleYourCurrentHome(){
 	    var questions = [
 	    {
 	        type: "desc",
-	        text: "Whats the listing price of your current home?",
+	        text: "What's the listing price of your current home?",
 	        name: "homelistprice",
 	        value: ""
 	    }, {
 	        type: "desc",
-	        text: "Whats the mortage balance of your current home?",
+	        text: "What's the mortage balance of your current home?",
 	        name: "homemortgagebalance",
 	        value: ""
 	    }, {
@@ -818,7 +818,7 @@ function addBankAccountComponent(element,value){
 
     var questions = [{
         type: "select",
-        text: "Account Type",
+        text: "Account type",
         name: "accountSubType",
         options: [{
             text: "Savings",
@@ -835,7 +835,7 @@ function addBankAccountComponent(element,value){
         value: ""
     }, {
         type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.",
+        text: "How much from this account are you able to use towards the purchase for your new home? Your best guess is fine.",
         name: "amountForNewHome",
         value: ""
     }];
@@ -913,7 +913,7 @@ function addRetirementQuestion(element,value){
     var parentWrapper = $(element).closest('.ce-sub-option-wrapper');
     var questions = [{
        type: "select",
-       text: "Account Type",
+       text: "Account type",
        name: "accountSubType",
        options: [{
            text: "IRA",
@@ -933,7 +933,7 @@ function addRetirementQuestion(element,value){
        value: ""
     }, {
        type: "desc",
-       text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
+       text: "How much from this account are you able to use towards the purchase for your new home? Your best guess is fine.?",
        name: "amountForNewHome",
        value: ""
     }];       
@@ -1010,13 +1010,13 @@ function addOtherAccountComponent(element,value){
     var parentWrapper = $(element).closest('.ce-sub-option-wrapper');
     var questions = [{
         type: "select",
-        text: "Account Type",
+        text: "Account type",
         name: "accountSubType",
         options: [{
             text: "Money Market",
             value: "0"
         }, {
-            text: "Cer8ficate of deposit",
+            text: "Certificate of deposit",
             value: "1"
         }, {
             text: "Mutual Fund",
@@ -1033,7 +1033,7 @@ function addOtherAccountComponent(element,value){
         value: ""
     }, {
         type: "desc",
-        text: "How much from this Account are you able to use towards the purchase for your new home? Your best guess is fine.?",
+        text: "How much from this account are you able to use towards the purchase for your new home? Your best guess is fine.?",
         name: "amountForNewHome",
         value: ""
     }];
@@ -1085,7 +1085,7 @@ function paintSaleOfCurrentHome() {
      
      var skipQuestions = $('<div>').attr({
     	"class" : "ce-option-checkbox myassets" 
-     }).html("No Thanks, Let's move on")
+     }).html("No thanks, let's move on")
      .bind('click',function(){
     	 if($(this).hasClass('app-option-checked')){
     		 $(this).removeClass('app-option-checked');

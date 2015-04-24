@@ -198,12 +198,12 @@ function paintloanamount() {
     quesContxts = [];
     var questions = [{
             "type": "desc",
-            "text": "Purchase Price?",
+            "text": "Purchase price?",
             "name": "homeWorthToday",
             "value": ""
         }, {
             "type": "desc",
-            "text": "Down Payment?",
+            "text": "Down payment?",
             "name": "currentMortgageBalance",
             "value": ""
         }
@@ -274,7 +274,7 @@ function validateDownPaymentOrPurchasePrice (purchasePriceElement, downPaymentEl
 	 var downPayment = downPaymentElement.val();
 	if((getFloatValue(downPayment) < (0.03* getFloatValue(purchasePrice)))){
 		console.log("Eror");
-		downPaymentElement.next('.err-msg').html("Down Payment must be greater than 3% of Purchase Price.").show();
+		downPaymentElement.next('.err-msg').html("Down payment must be greater than 3% of purchase price.").show();
 		downPaymentElement.addClass('ce-err-input').show();		
 		return false;
 	}
@@ -336,7 +336,7 @@ function saleYourCurrentHome() {
 function paintHomeZipCode() {
     active = 4;
     homeProgressBaar(4);
-    var quesTxt = "Zip Code For Home You Are Purchasing?";
+    var quesTxt = "Zip code";
     var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate, "zipCode");
     $('#ce-refinance-cp').html(quesCont);
 }
@@ -600,7 +600,7 @@ function paintBuyHomeEmployed(divId) {
 }
 
 function paintBuyHomeSelfEmployed(divId) {
-	var quesTxt = "Monthly Income";
+	var quesTxt = "Monthly income";
 
 	var wrapper = $('<div>');
 	

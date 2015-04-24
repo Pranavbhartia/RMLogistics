@@ -756,7 +756,7 @@ function paintNewResidenceTypeQues(){
         text: "Property Type?",
         name: "propertyType",
         options: [{
-            text: "Single Family Residence",
+            text: "Single family residence",
             value: "0"
         }, {
             text: "Condo",
@@ -768,16 +768,16 @@ function paintNewResidenceTypeQues(){
         selected: ""
     }, {
         type: "select",
-        text: "Property Use?",
+        text: "Property use?",
         name: "residenceType",
         options: [{
-            text: "Primary Residence",
+            text: "Primary residence",
             value: "0"
         }, {
-            text: "Vacation/Second Home",
+            text: "Vacation/Second home",
             value: "1"
         }, {
-            text: "Investment Property",
+            text: "Investment property",
             value: "2"
         }],
         selected: ""
@@ -832,7 +832,7 @@ function paintRefinanceHomeInformation() {
         text: "What type of property is this?",
         name: "propertyType",
         options: [{
-            text: "Single Family Residence",
+            text: "Single family residence",
             value: "0"
         }, {
             text: "Condo",
@@ -847,13 +847,13 @@ function paintRefinanceHomeInformation() {
         text: "How do you use this home?",
         name: "residenceType",
         options: [{
-            text: "Primary Residence",
+            text: "Primary residence",
             value: "0"
         }, {
-            text: "Vacation Home",
+            text: "Vacation home",
             value: "1"
         }, {
-            text: "Second Home",
+            text: "Second home",
             value: "2"
         }],
         selected: ""
@@ -1230,7 +1230,7 @@ function getCurrentDate(){
 	hours = hours % 12;
 	  hours = hours ? hours : 12; 
 
-	var time = hours + ":" + d.getMinutes() + ":" + d.getSeconds();
+	var time = hours + ":" + d.getMinutes();
 
 
 	var output = 
@@ -1258,7 +1258,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
     var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
     
-    container.append(tenureSlider).append(rateSlider);
+    container.append(header).append(tenureSlider).append(rateSlider);
     var rateBtn1="";
     var rateBtn2="";
     if(!hideCreateAccountBtn){
@@ -1287,7 +1287,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
             }
         });
     }
-    return wrapper.append(header).append(container).append(rateBtn1).append(rateBtn2);;
+    return wrapper.append(container).append(rateBtn1).append(rateBtn2);;
 }
 
 
@@ -1448,10 +1448,10 @@ function teaseCalculation(inputCustomerDetails){
 	var taxesTemp = 0;
 	 var InsuranceTemp = 0;
 	var principalInterest = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
-	if($('#calTaxID2').val() != "Calculate") 
+	if($('#calTaxID2').val() != "") 
 	taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));
     
-	if($('#CalInsuranceID2').val() != "Calculate") 
+	if($('#CalInsuranceID2').val() != "") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     var  monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment)));  	
     
@@ -1566,7 +1566,6 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout",showValue(currentMortgageBalance), "Cashout",showValue(cashTakeOut),true,path);	
     
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR +" %", "aprid");
-    //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
     
     var rightCol = $('<div>').attr({
@@ -1650,17 +1649,13 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     var leftCol = $('<div>').attr({
         "class": "loan-summary-lp float-left"
     });
-    // add rows in left column
-    //var lcRow1 = getLaonSummaryApplyBtnRow();
+
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", yearValues[yearValues.length-1].value +" Year Fixed","loanprogramId");
     var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false,path);
-    //var lcRow4 = getLoanSummaryRow("Down Payment", "");
-    //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
     var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO[index].teaserRate).toFixed(3) +" %", "teaserRateId");
-    //var lcRow7 = getLoanSummaryRow("Loan Amount", loanAmount);
+
     var lcRow5 = getLoanSummaryRow("APR", rateVO[index].APR +" %", "aprid");
-    //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
@@ -1668,12 +1663,11 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     // add rows in right column
     var rcRow1 ="";
     if(customerInputData.livingSituation != "homeOwner")
-         rcRow1 = getLoanSummaryRow("Current Principal & Interest", showValue(customerInputData.purchaseDetails.rentPerMonth));
+         rcRow1 = getLoanSummaryRow("Current Rental Payment", showValue(customerInputData.purchaseDetails.rentPerMonth));
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVO[index].payment),"principalIntId");
     var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "","calTaxID","calTaxID2",customerInputData);
     rcRow3.addClass("no-border-bottom");
     var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "","CalInsuranceID","CalInsuranceID2",customerInputData);
-    //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
     //var rcRow5 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(rateVO[index].payment) ,"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
     container.append(leftCol).append(rightCol);
@@ -1853,7 +1847,7 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
         }else{
             hgLow='<font color="red"><b>Higher</b></font>';
         }
-        var itm=$("#monthlyPaymentDifferenceId").parent()[0]
+        var itm=$("#monthlyPaymentDifferenceId").parent()[0];
         $(itm).find(".loan-summary-col-desc").html('This Monthly<br/> Payment is '+hgLow+' by');
         if(hgLow=='<font color="green"><b>Lower</b></font>'){
             if(!($("#monthlyPaymentDifferenceId").hasClass("loan-summary-green-col-detail"))){
