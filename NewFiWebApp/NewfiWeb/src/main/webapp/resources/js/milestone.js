@@ -941,10 +941,16 @@ function paintMilestoneCustomerProfileDetails(userObj) {
 	});
 
 	var custImg = $('<div>').attr({
-		"class" : "ms-cust-prof-img float-left"
+		
 	});
 	if(userObj.photoImageUrl){
+		custImg.addClass("ms-cust-prof-img float-left");
 		custImg.attr("style" , "background-image : url("+userObj.photoImageUrl+"); background-size: cover;");
+	}
+	else
+	{
+		custImg.addClass("ms-cust-prof-img-default float-left");
+		custImg.text(getInitials(userObj.firstName,userObj.lastName));
 	}
 	var custTxtContainer = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-cont float-left"
