@@ -172,7 +172,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
 	
 	$('#app-right-panel').html('');
 	
-    var quesHeaderTxt = "Residential Address";
+    var quesHeaderTxt = "Tell us about where you currently live";
+    
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -237,7 +238,32 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	
     }
     
-    $('#app-right-panel').append(quesHeaderTextCont).append(row);
+    
+    var propQuestions = [{
+        type: "desc",
+        text: "Property Street Address",
+        name: "propStreetAddress",
+        value: appUserDetails.propertyTypeMaster.propStreetAddress
+    }, {
+        type: "desc",
+        text: "Property State",
+        name: "propState",
+        value: appUserDetails.propertyTypeMaster.propState
+    }, {
+        type: "desc",
+        text: "Property City",
+        name: "propCity",
+        value: appUserDetails.propertyTypeMaster.propCity
+    }, {
+        type: "desc",
+        text: "Property Zip Code",
+        name: "propZipCode",
+        value: appUserDetails.propertyTypeMaster.homeZipCode
+    }];
+
+    
+    
+    $('#app-right-panel').append(quesHeaderTextCont);
     
     for(var i=0;i<questions.length;i++){
     	var question=questions[i];
@@ -246,6 +272,34 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	
     	quesContxts.push(contxt);
     }
+    
+    var propQuesHeaderTxt = "Tell us about the property you want to buy";
+    
+    
+    var propSpacer = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    });
+    
+    
+    var propQuesHeaderTextCont = $('<div>').attr({
+        "class": "app-ques-header-txt"
+    }).html(propQuesHeaderTxt);
+    
+    $('#app-right-panel').append(propSpacer).append(propQuesHeaderTextCont);
+    $('#app-right-panel').append(row);
+   
+    for(var i=0;i<propQuestions.length;i++){
+    	var propQuest=propQuestions[i];
+    	var contxt=getQuestionContext(propQuest,$('#app-right-panel'),appUserDetails);
+    	contxt.drawQuestion();
+    	
+    	quesContxts.push(contxt);
+    }
+    
+   
+    
+    
+    
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
@@ -256,7 +310,16 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var zipCode = $('input[name="zipCode"]').val();
     	var livingSince = $('input[name="startLivingTime"]').val();
     	var monthlyRent =  $('input[name="rentPerMonth"]').val();
-    	var isSellYourhome = quesContxts[4].value;
+    	var isSellYourhome = quesContxts[5].value;
+    	
+    	
+    	var propAddress= $('input[name="propStreetAddress"]').val();
+    	var propState = $('input[name="propState"]').val();
+    	var propCity = $('input[name="propCity"]').val();
+    	var propZipCode = $('input[name="propZipCode"]').val();
+    	
+
+    	
     	
     	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
     	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
@@ -310,6 +373,16 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
     		//appUserDetails.buyHome = buyHome;
     		//alert(JSON.stringify(appUserDetails));
+    		
+
+    		
+    		//if(appUserDetails.propertyTypeMaster){
+    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
+    		appUserDetails.propertyTypeMaster.propState=propState;
+    		appUserDetails.propertyTypeMaster.propCity=propCity;
+    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
+    		//}
+    		
     		saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
     		
         	        	
@@ -444,6 +517,10 @@ function paintWhereYouLiveStep(){
 		 //		 alert('buyhomeZipSec'+buyhomeZipSec);
 		 	//	 		 alert('buyhomeZipTri'+buyhomeZipTri);
 		  
+		    if(appUserDetails.purchaseDetails != null){
+				 
+				 purchaseDetails = appUserDetails.purchaseDetails;
+			 }
 		  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
 		  purchaseDetails.buyhomeZipSec=buyhomeZipSec;
 		  purchaseDetails.buyhomeZipTri=buyhomeZipTri;

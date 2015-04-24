@@ -229,3 +229,20 @@ alter table newfi_schema.customerdetails add column is_selected_property TINYINT
 ALTER TABLE `newfi_schema`.`user` 
 ADD COLUMN `token_generation_time` DATETIME NULL DEFAULT NULL ;
 
+
+
+#Added by Shashank 23 April
+
+ALTER TABLE `newfi_schema`.`customerspousedetails` 
+ADD COLUMN `street_address` VARCHAR(200) NULL AFTER `skip_my_assets`,
+ADD COLUMN `state` VARCHAR(45) NULL AFTER `streetAddress`,
+ADD COLUMN `city` VARCHAR(45) NULL AFTER `State`,
+ADD COLUMN `zip` VARCHAR(45) NULL AFTER `City`,
+ADD COLUMN `spouse_last_name` VARCHAR(45) NULL ;
+
+
+
+ALTER TABLE `newfi_schema`.`propertytypemaster` 
+ADD COLUMN `property_street_address` VARCHAR(100) NULL AFTER `prop_ins_mon_yrly`,
+ADD COLUMN `property_city` VARCHAR(45) NULL AFTER `property_street_address`,
+ADD COLUMN `property_state` VARCHAR(45) NULL AFTER `property_city`;

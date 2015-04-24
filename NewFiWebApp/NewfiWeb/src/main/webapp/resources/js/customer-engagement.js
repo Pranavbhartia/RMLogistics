@@ -1082,8 +1082,8 @@ function paintApplyNow(inputCustomerDetails) {
    		 appUserDetails.monthlyRent = inputCustomerDetails.rentPerMonth;
    		 appUserDetails.purchaseDetails =purchaseDetails;
          var propertyTypeMaster={};
-         propertyTypeMaster.propertyType=buyHomeTeaserRate.propertyType;
-         propertyTypeMaster.residenceType=buyHomeTeaserRate.residenceType;
+         propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
+         propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
          appUserDetails.propertyTypeMaster = propertyTypeMaster;
         }   
         appUserDetails.user = user;       

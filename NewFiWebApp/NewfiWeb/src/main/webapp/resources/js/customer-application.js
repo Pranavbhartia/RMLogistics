@@ -542,7 +542,8 @@ function paintCustomerApplicationPageStep1a() {
 	
 	appProgressBaar(2);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Residential Address";
+    var quesHeaderTxt = "Tell us about where you currently live";
+   
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -569,15 +570,19 @@ function paintCustomerApplicationPageStep1a() {
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
-        text: "What is your cip code?",
+        text: "What is your zip code?",
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     }];
 
 
      
+    
+  
+
 
     var questionsContainer = getQuestionsContainer(questions);
+   
     //var mainClassName=questionsContainer.attr('class');
     //$('').append(row);
     var saveAndContinueButton = $('<div>').attr({
@@ -587,7 +592,9 @@ function paintCustomerApplicationPageStep1a() {
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
     	var zipCode = $('input[name="zipCode"]').val();
-
+    	
+    	
+    	
     	var addressStreet =   $('input[name="streetAddress"]').val();
     	
         var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
@@ -626,6 +633,9 @@ function paintCustomerApplicationPageStep1a() {
     		appUserDetails.user = user;
     		
     		
+    		
+    	
+    		
     		////alert(JSON.stringify(appUserDetails));
     		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
     		
@@ -636,12 +646,8 @@ function paintCustomerApplicationPageStep1a() {
    	
     });
 
-    $('#app-right-panel').append(quesHeaderTextCont).append(row).append(questionsContainer)
-        .append(saveAndContinueButton);
-    if(selectedProperty){
-    	
-    	$(".ce-option-checkbox").click();
-    }
+    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
+   
     
     addStateCityZipLookUp();
 }
@@ -664,12 +670,23 @@ function paintCheckBox(){
     		$('input[name=streetAddress]').val('');
     		$('input[name=streetAddress]').parent().parent().show();
     		$('input[name=addressStreet]').parent().parent().show();
+    	    $('input[name="propStreetAddress"]').parent().parent().show();
+        	$('input[name="propState"]').parent().parent().show();
+        	$('input[name="propCity"]').parent().parent().show();
+        	$('input[name="propZipCode"]').parent().parent().show();
+        	
+    		
+    		
     	
     		
     	}else{
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
         	$('input[name=addressStreet]').parent().parent().hide();
+        	 $('input[name="propStreetAddress"]').parent().parent().hide();
+         	$('input[name="propState"]').parent().parent().hide();
+         	$('input[name="propCity"]').parent().parent().hide();
+         	$('input[name="propZipCode"]').parent().parent().hide();
         	
     	}
 		
@@ -678,6 +695,10 @@ function paintCheckBox(){
 	return wrapper.append(optionContainer);
 
 }
+
+
+
+
 
 function addStateCityZipLookUp(){
 synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -688,6 +709,8 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     });
     
     $('input[name="state"]').after(stateDropDownWrapper);
+    $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
+    
     
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
 		e.stopPropagation();
@@ -707,6 +730,27 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 		appendStateDropDown('state-dropdown-wrapper',searchList);
 	});
     
+    
+    $('input[name="coBorrowerState"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper').css("display") == "none"){
+			appendStateDropDown('state-dropdown-wrapper',stateList);
+			toggleStateDropDown();
+		}else{
+			toggleStateDropDown();
+		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDown('state-dropdown-wrapper',searchList);
+	});
+    
+    
+    
     $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
 		
 		var searchData = [];
@@ -724,7 +768,46 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 		$(this).autocomplete("search"); 
 	}).width(200);
     
+    
+    
+ $('input[name="coBorrowerCity"]').attr("id","cityId").bind('click keydown',function(){
+		
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookup(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(200);
+ 
+ 
+    
     $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
+		
+		var selectedCity = $('#cityId').val();
+		var searchData = [];
+		var count = 0;
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			if(selectedCity == currentZipcodeLookUp[i].cityName){
+				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+			}
+		}
+
+		initializeZipcodeLookup(searchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	});
+    
+    
+ $('input[name="coBorrowerZipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
 		
 		var selectedCity = $('#cityId').val();
 		var searchData = [];
@@ -1155,13 +1238,63 @@ function paintCustomerApplicationPageStep2() {
                         type: "desc",
                         text: "Co-borrower's name",
                         name: "coBorrowerName"
+                    },
+                    {
+                        type: "desc",
+                        text: "Co-borrower's last name",
+                        name: "coBorrowerLastName"
+                    },{
+                        type: "desc",
+                        text: "Co-borrower's Street Address",
+                        name: "coBorrowerStreetAddress",
+                        //value: appUserDetails.user.customerDetail.addressStreet
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's State",
+                        name: "coBorrowerState",
+                        //value: appUserDetails.user.customerDetail.addressState
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's City",
+                        name: "coBorrowerCity",
+                        //value: appUserDetails.user.customerDetail.addressCity
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's Zip Code",
+                        name: "coBorrowerZipCode",
+                        //value: appUserDetails.user.customerDetail.addressZipCode
                     }]
                 }, {
                     text: "No",
                     addQuestions:[{
                         type: "desc",
-                        text: "Co-borrower's name",
+                        text: "Co-borrower's first name",
                         name: "coBorrowerName"
+                    },
+                    {
+                        type: "desc",
+                        text: "Co-borrower's last name",
+                        name: "coBorrowerLastName"
+                    },{
+                        type: "desc",
+                        text: "Co-borrower's Street Address",
+                        name: "coBorrowerStreetAddress",
+                        //value: appUserDetails.user.customerDetail.addressStreet
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's State",
+                        name: "coBorrowerState",
+                        //value: appUserDetails.user.customerDetail.addressState
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's City",
+                        name: "coBorrowerCity",
+                        //value: appUserDetails.user.customerDetail.addressCity
+                    }, {
+                        type: "desc",
+                        text: "Co-borrower's Zip Code",
+                        name: "coBorrowerZipCode",
+                        //value: appUserDetails.user.customerDetail.addressZipCode
                     }]
                 }],
                 selected: ""
@@ -1215,18 +1348,61 @@ function paintCustomerApplicationPageStep2() {
     		    		}else{
     		    			
     		    			var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+    		    			var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
+    		    			var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
+    		    			var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
+    		    			var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
+    		    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('coBorrowerZipCode').val(),message);
     		    	    	if(!question){
     		    	    		return false;
-    		    	    	}
+    		    	    	}else if(!question1){
+    		    	    		return false;
+    		    	    	
+    		    	    	}else if(!question2){
+    		    	    		return false;
+    		    	    		
+    		    	    	}else if(!question3){
+    		    	    		return false;
+    		    	    		
+    		    	    	}else if(!question4){
+    		    	    		return false;
+    		    	    		
+    		    	    	}else if(!question5){
+    		    	    		return false;
+    		    	    		
+    		    	    	}else{}
+    		    	    	
     		    			 showErrorToastMessage(yesyNoErrorMessage);
     	    		    	 return false;
     		    		}
     		     }else{
 
     		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
-    			    	if(!question){
-    			    		return false;
-    			    	}
+    		    	 var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
+		    			var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
+		    			var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
+		    			var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
+		    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('coBorrowerZipCode').val(),message);
+		    			
+		    			
+    		    	 if(!question){
+		    	    		return false;
+		    	    	}else if(!question1){
+		    	    		return false;
+		    	    	
+		    	    	}else if(!question2){
+		    	    		return false;
+		    	    		
+		    	    	}else if(!question3){
+		    	    		return false;
+		    	    		
+		    	    	}else if(!question4){
+		    	    		return false;
+		    	    		
+		    	    	}else if(!question5){
+		    	    		return false;
+		    	    		
+		    	    	}else{}
 
     		     }
     			 
@@ -1236,8 +1412,7 @@ function paintCustomerApplicationPageStep2() {
     			 appUserDetails.isSpouseOnLoan =false;
 	    		 appUserDetails.spouseName  = "";
     		 }
-	    	
-	    	
+    		
 	    	// this is the condition when spouseName is in the loan
             if(!appUserDetails.customerSpouseDetail)
                 appUserDetails.customerSpouseDetail={};
@@ -1246,14 +1421,29 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    		
 	    		appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+	    		appUserDetails.customerSpouseDetail.spouseLastName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[1].value;
+	    		appUserDetails.customerSpouseDetail.streetAddress=quesContxts[0].childContexts.Yes[0].childContexts.Yes[2].value;
+	    		appUserDetails.customerSpouseDetail.state=quesContxts[0].childContexts.Yes[0].childContexts.Yes[3].value;
+	    		appUserDetails.customerSpouseDetail.city=quesContxts[0].childContexts.Yes[0].childContexts.Yes[4].value;
+	    		appUserDetails.customerSpouseDetail.zip=quesContxts[0].childContexts.Yes[0].childContexts.Yes[5].value;
 	    	
 	    	}else if(quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.No != undefined){
 	    
 	    	appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.No[0].value  ;
+	    	appUserDetails.customerSpouseDetail.spouseLastName = quesContxts[0].childContexts.Yes[0].childContexts.No[1].value;
+    		appUserDetails.customerSpouseDetail.streetAddress=quesContxts[0].childContexts.Yes[0].childContexts.No[2].value;
+    		appUserDetails.customerSpouseDetail.state=quesContxts[0].childContexts.Yes[0].childContexts.No[3].value;
+    		appUserDetails.customerSpouseDetail.city=quesContxts[0].childContexts.Yes[0].childContexts.No[4].value;
+    		appUserDetails.customerSpouseDetail.zip=quesContxts[0].childContexts.Yes[0].childContexts.No[5].value;
 	    	
 	    	}
 	    	else{
 	    		appUserDetails.customerSpouseDetail.spouseName  = "";
+	    		appUserDetails.customerSpouseDetail.spouseLastName = "";
+	    		appUserDetails.customerSpouseDetail.streetAddress="";
+	    		appUserDetails.customerSpouseDetail.state="";
+	    		appUserDetails.customerSpouseDetail.city="";
+	    		appUserDetails.customerSpouseDetail.zip="";
 	    	}
 	    	
 	    	
@@ -1276,7 +1466,7 @@ function paintCustomerApplicationPageStep2() {
     	
     });
     $('#app-right-panel').append(saveAndContinueButton);
-    
+    addStateCityZipLookUp();
 }
 
 function getContextApplicationYesNoQues(contxt) {
@@ -1358,7 +1548,7 @@ function getContextApplicationTextQues(contxt) {
     	ctx.value=$(this).val();
     }).on("load keydown", function(e){
           
-		if(contxt.name != 'coBorrowerName' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
+		if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
 			$('input[name='+contxt.name+']').maskMoney({
 				thousands:',',
 				decimal:'.',
@@ -1371,6 +1561,9 @@ function getContextApplicationTextQues(contxt) {
 		
 	});
 
+    
+    
+    
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
     }
@@ -4598,6 +4791,7 @@ function paintLockRate(lqbData, appUserDetails) {
 }
  
 
+
 function mapDbDataForFrontend(key){
 //alert('isside mapDbDataForFrontend');
     switch(key){
@@ -4613,6 +4807,22 @@ function mapDbDataForFrontend(key){
             if(appUserDetails.user&&appUserDetails.user.customerDetail)
                 return appUserDetails.user.customerDetail.addressZipCode;
             break;
+        case "propState":
+            if(appUserDetails.propertyTypeMaster)
+                return appUserDetails.propertyTypeMaster.propState;
+            break;
+        case "propCity":
+            if(appUserDetails.propertyTypeMaster)
+                return appUserDetails.propertyTypeMaster.propCity;
+            break;
+        case "propZipCode":
+            if(appUserDetails.propertyTypeMaster)
+                return appUserDetails.propertyTypeMaster.homeZipCode;
+            break; 
+        case "propStreetAddress":
+            if(appUserDetails.propertyTypeMaster)
+                return appUserDetails.propertyTypeMaster.propStreetAddress;
+            break; 
         case "startLivingTime":
             if(appUserDetails.user&&appUserDetails.user.customerDetail)
                 return appUserDetails.user.customerDetail.livingSince;
@@ -4626,6 +4836,26 @@ function mapDbDataForFrontend(key){
         case "coBorrowerName":
             if(appUserDetails.customerSpouseDetail)
                 return appUserDetails.customerSpouseDetail.spouseName;
+            break;
+        case "coBorrowerLastName":
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.spouseLastName;
+            break;
+        case "coBorrowerStreetAddress":
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.streetAddress;
+            break;
+        case "coBorrowerState":
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.state;
+            break;
+        case "coBorrowerZipCode":
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.zip;
+            break;
+        case "coBorrowerCity":
+            if(appUserDetails.customerSpouseDetail)
+                return appUserDetails.customerSpouseDetail.city;
             break;
         case "isCityOrZipKnown":
             if(appUserDetails.purchaseDetails&&appUserDetails.purchaseDetails.buyhomeZipPri&&appUserDetails.purchaseDetails.buyhomeZipPri!="")

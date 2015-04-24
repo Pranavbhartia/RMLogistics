@@ -33,6 +33,7 @@ public class CustomerSpouseDetail implements Serializable {
 	private String spouseSsn;
 	private String spouseSecPhoneNumber;
 	private String spouseName;
+	private String spouseLastName;
 	private Boolean isSelfEmployed;
 	private Boolean isssIncomeOrDisability;
 	private Boolean is_pension_or_retirement;
@@ -44,6 +45,10 @@ public class CustomerSpouseDetail implements Serializable {
 	private String currentHomePrice;
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
+	private String streetAddress;
+	private String state;
+	private String city;
+	private String zip;
 	
 	// Income page input
 	private BigDecimal selfEmployedIncome;
@@ -105,6 +110,15 @@ public class CustomerSpouseDetail implements Serializable {
 
 	public void setSpouseName(String spouseName) {
 		this.spouseName = spouseName;
+	}
+
+	@Column(name = "spouse_last_name")
+	public String getSpouseLastName() {
+		return spouseLastName;
+	}
+
+	public void setSpouseLastName(String spouseLastName) {
+		this.spouseLastName = spouseLastName;
 	}
 
 	@Column(name = "is_self_employed", columnDefinition = "TINYINT")
@@ -270,5 +284,41 @@ public class CustomerSpouseDetail implements Serializable {
 
 	public void setSkipMyAssets(Boolean skipMyAssets) {
 		this.skipMyAssets = skipMyAssets;
+	}
+
+	@Column(name = "street_address")
+	public String getStreetAddress() {
+		return streetAddress;
+	}
+
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+
+	@Column(name = "state")
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	@Column(name = "city")
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	@Column(name = "zip")
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 }

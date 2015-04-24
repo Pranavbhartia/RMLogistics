@@ -32,6 +32,9 @@ public class PropertyTypeMaster implements Serializable {
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
 	private String propInsMonthlyOryearly;
+	private String propStreetAddress;
+	private String propCity;
+	private String propState;
 	private List<Loan> loans;
 	private List<LoanAppForm> loanAppForms;
 	private List<LoanApplicationFeeMaster> loanApplicationFeeMasters;
@@ -269,6 +272,33 @@ public class PropertyTypeMaster implements Serializable {
 
 	public void setPropInsMonthlyOryearly(String propInsMonthlyOryearly) {
 		this.propInsMonthlyOryearly = propInsMonthlyOryearly;
+	}
+
+	@Column(name = "property_street_address")
+	public String getPropStreetAddress() {
+		return propStreetAddress;
+	}
+
+	public void setPropStreetAddress(String propStreetAddress) {
+		this.propStreetAddress = propStreetAddress;
+	}
+	
+	@Column(name = "property_city")
+	public String getPropCity() {
+		return propCity;
+	}
+
+	public void setPropCity(String propCity) {
+		this.propCity = propCity;
+	}
+
+	@Column(name = "property_state")
+	public String getPropState() {
+		return propState;
+	}
+
+	public void setPropState(String propState) {
+		this.propState = propState;
 	}
 
 }

@@ -79,7 +79,7 @@ public class ShopperRegistrationController {
 			// loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
 			LOG.info("calling UserName : "
 			        + loaAppFormVO.getUser().getFirstName());
-
+			
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);

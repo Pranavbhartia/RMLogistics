@@ -809,6 +809,14 @@ public class LoanAppFormVO implements Serializable {
 		        .getNewHomeBudgetFromsale());
 		propertyTypeMaster.setPropInsMonthlyOryearly(propertyTypeMasterVO
 		        .getPropInsMonthlyOryearly());
+		propertyTypeMaster.setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
+		propertyTypeMaster.setPropStreetAddress(propertyTypeMasterVO.getPropStreetAddress());
+		propertyTypeMaster.setPropCity(propertyTypeMasterVO.getPropCity());
+		propertyTypeMaster.setPropState(propertyTypeMasterVO.getPropState());
+		
+		
+		
+		
 		return propertyTypeMaster;
 
 	}
@@ -1207,6 +1215,16 @@ public class LoanAppFormVO implements Serializable {
 		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO
 		        .isIsssIncomeOrDisability());
 		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO.isSelfEmployed());
+		
+		customerSpouseDetail.setSpouseLastName(customerSpouseDetailVO.getSpouseLastName());
+		customerSpouseDetail.setStreetAddress(customerSpouseDetailVO.getStreetAddress());
+		customerSpouseDetail.setState(customerSpouseDetailVO.getState());
+		customerSpouseDetail.setCity(customerSpouseDetailVO.getCity());
+		customerSpouseDetail.setZip(customerSpouseDetailVO.getZip());
+		
+		
+		
+		
 		
 		// income Start:
 		customerSpouseDetail.setSelfEmployedIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getSelfEmployedIncome()));

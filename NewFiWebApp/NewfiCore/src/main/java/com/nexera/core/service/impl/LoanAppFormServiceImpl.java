@@ -504,6 +504,14 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .isIsssIncomeOrDisability());
 		customerSpouseDetailVO.setIspensionOrRetirement(customerspousedetail.isIs_pension_or_retirement());
 		
+
+		customerSpouseDetailVO.setSpouseLastName(customerspousedetail.getSpouseLastName());
+		customerSpouseDetailVO.setStreetAddress(customerspousedetail.getStreetAddress());
+		customerSpouseDetailVO.setState(customerspousedetail.getState());
+		customerSpouseDetailVO.setCity(customerspousedetail.getCity());
+		customerSpouseDetailVO.setZip(customerspousedetail.getZip());
+		
+		
 		// income : start
 		if(null!= customerspousedetail.getSelfEmployedIncome())
 		customerSpouseDetailVO.setSelfEmployedIncome(customerspousedetail.getSelfEmployedIncome().toString());
@@ -772,6 +780,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .getPropTaxMonthlyOryearly());
 		propertyTypeMasterVO.setPropInsMonthlyOryearly(propertyTypeMaster
 		        .getPropInsMonthlyOryearly());
+		propertyTypeMasterVO.setPropStreetAddress(propertyTypeMaster.getPropStreetAddress());
+		propertyTypeMasterVO.setPropCity(propertyTypeMaster.getPropCity());
+		propertyTypeMasterVO.setPropState(propertyTypeMaster.getPropState());
+		propertyTypeMasterVO.setHomeZipCode(propertyTypeMaster.getHomeZipCode());
 		return propertyTypeMasterVO;
 
 	}

@@ -426,8 +426,7 @@ public class ApplicationFormRestService {
 				        cache.get("refinanceDetailsId"));
 			}
 
-			if (cache.get("purchaseDetails") != null
-			        && loaAppFormVO.getPurchaseDetails() != null &&loaAppFormVO.getPurchaseDetails().getId() == 0
+			if (cache.get("purchaseDetails") != null && loaAppFormVO.getPurchaseDetails() != null &&loaAppFormVO.getPurchaseDetails().getId() == 0
 			        && cache.get("purchaseDetails") != 0) {
 				loaAppFormVO.getPurchaseDetails().setId(
 				        cache.get("purchaseDetails"));
@@ -1109,23 +1108,28 @@ public class ApplicationFormRestService {
 			String condition = "";
 			
 			String loanPurpose ="";
-			
+		
 			
 			if ("PUR".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())) {
 				loanPurpose = "0";
 				hashmap.put("loanPurchasePrice", Utils
 				        .unformatCurrencyField(loanAppFormVO
 				                .getPurchaseDetails().getHousePrice()));
+				hashmap.put("prodCashOut", "0");
 			} else if ("REFCO".equalsIgnoreCase(loanAppFormVO.getLoanType().getLoanTypeCd())){
 				loanPurpose = "2";
 				hashmap.put("loanPurchasePrice", Utils
 				        .unformatCurrencyField(loanAppFormVO
 				                .getPropertyTypeMaster().getCurrentHomePrice()));
+				
+				hashmap.put("prodCashOut", Utils.unformatCurrencyField(loanAppFormVO
+		                .getRefinancedetails().getCashTakeOut()));
 			}else {
 				loanPurpose = "1";
 				hashmap.put("loanPurchasePrice", Utils
 				        .unformatCurrencyField(loanAppFormVO
 				                .getPropertyTypeMaster().getCurrentHomePrice()));
+				hashmap.put("prodCashOut", "0");
 			}
 			
 			hashmap.put("loanPurpose", loanPurpose);
@@ -1157,15 +1161,23 @@ public class ApplicationFormRestService {
 			        .getCustomerDetail().getDateOfBirth())));
 			hashmap.put("propertyState", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressState());
+			
 			hashmap.put("alimonyName", "NONE");
-			hashmap.put("alimonyPayment", "1000");
+			
+			if(loanAppFormVO.getReceiveAlimonyChildSupport()){
+			hashmap.put("alimonyPayment", loanAppFormVO.getChildSupportAlimony());
+			}else{
+				hashmap.put("alimonyPayment", "1000");
+		
+			}
+			
 			hashmap.put("jobExpenses", "1000");
+			
 			if (loanAppFormVO.getCustomerEmploymentIncome() != null
 			        && loanAppFormVO.getCustomerEmploymentIncome().size() > 0) {
-				hashmap.put("jobRelatedPayment", Utils.unformatCurrencyField(loanAppFormVO
-				        .getCustomerEmploymentIncome().get(0)
-				        .getCustomerEmploymentIncome()
-				        .getEmployedIncomePreTax()));
+				hashmap.put("jobRelatedPayment", (Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome()
+				        .getEmployedIncomePreTax()))*12)+"");
+				
 			} else {
 				hashmap.put("jobRelatedPayment", "1000");
 			}
@@ -1193,10 +1205,16 @@ public class ApplicationFormRestService {
 			        .getCustomerDetail().getAddressState());
 			hashmap.put("applicantZipCode", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressZipCode());
-			
-			hashmap.put("applicantAddress", "888 Apple road");
+			if(null== loanAppFormVO.getUser()
+			        .getCustomerDetail().getAddressStreet() || "".equalsIgnoreCase(loanAppFormVO.getUser()
+			        .getCustomerDetail().getAddressStreet())){
+				hashmap.put("applicantAddress", "undisclosed");
+			}else{
+			hashmap.put("applicantAddress", loanAppFormVO.getUser()
+			        .getCustomerDetail().getAddressStreet());
+			}
 
-			hashmap.put("prodCashOut", "40000");
+			
 
 			
 			
@@ -1219,13 +1237,13 @@ public class ApplicationFormRestService {
 			
 			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== true && loanAppFormVO.getSsnProvided() == true && loanAppFormVO.getCbSsnProvided() == true ){
 				hashmap = getBorrowerCredit(hashmap);
-				hashmap = appendSpouseCoBorrowerDetails(hashmap);
+				hashmap = appendSpouseCoBorrowerDetails(hashmap,loanAppFormVO);
 				condition = "coborrowerIsWifeWithSSNBoth";
 			}
 
 			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== true && loanAppFormVO.getSsnProvided() == false && loanAppFormVO.getCbSsnProvided() == false ){
 				
-				hashmap = appendSpouseCoBorrowerDetails(hashmap);
+				hashmap = appendSpouseCoBorrowerDetails(hashmap,loanAppFormVO);
 				hashmap.put("applicantId", " ");
 				hashmap.put("userSSNnumber", "000000000");
 				hashmap.put("userCoborrowerSSNnumber","000000000");
@@ -1236,13 +1254,13 @@ public class ApplicationFormRestService {
 			
 			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== false && loanAppFormVO.getSsnProvided() == true && loanAppFormVO.getCbSsnProvided() == true ){
 				hashmap = getBorrowerCredit(hashmap);
-				hashmap = appendCoBorrowerDetails(hashmap);
+				hashmap = appendCoBorrowerDetails(hashmap,loanAppFormVO);
 				hashmap = getCoBorrowerCredit(hashmap);
 				condition = "coborrowerWithSSNBoth";
 			}
 		    
 			if(loanAppFormVO.getIsCoborrowerPresent() == true && loanAppFormVO.getIsSpouseOnLoan()== false && loanAppFormVO.getSsnProvided() == false && loanAppFormVO.getCbSsnProvided() == false ){
-				hashmap = appendCoBorrowerDetails(hashmap);
+				hashmap = appendCoBorrowerDetails(hashmap,loanAppFormVO);
 				hashmap.put("applicantId", " ");
 				hashmap.put("userSSNnumber", "000000000");
 				hashmap.put("userCoborrowerSSNnumber","000000000");
@@ -1285,14 +1303,16 @@ public class ApplicationFormRestService {
 	
 	
 	
-	HashMap<String, String> appendSpouseCoBorrowerDetails(HashMap<String, String> hashmap){
-		hashmap.put("firstCoborrowerName","Jacob");
-		hashmap.put("middleCoborrowerName","B");
-		hashmap.put("lastCoborrowerName","TESTCASE");
-		hashmap.put("dateOfCoborrowerBirth","1980-05-27");
+	HashMap<String, String> appendSpouseCoBorrowerDetails(HashMap<String, String> hashmap,LoanAppFormVO loanAppFormVO){
+		if(loanAppFormVO.getCustomerSpouseDetail()!=null){
+		hashmap.put("firstCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseName());	
+		hashmap.put("middleCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseLastName());
+		hashmap.put("lastCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseLastName());
+		hashmap.put("dateOfCoborrowerBirth",new SimpleDateFormat("yyyy-MM-dd").format(new Date(loanAppFormVO.getCustomerSpouseDetail().getSpouseDateOfBirth())));
 		hashmap.put("baseCoborrowerIncome","100000");
-		hashmap.put("applicantCoborrowerAddress","123 Love AVE");
-		hashmap.put("userCoborrowerSSNnumber","000-00-0016");
+		hashmap.put("applicantCoborrowerAddress",loanAppFormVO.getCustomerSpouseDetail().getStreetAddress());
+		hashmap.put("userCoborrowerSSNnumber",loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn());
+		}
 		
 		return hashmap;
 	}
@@ -1326,23 +1346,46 @@ public class ApplicationFormRestService {
 	   
     
     
-	HashMap<String, String> appendCoBorrowerDetails(HashMap<String, String> hashmap){
-		
-		hashmap.put("firstCoborrowerName","JANET");
-		hashmap.put( "middleCoborrowerName","X");
-		hashmap.put( "lastCoborrowerName","TESTCASE");
-		hashmap.put("dateOfCoborrowerBirth","1947-01-22");
+	HashMap<String, String> appendCoBorrowerDetails(HashMap<String, String> hashmap,LoanAppFormVO loanAppFormVO){
+		if(loanAppFormVO.getCustomerSpouseDetail()!=null){
+		hashmap.put("firstCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseName());
+		hashmap.put( "middleCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseLastName());
+		hashmap.put( "lastCoborrowerName",loanAppFormVO.getCustomerSpouseDetail().getSpouseLastName());
+		hashmap.put("dateOfCoborrowerBirth",new SimpleDateFormat("yyyy-MM-dd").format(new Date(loanAppFormVO.getCustomerSpouseDetail().getSpouseDateOfBirth())));
 		hashmap.put( "baseCoborrowerIncome","100000");
-		hashmap.put("applicantCoborrowerAddress","19 FOREST DR");
-		hashmap.put("userCoborrowerSSNnumber","000-00-0003");
-		hashmap.put( "ApplicantCoBorrowerId","000-00-0003");
+		hashmap.put("applicantCoborrowerAddress",loanAppFormVO.getCustomerSpouseDetail().getStreetAddress());
+		hashmap.put("userCoborrowerSSNnumber",loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn());
+		hashmap.put( "ApplicantCoBorrowerId",loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn());
 		hashmap.put( "alimonyCoborrowerName","NONE");
-		hashmap.put("alimonyCoborrowerPayment","1000");
+		//hashmap.put("alimonyCoborrowerPayment","1000");
+		if(loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony() != null && loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony() != ""){
+			hashmap.put("alimonyCoborrowerPayment", Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony()));
+			}else{
+				hashmap.put("alimonyCoborrowerPayment", "1000");
+		
+			}
+		
+		
 		hashmap.put( "jobCoborrowerExpenses","1000");
-		hashmap.put( "jobRelatedCoborrowerPayment","100000");
-		hashmap.put( "applicantCoborrowerCity","ANTHILL");
-		hashmap.put("applicantCoborrowerState","MO");
-		hashmap.put( "applicantCoborrowerZipCode","65488");	
+		//hashmap.put( "jobRelatedCoborrowerPayment","100000");
+		
+		if (loanAppFormVO.getCustomerSpouseEmploymentIncome() != null
+		        && loanAppFormVO.getCustomerSpouseEmploymentIncome().size() > 0) {
+				
+			
+			hashmap.put("jobRelatedCoborrowerPayment", (Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome()
+			        .getEmployedIncomePreTax()))*12)+"");
+		} else {
+			hashmap.put("jobRelatedCoborrowerPayment", "10000");
+		}
+		
+		
+		
+		
+		hashmap.put( "applicantCoborrowerCity",loanAppFormVO.getCustomerSpouseDetail().getCity());
+		hashmap.put("applicantCoborrowerState",loanAppFormVO.getCustomerSpouseDetail().getState());
+		hashmap.put( "applicantCoborrowerZipCode",loanAppFormVO.getCustomerSpouseDetail().getCity());	
+		}
 		return hashmap;
 		
 	}

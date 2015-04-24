@@ -28,6 +28,9 @@ public class PropertyTypeMasterVO implements Serializable {
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
 	private String propInsMonthlyOryearly;
+	private String propStreetAddress;
+	private String propCity;
+	private String propState;
 
 	public int getId() {
 		return id;
@@ -188,6 +191,30 @@ public class PropertyTypeMasterVO implements Serializable {
 
 	public void setPropInsMonthlyOryearly(String propInsMonthlyOryearly) {
 		this.propInsMonthlyOryearly = propInsMonthlyOryearly;
+	}
+
+	public String getPropStreetAddress() {
+		return propStreetAddress;
+	}
+
+	public void setPropStreetAddress(String propStreetAddress) {
+		this.propStreetAddress = propStreetAddress;
+	}
+
+	public String getPropCity() {
+		return propCity;
+	}
+
+	public void setPropCity(String propCity) {
+		this.propCity = propCity;
+	}
+
+	public String getPropState() {
+		return propState;
+	}
+
+	public void setPropState(String propState) {
+		this.propState = propState;
 	}
 
 }
