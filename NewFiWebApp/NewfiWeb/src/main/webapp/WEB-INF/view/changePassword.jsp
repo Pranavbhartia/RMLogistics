@@ -57,7 +57,7 @@ $('#changePwdForm').submit(function(event){
 	event.preventDefault();
 	var changePasswordData = new Object();
 	changePasswordData.newPassword = $('#pwd').val();
-	changePasswordData.userId=currentUser.id;
+	changePasswordData.userId=currentUser.userId;
 	var dateVar = new Date();
 	var timezone = dateVar.getTimezoneOffset();
 	changePasswordData.emailID = currentUser.emailID+ ":"+timezone;
