@@ -416,7 +416,7 @@ function paintConversations(conversations) {
 		});
 
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left"
+			
 		});
 
 		if (data.createdUser.imgUrl != undefined &&  data.createdUser.imgUrl != "") {
@@ -461,18 +461,20 @@ function paintConversations(conversations) {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({
-					"class" : "conv-prof-image float-left",
+					
 					"id" : otherUserBinded[k].userID
 				});
 
 				if (otherUserBinded[k].imgUrl != undefined) {
+					userImage.addClass("conv-prof-image float-left");
 					userImage.attr({
 						"style" : "background-image:url('"
 								+ otherUserBinded[k].imgUrl + "')"
 					});
 				}
 				else
-				{					
+				{	
+					userImage.addClass("conv-prof-image-default float-left");
 					var initialText =getInitialsFromFullName (otherUserBinded[k].userName); 
 					userImage.text(initialText);
 				}

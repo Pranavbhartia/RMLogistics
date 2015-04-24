@@ -406,9 +406,7 @@ function appendCustomers(elementId, customers) {
 		// TODO customer prof default pic to be set correctly
 		if (customer.prof_image == undefined || customer.prof_image == ""
 			|| customer.prof_image == null) {
-			profImage.addClass("lp-initial-pic float-left");
-			profImage.css("background-image:url(resources/images/person-placeholder.png");
-			//customer.prof_image = "resources/images/person-placeholder.png";			
+			profImage.addClass("lp-initial-pic float-left");				
 			profImage.text(getInitialsFromFullName(customer.name));		
 		}
 		else
@@ -967,7 +965,7 @@ function paintRecentNotes(response) {
 		notes[i].name = obj[0].createdUser.userName;
 		if (obj[0].createdUser.imgUrl == undefined
 				|| obj[0].createdUser.imgUrl == null) {
-			notes[i].imgUrl = "./resources/images/person-placeholder.png";
+			notes[i].imgUrl = "";
 		} else {
 			notes[i].imgUrl = obj[0].createdUser.imgUrl;
 		}
