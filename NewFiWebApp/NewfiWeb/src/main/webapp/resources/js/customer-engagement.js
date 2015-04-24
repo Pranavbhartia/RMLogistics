@@ -1670,9 +1670,9 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     if(customerInputData.livingSituation != "homeOwner")
          rcRow1 = getLoanSummaryRow("Current Principal & Interest", showValue(customerInputData.purchaseDetails.rentPerMonth));
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVO[index].payment),"principalIntId");
-    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "Calculate","calTaxID","calTaxID2",customerInputData);
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "","calTaxID","calTaxID2",customerInputData);
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "Calculate","CalInsuranceID","CalInsuranceID2",customerInputData);
+    var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "","CalInsuranceID","CalInsuranceID2",customerInputData);
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal 																			& interest payment");
     //var rcRow5 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(rateVO[index].payment) ,"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
@@ -1809,12 +1809,12 @@ function getLoanSummaryRowCalculateBtnCEP(desc, detail,id,id2,customerInputData)
     	}*/
     	
     	var taxesTemp = 0;
-    	if($('#calTaxID2').val() !="Calculate")
+    	if($('#calTaxID2').val() !="")
     	 taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));    	
     	customerInputData.propertyTaxesPaid = taxesTemp;
     	
     	var InsuranceTemp = 0;
-    	if($('#CalInsuranceID2').val() !="Calculate")
+    	if($('#CalInsuranceID2').val() !="")
     	 InsuranceTemp = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     	
     	customerInputData.annualHomeownersInsurance = InsuranceTemp; 

@@ -4627,8 +4627,10 @@ function optionClicked(element,ctx,option,value,skipCondition){
 
 function getTextQuestion(quesText, clickEvent, name) {
 
-  
-
+	var value ="";
+	if(mapDbDataForFrontend(name))
+	value = mapDbDataForFrontend(name);
+	
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
@@ -4644,7 +4646,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 	var inputBox = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : name,
-	//	"value" : refinanceTeaserRate[name]
+		"value" : value
 	}).on("load keydown", function(e){
           
 		if(name != 'zipCode' && name != 'mortgageyearsleft'){
@@ -4808,7 +4810,7 @@ function paintLockRate(lqbData, appUserDetails) {
 
 
 function mapDbDataForFrontend(key){
-//alert('isside mapDbDataForFrontend');
+
     switch(key){
         case "state":
             if(appUserDetails.user&&appUserDetails.user.customerDetail)
@@ -4968,6 +4970,10 @@ function mapDbDataForFrontend(key){
                 else if(buyHomeTeaserRate.residenceType)
                     return buyHomeTeaserRate.residenceType;
             }
+            break;
+        case "cashTakeOut":
+            if(appUserDetails.refinancedetails)
+                return appUserDetails.refinancedetails.cashTakeOut;
             break;
             
     /*    case "isDownPaymentBorrowed":
