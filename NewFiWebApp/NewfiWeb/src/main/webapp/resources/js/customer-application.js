@@ -3940,7 +3940,10 @@ function getYearMonthOptionContainer(contxt){
                     if(ctx.yearMonthVal!=$(this).data("value")){
                         ctx.yearMonthVal=$(this).data("value");
                         if($(this).data("value")=="Year"){
-                            var val=Math.round(getFloatValue(ctx.value)/12)
+                            var val=getFloatValue(ctx.value)/12;
+                            ctx.value = val;
+                        }else{
+                            var val=getFloatValue(ctx.value)*12;
                             ctx.value = val;
                         }
                     }
@@ -3990,7 +3993,7 @@ function getMonthYearTextQuestionContext(contxt) {
         if(ctx.yearMonthVal=="Month"){
             ctx.value = $(this).val();
         }else{
-            var val=Math.round(getFloatValue($(this).val())/12)
+            var val=getFloatValue($(this).val())/12;
             ctx.value = val;
         }
     }).on("load keydown", function(e) {
