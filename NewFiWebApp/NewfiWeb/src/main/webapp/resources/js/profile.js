@@ -2030,9 +2030,10 @@ function saveEditUserProfile(user){
 			alert("error"+error);
 		}
 	});
-	
+	var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
 	$('#profileNameId').text(fname);
 	$('#profilePhoneNumId').text(priPhone);
+	$('#loanType').text(loanType);
 	
 	
 	$('#center-panel-cont').html("");

@@ -73,7 +73,8 @@
 				adjustRightPanelOnResize();
                 adjustCustomerApplicationPageOnResize();
 			});
-
+			var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
+			$('#loanType').text(loanType);
 			var initialText = getInitials(newfiObject.user.firstName,newfiObject.user.lastName);
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				//$("#myProfilePicture").addClass("lp-pic float-left");

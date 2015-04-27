@@ -8,7 +8,7 @@
       				
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
-				<div class="lp-txt2">Home Buyer</div>
+				<div class="lp-txt2" id="loanType"></div>
 				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div>
 			</div>
 		</div>
