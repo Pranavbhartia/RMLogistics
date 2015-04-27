@@ -318,14 +318,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.getAccountSubType()"
 				        + cei.getAccountSubType());
 				CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
-				customerBankAccountDetails.setAccountSubType(cei
-				        .getAccountSubType());
-				customerBankAccountDetails.setCurrentaccountbalance(cei
-				        .getCurrentaccountbalance());
-				customerBankAccountDetails.setAmountfornewhome(cei
-				        .getAmountfornewhome());
+				
+				customerBankAccountDetails.setId(cei.getId());
+				customerBankAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerBankAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerBankAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
 				customerBankAccountDetails.setLoanAppForms(loanAppForm);
-				this.save(customerBankAccountDetails);
+				
+				this.saveOrUpdate(customerBankAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerBankAccountDetails()"
@@ -341,17 +341,15 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 
 			while (itr.hasNext()) {
 				CustomerRetirementAccountDetails cei = itr.next();
-				LOG.info("cei.getAccountSubType()"
-				        + cei.getAccountSubType());
+				LOG.info("cei.getAccountSubType()" + cei.getAccountSubType());
 				CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
-				customerRetirementAccountDetails.setAccountSubType(cei
-				        .getAccountSubType());
-				customerRetirementAccountDetails.setCurrentaccountbalance(cei
-				        .getCurrentaccountbalance());
-				customerRetirementAccountDetails.setAmountfornewhome(cei
-				        .getAmountfornewhome());
+				
+				customerRetirementAccountDetails.setId(cei.getId());
+				customerRetirementAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerRetirementAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerRetirementAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
 				customerRetirementAccountDetails.setLoanAppForms(loanAppForm);
-				this.save(customerRetirementAccountDetails);
+				this.saveOrUpdate(customerRetirementAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerRetirementAccountDetails()"
@@ -367,17 +365,15 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 
 			while (itr.hasNext()) {
 				CustomerOtherAccountDetails cei = itr.next();
-				LOG.info("cei.getAccountSubType()"
-				        + cei.getAccountSubType());
+				LOG.info("cei.getAccountSubType()"+ cei.getAccountSubType());
 				CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
-				customerOtherAccountDetails.setAccountSubType(cei
-				        .getAccountSubType());
-				customerOtherAccountDetails.setCurrentaccountbalance(cei
-				        .getCurrentaccountbalance());
-				customerOtherAccountDetails.setAmountfornewhome(cei
-				        .getAmountfornewhome());
+				
+				customerOtherAccountDetails.setId(cei.getId());
+				customerOtherAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerOtherAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerOtherAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
 				customerOtherAccountDetails.setLoanAppForms(loanAppForm);
-				this.save(customerOtherAccountDetails);
+				this.saveOrUpdate(customerOtherAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"
@@ -396,14 +392,13 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.getAccountSubType()"
 				        + cei.getAccountSubType());
 				CustomerSpouseBankAccountDetails customerSpouseBankAccountDetails = new CustomerSpouseBankAccountDetails();
-				customerSpouseBankAccountDetails.setAccountSubType(cei
-				        .getAccountSubType());
-				customerSpouseBankAccountDetails.setCurrentaccountbalance(cei
-				        .getCurrentaccountbalance());
-				customerSpouseBankAccountDetails.setAmountfornewhome(cei
-				        .getAmountfornewhome());
+				
+				customerSpouseBankAccountDetails.setId(cei.getId());
+				customerSpouseBankAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerSpouseBankAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerSpouseBankAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
 				customerSpouseBankAccountDetails.setLoanAppForms(loanAppForm);
-				this.save(customerSpouseBankAccountDetails);
+				this.saveOrUpdate(customerSpouseBankAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerSpouseBankAccountDetails()"
@@ -423,8 +418,9 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.getAccountSubType()"
 				        + cei.getAccountSubType());
 				CustomerSpouseRetirementAccountDetails customerSpouseRetirementAccountDetails = new CustomerSpouseRetirementAccountDetails();
-				customerSpouseRetirementAccountDetails.setAccountSubType(cei
-				        .getAccountSubType());
+				
+				customerSpouseRetirementAccountDetails.setId(cei.getId());
+				customerSpouseRetirementAccountDetails.setAccountSubType(cei.getAccountSubType());
 				customerSpouseRetirementAccountDetails
 				        .setCurrentaccountbalance(cei
 				                .getCurrentaccountbalance());
@@ -432,7 +428,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getAmountfornewhome());
 				customerSpouseRetirementAccountDetails
 				        .setLoanAppForms(loanAppForm);
-				this.save(customerSpouseRetirementAccountDetails);
+				this.saveOrUpdate(customerSpouseRetirementAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerSpouseRetirementAccountDetails()"
@@ -453,6 +449,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				LOG.info("cei.getAccountSubType()"
 				        + cei.getAccountSubType());
 				CustomerSpouseOtherAccountDetails customerSpouseOtherAccountDetails = new CustomerSpouseOtherAccountDetails();
+				
+				customerSpouseOtherAccountDetails.setId(cei.getId());
 				customerSpouseOtherAccountDetails.setAccountSubType(cei
 				        .getAccountSubType());
 				customerSpouseOtherAccountDetails.setCurrentaccountbalance(cei
@@ -460,7 +458,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				customerSpouseOtherAccountDetails.setAmountfornewhome(cei
 				        .getAmountfornewhome());
 				customerSpouseOtherAccountDetails.setLoanAppForms(loanAppForm);
-				this.save(customerSpouseOtherAccountDetails);
+				this.saveOrUpdate(customerSpouseOtherAccountDetails);
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"

@@ -450,6 +450,7 @@ function getApplicationTextQues(question) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+
     var optionCont;
   if(question.name!='streetAddress'){
 	  optionCont = $('<input>').attr({
@@ -468,6 +469,7 @@ function getApplicationTextQues(question) {
 				    allowNegative:false
 				});
 			}
+
 			
 			   if (question.name == 'ssn') {
 				  // $('input[name="ssn"]').mask("999-99-9999");
@@ -1557,6 +1559,7 @@ function paintCustomerApplicationPageStep2() {
     	
     });
     $('#app-right-panel').append(saveAndContinueButton);
+    
     addStateCityZipLookUp();
 }
 
@@ -1795,6 +1798,7 @@ function incomesSelectALLThatApply() {
             option.onselect(option.value,option.data,option.name);
         }
     }
+    
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1970,7 +1974,9 @@ function paintMyIncome() {
 		$(".myassets").click();
 		
 	}
+    
     $('#app-right-panel').append(saveAndContinueButton);
+    
 }
  
 function getAccountValues(element,key,accType,balance,forNewHome){
@@ -2175,7 +2181,21 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
     		}
     	}
+    	
     });
+});
+
+$('body').on('keypress',"input[name='beforeTax']",function(){
+	
+	$("input[name='beforeTax']").maskMoney({
+		thousands:',',
+		decimal:'.',
+		allowZero:true,
+		prefix: '$',
+	    precision:0,
+	    allowNegative:false
+	});	
+	
 });
 
 function getPreviousEmployementQuestions(value) {
@@ -4185,7 +4205,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
     		datatype : "application/json",
     		success:function(data){
     			
-    			//appUserDetails=data;
+    			appUserDetails=data;
                 newfi.appUserDetails=JSON.stringify(appUserDetails);
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
