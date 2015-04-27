@@ -1683,20 +1683,29 @@ function paintMyIncome() {
         "class": "ce-save-btn"
     }).html("Save & continue").on('click', function(event) {
     	//TODO validation
-        var isStatus=[];
-        for(var i=0;i<$('.ce-option-checkbox').length;i++){
-      	  isStatus  =validateCheckbox('ce-option-checkbox','app-option-checked');
-      	  
-        }
-     
-        if(isStatus==null||isStatus==""){
-      	  showErrorToastMessage(selectQuestionErrorMessage);
-      	  return false;
-        }
-        
-        
-        
-      //End of validation
+    	        var isStatus=[];
+    	     
+    	      	  isStatus  = validateCheckbox(isStatus);
+    	   
+    	  
+    	        if(isStatus==null||isStatus==""){	
+    	      	  showErrorToastMessage(selectQuestionErrorMessage);
+    	      	  return false;
+    	        }else{
+    	        	for(var i=0;i<isStatus.length;i++){
+    	        		var status=validateInputOfChecked(isStatus[i]);
+        	        	if(status==false){
+        	        		return false;
+        	        	}	
+    	        	}
+    	        	
+    	        }
+    	       
+    	       
+    	        
+    	        
+    	        
+    	      //End of validation
     
     
         var  customerEmploymentIncome = [];
@@ -1886,7 +1895,7 @@ function paintRefinanceEmployed(divId,value) {
 }
 
 function getMultiTextQuestion(quesText, value) {
-	var errFeild=appendErrorMessage();
+
     var wrapper = $('<div>').attr({
         "class": "ce-option-ques-wrapper"
     });
@@ -1921,7 +1930,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox0.attr("value", val);
     }
-    quesTextCont0.append(inputBox0).append(errFeild);
+    quesTextCont0.append(inputBox0);
     
     
     // Job title
@@ -1941,7 +1950,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox4.attr("value", val);
     }
-    quesTextCont4.append(inputBox4).append(errFeild);
+    quesTextCont4.append(inputBox4).append(appendErrorMessage());
     
 
     // Monthly income
@@ -1962,7 +1971,7 @@ function getMultiTextQuestion(quesText, value) {
         inputBox1.attr("value", val);
     }
   
-    quesTextCont1.append(inputBox1).append(errFeild);
+    quesTextCont1.append(inputBox1).append(appendErrorMessage());
     
     
     // Employer
@@ -1982,7 +1991,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox2.attr("value", val);
     }
-    quesTextCont2.append(inputBox2).append(errFeild);
+    quesTextCont2.append(inputBox2).append(appendErrorMessage());
     
     
    // Start working 
@@ -2002,7 +2011,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox3.attr("value", val);
     }
-    quesTextCont3.append(inputBox3).append(errFeild);
+    quesTextCont3.append(inputBox3).append(appendErrorMessage());
 
    
 
@@ -2036,7 +2045,7 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
 });
 
 function getPreviousEmployementQuestions(value) {
-	var errFeild=appendErrorMessage();
+
 	var wrapper = $('<div>').attr({
 		"class" : "ce-option-ques-wrapper prev-employement-ques"
 	});
@@ -2088,9 +2097,9 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox0.attr("value",val);
 	}
-	quesTextCont0.append(inputBox0).append(errFeild);
+	quesTextCont0.append(inputBox0);
 	
-	quesTextCont1.append(inputBox1).append(errFeild);
+	quesTextCont1.append(inputBox1).append(appendErrorMessage());
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2105,7 +2114,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox2.attr("value",val);
 	}
-	quesTextCont2.append(inputBox2).append(errFeild);
+	quesTextCont2.append(inputBox2).append(appendErrorMessage());
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2120,7 +2129,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox3.attr("value",val);
 	}
-	quesTextCont3.append(inputBox3).append(errFeild);
+	quesTextCont3.append(inputBox3).append(appendErrorMessage());
 	
 	var quesTextCont4 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2134,7 +2143,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox4.attr("value",val);
 	}
-	quesTextCont4.append(inputBox4).append(errFeild);
+	quesTextCont4.append(inputBox4).append(appendErrorMessage());
 
 	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
@@ -2167,7 +2176,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     if(value&&!value.selected)
         flag=false;
     //appUserDetails.employed ="true";
-    var errFeild=appendErrorMessage();
+ 
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var wrapper = $('<div>').attr({
@@ -2191,7 +2200,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedIncome",
     			"value" : val
     		});
-    		optionContainer.append(inputBox);
+    		optionContainer.append(inputBox).append(appendErrorMessage());
     		container.append(quesTextCont).append(optionContainer);
     		
     		var container1 = $('<div>').attr({
@@ -2212,7 +2221,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedYears",
     			"value" : val
     		});
-    		optionContainer1.append(inputBox1);
+    		optionContainer1.append(inputBox1).append(appendErrorMessage);
     		container1.append(quesTextCont1).append(optionContainer1);
     		
     		wrapper.append(container).append(container1);
