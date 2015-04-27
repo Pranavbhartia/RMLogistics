@@ -450,36 +450,69 @@ function getApplicationTextQues(question) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
-  
-    var optionCont = $('<input>').attr({
-        "class": "app-input",
-        "name": question.name,
-        "value":question.value
-    }).on("keyup", function(e){
-          	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
-			$('input[name='+question.name+']').maskMoney({
-				thousands:',',
-				decimal:'.',
-				allowZero:true,
-				prefix: '$',
-			    precision:0,
-			    allowNegative:false
-			});
-		}
-		
-		   if (question.name == 'ssn') {
-			  // $('input[name="ssn"]').mask("999-99-9999");
-			 // $('input[name="ssn"]').attr('type', 'password');
-        }
-		
-	}).keypress(function(key) {
-		if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+    var optionCont;
+  if(question.name!='streetAddress'){
+	  optionCont = $('<input>').attr({
+	        "class": "app-input",
+	        "name": question.name,
+	        "value":question.value
+	    }).on("keyup", function(e){
+	          	
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+				$('input[name='+question.name+']').maskMoney({
+					thousands:',',
+					decimal:'.',
+					allowZero:true,
+					prefix: '$',
+				    precision:0,
+				    allowNegative:false
+				});
+			}
 			
-			  if(key.charCode < 48 || key.charCode > 57) return false;
-		}
-      
-    });
+			   if (question.name == 'ssn') {
+				  // $('input[name="ssn"]').mask("999-99-9999");
+				 // $('input[name="ssn"]').attr('type', 'password');
+	        }
+			
+		}).keypress(function(key) {
+			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+				
+				  if(key.charCode < 48 || key.charCode > 57) return false;
+			}
+	      
+	    });
+  }else{
+	   optionCont = $('<input>').attr({
+	        "class": "app-input app-append-width",
+	        "name": question.name,
+	        "value":question.value
+	    }).on("keyup", function(e){
+	          	
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+				$('input[name='+question.name+']').maskMoney({
+					thousands:',',
+					decimal:'.',
+					allowZero:true,
+					prefix: '$',
+				    precision:0,
+				    allowNegative:false
+				});
+			}
+			
+			   if (question.name == 'ssn') {
+				  // $('input[name="ssn"]').mask("999-99-9999");
+				 // $('input[name="ssn"]').attr('type', 'password');
+	        }
+			
+		}).keypress(function(key) {
+			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+				
+				  if(key.charCode < 48 || key.charCode > 57) return false;
+			}
+	      
+	    });
+  }
+   
 
     if (question.value != undefined) {
         optionCont.val(question.value);
@@ -578,7 +611,7 @@ function paintCustomerApplicationPageStep1a() {
 
 
     var questionsContainer = getQuestionsContainer(questions);
-   
+
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
@@ -1374,7 +1407,7 @@ function paintCustomerApplicationPageStep2() {
     	contxt.drawQuestion();  	
     	quesContxts.push(contxt);
     }
-    
+
     //alert('isCoBorrowerSpouse'+ $('input[name="isCoBorrowerSpouse"]').val())
     
     var saveAndContinueButton = $('<div>').attr({
@@ -1596,29 +1629,57 @@ function getContextApplicationTextQues(contxt) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+    var optionCont ;
     var errFeild=appendErrorMessage();
-    var optionCont = $('<input>').attr({
-        "class": "app-input",
-        "name": contxt.name,
-        "value":showValue(contxt.value)
-    }).bind("change",{"contxt":contxt},function(event){
-    	var ctx=event.data.contxt;
-    	ctx.value=$(this).val();
-    }).on("load keydown", function(e){
-          
-		if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
-			$('input[name='+contxt.name+']').maskMoney({
-				thousands:',',
-				decimal:'.',
-				allowZero:true,
-				prefix: '$',
-			    precision:0,
-			    allowNegative:false
-			});
-		}
-		
-	});
+    if(contxt.name == 'propStreetAddress' || contxt.name == 'coBorrowerStreetAddress' || contxt.name=='streetAddress' || contxt.name=='addressStreet'){
+    	 optionCont = $('<input>').attr({
+    	        "class": "app-input app-append-width",
+    	        "name": contxt.name,
+    	        "value":showValue(contxt.value)
+    	    }).bind("change",{"contxt":contxt},function(event){
+    	    	var ctx=event.data.contxt;
+    	    	ctx.value=$(this).val();
+    	    }).on("load keydown", function(e){
+    	          
+    			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
+    				$('input[name='+contxt.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+    			
+    		});
 
+    	    
+    }else{
+    	 optionCont = $('<input>').attr({
+    	        "class": "app-input",
+    	        "name": contxt.name,
+    	        "value":showValue(contxt.value)
+    	    }).bind("change",{"contxt":contxt},function(event){
+    	    	var ctx=event.data.contxt;
+    	    	ctx.value=$(this).val();
+    	    }).on("load keydown", function(e){
+    	          
+    			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
+    				$('input[name='+contxt.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+    			
+    		});
+
+    	    
+    }
     
     
     
