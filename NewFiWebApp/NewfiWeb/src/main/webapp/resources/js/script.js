@@ -1039,8 +1039,15 @@ function getLoanSummaryWrapper(lqbData, appUserDetails) {
     } else if (loanTypeText == "PUR") {
         container = getLoanSummaryContainerPurchase(lqbData, appUserDetails);
     }
-    var bottomText = getHeaderText("Rate and APR quoted are based on the information you provided are not guaranteed and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified");
-    var rateWrapper = getLoanSliderWrapper(lqbData,appUserDetails);
+    var bottomText ="";
+    var yearValues = lqbData;
+    var rateVoObj=getLQBObj(yearValues);
+
+    var rateWrapper ="";
+    if(!rateVoObj.dummyData){
+        rateWrapper =getLoanSliderWrapper(lqbData,appUserDetails);
+        bottomText = getHeaderText("Rate and APR quoted are based on the information you provided are not guaranteed and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified");
+    }
     parentWrapper.append(header).append(container).append(rateWrapper).append(bottomText);
     
     return parentWrapper;
@@ -1543,15 +1550,24 @@ function getClosingCostSummaryContainer(valueSet) {
     var parentWrapper = $('<div>').attr({
         "class": "closing-cost-wrapper"
     });
-    var header = getClosingCostHeader("Closing Cost Summary");
-    var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
-    var closingDate = $('<span>').attr({
-        "class": "semibold"
-    });
-    descText.append(closingDate);
-    var topContainer = getClosingCostTopConatiner();
-    var bottomContainer = getClosingCostBottomConatiner();
-    return parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+    if(valueSet.dummyData){
+        if(typeof(newfiObject)!=='undefined')
+            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
+        else{
+            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you!"));
+        }
+    }else{
+        var header = getClosingCostHeader("Closing Cost Summary");
+        var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
+        var closingDate = $('<span>').attr({
+            "class": "semibold"
+        });
+        descText.append(closingDate);
+        var topContainer = getClosingCostTopConatiner();
+        var bottomContainer = getClosingCostBottomConatiner();
+        parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+    }
+    return parentWrapper;
 }
 
 
