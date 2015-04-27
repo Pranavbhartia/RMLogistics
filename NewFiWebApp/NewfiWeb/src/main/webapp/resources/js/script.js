@@ -2060,7 +2060,12 @@ function getRequestRateLockStatus(element){
                 }else{
                 	element.addClass("rate-btn");
                     element.html("Contact Your loan manager").on('click',function(){
-                     changeLeftPanel(1);
+                     //changeLeftPanel(1);
+                        if(typeof(selectedUserDetail)!=='undefined'){
+                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/team"
+                        }else{
+                            window.location.hash="#myTeam";    
+                        }
                     });
                 }
             }
