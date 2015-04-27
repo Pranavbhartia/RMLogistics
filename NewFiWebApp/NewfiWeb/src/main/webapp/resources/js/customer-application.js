@@ -450,36 +450,71 @@ function getApplicationTextQues(question) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
-  
-    var optionCont = $('<input>').attr({
-        "class": "app-input",
-        "name": question.name,
-        "value":question.value
-    }).on("keydown", function(e){
-          	
-        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
-			$('input[name='+question.name+']').maskMoney({
-				thousands:',',
-				decimal:'.',
-				allowZero:true,
-				prefix: '$',
-			    precision:0,
-			    allowNegative:false
-			});
-		}
-		
-		   if (question.name == 'ssn') {
-			  // $('input[name="ssn"]').mask("999-99-9999");
-			 // $('input[name="ssn"]').attr('type', 'password');
-        }
-		
-	}).keypress(function(key) {
-		if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+
+    var optionCont;
+  if(question.name!='streetAddress'){
+	  optionCont = $('<input>').attr({
+	        "class": "app-input",
+	        "name": question.name,
+	        "value":question.value
+	    }).on("keyup", function(e){
+	          	
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+				$('input[name='+question.name+']').maskMoney({
+					thousands:',',
+					decimal:'.',
+					allowZero:true,
+					prefix: '$',
+				    precision:0,
+				    allowNegative:false
+				});
+			}
+
 			
-			  if(key.charCode < 48 || key.charCode > 57) return false;
-		}
-      
-    });
+			   if (question.name == 'ssn') {
+				  // $('input[name="ssn"]').mask("999-99-9999");
+				 // $('input[name="ssn"]').attr('type', 'password');
+	        }
+			
+		}).keypress(function(key) {
+			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+				
+				  if(key.charCode < 48 || key.charCode > 57) return false;
+			}
+	      
+	    });
+  }else{
+	   optionCont = $('<input>').attr({
+	        "class": "app-input app-append-width",
+	        "name": question.name,
+	        "value":question.value
+	    }).on("keyup", function(e){
+	          	
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+				$('input[name='+question.name+']').maskMoney({
+					thousands:',',
+					decimal:'.',
+					allowZero:true,
+					prefix: '$',
+				    precision:0,
+				    allowNegative:false
+				});
+			}
+			
+			   if (question.name == 'ssn') {
+				  // $('input[name="ssn"]').mask("999-99-9999");
+				 // $('input[name="ssn"]').attr('type', 'password');
+	        }
+			
+		}).keypress(function(key) {
+			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+				
+				  if(key.charCode < 48 || key.charCode > 57) return false;
+			}
+	      
+	    });
+  }
+   
 
     if (question.value != undefined) {
         optionCont.val(question.value);
@@ -578,7 +613,7 @@ function paintCustomerApplicationPageStep1a() {
 
 
     var questionsContainer = getQuestionsContainer(questions);
-   
+
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
@@ -680,10 +715,79 @@ function paintCheckBox(){
 	return wrapper.append(optionContainer);
 
 }
+function addCityStateZipLookUpForProperty(){
+synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+    
+    var stateDropDownWrapper = $('<div>').attr({
+    	"id" : "state-dropdown-wrapper-property",
+    	"class" : "state-dropdown-wrapper hide"
+    });
 
+    $('input[name="propState"]').after(stateDropDownWrapper);
+	$('input[name="propState"]').attr("id","stateID").addClass('prof-form-input-statedropdown').bind('click',function(e){
 
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper-property').css("display") == "none"){
+			appendStateDropDownForProperty('state-dropdown-wrapper-property',stateList);
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
+		}else{
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
+		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchList);
+	});
+	
+$('input[name="propCity"]').attr("id","cityID").bind('click keydown',function(){
 
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookupForProperty(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(200);
 
+$('input[name="propZipCode"]').attr("id","zipcodeID").bind('click keydown',function(){
+
+	var selectedCity = $('#cityID').val();
+	var searchData = [];
+	var count = 0;
+	for(var i=0; i<currentZipcodeLookUp.length; i++){
+		if(selectedCity == currentZipcodeLookUp[i].cityName){
+			searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+		}
+	}
+
+	initializeZipcodeLookupForProperty(searchData);
+}).bind('focus', function(){ 
+	$(this).trigger('keydown');
+	$(this).autocomplete("search"); 
+});
+
+}
 
 function addStateCityZipLookUp(){
 synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -695,6 +799,10 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
+    
+   
+  
+    
     
     
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
@@ -734,6 +842,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 		appendStateDropDown('state-dropdown-wrapper',searchList);
 	});
     
+
     
     
     $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
@@ -773,7 +882,6 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	}).width(200);
  
  
-    
     $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
 		
 		var selectedCity = $('#cityId').val();
@@ -1301,7 +1409,7 @@ function paintCustomerApplicationPageStep2() {
     	contxt.drawQuestion();  	
     	quesContxts.push(contxt);
     }
-    
+
     //alert('isCoBorrowerSpouse'+ $('input[name="isCoBorrowerSpouse"]').val())
     
     var saveAndContinueButton = $('<div>').attr({
@@ -1524,29 +1632,57 @@ function getContextApplicationTextQues(contxt) {
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+    var optionCont ;
     var errFeild=appendErrorMessage();
-    var optionCont = $('<input>').attr({
-        "class": "app-input",
-        "name": contxt.name,
-        "value":showValue(contxt.value)
-    }).bind("change",{"contxt":contxt},function(event){
-    	var ctx=event.data.contxt;
-    	ctx.value=$(this).val();
-    }).on("load keydown", function(e){
-          
-		if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
-			$('input[name='+contxt.name+']').maskMoney({
-				thousands:',',
-				decimal:'.',
-				allowZero:true,
-				prefix: '$',
-			    precision:0,
-			    allowNegative:false
-			});
-		}
-		
-	});
+    if(contxt.name == 'propStreetAddress' || contxt.name == 'coBorrowerStreetAddress' || contxt.name=='streetAddress' || contxt.name=='addressStreet'){
+    	 optionCont = $('<input>').attr({
+    	        "class": "app-input app-append-width",
+    	        "name": contxt.name,
+    	        "value":showValue(contxt.value)
+    	    }).bind("change",{"contxt":contxt},function(event){
+    	    	var ctx=event.data.contxt;
+    	    	ctx.value=$(this).val();
+    	    }).on("load keydown", function(e){
+    	          
+    			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
+    				$('input[name='+contxt.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+    			
+    		});
 
+    	    
+    }else{
+    	 optionCont = $('<input>').attr({
+    	        "class": "app-input",
+    	        "name": contxt.name,
+    	        "value":showValue(contxt.value)
+    	    }).bind("change",{"contxt":contxt},function(event){
+    	    	var ctx=event.data.contxt;
+    	    	ctx.value=$(this).val();
+    	    }).on("load keydown", function(e){
+    	          
+    			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
+    				$('input[name='+contxt.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+    			
+    		});
+
+    	    
+    }
     
     
     
@@ -1685,20 +1821,29 @@ function paintMyIncome() {
         "class": "ce-save-btn"
     }).html("Save & continue").on('click', function(event) {
     	//TODO validation
-        var isStatus=[];
-        for(var i=0;i<$('.ce-option-checkbox').length;i++){
-      	  isStatus  =validateCheckbox('ce-option-checkbox','app-option-checked');
-      	  
-        }
-     
-        if(isStatus==null||isStatus==""){
-      	  showErrorToastMessage(selectQuestionErrorMessage);
-      	  return false;
-        }
-        
-        
-        
-      //End of validation
+    	        var isStatus=[];
+    	     
+    	      	  isStatus  = validateCheckbox(isStatus);
+    	   
+    	  
+    	        if(isStatus==null||isStatus==""){	
+    	      	  showErrorToastMessage(selectQuestionErrorMessage);
+    	      	  return false;
+    	        }else{
+    	        	for(var i=0;i<isStatus.length;i++){
+    	        		var status=validateInputOfChecked(isStatus[i]);
+        	        	if(status==false){
+        	        		return false;
+        	        	}	
+    	        	}
+    	        	
+    	        }
+    	       
+    	       
+    	        
+    	        
+    	        
+    	      //End of validation
     
     
         var  customerEmploymentIncome = [];
@@ -1890,7 +2035,7 @@ function paintRefinanceEmployed(divId,value) {
 }
 
 function getMultiTextQuestion(quesText, value) {
-	var errFeild=appendErrorMessage();
+
     var wrapper = $('<div>').attr({
         "class": "ce-option-ques-wrapper"
     });
@@ -1925,7 +2070,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox0.attr("value", val);
     }
-    quesTextCont0.append(inputBox0).append(errFeild);
+    quesTextCont0.append(inputBox0);
     
     
     // Job title
@@ -1945,7 +2090,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox4.attr("value", val);
     }
-    quesTextCont4.append(inputBox4).append(errFeild);
+    quesTextCont4.append(inputBox4).append(appendErrorMessage());
     
 
     // Monthly income
@@ -1966,7 +2111,7 @@ function getMultiTextQuestion(quesText, value) {
         inputBox1.attr("value", val);
     }
   
-    quesTextCont1.append(inputBox1).append(errFeild);
+    quesTextCont1.append(inputBox1).append(appendErrorMessage());
     
     
     // Employer
@@ -1986,7 +2131,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox2.attr("value", val);
     }
-    quesTextCont2.append(inputBox2).append(errFeild);
+    quesTextCont2.append(inputBox2).append(appendErrorMessage());
     
     
    // Start working 
@@ -2006,7 +2151,7 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox3.attr("value", val);
     }
-    quesTextCont3.append(inputBox3).append(errFeild);
+    quesTextCont3.append(inputBox3).append(appendErrorMessage());
 
    
 
@@ -2054,7 +2199,7 @@ $('body').on('keypress',"input[name='beforeTax']",function(){
 });
 
 function getPreviousEmployementQuestions(value) {
-	var errFeild=appendErrorMessage();
+
 	var wrapper = $('<div>').attr({
 		"class" : "ce-option-ques-wrapper prev-employement-ques"
 	});
@@ -2106,9 +2251,9 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox0.attr("value",val);
 	}
-	quesTextCont0.append(inputBox0).append(errFeild);
+	quesTextCont0.append(inputBox0);
 	
-	quesTextCont1.append(inputBox1).append(errFeild);
+	quesTextCont1.append(inputBox1).append(appendErrorMessage());
 
 	var quesTextCont2 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2123,7 +2268,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox2.attr("value",val);
 	}
-	quesTextCont2.append(inputBox2).append(errFeild);
+	quesTextCont2.append(inputBox2).append(appendErrorMessage());
 
 	var quesTextCont3 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2138,7 +2283,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox3.attr("value",val);
 	}
-	quesTextCont3.append(inputBox3).append(errFeild);
+	quesTextCont3.append(inputBox3).append(appendErrorMessage());
 	
 	var quesTextCont4 = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
@@ -2152,7 +2297,7 @@ function getPreviousEmployementQuestions(value) {
 	if(val!=""){
 		inputBox4.attr("value",val);
 	}
-	quesTextCont4.append(inputBox4).append(errFeild);
+	quesTextCont4.append(inputBox4).append(appendErrorMessage());
 
 	optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
@@ -2185,7 +2330,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     if(value&&!value.selected)
         flag=false;
     //appUserDetails.employed ="true";
-    var errFeild=appendErrorMessage();
+ 
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var wrapper = $('<div>').attr({
@@ -2209,7 +2354,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedIncome",
     			"value" : val
     		});
-    		optionContainer.append(inputBox);
+    		optionContainer.append(inputBox).append(appendErrorMessage());
     		container.append(quesTextCont).append(optionContainer);
     		
     		var container1 = $('<div>').attr({
@@ -2230,7 +2375,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedYears",
     			"value" : val
     		});
-    		optionContainer1.append(inputBox1);
+    		optionContainer1.append(inputBox1).append(appendErrorMessage);
     		container1.append(quesTextCont1).append(optionContainer1);
     		
     		wrapper.append(container).append(container1);
@@ -4784,9 +4929,9 @@ $.ajax({
 		success:function(data){
 		
            // alert('createLoan data is '+data)
-			if(data==""){
+			/*if(data==""){
                 $('#center-panel-cont').html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
-            }else{
+            }else{*/
                 var ob;
                 try{
                     ob=JSON.parse(data);
@@ -4796,7 +4941,7 @@ $.ajax({
                 }
                // alert('createLoan data is '+data)
                 paintLockRate(ob, appUserDetails);
-            }
+            /*}*/
             $('#overlay-loader').hide();
 		},
 		error:function(erro){

@@ -296,9 +296,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	quesContxts.push(contxt);
     }
     
-   
-    
-    
+
     
 
     var saveAndContinueButton = $('<div>').attr({
@@ -339,10 +337,23 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	if($('.ce-option-checkbox').hasClass('app-option-checked')){
     		
     	}else{
-    		var isSuccess=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
-    		if(!isSuccess){
-    			return false;
-    		}
+    		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
+        	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),message);
+        	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+        	if(propState==""||propState==undefined ||propState==null){
+        		showErrorToastMessage(stateErrorMessage);
+        		return false;
+        	}
+
+        	if(!propertQuestionOne){
+        		return false;
+        	}
+        	if(!propertQuestionTwo){
+        		return false;
+        	}
+        	if(!propertQuestionfour){
+        		return false;
+        	}
     	}
     	//alert(isSellYourhome);
     	
@@ -393,6 +404,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     $('#app-right-panel').append(saveAndContinueButton);
     
     addStateCityZipLookUp();
+    addCityStateZipLookUpForProperty();
+   
 }
 
 
@@ -487,6 +500,8 @@ function paintWhereYouLiveStep(){
 	
     var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
     
+    $('#app-right-panel').find('.app-ques-wrapper').append(addRemoveRow);
+    
     var btn=$(addRemoveRow).find(".add-btn");
     if(appUserDetails.purchaseDetails.buyhomeZipSec&&appUserDetails.purchaseDetails.buyhomeZipSec!=""){
         addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipSec);
@@ -530,7 +545,6 @@ function paintWhereYouLiveStep(){
 		
 	      });
 	
-    $('#app-right-panel').find('.app-ques-wrapper').append(addRemoveRow);
     
     $('#app-right-panel').append(saveAndContinueButton);
 
@@ -546,8 +560,8 @@ function addZipField(fieldName,element,value){
         });
         
         var inputElement = $('<input>').attr({
-            "name" : fieldName+inputField.parent().children('input').size(),
-            "class" : "ce-input ce-input-add"
+            "name" : fieldName+inputField.parent().parent().find(".app-options-cont").size(),
+            "class" : "app-input"
         });
         
         inputCont.append(inputElement);
