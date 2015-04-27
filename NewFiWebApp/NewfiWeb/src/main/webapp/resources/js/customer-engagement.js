@@ -915,9 +915,9 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             success: function(data) {
             	
                 $('#overlay-loader').hide();
-                if(data==""){
+               /* if(data==""){
                     $(parentContainer).html("Sorry, We could not find suitable products for you!");
-                }else{
+                }else{*/
                     var ob;
                     try{
                         ob=JSON.parse(data);
@@ -927,7 +927,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                     }
                    // alert('createLoan data is '+data)
                     paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
-                }
+               /* }*/
                   
                  
             },

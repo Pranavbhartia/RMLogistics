@@ -598,13 +598,19 @@ $.ajax({
 		type:"POST",
 		datatype : "application/json",
 		success:function(data){
-		
-           // alert('fetchLockRatedata data is '+JSON.stringify(data));
-            if(data==""){
-                $('#center-panel-cont').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");
-            }else{
-			    fixAndLoakYourRatePage2(JSON.parse(data), appUserDetails) ;
+		    var ob;
+            try{
+                ob=JSON.parse(data);
+            }catch(exception){
+                ob={};
+                console.log("Invalid Data");
             }
+           // alert('fetchLockRatedata data is '+JSON.stringify(data));
+            /*if(data==""){
+                $('#center-panel-cont').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");
+            }else{*/
+			    fixAndLoakYourRatePage(ob, appUserDetails) ;
+            /*}*/
 			$('#overlay-loader').hide();
 		},
 		error:function(erro){
@@ -621,11 +627,16 @@ function fixAndLoakYourRatePage2(lqbData1, appUserDetails) {
     if(lqbData1){
         var lqbFileId ={};
         $('#center-panel-cont').html("");
-        var loanNumber = lqbData1[0].loanNumber;
-        loan.lqbFileId=loanNumber;  
+        try{
+            var loanNumber = lqbData1[0].loanNumber;
+            loan.lqbFileId=loanNumber;  
+            
+            appUserDetails.loan.lqbFileId = loanNumber;
+            lockratedata.sLoanNumber=loanNumber;
+        }catch(exception){
+            console.log("caught Exception : "+exception);
+        }
 
-        appUserDetails.loan.lqbFileId = loanNumber;
-        lockratedata.sLoanNumber=loanNumber;
         lqbData1 =  modifiedLQBJsonResponse(lqbData1);
     }
     
@@ -644,11 +655,16 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
 
 		var lqbFileId ={};
         $('#center-panel-cont').html("");
-        var loanNumber = lqbData[0].loanNumber;
-       loan.lqbFileId=loanNumber;  
+        try{
+            var loanNumber = lqbData[0].loanNumber;
+            loan.lqbFileId=loanNumber;  
+
      //  alert('loan Number'+loanNumber);
-        appUserDetails.loan.lqbFileId = loanNumber;
-        lockratedata.sLoanNumber=loanNumber;
+            appUserDetails.loan.lqbFileId = loanNumber;
+            lockratedata.sLoanNumber=loanNumber;
+        }catch(exception){
+            console.log("caught Exception : "+exception);
+        }
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         //saveAndUpdateLoanAppForm(appUserDetails);
         
@@ -1202,7 +1218,10 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     // add rows in left column
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVoObj.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 = getLoanSummaryRow("Interest Rate", parseFloat(rateVoObj.teaserRate).toFixed(3) +" %", "lockInterestRate");
+    var val="";
+    if(rateVoObj.teaserRate)
+        val=parseFloat(rateVoObj.teaserRate).toFixed(3)+" %";
+    var lcRow3 = getLoanSummaryRow("Interest Rate", val , "lockInterestRate");
     
     if(appUserDetails.refinancedetails.refinanceOption != "REFCO")
     var lcRow4 = getLoanAmountRow("Loan Amount",showValue(loanAmount), "loanAmount");
