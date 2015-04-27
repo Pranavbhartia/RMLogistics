@@ -562,8 +562,8 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "totEstResDepWthLen":
     		fun=function(){
-    			var val1=getFloatValue(closingCostHolder.valueSet["taxResrv1004"]);
-    			var val2=getFloatValue(closingCostHolder.valueSet["hazInsReserve1002"]);
+    			var val1=getFloatValue(closingCostHolder["taxResrv1004"].getValueForItem());
+    			var val2=getFloatValue(closingCostHolder["hazInsReserve1002"].getValueForItem());
     			var result=val1+val2;
     			return result;
     		};
@@ -637,11 +637,25 @@ function updateOnSlide(valueSet){
 
 function getLQBObj(yearValues){
 	if(!appUserDetails.loan||!appUserDetails.loan.isRateLocked){
-	    var rateVO = yearValues[yearValues.length-1].rateVO;
-	    var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
-	    var ob=rateVO[index];
-	    ob.yearData=yearValues[yearValues.length-1].value;
-	    return rateVO[index];
+		try{
+		    var rateVO = yearValues[yearValues.length-1].rateVO;
+		    var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
+		    var ob=rateVO[index];
+		    ob.yearData=yearValues[yearValues.length-1].value;
+		    return rateVO[index];
+		}catch(exception){
+			var ob={
+				"payment":0,
+				"yearData":"",
+				"teaserRate":"",
+				"APR":"",
+				"lLpTemplateId":"",
+				"point":"",
+				"closingCost":"",
+				"dummyData":true
+			};
+			return ob;
+		}
 	}else{
 		return JSON.parse(appUserDetails.loan.lockedRateData);
 	}
