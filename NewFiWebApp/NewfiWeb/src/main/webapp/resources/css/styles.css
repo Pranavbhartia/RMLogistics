@@ -615,7 +615,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
-	width: auto;
+	width: 120px;
 	color:#fff;
 	font-size: 15px;
 	background: #428bca;
