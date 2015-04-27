@@ -14,12 +14,12 @@
 
     <cache name="teaserRate" eternal="false"
         maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
-        timeToIdleSeconds="0" timeToLiveSeconds="6"
+        timeToIdleSeconds="0" timeToLiveSeconds="1"
         memoryStoreEvictionPolicy="LRU" />
         
     <cache name="lqbAuthToken" eternal="false"
         maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
-        timeToIdleSeconds="0" timeToLiveSeconds="6000"
+        timeToIdleSeconds="0" timeToLiveSeconds="1"
         memoryStoreEvictionPolicy="LRU" />
         
         
