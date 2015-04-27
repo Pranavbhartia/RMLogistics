@@ -1407,7 +1407,7 @@ function paintCustomerApplicationPageStep2() {
     	contxt.drawQuestion();  	
     	quesContxts.push(contxt);
     }
-    $('input[name="coBorrowerStreetAddress"]').css("width","500px");
+
     //alert('isCoBorrowerSpouse'+ $('input[name="isCoBorrowerSpouse"]').val())
     
     var saveAndContinueButton = $('<div>').attr({
