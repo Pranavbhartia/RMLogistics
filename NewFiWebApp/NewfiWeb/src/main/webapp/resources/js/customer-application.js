@@ -455,7 +455,7 @@ function getApplicationTextQues(question) {
         "class": "app-input",
         "name": question.name,
         "value":question.value
-    }).on("keyup", function(e){
+    }).on("keydown", function(e){
           	
         if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
 			$('input[name='+question.name+']').maskMoney({
@@ -1451,6 +1451,7 @@ function paintCustomerApplicationPageStep2() {
     	
     });
     $('#app-right-panel').append(saveAndContinueButton);
+    
     addStateCityZipLookUp();
 }
 
@@ -1661,6 +1662,7 @@ function incomesSelectALLThatApply() {
             option.onselect(option.value,option.data,option.name);
         }
     }
+    
     return incomesSelectALLThatApplyDiv;
 }
  
@@ -1827,7 +1829,9 @@ function paintMyIncome() {
 		$(".myassets").click();
 		
 	}
+    
     $('#app-right-panel').append(saveAndContinueButton);
+    
 }
  
 function getAccountValues(element,key,accType,balance,forNewHome){
@@ -2032,7 +2036,21 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
     		}
     	}
+    	
     });
+});
+
+$('body').on('keypress',"input[name='beforeTax']",function(){
+	
+	$("input[name='beforeTax']").maskMoney({
+		thousands:',',
+		decimal:'.',
+		allowZero:true,
+		prefix: '$',
+	    precision:0,
+	    allowNegative:false
+	});	
+	
 });
 
 function getPreviousEmployementQuestions(value) {
@@ -4042,7 +4060,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
     		datatype : "application/json",
     		success:function(data){
     			
-    			//appUserDetails=data;
+    			appUserDetails=data;
                 newfi.appUserDetails=JSON.stringify(appUserDetails);
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)

@@ -718,49 +718,46 @@ function getPopupQuestionsContainer(questions,value) {
 
 function saleYourCurrentHome(){
 	
+    var currentHomePrice = "";
+	if(appUserDetails.propertyTypeMaster.currentHomePrice)
+		currentHomePrice = appUserDetails.propertyTypeMaster.currentHomePrice;
+	var homemortgagebalance ="";
+	homemortgagebalance = appUserDetails.propertyTypeMaster.currentHomeMortgageBalance;
+	var inverstInPurchase = "";
+		inverstInPurchase = appUserDetails.propertyTypeMaster.newHomeBudgetFromsale; 
+	
+	
 	var quesHeaderTxt = "Sale of your current home";
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
-    
-    
 	    var questions = [
 	    {
 	        type: "desc",
 	        text: "What's the listing price of your current home?",
 	        name: "homelistprice",
-	        value: ""
+	        value: currentHomePrice
 	    }, {
 	        type: "desc",
 	        text: "What's the mortage balance of your current home?",
 	        name: "homemortgagebalance",
-	        value: ""
+	        value: homemortgagebalance
 	    }, {
 	        type: "desc",
 	        text: "How much from this sale do you intend to purchase towards your new home ?",
 	        name: "inverstInPurchase",
-	        value: ""
+	        value: inverstInPurchase
 	    }];
 	
-	    var questionsContainer = getQuestionsContainer(questions);
+	    var questionsContainer = getPopupQuestionsContainer(questions);
 	    quesHeaderTextCont.append(questionsContainer);
 	    
        return quesHeaderTextCont;	    
 }
 
-$('body').on('click','.app-account-wrapper .ce-option-checkbox',function(e){
-	e.stopPropagation();
-	
-	if($(this).hasClass('app-option-checked')){
-		$(this).removeClass('app-option-checked');
-		$(this).next('.ce-sub-option-wrapper').hide();
-	}else{
-		$(this).addClass('app-option-checked');
-		$(this).next('.ce-sub-option-wrapper').show();
-	}
-});
+
 
 function bankAccount(parentContainer,isSpouse){
 	
@@ -1147,6 +1144,19 @@ function getAddAccountBtn(questions) {
 	return addAccountBtn;
 }
 
+
+
+$('body').on('click','.app-account-wrapper .ce-option-checkbox',function(e){
+	e.stopPropagation();
+	
+	if($(this).hasClass('app-option-checked')){
+		$(this).removeClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').hide();
+	}else{
+		$(this).addClass('app-option-checked');
+		$(this).next('.ce-sub-option-wrapper').show();
+	}
+});
 
 ///////////////BuyHomeApplication /////////////////
 

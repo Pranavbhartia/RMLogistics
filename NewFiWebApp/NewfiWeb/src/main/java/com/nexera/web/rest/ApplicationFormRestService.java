@@ -820,7 +820,7 @@ public class ApplicationFormRestService {
 				}
 			}
 
-			// return new Gson().toJson(loaAppFormVO);
+			return new Gson().toJson(loaAppFormVO);
 
 		} catch (Exception e) {
 			e.printStackTrace();
