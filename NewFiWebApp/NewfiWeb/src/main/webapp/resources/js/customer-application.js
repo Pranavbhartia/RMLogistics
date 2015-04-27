@@ -4909,9 +4909,9 @@ $.ajax({
 		success:function(data){
 		
            // alert('createLoan data is '+data)
-			if(data==""){
+			/*if(data==""){
                 $('#center-panel-cont').html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
-            }else{
+            }else{*/
                 var ob;
                 try{
                     ob=JSON.parse(data);
@@ -4921,7 +4921,7 @@ $.ajax({
                 }
                // alert('createLoan data is '+data)
                 paintLockRate(ob, appUserDetails);
-            }
+            /*}*/
             $('#overlay-loader').hide();
 		},
 		error:function(erro){
