@@ -102,43 +102,8 @@
 			
 			
 			<!-- Footer -->
-			<!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
-			<footer id="footer" role="contentinfo">
-              <section class="section swatch-black">
-                <div class="container">
-                    <div class="row element-normal-top element-normal-bottom">
-                       <div class="col-md-4">
-                          <div id="text-3" class="sidebar-widget  widget_text">
-                             <h3 class="sidebar-header">Links</h3>			
-                             <div class="textwidget">
-                             <div id="footer_legal" class="sidebar-widget  widget_recent_entries">
-                             <ul>
-                               <li class="clearfix"><a href="http://52.74.75.203:8080/NewfiWeb/customerEngagement.do" target="_blank">Check Rates</a></li><li class="clearfix"><a href="http://52.74.75.203:8080/NewfiWeb/" target="_blank">Login</a></li>
-                               <li class="clearfix"><a href="http://nexeraholding.com/" target="_blank">Nexera Holding</a></li>
-                             </ul>
-                            </div>
-                            </div>
-		                    </div>
-		                    </div>
-                        <div class="col-md-4 text-left"><div id="text-2" class="sidebar-widget  widget_text"><h3 class="sidebar-header">Legal</h3>			
-                        <div class="textwidget"><div id="footer_legal" class="sidebar-widget  widget_recent_entries">
-                        <ul>
-                            <li class="clearfix"><a href="http://newfi.com/newfi/information/#licensing">Licensing</a></li><li class="clearfix"><a href="http://www.nmlsconsumeraccess.org/" target="_blank">NMLS Consumer Access</a></li>
-                            <li class="clearfix"><a href="http://newfi.com/newfi/privacy-policy/">Privacy Policy</a></li>
-                            <li class="clearfix"><a href="http://newfi.com/newfi/information/">Terms of Use</a></li>
-                        </ul>
-                       </div></div>
-		               </div></div>
-                      <div class="col-md-4 text-left"><div id="text-4" class="sidebar-widget  widget_text">			
-                      <div class="textwidget"><div class="textwidget"><img src="http://www.realtechhm.com/newfi/wp-content/uploads/2015/04/newfi_logo.png" width="71" height="30" alt="NewFi"><br>
-                      a new way to finance your home<br><br>
-                      2200 Powell Street, Suite 340<br>
-                      Emeryville, CA  94608<br>
-                      <a href="tel:+18883163934">Call now 1-888-316-3934</a></div></div>
-		             </div></div></div>
-                     </div>
-                    </section>
-                    </footer>
+			 <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
+			
 		</div>
 	</div>
 </body>
