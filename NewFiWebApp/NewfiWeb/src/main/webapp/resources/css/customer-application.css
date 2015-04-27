@@ -198,3 +198,7 @@
 .ce-err-input{
 	  border: 1px solid #dd4b39;
 }
+
+.app-append-width {
+    width: 212px;
+}

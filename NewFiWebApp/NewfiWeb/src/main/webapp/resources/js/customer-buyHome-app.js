@@ -296,9 +296,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	quesContxts.push(contxt);
     }
     
-   
-    
-    
+
     
 
     var saveAndContinueButton = $('<div>').attr({
