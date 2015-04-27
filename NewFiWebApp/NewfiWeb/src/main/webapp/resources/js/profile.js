@@ -920,6 +920,32 @@ function initializeCityLookup(searchData){
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);
 	}*/
+	
+}
+
+function initializeCityLookupForProperty(searchData){
+
+		$('#cityID').autocomplete({
+			minLength : 0,
+			source : searchData,
+			focus : function(event, ui) {
+				/*$("#cityId").val(ui.item.label);
+				return false;*/
+				event.stopPropagation();
+			},
+			select : function(event, ui) {
+				/*$("#cityId").val(ui.item.label);
+				return false;*/
+				event.stopPropagation();
+			},
+			open : function() {
+				$('.ui-autocomplete').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('.ui-autocomplete').perfectScrollbar('update');
+			}
+		});
+
 }
 
 function getStateRow(user) {
@@ -1051,7 +1077,36 @@ function appendStateDropDown(elementToApeendTo,states) {
 		
 		parentToAppendTo.append(stateRow);
 	}
+	
+		
+		
+	
 }
+function appendStateDropDownForProperty(elementToApeendTo,states){
+	var parentToAppendTo = $('#'+elementToApeendTo);
+	parentToAppendTo.html('');
+
+	for(var i=0; i<states.length; i++){
+		var stateRow = $('<div>').attr({
+			"class" : "state-dropdown-row"
+		}).html(states[i].stateCode)
+		.bind('click',function(e){
+			e.stopPropagation();
+			$('#stateID').val($(this).html());
+			currentZipcodeLookUp = [];
+			$('#cityID').val('');
+			$('#zipcodeID').val('');
+			var stateCode = $(this).html();
+			
+			var stateId = findStateIdForStateCode(stateCode);
+			toggleStateDropDown();
+			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
+		});
+		
+		parentToAppendTo.append(stateRow);
+}
+}
+
 
 function appendManagerStateDropDown(elementToApeendTo,stateList) {
 
@@ -1270,8 +1325,32 @@ function initializeZipcodeLookup(searchData){
 	});/*.autocomplete("instance")._renderItem = function(ul, item) {
 		return $("<li>").append(item.label).appendTo(ul);
 	}*/
-}
 
+	
+
+}
+function initializeZipcodeLookupForProperty(searchData){
+	$('#zipcodeID').autocomplete({
+		minLength : 0,
+		source : searchData,
+		focus : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+			event.stopPropagation();
+		},
+		select : function(event, ui) {
+			/*$("#zipcodeId").val(ui.item.label);
+			return false;*/
+			event.stopPropagation();
+		},
+		open : function() {
+			$('.ui-autocomplete').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('.ui-autocomplete').perfectScrollbar('update');
+		}
+	});
+}
 function getPhone1Row(user) {
 	var span=$('<span>').attr({
 		"class" : "mandatoryClass"
