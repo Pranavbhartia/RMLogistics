@@ -1944,6 +1944,9 @@ $(document).on('click', '#alert-notification-btn', function(e) {
 
 function showAlertNotificationPopup() {
     $('#alert-popup-wrapper').show();
+    $('#alert-popup-wrapper').perfectScrollbar({
+        suppressScrollX : true
+    });
 }
 
 function hideAlertNotificationPopup() {

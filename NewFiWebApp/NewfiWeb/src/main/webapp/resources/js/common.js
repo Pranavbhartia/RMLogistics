@@ -696,8 +696,6 @@ function getInitials (firstName, lastName)
 }
 
 
-$('#alert-popup-wrapper').perfectScrollbar({
-	suppressScrollX : true
-});
+
 
 
