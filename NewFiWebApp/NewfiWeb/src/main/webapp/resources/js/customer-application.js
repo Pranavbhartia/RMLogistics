@@ -4767,9 +4767,17 @@ $.ajax({
 		
            // alert('createLoan data is '+data)
 			if(data==""){
-                $('#center-panel-cont').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");
+                $('#center-panel-cont').html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
             }else{
-                paintLockRate(JSON.parse(data), appUserDetails);
+                var ob;
+                try{
+                    ob=JSON.parse(data);
+                }catch(exception){
+                    ob={};
+                    console.log("Invalid Data");
+                }
+               // alert('createLoan data is '+data)
+                paintLockRate(ob, appUserDetails);
             }
             $('#overlay-loader').hide();
 		},
@@ -5115,9 +5123,15 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
         data:{"appFormData" : JSON.stringify(appUserDetails)},
         datatype : "application/json",
         success:function(data){
-        
+            var ob;
+            try{
+                ob=JSON.parse(data);
+            }catch(exception){
+                ob={};
+                console.log("Invalid Data");
+            }
            // alert('createLoan data is '+data)
-            paintLockRate(JSON.parse(data), appUserDetails);
+            paintLockRate(ob, appUserDetails);
              $('#overlay-loader').hide();
         },
         error:function(erro){
