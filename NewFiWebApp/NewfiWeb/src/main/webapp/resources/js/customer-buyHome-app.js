@@ -487,6 +487,8 @@ function paintWhereYouLiveStep(){
 	
     var addRemoveRow = getAddRemoveButtonRow("buyhomeZipPri");
     
+    $('#app-right-panel').find('.app-ques-wrapper').append(addRemoveRow);
+    
     var btn=$(addRemoveRow).find(".add-btn");
     if(appUserDetails.purchaseDetails.buyhomeZipSec&&appUserDetails.purchaseDetails.buyhomeZipSec!=""){
         addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipSec);
@@ -530,7 +532,6 @@ function paintWhereYouLiveStep(){
 		
 	      });
 	
-    $('#app-right-panel').find('.app-ques-wrapper').append(addRemoveRow);
     
     $('#app-right-panel').append(saveAndContinueButton);
 
@@ -546,8 +547,8 @@ function addZipField(fieldName,element,value){
         });
         
         var inputElement = $('<input>').attr({
-            "name" : fieldName+inputField.parent().children('input').size(),
-            "class" : "ce-input ce-input-add"
+            "name" : fieldName+inputField.parent().parent().find(".app-options-cont").size(),
+            "class" : "app-input"
         });
         
         inputCont.append(inputElement);
