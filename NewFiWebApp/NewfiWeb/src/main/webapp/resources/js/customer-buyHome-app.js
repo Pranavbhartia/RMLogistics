@@ -339,10 +339,23 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	if($('.ce-option-checkbox').hasClass('app-option-checked')){
     		
     	}else{
-    		var isSuccess=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
-    		if(!isSuccess){
-    			return false;
-    		}
+    		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
+        	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),message);
+        	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+        	if(propState==""||propState==undefined ||propState==null){
+        		showErrorToastMessage(stateErrorMessage);
+        		return false;
+        	}
+
+        	if(!propertQuestionOne){
+        		return false;
+        	}
+        	if(!propertQuestionTwo){
+        		return false;
+        	}
+        	if(!propertQuestionfour){
+        		return false;
+        	}
     	}
     	//alert(isSellYourhome);
     	
@@ -393,6 +406,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
     $('#app-right-panel').append(saveAndContinueButton);
     
     addStateCityZipLookUp();
+    addCityStateZipLookUpForProperty();
+   
 }
 
 

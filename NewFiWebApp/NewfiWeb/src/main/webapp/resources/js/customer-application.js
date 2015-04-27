@@ -680,10 +680,79 @@ function paintCheckBox(){
 	return wrapper.append(optionContainer);
 
 }
+function addCityStateZipLookUpForProperty(){
+synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+    
+    var stateDropDownWrapper = $('<div>').attr({
+    	"id" : "state-dropdown-wrapper-property",
+    	"class" : "state-dropdown-wrapper hide"
+    });
 
+    $('input[name="propState"]').after(stateDropDownWrapper);
+	$('input[name="propState"]').attr("id","stateID").addClass('prof-form-input-statedropdown').bind('click',function(e){
 
+		e.stopPropagation();
+		if($('#state-dropdown-wrapper-property').css("display") == "none"){
+			appendStateDropDownForProperty('state-dropdown-wrapper-property',stateList);
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
+		}else{
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
+		}
+	}).bind('keyup',function(e){
+		var searchTerm = "";
+		if(!$(this).val()){
+			return false;
+		}
+		searchTerm = $(this).val().trim();
+		var searchList = searchInStateArray(searchTerm);
+		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchList);
+	});
+	
+$('input[name="propCity"]').attr("id","cityID").bind('click keydown',function(){
 
+		var searchData = [];
+		for(var i=0; i<currentZipcodeLookUp.length; i++){
+			searchData[i] = currentZipcodeLookUp[i].cityName;
+		}
+		
+		var uniqueSearchData = searchData.filter(function(itm,i,a){
+		    return i==a.indexOf(itm);
+		});
+		
+		initializeCityLookupForProperty(uniqueSearchData);
+	}).bind('focus', function(){ 
+		$(this).trigger('keydown');
+		$(this).autocomplete("search"); 
+	}).width(200);
 
+$('input[name="propZipCode"]').attr("id","zipcodeID").bind('click keydown',function(){
+
+	var selectedCity = $('#cityID').val();
+	var searchData = [];
+	var count = 0;
+	for(var i=0; i<currentZipcodeLookUp.length; i++){
+		if(selectedCity == currentZipcodeLookUp[i].cityName){
+			searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+		}
+	}
+
+	initializeZipcodeLookupForProperty(searchData);
+}).bind('focus', function(){ 
+	$(this).trigger('keydown');
+	$(this).autocomplete("search"); 
+});
+
+}
 
 function addStateCityZipLookUp(){
 synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -695,6 +764,10 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
+    
+   
+  
+    
     
     
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
@@ -734,6 +807,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 		appendStateDropDown('state-dropdown-wrapper',searchList);
 	});
     
+
     
     
     $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
@@ -773,7 +847,6 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	}).width(200);
  
  
-    
     $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
 		
 		var selectedCity = $('#cityId').val();
