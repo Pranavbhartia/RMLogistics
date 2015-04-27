@@ -375,50 +375,94 @@ function showValue(number) {
 }
 
 
-
+function getClosingCostLabel(item){
+	//Note case string should not be changed if text need to be changed then string being returned need to be modified
+	switch(item){
+       	case "Lender Fee":
+			return "Lender Fee";
+		case "This is your cost or credit based on rate selected":
+			return "This is your cost or credit based on rate selected" ;
+		case "Estimated Lender Costs":
+			return "Estimated Lender Costs" ;
+		case "Appraisal Fee":
+			return "Appraisal Fee";
+		case "Credit Report":
+			return "Credit Report";
+		case "Flood Certification":
+			return "Flood Certification";
+		case "Wire Fee":
+			return "Wire Fee";
+		case "Owners Title Insurance":
+			return "Owners Title Insurance";
+		case "Lenders Title Insurance":
+			return "Lenders Title Insurance";
+		case "Closing/Escrow Fee":
+			return "Closing/Escrow Fee";
+		case "Recording Fee":
+			return "Recording Fee";
+		case "City/County Tax stamps":
+			return "City/County Tax stamps";
+		case "Total Estimated Third Party Costs":
+			return "Total Estimated Third Party Costs";
+		case "Interest":
+			return "Interest";
+		case "Homeowners Insurance":
+			return "Homeowners Insurance";
+		case "Total Prepaids":
+			return "Total Prepaids";
+		case "Tax Reserve - Estimated 2 Month(s)":
+			return "Tax Reserve - Estimated 2 Month(s)";
+		case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
+			return "Homeowners Insurance Reserve - Estimated 2 Month(s)";
+		case "Total Estimated Reserves Deposited in Escrow Account":
+			return "Total Estimated Reserves Deposited in Escrow Account";
+		case "Total Estimated Closing Cost":
+			return "Total Estimated Closing Cost";	
+    }
+}
 
 var closingCostHolder;
 function objectKeyMakerFunction(item){
     switch(item){
-       	case "Lender Fee":
+       	case getClosingCostLabel("Lender Fee"):
 			return "lenderFee813";
-		case "Credit/Charge":
+		case getClosingCostLabel("This is your cost or credit based on rate selected"):
 			return "creditOrCharge802" ;
-		case "Estimated Lender Costs":
+		case getClosingCostLabel("Estimated Lender Costs"):
 			return "TotEstLenCost" ;
-		case "Appraisal Fee":
+		case getClosingCostLabel("Appraisal Fee"):
 			return "appraisalFee804";
-		case "Credit Report":
+		case getClosingCostLabel("Credit Report"):
 			return "creditReport805";
-		case "Flood Certification":
+		case getClosingCostLabel("Flood Certification"):
 			return "floodCertification807";
-		case "Wire Fee":
+		case getClosingCostLabel("Wire Fee"):
 			return "wireFee812";
-		case "Owners Title Insurance":
+		case getClosingCostLabel("Owners Title Insurance"):
 			return "ownersTitleInsurance1103";
-		case "Lenders Title Insurance":
+		case getClosingCostLabel("Lenders Title Insurance"):
 			return "lendersTitleInsurance1104";
-		case "Closing/Escrow Fee":
+		case getClosingCostLabel("Closing/Escrow Fee"):
 			return "closingEscrowFee1102";
-		case "Recording Fee":
+		case getClosingCostLabel("Recording Fee"):
 			return "recordingFees1201";
-		case "City/County Tax stamps":
+		case getClosingCostLabel("City/County Tax stamps"):
 			return "cityCountyTaxStamps1204";
-		case "Total Estimated Third Party Costs":
+		case getClosingCostLabel("Total Estimated Third Party Costs"):
 			return "totEstThdPtyCst";
-		case "Interest":
+		case getClosingCostLabel("Interest"):
 			return "interest901";
-		case "Homeowners Insurance":
+		case getClosingCostLabel("Homeowners Insurance"):
 			return "hazIns903";
-		case "Total Prepaids":
+		case getClosingCostLabel("Total Prepaids"):
 			return "totPrepaids";
-		case "Tax Reserve - Estimated 2 Month(s)":
+		case getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"):
 			return "taxResrv1004";
-		case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
+		case getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"):
 			return "hazInsReserve1002";
-		case "Total Estimated Reserves Deposited in Escrow Account":
+		case getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"):
 			return "totEstResDepWthLen";
-		case "Total Estimated Closing Cost":
+		case getClosingCostLabel("Total Estimated Closing Cost"):
 			return "totEstimatedClosingCost";	
     }
     return undefined;
@@ -449,7 +493,7 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "hazIns903":
     		fun=function(){
-    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+    			if(closingCostHolder.valueSet[key]&&getFloatValue(closingCostHolder.valueSet[key])!=0)
 		    		return closingCostHolder.valueSet[key];
 		    	else{
 		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){		    			
@@ -457,7 +501,7 @@ function getCalculationFunctionForItem(key){
 		    			var result=Math.round(.0035*purchaseValue)
 		    			return result;
 		    		}else{
-		    			var result=refinanceTeaserRate!=undefined?closingCostHolder.annualHomeownersInsurance:"";
+		    			var result=closingCostHolder!=undefined?closingCostHolder.annualHomeownersInsurance:"";
 		    			return result;
 		    		}
 		    	}
@@ -465,7 +509,7 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "taxResrv1004":
     		fun=function(){
-    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+    			if(closingCostHolder.valueSet[key]&&getFloatValue(closingCostHolder.valueSet[key])!=0)
 		    		return closingCostHolder.valueSet[key];
 		    	else{
 		    		if(closingCostHolder.loanType&&closingCostHolder.loanType=="Purchase"){
@@ -482,7 +526,7 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "hazInsReserve1002":
     		fun=function(){
-    			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
+    			if(closingCostHolder.valueSet[key]&&getFloatValue(closingCostHolder.valueSet[key])!=0)
 		    		return closingCostHolder.valueSet[key];
 		    	else{
 		    		return "$ 0";
@@ -510,8 +554,8 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "totPrepaids":
     		fun=function(){
-    			var val1=getFloatValue(closingCostHolder.valueSet["interest901"]);
-    			var val2=getFloatValue(closingCostHolder.valueSet["hazIns903"]);
+    			var val1=getFloatValue(closingCostHolder["interest901"].getValueForItem());
+    			var val2=getFloatValue(closingCostHolder["hazIns903"].getValueForItem());
     			var result=val1+val2;
     			return result;
     		};
@@ -526,7 +570,7 @@ function getCalculationFunctionForItem(key){
     		break;
     	case "cityCountyTaxStamps1204":
     		fun=function(){
-        		if(closingCostHolder.valueSet[key] && getFloatValue(closingCostHolder.valueSet[key])!= "0" )
+        		if(closingCostHolder.valueSet[key] && getFloatValue(closingCostHolder.valueSet[key])!= 0 )
 	        		return closingCostHolder.valueSet[key];
 	        	else
 	        		return "Varies by Location";
