@@ -244,7 +244,7 @@ function paintSpouseRefinanceSelfEmployed(divId,value) {
 	          "value": appUserDetails.customerSpouseDetail.selfEmployedIncome
 	         });
 
-	         optionContainer.append(inputBox);
+	         optionContainer.append(inputBox).append(appendErrorMessage());
 	         container.append(quesTextCont).append(optionContainer);
 	         
 	         
@@ -267,7 +267,7 @@ function paintSpouseRefinanceSelfEmployed(divId,value) {
 	          "value": ""
 	         });
 
-	         optionContainer1.append(inputBox1);
+	         optionContainer1.append(inputBox1).append(appendErrorMessage());
 	         container1.append(quesTextCont1).append(optionContainer1);
 	         
 	         wrapper.append(container).append(container1);
@@ -322,6 +322,7 @@ function paintSpouseRefinanceEmployed(divId,value) {
 
 
 function paintSpouseRefinanceDisability(divId,value) {
+	var errFeild=appendErrorMessage();
 	  var flag=true;
 	    if(value&&!value.selected)
 	        flag=false;
@@ -353,7 +354,7 @@ function paintSpouseRefinanceDisability(divId,value) {
 	          "value": appUserDetails.customerSpouseDetail.ssDisabilityIncome
 	         });
 
-	         optionContainer.append(inputBox);
+	         optionContainer.append(inputBox).append(errFeild);
 	         container.append(quesTextCont).append(optionContainer);
 	         wrapper.append(container);
 	         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
@@ -368,6 +369,7 @@ function paintSpouseRefinanceDisability(divId,value) {
 
 
 function paintSpouseRefinancePension(divId,value) {
+	var errFeild=appendErrorMessage();
 	  var flag=true;
 	    if(value&&!value.selected)
 	        flag=false;
@@ -399,7 +401,7 @@ function paintSpouseRefinancePension(divId,value) {
 	          "value": appUserDetails.customerSpouseDetail.monthlyPension
 	         });
 
-	         optionContainer.append(inputBox);
+	         optionContainer.append(inputBox).append(errFeild);
 	         container.append(quesTextCont).append(optionContainer);
 	         wrapper.append(container);
 	         if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
@@ -535,9 +537,9 @@ function getMultiTextQuestionSpouse(quesText,value) {
 			"type":"hidden",
 			"value" :val
 		});
-		quesTextCont0.append(inputBox0);
+		quesTextCont0.append(inputBox0).append(appendErrorMessage());
 		
-		quesTextCont1.append(inputBox1);
+		quesTextCont1.append(inputBox1).append(appendErrorMessage());
 
 		var quesTextCont2 = $('<div>').attr({
 			"class" : "ce-rp-ques-text"
@@ -555,7 +557,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 			"value":val
 		});
 
-		quesTextCont2.append(inputBox2);
+		quesTextCont2.append(inputBox2).append(appendErrorMessage());
 
 		var quesTextCont3 = $('<div>').attr({
 			"class" : "ce-rp-ques-text"
@@ -571,7 +573,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 			"value" : val
 		});
 
-		quesTextCont3.append(inputBox3);
+		quesTextCont3.append(inputBox3).append(appendErrorMessage());
 		
 		var quesTextCont4 = $('<div>').attr({
 			"class" : "ce-rp-ques-text"
@@ -585,7 +587,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 		if(val!=""){
 			inputBox4.attr("value",val);
 		}
-		quesTextCont4.append(inputBox4);
+		quesTextCont4.append(inputBox4).append(appendErrorMessage());
 
 		optionContainer/*.append(quesTextCont0)*/.append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(
 				quesTextCont3);

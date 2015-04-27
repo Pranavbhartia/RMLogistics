@@ -32,11 +32,43 @@ function validateInput(element,inputVal,message){
 	
 }
 
-function validateCheckbox(className,isCheckedClassName){
-	//$('.ce-option-checkbox[value=0]').hasClass('app-option-checked');
-	var checkedList=[];
-	if($('.'+className).hasClass(isCheckedClassName)){
-		checkedList=$('.'+className);
+function validateCheckbox(isStatus){
+
+        for(var i=0;i<$('.ce-option-checkbox').length;i++){
+	
+		if($('.ce-option-checkbox[value='+i+']').hasClass('app-option-checked')){
+			isStatus.push( $('.ce-option-checkbox[value='+i+']'));
+		}
+		
+	   }
+          return isStatus;
+}
+
+function validateInputOfChecked(isStatus){
+
+		if(isStatus.attr('value')==0){
+     	   var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input');
+            for(var count=0;count<inputs.length;count++){
+            	if(inputs[count].name!="customerEmploymentIncomeId"){
+            		 var isStatus=validateInput(inputs[count],inputs[count].value,message);
+                	 if(isStatus==false){
+                		 return false;
+                	 }
+            	}
+        	
+           }
+        }else{
+     	   var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input');
+	            for(var count=0;count<inputs.length;count++){
+	        	 var isStatus=validateInput(inputs[count],inputs[count].value,message);
+	        	 if(isStatus==false){
+	        		 return false;
+	        	 }
+        }
+            
+       
 	}
-	return checkedList;
+                   
+				   
+
 }
