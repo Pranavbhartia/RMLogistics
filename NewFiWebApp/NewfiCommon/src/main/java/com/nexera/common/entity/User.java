@@ -459,6 +459,7 @@ public class User implements Serializable, UserDetails {
 				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
 				        .getCarrierNameForEmail(user.getCarrierInfo());
 				userVO.setCarrierInfo(mobileCarrier.getCarrierEmail());
+
 			}
 
 		}

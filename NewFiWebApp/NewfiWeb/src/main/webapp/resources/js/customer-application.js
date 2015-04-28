@@ -1712,7 +1712,7 @@ function incomesSelectALLThatApply() {
     }
     var employedData={};
     if(appUserDetails && appUserDetails.customerEmploymentIncome)
-        employedData={"selected":true,"data":appUserDetails.customerEmploymentIncome};
+        employedData={"selected":appUserDetails.customerEmploymentIncome.length>0?true:false,"data":appUserDetails.customerEmploymentIncome};
     var childSupportIncome={};
     if(appUserDetails && appUserDetails.receiveAlimonyChildSupport)
         childSupportIncome={"selected":appUserDetails.receiveAlimonyChildSupport,"data":appUserDetails.childSupportAlimony};
@@ -1792,6 +1792,7 @@ function incomesSelectALLThatApply() {
 	
     var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
     $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
+    
     for(var i=0;i<options.length;i++){
         var option=options[i];
         if(option.onselect){
@@ -1820,10 +1821,9 @@ function paintMyIncome() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "ce-save-btn"
     }).html("Save & continue").on('click', function(event) {
-    	//TODO validation
+    
     	        var isStatus=[];
-    	     
-    	      	  isStatus  = validateCheckbox(isStatus);
+    	      	 isStatus  = validateCheckbox(isStatus);
     	   
     	  
     	        if(isStatus==null||isStatus==""){	
@@ -1839,45 +1839,45 @@ function paintMyIncome() {
     	        	
     	        }
     	       
-    	       
-    	        
-    	        
-    	        
     	      //End of validation
     
     
         var  customerEmploymentIncome = [];
          
-        $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
-            customerEmploymentIncome1 = {};
-
-            id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
-            if(id ==""){
-                id = undefined;
-            }
-
-            jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
-            EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
-            EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
-            EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
-
-            customerEmploymentIncome1.id  = id;
-            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
-            customerEmploymentIncome1.jobTitle=jobTitle;
-            customerEmploymentIncome1.employedAt = EmployedAt;
-            customerEmploymentIncome1.employedSince = EmployedSince;
-            var termp = {};
-            termp.customerEmploymentIncome = customerEmploymentIncome1;
-
-            customerEmploymentIncome.push(termp);
-        });
-         
+        if($("#ce-option_0").prev().hasClass('app-option-checked')){
+	       
+        	$("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+	            customerEmploymentIncome1 = {};
+	
+	            id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
+	            if(id ==""){
+	                id = undefined;
+	            }
+	
+	            jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
+	            EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
+	            EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
+	            EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+	
+	            customerEmploymentIncome1.id  = id;
+	            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
+	            customerEmploymentIncome1.jobTitle=jobTitle;
+	            customerEmploymentIncome1.employedAt = EmployedAt;
+	            customerEmploymentIncome1.employedSince = EmployedSince;
+	            var termp = {};
+	            termp.customerEmploymentIncome = customerEmploymentIncome1;
+	
+	            customerEmploymentIncome.push(termp);
+	        });
+        }
        
-        if(customerEmploymentIncome&&customerEmploymentIncome.length>0)
-            appUserDetails.customerEmploymentIncome=customerEmploymentIncome;
+     
+        appUserDetails.customerEmploymentIncome = customerEmploymentIncome;
        
-    	selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
+    	
+        selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
         selfEmployedYears = $('input[name="selfEmployedYears"]').val();
+        
         childAlimonySupport = $('input[name="childAlimonySupport"]').val();
         socialSecurityIncome = $('input[name="socialSecurityIncome"]').val();
         disabilityIncome = $('input[name="disabilityIncome"]').val();
@@ -1887,6 +1887,9 @@ function paintMyIncome() {
         appUserDetails.isselfEmployed = false;
         appUserDetails.receiveAlimonyChildSupport=false;
         appUserDetails.isssIncomeOrDisability=false;
+        
+        
+        
     	if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
             appUserDetails.isselfEmployed = true;
     		appUserDetails.selfEmployedMonthlyIncome= selfEmployedIncome;
@@ -1895,24 +1898,28 @@ function paintMyIncome() {
             appUserDetails.selfEmployedMonthlyIncome= undefined;
             appUserDetails.selfEmployedNoYear =undefined;
         }
+    	
     	if(childAlimonySupport != "" && childAlimonySupport != undefined){
             appUserDetails.receiveAlimonyChildSupport=true;
     		appUserDetails.childSupportAlimony =childAlimonySupport;
     	}else{
             appUserDetails.childSupportAlimony = undefined;
         }
+    	
     	if(socialSecurityIncome !="" && socialSecurityIncome != undefined){
     		appUserDetails.isssIncomeOrDisability=true;
     		appUserDetails.socialSecurityIncome = socialSecurityIncome;
     	}else{
             appUserDetails.socialSecurityIncome = undefined;
         }
+    	
     	if(disabilityIncome !="" && disabilityIncome != undefined){
             appUserDetails.isssIncomeOrDisability=true;
             appUserDetails.ssDisabilityIncome = disabilityIncome;
         }else{
             appUserDetails.ssDisabilityIncome = undefined;
         }
+    	
         if(pensionIncome !="" && pensionIncome != undefined){
             appUserDetails.ispensionOrRetirement=true;
             appUserDetails.monthlyPension = pensionIncome;
@@ -1925,6 +1932,8 @@ function paintMyIncome() {
         }else{
             appUserDetails.retirementIncome = undefined;
         }
+        
+        
         if(purchase == true){
             
             homeListPrice = $('input[name="homelistprice"]').val();
@@ -2009,7 +2018,7 @@ function paintRefinanceEmployed(divId,value) {
         if(value){
             var quesCont ;
             var incomes=value.data;
-            for(var i=0;i<incomes.length;i++){
+            for(var i=incomes.length-1;i>=0;i--){
                 var income=incomes[i].customerEmploymentIncome;
                     var quesTxt = "About how much do you make a year";
                     quesCont = getMultiTextQuestion(quesTxt,income);
@@ -2175,12 +2184,12 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     	var currentYear = new Date().getFullYear();
     	var currentMonth = new Date().getMonth();
     	
-    	if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
-    		/*$('#ce-option_0').find('.add-account-btn').trigger('click');*/
+    	/*if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
+    		$('#ce-option_0').find('.add-account-btn').trigger('click');
     		if($('#ce-option_0').children('.prev-employement-ques').length <= 0){
     			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
     		}
-    	}
+    	}*/
     	
     });
 });
@@ -2594,10 +2603,13 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		var optionIncome = $('<div>').attr({
 			"class" : "ce-option-ques-wrapper"
 		});
-        var selectedClas="";
+        
+		var selectedClas="";
+        
         if(options[i].data&&options[i].data.selected)
             selectedClas="app-option-checked";
-		var option = $('<div>').attr({
+		
+        var option = $('<div>').attr({
 			"class" : "ce-option-checkbox "+selectedClas,
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
