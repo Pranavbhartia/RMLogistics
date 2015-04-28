@@ -321,3 +321,11 @@ VALUES ('37','DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID','New user mail','2015-04-10 1
 
 INSERT INTO `newfi_schema`.`batchjobmaster`(`id`,`name`,`description`,`status`)
 VALUES ('3','user-batch-job','Batch job for user profile check','0');
+
+#Added by Utsav on 28th April at 06:07 PM IST
+ALTER TABLE `newfi_schema`.`user` 
+   ADD COLUMN `time_offset` bigint(100) NULL AFTER `token_generation_time`;
+   
+#Added by Utsav on 28th April at 06:24 PM IST   
+ALTER TABLE `newfi_schema`.`template` 
+	change `key` `key` varchar(100) character set utf8 collate utf8_general_ci NULL;

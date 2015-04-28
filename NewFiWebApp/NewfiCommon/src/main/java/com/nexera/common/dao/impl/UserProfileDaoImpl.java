@@ -574,7 +574,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("status", true));
-		criteria.add(Restrictions.eq("isProfileComplete", false));
 		return criteria.list();
 	}
 
