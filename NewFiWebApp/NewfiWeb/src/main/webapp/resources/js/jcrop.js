@@ -38,9 +38,9 @@ function initiateJcrop(input) {
 			 //var tempRatio = actWidth/newWidth;
             ratio = $('#pu-img').width() / myImage.width;
 
-			
 			$('#pu-img').Jcrop({
-				 setSelect : [ 0, 0, 50, 50 ],
+				/* setSelect : [ ratio,ratio,$('#pu-img').width()/2,$('#pu-img').height()/2]*/
+			 setSelect : [50, 0, 300,300],
 				onSelect : updatePreview,
 				onChange : updatePreview,
 				aspectRatio: 1,
