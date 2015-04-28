@@ -1,5 +1,6 @@
 package com.nexera.common.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.NotificationDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.Notification;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
@@ -113,13 +115,18 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 			} else
 				userRoleBased = userRest;
+			
+			if (loan == null) {
+				List<Loan> loanList = getLoanListForUser(user);
+				criteria.add(Restrictions.in("loan", loanList));
+			}
+			
 		}
 		if (userRoleBased != null)
 			criteria.add(Restrictions.or(noRolesAssigned, userRoleBased));
 		else {
 			criteria.add(noRolesAssigned);
 		}
-
 		// Fetch only unread notifications
 		criteria.add(Restrictions.eq("read", false));
 
@@ -139,6 +146,19 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 		List<Notification> notifications = criteria.list();
 
 		return notifications;
+	}
+
+	private List<Loan> getLoanListForUser(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanTeam.class);
+		criteria.add(Restrictions.eq("user", user));
+		List<LoanTeam> team = (List<LoanTeam>) criteria.list();
+		List<Loan> loanList = new ArrayList<Loan>();
+		for (LoanTeam loanTeam : team) {
+			Loan loan = loanTeam.getLoan();
+			loanList.add(loan);
+		}
+		return loanList;
 	}
 
 	/*
