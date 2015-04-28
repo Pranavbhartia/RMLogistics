@@ -448,7 +448,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		} finally {
-			if (serverFile.exists()) {
+			if (serverFile!= null && serverFile.exists()) {
 				serverFile.delete();
 			}
 		}
