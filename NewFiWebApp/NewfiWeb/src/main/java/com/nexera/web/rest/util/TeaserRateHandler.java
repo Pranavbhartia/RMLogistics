@@ -40,6 +40,15 @@ public class TeaserRateHandler extends DefaultHandler {
     	loanPrograms.add("30 YR FIXED CONFORMING");
     	loanPrograms.add("5/1 1 YR LIBOR CONFORMING  2/2/5 30 YR ARM");
     	loanPrograms.add("7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM");
+    	 loanPrograms.add("15 YR FIXED NONCONFORMING");
+    	 loanPrograms.add("20 YR FIXED NONCONFORMING");
+      	loanPrograms.add("30 YR FIXED NONCONFORMING");
+      	loanPrograms.add("5/1 1 YR LIBOR NONCONFORMING  2/2/5 30 YR ARM");
+      	loanPrograms.add("7/1 1 YR LIBOR NONCONFORMING  5/2/5 30 YR ARM");
+      	
+    	
+    	
+    	//loanPrograms.add("7/1 1 YR LIBOR CONFORMING  5/2/5 30 YR ARM");
         
     }
     
