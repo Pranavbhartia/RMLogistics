@@ -715,6 +715,8 @@ function homeProgressBaar(num) {
             .removeClass('ce-lp-complete').addClass('ce-lp-not-started');
         $('#homeStepNoId_' + i).html(i);
     }
+    if(typeof(newfiObject)==='undefined')
+            window.location.hash="#CE-"+(num-1);
     sessionStorage.refinaceData = JSON.stringify(buyHomeTeaserRate);
 }
 
