@@ -459,7 +459,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			newUser.getCustomerDetail().setProfileCompletionStatus(
 			        (int) Math.ceil(CommonConstants.PROFILE_STATUS_WEIGHTAGE));
 		}
-		if (newUser.getUserRole() != null && newUser.getRealtorDetail() != null) {
+		if (newUser.getUserRole() != null && newUser.getRealtorDetail() == null) {
 			if (newUser.getUserRole().getId() == UserRolesEnum.REALTOR
 			        .getRoleId()) {
 				newUser.setRealtorDetail(new RealtorDetail());
