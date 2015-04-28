@@ -35,21 +35,10 @@
 	<script>
 		$(document).ready(function() {
 			
-            
-            $(document).on('click','.soft-menu-icon',function(e){
-                e.stopPropagation();
-                $('.soft-menu-wrapper').slideToggle();
-            });
-
-            $(document).on('click','.soft-menu-wrapper',function(e){
-                e.stopPropagation();
-            });
-
-            $(document).on('click',function(e){
-                if($('.soft-menu-wrapper').css("display") == "block"){
-                    $('.soft-menu-wrapper').slideToggle();
-                }
-            });
+			adjustCustomerEngagementPageOnResize();
+			$(window).resize(function(){
+				adjustCustomerEngagementPageOnResize();
+			});
             
 			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){
 				$('input[name="currentMortgageBalance"]').maskMoney({
