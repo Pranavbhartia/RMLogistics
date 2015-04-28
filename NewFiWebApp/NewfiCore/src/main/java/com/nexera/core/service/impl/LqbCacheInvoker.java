@@ -1,5 +1,7 @@
 package com.nexera.core.service.impl;
 
+import java.util.Date;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,14 @@ public class LqbCacheInvoker implements LqbInterface {
 			HttpHeaders headers = new HttpHeaders();
 			HttpEntity request = new HttpEntity(appFormData, headers);
 			RestTemplate restTemplate = new RestTemplate();
+			Date date = new Date();
+			LOGGER.debug("Time taken before invoking this rest call for teaser rate is "
+			        + date);
 			String returnedUser = restTemplate.postForObject(muleUrlForLoan,
 			        request, String.class);
+			Date date1 = new Date();
+			LOGGER.debug("Time taken after invoking this rest call for teaser rate is "
+			        + date1);
 			JSONObject jsonObject = new JSONObject(returnedUser);
 
 			return jsonObject.get("responseMessage").toString();

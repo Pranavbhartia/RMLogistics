@@ -3,6 +3,7 @@ package com.nexera.core.batchprocessor;
 import java.util.Date;
 import java.util.List;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.NexeraUtility;
 
+@DisallowConcurrentExecution
 public class UserBatchProcessor extends QuartzJobBean {
 
 	private static final Logger LOGGER = LoggerFactory
@@ -60,11 +62,13 @@ public class UserBatchProcessor extends QuartzJobBean {
 					List<User> userList = userProfileService
 					        .fetchAllActiveUsers();
 					for (User user : userList) {
-						UserManager userManager = applicationContext
-						        .getBean(UserManager.class);
-						userManager.setUser(user);
-						userManager.setExceptionMaster(exceptionMaster);
-						taskExecutor.execute(userManager);
+						if (user.getTokenGeneratedTime() != null) {
+							UserManager userManager = applicationContext
+							        .getBean(UserManager.class);
+							userManager.setUser(user);
+							userManager.setExceptionMaster(exceptionMaster);
+							taskExecutor.execute(userManager);
+						}
 					}
 					taskExecutor.shutdown();
 				} finally {
