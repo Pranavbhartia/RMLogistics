@@ -28,6 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UserVO;
@@ -75,6 +76,9 @@ public class User implements Serializable, UserDetails {
 	private Date createdDate;
 	private Date lastLoginDate;
 	private Date tokenGeneratedTime;
+	
+	private Boolean mobileAlertsPreference;
+	private String carrierInfo;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -394,6 +398,28 @@ public class User implements Serializable, UserDetails {
 		this.todaysLoansCount = todaysLoansCount;
 	}
 
+	@Column(name = "mobile_alert_preference", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getMobileAlertsPreference() {
+		return mobileAlertsPreference;
+	}
+
+	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
+		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
+	
+	@Column(name = "carrier_info")
+	public String getCarrierInfo() {
+		return carrierInfo;
+	}
+
+	public void setCarrierInfo(String carrierInfo) {
+		this.carrierInfo = carrierInfo;
+	}
+	
+	
+	
+	
 	public static UserVO convertFromEntityToVO(final User user) {
 		UserVO userVO = new UserVO();
 		if (user != null) {
@@ -430,6 +456,13 @@ public class User implements Serializable, UserDetails {
 
 				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
+			
+			userVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
+			if (user.getCarrierInfo() != null) {
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum.getCarrierNameForEmail(user.getCarrierInfo());
+				userVO.setCarrierInfo(mobileCarrier.getCarrierEmail());
+			}
+			
 		}
 		return userVO;
 	}
@@ -473,6 +506,12 @@ public class User implements Serializable, UserDetails {
 			userModel.setRealtorDetail(RealtorDetail
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}
+		userModel.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
+		if (userVO.getCarrierInfo() != null) {
+			MobileCarriersEnum mobileCarrier = MobileCarriersEnum.getCarrierEmailForName(userVO.getCarrierInfo());
+			userModel.setCarrierInfo(mobileCarrier.getCarrierEmail());
+	    }
+		
 
 		return userModel;
 	}

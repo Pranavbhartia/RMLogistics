@@ -247,3 +247,9 @@ ALTER TABLE `newfi_schema`.`propertytypemaster`
 ADD COLUMN `property_street_address` VARCHAR(100) NULL AFTER `prop_ins_mon_yrly`,
 ADD COLUMN `property_city` VARCHAR(45) NULL AFTER `property_street_address`,
 ADD COLUMN `property_state` VARCHAR(45) NULL AFTER `property_city`;
+
+
+#Added by Abhishek 28 April
+alter table user add column mobile_alert_preference TINYINT(1) ,  add column carrier_info VARCHAR(255);
+ALTER TABLE customerdetails drop mobile_alert_preference ;
+ALTER TABLE customerdetails drop carrier_info;
