@@ -60,11 +60,13 @@ public class UserBatchProcessor extends QuartzJobBean {
 					List<User> userList = userProfileService
 					        .fetchAllActiveUsers();
 					for (User user : userList) {
-						UserManager userManager = applicationContext
-						        .getBean(UserManager.class);
-						userManager.setUser(user);
-						userManager.setExceptionMaster(exceptionMaster);
-						taskExecutor.execute(userManager);
+						if (user.getTokenGeneratedTime() != null) {
+							UserManager userManager = applicationContext
+							        .getBean(UserManager.class);
+							userManager.setUser(user);
+							userManager.setExceptionMaster(exceptionMaster);
+							taskExecutor.execute(userManager);
+						}
 					}
 					taskExecutor.shutdown();
 				} finally {
