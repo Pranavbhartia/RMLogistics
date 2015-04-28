@@ -249,6 +249,12 @@ ADD COLUMN `property_city` VARCHAR(45) NULL AFTER `property_street_address`,
 ADD COLUMN `property_state` VARCHAR(45) NULL AFTER `property_city`;
 
 
+
+#Added by Abhishek 28 April
+alter table user add column mobile_alert_preference TINYINT(1) ,  add column carrier_info VARCHAR(255);
+ALTER TABLE customerdetails drop mobile_alert_preference ;
+ALTER TABLE customerdetails drop carrier_info;
+
 #Added by Utsav on 28th April at 03:45 PM IST
 
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
@@ -321,6 +327,7 @@ VALUES ('37','DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID','New user mail','2015-04-10 1
 
 INSERT INTO `newfi_schema`.`batchjobmaster`(`id`,`name`,`description`,`status`)
 VALUES ('3','user-batch-job','Batch job for user profile check','0');
+
 
 #Added by Utsav on 28th April at 06:07 PM IST
 ALTER TABLE `newfi_schema`.`user` 

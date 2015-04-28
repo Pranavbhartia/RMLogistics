@@ -37,6 +37,9 @@ public class UserVO implements Serializable {
 	private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
 	private String loanManagerEmail;
 	private Date tokenGeneratedTime;
+	private Boolean mobileAlertsPreference;
+	private String carrierInfo;
+	
 
 	public UserVO() {
 
@@ -271,6 +274,23 @@ public class UserVO implements Serializable {
 
 	public void setTokenGeneratedTime(Date tokenGeneratedTime) {
 		this.tokenGeneratedTime = tokenGeneratedTime;
+	}
+	
+	
+	public Boolean getMobileAlertsPreference() {
+		return mobileAlertsPreference;
+	}
+
+	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
+		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
+	
+	public String getCarrierInfo() {
+		return carrierInfo;
+	}
+
+	public void setCarrierInfo(String carrierInfo) {
+		this.carrierInfo = carrierInfo;
 	}
 
 }

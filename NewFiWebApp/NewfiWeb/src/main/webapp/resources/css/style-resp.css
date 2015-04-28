@@ -1,8 +1,11 @@
 /* ============== SMARTPHONES ==============*/
 @media (max-width: 767px) {
+	body{
+		overflow-x: hidden;
+	}
 	.home-container{
 		padding-right: 5px;
-		overflow: hidden;
+		overflow: visible;
 	}
 	.left-panel{
 		display: none;
@@ -235,7 +238,7 @@
 		width: 140px;
 	}
 	.silder-cont{
-		width: 90%;
+		width: 90% !important;
 		margin-bottom: 30px;
 	}
 	.slider-hdr-txt{
@@ -304,8 +307,19 @@
         margin-top: 5px;
     }
     .assigned-agent-cont-rc{
-        display: none;
+        width: 100%;
+        padding: 0;
     }
+    .assigned-agent-default-img{
+    	margin: 0 auto;
+	}
+	.assigned-agent-name{
+		font-size: 11px;
+		text-align: center;
+	}
+	.assigned-agent-role,.assigned-agent-contact{
+		display: none;
+	}
     .milestone-header-bar{
     	display: none;
     }
@@ -330,6 +344,38 @@
 	}
 	.ms-add-notification-popup:after {
 		right: 50%;
+	}
+	.ce-refinance-wrapper{
+		margin-left: 0;
+	}
+	.ce-lp{
+		display: none;
+	}
+	.ce-cp{
+		width: 100% !important;
+		margin-left: 0;
+		padding: 0 20px;
+	}
+	.ce-option{
+		width: 100%;
+	}
+	.reg-input-row {
+		width: 400px;
+		height:auto;
+		margin: 0 auto 10px auto;
+		padding: 0 10px;
+	}
+	.reg-row-lc,.reg-row-rc {
+		width: 100%;
+		padding:0;
+		text-align: left !important;
+	}
+	.reg-row-lc{
+		line-height: 25px;
+	}
+	.reg-display-title-subtxt{
+		max-width: 100%;
+		padding: 0 10px;
 	}
 }
 
@@ -510,6 +556,18 @@
 	.ms-add-notification-popup{
 		left: -100px;
 	}
+	.ce-refinance-wrapper{
+		margin-left: 10px;
+	}
+	.ce-cp{
+		margin-left: 20px;
+	}
+	.reg-row-lc{
+	    padding-right: 10px;
+	}
+	.reg-row-rc{
+	    padding-left: 10px;
+	}
 }
 
 
@@ -577,6 +635,12 @@
     .needed-items-lc {
 	  	width: 70%;
 	}
+	.ce-refinance-wrapper{
+		margin-left: 60px;
+	}
+	.ce-cp{
+		margin-left: 40px;
+	}
 }
 
 
@@ -593,6 +657,9 @@
 	}
     .cust-app-rp{
         width: 534px !important;
+    }
+    .ce-cp{
+    	  width: 755px !important;
     }
 }
 
@@ -682,6 +749,9 @@
 		padding: 10px 5px;
 		width: 300px;
 		left: -60px;
+	}
+	.milestone-lc-header-icn,.milestone-rc-header-icn{
+		display: none;
 	}
 }
 
@@ -900,7 +970,7 @@
 		text-align: left;
 	}
 	.prof-form-row{
-		padding: 5px 0;
+		padding: 5px 10px;
 	}
 	.upload-pic-desc {
 		line-height: 20px;
@@ -930,7 +1000,7 @@
     .av-loan-details-row-rc{
         max-width: 50%;
         padding-left: 10px;
-        word-break:break-all;
+        word-break:break-word;
     }
     .app-options-cont,.app-input{
         width: 100%;
@@ -984,6 +1054,10 @@
 		width: 90px;
 		padding-right: 10px;
 		text-align: right;
+		height: 40px;
+		line-height: 20px;
+		display: table-cell;
+		vertical-align: middle;
 	}
 	.create-user-popup-input{
 		width: 190px;
@@ -1020,25 +1094,16 @@
 		{
 		width: 100%;
 	}
+	.reg-input-row {
+		width: 320px;
+	}
+	.reg-input-row .reg-fname, .reg-input-row .reg-lname{
+		width: 135px;
+	}
+	.reg-input-row .reg-lname{
+		margin-right: 10px;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

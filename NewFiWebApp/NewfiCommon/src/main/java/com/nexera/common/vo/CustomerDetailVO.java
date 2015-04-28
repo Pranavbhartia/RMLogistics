@@ -17,7 +17,7 @@ public class CustomerDetailVO implements Serializable {
 	private String secEmailId;
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
-	private Boolean mobileAlertsPreference;
+	
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
@@ -28,7 +28,7 @@ public class CustomerDetailVO implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
-	private String carrierInfo;
+	
 	private String addressStreet;
 	
 	private Boolean selectedProperty;
@@ -131,14 +131,6 @@ public class CustomerDetailVO implements Serializable {
 
 	public void setSubscriptionsStatus(Integer subscriptionsStatus) {
 		this.subscriptionsStatus = subscriptionsStatus;
-	}
-
-	public Boolean getMobileAlertsPreference() {
-		return mobileAlertsPreference;
-	}
-
-	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
-		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
 
 	public Boolean getIsselfEmployed() {
@@ -265,7 +257,7 @@ public class CustomerDetailVO implements Serializable {
 		customerDetailVO.setSecPhoneNumber(customerDetail.getSecPhoneNumber());
 		customerDetailVO.setSubscriptionsStatus(customerDetail
 		        .getSubscriptionsStatus());
-		customerDetailVO.setCarrierInfo(customerDetail.getCarrierInfo());
+		
 		customerDetailVO.setLivingSince(customerDetail.getLivingSince());	
 		
 		// seleted property 
@@ -299,13 +291,7 @@ public class CustomerDetailVO implements Serializable {
 		this.transunionScore = transunionScore;
 	}
 
-	public String getCarrierInfo() {
-		return carrierInfo;
-	}
-
-	public void setCarrierInfo(String carrierInfo) {
-		this.carrierInfo = carrierInfo;
-	}
+	
 
 	public String getAddressStreet() {
 		return addressStreet;

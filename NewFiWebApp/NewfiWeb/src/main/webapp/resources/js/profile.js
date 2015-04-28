@@ -5,6 +5,12 @@ var internalUserStates = new Object();
 var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
+
+var passwordFieldEmptyErrorMessage="Should not be empty";
+var passwordDonotMatchErrorMessage="Passwords donot match";
+var passwordlengthErrorMessage="Password length should be atleast 8-digit";
+var invalidPassword="Password should not contain firstname or lastname";
+var passwordRegexErrorMessage="Password should have atleast one upercase and one lowercase character";
 //var userStates=[];
 function showCustomerProfilePage() {
 	scrollToTop();
@@ -49,6 +55,8 @@ function showLoanManagerProfilePage(){
 	selectedUserDetail = undefined;
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierList);
+	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -175,12 +183,15 @@ function getPasswordInfoContainer(){
 	var container = $('<div>').attr({
 		"class" : "loan-personal-info-container"
 	});
+
 	var passwordRow = getPasswordRow("New Password","password");
 	container.append(passwordRow);
 
 
 	var newpasswordRow = getPasswordRow("Confirm Password","confirmpassword");
 	container.append(newpasswordRow);
+	
+
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
@@ -239,6 +250,10 @@ function getLoanPersonalInfoContainer(user) {
 	
 	var stateRow = getManagerStateRow(user);
 	container.append(stateRow);
+	
+   // added check box 
+	var checkBox=getCheckStatus(user);
+	container.append(checkBox);
 	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
@@ -322,26 +337,92 @@ function changePassword(){
 	user.id = $("#userid").val();
 	user.password = $("#password").val();
 	console.info("userProfileJson:"+JSON.stringify(user));
-	  if($('#password').val() != $('#confirmpassword').val()) {
-            alert("Password and Confirm Password don't match");
-            event.preventDefault();
-            return false;
-          }
-	 $.ajax({
-			url : "rest/userprofile/password",
-			type : "POST",
-			data : {
-				"userVOStr" : JSON.stringify(user)
-			},
-			dataType : "json",
-			success : function(data) {
-				showToastMessage("Succesfully updated");
-			},
-			error : function(error) {
-				showToastMessage("Something went wrong");
-			}
-		});
+	
+	    var passwordField=validateInput($('#password'),$('#password').val(),passwordFieldEmptyErrorMessage);
+	    var confirmPasswordField=validateInput($('#confirmpassword'),$('#confirmpassword').val(),passwordFieldEmptyErrorMessage);
+		if(!passwordField){
+			return false;
+		}
+		if(!confirmPasswordField){
+			return false;
+		}
+		var fistName=newfiObject.user.firstName;
+		var lastName=newfiObject.user.lastName;
+		var isSuccess=validatePassword($('#password').val(),$('#confirmpassword').val(),fistName,lastName,"password");
+		if(isSuccess){
+			 $.ajax({
+					url : "rest/userprofile/password",
+					type : "POST",
+					data : {
+						"userVOStr" : JSON.stringify(user)
+					},
+					dataType : "json",
+					success : function(data) {
+						showToastMessage("Succesfully updated");
+					},
+					error : function(error) {
+						showToastMessage("Something went wrong");
+					}
+				});
+		}
+	
 }
+
+function validatePassword(password,confirmPassword,firstName,lastName,elementID){
+	
+	var regex=/(?=.*[a-z])(?=.*[A-Z])/;
+    var status;
+	if(password!=confirmPassword){
+		$('#password').next('.err-msg').html(passwordDonotMatchErrorMessage).show();
+		$('#'+elementID).addClass('ce-err-input').show();
+		return false;
+	}else{
+		if(password.length<8){
+			$('#password').next('.err-msg').html(passwordlengthErrorMessage).show();
+			$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+        if(password.indexOf(firstName) > -1){
+        	$('#password').next('.err-msg').html(invalidPassword).show();
+        	$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+		 if(regex.test(password)==false){
+				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
+				$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+          if(password.indexOf(firstName) == -1){
+			var lowercase=password.toLowerCase();
+			if(lowercase.length>3){
+			if(lowercase.indexOf(firstName) > -1){
+				$('#password').next('.err-msg').html(invalidPassword).show();
+				$('#'+elementID).addClass('ce-err-input').show();
+				return false;
+			}
+			}
+			
+		}
+         if(password.indexOf(lastName) > -1){
+			showErrorToastMessage("Password should not contain firstname or lastname");
+			return false;
+		}
+         if(password.indexOf(lastName) == -1){
+		
+			var lowercase=password.toLowerCase();
+		if(lowercase.length>3){
+			if(lowercase.indexOf(lastName) > -1){
+				showErrorToastMessage("Password should not contain firstname or lastname");
+				return false;
+			}
+		}
+			
+			
+		}
+	}
+	return true;
+}
+
 function updateLMDetails() {
 
 	var userProfileJson = new Object();
@@ -363,6 +444,18 @@ function updateLMDetails() {
 	    	}
 	    }
 	}
+	
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		userProfileJson.mobileAlertsPreference = true;	
+		userProfileJson.carrierInfo=$('#carrierInfoID').val();
+		if(userProfileJson.carrierInfo == ""){
+			showErrorToastMessage("Please choose any carrier");
+			return false;
+		}
+			
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
+		   userProfileJson.mobileAlertsPreference = false;
+    }
 	
 	var customerDetails = new Object();
 
@@ -1389,6 +1482,7 @@ function getPhone1Row(user) {
 	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
+
 //TODO added for validation LM
 
 function getPhone1RowLM(user) {
@@ -1422,8 +1516,9 @@ function getPhone1RowLM(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
+	var carrierInfo=getCarrierDropdown(user);
 	
-	rowCol2.append(inputCont);
+	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -1508,7 +1603,7 @@ var row = $('<div>').attr({
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');			
-			validatePhone('priPhoneNumberId');
+			//validatePhone('priPhoneNumberId');
 	        $('#prof-form-row-custom-email').show();
 	});
 	
@@ -1522,10 +1617,10 @@ var row = $('<div>').attr({
 			$('#prof-form-row-custom-email').hide();
 	});
 	
-	if(user.customerDetail.mobileAlertsPreference!=null){
-		if(user.customerDetail.mobileAlertsPreference){
+	if(user.mobileAlertsPreference!=null){
+		if(user.mobileAlertsPreference){
 			radioYesButton.addClass('radio-btn-selected');
-		}else if(!user.customerDetail.mobileAlertsPreference){
+		}else if(!user.mobileAlertsPreference){
 			radioNoButton.addClass('radio-btn-selected');
 		}}
 
@@ -1538,7 +1633,9 @@ var row = $('<div>').attr({
 
 }
 function getCarrierDropdown(user){
-var row = $('<div>').attr({
+
+    var carrierName = getCarrierName(user.carrierInfo);
+	var row = $('<div>').attr({
 		"class" : "prof-form-row-carrier clearfix hide",
 		"id":"prof-form-row-custom-email"
 	});
@@ -1549,7 +1646,7 @@ var row = $('<div>').attr({
 			
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
-		"value" : user.customerDetail.carrierInfo,
+		"value" : carrierName,
 		"placeholder":"Select Carrier",
 		"id" : "carrierInfoID"
 	}).bind('click',function(e){
@@ -1563,7 +1660,7 @@ var row = $('<div>').attr({
 	});
 	
 
-	if(user.customerDetail.mobileAlertsPreference){
+	if(user.mobileAlertsPreference){
 		row.removeClass('hide');
 		
 	}
@@ -1761,10 +1858,10 @@ function updateUserDetails() {
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
-		customerDetails.mobileAlertsPreference = true;	
-		customerDetails.carrierInfo=$('#carrierInfoID').val();
+		userProfileJson.mobileAlertsPreference = true;	
+		userProfileJson.carrierInfo=$('#carrierInfoID').val();
 		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
-		customerDetails.mobileAlertsPreference = false;
+		   userProfileJson.mobileAlertsPreference = false;
 		}
 
     
@@ -2141,15 +2238,83 @@ function getPasswordRow(displayName,id) {
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
+	var input;
+	if(id!="lqb_userPassword"){
+		 input = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-m",
+			"id" : id,
+			"type" : "password",
+			"name":"change-password"
+		});
+		 inputCont.append(input).append(appendErrorMessage);
+	}else{
+		input = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-m",
+			"id" : id,
+			"type" : "password"
+		});
+		inputCont.append(input);
+	}
 	
-	var input = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-m",
-		"id" : id,
-		"type" : "password"
-	});
 	
-	inputCont.append(input);
+	inputCont.append(input).append(appendErrorMessage);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+function getCarrierName(carrierInfo){
+	
+	 switch(carrierInfo){
+     case "@txt.att.net":
+             return "AT&T";
+         break;
+     case "@tmomail.net":
+         return "T-Mobile";
+     break;
+     case "@vtext.com":
+         return "Verizon";
+     break;
+     case "@messaging.sprintpcs.com":
+         return "Sprint";
+     break;
+     case "@vmobl.com":
+         return "Virgin Mobile";
+     break;
+     case "@mmst5.tracfone.com":
+         return "Tracfone";
+     break;
+     case "@mymetropcs.com":
+         return "Metro Pcs";
+     break;
+     case "@myboostmobile.com":
+         return "Boost Mobile";
+     break;
+     case "@sms.mycricket.com":
+         return "Cricket";
+     break;
+     case "@messaging.nextel.com":
+         return "Nextel";
+     break;
+     case "@message.alltel.com":
+         return "Alltel";
+     break;
+     case "@ptel.com":
+         return "Ptel";
+     break;
+     case "@tms.suncom.com":
+         return "Suncom";
+     break;
+     case "@qwestmp.com":
+         return "Quest";
+     break;
+     case "@email.uscc.net":
+         return "US Cellular";
+     break;
+     case "@mobile.mycingular.com":
+         return "Cingular";
+     break;
+    
+     return ""; 
+	}
 }

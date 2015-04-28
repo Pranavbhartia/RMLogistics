@@ -132,12 +132,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateUser(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber,usr.mobileAlertsPreference=:mobileAlertsPreference,usr.carrierInfo=:carrierInfo WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
+		query.setParameter("mobileAlertsPreference", user.getMobileAlertsPreference());
+		query.setParameter("carrierInfo", user.getCarrierInfo());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		return result;
@@ -147,7 +149,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateCustomerDetails(CustomerDetail customerDetail) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus,customerdetail.mobileAlertsPreference=:mobileAlertsPreference,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
 		query.setParameter("street", customerDetail.getAddressStreet());
@@ -158,10 +160,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
-		query.setParameter("mobileAlertsPreference",
-		        customerDetail.getMobileAlertsPreference());
+/*		query.setParameter("mobileAlertsPreference",
+		        customerDetail.getMobileAlertsPreference());*/
 		query.setParameter("id", customerDetail.getId());
-		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
+		//query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
 		return result;
 	}
@@ -405,7 +407,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer managerUpdateUCustomerDetails(CustomerDetail customerDetail) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.carrierInfo=:carrierInfo WHERE customerdetail.id = :id";
+		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("city", customerDetail.getAddressCity());
@@ -413,7 +415,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("id", customerDetail.getId());
-		query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
 		return result;
 	}

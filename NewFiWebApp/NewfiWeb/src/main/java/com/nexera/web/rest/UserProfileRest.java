@@ -34,14 +34,11 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
-import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MobileCarriersEnum;
-import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.FatalException;
-import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -51,7 +48,6 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
-import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -369,9 +365,10 @@ public class UserProfileRest {
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
-		if (userVO.getUsername() == null)
-			userVO.setUsername(userVO.getEmailId());
+		
 		try {
+			if (userVO.getUsername() == null)
+				userVO.setUsername(userVO.getEmailId());
 			userVO = userProfileService.createNewUserAndSendMail(userVO);
 			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
 			        .getRoleId()) {
@@ -386,6 +383,9 @@ public class UserProfileRest {
 				}
 
 			}
+		}catch(DatabaseException dbe){
+			LOG.error("Error while saveing user with same email");
+			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522", "User Already Present"));
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

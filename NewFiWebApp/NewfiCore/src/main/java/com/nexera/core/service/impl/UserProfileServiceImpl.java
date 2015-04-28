@@ -242,7 +242,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				completionStatus = completionStatus
 				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
-			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+			if (userVO.getMobileAlertsPreference() != null) {
 				completionStatus = completionStatus
 				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
@@ -451,6 +451,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 
 		User newUser = User.convertFromVOToEntity(userVO);
+		
 		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
 		        .getEmailId());
 		newUser.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
@@ -478,7 +479,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        ActiveInternalEnum.ACTIVE);
 		}
 		LOG.debug("Saving the user to the database");
-		int userID = userProfileDao.saveUserWithDetails(newUser);
+		Integer userID =null;
+		try{
+			userID = userProfileDao.saveUserWithDetails(newUser);
+		}catch(DatabaseException de){
+			LOG.error("database exception");
+			throw new DatabaseException("Email Already present in database");
+		}
+		
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);

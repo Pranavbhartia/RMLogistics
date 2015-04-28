@@ -473,13 +473,7 @@ public class LoanServiceImpl implements LoanService {
 			        .setAddressStreet(customerDetail.getAddressStreet());
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
-			if (null != customerDetail.getCarrierInfo()) {
-
-				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
-				        .getCarrierNameForEmail(customerDetail.getCarrierInfo());
-				customerDetailVO.setCarrierInfo(mobileCarrier.getCarrierName());
-
-			}
+			
 
 			if (null != customerDetail.getDateOfBirth())
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
