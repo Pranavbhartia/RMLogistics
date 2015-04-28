@@ -954,7 +954,8 @@ function progressBaar(num) {
             $('#stepNoId_' + i).html(i);
         }
         sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-       window.location.hash="#"+(num-1);
+        if(typeof(newfiObject)==='undefined')
+            window.location.hash="#"+(num-1);
     }
    
 

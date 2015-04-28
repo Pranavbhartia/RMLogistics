@@ -5250,10 +5250,10 @@ function createTeaserRateObjectForRefinance(appUserDet){
             "currentMortgageBalance":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.currentMortgageBalance:"",
             "currentMortgagePayment":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.currentMortgagePayment:"",
             "isIncludeTaxes":appUserDet.refinancedetails!=undefined?appUserDet.refinancedetails.includeTaxes:"",
-            "propertyTaxesPaid":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.propertyTaxesPaid:"",
-            "annualHomeownersInsurance":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.propertyInsuranceCost:"",
-            "homeWorthToday":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.homeWorthToday:"",
-            "zipCode":appUserDet.propertyTypeMaster!=undefined?appUserDet.refinancedetails.homeZipCode:""
+            "propertyTaxesPaid":appUserDet.propertyTypeMaster!=undefined?appUserDet.propertyTypeMaster.propertyTaxesPaid:"",
+            "annualHomeownersInsurance":appUserDet.propertyTypeMaster!=undefined?appUserDet.propertyTypeMaster.propertyInsuranceCost:"",
+            "homeWorthToday":appUserDet.propertyTypeMaster!=undefined?appUserDet.propertyTypeMaster.homeWorthToday:"",
+            "zipCode":appUserDet.propertyTypeMaster!=undefined?appUserDet.propertyTypeMaster.homeZipCode:""
         };
     }
     return ob;
