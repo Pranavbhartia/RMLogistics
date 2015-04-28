@@ -114,7 +114,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("id", userId));
+
 		User user = (User) criteria.uniqueResult();
+		if (user == null) {
+			// No records found
+			return null;
+		}
 		Hibernate.initialize(user.getInternalUserDetail());
 		Hibernate.initialize(user.getUserRole());
 		Hibernate.initialize(user.getRealtorDetail());
@@ -485,6 +490,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		// TODO Auto-generated method stub
 		UserRoleNameImageVO userVO = new UserRoleNameImageVO();
 		User user = findByUserId(userID);
+		if (user == null) {
+			return null;
+		}
 		userVO.setUserName(user.getFirstName() + " " + user.getLastName());
 		userVO.setImgPath(user.getPhotoImageUrl());
 		userVO.setUserID(userID);
@@ -515,7 +523,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		List<UserRoleNameImageVO> imageVOs = new ArrayList<UserRoleNameImageVO>();
 		for (Long userId : roleList) {
-			imageVOs.add(findUserDetails(userId.intValue()));
+			if (userId != null) {
+				UserRoleNameImageVO imageVO = findUserDetails(userId.intValue());
+				if (imageVO != null) {
+					imageVOs.add(imageVO);
+				}
+
+			}
+
 		}
 		return imageVOs;
 	}

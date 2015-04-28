@@ -36,6 +36,7 @@
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
+		$('.assigned-agent-contact').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
 			isAgentTypeDashboard = true;
 			paintAgentDashboard('myloans');

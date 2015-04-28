@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,9 @@ public class Utils {
 	private static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static String GMT = "GMT";
 	static final long ONE_MINUTE_IN_MILLIS = 60000;
+
+	@Value("${unprotected.urls}")
+	private String unProtectedUrls;
 
 	/**
 	 * Formatted string to be used for UI purpose. If input is null, the
@@ -181,8 +185,8 @@ public class Utils {
 		tokenExpirationTime.add(Calendar.DAY_OF_MONTH, 3);
 		Calendar today = Calendar.getInstance();
 		today.setTimeInMillis(System.currentTimeMillis());
-		LOG.debug(""+tokenExpirationTime.compareTo(today));
-		LOG.debug("Has Token Expired"+tokenExpirationTime.before(today));
+		LOG.debug("" + tokenExpirationTime.compareTo(today));
+		LOG.debug("Has Token Expired" + tokenExpirationTime.before(today));
 		return tokenExpirationTime.before(today);
 
 	}
@@ -267,11 +271,12 @@ public class Utils {
 
 	public List<String> getUnprotectedUrls() {
 
+		String[] unprotectedUrlsArray = unProtectedUrls.split(",");
+
 		List<String> unprotectedUrls = new ArrayList<String>();
-		unprotectedUrls.add("/shopper/registration");
-		unprotectedUrls.add("/shopper/realtorRegistration");
-		unprotectedUrls.add("/userprofile/forgetPassword");
-		unprotectedUrls.add("/calculator/findteaseratevalue");
+		for (String url : unprotectedUrlsArray) {
+			unprotectedUrls.add(url);
+		}
 		return unprotectedUrls;
 	}
 

@@ -82,6 +82,7 @@
 			showToastMessage("Payment successful!");
 			var workItemIDAppFee = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"].id;
 			workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
+			workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"].status="1";
         	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
         	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
 			console.log("Finished showing the toast");
