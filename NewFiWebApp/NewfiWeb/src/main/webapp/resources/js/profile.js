@@ -5,6 +5,12 @@ var internalUserStates = new Object();
 var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
+
+var passwordFieldEmptyErrorMessage="Should not be empty";
+var passwordDonotMatchErrorMessage="Passwords donot match";
+var passwordlengthErrorMessage="Password length should be atleast 8-digit";
+var invalidPassword="Password should not contain firstname or lastname";
+var passwordRegexErrorMessage="Password should have atleast one upercase and one lowercase character";
 //var userStates=[];
 function showCustomerProfilePage() {
 	scrollToTop();
@@ -175,12 +181,15 @@ function getPasswordInfoContainer(){
 	var container = $('<div>').attr({
 		"class" : "loan-personal-info-container"
 	});
+
 	var passwordRow = getPasswordRow("New Password","password");
 	container.append(passwordRow);
 
 
 	var newpasswordRow = getPasswordRow("Confirm Password","confirmpassword");
 	container.append(newpasswordRow);
+	
+
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
@@ -322,26 +331,92 @@ function changePassword(){
 	user.id = $("#userid").val();
 	user.password = $("#password").val();
 	console.info("userProfileJson:"+JSON.stringify(user));
-	  if($('#password').val() != $('#confirmpassword').val()) {
-            alert("Password and Confirm Password don't match");
-            event.preventDefault();
-            return false;
-          }
-	 $.ajax({
-			url : "rest/userprofile/password",
-			type : "POST",
-			data : {
-				"userVOStr" : JSON.stringify(user)
-			},
-			dataType : "json",
-			success : function(data) {
-				showToastMessage("Succesfully updated");
-			},
-			error : function(error) {
-				showToastMessage("Something went wrong");
-			}
-		});
+	
+	    var passwordField=validateInput($('#password'),$('#password').val(),passwordFieldEmptyErrorMessage);
+	    var confirmPasswordField=validateInput($('#confirmpassword'),$('#confirmpassword').val(),passwordFieldEmptyErrorMessage);
+		if(!passwordField){
+			return false;
+		}
+		if(!confirmPasswordField){
+			return false;
+		}
+		var fistName=newfiObject.user.firstName;
+		var lastName=newfiObject.user.lastName;
+		var isSuccess=validatePassword($('#password').val(),$('#confirmpassword').val(),fistName,lastName,"password");
+		if(isSuccess){
+			 $.ajax({
+					url : "rest/userprofile/password",
+					type : "POST",
+					data : {
+						"userVOStr" : JSON.stringify(user)
+					},
+					dataType : "json",
+					success : function(data) {
+						showToastMessage("Succesfully updated");
+					},
+					error : function(error) {
+						showToastMessage("Something went wrong");
+					}
+				});
+		}
+	
 }
+
+function validatePassword(password,confirmPassword,firstName,lastName,elementID){
+	
+	var regex=/(?=.*[a-z])(?=.*[A-Z])/;
+    var status;
+	if(password!=confirmPassword){
+		$('#password').next('.err-msg').html(passwordDonotMatchErrorMessage).show();
+		$('#'+elementID).addClass('ce-err-input').show();
+		return false;
+	}else{
+		if(password.length<8){
+			$('#password').next('.err-msg').html(passwordlengthErrorMessage).show();
+			$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+        if(password.indexOf(firstName) > -1){
+        	$('#password').next('.err-msg').html(invalidPassword).show();
+        	$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+		 if(regex.test(password)==false){
+				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
+				$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}
+          if(password.indexOf(firstName) == -1){
+			var lowercase=password.toLowerCase();
+			if(lowercase.length>3){
+			if(lowercase.indexOf(firstName) > -1){
+				$('#password').next('.err-msg').html(invalidPassword).show();
+				$('#'+elementID).addClass('ce-err-input').show();
+				return false;
+			}
+			}
+			
+		}
+         if(password.indexOf(lastName) > -1){
+			showErrorToastMessage("Password should not contain firstname or lastname");
+			return false;
+		}
+         if(password.indexOf(lastName) == -1){
+		
+			var lowercase=password.toLowerCase();
+		if(lowercase.length>3){
+			if(lowercase.indexOf(lastName) > -1){
+				showErrorToastMessage("Password should not contain firstname or lastname");
+				return false;
+			}
+		}
+			
+			
+		}
+	}
+	return true;
+}
+
 function updateLMDetails() {
 
 	var userProfileJson = new Object();
@@ -2141,14 +2216,26 @@ function getPasswordRow(displayName,id) {
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
+	var input;
+	if(id!="lqb_userPassword"){
+		 input = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-m",
+			"id" : id,
+			"type" : "password",
+			"name":"change-password"
+		});
+		 inputCont.append(input).append(appendErrorMessage);
+	}else{
+		input = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-m",
+			"id" : id,
+			"type" : "password"
+		});
+		inputCont.append(input);
+	}
 	
-	var input = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-m",
-		"id" : id,
-		"type" : "password"
-	});
 	
-	inputCont.append(input);
+	inputCont.append(input).append(appendErrorMessage);
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);

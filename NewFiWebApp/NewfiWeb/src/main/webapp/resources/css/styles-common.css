@@ -223,7 +223,7 @@ k}
 
   width: 300px;
   height: 50px;
-  line-height: 50pxpx;
+  line-height: 50px;
   border: 1px solid #dcdcdc;
   background-color: #fafafa;
   background-repeat: no-repeat;
@@ -232,6 +232,7 @@ k}
   padding-left: 40px;
   margin-bottom: 30px;
   background-size: 16px auto;
+  margin-top:40px;
 }
 
 .reset-error {
