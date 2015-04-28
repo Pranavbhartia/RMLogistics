@@ -1192,6 +1192,10 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var totalEstMonthlyPayment = principalInterest;
     var Insurance =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyInsuranceCost)));
 	var tax =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyTaxesPaid)));
+    if(isNaN(getFloatValue(tax)))
+        tax="";
+    if(isNaN(getFloatValue(Insurance)))
+        Insurance="";
     
     if(appUserDetails.refinancedetails.includeTaxes ==true){
     	
