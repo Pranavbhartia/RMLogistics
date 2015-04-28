@@ -163,7 +163,7 @@ public class TemplateController extends DefaultController {
 				LOG.error("Error whiile saving s3 url in the data base");
 
 			}
-			LOG.error("S3 path-----" + s3Path);
+			LOG.debug("S3 path-----" + s3Path);
 
 		} catch (Exception e) {
 
