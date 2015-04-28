@@ -40,6 +40,7 @@ import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.EmailAlreadyRegisteredException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
@@ -369,9 +370,10 @@ public class UserProfileRest {
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
-		if (userVO.getUsername() == null)
-			userVO.setUsername(userVO.getEmailId());
+		
 		try {
+			if (userVO.getUsername() == null)
+				userVO.setUsername(userVO.getEmailId());
 			userVO = userProfileService.createNewUserAndSendMail(userVO);
 			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
 			        .getRoleId()) {
@@ -386,6 +388,9 @@ public class UserProfileRest {
 				}
 
 			}
+		}catch(DatabaseException dbe){
+			LOG.error("Error while saveing user with same email");
+			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522", "User Already Present"));
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
