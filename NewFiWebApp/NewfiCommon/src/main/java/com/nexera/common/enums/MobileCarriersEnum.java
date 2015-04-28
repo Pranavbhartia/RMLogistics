@@ -3,8 +3,7 @@ package com.nexera.common.enums;
 public enum MobileCarriersEnum {
 	CARRIER_AT_T("@txt.att.net", "AT&T"), CARRIER_T_MOBILE("@tmomail.net",
 	        "T-Mobile"), CARRIER_VERIZON("@vtext.com", "Verizon"), CARRIER_SPRINT(
-	        "@messaging.sprintpcs.com", "Sprint"), CARRIER_SPRINT_ALTERNATIVE(
-	        "@pm.sprint.com", "Sprint"), CARRIER_VIRGIN("@vmobl.com",
+	        "@messaging.sprintpcs.com", "Sprint"), CARRIER_VIRGIN("@vmobl.com",
 	        "Virgin Mobile"), CARRIER_TRACFONE("@mmst5.tracfone.com",
 	        "Tracfone"), CARRIER_METRO_PCS("@mymetropcs.com", "Metro Pcs"), CARRIER_BOOST_MOBILE(
 	        "@myboostmobile.com", "Boost Mobile"), CARRIER_CRICKET(

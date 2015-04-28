@@ -1633,7 +1633,9 @@ var row = $('<div>').attr({
 
 }
 function getCarrierDropdown(user){
-var row = $('<div>').attr({
+
+    var carrierName = getCarrierName(user.carrierInfo);
+	var row = $('<div>').attr({
 		"class" : "prof-form-row-carrier clearfix hide",
 		"id":"prof-form-row-custom-email"
 	});
@@ -1644,7 +1646,7 @@ var row = $('<div>').attr({
 			
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
-		"value" : user.carrierInfo,
+		"value" : carrierName,
 		"placeholder":"Select Carrier",
 		"id" : "carrierInfoID"
 	}).bind('click',function(e){
@@ -2259,4 +2261,60 @@ function getPasswordRow(displayName,id) {
 	
 	rowCol2.append(inputCont);
 	return row.append(rowCol1).append(rowCol2);
+}
+
+function getCarrierName(carrierInfo){
+	
+	 switch(carrierInfo){
+     case "@txt.att.net":
+             return "AT&T";
+         break;
+     case "@tmomail.net":
+         return "T-Mobile";
+     break;
+     case "@vtext.com":
+         return "Verizon";
+     break;
+     case "@messaging.sprintpcs.com":
+         return "Sprint";
+     break;
+     case "@vmobl.com":
+         return "Virgin Mobile";
+     break;
+     case "@mmst5.tracfone.com":
+         return "Tracfone";
+     break;
+     case "@mymetropcs.com":
+         return "Metro Pcs";
+     break;
+     case "@myboostmobile.com":
+         return "Boost Mobile";
+     break;
+     case "@sms.mycricket.com":
+         return "Cricket";
+     break;
+     case "@messaging.nextel.com":
+         return "Nextel";
+     break;
+     case "@message.alltel.com":
+         return "Alltel";
+     break;
+     case "@ptel.com":
+         return "Ptel";
+     break;
+     case "@tms.suncom.com":
+         return "Suncom";
+     break;
+     case "@qwestmp.com":
+         return "Quest";
+     break;
+     case "@email.uscc.net":
+         return "US Cellular";
+     break;
+     case "@mobile.mycingular.com":
+         return "Cingular";
+     break;
+    
+     return ""; 
+	}
 }
