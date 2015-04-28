@@ -55,6 +55,8 @@ function showLoanManagerProfilePage(){
 	selectedUserDetail = undefined;
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
+	synchronousAjaxRequest("rest/userprofile/getMobileCarriers", "GET", "json", "", mobileCarrierList);
+	
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	$('.lp-item').removeClass('lp-item-active');
@@ -249,6 +251,10 @@ function getLoanPersonalInfoContainer(user) {
 	var stateRow = getManagerStateRow(user);
 	container.append(stateRow);
 	
+   // added check box 
+	var checkBox=getCheckStatus(user);
+	container.append(checkBox);
+	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
 
@@ -438,6 +444,18 @@ function updateLMDetails() {
 	    	}
 	    }
 	}
+	
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		userProfileJson.mobileAlertsPreference = true;	
+		userProfileJson.carrierInfo=$('#carrierInfoID').val();
+		if(userProfileJson.carrierInfo == ""){
+			showErrorToastMessage("Please choose any carrier");
+			return false;
+		}
+			
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
+		   userProfileJson.mobileAlertsPreference = false;
+    }
 	
 	var customerDetails = new Object();
 
@@ -1464,6 +1482,7 @@ function getPhone1Row(user) {
 	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
+
 //TODO added for validation LM
 
 function getPhone1RowLM(user) {
@@ -1497,8 +1516,9 @@ function getPhone1RowLM(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
+	var carrierInfo=getCarrierDropdown(user);
 	
-	rowCol2.append(inputCont);
+	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
 
@@ -1583,7 +1603,7 @@ var row = $('<div>').attr({
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');			
-			validatePhone('priPhoneNumberId');
+			//validatePhone('priPhoneNumberId');
 	        $('#prof-form-row-custom-email').show();
 	});
 	
@@ -1597,10 +1617,10 @@ var row = $('<div>').attr({
 			$('#prof-form-row-custom-email').hide();
 	});
 	
-	if(user.customerDetail.mobileAlertsPreference!=null){
-		if(user.customerDetail.mobileAlertsPreference){
+	if(user.mobileAlertsPreference!=null){
+		if(user.mobileAlertsPreference){
 			radioYesButton.addClass('radio-btn-selected');
-		}else if(!user.customerDetail.mobileAlertsPreference){
+		}else if(!user.mobileAlertsPreference){
 			radioNoButton.addClass('radio-btn-selected');
 		}}
 
@@ -1624,7 +1644,7 @@ var row = $('<div>').attr({
 			
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
-		"value" : user.customerDetail.carrierInfo,
+		"value" : user.carrierInfo,
 		"placeholder":"Select Carrier",
 		"id" : "carrierInfoID"
 	}).bind('click',function(e){
@@ -1638,7 +1658,7 @@ var row = $('<div>').attr({
 	});
 	
 
-	if(user.customerDetail.mobileAlertsPreference){
+	if(user.mobileAlertsPreference){
 		row.removeClass('hide');
 		
 	}
@@ -1836,10 +1856,10 @@ function updateUserDetails() {
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
-		customerDetails.mobileAlertsPreference = true;	
-		customerDetails.carrierInfo=$('#carrierInfoID').val();
+		userProfileJson.mobileAlertsPreference = true;	
+		userProfileJson.carrierInfo=$('#carrierInfoID').val();
 		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
-		customerDetails.mobileAlertsPreference = false;
+		   userProfileJson.mobileAlertsPreference = false;
 		}
 
     

@@ -242,7 +242,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				completionStatus = completionStatus
 				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
-			if (userVO.getCustomerDetail().getMobileAlertsPreference() != null) {
+			if (userVO.getMobileAlertsPreference() != null) {
 				completionStatus = completionStatus
 				        + CommonConstants.PROFILE_STATUS_WEIGHTAGE;
 			}
