@@ -274,20 +274,86 @@ function getLoanManager(user){
 		});
 
 		var inputCont = $('<div>').attr({
-			"class" : "prof-form-input-cont"
+			"class" : "prof-form-input-cont clearfix"
 		});
 		
 		var emailInput = $('<input>').attr({
-			"class" : "prof-form-input prof-form-input-lg",
+			"class" : "prof-form-input float-left add-member-input prof-form-input-lg",
 			"value" : user.loanManagerEmail,
-			"id" : "managerID"
-		});
+			"id" : "managerID",
+			"roleID" : user.userRole.id,
+			"internalroleid" : "0",
+			"userrolebased" : (user.userRole.roleCd == "REALTOR")?"true" : "false"
+		}).on(
+				'input',
+				function() {
+					var name = $(this).val();
+					console.log("Name entered : " + name);
+					var code = $(this).attr("code");
+					var roleID = $(this).attr("roleID");
+					if (roleID == undefined
+							&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
+						showToastMessage("Please select a user type");
+						return false;
+					}
+					var internalRoleID = $(this).attr(
+							"internalRoleID");
+					var isSearchUserRoleBased = $(this)
+							.attr("userRoleBased");
+					if (isSearchUserRoleBased == "true")
+						searchUsersBasedOnNameAndRole(name, roleID,
+								internalRoleID);
+					else if (isSearchUserRoleBased == "false")
+						searchUsersBasedOnCode(name, code);
+				});
+		
+		var downArrow = $('<div>')
+		.attr({
+			"class" : "add-member-down-arrow float-right",
+			"style" : "right:17px"
+		}).on(
+				'click',
+				function(e) {
+					e.stopPropagation();
+					
+					if ($('#add-username-dropdown-cont').css("display") == "block") {
+						hideUserNameDropDown();
+					} else {
+						var name = "";
+						console.log("Name entered : " + name);
+						var code = $("#managerID").attr("code");
+						var roleID = $("#managerID").attr(
+								"roleID");
+						if (roleID == undefined) {
+							showToastMessage("Please select a user type");
+							return false;
+						}
+						var internalRoleID = $("#managerID")
+								.attr("internalRoleID");
+						var isSearchUserRoleBased = $("#managerID").attr(
+								"userRoleBased");
+						if (isSearchUserRoleBased == "true")
+							searchUsersBasedOnNameAndRole(name, roleID,
+									internalRoleID);
+						else if (isSearchUserRoleBased == "false")
+							searchUsersBasedOnCode(name, code);
+						
+						
+						
+						
+					}
+				});
 		
 		var errMessage = $('<div>').attr({
 			"class" : "err-msg hide" 
 		});
 		
-		inputCont.append(emailInput).append(errMessage);
+		var dropdownCont = $('<div>').attr({
+			"id" : "add-username-dropdown-cont",
+			"class" : "add-member-dropdown-cont hide"
+		});
+		
+		inputCont.append(emailInput).append(downArrow).append(dropdownCont);
 		
 		rowCol2.append(inputCont);
 		return row.append(rowCol1).append(rowCol2);

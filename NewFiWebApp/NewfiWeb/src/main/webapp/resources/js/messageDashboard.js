@@ -528,15 +528,28 @@ function appendReplyContainer(element) {
 		"placeholder" : "Type your message here. Press enter to send."
 	}).css({
 		"width" : parentWidth - 40
-	}).on('keyup', function(e) {
+	})/*.on('keyup', function(e) {
 		if (e.which == 13) {
 			sendMessage(this);
 		}
-	});
+	})*/;
 
-	replyContainerWrapper.append(textBox);
+	
+	
+	var sendButton = $("<div>").attr({
+			"class" : "message-btn ",
+			"style" : "margin-left:760px;",
+			"onclick" : "findTextArea(this)"
+	}).html("Send Message");
+	
+	replyContainerWrapper.append(textBox).append(sendButton);
 	$(element).parent().after(replyContainerWrapper);
 	textBox.focus();
+}
+
+function findTextArea(click){
+	var element = $(click).parent().find('textarea');
+	 sendMessage(element);
 }
 
 // Function to be called when a user presses enter after typing a message

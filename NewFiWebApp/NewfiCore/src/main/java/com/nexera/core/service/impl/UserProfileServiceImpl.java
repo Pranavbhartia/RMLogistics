@@ -59,7 +59,6 @@ import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
-import com.nexera.common.exception.EmailAlreadyRegisteredException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
