@@ -59,6 +59,7 @@ import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.EmailAlreadyRegisteredException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InputValidationException;
@@ -451,6 +452,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 
 		User newUser = User.convertFromVOToEntity(userVO);
+		
 		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
 		        .getEmailId());
 		newUser.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
@@ -478,7 +480,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        ActiveInternalEnum.ACTIVE);
 		}
 		LOG.debug("Saving the user to the database");
-		int userID = userProfileDao.saveUserWithDetails(newUser);
+		Integer userID =null;
+		try{
+			userID = userProfileDao.saveUserWithDetails(newUser);
+		}catch(DatabaseException de){
+			LOG.error("database exception");
+			throw new DatabaseException("Email Already present in database");
+		}
+		
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);

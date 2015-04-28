@@ -3680,6 +3680,12 @@ function createUserAndAddToLoanTeam(user) {
 
 function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
+	
+	if(data.error!= undefined && data.error.code=="522"){
+		showToastMessage("Email already exists!!");
+		return;
+	}
+	
 	var result = data.resultObject;
 	hideCreateUserPopup();
 	hideMilestoneAddTeamMemberPopup();
