@@ -252,7 +252,7 @@ ADD COLUMN `property_state` VARCHAR(45) NULL AFTER `property_city`;
 #Added by Utsav on 28th April at 03:45 PM IST
 
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
-VALUES ('6','NEW_USER_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','bdfe9357-5896-42c2-92e2-ccca4c5e8a34');
+VALUES ('6','WELCOME_TO_NEWFI_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','bdfe9357-5896-42c2-92e2-ccca4c5e8a34');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('7','CREATED_ACCOUNT_PASSWORD_NOT_UPDATED_TEMPLATE_ID','Accoutn created but password not updated','2015-04-10 12:53:34','d5639bee-de0a-4020-a8c5-0ee97fe78add');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
