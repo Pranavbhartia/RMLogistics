@@ -101,7 +101,10 @@ function showCustomerLoanPage(user) {
     });
     loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
     $('#right-panel').append(loanDetailsMainContainer);
-    changeSecondaryLeftPanel(5);
+    if (window.location.hash!= "")
+    {
+    	changeSecondaryLeftPanel(5);
+    }
     //adjustCenterPanelWidth();
     //TODO: Invoke dynamic binder to listen to secondary navigation clicks
     bindDataToSN();
