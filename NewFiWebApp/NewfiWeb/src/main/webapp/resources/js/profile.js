@@ -486,7 +486,8 @@ function updateLMDetails() {
 		success : function(data) {
             if(data.error==null){
             	$("#profileNameId").text($("#firstNameId").val());
-    			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+
+            	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
     			showToastMessage("Succesfully updated");
     			showLoanManagerProfilePage();
             }else{
@@ -1893,7 +1894,7 @@ function updateUserDetails() {
 		success : function(data) {
 
 			$("#profileNameId").text($("#firstNameId").val());
-			$("#profilePhoneNumId").text($("#priPhoneNumberId").val());
+		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
 
 		},
 		error : function(error) {
@@ -2129,8 +2130,9 @@ function saveEditUserProfile(user){
 	});
 	var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
 	$('#profileNameId').text(fname);
-	$('#profilePhoneNumId').text(priPhone);
+	//$('#profilePhoneNumId').text(priPhone);
 	$('#loanType').text(loanType);
+	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat(priPhone));
 	
 	
 	$('#center-panel-cont').html("");
