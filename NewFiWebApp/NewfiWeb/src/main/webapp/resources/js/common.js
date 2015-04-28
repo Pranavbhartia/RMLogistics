@@ -296,6 +296,20 @@ function adjustCustomerNameWidth() {
 	$('.cus-name').outerWidth(cusNameWidth);
 }
 
+//Function to adjust center panel in customer Engagement Page
+function adjustCustomerEngagementPageOnResize() {
+	if (window.innerWidth <= 1200 && window.innerWidth >= 993) {
+		var leftPanelWidth = $('.ce-lp').width();
+		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 100;
+		$('#ce-refinance-cp').width(centerPanelWidth);
+	}
+	else if (window.innerWidth <= 992 && window.innerWidth >= 768) {
+		var leftPanelWidth = $('.ce-lp').width();
+		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 40;
+		$('#ce-refinance-cp').width(centerPanelWidth);
+	}
+}
+
 
 function scrollToTop(){
 	$(window).scrollTop(0);
@@ -697,5 +711,19 @@ function getInitials (firstName, lastName)
 
 
 
+//Soft Menu click events
+$(document).on('click','.soft-menu-icon',function(e){
+    e.stopPropagation();
+    $('.soft-menu-wrapper').slideToggle();
+});
 
+$(document).on('click','.soft-menu-wrapper',function(e){
+    e.stopPropagation();
+});
+
+$(document).on('click',function(e){
+    if($('.soft-menu-wrapper').css("display") == "block"){
+        $('.soft-menu-wrapper').slideToggle();
+    }
+});
 
