@@ -37,10 +37,7 @@ function initiateJcrop(input) {
 			// $('#pu-img').width(imageMaxWidth);
 			 //var tempRatio = actWidth/newWidth;
             ratio = $('#pu-img').width() / myImage.width;
-           
-			console.log("d="+ $('#pu-img').width()+"o="+myImage.width);
-			console.log(myImage.width/2);
-			console.log($('#pu-img').width()/2);
+
 			$('#pu-img').Jcrop({
 				/* setSelect : [ ratio,ratio,$('#pu-img').width()/2,$('#pu-img').height()/2]*/
 			 setSelect : [50, 0, 300,300],
