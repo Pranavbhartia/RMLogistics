@@ -76,7 +76,7 @@ public class User implements Serializable, UserDetails {
 	private Date createdDate;
 	private Date lastLoginDate;
 	private Date tokenGeneratedTime;
-	
+
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
 
@@ -407,7 +407,7 @@ public class User implements Serializable, UserDetails {
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
-	
+
 	@Column(name = "carrier_info")
 	public String getCarrierInfo() {
 		return carrierInfo;
@@ -416,10 +416,7 @@ public class User implements Serializable, UserDetails {
 	public void setCarrierInfo(String carrierInfo) {
 		this.carrierInfo = carrierInfo;
 	}
-	
-	
-	
-	
+
 	public static UserVO convertFromEntityToVO(final User user) {
 		UserVO userVO = new UserVO();
 		if (user != null) {
@@ -456,13 +453,14 @@ public class User implements Serializable, UserDetails {
 
 				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
-			
+
 			userVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
 			if (user.getCarrierInfo() != null) {
-				MobileCarriersEnum mobileCarrier = MobileCarriersEnum.getCarrierNameForEmail(user.getCarrierInfo());
+				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+				        .getCarrierNameForEmail(user.getCarrierInfo());
 				userVO.setCarrierInfo(mobileCarrier.getCarrierEmail());
 			}
-			
+
 		}
 		return userVO;
 	}
@@ -507,11 +505,15 @@ public class User implements Serializable, UserDetails {
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}
 		userModel.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
-		if (userVO.getCarrierInfo() != null) {
-			MobileCarriersEnum mobileCarrier = MobileCarriersEnum.getCarrierEmailForName(userVO.getCarrierInfo());
-			userModel.setCarrierInfo(mobileCarrier.getCarrierEmail());
-	    }
-		
+		if (userVO.getCarrierInfo() != null
+		        && !userVO.getCarrierInfo().isEmpty()) {
+			MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+			        .getCarrierEmailForName(userVO.getCarrierInfo());
+			if (mobileCarrier != null) {
+				userModel.setCarrierInfo(mobileCarrier.getCarrierEmail());
+			}
+
+		}
 
 		return userModel;
 	}
