@@ -16,20 +16,10 @@
 	<context:annotation-config />
 	<task:annotation-driven />
 
-	<!-- <cache:annotation-driven />
-
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-		<property name="cacheManager" value="ehcache"></property>
-
-	</bean>
-
-	Ehcache library setup
-	<bean id="ehcache"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-		>
-		<property name="configLocation" value="ehcache.xml"></property>
-		</bean>
- -->
+	<!-- <cache:annotation-driven /> <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"> 
+		<property name="cacheManager" value="ehcache"></property> </bean> Ehcache 
+		library setup <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" 
+		> <property name="configLocation" value="ehcache.xml"></property> </bean> -->
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="2" />
@@ -52,6 +42,13 @@
 		<property name="durability" value="true" />
 	</bean>
 
+	<bean name="userJobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.nexera.core.batchprocessor.UserBatchProcessor" />
+		<property name="durability" value="true" />
+	</bean>
+
 
 
 	<bean id="emailCronTrigger"
@@ -60,12 +57,18 @@
 		<property name="cronExpression" value="0 0/5 * * * ?" />
 	</bean>
 
+	<bean id="userCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userJobDetail" />
+		<property name="cronExpression" value="0 0/59 * * * ?" />
 
+	</bean>
 
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
 		<property name="cronExpression" value="0 0/30 * * * ?" />
+
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 
@@ -75,9 +78,7 @@
 			<list>
 				<ref bean="complexJobDetail" />
 				<ref bean="emailJobDetail" />
-				<!-- <ref bean="checkUserprofile"/> <ref bean="checkLockUserRate"/> <ref 
-					bean="checkLoanApplicationFee"/> <ref bean="checkIsBankConnected"/> <ref 
-					bean="checkApplicationProgress"/> <ref bean="checkNeededItems"/> -->
+				<ref bean="userJobDetail" />
 			</list>
 		</property>
 
@@ -85,10 +86,7 @@
 			<list>
 				<ref bean="cronTrigger" />
 				<ref bean="emailCronTrigger" />
-				<!-- <ref bean="userProfileCronTrigger" /> <ref bean="lockUserRateCronTrigger" 
-					/> <ref bean="applicationFeesCronTrigger" /> <ref bean="isBankConnectedCronTrigger" 
-					/> <ref bean="applicationProgressCronTrigger" /> <ref bean="neededDocumentCronTrigger" 
-					/> -->
+				<ref bean="userCronTrigger" />
 			</list>
 		</property>
 	</bean>
