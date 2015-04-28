@@ -315,3 +315,9 @@ INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`
 VALUES ('36','FINAL_DOCS_SENT_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','852fcf28-1c94-40e2-bab4-145a3790f5fe');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('37','DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','a77f61e9-66eb-4304-a205-2959be561f58');
+
+
+#Added by Utsav on 28th April at 04:33 PM IST
+
+INSERT INTO `newfi_schema`.`batchjobmaster`(`id`,`name`,`description`,`status`)
+VALUES ('3','user-batch-job','Batch job for user profile check','0');
