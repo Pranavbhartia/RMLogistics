@@ -430,6 +430,17 @@ function getRefinanceLeftPanel() {
     }
     return container;
 }
+function switchBasedOnStage(stage){
+    var element;
+    if(buyHomeTeaserRate.loanType){
+        element=$("#homeProgressBaarId_"+stage);
+    }else if(refinanceTeaserRate.loanType){
+        element=$("#progressBaarId_"+stage)
+    }
+    if(element){
+        $(element).trigger( "click" );
+    }
+}
 
 function getRefinanceLeftPanelItem(itemTxt, stepNo, itemCompletionStage) {
     var itemCont = $('<div>').attr({
@@ -940,7 +951,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         
     }
  
-
+var refreshSupport=true;
 function progressBaar(num) {
         var count = 7;
         $("#progressBaarId_" + num).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
@@ -955,7 +966,7 @@ function progressBaar(num) {
         }
         sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
         if(typeof(newfiObject)==='undefined')
-            window.location.hash="#"+(num-1);
+            window.location.hash="#CE-"+(num-1);
     }
    
 
