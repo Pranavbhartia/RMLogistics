@@ -92,7 +92,7 @@ public abstract class NexeraWorkflowTask {
 			// Sending sms to user now
 			if (loanVO.getUser() != null) {
 				if (loanVO.getUser().getCustomerDetail() != null) {
-					if (loanVO.getUser().getCustomerDetail().getCarrierInfo() != null) {
+					if (loanVO.getUser().getCarrierInfo() != null) {
 						if (loanVO.getUser().getPhoneNumber() != null
 						        && loanVO.getUser().getPhoneNumber()
 						                .equalsIgnoreCase("")) {
@@ -100,7 +100,7 @@ public abstract class NexeraWorkflowTask {
 							        + Long.valueOf(loanVO.getUser()
 							                .getPhoneNumber()));
 							smsServiceHelper.sendNotificationSMS(loanVO
-							        .getUser().getCustomerDetail()
+							        .getUser()
 							        .getCarrierInfo(), Long.valueOf(loanVO
 							        .getUser().getPhoneNumber()));
 						}

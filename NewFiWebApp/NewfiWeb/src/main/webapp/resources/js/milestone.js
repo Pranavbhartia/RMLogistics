@@ -446,6 +446,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				data.loanID = workFlowContext.loanId;
 			}
 			
+			
 			ob.stateInfoContainer=txtRow1;
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
@@ -553,6 +554,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 						}
 					});
 			}else{
+				
 				ob.stateInfoContainer.html(ob.workItem.stateInfo);
 			}	
 		}		
@@ -1149,6 +1151,19 @@ function addClicableClassToElement(element,workflowItem){
 		case "LOAN_MANAGER_DECISION":
 			$(element).addClass("cursor-pointer");
 			break;
+		case "CONNECT_ONLINE_APP":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "MANAGE_ACCOUNT":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "SMS_TEXTING_PREF":
+			$(element).addClass("cursor-pointer");
+			break;
+		case "MANAGE_PHOTO":
+			$(element).addClass("cursor-pointer");
+			break;
+			
 	}
 }
 function appendMilestoneItem(workflowItem, childList) {

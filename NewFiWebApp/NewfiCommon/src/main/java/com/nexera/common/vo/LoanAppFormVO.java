@@ -862,8 +862,6 @@ public class LoanAppFormVO implements Serializable {
 		customerDetail.setSsn(customerDetailVO.getSsn());
 
 		customerDetail.setId(customerDetailVO.getId());
-		customerDetail.setMobileAlertsPreference(customerDetailVO
-		        .getMobileAlertsPreference());
 
 		customerDetail.setIsselfEmployed(customerDetailVO.getIsselfEmployed());
 		customerDetail.setSelfEmployedIncome(customerDetailVO

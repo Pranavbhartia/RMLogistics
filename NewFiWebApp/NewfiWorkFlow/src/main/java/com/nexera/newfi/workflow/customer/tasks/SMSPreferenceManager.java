@@ -43,7 +43,7 @@ public class SMSPreferenceManager implements IWorkflowTaskExecutor {
 		int userId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO userVo = userProfileService.findUser(userId);
-		if (userVo.getCustomerDetail().getMobileAlertsPreference() != null) {
+		if (userVo.getMobileAlertsPreference() != null) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);

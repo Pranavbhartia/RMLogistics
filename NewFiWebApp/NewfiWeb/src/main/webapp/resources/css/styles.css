@@ -4651,7 +4651,7 @@ input.calc-input {
 /*styles for carrierInfo drop down*/
 .prof-form-row-carrier {
   float: right;
-  margin: 0px -50px;
+  /* margin: 0px -50px; */
 }
 
 .prof-form-input-carrier {

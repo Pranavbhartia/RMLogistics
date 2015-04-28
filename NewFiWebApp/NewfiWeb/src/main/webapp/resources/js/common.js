@@ -310,7 +310,6 @@ function adjustCustomerEngagementPageOnResize() {
 	}
 }
 
-
 function scrollToTop(){
 	$(window).scrollTop(0);
 }
@@ -371,15 +370,33 @@ function getRoundValue(inputData){
 		return 0;
 	
 }
+function getDecimalValue(inputData){
+	if(inputData){
+		var num=removedDoller(removedComma(inputData));
+		var val;
+		try{
+			val=parseFloat(num).toFixed(2);
+		}catch(exception){
+			val=num;
+		}
+		return val;
+	} else
+		return 0;
+	
+}
 
 function numberWithCommasAndDoller(x) {
     return "$"+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function showValue(number) {
+function showValue(number,showDecimal) {
 	var temp=removedDoller(removedComma(number));
 	if(number&&number!=""&&!isNaN(temp))
-    	return numberWithCommasAndDoller(getRoundValue(number));
+		if(!showDecimal)
+    		return numberWithCommasAndDoller(getRoundValue(number));
+    	else{
+			return numberWithCommasAndDoller(getDecimalValue(number));
+    	}
 	else{
 		if(isNaN(temp))
 			return number;
@@ -388,6 +405,12 @@ function showValue(number) {
 	}
 }
 
+function markNegative(val){
+	if(!isNaN(val)){
+		val=showValue(Math.abs(val),true);
+	}
+	return "("+val+")";
+}
 
 function getClosingCostLabel(item){
 	//Note case string should not be changed if text need to be changed then string being returned need to be modified
@@ -486,7 +509,7 @@ function getCalculationFunctionForItem(key){
     	if(closingCostHolder.valueSet[key])
     		return closingCostHolder.valueSet[key];
     	else
-    		return "0";
+    		return "$0.00";
     };
     switch(key){
     	case "TotEstLenCost":
@@ -502,7 +525,7 @@ function getCalculationFunctionForItem(key){
     			if(closingCostHolder.valueSet[key]&&closingCostHolder.valueSet[key]!="0")
 		    		return closingCostHolder.valueSet[key];
 		    	else
-		    		return "$ 125.00";
+		    		return "$125.00";
     		};
     		break;
     	case "hazIns903":
@@ -543,7 +566,7 @@ function getCalculationFunctionForItem(key){
     			if(closingCostHolder.valueSet[key]&&getFloatValue(closingCostHolder.valueSet[key])!=0)
 		    		return closingCostHolder.valueSet[key];
 		    	else{
-		    		return "$ 0";
+		    		return "$0.00";
 		    	}
     		};
     		break;
@@ -613,7 +636,15 @@ function getRowHolderObject(container,value,key){
 			var ob=this;
         	var getVal=ob.updateFunction();
         	if(!isNaN(getVal)){
-        		getVal=showValue(getVal);
+        		var negativeFlag=false;
+        		if(getVal<0){
+        			negativeFlag=true;
+        			getVal=Math.abs(getVal)
+        		}
+        		getVal=showValue(getVal,true);
+        		if(negativeFlag){
+        			getVal=markNegative(getVal);
+        		}
         	}
         	return getVal;
         },
