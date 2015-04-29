@@ -4725,3 +4725,13 @@ input.calc-input {
 }
 
 /*End*/
+
+#overlay-loader-text{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 150px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 15px;
+ }
