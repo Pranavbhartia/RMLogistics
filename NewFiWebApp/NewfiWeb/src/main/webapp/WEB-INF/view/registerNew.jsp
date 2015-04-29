@@ -155,6 +155,7 @@
 		    $.ajax({
 		        url: "rest/shopper/validate",
 		        type: "POST",
+		        cache:false,
 		        data: {
 		            "registrationDetails": JSON.stringify(registration)
 		        },
@@ -185,6 +186,7 @@
     $.ajax({
         url: "/NewfiWeb/rest/shopper/registration",
         type: "POST",
+        cache:false,
         data: {
             "registrationDetails": JSON.stringify(registration)
         },
@@ -209,6 +211,7 @@
 		    $.ajax({
 		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
 		        type: "POST",
+		        cache:false,
 		        data: {
 		            "registrationDetails": JSON.stringify(user)
 		        },

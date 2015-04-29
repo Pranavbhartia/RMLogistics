@@ -88,7 +88,8 @@ $('#changePwdForm').submit(function(event){
 	if(isSuccess){
 		$.ajax({
 	        url: "/NewfiWeb/rest/userprofile/password",
-	        type: "POST",       
+	        type: "POST",  
+	        cache:false,
 	        data: {
 	                 "changePasswordData": JSON.stringify(changePasswordData)
 	        },

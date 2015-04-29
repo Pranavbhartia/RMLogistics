@@ -58,6 +58,7 @@
 		$.ajax({
 			url : url,
 			type : "POST",
+			cache:false,
 			data : data,
 			success : showMessage,
 			error :  function(e) {
