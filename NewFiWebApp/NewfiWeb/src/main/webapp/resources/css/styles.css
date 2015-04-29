@@ -4788,4 +4788,11 @@ input.calc-input {
 .licence-input{
 	width: 150px
 }
+
+.license-row {
+	line-height:30px;
+    background: #F5F9Fc;
+    padding: 0 15px;
+    border-radius: 3px;
+}
 /*End*/
