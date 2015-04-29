@@ -1,5 +1,7 @@
 package com.nexera.core.service.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,18 +25,23 @@ public class StateLookupServiceImpl implements StateLookupService {
 
 	@Autowired
 	private StateLookupDao stateLookupDao;
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<StateLookupVO> getStatesList() {
-		
+
 		LOG.info("Method getStatesList() called to fetch the list of states of US");
-		
-        List<StateLookup> list = stateLookupDao.loadAll(StateLookup.class);
-		
+
+		List<StateLookup> list = stateLookupDao.loadAll(StateLookup.class);
+		Collections.sort(list, new Comparator<StateLookup>() {
+			public int compare(StateLookup o1, StateLookup o2) {
+
+				return o1.getStatecode().compareTo(o2.getStatecode());
+			}
+		});
 		LOG.info("Method getStatesList() finished");
 		return StateLookup.convertToVo(list);
-		
+
 	}
 
 	@Override

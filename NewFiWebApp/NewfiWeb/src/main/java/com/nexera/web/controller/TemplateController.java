@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -29,7 +28,9 @@ import sun.misc.BASE64Decoder;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -201,23 +202,15 @@ public class TemplateController extends DefaultController {
 	public ModelAndView referrerRegistration(@PathVariable String userName) {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Url referer from" + userName);
-		List<String> emailIds = userProfileService.getDefaultUsers(userName);
-		if (emailIds != null) {
-
-			if (emailIds.size() == 2) {
-				// Has to be a Realtor referal
-				if (!emailIds.get(0).equals("")) {
-					mav.addObject("loanManagerEmail", emailIds.get(0));
-				}
-
-				mav.addObject("realtorEmail", emailIds.get(1));
-			} else {
-				mav.addObject("loanManagerEmail", emailIds.get(0));
-			}
-		} else {
-			mav.addObject("loanManagerEmail", "");
-			mav.addObject("realtorEmail", "");
+		try {
+			UserVO userVO = userProfileService.findByUserName(userName);
+			mav.addObject("userObject", userVO);
+		} catch (DatabaseException | NoRecordsFetchedException e) {
+			// TODO Auto-generated catch block
+			LOG.error("Error retrieving information related to username"
+			        + userName, e);
 		}
+
 		mav.setViewName("registerNew");
 		return mav;
 	}
