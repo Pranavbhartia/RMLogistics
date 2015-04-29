@@ -18,6 +18,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 		url : url,
 		type : type,
 		dataType : dataType,
+		cache:false,
 		data : data,
 		contentType: "application/json",
 		success : function(response){
@@ -69,6 +70,7 @@ function synchronousAjaxRequest(url,type,dataType,data,successCallBack, isPagina
 		type : type,
 		dataType : dataType,
 		async:false,
+		cache:false,
 		data : data,
 		contentType: "application/json",
 		success : successCallBack,
@@ -161,24 +163,20 @@ function hideOverlay(){
    
 }
 
-//Function to show toast message
-function showToastMessage(message){
-	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
-	$('#overlay-toast').fadeIn("slow",function(){
-		setTimeout(function(){
-			$('#overlay-toast').fadeOut("slow");
-		},2000);
-	});
-}
 
 //Function to show toast message
 function showErrorToastMessage(message){
 	$('#overlay-toast-txt').html(message).addClass('overlay-toast-success');
-	$('#overlay-toast').fadeIn("slow",function(){
+	$('#overlay-toast').show();
+	$('#overlay-toast').click(function(e){
+		$('#overlay-toast-txt').html('');
+		$('#overlay-toast').hide();
+	});
+	/*$('#overlay-toast').fadeIn("slow",function(){
 		setTimeout(function(){
 			$('#overlay-toast').fadeOut("slow");
 		},3000);
-	});
+	});*/
 }
 
 
@@ -302,7 +300,7 @@ function adjustCustomerNameWidth() {
 	var statusIcnWidth = $('.onl-status-icn').width();
 	var cusImgWidth = $('.cus-img-icn').width();
 	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 5;
-	$('.cus-name').outerWidth(cusNameWidth);
+	$('.cus-name').attr('style','max-width:'+cusNameWidth);
 }
 
 //Function to adjust center panel in customer Engagement Page
@@ -626,7 +624,8 @@ function getCalculationFunctionForItem(key){
     		fun=function(){
     			var val1=getFloatValue(closingCostHolder["TotEstLenCost"].getValueForItem());
     			var val2=getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
-    			var result=val1+val2;
+    			var val3=getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
+    			var result=val1+val2+val3;
         		return result;
 	        };
     		break;
@@ -766,4 +765,3 @@ $(document).on('click',function(e){
         $('.soft-menu-wrapper').slideToggle();
     }
 });
-

@@ -1324,7 +1324,7 @@ function appendCustomerLoanDetails(loanDetails) {
 
 			var label = $("<div>").attr({
 				"class" : "av-loan-details-row-lc datelabel float-left"
-			}).html("Set expiry date");
+			}).html("Set Contract Expiration Date");
 			var expiryDate = "";
 			if (loanDetails.purchaseDocumentExpiryDate != undefined
 					&& loanDetails.purchaseDocumentExpiryDate != null) {
@@ -1390,6 +1390,7 @@ function updatePurchaseDocumentExpiryDate() {
 		url : url,
 		type : "POST",
 		data : data,
+		cache:false,
 		contentType : "application/x-www-form-urlencoded",
 		success : function(response) {
 			showExpiryDateResponse(response);
@@ -2336,6 +2337,7 @@ function updateUserProfile() {
 		$.ajax({
 			url : "rest/userprofile/managerupdateprofile",
 			type : "POST",
+			cache:false,
 			data : {
 				"updateUserInfo" : JSON.stringify(userProfileJson)
 			},
@@ -3712,6 +3714,7 @@ $(document).on('click', '.pay-application-fee', function(event) {
 	$.ajax({
 		url : url,
 		type : "GET",
+		cache:false,
 		success : function(data) {
 			console.log("Show payment called with data : " + data);
 			$("#popup-overlay").html(data);

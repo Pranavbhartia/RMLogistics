@@ -460,6 +460,7 @@
 
 			    	   url:"rest/userprofile/findteaserate",
 			    	   type:"POST",
+			    	   cache:false,
 			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
 			    	   datatype:"application/json",
 			    	   success : function(){

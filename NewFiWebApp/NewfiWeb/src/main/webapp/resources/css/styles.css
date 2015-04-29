@@ -1,3 +1,4 @@
+
 @font-face {
 	font-family: 'OpenSans';
 	src: url('../fonts/OpenSans-Regular-webfont.eot')
@@ -108,6 +109,11 @@ input[type="button"]:active, button:active {
 input[type="button"]:focus, button:focus {
 	border: none;
 	outline: none;
+}
+
+.link-pointer{
+	color: #428bca;
+	cursor: pointer;
 }
 
 .container {
@@ -1269,6 +1275,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-online-status {
+	display:none;
 	height: 15px;
 	line-height: 15px;
 	font-size: 10px;
@@ -1394,6 +1401,7 @@ input[type="button"]:focus, button:focus {
   margin-bottom: 5px;
 	width: 45px;
 	height: 45px;
+	margin-right: 15px;
 	
 }
 .con-prof-name {
@@ -1441,7 +1449,7 @@ input[type="button"]:focus, button:focus {
 
 .assigned-agent-cont-rc {
 	width: 63%;
-	padding-left: 15px;
+	padding-left: 5px;
 }
 
 .right-panel-messageDashboard {
@@ -2711,7 +2719,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 216px;
+	width: 300px;
 }
 
 .prof-btn {
@@ -2884,6 +2892,7 @@ input.calc-input {
 .login-hdr {
 	line-height: 50px;
 	margin: 0 5px;
+	color: #fff;
 }
 
 .hdr-login-btn,.hdr-get-quote,.hdr-signup-btn {
@@ -2969,6 +2978,7 @@ input.calc-input {
 	font-size: 12px;
 	border: 1px #8EC63F solid;
 	border-left-width: 7px;
+	cursor: pointer;
 }
 
 .overlay-toast-success {
@@ -4644,7 +4654,7 @@ input.calc-input {
 /*styles for carrierInfo drop down*/
 .prof-form-row-carrier {
   float: right;
-  margin: 0px -50px;
+  /* margin: 0px -50px; */
 }
 
 .prof-form-input-carrier {
@@ -4724,8 +4734,71 @@ input.calc-input {
 	font-size: 11px;
 }
 
-/*End*/
+.work-on-loan-active {
+	padding: 10px 0 5px 20px;
+	font-size: 11px;
+}
 
+.work-on-loan-item-cont {
+	float: left;
+	padding-top: 40px;
+	margin-left: 10px;
+	font-size: 11px;
+}
+
+.lp-details-icn {
+	background: url(../images/t2-pic1-inactive.png) no-repeat center;
+}
+
+.lp-rates-icn {
+	background: url(../images/t2-pic2-inactive.png) no-repeat center;
+}
+
+.lp-upload-icn {
+	background: url(../images/t2-pic3-inactive.png) no-repeat center;
+}
+
+.lp-progess-icn {
+	background: url(../images/t2-pic4-inactive.png) no-repeat center;
+}
+
+.lp-item .work-on-loan-active{
+	display: none;
+}
+
+.lp-item-active .work-on-loan-active{
+	display: block;
+}
+
+.lp-item .work-on-loan-inactive{
+	display: block;
+}
+
+.lp-item-active .work-on-loan-inactive{
+	display: none;
+}
+
+.state-wrapper{
+	position: relative;
+}
+
+.add-licence-popup {
+	right: -290px;
+	top: 30px;
+	padding: 10px 10px 20px 10px;
+}
+
+.licence-input{
+	width: 150px
+}
+
+.license-row {
+	line-height:30px;
+    background: #F5F9Fc;
+    padding: 0 15px;
+    border-radius: 3px;
+}
+/*End*/
 #overlay-loader-text{
   position: fixed;
   left: 0;
@@ -4735,3 +4808,4 @@ input.calc-input {
   margin: 0 auto;
   font-size: 15px;
  }
+

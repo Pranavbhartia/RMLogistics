@@ -19,10 +19,8 @@
 	<div class="home-container container">
 		<div class="login-container container">
 				<div class="container-row row clearfix">
-					<div class="reg-display-title">Reset Password</div>
-					<div class="reg-display-title-subtxt">Lorem Ipsum is also known
-						as: Greeked Text, blind text, placeholder text, dummy content,
-						filter text, lipsum, and mock-content.</div>
+					<div class="reg-display-title">Password Reset</div>
+					<div class="reg-display-title-subtxt">Enter the email address that you used to create your account.  We will send you an email with instructions to reset your password.</div>
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm" action="#" method="POST">
 						    <div class="reset-error hide" id="errorMessage"></div>

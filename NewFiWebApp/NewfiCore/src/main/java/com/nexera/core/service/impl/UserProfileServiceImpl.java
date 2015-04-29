@@ -430,6 +430,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-password-", new String[] { uniqueURL });
+		substitutions.put("-baseUrl-", new String[] { baseUrl });
 
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -451,7 +452,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 
 		User newUser = User.convertFromVOToEntity(userVO);
-		
+
 		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
 		        .getEmailId());
 		newUser.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
@@ -479,14 +480,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        ActiveInternalEnum.ACTIVE);
 		}
 		LOG.debug("Saving the user to the database");
-		Integer userID =null;
-		try{
+		Integer userID = null;
+		try {
 			userID = userProfileDao.saveUserWithDetails(newUser);
-		}catch(DatabaseException de){
+		} catch (DatabaseException de) {
 			LOG.error("database exception");
 			throw new DatabaseException("Email Already present in database");
 		}
-		
+
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);
@@ -1301,5 +1302,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void updateTokenDetails(User user) {
 		userProfileDao.updateTokenDetails(user);
 		return;
+	}
+
+	@Override
+	public UserVO findByUserName(String userName) throws DatabaseException,
+	        NoRecordsFetchedException {
+		// TODO Auto-generated method stub
+		return User.convertFromEntityToVO(userProfileDao
+		        .getUserByUserName(userName));
 	}
 }

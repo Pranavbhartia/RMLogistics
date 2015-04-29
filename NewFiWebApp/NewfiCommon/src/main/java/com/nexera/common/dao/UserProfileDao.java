@@ -96,4 +96,7 @@ public interface UserProfileDao extends GenericDao {
 	public Integer updateRealtorDetails(RealtorDetail realtor);
 
 	public Integer UpdateUserProfile(String phoneNumber, Integer userId);
+
+	public User getUserByUserName(String userName)
+	        throws NoRecordsFetchedException;
 }

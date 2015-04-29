@@ -266,6 +266,13 @@ function getLoanPersonalInfoContainer(user) {
 	        }
 	}
  	
+	var licensesRow = getLicensesRow();
+	container.append(licensesRow);
+	
+	if(user.internalUserStateMappingVOs == undefined){
+		licensesRow.addClass('hide');
+	}
+	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn",
 		"onclick" : "updateLMDetails()"
@@ -273,6 +280,64 @@ function getLoanPersonalInfoContainer(user) {
 	container.append(saveBtn);
 	return container;
 }
+
+function getLicensesRow() {
+	var row = $('<div>').attr({
+		"id" : "licenseRow",
+		"class" : "clearfix"
+	});
+	var rowCol1 = $('<div>').attr({
+		"class" : "prof-form-row-desc float-left"
+	});
+	
+	var rowCol2 = $('<div>').attr({
+		"id" : "licensedStateList",
+		"class" : "prof-form-rc float-left"
+	});
+	
+	appendLicensedStates(rowCol2);
+		
+	return row.append(rowCol1).append(rowCol2);
+}
+
+function appendLicensedStates(element){
+	element.html('');
+	if(!jQuery.isEmptyObject(internalUserStates)){
+		$('#licenseRow').show();
+	}else{
+		return;
+	}
+	for(var key in internalUserStates){
+		if(internalUserStates[key].userId == undefined){
+			continue;
+		}
+		var licenseRow = $('<div>').attr({
+			"class" : "license-row clearfix"
+		});
+		
+		var state = $('<div>').attr({
+			"class" : "state-val float-left"
+		}).text(findStateNameForStateId(internalUserStates[key].stateId));
+		state.append(" : ");
+		
+		var licenseNumber = $('<div>').attr({
+			"class" : "license-val float-left"
+		}).text(internalUserStates[key].license);
+		
+		var removeIcn = $('<div>').attr({
+			"class" : "message-recipient-remove-icn float-right"
+		}).bind('click',{"key":key},function(event){
+			var key = event.data.key;
+			$(this).closest('.license-row').remove();
+			delete internalUserStates[key];
+		});
+		
+		licenseRow.append(state).append(licenseNumber).append(removeIcn);
+		element.append(licenseRow);
+		
+	}
+}
+
 function getLoanManager(user){
 
 		
@@ -385,6 +450,7 @@ function updateLqbLMDetails(){
 	 $.ajax({
 			url : "rest/userprofile/updateLqbprofile",
 			type : "POST",
+			cache:false,
 			data : {
 				"updateUserInfo" : JSON.stringify(userProfileJson)
 			},
@@ -419,6 +485,7 @@ function changePassword(){
 			 $.ajax({
 					url : "rest/userprofile/password",
 					type : "POST",
+					cache:false,
 					data : {
 						"userVOStr" : JSON.stringify(user)
 					},
@@ -545,6 +612,7 @@ function updateLMDetails() {
 	    $.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
+		cache:false,
 		data : {
 			"updateUserInfo" : JSON.stringify(userProfileJson)
 		},
@@ -1158,19 +1226,64 @@ function getStateRow(user) {
 }
 
 
-function getManagerStateRow(user) {
+function getManagerStateRow() {
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("State");
+	}).html("Licensed States");
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left clearfix"
 	});
 	
+	var addLicence = $('<span>').attr({
+		"class" : "link-pointer"
+	}).text("Add License")
+	.bind('click',function(e){
+		appendAddLicencePopup(this);
+	});
+	
+	rowCol2.append(addLicence);
+	return row.append(rowCol1).append(rowCol2);
+}
+
+function removeAddLicencePopup() {
+	$('#add-licence-popup').remove();	
+}
+
+function appendAddLicencePopup(element) {
+	
+	removeAddLicencePopup();
+	
+	var wrapper = $('<div>').attr({
+		"id" : "add-licence-popup",
+		"class" : "ms-add-member-popup add-licence-popup"
+	}).click(function(e) {
+		e.stopPropagation();
+	});
+	var header = $('<div>').attr({
+		"class" : "popup-header"
+	}).html("Add a License");
+	
+	var container = $('<div>').attr({
+		"class" : "popup-container"
+	});
+	
+	var row = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	
+	var col1 = $('<div>').attr({
+		"class" : "add-member-input-cont float-left clearfix"
+	});
+	
+	var col1Label = $('<div>').attr({
+		"class" : "add-member-label float-left"
+	}).text("State");
+	
 	var stateWrapper = $('<div>').attr({
-		"class" : "float-left"
+		"class" : "state-wrapper float-left"
 	});
 	
 	var stateInput = $('<input>').attr({
@@ -1203,11 +1316,65 @@ function getManagerStateRow(user) {
 	
 	stateWrapper.append(stateInput).append(dropDownWrapper);
 	
-	var stateTextRow = getStateTextRow();
+	col1.append(col1Label).append(stateWrapper);
 	
-	rowCol2.append(stateWrapper).append(stateTextRow);
-	return row.append(rowCol1).append(rowCol2);
+	var col2 = $('<div>').attr({
+		"class" : "add-member-input-cont float-left clearfix"
+	});
+	
+	var col2Label = $('<div>').attr({
+		"class" : "add-member-label float-left"
+	}).text("License No");
+	
+	var col2Input = $('<input>').attr({
+		"id" : "licenseId",
+		"class" : "create-user-popup-input licence-input float-left"
+	});
+	
+	col2.append(col2Label).append(col2Input);
+	
+	row.append(col1).append(col2);
+	
+	var updateBtn = $('<div>').attr({
+		"id" : "save-license-btn",
+		"class" : "prof-btn prof-save-btn"
+	}).text("Save")
+	.bind('click',function(e){
+		e.stopPropagation();
+		var licenseVal = $('#licenseId').val();
+		
+		if(licenseVal == undefined || licenseVal == ""){
+			return false;
+		}
+		
+		var internalUserStateMappingVO = {};
+		var isNew = true;
+		if(internalUserStates[$(this).attr("state-id")]){
+			isNew = true;
+			internalUserStateMappingVO = internalUserStates[$(this).attr("state-id")];
+		}
+		
+		internalUserStateMappingVO.userId=$("#userid").val();
+		internalUserStateMappingVO.stateId=$(this).attr("state-id");
+		internalUserStateMappingVO.license=licenseVal;
+		
+		if(isNew)
+			internalUserStates[$(this).attr("state-id")] = internalUserStateMappingVO;
+		
+		removeAddLicencePopup();
+		
+		appendLicensedStates($('#licensedStateList'));
+	});
+	
+	
+	container.append(row).append(updateBtn);
+	
+	wrapper.append(header).append(container).append(updateBtn);
+	
+	$(element).append(wrapper);
 }
+
+
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
 		currentZipcodeLookUp = response.resultObject;
@@ -1296,15 +1463,17 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 		stateRow.append(checkBox).append(textRow);
 		stateRow.bind('click',function(e){
 			e.stopPropagation();
-			var internalUserStateMappingVO=new Object();
+			$('#stateId').val($(this).text());
+			$('#save-license-btn').attr("state-id",this.id);
+			/*var internalUserStateMappingVO=new Object();
 			internalUserStateMappingVO.userId=$("#userid").val();
 			internalUserStateMappingVO.stateId=this.id;
 			if($("#checkBox_"+this.id).hasClass("doc-unchecked")){
 				$("#checkBox_"+this.id).removeClass("doc-unchecked").addClass("doc-checked");
 				internalUserStateMappingVO.isChecked=true;		
-//		       			internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
+				//internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
 				internalUserStates[this.id]=internalUserStateMappingVO;
-			}/*else{
+			}else{
 				internalUserStates[this.id].isChecked = false;
 				//$('.message-recipient-remove-icn[data-id="'+this.id+'"]').closest('.prof-form-input-textarea-block').remove();
 				$("#checkBox_"+this.id).addClass("doc-unchecked").removeClass("doc-checked");
@@ -1315,8 +1484,8 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 			}*/
 			appendUserStatesInLMProfile($('#inputTextarea'));
 				
-				$('#stateId').val(this.name);
-				//toggleStateDropDown();
+				//$('#stateId').val(this.name);
+				toggleStateDropDown();
 			});
 		if(states.indexOf((stateList[i].id).toString())>-1){
 			stateRow.prependTo($containerToAppend);
@@ -1953,6 +2122,7 @@ function updateUserDetails() {
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
+		cache:false,
 		data : {
 			"updateUserInfo" : JSON.stringify(userProfileJson)
 		},
@@ -2185,6 +2355,7 @@ function saveEditUserProfile(user){
 	$.ajax({
 		url : "rest/userprofile/completeprofile",
 		type : "POST",
+		cache:false,
 		data : {"completeUserInfo":JSON.stringify(completeUserInfo)},
 		dataType : "json",
 		success : function(data) {
