@@ -629,7 +629,11 @@ function getCalculationFunctionForItem(key){
     		fun=function(){
     			var val1=getFloatValue(closingCostHolder["TotEstLenCost"].getValueForItem());
     			var val2=getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
-    			var val3=getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
+    			var val3 = 0;
+    			if (closingCostHolder["totPrepaids"])
+    			{
+    			 val3=getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
+    			}
     			var result=val1+val2+val3;
         		return result;
 	        };
