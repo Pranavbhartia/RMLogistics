@@ -21,7 +21,7 @@ public class BatchServiceImpl implements BatchService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public BatchJobMaster getBatchJobMasterById(int batchJobId) {
+	public synchronized BatchJobMaster getBatchJobMasterById(int batchJobId) {
 		return (BatchJobMaster) batchJobMasterDao.load(BatchJobMaster.class,
 		        batchJobId);
 
@@ -29,7 +29,7 @@ public class BatchServiceImpl implements BatchService {
 
 	@Override
 	@Transactional
-	public BatchJobExecution putBatchIntoExecution(
+	public synchronized BatchJobExecution putBatchIntoExecution(
 	        BatchJobExecution batchJobExecution) {
 		Integer batchJobExecutionId = (Integer) batchJobExecutionDao
 		        .save(batchJobExecution);
@@ -40,7 +40,8 @@ public class BatchServiceImpl implements BatchService {
 
 	@Override
 	@Transactional
-	public void updateBatchJobExecution(BatchJobExecution batchJobExecution) {
+	public synchronized void updateBatchJobExecution(
+	        BatchJobExecution batchJobExecution) {
 		batchJobExecutionDao.update(batchJobExecution);
 
 	}

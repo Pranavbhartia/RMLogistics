@@ -255,6 +255,11 @@ alter table user add column mobile_alert_preference TINYINT(1) ,  add column car
 ALTER TABLE customerdetails drop mobile_alert_preference ;
 ALTER TABLE customerdetails drop carrier_info;
 
+   
+#Added by Utsav on 28th April at 06:24 PM IST   
+ALTER TABLE `newfi_schema`.`template` 
+	change `key` `key` varchar(100) character set utf8 collate utf8_general_ci NULL;
+
 #Added by Utsav on 28th April at 03:45 PM IST
 
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
@@ -332,7 +337,4 @@ VALUES ('3','user-batch-job','Batch job for user profile check','0');
 #Added by Utsav on 28th April at 06:07 PM IST
 ALTER TABLE `newfi_schema`.`user` 
    ADD COLUMN `time_offset` bigint(100) NULL AFTER `token_generation_time`;
-   
-#Added by Utsav on 28th April at 06:24 PM IST   
-ALTER TABLE `newfi_schema`.`template` 
-	change `key` `key` varchar(100) character set utf8 collate utf8_general_ci NULL;
+
