@@ -363,6 +363,7 @@ function getLoanManager(user){
 			"id" : "managerID",
 			"roleID" : user.userRole.id,
 			"internalroleid" : "0",
+			"showinEditProfile" : "1",
 			"userrolebased" : (user.userRole.roleCd == "REALTOR")?"true" : "false"
 		}).on(
 				'input',
