@@ -629,12 +629,19 @@ function getCalculationFunctionForItem(key){
     		fun=function(){
     			var val1=getFloatValue(closingCostHolder["TotEstLenCost"].getValueForItem());
     			var val2=getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
-    			var val3 = 0;
-    			if (closingCostHolder["totPrepaids"])
+    			var int1= 0;
+    			if (closingCostHolder["interest901"])
     			{
-    			 val3=getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
+    				int1 = getFloatValue(closingCostHolder["interest901"].getValueForItem());
+    				
     			}
-    			var result=val1+val2+val3;
+    			var haz=0 ;
+    			if (closingCostHolder["hazIns903"])
+    			{
+    				haz = getFloatValue(closingCostHolder["hazIns903"].getValueForItem());
+    			}
+    			var totPrep=int1+haz;
+    			var result=val1+val2+totPrep;
         		return result;
 	        };
     		break;
