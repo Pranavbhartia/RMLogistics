@@ -1869,10 +1869,12 @@ function paintMyIncome() {
 	
 	            customerEmploymentIncome.push(termp);
 	        });
+        	
+        	appUserDetails.customerEmploymentIncome = customerEmploymentIncome;
         }
        
      
-        appUserDetails.customerEmploymentIncome = customerEmploymentIncome;
+        
        
     	
         selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
