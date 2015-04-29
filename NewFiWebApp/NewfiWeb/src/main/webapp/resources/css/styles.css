@@ -1237,7 +1237,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-cont-wrapper {
-    width: 25%;
+    width: 23%;
     min-width: 210px;
     float: left;
     padding: 10px 5px;
@@ -1347,6 +1347,7 @@ input[type="button"]:focus, button:focus {
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+	margin-right:35px;
 }
 
 .conversation-container {
@@ -2719,7 +2720,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 300px;
+	width: 200px;
 }
 
 .prof-btn {
