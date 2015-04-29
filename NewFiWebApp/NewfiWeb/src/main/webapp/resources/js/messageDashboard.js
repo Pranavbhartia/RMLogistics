@@ -595,14 +595,20 @@ function paintChildConversations(level, conversations) {
 		});
 
 		var col1 = $('<div>').attr({
-			"class" : "conv-prof-image float-left"
+			//"class" : "conv-prof-image float-left"
 		});
 
 		if (data.createdUser.imgUrl != undefined) {
+			col1.addClass("conv-prof-image float-left");
 			col1.attr({
 				"style" : "background-image:url(" + data.createdUser.imgUrl
 						+ ")"
 			});
+		}
+		else
+		{
+			col1.addClass("conv-prof-image-default float-left");
+			col1.text(getInitialsFromFullName(data.createdUser.userName));
 		}
 
 		var col2 = $('<div>').attr({
@@ -630,16 +636,22 @@ function paintChildConversations(level, conversations) {
 					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR") {
 				// We wil not show any other user roles in here.
 
-				var userImage = $('<div>').attr({
-					"class" : "conv-prof-image float-left",
+				var userImage = $('<div>').attr({					
 					"id" : otherUserBinded[k].userID
 				});
 
 				if (otherUserBinded[k].imgUrl != undefined) {
+					userImage.addClass("conv-prof-image float-left");
 					userImage.attr({
 						"style" : "background-image:url('"
 								+ otherUserBinded[k].imgUrl + "')"
 					});
+				}
+				else
+				{
+					userImage.addClass("conv-prof-image-default float-left");
+					var initialText =getInitialsFromFullName (otherUserBinded[k].userName); 
+					userImage.text(initialText);
 				}
 
 				if (otherUserBinded[k].userID == data.createdUser.userID)
