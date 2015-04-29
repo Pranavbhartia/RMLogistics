@@ -1395,6 +1395,7 @@ function milestoneChildEventHandler(event) {
 		        url : url,
 		        type : "POST",
 		        data : payload,
+		        cache:false,
 		        success : function(data) {
 		        	console.log("Show payment called with data : " + data);
 		        	$("#popup-overlay").html(data);

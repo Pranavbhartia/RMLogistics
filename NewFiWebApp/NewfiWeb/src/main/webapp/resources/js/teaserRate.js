@@ -104,6 +104,7 @@ function getRateProgramContainer() {
 			
 			url:"register.do",
 			type:"GET",
+			cache:false,
 			success :function(){},
 			error :function(){}
 		});

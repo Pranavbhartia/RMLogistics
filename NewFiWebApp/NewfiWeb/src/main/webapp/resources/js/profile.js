@@ -450,6 +450,7 @@ function updateLqbLMDetails(){
 	 $.ajax({
 			url : "rest/userprofile/updateLqbprofile",
 			type : "POST",
+			cache:false,
 			data : {
 				"updateUserInfo" : JSON.stringify(userProfileJson)
 			},
@@ -484,6 +485,7 @@ function changePassword(){
 			 $.ajax({
 					url : "rest/userprofile/password",
 					type : "POST",
+					cache:false,
 					data : {
 						"userVOStr" : JSON.stringify(user)
 					},
@@ -610,6 +612,7 @@ function updateLMDetails() {
 	    $.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
+		cache:false,
 		data : {
 			"updateUserInfo" : JSON.stringify(userProfileJson)
 		},
@@ -2119,6 +2122,7 @@ function updateUserDetails() {
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
+		cache:false,
 		data : {
 			"updateUserInfo" : JSON.stringify(userProfileJson)
 		},
@@ -2351,6 +2355,7 @@ function saveEditUserProfile(user){
 	$.ajax({
 		url : "rest/userprofile/completeprofile",
 		type : "POST",
+		cache:false,
 		data : {"completeUserInfo":JSON.stringify(completeUserInfo)},
 		dataType : "json",
 		success : function(data) {
