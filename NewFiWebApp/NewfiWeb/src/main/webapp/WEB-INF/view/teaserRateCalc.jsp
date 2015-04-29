@@ -42,7 +42,7 @@
 		<input type="submit" value="Submit">
 	</form>
 
-
+<jsp:include page="inlineFooter.jsp"></jsp:include>
 	<jsp:include page="include/teaserViewJsIncludes.jsp"></jsp:include>
 
 </body>

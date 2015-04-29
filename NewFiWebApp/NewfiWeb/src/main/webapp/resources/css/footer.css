@@ -1,0 +1,139 @@
+
+section.section.swatch-black {
+    background-color: black;
+}
+
+.footer-container {
+    position: relative;    
+    z-index: 3;
+    width: 1170px;
+    margin-right: auto;    
+    margin-left: auto;    
+    padding-left: 15px;   
+     padding-right: 15px;
+}
+
+.footer-container {
+    /* margin: 10px; */
+}
+
+.footer-container-text {
+    text-align: center;
+    padding-top: 40px;
+    color: grey;
+}
+
+.footer-element-normal-bottom {
+  padding-top: 20px;
+}
+
+.footer-col-md-3 {
+  margin-left: 24px;
+  width:25%
+}
+
+.footer-sidebar-header {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  position: relative;
+  color: white;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.footer-border-width {
+  width: 50px;
+  border-bottom: 1px solid white;
+}
+
+.footer-order-list {
+  padding: 0px;
+  margin: 0px;
+}
+
+.footer-list {
+  font-family: openSans;
+  list-style: none;
+  border-bottom: 1px solid grey;
+  margin-left: 0px;
+  padding-bottom: 13px;
+  padding-top: 13px;
+}
+
+.footer-anchor {
+  font-family: OpenSans;
+  font-size: 14px;
+  color: white;
+}
+
+.footer-icon-col-md-3 {
+  float: right;
+ 
+}
+
+.footer-icon-container{
+  padding-top: 15px;
+}
+
+
+.footerlinkedin{
+     background: url(../images/footer_sprite.png) no-repeat 0 -2px;
+     height: 40px;
+     width:40px;
+     float:left;
+}
+
+.footertwitter{
+      background: url(../images/footer_sprite.png) no-repeat -54px -2px;
+     height: 40px;
+     width:40px;
+     float:left;
+     margin-left: 20px;
+}
+
+
+.footeremail{
+     background: url(../images/footer_sprite.png) no-repeat -110px -2px;
+     height: 40px;
+     width:40px;
+     float:left;
+     margin-left: 20px;
+}
+
+
+
+div.footerlinkedin:hover{
+  background-position: 0 -58px;
+  cursor: pointer;
+}
+
+div.footertwitter:hover{
+  background-position: -54px -58px;    
+  cursor: pointer;
+}
+
+
+div.footeremail:hover{
+  background-position: -110px -58px;   
+  cursor: pointer;
+}
+
+.footer-text {
+  text-align: center;
+ padding-top:15px;
+}
+
+.footer-wrapper {
+  bottom: 0px;
+  width: 100%;
+  position: fixed;
+  height: 45px;
+  background-color: #FAFAFA;
+  z-index: 9999;
+  border-top: 1px solid #E5E5E5;
+}
+
+* html.footer-wrapper  {
+   position:absolute;
+   top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
+}

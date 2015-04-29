@@ -18,6 +18,7 @@
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/style-admin.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/footer.css" rel="stylesheet">
 </head>
 
 <body>
@@ -30,6 +31,7 @@
 			<div id="right-panel"></div>
 		</div>
 	</div>
+	<jsp:include page="inlineFooter.jsp"></jsp:include>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
 		var newfi = ${newfi};

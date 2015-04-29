@@ -25,7 +25,7 @@
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
-    
+<link href="resources/css/footer.css" rel="stylesheet">    
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
 
@@ -56,6 +56,7 @@
 			<div id="loading"></div>
 		</div>
 	</div>
+	<jsp:include page="inlineFooter.jsp"></jsp:include>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
