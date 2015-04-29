@@ -1597,6 +1597,13 @@ function hideUserNameDropDown() {
 function paintUserNameDropDown(values, hideAddUser) {
 	var dropdownCont = $('#add-username-dropdown-cont');
 	dropdownCont.html('');
+	if(!hideAddUser){
+		var showinEditProfile = $('#add-memeber-user-type').attr("showinEditProfile");
+		if(showinEditProfile && showinEditProfile=="1"){
+			hideAddUser = true;
+		}
+		
+	}
 
 	if (values != undefined && values.length > 0) {
 		for (var i = 0; i < values.length; i++) {

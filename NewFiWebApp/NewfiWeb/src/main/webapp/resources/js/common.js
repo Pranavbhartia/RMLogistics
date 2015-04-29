@@ -305,6 +305,7 @@ function adjustCustomerNameWidth() {
 	var statusIcnWidth = $('.onl-status-icn').width();
 	var cusImgWidth = $('.cus-img-icn').width();
 	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 5;
+//	$('.cus-name').outerWidth(cusNameWidth);
 	$('.cus-name').attr('style','max-width:'+cusNameWidth);
 }
 
@@ -629,8 +630,19 @@ function getCalculationFunctionForItem(key){
     		fun=function(){
     			var val1=getFloatValue(closingCostHolder["TotEstLenCost"].getValueForItem());
     			var val2=getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
-    			var val3=getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
-    			var result=val1+val2+val3;
+    			var int1= 0;
+    			if (closingCostHolder["interest901"])
+    			{
+    				int1 = getFloatValue(closingCostHolder["interest901"].getValueForItem());
+    				
+    			}
+    			var haz=0 ;
+    			if (closingCostHolder["hazIns903"])
+    			{
+    				haz = getFloatValue(closingCostHolder["hazIns903"].getValueForItem());
+    			}
+    			var totPrep=int1+haz;
+    			var result=val1+val2+totPrep;
         		return result;
 	        };
     		break;
