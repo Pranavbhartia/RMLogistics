@@ -887,7 +887,7 @@ public class ApplicationFormRestService {
 
 	@RequestMapping(value = "/changeLoanAmount", method = RequestMethod.POST)
 	public @ResponseBody
-	String changeLoanAmount(String appFormData) {
+	String changeLoanAmount(String appFormData, HttpServletRequest httpServletRequest) {
 		Gson gson = new Gson();
 		String lockRateData = null;
 		try {
@@ -903,6 +903,9 @@ public class ApplicationFormRestService {
 				// JSONObject jsonObject = new JSONObject(response);
 				// LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
 
+				String loanAppFrm = gson.toJson(loaAppFormVO);
+				createApplication(loanAppFrm, httpServletRequest);
+				
 				if (response != null) {
 					lockRateData = loadLoanRateData(loanNumber);
 					System.out.println("lockRateData" + lockRateData);
@@ -1181,6 +1184,7 @@ public class ApplicationFormRestService {
 			} else {
 				hashmap.put("jobRelatedPayment", "1000");
 			}
+			
 			hashmap.put("userSSNnumber", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
 			hashmap.put("baseIncome", Utils.unformatCurrencyField(loanAppFormVO
@@ -1188,6 +1192,19 @@ public class ApplicationFormRestService {
 			        .getCustomerEmploymentIncome().getEmployedIncomePreTax()));
 			hashmap.put("ProdLckdDays", "30");
 			
+			if(null == loanAppFormVO.getUser()
+	        .getCustomerDetail().getSsn() || "".equalsIgnoreCase(loanAppFormVO.getUser()
+	        .getCustomerDetail().getSsn())){
+				
+				loanAppFormVO.setSsnProvided(false);
+				
+			}
+			
+			if(null == loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn() || "".equalsIgnoreCase(loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn())){
+						
+						loanAppFormVO.setCbSsnProvided(false);
+						
+			}
 			
 			
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
