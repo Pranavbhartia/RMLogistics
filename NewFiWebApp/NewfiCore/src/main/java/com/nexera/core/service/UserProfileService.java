@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -95,5 +96,8 @@ public interface UserProfileService {
 
 	public User validateRegistrationLink(String userToken, int clientRawOffset)
 	        throws InvalidInputException;
+
+	public UserVO findByUserName(String userName) throws DatabaseException,
+	        NoRecordsFetchedException;
 
 }
