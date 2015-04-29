@@ -1323,7 +1323,7 @@ function appendCustomerLoanDetails(loanDetails) {
 
 			var label = $("<div>").attr({
 				"class" : "av-loan-details-row-lc datelabel float-left"
-			}).html("Set expiry date");
+			}).html("Set Contract Expiration Date");
 			var expiryDate = "";
 			if (loanDetails.purchaseDocumentExpiryDate != undefined
 					&& loanDetails.purchaseDocumentExpiryDate != null) {
