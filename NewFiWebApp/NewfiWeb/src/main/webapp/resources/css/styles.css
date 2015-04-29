@@ -110,6 +110,11 @@ input[type="button"]:focus, button:focus {
 	outline: none;
 }
 
+.link-pointer{
+	color: #428bca;
+	cursor: pointer;
+}
+
 .container {
 	/*max-width: 980px;*/
 	
@@ -1269,6 +1274,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-online-status {
+	display:none;
 	height: 15px;
 	line-height: 15px;
 	font-size: 10px;
@@ -2711,7 +2717,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 216px;
+	width: 300px;
 }
 
 .prof-btn {
@@ -2884,6 +2890,7 @@ input.calc-input {
 .login-hdr {
 	line-height: 50px;
 	margin: 0 5px;
+	color: #fff;
 }
 
 .hdr-login-btn,.hdr-get-quote,.hdr-signup-btn {
@@ -4644,7 +4651,7 @@ input.calc-input {
 /*styles for carrierInfo drop down*/
 .prof-form-row-carrier {
   float: right;
-  margin: 0px -50px;
+  /* margin: 0px -50px; */
 }
 
 .prof-form-input-carrier {
@@ -4724,4 +4731,68 @@ input.calc-input {
 	font-size: 11px;
 }
 
+.work-on-loan-active {
+	padding: 10px 0 5px 20px;
+	font-size: 11px;
+}
+
+.work-on-loan-item-cont {
+	float: left;
+	padding-top: 40px;
+	margin-left: 10px;
+	font-size: 11px;
+}
+
+.lp-details-icn {
+	background: url(../images/t2-pic1-inactive.png) no-repeat center;
+}
+
+.lp-rates-icn {
+	background: url(../images/t2-pic2-inactive.png) no-repeat center;
+}
+
+.lp-upload-icn {
+	background: url(../images/t2-pic3-inactive.png) no-repeat center;
+}
+
+.lp-progess-icn {
+	background: url(../images/t2-pic4-inactive.png) no-repeat center;
+}
+
+.lp-item .work-on-loan-active{
+	display: none;
+}
+
+.lp-item-active .work-on-loan-active{
+	display: block;
+}
+
+.lp-item .work-on-loan-inactive{
+	display: block;
+}
+
+.lp-item-active .work-on-loan-inactive{
+	display: none;
+}
+
+.state-wrapper{
+	position: relative;
+}
+
+.add-licence-popup {
+	right: -290px;
+	top: 30px;
+	padding: 10px 10px 20px 10px;
+}
+
+.licence-input{
+	width: 150px
+}
+
+.license-row {
+	line-height:30px;
+    background: #F5F9Fc;
+    padding: 0 15px;
+    border-radius: 3px;
+}
 /*End*/
