@@ -256,6 +256,7 @@ function getMessageDashboardWrapper() {
 				formatPhoneNumberToUsFormat(myLoanTeam[i].phoneNumber),
 				myLoanTeam[i].photoImageUrl);
 		assignedAgentWrapper.append(agent);
+		
 
 		createOtherUserobject(myLoanTeam[i].id, myLoanTeam[i].firstName,
 				userRole);
@@ -264,6 +265,7 @@ function getMessageDashboardWrapper() {
 	/* addClass('assigned-agent-unselect'); */
 
 	container.append(assignedAgentWrapper);
+	
 
 	var textContainer = $('<div>').attr({
 		"class" : "message-container"

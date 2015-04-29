@@ -916,6 +916,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         $(parentContainer).html(container);
        
         $('#overlay-loader').show();
+        
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",

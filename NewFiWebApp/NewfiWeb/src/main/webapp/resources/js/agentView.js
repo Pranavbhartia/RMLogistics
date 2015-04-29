@@ -1078,7 +1078,8 @@ function getAppDetailsForUser(userId, callback) {
 						callback(JSON.parse(appFormDetails));
 					}
 				}
-			});
+				
+			} , undefined ,  undefined ,  undefined , "We are checking on you awesome rates");
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages

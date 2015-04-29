@@ -145,20 +145,24 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 
                     var userId=newfiObject.user.id;
                     getAppDetailsForUser(userId,function(appUserDetailsTemp){
-                    	  $('#overlay-loader').show();
+                    	
                         var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
                         if(LQBFileId){
                             if(appUserDetailsTemp.loan.isRateLocked){
                                 fixAndLoakYourRatePage2(undefined, appUserDetailsTemp);
-                                $('#overlay-loader').hide();
+                               
+                                
                             }else{
                                 paintFixYourRatePage();
                             }
+                          
                         }else{
                             //code to Paint teaser rate page
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
+                    
                     });
+                   
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
 	                

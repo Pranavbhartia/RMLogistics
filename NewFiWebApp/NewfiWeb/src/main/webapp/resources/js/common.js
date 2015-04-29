@@ -7,9 +7,9 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
-function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback){
+function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
 	if(isPagination===undefined){
-		showOverlay();
+		showOverlay(showOverlayText);
 	}else if(isPagination==true){
 		showPaginationScrollIcon(div);
 	}	
@@ -29,7 +29,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 			successCallBack(response);
 		},
 		complete:function(response){
-			
+		
 			if(completeCallback){
 				if(isPagination){
 					removePaginationScrollIcon(div);
@@ -45,6 +45,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 			adjustRightPanelOnResize();
             adjustCustomerApplicationPageOnResize();
             adjustAgentDashboardOnResize();
+        
 		},
 		error : function(){
 			if(isPagination){
@@ -127,11 +128,15 @@ $(document).click(function(){
 });
 
 //function to show overlay
-function showOverlay(){
+function showOverlay(showOverlayText){
 	if(overlayCount == 0){
 		$('#overlay-loader').show();
 	}
 	overlayCount++;
+	if(showOverlayText){
+		$("#overlay-loader-text").html(showOverlayText);
+	}
+	
 }
 
 function showPaginationScrollIcon(div){
@@ -150,6 +155,10 @@ function hideOverlay(){
 	if(overlayCount == 0){
 		$('#overlay-loader').hide();
 	}
+	setTimeout(function() {
+		 $("#overlay-loader-text").html('');
+	}, 3000);
+   
 }
 
 //Function to show toast message
@@ -158,7 +167,7 @@ function showToastMessage(message){
 	$('#overlay-toast').fadeIn("slow",function(){
 		setTimeout(function(){
 			$('#overlay-toast').fadeOut("slow");
-		},3000);
+		},2000);
 	});
 }
 
