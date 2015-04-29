@@ -19,7 +19,7 @@
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
-
+<link href="resources/css/footer.css" rel="stylesheet">
 <script src="resources/js/jquery-2.1.3.min.js"></script>
 
 <script type="text/javascript">
@@ -99,12 +99,121 @@
 					</div>
 				</div>
 			</div>
-			
+			</div>
 			
 			<!-- Footer -->
-			 <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
+			 <!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
+    <footer id="footer" role="contentinfo">
+   <section class="section swatch-black">
+      <div class="footer-container">
+         <div class="row footer-element-normal-top footer-element-normal-bottom">
+            <div class="footer-col-md-3 float-left">
+               <div id="text-3" class="sidebar-widget  widget_text">
+                  <h3 class="footer-sidebar-header footer-border-width">Our Brands</h3>
+                  <div class="textwidget">
+                     <div id="footer_ourbrands" class="sidebar-widget  widget_recent_entries">
+                        <ul class="footer-order-list">                          
+                           <li class="footer-list clearfix"><a class="footer-anchor" href="/about-us/#newfi">Newfi</a><a></a></li>
+                           <a>
+                           </a>
+                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" href="/about-us/#blustream">Blustream</a><a></a></li>
+                           <a>
+                           </a>
+                        </ul>
+                        <a>
+                        </a>
+                     </div>
+                  </div>
+                  <a>
+                  </a>
+               </div>
+            </div>
+            <a>
+            </a>
+            <div class="footer-col-md-3 float-left">
+               <a></a>
+               <div id="sticky-posts-2" class="sidebar-widget  widget_recent_entries sidebar-widget  widget_ultimate_posts">
+                  <a>
+                     <h3 class="footer-sidebar-header footer-border-width">Careers</h3>
+                  </a>
+                  <ul class="footer-order-list">
+                     <a>
+                     </a>
+                     <li class=" footer-list clearfix">
+                        <a>
+                        </a>
+                        <div class="upw-content">
+                           <a>
+                           </a>
+                           <p class="post-title"><a>
+                              </a><a class="footer-anchor" href="http://www.nexeraholding.com/careers/call-center-loan-officer/" title="Call Center Loan Officer">
+                              Call Center Loan Officer            </a>
+                           </p>
+                        </div>
+                     </li>
+                     <li class=" footer-list clearfix">
+                        <div class="upw-content">
+                           <p class="post-title">
+                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/senior-underwriter/" title="Senior Underwriter">
+                              Senior Underwriter            </a>
+                           </p>
+                        </div>
+                     </li>
+                     <li class="footer-list clearfix">
+                        <div class="upw-content">
+                           <p class="post-title">
+                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/fundershipper/" title="Funder/Shipper">
+                              Funder/Shipper            </a>
+                           </p>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="footer-col-md-3 float-left">
+               <div id="text-4" class="sidebar-widget  widget_text">
+                  <h3 class="footer-sidebar-header footer-border-width">Legal</h3>
+                  <div class="textwidget">
+                     <div id="footer_legal" class="sidebar-widget  widget_recent_entries">
+                        <ul class="footer-order-list">
+                           <li class=" footer-list clearfix"><a class="footer-anchor" href="/information/#licensing">Licensing</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" target="_blank" href="http://www.nmlsconsumeraccess.org/">NMLS Consumer Access</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" href="/privacy-policy/">Privacy Policy</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" href="/information/">Terms of Use</a></li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="footer-icon-col-md-3">
+               <div id="text-5" class="sidebar-widget  widget_text">
+                  <div class="textwidget">
+                     <div class="footer-icon-container clearfix">
+                        <a href="https://www.linkedin.com/company/nexera-holding-llc" target="_blank">
+                           <div class="footerlinkedin"></div>
+                        </a>
+                        <a href="https://twitter.com/NexeraHolding" target="_blank">
+                           <div class="footertwitter"></div>
+                        </a>
+                        <a href="mailto:info@nexeraholding.com">
+                           <div class="footeremail"></div>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <section class="section swatch-black">
+      <div class="footer-container-text">
+         © 2015 Nexera Holding LLC - DBA Newfi and Blustream | All Rights Reserved | NMLS ID 1231327
+      </div>
+      <br>
+   </section>
+</footer>
 			
-		</div>
+		
 	</div>
 </body>
 <script>
