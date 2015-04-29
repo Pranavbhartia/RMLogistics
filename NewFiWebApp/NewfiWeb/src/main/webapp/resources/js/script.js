@@ -1995,6 +1995,9 @@ function appendAlertNotificationPopup() {
     var row6 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum", "2hr ago", false);
     alertWrapper.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6);
     $('#alert-notification-btn').append(alertWrapper);
+    $('#alert-popup-wrapper').perfectScrollbar({
+        suppressScrollX : true
+    });
 }
 
 function getAlertNotificationRow(alert, time, isSystemAlert) {
