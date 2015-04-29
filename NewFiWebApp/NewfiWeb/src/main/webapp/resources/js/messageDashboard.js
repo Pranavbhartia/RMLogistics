@@ -457,7 +457,7 @@ function paintConversations(conversations) {
 		var otherUserBinded = data.otherUsers;
 		for (k in otherUserBinded) {
 			if (otherUserBinded[k].roleName == "Loan Manager"
-					|| otherUserBinded[k].roleName == "CUSTOMER") {
+					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR") {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({
@@ -627,7 +627,7 @@ function paintChildConversations(level, conversations) {
 		for (k in otherUserBinded) {
 
 			if (otherUserBinded[k].roleName == "Loan Manager"
-					|| otherUserBinded[k].roleName == "CUSTOMER") {
+					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR") {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({
