@@ -551,21 +551,23 @@ ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 
 }
 function appendDataToNewfiTeamWrapperForAdmin(data){
+if(data.error==null||data.error==undefined||data.error==""){
+	 var users = data.resultObject;
+	  
+	   var tableRow = getAdminTeamListTableRow(users);
+	   var teamContainer = $(".admin-newfi-team-container").append(tableRow);
+	   $('#admin-create-user-emailId').val('');
+	   $('#admin-create-user-first-name').val('');
+	   $('#admin-create-user-last-name').val('');
 
-   var users = data.resultObject;
-   var existingDiv = $('.admin-newfi-team-container').find(
-			'.admin-newfi-team-list-tr[userid=' + users.id + ']');
-	if (existingDiv != undefined && existingDiv.length > 0) {
-		showErrorToastMessage("User already exists on the loan team.");
-		return;
-	}
-   var tableRow = getAdminTeamListTableRow(users);
-   var teamContainer = $(".admin-newfi-team-container").append(tableRow);
-   $('#admin-create-user-emailId').val('');
-   $('#admin-create-user-first-name').val('');
-   $('#admin-create-user-last-name').val('');
-
-	showToastMessage("User added to loan team.");
+		showToastMessage("User created successfully");
+}else{
+	   $('#admin-create-user-emailId').val('');
+	   $('#admin-create-user-first-name').val('');
+	   $('#admin-create-user-last-name').val('');
+	showErrorToastMessage(data.resultObject.message);
+}
+  
 	
 }
 function appendAdminCreateUserPopupFirstName(){
