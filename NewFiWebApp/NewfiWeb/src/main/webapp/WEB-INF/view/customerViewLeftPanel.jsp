@@ -31,12 +31,21 @@
 		</div>
 		<div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix" onclick="changeLeftPanel(2);">
 			<div class="loan-txt1">Work on your loan</div>
-			<div class="loan-txt clearfix">
+			<!-- <div class="loan-txt clearfix">
 				<div class="float-left loan-pic"></div>
 				<div class="float-left loan-txt2">
 					Process Completed<br />
 					<span class="txt-light">Lorem ipsum</span>
 				</div>
+			</div> -->
+			<div class="work-on-loan-active">
+				Input, Shop, Upload and<br />Track your Loan Progress.
+			</div>
+			<div class="work-on-loan-inactive clearfix">
+				<div class="work-on-loan-item-cont lp-details-icn">Details</div>
+				<div class="work-on-loan-item-cont lp-rates-icn">Rates</div>
+				<div class="work-on-loan-item-cont lp-upload-icn">Upload</div>
+				<div class="work-on-loan-item-cont lp-progess-icn">Progress</div>
 			</div>
 		</div>
 		<div id="lp-alert-wrapper" class="lp-alert-wrapper lp-item clearfix">

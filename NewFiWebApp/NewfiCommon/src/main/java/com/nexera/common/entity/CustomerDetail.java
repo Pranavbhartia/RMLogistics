@@ -45,7 +45,7 @@ public class CustomerDetail implements Serializable {
 	private String secEmailId;
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
-	private Boolean mobileAlertsPreference;
+	
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
@@ -56,7 +56,7 @@ public class CustomerDetail implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
-	private String carrierInfo;
+	
 	private String addressStreet;
 	
 	private Boolean selectedProperty;
@@ -166,15 +166,7 @@ public class CustomerDetail implements Serializable {
 		this.subscriptionsStatus = subscriptionsStatus;
 	}
 
-	@Column(name = "mobile_alert_preference", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getMobileAlertsPreference() {
-		return mobileAlertsPreference;
-	}
-
-	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
-		this.mobileAlertsPreference = mobileAlertsPreference;
-	}
+	
 
 	@Column(name = "isselfEmployed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -320,21 +312,13 @@ public class CustomerDetail implements Serializable {
 			        .getProfileCompletionStatus());
 			customerDetailVO.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
-			customerDetailVO.setMobileAlertsPreference(inputEntity
-			        .getMobileAlertsPreference());
+			
 			customerDetailVO.setLivingSince(inputEntity.getLivingSince());
 			customerDetailVO.setTransunionScore(inputEntity
 			        .getTransunionScore());
 			customerDetailVO.setEquifaxScore(inputEntity.getEquifaxScore());
 			customerDetailVO.setExperianScore(inputEntity.getExperianScore());
 
-			if (inputEntity.getCarrierInfo() != null) {
-				MobileCarriersEnum enumValue = MobileCarriersEnum
-				        .getCarrierNameForEmail(inputEntity.getCarrierInfo());
-
-				customerDetailVO.setCarrierInfo(enumValue.getCarrierName());
-
-			}
 
 			// customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
 			// System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
@@ -492,14 +476,7 @@ public class CustomerDetail implements Serializable {
 			        .getSubscriptionsStatus());
 			customerDetail.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetail.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
-			customerDetail.setMobileAlertsPreference(inputEntity
-			        .getMobileAlertsPreference());
 			customerDetail.setLivingSince(inputEntity.getLivingSince());
-			if (inputEntity.getCarrierInfo() != null) {
-				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
-				        .getCarrierEmailForName(inputEntity.getCarrierInfo());
-				customerDetail.setCarrierInfo(mobileCarrier.getCarrierEmail());
-			}
 
 			if (null != inputEntity.getProfileCompletionStatus()) {
 				customerDetail.setProfileCompletionStatus(inputEntity
@@ -638,14 +615,7 @@ public class CustomerDetail implements Serializable {
 		this.transunionScore = transunionScore;
 	}
 
-	@Column(name = "carrier_info")
-	public String getCarrierInfo() {
-		return carrierInfo;
-	}
-
-	public void setCarrierInfo(String carrierInfo) {
-		this.carrierInfo = carrierInfo;
-	}
+	
 
 	@Column(name = "address_street")
 	public String getAddressStreet() {

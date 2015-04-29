@@ -44,7 +44,7 @@
 				</div>
 				<div class="lp-item-body-row">
 					<span id="lp-in-progress">${progressVO.inProgress }</span> <span>
-						Inprogress</span>
+						In Progress</span>
 				</div>
 			</div>
 		</div>

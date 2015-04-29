@@ -57,6 +57,8 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 		}
 		Criterion userRoleBased = null;
+		boolean internalFlag = false;
+		List<Notification> notifications = new ArrayList<Notification>();
 		if (user != null) {
 
 			if (user.getUserRole() != null) {
@@ -82,6 +84,10 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 						break;
 
 					case INTERNAL:
+						if (user.getInternalUserDetail()
+						        .getInternaUserRoleMaster().getRoleName()
+						        .equals("SM"))
+							internalFlag = true;
 						userRoleBased = Restrictions
 						        .or(userRest,
 						                Restrictions.and(
@@ -115,12 +121,15 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 			} else
 				userRoleBased = userRest;
-			
-			if (loan == null) {
+
+			if (loan == null && !internalFlag) {
 				List<Loan> loanList = getLoanListForUser(user);
+				if (loanList == null || loanList.isEmpty()) {
+					return notifications;
+				}
 				criteria.add(Restrictions.in("loan", loanList));
 			}
-			
+
 		}
 		if (userRoleBased != null)
 			criteria.add(Restrictions.or(noRolesAssigned, userRoleBased));
@@ -143,7 +152,7 @@ public class NotificationDaoImpl extends GenericDaoImpl implements
 
 		criteria.add(reminder);
 
-		List<Notification> notifications = criteria.list();
+		notifications = criteria.list();
 
 		return notifications;
 	}

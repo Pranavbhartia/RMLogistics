@@ -190,6 +190,18 @@ public class RestInterceptor implements Callable
                 inputParams = new Object[2];
                 inputParams[0] = NewFiManager.userTicket;
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+            } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LIST_MODIFIED_LOANS_BY_APP_CODE ) ) {
+                LOG.debug( "Operation Chosen Was ListModifiedLoansByAppCode " );
+                inputParams = new Object[2];
+                inputParams[0] = NewFiManager.userTicket;
+                inputParams[1] = restParameters.getLoanVO().getAppCode();
+            } else if ( restParameters.getOpName().equals(
+                WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE ) ) {
+                LOG.debug( "Operation Chosen Was ListModifiedLoansByAppCode " );
+                inputParams = new Object[2];
+                inputParams[0] = NewFiManager.userTicket;
+                inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+                inputParams[2] = restParameters.getLoanVO().getAppCode();
             } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT ) ) {
                 LOG.debug( "Operation Chosen Was UploadPDFDocument " );
 

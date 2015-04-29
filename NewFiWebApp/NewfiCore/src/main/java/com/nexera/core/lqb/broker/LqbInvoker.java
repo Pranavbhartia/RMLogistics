@@ -3,8 +3,11 @@ package com.nexera.core.lqb.broker;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +29,9 @@ public class LqbInvoker {
 	@Value("${muleUrlForAppView}")
 	private String muleUrlForAppView;
 
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(LqbInvoker.class);
+
 	public JSONObject invokeLqbService(String formData) {
 		try {
 			return invokeRestSpringParseObj(formData);
@@ -40,9 +46,14 @@ public class LqbInvoker {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		HttpEntity request = new HttpEntity(formData, headers);
 		RestTemplate restTemplate = new RestTemplate();
-
+		Date date = new Date();
+		LOGGER.debug("Time taken before invoking this rest call for teaser rate is "
+		        + date);
 		String returnedUser = restTemplate.postForObject(muleUrlForLoan,
 		        request, String.class);
+		Date date1 = new Date();
+		LOGGER.debug("Time taken before invoking this rest call for teaser rate is "
+		        + date1);
 		JSONObject jsonObject = new JSONObject(returnedUser);
 		return jsonObject;
 	}

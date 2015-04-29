@@ -38,9 +38,9 @@ function initiateJcrop(input) {
 			 //var tempRatio = actWidth/newWidth;
             ratio = $('#pu-img').width() / myImage.width;
 
-			
 			$('#pu-img').Jcrop({
-				 setSelect : [ 0, 0, 50, 50 ],
+				/* setSelect : [ ratio,ratio,$('#pu-img').width()/2,$('#pu-img').height()/2]*/
+			 setSelect : [50, 0, 300,300],
 				onSelect : updatePreview,
 				onChange : updatePreview,
 				aspectRatio: 1,
@@ -49,56 +49,8 @@ function initiateJcrop(input) {
 		};
 		reader.readAsDataURL(input.files[0]);
 
-		var canvas = $("#pu-canvas")[0];
-		$(document).on('click','#btn-pu-save',function() {
-				$("#popup-overlay").hide();
-					var dataurl = canvas.toDataURL("image/png");
-					$('#pu-img').attr('src', dataurl);
-					
-					// $('#prof-image').attr('src', dataurl);
-					// $('#overlay-main').hide();
-                    var userid=document.getElementById("prof-image").name;
-
-					var formData = new FormData();
-					formData.append("imageBase64", dataurl);
-					formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
-
-
-					formData.append("userid",userid);
-					showOverlay();
-					$.ajax({
-						url : "uploadCommonImageToS3.do",
-						type : "POST",
-						//dataType : "text",
-						contentType : false,
-						processData : false,
-						cache : false,
-						data : formData,
-						success : function(data) {
-							
-							if(newfiObject.user.id==userid){
-							newfiObject.user.photoImageUrl = data;
-							$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"}).text('');
-							 
-							$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});}
-							else{
-							
-							$("#cusProfPicID").css({"background-image": "url("+data+")","background-size": "cover"});
-							 
-							$("#custprofuploadicnID").css({"background-image": "url("+data+")","background-size": "cover"});
-							
-							
-							}
-							//
-						},
-						complete : function() {
-						//alert('cpmplte');
-							hideOverlay();
-						},
-						error : function(e) {
-						//alert('error');
-						}
-					});
+		
+		$(document).on('click','#btn-pu-save',function(event) {
 
 				});
 	}
@@ -129,6 +81,7 @@ function updatePreview(c) {
 
 function createUploadPhotoContent(){
 	
+	$('.overlay-container').empty();
 	var overlayDiv = $('<div>').attr({
 		"class" : "overlay-container"
 	});
@@ -170,6 +123,58 @@ function createUploadPhotoContent(){
 	 "class":"btn-save-class",
 		"id" : "btn-pu-save"
 	}).html("Save");
+	btnSaveDiv.click(function(){
+
+		var canvas = $("#pu-canvas")[0];
+			$("#popup-overlay").hide();
+				var dataurl = canvas.toDataURL("image/png");
+				$('#pu-img').attr('src', dataurl);
+				
+				// $('#prof-image').attr('src', dataurl);
+				// $('#overlay-main').hide();
+                var userid=document.getElementById("prof-image").name;
+
+				var formData = new FormData();
+				formData.append("imageBase64", dataurl);
+				formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
+
+
+				formData.append("userid",userid);
+				showOverlay();
+				$.ajax({
+					url : "uploadCommonImageToS3.do",
+					type : "POST",
+					//dataType : "text",
+					contentType : false,
+					processData : false,
+					cache : false,
+					data : formData,
+					success : function(data) {
+						console.log('URL from S3:' +data);
+						if(newfiObject.user.id==userid){
+						newfiObject.user.photoImageUrl = data;
+						$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"}).text('');
+						 
+						$("#profilePic").css({"background-image": "url("+data+")","background-size": "cover"});}
+						else{
+						
+						$("#cusProfPicID").css({"background-image": "url("+data+")","background-size": "cover"});
+						 
+						$("#custprofuploadicnID").css({"background-image": "url("+data+")","background-size": "cover"});
+						
+						
+						}
+						//
+					},
+					complete : function() {
+					//alert('cpmplte');
+						hideOverlay();
+					},
+					error : function(e) {
+					//alert('error');
+					}
+				});
+	});
 	
 	var btnCancelDiv = $('<div>').attr({
 	  "class":"btn-cancel-class",

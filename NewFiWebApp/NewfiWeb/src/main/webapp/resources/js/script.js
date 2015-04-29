@@ -101,7 +101,10 @@ function showCustomerLoanPage(user) {
     });
     loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
     $('#right-panel').append(loanDetailsMainContainer);
-    changeSecondaryLeftPanel(1);
+    if (window.location.hash!= "")
+    {
+    	changeSecondaryLeftPanel(5);
+    }
     //adjustCenterPanelWidth();
     //TODO: Invoke dynamic binder to listen to secondary navigation clicks
     bindDataToSN();
@@ -1121,7 +1124,10 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false);
     //var lcRow4 = getLoanSummaryRow("Down Payment", "$ 100,000.00");
     //var lcRow5 = getLoanSummaryRow("Purchase Amount", estimatedPrice);
-    var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVoObj.teaserRate).toFixed(3)+" %", "teaserRateId");
+    var val="";
+    if(rateVoObj.teaserRate)
+        val=parseFloat(rateVoObj.teaserRate).toFixed(3)+" %";
+    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "teaserRateId");
     var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR +" %", "aprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVO[index].closingCost), "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
@@ -1192,6 +1198,10 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var totalEstMonthlyPayment = principalInterest;
     var Insurance =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyInsuranceCost)));
 	var tax =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyTaxesPaid)));
+    if(isNaN(getFloatValue(tax)))
+        tax="";
+    if(isNaN(getFloatValue(Insurance)))
+        Insurance="";
     
     if(appUserDetails.refinancedetails.includeTaxes ==true){
     	
@@ -1985,6 +1995,9 @@ function appendAlertNotificationPopup() {
     var row6 = getAlertNotificationRow("Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum", "2hr ago", false);
     alertWrapper.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6);
     $('#alert-notification-btn').append(alertWrapper);
+    $('#alert-popup-wrapper').perfectScrollbar({
+        suppressScrollX : true
+    });
 }
 
 function getAlertNotificationRow(alert, time, isSystemAlert) {

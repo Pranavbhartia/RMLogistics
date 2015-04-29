@@ -430,6 +430,17 @@ function getRefinanceLeftPanel() {
     }
     return container;
 }
+function switchBasedOnStage(stage){
+    var element;
+    if(buyHomeTeaserRate.loanType){
+        element=$("#homeProgressBaarId_"+stage);
+    }else if(refinanceTeaserRate.loanType){
+        element=$("#progressBaarId_"+stage)
+    }
+    if(element){
+        $(element).trigger( "click" );
+    }
+}
 
 function getRefinanceLeftPanelItem(itemTxt, stepNo, itemCompletionStage) {
     var itemCont = $('<div>').attr({
@@ -940,7 +951,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         
     }
  
-
+var refreshSupport=true;
 function progressBaar(num) {
         var count = 7;
         $("#progressBaarId_" + num).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
@@ -954,7 +965,8 @@ function progressBaar(num) {
             $('#stepNoId_' + i).html(i);
         }
         sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-       window.location.hash="#"+(num-1);
+        if(typeof(newfiObject)==='undefined')
+            window.location.hash="#CE-"+(num-1);
     }
    
 
@@ -1554,6 +1566,10 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     var totalEstMonthlyPayment = principalInterest;
     var Insurance =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
 	var tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
+    if(isNaN(getFloatValue(tax)))
+        tax="";
+    if(isNaN(getFloatValue(Insurance)))
+        Insurance="";
     
     if(customerInputData.isIncludeTaxes =="Yes"){
     	
@@ -1569,7 +1585,10 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     
     var lcRow1 = getLoanSummaryRow("Loan Type", "Refinance - " + refinanceOpt);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO.teaserRate).toFixed(3)+" %", "teaserRateId");
+    var val="";
+    if(rateVO.teaserRate)
+        val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
+    var lcRow3 = getLoanSummaryRow("Interest Rate", val, "teaserRateId");
     
     if(customerInputData.refinanceOption != "REFCO")
     var lcRow4 = getLoanAmountRowCEP("Loan Amount", showValue(loanAmount),"loanAmount");
@@ -1664,7 +1683,10 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
     var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false,path);
-    var lcRow4 = getLoanSummaryRow("Interest Rate", parseFloat(rateVO.teaserRate).toFixed(3) +" %", "teaserRateId");
+    var val="";
+    if(rateVO.teaserRate)
+        val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
+    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "teaserRateId");
 
     var lcRow5 = getLoanSummaryRow("APR", rateVO.APR +" %", "aprid");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);

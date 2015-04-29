@@ -26,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
 
-import com.mongodb.util.JSON;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -124,9 +123,11 @@ public class TemplateController extends DefaultController {
 				LOG.error("Buffered Image is null");
 			}
 
-			File dir = new File(nexeraUtility.tomcatDirectoryPath());
-			if (!dir.exists())
+			File dir = new File(nexeraUtility.tomcatDirectoryPath()
+			        + File.separator + nexeraUtility.randomStringOfLength());
+			if (!dir.exists()) {
 				dir.mkdirs();
+			}
 
 			String filePath = dir.getAbsolutePath() + File.separator
 			        + imageFileName;
@@ -162,7 +163,7 @@ public class TemplateController extends DefaultController {
 				LOG.error("Error whiile saving s3 url in the data base");
 
 			}
-			LOG.error("S3 path-----" + s3Path);
+			LOG.debug("S3 path-----" + s3Path);
 
 		} catch (Exception e) {
 
