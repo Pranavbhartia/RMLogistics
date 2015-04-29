@@ -412,6 +412,14 @@ public class UserProfileRest {
 		if (userVO.getUsername() == null)
 			userVO.setUsername(userVO.getEmailId());
 		try {
+			LOG.info("TO check whether user exsists");
+			User user=userProfileService.findUserByMail(userVO.getEmailId());
+			if(user!=null){
+				ErrorVO error=new ErrorVO();
+				error.setMessage(ErrorConstants.ADMIN_CREATE_USER_ERROR);
+				return new Gson().toJson(RestUtil.wrapObjectForFailure(error, "522", ""));
+
+			}
 			LOG.debug("Creating the new user");
 			userVO = userProfileService.createNewUserAndSendMail(userVO);
 			LOG.debug("Created new user and email sent!");
