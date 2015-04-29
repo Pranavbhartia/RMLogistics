@@ -1308,6 +1308,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        NoRecordsFetchedException {
 		// TODO Auto-generated method stub
 		return User.convertFromEntityToVO(userProfileDao
-		        .findByUserName(userName));
+		        .getUserByUserName(userName));
 	}
 }
