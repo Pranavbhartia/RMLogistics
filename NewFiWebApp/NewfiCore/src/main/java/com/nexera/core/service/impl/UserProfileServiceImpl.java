@@ -430,6 +430,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-password-", new String[] { uniqueURL });
+		substitutions.put("-baseUrl-", new String[] { baseUrl });
 
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays

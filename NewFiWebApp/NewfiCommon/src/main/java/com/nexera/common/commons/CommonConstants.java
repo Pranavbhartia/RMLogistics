@@ -194,4 +194,5 @@ public interface CommonConstants {
 
 	public static final String elapsedOverDueStr = "Overdue.";
 	public static final String THUMBNAIL_PARAM = "&isThumb=0";
+	public static final String EMAIL_EMPTY_FOOTER = ".";
 }
