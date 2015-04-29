@@ -43,6 +43,8 @@ public class LoanVO
 
     private String docId;
 
+    private String appCode;
+
 
     /**
      * @return the sTicket
@@ -311,6 +313,24 @@ public class LoanVO
     public void setCondition( String condition )
     {
         this.condition = condition;
+    }
+
+
+    /**
+     * @return the appCode
+     */
+    public String getAppCode()
+    {
+        return appCode;
+    }
+
+
+    /**
+     * @param appCode the appCode to set
+     */
+    public void setAppCode( String appCode )
+    {
+        this.appCode = appCode;
     }
 
 }
