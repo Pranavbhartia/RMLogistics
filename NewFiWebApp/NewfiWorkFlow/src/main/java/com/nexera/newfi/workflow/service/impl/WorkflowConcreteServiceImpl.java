@@ -257,17 +257,26 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			needURLItem = MasterNeedsEnum.Signed_Disclosure;
 		}
 		if (needURLItem != null) {
-			NeedsListMaster needsListMaster = new NeedsListMaster();
-			needsListMaster.setId(Integer.parseInt(needURLItem.getIndx()));
-			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
-			        loan, needsListMaster);
-			if (loanNeedsList != null
-			        && loanNeedsList.getUploadFileId() != null) {
-				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-				        loanNeedsList.getUploadFileId().getUuidFileId());
-			}
+			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+			        getDisclosureURL(loanID, needURLItem));
 		}
 		return utils.getJsonStringOfMap(map);
+	}
+
+	@Override
+	public String getDisclosureURL(int loanID, MasterNeedsEnum needItem) {
+		String uuID = "";
+		if (needItem != null) {
+			NeedsListMaster needsListMaster = new NeedsListMaster();
+			needsListMaster.setId(Integer.parseInt(needItem.getIndx()));
+			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
+			        new Loan(loanID), needsListMaster);
+			if (loanNeedsList != null
+			        && loanNeedsList.getUploadFileId() != null) {
+				uuID = loanNeedsList.getUploadFileId().getUuidFileId();
+			}
+		}
+		return uuID;
 	}
 
 	@Override
