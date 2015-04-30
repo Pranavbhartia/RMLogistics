@@ -8,8 +8,12 @@ var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
+	if(showOverlayText){
+		showOverleyMessage(showOverlayText);
+	}
+	
 	if(isPagination===undefined){
-		showOverlay(showOverlayText);
+		showOverlay();
 	}else if(isPagination==true){
 		showPaginationScrollIcon(div);
 	}	
@@ -130,15 +134,21 @@ $(document).click(function(){
 });
 
 //function to show overlay
-function showOverlay(showOverlayText){
+function showOverlay(){
 	if(overlayCount == 0){
 		$('#overlay-loader').show();
 	}
 	overlayCount++;
-	if(showOverlayText){
-		$("#overlay-loader-text").html(showOverlayText);
-	}
 	
+	
+}
+
+function showOverleyMessage(text){
+	$("#overlay-loader-text").html(text);
+}
+
+function clearOverlayMessage(){
+	$("#overlay-loader-text").empty();
 }
 
 function showPaginationScrollIcon(div){
@@ -157,9 +167,7 @@ function hideOverlay(){
 	if(overlayCount == 0){
 		$('#overlay-loader').hide();
 	}
-	setTimeout(function() {
-		 $("#overlay-loader-text").html('');
-	}, 3000);
+	
    
 }
 
