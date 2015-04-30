@@ -219,8 +219,8 @@ public class Utils {
 		        CommonConstants.SENDER_DOMAIN);
 	}
 
-	public String generateLoanEmail(int loanId) {
-		return loanId + CommonConstants.SENDER_DOMAIN;
+	public String generateLoanEmail(String prefix) {
+		return prefix + CommonConstants.SENDER_DOMAIN;
 	}
 
 	public UserRolesEnum getLoggedInUserRole() {

@@ -3,6 +3,7 @@ package com.nexera.common.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -72,10 +73,11 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 		        ZipCodeLookup.class);
 		criteria.add(Restrictions.eq("zipcode", addressZipCode));
-		StateLookup lookup = (StateLookup) criteria.uniqueResult();
-		if (lookup == null) {
+		ZipCodeLookup lookup = (ZipCodeLookup) criteria.uniqueResult();
+		if (lookup == null || lookup.getStateLookup() == null) {
 			return null;
 		}
-		return lookup.getStatecode();
+		Hibernate.initialize(lookup.getStateLookup());
+		return lookup.getStateLookup().getStatecode();
 	}
 }
