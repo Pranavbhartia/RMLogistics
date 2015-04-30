@@ -104,7 +104,7 @@ a,a:hover,a:visited {
 }
 
 .header-logo {
-	height: 100px;
+	height: 80px;
 	width: 200px;
 	background: url(../images/image003.png) no-repeat center;
 	cursor: pointer;
@@ -414,3 +414,10 @@ table.adjuster-table{
 .addr-blustream>div{
 	text-align: right;
 }
+
+.mamoth-table-wrapper .rate-table-wrapper-cont{
+	height: 240px;
+}
+.mamoth-table-wrapper .rate-table-container{
+	height: 210px;
+} 
