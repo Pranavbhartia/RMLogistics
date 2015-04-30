@@ -1,7 +1,5 @@
 package com.nexera.web.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,7 +7,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -24,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import sun.misc.BASE64Decoder;
-
+import com.amazonaws.util.Base64;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -116,14 +112,12 @@ public class TemplateController extends DefaultController {
 			Integer userid = Integer.parseInt(req.getParameter("userid"));
 			String imageFileName = req.getParameter("imageFileName");
 
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] decodedBytes = decoder.decodeBuffer(imageBase64
+			// BASE64Decoder decoder = new BASE64Decoder();
+			// byte[] decodedBytes = decoder.decodeBuffer(imageBase64
+			// .substring("data:image/png;base64,".length()));
+
+			byte[] decodedBytes = Base64.decode(imageBase64
 			        .substring("data:image/png;base64,".length()));
-			BufferedImage image = ImageIO.read(new ByteArrayInputStream(
-			        decodedBytes));
-			if (image == null) {
-				LOG.error("Buffered Image is null");
-			}
 			File dir = new File(nexeraUtility.tomcatDirectoryPath()
 			        + File.separator + nexeraUtility.randomStringOfLength());
 			if (!dir.exists()) {
