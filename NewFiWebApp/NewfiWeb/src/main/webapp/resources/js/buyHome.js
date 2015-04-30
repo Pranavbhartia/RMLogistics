@@ -369,6 +369,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             "teaseRate": JSON.stringify(teaserRateData)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
             $('#overlay-loader').hide();
             // var teaserRate = data;

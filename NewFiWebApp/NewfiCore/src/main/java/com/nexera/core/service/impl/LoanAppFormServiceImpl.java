@@ -79,13 +79,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 
 	@Override
 	@Transactional
-	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
-		LoanAppForm loanAppForm = loanAppFormDao
-		        .saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
+	public LoanAppFormVO create(final LoanAppFormVO loaAppFormVO) {
+		LoanAppForm loanAppForm = loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
 		// updating the user table coloum phone number
 		userProfileDao.UpdateUserProfile(loaAppFormVO.getUser().getPhoneNumber(), loaAppFormVO.getUser().getId());
-
-		return loanAppForm;
+		
+		return convertToLoanAppFormVO(loanAppForm);
 		/*
 		 * LoanAppForm loanAppForm = null; if (loanAppFormID != null &&
 		 * loanAppFormID > 0) loanAppForm =

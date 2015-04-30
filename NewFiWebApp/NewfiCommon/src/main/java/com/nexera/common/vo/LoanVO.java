@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 
 public class LoanVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -277,6 +279,15 @@ public class LoanVO implements Serializable {
 
 		Loan loan = new Loan();
 		loan.setId(this.getId());
+		if (null != this.getLoanType()) {
+
+			loan.setLoanType(this.getLoanType().convertToEntity());
+
+		} else {
+
+			loan.setLoanType(new LoanTypeMaster(LoanTypeMasterEnum.NONE));
+		}
+
 		/*
 		 * System.out.println("this.getLqbFileId()"+this.getLqbFileId());
 		 * loan.setLqbFileId(this.getLqbFileId());
