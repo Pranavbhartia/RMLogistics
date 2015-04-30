@@ -1,29 +1,46 @@
 package com.nexera.core.batchprocessor;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.WebServiceMethodParameters;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.BatchJobExecution;
 import com.nexera.common.entity.BatchJobMaster;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestoneMaster;
+import com.nexera.common.vo.lqb.ModifiedLoanListResponseVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.manager.ThreadManager;
 import com.nexera.core.service.BatchService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.ModifiedLoanListXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
 
 @DisallowConcurrentExecution
@@ -46,7 +63,13 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	@Autowired
 	private NexeraUtility nexeraUtility;
 
+	@Autowired
+	LqbInvoker lqbInvoker;
+
 	private ExceptionMaster exceptionMaster;
+
+	@Value("${lqb.appcode}")
+	private String appCode;
 
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
@@ -61,9 +84,43 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				taskExecutor = getTaskExecutor();
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
 				try {
+					LOGGER.debug("Invoking modifiedLoanListByAppCode service of lendinqb ");
+					List<ModifiedLoanListResponseVO> modifiedLoanResponseList = null;
+					JSONObject modifiedLoanListOperationObject = createLoanModifiedListJsonObject(WebServiceOperations.OP_NAME_LIST_MODIFIED_LOANS_BY_APP_CODE);
+					if (modifiedLoanListOperationObject != null) {
+						LOGGER.debug("Invoking LQB service to fetch modified Loans ");
+						JSONObject modifiedLoanListJSONResponse = lqbInvoker
+						        .invokeLqbService(modifiedLoanListOperationObject
+						                .toString());
+						if (modifiedLoanListJSONResponse != null) {
+							if (!modifiedLoanListJSONResponse
+							        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+
+								String modifiedLoanListResponse = modifiedLoanListJSONResponse
+								        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+								modifiedLoanListResponse = nexeraUtility
+								        .removeBackSlashDelimiter(modifiedLoanListResponse);
+								modifiedLoanResponseList = parseLoanModifiedLqbResponse(modifiedLoanListResponse);
+							}
+						}
+					}
+
+					List<Loan> modifiedLoans = new ArrayList<Loan>();
 					List<Loan> loanList = loanService.getLoansInActiveStatus();
-					if (loanList != null) {
-						for (Loan loan : loanList) {
+					for (ModifiedLoanListResponseVO modifiedLoanListResponseVO : modifiedLoanResponseList) {
+						if (modifiedLoanListResponseVO.getValid()) {
+							LOGGER.debug("This loan is still valid in lqb ");
+							for (Loan loan : loanList) {
+								if (loan.getLqbFileId().equalsIgnoreCase(
+								        modifiedLoanListResponseVO
+								                .getLoanName())) {
+									modifiedLoans.add(loan);
+								}
+							}
+						}
+					}
+					if (modifiedLoans != null) {
+						for (Loan loan : modifiedLoans) {
 							if (loan.getLqbFileId() != null) {
 								ThreadManager threadManager = applicationContext
 								        .getBean(ThreadManager.class);
@@ -136,5 +193,53 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		taskExecutor.setAwaitTerminationSeconds(Integer.MAX_VALUE);
 		return taskExecutor;
 
+	}
+
+	public JSONObject createLoanModifiedListJsonObject(String opName) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_APP_CODE,
+			        appCode);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
+		}
+		return json;
+	}
+
+	private List<ModifiedLoanListResponseVO> parseLoanModifiedLqbResponse(
+	        String loadResponse) {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+			ModifiedLoanListXMLHandler handler = new ModifiedLoanListXMLHandler();
+			// parse the file and also register this class for call backs
+			sp.parse(new InputSource(new StringReader(loadResponse)), handler);
+			return handler.getModifiedLoanList();
+
+		} catch (SAXException se) {
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        se.getMessage());
+			nexeraUtility.sendExceptionEmail(se.getMessage());
+		} catch (ParserConfigurationException pce) {
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        pce.getMessage());
+			nexeraUtility.sendExceptionEmail(pce.getMessage());
+		} catch (IOException ie) {
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        ie.getMessage());
+			nexeraUtility.sendExceptionEmail(ie.getMessage());
+		}
+
+		return null;
 	}
 }

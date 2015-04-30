@@ -157,10 +157,11 @@ public interface LoanService {
 
 	public void saveLoanProgress(int loand,
 	        LoanProgressStatusMaster progressValue);
-	
+
 	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo);
 
-
 	public LoanVO wrapperCallForDashboard(Integer loanID);
+
+	public void sendApplicationFinishedEmail(Loan loan);
 
 }
