@@ -6,6 +6,9 @@
 		<field id="sProdRLckdDays ">ProdLckdDays</field>
 		<field id="sLAmtCalc">loanAmount</field>	
 		<field id="sSpState">propertyState</field>
+		<field id="sSpCity">propertyCity</field>
+		<field id="sSpAddr">propertyStreetAddress</field>
+		<field id="sSpZip">propertyZip</field>		
 		<field id="sApprVal">loanApprovedValue</field>
 		<field id="sProd3rdPartyUwResultT">1</field>
 		<field id="sProdFilterDue10Yrs">true</field>
@@ -58,6 +61,7 @@
 			<field id="aBCity">applicantCity</field>
 			<field id="aBState">applicantState</field>
 			<field id="aBZip">applicantZipCode</field>
+			<field id="aBHPhone">borrowerHomePhone</field>
 			<collection id="aLiaCollection">
 				<record>
 					<field id="DebtT">1</field>
