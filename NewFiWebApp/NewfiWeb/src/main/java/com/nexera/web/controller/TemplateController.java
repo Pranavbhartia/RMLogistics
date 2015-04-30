@@ -196,7 +196,8 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "registerNew.do")
 	public ModelAndView showCustomerRegisterNewPage() {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("registerNew");
+		mav.setViewName("registerDirect");
+
 		return mav;
 	}
 

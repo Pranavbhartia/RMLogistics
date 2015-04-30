@@ -466,10 +466,10 @@ function updateLqbLMDetails(){
 }
 
 function changePassword(){
-	var user = new Object();
-	user.id = $("#userid").val();
-	user.password = $("#password").val();
-	console.info("userProfileJson:"+JSON.stringify(user));
+	var changePasswordData = new Object();
+	changePasswordData.userId = $("#userid").val();
+	changePasswordData.newPassword = $("#password").val();
+	console.info("userProfileJson:"+JSON.stringify(changePasswordData));
 	
 	    var passwordField=validateInput($('#password'),$('#password').val(),passwordFieldEmptyErrorMessage);
 	    var confirmPasswordField=validateInput($('#confirmpassword'),$('#confirmpassword').val(),passwordFieldEmptyErrorMessage);
@@ -486,11 +486,12 @@ function changePassword(){
 			 $.ajax({
 					url : "rest/userprofile/password",
 					type : "POST",
-					cache:false,
+					
 					data : {
-						"userVOStr" : JSON.stringify(user)
+						"changePasswordData" : JSON.stringify(changePasswordData)
 					},
 					dataType : "json",
+					cache:false,
 					success : function(data) {
 						showToastMessage("Succesfully updated");
 					},
@@ -505,7 +506,7 @@ function changePassword(){
 function validatePassword(password,confirmPassword,firstName,lastName,elementID){
 	
 	var regex=/(?=.*[a-z])(?=.*[A-Z])/;
-    var status;
+
 	if(password!=confirmPassword){
 		$('#password').next('.err-msg').html(passwordDonotMatchErrorMessage).show();
 		$('#'+elementID).addClass('ce-err-input').show();
@@ -521,32 +522,34 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
         	$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
-		 if(regex.test(password)==false){
-				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
-				$('#'+elementID).addClass('ce-err-input').show();
-			return false;
-		}
-          if(password.indexOf(firstName) == -1){
+        if(password.indexOf(firstName) == -1){
 			var lowercase=password.toLowerCase();
-			if(lowercase.length>3){
 			if(lowercase.indexOf(firstName) > -1){
 				$('#password').next('.err-msg').html(invalidPassword).show();
 				$('#'+elementID).addClass('ce-err-input').show();
 				return false;
 			}
-			}
-			
+	
 		}
-         if(password.indexOf(lastName) > -1){
-			showErrorToastMessage("Password should not contain firstname or lastname");
+		 if(regex.test(password)==false){
+				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
+				$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
-         if(password.indexOf(lastName) == -1){
-		
+         if(lastName.length>3){
+        	 if(password.indexOf(lastName) > -1){
+            	 $('#password').next('.err-msg').html(invalidPassword).show();
+    				$('#'+elementID).addClass('ce-err-input').show();
+    			return false;
+    		}
+         }
+        
+         if(password.indexOf(lastName) == -1){		
 			var lowercase=password.toLowerCase();
-		if(lowercase.length>3){
+		    if(lastName.length>3){
 			if(lowercase.indexOf(lastName) > -1){
-				showErrorToastMessage("Password should not contain firstname or lastname");
+				$('#password').next('.err-msg').html(invalidPassword).show();
+				$('#'+elementID).addClass('ce-err-input').show();
 				return false;
 			}
 		}

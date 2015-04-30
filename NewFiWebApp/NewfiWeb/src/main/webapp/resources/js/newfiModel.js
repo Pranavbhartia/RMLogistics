@@ -1,4 +1,3 @@
-var newfiObject=null;
 var currentHistoryUrl = '';
 var historyCallback = false;
 var refreshSupport = true;
