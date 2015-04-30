@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.NeedsListMaster;
@@ -40,6 +41,9 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	private NeedsListService needsListService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
+	@Autowired
+	private Utils utils;
 
 	@Value("${profile.url}")
 	private String baseUrl;
@@ -120,7 +124,12 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		        .toString()
 		        .equalsIgnoreCase(
 		                CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE)) {
-			objectMap.put("-disclousreslink-", baseUrl);
+			int loanId = Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			String disclosureFileUUId = iWorkflowService.getDisclosureURL(
+			        loanId, MasterNeedsEnum.Disclsoure_Available);
+			objectMap.put("-disclousreslink-",
+			        utils.getFileUrl(baseUrl, disclosureFileUUId));
 		}
 		substitutions.put("-message-", ary);
 		for (String key : objectMap.keySet()) {

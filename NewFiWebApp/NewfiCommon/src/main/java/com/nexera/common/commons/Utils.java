@@ -339,4 +339,10 @@ public class Utils {
 		return utcDate;
 	}
 
+	public String getFileUrl(String baseUrl, String uuID) {
+		String fileURL = baseUrl + "readFileAsStream.do?uuid=" + uuID
+		        + "&isThumb=0";
+		return fileURL;
+	}
+
 }
