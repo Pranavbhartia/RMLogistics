@@ -22,6 +22,8 @@ public class WebServiceOperations
     public static String OP_NAME_LOAN_SAVE = "Save";
 
     public static String OP_NAME_LOAN_LOAD = "Load";
+    
+    public static String OP_NAME_LOAN_BATCH_LOAD = "BatchLoad";
 
     public static String OP_NAME_GET_CREDIT_SCORE = "CreditScore";
 

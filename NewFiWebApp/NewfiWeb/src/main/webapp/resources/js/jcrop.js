@@ -151,6 +151,13 @@ function createUploadPhotoContent(){
 					data : formData,
 					success : function(data) {
 						console.log('URL from S3:' +data);
+						if(data==null || data.trim()==''){
+							showErrorToastMessage("File upload failed. Please try again");
+							return;
+						}
+						if(checkIfSafari){
+							window.location.reload(true);
+						}
 						if(newfiObject.user.id==userid){
 						newfiObject.user.photoImageUrl = data;
 						$("#myProfilePicture").css({"background-image": "url("+data+")","background-size": "cover"}).text('');

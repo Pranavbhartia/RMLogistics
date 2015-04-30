@@ -1,4 +1,6 @@
-<div id="overlay-loader" class="overlay-loader hide"></div>
+<div id="overlay-loader" class="overlay-loader hide">
+		<div id="overlay-loader-text"></div>
+</div>
 <div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">
@@ -12,8 +14,9 @@
 		</div>
 	</div>
 </div>
-<div id="overlay-toast" class="overlay-toast-wrapper hide">
-	<div id="overlay-toast-txt" class="overlay-toast-txt"></div>
+<div id="overlay-toast" class="overlay-toast-wrapper">
+	<div id="overlay-toast-txt" class="overlay-toast-txt hide"></div>
+	<div id="overlay-toast-error-txt" class="overlay-toast-txt hide"></div>
 </div>
 
 <div id="overlay-popup" class="overlay-popup-wrapper hide">

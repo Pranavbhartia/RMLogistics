@@ -1,3 +1,4 @@
+
 @font-face {
 	font-family: 'OpenSans';
 	src: url('../fonts/OpenSans-Regular-webfont.eot')
@@ -1236,7 +1237,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-cont-wrapper {
-    width: 25%;
+    width: 23%;
     min-width: 210px;
     float: left;
     padding: 10px 5px;
@@ -1346,6 +1347,7 @@ input[type="button"]:focus, button:focus {
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+	margin-right:35px;
 }
 
 .conversation-container {
@@ -2718,7 +2720,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 300px;
+	width: 200px;
 }
 
 .prof-btn {
@@ -2978,6 +2980,7 @@ input.calc-input {
 	border: 1px #8EC63F solid;
 	border-left-width: 7px;
 	cursor: pointer;
+	margin:10px auto;
 }
 
 .overlay-toast-success {
@@ -4791,10 +4794,69 @@ input.calc-input {
 	width: 150px
 }
 
+
 .license-row {
 	line-height:30px;
     background: #F5F9Fc;
     padding: 0 15px;
     border-radius: 3px;
 }
+
+.left-user-container {
+  width: 29%;
+  height: 378px;
+  border-right: 1px solid #d3d3d3;
+  padding-left: 134px;
+}
+
+.new-user-container{
+	width: 69%;
+}
+.photo-img-url{
+	height: 100px;
+  	width: 100px;
+  	margin-right: 33px;
+  	float: right;
+  	border-radius: 50%;
+	margin-bottom : 10px;
+}
+
+.user-info-image {
+	/* width: 138px;
+	height: 100px; */
+	margin-top: 20px;
+}
+
+.user-info-row {
+	width: 102px;
+  line-height: 20px;
+  margin: 0px auto;
+}
+
+.user-info-outer-container{
+	width: 900px;
+  	margin: 0px auto;
+}
+
+.reg-row-lc-new {
+	width: 219px !important;
+}
+.reg-row-rc-new {
+	width: 385px !important;
+}
+
+.user-info-name {
+	font-size: 14px;
+	text-transform: capitalize;
+}
 /*End*/
+#overlay-loader-text{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 150px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 15px;
+ }
+

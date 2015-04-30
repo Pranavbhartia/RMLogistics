@@ -257,24 +257,33 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			needURLItem = MasterNeedsEnum.Signed_Disclosure;
 		}
 		if (needURLItem != null) {
-			NeedsListMaster needsListMaster = new NeedsListMaster();
-			needsListMaster.setId(Integer.parseInt(needURLItem.getIndx()));
-			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
-			        loan, needsListMaster);
-			if (loanNeedsList != null
-			        && loanNeedsList.getUploadFileId() != null) {
-				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-				        loanNeedsList.getUploadFileId().getUuidFileId());
-			}
+			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+			        getDisclosureURL(loanID, needURLItem));
 		}
 		return utils.getJsonStringOfMap(map);
+	}
+
+	@Override
+	public String getDisclosureURL(int loanID, MasterNeedsEnum needItem) {
+		String uuID = "";
+		if (needItem != null) {
+			NeedsListMaster needsListMaster = new NeedsListMaster();
+			needsListMaster.setId(Integer.parseInt(needItem.getIndx()));
+			LoanNeedsList loanNeedsList = needsListService.findNeedForLoan(
+			        new Loan(loanID), needsListMaster);
+			if (loanNeedsList != null
+			        && loanNeedsList.getUploadFileId() != null) {
+				uuID = loanNeedsList.getUploadFileId().getUuidFileId();
+			}
+		}
+		return uuID;
 	}
 
 	@Override
 	public String getRenderInfoForApplicationFee(int loanID) {
 		LOG.debug("Inside method getRenderStateInfoForApplicationFee ");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
+		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
 		Loan loan = new Loan(loanID);
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.APP_FEE.getMilestoneKey());

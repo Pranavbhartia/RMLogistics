@@ -3120,7 +3120,7 @@ function paintCustomerApplicationPageStep4a() {
             value: "americanIndian"
         }, {
             text: "Native Hawaiian or Pacific Islander",
-            value: "nativeHawaiian "
+            value: "nativeHawaiian"
         }, {
             text: "Black or African American",
             value: "black"
@@ -3276,7 +3276,7 @@ function goverementOptionalQues() {
             value: "americanIndian"
         }, {
             text: "Native Hawaiian or Pacific Islander",
-            value: "nativeHawaiian "
+            value: "nativeHawaiian"
         }, {
             text: "Black or African American",
             value: "black"

@@ -890,12 +890,14 @@ function paintRefinanceHomeZipCode() {
         var quesTxt = "What is the zip code of your home?";
         var quesCont = getTextQuestion(quesTxt, paintRefinanceSeeRates, "zipCode");
         $('#ce-refinance-cp').html(quesCont);
-    }
+    }	
     
 
 
 function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccountBtn) {
-        if(!parentContainer){
+        
+	
+	if(!parentContainer){
             parentContainer=$('#ce-refinance-cp');
         }
         if(!teaserRateData){
@@ -915,7 +917,8 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         container.append(quesTextCont);
         $(parentContainer).html(container);
        
-        $('#overlay-loader').show();
+        showOverlay();
+        
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",
@@ -926,7 +929,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             cache:false,
             success: function(data) {
             	
-                $('#overlay-loader').hide();
+               hideOverlay();
                /* if(data==""){
                     $(parentContainer).html("Sorry, We could not find suitable products for you!");
                 }else{*/
@@ -946,7 +949,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             error: function(data) {
                 alert("error inside paintRefinanceSeeRates :" +data);
                 
-                $('#overlay-loader').hide();
+                hideOverlay();
             }
         });
         

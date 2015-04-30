@@ -150,10 +150,10 @@ public class DefaultController implements InitializingBean {
 					if (loanTeamVO.getUser() != null
 					        && loanTeamVO.getUser().getFirstName() != null
 					        && loanTeamVO.getUser().getLastName() != null) {
-						intialsList.add(loanTeamVO.getUser().getFirstName()
+						intialsList.add(loanTeamVO.getUser().getFirstName().toUpperCase()
 						        .charAt(0)
 						        + ""
-						        + loanTeamVO.getUser().getLastName().charAt(0));
+						        + loanTeamVO.getUser().getLastName().toUpperCase().charAt(0));
 					} else {
 						intialsList.add(" ");
 					}

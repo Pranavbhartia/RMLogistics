@@ -303,6 +303,8 @@ public class NexeraUtility {
 	public String convertImageToPDF(File file, String contentType) {
 		MultipartFile multipartPDF = null;
 		String filepath = null;
+		FileSeekableStream fss = null;
+		InputStream in = null;
 		try {
 
 			PDDocument document = new PDDocument();
@@ -311,7 +313,7 @@ public class NexeraUtility {
 			// BufferedImage bimg = ImageIO.read(in);
 			float width, height;
 			if (contentType.equalsIgnoreCase("image/tiff")) {
-				FileSeekableStream fss = new FileSeekableStream(file);
+				fss = new FileSeekableStream(file);
 				ImageDecoder decoder = ImageCodec.createImageDecoder("tiff",
 				        fss, null);
 				RenderedImage image = decoder.decodeAsRenderedImage();
@@ -321,7 +323,7 @@ public class NexeraUtility {
 				height = bimg.getHeight();
 
 			} else {
-				InputStream in = new FileInputStream(file);
+				in = new FileInputStream(file);
 				BufferedImage bimg = ImageIO.read(in);
 				width = bimg.getWidth();
 				height = bimg.getHeight();
@@ -364,13 +366,44 @@ public class NexeraUtility {
 			document.close();
 
 		} catch (Exception e) {
+			
+			
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 			throw new FatalException("Cannot convert image to PDF");
+		}finally{
+			if(fss!= null){
+				try {
+	                fss.close();
+                } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+                }
+			}
+			if(in != null){
+				try {
+	                in.close();
+                } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+                }
+			}
+	
 		}
 		return filepath;
 
 	}
 
+	public void deleteFileFolderFromLocalDirectory(File file){
+		if(file.exists()){
+			File dir=new File(file.getAbsolutePath().replaceAll(file.getName(), ""));
+			file.delete();
+			if(dir.isDirectory()){
+				dir.delete();
+			}
+			
+		}
+	}
+	
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		String uniqueId = uuidString();
