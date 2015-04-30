@@ -167,8 +167,8 @@ public class ThreadManager implements Runnable {
 		workflowItemExecList = getWorkflowItemExecByLoan(loan);
 		LOGGER.debug("Invoking load service of lendinqb ");
 		JSONObject loadOperationObject = createLoadJsonObject(map,
-		        WebServiceOperations.OP_NAME_LOAN_LOAD, loan.getLqbFileId(),
-		        format);
+		        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
+		        loan.getLqbFileId(), format);
 		if (loadOperationObject != null) {
 			LOGGER.debug("Invoking LQB service to fetch Loan status ");
 			JSONObject loadJSONResponse = lqbInvoker
