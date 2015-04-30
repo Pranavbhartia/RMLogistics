@@ -37,6 +37,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.UserVO;
@@ -138,8 +139,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
-		query.setParameter("mobileAlertsPreference",
-		        user.getMobileAlertsPreference());
+		query.setParameter("mobileAlertsPreference",user.getMobileAlertsPreference());
 		query.setParameter("carrierInfo", user.getCarrierInfo());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
@@ -882,4 +882,26 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			        hibernateException);
 		}
 	}
+
+	@Override
+    public InternalUserStateMapping updateInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo) {
+	    
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(internalUserStateMapping);
+		
+	    return internalUserStateMapping;
+    }
+
+	@Override
+    public InternalUserStateMapping deleteInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo) {
+		
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+		Session session = sessionFactory.getCurrentSession();
+		session.delete(internalUserStateMapping);
+		
+	    return internalUserStateMapping;
+    }
 }

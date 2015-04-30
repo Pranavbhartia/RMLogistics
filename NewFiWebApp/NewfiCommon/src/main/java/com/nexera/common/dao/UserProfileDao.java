@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
+import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.UserVO;
@@ -99,4 +101,10 @@ public interface UserProfileDao extends GenericDao {
 
 	public User getUserByUserName(String userName)
 	        throws NoRecordsFetchedException;
+
+	public InternalUserStateMapping updateInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo);
+
+	public InternalUserStateMapping deleteInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo);
 }

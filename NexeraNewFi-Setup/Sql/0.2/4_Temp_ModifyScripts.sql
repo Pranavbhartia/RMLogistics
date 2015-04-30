@@ -338,3 +338,6 @@ VALUES ('3','user-batch-job','Batch job for user profile check','0');
 ALTER TABLE `newfi_schema`.`user` 
    ADD COLUMN `time_offset` bigint(100) NULL AFTER `token_generation_time`;
 
+
+# Added by Abhishek
+alter table newfi_schema.internaluserstatemapping add column license_number varchar (100);

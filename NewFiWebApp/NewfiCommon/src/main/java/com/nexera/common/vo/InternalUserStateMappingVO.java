@@ -6,6 +6,7 @@ public class InternalUserStateMappingVO {
 	private Integer userId;
 	private Integer stateId;
 	private Boolean isChecked;
+	private String license;
 	
 	public Integer getId() {
 		return id;
@@ -38,6 +39,16 @@ public class InternalUserStateMappingVO {
 	public void setIsChecked(Boolean isChecked) {
 		this.isChecked = isChecked;
 	}
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
+
+	
 
 	
 }

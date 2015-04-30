@@ -48,6 +48,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -574,6 +575,61 @@ public class UserProfileRest {
 		}
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
+	
+	
+	@RequestMapping(value = "/internaluserstatemapping", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateInternalUserStateMapping(String internaluserstatemapping) {
+
+		Gson gson = new Gson();
+		InternalUserStateMappingVO internalUserStateMappingVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping, InternalUserStateMappingVO.class);
+
+		try {
+			internalUserStateMappingVO = userProfileService.updateInternalUserStateMapping(internalUserStateMappingVO);
+			if (null ==internalUserStateMappingVO) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
+			}
+			commonResponseVO.setResultObject("success");
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		} catch (Exception e) {
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+
+		return commonResponseVO;
+	}
+	
+	@RequestMapping(value = "/deleteStatelicensemapping", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO deleteInternalUserStateMapping(String internaluserstatemapping) {
+
+		Gson gson = new Gson();
+		InternalUserStateMappingVO internalUserStateMappingVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping, InternalUserStateMappingVO.class);
+
+		try {
+			internalUserStateMappingVO = userProfileService.deleteInternalUserStateMapping(internalUserStateMappingVO);
+			if (null ==internalUserStateMappingVO) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
+			}
+			commonResponseVO.setResultObject("success");
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		} catch (Exception e) {
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+
 		return commonResponseVO;
 	}
 

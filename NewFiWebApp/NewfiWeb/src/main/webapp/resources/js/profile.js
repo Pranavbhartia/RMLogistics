@@ -248,12 +248,12 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
 	
-	var stateRow = getManagerStateRow(user);
-	container.append(stateRow);
-	
    // added check box 
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
+	
+	var stateRow = getManagerStateRow(user);
+	container.append(stateRow);
 	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
@@ -329,6 +329,9 @@ function appendLicensedStates(element){
 		}).bind('click',{"key":key},function(event){
 			var key = event.data.key;
 			$(this).closest('.license-row').remove();
+			internalUserStates[key].isChecked = false;
+			//
+			deleteStateLicenseMapping(internalUserStates[key]);
 			delete internalUserStates[key];
 		});
 		
@@ -598,13 +601,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
-	var internalUserState=[];
+	/*var internalUserState=[];
 	//for(var i=0;i<internalUserStates.length;i++){
 	for(var key in internalUserStates){
 		if(internalUserStates[key]!=0)
 			internalUserState.push(internalUserStates[key]);
 	}
-	userProfileJson.internalUserStateMappingVOs = internalUserState;
+	userProfileJson.internalUserStateMappingVOs = internalUserState;*/
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -1363,6 +1366,7 @@ function appendAddLicencePopup(element) {
 			internalUserStates[$(this).attr("state-id")] = internalUserStateMappingVO;
 		
 		removeAddLicencePopup();
+		saveInternalUserStatesAndLicense(internalUserStateMappingVO);
 		
 		appendLicensedStates($('#licensedStateList'));
 	});
@@ -1374,7 +1378,6 @@ function appendAddLicencePopup(element) {
 	
 	$(element).append(wrapper);
 }
-
 
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
@@ -2557,4 +2560,48 @@ function getCarrierName(carrierInfo){
     
      return ""; 
 	}
+}
+
+
+function saveInternalUserStatesAndLicense(internalUserStates){
+	
+	 $.ajax({
+	        url: "rest/userprofile/internaluserstatemapping",
+	        type: "POST",
+	        data: {
+	            "internaluserstatemapping": JSON.stringify(internalUserStates)
+	        },
+	        datatype: "application/json",
+	        cache:false,
+	        success: function(data) {
+	          
+	        },
+	        error: function() {
+	            alert("error");
+	           
+	        }
+	 
+	    });
+}
+
+
+function deleteStateLicenseMapping(statelicensemapping){
+	
+	 $.ajax({
+	        url: "rest/userprofile/deleteStatelicensemapping",
+	        type: "POST",
+	        data: {
+	            "internaluserstatemapping": JSON.stringify(statelicensemapping)
+	        },
+	        datatype: "application/json",
+	        cache:false,
+	        success: function(data) {
+	          
+	        },
+	        error: function() {
+	            alert("error");
+	           
+	        }
+	 
+	    });
 }

@@ -2,6 +2,7 @@ package com.nexera.common.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,9 +24,10 @@ public class InternalUserStateMapping implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private int id;
+	private Integer id;
 	private User user;
 	private StateLookup stateLookup;
+	private String licenseNumber;
 
 	public InternalUserStateMapping(){
 		
@@ -35,11 +37,11 @@ public class InternalUserStateMapping implements Serializable {
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -63,7 +65,17 @@ public class InternalUserStateMapping implements Serializable {
 		this.stateLookup = stateLookup;
 	}
 
-
+	
+	
+	@Column(name = "license_number")
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+	
+	
 	public static InternalUserStateMappingVO convertFromEntityToVO(
 			InternalUserStateMapping internalUserStateMapping) {
 
@@ -76,6 +88,24 @@ public class InternalUserStateMapping implements Serializable {
 		detailVO.setIsChecked(true);
 		detailVO.setStateId(internalUserStateMapping.getStateLookup().getId());
 		detailVO.setUserId(internalUserStateMapping.getUser().getId());
+		detailVO.setLicense(internalUserStateMapping.getLicenseNumber());
 		return detailVO;
 	}
+	
+	
+	public static InternalUserStateMapping convertFromVOToEntity(InternalUserStateMappingVO inputVo) {
+
+		if (inputVo == null)
+			return null;
+
+		InternalUserStateMapping internalUserStateMapping = new InternalUserStateMapping();
+		
+		internalUserStateMapping.setId(inputVo.getId());
+		internalUserStateMapping.setStateLookup(new StateLookup(inputVo.getStateId()));
+		internalUserStateMapping.setUser(new User(inputVo.getUserId()));
+		internalUserStateMapping.setLicenseNumber(inputVo.getLicense());
+		return internalUserStateMapping;
+	}
+	
+	
 }
