@@ -157,10 +157,16 @@ function hideOverlay(){
 //Function to show toast message
 function showToastMessage(message){
 	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
-	$('#overlay-toast').show();
-	$('#overlay-toast').click(function(e){
+    if($('#overlay-toast-error-txt').html()==""||$('#overlay-toast-error-txt').html()==null||$('#overlay-toast-error-txt').html()==undefined){
+    	$('#overlay-toast-txt').show();	
+    	
+    }else{
+    	$('#overlay-toast-error-txt').show();
+    	$('#overlay-toast-txt').show();	
+    }
+	$('#overlay-toast-txt').click(function(e){
 		$('#overlay-toast-txt').html('');
-		$('#overlay-toast').hide();
+		$('#overlay-toast-txt').hide();
 	});
 	/*$('#overlay-toast').fadeIn("slow",function(){
 		setTimeout(function(){
@@ -171,11 +177,19 @@ function showToastMessage(message){
 
 //Function to show toast message
 function showErrorToastMessage(message){
-	$('#overlay-toast-txt').html(message).addClass('overlay-toast-success');
-	$('#overlay-toast').show();
-	$('#overlay-toast').click(function(e){
-		$('#overlay-toast-txt').html('');
-		$('#overlay-toast').hide();
+	$('#overlay-toast-error-txt').html(message).addClass('overlay-toast-success');
+    if($('#overlay-toast-txt').html()==""||$('#overlay-toast-txt').html()==null||$('#overlay-toast-txt').html()==undefined){
+    	$('#overlay-toast-error-txt').show();	
+    	
+    }else{
+    	$('#overlay-toast-txt').show();	
+    	$('#overlay-toast-error-txt').show();
+    	
+    }
+
+	$('#overlay-toast-error-txt').click(function(e){
+		$('#overlay-toast-error-txt').html('');
+		$('#overlay-toast-error-txt').hide();
 	});
 	/*$('#overlay-toast').fadeIn("slow",function(){
 		setTimeout(function(){

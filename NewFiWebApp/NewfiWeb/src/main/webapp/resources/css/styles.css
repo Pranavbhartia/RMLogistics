@@ -2978,6 +2978,7 @@ input.calc-input {
 	border: 1px #8EC63F solid;
 	border-left-width: 7px;
 	cursor: pointer;
+	margin:10px auto;
 }
 
 .overlay-toast-success {
