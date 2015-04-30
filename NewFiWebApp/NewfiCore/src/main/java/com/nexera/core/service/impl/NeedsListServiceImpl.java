@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +79,9 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private UploadedFilesListDao uploadedFilesListDao;
 	@Autowired
 	private NotificationService notificationService;
+
+	@Value("${profile.url}")
+	private String baseUrl;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NeedsListServiceImpl.class);
@@ -427,7 +431,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		if (initialList) {
 			initialNeedsListSetEmail(loanId, addedList);
 		} else {
-			updatedNeedsListEmail(loanId, addedList);
+			updatedNeedsListEmail(loanId, addedList, removedList);
 		}
 		messageServiceHelper.generateNeedListModificationMessage(loanId,
 		        utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
@@ -642,13 +646,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 		if (loanVO != null) {
 			if (loanVO.getUser() != null) {
 				Template template = templateService
-				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_INITIAL_NEEDS_LIST_SET);
 				// We create the substitutions map
 				Map<String, String[]> substitutions = new HashMap<String, String[]>();
 				substitutions.put("-name-", new String[] { loanVO.getUser()
 				        .getFirstName() });
 				substitutions.put("-listofitems-",
-				        getNeedsListNameById(addedList));
+				        new String[] { getNeedsListNameById(addedList) });
+				substitutions.put("-url-", new String[] { baseUrl });
 				recipientVO.setEmailID(loanVO.getUser().getEmailId());
 				emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(
 				        Arrays.asList(recipientVO)));
@@ -669,38 +674,40 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	}
 
-	private String[] getNeedsListNameById(List<Integer> needsListId) {
-		LoanNeedsList loanNeedsList = null;
-		List<String> needsListName = new ArrayList<>();
+	private String getNeedsListNameById(List<Integer> needsListId) {
+		NeedsListMaster needsListMaster = null;
+		String needsName = "";
+
 		for (int id : needsListId) {
-			loanNeedsList = (LoanNeedsList) needsDao.load(LoanNeedsList.class,
-			        id);
-			if (loanNeedsList != null) {
-				needsListName
-				        .add(loanNeedsList.getNeedsListMaster().getLabel());
+			needsListMaster = (NeedsListMaster) needsDao.load(
+			        NeedsListMaster.class, id);
+			if (needsListMaster != null) {
+				needsName = needsListMaster.getLabel() + "\n" + needsName;
 			}
 
 		}
 
-		String[] needsNameArray = new String[needsListName.size()];
-		needsNameArray = needsListName.toArray(needsNameArray);
-		return needsNameArray;
+		return needsName;
 	}
 
 	@Override
-	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList) {
+	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList,
+	        List<Integer> removedList) {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEEDS_LIST_UPDATED);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loanVO.getUser()
 		        .getFirstName() });
+		substitutions.put("-url-", new String[] { baseUrl });
 
-		substitutions.put("-listofitems-", getNeedsListNameById(addedList));
+		substitutions.put("-listofitems-",
+		        new String[] { getNeedsListNameById(addedList)
+		                + getNeedsListNameById(removedList) });
 		recipientVO.setEmailID(loanVO.getUser().getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
 		        .asList(recipientVO)));
