@@ -565,10 +565,8 @@ function removeNotification(id) {
 }
 
 function takeToMilestone(id) {
-	if (userIsRealtor()) {
-
-	} else if (userIsCustomer()) {
-
+	  if (userIsCustomer()) {
+		  location.hash =  "#myLoan/my-loan-progres";
 	} else {
 		location.hash = "#loan/" + id + "/progress";
 	}
