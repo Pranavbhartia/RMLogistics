@@ -788,7 +788,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LM
 						        .getRoleId()) {
 							if (activeTeam.getUser().getId() != user.getId()
-							        && activeTeam.getUser().getStatus()
+							        && activeTeam.getUser().getStatus()==1
 							        && activeTeam.getUser()
 							                .getInternalUserDetail()
 							                .getActiveInternal() == ActiveInternalEnum.ACTIVE) {

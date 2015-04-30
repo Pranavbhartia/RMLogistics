@@ -132,7 +132,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateUser(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber,usr.mobileAlertsPreference=:mobileAlertsPreference,usr.carrierInfo=:carrierInfo WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber,usr.mobileAlertsPreference=:mobileAlertsPreference,usr.carrierInfo=:carrierInfo,usr.status=:status WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
@@ -141,6 +141,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("mobileAlertsPreference",
 		        user.getMobileAlertsPreference());
 		query.setParameter("carrierInfo", user.getCarrierInfo());
+		query.setParameter("status", user.getStatus());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		return result;

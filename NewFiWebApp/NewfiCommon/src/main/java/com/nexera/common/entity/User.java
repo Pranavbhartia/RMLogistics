@@ -43,7 +43,7 @@ import com.nexera.common.vo.UserVO;
 public class User implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Boolean status;
+	private int status;
 	private String emailId;
 	private String firstName;
 	private String lastName;
@@ -90,13 +90,12 @@ public class User implements Serializable, UserDetails {
 		this.id = id;
 	}
 
-	@Column(name = "status", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getStatus() {
+	@Column(name = "status", columnDefinition = "TINYINT")	
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -484,8 +483,11 @@ public class User implements Serializable, UserDetails {
 		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
 		// }
 		// userModel.setPassword(userVO.getPassword());
-
-		userModel.setStatus(true);
+		if (userVO.getStatus() == 0 || userVO.getStatus() == -1) {
+			userModel.setStatus(userVO.getStatus());
+		} else {
+			userModel.setStatus(1);
+		}
 
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());

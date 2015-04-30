@@ -822,6 +822,12 @@ var userRoleStr;
 		if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
 		trCol5.append(userDelIcn);}
 	}
+	if(user.userRole.id==1){
+		if(user.status==true){
+			trCol5.append(userDelIcn);
+		}
+		
+	}
 	
 	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
 			.append(trCol5);
@@ -855,7 +861,12 @@ function displayResponseData(data){
   // var tableRow = getAdminTeamListTableRow(data.resultObject);  
    var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
    teamMemberRow.remove();
-   showToastMessage("Loan manger deleted successfully");
+   if(data.resultObject.userRole.id==1){
+       showToastMessage("Customer deleted successfully");
+   }else{
+	   showToastMessage("Loan manger deleted successfully");  
+   }
+
   // tableRow.empty(teamMemberRow); 
 	}else{
 		showErrorToastMessage(data.error.message);
