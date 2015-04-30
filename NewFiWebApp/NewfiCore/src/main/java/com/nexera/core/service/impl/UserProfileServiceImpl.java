@@ -1306,6 +1306,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional(readOnly =true)
 	public UserVO findByUserName(String userName) throws DatabaseException,
 	        NoRecordsFetchedException {
 		// TODO Auto-generated method stub

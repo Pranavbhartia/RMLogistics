@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <meta charset="utf-8">
@@ -26,61 +27,89 @@
 				
 				<div class="reg-display-title">Get Started Now</div>
 				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
-				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">I am here to register as a</div>
-					<div class="reg-row-rc float-left">
-						<div class="reg-select reg-input-cont">
-							<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
-							<div class="reg-option-dropdown hide">
-								<div class="reg-select-option" id="customerID" role="cus">Customer</div>
-								<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
+				
+				<div class="clearfix user-info-outer-container">
+					<div class="float-left left-user-container ">
+						<div class="user-info-image">
+							<img src="${userObject.photoImageUrl}" class="photo-img-url"/>
+						</div>
+						
+						<div class="user-info-row">
+							<div class="user-info-name">${userObject.displayName}</div>
+						</div>
+						
+						<div class="user-info-row">
+							<div>${userObject.phoneNumber}</div>
+						</div>
+						
+						<div class="user-info-row">
+							<div>${userObject.userRole.label}</div>
+						</div>
+					</div>
+					<div class="float-right new-user-container">
+						<div class="reg-input-row clearfix">
+							<div class="reg-row-lc-new reg-row-lc float-left">I am here to register as a</div>
+							<div class="reg-row-rc-new reg-row-rc float-left">
+								<div class="reg-select reg-input-cont">
+									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
+									<div class="reg-option-dropdown hide">
+										<div class="reg-select-option" id="customerID" role="cus">Customer</div>
+										<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
+									</div>
+								</div>
 							</div>
 						</div>
+						
+						<div class="reg-input-row clearfix">
+							<div class="reg-row-lc-new reg-row-lc float-left">Name</div>
+							<div class="reg-row-rc-new reg-row-rc float-left clearfix">
+								<div class="reg-input-cont reg-fname float-left">
+									<input class="reg-input" placeholder="First Name" id="firstName">
+								</div>
+								<div class="reg-input-cont reg-lname float-left">
+									<input class="reg-input" placeholder="Last Name" id="lastName">
+								</div>
+							</div>
+						</div>
+						
+						<div class="reg-input-row clearfix">
+							<div class="reg-row-lc-new reg-row-lc float-left">Your email id</div>
+							<div class="reg-row-rc-new reg-row-rc float-left">
+								<div class="reg-input-cont reg-email">
+									<input class="reg-input" placeholder="Email" id="emailID">
+								</div>
+							</div>
+						</div>
+						
+						<div id="realor-email-cont" class="reg-input-row clearfix">
+							<div class="reg-row-lc-new reg-row-lc float-left">Referral Realtor email</div>
+							<div class="reg-row-rc-new reg-row-rc float-left">
+								<div class="reg-input-cont reg-email" id="realor-email">
+									<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" >
+								</div>
+							</div>
+						</div>
+						
+						<div class="reg-input-row clearfix">
+							<div class="reg-row-lc-new reg-row-lc float-left">Referral Loan Manager email</div>
+							<div class="reg-row-rc-new reg-row-rc float-left">
+								<div class="reg-input-cont reg-email" id="loanManager-email">
+									<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId">	
+								</div>
+							</div>
+						</div>
+		
+						<div class="reg-btn-wrapper clearfix">
+							<div class="reg-btn float-left" id="submitID">Submit</div>
+						</div>
+							
+					
 					</div>
 				</div>
 				
-				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Name</div>
-					<div class="reg-row-rc float-left clearfix">
-						<div class="reg-input-cont reg-fname float-left">
-							<input class="reg-input" placeholder="First Name" id="firstName">
-						</div>
-						<div class="reg-input-cont reg-lname float-left">
-							<input class="reg-input" placeholder="Last Name" id="lastName">
-						</div>
-					</div>
-				</div>
 				
-				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Your email id</div>
-					<div class="reg-row-rc float-left">
-						<div class="reg-input-cont reg-email">
-							<input class="reg-input" placeholder="Email" id="emailID">
-						</div>
-					</div>
-				</div>
 				
-				<div id="realor-email-cont" class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Referral Realtor email</div>
-					<div class="reg-row-rc float-left">
-						<div class="reg-input-cont reg-email" id="realor-email">
-							<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" >
-						</div>
-					</div>
-				</div>
-				
-				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Referral Loan Manager email</div>
-					<div class="reg-row-rc float-left">
-						<div class="reg-input-cont reg-email" id="loanManager-email">
-							<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId">	
-						</div>
-					</div>
-				</div>
-
-				<div class="reg-btn-wrapper clearfix">
-					<div class="reg-btn float-left" id="submitID">Submit</div>
-				</div>
+				<!-- End of second div -->
 							
 			</div>			
 		</div>
@@ -91,6 +120,9 @@
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
 			});
+			
+			var username =${userObject.firstName};
+			alert(username);
 
 			$("#customerID").on("click",function(e){		
 				var userType=$("#customerID").text();
