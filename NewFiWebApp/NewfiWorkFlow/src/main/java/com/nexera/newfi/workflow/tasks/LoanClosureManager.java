@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
@@ -40,6 +41,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED
 		                .getLosStatusID()))) {
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_LOAN_SUSPENDED);
 			displayMessage = LoanStatus.loanSuspendedMessage;
 
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
@@ -47,6 +50,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		        .equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
 		                .getLosStatusID()))) {
 			displayMessage = LoanStatus.loanDeclinedMessage;
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_LOAN_DECLINED);
 
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
@@ -98,7 +103,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
-		// Do Nothing : 
+		// Do Nothing :
 		return null;
 	}
 
@@ -108,7 +113,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing : No Reminders
 		return null;
 	}

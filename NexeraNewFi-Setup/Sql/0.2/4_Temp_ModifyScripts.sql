@@ -67,10 +67,10 @@ CREATE TABLE `template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-insert into template values(1,'PAYMENT_TEMPLATE_ID','Payment Mail','2015-04-10 12:53:34','7aac7754-7115-488d-a108-d64e505c47d7');
-insert into template values(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10 12:53:34','8b40d8f2-47b4-4ad7-8108-24fe7aac2ab8');
+insert into template values(1,'PAYMENT_TEMPLATE_ID','Payment Mail','2015-04-10 12:53:34','80be7cc4-767a-44fc-9b0c-202302000c5b');
+insert into template values(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10 12:53:34','1d11f2a2-1aa0-455a-aba7-bc05442800e3');
 insert into template values(3,'NEW_NOTE_TEMPLATE','New Note Created','2015-04-10 12:53:34','864e95f8-99b7-4366-95e7-52dd791e71f2');
-insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','0fef5375-ba8c-4820-939b-977ef30c58b1');
+insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','e2227e0e-deb4-4db0-9642-74ab494612bf');
 
 ALTER TABLE `newfi_schema`.`loanappform` 
 CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;

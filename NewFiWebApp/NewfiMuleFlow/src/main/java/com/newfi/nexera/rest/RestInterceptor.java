@@ -198,7 +198,7 @@ public class RestInterceptor implements Callable
             } else if ( restParameters.getOpName().equals(
                 WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE ) ) {
                 LOG.debug( "Operation Chosen Was ListModifiedLoansByAppCode " );
-                inputParams = new Object[2];
+                inputParams = new Object[3];
                 inputParams[0] = NewFiManager.userTicket;
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
                 inputParams[2] = restParameters.getLoanVO().getAppCode();

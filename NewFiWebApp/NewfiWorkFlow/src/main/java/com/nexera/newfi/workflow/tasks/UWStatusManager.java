@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -45,6 +46,8 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 			milestoneStatus = WorkItemStatus.STARTED.getStatus();
 		} else if (status.equals(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE
 		        .getLosStatusID() + "")) {
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_LOAN_CLEAR_TO_CLOSE);
 			message = LoanStatus.underwritingClearToCloseMessage;
 			milestoneStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
@@ -56,6 +59,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 			        message);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
+
 			sendEmail(objectMap);
 		}
 		LOG.debug("UW Status is " + milestoneStatus);
@@ -94,6 +98,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("updateReminder of UW  " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.UW_NOTIFICATION_TYPE;

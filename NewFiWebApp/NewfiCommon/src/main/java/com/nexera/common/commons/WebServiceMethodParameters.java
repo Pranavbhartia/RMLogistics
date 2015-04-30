@@ -27,6 +27,8 @@ public class WebServiceMethodParameters {
 
 	public static String PARAMETER_S_LOAN_NUMBER = "sLoanNumber";
 
+	public static String PARAMETER_APP_CODE = "appCode";
+
 	public static String PARAMETER_DOCUMENT_TYPE = "documentType";
 
 	public static String PARAMETER_NOTES = "notes";

@@ -1,20 +1,27 @@
 package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
+import com.nexera.common.vo.CustomerDetailVO;
+import com.nexera.common.vo.CustomerSpouseDetailVO;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -31,7 +38,11 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	UserProfileService userProfileService;
 
 	@Autowired
+	TemplateService templateService;
+
+	@Autowired
 	NeedsListService needsListService;
+
 	@Autowired
 	Utils utils;
 	private static final Logger LOG = LoggerFactory
@@ -46,6 +57,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		        LoanStatus.creditScoreMessage);
 		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 		        LoanStatus.creditScoreMessage);
+		objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+		        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
 		sendEmail(objectMap);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
@@ -64,8 +77,73 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
 		        needsListService.checkCreditReport(loanID));
 		// TO Remove------ end
-		
+
 		return utils.getJsonStringOfMap(map);
+	}
+
+	@Override
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+		LoanVO loanVO = loanService.getLoanByID(Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		if (loanVO != null) {
+			UserVO userVO = loanVO.getUser();
+			if (userVO != null) {
+				CustomerDetailVO customerDetailVO = userVO.getCustomerDetail();
+				if (customerDetailVO != null) {
+					String equifax = customerDetailVO.getEquifaxScore();
+					String experian = customerDetailVO.getExperianScore();
+					String transunion = customerDetailVO.getTransunionScore();
+					if (equifax != null && experian != null
+					        && transunion != null) {
+						int midScore = (Integer.parseInt(equifax)
+						        + Integer.parseInt(experian) + Integer
+						        .parseInt(transunion)) / 3;
+
+						substitutions.put("-midcreditscore-",
+						        new String[] { String.valueOf(midScore) });
+						String creditScoreStringForBorrower = "Borrower One "
+						        + userVO.getFirstName() + " : " + experian
+						        + ", " + equifax + ", " + transunion;
+						if (loanVO.getLoanAppForms() != null) {
+							CustomerSpouseDetailVO customerSpouseDetailVO = loanVO
+							        .getLoanAppForms().get(0)
+							        .getCustomerSpouseDetail();
+							if (customerSpouseDetailVO != null) {
+								String spouseEquifax = customerSpouseDetailVO
+								        .getEquifaxScore();
+								String spouseExperian = customerSpouseDetailVO
+								        .getExperianScore();
+								String spouseTransunion = customerSpouseDetailVO
+								        .getTransunionScore();
+								if (spouseEquifax != null
+								        && spouseExperian != null
+								        && spouseTransunion != null) {
+									creditScoreStringForBorrower = creditScoreStringForBorrower
+									        + "\n Borrower Two "
+									        + customerSpouseDetailVO
+									                .getSpouseName()
+									        + " : "
+									        + experian
+									        + ", "
+									        + equifax
+									        + ", "
+									        + transunion;
+								}
+							}
+						}
+						substitutions.put("-creditscoreinformation-",
+						        new String[] { creditScoreStringForBorrower });
+					}
+
+				}
+			}
+		}
+		return substitutions;
 	}
 
 	@Override
@@ -82,8 +160,9 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		
+
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.CREDIT_SCORE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -94,7 +173,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,
 		        prevMilestoneKey, notificationReminderContent);
-		LOG.debug("Creating LM Reminder for ..Credit Score Manager for Prev MS :" +prevMilestoneKey);
+		LOG.debug("Creating LM Reminder for ..Credit Score Manager for Prev MS :"
+		        + prevMilestoneKey);
 		iWorkflowService.updateLMReminder(createReminderVo);
 		return null;
 	}

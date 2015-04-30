@@ -448,7 +448,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		} finally {
-			if (serverFile!= null && serverFile.exists()) {
+			if (serverFile != null && serverFile.exists()) {
 				serverFile.delete();
 			}
 		}
@@ -817,7 +817,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	        Loan loan) {
 		EmailVO emailVO = constructEmail(loan);
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_NOTE);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEEDS_LIST_UPDATED);
 		if (insertFileCount > 0) {
 			LOG.debug("New Files have been inserted ");
 			emailVO.setTemplateId(template.getValue());

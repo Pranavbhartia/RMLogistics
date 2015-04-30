@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,13 +87,55 @@ public class UserManager implements Runnable {
 		}
 	}
 
+	public void fileInactivityAction(User user) {
+		LOGGER.debug("Inside method fileInactivityAction ");
+		Date lastLoginDateOfUser = user.getLastLoginDate();
+		Date systemDate = utils.convertCurrentDateToUtc();
+		long diff = systemDate.getTime() - lastLoginDateOfUser.getTime();
+		long diffInDays = TimeUnit.MILLISECONDS.toDays(diff);
+		if (diffInDays == 30) {
+			try {
+				sendUserInActiveEMail();
+			} catch (InvalidInputException | UndeliveredEmailException e) {
+				LOGGER.error("Exception caught " + e.getMessage());
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        e.getMessage());
+				nexeraUtility.sendExceptionEmail(e.getMessage());
+			}
+		}
+	}
+
+	private void sendUserInActiveEMail() throws InvalidInputException,
+	        UndeliveredEmailException {
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+
+		substitutions.put("-url-", new String[] { baseUrl });
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
+	}
+
 	private void sendPasswordNotUpdatedEmail(User user)
 	        throws InvalidInputException, UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
