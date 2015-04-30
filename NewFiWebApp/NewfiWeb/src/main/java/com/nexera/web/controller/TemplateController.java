@@ -3,6 +3,7 @@ package com.nexera.web.controller;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
@@ -123,7 +124,6 @@ public class TemplateController extends DefaultController {
 			if (image == null) {
 				LOG.error("Buffered Image is null");
 			}
-
 			File dir = new File(nexeraUtility.tomcatDirectoryPath()
 			        + File.separator + nexeraUtility.randomStringOfLength());
 			if (!dir.exists()) {
@@ -132,10 +132,18 @@ public class TemplateController extends DefaultController {
 
 			String filePath = dir.getAbsolutePath() + File.separator
 			        + imageFileName;
+			FileOutputStream fileOuputStream = new FileOutputStream(filePath);
+			try {
+
+				fileOuputStream.write(decodedBytes);
+			} finally {
+				fileOuputStream.close();
+			}
+
 			// Create the file on server
 
 			File fileLocal = new File(filePath);
-			ImageIO.write(image, "png", fileLocal);
+			// ImageIO.write(image, "png", fileLocal);
 
 			s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "User",
 			        "complete");

@@ -322,8 +322,15 @@ function retrieveState() {
 			entryPointForAgentView(loanID, secondaryId);
 		} else if (loanID && loanID > 0)
 			entryPointForAgentView(loanID, 2);
-		else
-			paintAgentDashboard('myloans');
+		else{
+			
+			//If it is a page refresh, ignore
+			if($('#agent-dashboard-container').length==0){
+				paintAgentDashboard('myloans');	
+			}
+			
+		}
+			
 
 		break;
 
