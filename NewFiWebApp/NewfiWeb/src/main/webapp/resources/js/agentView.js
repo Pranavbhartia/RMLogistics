@@ -1139,6 +1139,8 @@ function userIsRealtor() {
 	return false;
 }
 
+
+
 // Function to append customer's detail in loan manager view
 function appendCustomerDetailHeader(custHeaderDetails) {
 	var container = $('<div>').attr({

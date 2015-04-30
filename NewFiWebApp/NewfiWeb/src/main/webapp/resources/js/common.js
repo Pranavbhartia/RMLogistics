@@ -816,3 +816,9 @@ function checkIfSafari() {
 	}
 	return false;
 }
+function userIsCustomer() {
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
+		return true;
+	}
+	return false;
+}
