@@ -111,7 +111,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				objectMap.put(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 				        messageForNote);
-				objectMap.put("paymentStatus", status);
+				objectMap.put(WorkflowDisplayConstants.PAYMENT_STATUS, status);
 				sendEmail(objectMap);
 			}
 
@@ -128,8 +128,9 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		}
 
 		String[] ary = new String[1];
-		if (objectMap.get("paymentStatus") != null) {
-			if (((String) objectMap.get("paymentStatus"))
+		if (objectMap.get(WorkflowDisplayConstants.PAYMENT_STATUS) != null) {
+			if (((String) objectMap
+			        .get(WorkflowDisplayConstants.PAYMENT_STATUS))
 			        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_SUCCESS)) {
 
 				LoanVO loanVO = loanService.getLoanByID(Integer
@@ -158,7 +159,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 					ary[0] = objectMap.get(key).toString();
 					substitutions.put("-" + key + "-", ary);
 				}
-			} else if (((String) objectMap.get("paymentStatus"))
+			} else if (((String) objectMap
+			        .get(WorkflowDisplayConstants.PAYMENT_STATUS))
 			        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_PENDING)) {
 				ary[0] = objectMap.get(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
