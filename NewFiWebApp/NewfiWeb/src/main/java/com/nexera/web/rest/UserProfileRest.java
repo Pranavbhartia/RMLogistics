@@ -208,8 +208,8 @@ public class UserProfileRest {
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
 	public @ResponseBody String changeUserPassword(
-	        @RequestParam String changePasswordData, HttpServletRequest request,
-	        HttpServletResponse response) {
+	        @RequestParam String changePasswordData,
+	        HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
@@ -365,7 +365,7 @@ public class UserProfileRest {
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
-		
+
 		try {
 			if (userVO.getUsername() == null)
 				userVO.setUsername(userVO.getEmailId());
@@ -383,9 +383,10 @@ public class UserProfileRest {
 				}
 
 			}
-		}catch(DatabaseException dbe){
+		} catch (DatabaseException dbe) {
 			LOG.error("Error while saveing user with same email");
-			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522", "User Already Present"));
+			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522",
+			        "User Already Present"));
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -413,11 +414,12 @@ public class UserProfileRest {
 			userVO.setUsername(userVO.getEmailId());
 		try {
 			LOG.info("TO check whether user exsists");
-			User user=userProfileService.findUserByMail(userVO.getEmailId());
-			if(user!=null){
-				ErrorVO error=new ErrorVO();
+			User user = userProfileService.findUserByMail(userVO.getEmailId());
+			if (user != null) {
+				ErrorVO error = new ErrorVO();
 				error.setMessage(ErrorConstants.ADMIN_CREATE_USER_ERROR);
-				return new Gson().toJson(RestUtil.wrapObjectForFailure(error, "522", ""));
+				return new Gson().toJson(RestUtil.wrapObjectForFailure(error,
+				        "522", ""));
 
 			}
 			LOG.debug("Creating the new user");
@@ -500,9 +502,18 @@ public class UserProfileRest {
 
 		try {
 			UserVO userVO = userProfileService.findUser(userId);
+			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
+			        .getRoleId()) {
 
-			userProfileService.deleteUser(userVO);
-			response.setResultObject(userVO);
+				userVO.setStatus(-1);
+				userProfileService.updateUser(userVO);
+				response.setResultObject(userVO);
+
+			}else{
+				userProfileService.deleteUser(userVO);
+				response.setResultObject(userVO);
+			}
+			
 
 		} catch (InputValidationException e) {
 			LOG.error("error and message is : " + e.getDebugMessage());

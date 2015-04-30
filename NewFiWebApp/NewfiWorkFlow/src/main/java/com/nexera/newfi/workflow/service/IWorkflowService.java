@@ -2,6 +2,7 @@ package com.nexera.newfi.workflow.service;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 
@@ -30,4 +31,5 @@ public interface IWorkflowService {
 	public String getRenderInfoFor1003(int loanID, int userID);
 
 	public String getRenderInfoForAppraisal(int loanID);
+	public String getDisclosureURL(int loanID, MasterNeedsEnum needItem);
 }

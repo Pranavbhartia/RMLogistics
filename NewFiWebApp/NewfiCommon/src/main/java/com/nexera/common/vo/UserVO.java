@@ -14,7 +14,7 @@ public class UserVO implements Serializable {
 	private int id;
 	private int defaultLoanId;
 	private String userProfileBaseUrl;
-	private Boolean status;
+	private int status;
 	private String emailId;
 	private String emailEncryptionToken;
 	private String firstName;
@@ -57,11 +57,11 @@ public class UserVO implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
