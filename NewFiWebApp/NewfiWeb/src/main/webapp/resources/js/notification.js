@@ -700,8 +700,11 @@ function getAlertNotificationRow(notification, contxt) {
 
 	container.append(alertIcn).append(alertTxtCont);
 	container.bind("click", function(e) {
-		hideAlertNotificationPopup();
-		takeToMilestone(notification.loanID);
+		if (notification.loanID!=0)
+		{
+			hideAlertNotificationPopup();
+			takeToMilestone(notification.loanID);
+		}
 	});
 	if (notification.dismissable) {
 		var alertRemoveIcn = $('<div>').attr({
