@@ -101,7 +101,7 @@ function showCustomerLoanPage(user) {
     });
     loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
     $('#right-panel').append(loanDetailsMainContainer);
-    if (window.location.hash!= "")
+    if (window.location.hash== "")
     {
     	changeSecondaryLeftPanel(5);
     }
