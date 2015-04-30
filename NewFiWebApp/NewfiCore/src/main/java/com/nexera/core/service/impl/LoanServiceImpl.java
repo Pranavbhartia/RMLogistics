@@ -76,6 +76,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -125,6 +126,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+	@Autowired
+	private StateLookupService stateLookupService;
+
 	@Value("${profile.url}")
 	private String systemBaseUrl;
 
@@ -746,8 +750,10 @@ public class LoanServiceImpl implements LoanService {
 		 */
 
 		if (!defaultManagerAdded) {
-
-			UserVO defaultUser = assignmentHelper.getDefaultLoanManager("CA");
+			String stateName = stateLookupService.getStateCodeByZip(loanVO
+			        .getUserZipCode());
+			UserVO defaultUser = assignmentHelper
+			        .getDefaultLoanManager(stateName);
 
 			if (defaultUser != null) {
 				updateLoanTeamList(loanTeam,

@@ -181,7 +181,7 @@
 		function validateUser(registration){
 			$('#overlay-loader').show();
 		    $.ajax({
-		        url: "rest/shopper/validate",
+		        url: "/NewfiWeb/rest/shopper/validate",
 		        type: "POST",
 		        cache:false,
 		        data: {

@@ -4820,8 +4820,8 @@ input.calc-input {
 }
 
 .user-info-image {
-	width: 138px;
-	height: 100px;
+	/* width: 138px;
+	height: 100px; */
 	margin-top: 20px;
 }
 

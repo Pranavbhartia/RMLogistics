@@ -517,7 +517,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void deleteUser(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
-	
+
 		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
@@ -988,6 +988,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			} else {
 				LOG.info("loan type is NONE");
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
+			}
+
+			if (loaAppFormVO.getPropertyTypeMaster() != null) {
+				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
+				        .getHomeZipCode());
 			}
 
 			loanVO = loanService.createLoan(loanVO);

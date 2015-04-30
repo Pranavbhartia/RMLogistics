@@ -51,4 +51,14 @@ public class StateLookupServiceImpl implements StateLookupService {
 		        .findZipCodesForStateID(stateID));
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public String getStateCodeByZip(String addressZipCode) {
+		if (addressZipCode == null || addressZipCode.isEmpty()) {
+			return null;
+		}
+		// TODO Auto-generated method stub
+		return stateLookupDao.getStateCodeByZip(addressZipCode);
+	}
+
 }

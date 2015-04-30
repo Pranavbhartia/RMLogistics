@@ -55,6 +55,8 @@ public class LoanVO implements Serializable {
 	private String lqbUrl;
 	private String lockedRateData;
 
+	private String userZipCode;
+
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
 	}
@@ -384,10 +386,18 @@ public class LoanVO implements Serializable {
 	}
 
 	public String getLockedRateData() {
-	    return lockedRateData;
-    }
+		return lockedRateData;
+	}
 
 	public void setLockedRateData(String lockedRateData) {
-	    this.lockedRateData = lockedRateData;
-    }
+		this.lockedRateData = lockedRateData;
+	}
+
+	public String getUserZipCode() {
+		return userZipCode;
+	}
+
+	public void setUserZipCode(String userZipCode) {
+		this.userZipCode = userZipCode;
+	}
 }
