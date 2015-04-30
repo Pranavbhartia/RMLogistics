@@ -3,12 +3,15 @@ package com.nexera.newfi.workflow.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -37,6 +40,10 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 	private NeedsListService needsListService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+
+	@Value("${profile.url}")
+	private String baseUrl;
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DisclosuresManager.class);
 
@@ -53,6 +60,8 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		String mileStoneStatus = null;
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message = LoanStatus.disclosureAvailMessage;
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE);
 			flag = true;
 			returnStatus = WorkItemStatus.STARTED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureAvail;
@@ -61,6 +70,8 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureSigned;
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_ARE_COMPLETE);
 			// Have to add need for appraisal
 			NeedsListMaster appraisalMasterNeed = needsListService
 			        .fetchNeedListMasterByType(MasterNeedsEnum.Appraisal_Report
@@ -92,6 +103,32 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			return returnStatus;
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+		String[] ary = new String[1];
+		ary[0] = objectMap.get(
+		        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO).toString();
+		if (objectMap
+		        .get(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+		        .toString()
+		        .equalsIgnoreCase(
+		                CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE)) {
+			objectMap.put("-disclousreslink-", baseUrl);
+		}
+		substitutions.put("-message-", ary);
+		for (String key : objectMap.keySet()) {
+			ary = new String[1];
+			ary[0] = objectMap.get(key).toString();
+			substitutions.put("-" + key + "-", ary);
+		}
+		return substitutions;
 	}
 
 	@Override
@@ -137,6 +174,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing - No need to generate any Reminder..
 		return null;

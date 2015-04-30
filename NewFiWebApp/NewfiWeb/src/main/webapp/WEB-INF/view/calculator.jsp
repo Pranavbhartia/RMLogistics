@@ -9,6 +9,7 @@
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/footer.css" rel="stylesheet">
 </head>
 
 <body>
@@ -344,15 +345,15 @@
 						</div>
 						<div class="calc-btn" id ="submitID">Submit</div>
 					</div>
-<<<<<<< HEAD
+
 					<div class ="hide" id="slider"></div>
-=======
->>>>>>> upstream/master
+
                  <div class="teaserresult" id ="teaserresult"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<jsp:include page="inlineFooter.jsp"></jsp:include>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -459,6 +460,7 @@
 
 			    	   url:"rest/userprofile/findteaserate",
 			    	   type:"POST",
+			    	   cache:false,
 			    	   data:{"teaseRate":JSON.stringify(teaseRate)},
 			    	   datatype:"application/json",
 			    	   success : function(){

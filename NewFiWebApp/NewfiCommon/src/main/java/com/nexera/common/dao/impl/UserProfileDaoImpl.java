@@ -138,7 +138,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
-		query.setParameter("mobileAlertsPreference", user.getMobileAlertsPreference());
+		query.setParameter("mobileAlertsPreference",
+		        user.getMobileAlertsPreference());
 		query.setParameter("carrierInfo", user.getCarrierInfo());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
@@ -160,10 +161,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("dob", customerDetail.getDateOfBirth());
 		query.setParameter("profileStatus",
 		        customerDetail.getProfileCompletionStatus());
-/*		query.setParameter("mobileAlertsPreference",
-		        customerDetail.getMobileAlertsPreference());*/
+		/*
+		 * query.setParameter("mobileAlertsPreference",
+		 * customerDetail.getMobileAlertsPreference());
+		 */
 		query.setParameter("id", customerDetail.getId());
-		//query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
+		// query.setParameter("carrierInfo", customerDetail.getCarrierInfo());
 		int result = query.executeUpdate();
 		return result;
 	}
@@ -853,5 +856,30 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		User user = (User) criteria.uniqueResult();
 		return user;
 
+	}
+
+	@Override
+	public User getUserByUserName(String userName)
+	        throws NoRecordsFetchedException {
+		// TODO Auto-generated method stub
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(User.class);
+			criteria.add(Restrictions.eq("username", userName));
+			Object obj = criteria.uniqueResult();
+			if (obj == null) {
+				throw new NoRecordsFetchedException(
+				        DisplayMessageConstants.INVALID_USERNAME);
+			}
+			User user = (User) obj;
+			Hibernate.initialize(user.getUserRole());
+			return (User) obj;
+		} catch (HibernateException hibernateException) {
+			LOG.error("Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+			throw new DatabaseException(
+			        "Exception caught in fetchUsersBySimilarEmailId() ",
+			        hibernateException);
+		}
 	}
 }

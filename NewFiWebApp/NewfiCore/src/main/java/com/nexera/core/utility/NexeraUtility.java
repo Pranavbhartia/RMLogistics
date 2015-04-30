@@ -804,5 +804,11 @@ public class NexeraUtility {
 
 	}
 
+	public String removeBackSlashDelimiter(String string) {
+		if (string != null) {
+			string = string.replace("\\", "");
+		}
+		return string;
+	}
 
 }

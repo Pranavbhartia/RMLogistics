@@ -106,6 +106,11 @@ public class XMLProcessor
             newApplicant.appendChild( applicantState );
             Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aBHPhone", "applicationCoborrowerHomePhone" );
+            newApplicant.appendChild( coBorrowerHomePhone );
+            
+          
+            
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN_BOTH ) ) {
             LOG.debug( "Need to remove ssn related info for borrower" );
@@ -156,6 +161,8 @@ public class XMLProcessor
             newApplicant.appendChild( applicantState );
             Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aBHPhone", "applicationCoborrowerHomePhone" );
+            newApplicant.appendChild( coBorrowerHomePhone );
             Element aBCoBorrowerExperianScore = createNewElement( doc, "field", "aBExperianScore", "800" );
             Element aBCoBorrowerEquifax = createNewElement( doc, "field", "aBEquifaxScore", "800" );
             Element aBCoBorrowerTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "800" );
@@ -261,6 +268,8 @@ public class XMLProcessor
             newApplicant.appendChild( address );
             Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
+            newApplicant.appendChild( coBorrowerHomePhone );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITHOUT_SSN_BOTH ) ) {
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
@@ -279,6 +288,9 @@ public class XMLProcessor
             Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
             Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
+            
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
+            newApplicant.appendChild( coBorrowerHomePhone );
             
             Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
             Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );

@@ -172,7 +172,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	}
 
-	private Map<Integer, String> buildLookup(List<Integer> lookupList) {
+	public Map<Integer, String> buildLookup(List<Integer> lookupList) {
 		List<NeedsListMaster> needsListMasters = masterDataService
 		        .getNeedListMaster();
 		Map<Integer, String> needListLookup = new HashMap<Integer, String>();

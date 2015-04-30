@@ -347,10 +347,10 @@ public class ApplicationFormRestService {
 				        cache.get("purchaseDetails"));
 			}
 
+
 			LoanAppFormVO loanAppForm = loanAppFormService.create(loaAppFormVO);
 
-			
-			// After saving values in the data base putting id's in the cache
+
 
 			cache.put("loanAppFormId", loanAppForm.getId());
 			cache.put("userId", loanAppForm.getUser().getId());
@@ -838,8 +838,18 @@ public class ApplicationFormRestService {
 			        .getLastName());
 			hashmap.put("dateOfBirth", new SimpleDateFormat("yyyy-MM-dd").format(new Date(loanAppFormVO.getUser()
 			        .getCustomerDetail().getDateOfBirth())));
-			hashmap.put("propertyState", loanAppFormVO.getUser()
-			        .getCustomerDetail().getAddressState());
+		
+			if(null!= loanAppFormVO.getPropertyTypeMaster()){
+			hashmap.put("propertyState", loanAppFormVO.getPropertyTypeMaster().getPropState());
+			hashmap.put("propertyStreetAddress", loanAppFormVO.getPropertyTypeMaster().getPropStreetAddress());
+			hashmap.put("propertyCity", loanAppFormVO.getPropertyTypeMaster().getPropCity());
+			hashmap.put("propertyZip", loanAppFormVO.getPropertyTypeMaster().getHomeZipCode());
+			}
+			
+			
+			
+			hashmap.put("borrowerHomePhone", loanAppFormVO.getUser().getCustomerDetail().getSecPhoneNumber());
+			
 			
 			hashmap.put("alimonyName", "NONE");
 			
@@ -1005,6 +1015,7 @@ public class ApplicationFormRestService {
 		hashmap.put("baseCoborrowerIncome","100000");
 		hashmap.put("applicantCoborrowerAddress",loanAppFormVO.getCustomerSpouseDetail().getStreetAddress());
 		hashmap.put("userCoborrowerSSNnumber",loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn());
+		hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO.getCustomerSpouseDetail().getSpouseSecPhoneNumber());
 		}
 		
 		return hashmap;
@@ -1079,6 +1090,9 @@ public class ApplicationFormRestService {
 		hashmap.put("applicantCoborrowerState",loanAppFormVO.getCustomerSpouseDetail().getState());
 		hashmap.put( "applicantCoborrowerZipCode",loanAppFormVO.getCustomerSpouseDetail().getCity());	
 		}
+		
+		
+		hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO.getCustomerSpouseDetail().getSpouseSecPhoneNumber());
 		return hashmap;
 		
 	}

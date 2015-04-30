@@ -421,7 +421,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
@@ -429,7 +429,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-username-", new String[] { user.getEmailId() });
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
-		substitutions.put("-password-", new String[] { uniqueURL });
+
+		substitutions.put("-baseUrl-", new String[] { baseUrl });
+		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
@@ -451,7 +453,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Parsing the VO");
 
 		User newUser = User.convertFromVOToEntity(userVO);
-		
+
 		String encryptedMailId = nexeraUtility.encryptEmailAddress(newUser
 		        .getEmailId());
 		newUser.setTokenGeneratedTime(new Timestamp(System.currentTimeMillis()));
@@ -479,14 +481,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        ActiveInternalEnum.ACTIVE);
 		}
 		LOG.debug("Saving the user to the database");
-		Integer userID =null;
-		try{
+		Integer userID = null;
+		try {
 			userID = userProfileDao.saveUserWithDetails(newUser);
-		}catch(DatabaseException de){
+		} catch (DatabaseException de) {
 			LOG.error("database exception");
 			throw new DatabaseException("Email Already present in database");
 		}
-		
+
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);
@@ -1133,7 +1135,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_USER);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FORGOT_YOUR_PASSWORD);
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
@@ -1142,13 +1144,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-username-", new String[] { user.getEmailId() });
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
-		substitutions.put("-password-", new String[] { uniqueURL });
+		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 		recipientVO.setEmailID(user.getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
 		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Your password has been reset");
+		emailEntity.setSubject("Please reset your password");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		sendGridEmailService.sendMail(emailEntity);
@@ -1301,5 +1303,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void updateTokenDetails(User user) {
 		userProfileDao.updateTokenDetails(user);
 		return;
+	}
+
+	@Override
+	public UserVO findByUserName(String userName) throws DatabaseException,
+	        NoRecordsFetchedException {
+		// TODO Auto-generated method stub
+		return User.convertFromEntityToVO(userProfileDao
+		        .getUserByUserName(userName));
 	}
 }

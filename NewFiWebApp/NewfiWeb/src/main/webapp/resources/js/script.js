@@ -223,6 +223,7 @@ function paintProfileCompleteStep2(user) {
     $.ajax({
         url: "rest/userprofile/completeprofile",
         type: "POST",
+        cache:false,
         data: {
             "completeUserInfo": JSON.stringify(completeUserInfo)
         },
@@ -427,6 +428,7 @@ function lockLoanRate(lockratedata){
     $.ajax({
         url: "rest/application/lockLoanRate",
         type: "POST",
+        cache:false,
         data: {
             "appFormData": JSON.stringify(lockratedata)
         },
@@ -599,6 +601,7 @@ function fetchLockRatedata(loanNumber)
 $.ajax({
 		url:"rest/application/fetchLockRatedata/"+loanNumber,
 		type:"POST",
+		cache:false,
 		datatype : "application/json",
 		success:function(data){
 		    var ob;

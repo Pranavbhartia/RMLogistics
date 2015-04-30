@@ -1,18 +1,23 @@
 package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
+import com.nexera.common.vo.LoanTypeMasterVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -49,6 +54,24 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 			        LoanStatus.appraisalReceivedMessage);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        LoanStatus.appraisalReceivedMessage);
+			LoanVO loanVO = loanService.getLoanByID(loanId);
+			if (loanVO != null) {
+				LoanTypeMasterVO loanTypeMasterVO = loanVO.getLoanType();
+				if (loanTypeMasterVO != null) {
+					if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
+					        LoanTypeMasterEnum.PUR.name())) {
+						objectMap
+						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_PURCHASE);
+					} else if (loanTypeMasterVO.getLoanTypeCd()
+					        .equalsIgnoreCase(LoanTypeMasterEnum.REF.name())) {
+						objectMap
+						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_REFINANCE);
+
+					}
+				}
+			}
 			sendEmail(objectMap);
 		}
 		if (mileStoneStatus != null) {
@@ -78,6 +101,31 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		return null;
 	}
 
+	@Override
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+		LoanVO loanVO = loanService.getLoanByID(Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		if (loanVO != null) {
+			LoanTypeMasterVO loanTypeMasterVO = loanVO.getLoanType();
+			if (loanTypeMasterVO != null) {
+				if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
+				        LoanTypeMasterEnum.PUR.name())) {
+
+				} else if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
+				        LoanTypeMasterEnum.REF.name())) {
+
+				}
+			}
+		}
+		return substitutions;
+	}
+
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Updating Reminders for Appraisal " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.APPRAISAL_NOTIFICATION_TYPE;

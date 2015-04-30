@@ -172,7 +172,8 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		email.setFromName(emailEntity.getSenderName());
 		email.setSubject(emailEntity.getSubject());
 		if (emailEntity.getBody() == null || emailEntity.getBody().isEmpty()) {
-			// email.setText(CommonConstants.EMAIL_FOOTER);
+
+			email.setText(CommonConstants.EMAIL_EMPTY_FOOTER);
 		} else {
 			email.setText(emailEntity.getBody());
 		}

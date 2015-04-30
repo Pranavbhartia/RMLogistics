@@ -64,7 +64,7 @@
 					<div class="reg-row-lc float-left">Referral Realtor email</div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-email" id="realor-email">
-							<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" value="${loanManagerEmail}">
+							<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" >
 						</div>
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 					<div class="reg-row-lc float-left">Referral Loan Manager email</div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-email" id="loanManager-email">
-							<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId" value="${realtorEmail}">	
+							<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId">	
 						</div>
 					</div>
 				</div>
@@ -155,6 +155,7 @@
 		    $.ajax({
 		        url: "rest/shopper/validate",
 		        type: "POST",
+		        cache:false,
 		        data: {
 		            "registrationDetails": JSON.stringify(registration)
 		        },
@@ -185,6 +186,7 @@
     $.ajax({
         url: "/NewfiWeb/rest/shopper/registration",
         type: "POST",
+        cache:false,
         data: {
             "registrationDetails": JSON.stringify(registration)
         },
@@ -209,6 +211,7 @@
 		    $.ajax({
 		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
 		        type: "POST",
+		        cache:false,
 		        data: {
 		            "registrationDetails": JSON.stringify(user)
 		        },

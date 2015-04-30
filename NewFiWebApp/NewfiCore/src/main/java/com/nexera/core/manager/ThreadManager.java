@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
@@ -42,6 +44,7 @@ import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.LoanTypeMasterEnum;
@@ -49,8 +52,11 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
@@ -62,6 +68,8 @@ import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
@@ -121,6 +129,12 @@ public class ThreadManager implements Runnable {
 	@Autowired
 	NotificationService notificationService;
 
+	@Autowired
+	TemplateService templateService;
+
+	@Autowired
+	SendGridEmailService sendGridEmailService;
+
 	List<WorkflowItemExec> workflowItemExecList = new ArrayList<WorkflowItemExec>();
 
 	@Value("${date.format.1}")
@@ -135,10 +149,18 @@ public class ThreadManager implements Runnable {
 	@Value("${date.format.4}")
 	private String dateFormat4;
 
+	@Value("${profile.url}")
+	private String baseUrl;
+
+	@Value("${lqb.appcode}")
+	private String appCode;
+
 	@Override
 	public void run() {
 
 		LOGGER.debug("Inside method run ");
+
+		boolean success = true;
 		List<Integer> statusTrackingList = new LinkedList<Integer>();
 		Map<String, String> map = new HashMap<String, String>();
 		int format = 0;
@@ -157,7 +179,8 @@ public class ThreadManager implements Runnable {
 
 					String loadResponse = loadJSONResponse
 					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-					loadResponse = removeBackSlashDelimiter(loadResponse);
+					loadResponse = nexeraUtility
+					        .removeBackSlashDelimiter(loadResponse);
 					int currentLoanStatus = -1;
 					Milestones milestones = null;
 					List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
@@ -175,11 +198,13 @@ public class ThreadManager implements Runnable {
 						LOSLoanStatus loanStatusID = null;
 						if (currentLoanStatus == -1) {
 							LOGGER.error("Invalid/No status received from LQB ");
+							success = false;
 						} else {
 							loanStatusID = LOSLoanStatus
 							        .getLOSStatus(currentLoanStatus);
 							if (loanStatusID == null) {
 								LOGGER.error("Not a supported LQB status ");
+								success = false;
 							}
 
 							if (workflowItemExecList == null) {
@@ -335,6 +360,7 @@ public class ThreadManager implements Runnable {
 						}
 					} else {
 						LOGGER.error(" Unable to parse the LQB response ");
+						success = false;
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster,
 						        " Unable to parse the LQB response ");
@@ -343,6 +369,7 @@ public class ThreadManager implements Runnable {
 					}
 				} else {
 					LOGGER.error(" Valid Response Not Received From Mule/LQB ");
+					success = false;
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster,
 					        "Invalid response received from mule/lqb");
@@ -351,12 +378,14 @@ public class ThreadManager implements Runnable {
 				}
 			} else {
 				LOGGER.error("Connection Timed out at LQB ");
+				success = false;
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        " Connection to mule timed out");
 				nexeraUtility
 				        .sendExceptionEmail("Connection to mule timed out");
 			}
 		} else {
+			success = false;
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Request Json Object Not Created For Load ");
 			nexeraUtility
@@ -364,13 +393,19 @@ public class ThreadManager implements Runnable {
 
 		}
 		LOGGER.debug("Fetching Docs for this loan ");
-		fetchDocsForThisLoan(loan);
+		if (!fetchDocsForThisLoan(loan)) {
+			success = false;
+		}
 
 		LOGGER.debug("Fetching underwriting conditions for this loan ");
-		invokeUnderwritingCondition(loan, format);
+		if (!invokeUnderwritingCondition(loan, format)) {
+			success = false;
+		}
 
 		LOGGER.debug("Fetch Credit Score For This Loan ");
-		fetchCreditScore(loan);
+		if (!fetchCreditScore(loan)) {
+			success = false;
+		}
 
 		LOGGER.debug("Calling Braintree Tansaction Related Classes");
 		invokeBrainTree(loan);
@@ -412,6 +447,18 @@ public class ThreadManager implements Runnable {
 			        .sendExceptionEmail("No loan type master associated with this loan "
 			                + loan.getId());
 
+		}
+
+		if (success) {
+			JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
+			        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
+			        loan.getLqbFileId());
+			if (ClearModifiedLoanByNameByAppCodeObject != null) {
+				LOGGER.debug("Invoking LQB service to fetch Loan status ");
+				lqbInvoker
+				        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
+				                .toString());
+			}
 		}
 	}
 
@@ -532,10 +579,10 @@ public class ThreadManager implements Runnable {
 		return transactionService.getActiveTransactionsByLoan(loan);
 	}
 
-	private void fetchCreditScore(Loan loan) {
+	private Boolean fetchCreditScore(Loan loan) {
 		LOGGER.debug("Inside method fetchCreditScore ");
 		int format = 0;
-
+		Boolean success = true;
 		JSONObject creditScoreJSONObject = createCreditScoreJSONObject(
 		        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
 		        loan.getLqbFileId(), format);
@@ -552,16 +599,18 @@ public class ThreadManager implements Runnable {
 					Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
 					LOGGER.debug("Save Credit Score For This Borrower ");
 					saveCreditScoresForBorrower(creditScoreMap);
-
+					saveCreditScoresForCoBorrower(creditScoreMap);
 					creditScoreMap.clear();
 				}
 			}
 		} else {
+			success = false;
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        "Request Json Object Not Created For Credit Score ");
 			nexeraUtility
 			        .sendExceptionEmail("Unable to create json object for credit score ");
 		}
+		return success;
 	}
 
 	private void invokeCreditScoreMilestone() {
@@ -662,31 +711,34 @@ public class ThreadManager implements Runnable {
 	        Map<String, String> creditScoreMap) {
 
 		LOGGER.debug("Inside method saveCreditScoresForCoBorrower ");
-		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
-		if (customerDetail != null) {
+		CustomerSpouseDetail customerSpouseDetail = loan.getLoanAppForms()
+		        .get(0).getCustomerspousedetail();
+		if (customerSpouseDetail != null) {
 
 			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
 				String borrowerEquifaxScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE);
 				if (borrowerEquifaxScore != null
 				        && !borrowerEquifaxScore.equalsIgnoreCase("")) {
-					customerDetail.setEquifaxScore(borrowerEquifaxScore);
+					customerSpouseDetail.setEquifaxScore(borrowerEquifaxScore);
 				}
 				String borrowerExperianScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE);
 				if (borrowerExperianScore != null
 				        && !borrowerExperianScore.equalsIgnoreCase("")) {
-					customerDetail.setExperianScore(borrowerExperianScore);
+					customerSpouseDetail
+					        .setExperianScore(borrowerExperianScore);
 				}
 				String borrowerTransunionScore = creditScoreMap
 				        .get(CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE);
 				if (borrowerTransunionScore != null
 				        && !borrowerTransunionScore.equalsIgnoreCase("")) {
-					customerDetail.setTransunionScore(borrowerTransunionScore);
+					customerSpouseDetail
+					        .setTransunionScore(borrowerTransunionScore);
 				}
 
 				LOGGER.debug("Updating customer details ");
-				updateCustomerDetails(customerDetail);
+				updateCustomerSpouseScore(customerSpouseDetail);
 
 			} else {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
@@ -767,8 +819,9 @@ public class ThreadManager implements Runnable {
 		loanService.updateLoan(loan);
 	}
 
-	private void invokeUnderwritingCondition(Loan loan, int format) {
+	private Boolean invokeUnderwritingCondition(Loan loan, int format) {
 		LOGGER.debug("Invoking UnderwritingCondition service of lendinqb ");
+		boolean success = true;
 		JSONObject underWritingConditionJSONObject = createUnderWritingConditionJSONObject(
 		        WebServiceOperations.OP_NAME_UNDERWRITING_CONDITION,
 		        loan.getLqbFileId(), format);
@@ -804,9 +857,22 @@ public class ThreadManager implements Runnable {
 						}
 					}
 
-					needsListService.saveMasterNeedsForLoan(loan.getId(),
-					        conditionDescriptionList);
+					List<LoanNeedsList> needsList = needsListService
+					        .saveMasterNeedsForLoan(loan.getId(),
+					                conditionDescriptionList);
+					if (!needsList.isEmpty()) {
+						LOGGER.debug("Send mail because new needs list have been added ");
+						try {
+							loanApprovedWithConditionsEmail(loan, needsList);
+						} catch (InvalidInputException
+						        | UndeliveredEmailException e) {
+							nexeraUtility.putExceptionMasterIntoExecution(
+							        exceptionMaster, e.getMessage());
+							nexeraUtility.sendExceptionEmail(e.getMessage());
+						}
+					}
 				} else {
+					success = false;
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster, underWritingJSONResponse
 					                .getString("errorDescription"));
@@ -814,12 +880,14 @@ public class ThreadManager implements Runnable {
 					        .getString("errorDescription"));
 				}
 			} else {
+				success = false;
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "No resposne received from lqb/mule");
 				nexeraUtility
 				        .sendExceptionEmail("No resposne received from lqb/mule");
 			}
 		} else {
+			success = false;
 			nexeraUtility
 			        .putExceptionMasterIntoExecution(exceptionMaster,
 			                "Request Json Object Not Created For UnderwritingCondition ");
@@ -827,12 +895,49 @@ public class ThreadManager implements Runnable {
 			        .sendExceptionEmail("Unable to create request jsonobject for underwriting condition ");
 
 		}
+		return success;
 	}
 
-	private void fetchDocsForThisLoan(Loan loan) {
+	private String[] convertNeedsListToArray(List<LoanNeedsList> needsList) {
+		String[] needsListArray = new String[needsList.size()];
+		List<String> loanNeedLabel = new ArrayList<String>();
+		for (LoanNeedsList loanNeed : needsList) {
+			loanNeedLabel.add(loanNeed.getNeedsListMaster().getLabel());
+		}
+		needsListArray = (String[]) loanNeedLabel.toArray();
+		return needsListArray;
+	}
+
+	private void loanApprovedWithConditionsEmail(Loan loan,
+	        List<LoanNeedsList> needsList) throws InvalidInputException,
+	        UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loan.getUser()
+		        .getFirstName() });
+		substitutions.put("-url-", new String[] { baseUrl });
+		substitutions.put("-listOfItems-", convertNeedsListToArray(needsList));
+		recipientVO.setEmailID(loan.getUser().getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	private Boolean fetchDocsForThisLoan(Loan loan) {
 
 		LOGGER.debug("Invoking ListEdocsByLoanNumber service of lendinqb ");
-
+		Boolean success = true;
 		Date timeBeforeCallMade = new Date();
 		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
 		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
@@ -862,6 +967,7 @@ public class ThreadManager implements Runnable {
 						}
 					}
 				} else {
+					success = false;
 					nexeraUtility.putExceptionMasterIntoExecution(
 					        exceptionMaster, receivedResponseForDocs
 					                .getString("errorDescription"));
@@ -869,12 +975,14 @@ public class ThreadManager implements Runnable {
 					        .getString("errorDescription"));
 				}
 			} else {
+				success = false;
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 				        "No resposne received from lqb/mule");
 				nexeraUtility
 				        .sendExceptionEmail("No resposne received from lqb/mule");
 			}
 		} else {
+			success = false;
 			nexeraUtility
 			        .putExceptionMasterIntoExecution(exceptionMaster,
 			                "Request Json Object Not Created For List EDocsByLoanNumber ");
@@ -883,7 +991,7 @@ public class ThreadManager implements Runnable {
 			                + loan.getId());
 
 		}
-
+		return success;
 	}
 
 	private void checkWhetherDisclosureReceived(Loan loan,
@@ -1019,13 +1127,6 @@ public class ThreadManager implements Runnable {
 		return 0;
 	}
 
-	public String removeBackSlashDelimiter(String string) {
-		if (string != null) {
-			string = string.replace("\\", "");
-		}
-		return string;
-	}
-
 	public Date parseStringIntoDate(String dateTime) {
 		Date date = null;
 		for (SimpleDateFormat simpleDateFormat : fillSimpleDateFormatList()) {
@@ -1075,6 +1176,27 @@ public class ThreadManager implements Runnable {
 			}
 		}
 		return itemToExecute;
+	}
+
+	public JSONObject createClearModifiedLoanObject(String opName,
+	        String lqbLoanId) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_APP_CODE,
+			        appCode);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
+		}
+		return json;
 	}
 
 	public JSONObject createLoadJsonObject(Map<String, String> requestXMLMap,

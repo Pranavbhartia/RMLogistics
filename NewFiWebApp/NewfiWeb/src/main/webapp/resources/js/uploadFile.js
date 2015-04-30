@@ -293,6 +293,7 @@ function saveUserDocumentAssignments() {
 		type : "POST",
 		data : JSON.stringify(fileAssignMentVO),
 		dataType : "json",
+		cache:false,
 		contentType : "application/json; charset=utf-8",
 		success : function(data) {
 			saveAssignmentonFile(data);

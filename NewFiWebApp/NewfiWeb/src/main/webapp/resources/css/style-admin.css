@@ -225,7 +225,7 @@ display: block;
 
 .prof-cust-upload-btn-admin-um {
 	width: 33px;
-	background: url(../images/upload-pic.png) no-repeat right;
+	background: url(../images/t2-pic4-inactive.png) no-repeat right;
 	margin: 0px right;
 	line-height: 28px;
 	text-align: center;
@@ -234,7 +234,7 @@ display: block;
 	cursor: pointer;
 	height: 33px;
 	margin-left: 127px;
-	margin-top: -36px;
+	margin-top: -40px;
 }
 
 .add-member-input-admin-cont{
