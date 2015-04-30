@@ -1064,7 +1064,10 @@ function paintAgentLoanPage(data) {
 	}
 
 }
-function getAppDetailsForUser(userId, callback) {
+
+
+
+function getAppDetailsForUser(userId, callback , overleyText) {
 	ajaxRequest("rest/loan/appform/" + userId, "GET", "json", undefined,
 			function(response) {
 				if (response.error) {
@@ -1078,7 +1081,8 @@ function getAppDetailsForUser(userId, callback) {
 						callback(JSON.parse(appFormDetails));
 					}
 				}
-			});
+				
+			} , undefined ,  undefined ,  undefined , overleyText);
 }
 // function called when secondary left panel is changed in agent view loan
 // progress pages

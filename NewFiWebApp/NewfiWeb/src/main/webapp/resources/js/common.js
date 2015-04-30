@@ -7,9 +7,13 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
-function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
-		div, completeCallback) {
-	if (isPagination === undefined) {
+
+function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
+	if(showOverlayText){
+		showOverleyMessage(showOverlayText);
+	}
+	
+	if(isPagination===undefined){
 		showOverlay();
 	} else if (isPagination == true) {
 		showPaginationScrollIcon(div);
@@ -30,10 +34,11 @@ function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
 			}
 			successCallBack(response);
 		},
-		complete : function(response) {
 
-			if (completeCallback) {
-				if (isPagination) {
+		complete:function(response){
+		
+			if(completeCallback){
+				if(isPagination){
 					removePaginationScrollIcon(div);
 				} else {
 					hideOverlay();
@@ -46,7 +51,8 @@ function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			adjustCustomerApplicationPageOnResize();
-			adjustAgentDashboardOnResize();
+            adjustAgentDashboardOnResize();
+
 		},
 		error : function() {
 			if (isPagination) {
@@ -138,6 +144,16 @@ function showOverlay() {
 		$('#overlay-loader').show();
 	}
 	overlayCount++;
+	
+	
+}
+
+function showOverleyMessage(text){
+	$("#overlay-loader-text").html(text);
+}
+
+function clearOverlayMessage(){
+	$("#overlay-loader-text").empty();
 }
 
 function showPaginationScrollIcon(div) {
@@ -156,10 +172,15 @@ function hideOverlay() {
 	if (overlayCount == 0) {
 		$('#overlay-loader').hide();
 	}
+	
+   
 }
 
-// Function to show toast message
-function showToastMessage(message) {
+
+
+//Function to show toast message
+function showToastMessage(message){
+
 	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
 	if ($('#overlay-toast-error-txt').html() == ""
 			|| $('#overlay-toast-error-txt').html() == null
@@ -174,31 +195,33 @@ function showToastMessage(message) {
 		$('#overlay-toast-txt').html('');
 		$('#overlay-toast-txt').hide();
 	});
-	/*
-	 * $('#overlay-toast').fadeIn("slow",function(){ setTimeout(function(){
-	 * $('#overlay-toast').fadeOut("slow"); },3000); });
-	 */
+
+	/*$('#overlay-toast').fadeIn("slow",function(){
+		setTimeout(function(){
+			$('#overlay-toast').fadeOut("slow");
+		},3000);
+	});*/
 }
 
-// Function to show toast message
-function showErrorToastMessage(message) {
-	$('#overlay-toast-error-txt').html(message).addClass(
-			'overlay-toast-success');
-	if ($('#overlay-toast-txt').html() == ""
-			|| $('#overlay-toast-txt').html() == null
-			|| $('#overlay-toast-txt').html() == undefined) {
-		$('#overlay-toast-error-txt').show();
 
-	} else {
-		$('#overlay-toast-txt').show();
-		$('#overlay-toast-error-txt').show();
+//Function to show toast message
+function showErrorToastMessage(message){
+	$('#overlay-toast-error-txt').html(message).addClass('overlay-toast-success');
+    if($('#overlay-toast-txt').html()==""||$('#overlay-toast-txt').html()==null||$('#overlay-toast-txt').html()==undefined){
+    	$('#overlay-toast-error-txt').show();	
+    	
+    }else{
+    	$('#overlay-toast-txt').show();	
+    	$('#overlay-toast-error-txt').show();
+    	
+    }
 
-	}
+	$('#overlay-toast-error-txt').click(function(e){
 
-	$('#overlay-toast-error-txt').click(function(e) {
 		$('#overlay-toast-error-txt').html('');
 		$('#overlay-toast-error-txt').hide();
 	});
+	
 	/*
 	 * $('#overlay-toast').fadeIn("slow",function(){ setTimeout(function(){
 	 * $('#overlay-toast').fadeOut("slow"); },3000); });
@@ -816,9 +839,11 @@ function checkIfSafari() {
 	}
 	return false;
 }
+
 function userIsCustomer() {
 	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
 		return true;
 	}
 	return false;
 }
+
