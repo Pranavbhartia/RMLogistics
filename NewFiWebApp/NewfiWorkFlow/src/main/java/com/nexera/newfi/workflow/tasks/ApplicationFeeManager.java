@@ -3,12 +3,15 @@ package com.nexera.newfi.workflow.tasks;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
@@ -21,8 +24,12 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
@@ -46,6 +53,19 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private EngineTrigger engineTrigger;
+
+	@Autowired
+	TemplateService templateService;
+
+	@Autowired
+	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	SendGridEmailService sendGridEmailService;
+
+	@Value("${profile.url}")
+	private String baseUrl;
+
 	@Autowired
 	private NotificationService notificationService;
 	private static final Logger LOG = LoggerFactory
@@ -66,6 +86,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			LOG.info("Status for Application Fee Manager is " + status);
 			if (status.equals(LoanStatus.APP_PAYMENT_SUCCESS)) {
 				dismissAllPaymentAlerts(loanId);
+				objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+				        CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_FEE_PAID);
 				createAlertToLockRates(objectMap);
 				returnStatus = WorkItemStatus.COMPLETED.getStatus();
 				messageForNote = LoanStatus.paymentSuccessStatusMessage;
@@ -74,7 +96,10 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				return WorkItemStatus.NOT_STARTED.getStatus();
 			} else if (status.equals(LoanStatus.APP_PAYMENT_PENDING)) {
 				returnStatus = WorkItemStatus.STARTED.getStatus();
+				objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+				        CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED);
 				messageForNote = LoanStatus.paymentPendingStatusMessage;
+
 			}
 			if (status != null && !status.isEmpty()) {
 				LOG.info("Making Milestone chagne for App Fee with" + status);
@@ -86,11 +111,71 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				objectMap.put(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 				        messageForNote);
+				objectMap.put(WorkflowDisplayConstants.PAYMENT_STATUS, status);
 				sendEmail(objectMap);
 			}
 
 		}
 		return returnStatus;
+	}
+
+	@Override
+	public Map<String, String[]> doTemplateSubstitutions(
+	        Map<String, String[]> substitutions,
+	        HashMap<String, Object> objectMap) {
+		if (substitutions == null) {
+			substitutions = new HashMap<String, String[]>();
+		}
+
+		String[] ary = new String[1];
+		if (objectMap.get(WorkflowDisplayConstants.PAYMENT_STATUS) != null) {
+			if (((String) objectMap
+			        .get(WorkflowDisplayConstants.PAYMENT_STATUS))
+			        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_SUCCESS)) {
+
+				LoanVO loanVO = loanService.getLoanByID(Integer
+				        .parseInt(objectMap.get(
+				                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
+				                .toString()));
+				UserVO userVO = loanVO.getUser();
+
+				String appFee = String.valueOf(loanVO.getAppFee());
+				substitutions.put("-amount-", new String[] { appFee });
+				substitutions.put("-address-", new String[] { userVO
+				        .getCustomerDetail().getAddressStreet() });
+				substitutions.put("-city-", new String[] { userVO
+				        .getCustomerDetail().getAddressCity() });
+				substitutions.put("-state-", new String[] { userVO
+				        .getCustomerDetail().getAddressState() });
+				substitutions.put("-zip-", new String[] { userVO
+				        .getCustomerDetail().getAddressZipCode() });
+				ary[0] = objectMap.get(
+				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
+				        .toString();
+				substitutions.put("-message-", ary);
+
+				for (String key : objectMap.keySet()) {
+					ary = new String[1];
+					ary[0] = objectMap.get(key).toString();
+					substitutions.put("-" + key + "-", ary);
+				}
+			} else if (((String) objectMap
+			        .get(WorkflowDisplayConstants.PAYMENT_STATUS))
+			        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_PENDING)) {
+				ary[0] = objectMap.get(
+				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
+				        .toString();
+				substitutions.put("-message-", ary);
+				substitutions.put("-appfeepaymentlink-",
+				        new String[] { baseUrl });
+				for (String key : objectMap.keySet()) {
+					ary = new String[1];
+					ary[0] = objectMap.get(key).toString();
+					substitutions.put("-" + key + "-", ary);
+				}
+			}
+		}
+		return substitutions;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,18 +24,27 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanNeedsListVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.common.vo.NeedsListMasterVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.utility.CoreCommonConstants;
 
 @Component
@@ -50,10 +60,19 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private LoanDao loanDao;
 
 	@Autowired
+	private LoanService loanService;
+
+	@Autowired
 	private MessageServiceHelper messageServiceHelper;
 
 	@Autowired
 	private LoanNeedListDao loanNeedListDao;
+
+	@Autowired
+	private TemplateService templateService;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
@@ -345,11 +364,19 @@ public class NeedsListServiceImpl implements NeedsListService {
 	@Transactional
 	public int saveLoanNeeds(int loanId, List<Integer> needsList) {
 		LinkedHashMap<String, LoanNeedsList> existingNeeds = new LinkedHashMap<String, LoanNeedsList>();
+		boolean initialList = false;
 		List<LoanNeedsList> existingNeedsList = null;
 		List<Integer> addedList = new ArrayList<Integer>();
 		List<Integer> removedList = new ArrayList<Integer>();
 		try {
 			existingNeedsList = needsDao.getLoanNeedsList(loanId);
+			if (existingNeedsList == null || existingNeedsList.isEmpty()) {
+				initialList = true;
+
+			} else {
+				initialList = false;
+			}
+
 		} catch (NoRecordsFetchedException e1) {
 			LOGGER.error("Exception caught " + e1.getMessage());
 		}
@@ -397,8 +424,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 		} catch (Exception e) {
 			return 0;
 		}
+		if (initialList) {
+			initialNeedsListSetEmail(loanId, addedList);
+		} else {
+			updatedNeedsListEmail(loanId, addedList);
+		}
 		messageServiceHelper.generateNeedListModificationMessage(loanId,
-		        utils.getLoggedInUser(), addedList, removedList, Boolean.TRUE);
+		        utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
 		return 1;
 	}
 
@@ -542,8 +574,9 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Override
 	@Transactional
-	public void saveMasterNeedsForLoan(int loanId,
+	public List<LoanNeedsList> saveMasterNeedsForLoan(int loanId,
 	        List<NeedsListMaster> masterNeeds) {
+		List<LoanNeedsList> needsList = new ArrayList<LoanNeedsList>();
 		for (NeedsListMaster masterNeed : masterNeeds) {
 			NeedsListMaster existingNeed = needsDao
 			        .findNeedsListMasterByLabel(masterNeed.getLabel());
@@ -569,9 +602,11 @@ public class NeedsListServiceImpl implements NeedsListService {
 			LoanNeedsList loanNeedsList = needsDao.findLoanNeedByMaster(loan,
 			        masterNeed);
 			if (loanNeedsList == null) {
+				needsList.add(need);
 				needsDao.save(need);
 			}
 		}
+		return needsList;
 	}
 
 	@Override
@@ -597,5 +632,90 @@ public class NeedsListServiceImpl implements NeedsListService {
 	public String checkCreditReport(Integer loanID) {
 		// TODO Auto-generated method stub
 		return needsDao.checkCreditReport(loanID);
+	}
+
+	@Override
+	public void initialNeedsListSetEmail(Integer loanID, List<Integer> addedList) {
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			if (loanVO.getUser() != null) {
+				Template template = templateService
+				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+				// We create the substitutions map
+				Map<String, String[]> substitutions = new HashMap<String, String[]>();
+				substitutions.put("-name-", new String[] { loanVO.getUser()
+				        .getFirstName() });
+				substitutions.put("-listofitems-",
+				        getNeedsListNameById(addedList));
+				recipientVO.setEmailID(loanVO.getUser().getEmailId());
+				emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(
+				        Arrays.asList(recipientVO)));
+				emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+				emailEntity.setSubject("You Initial Needs List Are Set");
+				emailEntity.setTokenMap(substitutions);
+				emailEntity.setTemplateId(template.getValue());
+
+				try {
+					sendGridEmailService.sendMail(emailEntity);
+				} catch (InvalidInputException | UndeliveredEmailException e) {
+					LOGGER.error("Exception caught while sending email "
+					        + e.getMessage());
+				}
+			}
+		}
+
+	}
+
+	private String[] getNeedsListNameById(List<Integer> needsListId) {
+		LoanNeedsList loanNeedsList = null;
+		List<String> needsListName = new ArrayList<>();
+		for (int id : needsListId) {
+			loanNeedsList = (LoanNeedsList) needsDao.load(LoanNeedsList.class,
+			        id);
+			if (loanNeedsList != null) {
+				needsListName
+				        .add(loanNeedsList.getNeedsListMaster().getLabel());
+			}
+
+		}
+
+		String[] needsNameArray = new String[needsListName.size()];
+		needsNameArray = needsListName.toArray(needsNameArray);
+		return needsNameArray;
+	}
+
+	@Override
+	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList) {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loanVO.getUser()
+		        .getFirstName() });
+
+		substitutions.put("-listofitems-", getNeedsListNameById(addedList));
+		recipientVO.setEmailID(loanVO.getUser().getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("You Needs list has been updated");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		try {
+			sendGridEmailService.sendMail(emailEntity);
+		} catch (InvalidInputException | UndeliveredEmailException e) {
+			LOGGER.error("Exception caught while sending email "
+			        + e.getMessage());
+		}
+
 	}
 }

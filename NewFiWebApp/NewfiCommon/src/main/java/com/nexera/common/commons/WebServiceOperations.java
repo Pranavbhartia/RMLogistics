@@ -22,6 +22,8 @@ public class WebServiceOperations {
 
 	public static String OP_NAME_LOAN_LOAD = "Load";
 
+	public static String OP_NAME_LOAN_BATCH_LOAD = "BatchLoad";
+
 	public static String OP_NAME_GET_CREDIT_SCORE = "CreditScore";
 
 	public static String OP_NAME_UNDERWRITING_CONDITION = "UnderwritingCondition";
@@ -45,5 +47,9 @@ public class WebServiceOperations {
 	public static String OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL = "GetViewLoanUrl";
 
 	public static String OP_NAME_LOAN_DOWNLOAD_EDOCS_PDF_BY_DOC_ID = "DownloadEdocsPdfById";
+
+	public static String OP_NAME_LIST_MODIFIED_LOANS_BY_APP_CODE = "ListModifiedLoansByAppCode";
+
+	public static String OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE = "ClearModifiedLoanByNameByAppCode";
 
 }

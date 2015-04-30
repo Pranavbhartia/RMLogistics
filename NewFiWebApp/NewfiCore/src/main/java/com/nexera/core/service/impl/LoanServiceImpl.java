@@ -2,9 +2,12 @@ package com.nexera.core.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,7 @@ import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.PropertyTypeMaster;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -44,10 +48,10 @@ import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.Milestones;
-import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
@@ -64,11 +68,15 @@ import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -81,6 +89,12 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private TemplateService templateService;
+
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
 
 	@Autowired
 	private LoanNeedListDao loanNeedListDao;
@@ -113,6 +127,9 @@ public class LoanServiceImpl implements LoanService {
 	private LoanAppFormService loanAppFormService;
 	@Value("${profile.url}")
 	private String systemBaseUrl;
+
+	@Value("${profile.url}")
+	private String baseUrl;
 
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
@@ -473,7 +490,6 @@ public class LoanServiceImpl implements LoanService {
 			        .setAddressStreet(customerDetail.getAddressStreet());
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
-			
 
 			if (null != customerDetail.getDateOfBirth())
 				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
@@ -1800,5 +1816,47 @@ public class LoanServiceImpl implements LoanService {
 
 		}
 		return loanVO;
+	}
+
+	@Override
+	public void sendApplicationFinishedEmail(Loan loan) {
+		if (loan != null) {
+			LoanAppForm loanAppForm = loan.getLoanAppForms().get(0);
+			if (loanAppForm != null) {
+				Float appCompletionStatus = loanAppForm
+				        .getLoanAppFormCompletionStatus();
+				if (appCompletionStatus == 100.00) {
+					try {
+						sendAppFinishedEmail(loan);
+					} catch (InvalidInputException | UndeliveredEmailException e) {
+						LOG.error("Exception caught " + e.getMessage());
+					}
+				}
+			}
+		}
+	}
+
+	private void sendAppFinishedEmail(Loan loan) throws InvalidInputException,
+	        UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_FINISHED);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loan.getUser()
+		        .getFirstName() + " " + loan.getUser().getLastName() });
+		substitutions.put("-url-", new String[] { baseUrl });
+		recipientVO.setEmailID(loan.getUser().getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
 	}
 }

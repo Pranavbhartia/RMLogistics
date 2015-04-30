@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -46,6 +47,8 @@ public class EMailSender extends NexeraWorkflowTask implements
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        LoanStatus.sysEduMessage);
+			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+			        CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
 			sendEmail(objectMap);
 			makeANote(loanId, LoanStatus.sysEduMessage);
 		}

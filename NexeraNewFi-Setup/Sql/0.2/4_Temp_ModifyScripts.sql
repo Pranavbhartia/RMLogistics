@@ -67,11 +67,6 @@ CREATE TABLE `template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-insert into template values(1,'PAYMENT_TEMPLATE_ID','Payment Mail','2015-04-10 12:53:34','7aac7754-7115-488d-a108-d64e505c47d7');
-insert into template values(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10 12:53:34','8b40d8f2-47b4-4ad7-8108-24fe7aac2ab8');
-insert into template values(3,'NEW_NOTE_TEMPLATE','New Note Created','2015-04-10 12:53:34','864e95f8-99b7-4366-95e7-52dd791e71f2');
-insert into template values(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','0fef5375-ba8c-4820-939b-977ef30c58b1');
-
 ALTER TABLE `newfi_schema`.`loanappform` 
 CHANGE COLUMN `loan_app_completion_status` `loan_app_completion_status` DECIMAL(8,5) NULL DEFAULT NULL ;
 
@@ -151,9 +146,6 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='36' WHERE `id`='21'
 
 #Anoop - All scripts above this are in sync with the 1_create script.
 
-#Utsav Added on 18th April, Already Added in 1_CreateTable.sql
-INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
-VALUES ('5','TEMPLATE_WORKFLOW_COMPLETION','Milestone Template','2015-04-10 12:53:34','08986e4b-8407-4b44-9000-50c104db899c');
 
 UPDATE `newfi_schema`.`workflowtaskconfigmaster`
 SET `params` = '{"EMAIL_TEMPLATE_NAME": "TEMPLATE_WORKFLOW_COMPLETION"}'
@@ -262,6 +254,16 @@ ALTER TABLE `newfi_schema`.`template`
 
 #Added by Utsav on 28th April at 03:45 PM IST
 
+INSERT INTO `newfi_schema`.`template` (`id`,`key`,`description`,`modified_date`,`value`)
+VALUES(1,'PAYMENT_TEMPLATE_ID','Payment Mail','2015-04-10 12:53:34','80be7cc4-767a-44fc-9b0c-202302000c5b');
+INSERT INTO `newfi_schema`.`template` (`id`,`key`,`description`,`modified_date`,`value`)
+VALUES(2,'NEW_USER_TEMPLATE_ID','New User Mail','2015-04-10 12:53:34','1d11f2a2-1aa0-455a-aba7-bc05442800e3');
+INSERT INTO `newfi_schema`.`template` (`id`,`key`,`description`,`modified_date`,`value`)
+VALUES(3,'NEW_NOTE_TEMPLATE','New Note Created','2015-04-10 12:53:34','d18778b1-e69c-4566-a3aa-24d299b0156a');
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES(4,'PAYMENT_UNSUCCESSFUL_TEMPLATE_ID','Payment Failure','2015-04-10 12:53:34','e2227e0e-deb4-4db0-9642-74ab494612bf');
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('5','TEMPLATE_WORKFLOW_COMPLETION','Milestone Template','2015-04-10 12:53:34','01efab20-fe83-4a79-bdc5-c3abf624526b');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('6','WELCOME_TO_NEWFI_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','bdfe9357-5896-42c2-92e2-ccca4c5e8a34');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)

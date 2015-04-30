@@ -36,7 +36,7 @@ public interface NeedsListService {
 	public LoanNeedsList findNeedForLoan(Loan loan,
 	        NeedsListMaster needsListMaster);
 
-	public void saveMasterNeedsForLoan(int loanId,
+	public List<LoanNeedsList> saveMasterNeedsForLoan(int loanId,
 	        List<NeedsListMaster> masterNeeds);
 
 	public NeedsListMaster fetchNeedListMasterByType(String needsListType);
@@ -45,5 +45,9 @@ public interface NeedsListService {
 	        Integer loanID);
 
 	public String checkCreditReport(Integer loanID);
+
+	public void initialNeedsListSetEmail(Integer loanID, List<Integer> addedList);
+
+	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList);
 
 }

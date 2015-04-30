@@ -53,7 +53,8 @@ public class RestInterceptor implements Callable
         Gson gson = new Gson();
         RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
         if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
-            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION ) ) {
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
         } else {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
@@ -101,6 +102,17 @@ public class RestInterceptor implements Callable
                 inputParams[0] = NewFiManager.userTicket;
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
                 String sXmlQueryDefault = Utils.readFileAsString( "load.xml" );
+                if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
+                    sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
+                }
+                inputParams[2] = sXmlQueryDefault;
+                inputParams[3] = restParameters.getLoanVO().getFormat();
+            } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
+                LOG.debug( "Operation Chosen Was Load " );
+                inputParams = new Object[4];
+                inputParams[0] = NewFiManager.userTicket;
+                inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+                String sXmlQueryDefault = Utils.readFileAsString( "batchload.xml" );
                 if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
                     sXmlQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
                 }
@@ -198,7 +210,7 @@ public class RestInterceptor implements Callable
             } else if ( restParameters.getOpName().equals(
                 WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE ) ) {
                 LOG.debug( "Operation Chosen Was ListModifiedLoansByAppCode " );
-                inputParams = new Object[2];
+                inputParams = new Object[3];
                 inputParams[0] = NewFiManager.userTicket;
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
                 inputParams[2] = restParameters.getLoanVO().getAppCode();
