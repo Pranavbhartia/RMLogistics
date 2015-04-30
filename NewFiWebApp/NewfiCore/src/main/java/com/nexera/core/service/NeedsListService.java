@@ -48,6 +48,7 @@ public interface NeedsListService {
 
 	public void initialNeedsListSetEmail(Integer loanID, List<Integer> addedList);
 
-	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList);
+	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList,
+	        List<Integer> removedList);
 
 }
