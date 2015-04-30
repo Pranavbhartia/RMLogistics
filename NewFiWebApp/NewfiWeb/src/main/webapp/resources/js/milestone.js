@@ -566,7 +566,8 @@ function showAppFee (itemToAppendTo,workItem)
 {
 	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
 	var txtRow2 = $('<div>').attr({
-		"class" : rightLeftClass + "-text" + " milestone-lc-text",
+		"class" : rightLeftClass + "-text" ,
+		"id":workItem.id+"fee",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
 	});
@@ -580,14 +581,13 @@ function showAppFee (itemToAppendTo,workItem)
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.bind("click", function(e) {
 					milestoneChildEventHandler(e);
-				});		
-				
+				});						
 			}
 		}	
+		itemToAppendTo.append(txtRow2);	
 		if(tempOb.appfee)
 		{
-			txtRow2.html("$"+tempOb.appfee);
-			itemToAppendTo.append(txtRow2);		
+			txtRow2.html("$"+tempOb.appfee);					
 		}
 			
 	}
@@ -791,6 +791,7 @@ function getAppFeeEdit(workItem)
 		floatCls="float-left";
 	}
 	var appFeeEditItem = $('<div>').attr({
+		"id" : "SM_FEE_EDIT",
 		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
@@ -1765,8 +1766,8 @@ function appendAppFeeEditPopup(element,milestoneId) {
 					if (response.error) {
 						showToastMessage(response.error.message);
 					}else{
-						var contxt=workFlowContext.mileStoneContextList[milestoneId];	
-						contxt.stateInfoContainer.html("$"+newFee);
+						var contxt=workFlowContext.mileStoneContextList[milestoneId];							
+						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);						
 						removeAppFeeEditPopup();
 					}
 			},false);
