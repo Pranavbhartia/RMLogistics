@@ -283,7 +283,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	public String getRenderInfoForApplicationFee(int loanID) {
 		LOG.debug("Inside method getRenderStateInfoForApplicationFee ");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String status = LoanStatus.APP_PAYMENT_NOT_INITIATED;
+		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
 		Loan loan = new Loan(loanID);
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.APP_FEE.getMilestoneKey());

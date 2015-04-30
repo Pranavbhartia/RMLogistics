@@ -50,11 +50,21 @@
 		console.log("Making payment");
 		console.log(event);
 		console.log(nonce);
-		console.log(newfiObject.user.defaultLoanId);
+		
+		var loanID = 0;
+		if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+		{
+			loanID = newfiObject.user.defaultLoanId;
+		}
+		else
+		{
+			loanID = selectedUserDetail.loanID;
+		}
+		console.log("loanID"+loanID);
 		showOverlay();
 		url="./rest/payment/pay";
 		data = "payment_nonce=" + String(nonce);
-		data = data +"&loan_id=" + String(newfiObject.user.defaultLoanId);
+		data = data +"&loan_id=" + String(loanID);
 		$.ajax({
 			url : url,
 			type : "POST",
@@ -81,9 +91,16 @@
         	$("#popup-overlay").hide();
 			console.log("Showing toast now");
 			showToastMessage("Payment successful!");
-			var workItemIDAppFee = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"].id;
+			var referenceMileStone = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
+			if (!referenceMileStone)
+			{
+				referenceMileStone = workFlowContext.milestoneStepsLookup["APP_FEE"];
+			}
+			var workItemIDAppFee = referenceMileStone.id;
 			workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
-			workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"].status="1";
+			workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer");
+			//APP_FEE_PAY_FOR
+			referenceMileStone.status="1";
         	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
         	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
 			console.log("Finished showing the toast");
