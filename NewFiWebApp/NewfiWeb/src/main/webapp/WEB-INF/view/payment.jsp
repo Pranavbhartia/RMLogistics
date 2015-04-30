@@ -100,6 +100,12 @@
 			workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
 			workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer");
 			//APP_FEE_PAY_FOR
+			if ($("#WF"+workItemIDAppFee).find("#SM_FEE_EDIT"))
+				
+			{
+				$("#WF"+workItemIDAppFee).find("#SM_FEE_EDIT").remove();
+				
+			}
 			referenceMileStone.status="1";
         	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
         	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
