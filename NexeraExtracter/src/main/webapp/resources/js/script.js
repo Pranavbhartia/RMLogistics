@@ -193,12 +193,25 @@ function getLTVTable1() {
 
 	for (var i = 0; i < tableArray.length; i++) {
 		var tableRow = getLTVTableRow(tableArray[i]);
+		
 		tableRowCont.append(tableRow);
 	}
 
 	tableCont.append(tableRowCont);
 
 	return tableCont;
+}
+function inverseParanthesis(input){
+	if(input == null ){
+		return null;
+	}
+	if(input.indexOf('(')!=-1 && input.indexOf(')')!=-1){
+		input = input.replace('(','');
+		input = input.replace(')','');
+	}else{
+		input = '('+input+')';
+	}
+	return input;
 }
 
 function getLTVDescTable() {
@@ -407,7 +420,7 @@ function getLTVTableRow(rowObj) {
 	var row = $('<div>').attr({
 		"class" : "price-table-row"
 	});
-
+	
 	for (var i = 0; i < rowObj.length; i++) {
 		var col = $('<div>').attr({
 			"class" : "price-table-td"
