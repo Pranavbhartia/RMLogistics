@@ -113,7 +113,8 @@ function showCustomerLoanPage(user) {
 
 
 function changeSecondaryLeftPanel(secondary,doNothing) {
-	  scrollToTop();
+		    clearOverlayMessage();
+			scrollToTop();
 	        secondary = parseInt(secondary);
 	        $('.lp-t2-item').removeClass('t2-active');
 	        $('.lp-t2-item .arrow-right').remove();
@@ -145,20 +146,24 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 
                     var userId=newfiObject.user.id;
                     getAppDetailsForUser(userId,function(appUserDetailsTemp){
-                    	  $('#overlay-loader').show();
+                    	
                         var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
                         if(LQBFileId){
                             if(appUserDetailsTemp.loan.isRateLocked){
                                 fixAndLoakYourRatePage2(undefined, appUserDetailsTemp);
-                                $('#overlay-loader').hide();
+                               
+                                
                             }else{
                                 paintFixYourRatePage();
                             }
+                         
                         }else{
                             //code to Paint teaser rate page
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
-                    });
+                    
+                    } , "We are checking on you awesome rates");
+                   
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
 	                
@@ -597,7 +602,7 @@ function paintFixYourRatePage(appUserDetails) {
 function fetchLockRatedata(loanNumber)
 {
 //alert('inside create loan method');
- $('#overlay-loader').show();
+ showOverlay();
 $.ajax({
 		url:"rest/application/fetchLockRatedata/"+loanNumber,
 		type:"POST",
@@ -617,7 +622,8 @@ $.ajax({
             }else{*/
 			    fixAndLoakYourRatePage(ob, appUserDetails) ;
             /*}*/
-			$('#overlay-loader').hide();
+			hideOverlay();
+			clearOverlayMessage();
 		},
 		error:function(erro){
 			alert("error inside createLoan ");
@@ -2047,6 +2053,7 @@ function dismissAlert(element) {
     //History support for customer
 function entryPointCustomerViewChangeNav(viewName) {
     changeSecondaryLeftPanel(viewName);
+  
 }
 
 var lockratedata= {};

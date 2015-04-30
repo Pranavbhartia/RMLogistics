@@ -460,7 +460,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 // function to append MAMMOTH Rate tables
 function appendMAMMOTHTableWrapper(element) {
 	var wrapper = $('<div>').attr({
-		"class" : "table-wrapper clearfix"
+		"class" : "table-wrapper clearfix mamoth-table-wrapper"
 	});
 
 	var pageHeader = $('<div>').attr({

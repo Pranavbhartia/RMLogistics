@@ -472,7 +472,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
-		newUser.setStatus(true);
+		newUser.setStatus(1);
 		if (newUser.getInternalUserDetail() != null) {
 			if (newUser.getInternalUserDetail().getInternaUserRoleMaster()
 			        .getId() == 1)
@@ -517,10 +517,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void deleteUser(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
+
 		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
 			        ActiveInternalEnum.DELETED);
+
 			userProfileDao.updateInternalUserDetail(user);
 
 		} else {
@@ -988,6 +990,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
 			}
 
+			if (loaAppFormVO.getPropertyTypeMaster() != null) {
+				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
+				        .getHomeZipCode());
+			}
+
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 			userVOObj.setDefaultLoanId(loanVO.getId());
@@ -1306,7 +1313,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional(readOnly =true)
+	@Transactional(readOnly = true)
 	public UserVO findByUserName(String userName) throws DatabaseException,
 	        NoRecordsFetchedException {
 		// TODO Auto-generated method stub

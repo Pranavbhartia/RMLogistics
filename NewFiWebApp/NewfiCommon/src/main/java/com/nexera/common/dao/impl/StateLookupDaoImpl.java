@@ -66,4 +66,16 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 		return criteria.list();
 	}
 
+	@Override
+	public String getStateCodeByZip(String addressZipCode) {
+		// TODO Auto-generated method stub
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+		        ZipCodeLookup.class);
+		criteria.add(Restrictions.eq("zipcode", addressZipCode));
+		StateLookup lookup = (StateLookup) criteria.uniqueResult();
+		if (lookup == null) {
+			return null;
+		}
+		return lookup.getStatecode();
+	}
 }

@@ -1,3 +1,4 @@
+
 @font-face {
 	font-family: 'OpenSans';
 	src: url('../fonts/OpenSans-Regular-webfont.eot')
@@ -1236,7 +1237,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-cont-wrapper {
-    width: 25%;
+    width: 23%;
     min-width: 210px;
     float: left;
     padding: 10px 5px;
@@ -1346,6 +1347,7 @@ input[type="button"]:focus, button:focus {
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+	margin-right:35px;
 }
 
 .conversation-container {
@@ -2718,7 +2720,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 300px;
+	width: 200px;
 }
 
 .prof-btn {
@@ -4820,8 +4822,8 @@ input.calc-input {
 }
 
 .user-info-image {
-	width: 138px;
-	height: 100px;
+	/* width: 138px;
+	height: 100px; */
 	margin-top: 20px;
 }
 
@@ -4848,3 +4850,13 @@ input.calc-input {
 	text-transform: capitalize;
 }
 /*End*/
+#overlay-loader-text{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 150px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 15px;
+ }
+
