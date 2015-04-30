@@ -654,7 +654,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 				        Arrays.asList(recipientVO)));
 				emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-				emailEntity.setSubject("Password Not Updated! Pelase Update.");
+				emailEntity.setSubject("You Initial Needs List Are Set");
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(template.getValue());
 
@@ -706,7 +706,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setSubject("You Needs list has been updated");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
