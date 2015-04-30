@@ -1186,11 +1186,13 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 		cusRole.html(custHeaderDetails.role);
 
 	var cusContact = $('<div>').attr({
-		"class" : "cus-prof-role-txt"
+		"class" : "cus-prof-role-txt",
+			"id":"cusProfPhoneNumber"
 	});
 
 	if (custHeaderDetails.phoneNo)
-		cusContact.html(custHeaderDetails.phoneNo);
+
+		cusContact.html(formatPhoneNumberToUsFormat(custHeaderDetails.phoneNo));
 
 	cusProfText.append(cusName).append(cusRole).append(cusContact);
 	cusProfLeftContainer.append(cusProfPic).append(cusProfText);
@@ -2355,6 +2357,8 @@ function updateUserProfile() {
 				$("#cusProfNameTxtID").text(
 						userProfileJson.firstName + " "
 								+ userProfileJson.lastName);
+				$('#cusProfPhoneNumber').html(formatPhoneNumberToUsFormat(userProfileJson.phoneNumber));
+				
 				hideCustomerEditProfilePopUp();
 			},
 			error : function(error) {

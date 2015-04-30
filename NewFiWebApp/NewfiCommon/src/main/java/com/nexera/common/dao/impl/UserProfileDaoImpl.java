@@ -399,12 +399,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer managerUpdateUserProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,phoneNumber=:phoneNumber WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("id", user.getId());
+		query.setParameter("phoneNumber", user.getPhoneNumber());
 		int result = query.executeUpdate();
 		return result;
 	}
