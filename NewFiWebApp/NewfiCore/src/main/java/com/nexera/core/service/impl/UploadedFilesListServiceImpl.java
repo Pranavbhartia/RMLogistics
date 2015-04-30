@@ -438,12 +438,18 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					checkVo.setLqbFileId(latestRow.getLqbFileID());
 
 				} else {
+					
+					
 					throw new FatalException("Error saving document");
 				}
 
+			}else{
+				nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			}
 
 		} catch (Exception e) {
+			
+			nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
