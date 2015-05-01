@@ -25,6 +25,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.newfi.nexera.constants.NewFiConstants;
+import com.newfi.nexera.rest.RestInterceptor;
 
 
 /**
@@ -37,7 +38,7 @@ public class XMLProcessor
     private static final Logger LOG = Logger.getLogger( XMLProcessor.class );
 
 
-    public File parseXML( InputStream inputStream, String condition ) throws SAXException, IOException,
+    public  File parseXML( InputStream inputStream, String condition ) throws SAXException, IOException,
         ParserConfigurationException, TransformerException
     {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -153,14 +154,22 @@ public class XMLProcessor
             Element applicationCoborrowerGender = createNewElement( doc, "field", "aBGender", "applicationCoborrowerGender" );
             newApplicant.appendChild( applicationCoborrowerGender );
             
-            Element applicationCoborrowerEmplrNm = createNewElement( doc, "field", "aBEmplrNm", "applicationCoborrowerEmplrNm" );
-            newApplicant.appendChild( applicationCoborrowerEmplrNm );   
-            Element applicationCoborrowerEmplrJobTitle = createNewElement( doc, "field", "aBEmplrJobTitle", "applicationCoborrowerEmplrJobTitle" );
-            newApplicant.appendChild( applicationCoborrowerEmplrJobTitle );
-          
             
-         
+            
 			
+			
+			Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm", "applicationCoborrowerEmplrName" );
+            newApplicant.appendChild( applicationCoborrowerEmplrName );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd", "applicationCoborrowerEmploymentStartDate" );
+            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle", "applicationCoborrowerEmployementTitle" );
+            newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+			
+			
+            
+           
+           
+           
           
             
             loan.appendChild( newApplicant );
@@ -265,11 +274,32 @@ public class XMLProcessor
             
             
             
-            Element applicationCoborrowerEmplrNm = createNewElement( doc, "field", "aBEmplrNm", "applicationCoborrowerEmplrNm" );
-            newApplicant.appendChild( applicationCoborrowerEmplrNm );   
-            Element applicationCoborrowerEmplrJobTitle = createNewElement( doc, "field", "aBEmplrJobTitle", "applicationCoborrowerEmplrJobTitle" );
-            newApplicant.appendChild( applicationCoborrowerEmplrJobTitle );
-          
+              
+         /*   Element applicationCoborrowerEmpCollection = doc.createElement( "collection" );
+            applicationCoborrowerEmpCollection.setAttribute( "id", "aBEmpCollection" );
+            Element coBorrowerRecord = doc.createElement( "record" );         
+            Element applicationCoborrowerEmpIsCurrent = createNewElement( doc, "field", "IsCurrent", "true" );
+            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "EmplrNm", "applicationCoborrowerEmplrName" );
+            Element applicationCoborrowerMontlyIncome = createNewElement( doc, "field", "MonI", "applicationCoborrowerMontlyIncome" );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "EmplmtStartD", "applicationCoborrowerEmploymentStartDate" );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "JobTitle", "applicationCoborrowerEmployementTitle" );           
+            coBorrowerRecord.appendChild(applicationCoborrowerEmpIsCurrent);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmplrName);
+            coBorrowerRecord.appendChild(applicationCoborrowerMontlyIncome);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmploymentStartDate);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmployementTitle);           
+            applicationCoborrowerEmpCollection.appendChild(coBorrowerRecord);
+            newApplicant.appendChild( applicationCoborrowerEmpCollection );*/
+            
+            
+        	Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm", "applicationCoborrowerEmplrName" );
+            newApplicant.appendChild( applicationCoborrowerEmplrName );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd", "applicationCoborrowerEmploymentStartDate" );
+            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle", "applicationCoborrowerEmployementTitle" );
+            newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+			
+            
             
             
             Element aBCoBorrowerExperianScore = createNewElement( doc, "field", "aBExperianScore", "800" );
@@ -431,11 +461,20 @@ public class XMLProcessor
             
             
           
-            Element applicationCoborrowerEmplrNm = createNewElement( doc, "field", "aCEmplrNm", "applicationCoborrowerEmplrNm" );
-            newApplicant.appendChild( applicationCoborrowerEmplrNm );   
-            Element applicationCoborrowerEmplrJobTitle = createNewElement( doc, "field", "aCEmplrJobTitle", "applicationCoborrowerEmplrJobTitle" );
-            newApplicant.appendChild( applicationCoborrowerEmplrJobTitle );
-          
+              
+           
+            
+            
+            
+        	Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "acprimaryemplrnm", "applicationCoborrowerEmplrName" );
+            newApplicant.appendChild( applicationCoborrowerEmplrName );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "acprimaryempltstartd", "applicationCoborrowerEmploymentStartDate" );
+            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "acprimaryjobtitle", "applicationCoborrowerEmployementTitle" );
+            newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+			
+            
+            
             
             
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITHOUT_SSN_BOTH ) ) {
@@ -507,11 +546,32 @@ public class XMLProcessor
             newApplicant.appendChild( applicationCoborrowerGender );
       
            
-            Element applicationCoborrowerEmplrNm = createNewElement( doc, "field", "aCEmplrNm", "applicationCoborrowerEmplrNm" );
-            newApplicant.appendChild( applicationCoborrowerEmplrNm );   
-            Element applicationCoborrowerEmplrJobTitle = createNewElement( doc, "field", "aCEmplrJobTitle", "applicationCoborrowerEmplrJobTitle" );
-            newApplicant.appendChild( applicationCoborrowerEmplrJobTitle );
-          
+           /* Element applicationCoborrowerEmpCollection = doc.createElement( "collection" );
+            applicationCoborrowerEmpCollection.setAttribute( "id", "aCEmpCollection" );
+            Element coBorrowerRecord = doc.createElement( "record" );         
+            Element applicationCoborrowerEmpIsCurrent = createNewElement( doc, "field", "IsCurrent", "true" );
+            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "EmplrNm", "applicationCoborrowerEmplrName" );
+            Element applicationCoborrowerMontlyIncome = createNewElement( doc, "field", "MonI", "applicationCoborrowerMontlyIncome" );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "EmplmtStartD", "applicationCoborrowerEmploymentStartDate" );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "JobTitle", "applicationCoborrowerEmployementTitle" );           
+            coBorrowerRecord.appendChild(applicationCoborrowerEmpIsCurrent);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmplrName);
+            coBorrowerRecord.appendChild(applicationCoborrowerMontlyIncome);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmploymentStartDate);
+            coBorrowerRecord.appendChild(applicationCoborrowerEmployementTitle);           
+            applicationCoborrowerEmpCollection.appendChild(coBorrowerRecord);
+            newApplicant.appendChild( applicationCoborrowerEmpCollection );*/
+            
+
+            
+        	Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "acprimaryemplrnm", "applicationCoborrowerEmplrName" );
+            newApplicant.appendChild( applicationCoborrowerEmplrName );
+            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "acprimaryempltstartd", "applicationCoborrowerEmploymentStartDate" );
+            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "acprimaryjobtitle", "applicationCoborrowerEmployementTitle" );
+            newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+			
+        
             
             Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
             Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );
@@ -552,6 +612,7 @@ public class XMLProcessor
         DOMSource source = new DOMSource( doc );
 
         file = new File( getRootDirectory() + File.separator + randomStringOfLength() + ".xml" );
+       // System.out.println("file"+file);
         file.createNewFile();
         StreamResult result = new StreamResult( file );
         transformer.transform( source, result );
@@ -585,4 +646,17 @@ public class XMLProcessor
     }
 
 
+    
+    
+   /* public static void main(String[] args){
+    	try{
+    	RestInterceptor  ri = new RestInterceptor();
+    	InputStream inputStream = ri.getResource( "save.xml" );
+    	XMLProcessor xm = new XMLProcessor();
+    	xm.parseXML(inputStream, NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH ) ;
+    	}catch(Exception e){
+    		
+    	}
+    }*/
+    
 }

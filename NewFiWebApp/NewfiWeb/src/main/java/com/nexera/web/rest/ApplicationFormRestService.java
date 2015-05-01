@@ -1075,6 +1075,8 @@ public class ApplicationFormRestService {
 			if(null != loanAppFormVO.getCustomerEmploymentIncome() && loanAppFormVO.getCustomerEmploymentIncome().size()>0){
 			hashmap.put("borrowerEmplrNm",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedAt());
 			hashmap.put("borrowerEmplrJobTitle",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getJobTitle());
+			//hashmap.put("borrowerEmplrMonthlyIncome",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
+			hashmap.put("borrowerEmplrStartDate",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedSince());
 			}
 			
 			
@@ -1187,9 +1189,16 @@ public class ApplicationFormRestService {
 		hashmap.put("userCoborrowerSSNnumber",loanAppFormVO.getCustomerSpouseDetail().getSpouseSsn());
 		hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO.getCustomerSpouseDetail().getSpouseSecPhoneNumber());
 		if(null != loanAppFormVO.getCustomerSpouseEmploymentIncome() && loanAppFormVO.getCustomerSpouseEmploymentIncome().size()>0){
-			hashmap.put( "applicationCoborrowerEmplrNm",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedAt());
-			hashmap.put( "applicationCoborrowerEmplrJobTitle",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getJobTitle());
-			}
+			hashmap.put( "applicationCoborrowerEmplrName",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedAt());
+			hashmap.put( "applicationCoborrowerEmployementTitle",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getJobTitle());
+			//hashmap.put( "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
+			hashmap.put( "applicationCoborrowerEmploymentStartDate",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedSince());
+						
+         }
+		
+		
+		
+		
 		}
 		
 		hashmap = getCoBorrowerGovernmentQuestion(hashmap,loanAppFormVO);
@@ -1270,13 +1279,19 @@ public class ApplicationFormRestService {
 		hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO.getCustomerSpouseDetail().getSpouseSecPhoneNumber());
 		
 		if(null != loanAppFormVO.getCustomerSpouseEmploymentIncome() && loanAppFormVO.getCustomerSpouseEmploymentIncome().size()>0){
-		hashmap.put( "applicationCoborrowerEmplrNm",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedAt());
-		hashmap.put( "applicationCoborrowerEmplrJobTitle",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getJobTitle());
+		hashmap.put( "applicationCoborrowerEmplrName",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedAt());
+		hashmap.put( "applicationCoborrowerEmployementTitle",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getJobTitle());
+		//hashmap.put( "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
+		hashmap.put( "applicationCoborrowerEmploymentStartDate",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedSince());
+		
 		}
 		hashmap = getCoBorrowerGovernmentQuestion(hashmap,loanAppFormVO);
 		return hashmap;
 		
 	}
+	
+	
+	
 	
 	
 	
@@ -1417,11 +1432,12 @@ public class ApplicationFormRestService {
 		else return "No";
 	}
 	
+	
+	
+	
 HashMap<String, String> getCoBorrowerGovernmentQuestion(HashMap<String, String> hashmap,LoanAppFormVO loanAppFormVO){
 	 
      
-	
-	
 	
 	
 	if(null != loanAppFormVO.getSpouseGovernmentQuestions()){
