@@ -102,6 +102,7 @@
 	<script>
 	var photo = "${userObject.photoImageUrl}";
 	var name = "${userObject.displayName}";
+	var email = "${userObject.emailId}";
 		$(document).ready(function() {
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
@@ -148,8 +149,8 @@
 
 			
 				LoanAppFormVO.user=user;
-				LoanAppFormVO.loanMangerEmail=$("#loanManagerEmailId").val();
-				LoanAppFormVO.realtorEmail=$("#realtorEmailId").val();
+				LoanAppFormVO.loanMangerEmail=email;
+				LoanAppFormVO.realtorEmail=email;
 				
 				
 				

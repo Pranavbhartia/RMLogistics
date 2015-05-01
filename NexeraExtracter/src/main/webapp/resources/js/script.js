@@ -186,19 +186,48 @@ function getLTVTable1() {
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
-
+	
+	var reverseParenthesisArray = getReverseParenthesisArray(tableArray)
+	
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
 	});
 
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	for (var i = 0; i < reverseParenthesisArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
+		
 		tableRowCont.append(tableRow);
 	}
 
 	tableCont.append(tableRowCont);
 
 	return tableCont;
+}
+
+
+function getReverseParenthesisArray(array){
+	var newArray = new Array();
+	for (var i = 0; i < array.length; i++) {
+		var rowObject = array[i];
+		for(var j in rowObject){
+			if(j==0) continue;
+			rowObject[j] = inverseParanthesis(rowObject[j]);
+		}
+		newArray.push(rowObject)
+	}
+	return newArray;
+}
+function inverseParanthesis(input){
+	if(input == null ){
+		return null;
+	}
+	if(input.indexOf('(')!=-1 && input.indexOf(')')!=-1){
+		input = input.replace('(','');
+		input = input.replace(')','');
+	}else{
+		input = '('+input+')';
+	}
+	return input;
 }
 
 function getLTVDescTable() {
@@ -275,8 +304,10 @@ function getLTVTable3() {
 		"class" : "price-tr-wrapper"
 	});
 
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	var reverseTableArray = getReverseParenthesisArray(tableArray);
+	
+	for (var i = 0; i < reverseTableArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseTableArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -305,9 +336,9 @@ function getLTVTable4() {
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
 	});
-
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	var reverseTableArray = getReverseParenthesisArray(tableArray);
+	for (var i = 0; i < reverseTableArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseTableArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -407,7 +438,7 @@ function getLTVTableRow(rowObj) {
 	var row = $('<div>').attr({
 		"class" : "price-table-row"
 	});
-
+	
 	for (var i = 0; i < rowObj.length; i++) {
 		var col = $('<div>').attr({
 			"class" : "price-table-td"
@@ -565,8 +596,10 @@ function getMammothFixedAdjustersTable1() {
 		"class" : "price-tr-wrapper"
 	});
 
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
+	
+	for (var i = 0; i < reverseParenthesisArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -635,8 +668,10 @@ function getMammothARMAdjustersTable1() {
 		"class" : "price-tr-wrapper"
 	});
 
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
+	
+	for (var i = 0; i < reverseParenthesisArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -676,8 +711,10 @@ function getMammothARMAdjustersTable2() {
 		"class" : "price-tr-wrapper"
 	});
 
-	for (var i = 0; i < tableArray.length; i++) {
-		var tableRow = getLTVTableRow(tableArray[i]);
+	var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
+	
+	for (var i = 0; i < reverseParenthesisArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -780,6 +817,8 @@ function getCascaseAdjusterTable1() {
 			[ "720-739", "0.000", "-0.250", "-0.375", "-0.625", "-0.750", "n/a" ],
 			[ "700-719", "-0.375", "-0.625", "-875", "n/a", "n/a", "n/a" ] ];
 
+	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
+	
 	var dataRows = getCascadeTableDataRows(tableData);
 
 	table += row1 + row2 + row3 + dataRows + "</table>"
@@ -802,7 +841,9 @@ function getCascaseAdjusterTable2() {
 			[ "Condo", "0.000", "-0.250", "-0.375", "-0.500", "-0.750", "n/a" ],
 			[ "Cash Out", "0.000", "-0.375", "n/a", "n/a", "n/a", "n/a" ] ];
 
-	var dataRows = getCascadeTableDataRows(tableData);
+	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
+	
+	var dataRows = getCascadeTableDataRows(reverseParenthesisArray);
 
 	table += row1 + row2 + row3 + dataRows + "</table>"
 
@@ -825,7 +866,8 @@ function getCascaseAdjusterTable3() {
 			[ "40.00 - 43.00", "0.000", "0.000", "0.000", "-0.250", "-0.375",
 					"-0.375" ] ];
 
-	var dataRows = getCascadeTableDataRows(tableData);
+	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
+	var dataRows = getCascadeTableDataRows(reverseParenthesisArray);
 
 	table += row1 + row2 + row3 + dataRows + "</table>"
 

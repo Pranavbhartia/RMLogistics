@@ -699,7 +699,13 @@ function getAlertNotificationRow(notification, contxt) {
 		alertTxtCont.append(alertTime);
 
 	container.append(alertIcn).append(alertTxtCont);
-
+	container.bind("click", function(e) {
+		if (notification.loanID!=0)
+		{
+			hideAlertNotificationPopup();
+			takeToMilestone(notification.loanID);
+		}
+	});
 	if (notification.dismissable) {
 		var alertRemoveIcn = $('<div>').attr({
 			"class" : "alert-rm-icn float-right",

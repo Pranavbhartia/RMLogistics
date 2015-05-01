@@ -10,8 +10,8 @@
 		<field id="sSpAddr">propertyStreetAddress</field>
 		<field id="sSpZip">propertyZip</field>		
 		<field id="sApprVal">loanApprovedValue</field>
-		<field id="sLotAcqYr">propertyAcquiredYear</field>
-		<field id="sLotLien">mortageRemaining</field>
+		<field id="sSpAcqYr">propertyAcquiredYear</field>
+		<field id="sSpLien">mortageRemaining</field>
 		<field id="sProd3rdPartyUwResultT">1</field>
 		<field id="sProdFilterDue10Yrs">true</field>
 		<field id="sProdFilterDue15Yrs">true</field>
@@ -87,9 +87,12 @@
 			<field id="aBIsWhite">borrowerIsWhite</field>
 			<field id="aBGender">borrowerGender</field>
 			<field id="aBAddrYrs">borrowerAddrYrs</field>
-			<field id="aBEmplrNm">borrowerEmplrNm</field>
-			<field id="aBEmplrJobTitle">borrowerEmplrJobTitle</field>
-				<collection id="aLiaCollection">
+			<field id="abprimaryemplrnm">borrowerEmplrNm</field>
+				<field id="abprimaryempltstartd">borrowerEmplrStartDate</field>
+				<field id="abprimaryjobtitle">borrowerEmplrJobTitle</field>
+				
+		
+	  	<collection id="aLiaCollection">
 				<record>
 					<field id="DebtT">1</field>
 					<field id="ComNm">Bank Of America</field>
