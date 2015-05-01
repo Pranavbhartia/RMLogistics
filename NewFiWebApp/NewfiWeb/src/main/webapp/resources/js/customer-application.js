@@ -4226,7 +4226,7 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
     		cache:false,
     		success:function(data){
     			
-    			appUserDetails=data.resultObject;
+    			appUserDetails=JSON.parse(data);
                 newfi.appUserDetails=appUserDetails;
     			//newfi.appUserDetails = appUserDetails;
     			//console.log('appUserDetails'+appUserDetails);

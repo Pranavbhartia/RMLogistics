@@ -79,7 +79,7 @@ public class ApplicationFormRestService {
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO createApplication(String appFormData,
+	public @ResponseBody String createApplication(String appFormData,
 	        HttpServletRequest httpServletRequest) {
 
 		Gson gson = new Gson();
@@ -493,11 +493,12 @@ public class ApplicationFormRestService {
 					counter++;
 				}
 			}
-			CommonResponseVO responseVO = new CommonResponseVO();
+			//CommonResponseVO responseVO = new CommonResponseVO();
 			
-			responseVO.setResultObject(loanAppForm);
+			
+			//responseVO.setResultObject(loanAppForm);
 
-			return responseVO;
+			return gson.toJson(loanAppForm);
 
 		} catch (Exception e) {
 			e.printStackTrace();
