@@ -581,7 +581,7 @@ function getMammothFixedAdjustersTable1() {
 		"class" : "price-table-header"
 	}).html("FICO / LTV/CLTV Adjustment");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80" ];
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75","75.01-80" ];
 
 	var tableArray = [
 			[ ">=760", "0.500", "0.375", "0.250", "0.000", "(0.375)" ],
@@ -649,8 +649,8 @@ function getMammothARMAdjustersTable1() {
 		"class" : "price-table-header"
 	}).html("FICO / LTV/CLTV Adjustment");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80",
-			"80.01-85", "85.01-89.90" ];
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75",
+			"75.01-80","80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
 			[ ">=760", "0.375", "0.250", "0.125", "0.000", "(0.250)",
