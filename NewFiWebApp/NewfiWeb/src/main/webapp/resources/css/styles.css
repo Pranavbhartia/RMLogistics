@@ -2657,7 +2657,7 @@ input.calc-input {
 .upload-prof-pic-icn{
 	position: relative;
 	border-radius: 50%;
-	background: url(../images/upload-pic.png) no-repeat center;
+	background: url(../images/profilePic.png) no-repeat center;
 	background-size: cover;
 	cursor:pointer;
 	opacity:0.8;
