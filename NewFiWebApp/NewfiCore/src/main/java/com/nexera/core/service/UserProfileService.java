@@ -16,6 +16,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserVO;
@@ -99,5 +100,11 @@ public interface UserProfileService {
 
 	public UserVO findByUserName(String userName) throws DatabaseException,
 	        NoRecordsFetchedException;
+
+	public InternalUserStateMappingVO updateInternalUserStateMapping(
+            InternalUserStateMappingVO internalUserStateMappingVO);
+
+	public InternalUserStateMappingVO deleteInternalUserStateMapping(
+            InternalUserStateMappingVO internalUserStateMappingVO);
 
 }

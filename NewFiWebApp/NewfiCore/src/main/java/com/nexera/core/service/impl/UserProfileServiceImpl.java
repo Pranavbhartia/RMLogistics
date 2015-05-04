@@ -69,6 +69,7 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -976,19 +977,29 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
+			LoanTypeMasterVO loanTypeMasterVO = null;
 			if (loaAppFormVO.getLoanType() != null) {
-				if (loaAppFormVO.getLoanType().getLoanTypeCd()
-				        .equalsIgnoreCase("REF")) {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.REF));
+				if (loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
+					
+					loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.REF);
+					loanTypeMasterVO.setDescription("Refinance");
+					loanTypeMasterVO.setLoanTypeCd("REF");
+					loanVO.setLoanType(loanTypeMasterVO);
 				} else {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.PUR));
+					
+					loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.PUR);
+					loanTypeMasterVO.setDescription("Purchase");
+					loanTypeMasterVO.setLoanTypeCd("PUR");
+					loanVO.setLoanType(loanTypeMasterVO);
 				}
 			} else {
 				LOG.info("loan type is NONE");
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
+				loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.NONE);
+				loanVO.setLoanType(loanTypeMasterVO);
 			}
+
+
+			loanVO.setLoanType(loanTypeMasterVO);
 
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
 				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
@@ -1320,4 +1331,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return User.convertFromEntityToVO(userProfileDao
 		        .getUserByUserName(userName));
 	}
+
+	@Override
+	@Transactional
+    public InternalUserStateMappingVO updateInternalUserStateMapping(InternalUserStateMappingVO inputVo) {
+	    
+	    return InternalUserStateMapping.convertFromEntityToVO(userProfileDao.updateInternalUserStateMapping(inputVo));
+    }
+
+	@Override
+    public InternalUserStateMappingVO deleteInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo) {
+	    
+		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao.deleteInternalUserStateMapping(inputVo));
+    }
 }
