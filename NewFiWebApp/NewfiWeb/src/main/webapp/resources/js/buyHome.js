@@ -361,7 +361,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
     // alert(JSON.stringify(refinanceTeaserRate));
     container.append(quesTextCont);
     $(parentContainer).html(container);
-    showOverleyMessage("We are working on it…almost there!");
+    showOverleyMessage("We are working on it almost there!");
     showOverlay();
     $.ajax({
         url: "rest/calculator/findteaseratevalue",
@@ -370,6 +370,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             "teaseRate": JSON.stringify(teaserRateData)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
         	hideOverlay();
             // var teaserRate = data;
