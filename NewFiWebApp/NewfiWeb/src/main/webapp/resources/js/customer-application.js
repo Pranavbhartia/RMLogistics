@@ -1824,21 +1824,51 @@ function paintMyIncome() {
     }).html("Save & continue").on('click', function(event) {
     
     	        var isStatus=[];
+    	        
+    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+    	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
+    	    		var status=validateInputOfChecked(isStatus[0]);
+    	        	if(status==false){
+    	        		return false;
+    	        	}
+    	    	}else{
+    	    		showErrorToastMessage("W2 Employment Details are Mandatory");
+    	    		return isStatus;
+    	    	}
+
     	      	 isStatus  = validateCheckbox(isStatus);
-    	   
-    	  
-    	        if(isStatus==null||isStatus==""){	
-    	      	  showErrorToastMessage(selectQuestionErrorMessage);
-    	      	  return false;
-    	        }else{
-    	        	for(var i=0;i<isStatus.length;i++){
+    	        if(isStatus!=null||isStatus!=""){	
+    	      	 
+    	        	for(var i=1;i<isStatus.length;i++){
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
         	        	}	
     	        	}
     	        	
+    	        	
     	        }
+    	      
+    	        	/* if($('.ce-option-checkbox myassets').hasClass('app-option-checked')){
+    	    				
+    	        		}else{
+    	        			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
+    	        		
+    	        			if($('.ce-option-checkbox').hasClass(' app-option-checked')){
+    	        				var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
+    	        				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
+    	        				if(!questionOne){
+    	        					return false;
+    	        				}
+    	        				if(!questionTwo){
+    	        					return false;
+    	        				}
+    	        			}else{
+    	        				return false;
+    	        			}
+    	        			
+    	        		}
+    	        */
     	       
     	      //End of validation
     
@@ -1996,7 +2026,6 @@ function getAccountValues(element,key,accType,balance,forNewHome){
 	$(element).find('.ce-option-ques-wrapper').each(function(){
 		
 		var id =$(this).find('.ce-rp-ques-text').find('.ce-input[name="id"]').attr("value");
-		console.log("id....."+id);
 		var accountSubType = $(this).find('.app-options-cont[name="'+accType+'"]').find('.app-option-selected').data("value");
 		var currentAccountBalance = $(this).find('input[name="'+balance+'"]').val();
 		var  amountForNewHome =  $(this).find('input[name="'+forNewHome+'"]').val();
@@ -4226,10 +4255,9 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
     		cache:false,
     		success:function(data){
     			
-    			appUserDetails=JSON.parse(data);
-                newfi.appUserDetails=appUserDetails;
-    			//newfi.appUserDetails = appUserDetails;
-    			//console.log('appUserDetails'+appUserDetails);
+    			appUserDetails=data;
+                newfi.appUserDetails=JSON.stringify(appUserDetails);
+    			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
     			callBack();
     		},
@@ -4245,7 +4273,7 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
 
 
 
-function showLoanAppFormContainer(formCompletionStatus){
+/*function showLoanAppFormContainer(formCompletionStatus){
 	
 	switch (formCompletionStatus) {
     case 0:
@@ -4281,15 +4309,15 @@ function showLoanAppFormContainer(formCompletionStatus){
     	
 
 	}
-}
+}*/
 
 
 ///////////////////////NEW CODE ADDED ////////////////////////////
 
 
 function paintSelectLoanTypeQuestion() {
-    	appUserDetails = {};
-		appUserDetails = JSON.parse(newfi.appUserDetails);
+    	//appUserDetails = {};
+		//appUserDetails = JSON.parse(newfi.appUserDetails);
 	
 	appProgressBaar(1);
 	console.log("Inside paintSelectLoanTypeQuestion ");
@@ -4479,7 +4507,8 @@ var questions = [
 			 appUserDetails.refinancedetails = refinancedetails;
 			var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),refinancedetails.currentMortgageBalance ,message);
 			if(isSuccess){
-				paintRefinanceStep3();
+				 saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceStep3);
+				
 			}else{
 				return false;
 			}
