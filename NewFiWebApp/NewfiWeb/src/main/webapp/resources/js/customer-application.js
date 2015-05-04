@@ -1823,21 +1823,53 @@ function paintMyIncome() {
     }).html("Save & continue").on('click', function(event) {
     
     	        var isStatus=[];
+    	        
+    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+    	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
+    	    		var status=validateInputOfChecked(isStatus[0]);
+    	        	if(status==false){
+    	        		return false;
+    	        	}
+    	    	}else{
+    	    		showErrorToastMessage("W2 Employment Details are Mandatory");
+    	    		return isStatus;
+    	    	}
+
     	      	 isStatus  = validateCheckbox(isStatus);
-    	   
-    	  
-    	        if(isStatus==null||isStatus==""){	
-    	      	  showErrorToastMessage(selectQuestionErrorMessage);
-    	      	  return false;
-    	        }else{
-    	        	for(var i=0;i<isStatus.length;i++){
+    	        if(isStatus!=null||isStatus!=""){	
+    	      	 
+    	        	for(var i=1;i<isStatus.length;i++){
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
-        	        	}	
+        	        	}
+    	        		
+    	        			
     	        	}
     	        	
+    	        	
     	        }
+    	      
+    	        	/* if($('.ce-option-checkbox myassets').hasClass('app-option-checked')){
+    	    				
+    	        		}else{
+    	        			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
+    	        		
+    	        			if($('.ce-option-checkbox').hasClass(' app-option-checked')){
+    	        				var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
+    	        				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
+    	        				if(!questionOne){
+    	        					return false;
+    	        				}
+    	        				if(!questionTwo){
+    	        					return false;
+    	        				}
+    	        			}else{
+    	        				return false;
+    	        			}
+    	        			
+    	        		}
+    	        */
     	       
     	      //End of validation
     
