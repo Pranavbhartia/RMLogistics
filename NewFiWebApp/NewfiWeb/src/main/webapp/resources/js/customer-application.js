@@ -3165,7 +3165,7 @@ function paintCustomerApplicationPageStep4a() {
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
-	    		if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
+	    		if(ethnicity==undefined && race==undefined && sex==undefined){
 		    		showErrorToastMessage(yesyNoErrorMessage);
 		    		return false;
 		    	} 
