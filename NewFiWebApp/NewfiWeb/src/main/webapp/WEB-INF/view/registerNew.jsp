@@ -30,6 +30,7 @@
 				
 				<div class="clearfix user-info-outer-container">
 					<div class="float-left left-user-container ">
+						<div class="user-info-txt">Referred by</div>
 						<div class="user-info-image">
 							
 						</div>

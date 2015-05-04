@@ -1,4 +1,3 @@
-
 @font-face {
 	font-family: 'OpenSans';
 	src: url('../fonts/OpenSans-Regular-webfont.eot')
@@ -4806,7 +4805,7 @@ input.calc-input {
   width: 29%;
   height: 378px;
   border-right: 1px solid #d3d3d3;
-  padding-left: 134px;
+  padding-left: 80px;
 }
 
 .new-user-container{
@@ -4828,7 +4827,6 @@ input.calc-input {
 }
 
 .user-info-row {
-	width: 102px;
   line-height: 20px;
   margin: 0px auto;
 }
@@ -4860,3 +4858,15 @@ input.calc-input {
   font-size: 15px;
  }
 
+.user-info-image .assigned-agent-default-img,.user-info-image .assigned-agent-img {
+	width: 80px;
+	height: 80px;
+	line-height: 80px;
+	font-size: 24px;
+	margin: 0;
+}
+
+.user-info-txt {
+    font-size: 14px;
+    font-family: 'opensanssemibold';
+}
