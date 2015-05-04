@@ -248,10 +248,11 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
 	
+	
+	
    // added check box 
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
-	
 	var stateRow = getManagerStateRow(user);
 	container.append(stateRow);
 	
@@ -604,13 +605,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
-	/*var internalUserState=[];
+/*	var internalUserState=[];
 	//for(var i=0;i<internalUserStates.length;i++){
 	for(var key in internalUserStates){
 		if(internalUserStates[key]!=0)
 			internalUserState.push(internalUserStates[key]);
 	}
-	userProfileJson.internalUserStateMappingVOs = internalUserState;*/
+	userProfileJson.internalUserStateMappingVOs = internalUserState; */
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -1381,6 +1382,7 @@ function appendAddLicencePopup(element) {
 	
 	$(element).append(wrapper);
 }
+
 
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
