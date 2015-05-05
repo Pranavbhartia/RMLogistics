@@ -233,22 +233,22 @@ function getLTVDescTable(addHighBalArm) {
 
 	var tableArray = [ {
 		"desc" : "LTV>95",
-		"value" : "(0.500)"
+		"value" : "0.500"
 	}, {
 		"desc" : "Investment Property LTV <= 75 ",
-		"value" : "(1.750)"
+		"value" : "1.750"
 	}, {
 		"desc" : "Investment Property LTV >75 and <=80",
-		"value" : "(3.000)"
+		"value" : "3.000"
 	}, {
 		"desc" : "Investment Property LTV >80",
-		"value" : "(3.750)"
+		"value" : "3.750"
 	}, {
 		"desc" : "2-4 Units",
-		"value" : "(1.000)"
+		"value" : "1.000"
 	}, {
 		"desc" : "Attached Condo >75 LTV & Term > 15yrs",
-		"value" : "(0.750)"
+		"value" : "0.750"
 	}, {
 		"desc" : "HighBal Cashout Refi",
 		"value" : "1.000"
@@ -412,7 +412,9 @@ function getLTVTable6() {
 	}).html("Other Adjustments");
 	tableCont.append(hedaer);
 
-	var tableArray = [ [ "Escrow Waiver Fee", "(0.125)" ] ];
+	var tableArray = [ [ "Escrow Waiver Fee", "(0.125)" ] , 
+	                   [ "Loan amount <$100k", "(0.75)" ]
+	                   ];
 
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
@@ -628,11 +630,11 @@ function getMammothFixedAdjustersTable2() {
 	}).html("Price Adjustment");
 	tableCont.append(hedaer);
 
-	var tableArray = [ [ "Purchase", "0.375" ],
-			[ "Refinance - Non-Cashout", "0.000" ],
-			[ "Refinance - Cash-out", "(0.500)" ], [ "Investor", "(2.500)" ],
-			[ "2 Unit", "(0.500)" ], [ "Second Home", "(0.500)" ],
-			[ "Non-CA State Adjuster", "0.250" ] ];
+	var tableArray = [ [ "Purchase", "(.375)" ],
+			[ "Refinance - Non-Cashout", "0.00" ],
+			[ "Refinance - Cash-out", "(.500)" ], [ "Investor", "(2.500)" ],
+			[ "2 Unit", "(.500)" ], [ "Second Home", "(.500)" ],
+			[ "Non-CA State Adjuster", ".250" ] ];
 
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
@@ -662,12 +664,12 @@ function getMammothARMAdjustersTable1() {
 			"75.01-80","80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
-			[ ">=760", "0.375", "0.250", "0.125", "0.000", "(0.250)",
-					"(2.125)", "(2.375)" ],
-			[ "740-759", "0.375", "0.125", "0.000", "0.000", "(0.500)",
-					"(2.125)", "(2.375)" ],
-			[ "720-739", "0.250", "0.125", "0.000", "0.000", "(1.000)", "", "" ],
-			[ "700-719", "0.000", "(0.250)", "(0.250)", "(0.875)", "(1.500)",
+			[ ">=760", "0.000", "0.000", "0.000", "0.000", "0.000",
+					"(2.250)", "(3.250)" ],
+			[ "740-759", "0.000", "0.000", "0.000", "0.000", "0.000",
+			  "(2.250)", "(3.250)" ],
+			[ "720-739", "0.000", "0.000", "0.000", "0.000", "0.000", "", "" ],
+			[ "700-719", "0.000", "0.000", "0.000", "0.000", "0.000",
 					"", "" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
@@ -677,10 +679,10 @@ function getMammothARMAdjustersTable1() {
 		"class" : "price-tr-wrapper"
 	});
 
-	var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
+	//var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
 	
-	for (var i = 0; i < reverseParenthesisArray.length; i++) {
-		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
+	for (var i = 0; i < tableArray.length; i++) {
+		var tableRow = getLTVTableRow(tableArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -703,15 +705,15 @@ function getMammothARMAdjustersTable2() {
 			"75.01-80", "80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
-			[ "Purchase", "0.375", "0.375", "0.375", "0.375", "0.375", "0.375",
-					"0.375" ],
-			[ "Cash Out", "0.000", "0.000", "(0.500)", "", "", "", "" ],
-			[ "2 Unit", "0.000", "0.000", "(0.250)", "(0.500)", "", "", "" ],
-			[ "2nd Home", "(0.125)", "(0.250)", "(0.375)", "(0.625)",
-					"(0.625)", "", "" ],
-			[ "Investor", "(2.000)", "(2.000)", "(2.000)", "", "", "", "" ],
-			[ "DTI > 40%", "0.000", "0.000", "0.000", "(0.375)", "(0.375)",
-					"(0.500)", "(0.500)" ] ];
+			[ "Purchase", "0.000", "0.000", "0.000", "0.000", "0.000", "0.000",
+					"0.000" ],
+			[ "Cash Out", "0.000", "0.000", "(0.120)", "", "", "", "" ],
+			[ "2 Unit", "(0.250)", "(0.250)", "(0.375)", "(0.500)", "", "", "" ],
+			[ "2nd Home", "(0.125)", "(0.125)", "(0.125)", "(0.125)",
+					"(0.125)", "", "" ],
+			[ "Investor", "0.000", "(0.250)", "(0.375)", "", "", "", "" ],
+			[ "DTI > 40%", "(0.125)", "(0.125)", "(0.125)", "(0.125)", "(0.125)",
+					"(0.250)", "(0.375)" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
@@ -720,10 +722,10 @@ function getMammothARMAdjustersTable2() {
 		"class" : "price-tr-wrapper"
 	});
 
-	var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
+	//var reverseParenthesisArray = getReverseParenthesisArray(tableArray);
 	
-	for (var i = 0; i < reverseParenthesisArray.length; i++) {
-		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
+	for (var i = 0; i < tableArray.length; i++) {
+		var tableRow = getLTVTableRow(tableArray[i]);
 		tableRowCont.append(tableRow);
 	}
 
@@ -907,6 +909,7 @@ function getCascaseAdjusterTable5() {
 	var row1 = "<tr><th colspan=7 class='th1'>" + "Other Adjustments"
 			+ "</th></tr>";
 	var row2 = "<tr><th>Escrow Waiver Fee</th>" + "<td>-0.125</td></tr>";
+	var row3 = "<tr><th>Loan amount <$100k</th>" + "<td>0.75</td></tr>";
 
 	table += row1 + row2 + "</table>"
 
