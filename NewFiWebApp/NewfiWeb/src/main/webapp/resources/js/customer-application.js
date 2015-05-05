@@ -1865,7 +1865,7 @@ if($('.ce-option-checkbox').hasClass('myassets')){
 					return false;
 				}
 			}else{
-				$('.ce-option-checkbox.myassets').addClass('text-color')
+				$('.ce-option-checkbox.myassets').addClass('text-color');
 				showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
 				return false;
 			}
