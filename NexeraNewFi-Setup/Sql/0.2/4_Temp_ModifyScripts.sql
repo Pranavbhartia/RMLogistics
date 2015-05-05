@@ -344,3 +344,6 @@ ALTER TABLE `newfi_schema`.`user`
 #Added By abhishek on 2nd May 
 alter table newfi_schema.internaluserstatemapping add column license_number varchar (100);
 
+
+# Added by Abhishek
+alter table newfi_schema.internaluserstatemapping add column license_number varchar (100);

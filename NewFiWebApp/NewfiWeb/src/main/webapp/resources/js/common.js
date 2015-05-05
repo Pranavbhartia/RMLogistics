@@ -857,3 +857,7 @@ function userIsCustomer() {
 	return false;
 }
 
+function hideCompleteYourProfile(){
+	
+	$('#lp-step2').remove();
+}

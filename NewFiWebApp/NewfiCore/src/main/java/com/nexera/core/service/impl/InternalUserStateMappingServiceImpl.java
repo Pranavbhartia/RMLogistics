@@ -25,8 +25,7 @@ public class InternalUserStateMappingServiceImpl implements
 	@Transactional
 	public void saveOrUpdateUserStates(
 	        List<InternalUserStateMappingVO> internalUserStateMappings) {
-		mappingDao
-		        .saveOrUpdateUserStates(fillListInternalUserStateVOToObj(internalUserStateMappings));
+		mappingDao.saveOrUpdateUserStates(fillListInternalUserStateVOToObj(internalUserStateMappings));
 	}
 
 	@Override
@@ -38,21 +37,25 @@ public class InternalUserStateMappingServiceImpl implements
 
 	List<InternalUserStateMapping> fillListInternalUserStateVOToObj(
 	        List<InternalUserStateMappingVO> internalUserStateMappings) {
+		
 		List<InternalUserStateMapping> stateMappings = new ArrayList<InternalUserStateMapping>();
+		
 		InternalUserStateMapping stateMapping = null;
+		
 		for (InternalUserStateMappingVO internalUserStateMapping : internalUserStateMappings) {
 			stateMapping = new InternalUserStateMapping();
 			if (internalUserStateMapping.getId() != null)
 				stateMapping.setId(internalUserStateMapping.getId());
-			stateMapping.setStateLookup(new StateLookup(
-			        internalUserStateMapping.getStateId()));
-			stateMapping
-			        .setUser(new User(internalUserStateMapping.getUserId()));
-			if (!internalUserStateMapping.getIsChecked()) {
+			
+			stateMapping.setStateLookup(new StateLookup(internalUserStateMapping.getStateId()));
+			stateMapping.setUser(new User(internalUserStateMapping.getUserId()));
+			stateMapping.setLicenseNumber(internalUserStateMapping.getLicense());
+			
+			if (null != internalUserStateMapping.getIsChecked() && !internalUserStateMapping.getIsChecked()) {
 				if (internalUserStateMapping.getId() != null)
 					mappingDao.deleteObj(stateMapping);
 			} else {
-				if (internalUserStateMapping.getIsChecked())
+				
 					stateMappings.add(stateMapping);
 			}
 		}
@@ -66,9 +69,9 @@ public class InternalUserStateMappingServiceImpl implements
 		for (InternalUserStateMapping internalUserStateMapping : internalUserStateMappings) {
 			stateMapping = new InternalUserStateMappingVO();
 			stateMapping.setId(internalUserStateMapping.getId());
-			stateMapping.setStateId(internalUserStateMapping.getStateLookup()
-			        .getId());
+			stateMapping.setStateId(internalUserStateMapping.getStateLookup().getId());
 			stateMapping.setUserId(internalUserStateMapping.getUser().getId());
+			stateMapping.setLicense(internalUserStateMapping.getLicenseNumber());
 			stateMapping.setIsChecked(true);
 			stateMappings.add(stateMapping);
 		}
