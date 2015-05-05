@@ -799,12 +799,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
-    
-   
-  
-    
-    
-    
+ 
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
@@ -1850,27 +1845,32 @@ function paintMyIncome() {
     	        	
     	        	
     	        }
-    	      
-    	        	/* if($('.ce-option-checkbox myassets').hasClass('app-option-checked')){
-    	    				
-    	        		}else{
-    	        			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
-    	        		
-    	        			if($('.ce-option-checkbox').hasClass(' app-option-checked')){
-    	        				var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
-    	        				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
-    	        				if(!questionOne){
-    	        					return false;
-    	        				}
-    	        				if(!questionTwo){
-    	        					return false;
-    	        				}
-    	        			}else{
-    	        				return false;
-    	        			}
-    	        			
-    	        		}
-    	        */
+if($('.ce-option-checkbox').hasClass('myassets')){
+	if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
+
+    }else{
+  	  
+  	  if($('.ce-option-checkbox').hasClass(' app-option-checked')){
+  		       showErrorToastMessage('Please add an account');
+				var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
+				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
+				if(!questionOne){
+					return false;
+				}
+				if(!questionTwo){
+					return false;
+				}
+			}else{
+				$('.ce-option-checkbox.myassets').addClass('text-color');
+				showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
+				return false;
+			}
+    }
+}
+    	        	
+
+
+                  
     	       
     	      //End of validation
     
