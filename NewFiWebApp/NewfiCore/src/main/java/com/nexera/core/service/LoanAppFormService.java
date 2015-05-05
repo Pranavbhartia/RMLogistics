@@ -8,7 +8,7 @@ public interface LoanAppFormService {
 
 	public void save(LoanAppFormVO loaAppFormVO);
 
-	public LoanAppFormVO create(LoanAppFormVO loaAppFormVO);
+	public LoanAppForm create(LoanAppFormVO loaAppFormVO);
 
 
 	public LoanAppFormVO find(LoanAppFormVO loanAppFormVO);

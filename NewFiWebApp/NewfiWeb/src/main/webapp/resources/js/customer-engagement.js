@@ -1640,7 +1640,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     bottomRightCol.append(bottomRcRow);
 
     var hgLow="";
-     if(totalEstMonthlyPayment<monthlyPayment){
+     if(principalInterest<monthlyPayment){
         hgLow='<font color="green"><b>Lower</b></font>';
     }else{
         hgLow='<font color="red"><b>Higher</b></font>';

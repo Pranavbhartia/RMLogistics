@@ -91,10 +91,9 @@ public class ApplicationFormRestService {
 
 			System.out.println("appFormData is" + appFormData);
 
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			        LoanAppFormVO.class);
 			System.out.println("loaAppFormVO.getId()" + loaAppFormVO.getId());
-			
 			HashMap<String, Integer> cache = new HashMap<String, Integer>();
 
 			HttpSession httpSession = httpServletRequest.getSession();
@@ -108,8 +107,10 @@ public class ApplicationFormRestService {
 				cache = (HashMap<String, Integer>) map;
 			}
 
-			if (cache.get("loanAppFormId") != null && cache.get("loanAppFormId") != loaAppFormVO.getId()) {
-				System.out.println("loan form id mismatch , setting cache to null");
+			if (cache.get("loanAppFormId") != null
+			        && cache.get("loanAppFormId") != loaAppFormVO.getId()) {
+				System.out
+				        .println("loan form id mismatch , setting cache to null");
 				cache.clear();
 			}
 
@@ -145,45 +146,78 @@ public class ApplicationFormRestService {
 			}
 
 			// Customer Income
-			System.out.println("cache.get(customerEmploymentIncome0)"+ cache.get("customerEmploymentIncome0"));
+			System.out.println("cache.get(customerEmploymentIncome0)"
+			        + cache.get("customerEmploymentIncome0"));
 			
-			if (loaAppFormVO.getCustomerEmploymentIncome() != null
-			        && cache.get("customerEmploymentIncome0") != null
-			        && loaAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getId() == 0
-			        && cache.get("customerEmploymentIncome0") != 0) {
-				
-				System.out.println("Inside customerEmploymentIncome0 ");
-				
-				Iterator<CustomerEmploymentIncomeVO> itr = loaAppFormVO.getCustomerEmploymentIncome().iterator();
+			
+			if (loaAppFormVO.getCustomerEmploymentIncome() != null) {
+				System.out.println("##Inside customerEmploymentIncome0 ");
+				Iterator<CustomerEmploymentIncomeVO> itr = loaAppFormVO
+				        .getCustomerEmploymentIncome().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
 
-					CustomerEmploymentIncomeVO customeremploymentincomeVO = itr.next();
-					System.out.println("customeremploymentincomeVO.getEmployedAt()"+ customeremploymentincomeVO.getCustomerEmploymentIncome().getEmployedAt());
-					System.out.println("cache.get(customerEmploymentIncome"+ cache.get("customerEmploymentIncome" + counter+ ""));
+					CustomerEmploymentIncomeVO customeremploymentincomeVO = itr
+					        .next();
+					System.out
+					        .println("customeremploymentincomeVO.getEmployedAt()"
+					                + customeremploymentincomeVO
+					                        .getCustomerEmploymentIncome()
+					                        .getEmployedAt());
+					System.out.println("cache.get(customerEmploymentIncome"
+					        + cache.get("customerEmploymentIncome" + counter
+					                + ""));
 					
-					if (cache.get("customerEmploymentIncome" + counter + "") != null) {
-						loaAppFormVO.getCustomerEmploymentIncome().get(counter).getCustomerEmploymentIncome().setId(cache.get("customerEmploymentIncome"+ counter + ""));
+					
+					
+					if (cache.get("customerEmploymentIncome" + counter) != null && cache.get("customerEmploymentIncome" + counter) !=0 && loaAppFormVO.getCustomerEmploymentIncome().get(counter)
+			                .getCustomerEmploymentIncome().getId() == 0) {
+						loaAppFormVO
+						        .getCustomerEmploymentIncome()
+						        .get(counter)
+						        .getCustomerEmploymentIncome()
+						        .setId(cache.get("customerEmploymentIncome"
+						                + counter + ""));
 					}
 					counter++;
 				}
 			}
 
 			// Customer Bank Account
+				System.out.println("cache.get(customerBankAccountDetails0)"
+			        + cache.get("customerBankAccountDetails0"));
+			if (loaAppFormVO.getCustomerBankAccountDetails()!=null) {
+				
+				System.out.println("Inside customerBankAccountDetails0 "+loaAppFormVO.getCustomerBankAccountDetails().get(0)
+		                .getCustomerBankAccountDetails().getId());
 
-			if (cache.get("customerBankAccountDetails0") != null && null != loaAppFormVO.getCustomerBankAccountDetails() && loaAppFormVO.getCustomerBankAccountDetails().size() > 0
-			        && loaAppFormVO.getCustomerBankAccountDetails().get(0).getCustomerBankAccountDetails().getId() == 0
-			        && cache.get("customerBankAccountDetails0") != 0) {
-
-				Iterator<CustomerBankAccountDetailsVO> itr = loaAppFormVO.getCustomerBankAccountDetails().iterator();
+				Iterator<CustomerBankAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerBankAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
 
-					CustomerBankAccountDetailsVO customerBankAccountDetailsVO = itr.next();
-					System.out.println("customerBankAccountDetailsVO.getAccountSubType()" + customerBankAccountDetailsVO.getCustomerBankAccountDetails().getAccountSubType());
+					CustomerBankAccountDetailsVO customerBankAccountDetailsVO = itr
+					        .next();
+					System.out
+					        .println("customerBankAccountDetailsVO.getAccountSubType()"
+					                + customerBankAccountDetailsVO
+					                        .getCustomerBankAccountDetails()
+					                        .getAccountSubType());
 					
-					if(cache.get("customerBankAccountDetails" + counter + "") != null){
-					loaAppFormVO.getCustomerBankAccountDetails().get(counter).getCustomerBankAccountDetails().setId(cache.get("customerBankAccountDetails" + counter + ""));
+					System.out.println("cache.get(customerBankAccountDetails"
+					        + cache.get("customerBankAccountDetails" + counter
+					                + ""));
+					
+					        
+					        
+					if (cache.get("customerBankAccountDetails" + counter) != null && cache.get("customerBankAccountDetails" + counter) != 0  && loaAppFormVO.getCustomerBankAccountDetails().get(counter)
+			                .getCustomerBankAccountDetails().getId() == 0) {
+					loaAppFormVO
+					        .getCustomerBankAccountDetails()
+					        .get(counter)
+					        .getCustomerBankAccountDetails()
+					        .setId(cache.get("customerBankAccountDetails"
+					                + counter + ""));
 					}
 					counter++;
 				}
@@ -192,35 +226,62 @@ public class ApplicationFormRestService {
 
 			// Customer Retirement Account
 
-			if (cache.get("customerRetirementAccountDetails0") != null && loaAppFormVO.getCustomerRetirementAccountDetails().get(0).getCustomerRetirementAccountDetails().getId() == 0
-			        && cache.get("customerRetirementAccountDetails0") != 0) {
+			if (loaAppFormVO.getCustomerRetirementAccountDetails() != null) {
 
-				Iterator<CustomerRetirementAccountDetailsVO> itr = loaAppFormVO.getCustomerRetirementAccountDetails().iterator();
+				Iterator<CustomerRetirementAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerRetirementAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = itr.next();
-					System.out.println("customerBankAccountDetailsVO.getAccountSubType()"+ customerRetirementAccountDetailsVO.getCustomerRetirementAccountDetails().getAccountSubType());
+					CustomerRetirementAccountDetailsVO customerRetirementAccountDetailsVO = itr
+					        .next();
+					System.out
+					        .println("customerBankAccountDetailsVO.getAccountSubType()"
+					                + customerRetirementAccountDetailsVO
+					                        .getCustomerRetirementAccountDetails()
+					                        .getAccountSubType());
 					
-					if(cache.get("customerRetirementAccountDetails" + counter + "") != null){
-						loaAppFormVO.getCustomerRetirementAccountDetails().get(counter).getCustomerRetirementAccountDetails().setId(cache.get("customerRetirementAccountDetails"+ counter + ""));
-					}
+				
+						        
+					
+			if (cache.get("customerRetirementAccountDetails" + counter) != null && cache.get("customerRetirementAccountDetails" + counter) != 0  && loaAppFormVO.getCustomerRetirementAccountDetails().get(counter)
+						                .getCustomerRetirementAccountDetails().getId() == 0) {
+					loaAppFormVO
+					        .getCustomerRetirementAccountDetails()
+					        .get(counter)
+					        .getCustomerRetirementAccountDetails()
+					        .setId(cache.get("customerRetirementAccountDetails"
+					                + counter + ""));
+			}
 					counter++;
 				}
 			}
 
 			// Customer Other Account
 
-			if (cache.get("customerOtherAccountDetails0") != null && loaAppFormVO.getCustomerOtherAccountDetails().get(0).getCustomerOtherAccountDetails().getId() == 0 
-					&& cache.get("customerOtherAccountDetails0") != 0) {
-				
-				Iterator<CustomerOtherAccountDetailsVO> itr = loaAppFormVO.getCustomerOtherAccountDetails().iterator();
+			if (loaAppFormVO.getCustomerOtherAccountDetails() !=null ) {
+				Iterator<CustomerOtherAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerOtherAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = itr.next();
-					System.out.println("customerBankAccountDetailsVO.getAccountSubType()"+ customerOtherAccountDetailsVO.getCustomerOtherAccountDetails().getAccountSubType());
+					CustomerOtherAccountDetailsVO customerOtherAccountDetailsVO = itr
+					        .next();
+					System.out
+					        .println("customerOtherAccountDetailsVO.getAccountSubType()"
+					                + customerOtherAccountDetailsVO
+					                        .getCustomerOtherAccountDetails()
+					                        .getAccountSubType());
 					
-					if(cache.get("customerOtherAccountDetails" + counter + "") != null){
-						loaAppFormVO.getCustomerOtherAccountDetails().get(counter).getCustomerOtherAccountDetails().setId(cache.get("customerOtherAccountDetails"+ counter + ""));
+				
+					        
+					        
+					if (cache.get("customerOtherAccountDetails" + counter) != null && cache.get("customerOtherAccountDetails" + counter) != 0  && loaAppFormVO.getCustomerOtherAccountDetails().get(counter)
+								                .getCustomerOtherAccountDetails().getId() == 0) {
+					loaAppFormVO
+					        .getCustomerOtherAccountDetails()
+					        .get(counter)
+					        .getCustomerOtherAccountDetails()
+					        .setId(cache.get("customerOtherAccountDetails"
+					                + counter + ""));
 					}
 					counter++;
 				}
@@ -230,22 +291,47 @@ public class ApplicationFormRestService {
 			// //Spouse Income Related Details
 
 			// Customer Spouse Income
-			System.out.println("cache.get(customerSpouseEmploymentIncome0)"+ cache.get("customerSpouseEmploymentIncome0"));
 			
-			if (loaAppFormVO.getCustomerSpouseEmploymentIncome() != null && cache.get("customerSpouseEmploymentIncome0") != null
-			        && loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getId() == 0
-			        && cache.get("customerSpouseEmploymentIncome0") != 0) {
-				
-				Iterator<CustomerSpouseEmploymentIncomeVO> itr = loaAppFormVO.getCustomerSpouseEmploymentIncome().iterator();
-				
+			
+		
+          /* System.out.println("## loaAppFormVO.getCustomerSpouseEmploymentIncome()"+ loaAppFormVO.getCustomerSpouseEmploymentIncome());
+			 System.out.println("## loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0)"+ loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0));
+			 System.out.println("## loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome()"+ loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome());
+			 System.out.println("## loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getId()"+ loaAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getId());
+        */    		 
+             
+             
+			System.out.println("cache.get(customerSpouseEmploymentIncome0)"
+			        + cache.get("customerSpouseEmploymentIncome0"));
+			if (loaAppFormVO.getCustomerSpouseEmploymentIncome() != null) {
+				Iterator<CustomerSpouseEmploymentIncomeVO> itr = loaAppFormVO
+				        .getCustomerSpouseEmploymentIncome().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
 
-					CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO = itr.next();
-					System.out.println("customeremploymentincomeVO.getEmployedAt()"+ customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome().getEmployedAt());
+					CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincomeVO = itr
+					        .next();
+					System.out
+					        .println("customerSpouseEmploymentincomeVO.getEmployedAt()"
+					                + customerSpouseEmploymentincomeVO
+					                        .getCustomerSpouseEmploymentIncome()
+					                        .getEmployedAt());
 					
-					if(cache.get("customerSpouseEmploymentIncome" + counter + "") != null){
-						loaAppFormVO.getCustomerSpouseEmploymentIncome().get(counter).getCustomerSpouseEmploymentIncome().setId(cache.get("customerSpouseEmploymentIncome" + counter + ""));
+					System.out.println("cache.get(customerSpouseEmploymentIncome"
+					        + cache.get("customerSpouseEmploymentIncome" + counter
+					                + ""));
+					
+					
+					
+						        
+					if (cache.get("customerSpouseEmploymentIncome" + counter) != null && cache.get("customerSpouseEmploymentIncome" + counter) != 0  && loaAppFormVO.getCustomerSpouseEmploymentIncome().get(counter)
+			                .getCustomerSpouseEmploymentIncome().getId() == 0) {
+					loaAppFormVO
+					        .getCustomerSpouseEmploymentIncome()
+					        .get(counter)
+					        .getCustomerSpouseEmploymentIncome()
+					        .setId(cache.get("customerSpouseEmploymentIncome"
+					                + counter + ""));
 					}
 					counter++;
 				}
@@ -253,70 +339,116 @@ public class ApplicationFormRestService {
 
 			// Customer Spouse Bank Account
 
-			if (cache.get("customerSpouseBankAccountDetails0") != null
-			        && loaAppFormVO.getCustomerSpouseBankAccountDetails().get(0).getCustomerSpouseBankAccountDetails().getId() == 0
-			        && cache.get("customerSpouseBankAccountDetails0") != 0) {
+			if (loaAppFormVO.getCustomerSpouseBankAccountDetails() != null) {
 
-				Iterator<CustomerSpouseBankAccountDetailsVO> itr = loaAppFormVO.getCustomerSpouseBankAccountDetails().iterator();
+				Iterator<CustomerSpouseBankAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerSpouseBankAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
 
-					CustomerSpouseBankAccountDetailsVO customerSpouseBankAccountDetailsVO = itr.next();
-					System.out.println("customerSpouseBankAccountDetailsVO.getAccountSubType()"+ customerSpouseBankAccountDetailsVO.getCustomerSpouseBankAccountDetails().getAccountSubType());
+					CustomerSpouseBankAccountDetailsVO customerSpouseBankAccountDetailsVO = itr
+					        .next();
+					System.out
+					        .println("customerSpouseBankAccountDetailsVO.getAccountSubType()"
+					                + customerSpouseBankAccountDetailsVO
+					                        .getCustomerSpouseBankAccountDetails()
+					                        .getAccountSubType());
 					
-					if(cache.get("customerSpouseBankAccountDetails" + counter + "") != null){
-						loaAppFormVO.getCustomerSpouseBankAccountDetails().get(counter).getCustomerSpouseBankAccountDetails().setId(cache.get("customerSpouseBankAccountDetails"+ counter + ""));
+					
+					if (cache.get("customerSpouseBankAccountDetails" + counter) != null && cache.get("customerSpouseBankAccountDetails" + counter) != 0  && loaAppFormVO.getCustomerSpouseBankAccountDetails().get(counter)
+			                .getCustomerSpouseBankAccountDetails().getId() == 0) {
+					loaAppFormVO
+					        .getCustomerSpouseBankAccountDetails()
+					        .get(counter)
+					        .getCustomerSpouseBankAccountDetails()
+					        .setId(cache.get("customerSpouseBankAccountDetails"
+					                + counter + ""));
 					}
 					counter++;
 				}
 
 			}
 
-			//  Spouse Retirement Account
+			// Customer Spouse Retirement Account
 
-			if (cache.get("customerSpouseRetirementAccountDetails0") != null
-			        && loaAppFormVO.getCustomerSpouseRetirementAccountDetails().get(0).getCustomerSpouseRetirementAccountDetails().getId() == 0
-			        && cache.get("customerSpouseRetirementAccountDetails0") != 0) {
-
-				Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = loaAppFormVO.getCustomerSpouseRetirementAccountDetails().iterator();
+			if (loaAppFormVO.getCustomerSpouseRetirementAccountDetails() != null) {
+				System.out
+		        .println("$$ Inside getCustomerSpouseRetirementAccountDetails");
+				Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerSpouseRetirementAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseRetirementAccountDetailsVO customerSpouseRetirementAccountDetailsVO = itr.next();
-					System.out.println("customerSpouseBankAccountDetailsVO.getAccountSubType()" + customerSpouseRetirementAccountDetailsVO.getCustomerSpouseRetirementAccountDetails().getAccountSubType());
+					CustomerSpouseRetirementAccountDetailsVO customerSpouseRetirementAccountDetailsVO = itr
+					        .next();
 					
-					if(cache.get("customerSpouseRetirementAccountDetails" + counter + "") != null){
-						loaAppFormVO.getCustomerSpouseRetirementAccountDetails().get(counter).getCustomerSpouseRetirementAccountDetails().setId(cache.get("customerSpouseRetirementAccountDetails"+ counter + ""));
-					}
+					 System.out
+				        .println("$$$$getCustomerSpouseRetirementAccountDetails.getAccountSubType()"
+				                + customerSpouseRetirementAccountDetailsVO
+				                        .getCustomerSpouseRetirementAccountDetails()
+				                        .getAccountSubType());
+					 
+					 
+					
+				   if(cache.get("customerSpouseRetirementAccountDetails"+counter) != null && loaAppFormVO.getCustomerSpouseRetirementAccountDetails()
+	                .get(counter).getCustomerSpouseRetirementAccountDetails()
+	                .getId() == 0
+	        && cache.get("customerSpouseRetirementAccountDetails"+counter) != 0	){
+				  
+					loaAppFormVO
+					        .getCustomerSpouseRetirementAccountDetails()
+					        .get(counter)
+					        .getCustomerSpouseRetirementAccountDetails()
+					        .setId(cache
+					                .get("customerSpouseRetirementAccountDetails"
+					                        + counter + ""));
+				   }
 					counter++;
 				}
 			}
 
-			// Spouse Other Account
+			// Customer Spouse Other Account
 
-			if (cache.get("customerSpouseOtherAccountDetails0") != null
-			        && loaAppFormVO.getCustomerSpouseOtherAccountDetails().get(0).getCustomerSpouseOtherAccountDetails().getId() == 0
-			        && cache.get("customerSpouseOtherAccountDetails0") != 0) {
+			if (loaAppFormVO.getCustomerSpouseOtherAccountDetails() != null ) {
+				Iterator<CustomerSpouseOtherAccountDetailsVO> itr = loaAppFormVO
+				        .getCustomerSpouseOtherAccountDetails().iterator();
+				int counter = 0;
 				
-				Iterator<CustomerSpouseOtherAccountDetailsVO> itr = loaAppFormVO.getCustomerSpouseOtherAccountDetails().iterator();
-				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseOtherAccountDetailsVO customerSpouseOtherAccountDetailsVO = itr.next();
-					System.out.println("customerSpouseBankAccountDetailsVO.getAccountSubType()"+ customerSpouseOtherAccountDetailsVO.getCustomerSpouseOtherAccountDetails().getAccountSubType());
-					
-					if(cache.get("customerSpouseOtherAccountDetails" + counter + "") != null){
-						loaAppFormVO.getCustomerSpouseOtherAccountDetails().get(counter).getCustomerSpouseOtherAccountDetails().setId(cache.get("customerSpouseOtherAccountDetails" + counter + ""));
-					}
+					CustomerSpouseOtherAccountDetailsVO customerSpouseOtherAccountDetailsVO = itr
+					        .next();
+					System.out
+					        .println("customerSpouseBankAccountDetailsVO.getAccountSubType()"
+					                + customerSpouseOtherAccountDetailsVO
+					                        .getCustomerSpouseOtherAccountDetails()
+					                        .getAccountSubType());
+					 if(cache.get("customerSpouseOtherAccountDetails"+counter) != null && loaAppFormVO.getCustomerSpouseOtherAccountDetails()
+				                .get(counter).getCustomerSpouseOtherAccountDetails()
+				                .getId() == 0
+				        && cache.get("customerSpouseOtherAccountDetails"+counter) != 0	){
+					loaAppFormVO
+					        .getCustomerSpouseOtherAccountDetails()
+					        .get(counter)
+					        .getCustomerSpouseOtherAccountDetails()
+					        .setId(cache
+					                .get("customerSpouseOtherAccountDetails"
+					                        + counter + ""));
+					 }
 					counter++;
 				}
 
 			}
 
-			System.out.println("cache.get(propertyTypeMasterId)"+ cache.get("propertyTypeMasterId"));
-			if (cache.get("propertyTypeMasterId") != null && loaAppFormVO.getPropertyTypeMaster().getId() == 0 && cache.get("propertyTypeMasterId") != 0) {
-				loaAppFormVO.getPropertyTypeMaster().setId(cache.get("propertyTypeMasterId"));
+			System.out.println("cache.get(propertyTypeMasterId)"
+			        + cache.get("propertyTypeMasterId"));
+			if (cache.get("propertyTypeMasterId") != null
+			        && loaAppFormVO.getPropertyTypeMaster().getId() == 0
+			        && cache.get("propertyTypeMasterId") != 0) {
+				loaAppFormVO.getPropertyTypeMaster().setId(
+				        cache.get("propertyTypeMasterId"));
 			}
 
-			System.out.println("cache.get(governmentQuestionId)" + cache.get("governmentQuestionId"));
+			System.out.println("cache.get(governmentQuestionId)"
+			        + cache.get("governmentQuestionId"));
 			if (cache.get("governmentQuestionId") != null
 			        && loaAppFormVO.getGovernmentquestion().getId() == 0
 			        && cache.get("governmentQuestionId") != 0) {
@@ -348,86 +480,130 @@ public class ApplicationFormRestService {
 				        cache.get("purchaseDetails"));
 			}
 
+			LoanAppForm loanAppForm = loanAppFormService.create(loaAppFormVO);
 
-			LoanAppFormVO loanAppForm = loanAppFormService.create(loaAppFormVO);
-
-
+			
+		
+			
 
 			cache.put("loanAppFormId", loanAppForm.getId());
 			cache.put("userId", loanAppForm.getUser().getId());
-			cache.put("customerId", loanAppForm.getUser().getCustomerDetail().getId());
-			cache.put("propertyTypeMasterId", loanAppForm.getPropertyTypeMaster().getId());
-			
-			System.out.println("cache propertyTypeMasterId"+ loanAppForm.getPropertyTypeMaster().getId());
-			System.out.println("cache refinacne"+ loanAppForm.getRefinancedetails().getId());
-			
-			cache.put("governmentQuestionId", loanAppForm.getGovernmentquestion().getId());
-			cache.put("refinanceDetailsId", loanAppForm.getRefinancedetails().getId());
-			cache.put("purchaseDetails", loanAppForm.getPurchaseDetails().getId());
+			cache.put("customerId", loanAppForm.getUser().getCustomerDetail()
+			        .getId());
+			cache.put("propertyTypeMasterId", loanAppForm
+			        .getPropertyTypeMaster().getId());
+			System.out.println("cache propertyTypeMasterId"
+			        + loanAppForm.getPropertyTypeMaster().getId());
 
-			if (loanAppForm.getCustomerSpouseDetail() != null) {
-				cache.put("customerSpouseDetail", loanAppForm.getCustomerSpouseDetail().getId());
+			System.out.println("cache refinacne"
+			        + loanAppForm.getRefinancedetails().getId());
+			cache.put("governmentQuestionId", loanAppForm
+			        .getGovernmentquestion().getId());
+			cache.put("refinanceDetailsId", loanAppForm.getRefinancedetails()
+			        .getId());
+			cache.put("purchaseDetails", loanAppForm.getPurchaseDetails()
+			        .getId());
 
-				LOG.info("cache.putcustomerSpouseDetail" + loanAppForm.getCustomerSpouseDetail().getId());
+			if (loanAppForm.getCustomerspousedetail() != null) {
+				cache.put("customerSpouseDetail", loanAppForm
+				        .getCustomerspousedetail().getId());
+
+				LOG.info("cache.putcustomerSpouseDetail"
+				        + loanAppForm.getCustomerspousedetail().getId());
 			}
 
 			if (loanAppForm.getCustomerEmploymentIncome() != null) {
 
 				LOG.info("Setting customer emplyment income");
-				Iterator<CustomerEmploymentIncomeVO> itr = loanAppForm.getCustomerEmploymentIncome().iterator();
+				Iterator<CustomerEmploymentIncome> itr = loanAppForm
+				        .getCustomerEmploymentIncome().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerEmploymentIncomeVO customeremploymentincome = itr.next();
-					
-					System.out.println("customeremploymentincome.getEmployedAt()"+ counter + "##"+ customeremploymentincome.getEmployedAt());
-					System.out.println("customeremploymentincomeVO.getCustomerEmploymentIncome().getId()"+ counter+ "##"+ customeremploymentincome.getId());
-					
-					cache.put("customerEmploymentIncome" + counter,customeremploymentincome.getId());
+					CustomerEmploymentIncome customeremploymentincome = itr
+					        .next();
+					System.out
+					        .println("customeremploymentincome.getEmployedAt()"
+					                + counter + "##"
+					                + customeremploymentincome.getEmployedAt());
+					System.out
+					        .println("customeremploymentincomeVO.getCustomerEmploymentIncome().getId()"
+					                + counter
+					                + "##"
+					                + customeremploymentincome.getId());
+					cache.put("customerEmploymentIncome" + counter,
+					        customeremploymentincome.getId());
 					counter++;
 				}
 
 			}
 
 			if (loanAppForm.getCustomerBankAccountDetails() != null) {
-				Iterator<CustomerBankAccountDetailsVO> itr = loanAppForm.getCustomerBankAccountDetails().iterator();
+				Iterator<CustomerBankAccountDetails> itr = loanAppForm
+				        .getCustomerBankAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerBankAccountDetailsVO customerBankAccountDetails = itr.next();
+					CustomerBankAccountDetails customerBankAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerBankAccountDetails.getAccountSubType()"
+					                + customerBankAccountDetails
+					                        .getAccountSubType());
+					//System.out.println("customerBankAccountDetails.getId()"
+					  //      + customerBankAccountDetails.getId());
 					
-					System.out.println("customerBankAccountDetails.getAccountSubType()"+ customerBankAccountDetails.getAccountSubType());
-					System.out.println("customerBankAccountDetails.getId()"+ customerBankAccountDetails.getId());
 					
-					cache.put("customerBankAccountDetails" + counter,customerBankAccountDetails.getId());
+					System.out
+			        .println("customerBankAccountDetails.getId()"
+			                + counter
+			                + "##"
+			                + customerBankAccountDetails.getId());
+					
+					
+					cache.put("customerBankAccountDetails" + counter,
+					        customerBankAccountDetails.getId());
 					counter++;
 				}
 
 			}
+			
+			
 
 			if (loanAppForm.getCustomerRetirementAccountDetails() != null) {
 
-				Iterator<CustomerRetirementAccountDetailsVO> itr = loanAppForm.getCustomerRetirementAccountDetails().iterator();
+				Iterator<CustomerRetirementAccountDetails> itr = loanAppForm
+				        .getCustomerRetirementAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerRetirementAccountDetailsVO customerRetirementAccountDetails = itr.next();
-					
-					System.out.println("customerRetirementAccountDetails.getAccountSubType()" + customerRetirementAccountDetails.getAccountSubType());
-					System.out.println("customerRetirementAccountDetails.getId()" + customerRetirementAccountDetails.getId());
-					
-					cache.put("customerRetirementAccountDetails" + counter,customerRetirementAccountDetails.getId());
+					CustomerRetirementAccountDetails customerRetirementAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerRetirementAccountDetails.getAccountSubType()"
+					                + customerRetirementAccountDetails
+					                        .getAccountSubType());
+					System.out
+					        .println("customerRetirementAccountDetails.getId()"
+					                + customerRetirementAccountDetails.getId());
+					cache.put("customerRetirementAccountDetails" + counter,
+					        customerRetirementAccountDetails.getId());
 					counter++;
 				}
 			}
 
 			if (loanAppForm.getCustomerOtherAccountDetails() != null) {
-				Iterator<CustomerOtherAccountDetailsVO> itr = loanAppForm.getCustomerOtherAccountDetails().iterator();
+				Iterator<CustomerOtherAccountDetails> itr = loanAppForm
+				        .getCustomerOtherAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerOtherAccountDetailsVO customerOtherAccountDetails = itr.next();
-					
-					System.out.println("customerOtherAccountDetails.getAccountSubType()"+ customerOtherAccountDetails.getAccountSubType());
-					System.out.println("customerOtherAccountDetails.getId()"+ customerOtherAccountDetails.getId());
-					
-					cache.put("customerOtherAccountDetails" + counter, customerOtherAccountDetails.getId());
+					CustomerOtherAccountDetails customerOtherAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerOtherAccountDetails.getAccountSubType()"
+					                + customerOtherAccountDetails
+					                        .getAccountSubType());
+					System.out.println("customerOtherAccountDetails.getId()"
+					        + customerOtherAccountDetails.getId());
+					cache.put("customerOtherAccountDetails" + counter,
+					        customerOtherAccountDetails.getId());
 					counter++;
 				}
 			}
@@ -436,30 +612,41 @@ public class ApplicationFormRestService {
 
 			if (loanAppForm.getCustomerSpouseEmploymentIncome() != null) {
 
-				Iterator<CustomerSpouseEmploymentIncomeVO> itr = loanAppForm.getCustomerSpouseEmploymentIncome().iterator();
+				Iterator<CustomerSpouseEmploymentIncome> itr = loanAppForm
+				        .getCustomerSpouseEmploymentIncome().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseEmploymentIncomeVO customerSpouseEmploymentincome = itr.next();
-					
-					System.out.println("customerSpouseEmploymentincome.getEmployedAt()"+ customerSpouseEmploymentincome.getEmployedAt());
-					System.out.println("customerSpouseEmploymentincome.getId("+ customerSpouseEmploymentincome.getId());
-					
-					cache.put("customerSpouseEmploymentIncome" + counter,customerSpouseEmploymentincome.getId());
+					CustomerSpouseEmploymentIncome customerSpouseEmploymentincome = itr
+					        .next();
+					System.out
+					        .println("customerSpouseEmploymentincome.getEmployedAt()"
+					                + customerSpouseEmploymentincome
+					                        .getEmployedAt());
+					System.out.println("customerSpouseEmploymentincome.getId("
+					        + customerSpouseEmploymentincome.getId());
+					cache.put("customerSpouseEmploymentIncome" + counter,
+					        customerSpouseEmploymentincome.getId());
 					counter++;
 				}
 
 			}
 
 			if (loanAppForm.getCustomerSpouseBankAccountDetails() != null) {
-				Iterator<CustomerSpouseBankAccountDetailsVO> itr = loanAppForm.getCustomerSpouseBankAccountDetails().iterator();
+				Iterator<CustomerSpouseBankAccountDetails> itr = loanAppForm
+				        .getCustomerSpouseBankAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseBankAccountDetailsVO customerSpouseBankAccountDetails = itr.next();
-					
-					System.out.println("customerSpouseBankAccountDetails.getAccountSubType()"+ customerSpouseBankAccountDetails.getAccountSubType());
-					System.out.println("customerSpouseBankAccountDetails.getId()"+ customerSpouseBankAccountDetails.getId());
-					
-					cache.put("customerSpouseBankAccountDetails" + counter,customerSpouseBankAccountDetails.getId());
+					CustomerSpouseBankAccountDetails customerSpouseBankAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerSpouseBankAccountDetails.getAccountSubType()"
+					                + customerSpouseBankAccountDetails
+					                        .getAccountSubType());
+					System.out
+					        .println("customerSpouseBankAccountDetails.getId()"
+					                + customerSpouseBankAccountDetails.getId());
+					cache.put("customerSpouseBankAccountDetails" + counter,
+					        customerSpouseBankAccountDetails.getId());
 					counter++;
 				}
 
@@ -467,43 +654,53 @@ public class ApplicationFormRestService {
 
 			if (loanAppForm.getCustomerSpouseRetirementAccountDetails() != null) {
 
-				Iterator<CustomerSpouseRetirementAccountDetailsVO> itr = loanAppForm.getCustomerSpouseRetirementAccountDetails().iterator();
+				Iterator<CustomerSpouseRetirementAccountDetails> itr = loanAppForm
+				        .getCustomerSpouseRetirementAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseRetirementAccountDetailsVO customerSpouseRetirementAccountDetails = itr.next();
-					
-					System.out.println("customerSpouseRetirementAccountDetails.getAccountSubType()"+ customerSpouseRetirementAccountDetails.getAccountSubType());
-					System.out.println("customerSpouseRetirementAccountDetails.getId()"+ customerSpouseRetirementAccountDetails.getId());
-					
-					cache.put("customerSpouseRetirementAccountDetails"+ counter,customerSpouseRetirementAccountDetails.getId());
+					CustomerSpouseRetirementAccountDetails customerSpouseRetirementAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerSpouseRetirementAccountDetails.getAccountSubType()"
+					                + customerSpouseRetirementAccountDetails
+					                        .getAccountSubType());
+					System.out
+					        .println("customerSpouseRetirementAccountDetails.getId()"
+					                + customerSpouseRetirementAccountDetails
+					                        .getId());
+					cache.put("customerSpouseRetirementAccountDetails"
+					        + counter,
+					        customerSpouseRetirementAccountDetails.getId());
 					counter++;
 				}
 			}
 
 			if (loanAppForm.getCustomerSpouseOtherAccountDetails() != null) {
-				Iterator<CustomerSpouseOtherAccountDetailsVO> itr = loanAppForm.getCustomerSpouseOtherAccountDetails().iterator();
+				Iterator<CustomerSpouseOtherAccountDetails> itr = loanAppForm
+				        .getCustomerSpouseOtherAccountDetails().iterator();
 				int counter = 0;
 				while (itr.hasNext()) {
-					CustomerSpouseOtherAccountDetailsVO customerSpouseOtherAccountDetails = itr.next();
-					
-					System.out.println("customerSpouseOtherAccountDetails.getAccountSubType()"+ customerSpouseOtherAccountDetails.getAccountSubType());
-					System.out.println("customerSpouseOtherAccountDetails.getId()"+ customerSpouseOtherAccountDetails.getId());
-					
-					cache.put("customerSpouseOtherAccountDetails" + counter,customerSpouseOtherAccountDetails.getId());
+					CustomerSpouseOtherAccountDetails customerSpouseOtherAccountDetails = itr
+					        .next();
+					System.out
+					        .println("customerSpouseOtherAccountDetails.getAccountSubType()"
+					                + customerSpouseOtherAccountDetails
+					                        .getAccountSubType());
+					System.out
+					        .println("customerSpouseOtherAccountDetails.getId()"
+					                + customerSpouseOtherAccountDetails.getId());
+					cache.put("customerSpouseOtherAccountDetails" + counter,
+					        customerSpouseOtherAccountDetails.getId());
 					counter++;
 				}
 			}
-			//CommonResponseVO responseVO = new CommonResponseVO();
-			
-			
-			//responseVO.setResultObject(loanAppForm);
 
-			return gson.toJson(loanAppForm);
+			return new Gson().toJson(loaAppFormVO);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
 		return null;
 	}
 

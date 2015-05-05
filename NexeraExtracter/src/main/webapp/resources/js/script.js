@@ -109,13 +109,12 @@ function getPriceAdjustmentWrapper1() {
 		"class" : "price-table-cont-wrapper"
 	});
 
-	container.append(getLTVTable());
-
+	container.append(getLTVTable(true));
 	return wrapper.append(header).append(container);
 
 }
 
-function getLTVTable() {
+function getLTVTable(addHighBalArm) {
 	var tableWrapper = $('<div>').attr({
 		"class" : "price-table"
 	});
@@ -129,7 +128,7 @@ function getLTVTable() {
 	});
 	var table1 = getLTVTable1();
 	row1.append(table1);
-	var ltvDescTable = getLTVDescTable();
+	var ltvDescTable = getLTVDescTable(addHighBalArm);
 	row1.append(ltvDescTable);
 
 	var row2 = $('<div>').attr({
@@ -230,7 +229,7 @@ function inverseParanthesis(input){
 	return input;
 }
 
-function getLTVDescTable() {
+function getLTVDescTable(addHighBalArm) {
 
 	var tableArray = [ {
 		"desc" : "LTV>95",
@@ -250,8 +249,18 @@ function getLTVDescTable() {
 	}, {
 		"desc" : "Attached Condo >75 LTV & Term > 15yrs",
 		"value" : "(0.750)"
+	}, {
+		"desc" : "HighBal Cashout Refi",
+		"value" : "1.000"
 	} ];
-
+	if(addHighBalArm){
+		var array = new Object(); 
+		array.desc = "HighBal ARM";
+		array.value = "0.750";
+		
+		tableArray.push(array);
+	}
+	
 	var table = $('<div>').attr({
 		"class" : "ltv-desc-table float-right"
 	});
@@ -581,7 +590,7 @@ function getMammothFixedAdjustersTable1() {
 		"class" : "price-table-header"
 	}).html("FICO / LTV/CLTV Adjustment");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80" ];
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75","75.01-80" ];
 
 	var tableArray = [
 			[ ">=760", "0.500", "0.375", "0.250", "0.000", "(0.375)" ],
@@ -649,8 +658,8 @@ function getMammothARMAdjustersTable1() {
 		"class" : "price-table-header"
 	}).html("FICO / LTV/CLTV Adjustment");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80",
-			"80.01-85", "85.01-89.90" ];
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75",
+			"75.01-80","80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
 			[ ">=760", "0.375", "0.250", "0.125", "0.000", "(0.250)",
@@ -811,11 +820,11 @@ function getCascaseAdjusterTable1() {
 	var row3 = "<tr><th><= 60.00%</th><th>60.01-65.00%</th><th>65.01-70.00%</th><th>70.01-75.00%</th><th>75.01-80.00%</th><th>80.01-85.00%</th></tr>";
 
 	var tableData = [
-			[ ">=760", "0.375", "0.250", "0.000", "-0.125", "-0.250", "0.000" ],
-			[ "740-759", "0.125", "0.000", "-0.125", "-0.375", "-0.500",
-					"-0.250" ],
-			[ "720-739", "0.000", "-0.250", "-0.375", "-0.625", "-0.750", "n/a" ],
-			[ "700-719", "-0.375", "-0.625", "-875", "n/a", "n/a", "n/a" ] ];
+			[ ">=760", "0.375", "0.25", "(0.000)", "(0.125)", "(0.250)", "(0.000)" ],
+			[ "740-759", "0.125", "(0.000)", "(0.125)", "(0.375)", "(0.500)",
+					"(0.250)" ],
+			[ "720-739", "(0.000)", "(0.250)", "(0.375)", "(0.625)", "(0.750)", "(n/a)" ],
+			[ "700-719", "(0.375)", "(0.625)", "(0.875)", "(n/a)", "(n/a)", "(n/a)" ] ];
 
 	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
 	
@@ -836,14 +845,14 @@ function getCascaseAdjusterTable2() {
 	var row3 = "<tr><th><= 60.00%</th><th>60.01-65.00%</th><th>65.01-70.00%</th><th>70.01-75.00%</th><th>75.01-80.00%</th><th>80.01-85.00%</th></tr>";
 
 	var tableData = [
-			[ "2-Unit Property", "0.000", "-0.250", "n/a", "n/a", "n/a", "n/a" ],
-			[ "Second Home", "0.000", "-0.375", "-0.500", "n/a", "n/a", "n/a" ],
-			[ "Condo", "0.000", "-0.250", "-0.375", "-0.500", "-0.750", "n/a" ],
-			[ "Cash Out", "0.000", "-0.375", "n/a", "n/a", "n/a", "n/a" ] ];
+			[ "2-Unit Property", "0.000", "0.250", "n/a", "n/a", "n/a", "n/a" ],
+			[ "Second Home", "0.000", "0.375", "0.500", "0.625", "n/a", "n/a" ],
+			[ "Condo", "0.000", "0.250", "0.375", "0.500", "0.750", "0.750" ],
+			[ "Cash Out", "0.000", "0.375", "n/a", "n/a", "n/a", "n/a" ] ];
 
-	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
+	//var reverseParenthesisArray = getReverseParenthesisArray(tableData);
 	
-	var dataRows = getCascadeTableDataRows(reverseParenthesisArray);
+	var dataRows = getCascadeTableDataRows(tableData);
 
 	table += row1 + row2 + row3 + dataRows + "</table>"
 
@@ -862,12 +871,12 @@ function getCascaseAdjusterTable3() {
 	var tableData = [
 			[ "< 35.00", "0.000", "0.000", "0.000", "0.000", "0.000", "0.000" ],
 			[ "35.00 - 39.99", "0.000", "0.000", "0.000", "0.000", "0.000",
-					"n/a" ],
-			[ "40.00 - 43.00", "0.000", "0.000", "0.000", "-0.250", "-0.375",
-					"-0.375" ] ];
+			  "0.000" ],
+			[ "40.00 - 43.00", "0.000", "0.000", "0.000", "0.250", "0.375",
+					"0.375" ] ];
 
-	var reverseParenthesisArray = getReverseParenthesisArray(tableData);
-	var dataRows = getCascadeTableDataRows(reverseParenthesisArray);
+	//var reverseParenthesisArray = getReverseParenthesisArray(tableData);
+	var dataRows = getCascadeTableDataRows(tableData);
 
 	table += row1 + row2 + row3 + dataRows + "</table>"
 

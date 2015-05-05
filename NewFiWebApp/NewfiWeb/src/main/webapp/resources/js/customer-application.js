@@ -1843,7 +1843,9 @@ function paintMyIncome() {
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
-        	        	}	
+        	        	}
+    	        		
+    	        			
     	        	}
     	        	
     	        	
