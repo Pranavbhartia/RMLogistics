@@ -4246,18 +4246,18 @@ function getMonthYearTextQuestionContext(contxt) {
 }
 
 
-function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
+function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(!LQBFileId){
     	$.ajax({
     		url:"rest/application/applyloan",
     		type:"POST",
-    		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
+    		data:{"appFormData" : JSON.stringify(appUserDetails)},
     		datatype : "application/json",
     		cache:false,
     		success:function(data){
     			
-    			appUserDetails=data;
+    			//appUserDetails=data;
                 newfi.appUserDetails=JSON.stringify(appUserDetails);
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
@@ -4973,6 +4973,8 @@ function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
+	hideCompleteYourProfile();
+	
 $('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",

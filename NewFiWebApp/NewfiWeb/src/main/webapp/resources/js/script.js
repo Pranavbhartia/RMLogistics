@@ -132,6 +132,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                     if(!appUserDetailsTemp.loan.lqbFileId){
                         paintCustomerApplicationPage();
                     }else{
+                    	hideCompleteYourProfile();
                         $('#center-panel-cont').html("Application already submitted.");
                     }
 	            });

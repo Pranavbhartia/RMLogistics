@@ -1100,7 +1100,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	    	spouseGovernmentQuestions.skipOptionalQuestion=skipOptionalQuestion;	
 	    	
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
+	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5);
 	    	//paintCustomerApplicationPageStep5();
 	    });
 
