@@ -533,16 +533,19 @@ public class UserProfileRest {
 
 	}
 
-	@RequestMapping(value = "/addusersfromcsv", method = RequestMethod.POST, headers = "Accept=*")
+
+    @SuppressWarnings("null")
+    @RequestMapping(value = "/addusersfromcsv", method = RequestMethod.POST, headers = "Accept=*")
 	public @ResponseBody String registerUsersFromCsv(
 	        @RequestParam(value = "file", required = true) MultipartFile multipartFile,
 	        HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("File upload Rest service called");
-		JsonObject result = null;
+		JsonObject result = new JsonObject();
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile file = multipartRequest.getFile("file");
 		try {
 			result = userProfileService.parseCsvAndAddUsers(file);
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

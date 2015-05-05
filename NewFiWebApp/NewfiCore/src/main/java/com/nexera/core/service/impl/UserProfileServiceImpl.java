@@ -901,8 +901,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		for (String stateCode : stateCodesList) {
 			internalUserStateMapping = new InternalUserStateMapping();
-			internalUserStateMapping.setStateLookup(stateLookupDao
-			        .findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
 			internalUserStateMapping.setUser(user);
 			internalUserStateMappingDao.save(internalUserStateMapping);
 		}
@@ -910,6 +909,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
 	        throws IOException, InvalidInputException,
 	        UndeliveredEmailException, NoRecordsFetchedException {
@@ -940,7 +940,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		csvReader.close();
-		errors.add("errors", errorList);
+		if(errorList.size()==0){
+			errors.addProperty("success", "CSV was uploaded successfully");
+		}else{
+			errors.add("errors", errorList);	
+		}
+		
 		return errors;
 	}
 
