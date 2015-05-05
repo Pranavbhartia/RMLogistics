@@ -595,8 +595,9 @@ function getCalculationFunctionForItem(key) {
 					var result = Math.round(.0035 * purchaseValue)
 					return result;
 				} else {
-					var result = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
+					var taxVal = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
 							: "";
+					var result = Math.round(taxVal * 2);
 					return result;
 				}
 			}
@@ -615,7 +616,7 @@ function getCalculationFunctionForItem(key) {
 					return result;
 				} else {
 					var taxVal = getFloatValue(closingCostHolder.propertyTaxesPaid);
-					var result = Math.round(taxVal / 6);
+					var result = Math.round(taxVal * 2);
 					return result;
 				}
 			}
@@ -627,7 +628,14 @@ function getCalculationFunctionForItem(key) {
 					&& getFloatValue(closingCostHolder.valueSet[key]) != 0)
 				return closingCostHolder.valueSet[key];
 			else {
-				return "$0.00";
+				if (closingCostHolder.loanType
+						&& closingCostHolder.loanType == "Purchase") {
+					var insVal = getFloatValue(closingCostHolder.annualHomeownersInsurance);
+					var result = Math.round(insVal * 2);
+					return result;
+				}else{
+					return "$0.00";
+				}
 			}
 		};
 		break;
@@ -724,6 +732,8 @@ function getRowHolderObject(container, value, key) {
 				if (negativeFlag) {
 					getVal = markNegative(getVal);
 				}
+			}else{
+				getVal="$0.00";
 			}
 			return getVal;
 		},
