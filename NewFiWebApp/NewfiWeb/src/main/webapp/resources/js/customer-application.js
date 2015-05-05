@@ -720,7 +720,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     var stateDropDownWrapper = $('<div>').attr({
     	"id" : "state-dropdown-wrapper-property",
-    	"class" : "state-dropdown-wrapper property hide"
+    	"class" : "state-dropdown-wrapper hide"
     });
 
     $('input[name="propState"]').after(stateDropDownWrapper);
