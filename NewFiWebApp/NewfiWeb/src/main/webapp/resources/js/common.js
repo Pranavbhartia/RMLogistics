@@ -875,26 +875,24 @@ function hideCompleteYourProfile(){
 
 
 
-function getCurrentDate(){
-	var d = new Date();
+function getCurrentDate() {
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var hours = d.getHours();
+    var min = d.getMinutes();
 
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-	var hours = d.getHours();
+    var ampm = d.getHours() >= 12 ? 'pm' : 'am';
 
-	var ampm = d.getHours() >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
 
-	hours = hours % 12;
-	  hours = hours ? hours : 12; 
+    min = (min < 10 ? '0' + min : '' + min);
 
-	var time = hours + ":" + d.getMinutes();
+    var time = hours + ":" + min;
 
 
-	var output = 
-	    ((''+month).length<2 ? '0' : '') + month + '/' +
-	    ((''+day).length<2 ? '0' : '') + day + '/' +
-	    d.getFullYear()+'   '+
-	    time +' '+ampm;
+    var output = (('' + month).length < 2 ? '0' : '') + month + '/' + (('' + day).length < 2 ? '0' : '') + day + '/' + d.getFullYear() + '   ' + time + ' ' + ampm;
 
-	return output;
+    return output;
 }
