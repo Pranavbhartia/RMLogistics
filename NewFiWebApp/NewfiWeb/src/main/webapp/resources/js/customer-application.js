@@ -799,12 +799,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
-    
-   
-  
-    
-    
-    
+ 
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){

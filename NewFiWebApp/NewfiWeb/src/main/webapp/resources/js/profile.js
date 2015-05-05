@@ -1435,7 +1435,12 @@ function appendStateDropDownForProperty(elementToApeendTo,states){
 			var stateCode = $(this).html();
 			
 			var stateId = findStateIdForStateCode(stateCode);
-			toggleStateDropDown();
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
 			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 		});
 		
@@ -1549,12 +1554,16 @@ function searchInStateArray(searchTerm){
 
 
 function toggleStateDropDown() {
-	$('#state-dropdown-wrapper').slideToggle("slow",function(){
-		$('#state-dropdown-wrapper').perfectScrollbar({
-			suppressScrollX : true
+
+		$('#state-dropdown-wrapper').slideToggle("slow",function(e){
+			
+			$('#state-dropdown-wrapper').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('#state-dropdown-wrapper').perfectScrollbar('update');		
 		});
-		$('#state-dropdown-wrapper').perfectScrollbar('update');		
-	});
+
+	
 }
 
 function toggleCarrierDropDown() {
