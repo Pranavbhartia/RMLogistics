@@ -926,6 +926,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                 "teaseRate": JSON.stringify(teaserRateData)
             },
             datatype: "application/json",
+            cache:false,
             success: function(data) {
             	
                hideOverlay();
@@ -1046,7 +1047,7 @@ function paintApplyNow(inputCustomerDetails) {
 		return;
         }
 	}
-        var appUserDetails = new Object();
+        var appUserInput = new Object();
         var refinancedetails = new Object();
         var propertyTypeMaster = new Object();
         var purchaseDetails = new Object();
@@ -1058,7 +1059,7 @@ function paintApplyNow(inputCustomerDetails) {
        
         loanType = {};
         loanType.loanTypeCd = inputCustomerDetails.loanType;
-        appUserDetails.loanType = loanType;
+        appUserInput.loanType = loanType;
         
         
         	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
@@ -1068,7 +1069,7 @@ function paintApplyNow(inputCustomerDetails) {
 	        	}
         
         
-        if(appUserDetails.loanType.loanTypeCd === 'REF'){
+        if(appUserInput.loanType.loanTypeCd === 'REF'){
         	
         	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
             refinancedetails.mortgageyearsleft=inputCustomerDetails.yearLeftOnMortgage;
@@ -1088,8 +1089,8 @@ function paintApplyNow(inputCustomerDetails) {
             propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType;
             propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType;
 
-            appUserDetails.refinancedetails = refinancedetails;
-            appUserDetails.propertyTypeMaster = propertyTypeMaster;
+            appUserInput.refinancedetails = refinancedetails;
+            appUserInput.propertyTypeMaster = propertyTypeMaster;
             
         }else{
         	
@@ -1102,17 +1103,17 @@ function paintApplyNow(inputCustomerDetails) {
    		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
    		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
 
-   		 appUserDetails.monthlyRent = inputCustomerDetails.rentPerMonth;
-   		 appUserDetails.purchaseDetails =purchaseDetails;
+   		 appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
+   		 appUserInput.purchaseDetails =purchaseDetails;
          var propertyTypeMaster={};
          propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
          propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
-         appUserDetails.propertyTypeMaster = propertyTypeMaster;
+         appUserInput.propertyTypeMaster = propertyTypeMaster;
         }   
-        appUserDetails.user = user;       
+        appUserInput.user = user;       
        // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        validateUsersBeforeRegistration(appUserDetails);
+        validateUsersBeforeRegistration(appUserInput);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         //saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
@@ -1135,6 +1136,7 @@ function validateUsersBeforeRegistration(registration){
             "registrationDetails": JSON.stringify(registration)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
 
             $('#overlay-loader').hide();
@@ -1161,6 +1163,7 @@ function saveUserAndRedirect(registration) {
             "registrationDetails": JSON.stringify(registration)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
             // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
@@ -1185,6 +1188,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 "appFormData": JSON.stringify(appUserDetails)
             },
             datatype: "application/json",
+            cache:false,
             success: function(data) {
               //  alert('inside appFormData');
                 window.location.href = data;

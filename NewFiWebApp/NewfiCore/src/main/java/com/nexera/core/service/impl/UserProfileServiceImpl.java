@@ -172,7 +172,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		// TODO for update customer details
 		UserVO userVODetails = findUser(userVO.getId());
 		userVO.setUserRole(userVODetails.getUserRole());
-
+		
+		/*if(userVO.getInternalUserStateMappingVOs()!=null){
+			internalUserStateMappingService.saveOrUpdateUserStates(userVO.getInternalUserStateMappingVOs());
+		}
+*/
 		if (userVO.getCustomerDetail() != null) {
 			userVO.getCustomerDetail().setProfileCompletionStatus(
 			        userVODetails.getCustomerDetail()
@@ -1010,6 +1014,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
 				        .getHomeZipCode());
 			}
+
 
 			loanVO = loanService.createLoan(loanVO);
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));

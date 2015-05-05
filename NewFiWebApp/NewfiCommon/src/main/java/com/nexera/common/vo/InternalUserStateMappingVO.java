@@ -47,6 +47,5 @@ public class InternalUserStateMappingVO {
 	public void setLicense(String license) {
 		this.license = license;
 	}
-
 	
 }

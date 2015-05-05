@@ -89,7 +89,7 @@ public class ShopperRegistrationController {
 			        "User exsit Please register with another emailID");
 		}
 
-		return profileUrl + "home.do";
+		return profileUrl + "home.do#myLoan/lock-my-rate";
 	}
 
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)

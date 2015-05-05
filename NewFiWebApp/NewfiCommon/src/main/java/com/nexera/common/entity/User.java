@@ -42,6 +42,7 @@ import com.nexera.common.vo.UserVO;
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private int status;
 	private String emailId;
@@ -82,11 +83,11 @@ public class User implements Serializable, UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -517,7 +518,17 @@ public class User implements Serializable, UserDetails {
 			}
 
 		}
+		
+		/*if (null != userVO.getInternalUserStateMappingVOs() && !userVO.getInternalUserStateMappingVOs().isEmpty()) {
+			
+			List<InternalUserStateMapping> internalUserStateMapping = new ArrayList<InternalUserStateMapping>();
+			for (InternalUserStateMappingVO internalUserStateMappingVO : userVO.getInternalUserStateMappingVOs()) {
+				internalUserStateMapping.add(InternalUserStateMapping.convertFromVOToEntity(internalUserStateMappingVO));
+			}
 
+			userModel.setInternalUserStateMappings(internalUserStateMapping);
+		}
+*/
 		return userModel;
 	}
 

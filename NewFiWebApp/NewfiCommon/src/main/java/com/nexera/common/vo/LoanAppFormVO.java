@@ -512,6 +512,7 @@ public class LoanAppFormVO implements Serializable {
 		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
 	}
 
+	
 	public LoanAppForm convertToEntity() {
 
 		LoanAppForm loanAppForm = new LoanAppForm();
@@ -528,7 +529,7 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setMaritalStatus(this.maritalStatus);
 		loanAppForm.setOwnsOtherProperty(this.ownsOtherProperty);
 		loanAppForm.setIspensionOrRetirement(this.ispensionOrRetirement);
-	
+
 		loanAppForm
 		        .setReceiveAlimonyChildSupport(this.receiveAlimonyChildSupport);
 		loanAppForm.setRentedOtherProperty(this.rentedOtherProperty);
@@ -537,45 +538,51 @@ public class LoanAppFormVO implements Serializable {
 		loanAppForm.setIsselfEmployed(this.isselfEmployed);
 		loanAppForm.setSelfEmployedIncome(this.selfEmployedIncome);
 		loanAppForm.setIsssIncomeOrDisability(this.isssIncomeOrDisability);
-		
-		
+
 		loanAppForm.setSsnProvided(this.ssnProvided);
 		loanAppForm.setCbSsnProvided(this.cbSsnProvided);
 		loanAppForm.setIsCoborrowerPresent(this.isCoborrowerPresent);
 		loanAppForm.setIsSpouseOnLoan(this.isSpouseOnLoan);
 		loanAppForm.setSpouseName(this.spouseName);
 		loanAppForm.setMonthlyRent(this.getMonthlyRent());
-		
+
 		// User Income page : Starts
-		loanAppForm.setMonthlyIncome(Utils.convertToBigDecimal(this.selfEmployedMonthlyIncome));
-		loanAppForm.setSelfEmployedNoYear(Utils.convertToInteger(this.selfEmployedNoYear));
-		loanAppForm.setChildSupportAlimony(Utils.convertToBigDecimal(this.childSupportAlimony));
-		loanAppForm.setSocialSecurityIncome(Utils.convertToBigDecimal(this.socialSecurityIncome));
+		loanAppForm.setMonthlyIncome(Utils
+		        .convertToBigDecimal(this.selfEmployedMonthlyIncome));
+		loanAppForm.setSelfEmployedNoYear(Utils
+		        .convertToInteger(this.selfEmployedNoYear));
+		loanAppForm.setChildSupportAlimony(Utils
+		        .convertToBigDecimal(this.childSupportAlimony));
+		loanAppForm.setSocialSecurityIncome(Utils
+		        .convertToBigDecimal(this.socialSecurityIncome));
 		loanAppForm.setSsDisabilityIncome(this.ssDisabilityIncome);
 		loanAppForm.setMonthlyPension(this.monthlyPension);
-		loanAppForm.setRetirementIncome(Utils.convertToBigDecimal(this.retirementIncome));
+		loanAppForm.setRetirementIncome(Utils
+		        .convertToBigDecimal(this.retirementIncome));
 		// User Income Page : Ends
-		
+
 		// Skip My Assets: Starts
 		loanAppForm.setSkipMyAssets(this.skipMyAssets);
-		
+
 		// Ends
-		
-		loanAppForm.setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
+
+		loanAppForm
+		        .setLoanAppFormCompletionStatus(this.loanAppFormCompletionStatus);
 		loanAppForm.setMonthlyRent(this.monthlyRent);
 
-		if (this.getLoanType() != null) {
-			if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-				        LoanTypeMasterEnum.REF));
-			} else {
-				loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
-				        LoanTypeMasterEnum.PUR));
-			}
-		} else {
-
+		if (this.getLoan().getLoanType() == null) {
+			/*
+			 * if (this.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
+			 * loanAppForm.setLoanTypeMaster(new
+			 * LoanTypeMaster(LoanTypeMasterEnum.REF)); } else {
+			 * loanAppForm.setLoanTypeMaster(new
+			 * LoanTypeMaster(LoanTypeMasterEnum.PUR)); } } else {
+			 */
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
 			        LoanTypeMasterEnum.NONE));
+		} else {
+			loanAppForm.setLoanTypeMaster(this.getLoan().getLoanType().convertToEntity());
+
 		}
 
 		loanAppForm
@@ -646,7 +653,7 @@ public class LoanAppFormVO implements Serializable {
 
 		return loanAppForm;
 	}
-
+	
 	private Loan parseVOtoEntityLoan(LoanVO loanVO) {
 
 		Loan loan = new Loan();
