@@ -295,19 +295,24 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			success:function(data){
 			
 		    if(data!=null){
-				$("#admin-error-wrapper").toggleClass('admin-display');
+			
             var response=JSON.parse(data);
+            
             var errors=response.errors;
-			for(var i=0;i<=errors.length;i++){
+            if(errors==undefined){
+            	showToastMessage(response.success);
+            }else{
+            	$("#admin-error-wrapper").toggleClass('admin-display');
+            	for(var i=0;i<=errors.length;i++){
 					var row=displayErrorMessage(errors[i]);
 					$("#admin-error-container").append(row);
 				}
-			}else{
-				showToastMessage("Uploaded Successfully");
-			}			
+            }
+            	
+		    }	
 			},
 			error:function(e){
-				//alert("error");
+				showErrorToastMessage("Problem while uploading csv.Please try again later");
 			}
 			
 		});
