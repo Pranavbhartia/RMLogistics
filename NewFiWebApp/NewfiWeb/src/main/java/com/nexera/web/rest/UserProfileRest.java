@@ -510,11 +510,10 @@ public class UserProfileRest {
 				userProfileService.updateUser(userVO);
 				response.setResultObject(userVO);
 
-			}else{
+			} else {
 				userProfileService.deleteUser(userVO);
 				response.setResultObject(userVO);
 			}
-			
 
 		} catch (InputValidationException e) {
 			LOG.error("error and message is : " + e.getDebugMessage());
@@ -538,11 +537,12 @@ public class UserProfileRest {
 	        @RequestParam(value = "file", required = true) MultipartFile multipartFile,
 	        HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("File upload Rest service called");
-		JsonObject result = null;
+		JsonObject result = new JsonObject();
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile file = multipartRequest.getFile("file");
 		try {
 			result = userProfileService.parseCsvAndAddUsers(file);
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -588,21 +588,23 @@ public class UserProfileRest {
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
-	
-	
+
 	@RequestMapping(value = "/internaluserstatemapping", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO updateInternalUserStateMapping(String internaluserstatemapping) {
+	public @ResponseBody CommonResponseVO updateInternalUserStateMapping(
+	        String internaluserstatemapping) {
 
 		Gson gson = new Gson();
 		InternalUserStateMappingVO internalUserStateMappingVO = null;
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 
-		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping, InternalUserStateMappingVO.class);
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping,
+		        InternalUserStateMappingVO.class);
 
 		try {
-			internalUserStateMappingVO = userProfileService.updateInternalUserStateMapping(internalUserStateMappingVO);
-			if (null ==internalUserStateMappingVO) {
+			internalUserStateMappingVO = userProfileService
+			        .updateInternalUserStateMapping(internalUserStateMappingVO);
+			if (null == internalUserStateMappingVO) {
 				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
 			}
 			commonResponseVO.setResultObject("success");
@@ -616,20 +618,23 @@ public class UserProfileRest {
 
 		return commonResponseVO;
 	}
-	
+
 	@RequestMapping(value = "/deleteStatelicensemapping", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO deleteInternalUserStateMapping(String internaluserstatemapping) {
+	public @ResponseBody CommonResponseVO deleteInternalUserStateMapping(
+	        String internaluserstatemapping) {
 
 		Gson gson = new Gson();
 		InternalUserStateMappingVO internalUserStateMappingVO = null;
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 
-		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping, InternalUserStateMappingVO.class);
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping,
+		        InternalUserStateMappingVO.class);
 
 		try {
-			internalUserStateMappingVO = userProfileService.deleteInternalUserStateMapping(internalUserStateMappingVO);
-			if (null ==internalUserStateMappingVO) {
+			internalUserStateMappingVO = userProfileService
+			        .deleteInternalUserStateMapping(internalUserStateMappingVO);
+			if (null == internalUserStateMappingVO) {
 				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
 			}
 			commonResponseVO.setResultObject("success");
