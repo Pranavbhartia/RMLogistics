@@ -861,3 +861,38 @@ function hideCompleteYourProfile(){
 	
 	$('#lp-step2').remove();
 }
+
+
+/*function showCurrentDate(d){
+	  function addZero(n){
+	     return n < 10 ? '0' + n : '' + n;
+	  }
+
+	    return addZero(d.getMonth()+1)+"/"+ addZero(d.getDate()) + "/" + d.getFullYear() + " " + 
+	           addZero(d.getHours()) + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getMinutes());
+	}*/
+
+
+
+
+function getCurrentDate() {
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var hours = d.getHours();
+    var min = d.getMinutes();
+
+    var ampm = d.getHours() >= 12 ? 'pm' : 'am';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    min = (min < 10 ? '0' + min : '' + min);
+
+    var time = hours + ":" + min;
+
+
+    var output = (('' + month).length < 2 ? '0' : '') + month + '/' + (('' + day).length < 2 ? '0' : '') + day + '/' + d.getFullYear() + '   ' + time + ' ' + ampm;
+
+    return output;
+}

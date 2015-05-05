@@ -671,7 +671,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         try{
             var loanNumber = lqbData[0].loanNumber;
             loan.lqbFileId=loanNumber;  
-
+            hideCompleteYourProfile();
      //  alert('loan Number'+loanNumber);
             appUserDetails.loan.lqbFileId = loanNumber;
             lockratedata.sLoanNumber=loanNumber;
@@ -1092,7 +1092,7 @@ function getLoanSummaryHeader() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html("Rates as of 1/16/2015 8:13:52 AM");
+    }).html("Rates as of "+getCurrentDate());
     headerCont.append(col1).append(col2);
     return headerCont;
 }
