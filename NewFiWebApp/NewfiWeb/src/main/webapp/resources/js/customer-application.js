@@ -1844,32 +1844,39 @@ function paintMyIncome() {
     	        	
     	        	
     	        }
+    	       /* var isChecked=0;
 if($('.ce-option-checkbox').hasClass('myassets')){
 	if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
 
-    }else{
-  	  
-  	  if($('.ce-option-checkbox').hasClass(' app-option-checked')){
-  		       showErrorToastMessage('Please add an account');
-				var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
+    }else{ 
+    	
+    	var checkboxes=$('.asset-ques-wrapper').find('.app-account-wrapper');
+    	for(var count=0;count<checkboxes.length;count++){
+    		var currentCheckBox=$('.ce-option-checkbox.myassets').next().find('.app-account-wrapper').find('.ce-option-checkbox')[count];
+
+    		if($('.'+currentCheckBox.className).hasClass('app-option-checked')){
+    			isChecked=isChecked+1;
+    		}
+    }
+    	if(isChecked==0){
+    		$('.ce-option-checkbox.myassets').addClass('text-color');
+			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
+			return false; 
+    	}else{
+			 var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
 				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
 				if(!questionOne){
 					return false;
 				}
 				if(!questionTwo){
 					return false;
-				}
-			}else{
-				$('.ce-option-checkbox.myassets').addClass('text-color');
-				showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
-				return false;
-			}
-    }
+				} 
+    	}
 }
     	        	
 
-
-                  
+}
+                  */
     	       
     	      //End of validation
     
