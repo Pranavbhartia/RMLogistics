@@ -60,6 +60,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NeedsListService;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -73,6 +74,8 @@ public class ApplicationFormRestService {
 	
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private NeedsListService needsListService;
 
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
@@ -746,6 +749,10 @@ public class ApplicationFormRestService {
 				}
 				// JSONObject jsonObject = new JSONObject(response);
 				// LOG.info("Response Returned from save Loan Service is"+jsonObject.get("responseCode").toString());
+
+				// Code for automating Needs List creation
+				Integer loanId = loaAppFormVO.getLoan().getId();
+				needsListService.createInitilaNeedsList(loanId);
 
 				if (response != null) {
 					lockRateData = loadLoanRateData(loanNumber);
