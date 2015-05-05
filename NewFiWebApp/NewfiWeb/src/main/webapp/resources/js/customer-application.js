@@ -4980,7 +4980,6 @@ function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
-	hideCompleteYourProfile();
 	
 $('#overlay-loader').show();
 $.ajax({
