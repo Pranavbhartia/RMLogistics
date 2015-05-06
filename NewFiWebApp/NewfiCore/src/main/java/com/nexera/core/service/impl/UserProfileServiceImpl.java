@@ -167,16 +167,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// TODO update user details
 		User user = User.convertFromVOToEntity(userVO);
+		user.setStatus(-1);
 		Integer userVOObj = userProfileDao.updateUser(user);
 
 		// TODO for update customer details
 		UserVO userVODetails = findUser(userVO.getId());
 		userVO.setUserRole(userVODetails.getUserRole());
-		
-		/*if(userVO.getInternalUserStateMappingVOs()!=null){
-			internalUserStateMappingService.saveOrUpdateUserStates(userVO.getInternalUserStateMappingVOs());
-		}
-*/
+
+		/*
+		 * if(userVO.getInternalUserStateMappingVOs()!=null){
+		 * internalUserStateMappingService
+		 * .saveOrUpdateUserStates(userVO.getInternalUserStateMappingVOs()); }
+		 */
 		if (userVO.getCustomerDetail() != null) {
 			userVO.getCustomerDetail().setProfileCompletionStatus(
 			        userVODetails.getCustomerDetail()
@@ -453,7 +455,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public UserVO createNewUserAndSendMail(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException {
+	        throws InvalidInputException, UndeliveredEmailException,
+	        FatalException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
@@ -906,7 +909,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		for (String stateCode : stateCodesList) {
 			internalUserStateMapping = new InternalUserStateMapping();
-			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setStateLookup(stateLookupDao
+			        .findStateLookupByStateCode(stateCode));
 			internalUserStateMapping.setUser(user);
 			internalUserStateMappingDao.save(internalUserStateMapping);
 		}
@@ -945,12 +949,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		csvReader.close();
-		if(errorList.size()==0){
+		if (errorList.size() == 0) {
 			errors.addProperty("success", "CSV was uploaded successfully");
-		}else{
-			errors.add("errors", errorList);	
+		} else {
+			errors.add("errors", errorList);
 		}
-		
+
 		return errors;
 	}
 
@@ -968,6 +972,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
 			userVO.setCustomerDetail(new CustomerDetailVO());
+			userVO.setStatus(1);
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
 			UserVO userVOObj = null;
@@ -991,15 +996,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// TODO: Add LoanTypeMaster dynamically based on option selected
 			LoanTypeMasterVO loanTypeMasterVO = null;
 			if (loaAppFormVO.getLoanType() != null) {
-				if (loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-					
-					loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.REF);
+				if (loaAppFormVO.getLoanType().getLoanTypeCd()
+				        .equalsIgnoreCase("REF")) {
+
+					loanTypeMasterVO = new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.REF);
 					loanTypeMasterVO.setDescription("Refinance");
 					loanTypeMasterVO.setLoanTypeCd("REF");
 					loanVO.setLoanType(loanTypeMasterVO);
 				} else {
-					
-					loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.PUR);
+
+					loanTypeMasterVO = new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.PUR);
 					loanTypeMasterVO.setDescription("Purchase");
 					loanTypeMasterVO.setLoanTypeCd("PUR");
 					loanVO.setLoanType(loanTypeMasterVO);
@@ -1010,6 +1018,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				loanVO.setLoanType(loanTypeMasterVO);
 			}
 
+			// loanVO.setLoanType(loanTypeMasterVO);
 
 
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
@@ -1017,10 +1026,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getHomeZipCode());
 			}
 
-
 			loanVO = loanService.createLoan(loanVO);
+			LOG.info("loan is created ");
+
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
-			
+
+			LOG.info("workflowCoreService is excecuted succefully ");
+
 			userVOObj.setDefaultLoanId(loanVO.getId());
 		
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
@@ -1032,6 +1044,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
+
+			LOG.info("convertion of propertyTypeMasterVO ");
 
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
 				propertyTypeMasterVO.setHomeZipCode(loaAppFormVO
@@ -1053,6 +1067,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
 
+			LOG.info("convertion of refinanceVO ");
 			RefinanceVO refinanceVO = new RefinanceVO();
 			if (loaAppFormVO.getRefinancedetails() != null) {
 				refinanceVO.setRefinanceOption(loaAppFormVO
@@ -1346,15 +1361,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-    public InternalUserStateMappingVO updateInternalUserStateMapping(InternalUserStateMappingVO inputVo) {
-	    
-	    return InternalUserStateMapping.convertFromEntityToVO(userProfileDao.updateInternalUserStateMapping(inputVo));
-    }
+	public InternalUserStateMappingVO updateInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao
+		        .updateInternalUserStateMapping(inputVo));
+	}
 
 	@Override
-    public InternalUserStateMappingVO deleteInternalUserStateMapping(
-            InternalUserStateMappingVO inputVo) {
-	    
-		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao.deleteInternalUserStateMapping(inputVo));
-    }
+	public InternalUserStateMappingVO deleteInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao
+		        .deleteInternalUserStateMapping(inputVo));
+	}
 }
