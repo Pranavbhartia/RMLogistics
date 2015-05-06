@@ -141,14 +141,13 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 					// THIS SHOULD NEVER HAPPEN
 					LOG.error("Trying to fetch a user who does not exist. ", e);
 				}
-				if (UserRolesEnum.CUSTOMER.equalsName(userVo.getUserRole()
-				        .getRoleCd())) {
-					message = message.replace(
-					        CommunicationLogConstants.CUSTOMER,
-					        userVo.getDisplayName());
-
-				}
 				messageUserVOs.add(otherUser);
+			}
+			if (UserRolesEnum.CUSTOMER.equalsName(userVo.getUserRole()
+			        .getRoleCd())) {
+				message = message.replace(CommunicationLogConstants.CUSTOMER,
+				        userVo.getDisplayName());
+
 			}
 
 		}

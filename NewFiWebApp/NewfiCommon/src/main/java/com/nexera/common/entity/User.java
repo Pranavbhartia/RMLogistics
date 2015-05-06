@@ -484,11 +484,9 @@ public class User implements Serializable, UserDetails {
 		// userModel.setEmailId(userVO.getEmailId().split(":")[0]);
 		// }
 		// userModel.setPassword(userVO.getPassword());
-		if (userVO.getStatus() == 0 || userVO.getStatus() == -1) {
+
 			userModel.setStatus(userVO.getStatus());
-		} else {
-			userModel.setStatus(1);
-		}
+
 
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());

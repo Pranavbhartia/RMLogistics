@@ -84,9 +84,16 @@ public class ShopperRegistrationController {
 			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
-		} catch (Exception e) {
+		} 
+		catch (FatalException e) {
+			LOG.error("error while creating user"+e.getStackTrace());
 			throw new FatalException(
-			        "User exsit Please register with another emailID");
+			        "User could not be registered");
+		}
+		catch (Exception e) {
+			LOG.error("error while creating user"+e.getStackTrace());
+			throw new FatalException(
+			        "User could not be registered ");
 		}
 
 		return profileUrl + "home.do#myLoan/lock-my-rate";

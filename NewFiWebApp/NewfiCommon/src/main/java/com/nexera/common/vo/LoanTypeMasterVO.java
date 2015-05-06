@@ -109,12 +109,15 @@ public class LoanTypeMasterVO implements Serializable {
 
 	
 	public LoanTypeMaster convertToEntity(){
+		
 		LoanTypeMaster loanTypeMaster=null;
-		if(this.getLoanTypeCd().equalsIgnoreCase("REF")){
+		if(null!= this.getLoanTypeCd() && this.getLoanTypeCd().equalsIgnoreCase("REF")){
 			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.REF);
 			
-		}else {
+		}else if(null!= this.getLoanTypeCd() && this.getLoanTypeCd().equalsIgnoreCase("PUR")) {
 			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.PUR);
+		}else{
+			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.NONE);
 		}
 		
 		loanTypeMaster.setDescription(this.getDescription());
