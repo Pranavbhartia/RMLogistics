@@ -1594,7 +1594,7 @@ function appendLoanStatusPopup(element,milestoneId) {
 	});
 	
 	var submitBtn = $('<div>').attr({
-		"class" : "popup-save-btn"
+		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
 		var comment=event.data.comment.val();
 		var value=event.data.container.find(".radio-btn-selected").attr("value");
@@ -1630,9 +1630,19 @@ function appendLoanStatusPopup(element,milestoneId) {
 			showToastMessage("Please Select an Option");
 		}
 	});
-	;
 	
-	container.append(radioButtonRow).append(note).append(submitBtn);
+	var cancelBtn = $('<div>').attr({
+		"class" : "popup-save-btn float-right"
+	}).html("Cancel").bind('click',function(event){
+		event.stopPropagation();
+		removeLoanStatusPopup();
+	});
+	var btnContainer = $('<div>').attr({
+        "class": "milestone-qc-btn-container"
+    });
+    btnContainer.append(submitBtn).append(cancelBtn);
+
+	container.append(radioButtonRow).append(note).append(btnContainer);
 	
 	wrapper.append(header).append(container);
 	
@@ -1671,7 +1681,7 @@ function appendQCPopup(element,milestoneId) {
 	});
 	
 	var submitBtn = $('<div>').attr({
-		"class" : "popup-save-btn"
+		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
 		event.stopPropagation();
 		var comment=event.data.comment.val();
@@ -1705,9 +1715,19 @@ function appendQCPopup(element,milestoneId) {
 			showToastMessage("Please Select an Option");
 		}
 	});
-	;
 	
-	container.append(note).append(submitBtn);
+
+	var cancelBtn = $('<div>').attr({
+		"class" : "popup-save-btn float-right"
+	}).html("Cancel").bind('click',function(event){
+		event.stopPropagation();
+		removeQCPopup();
+	});
+	var btnContainer = $('<div>').attr({
+        "class": "milestone-qc-btn-container"
+    });
+    btnContainer.append(submitBtn).append(cancelBtn);
+	container.append(note).append(btnContainer);
 	
 	wrapper.append(header).append(container);
 	wrapper.bind("click",function(e){
@@ -1745,7 +1765,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	});
 	
 	var submitBtn = $('<div>').attr({
-		"class" : "popup-save-btn"
+		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
 		
 		var newFee=event.data.comment.val();
@@ -1775,9 +1795,18 @@ function appendAppFeeEditPopup(element,milestoneId) {
 			showToastMessage("Add a value");
 		}
 	});
-	;
+	var cancelBtn = $('<div>').attr({
+		"class" : "popup-save-btn float-right"
+	}).html("Cancel").bind('click',function(event){
+		event.stopPropagation();
+		removeAppFeeEditPopup();
+	});
+	var btnContainer = $('<div>').attr({
+        "class": "milestone-qc-btn-container"
+    });
+    btnContainer.append(submitBtn).append(cancelBtn);
 	
-	container.append(newFee).append(submitBtn);
+	container.append(newFee).append(btnContainer);
 	
 	wrapper.append(header).append(container);
 	wrapper.bind("click",function(e){
