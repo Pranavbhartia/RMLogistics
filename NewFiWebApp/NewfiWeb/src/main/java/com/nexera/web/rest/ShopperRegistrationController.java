@@ -86,7 +86,7 @@ public class ShopperRegistrationController {
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} 
 		catch (FatalException e) {
-			LOG.error("error while creating user"+e.getStackTrace());
+			LOG.error("error while creating user");
 			throw new FatalException(
 			        "User could not be registered");
 		}

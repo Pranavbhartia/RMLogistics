@@ -998,14 +998,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (loaAppFormVO.getLoanType() != null) {
 				if (loaAppFormVO.getLoanType().getLoanTypeCd()
 				        .equalsIgnoreCase("REF")) {
-
+					LOG.info("In refinanace path........................................");
 					loanTypeMasterVO = new LoanTypeMasterVO(
 					        LoanTypeMasterEnum.REF);
 					loanTypeMasterVO.setDescription("Refinance");
 					loanTypeMasterVO.setLoanTypeCd("REF");
 					loanVO.setLoanType(loanTypeMasterVO);
 				} else {
-
+					LOG.info("In purchase path........................................");
 					loanTypeMasterVO = new LoanTypeMasterVO(
 					        LoanTypeMasterEnum.PUR);
 					loanTypeMasterVO.setDescription("Purchase");
@@ -1013,7 +1013,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 					loanVO.setLoanType(loanTypeMasterVO);
 				}
 			} else {
-				LOG.info("loan type is NONE");
+				LOG.info("loan type is NONE..................................................");
 				loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.NONE);
 				loanVO.setLoanType(loanTypeMasterVO);
 			}
@@ -1026,16 +1026,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 			}
 
 			loanVO = loanService.createLoan(loanVO);
-			LOG.info("loan is created ");
+			LOG.info("loan is created........................................................ ");
 
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 
-			LOG.info("workflowCoreService is excecuted succefully ");
+			LOG.info("workflowCoreService is excecuted succefully.......................................... ");
 
 			userVOObj.setDefaultLoanId(loanVO.getId());
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-
+			LOG.info("loanapp form object created sec..................................................");
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
 			loanAppFormVO.setLoanType(loanTypeMasterVO);
@@ -1044,7 +1044,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
 
-			LOG.info("convertion of propertyTypeMasterVO ");
+			LOG.info("convertion of propertyTypeMasterVO ...........................................");
 
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
 				propertyTypeMasterVO.setHomeZipCode(loaAppFormVO
@@ -1068,7 +1068,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
 
-			LOG.info("convertion of refinanceVO ");
+			LOG.info("convertion of refinanceVO after purchase......................................");
 			RefinanceVO refinanceVO = new RefinanceVO();
 			if (loaAppFormVO.getRefinancedetails() != null) {
 				refinanceVO.setRefinanceOption(loaAppFormVO
@@ -1086,7 +1086,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			}
 
 			loanAppFormVO.setRefinancedetails(refinanceVO);
-
+			LOG.info("after convertion of refinanceVO .............................................. ");
 			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
 			if (loaAppFormVO.getPurchaseDetails() != null) {
 				purchaseDetailsVO.setLivingSituation(loaAppFormVO
@@ -1112,15 +1112,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// loanAppFormVO.setLoanType(new
 			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 			// }
-			LOG.info("loanAppFormService.create(loanAppFormVO)");
+			LOG.info("before calling create.......................................");
 			loanAppFormService.create(loanAppFormVO);
+			LOG.info("after creating a loanAppFormService.create(loanAppFormVO)");
 
 			return userVOObj;
 		} catch (Exception e) {
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
 			LOG.error("error while creating user in shopper registartion  creating user"+e.getStackTrace());
-			throw new FatalException("Error in User registration", e);
+			 e.getCause().printStackTrace();
+			throw new FatalException("Error in User registration");
 		}
 	}
 
