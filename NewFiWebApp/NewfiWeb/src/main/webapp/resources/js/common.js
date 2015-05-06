@@ -723,8 +723,6 @@ function getRowHolderObject(container, value, key) {
 				if (negativeFlag) {
 					getVal = markNegative(getVal);
 				}
-			}else{
-				getVal="$0.00";
 			}
 			return getVal;
 		},
