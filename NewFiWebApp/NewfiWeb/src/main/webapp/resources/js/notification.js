@@ -239,13 +239,17 @@ function getNotificationContext(loanId, userId) {
 			} else {
 				customerName = "";
 			}
+			var alertTime = '';
+
+			if (notification.remindOn)
+				alertTime = ":  <font size='1'>"+getTimeElapsedString(notification.remindOn)+"</font>";
 			$("#" + ob.loanContainerId)
 					.append(
 							'<div class="lp-alert-item-container clearfix" id="LNID'
 									+ notification.id
 									+ ' "><div class="lp-alert-item float-left" onclick="takeToMilestone('
 									+ notification.loanID + ');"">'
-									+ notification.content + customerName
+									+ notification.content + customerName + alertTime
 									+ '</div>' + closebtn + '</div>');
 			if (callback) {
 				callback(ob);
