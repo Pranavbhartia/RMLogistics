@@ -1649,8 +1649,7 @@ function getClosingCostTopConatiner() {
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
         row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
-    var row10Con2 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2).append(row10Con2);
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     return wrapper.append(heading).append(container1).append(container2);
 }
 
@@ -1666,7 +1665,9 @@ function getClosingCostBottomConatiner() {
     var row1Con1 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "$ 699.40","");
     var row2Con1 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "$ 455.00");
     var row3Con1 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "$ 699.40");
-    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
+    var row10Con2 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
+    
+    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1).append(row10Con2);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
