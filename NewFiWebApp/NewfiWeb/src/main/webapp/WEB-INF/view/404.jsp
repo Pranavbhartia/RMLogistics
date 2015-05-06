@@ -25,7 +25,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<!--start-content------>
 			<div class="content">
 			<!-- 	<img src="resources/images/404-error-img.png" title="error"/> -->
-				<p><span><label>O</label>oops.....</span>You seem to have requested a page that doesn't exist.</p>
+				<p><span>OOPS!!!That was not supposed to happen.</span><br/>
+				<span class="label-txt">We apologize for the inconvenience.Click the link below to be redirected to the home page.</span></p>
 				<a href="#">Back To Home</a>
 				<div class="copy-right">
 					<p>&#169 All rights Reserved | <a href="#">Nexera Holdings</a></p>

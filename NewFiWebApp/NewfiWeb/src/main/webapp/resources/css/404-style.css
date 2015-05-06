@@ -156,3 +156,7 @@ body{
 		margin: 18px 0px 22px 0px;
 	}
 }
+
+span.label-txt {
+  font-size: 20px;
+}
