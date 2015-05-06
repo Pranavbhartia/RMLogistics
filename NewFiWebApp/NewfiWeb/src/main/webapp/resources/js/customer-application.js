@@ -5286,7 +5286,7 @@ function createTeaserRateObjectForPurchase(appUserDet){
         ob= {
             "purchaseDetails":{
                 "livingSituation":appUserDet.purchaseDetails.livingSituation,
-                "rentPerMonth":"$5,000",
+                "rentPerMonth":appUserDet.monthlyRent,
                 "isTaxAndInsuranceInLoanAmt":appUserDet.purchaseDetails.isTaxAndInsuranceInLoanAmt,
                 "housePrice":appUserDet.purchaseDetails.housePrice,
                 "loanAmount":appUserDet.purchaseDetails.loanAmount,
@@ -5294,9 +5294,9 @@ function createTeaserRateObjectForPurchase(appUserDet){
             },
             "loanType":appUserDet.loanType.loanTypeCd,
             "livingSituation":appUserDet.purchaseDetails.livingSituation,
-            "rentPerMonth":"$5,000",
+            "rentPerMonth":appUserDet.monthlyRent,
             "homeWorthToday":appUserDet.purchaseDetails.housePrice,
-            "currentMortgageBalance":"$280,000",
+            "currentMortgageBalance":appUserDet.purchaseDetails.loanAmount,
             "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
         };
     }
