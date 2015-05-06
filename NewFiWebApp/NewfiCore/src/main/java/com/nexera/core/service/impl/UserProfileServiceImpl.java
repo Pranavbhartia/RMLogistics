@@ -974,6 +974,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = this.createNewUserAndSendMail(userVO);
+			LOG.info("Email send successful"+userVO.getEmailId());
 			// insert a record in the loan table also
 			loanVO = new LoanVO();
 
@@ -989,7 +990,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LoanTypeMasterVO loanTypeMasterVO = null;
 			if (loaAppFormVO.getLoanType() != null) {
 				if (loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("REF")) {
-					
+					LOG.info("REF Path"+loaAppFormVO.getLoanType());
 					loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.REF);
 					loanTypeMasterVO.setDescription("Refinance");
 					loanTypeMasterVO.setLoanTypeCd("REF");
@@ -1015,9 +1016,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getHomeZipCode());
 			}
 
-
+			LOG.info("Creatign loan");
 			loanVO = loanService.createLoan(loanVO);
+			LOG.info("Done  loan creation"+loanVO.getId());
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+			LOG.info("Done  loan creation");
 			userVOObj.setDefaultLoanId(loanVO.getId());
 			// create a record in the loanAppForm table
 
@@ -1053,6 +1056,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			RefinanceVO refinanceVO = new RefinanceVO();
 			if (loaAppFormVO.getRefinancedetails() != null) {
+				LOG.info("Creating refinance ");
 				refinanceVO.setRefinanceOption(loaAppFormVO
 				        .getRefinancedetails().getRefinanceOption());
 				refinanceVO.setMortgageyearsleft(loaAppFormVO
@@ -1071,6 +1075,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
 			if (loaAppFormVO.getPurchaseDetails() != null) {
+				LOG.info("Creating getPurchaseDetails ");
 				purchaseDetailsVO.setLivingSituation(loaAppFormVO
 				        .getPurchaseDetails().getLivingSituation());
 				purchaseDetailsVO.setHousePrice(loaAppFormVO
@@ -1097,6 +1102,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.info("loanAppFormService.create(loanAppFormVO)");
 			loanAppFormService.create(loanAppFormVO);
 
+			LOG.info("Created Loan app form  ");
 			return userVOObj;
 		} catch (Exception e) {
 			LOG.error("User registration failed. Generating an alert"
