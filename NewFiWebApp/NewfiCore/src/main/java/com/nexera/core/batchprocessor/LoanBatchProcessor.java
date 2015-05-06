@@ -107,32 +107,34 @@ public class LoanBatchProcessor extends QuartzJobBean {
 
 					List<Loan> modifiedLoans = new ArrayList<Loan>();
 					List<Loan> loanList = loanService.getLoansInActiveStatus();
-					for (ModifiedLoanListResponseVO modifiedLoanListResponseVO : modifiedLoanResponseList) {
-						if (modifiedLoanListResponseVO.getValid()) {
-							LOGGER.debug("This loan is still valid in lqb ");
-							for (Loan loan : loanList) {
-								if (loan.getLqbFileId().equalsIgnoreCase(
-								        modifiedLoanListResponseVO
-								                .getLoanName())) {
-									modifiedLoans.add(loan);
+					if (modifiedLoanResponseList != null) {
+						for (ModifiedLoanListResponseVO modifiedLoanListResponseVO : modifiedLoanResponseList) {
+							if (modifiedLoanListResponseVO.getValid()) {
+								LOGGER.debug("This loan is still valid in lqb ");
+								for (Loan loan : loanList) {
+									if (loan.getLqbFileId().equalsIgnoreCase(
+									        modifiedLoanListResponseVO
+									                .getLoanName())) {
+										modifiedLoans.add(loan);
+									}
 								}
 							}
 						}
-					}
-					if (modifiedLoans != null) {
-						for (Loan loan : modifiedLoans) {
-							if (loan.getLqbFileId() != null) {
-								ThreadManager threadManager = applicationContext
-								        .getBean(ThreadManager.class);
-								threadManager
-								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
-								threadManager.setLoan(loan);
-								threadManager
-								        .setExceptionMaster(exceptionMaster);
-								taskExecutor.execute(threadManager);
+						if (modifiedLoans != null) {
+							for (Loan loan : modifiedLoans) {
+								if (loan.getLqbFileId() != null) {
+									ThreadManager threadManager = applicationContext
+									        .getBean(ThreadManager.class);
+									threadManager
+									        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
+									threadManager.setLoan(loan);
+									threadManager
+									        .setExceptionMaster(exceptionMaster);
+									taskExecutor.execute(threadManager);
+								}
 							}
+							taskExecutor.shutdown();
 						}
-						taskExecutor.shutdown();
 					}
 				} finally {
 					LOGGER.debug("Updating the end time for this batch job ");
