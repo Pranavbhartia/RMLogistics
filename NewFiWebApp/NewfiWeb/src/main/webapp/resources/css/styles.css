@@ -152,6 +152,11 @@ input[type="button"]:focus, button:focus {
 .btn-alarm {
 	background: url(../images/alram.png) no-repeat center;
 }
+.milestone-qc-btn-container
+{
+	width: 260px;
+	margin: 0 auto;
+}
 
 .btn-settings {
 	background: url(../images/settings.png) no-repeat center;
