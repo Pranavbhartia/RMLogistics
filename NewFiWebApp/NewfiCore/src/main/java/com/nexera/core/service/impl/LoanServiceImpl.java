@@ -690,11 +690,15 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
+		LOG.info("Saving turn around time for loan");
 		saveAllLoanTurnAroundTimeForLoan(loanId);
+		LOG.info("Saved turn around time");
 		addDefaultLoanTeam(loanVO, loanId);
+
+		LOG.info("Added team");
 		loanDao.updateLoanEmail(loanId,
 		        utils.generateLoanEmail(loanVO.getUser().getUsername()));
-
+		LOG.info("Added Loan Email");
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		loanVO.setId(loanId);
@@ -1865,5 +1869,32 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	@Override
+	public void sendNoproductsAvailableEmail(Integer loanId)
+	        throws InvalidInputException, UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		LoanVO loan = getLoanByID(loanId);
+		if (loan != null) {
+			Template template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+			// We create the substitutions map
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", new String[] { loan.getUser()
+			        .getFirstName() + " " + loan.getUser().getLastName() });
+			recipientVO.setEmailID(loan.getUser().getEmailId());
+			emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+			        .asList(recipientVO)));
+			emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+			emailEntity.setSubject("No Products Available");
+			emailEntity.setTokenMap(substitutions);
+			emailEntity.setTemplateId(template.getValue());
+
+			sendGridEmailService.sendMail(emailEntity);
+		}
 	}
 }

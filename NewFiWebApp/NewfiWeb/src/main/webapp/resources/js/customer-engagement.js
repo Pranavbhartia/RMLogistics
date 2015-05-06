@@ -1117,7 +1117,8 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
          propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
          appUserInput.propertyTypeMaster = propertyTypeMaster;
         }   
-        appUserInput.user = user;       
+        appUserInput.user = user; 
+        console.log(appUserInput);
        // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
         validateUsersBeforeRegistration(appUserInput, teaseRateDataList);
@@ -1202,7 +1203,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 window.location.href = data;
             },
             error: function(erro) {
-                showerrorToastMessage(erro);
+                showErrorToastMessage(erro);
             }
         });
     }
