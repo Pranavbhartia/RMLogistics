@@ -607,7 +607,7 @@ public class UserProfileRest {
 			if (null == internalUserStateMappingVO) {
 				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
 			}
-			commonResponseVO.setResultObject("success");
+			commonResponseVO.setResultObject(internalUserStateMappingVO);
 		} catch (InputValidationException e) {
 			error.setMessage(e.getDebugMessage());
 			commonResponseVO.setError(error);

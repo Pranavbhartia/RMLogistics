@@ -2589,6 +2589,8 @@ function saveInternalUserStatesAndLicense(internalUserStates){
 	        cache:false,
 	        success: function(data) {
 	          
+	        	internalUserStateMappingVO = data.resultObject; 
+	        	
 	        },
 	        error: function() {
 	            alert("error");
