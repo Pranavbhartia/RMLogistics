@@ -690,11 +690,15 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
+		LOG.info ("Saving turn around time for loan");
 		saveAllLoanTurnAroundTimeForLoan(loanId);
+		LOG.info ("Saved turn around time");
 		addDefaultLoanTeam(loanVO, loanId);
+		
+		LOG.info ("Added team");
 		loanDao.updateLoanEmail(loanId,
 		        utils.generateLoanEmail(loanVO.getUser().getUsername()));
-
+		LOG.info ("Added Loan Email");
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
 		loanVO.setId(loanId);
