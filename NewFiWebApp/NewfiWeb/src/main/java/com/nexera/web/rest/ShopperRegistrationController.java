@@ -1,6 +1,8 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
@@ -30,6 +34,7 @@ import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -65,23 +70,30 @@ public class ShopperRegistrationController {
 	        .getLogger(ShopperRegistrationController.class);
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public @ResponseBody String shopperRegistration(String registrationDetails,
+	public @ResponseBody String shopperRegistration(String registrationDetails,String teaseRateData,
 	        HttpServletRequest request, HttpServletResponse response)
 	        throws IOException {
 
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
-			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
-			        LoanAppFormVO.class);
+			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,LoanAppFormVO.class);
+			
+			//ObjectMapper mapper = new ObjectMapper();
+			TypeReference<List<LqbTeaserRateVo>> typeRef = new TypeReference<List<LqbTeaserRateVo>>() {};
+			//List<HashMap<String, String>> teaseRateDatalist = mapper.readValue(teaseRateData, typeRef);
+			List<LqbTeaserRateVo> teaseRateDatalist= gson.fromJson(teaseRateData, typeRef.getType());
+			
+			
 			String emailId = loaAppFormVO.getUser().getEmailId();
 			// LOG.info("calling 1234 "+
 			// loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
 			LOG.info("calling UserName : "
 			        + loaAppFormVO.getUser().getFirstName());
 
-			UserVO user = userProfileService.registerCustomer(loaAppFormVO);
-			// userProfileService.crateWorkflowItems(user.getDefaultLoanId());
+			UserVO user = userProfileService.registerCustomer(loaAppFormVO,teaseRateDatalist);
+			
+			 userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} 

@@ -163,7 +163,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
                     
-                    } , "We are checking on you awesome rates");
+                    } , "We are checking on your awesome rates");
                    
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
@@ -1583,8 +1583,10 @@ function getClosingCostSummaryContainer(valueSet) {
     }
     if(valueSet){
         closingCostHolder.valueSet=valueSet;
+        closingCostHolder.initValueSet = valueSet;
     }else{
         closingCostHolder.valueSet={};
+        closingCostHolder.initValueSet = valueSet;
     }
     var parentWrapper = $('<div>').attr({
         "class": "closing-cost-wrapper"
