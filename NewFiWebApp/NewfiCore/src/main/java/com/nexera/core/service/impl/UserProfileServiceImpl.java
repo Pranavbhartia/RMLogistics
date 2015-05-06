@@ -505,7 +505,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
-
+		LOG.debug("sendNewUserEmail : sending the email done");
+		
 		userVO.setPassword(newUser.getPassword());
 		// reset this value so that two objects are not created
 		userVO.setCustomerDetail(null);
@@ -979,7 +980,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = this.createNewUserAndSendMail(userVO);
-			// insert a record in the loan table also
+			
+			LOG.info("Successfully exceuted createNewUserAndSendMail");
+			
 			loanVO = new LoanVO();
 
 			loanVO.setUser(userVOObj);
@@ -1017,6 +1020,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// loanVO.setLoanType(loanTypeMasterVO);
 
+
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
 				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
 				        .getHomeZipCode());
@@ -1028,13 +1032,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 
 			LOG.info("workflowCoreService is excecuted succefully ");
-			userVOObj.setDefaultLoanId(loanVO.getId());
-			// create a record in the loanAppForm table
 
+			userVOObj.setDefaultLoanId(loanVO.getId());
+		
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
 
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO.setLoanType(loanTypeMasterVO);
+			
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
@@ -1054,10 +1060,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getPropertyTypeMaster().getPropTaxMonthlyOryearly());
 				propertyTypeMasterVO.setPropInsMonthlyOryearly(loaAppFormVO
 				        .getPropertyTypeMaster().getPropInsMonthlyOryearly());
-				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO
-				        .getPropertyTypeMaster().getPropertyTypeCd());
-				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO
-				        .getPropertyTypeMaster().getResidenceTypeCd());
+				propertyTypeMasterVO.setPropertyTypeCd(loaAppFormVO.getPropertyTypeMaster().getPropertyTypeCd());
+				propertyTypeMasterVO.setResidenceTypeCd(loaAppFormVO.getPropertyTypeMaster().getResidenceTypeCd());
 
 			}
 
@@ -1100,7 +1104,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setPurchaseDetails(purchaseDetailsVO);
 
-			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
+			//loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
