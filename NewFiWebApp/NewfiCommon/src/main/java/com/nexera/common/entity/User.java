@@ -42,8 +42,9 @@ import com.nexera.common.vo.UserVO;
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
+
 	private int id;
-	private Boolean status;
+	private int status;
 	private String emailId;
 	private String firstName;
 	private String lastName;
@@ -82,21 +83,20 @@ public class User implements Serializable, UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	@Column(name = "status", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getStatus() {
+	@Column(name = "status", columnDefinition = "TINYINT")	
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -485,7 +485,8 @@ public class User implements Serializable, UserDetails {
 		// }
 		// userModel.setPassword(userVO.getPassword());
 
-		userModel.setStatus(true);
+			userModel.setStatus(userVO.getStatus());
+
 
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
@@ -515,7 +516,17 @@ public class User implements Serializable, UserDetails {
 			}
 
 		}
+		
+		/*if (null != userVO.getInternalUserStateMappingVOs() && !userVO.getInternalUserStateMappingVOs().isEmpty()) {
+			
+			List<InternalUserStateMapping> internalUserStateMapping = new ArrayList<InternalUserStateMapping>();
+			for (InternalUserStateMappingVO internalUserStateMappingVO : userVO.getInternalUserStateMappingVOs()) {
+				internalUserStateMapping.add(InternalUserStateMapping.convertFromVOToEntity(internalUserStateMappingVO));
+			}
 
+			userModel.setInternalUserStateMappings(internalUserStateMapping);
+		}
+*/
 		return userModel;
 	}
 

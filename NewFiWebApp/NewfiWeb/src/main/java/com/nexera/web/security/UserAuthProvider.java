@@ -48,7 +48,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			        password);
 
 			LOG.debug("Checking if user is not in inactive mode");
-			if (!user.getStatus()) {
+			if (user.getStatus()==0||user.getStatus()==-1) {
 				throw new InvalidInputException("User not active in login",
 				        DisplayMessageConstants.USER_INACTIVE);
 			}

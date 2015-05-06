@@ -295,19 +295,24 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			success:function(data){
 			
 		    if(data!=null){
-				$("#admin-error-wrapper").toggleClass('admin-display');
+			
             var response=JSON.parse(data);
+            
             var errors=response.errors;
-			for(var i=0;i<=errors.length;i++){
+            if(errors==undefined){
+            	showToastMessage(response.success);
+            }else{
+            	$("#admin-error-wrapper").toggleClass('admin-display');
+            	for(var i=0;i<=errors.length;i++){
 					var row=displayErrorMessage(errors[i]);
 					$("#admin-error-container").append(row);
 				}
-			}else{
-				showToastMessage("Uploaded Successfully");
-			}			
+            }
+            	
+		    }	
 			},
 			error:function(e){
-				//alert("error");
+				showErrorToastMessage("Problem while uploading csv.Please try again later");
 			}
 			
 		});
@@ -724,107 +729,116 @@ function getAdminTeamListTableHeader() {
 }
 
 function getAdminTeamListTableRow(user) {
-	var tableRow = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr clearfix",
-		"userid" : user.id
-	});
 
-	var trCol1 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr-col1 float-left"
-	}).html(user.firstName + " " + user.lastName);
+		var tableRow = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr clearfix",
+			"userid" : user.id
+		});
 
-	var trCol2 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr-col2 float-left"
-	});
-	
+		var trCol1 = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr-col1 float-left"
+		}).html(user.firstName + " " + user.lastName);
 
-var userRoleStr;
-	if (user.userRole.id == 3) {
-		var intRoleID = user.internalUserDetail.internalUserRoleMasterVO.id;
-		for (j in newfiObject.internalUserRoleMasters) {
-			var intMaster = newfiObject.internalUserRoleMasters[j];
-			if (intMaster.id == intRoleID)
-				userRoleStr = intMaster.roleDescription;
-		}
-	}else if(user.userRole.id == 2){
-	userRoleStr="Realtor";
-	
-	}else{
-	userRoleStr=user.userRole.label;
-	
-	}
-
-	trCol2.html(userRoleStr);
-
-	var trCol3 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr-col3 float-left"
-	}).html(user.emailId);	
-	
-	var inputActive=$('<div>').attr({
-	"class":"admin-btn-active",
-	"id":"admin-status-active"
-	});
-	var inputInActive=$('<div>').attr({
-	"class":"admin-btn-in-active",
-	"id":"admin-status-inactive"
-	});
-	
-	var trCol4 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr-col4 float-left",
-		"userID":user.id
+		var trCol2 = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr-col2 float-left"
+		});
 		
-	});
-	if(user.userRole.id==3){
-	if(user.internalUserDetail.internalUserRoleMasterVO.id==1){
-	if(user.internalUserDetail.activeInternal==statusActive){
-	console.log("status of user",user.status);
-	trCol4.append(inputActive);
 
-	
-	}else if(user.internalUserDetail.activeInternal==statusInActive){
-	console.log("status of user in",user.status);
-	trCol4.append(inputInActive);
-	}else{
+	var userRoleStr;
+		if (user.userRole.id == 3) {
+			var intRoleID = user.internalUserDetail.internalUserRoleMasterVO.id;
+			for (j in newfiObject.internalUserRoleMasters) {
+				var intMaster = newfiObject.internalUserRoleMasters[j];
+				if (intMaster.id == intRoleID)
+					userRoleStr = intMaster.roleDescription;
+			}
+		}else if(user.userRole.id == 2){
+		userRoleStr="Realtor";
+		
+		}else{
+		userRoleStr=user.userRole.label;
+		
+		}
+
+		trCol2.html(userRoleStr);
+
+		var trCol3 = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr-col3 float-left"
+		}).html(user.emailId);	
+		
+		var inputActive=$('<div>').attr({
+		"class":"admin-btn-active",
+		"id":"admin-status-active"
+		});
+		var inputInActive=$('<div>').attr({
+		"class":"admin-btn-in-active",
+		"id":"admin-status-inactive"
+		});
+		
+		var trCol4 = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr-col4 float-left",
+			"userID":user.id
+			
+		});
+		if(user.userRole.id==3){
+		if(user.internalUserDetail.internalUserRoleMasterVO.id==1){
+		if(user.internalUserDetail.activeInternal==statusActive){
+		console.log("status of user",user.status);
 		trCol4.append(inputActive);
-	}
-	}
-	}
-    inputActive.click(function(){
-     ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},"");
-	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
-	teamMemberRow.empty();
-	teamMemberRow.append(inputInActive);
-	});	
-	inputInActive.click(function(){
-    ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
-			"");
-	var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
-	teamMemberRow.empty();
-	teamMemberRow.append(inputActive);	
-	});
-	
-	var trCol5 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-tr-col5 float-left"
-	});
 
-	var userDelIcn = $('<div>').attr({
-		"class" : "user-del-icn",
-		"userid" : user.id,
-	
-	});
+		
+		}else if(user.internalUserDetail.activeInternal==statusInActive){
+		console.log("status of user in",user.status);
+		trCol4.append(inputInActive);
+		}else{
+			trCol4.append(inputActive);
+		}
+		}
+		}
+	    inputActive.click(function(){
+	     ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},"");
+		var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
+		teamMemberRow.empty();
+		teamMemberRow.append(inputInActive);
+		});	
+		inputInActive.click(function(){
+	    ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
+				"");
+		var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
+		teamMemberRow.empty();
+		teamMemberRow.append(inputActive);	
+		});
+		
+		var trCol5 = $('<div>').attr({
+			"class" : "admin-newfi-team-list-tr-col5 float-left"
+		});
 
-	userDelIcn.click(function() {
-		var userID = $(this).attr("userid");
+		var userDelIcn = $('<div>').attr({
+			"class" : "user-del-icn",
+			"userid" : user.id,
+		
+		});
 
-    RemoveUserFromUserListAdmin("Are you sure you want to delete the user?",userID);
-	});
-	if(user.userRole.id==3){
-		if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
-		trCol5.append(userDelIcn);}
-	}
+		userDelIcn.click(function() {
+			var userID = $(this).attr("userid");
+
+	    RemoveUserFromUserListAdmin("Are you sure you want to delete the user?",userID);
+		});
+		if(user.userRole.id==3){
+			if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
+			trCol5.append(userDelIcn);}
+		}
+		if(user.userRole.id==1){
+			if(user.status==1){
+				trCol5.append(userDelIcn);
+			}
+			
+		}
+		
+		return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
+				.append(trCol5);
+
 	
-	return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
-			.append(trCol5);
 }
 
 function RemoveUserFromUserListAdmin(textMessage,userID){
@@ -855,7 +869,12 @@ function displayResponseData(data){
   // var tableRow = getAdminTeamListTableRow(data.resultObject);  
    var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
    teamMemberRow.remove();
-   showToastMessage("Loan manger deleted successfully");
+   if(data.resultObject.userRole.id==1){
+       showToastMessage("Customer deleted successfully");
+   }else{
+	   showToastMessage("Loan manger deleted successfully");  
+   }
+
   // tableRow.empty(teamMemberRow); 
 	}else{
 		showErrorToastMessage(data.error.message);

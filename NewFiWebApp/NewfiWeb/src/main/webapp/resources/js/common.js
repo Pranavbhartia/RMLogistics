@@ -7,9 +7,13 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
-function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
-		div, completeCallback) {
-	if (isPagination === undefined) {
+
+function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
+	if(showOverlayText){
+		showOverleyMessage(showOverlayText);
+	}
+	
+	if(isPagination===undefined){
 		showOverlay();
 	} else if (isPagination == true) {
 		showPaginationScrollIcon(div);
@@ -30,10 +34,11 @@ function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
 			}
 			successCallBack(response);
 		},
-		complete : function(response) {
 
-			if (completeCallback) {
-				if (isPagination) {
+		complete:function(response){
+		
+			if(completeCallback){
+				if(isPagination){
 					removePaginationScrollIcon(div);
 				} else {
 					hideOverlay();
@@ -46,7 +51,8 @@ function ajaxRequest(url, type, dataType, data, successCallBack, isPagination,
 			adjustCenterPanelWidth();
 			adjustRightPanelOnResize();
 			adjustCustomerApplicationPageOnResize();
-			adjustAgentDashboardOnResize();
+            adjustAgentDashboardOnResize();
+
 		},
 		error : function() {
 			if (isPagination) {
@@ -138,6 +144,16 @@ function showOverlay() {
 		$('#overlay-loader').show();
 	}
 	overlayCount++;
+	
+	
+}
+
+function showOverleyMessage(text){
+	$("#overlay-loader-text").html(text);
+}
+
+function clearOverlayMessage(){
+	$("#overlay-loader-text").empty();
 }
 
 function showPaginationScrollIcon(div) {
@@ -156,10 +172,15 @@ function hideOverlay() {
 	if (overlayCount == 0) {
 		$('#overlay-loader').hide();
 	}
+	
+   
 }
 
-// Function to show toast message
-function showToastMessage(message) {
+
+
+//Function to show toast message
+function showToastMessage(message){
+
 	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
 	if ($('#overlay-toast-error-txt').html() == ""
 			|| $('#overlay-toast-error-txt').html() == null
@@ -174,31 +195,33 @@ function showToastMessage(message) {
 		$('#overlay-toast-txt').html('');
 		$('#overlay-toast-txt').hide();
 	});
-	/*
-	 * $('#overlay-toast').fadeIn("slow",function(){ setTimeout(function(){
-	 * $('#overlay-toast').fadeOut("slow"); },3000); });
-	 */
+
+	/*$('#overlay-toast').fadeIn("slow",function(){
+		setTimeout(function(){
+			$('#overlay-toast').fadeOut("slow");
+		},3000);
+	});*/
 }
 
-// Function to show toast message
-function showErrorToastMessage(message) {
-	$('#overlay-toast-error-txt').html(message).addClass(
-			'overlay-toast-success');
-	if ($('#overlay-toast-txt').html() == ""
-			|| $('#overlay-toast-txt').html() == null
-			|| $('#overlay-toast-txt').html() == undefined) {
-		$('#overlay-toast-error-txt').show();
 
-	} else {
-		$('#overlay-toast-txt').show();
-		$('#overlay-toast-error-txt').show();
+//Function to show toast message
+function showErrorToastMessage(message){
+	$('#overlay-toast-error-txt').html(message).addClass('overlay-toast-success');
+    if($('#overlay-toast-txt').html()==""||$('#overlay-toast-txt').html()==null||$('#overlay-toast-txt').html()==undefined){
+    	$('#overlay-toast-error-txt').show();	
+    	
+    }else{
+    	$('#overlay-toast-txt').show();	
+    	$('#overlay-toast-error-txt').show();
+    	
+    }
 
-	}
+	$('#overlay-toast-error-txt').click(function(e){
 
-	$('#overlay-toast-error-txt').click(function(e) {
 		$('#overlay-toast-error-txt').html('');
 		$('#overlay-toast-error-txt').hide();
 	});
+	
 	/*
 	 * $('#overlay-toast').fadeIn("slow",function(){ setTimeout(function(){
 	 * $('#overlay-toast').fadeOut("slow"); },3000); });
@@ -572,8 +595,9 @@ function getCalculationFunctionForItem(key) {
 					var result = Math.round(.0035 * purchaseValue)
 					return result;
 				} else {
-					var result = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
+					var taxVal = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
 							: "";
+					var result = Math.round(taxVal * 2);
 					return result;
 				}
 			}
@@ -592,7 +616,7 @@ function getCalculationFunctionForItem(key) {
 					return result;
 				} else {
 					var taxVal = getFloatValue(closingCostHolder.propertyTaxesPaid);
-					var result = Math.round(taxVal / 6);
+					var result = Math.round(taxVal * 2);
 					return result;
 				}
 			}
@@ -604,7 +628,14 @@ function getCalculationFunctionForItem(key) {
 					&& getFloatValue(closingCostHolder.valueSet[key]) != 0)
 				return closingCostHolder.valueSet[key];
 			else {
-				return "$0.00";
+				if (closingCostHolder.loanType
+						&& closingCostHolder.loanType == "Purchase") {
+					var insVal = getFloatValue(closingCostHolder.annualHomeownersInsurance);
+					var result = Math.round(insVal * 2);
+					return result;
+				}else{
+					return "$0.00";
+				}
 			}
 		};
 		break;
@@ -662,19 +693,10 @@ function getCalculationFunctionForItem(key) {
 					.getValueForItem());
 			var val2 = getFloatValue(closingCostHolder["totEstThdPtyCst"]
 					.getValueForItem());
-			var int1 = 0;
-			if (closingCostHolder["interest901"]) {
-				int1 = getFloatValue(closingCostHolder["interest901"]
-						.getValueForItem());
-
-			}
-			var haz = 0;
-			if (closingCostHolder["hazIns903"]) {
-				haz = getFloatValue(closingCostHolder["hazIns903"]
-						.getValueForItem());
-			}
-			var totPrep = int1 + haz;
-			var result = val1 + val2 + totPrep;
+			var val3 = getFloatValue(closingCostHolder["totPrepaids"]
+					.getValueForItem());
+			
+			var result = val1 + val2 + val3;
 			return result;
 		};
 		break;
@@ -815,4 +837,51 @@ function checkIfSafari() {
 		return true;
 	}
 	return false;
+}
+
+function userIsCustomer() {
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER") {
+		return true;
+	}
+	return false;
+}
+
+function hideCompleteYourProfile(){
+	
+	$('#lp-step2').remove();
+}
+
+
+/*function showCurrentDate(d){
+	  function addZero(n){
+	     return n < 10 ? '0' + n : '' + n;
+	  }
+
+	    return addZero(d.getMonth()+1)+"/"+ addZero(d.getDate()) + "/" + d.getFullYear() + " " + 
+	           addZero(d.getHours()) + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getMinutes());
+	}*/
+
+
+
+
+function getCurrentDate() {
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var hours = d.getHours();
+    var min = d.getMinutes();
+
+    var ampm = d.getHours() >= 12 ? 'pm' : 'am';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    min = (min < 10 ? '0' + min : '' + min);
+
+    var time = hours + ":" + min;
+
+
+    var output = (('' + month).length < 2 ? '0' : '') + month + '/' + (('' + day).length < 2 ? '0' : '') + day + '/' + d.getFullYear() + '   ' + time + ' ' + ampm;
+
+    return output;
 }

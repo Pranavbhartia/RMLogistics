@@ -890,12 +890,14 @@ function paintRefinanceHomeZipCode() {
         var quesTxt = "What is the zip code of your home?";
         var quesCont = getTextQuestion(quesTxt, paintRefinanceSeeRates, "zipCode");
         $('#ce-refinance-cp').html(quesCont);
-    }
+    }	
     
 
 
 function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccountBtn) {
-        if(!parentContainer){
+        
+	
+	if(!parentContainer){
             parentContainer=$('#ce-refinance-cp');
         }
         if(!teaserRateData){
@@ -915,7 +917,8 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         container.append(quesTextCont);
         $(parentContainer).html(container);
        
-        $('#overlay-loader').show();
+        showOverlay();
+        
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",
@@ -923,9 +926,10 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                 "teaseRate": JSON.stringify(teaserRateData)
             },
             datatype: "application/json",
+            cache:false,
             success: function(data) {
             	
-                $('#overlay-loader').hide();
+               hideOverlay();
                /* if(data==""){
                     $(parentContainer).html("Sorry, We could not find suitable products for you!");
                 }else{*/
@@ -945,7 +949,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             error: function(data) {
                 alert("error inside paintRefinanceSeeRates :" +data);
                 
-                $('#overlay-loader').hide();
+                hideOverlay();
             }
         });
         
@@ -1043,7 +1047,7 @@ function paintApplyNow(inputCustomerDetails) {
 		return;
         }
 	}
-        var appUserDetails = new Object();
+        var appUserInput = new Object();
         var refinancedetails = new Object();
         var propertyTypeMaster = new Object();
         var purchaseDetails = new Object();
@@ -1055,7 +1059,7 @@ function paintApplyNow(inputCustomerDetails) {
        
         loanType = {};
         loanType.loanTypeCd = inputCustomerDetails.loanType;
-        appUserDetails.loanType = loanType;
+        appUserInput.loanType = loanType;
         
         
         	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
@@ -1065,7 +1069,7 @@ function paintApplyNow(inputCustomerDetails) {
 	        	}
         
         
-        if(appUserDetails.loanType.loanTypeCd === 'REF'){
+        if(appUserInput.loanType.loanTypeCd === 'REF'){
         	
         	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
             refinancedetails.mortgageyearsleft=inputCustomerDetails.yearLeftOnMortgage;
@@ -1085,8 +1089,8 @@ function paintApplyNow(inputCustomerDetails) {
             propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType;
             propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType;
 
-            appUserDetails.refinancedetails = refinancedetails;
-            appUserDetails.propertyTypeMaster = propertyTypeMaster;
+            appUserInput.refinancedetails = refinancedetails;
+            appUserInput.propertyTypeMaster = propertyTypeMaster;
             
         }else{
         	
@@ -1099,17 +1103,18 @@ function paintApplyNow(inputCustomerDetails) {
    		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
    		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
 
-   		 appUserDetails.monthlyRent = inputCustomerDetails.rentPerMonth;
-   		 appUserDetails.purchaseDetails =purchaseDetails;
+   		 appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
+   		 appUserInput.purchaseDetails =purchaseDetails;
          var propertyTypeMaster={};
          propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
          propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
-         appUserDetails.propertyTypeMaster = propertyTypeMaster;
+         appUserInput.propertyTypeMaster = propertyTypeMaster;
         }   
-        appUserDetails.user = user;       
+        appUserInput.user = user; 
+        console.log(appUserInput);
        // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        validateUsersBeforeRegistration(appUserDetails);
+        validateUsersBeforeRegistration(appUserInput);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         //saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
@@ -1132,6 +1137,7 @@ function validateUsersBeforeRegistration(registration){
             "registrationDetails": JSON.stringify(registration)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
 
             $('#overlay-loader').hide();
@@ -1158,6 +1164,7 @@ function saveUserAndRedirect(registration) {
             "registrationDetails": JSON.stringify(registration)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
             // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
@@ -1182,12 +1189,13 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 "appFormData": JSON.stringify(appUserDetails)
             },
             datatype: "application/json",
+            cache:false,
             success: function(data) {
               //  alert('inside appFormData');
                 window.location.href = data;
             },
             error: function(erro) {
-                showerrorToastMessage(erro);
+                showErrorToastMessage(erro);
             }
         });
     }
@@ -1633,7 +1641,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     bottomRightCol.append(bottomRcRow);
 
     var hgLow="";
-     if(totalEstMonthlyPayment<monthlyPayment){
+     if(principalInterest<monthlyPayment){
         hgLow='<font color="green"><b>Lower</b></font>';
     }else{
         hgLow='<font color="red"><b>Higher</b></font>';

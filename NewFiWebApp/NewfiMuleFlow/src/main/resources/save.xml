@@ -10,6 +10,8 @@
 		<field id="sSpAddr">propertyStreetAddress</field>
 		<field id="sSpZip">propertyZip</field>		
 		<field id="sApprVal">loanApprovedValue</field>
+		<field id="sSpAcqYr">propertyAcquiredYear</field>
+		<field id="sSpLien">mortageRemaining</field>
 		<field id="sProd3rdPartyUwResultT">1</field>
 		<field id="sProdFilterDue10Yrs">true</field>
 		<field id="sProdFilterDue15Yrs">true</field>
@@ -62,7 +64,35 @@
 			<field id="aBState">applicantState</field>
 			<field id="aBZip">applicantZipCode</field>
 			<field id="aBHPhone">borrowerHomePhone</field>
-			<collection id="aLiaCollection">
+			<field id="aBDecJudgment">borrowerDecJudgment</field>
+			<field id="aBDecBankrupt">borrowerDecBankrupt</field>
+			<field id="aBDecForeclosure">borrowerDecForeclosure</field>
+			<field id="aBDecLawsuit">borrowerDecLawsuit</field>
+			<field id="aBDecObligated">borrowerDecObligated</field>
+			<field id="aBDecDelinquent">borrowerDecDelinquent</field>
+			<field id="aBDecAlimony">borrowerDecAlimony</field>
+			<field id="aBDecBorrowing">borrowerDecBorrowing</field>
+    		<field id="aBDecEndorser">borrowerDecEndorser</field>
+			<field id="aBDecCitizen">borrowerDecCitizen</field>
+			<field id="aBDecResidency">borrowerDecResidency</field>
+			<field id="aBDecOcc">borrowerDecOcc</field>
+			<field id="aBDecPastOwnedPropT">borrowerDecPastOwnedPropT</field>
+			<field id="aBDecPastOwnedPropTitleT">TitleTborrowerDecPastOwnedProperty</field>
+			<field id="aBNoFurnish">borrowerNoFurnish</field>
+			<field id="aBHispanicT">borrowerHispanicT</field>
+			<field id="aBIsAmericanIndian">borrowerIsAmericanIndian</field>
+			<field id="aBIsAsian">borrowerIsAsian</field>
+			<field id="aBIsBlack">borrowerIsBlack</field>
+			<field id="aBIsPacificIslander">borrowerIsPacificIslander</field>
+			<field id="aBIsWhite">borrowerIsWhite</field>
+			<field id="aBGender">borrowerGender</field>
+			<field id="aBAddrYrs">borrowerAddrYrs</field>
+			<field id="abprimaryemplrnm">borrowerEmplrNm</field>
+				<field id="abprimaryempltstartd">borrowerEmplrStartDate</field>
+				<field id="abprimaryjobtitle">borrowerEmplrJobTitle</field>
+				
+		
+	  	<collection id="aLiaCollection">
 				<record>
 					<field id="DebtT">1</field>
 					<field id="ComNm">Bank Of America</field>

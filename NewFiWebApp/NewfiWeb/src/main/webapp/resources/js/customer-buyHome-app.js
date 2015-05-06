@@ -208,7 +208,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         value: appUserDetails.user.customerDetail.livingSince
     }];
 
-    if(purchaseDetails["livingSituation"]=="renting"){
+    if(appUserDetails.purchaseDetails["livingSituation"]=="renting"){
     	var rentPerMonth ={
     	        type: "desc",
     	        text: "How much do you pay each month for rent?",

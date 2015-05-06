@@ -198,42 +198,10 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			LOG.info("Before saveOrUpdate(loanAppForm.getUser().getCustomerDetail().getCustomerEmploymentIncome()"
 			                + loanAppForm.getCustomerEmploymentIncome());
 
-			/*
-			 * CustomerEmploymentIncome customeremploymentIncome = new
-			 * CustomerEmploymentIncome();
-			 * 
-			 * customeremploymentIncome.setEmployedAt("Infosys1");
-			 * customeremploymentIncome.setEmployedIncomePreTax("100000");
-			 * customeremploymentIncome.setEmployedSince("2007");
-			 * customeremploymentIncome.setLoanAppForms(loanAppForm);
-			 * 
-			 * loanAppForm.getCustomerEmploymentIncome().add(
-			 * customeremploymentIncome);
-			 * 
-			 * CustomerEmploymentIncome customeremploymentIncome1 = new
-			 * CustomerEmploymentIncome();
-			 * customeremploymentIncome1.setEmployedAt("Wipro1");
-			 * customeremploymentIncome1.setEmployedIncomePreTax("200000");
-			 * customeremploymentIncome1.setEmployedSince("2009");
-			 * customeremploymentIncome1.setLoanAppForms(loanAppForm);
-			 * 
-			 * loanAppForm.getCustomerEmploymentIncome().add(
-			 * customeremploymentIncome1);
-			 * 
-			 * 
-			 * 
-			 * 
-			 * this.save(customeremploymentIncome);
-			 * this.save(customeremploymentIncome1);
-			 */
-
-			// List<CustomerEmploymentIncome> ceiList = new
-			// ArrayList<CustomerEmploymentIncome>();
 			LOG.info("loanAppForm.getCustomerEmploymentIncome().get(0).getEmployedAt()"
 			                + loanAppForm.getCustomerEmploymentIncome().get(0)
 			                        .getEmployedAt());
-			// System.out.println("loanAppForm.getCustomerEmploymentIncome().get(1).getEmployedAt()"+
-			// loanAppForm.getCustomerEmploymentIncome().get(1).getEmployedAt());
+			
 			Iterator<CustomerEmploymentIncome> itr = loanAppForm
 			        .getCustomerEmploymentIncome().iterator();
             int counter = 0 ;
@@ -265,6 +233,111 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			sessionFactory.getCurrentSession().flush();
 		}
 
+		
+		
+		if (null != loanAppForm.getCustomerBankAccountDetails()) {
+			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerBankAccountDetails()"
+			                + loanAppForm.getCustomerBankAccountDetails());
+			Iterator<CustomerBankAccountDetails> itr = loanAppForm
+			        .getCustomerBankAccountDetails().iterator();
+			 int counter = 0 ;
+			while (itr.hasNext()) {
+				CustomerBankAccountDetails cei = itr.next();
+				LOG.info("cei.getAccountSubType()"
+				        + cei.getAccountSubType());
+				CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
+				
+				customerBankAccountDetails.setId(cei.getId());
+				customerBankAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerBankAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerBankAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
+				customerBankAccountDetails.setLoanAppForms(loanAppForm);
+				
+				this.saveOrUpdate(customerBankAccountDetails);
+				
+				LOG.info("customerBankAccountDetails id is "+ customerBankAccountDetails.getId());
+				LOG.info("customerBankAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerBankAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerBankAccountDetails().get(counter)
+				        .setId(customerBankAccountDetails.getId());
+				counter++;
+			}
+
+			LOG.info("After saveOrUpdate(loanAppForm.getCustomerBankAccountDetails()"
+			                + loanAppForm.getCustomerBankAccountDetails());
+			sessionFactory.getCurrentSession().flush();
+		}
+		
+		
+		
+		if (null != loanAppForm.getCustomerRetirementAccountDetails()) {
+			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerRetirementAccountDetails()"
+			                + loanAppForm.getCustomerRetirementAccountDetails());
+			Iterator<CustomerRetirementAccountDetails> itr = loanAppForm
+			        .getCustomerRetirementAccountDetails().iterator();
+			 int counter = 0 ;
+			while (itr.hasNext()) {
+				CustomerRetirementAccountDetails cei = itr.next();
+				LOG.info("cei.getAccountSubType()" + cei.getAccountSubType());
+				CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
+				
+				customerRetirementAccountDetails.setId(cei.getId());
+				customerRetirementAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerRetirementAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerRetirementAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
+				customerRetirementAccountDetails.setLoanAppForms(loanAppForm);
+				this.saveOrUpdate(customerRetirementAccountDetails);
+				LOG.info("customerRetirementAccountDetails id is "+ customerRetirementAccountDetails.getId());
+				LOG.info("customerRetirementAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerRetirementAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerRetirementAccountDetails().get(counter)
+				        .setId(customerRetirementAccountDetails.getId());
+				counter++;
+			}
+
+			LOG.info("After saveOrUpdate(loanAppForm.getCustomerRetirementAccountDetails()"
+			                + loanAppForm.getCustomerRetirementAccountDetails());
+			sessionFactory.getCurrentSession().flush();
+		}
+
+		
+		
+		if (null != loanAppForm.getCustomerOtherAccountDetails()) {
+			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"
+			                + loanAppForm.getCustomerOtherAccountDetails());
+			Iterator<CustomerOtherAccountDetails> itr = loanAppForm
+			        .getCustomerOtherAccountDetails().iterator();
+			 int counter = 0 ;
+			while (itr.hasNext()) {
+				CustomerOtherAccountDetails cei = itr.next();
+				LOG.info("cei.getAccountSubType()"+ cei.getAccountSubType());
+				CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
+				
+				customerOtherAccountDetails.setId(cei.getId());
+				customerOtherAccountDetails.setAccountSubType(cei.getAccountSubType());
+				customerOtherAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
+				customerOtherAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
+				customerOtherAccountDetails.setLoanAppForms(loanAppForm);
+				this.saveOrUpdate(customerOtherAccountDetails);
+				LOG.info("customerOtherAccountDetails id is "+ customerOtherAccountDetails.getId());
+				LOG.info("customerOtherAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerOtherAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerOtherAccountDetails().get(counter)
+				        .setId(customerOtherAccountDetails.getId());
+				counter++;
+			}
+
+			LOG.info("After saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"
+			                + loanAppForm.getCustomerOtherAccountDetails());
+			sessionFactory.getCurrentSession().flush();
+		}
+
+		
+		
+		
 		
 		
 		if (null != loanAppForm.getCustomerSpouseEmploymentIncome()) {
@@ -307,86 +380,15 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			sessionFactory.getCurrentSession().flush();
 		}
 
-		if (null != loanAppForm.getCustomerBankAccountDetails()) {
-			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerBankAccountDetails()"
-			                + loanAppForm.getCustomerBankAccountDetails());
-			Iterator<CustomerBankAccountDetails> itr = loanAppForm
-			        .getCustomerBankAccountDetails().iterator();
+		
 
-			while (itr.hasNext()) {
-				CustomerBankAccountDetails cei = itr.next();
-				LOG.info("cei.getAccountSubType()"
-				        + cei.getAccountSubType());
-				CustomerBankAccountDetails customerBankAccountDetails = new CustomerBankAccountDetails();
-				
-				customerBankAccountDetails.setId(cei.getId());
-				customerBankAccountDetails.setAccountSubType(cei.getAccountSubType());
-				customerBankAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
-				customerBankAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
-				customerBankAccountDetails.setLoanAppForms(loanAppForm);
-				
-				this.saveOrUpdate(customerBankAccountDetails);
-			}
-
-			LOG.info("After saveOrUpdate(loanAppForm.getCustomerBankAccountDetails()"
-			                + loanAppForm.getCustomerBankAccountDetails());
-			sessionFactory.getCurrentSession().flush();
-		}
-
-		if (null != loanAppForm.getCustomerRetirementAccountDetails()) {
-			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerRetirementAccountDetails()"
-			                + loanAppForm.getCustomerRetirementAccountDetails());
-			Iterator<CustomerRetirementAccountDetails> itr = loanAppForm
-			        .getCustomerRetirementAccountDetails().iterator();
-
-			while (itr.hasNext()) {
-				CustomerRetirementAccountDetails cei = itr.next();
-				LOG.info("cei.getAccountSubType()" + cei.getAccountSubType());
-				CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
-				
-				customerRetirementAccountDetails.setId(cei.getId());
-				customerRetirementAccountDetails.setAccountSubType(cei.getAccountSubType());
-				customerRetirementAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
-				customerRetirementAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
-				customerRetirementAccountDetails.setLoanAppForms(loanAppForm);
-				this.saveOrUpdate(customerRetirementAccountDetails);
-			}
-
-			LOG.info("After saveOrUpdate(loanAppForm.getCustomerRetirementAccountDetails()"
-			                + loanAppForm.getCustomerRetirementAccountDetails());
-			sessionFactory.getCurrentSession().flush();
-		}
-
-		if (null != loanAppForm.getCustomerOtherAccountDetails()) {
-			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"
-			                + loanAppForm.getCustomerOtherAccountDetails());
-			Iterator<CustomerOtherAccountDetails> itr = loanAppForm
-			        .getCustomerOtherAccountDetails().iterator();
-
-			while (itr.hasNext()) {
-				CustomerOtherAccountDetails cei = itr.next();
-				LOG.info("cei.getAccountSubType()"+ cei.getAccountSubType());
-				CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
-				
-				customerOtherAccountDetails.setId(cei.getId());
-				customerOtherAccountDetails.setAccountSubType(cei.getAccountSubType());
-				customerOtherAccountDetails.setCurrentaccountbalance(cei.getCurrentaccountbalance());
-				customerOtherAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
-				customerOtherAccountDetails.setLoanAppForms(loanAppForm);
-				this.saveOrUpdate(customerOtherAccountDetails);
-			}
-
-			LOG.info("After saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"
-			                + loanAppForm.getCustomerOtherAccountDetails());
-			sessionFactory.getCurrentSession().flush();
-		}
-
+		
 		if (null != loanAppForm.getCustomerSpouseBankAccountDetails()) {
 			LOG.info("Before saveOrUpdate(loanAppForm.getCustomerSpouseBankAccountDetails()"
 			                + loanAppForm.getCustomerSpouseBankAccountDetails());
 			Iterator<CustomerSpouseBankAccountDetails> itr = loanAppForm
 			        .getCustomerSpouseBankAccountDetails().iterator();
-
+			int counter = 0 ;
 			while (itr.hasNext()) {
 				CustomerSpouseBankAccountDetails cei = itr.next();
 				LOG.info("cei.getAccountSubType()"
@@ -399,6 +401,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				customerSpouseBankAccountDetails.setAmountfornewhome(cei.getAmountfornewhome());
 				customerSpouseBankAccountDetails.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customerSpouseBankAccountDetails);
+				LOG.info("customerSpouseBankAccountDetails id is "
+				        + customerSpouseBankAccountDetails.getId());
+				LOG.info("customerSpouseBankAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerSpouseBankAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerSpouseBankAccountDetails().get(counter)
+				        .setId(customerSpouseBankAccountDetails.getId());
+				counter++;
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerSpouseBankAccountDetails()"
@@ -412,7 +422,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			                        .getCustomerSpouseRetirementAccountDetails());
 			Iterator<CustomerSpouseRetirementAccountDetails> itr = loanAppForm
 			        .getCustomerSpouseRetirementAccountDetails().iterator();
-
+			int counter = 0 ;
 			while (itr.hasNext()) {
 				CustomerSpouseRetirementAccountDetails cei = itr.next();
 				LOG.info("cei.getAccountSubType()"
@@ -429,6 +439,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				customerSpouseRetirementAccountDetails
 				        .setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customerSpouseRetirementAccountDetails);
+				LOG.info("customerSpouseRetirementAccountDetails id is "
+				        + customerSpouseRetirementAccountDetails.getId());
+				LOG.info("customerSpouseRetirementAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerSpouseRetirementAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerSpouseRetirementAccountDetails().get(counter)
+				        .setId(customerSpouseRetirementAccountDetails.getId());
+				counter++;
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerSpouseRetirementAccountDetails()"
@@ -443,7 +461,7 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			                        .getCustomerSpouseOtherAccountDetails());
 			Iterator<CustomerSpouseOtherAccountDetails> itr = loanAppForm
 			        .getCustomerSpouseOtherAccountDetails().iterator();
-
+			int counter = 0 ;
 			while (itr.hasNext()) {
 				CustomerSpouseOtherAccountDetails cei = itr.next();
 				LOG.info("cei.getAccountSubType()"
@@ -459,6 +477,14 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getAmountfornewhome());
 				customerSpouseOtherAccountDetails.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customerSpouseOtherAccountDetails);
+				LOG.info("customerSpouseOtherAccountDetails id is "
+				        + customerSpouseOtherAccountDetails.getId());
+				LOG.info("customerSpouseOtherAccountDetails id is "+counter+":::"
+				        + loanAppForm.getCustomerSpouseOtherAccountDetails().get(counter)
+				                .getId());
+				loanAppForm.getCustomerSpouseOtherAccountDetails().get(counter)
+				        .setId(customerSpouseOtherAccountDetails.getId());
+				counter++;
 			}
 
 			LOG.info("After saveOrUpdate(loanAppForm.getCustomerOtherAccountDetails()"

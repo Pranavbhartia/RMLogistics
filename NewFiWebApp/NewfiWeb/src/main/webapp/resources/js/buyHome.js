@@ -361,7 +361,8 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
     // alert(JSON.stringify(refinanceTeaserRate));
     container.append(quesTextCont);
     $(parentContainer).html(container);
-    $('#overlay-loader').show();
+    showOverleyMessage("We are working on it almost there!");
+    showOverlay();
     $.ajax({
         url: "rest/calculator/findteaseratevalue",
         type: "POST",
@@ -369,16 +370,18 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             "teaseRate": JSON.stringify(teaserRateData)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
-            $('#overlay-loader').hide();
+        	hideOverlay();
             // var teaserRate = data;
             // paintteaserRate(data);
             //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
             paintFixYourRatePageCEP(JSON.parse(data), teaserRateData, parentContainer, hideCreateAccountBtn);
+            clearOverlayMessage();
         },
         error: function() {
             alert("error");
-            $('#overlay-loader').hide();
+            hideOverlay();
         }
     });
 }

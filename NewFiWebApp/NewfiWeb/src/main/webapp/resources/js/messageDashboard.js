@@ -256,6 +256,7 @@ function getMessageDashboardWrapper() {
 				formatPhoneNumberToUsFormat(myLoanTeam[i].phoneNumber),
 				myLoanTeam[i].photoImageUrl);
 		assignedAgentWrapper.append(agent);
+		
 
 		createOtherUserobject(myLoanTeam[i].id, myLoanTeam[i].firstName,
 				userRole);
@@ -264,6 +265,7 @@ function getMessageDashboardWrapper() {
 	/* addClass('assigned-agent-unselect'); */
 
 	container.append(assignedAgentWrapper);
+	
 
 	var textContainer = $('<div>').attr({
 		"class" : "message-container"
@@ -518,7 +520,7 @@ function appendReplyContainer(element) {
 	var parentWidth = $(element).parent().width();
 	var parentLeftPadding = $(element).parent().css("padding-left");
 	var replyContainerWrapper = $('<div>').attr({
-		"class" : "reply-cont-wrapper"
+		"class" : "reply-cont-wrapper clearfix"
 	}).css({
 		"padding-left" : parentLeftPadding
 	});
@@ -537,8 +539,7 @@ function appendReplyContainer(element) {
 	
 	
 	var sendButton = $("<div>").attr({
-			"class" : "message-btn ",
-			"style" : "margin-left:760px;",
+			"class" : "message-btn float-right",
 			"onclick" : "findTextArea(this)"
 	}).html("Send Message");
 	

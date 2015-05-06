@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 
 public class LoanTypeMasterVO implements Serializable {
@@ -106,4 +107,22 @@ public class LoanTypeMasterVO implements Serializable {
 	    this.uploadedFiles = uploadedFiles;
     }
 
+	
+	public LoanTypeMaster convertToEntity(){
+		
+		LoanTypeMaster loanTypeMaster=null;
+		if(null!= this.getLoanTypeCd() && this.getLoanTypeCd().equalsIgnoreCase("REF")){
+			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.REF);
+			
+		}else if(null!= this.getLoanTypeCd() && this.getLoanTypeCd().equalsIgnoreCase("PUR")) {
+			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.PUR);
+		}else{
+			loanTypeMaster = new LoanTypeMaster(LoanTypeMasterEnum.NONE);
+		}
+		
+		loanTypeMaster.setDescription(this.getDescription());
+		loanTypeMaster.setLoanTypeCd(this.getLoanTypeCd());
+		
+		return loanTypeMaster;
+	}
 }

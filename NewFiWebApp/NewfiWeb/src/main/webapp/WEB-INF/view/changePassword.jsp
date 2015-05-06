@@ -85,9 +85,10 @@ $('#changePwdForm').submit(function(event){
 	var firstName=currentUser.firstName;
 	var lastName=currentUser.lastName;
 	var isSuccess=validatePassword(password,confirmPassword,firstName,lastName,"email-container");
+	showOverlay();
 	if(isSuccess){
 		$.ajax({
-	        url: "/NewfiWeb/rest/userprofile/password",
+	        url: "rest/userprofile/password",
 	        type: "POST",  
 	        cache:false,
 	        data: {
@@ -95,17 +96,17 @@ $('#changePwdForm').submit(function(event){
 	        },
 	        datatype: "json",
 	        success: function(data) {            
-	            $('#overlay-loader').hide();            
+	        	hideOverlay();          
 	            window.location.href = data;            
 	        },
 	        error: function(data) {           
 	            showErrorToastMessage("error while creating user");
-	            $('#overlay-loader').hide();
+	            hideOverlay();
 	        }
 	    });
 	}
 	
-	
+	hideOverlay();
 	});
 	
 function paintForgetPasswordResponse(data){

@@ -69,6 +69,7 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
@@ -166,12 +167,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// TODO update user details
 		User user = User.convertFromVOToEntity(userVO);
+		user.setStatus(-1);
 		Integer userVOObj = userProfileDao.updateUser(user);
 
 		// TODO for update customer details
 		UserVO userVODetails = findUser(userVO.getId());
 		userVO.setUserRole(userVODetails.getUserRole());
 
+		/*
+		 * if(userVO.getInternalUserStateMappingVOs()!=null){
+		 * internalUserStateMappingService
+		 * .saveOrUpdateUserStates(userVO.getInternalUserStateMappingVOs()); }
+		 */
 		if (userVO.getCustomerDetail() != null) {
 			userVO.getCustomerDetail().setProfileCompletionStatus(
 			        userVODetails.getCustomerDetail()
@@ -448,7 +455,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public UserVO createNewUserAndSendMail(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException {
+	        throws InvalidInputException, UndeliveredEmailException,
+	        FatalException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
@@ -472,7 +480,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		LOG.debug("Done parsing, Setting a new random password");
 		newUser.setPassword(generateRandomPassword());
-		newUser.setStatus(true);
+		newUser.setStatus(1);
 		if (newUser.getInternalUserDetail() != null) {
 			if (newUser.getInternalUserDetail().getInternaUserRoleMaster()
 			        .getId() == 1)
@@ -497,6 +505,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
+		LOG.debug("sendNewUserEmail : sending the email done");
 
 		userVO.setPassword(newUser.getPassword());
 		// reset this value so that two objects are not created
@@ -517,10 +526,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void deleteUser(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
+
 		boolean canUserBeDeleted = loanDao.checkLoanDependency(user);
 		if (canUserBeDeleted) {
 			user.getInternalUserDetail().setActiveInternal(
 			        ActiveInternalEnum.DELETED);
+
 			userProfileDao.updateInternalUserDetail(user);
 
 		} else {
@@ -907,6 +918,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
 	public JsonObject parseCsvAndAddUsers(MultipartFile file)
 	        throws IOException, InvalidInputException,
 	        UndeliveredEmailException, NoRecordsFetchedException {
@@ -937,7 +949,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 
 		csvReader.close();
-		errors.add("errors", errorList);
+		if (errorList.size() == 0) {
+			errors.addProperty("success", "CSV was uploaded successfully");
+		} else {
+			errors.add("errors", errorList);
+		}
+
 		return errors;
 	}
 
@@ -955,6 +972,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setEmailId(userVO.getEmailId().split(":")[0]);
 			userVO.setUserRole(new UserRoleVO(UserRolesEnum.CUSTOMER));
 			userVO.setCustomerDetail(new CustomerDetailVO());
+			userVO.setStatus(1);
 			// String password = userVO.getPassword();
 			// UserVO userVOObj= userProfileService.saveUser(userVO);
 			UserVO userVOObj = null;
@@ -962,7 +980,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = this.createNewUserAndSendMail(userVO);
-			// insert a record in the loan table also
+
+			LOG.info("Successfully exceuted createNewUserAndSendMail");
+
 			loanVO = new LoanVO();
 
 			loanVO.setUser(userVOObj);
@@ -974,32 +994,57 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			// Currently hardcoding to refinance, this has to come from UI
 			// TODO: Add LoanTypeMaster dynamically based on option selected
+			LoanTypeMasterVO loanTypeMasterVO = null;
 			if (loaAppFormVO.getLoanType() != null) {
 				if (loaAppFormVO.getLoanType().getLoanTypeCd()
 				        .equalsIgnoreCase("REF")) {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.REF));
+					LOG.info("In refinanace path........................................");
+					loanTypeMasterVO = new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.REF);
+					loanTypeMasterVO.setDescription("Refinance");
+					loanTypeMasterVO.setLoanTypeCd("REF");
+					loanVO.setLoanType(loanTypeMasterVO);
 				} else {
-					loanVO.setLoanType(new LoanTypeMasterVO(
-					        LoanTypeMasterEnum.PUR));
+					LOG.info("In purchase path........................................");
+					loanTypeMasterVO = new LoanTypeMasterVO(
+					        LoanTypeMasterEnum.PUR);
+					loanTypeMasterVO.setDescription("Purchase");
+					loanTypeMasterVO.setLoanTypeCd("PUR");
+					loanVO.setLoanType(loanTypeMasterVO);
 				}
 			} else {
-				LOG.info("loan type is NONE");
-				loanVO.setLoanType(new LoanTypeMasterVO(LoanTypeMasterEnum.NONE));
+				LOG.info("loan type is NONE..................................................");
+				loanTypeMasterVO = new LoanTypeMasterVO(LoanTypeMasterEnum.NONE);
+				loanVO.setLoanType(loanTypeMasterVO);
+			}
+
+			// loanVO.setLoanType(loanTypeMasterVO);
+
+			if (loaAppFormVO.getPropertyTypeMaster() != null) {
+				loanVO.setUserZipCode(loaAppFormVO.getPropertyTypeMaster()
+				        .getHomeZipCode());
 			}
 
 			loanVO = loanService.createLoan(loanVO);
+			LOG.info("loan is created........................................................ ");
+
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
+
+			LOG.info("workflowCoreService is excecuted succefully.......................................... ");
+
 			userVOObj.setDefaultLoanId(loanVO.getId());
-			// create a record in the loanAppForm table
 
 			LoanAppFormVO loanAppFormVO = new LoanAppFormVO();
-
+			LOG.info("loanapp form object created sec..................................................");
 			loanAppFormVO.setUser(userVOObj);
 			loanAppFormVO.setLoan(loanVO);
+			loanAppFormVO.setLoanType(loanTypeMasterVO);
+
 			loanAppFormVO.setLoanAppFormCompletionStatus(new Float(0.0f));
 
 			PropertyTypeMasterVO propertyTypeMasterVO = new PropertyTypeMasterVO();
+
+			LOG.info("convertion of propertyTypeMasterVO ...........................................");
 
 			if (loaAppFormVO.getPropertyTypeMaster() != null) {
 				propertyTypeMasterVO.setHomeZipCode(loaAppFormVO
@@ -1023,6 +1068,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
 
+			LOG.info("convertion of refinanceVO after purchase......................................");
 			RefinanceVO refinanceVO = new RefinanceVO();
 			if (loaAppFormVO.getRefinancedetails() != null) {
 				refinanceVO.setRefinanceOption(loaAppFormVO
@@ -1040,7 +1086,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			}
 
 			loanAppFormVO.setRefinancedetails(refinanceVO);
-
+			LOG.info("after convertion of refinanceVO .............................................. ");
 			PurchaseDetailsVO purchaseDetailsVO = new PurchaseDetailsVO();
 			if (loaAppFormVO.getPurchaseDetails() != null) {
 				purchaseDetailsVO.setLivingSituation(loaAppFormVO
@@ -1059,21 +1105,24 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			loanAppFormVO.setPurchaseDetails(purchaseDetailsVO);
 
-			loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
+			// loanAppFormVO.setLoanType(loaAppFormVO.getLoanType());
 			loanAppFormVO.setMonthlyRent(loaAppFormVO.getMonthlyRent());
 
 			// if(customerEnagagement.getLoanType().equalsIgnoreCase("REF")){
 			// loanAppFormVO.setLoanType(new
 			// LoanTypeMasterVO(LoanTypeMasterEnum.REF));
 			// }
-			LOG.info("loanAppFormService.create(loanAppFormVO)");
+			LOG.info("before calling create.......................................");
 			loanAppFormService.create(loanAppFormVO);
+			LOG.info("after creating a loanAppFormService.create(loanAppFormVO)");
 
 			return userVOObj;
 		} catch (Exception e) {
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
-			throw new FatalException("Error in User registration", e);
+			LOG.error("error while creating user in shopper registartion  creating user"+e.getStackTrace());
+			 e.getCause().printStackTrace();
+			throw new FatalException("Error in User registration");
 		}
 	}
 
@@ -1306,11 +1355,28 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-	@Transactional(readOnly =true)
+	@Transactional(readOnly = true)
 	public UserVO findByUserName(String userName) throws DatabaseException,
 	        NoRecordsFetchedException {
 		// TODO Auto-generated method stub
 		return User.convertFromEntityToVO(userProfileDao
 		        .getUserByUserName(userName));
+	}
+
+	@Override
+	@Transactional
+	public InternalUserStateMappingVO updateInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao
+		        .updateInternalUserStateMapping(inputVo));
+	}
+
+	@Override
+	public InternalUserStateMappingVO deleteInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao
+		        .deleteInternalUserStateMapping(inputVo));
 	}
 }

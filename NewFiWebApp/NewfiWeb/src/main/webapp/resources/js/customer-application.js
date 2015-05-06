@@ -799,12 +799,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
-    
-   
-  
-    
-    
-    
+ 
     $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
@@ -1475,7 +1470,7 @@ function paintCustomerApplicationPageStep2() {
 		    			var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
 		    			var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
 		    			var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
-		    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('coBorrowerZipCode').val(),message);
+		    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
 		    			
 		    			
     		    	 if(!question){
@@ -1513,21 +1508,21 @@ function paintCustomerApplicationPageStep2() {
 	    		appUserDetails.isSpouseOnLoan = true;
 	    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
 	    		
-	    		appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
-	    		appUserDetails.customerSpouseDetail.spouseLastName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[1].value;
-	    		appUserDetails.customerSpouseDetail.streetAddress=quesContxts[0].childContexts.Yes[0].childContexts.Yes[2].value;
-	    		appUserDetails.customerSpouseDetail.state=quesContxts[0].childContexts.Yes[0].childContexts.Yes[3].value;
-	    		appUserDetails.customerSpouseDetail.city=quesContxts[0].childContexts.Yes[0].childContexts.Yes[4].value;
-	    		appUserDetails.customerSpouseDetail.zip=quesContxts[0].childContexts.Yes[0].childContexts.Yes[5].value;
+	    		appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
+	    		appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
+	    		appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();
+	    		appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
+	    		appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
+	    		appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
 	    	
 	    	}else if(quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.No != undefined){
 	    
-	    	appUserDetails.customerSpouseDetail.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.No[0].value  ;
-	    	appUserDetails.customerSpouseDetail.spouseLastName = quesContxts[0].childContexts.Yes[0].childContexts.No[1].value;
-    		appUserDetails.customerSpouseDetail.streetAddress=quesContxts[0].childContexts.Yes[0].childContexts.No[2].value;
-    		appUserDetails.customerSpouseDetail.state=quesContxts[0].childContexts.Yes[0].childContexts.No[3].value;
-    		appUserDetails.customerSpouseDetail.city=quesContxts[0].childContexts.Yes[0].childContexts.No[4].value;
-    		appUserDetails.customerSpouseDetail.zip=quesContxts[0].childContexts.Yes[0].childContexts.No[5].value;
+	    		appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
+	    		appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
+	    		appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();
+	    		appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
+	    		appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
+	    		appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
 	    	
 	    	}
 	    	else{
@@ -1804,7 +1799,8 @@ function incomesSelectALLThatApply() {
 }
  
 function paintMyIncome() {
-    
+	
+	//appUserDetails = newfi.appUserDetails;
     appProgressBaar(4);
     $('#app-right-panel').html('');
     var incomesSelectALLThatApplyDiv = incomesSelectALLThatApply();
@@ -1823,21 +1819,65 @@ function paintMyIncome() {
     }).html("Save & continue").on('click', function(event) {
     
     	        var isStatus=[];
+    	        
+    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+    	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
+    	    		var status=validateInputOfChecked(isStatus[0]);
+    	        	if(status==false){
+    	        		return false;
+    	        	}
+    	    	}else{
+    	    		showErrorToastMessage("W2 Employment Details are Mandatory");
+    	    		return isStatus;
+    	    	}
+
     	      	 isStatus  = validateCheckbox(isStatus);
-    	   
-    	  
-    	        if(isStatus==null||isStatus==""){	
-    	      	  showErrorToastMessage(selectQuestionErrorMessage);
-    	      	  return false;
-    	        }else{
-    	        	for(var i=0;i<isStatus.length;i++){
+    	        if(isStatus!=null||isStatus!=""){	
+    	      	 
+    	        	for(var i=1;i<isStatus.length;i++){
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
-        	        	}	
+        	        	}
+    	        		
+    	        			
     	        	}
     	        	
+    	        	
     	        }
+    	       /* var isChecked=0;
+if($('.ce-option-checkbox').hasClass('myassets')){
+	if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
+
+    }else{ 
+    	
+    	var checkboxes=$('.asset-ques-wrapper').find('.app-account-wrapper');
+    	for(var count=0;count<checkboxes.length;count++){
+    		var currentCheckBox=$('.ce-option-checkbox.myassets').next().find('.app-account-wrapper').find('.ce-option-checkbox')[count];
+
+    		if($('.'+currentCheckBox.className).hasClass('app-option-checked')){
+    			isChecked=isChecked+1;
+    		}
+    }
+    	if(isChecked==0){
+    		$('.ce-option-checkbox.myassets').addClass('text-color');
+			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
+			return false; 
+    	}else{
+			 var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
+				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
+				if(!questionOne){
+					return false;
+				}
+				if(!questionTwo){
+					return false;
+				} 
+    	}
+}
+    	        	
+
+}
+                  */
     	       
     	      //End of validation
     
@@ -1869,10 +1909,12 @@ function paintMyIncome() {
 	
 	            customerEmploymentIncome.push(termp);
 	        });
+        	
+        	appUserDetails.customerEmploymentIncome = customerEmploymentIncome;
         }
        
      
-        appUserDetails.customerEmploymentIncome = customerEmploymentIncome;
+        
        
     	
         selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
@@ -1946,9 +1988,9 @@ function paintMyIncome() {
        	    appUserDetails.propertyTypeMaster.newHomeBudgetFromsale=investmentInHome;
             
             
-            appUserDetails.customerBankAccountDetails = [];
-            appUserDetails.customerOtherAccountDetails = [];
-            appUserDetails.customerRetirementAccountDetails = [];
+           // appUserDetails.customerBankAccountDetails = [];
+           // appUserDetails.customerOtherAccountDetails = [];
+           // appUserDetails.customerRetirementAccountDetails = [];
           
             
             appUserDetails.skipMyAssets = $('.myassets').hasClass("app-option-checked");
@@ -1959,22 +2001,22 @@ function paintMyIncome() {
             var retirementContainer=assets[1];
             var otherContainer=assets[2];
             
-            if($(bankContainer).find('.app-option-checked')){
+            if($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')){
             	appUserDetails.customerBankAccountDetails=getAccountValues(bankContainer,"customerBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
             }
-    		if($(retirementContainer).find('.app-option-checked')){
+    		if($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')){
     			appUserDetails.customerRetirementAccountDetails=getAccountValues(retirementContainer,"customerRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
     	    }
-    		if($(otherContainer).find('.app-option-checked')){
+    		if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
     			appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
     		}
     		
         }
                 
         if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
-            saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome());
+            saveAndUpdateLoanAppForm(appUserDetails, paintMySpouseIncome);
         } else {
-            saveAndUpdateLoanAppForm(appUserDetails, paintCustomerApplicationPageStep4a());
+            saveAndUpdateLoanAppForm(appUserDetails, paintCustomerApplicationPageStep4a);
         }
             
     });
@@ -3059,7 +3101,7 @@ function paintCustomerApplicationPageStep4a() {
     	 
     	 //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
     	// //alert(JSON.stringify(appUserDetails));
-    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b());
+    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4b);
     	
     	//paintCustomerApplicationPageStep4b();
     });
@@ -3116,7 +3158,7 @@ function paintCustomerApplicationPageStep4a() {
             value: "americanIndian"
         }, {
             text: "Native Hawaiian or Pacific Islander",
-            value: "nativeHawaiian "
+            value: "nativeHawaiian"
         }, {
             text: "Black or African American",
             value: "black"
@@ -3151,7 +3193,7 @@ function paintCustomerApplicationPageStep4a() {
 	        "class": "app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
-           dateOfBirth = $('input[name="birthday"]').val();
+            //dateOfBirth = $('input[name="birthday"]').val();
 	    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
 	    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
 	    	sex =  $('.app-options-cont[name="sex"]').find('.app-option-selected').data().value;
@@ -3161,25 +3203,28 @@ function paintCustomerApplicationPageStep4a() {
 	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 	    		
 	    	}else{
-	    		if(dateOfBirth==undefined && ethnicity==undefined && race==undefined && sex==undefined){
+	    		if(ethnicity==undefined && race==undefined && sex==undefined){
 		    		showErrorToastMessage(yesyNoErrorMessage);
 		    		return false;
 		    	} 
 	    		
 	    	}
-	    	governmentquestion.ethnicity = ethnicity;
-	    	governmentquestion.race = race;
-	    	governmentquestion.sex =sex;
-	    	governmentquestion.skipOptionalQuestion=skipOptionalQuestion;
+	    	//govQues =appUserDetails.governmentquestion;
 	    	
+	    	appUserDetails.governmentquestion.ethnicity = ethnicity;
+	    	appUserDetails.governmentquestion.race = race;
+	    	appUserDetails.governmentquestion.sex =sex;
+	    	appUserDetails.governmentquestion.skipOptionalQuestion=skipOptionalQuestion;
+	    	
+	    	//appUserDetails.governmentquestion = govQues; 
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	
 	    	
 	    	if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true)
 				{
-				saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4a(appUserDetails.customerSpouseDetail.spouseName));
+				saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4a);
 				}else{
-				 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5());
+				 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5);
 				}
 	    	
 	    	//paintCustomerApplicationPageStep5();
@@ -3269,7 +3314,7 @@ function goverementOptionalQues() {
             value: "americanIndian"
         }, {
             text: "Native Hawaiian or Pacific Islander",
-            value: "nativeHawaiian "
+            value: "nativeHawaiian"
         }, {
             text: "Black or African American",
             value: "black"
@@ -3964,6 +4009,7 @@ function saveUserAndLockRate(appUserDetails) {
             "teaseRate": JSON.stringify(teaserrate)
         },
         datatype: "application/json",
+        cache:false,
         success: function(data) {
             $('#overlay-loader').hide();
             //TO:DO pass the data (json)which is coming from the controller
@@ -4215,9 +4261,10 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
     		type:"POST",
     		data:{"appFormData" : JSON.stringify(appUserDetails)},
     		datatype : "application/json",
+    		cache:false,
     		success:function(data){
     			
-    			appUserDetails=data;
+    			//appUserDetails=data;
                 newfi.appUserDetails=JSON.stringify(appUserDetails);
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
@@ -4235,7 +4282,7 @@ function saveAndUpdateLoanAppForm(appUserDetails,callBack){
 
 
 
-function showLoanAppFormContainer(formCompletionStatus){
+/*function showLoanAppFormContainer(formCompletionStatus){
 	
 	switch (formCompletionStatus) {
     case 0:
@@ -4271,15 +4318,15 @@ function showLoanAppFormContainer(formCompletionStatus){
     	
 
 	}
-}
+}*/
 
 
 ///////////////////////NEW CODE ADDED ////////////////////////////
 
 
 function paintSelectLoanTypeQuestion() {
-    	appUserDetails = {};
-		appUserDetails = JSON.parse(newfi.appUserDetails);
+    	//appUserDetails = {};
+		//appUserDetails = JSON.parse(newfi.appUserDetails);
 	
 	appProgressBaar(1);
 	console.log("Inside paintSelectLoanTypeQuestion ");
@@ -4469,7 +4516,8 @@ var questions = [
 			 appUserDetails.refinancedetails = refinancedetails;
 			var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),refinancedetails.currentMortgageBalance ,message);
 			if(isSuccess){
-				paintRefinanceStep3();
+				 saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceStep3);
+				
 			}else{
 				return false;
 			}
@@ -4932,12 +4980,14 @@ function createLoan(appUserDetails)
 {
 ////alert('inside create loan method');
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
+	
 $('#overlay-loader').show();
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
 		data:{"appFormData" : JSON.stringify(appUserDetails)},
 		datatype : "application/json",
+		cache:false,
 		success:function(data){
 		
            // alert('createLoan data is '+data)
@@ -5152,12 +5202,12 @@ function mapDbDataForFrontend(key){
             break;
             
             
-    /*    case "isDownPaymentBorrowed":
+        case "isDownPaymentBorrowed":
             return appUserDetails.governmentquestion.isDownPaymentBorrowed;
         case "typeOfPropertyOwned":
             return appUserDetails.governmentquestion.typeOfPropertyOwned;
           case "propertyTitleStatus":
-            return appUserDetails.governmentquestion.propertyTitleStatus;*/
+            return appUserDetails.governmentquestion.propertyTitleStatus;
             
         return undefined; 
     }
@@ -5236,7 +5286,7 @@ function createTeaserRateObjectForPurchase(appUserDet){
         ob= {
             "purchaseDetails":{
                 "livingSituation":appUserDet.purchaseDetails.livingSituation,
-                "rentPerMonth":"$5,000",
+                "rentPerMonth":appUserDet.monthlyRent,
                 "isTaxAndInsuranceInLoanAmt":appUserDet.purchaseDetails.isTaxAndInsuranceInLoanAmt,
                 "housePrice":appUserDet.purchaseDetails.housePrice,
                 "loanAmount":appUserDet.purchaseDetails.loanAmount,
@@ -5244,9 +5294,9 @@ function createTeaserRateObjectForPurchase(appUserDet){
             },
             "loanType":appUserDet.loanType.loanTypeCd,
             "livingSituation":appUserDet.purchaseDetails.livingSituation,
-            "rentPerMonth":"$5,000",
+            "rentPerMonth":appUserDet.monthlyRent,
             "homeWorthToday":appUserDet.purchaseDetails.housePrice,
-            "currentMortgageBalance":"$280,000",
+            "currentMortgageBalance":appUserDet.purchaseDetails.loanAmount,
             "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
         };
     }
@@ -5297,6 +5347,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
         type:"POST",
         data:{"appFormData" : JSON.stringify(appUserDetails)},
         datatype : "application/json",
+        cache:false,
         success:function(data){
             var ob;
             try{

@@ -37,6 +37,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
 import com.nexera.common.vo.UserVO;
@@ -132,15 +133,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public Integer updateUser(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber,usr.mobileAlertsPreference=:mobileAlertsPreference,usr.carrierInfo=:carrierInfo WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,usr.phoneNumber=:priPhoneNumber,usr.mobileAlertsPreference=:mobileAlertsPreference,usr.carrierInfo=:carrierInfo,usr.status=:status WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
-		query.setParameter("mobileAlertsPreference",
-		        user.getMobileAlertsPreference());
+		query.setParameter("mobileAlertsPreference",user.getMobileAlertsPreference());
 		query.setParameter("carrierInfo", user.getCarrierInfo());
+		query.setParameter("status", user.getStatus());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		return result;
@@ -228,15 +229,16 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public List<User> getUsersList() {
 
-		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL";
+		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL and status!=:status";
 		String searchQueryInternalUser = "FROM User where internalUserDetail.activeInternal!=:DELETED";
-
+       
 		Session session = sessionFactory.getCurrentSession();
 
 		Query queryCustomer = session.createQuery(searchQueryCustomer);
 		Query queryInternalUser = session.createQuery(searchQueryInternalUser);
-		queryInternalUser.setParameter("DELETED", ActiveInternalEnum.DELETED);
 
+		queryInternalUser.setParameter("DELETED", ActiveInternalEnum.DELETED);
+		queryCustomer.setParameter("status", -1);
 		List<User> userList = queryCustomer.list();
 		userList.addAll(queryInternalUser.list());
 
@@ -397,12 +399,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer managerUpdateUserProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id WHERE usr.id = :id";
+		String hql = "UPDATE User usr set usr.firstName = :first_name,usr.lastName =:last_name,usr.emailId=:email_id,phoneNumber=:phoneNumber WHERE usr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("first_name", user.getFirstName());
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("id", user.getId());
+		query.setParameter("phoneNumber", user.getPhoneNumber());
 		int result = query.executeUpdate();
 		return result;
 	}
@@ -882,4 +885,26 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			        hibernateException);
 		}
 	}
+
+	@Override
+    public InternalUserStateMapping updateInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo) {
+	    
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(internalUserStateMapping);
+		
+	    return internalUserStateMapping;
+    }
+
+	@Override
+    public InternalUserStateMapping deleteInternalUserStateMapping(
+            InternalUserStateMappingVO inputVo) {
+		
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+		Session session = sessionFactory.getCurrentSession();
+		session.delete(internalUserStateMapping);
+		
+	    return internalUserStateMapping;
+    }
 }

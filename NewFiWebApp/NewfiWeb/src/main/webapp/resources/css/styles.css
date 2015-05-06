@@ -152,6 +152,11 @@ input[type="button"]:focus, button:focus {
 .btn-alarm {
 	background: url(../images/alram.png) no-repeat center;
 }
+.milestone-qc-btn-container
+{
+	width: 260px;
+	margin: 0 auto;
+}
 
 .btn-settings {
 	background: url(../images/settings.png) no-repeat center;
@@ -1236,7 +1241,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .assigned-agent-cont-wrapper {
-    width: 25%;
+    width: 23%;
     min-width: 210px;
     float: left;
     padding: 10px 5px;
@@ -1346,6 +1351,7 @@ input[type="button"]:focus, button:focus {
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+	margin-right:35px;
 }
 
 .conversation-container {
@@ -2655,7 +2661,7 @@ input.calc-input {
 .upload-prof-pic-icn{
 	position: relative;
 	border-radius: 50%;
-	background: url(../images/upload-pic.png) no-repeat center;
+	background: url(../images/profilePic.png) no-repeat center;
 	background-size: cover;
 	cursor:pointer;
 	opacity:0.8;
@@ -2718,7 +2724,7 @@ input.calc-input {
 }
 
 .prof-form-input-lg {
-	width: 300px;
+	width: 200px;
 }
 
 .prof-btn {
@@ -4804,7 +4810,7 @@ input.calc-input {
   width: 29%;
   height: 378px;
   border-right: 1px solid #d3d3d3;
-  padding-left: 134px;
+  padding-left: 80px;
 }
 
 .new-user-container{
@@ -4820,13 +4826,12 @@ input.calc-input {
 }
 
 .user-info-image {
-	width: 138px;
-	height: 100px;
+	/* width: 138px;
+	height: 100px; */
 	margin-top: 20px;
 }
 
 .user-info-row {
-	width: 102px;
   line-height: 20px;
   margin: 0px auto;
 }
@@ -4848,3 +4853,25 @@ input.calc-input {
 	text-transform: capitalize;
 }
 /*End*/
+#overlay-loader-text{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 150px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 15px;
+ }
+
+.user-info-image .assigned-agent-default-img,.user-info-image .assigned-agent-img {
+	width: 80px;
+	height: 80px;
+	line-height: 80px;
+	font-size: 24px;
+	margin: 0;
+}
+
+.user-info-txt {
+    font-size: 14px;
+    font-family: 'opensanssemibold';
+}

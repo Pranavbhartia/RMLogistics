@@ -48,6 +48,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
+import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -208,8 +209,8 @@ public class UserProfileRest {
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
 	public @ResponseBody String changeUserPassword(
-	        @RequestParam String changePasswordData, HttpServletRequest request,
-	        HttpServletResponse response) {
+	        @RequestParam String changePasswordData,
+	        HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Resetting the Password");
 		boolean passwordChanged = false;
 		Gson gson = new Gson();
@@ -365,7 +366,7 @@ public class UserProfileRest {
 	public @ResponseBody String createUser(@RequestBody String userVOStr) {
 
 		UserVO userVO = new Gson().fromJson(userVOStr, UserVO.class);
-		
+
 		try {
 			if (userVO.getUsername() == null)
 				userVO.setUsername(userVO.getEmailId());
@@ -383,9 +384,10 @@ public class UserProfileRest {
 				}
 
 			}
-		}catch(DatabaseException dbe){
+		} catch (DatabaseException dbe) {
 			LOG.error("Error while saveing user with same email");
-			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522", "User Already Present"));
+			return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "522",
+			        "User Already Present"));
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -413,11 +415,12 @@ public class UserProfileRest {
 			userVO.setUsername(userVO.getEmailId());
 		try {
 			LOG.info("TO check whether user exsists");
-			User user=userProfileService.findUserByMail(userVO.getEmailId());
-			if(user!=null){
-				ErrorVO error=new ErrorVO();
+			User user = userProfileService.findUserByMail(userVO.getEmailId());
+			if (user != null) {
+				ErrorVO error = new ErrorVO();
 				error.setMessage(ErrorConstants.ADMIN_CREATE_USER_ERROR);
-				return new Gson().toJson(RestUtil.wrapObjectForFailure(error, "522", ""));
+				return new Gson().toJson(RestUtil.wrapObjectForFailure(error,
+				        "522", ""));
 
 			}
 			LOG.debug("Creating the new user");
@@ -500,9 +503,17 @@ public class UserProfileRest {
 
 		try {
 			UserVO userVO = userProfileService.findUser(userId);
+			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
+			        .getRoleId()) {
 
-			userProfileService.deleteUser(userVO);
-			response.setResultObject(userVO);
+				
+				userProfileService.updateUser(userVO);
+				response.setResultObject(userVO);
+
+			} else {
+				userProfileService.deleteUser(userVO);
+				response.setResultObject(userVO);
+			}
 
 		} catch (InputValidationException e) {
 			LOG.error("error and message is : " + e.getDebugMessage());
@@ -526,11 +537,12 @@ public class UserProfileRest {
 	        @RequestParam(value = "file", required = true) MultipartFile multipartFile,
 	        HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("File upload Rest service called");
-		JsonObject result = null;
+		JsonObject result = new JsonObject();
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile file = multipartRequest.getFile("file");
 		try {
 			result = userProfileService.parseCsvAndAddUsers(file);
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -574,6 +586,66 @@ public class UserProfileRest {
 		}
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
+
+	@RequestMapping(value = "/internaluserstatemapping", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateInternalUserStateMapping(
+	        String internaluserstatemapping) {
+
+		Gson gson = new Gson();
+		InternalUserStateMappingVO internalUserStateMappingVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping,
+		        InternalUserStateMappingVO.class);
+
+		try {
+			internalUserStateMappingVO = userProfileService
+			        .updateInternalUserStateMapping(internalUserStateMappingVO);
+			if (null == internalUserStateMappingVO) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
+			}
+			commonResponseVO.setResultObject(internalUserStateMappingVO);
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		} catch (Exception e) {
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+
+		return commonResponseVO;
+	}
+
+	@RequestMapping(value = "/deleteStatelicensemapping", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO deleteInternalUserStateMapping(
+	        String internaluserstatemapping) {
+
+		Gson gson = new Gson();
+		InternalUserStateMappingVO internalUserStateMappingVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+
+		internalUserStateMappingVO = gson.fromJson(internaluserstatemapping,
+		        InternalUserStateMappingVO.class);
+
+		try {
+			internalUserStateMappingVO = userProfileService
+			        .deleteInternalUserStateMapping(internalUserStateMappingVO);
+			if (null == internalUserStateMappingVO) {
+				error.setMessage(ErrorConstants.UPDATE_ERROR_USER);
+			}
+			commonResponseVO.setResultObject("success");
+		} catch (InputValidationException e) {
+			error.setMessage(e.getDebugMessage());
+			commonResponseVO.setError(error);
+		} catch (Exception e) {
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+
 		return commonResponseVO;
 	}
 

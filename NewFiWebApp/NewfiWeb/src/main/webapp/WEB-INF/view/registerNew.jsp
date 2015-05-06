@@ -30,8 +30,9 @@
 				
 				<div class="clearfix user-info-outer-container">
 					<div class="float-left left-user-container ">
+						<div class="user-info-txt">Referred by</div>
 						<div class="user-info-image">
-							<img src="${userObject.photoImageUrl}" class="photo-img-url"/>
+							
 						</div>
 						
 						<div class="user-info-row">
@@ -81,23 +82,7 @@
 							</div>
 						</div>
 						
-						<div id="realor-email-cont" class="reg-input-row clearfix">
-							<div class="reg-row-lc-new reg-row-lc float-left">Referral Realtor email</div>
-							<div class="reg-row-rc-new reg-row-rc float-left">
-								<div class="reg-input-cont reg-email" id="realor-email">
-									<input class="reg-input" placeholder="Loan Manager Email" id="loanManagerEmailId" >
-								</div>
-							</div>
-						</div>
 						
-						<div class="reg-input-row clearfix">
-							<div class="reg-row-lc-new reg-row-lc float-left">Referral Loan Manager email</div>
-							<div class="reg-row-rc-new reg-row-rc float-left">
-								<div class="reg-input-cont reg-email" id="loanManager-email">
-									<input class="reg-input" placeholder="Realtor Email" id="realtorEmailId">	
-								</div>
-							</div>
-						</div>
 		
 						<div class="reg-btn-wrapper clearfix">
 							<div class="reg-btn float-left" id="submitID">Submit</div>
@@ -116,13 +101,26 @@
 	</div>
 	
 	<script>
+	var photo = "${userObject.photoImageUrl}";
+	var name = "${userObject.displayName}";
+	var email = "${userObject.emailId}";
 		$(document).ready(function() {
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
 			});
+			var imgCont = $('<div>').attr({
+				
+			});
+			if(photo==null||photo==""){
+				
+				imgCont.addClass("assigned-agent-default-img");		
+				imgCont.text(getInitialsFromFullName(name));	
+			}else{
+				imgCont.addClass("assigned-agent-img");
+				imgCont.css("background-image", "url('" + photo + "')");
+			}
+			$(".user-info-image").append(imgCont);
 			
-			var username =${userObject.firstName};
-			alert(username);
 
 			$("#customerID").on("click",function(e){		
 				var userType=$("#customerID").text();
@@ -152,8 +150,8 @@
 
 			
 				LoanAppFormVO.user=user;
-				LoanAppFormVO.loanMangerEmail=$("#loanManagerEmailId").val();
-				LoanAppFormVO.realtorEmail=$("#realtorEmailId").val();
+				LoanAppFormVO.loanMangerEmail=email;
+				LoanAppFormVO.realtorEmail=email;
 				
 				
 				
@@ -216,7 +214,7 @@
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
-        url: "/NewfiWeb/rest/shopper/registration",
+        url: "rest/shopper/registration",
         type: "POST",
         cache:false,
         data: {
@@ -241,7 +239,7 @@
 		function createNewRealtor(user){
 		    $('#overlay-loader').show();
 		    $.ajax({
-		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
+		        url: "rest/shopper/realtorRegistration",
 		        type: "POST",
 		        cache:false,
 		        data: {

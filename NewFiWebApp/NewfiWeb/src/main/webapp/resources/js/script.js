@@ -101,7 +101,7 @@ function showCustomerLoanPage(user) {
     });
     loanDetailsMainContainer.append(secondaryLeftNav).append(centerPanel);
     $('#right-panel').append(loanDetailsMainContainer);
-    if (window.location.hash!= "")
+    if (window.location.hash== "")
     {
     	changeSecondaryLeftPanel(5);
     }
@@ -113,7 +113,8 @@ function showCustomerLoanPage(user) {
 
 
 function changeSecondaryLeftPanel(secondary,doNothing) {
-	  scrollToTop();
+		    clearOverlayMessage();
+			scrollToTop();
 	        secondary = parseInt(secondary);
 	        $('.lp-t2-item').removeClass('t2-active');
 	        $('.lp-t2-item .arrow-right').remove();
@@ -131,6 +132,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                     if(!appUserDetailsTemp.loan.lqbFileId){
                         paintCustomerApplicationPage();
                     }else{
+                    	hideCompleteYourProfile();
                         $('#center-panel-cont').html("Application already submitted.");
                     }
 	            });
@@ -145,20 +147,24 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 
                     var userId=newfiObject.user.id;
                     getAppDetailsForUser(userId,function(appUserDetailsTemp){
-                    	  $('#overlay-loader').show();
+                    	
                         var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
                         if(LQBFileId){
                             if(appUserDetailsTemp.loan.isRateLocked){
                                 fixAndLoakYourRatePage2(undefined, appUserDetailsTemp);
-                                $('#overlay-loader').hide();
+                               
+                                
                             }else{
                                 paintFixYourRatePage();
                             }
+                         
                         }else{
                             //code to Paint teaser rate page
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
-                    });
+                    
+                    } , "We are checking on you awesome rates");
+                   
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
 	                
@@ -597,7 +603,7 @@ function paintFixYourRatePage(appUserDetails) {
 function fetchLockRatedata(loanNumber)
 {
 //alert('inside create loan method');
- $('#overlay-loader').show();
+ showOverlay();
 $.ajax({
 		url:"rest/application/fetchLockRatedata/"+loanNumber,
 		type:"POST",
@@ -617,7 +623,8 @@ $.ajax({
             }else{*/
 			    fixAndLoakYourRatePage(ob, appUserDetails) ;
             /*}*/
-			$('#overlay-loader').hide();
+			hideOverlay();
+			clearOverlayMessage();
 		},
 		error:function(erro){
 			alert("error inside createLoan ");
@@ -664,7 +671,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         try{
             var loanNumber = lqbData[0].loanNumber;
             loan.lqbFileId=loanNumber;  
-
+            hideCompleteYourProfile();
      //  alert('loan Number'+loanNumber);
             appUserDetails.loan.lqbFileId = loanNumber;
             lockratedata.sLoanNumber=loanNumber;
@@ -1085,7 +1092,7 @@ function getLoanSummaryHeader() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html("Rates as of 1/16/2015 8:13:52 AM");
+    }).html("Rates as of "+getCurrentDate());
     headerCont.append(col1).append(col2);
     return headerCont;
 }
@@ -1642,8 +1649,7 @@ function getClosingCostTopConatiner() {
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
         row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
-    var row10Con2 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2).append(row10Con2);
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     return wrapper.append(heading).append(container1).append(container2);
 }
 
@@ -1659,7 +1665,9 @@ function getClosingCostBottomConatiner() {
     var row1Con1 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "$ 699.40","");
     var row2Con1 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "$ 455.00");
     var row3Con1 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "$ 699.40");
-    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
+    var row10Con2 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
+    
+    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1).append(row10Con2);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
@@ -2047,6 +2055,7 @@ function dismissAlert(element) {
     //History support for customer
 function entryPointCustomerViewChangeNav(viewName) {
     changeSecondaryLeftPanel(viewName);
+  
 }
 
 var lockratedata= {};

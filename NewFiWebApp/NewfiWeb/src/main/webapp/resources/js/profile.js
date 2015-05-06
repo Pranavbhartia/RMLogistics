@@ -248,12 +248,13 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
 	
-	var stateRow = getManagerStateRow(user);
-	container.append(stateRow);
+	
 	
    // added check box 
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
+	var stateRow = getManagerStateRow(user);
+	container.append(stateRow);
 	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
@@ -329,6 +330,9 @@ function appendLicensedStates(element){
 		}).bind('click',{"key":key},function(event){
 			var key = event.data.key;
 			$(this).closest('.license-row').remove();
+			internalUserStates[key].isChecked = false;
+			//
+			deleteStateLicenseMapping(internalUserStates[key]);
 			delete internalUserStates[key];
 		});
 		
@@ -466,10 +470,10 @@ function updateLqbLMDetails(){
 }
 
 function changePassword(){
-	var user = new Object();
-	user.id = $("#userid").val();
-	user.password = $("#password").val();
-	console.info("userProfileJson:"+JSON.stringify(user));
+	var changePasswordData = new Object();
+	changePasswordData.userId = $("#userid").val();
+	changePasswordData.newPassword = $("#password").val();
+	console.info("userProfileJson:"+JSON.stringify(changePasswordData));
 	
 	    var passwordField=validateInput($('#password'),$('#password').val(),passwordFieldEmptyErrorMessage);
 	    var confirmPasswordField=validateInput($('#confirmpassword'),$('#confirmpassword').val(),passwordFieldEmptyErrorMessage);
@@ -486,11 +490,12 @@ function changePassword(){
 			 $.ajax({
 					url : "rest/userprofile/password",
 					type : "POST",
-					cache:false,
+					
 					data : {
-						"userVOStr" : JSON.stringify(user)
+						"changePasswordData" : JSON.stringify(changePasswordData)
 					},
 					dataType : "json",
+					cache:false,
 					success : function(data) {
 						showToastMessage("Succesfully updated");
 					},
@@ -505,7 +510,7 @@ function changePassword(){
 function validatePassword(password,confirmPassword,firstName,lastName,elementID){
 	
 	var regex=/(?=.*[a-z])(?=.*[A-Z])/;
-    var status;
+
 	if(password!=confirmPassword){
 		$('#password').next('.err-msg').html(passwordDonotMatchErrorMessage).show();
 		$('#'+elementID).addClass('ce-err-input').show();
@@ -521,32 +526,34 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
         	$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
-		 if(regex.test(password)==false){
-				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
-				$('#'+elementID).addClass('ce-err-input').show();
-			return false;
-		}
-          if(password.indexOf(firstName) == -1){
+        if(password.indexOf(firstName) == -1){
 			var lowercase=password.toLowerCase();
-			if(lowercase.length>3){
 			if(lowercase.indexOf(firstName) > -1){
 				$('#password').next('.err-msg').html(invalidPassword).show();
 				$('#'+elementID).addClass('ce-err-input').show();
 				return false;
 			}
-			}
-			
+	
 		}
-         if(password.indexOf(lastName) > -1){
-			showErrorToastMessage("Password should not contain firstname or lastname");
+		 if(regex.test(password)==false){
+				$('#password').next('.err-msg').html(passwordRegexErrorMessage).show();
+				$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
-         if(password.indexOf(lastName) == -1){
-		
+         if(lastName.length>3){
+        	 if(password.indexOf(lastName) > -1){
+            	 $('#password').next('.err-msg').html(invalidPassword).show();
+    				$('#'+elementID).addClass('ce-err-input').show();
+    			return false;
+    		}
+         }
+        
+         if(password.indexOf(lastName) == -1){		
 			var lowercase=password.toLowerCase();
-		if(lowercase.length>3){
+		    if(lastName.length>3){
 			if(lowercase.indexOf(lastName) > -1){
-				showErrorToastMessage("Password should not contain firstname or lastname");
+				$('#password').next('.err-msg').html(invalidPassword).show();
+				$('#'+elementID).addClass('ce-err-input').show();
 				return false;
 			}
 		}
@@ -598,13 +605,13 @@ function updateLMDetails() {
 
 
 	userProfileJson.customerDetail = customerDetails;
-	var internalUserState=[];
+/*	var internalUserState=[];
 	//for(var i=0;i<internalUserStates.length;i++){
 	for(var key in internalUserStates){
 		if(internalUserStates[key]!=0)
 			internalUserState.push(internalUserStates[key]);
 	}
-	userProfileJson.internalUserStateMappingVOs = internalUserState;
+	userProfileJson.internalUserStateMappingVOs = internalUserState; */
     var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
 
 
@@ -1363,6 +1370,7 @@ function appendAddLicencePopup(element) {
 			internalUserStates[$(this).attr("state-id")] = internalUserStateMappingVO;
 		
 		removeAddLicencePopup();
+		saveInternalUserStatesAndLicense(internalUserStateMappingVO);
 		
 		appendLicensedStates($('#licensedStateList'));
 	});
@@ -1427,7 +1435,12 @@ function appendStateDropDownForProperty(elementToApeendTo,states){
 			var stateCode = $(this).html();
 			
 			var stateId = findStateIdForStateCode(stateCode);
-			toggleStateDropDown();
+			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+				$('#state-dropdown-wrapper-property').perfectScrollbar({
+					suppressScrollX : true
+				});
+				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+			});
 			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);
 		});
 		
@@ -1541,12 +1554,16 @@ function searchInStateArray(searchTerm){
 
 
 function toggleStateDropDown() {
-	$('#state-dropdown-wrapper').slideToggle("slow",function(){
-		$('#state-dropdown-wrapper').perfectScrollbar({
-			suppressScrollX : true
+
+		$('#state-dropdown-wrapper').slideToggle("slow",function(e){
+			
+			$('#state-dropdown-wrapper').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('#state-dropdown-wrapper').perfectScrollbar('update');		
 		});
-		$('#state-dropdown-wrapper').perfectScrollbar('update');		
-	});
+
+	
 }
 
 function toggleCarrierDropDown() {
@@ -2557,4 +2574,50 @@ function getCarrierName(carrierInfo){
     
      return ""; 
 	}
+}
+
+
+function saveInternalUserStatesAndLicense(internalUserStates){
+	
+	 $.ajax({
+	        url: "rest/userprofile/internaluserstatemapping",
+	        type: "POST",
+	        data: {
+	            "internaluserstatemapping": JSON.stringify(internalUserStates)
+	        },
+	        datatype: "application/json",
+	        cache:false,
+	        success: function(data) {
+	          
+	        	internalUserStateMappingVO = data.resultObject; 
+	        	
+	        },
+	        error: function() {
+	            alert("error");
+	           
+	        }
+	 
+	    });
+}
+
+
+function deleteStateLicenseMapping(statelicensemapping){
+	
+	 $.ajax({
+	        url: "rest/userprofile/deleteStatelicensemapping",
+	        type: "POST",
+	        data: {
+	            "internaluserstatemapping": JSON.stringify(statelicensemapping)
+	        },
+	        datatype: "application/json",
+	        cache:false,
+	        success: function(data) {
+	          
+	        },
+	        error: function() {
+	            alert("error");
+	           
+	        }
+	 
+	    });
 }
