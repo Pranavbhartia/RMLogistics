@@ -11,6 +11,7 @@ import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.InputValidationException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -53,7 +54,7 @@ public interface UserProfileService {
 	public void enableUser(int userId) throws NoRecordsFetchedException;
 
 	public UserVO createNewUserAndSendMail(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException;
+	        throws InvalidInputException, UndeliveredEmailException,FatalException;
 
 	public void deleteUser(UserVO userVO) throws Exception;
 

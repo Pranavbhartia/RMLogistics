@@ -506,7 +506,7 @@ public class UserProfileRest {
 			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
 			        .getRoleId()) {
 
-				userVO.setStatus(-1);
+				
 				userProfileService.updateUser(userVO);
 				response.setResultObject(userVO);
 

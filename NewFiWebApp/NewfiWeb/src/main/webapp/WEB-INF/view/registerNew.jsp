@@ -183,7 +183,7 @@
 		function validateUser(registration){
 			$('#overlay-loader').show();
 		    $.ajax({
-		        url: "/NewfiWeb/rest/shopper/validate",
+		        url: "rest/shopper/validate",
 		        type: "POST",
 		        cache:false,
 		        data: {
@@ -214,7 +214,7 @@
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
-        url: "/NewfiWeb/rest/shopper/registration",
+        url: "rest/shopper/registration",
         type: "POST",
         cache:false,
         data: {
@@ -239,7 +239,7 @@
 		function createNewRealtor(user){
 		    $('#overlay-loader').show();
 		    $.ajax({
-		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
+		        url: "rest/shopper/realtorRegistration",
 		        type: "POST",
 		        cache:false,
 		        data: {
