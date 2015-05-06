@@ -974,7 +974,7 @@ function progressBaar(num) {
     }
    
 
-function paintApplyNow(inputCustomerDetails) {
+function paintApplyNow(inputCustomerDetails,emailQuote) {
   
     
     var registration = new Object();
@@ -1053,10 +1053,17 @@ function paintApplyNow(inputCustomerDetails) {
         var purchaseDetails = new Object();
         var user = new Object();
 
+        var selectedLqbData = closingCostHolder.valueSet;
+        var initValueSet = closingCostHolder.initValueSet;
+        var teaseRateDataList=[];
+        teaseRateDataList.push(initValueSet);
+        teaseRateDataList.push(selectedLqbData);
+        
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
-       
+        appUserInput.emailQuote = emailQuote;
+        
         loanType = {};
         loanType.loanTypeCd = inputCustomerDetails.loanType;
         appUserInput.loanType = loanType;
@@ -1113,7 +1120,7 @@ function paintApplyNow(inputCustomerDetails) {
         appUserInput.user = user;       
        // Where livingSituation should goes 
         //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        validateUsersBeforeRegistration(appUserInput);
+        validateUsersBeforeRegistration(appUserInput, teaseRateDataList);
         // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
         //saveUserAndRedirect(appUserDetails);
         // saveUserAndRedirect(registration);
@@ -1127,7 +1134,7 @@ function paintApplyNow(inputCustomerDetails) {
     regMainContainer.append(regContainerGetStarted);
     return parentWrapper.append(regMainContainer);
 }
-function validateUsersBeforeRegistration(registration){
+function validateUsersBeforeRegistration(registration,teaseRateDataList){
 	$('#overlay-loader').show();
     $.ajax({
         url: "rest/shopper/validate",
@@ -1141,7 +1148,7 @@ function validateUsersBeforeRegistration(registration){
 
             $('#overlay-loader').hide();
             if(data.error==null){
-            	 saveUserAndRedirect(registration);
+            	 saveUserAndRedirect(registration,teaseRateDataList);
             }else{
             	showErrorToastMessage(data.error.message);
             }
@@ -1153,14 +1160,15 @@ function validateUsersBeforeRegistration(registration){
         }
     });
 }
-function saveUserAndRedirect(registration) {
+function saveUserAndRedirect(registration,teaseRateDataList) {
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
         url: "rest/shopper/registration",
         type: "POST",
         data: {
-            "registrationDetails": JSON.stringify(registration)
+            "registrationDetails": JSON.stringify(registration),
+            "teaseRateData": JSON.stringify(teaseRateDataList),
         },
         datatype: "application/json",
         cache:false,
@@ -1301,7 +1309,8 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
         rateBtn2 = $('<div>').attr({
             "class": "rate-btn-alertRate"
         }).html("Email This Quote").on('click', function() {
-            var mainContainer = paintApplyNow(inputCustomerDetails);
+        	var emailQuote = true;
+            var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
             $('#ce-main-container').html(mainContainer);
         });
     }else{

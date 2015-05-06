@@ -68,6 +68,8 @@ public class LoanAppFormVO implements Serializable {
 	private Boolean ssnProvided;
 	private Boolean cbSsnProvided;
 	
+	private Boolean emailQuote;
+	
 	private Boolean skipMyAssets; 
 	
 	private UserVO user;
@@ -513,6 +515,14 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	
+	public Boolean getEmailQuote() {
+		return emailQuote;
+	}
+
+	public void setEmailQuote(Boolean emailQuote) {
+		this.emailQuote = emailQuote;
+	}
+
 	public LoanAppForm convertToEntity() {
 
 		LoanAppForm loanAppForm = new LoanAppForm();

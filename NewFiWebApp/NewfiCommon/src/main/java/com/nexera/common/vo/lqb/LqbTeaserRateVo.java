@@ -25,7 +25,8 @@ public class LqbTeaserRateVo {
 	private String hazInsReserve1002;
 	private String ownersTitleInsurance1103;
 	
-	
+	// added to send mail with quotes
+	private String yearData;
 	
 	
 	
@@ -158,6 +159,13 @@ public class LqbTeaserRateVo {
 	public void setOwnersTitleInsurance1103(String ownersTitleInsurance1103) {
 		this.ownersTitleInsurance1103 = ownersTitleInsurance1103;
 	}
+	public String getYearData() {
+		return yearData;
+	}
+	public void setYearData(String yearData) {
+		this.yearData = yearData;
+	}
+	
 	
 	
 }

@@ -21,6 +21,7 @@ import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 
 public interface UserProfileService {
 
@@ -72,7 +73,7 @@ public interface UserProfileService {
 	        throws FileNotFoundException, IOException, InvalidInputException,
 	        UndeliveredEmailException, NoRecordsFetchedException;
 
-	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO);
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO, List<LqbTeaserRateVo> teaseRateDatalist);
 
 	public void crateWorkflowItems(int defaultLoanId) throws Exception;
 
