@@ -655,6 +655,8 @@ function getCalculationFunctionForItem(key) {
 			var val7 = getFloatValue(closingCostHolder.valueSet["closingEscrowFee1102"]);
 			var val8 = getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
 			var val9 = getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
+			if(isNaN(val9))
+				val9=0;
 			if (isNaN(val9)) {
 				val9 = 0;
 			}
