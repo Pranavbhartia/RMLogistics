@@ -893,7 +893,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	 
     	 if( isBankrupt =="Yes"){ 
     		 spouseGovernmentQuestions.isBankrupt = true;
- 		 }else if(isBankrupt =="no"){
+ 		 }else if(isBankrupt =="No"){
  			spouseGovernmentQuestions.isBankrupt = false;
  		 }else{
  			spouseGovernmentQuestions.isBankrupt = null;
