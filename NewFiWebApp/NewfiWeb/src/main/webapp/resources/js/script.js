@@ -2097,7 +2097,7 @@ function getRequestRateLockStatus(element){
                 showToastMessage(response.error.message)
             }else{
                 var status=response.resultObject;
-                if(status){
+                if(status&&newfiObject.user.userRole.roleCd!="REALTOR"){
                     element.addClass("rate-btn");
                     element.html("Request Rate Lock").on('click', function(event) {
                             $('input').attr("readonly","true");
