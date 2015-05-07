@@ -39,7 +39,6 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String message = "";
 		String milestoneStatus = null;
-
 		if (status.equals(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING
 		        .getLosStatusID() + "")) {
 			message = LoanStatus.inUnderwritingMessage;
@@ -60,7 +59,7 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
 
-			sendEmail(objectMap);
+			sendEmail(objectMap, null);
 		}
 		LOG.debug("UW Status is " + milestoneStatus);
 		return milestoneStatus;

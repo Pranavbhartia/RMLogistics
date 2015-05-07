@@ -40,6 +40,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug("Execute Appraisal Manager " + objectMap);
+		String subject = null;
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		int loanId = Integer.parseInt(objectMap.get(
@@ -63,16 +64,17 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 						objectMap
 						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_PURCHASE);
+						subject = CommonConstants.SUBJECT_APPRAISAL_ORDERED_PURCHASE;
 					} else if (loanTypeMasterVO.getLoanTypeCd()
 					        .equalsIgnoreCase(LoanTypeMasterEnum.REF.name())) {
 						objectMap
 						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_REFINANCE);
-
+						subject = CommonConstants.SUBJECT_APPRAISAL_ORDERED_REFINANCE;
 					}
 				}
 			}
-			sendEmail(objectMap);
+			sendEmail(objectMap, subject);
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);

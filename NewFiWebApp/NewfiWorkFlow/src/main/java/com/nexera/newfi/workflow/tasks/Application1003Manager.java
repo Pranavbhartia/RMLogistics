@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -57,7 +58,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			makeANote(loanID, LoanStatus.submittedMessage);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        Milestones.App1003.getMilestoneKey());
-			sendEmail(objectMap);
+			sendEmail(objectMap, CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			LOG.info("Saving Loan as INprogres");
@@ -110,7 +111,8 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		return null;
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
 		return null;
 	}
 

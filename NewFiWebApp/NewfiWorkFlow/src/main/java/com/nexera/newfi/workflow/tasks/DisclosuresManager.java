@@ -60,12 +60,14 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String message = "";
+		String subject = null;
 		String returnStatus = "";
 		String mileStoneStatus = null;
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message = LoanStatus.disclosureAvailMessage;
 			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE);
+			subject = CommonConstants.SUBJECT_DISCLOSURE_AVAILABLE;
 			flag = true;
 			returnStatus = WorkItemStatus.STARTED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureAvail;
@@ -74,6 +76,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureSigned;
+			subject = CommonConstants.SUBJECT_DISCLOSURE_ARE_COMPLETE;
 			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_ARE_COMPLETE);
 			// Have to add need for appraisal
@@ -101,7 +104,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			makeANote(loanId, message);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
-			sendEmail(objectMap);
+			sendEmail(objectMap, subject);
 			// Dismiss any DISCLOSURE_AVAIL_NOTIFICATION_TYPE alerts
 			dismissDisclosureDueAlerts(objectMap);
 			return returnStatus;

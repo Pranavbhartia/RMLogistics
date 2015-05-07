@@ -28,6 +28,7 @@ public class AlertManager extends NexeraWorkflowTask implements
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(AlertManager.class);
 
+	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug(" Executing concrete class " + objectMap);
 		makeANote(
@@ -36,16 +37,18 @@ public class AlertManager extends NexeraWorkflowTask implements
 		        LoanStatus.initialContactMadeMessage);
 		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 		        LoanStatus.initialContactMadeMessage);
-		sendEmail(objectMap);
+		sendEmail(objectMap, null);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
+	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.debug("Rendering State "
 		        + inputMap.get(WorkflowDisplayConstants.LOAN_ID_KEY_NAME));
 		return WorkflowDisplayConstants.ALERT_MANAGER_TEXT;
 	}
 
+	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get("loanID").toString());
 		LOG.debug("Checking State " + loanId);
@@ -77,6 +80,7 @@ public class AlertManager extends NexeraWorkflowTask implements
 		return String.valueOf(notificationVO.getId());
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing - since this does NOT need a Reminder.
 		return null;
