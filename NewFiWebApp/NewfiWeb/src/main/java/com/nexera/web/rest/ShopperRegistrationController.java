@@ -1,11 +1,11 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
@@ -70,42 +69,42 @@ public class ShopperRegistrationController {
 	        .getLogger(ShopperRegistrationController.class);
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public @ResponseBody String shopperRegistration(String registrationDetails,String teaseRateData,
-	        HttpServletRequest request, HttpServletResponse response)
-	        throws IOException {
+	public @ResponseBody String shopperRegistration(String registrationDetails,
+	        String teaseRateData, HttpServletRequest request,
+	        HttpServletResponse response) throws IOException {
 
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
-			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,LoanAppFormVO.class);
-			
-			//ObjectMapper mapper = new ObjectMapper();
-			TypeReference<List<LqbTeaserRateVo>> typeRef = new TypeReference<List<LqbTeaserRateVo>>() {};
-			//List<HashMap<String, String>> teaseRateDatalist = mapper.readValue(teaseRateData, typeRef);
-			List<LqbTeaserRateVo> teaseRateDatalist= gson.fromJson(teaseRateData, typeRef.getType());
-			
-			
+			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
+			        LoanAppFormVO.class);
+
+			// ObjectMapper mapper = new ObjectMapper();
+			TypeReference<List<LqbTeaserRateVo>> typeRef = new TypeReference<List<LqbTeaserRateVo>>() {
+			};
+			// List<HashMap<String, String>> teaseRateDatalist =
+			// mapper.readValue(teaseRateData, typeRef);
+			List<LqbTeaserRateVo> teaseRateDatalist = gson.fromJson(
+			        teaseRateData, typeRef.getType());
+
 			String emailId = loaAppFormVO.getUser().getEmailId();
 			// LOG.info("calling 1234 "+
 			// loaAppFormVO.getRefinancedetails().getCurrentMortgageBalance());
 			LOG.info("calling UserName : "
 			        + loaAppFormVO.getUser().getFirstName());
 
-			UserVO user = userProfileService.registerCustomer(loaAppFormVO,teaseRateDatalist);
-			
-			 userProfileService.crateWorkflowItems(user.getDefaultLoanId());
+			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
+			        teaseRateDatalist);
+
+			userProfileService.crateWorkflowItems(user.getDefaultLoanId());
 			LOG.info("User succesfully created" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
-		} 
-		catch (FatalException e) {
+		} catch (FatalException e) {
 			LOG.error("error while creating user");
-			throw new FatalException(
-			        "User could not be registered");
-		}
-		catch (Exception e) {
-			LOG.error("error while creating user"+e.getStackTrace());
-			throw new FatalException(
-			        "User could not be registered ");
+			throw new FatalException("User could not be registered");
+		} catch (Exception e) {
+			LOG.error("error while creating user" + e.getStackTrace());
+			throw new FatalException("User could not be registered ");
 		}
 
 		return profileUrl + "home.do#myLoan/lock-my-rate";
@@ -252,12 +251,23 @@ public class ShopperRegistrationController {
 
 	private void authenticateUserAndSetSession(String emailId, String password,
 	        HttpServletRequest request) {
+		// If there is any session clear it
+		// if (request.getSession() != null) {
+		// request.getSession().invalidate();
+		// LOG.debug("Clearing old sessions");
+		// }
+
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 		        emailId, password);
+		HttpSession session = request.getSession(false);
+		String sessionId = (session != null) ? session.getId() : null;
+		if (sessionId == null) {
+			request.getSession(Boolean.TRUE);
+		}
 		token.setDetails(new WebAuthenticationDetails(request));
 		Authentication authenticatedUser = authenticationManager
 		        .authenticate(token);
+
 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 	}
-
 }
