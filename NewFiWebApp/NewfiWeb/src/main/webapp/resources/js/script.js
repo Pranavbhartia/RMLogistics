@@ -1112,6 +1112,14 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
 	 var loanAmount =  getFloatValue(appUserDetails.purchaseDetails.loanAmount) ;    
 	 var downPayment = (housePrice-loanAmount);
 	
+	 var Insurance =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyInsuranceCost)));
+	 var tax =  parseFloat(removedDoller(removedComma(appUserDetails.propertyTypeMaster.propertyTaxesPaid)));
+	 
+	 if(isNaN(getFloatValue(tax)))
+	        tax="";
+	 if(isNaN(getFloatValue(Insurance)))
+	        Insurance="";
+	 
 	 var principalInterest = getFloatValue(rateVoObj.payment);
 	 var totalEstMonthlyPayment = principalInterest;
 	 
@@ -1151,9 +1159,9 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
      rcRow1 = getLoanSummaryRow("Current Rental Payment", showValue(appUserDetails.monthlyRent),"monthlyPaymentId");
     
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVoObj.payment),"principalIntId");
-    var rcRow3 = getLoanSummaryRowCalculateBtn("Tax", "","calTaxID","calTaxID2",appUserDetails);
+    var rcRow3 = getLoanSummaryRowCalculateBtn("Tax",showValue(tax),"calTaxID","calTaxID2",appUserDetails);
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance", "","CalInsuranceID","CalInsuranceID2",appUserDetails);
+    var rcRow4 = getLoanSummaryRowCalculateBtn("Insurance",showValue(Insurance),"CalInsuranceID","CalInsuranceID2",appUserDetails);
     //var rcRow5 = getLoanSummaryTextRow("Your tax and insurance payment above will be included with your principal & interest payment");
     //var rcRow6 = getLoanSummaryLastRow("Estimated<br/>Monthly Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
@@ -1213,7 +1221,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     if(isNaN(getFloatValue(Insurance)))
         Insurance="";
     
-    if(appUserDetails.refinancedetails.includeTaxes ==true){
+    if(appUserDetails.refinancedetails.includeTaxes == true){
     	
     	var investment = (Insurance + tax);
     	monthlyPayment= monthlyPayment - investment ;
@@ -1248,7 +1256,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     else
         var lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout",showValue(currentMortgageBalance), "Cashout",showValue(cashTakeOut),true);
 
-    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR, "lockrateaprid");
+    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR+" %", "lockrateaprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO[index].closingCost), "lockClosingCost");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
     

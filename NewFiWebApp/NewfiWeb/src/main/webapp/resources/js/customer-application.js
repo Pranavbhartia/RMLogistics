@@ -1112,7 +1112,7 @@ $('#app-right-panel').html("");
 			   
 			   appUserDetails.refinancedetails = refinancedetails;
 			  
-			   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
+			   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2);
 
 		  
 		
@@ -1174,7 +1174,7 @@ function getQuestionContext(question,parentContainer,valueSet){
 	        clearChildren:function(callback){
 	        	
 	        },
-	        drawChildQuestions:function(option,questions){
+	        drawChildQuestions:function(option,questions,callback){
 	        
 	        	var ob=this;
 	        	var childContainer = $('<div>');
@@ -1188,6 +1188,9 @@ function getQuestionContext(question,parentContainer,valueSet){
 	            	ob.childContexts[option].push(contxt);
 	        	}
 	        	ob.container.after(childContainer);
+	        	if(callback){
+	        		callback();
+	        	}
 	        },
 	        changeHandler:function(newValue,callback){
 	        	var ob=this;
@@ -1322,9 +1325,10 @@ function paintCustomerApplicationPageStep2() {
                 name: "isSpouseCoBorrower",
                 options: [{
                     text: "Yes",
+                    callBack:addStateCityZipLookUp,
                     addQuestions:[{
                         type: "desc",
-                        text: "Co-borrower's name",
+                        text: "Co-borrower's first name",
                         name: "coBorrowerName"
                     },
                     {
@@ -1354,6 +1358,7 @@ function paintCustomerApplicationPageStep2() {
                     }]
                 }, {
                     text: "No",
+                    callBack:addStateCityZipLookUp,
                     addQuestions:[{
                         type: "desc",
                         text: "Co-borrower's first name",
@@ -1401,7 +1406,8 @@ function paintCustomerApplicationPageStep2() {
     
     	var question=questions[i];
     	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails);
-    	contxt.drawQuestion();  	
+    	contxt.drawQuestion();
+    	
     	quesContxts.push(contxt);
     }
 
@@ -1554,7 +1560,6 @@ function paintCustomerApplicationPageStep2() {
     	
     });
     $('#app-right-panel').append(saveAndContinueButton);
-    
     addStateCityZipLookUp();
 }
 
@@ -1608,7 +1613,7 @@ function optionClicked(element,ctx,option,value,skipCondition){
     	ctx.value=value;
     	var opt=option;
     	if(opt.addQuestions){
-    		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
+    		ctx.drawChildQuestions(ctx.value,opt.addQuestions,opt.callBack);
     	}
 	}
 }
@@ -1687,6 +1692,7 @@ function getContextApplicationTextQues(contxt) {
 
     optionsContainer.append(optionCont).append(errFeild);
 
+    	
     return container.append(quesTextCont).append(optionsContainer);
 }
 
@@ -4819,18 +4825,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
 }
 
 
-function optionClicked(element,ctx,option,value,skipCondition){
-	$(element).parent().find('.app-option-choice').attr("isSelected","false");
-	$(element).attr("isSelected","true");
-	ctx.clickHandler(value);
-	if(ctx.value!=value||skipCondition){
-    	ctx.value=value;
-    	var opt=option;
-    	if(opt.addQuestions){
-    		ctx.drawChildQuestions(ctx.value,opt.addQuestions);
-    	}
-	}
-}
+
 
 
 
@@ -5336,10 +5331,14 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
     if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
         appUserDetails.purchaseDetails.loanAmount=loanAmount-purchaseAmount;
         appUserDetails.purchaseDetails.housePrice=loanAmount;
+        appUserDetails.propertyTypeMaster.propertyTaxesPaid = $('#calTaxID2').val();
+        appUserDetails.propertyTypeMaster.propertyInsuranceCost = $('#CalInsuranceID2').val();
     }else{
         var parentContainer=$('#center-panel-cont');
         appUserDetails.refinancedetails.currentMortgageBalance=loanAmount;
         appUserDetails.refinancedetails.cashTakeOut=purchaseAmount;
+        appUserDetails.propertyTypeMaster.propertyTaxesPaid = $('#calTaxID2').val();
+        appUserDetails.propertyTypeMaster.propertyInsuranceCost = $('#CalInsuranceID2').val();
     }
 
     $.ajax({

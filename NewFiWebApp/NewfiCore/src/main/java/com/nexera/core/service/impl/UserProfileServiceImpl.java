@@ -464,16 +464,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 			
 			substitutions.put("-name-", new String[] { user.getFirstName() + " " + user.getLastName() });
 			substitutions.put("-username-", new String[] { user.getEmailId() });
-			String uniqueURL = baseUrl + "reset.do?reference="+ user.getEmailEncryptionToken();
 			
 			substitutions.put("-url-", new String[] { baseUrl });
-			substitutions.put("-passwordurl-", new String[] { uniqueURL });
 			
 			substitutions.put("-lowestPeriodYear-", new String[] {teaseRateDataList.get(0).getYearData()});
 			substitutions.put("-lowestRate-", new String[] {teaseRateDataList.get(0).getTeaserRate()});
+			substitutions.put("-lowestApr-", new String[] {teaseRateDataList.get(0).getAPR()});
 			
 			substitutions.put("-periodYear-", new String[] {teaseRateDataList.get(1).getYearData()});
 			substitutions.put("-rate-", new String[] {teaseRateDataList.get(1).getTeaserRate()});
+			substitutions.put("-apr-", new String[] {teaseRateDataList.get(1).getAPR()});
 			
 			
 			recipientVO.setEmailID(user.getEmailId());
