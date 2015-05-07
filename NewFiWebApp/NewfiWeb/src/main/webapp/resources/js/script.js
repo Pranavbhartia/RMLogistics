@@ -1100,9 +1100,7 @@ function getLoanSummaryHeader() {
 function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     
 	var yearValues = lqbData;
-    //var rateVO = yearValues[yearValues.length-1].rateVO;
-	//var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
-	
+    
     var rateVoObj=getLQBObj(yearValues);
 
 	var livingSituation = capitalizeFirstLetter(appUserDetails.purchaseDetails.livingSituation);
@@ -1398,7 +1396,8 @@ function getLoanSummaryRow(desc, detail, id) {
 }
 
 function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
-    var container = $('<div>').attr({
+    
+	var container = $('<div>').attr({
         "class": "loan-summary-row clearfix"
     });
     var col1 = $('<div>').attr({
@@ -1515,8 +1514,22 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     });
     $(inputBox).val(detail);
     
+    var saveBtn = $('<div>').attr({
+    	"class" : "sm-save-btn float-right"
+    }).html("Save").on('click',function(){
+    	
+    	saveTaxAndInsurance();
+    });
+    
+    
+    
     col2.append(inputBox);
-    container.append(col1).append(col2);
+    
+    if(desc =="Insurance")
+    container.append(col1).append(col2).append(saveBtn);
+    else
+    	container.append(col1).append(col2);
+    
     return container;
 }
 
@@ -2488,4 +2501,36 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     col2row2.keyup(purchaseTRate.change);
     return container.append(loanAmountCont).append(loanAmountDetails);
    // return container.append(loanAmountCont);
+}
+
+
+function saveTaxAndInsurance(){
+	
+    $('#overlay-loader').show();
+    
+     appUserDetails.propertyTypeMaster.propertyTaxesPaid = $('#calTaxID2').val();
+     appUserDetails.propertyTypeMaster.propertyInsuranceCost = $('#CalInsuranceID2').val();
+    
+    $.ajax({
+        url:"rest/application/savetaxandinsurance",
+        type:"POST",
+        data:{"appFormData" : JSON.stringify(appUserDetails)},
+        datatype : "application/json",
+        cache:false,
+        success:function(data){
+            var ob;
+            try{
+                ob=JSON.parse(data);
+            }catch(exception){
+                ob={};
+                console.log("Invalid Data");
+            }         
+             $('#overlay-loader').hide();
+        },
+        error:function(erro){
+            alert("error inside createLoan ");
+             $('#overlay-loader').hide();
+        }
+        
+    });
 }

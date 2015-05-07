@@ -1112,9 +1112,12 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
 
    		 appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
    		 appUserInput.purchaseDetails =purchaseDetails;
-         var propertyTypeMaster={};
+
          propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
          propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
+         propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
+         propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
+         
          appUserInput.propertyTypeMaster = propertyTypeMaster;
         }   
         appUserInput.user = user; 
@@ -1304,7 +1307,13 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
         }).html("Create Newfi Account").on('click', function() {
-            var mainContainer = paintApplyNow(inputCustomerDetails);
+            
+        	
+        	inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
+        	inputCustomerDetails.propertyInsuranceCost = $('#CalInsuranceID2').val();
+        	
+            
+        	var mainContainer = paintApplyNow(inputCustomerDetails);
             $('#ce-main-container').html(mainContainer);
         });
         rateBtn2 = $('<div>').attr({
@@ -1680,6 +1689,14 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     var downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
     var loanAmount = (housePrice-downPayment);
     
+    var Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyInsuranceCost)));
+	var tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
+	 
+	 if(isNaN(getFloatValue(tax)))
+	        tax="";
+	 if(isNaN(getFloatValue(Insurance)))
+	        Insurance="";
+    
    /* var principalInterest = parseFloat(removedDoller(removedComma(rateVO[index].payment)));
     var totalEstMonthlyPayment = principalInterest;
     */
@@ -1699,7 +1716,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
 
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 =  getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false,path);
+    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false,path);
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
@@ -1715,9 +1732,9 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     if(customerInputData.livingSituation != "homeOwner")
          rcRow1 = getLoanSummaryRow("Current Rental Payment", showValue(customerInputData.purchaseDetails.rentPerMonth));
     var rcRow2 = getLoanSummaryRow("Proposed Principal & Interest", showValue(rateVO.payment),"principalIntId");
-    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax", "","calTaxID","calTaxID2",customerInputData);
+    var rcRow3 = getLoanSummaryRowCalculateBtnCEP("Tax",showValue(tax),"calTaxID","calTaxID2",customerInputData);
     rcRow3.addClass("no-border-bottom");
-    var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance", "","CalInsuranceID","CalInsuranceID2",customerInputData);
+    var rcRow4 = getLoanSummaryRowCalculateBtnCEP("Insurance",showValue(Insurance),"CalInsuranceID","CalInsuranceID2",customerInputData);
     //var rcRow5 = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(rateVO[index].payment) ,"totalEstMonthlyPaymentId");
     rightCol.append(rcRow1).append(rcRow2).append(rcRow3).append(rcRow4);
     container.append(leftCol).append(rightCol);

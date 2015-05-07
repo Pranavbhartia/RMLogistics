@@ -1548,6 +1548,23 @@ HashMap<String, String> getCoBorrowerGovernmentQuestion(HashMap<String, String> 
       return hashmap;
 	}
 	
-	
+
+		@RequestMapping(value = "/savetaxandinsurance", method = RequestMethod.POST)
+		public @ResponseBody
+		void saveTaxAndInsurance(String appFormData, HttpServletRequest httpServletRequest) {
+			Gson gson = new Gson();
+			
+			try {
+				LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
+				
+					String loanAppFrm = gson.toJson(loaAppFormVO);
+					createApplication(loanAppFrm, httpServletRequest);
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+			
+		}
 
 }

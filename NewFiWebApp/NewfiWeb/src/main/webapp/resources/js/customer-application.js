@@ -5179,7 +5179,7 @@ function mapDbDataForFrontend(key){
             if(typeof(newfiObject)!=='undefined'){
                 if(appUserDetails.propertyTypeMaster)
                     val=appUserDetails.propertyTypeMaster.propertyTypeCd;
-                return val
+                return val;
             }else{
                 if(refinanceTeaserRate.residenceType)
                     return refinanceTeaserRate.residenceType;
@@ -5197,12 +5197,16 @@ function mapDbDataForFrontend(key){
             break;
             
             
-        case "isDownPaymentBorrowed":
+       /* case "isDownPaymentBorrowed":
+        	if(appUserDetails.governmentquestion)
             return appUserDetails.governmentquestion.isDownPaymentBorrowed;
+        	break;*/
         case "typeOfPropertyOwned":
             return appUserDetails.governmentquestion.typeOfPropertyOwned;
+            break;
           case "propertyTitleStatus":
             return appUserDetails.governmentquestion.propertyTitleStatus;
+            break;
             
         return undefined; 
     }
@@ -5292,7 +5296,9 @@ function createTeaserRateObjectForPurchase(appUserDet){
             "rentPerMonth":appUserDet.monthlyRent,
             "homeWorthToday":appUserDet.purchaseDetails.housePrice,
             "currentMortgageBalance":appUserDet.purchaseDetails.loanAmount,
-            "zipCode":appUserDet.purchaseDetails.buyhomeZipPri
+            "zipCode":appUserDet.purchaseDetails.buyhomeZipPri,
+            "propertyInsuranceCost":appUserDet.propertyTypeMaster.propertyInsuranceCost,
+            "propertyTaxesPaid":appUserDet.propertyTypeMaster.propertyTaxesPaid
         };
     }
     return ob;
