@@ -698,8 +698,10 @@ public class LoanServiceImpl implements LoanService {
 		addDefaultLoanTeam(loanVO, loanId);
 
 		LOG.info("Added team");
-		loanDao.updateLoanEmail(loanId,
-		        utils.generateLoanEmail(loanVO.getUser().getUsername()));
+		loanVO.setLoanEmailId(utils.generateLoanEmail(loanVO.getUser()
+		        .getUsername()));
+		loanDao.updateLoanEmail(loanId, loanVO.getLoanEmailId());
+
 		LOG.info("Added Loan Email");
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
