@@ -897,7 +897,7 @@ function getCascaseAdjusterTable4() {
 	var row2 = "<tr><th>Jumbo State Tier</th>"
 			+ "<th>Eligible States</th><th></th></tr>";
 
-	var tableData = [ [ "1", "CA", "-0.120" ], [ "3", "WA", "-0.030" ],
+	var tableData = [ [ "1", "CA", "(0.120)" ], [ "3", "WA", "(0.030)" ],
 			[ "4", "OR", "0.020" ] ];
 
 	var dataRows = getCascadeTableDataRows(tableData);
@@ -912,9 +912,8 @@ function getCascaseAdjusterTable5() {
 
 	var row1 = "<tr><th colspan=7 class='th1'>" + "Other Adjustments"
 			+ "</th></tr>";
-	var row2 = "<tr><th>Escrow Waiver Fee</th>" + "<td>-0.125</td></tr>";
-	var row3 = "<tr><th>Loan amount <$100k</th>" + "<td>0.75</td></tr>";
-
+	var row2 = "<tr><th>Escrow Waiver Fee</th>" + "<td>.125</td></tr>";
+	
 	table += row1 + row2 + "</table>"
 
 	return table;
