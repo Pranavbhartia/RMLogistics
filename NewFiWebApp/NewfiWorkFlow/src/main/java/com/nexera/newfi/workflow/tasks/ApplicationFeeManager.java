@@ -75,6 +75,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	public String execute(HashMap<String, Object> objectMap) {
 		String returnStatus = null;
 		String messageForNote = "";
+		String subject = null;
 		LOG.info("Execute Concrete Class for ApplicationFeeManager "
 		        + objectMap);
 		if (objectMap != null) {
@@ -88,16 +89,19 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				dismissAllPaymentAlerts(loanId);
 				objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 				        CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_FEE_PAID);
+				subject = CommonConstants.SUBJECT_APPLICATION_FEE_PAID;
 				createAlertToLockRates(objectMap);
 				returnStatus = WorkItemStatus.COMPLETED.getStatus();
 				messageForNote = LoanStatus.paymentSuccessStatusMessage;
 			} else if (status.equals(LoanStatus.APP_PAYMENT_FAILURE)) {
 				messageForNote = LoanStatus.paymentFailureStatusMessage;
+				subject = CommonConstants.SUBJECT_APPLICATION_FEE_FAILED;
 				return WorkItemStatus.NOT_STARTED.getStatus();
 			} else if (status.equals(LoanStatus.APP_PAYMENT_PENDING)) {
 				returnStatus = WorkItemStatus.STARTED.getStatus();
 				objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 				        CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED);
+				subject = CommonConstants.SUBJECT_APPLICATION_FEE_PENDING;
 				messageForNote = LoanStatus.paymentPendingStatusMessage;
 
 			}
@@ -112,7 +116,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 				        messageForNote);
 				objectMap.put(WorkflowDisplayConstants.PAYMENT_STATUS, status);
-				sendEmail(objectMap);
+				sendEmail(objectMap, subject);
 			}
 
 		}

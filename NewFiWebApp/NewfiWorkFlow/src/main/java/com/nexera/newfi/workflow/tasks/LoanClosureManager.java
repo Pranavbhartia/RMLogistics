@@ -29,6 +29,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
+		String subject = null;
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		String completedStatus = null;
@@ -36,7 +37,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		if (status.equals(String.valueOf(LOSLoanStatus.LQB_STATUS_FUNDED
 		        .getLosStatusID()))) {
 			displayMessage = LoanStatus.loanFundedMessage;
-
+			subject = CommonConstants.SUBJECT_LOAN_FUNDED;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED
@@ -44,7 +45,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        CommonConstants.TEMPLATE_KEY_NAME_LOAN_SUSPENDED);
 			displayMessage = LoanStatus.loanSuspendedMessage;
-
+			subject = CommonConstants.SUBJECT_LOAN_SUSPENDED;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status
 		        .equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
@@ -52,19 +53,20 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			displayMessage = LoanStatus.loanDeclinedMessage;
 			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        CommonConstants.TEMPLATE_KEY_NAME_LOAN_DECLINED);
-
+			subject = CommonConstants.SUBJECT_LOAN_DECLINED;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
 		                .getLosStatusID()))) {
 			displayMessage = LoanStatus.loanFundedMessage;
-
+			subject = CommonConstants.SUBJECT_LOAN_WITHDRAWN;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
 		                .getLosStatusID()))) {
 			displayMessage = LoanStatus.loanArchivedMessage;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
+			subject = CommonConstants.SUBJECT_LOAN_ARCHIVED;
 		}
 		if (status != null && !status.isEmpty()) {
 			makeANote(Integer.parseInt(objectMap.get(
@@ -72,7 +74,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			        displayMessage);
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        displayMessage);
-			sendEmail(objectMap);
+			sendEmail(objectMap, subject);
 		}
 		return completedStatus;
 	}
@@ -114,7 +116,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing : No Reminders
 		return null;
 	}

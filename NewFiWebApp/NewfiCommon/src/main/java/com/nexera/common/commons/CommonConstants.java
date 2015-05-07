@@ -196,4 +196,63 @@ public interface CommonConstants {
 	public static final String elapsedOverDueStr = "Overdue.";
 	public static final String THUMBNAIL_PARAM = "&isThumb=0";
 	public static final String EMAIL_EMPTY_FOOTER = ".";
+
+	// Subjects
+	public static final String SUBJECT_GETTING_TO_KNOW_NEWFI = "Getting to know Newfi";
+
+	public static final String SUBJECT_DRIP_RATE_ALERTS = "Drip Rate Alerts";
+
+	public static final String SUBJECT_CREATED_ACCOUNT_NOT_COMPLETED_APPLICATION = "Created Account - Not Completed Application";
+
+	public static final String SUBJECT_NO_COMPLETED_APPLICATION = "No Completed Application";
+
+	public static final String SUBJECT_NOT_COMPLETED_APPLICATION_EMAIL_3 = "Not Completed Application EMail 3";
+
+	public static final String SUBJECT_APPLICATION_FINISHED = "Application Finished";
+
+	public static final String SUBJECT_NO_PRODUCTS_AVAILABLE = "No Products Available";
+
+	public static final String SUBJECT_NO_ACTION_FILE_INACTIVITY = "NO Action - File Inactivity";
+
+	public static final String SUBJECT_YOUR_CREDIT = "Your Credit";
+
+	public static final String SUBJECT_RATE_LOCK_REQUESTED = "Rate Lock Requested";
+
+	public static final String SUBJECT_RATES_LOCKED = "Rates Locked";
+
+	public static final String SUBJECT_YOUR_APPLICATION_FEE_DUE = "Your Application Fee Due";
+
+	public static final String SUBJECT_APPLICATION_FEE_PAID = "Application Fee Paid";
+
+	public static final String SUBJECT_APPLICATION_FEE_PENDING = "Application Fee Pending";
+
+	public static final String SUBJECT_APPLICATION_FEE_FAILED = "Application Fee Failed";
+
+	public static final String SUBJECT_APPRAISAL_ORDERED_PURCHASE = "Appraisal Ordered - Purchase";
+
+	public static final String SUBJECT_APPRAISAL_ORDERED_REFINANCE = "Appraisal Ordered - Refinance";
+
+	public static final String SUBJECT_APPRAISAL_RECEIVED = "Appraisal Received";
+
+	public static final String SUBJECT_DISCLOSURE_AVAILABLE = "Disclosure Available";
+
+	public static final String SUBJECT_DISCLOSURE_ARE_COMPLETE = "Disclosure Are Complete";
+
+	public static final String SUBJECT_LOAN_HAS_BEEN_PREAPPROVED = "Loan has been preapproved - Purchase Only";
+
+	public static final String SUBJECT_LOAN_APPROVED_WITH_CONDITIONS = "Loan Approved With Conditions";
+
+	public static final String SUBJECT_LOAN_FUNDED = "Loan Funded";
+
+	public static final String SUBJECT_LOAN_SUSPENDED = "Loan Suspended";
+
+	public static final String SUBJECT_LOAN_DECLINED = "Loan Declined";
+
+	public static final String SUBJECT_LOAN_WITHDRAWN = "Loan Withdrawn";
+
+	public static final String SUBJECT_LOAN_ARCHIVED = "Loan Archived";
+
+	public static final String SUBJECT_LOAN_IS_CLEAR_TO_CLOSE = "Loan Is Clear To Close";
+
+	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
 }
