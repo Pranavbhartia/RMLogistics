@@ -162,13 +162,20 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
+	@Transactional
+	public Integer updateUserStatus(UserVO userVO) {
+     Integer result=userProfileDao.updateUserStatus(User.convertFromVOToEntity(userVO));
+     return result;
+	}
+
+	@Override
 	@Transactional()
 	public Integer updateUser(UserVO userVO) throws InputValidationException,
 	        NonFatalException {
 
 		// TODO update user details
 		User user = User.convertFromVOToEntity(userVO);
-		user.setStatus(-1);
+
 		Integer userVOObj = userProfileDao.updateUser(user);
 
 		// TODO for update customer details
@@ -452,39 +459,48 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		sendGridEmailService.sendMail(emailEntity);
 	}
-	
-	
-	private void sendEmailWithQuotes(UserVO user,List<LqbTeaserRateVo> teaseRateDataList) throws InvalidInputException,UndeliveredEmailException {
 
-			EmailVO emailEntity = new EmailVO();
-			EmailRecipientVO recipientVO = new EmailRecipientVO();
-			Template template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DRIP_RATE_ALERTS);
-			// We create the substitutions map
-			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-			
-			substitutions.put("-name-", new String[] { user.getFirstName() + " " + user.getLastName() });
-			substitutions.put("-username-", new String[] { user.getEmailId() });
-			
-			substitutions.put("-url-", new String[] { baseUrl });
-			
-			substitutions.put("-lowestPeriodYear-", new String[] {teaseRateDataList.get(0).getYearData()});
-			substitutions.put("-lowestRate-", new String[] {teaseRateDataList.get(0).getTeaserRate()});
-			substitutions.put("-lowestApr-", new String[] {teaseRateDataList.get(0).getAPR()});
-			
-			substitutions.put("-periodYear-", new String[] {teaseRateDataList.get(1).getYearData()});
-			substitutions.put("-rate-", new String[] {teaseRateDataList.get(1).getTeaserRate()});
-			substitutions.put("-apr-", new String[] {teaseRateDataList.get(1).getAPR()});
-			
-			
-			recipientVO.setEmailID(user.getEmailId());
-			emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays.asList(recipientVO)));
-			emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
-			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			emailEntity.setSubject("You have been subscribed to Nexera");
-			emailEntity.setTokenMap(substitutions);
-			emailEntity.setTemplateId(template.getValue());
-			
-			sendGridEmailService.sendMail(emailEntity);
+	private void sendEmailWithQuotes(UserVO user,
+	        List<LqbTeaserRateVo> teaseRateDataList)
+	        throws InvalidInputException, UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DRIP_RATE_ALERTS);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		substitutions.put("-username-", new String[] { user.getEmailId() });
+
+		substitutions.put("-url-", new String[] { baseUrl });
+
+		substitutions.put("-lowestPeriodYear-",
+		        new String[] { teaseRateDataList.get(0).getYearData() });
+		substitutions.put("-lowestRate-",
+		        new String[] { teaseRateDataList.get(0).getTeaserRate() });
+		substitutions.put("-lowestApr-", new String[] { teaseRateDataList
+		        .get(0).getAPR() });
+
+		substitutions.put("-periodYear-",
+		        new String[] { teaseRateDataList.get(1).getYearData() });
+		substitutions.put("-rate-", new String[] { teaseRateDataList.get(1)
+		        .getTeaserRate() });
+		substitutions.put("-apr-", new String[] { teaseRateDataList.get(1)
+		        .getAPR() });
+
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("You have been subscribed to Nexera");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
 	}
 
 	@Override
