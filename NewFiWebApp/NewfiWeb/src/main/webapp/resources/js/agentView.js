@@ -1276,8 +1276,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", selectedUserDetail.loanID + ""
-			+ loanDetails.setSenderDomain);
+	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	appendLoanDetailsRow("Customer", "Edit", true);
 

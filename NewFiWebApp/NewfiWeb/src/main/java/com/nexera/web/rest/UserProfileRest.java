@@ -500,15 +500,21 @@ public class UserProfileRest {
 
 		LOG.info("Delete user with user id : " + userId);
 		CommonResponseVO response = new CommonResponseVO();
-
+		ErrorVO error = new ErrorVO();
 		try {
 			UserVO userVO = userProfileService.findUser(userId);
 			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
 			        .getRoleId()) {
 
-				
-				userProfileService.updateUser(userVO);
-				response.setResultObject(userVO);
+				userVO.setStatus(-1);
+				Integer result=userProfileService.updateUserStatus(userVO);
+				if(result>0){
+					response.setResultObject(userVO);
+				}else{
+					error.setMessage("Error while deletion.Please try again later");
+					response.setError(error);
+				}
+			
 
 			} else {
 				userProfileService.deleteUser(userVO);
@@ -517,14 +523,14 @@ public class UserProfileRest {
 
 		} catch (InputValidationException e) {
 			LOG.error("error and message is : " + e.getDebugMessage());
-			ErrorVO error = new ErrorVO();
+			
 			error.setMessage(e.getDebugMessage());
 			response.setError(error);
 			e.getDebugMessage();
 
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
-			ErrorVO error = new ErrorVO();
+			
 			error.setMessage(e.getMessage());
 			response.setError(error);
 		}

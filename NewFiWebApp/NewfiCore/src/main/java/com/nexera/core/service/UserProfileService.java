@@ -108,5 +108,6 @@ public interface UserProfileService {
 
 	public InternalUserStateMappingVO deleteInternalUserStateMapping(
             InternalUserStateMappingVO internalUserStateMappingVO);
-
+   
+	public Integer updateUserStatus(UserVO userVO);
 }

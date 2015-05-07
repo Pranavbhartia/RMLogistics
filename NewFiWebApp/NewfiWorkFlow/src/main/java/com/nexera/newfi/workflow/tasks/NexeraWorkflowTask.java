@@ -40,7 +40,7 @@ public abstract class NexeraWorkflowTask {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(NexeraWorkflowTask.class);
 
-	public void sendEmail(HashMap<String, Object> objectMap) {
+	public void sendEmail(HashMap<String, Object> objectMap, String subject) {
 		if (objectMap != null) {
 			LoanVO loanVO = loanService
 			        .getLoanByID(Integer.parseInt(objectMap.get(
@@ -87,7 +87,11 @@ public abstract class NexeraWorkflowTask {
 				emailEntity.setSenderEmailId("web@newfi.com");
 				emailEntity.setRecipients(recipients);
 				emailEntity.setSenderName("Newfi System");
-				emailEntity.setSubject("Nexera Newfi Portal");
+				if (subject == null) {
+					emailEntity.setSubject("Nexera Newfi Portal");
+				} else {
+					emailEntity.setSubject(subject);
+				}
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(emailTemplate);
 				sendGridEmailService.sendAsyncMail(emailEntity);

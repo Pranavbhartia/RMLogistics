@@ -107,4 +107,6 @@ public interface UserProfileDao extends GenericDao {
 
 	public InternalUserStateMapping deleteInternalUserStateMapping(
             InternalUserStateMappingVO inputVo);
+	
+	public Integer updateUserStatus(User user);
 }
