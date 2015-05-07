@@ -39,13 +39,13 @@
 							<div class="user-info-name">${userObject.displayName}</div>
 						</div>
 						
-						<div class="user-info-row">
+						<div class="user-info-row" id="realtorPhNumber">
 							<div>${userObject.phoneNumber}</div>
 						</div>
 						
-						<div class="user-info-row">
+						<%-- <div class="user-info-row">
 							<div>${userObject.userRole.label}</div>
-						</div>
+						</div> --%>
 					</div>
 					<div class="float-right new-user-container">
 						<div class="reg-input-row clearfix">
@@ -108,6 +108,7 @@
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
 			});
+			$('#realtorPhNumber').html(formatPhoneNumberToUsFormat($('#realtorPhNumber').html()));
 			var imgCont = $('<div>').attr({
 				
 			});
