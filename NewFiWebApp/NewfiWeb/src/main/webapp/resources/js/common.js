@@ -434,7 +434,7 @@ function getDecimalValue(inputData) {
 		}
 		return val;
 	} else
-		return 0;
+		return 0.00;
 
 }
 
@@ -444,7 +444,7 @@ function numberWithCommasAndDoller(x) {
 
 function showValue(number, showDecimal) {
 	var temp = removedDoller(removedComma(number));
-	if (number && number != "" && !isNaN(temp))
+	if (!isNaN(temp) && number !== "")
 		if (!showDecimal)
 			return numberWithCommasAndDoller(getRoundValue(number));
 		else {
@@ -590,7 +590,7 @@ function getCalculationFunctionForItem(key) {
 				return closingCostHolder.valueSet[key];
 			else {
 				if (closingCostHolder.loanType
-						&& closingCostHolder.loanType == "Purchase") {
+						&& closingCostHolder.loanType == "PUR") {
 					var purchaseValue = getFloatValue(closingCostHolder.housePrice);
 					var result = Math.round(.0035 * purchaseValue)
 					return result;
@@ -610,7 +610,7 @@ function getCalculationFunctionForItem(key) {
 				return closingCostHolder.valueSet[key];
 			else {
 				if (closingCostHolder.loanType
-						&& closingCostHolder.loanType == "Purchase") {
+						&& closingCostHolder.loanType == "PUR") {
 					var purchaseValue = getFloatValue(closingCostHolder.housePrice);
 					var result = Math.round((.0125 * purchaseValue) / 6);
 					return result;
@@ -629,7 +629,7 @@ function getCalculationFunctionForItem(key) {
 				return closingCostHolder.valueSet[key];
 			else {
 				if (closingCostHolder.loanType
-						&& closingCostHolder.loanType == "Purchase") {
+						&& closingCostHolder.loanType == "PUR") {
 					var insVal = getFloatValue(closingCostHolder.annualHomeownersInsurance);
 					var result = Math.round(insVal * 2);
 					return result;
@@ -713,16 +713,20 @@ function getRowHolderObject(container, value, key) {
 		getValueForItem : function() {
 			var ob = this;
 			var getVal = ob.updateFunction();
-			if (!isNaN(getVal)) {
+			var val=getFloatValue(getVal);
+			if (!isNaN(val)) {
 				var negativeFlag = false;
-				if (getVal < 0) {
+				if (val < 0) {
 					negativeFlag = true;
-					getVal = Math.abs(getVal)
+					val = Math.abs(val)
 				}
-				getVal = showValue(getVal, true);
+				getVal = showValue(val, true);
 				if (negativeFlag) {
 					getVal = markNegative(getVal);
 				}
+			}else{
+				if(getVal!="Varies by Location")
+					getVal="$0.00"
 			}
 			return getVal;
 		},
