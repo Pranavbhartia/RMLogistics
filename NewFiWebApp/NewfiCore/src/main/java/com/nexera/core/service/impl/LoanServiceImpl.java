@@ -1874,8 +1874,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	public void sendNoproductsAvailableEmail(Integer loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public void sendNoproductsAvailableEmail(Integer loanId) {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
@@ -1896,7 +1895,13 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
 
-			sendGridEmailService.sendMail(emailEntity);
+			try {
+				sendGridEmailService.sendMail(emailEntity);
+			} catch (InvalidInputException e) {
+				LOG.error("Excpetion caught " + e.getMessage());
+			} catch (UndeliveredEmailException e) {
+				LOG.error("Excpetion caught " + e.getMessage());
+			}
 
 			LoanTeamListVO loanTeamListVO = getLoanTeamListForLoan(loan);
 			if (loanTeamListVO != null) {
@@ -1952,8 +1957,16 @@ public class LoanServiceImpl implements LoanService {
 										        .setTemplateId(loanManagerTemplate
 										                .getValue());
 
-										sendGridEmailService
-										        .sendMail(emailEntity);
+										try {
+											sendGridEmailService
+											        .sendMail(emailEntity);
+										} catch (InvalidInputException e) {
+											LOG.error("Excpetion caught "
+											        + e.getMessage());
+										} catch (UndeliveredEmailException e) {
+											LOG.error("Excpetion caught "
+											        + e.getMessage());
+										}
 
 									}
 								}
