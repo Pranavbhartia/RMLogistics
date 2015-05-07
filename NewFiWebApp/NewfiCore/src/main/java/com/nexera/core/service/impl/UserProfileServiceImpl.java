@@ -452,43 +452,48 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		sendGridEmailService.sendMail(emailEntity);
 	}
-	
-	
-	private void sendEmailWithQuotes(UserVO user,List<LqbTeaserRateVo> teaseRateDataList) throws InvalidInputException,UndeliveredEmailException {
 
-			EmailVO emailEntity = new EmailVO();
-			EmailRecipientVO recipientVO = new EmailRecipientVO();
-			Template template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DRIP_RATE_ALERTS);
-			// We create the substitutions map
-			Map<String, String[]> substitutions = new HashMap<String, String[]>();
-			
-			substitutions.put("-name-", new String[] { user.getFirstName() + " " + user.getLastName() });
-			substitutions.put("-username-", new String[] { user.getEmailId() });
-			String uniqueURL = baseUrl + "reset.do?reference="+ user.getEmailEncryptionToken();
-			
-			substitutions.put("-url-", new String[] { baseUrl });
-			substitutions.put("-passwordurl-", new String[] { uniqueURL });
-			
-			substitutions.put("-lowestPeriodYear-", new String[] {teaseRateDataList.get(0).getYearData()});
-			substitutions.put("-lowestRate-", new String[] {teaseRateDataList.get(0).getTeaserRate()});
-			
-			substitutions.put("-periodYear-", new String[] {teaseRateDataList.get(1).getYearData()});
-			substitutions.put("-rate-", new String[] {teaseRateDataList.get(1).getTeaserRate()});
-			
-			
-			recipientVO.setEmailID(user.getEmailId());
-			emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays.asList(recipientVO)));
-			emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
-			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			emailEntity.setSubject("You have been subscribed to Nexera");
-			emailEntity.setTokenMap(substitutions);
-			emailEntity.setTemplateId(template.getValue());
-			
-			sendGridEmailService.sendMail(emailEntity);
+	private void sendEmailWithQuotes(UserVO user,
+	        List<LqbTeaserRateVo> teaseRateDataList)
+	        throws InvalidInputException, UndeliveredEmailException {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DRIP_RATE_ALERTS);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		substitutions.put("-username-", new String[] { user.getEmailId() });
+		String uniqueURL = baseUrl + "reset.do?reference="
+		        + user.getEmailEncryptionToken();
+
+		substitutions.put("-url-", new String[] { baseUrl });
+		substitutions.put("-passwordurl-", new String[] { uniqueURL });
+
+		substitutions.put("-lowestPeriodYear-",
+		        new String[] { teaseRateDataList.get(0).getYearData() });
+		substitutions.put("-lowestRate-",
+		        new String[] { teaseRateDataList.get(0).getTeaserRate() });
+
+		substitutions.put("-periodYear-",
+		        new String[] { teaseRateDataList.get(1).getYearData() });
+		substitutions.put("-rate-", new String[] { teaseRateDataList.get(1)
+		        .getTeaserRate() });
+
+		recipientVO.setEmailID(user.getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("You have been subscribed to Nexera");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
 	}
-	
-	
-	
 
 	@Override
 	@Transactional
@@ -538,10 +543,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);
-			
-		
-			
-			
+
 		} catch (InvalidInputException | UndeliveredEmailException e) {
 			// TODO: Need to handle this and try a resend, since password will
 			// not be stored
@@ -550,6 +552,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("sendNewUserEmail : sending the email done");
 
 		userVO.setPassword(newUser.getPassword());
+		userVO.setUsername(newUser.getUsername());
 		// reset this value so that two objects are not created
 		userVO.setCustomerDetail(null);
 		userVO.setId(userID);
@@ -1004,8 +1007,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO , List<LqbTeaserRateVo> teaseRateDataList)
-	        throws FatalException {
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO,
+	        List<LqbTeaserRateVo> teaseRateDataList) throws FatalException {
 
 		try {
 			// CustomerEnagagement customerEnagagement =
@@ -1025,12 +1028,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = this.createNewUserAndSendMail(userVO);
 
-			
-			if(null != loaAppFormVO.getEmailQuote() && loaAppFormVO.getEmailQuote()){
-				
-				sendEmailWithQuotes(userVOObj,teaseRateDataList);
+			if (null != loaAppFormVO.getEmailQuote()
+			        && loaAppFormVO.getEmailQuote()) {
+
+				sendEmailWithQuotes(userVOObj, teaseRateDataList);
 			}
-			
 
 			LOG.info("Successfully exceuted createNewUserAndSendMail");
 
@@ -1170,11 +1172,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			return userVOObj;
 		} catch (Exception e) {
 
-
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
-			LOG.error("error while creating user in shopper registartion  creating user"+e.getStackTrace());
-			 e.getCause().printStackTrace();
+			LOG.error("error while creating user in shopper registartion  creating user"
+			        + e.getStackTrace());
+			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
 		}
