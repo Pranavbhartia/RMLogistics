@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageVO.FileVO;
@@ -124,12 +125,27 @@ public class EmailProcessor implements Runnable {
 						String[] toAddressArray = toAddressString.split("-");
 						if (toAddressArray.length == 1) {
 							LOGGER.debug("This is a new message, does not contain a message id");
-							loanId = toAddressArray[0];
-							loanId = loanId.replace(
+							String userName = toAddressArray[0];
+							userName = userName.replace(
 							        CommonConstants.SENDER_DOMAIN_REGEX, "");
-							if (loanId.contains("@")) {
-								loanId = loanId.substring(0,
-								        loanId.indexOf("@"));
+							if (userName.contains("@")) {
+								userName = userName.substring(0,
+								        userName.indexOf("@"));
+							}
+
+							try {
+								UserVO userVO = userProfileService
+								        .findByUserName(userName);
+								LoanVO loan = loanService
+								        .getActiveLoanOfUser(userVO);
+								if (loan != null) {
+									loanId = String.valueOf(loan.getId());
+								} else {
+									loanId = null;
+								}
+							} catch (NoRecordsFetchedException ne) {
+								LOGGER.error("User not found exception ");
+								loanId = null;
 							}
 
 						} else if (toAddressArray.length == 2) {

@@ -730,8 +730,9 @@ public class ApplicationFormRestService {
 		System.out.println("Inside createLoan" + appFormData);
 		Gson gson = new Gson();
 		String lockRateData = null;
+		LoanAppFormVO loaAppFormVO = null;
 		try {
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			loaAppFormVO = gson.fromJson(appFormData,
 			        LoanAppFormVO.class);
 			String loanNumber = invokeRest(prepareCreateLoanJson(
 			        "DIRECT-REFI-MASTER TEMPLATE").toString());
@@ -761,7 +762,13 @@ public class ApplicationFormRestService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			lockRateData = "error";
+		}
+		if (lockRateData == null || lockRateData == "error") {
+			// code to send mail to user and loan manager
+			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null)
+				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
+			        .getId());
 		}
 		return lockRateData;
 

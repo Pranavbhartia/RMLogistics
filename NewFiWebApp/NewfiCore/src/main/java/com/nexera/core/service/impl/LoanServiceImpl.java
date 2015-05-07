@@ -55,6 +55,8 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -696,8 +698,10 @@ public class LoanServiceImpl implements LoanService {
 		addDefaultLoanTeam(loanVO, loanId);
 
 		LOG.info("Added team");
-		loanDao.updateLoanEmail(loanId,
-		        utils.generateLoanEmail(loanVO.getUser().getUsername()));
+		loanVO.setLoanEmailId(utils.generateLoanEmail(loanVO.getUser()
+		        .getUsername()));
+		loanDao.updateLoanEmail(loanId, loanVO.getLoanEmailId());
+
 		LOG.info("Added Loan Email");
 		// Invoking the workflow activities to trigger
 		loan.setId(loanId);
@@ -1872,8 +1876,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	public void sendNoproductsAvailableEmail(Integer loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public void sendNoproductsAvailableEmail(Integer loanId) {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
@@ -1894,7 +1897,86 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
 
-			sendGridEmailService.sendMail(emailEntity);
+			try {
+				sendGridEmailService.sendMail(emailEntity);
+			} catch (InvalidInputException e) {
+				LOG.error("Excpetion caught " + e.getMessage());
+			} catch (UndeliveredEmailException e) {
+				LOG.error("Excpetion caught " + e.getMessage());
+			}
+
+			LoanTeamListVO loanTeamListVO = getLoanTeamListForLoan(loan);
+			if (loanTeamListVO != null) {
+				List<LoanTeamVO> loanTeamVOList = loanTeamListVO
+				        .getLoanTeamList();
+				if (loanTeamVOList != null) {
+					for (LoanTeamVO loanTeam : loanTeamVOList) {
+						if (loanTeam.getUser() != null) {
+							InternalUserDetailVO internalUserDetail = loanTeam
+							        .getUser().getInternalUserDetail();
+							if (internalUserDetail != null) {
+								InternalUserRoleMasterVO internalUserRole = internalUserDetail
+								        .getInternalUserRoleMasterVO();
+								if (internalUserRole != null) {
+									if (internalUserRole.getRoleName()
+									        .equalsIgnoreCase(
+									                InternalUserRolesEum.LM
+									                        .getName())) {
+										EmailVO loanManagerEmailEntity = new EmailVO();
+										EmailRecipientVO recipientLoanManagerVO = new EmailRecipientVO();
+										Template loanManagerTemplate = templateService
+										        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
+										// We create the substitutions map
+										Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+										loanManagerSubstitutions
+										        .put("-name-",
+										                new String[] { loanTeam
+										                        .getUser()
+										                        .getFirstName()
+										                        + " "
+										                        + loanTeam
+										                                .getUser()
+										                                .getLastName() });
+										loanManagerSubstitutions.put(
+										        "-customername-",
+										        new String[] { loan.getUser()
+										                .getFirstName() });
+										recipientLoanManagerVO
+										        .setEmailID(loanTeam.getUser()
+										                .getEmailId());
+										loanManagerEmailEntity
+										        .setRecipients(new ArrayList<EmailRecipientVO>(
+										                Arrays.asList(recipientLoanManagerVO)));
+										loanManagerEmailEntity
+										        .setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+										loanManagerEmailEntity
+										        .setSenderName(CommonConstants.SENDER_NAME);
+										loanManagerEmailEntity
+										        .setSubject("No Products Available");
+										loanManagerEmailEntity
+										        .setTokenMap(substitutions);
+										loanManagerEmailEntity
+										        .setTemplateId(loanManagerTemplate
+										                .getValue());
+
+										try {
+											sendGridEmailService
+											        .sendMail(emailEntity);
+										} catch (InvalidInputException e) {
+											LOG.error("Excpetion caught "
+											        + e.getMessage());
+										} catch (UndeliveredEmailException e) {
+											LOG.error("Excpetion caught "
+											        + e.getMessage());
+										}
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

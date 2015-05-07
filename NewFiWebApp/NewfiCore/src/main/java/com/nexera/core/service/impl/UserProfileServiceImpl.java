@@ -486,9 +486,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 			
 			sendGridEmailService.sendMail(emailEntity);
 	}
-	
-	
-	
 
 	@Override
 	@Transactional
@@ -538,10 +535,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);
-			
-		
-			
-			
+
 		} catch (InvalidInputException | UndeliveredEmailException e) {
 			// TODO: Need to handle this and try a resend, since password will
 			// not be stored
@@ -550,6 +544,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.debug("sendNewUserEmail : sending the email done");
 
 		userVO.setPassword(newUser.getPassword());
+		userVO.setUsername(newUser.getUsername());
 		// reset this value so that two objects are not created
 		userVO.setCustomerDetail(null);
 		userVO.setId(userID);
@@ -1004,8 +999,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO , List<LqbTeaserRateVo> teaseRateDataList)
-	        throws FatalException {
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO,
+	        List<LqbTeaserRateVo> teaseRateDataList) throws FatalException {
 
 		try {
 			// CustomerEnagagement customerEnagagement =
@@ -1025,12 +1020,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
 			userVOObj = this.createNewUserAndSendMail(userVO);
 
-			
-			if(null != loaAppFormVO.getEmailQuote() && loaAppFormVO.getEmailQuote()){
-				
-				sendEmailWithQuotes(userVOObj,teaseRateDataList);
+			if (null != loaAppFormVO.getEmailQuote()
+			        && loaAppFormVO.getEmailQuote()) {
+
+				sendEmailWithQuotes(userVOObj, teaseRateDataList);
 			}
-			
 
 			LOG.info("Successfully exceuted createNewUserAndSendMail");
 
@@ -1170,11 +1164,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 			return userVOObj;
 		} catch (Exception e) {
 
-
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
-			LOG.error("error while creating user in shopper registartion  creating user"+e.getStackTrace());
-			 e.getCause().printStackTrace();
+			LOG.error("error while creating user in shopper registartion  creating user"
+			        + e.getStackTrace());
+			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
 		}
