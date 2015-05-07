@@ -13,6 +13,7 @@ import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -30,6 +31,9 @@ import com.nexera.common.vo.UserVO;
 public interface LoanService {
 
 	public List<LoanVO> getLoansOfUser(UserVO user);
+
+	public void sendRateLocked(Integer loanId) throws InvalidInputException,
+	        UndeliveredEmailException;
 
 	public LoanVO getLoanByID(Integer loanID);
 
