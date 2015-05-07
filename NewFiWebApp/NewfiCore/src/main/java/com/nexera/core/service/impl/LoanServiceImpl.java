@@ -55,6 +55,8 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.InternalUserDetailVO;
+import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -1895,6 +1897,71 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setTemplateId(template.getValue());
 
 			sendGridEmailService.sendMail(emailEntity);
+
+			LoanTeamListVO loanTeamListVO = getLoanTeamListForLoan(loan);
+			if (loanTeamListVO != null) {
+				List<LoanTeamVO> loanTeamVOList = loanTeamListVO
+				        .getLoanTeamList();
+				if (loanTeamVOList != null) {
+					for (LoanTeamVO loanTeam : loanTeamVOList) {
+						if (loanTeam.getUser() != null) {
+							InternalUserDetailVO internalUserDetail = loanTeam
+							        .getUser().getInternalUserDetail();
+							if (internalUserDetail != null) {
+								InternalUserRoleMasterVO internalUserRole = internalUserDetail
+								        .getInternalUserRoleMasterVO();
+								if (internalUserRole != null) {
+									if (internalUserRole.getRoleName()
+									        .equalsIgnoreCase(
+									                InternalUserRolesEum.LM
+									                        .getName())) {
+										EmailVO loanManagerEmailEntity = new EmailVO();
+										EmailRecipientVO recipientLoanManagerVO = new EmailRecipientVO();
+										Template loanManagerTemplate = templateService
+										        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
+										// We create the substitutions map
+										Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+										loanManagerSubstitutions
+										        .put("-name-",
+										                new String[] { loanTeam
+										                        .getUser()
+										                        .getFirstName()
+										                        + " "
+										                        + loanTeam
+										                                .getUser()
+										                                .getLastName() });
+										loanManagerSubstitutions.put(
+										        "-customername-",
+										        new String[] { loan.getUser()
+										                .getFirstName() });
+										recipientLoanManagerVO
+										        .setEmailID(loanTeam.getUser()
+										                .getEmailId());
+										loanManagerEmailEntity
+										        .setRecipients(new ArrayList<EmailRecipientVO>(
+										                Arrays.asList(recipientLoanManagerVO)));
+										loanManagerEmailEntity
+										        .setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+										loanManagerEmailEntity
+										        .setSenderName(CommonConstants.SENDER_NAME);
+										loanManagerEmailEntity
+										        .setSubject("No Products Available");
+										loanManagerEmailEntity
+										        .setTokenMap(substitutions);
+										loanManagerEmailEntity
+										        .setTemplateId(loanManagerTemplate
+										                .getValue());
+
+										sendGridEmailService
+										        .sendMail(emailEntity);
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

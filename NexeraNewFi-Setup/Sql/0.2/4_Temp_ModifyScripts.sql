@@ -325,9 +325,9 @@ VALUES ('34','LOAN_DECLINED_TEMPLATE_ID','loan declined','2015-04-10 12:53:34','
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('35','LOAN_CLEAR_TO_CLOSE_TEMPLATE_ID','Loan clear to close','2015-04-10 12:53:34','fd85f95d-baf7-44cc-9dc4-282ddb2706ee');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
-VALUES ('36','FINAL_DOCS_SENT_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','852fcf28-1c94-40e2-bab4-145a3790f5fe');
+VALUES ('36','FINAL_DOCS_SENT_TEMPLATE_ID','Final docs are sent','2015-04-10 12:53:34','852fcf28-1c94-40e2-bab4-145a3790f5fe');
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
-VALUES ('37','DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID','New user mail','2015-04-10 12:53:34','a77f61e9-66eb-4304-a205-2959be561f58');
+VALUES ('37','DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID','Docs have been assigned to funder','2015-04-10 12:53:34','a77f61e9-66eb-4304-a205-2959be561f58');
 
 
 #Added by Utsav on 28th April at 04:33 PM IST
@@ -347,3 +347,8 @@ alter table newfi_schema.internaluserstatemapping add column license_number varc
 
 # Added by Abhishek
 alter table newfi_schema.internaluserstatemapping add column license_number varchar (100);
+
+
+# Added by Utsav on 7th May 
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('38','NO_PRODUCTS_AVAILABLE_LOAN_MANAGER_TEMPLATE_ID','No producst available','f1329d6b-11b9-4fc6-a10f-a595125250de');
