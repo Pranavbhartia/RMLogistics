@@ -412,7 +412,10 @@ function getFloatValue(inputData) {
 			return parseFloat(removedDoller(removedComma(inputData)));
 		}
 	} else
-		return 0;
+		if(isNaN(inputData)){
+			return inputData;
+		}else
+			return 0;
 
 }
 
@@ -439,6 +442,8 @@ function getDecimalValue(inputData) {
 }
 
 function numberWithCommasAndDoller(x) {
+	if(x==0)
+		return "$0.00";
 	return "$" + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -650,6 +655,8 @@ function getCalculationFunctionForItem(key) {
 			var val7 = getFloatValue(closingCostHolder.valueSet["closingEscrowFee1102"]);
 			var val8 = getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
 			var val9 = getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
+			if(isNaN(val9))
+				val9=0;
 			if (isNaN(val9)) {
 				val9 = 0;
 			}
