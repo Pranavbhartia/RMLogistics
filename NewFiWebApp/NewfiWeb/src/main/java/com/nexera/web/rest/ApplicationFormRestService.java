@@ -843,6 +843,7 @@ public class ApplicationFormRestService {
 			if (!lockRateData.contains("status=\"Error\"")) {
 				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
 				        loanLockRateVO.getRateVo());
+				loanService.sendRateLocked(loanLockRateVO.getLoanId());
 			}
 
 		} catch (Exception e) {

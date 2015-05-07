@@ -1876,6 +1876,33 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	public void sendRateLocked(Integer loanID) throws InvalidInputException,
+	        UndeliveredEmailException {
+		LoanVO loan = getLoanByID(loanID);		
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_RATES_LOCKED);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loan.getUser()
+		        .getFirstName() + " " + loan.getUser().getLastName() });
+		substitutions.put("-rate-", new String[] { loan.getLockedRate()!=null? loan.getLockedRate().toString() : "" });
+		substitutions.put("-rateexpirationdate-", new String[] {  " " });
+		
+		recipientVO.setEmailID(loan.getUser().getEmailId());
+		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
+		        .asList(recipientVO)));
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Rates Locked");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		sendGridEmailService.sendMail(emailEntity);
+	}
+
+	@Override
 	public void sendNoproductsAvailableEmail(Integer loanId) {
 
 		EmailVO emailEntity = new EmailVO();
