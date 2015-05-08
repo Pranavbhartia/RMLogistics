@@ -611,6 +611,16 @@
 		font-family: 'opensanssemibold';
 		color: #F47522;
 	}
+	.loan-summary-sub-col-detail{
+		float: none;
+	}
+	.sm-save-btn {
+		margin: 5px 0 0 0;
+		float: none;
+		width: 40px;
+		padding: 0;
+		text-align: center;
+	}
 }
 
 
@@ -1142,6 +1152,16 @@
 	}
 	.reg-input-row .reg-lname{
 		margin-right: 10px;
+	}
+	.loan-summary-sub-col-detail{
+		float: none;
+	}
+	.sm-save-btn {
+		margin: 5px 0 0 0;
+		float: none;
+		width: 40px;
+		padding: 0;
+		text-align: center;
 	}
 }
 
