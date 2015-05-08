@@ -217,6 +217,10 @@ function paintCustomerApplicationPage() {
         "class": "clearfix"
     });
 
+    var stepContOnMobileScreen = $('<div>').attr({
+    	"class" : "hide cust-app-step-hdr"
+    }).html("Step ").append("<span id='step-no'>1</span>").append(" of " + applicationItemsList.length);
+    
     var applicationLeftPanel = $('<div>').attr({
         "class": "cust-app-lp float-left"
     });
@@ -230,7 +234,7 @@ function paintCustomerApplicationPage() {
         "class": "cust-app-rp float-left"
     });
 
-    container.append(applicationLeftPanel).append(applicationRightPanel);
+    container.append(applicationLeftPanel).append(stepContOnMobileScreen).append(applicationRightPanel);
     
     
 
@@ -3516,8 +3520,8 @@ $(".ce-option-checkbox").click();
 
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);
-	createLoan(appUserDetails);
-	changeSecondaryLeftPanel(3,true);
+	createLoan(appUserDetails, true);
+	
 	//saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
@@ -4039,7 +4043,7 @@ function saveUserAndLockRate(appUserDetails) {
  
 
 function appProgressBaar(num){
-	
+	$('#step-no').text(num);
 	var count = 6;
 	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
@@ -4977,7 +4981,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 
 
 
-function createLoan(appUserDetails)
+function createLoan(appUserDetails, flag)
 {
 ////alert('inside create loan method');
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
@@ -5003,12 +5007,18 @@ $.ajax({
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
-               	if(data=="error"){
-               		showErrorToastMessage("Your application could not be submitted");
-               	}else{
-               		paintLockRate(ob, appUserDetails);	
-               	}
+
+                if(data=="error"){
+                    showErrorToastMessage("Your application could not be submitted");
+                   }else{
+                	   if(flag)
+                		{
+                		   changeSecondaryLeftPanel(3,true);                		  
+                		}
+                	   paintLockRate(ob, appUserDetails); 
+                   }
                 
+
             /*}*/
             $('#overlay-loader').hide();
 		},

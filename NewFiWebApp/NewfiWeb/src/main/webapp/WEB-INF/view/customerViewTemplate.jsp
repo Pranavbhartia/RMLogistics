@@ -21,6 +21,7 @@
 <link href="resources/css/datepicker.css" rel="stylesheet">
 <link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/pgwslideshow.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
@@ -65,10 +66,13 @@
 		$(document).ready(function() {
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
-			changeLeftPanel(2);
+			changeLeftPanel(2,callBackFun);
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
 			
+			 
+		});
+		function callBackFun(){
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
@@ -143,8 +147,8 @@
 		//	retrieveState();
 
 			
-			$('[data-toggle="tooltip"]').tooltip();   
-		});
+			$('[data-toggle="tooltip"]').tooltip();  
+		}
 	</script>
 </body>
 </html>

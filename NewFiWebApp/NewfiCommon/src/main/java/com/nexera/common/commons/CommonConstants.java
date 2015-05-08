@@ -97,7 +97,7 @@ public interface CommonConstants {
 	/*
 	 * Constants for email subjects
 	 */
-	public static final String NOTE_SUBJECT = "NewFi - You have a new note";
+	public static final String NOTE_SUBJECT = "newfi - You have a new note";
 
 	public static final String ANONYMOUS_USER = "User name unavailable";
 
@@ -149,6 +149,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_TEST_TEMPLATE = "TEST_EMAIL_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WORKFLOW_COMPLETION = "TEMPLATE_WORKFLOW_COMPLETION";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI = "WELCOME_TO_NEWFI_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR = "WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED = "CREATED_ACCOUNT_PASSWORD_NOT_UPDATED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FORGOT_YOUR_PASSWORD = "FORGOT_YOUR_PASSWORD_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_GET_TO_KNOW_NEWFI = "GET_TO_KNOW_NEWFI_TEMPLATE_ID";

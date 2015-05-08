@@ -4,7 +4,7 @@ var currentUserAndLoanOnj = new Object();
 var doPagination = false;
 var loanTypeText = "refinance";
 
-function changeLeftPanel(primary) {
+function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
     $('.lp-item').removeClass('lp-item-active');
@@ -12,17 +12,19 @@ function changeLeftPanel(primary) {
     if (leftPanel == 1) {
         doPagination = true;
         showMessageDashboard();
+        if(callback)
+            callback();
     } else if (leftPanel == 2) {
         doPagination = false;
-        findUser();
+        findUser(callback);
     }
     var contxt = getNotificationContext(newfiObject.user.defaultLoanId, newfiObject.user.id);
     contxt.initContext(true);
     addContext("notification", contxt);
 }
 
-function findUser() {
-        ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+function findUser(callback) {
+        ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, function(response){appendCustPersonalInfoWrapper(response,callback)});
     }
     /*var logedInUser;
 
@@ -37,10 +39,10 @@ function findUser() {
     	logedInUser.phoneNo = user.phone_no;
 
     }*/
-function appendCustPersonalInfoWrapper(user) {
+function appendCustPersonalInfoWrapper(user,callback) {
     //alert(logedInUser.userID);
     //resetlogedInUserDetailObject(user);
-    showCustomerLoanPage(user);
+    showCustomerLoanPage(user,callback);
 }
 
 function getCustomerSecondaryLeftNav() {
@@ -85,7 +87,7 @@ function showMessageDashboard() {
     adjustCenterPanelWidth();
 }
 
-function showCustomerLoanPage(user) {
+function showCustomerLoanPage(user,callback) {
 	scrollToTop();
     $('.lp-right-arrow').remove();
     $('#right-panel').html('');
@@ -109,6 +111,8 @@ function showCustomerLoanPage(user) {
     //TODO: Invoke dynamic binder to listen to secondary navigation clicks
     bindDataToSN();
     globalSNBinder();
+    if(callback)
+        callback();
 }
 
 
@@ -126,6 +130,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	        $('#center-panel-cont').html('');
 	        if (secondary == 1) {
 	            // getting to know newfi page
+	        	paintGettingToKnowPage();
 	        } else if (secondary == 2) {
 	            var userId=newfiObject.user.id;
 	            getAppDetailsForUser(userId,function(appUserDetailsTemp){
@@ -163,7 +168,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
                     
-                    } , "We are checking on your awesome rates");
+                    } , "We are checking on your<br/> awesome rates");
                    
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
@@ -177,6 +182,72 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            paintCustomerLoanProgressPage();
 	        }
 	    }
+
+/*
+ * Function to paint the getting to know newfi page on customer login
+ */
+function paintGettingToKnowPage() {
+	var wrapper = $('<div>').attr({
+        "class": "getting-to-know-wrapper"
+    });
+    var header = $('<div>').attr({
+        "class": "complete-application-header"
+    }).html("Getting to Know Newfi");
+    wrapper.append(header);
+    
+    
+    var container = $('<div>').attr({
+    	"class" : "getting-to-know-container"
+    });
+    
+    var slideShowCont = $('<ul>').attr({
+    	"class" : "pgwSlideshow"
+    });
+    
+
+    var imagesObj = [ {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/san-francisco.jpg",
+		"alt" : "San Franciso",
+		"data-description" : "San Franciso"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/rio.jpg",
+		"alt" : "Rio de Jenario",
+		"data-description" : "Brazil"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/new-delhi.jpg",
+		"alt" : "New Delhi",
+		"data-description" : "India"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/new-york.jpg",
+		"alt" : "New York, US",
+		"data-description" : ""
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/london.jpg",
+		"alt" : "London, England",
+		"description" : ""
+	} ];
+    
+    for(var i=0; i<imagesObj.length; i++){
+    	
+    	var item = $('<li>');
+    	
+    	var image = $('<img>').attr({
+        	"src" : imagesObj[i].src,
+        	"alt" : imagesObj[i].alt,
+        	"data-description" : imagesObj[i].description
+        });    	
+    	
+    	item.append(image);
+    	slideShowCont.append(item);
+    }
+    
+    container.append(slideShowCont);
+    
+    $('#center-panel-cont').html(wrapper).append(container);
+    
+    var pgwSlideshow = $('.pgwSlideshow').pgwSlideshow();
+    
+}
 
     /*
 

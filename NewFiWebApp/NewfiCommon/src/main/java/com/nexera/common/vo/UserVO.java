@@ -39,7 +39,18 @@ public class UserVO implements Serializable {
 	private Date tokenGeneratedTime;
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
-	
+
+	public String getRoleName() {
+		String roleName = "NA";
+		if (this.getInternalUserDetail() != null
+		        && this.getInternalUserDetail().getInternalUserRoleMasterVO() != null) {
+			roleName = this.getInternalUserDetail()
+			        .getInternalUserRoleMasterVO().getRoleDescription();
+		} else if (this.getUserRole() != null) {
+			roleName = this.getUserRole().getRoleDescription();
+		}
+		return roleName;
+	}
 
 	public UserVO() {
 
@@ -275,8 +286,7 @@ public class UserVO implements Serializable {
 	public void setTokenGeneratedTime(Date tokenGeneratedTime) {
 		this.tokenGeneratedTime = tokenGeneratedTime;
 	}
-	
-	
+
 	public Boolean getMobileAlertsPreference() {
 		return mobileAlertsPreference;
 	}
@@ -284,7 +294,7 @@ public class UserVO implements Serializable {
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 		this.mobileAlertsPreference = mobileAlertsPreference;
 	}
-	
+
 	public String getCarrierInfo() {
 		return carrierInfo;
 	}
