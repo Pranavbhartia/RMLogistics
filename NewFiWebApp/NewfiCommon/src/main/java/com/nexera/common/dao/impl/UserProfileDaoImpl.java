@@ -153,7 +153,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		String hql = "UPDATE CustomerDetail customerdetail set customerdetail.addressStreet = :street,customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
-		query.setParameter("street", customerDetail.getAddressStreet());
+		//query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());

@@ -75,6 +75,8 @@
                 adjustCustomerApplicationPageOnResize();
 			});
 			var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
+			if(loanType === "Purchase")
+				loanType = "Home Buyer";
 			$('#loanType').text(loanType);
 			var initialText = getInitials(newfiObject.user.firstName,newfiObject.user.lastName);
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
