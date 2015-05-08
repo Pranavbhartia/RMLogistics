@@ -4875,3 +4875,14 @@ input.calc-input {
     font-size: 14px;
     font-family: 'opensanssemibold';
 }
+
+.reg-input-error {
+  width: 300px;
+  height: 45px;
+  line-height: 45px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  border-radius: 3px;
+  margin: 20px auto;
+  color : red
+}
