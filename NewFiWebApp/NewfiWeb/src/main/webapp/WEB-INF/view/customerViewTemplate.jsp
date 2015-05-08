@@ -65,10 +65,13 @@
 		$(document).ready(function() {
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
-			changeLeftPanel(2);
+			changeLeftPanel(2,callBackFun);
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
 			
+			 
+		});
+		function callBackFun(){
 			$(window).resize(function() {
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
@@ -143,8 +146,8 @@
 		//	retrieveState();
 
 			
-			$('[data-toggle="tooltip"]').tooltip();   
-		});
+			$('[data-toggle="tooltip"]').tooltip();  
+		}
 	</script>
 </body>
 </html>
