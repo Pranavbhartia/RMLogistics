@@ -1627,10 +1627,19 @@ function paintUserNameDropDown(values, hideAddUser) {
 									+ " "
 									+ (value.lastName == undefined ? ""
 											: value.lastName))
-					.on(
-							'click',
+					.bind(
+							'click',{"userOb":value},
 							function(event) {
 								event.stopImmediatePropagation();
+								var managerElement=$("#managerID");
+								if(managerElement.length>0){
+									var userOb=event.data.userOb;
+									managerElement.attr("roleid",userOb.userRole.id);
+									managerElement.val(event.data.userOb.emailId);
+									managerElement.attr("userid",userOb.id);
+									hideUserNameDropDown();
+									return;
+								}
 								var userID = $(this).attr("userID");
 								var homeOwnInsID = $(this).attr("homeOwnInsID");
 								var titleCompanyID = $(this).attr(

@@ -375,14 +375,13 @@ function getLoanManager(user){
 					var name = $(this).val();
 					console.log("Name entered : " + name);
 					var code = $(this).attr("code");
-					var roleID = $(this).attr("roleID");
+					var roleID = "3";//Since we are looking for loan manager
 					if (roleID == undefined
 							&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
 						showToastMessage("Please select a user type");
 						return false;
 					}
-					var internalRoleID = $(this).attr(
-							"internalRoleID");
+					var internalRoleID = "1";//Since we are looking for loan manager
 					var isSearchUserRoleBased = $(this)
 							.attr("userRoleBased");
 					if (isSearchUserRoleBased == "true")
@@ -407,14 +406,12 @@ function getLoanManager(user){
 						var name = "";
 						console.log("Name entered : " + name);
 						var code = $("#managerID").attr("code");
-						var roleID = $("#managerID").attr(
-								"roleID");
+						var roleID = "3";//Since we are looking for loan manager
 						if (roleID == undefined) {
 							showToastMessage("Please select a user type");
 							return false;
 						}
-						var internalRoleID = $("#managerID")
-								.attr("internalRoleID");
+						var internalRoleID = "1";//Since we are looking for loan manager
 						var isSearchUserRoleBased = $("#managerID").attr(
 								"userRoleBased");
 						if (isSearchUserRoleBased == "true")
