@@ -23,7 +23,10 @@
 <script src="resources/js/jquery-2.1.3.min.js"></script>
 
 <script type="text/javascript">
+
+var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 	$(document).ready(function() {
+		
 		$('#loginForm').submit(function() {
 			var userName = $("#userId").val();
 			var password = $("#password").val();
@@ -31,12 +34,12 @@
 			var timezone = dateVar.getTimezoneOffset();
 			$("#inputEmail").val(userName + ":" + timezone);
 			$("#inputPassword").val(password);
-
 			return true;
 		});
+		
 		var hrefValue=window.location.href.split( '?' );
-		if(hrefValue[1]=="s=autherror"){
-			$("#errorMessage").text("Please Enter Valid Credentials");
+		if(errorMessage!=""){
+			$("#errorMessage").text(errorMessage);
 			$("#errorMessage").show();
 		}else if(hrefValue[1]=="s=sessionerror"){
 			$("#errorMessage").text("Session expired.Please Login");
@@ -46,7 +49,7 @@
 </script>
 </head>
 <body>
-
+ 
 	<div class="login-body-wrapper">
 		<div class="login-body-overlay">
 			<!-- Login Header -->
