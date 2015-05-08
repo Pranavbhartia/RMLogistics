@@ -38,7 +38,9 @@
 						<div class="user-info-row">
 							<div class="user-info-name">${userObject.displayName}</div>
 						</div>
-						
+						<div class="user-info-row" id="realtorRole">
+							<div>${userRole}</div>
+						</div>
 						<div class="user-info-row" id="realtorPhNumber">
 							<div>${userObject.phoneNumber}</div>
 						</div>
@@ -49,7 +51,7 @@
 					</div>
 					<div class="float-right new-user-container">
 						<div class="reg-input-row clearfix">
-							<div class="reg-row-lc-new reg-row-lc float-left">I am here to register as a</div>
+							<div class="reg-row-lc-new reg-row-lc float-left">Register as</div>
 							<div class="reg-row-rc-new reg-row-rc float-left">
 								<div class="reg-select reg-input-cont">
 									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
@@ -62,7 +64,7 @@
 						</div>
 						
 						<div class="reg-input-row clearfix">
-							<div class="reg-row-lc-new reg-row-lc float-left">Name</div>
+							<div class="reg-row-lc-new reg-row-lc float-left">Your Name</div>
 							<div class="reg-row-rc-new reg-row-rc float-left clearfix">
 								<div class="reg-input-cont reg-fname float-left">
 									<input class="reg-input" placeholder="First Name" id="firstName">

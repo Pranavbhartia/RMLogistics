@@ -217,6 +217,10 @@ function paintCustomerApplicationPage() {
         "class": "clearfix"
     });
 
+    var stepContOnMobileScreen = $('<div>').attr({
+    	"class" : "hide cust-app-step-hdr"
+    }).html("Step ").append("<span id='step-no'>1</span>").append(" of " + applicationItemsList.length);
+    
     var applicationLeftPanel = $('<div>').attr({
         "class": "cust-app-lp float-left"
     });
@@ -230,7 +234,7 @@ function paintCustomerApplicationPage() {
         "class": "cust-app-rp float-left"
     });
 
-    container.append(applicationLeftPanel).append(applicationRightPanel);
+    container.append(applicationLeftPanel).append(stepContOnMobileScreen).append(applicationRightPanel);
     
     
 
@@ -4039,7 +4043,7 @@ function saveUserAndLockRate(appUserDetails) {
  
 
 function appProgressBaar(num){
-	
+	$('#step-no').text(num);
 	var count = 6;
 	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')
 			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
