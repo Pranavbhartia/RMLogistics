@@ -1,6 +1,8 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -13,12 +15,16 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Template;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.CustomerSpouseDetailVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
+import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.TemplateService;
@@ -44,6 +50,9 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	NeedsListService needsListService;
 
 	@Autowired
+	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
 	Utils utils;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(CreditScoreManager.class);
@@ -61,6 +70,70 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
 		sendEmail(objectMap, CommonConstants.SUBJECT_YOUR_CREDIT);
 		return WorkItemStatus.COMPLETED.getStatus();
+	}
+
+	@Override
+	public void sendEmail(HashMap<String, Object> objectMap, String subject) {
+		if (objectMap != null) {
+			LoanVO loanVO = loanService
+			        .getLoanByID(Integer.parseInt(objectMap.get(
+			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
+			                .toString()));
+			if (loanVO != null) {
+				String emailTemplateKey = objectMap.get(
+				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+				        .toString();
+				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+				Template template = templateService
+				        .getTemplateByKey(emailTemplateKey);
+				if (template != null) {
+					LOG.info("Send Email Template Found " + template.getValue());
+					emailTemplate = template.getValue();
+				}
+				EmailVO emailEntity = new EmailVO();
+				List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+				String[] names = new String[1];
+				names[0] = loanVO.getUser().getFirstName();
+				Map<String, String[]> substitutions = new HashMap<String, String[]>();
+				substitutions.put("-name-", names);
+				substitutions = doTemplateSubstitutions(substitutions,
+				        objectMap);
+				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+				emailRecipientVO.setEmailID(loanVO.getUser().getEmailId());
+				recipients.add(emailRecipientVO);
+				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setRecipients(recipients);
+				emailEntity.setSenderName("Newfi System");
+				if (subject == null) {
+					emailEntity.setSubject("Nexera Newfi Portal");
+				} else {
+					emailEntity.setSubject(subject);
+				}
+				emailEntity.setTokenMap(substitutions);
+				emailEntity.setTemplateId(emailTemplate);
+				sendGridEmailService.sendAsyncMail(emailEntity);
+
+				// Sending sms to user now
+				if (loanVO.getUser() != null) {
+					if (loanVO.getUser().getCustomerDetail() != null) {
+						if (loanVO.getUser().getCarrierInfo() != null) {
+							if (loanVO.getUser().getPhoneNumber() != null
+							        && loanVO.getUser().getPhoneNumber()
+							                .equalsIgnoreCase("")) {
+								LOG.info("Sending SMS "
+								        + Long.valueOf(loanVO.getUser()
+								                .getPhoneNumber()));
+								smsServiceHelper.sendNotificationSMS(loanVO
+								        .getUser().getCarrierInfo(), Long
+								        .valueOf(loanVO.getUser()
+								                .getPhoneNumber()));
+							}
+						}
+					}
+
+				}
+			}
+		}
 	}
 
 	@Override
