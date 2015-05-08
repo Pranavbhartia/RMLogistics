@@ -3,6 +3,7 @@ package com.nexera.common.dao.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -249,7 +250,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	}
 
 	@Override
-    public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
+	public List<Loan> retrieveLoanDetailsOnSearch(LoanUserSearchVO searchVO) {
 
 		try {
 
@@ -291,6 +292,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.createAlias("loan", "loan");
+			criteria.addOrder(Order.desc("loan.modifiedDate"));
 			// If the user is Sales manager, retrieve all loans
 			parseUserModel = (User) this.load(User.class,
 			        parseUserModel.getId());
@@ -328,7 +331,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
 			}
-
+			/*Collections.sort(loanListForUser, new Comparator<Loan>() {
+				public int compare(Loan loan1, Loan loan2) {
+					return loan1.getCreatedDate().compareTo(loan2.getCreatedDate());
+				}
+			});*/
 			return loanListForUser;
 		} catch (HibernateException hibernateException) {
 
@@ -788,7 +795,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LM
 						        .getRoleId()) {
 							if (activeTeam.getUser().getId() != user.getId()
-							        && activeTeam.getUser().getStatus()==1
+							        && activeTeam.getUser().getStatus() == 1
 							        && activeTeam.getUser()
 							                .getInternalUserDetail()
 							                .getActiveInternal() == ActiveInternalEnum.ACTIVE) {
@@ -878,7 +885,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	@Override
 	public void updateLoan(Integer loanId, Boolean rateLocked,
 	        String lockedratedata) {
-	  
+
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE Loan loan set loan.isRateLocked = :ISRATELOCKED , loan.lockedRateData= :LOCKEDRATEDATA  WHERE loan.id = :ID";
 		Query query = session.createQuery(hql);
@@ -886,6 +893,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		query.setParameter("ID", loanId);
 		query.setParameter("LOCKEDRATEDATA", lockedratedata);
 		query.executeUpdate();
-	    
-    }
+
+	}
 }
