@@ -45,7 +45,7 @@ public class UserVO implements Serializable {
 		if (this.getInternalUserDetail() != null
 		        && this.getInternalUserDetail().getInternalUserRoleMasterVO() != null) {
 			roleName = this.getInternalUserDetail()
-			        .getInternalUserRoleMasterVO().getRoleName();
+			        .getInternalUserRoleMasterVO().getRoleDescription();
 		} else if (this.getUserRole() != null) {
 			roleName = this.getUserRole().getRoleDescription();
 		}

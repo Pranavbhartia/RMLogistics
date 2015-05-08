@@ -47,11 +47,14 @@ function paintBuyHomeContainer() {
         "class": "ce-refinance-wrapper clearfix"
     });
     var leftPanel = getBuyHomeLeftPanel();
+    var stepContOnMobileScreen = $('<div>').attr({
+    	"class" : "hide cust-eng-step-hdr"
+    }).html("Step ").append("<span id='step-no'>1</span>").append(" of " + buyHomeitemsList.length);
     var centerPanel = $('<div>').attr({
         "id": "ce-refinance-cp",
         "class": "ce-cp float-left"
     });
-    wrapper.append(leftPanel).append(centerPanel);
+    wrapper.append(leftPanel).append(stepContOnMobileScreen).append(centerPanel);
     $('#ce-main-container').append(wrapper);
     paintBuyHomeQuest();
 }
@@ -705,6 +708,7 @@ function paintBuyHomeOwner() {
 
 function homeProgressBaar(num) {
     var count = 5;
+    $('#step-no').text(num);
     $("#homeProgressBaarId_" + num).removeClass('ce-lp-in-progress')
         .removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
     $('#homeStepNoId_' + num).html(num);

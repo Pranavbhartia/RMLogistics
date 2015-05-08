@@ -409,11 +409,14 @@ function paintRefinanceMainContainer() {
         "class": "ce-refinance-wrapper clearfix"
     });
     var leftPanel = getRefinanceLeftPanel();
+    var stepContOnMobileScreen = $('<div>').attr({
+    	"class" : "hide cust-eng-step-hdr"
+    }).html("Step ").append("<span id='step-no'>1</span>").append(" of " + itemsList.length);
     var centerPanel = $('<div>').attr({
         "id": "ce-refinance-cp",
         "class": "ce-cp float-left"
     });
-    wrapper.append(leftPanel).append(centerPanel);
+    wrapper.append(leftPanel).append(stepContOnMobileScreen).append(centerPanel);
     $('#ce-main-container').append(wrapper);
     paintRefinanceQuest1();
 }
@@ -960,6 +963,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
 var refreshSupport=true;
 function progressBaar(num) {
         var count = 7;
+        $('#step-no').text(num);
         $("#progressBaarId_" + num).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
         $('#stepNoId_' + num).html(num);
         for (var i = 1; i <= num - 1; i++) {
