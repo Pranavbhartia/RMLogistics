@@ -352,6 +352,6 @@ alter table newfi_schema.internaluserstatemapping add column license_number varc
 # Added by Utsav on 7th May 
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('38','NO_PRODUCTS_AVAILABLE_LOAN_MANAGER_TEMPLATE_ID','No producst available','2015-04-10 12:53:34','f1329d6b-11b9-4fc6-a10f-a595125250de');
-
-
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('39','WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID','No producst available','2015-04-10 12:53:34','8800b478-b1cb-4bf7-a324-1280cf9e1712');
 ##All of the above is moved to 1_create script
