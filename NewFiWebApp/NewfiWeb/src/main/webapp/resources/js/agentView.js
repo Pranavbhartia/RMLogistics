@@ -26,7 +26,9 @@ function getAgentSecondaryLeftNav() {
 	});
 
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
-	var step1 = getAgentSecondaryLeftNavStep(1, "application progress");
+	var step1 ="";
+	if(!selectedUserDetail.lqbFileId)
+		step1 = getAgentSecondaryLeftNavStep(1, "application progress");
 	var step2 = '';
 	if (!userIsRealtor()) {
 		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
@@ -1019,7 +1021,8 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.loanID = userObject.loanID;
 	selectedUserDetail.role = userObject.role;
 	selectedUserDetail.phoneNo = userObject.phone_no;
-
+	selectedUserDetail.lqbFileId = userObject.lqbFileId;
+	
 	selectedUserDetail.name = userObject.name;
 	selectedUserDetail.createdDate = userObject.loanInitiatedOn;
 	selectedUserDetail.modifiedDate = userObject.lastActedOn;
