@@ -27,7 +27,7 @@
 				<div class="reg-display-title">Get Started Now</div>
 				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
 				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">I am here to register as a</div>
+					<div class="reg-row-lc float-left">Register as</div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-select reg-input-cont">
 							<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
@@ -40,7 +40,7 @@
 				</div>
 				
 				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Name</div>
+					<div class="reg-row-lc float-left">Your Name</div>
 					<div class="reg-row-rc float-left clearfix">
 						<div class="reg-input-cont reg-fname float-left">
 							<input class="reg-input" placeholder="First Name" id="firstName">

@@ -27,5 +27,5 @@ public interface CommunicationLogConstants {
 	/*
 	 * User logs in for the first time to the platform
 	 */
-	public static final String WELCOME_USER = "Newfi Team welcomes {user}. Thanks for using the platform.";
+	public static final String WELCOME_USER = "Newfi Team welcomes {user}.";
 }

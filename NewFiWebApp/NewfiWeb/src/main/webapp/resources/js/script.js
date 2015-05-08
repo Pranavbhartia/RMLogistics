@@ -130,6 +130,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	        $('#center-panel-cont').html('');
 	        if (secondary == 1) {
 	            // getting to know newfi page
+	        	paintGettingToKnowPage();
 	        } else if (secondary == 2) {
 	            var userId=newfiObject.user.id;
 	            getAppDetailsForUser(userId,function(appUserDetailsTemp){
@@ -167,7 +168,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
                     
-                    } , "We are checking on your awesome rates");
+                    } , "We are checking on your<br/> awesome rates");
                    
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
@@ -181,6 +182,72 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 	            paintCustomerLoanProgressPage();
 	        }
 	    }
+
+/*
+ * Function to paint the getting to know newfi page on customer login
+ */
+function paintGettingToKnowPage() {
+	var wrapper = $('<div>').attr({
+        "class": "getting-to-know-wrapper"
+    });
+    var header = $('<div>').attr({
+        "class": "complete-application-header"
+    }).html("Getting to Know Newfi");
+    wrapper.append(header);
+    
+    
+    var container = $('<div>').attr({
+    	"class" : "getting-to-know-container"
+    });
+    
+    var slideShowCont = $('<ul>').attr({
+    	"class" : "pgwSlideshow"
+    });
+    
+
+    var imagesObj = [ {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/san-francisco.jpg",
+		"alt" : "San Franciso",
+		"data-description" : "San Franciso"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/rio.jpg",
+		"alt" : "Rio de Jenario",
+		"data-description" : "Brazil"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/new-delhi.jpg",
+		"alt" : "New Delhi",
+		"data-description" : "India"
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/new-york.jpg",
+		"alt" : "New York, US",
+		"data-description" : ""
+	}, {
+		"src" : "//static.pgwjs.com/img/pg/slideshow/london.jpg",
+		"alt" : "London, England",
+		"description" : ""
+	} ];
+    
+    for(var i=0; i<imagesObj.length; i++){
+    	
+    	var item = $('<li>');
+    	
+    	var image = $('<img>').attr({
+        	"src" : imagesObj[i].src,
+        	"alt" : imagesObj[i].alt,
+        	"data-description" : imagesObj[i].description
+        });    	
+    	
+    	item.append(image);
+    	slideShowCont.append(item);
+    }
+    
+    container.append(slideShowCont);
+    
+    $('#center-panel-cont').html(wrapper).append(container);
+    
+    var pgwSlideshow = $('.pgwSlideshow').pgwSlideshow();
+    
+}
 
     /*
 

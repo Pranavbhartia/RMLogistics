@@ -208,6 +208,8 @@ public class TemplateController extends DefaultController {
 		try {
 			UserVO userVO = userProfileService.findByUserName(userName);
 			mav.addObject("userObject", userVO);
+			String userRole = userVO.getRoleName();
+			mav.addObject("userRole", userRole);
 		} catch (DatabaseException | NoRecordsFetchedException e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error retrieving information related to username"

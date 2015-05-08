@@ -21,6 +21,7 @@
 <link href="resources/css/datepicker.css" rel="stylesheet">
 <link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/pgwslideshow.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
