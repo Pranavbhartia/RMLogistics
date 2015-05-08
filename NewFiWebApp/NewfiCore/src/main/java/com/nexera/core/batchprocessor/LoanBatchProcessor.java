@@ -112,10 +112,13 @@ public class LoanBatchProcessor extends QuartzJobBean {
 							if (modifiedLoanListResponseVO.getValid()) {
 								LOGGER.debug("This loan is still valid in lqb ");
 								for (Loan loan : loanList) {
-									if (loan.getLqbFileId().equalsIgnoreCase(
-									        modifiedLoanListResponseVO
-									                .getLoanName())) {
-										modifiedLoans.add(loan);
+									if (loan.getLqbFileId() != null) {
+										if (loan.getLqbFileId()
+										        .equalsIgnoreCase(
+										                modifiedLoanListResponseVO
+										                        .getLoanName())) {
+											modifiedLoans.add(loan);
+										}
 									}
 								}
 							}
