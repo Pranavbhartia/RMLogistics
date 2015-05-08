@@ -4,7 +4,7 @@ var currentUserAndLoanOnj = new Object();
 var doPagination = false;
 var loanTypeText = "refinance";
 
-function changeLeftPanel(primary) {
+function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
     $('.lp-item').removeClass('lp-item-active');
@@ -12,17 +12,19 @@ function changeLeftPanel(primary) {
     if (leftPanel == 1) {
         doPagination = true;
         showMessageDashboard();
+        if(callback)
+            callback();
     } else if (leftPanel == 2) {
         doPagination = false;
-        findUser();
+        findUser(callback);
     }
     var contxt = getNotificationContext(newfiObject.user.defaultLoanId, newfiObject.user.id);
     contxt.initContext(true);
     addContext("notification", contxt);
 }
 
-function findUser() {
-        ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, appendCustPersonalInfoWrapper);
+function findUser(callback) {
+        ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, function(response){appendCustPersonalInfoWrapper(response,callback)});
     }
     /*var logedInUser;
 
@@ -37,10 +39,10 @@ function findUser() {
     	logedInUser.phoneNo = user.phone_no;
 
     }*/
-function appendCustPersonalInfoWrapper(user) {
+function appendCustPersonalInfoWrapper(user,callback) {
     //alert(logedInUser.userID);
     //resetlogedInUserDetailObject(user);
-    showCustomerLoanPage(user);
+    showCustomerLoanPage(user,callback);
 }
 
 function getCustomerSecondaryLeftNav() {
@@ -85,7 +87,7 @@ function showMessageDashboard() {
     adjustCenterPanelWidth();
 }
 
-function showCustomerLoanPage(user) {
+function showCustomerLoanPage(user,callback) {
 	scrollToTop();
     $('.lp-right-arrow').remove();
     $('#right-panel').html('');
@@ -109,6 +111,8 @@ function showCustomerLoanPage(user) {
     //TODO: Invoke dynamic binder to listen to secondary navigation clicks
     bindDataToSN();
     globalSNBinder();
+    if(callback)
+        callback();
 }
 
 
