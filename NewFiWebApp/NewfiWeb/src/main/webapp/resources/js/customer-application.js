@@ -3466,7 +3466,7 @@ function paintCustomerApplicationPageStep5() {
     		
     		customerDetailTemp =  appUserDetails.user.customerDetail;
             userTemp = appUserDetails.user;
-    		customerDetailTemp.dateOfBirth= new Date(dateOfBirth).getTime();
+    		customerDetailTemp.dateOfBirth= makeDate(dateOfBirth);//new Date(dateOfBirth).getTime();
     		
     		customerDetailTemp.ssn = ssn;
     		//customerDetailTemp.secPhoneNumber = secPhoneNumber;
@@ -5003,7 +5003,12 @@ $.ajax({
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
-                paintLockRate(ob, appUserDetails);
+               	if(data=="error"){
+               		showErrorToastMessage("Your application could not be submitted");
+               	}else{
+               		paintLockRate(ob, appUserDetails);	
+               	}
+                
             /*}*/
             $('#overlay-loader').hide();
 		},

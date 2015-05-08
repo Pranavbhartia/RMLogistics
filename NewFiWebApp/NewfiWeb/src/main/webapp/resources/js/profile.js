@@ -598,7 +598,7 @@ function updateLMDetails() {
 	var customerDetails = new Object();
 
 	customerDetails.id = $("#customerDetailsId").val();
-	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
+	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
 
 
 	userProfileJson.customerDetail = customerDetails;
@@ -2105,7 +2105,7 @@ function updateUserDetails() {
 	customerDetails.addressCity = $("#cityId").val();
 	customerDetails.addressState = $("#stateId").val();
 	customerDetails.addressZipCode = $("#zipcodeId").val();
-	customerDetails.dateOfBirth = new Date($("#dateOfBirthId").val()).getTime();
+	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
@@ -2361,7 +2361,7 @@ function saveEditUserProfile(user){
 	completeCustomerDetails.addressCity = city;
 	completeCustomerDetails.addressState = state;
 	completeCustomerDetails.addressZipCode = zipcode;
-	completeCustomerDetails.dateOfBirth =new Date(dob).getTime();
+	completeCustomerDetails.dateOfBirth =makeDate(dob)//new Date(dob).getTime();
 	completeCustomerDetails.secEmailId = secEmailId;
 	completeCustomerDetails.secPhoneNumber = secPhone;
 	

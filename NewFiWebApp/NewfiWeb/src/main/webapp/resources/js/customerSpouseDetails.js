@@ -1265,7 +1265,7 @@ function paintCustomerSpouseApplicationPageStep5() {
        }
 
     		customerDetailTemp =  appUserDetails.customerSpouseDetail;
-    		customerDetailTemp.spouseDateOfBirth= new Date(dateOfBirth).getTime();
+    		customerDetailTemp.spouseDateOfBirth= makeDate(dateOfBirth);//new Date(dateOfBirth).getTime();
     		customerDetailTemp.spouseSsn = ssn;
     		customerDetailTemp.spouseSecPhoneNumber = secPhoneNumber;
     		//applicationFormSumbit();
