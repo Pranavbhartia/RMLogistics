@@ -1603,7 +1603,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     if(isNaN(getFloatValue(Insurance)))
         Insurance="";
     
-    if(customerInputData.isIncludeTaxes =="Yes"){
+    if(customerInputData.isIncludeTaxes =="Yes"||customerInputData.isIncludeTaxes ==true){
     	
     	var investment = (Insurance + tax);
     	monthlyPayment = monthlyPayment -investment ;
