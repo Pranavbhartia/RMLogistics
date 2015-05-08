@@ -916,7 +916,8 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         // alert(JSON.stringify(refinanceTeaserRate));
         container.append(quesTextCont);
         $(parentContainer).html(container);
-       
+        
+        showOverleyMessage("We are working on it almost there!");
         showOverlay();
         
         $.ajax({
@@ -942,6 +943,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                     }
                    // alert('createLoan data is '+data)
                     paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
+                    clearOverlayMessage();
                /* }*/
                   
                  
