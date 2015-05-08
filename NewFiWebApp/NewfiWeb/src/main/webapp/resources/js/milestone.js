@@ -951,6 +951,10 @@ function adjustBorderMilestoneContainer() {
 
 function paintMilestoneCustomerProfileDetails(userObj) {
 
+	var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
+	if(loanType === "Purchase")
+		loanType = "Home Buyer";
+	
 	var container = $('<div>').attr({
 		"class" : "ms-cust-prof-container clearfix"
 	});
@@ -977,7 +981,7 @@ function paintMilestoneCustomerProfileDetails(userObj) {
 
 	var role = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-role"
-	}).html("Home Buyer");
+	}).html(loanType);
 
 	var contact = $('<div>').attr({
 		"class" : "ms-cust-prof-txt-contact"

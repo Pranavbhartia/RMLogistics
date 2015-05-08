@@ -72,7 +72,7 @@ var applicationItemsList = [
 	                        },*/
 	                        {
 							    "text":"Home Information",
-	                            "onselect" : paintHomeInfoPage
+	                            "onselect" : paintRefinanceStep2
 	                        },
 	                        {
 								"text":"Who's on the Loan?",
@@ -576,7 +576,7 @@ function paintCustomerApplicationPageStep1a() {
     
 	
 	
-	appProgressBaar(2);
+	
 	$('#app-right-panel').html('');
     var quesHeaderTxt = "Tell us about where you currently live";
    
@@ -4490,6 +4490,12 @@ function paintRefinanceQuest1() {
 
 function paintRefinanceStep2() {
 
+if(appUserDetails.loanType.loanTypeCd =="PUR"){
+	paintCustomerApplicationPurchasePageStep1a();
+	return;
+}
+	
+appProgressBaar(2);
 quesContxts = [];
 stages = 2;
 //progressBaar(2);
