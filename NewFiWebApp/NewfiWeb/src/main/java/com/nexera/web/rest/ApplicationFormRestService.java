@@ -35,6 +35,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerEmploymentIncome;
@@ -58,6 +59,7 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
@@ -76,9 +78,12 @@ public class ApplicationFormRestService {
 	private LoanService loanService;
 	@Autowired
 	private NeedsListService needsListService;
-
+	@Autowired
+	private MessageServiceHelper messageServiceHelper;
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
+	@Autowired
+	private Utils utils;
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -766,9 +771,13 @@ public class ApplicationFormRestService {
 		}
 		if (lockRateData == null || lockRateData == "error") {
 			// code to send mail to user and loan manager
-			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null)
+			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null){
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
 			        .getId());
+				messageServiceHelper.generatePrivateMessage(loaAppFormVO
+				        .getLoan().getId(), LoanStatus.ratesLocked, utils.getLoggedInUser(),
+				        false);
+			}
 		}
 		return lockRateData;
 
