@@ -41,4 +41,6 @@ public interface LoanStatus {
 
 	String paymentSuccessStatusMessage = "Payment Made";
 	String paymentFailureStatusMessage = "Failure";
+
+	String ratesLocked = "Rates Locked";
 }

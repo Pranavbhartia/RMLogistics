@@ -5003,6 +5003,7 @@ $.ajax({
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
+
                 if(data=="error"){
                     showErrorToastMessage("Your application could not be submitted");
                    }else{
@@ -5012,6 +5013,8 @@ $.ajax({
                 		}
                 	   paintLockRate(ob, appUserDetails); 
                    }
+                
+
             /*}*/
             $('#overlay-loader').hide();
 		},
