@@ -3516,8 +3516,8 @@ $(".ce-option-checkbox").click();
 
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);
-	createLoan(appUserDetails);
-	changeSecondaryLeftPanel(3,true);
+	createLoan(appUserDetails, true);
+	
 	//saveUserAndLockRate(appUserDetails) ;
 	//changeSecondaryLeftPanel(3);
 }
@@ -4977,7 +4977,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 
 
 
-function createLoan(appUserDetails)
+function createLoan(appUserDetails, flag)
 {
 ////alert('inside create loan method');
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
@@ -5003,7 +5003,15 @@ $.ajax({
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
-                paintLockRate(ob, appUserDetails);
+                if(data=="error"){
+                    showErrorToastMessage("Your application could not be submitted");
+                   }else{
+                	   if(flag)
+                		{
+                		   changeSecondaryLeftPanel(3,true);                		  
+                		}
+                	   paintLockRate(ob, appUserDetails); 
+                   }
             /*}*/
             $('#overlay-loader').hide();
 		},
