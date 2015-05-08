@@ -894,3 +894,26 @@ function getCurrentDate() {
 
     return output;
 }
+
+function  makeDateFromDatePicker (datePickerID){
+	var dayPicked = $("#"+datePickerID).datepicker('getDate').getDate();
+	var monthPicked = $("#"+datePickerID).datepicker('getDate').getMonth();
+	var yearPicked = $("#"+datePickerID).datepicker('getDate').getFullYear();
+	var myDate1 = new Date(Date.UTC(yearPicked,monthPicked,dayPicked));
+	console.log("myDate" + myDate1);
+	var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
+	
+	return myDate;
+	
+}
+
+
+function  makeDate ( dateString){
+	var elements = dateString.split("/");	
+	var myDate1 = new Date(Date.UTC(elements[2],elements[0],elements[1]));
+	console.log("myDate1" + myDate1);
+	var myDate = Date.UTC(elements[2],elements[0],elements[1]);
+	
+	return myDate;
+	
+}
