@@ -1,5 +1,7 @@
 package com.nexera.web.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,6 +9,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -111,29 +114,40 @@ public class TemplateController extends DefaultController {
 			String imageBase64 = req.getParameter("imageBase64");
 			Integer userid = Integer.parseInt(req.getParameter("userid"));
 			String imageFileName = req.getParameter("imageFileName");
+			int selectedX = Integer.parseInt(req.getParameter("selected_x"));
+			int selectedY = Integer.parseInt(req.getParameter("selected_y"));
+			int selectedW = Integer.parseInt(req.getParameter("selected_w"));
+			int selectedH = Integer.parseInt(req.getParameter("selected_h"));
 
 			// BASE64Decoder decoder = new BASE64Decoder();
 			// byte[] decodedBytes = decoder.decodeBuffer(imageBase64
 			// .substring("data:image/png;base64,".length()));
 
-			byte[] decodedBytes = Base64.decode(imageBase64
-			        .substring("data:image/png;base64,".length()));
+			byte[] decodedBytes = Base64.decode(imageBase64.split(",")[1]);
 			File dir = new File(nexeraUtility.tomcatDirectoryPath()
 			        + File.separator + nexeraUtility.randomStringOfLength());
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 
+			String filePathSrc = dir.getAbsolutePath() + File.separator
+			        + "1.png";
+			ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
+			BufferedImage bufferedImage = ImageIO.read(bis);
+			FileOutputStream fileOuputStream = new FileOutputStream(filePathSrc);
+			ImageIO.write(bufferedImage, "png", fileOuputStream);
+			BufferedImage bufferedImageLocal = ImageIO.read(new File(
+			        filePathSrc));
+			fileOuputStream.close();
+
 			String filePath = dir.getAbsolutePath() + File.separator
 			        + imageFileName;
-			FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-			try {
 
-				fileOuputStream.write(decodedBytes);
-			} finally {
-				fileOuputStream.close();
-			}
-
+			BufferedImage croppedImage = utils.cropMyImage(bufferedImageLocal,
+			        selectedW, selectedH, selectedX, selectedY);
+			fileOuputStream = new FileOutputStream(filePath);
+			ImageIO.write(croppedImage, "png", fileOuputStream);
+			fileOuputStream.close();
 			// Create the file on server
 
 			File fileLocal = new File(filePath);

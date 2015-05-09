@@ -1,6 +1,8 @@
 var width_red=400;
 var height_red=400;
 var ratio = 1;
+var selected_x=50,selected_y=50,selected_h=100,selected_w=100;
+ 
 
 function initiateJcrop(input) {
 	
@@ -74,6 +76,12 @@ function updatePreview(c) {
 	  var ctx=canvas.getContext("2d");
 	  canvas.width=c.w;
 	  canvas.height=c.h;
+	 console.log(c.x/ratio + " "+  c.y/ratio + " "+ c.w/ratio + " "+ c.h/ratio);
+	 selected_x = c.x/ratio;
+	 selected_y = c.y/ratio;
+	 selected_w = c.w;
+	 selected_h = c.w;
+	 
 	 
 	  ctx.drawImage(imageObj, c.x/ratio, c.y/ratio, c.w/ratio, c.h/ratio, 0, 0, canvas.width, canvas.height);
 
@@ -125,9 +133,9 @@ function createUploadPhotoContent(){
 	}).html("Save");
 	btnSaveDiv.click(function(){
 
-		var canvas = $("#pu-canvas")[0];
+		var canvas = $('#pu-img')[0];
 			$("#popup-overlay").hide();
-				var dataurl = canvas.toDataURL("image/png");
+				var dataurl = canvas.src;
 				$('#pu-img').attr('src', dataurl);
 				
 				// $('#prof-image').attr('src', dataurl);
@@ -136,8 +144,13 @@ function createUploadPhotoContent(){
 
 				var formData = new FormData();
 				formData.append("imageBase64", dataurl);
+				
 				formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
-
+				formData.append("selected_x", Math.round( selected_x ));
+				formData.append("selected_y", Math.round( selected_y ));
+				formData.append("selected_w", selected_w);
+				formData.append("selected_h", selected_h);
+				
 
 				formData.append("userid",userid);
 				showOverlay();

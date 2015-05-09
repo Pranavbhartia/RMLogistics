@@ -1,5 +1,10 @@
 package com.nexera.common.commons;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -345,4 +350,106 @@ public class Utils {
 		return fileURL;
 	}
 
+	public BufferedImage resizeImage(BufferedImage originalImage, int type,
+	        int width, int height) {
+		BufferedImage resizedImage = new BufferedImage(width, height, type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, width, height, null);
+		g.dispose();
+
+		return resizedImage;
+	}
+
+	public BufferedImage cropMyImage(BufferedImage img, int cropWidth,
+	        int cropHeight, int cropStartX, int cropStartY) throws Exception {
+		BufferedImage clipped = null;
+		Dimension size = new Dimension(cropWidth, cropHeight);
+
+		boolean isClipAreaAdjusted = false;
+		Rectangle clip;
+
+		/** Checking for negative X Co-ordinate **/
+		if (cropStartX < 0) {
+			cropStartX = 0;
+			isClipAreaAdjusted = true;
+		}
+		/** Checking for negative Y Co-ordinate **/
+		if (cropStartY < 0) {
+			cropStartY = 0;
+			isClipAreaAdjusted = true;
+		}
+
+		/**
+		 * Checking if <span id="IL_AD1" class="IL_AD">the clip</span> area lies
+		 * outside the rectangle
+		 **/
+		if ((size.width + cropStartX) <= img.getWidth()
+		        && (size.height + cropStartY) <= img.getHeight()) {
+
+			/**
+			 * Setting up a clip rectangle when clip area lies within the image.
+			 */
+
+			clip = new Rectangle(size);
+			clip.x = cropStartX;
+			clip.y = cropStartY;
+		} else {
+
+			/**
+			 * Checking if the width of the clip area lies outside the image. If
+			 * so, making the image width boundary as the clip width.
+			 */
+			if ((size.width + cropStartX) > img.getWidth())
+				size.width = img.getWidth() - cropStartX;
+
+			/**
+			 * Checking if the height of the clip area lies outside the image.
+			 * If so, making the image height boundary as the clip height.
+			 */
+			if ((size.height + cropStartY) > img.getHeight())
+				size.height = img.getHeight() - cropStartY;
+
+			/** Setting up the clip are based on our clip area size adjustment **/
+			clip = new Rectangle(size);
+			clip.x = cropStartX;
+			clip.y = cropStartY;
+
+			isClipAreaAdjusted = true;
+
+		}
+		if (isClipAreaAdjusted)
+			System.out.println("Crop Area Lied Outside The Image."
+			        + " Adjusted The Clip Rectangle\n");
+
+		try {
+			int w = clip.width;
+			int h = clip.height;
+
+			System.out.println("Crop Width " + w);
+			System.out.println("Crop Height " + h);
+			System.out.println("Crop Location " + "(" + clip.x + "," + clip.y
+			        + ")");
+
+			clipped = img.getSubimage(clip.x, clip.y, w, h);
+
+			System.out.println("Image Cropped. New Image Dimension: "
+			        + clipped.getWidth() + "w X " + clipped.getHeight() + "h");
+		} catch (RasterFormatException rfe) {
+			System.out.println("Raster format error: " + rfe.getMessage());
+			return null;
+		}
+		return clipped;
+	}
+
+	private static void createClip(BufferedImage img, Dimension size,
+	        int cropStartX, int cropStartY) throws Exception {
+		/**
+		 * Some times clip area might lie outside the original image, fully or
+		 * partially. In such cases, this program will adjust the crop area to
+		 * fit within the original image.
+		 *
+		 * isClipAreaAdjusted flas is usded to denote if there was any
+		 * adjustment made.
+		 */
+	}
 }
