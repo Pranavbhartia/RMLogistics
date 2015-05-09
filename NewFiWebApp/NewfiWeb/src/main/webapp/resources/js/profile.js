@@ -1363,8 +1363,8 @@ function appendAddLicencePopup(element) {
 		internalUserStateMappingVO.stateId=$(this).attr("state-id");
 		internalUserStateMappingVO.license=licenseVal;
 		
-		if(isNew)
-			internalUserStates[$(this).attr("state-id")] = internalUserStateMappingVO;
+		//if(isNew)
+			//internalUserStates[$(this).attr("state-id")] = internalUserStateMappingVO;
 		
 		removeAddLicencePopup();
 		saveInternalUserStatesAndLicense(internalUserStateMappingVO);
@@ -2574,20 +2574,21 @@ function getCarrierName(carrierInfo){
 }
 
 
-function saveInternalUserStatesAndLicense(internalUserStates){
+function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
 	
 	 $.ajax({
 	        url: "rest/userprofile/internaluserstatemapping",
 	        type: "POST",
 	        data: {
-	            "internaluserstatemapping": JSON.stringify(internalUserStates)
+	            "internaluserstatemapping": JSON.stringify(internalUserStateMappingparam)
 	        },
 	        datatype: "application/json",
+	        async: false,
 	        cache:false,
 	        success: function(data) {
 	          
 	        	internalUserStateMappingVO = data.resultObject; 
-	        	
+	        	internalUserStates[internalUserStateMappingVO.stateId] = internalUserStateMappingVO;
 	        },
 	        error: function() {
 	            alert("error");

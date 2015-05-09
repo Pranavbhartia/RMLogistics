@@ -410,7 +410,7 @@ public class LoanServiceImpl implements LoanService {
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
 		loanCustomerVO.setTime(utils.getDateInUserLocaleFormatted(loan
-		        .getCreatedDate()));
+		        .getModifiedDate()));
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
@@ -422,6 +422,8 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus()
 		        .getLoanProgressStatus());
+		
+		loanCustomerVO.setLqbFileId(loan.getLqbFileId());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.

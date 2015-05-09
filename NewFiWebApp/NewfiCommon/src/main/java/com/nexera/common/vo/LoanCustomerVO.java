@@ -18,6 +18,8 @@ public class LoanCustomerVO {
 	private Date lastActedOn;
 	private Integer userID;
 	private Integer loanID;
+	private String lqbFileId;
+	
 	private String loanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
@@ -187,6 +189,14 @@ public class LoanCustomerVO {
 
 	public void setLoanStatus(String loanStatus) {
 	    this.loanStatus = loanStatus;
+    }
+
+	public String getLqbFileId() {
+	    return lqbFileId;
+    }
+
+	public void setLqbFileId(String lqbFileId) {
+	    this.lqbFileId = lqbFileId;
     }
 
 	
