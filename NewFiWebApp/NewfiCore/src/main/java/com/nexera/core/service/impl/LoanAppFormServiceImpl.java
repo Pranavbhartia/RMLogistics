@@ -3,6 +3,8 @@ package com.nexera.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +62,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	
 	@Autowired
 	private UserProfileDao userProfileDao;
-
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LoanAppFormServiceImpl.class);
 	@Override
 	@Transactional
 	public void save(LoanAppFormVO loaAppFormVO) {
@@ -80,6 +83,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Override
 	@Transactional
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
+		LOG.info("in create func of loanapp form..................");
 		LoanAppForm loanAppForm = loanAppFormDao
 		        .saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
 		// updating the user table coloum phone number
