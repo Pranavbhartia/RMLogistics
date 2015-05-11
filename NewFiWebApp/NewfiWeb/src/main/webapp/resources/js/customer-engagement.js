@@ -767,7 +767,7 @@ function paintNewResidenceTypeQues(){
     $('#ce-refinance-cp').html("");
     var questions = [{
         type: "select",
-        text: "Property Type?",
+        text: "Property type?",
         name: "propertyType",
         options: [{
             text: "Single family residence",
