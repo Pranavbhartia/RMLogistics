@@ -2371,7 +2371,9 @@ $('body').on('focus',"input[name='birthday']",function(){
     	$(this).datepicker({
 			orientation : "top auto",
 			autoclose : true,
-			maxDate: 0
+			maxDate: 0,
+			defaultDate:''
+			
 		});
   
 });
@@ -4990,6 +4992,7 @@ function createLoan(appUserDetails, flag)
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
 	
 $('#overlay-loader').show();
+showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
@@ -5024,6 +5027,7 @@ $.ajax({
 
             /*}*/
             $('#overlay-loader').hide();
+            clearOverlayMessage();
 		},
 		error:function(erro){
 			alert("error inside createLoan ");

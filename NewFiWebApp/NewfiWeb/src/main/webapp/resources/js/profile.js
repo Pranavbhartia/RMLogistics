@@ -12,6 +12,7 @@ var passwordlengthErrorMessage="Password length should be atleast 8 digits";
 var invalidPassword="Password can not contain first name or last name";
 var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
 //var userStates=[];
+
 function showCustomerProfilePage() {
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -604,7 +605,10 @@ function updateLMDetails() {
 	var customerDetails = new Object();
 
 	customerDetails.id = $("#customerDetailsId").val();
-	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
+	if($("#dateOfBirthId").val()!=undefined){
+		customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");
+	}
+	//new Date($("#dateOfBirthId").val()).getTime();
 
 
 	userProfileJson.customerDetail = customerDetails;
@@ -2159,6 +2163,7 @@ function updateUserDetails() {
 			$('#overlay-loader').hide();
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+
             showToastMessage("Successfully updated");
 		},
 		error : function(data) {

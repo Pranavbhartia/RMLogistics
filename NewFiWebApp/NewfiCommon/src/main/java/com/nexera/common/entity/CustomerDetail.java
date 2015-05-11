@@ -70,6 +70,9 @@ public class CustomerDetail implements Serializable {
 	private CustomerRetirementAccountDetails customerRetirementAccountDetails;
 
 	private CustomerOtherAccountDetails customerOtherAccountDetails;
+	
+	private Boolean tutorialStatus;
+
 
 	public CustomerDetail() {
 	}
@@ -234,6 +237,16 @@ public class CustomerDetail implements Serializable {
 		this.livingSince = livingSince;
 	}
 
+	@Column(name = "tutorial_status")
+	public Boolean getTutorialStatus() {
+		return tutorialStatus;
+	}
+
+	public void setTutorialStatus(Boolean tutorialStatus) {
+		this.tutorialStatus = tutorialStatus;
+	}
+	
+	
 	/*
 	 * @OneToOne(fetch = FetchType.EAGER)
 	 * 
@@ -330,6 +343,8 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO
 			        .setCustomerOtherAccountDetails(convertFromEntityToVO(inputEntity
 			                .getCustomerOtherAccountDetails()));
+			
+			customerDetailVO.setTutorialStatus(inputEntity.getTutorialStatus());
 
 		}
 		return customerDetailVO;

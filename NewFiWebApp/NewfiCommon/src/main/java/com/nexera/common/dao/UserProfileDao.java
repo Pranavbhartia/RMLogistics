@@ -109,4 +109,6 @@ public interface UserProfileDao extends GenericDao {
             InternalUserStateMappingVO inputVo);
 	
 	public Integer updateUserStatus(User user);
+
+	public Integer updateTutorialStatus(Integer id);
 }

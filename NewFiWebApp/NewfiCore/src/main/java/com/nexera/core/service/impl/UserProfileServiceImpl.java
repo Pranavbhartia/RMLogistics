@@ -1524,4 +1524,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return InternalUserStateMapping.convertFromEntityToVO(userProfileDao
 		        .deleteInternalUserStateMapping(inputVo));
 	}
+
+	@Override
+    public Integer updateTutorialStatus(Integer id) throws Exception  {
+		return userProfileDao.updateTutorialStatus(id);
+	    
+    }
 }
