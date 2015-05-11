@@ -449,6 +449,7 @@ function updateLqbLMDetails(){
 	internalUserDetail.lqbPassword = $("#lqb_userPassword").val();
 	userProfileJson.internalUserDetail=internalUserDetail;
 	console.info("userProfileJson:"+userProfileJson);
+	$('#overlay-loader').show();
 	 $.ajax({
 			url : "rest/userprofile/updateLqbprofile",
 			type : "POST",
@@ -458,9 +459,11 @@ function updateLqbLMDetails(){
 			},
 			dataType : "json",
 			success : function(data) {
+				$('#overlay-loader').hide();
 				showToastMessage("Succesfully updated");
 			},
 			error : function(error) {
+				$('#overlay-loader').hide();
 				showToastMessage("Something went wrong");
 			}
 		});
@@ -484,6 +487,7 @@ function changePassword(){
 		var lastName=newfiObject.user.lastName;
 		var isSuccess=validatePassword($('#password').val(),$('#confirmpassword').val(),fistName,lastName,"password");
 		if(isSuccess){
+			$('#overlay-loader').show();
 			 $.ajax({
 					url : "rest/userprofile/password",
 					type : "POST",
@@ -494,10 +498,12 @@ function changePassword(){
 					dataType : "json",
 					cache:false,
 					success : function(data) {
+						$('#overlay-loader').hide();
 						showToastMessage("Succesfully updated");
 					},
 					error : function(error) {
-						showToastMessage("Something went wrong");
+						$('#overlay-loader').hide();
+						showErrorToastMessage("Something went wrong");
 					}
 				});
 		}
@@ -614,6 +620,7 @@ function updateLMDetails() {
 
    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
      if(phoneStatus!=false){
+    	 $('#overlay-loader').show(); 
 	    $.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
@@ -623,6 +630,7 @@ function updateLMDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
+			$('#overlay-loader').hide();
             if(data.error==null){
             	$("#profileNameId").text($("#firstNameId").val());
 
@@ -630,13 +638,15 @@ function updateLMDetails() {
     			showToastMessage("Succesfully updated");
     			showLoanManagerProfilePage();
             }else{
+            	$('#overlay-loader').hide();
             	$("#managerID").val('');
             	showErrorToastMessage(data.error.message);
             }
 			
 		},
 		error : function(error) {
-			showErrorToastMessage(error);
+			$('#overlay-loader').hide();
+			showErrorToastMessage("Something went wrong");
 		}
 	});
 
@@ -2119,7 +2129,7 @@ function updateUserDetails() {
 	userProfileJson.customerDetail = customerDetails;
     
     //var phoneStatus=validatePhone("priPhoneNumberId");
-	var phoneStatus;
+	var phoneStatus="";
 	if(customerDetails.mobileAlertsPreference){
 	 phoneStatus=validatePhone("priPhoneNumberId");	
 	 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
@@ -2134,6 +2144,7 @@ function updateUserDetails() {
 
     if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
     if(phoneStatus){
+    	$('#overlay-loader').show();
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
@@ -2143,17 +2154,22 @@ function updateUserDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-
+			$('#overlay-loader').hide();
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
-
+            showToastMessage("Successfully updated");
 		},
-		error : function(error) {
-			alert("error" + error);
+		error : function(data) {
+			$('#overlay-loader').hide();
+			if(data.error.message!=null){
+				showErrorToastMessage(data.error.message);
+			}else{
+				showErrorToastMessage("Error While updating user details. Please try again later");
+			}
+			
 		}
 	});
-
-	showToastMessage("Succesfully updated");}
+}
 	}else{
 		showToastMessage("Mandatory Fileds should not be empty");
 	}
@@ -2366,7 +2382,7 @@ function saveEditUserProfile(user){
 	completeCustomerDetails.secPhoneNumber = secPhone;
 	
 	completeUserInfo.customerDetail = completeCustomerDetails;
-
+	$('#overlay-loader').show();
 	$.ajax({
 		url : "rest/userprofile/completeprofile",
 		type : "POST",
@@ -2374,10 +2390,11 @@ function saveEditUserProfile(user){
 		data : {"completeUserInfo":JSON.stringify(completeUserInfo)},
 		dataType : "json",
 		success : function(data) {
-
+			$('#overlay-loader').hide();
 		},
 		error : function(error) {
-			alert("error"+error);
+			$('#overlay-loader').hide();
+			showErrorToastMessage("Something went wrong");
 		}
 	});
 	var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
@@ -2575,7 +2592,7 @@ function getCarrierName(carrierInfo){
 
 
 function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
-	
+	$('#overlay-loader').show();
 	 $.ajax({
 	        url: "rest/userprofile/internaluserstatemapping",
 	        type: "POST",
@@ -2586,12 +2603,13 @@ function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
 	        async: false,
 	        cache:false,
 	        success: function(data) {
-	          
+	        	$('#overlay-loader').hide();
 	        	internalUserStateMappingVO = data.resultObject; 
 	        	internalUserStates[internalUserStateMappingVO.stateId] = internalUserStateMappingVO;
 	        },
 	        error: function() {
-	            alert("error");
+	        	$('#overlay-loader').hide();
+	            showErrorToastMessage("Something went wrong");
 	           
 	        }
 	 
@@ -2600,7 +2618,7 @@ function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
 
 
 function deleteStateLicenseMapping(statelicensemapping){
-	
+	$('#overlay-loader').show();
 	 $.ajax({
 	        url: "rest/userprofile/deleteStatelicensemapping",
 	        type: "POST",
@@ -2610,10 +2628,11 @@ function deleteStateLicenseMapping(statelicensemapping){
 	        datatype: "application/json",
 	        cache:false,
 	        success: function(data) {
-	          
+	        	$('#overlay-loader').hide();
 	        },
 	        error: function() {
-	            alert("error");
+	        	$('#overlay-loader').hide();
+	        	showErrorToastMessage("Something went wrong");
 	           
 	        }
 	 
