@@ -54,19 +54,20 @@
 							<div class="reg-row-lc-new reg-row-lc float-left">Register as</div>
 							<div class="reg-row-rc-new reg-row-rc float-left">
 								<div class="reg-select reg-input-cont">
-									
-									<%-- <c:if test="${userRole =='Realtor'}">
-									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="Customer">
-									</c:if>
-									<c:otherwise> --%>
-									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
-									<div class="reg-option-dropdown hide">
-										<div class="reg-select-option" id="customerID" role="cus">Customer</div>
+									<c:set var="val" value="${userRole}"/>
+                                     <c:choose> 
+                                        <c:when test="${val == 'Realtor'}">
+                                          <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="Customer">
+                                        </c:when>
+                                        <c:otherwise>
+                                        <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
+									     <div class="reg-option-dropdown hide">
+										   <div class="reg-select-option" id="customerID" role="cus">Customer</div>
 										
-										<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
-									</div>
-									<%-- </c:otherwise> --%>
-									
+										   <div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
+									       </div>
+                                        </c:otherwise>
+                                     </c:choose>
 								</div>
 							</div>
 						</div>
