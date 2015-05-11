@@ -168,7 +168,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// TODO update user details
 		User user = User.convertFromVOToEntity(userVO);
-		user.setStatus(-1);
+	
 		Integer userVOObj = userProfileDao.updateUser(user);
 
 		// TODO for update customer details
