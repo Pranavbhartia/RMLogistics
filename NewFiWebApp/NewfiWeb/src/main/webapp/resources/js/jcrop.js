@@ -146,6 +146,11 @@ function createUploadPhotoContent(){
 				formData.append("imageBase64", dataurl);
 				
 				formData.append("imageFileName", $('#prof-image').prop("files")[0].name);
+				if(isNaN(selected_x)){
+					selected_x = 50;
+				}if(isNaN(selected_y)){
+					selected_y = 50;
+				}
 				formData.append("selected_x", Math.round( selected_x ));
 				formData.append("selected_y", Math.round( selected_y ));
 				formData.append("selected_w", selected_w);

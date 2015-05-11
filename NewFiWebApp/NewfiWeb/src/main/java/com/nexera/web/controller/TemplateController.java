@@ -114,6 +114,7 @@ public class TemplateController extends DefaultController {
 			String imageBase64 = req.getParameter("imageBase64");
 			Integer userid = Integer.parseInt(req.getParameter("userid"));
 			String imageFileName = req.getParameter("imageFileName");
+
 			int selectedX = Integer.parseInt(req.getParameter("selected_x"));
 			int selectedY = Integer.parseInt(req.getParameter("selected_y"));
 			int selectedW = Integer.parseInt(req.getParameter("selected_w"));
