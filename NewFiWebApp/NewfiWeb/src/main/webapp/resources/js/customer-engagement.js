@@ -767,7 +767,7 @@ function paintNewResidenceTypeQues(){
     $('#ce-refinance-cp').html("");
     var questions = [{
         type: "select",
-        text: "Property Type?",
+        text: "Property type?",
         name: "propertyType",
         options: [{
             text: "Single family residence",
@@ -1023,6 +1023,21 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "name": "email"
     });
     regInputContainerEmail.append(regInputEmail);
+    
+    
+    var errorMsg = $('<div>').attr({
+        "class": "reg-input-error overlay-toast-success hide errorMsg"
+    });
+    var errorMsgSpan = $('<span>').attr({
+        "class": "overlay-toast-success",
+        
+    }).html("User exists. Please register with a different emailID").on('click',function(){
+    	
+    	$('.errorMsg').hide();
+    });
+    
+    errorMsg.append(errorMsgSpan);
+    
     var regContainerGetStarted = $('<div>').attr({
         "class": "reg-btn-wrapper clearfix"
     });
@@ -1141,7 +1156,9 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     regMainContainer.append(regInputContainerFname);
     regMainContainer.append(regInputContainerlname);
     regMainContainer.append(regInputContainerEmail);
+    regMainContainer.append(errorMsg);
     regMainContainer.append(regContainerGetStarted);
+   
     return parentWrapper.append(regMainContainer);
 }
 function validateUsersBeforeRegistration(registration,teaseRateDataList){
@@ -1160,12 +1177,14 @@ function validateUsersBeforeRegistration(registration,teaseRateDataList){
             if(data.error==null){
             	 saveUserAndRedirect(registration,teaseRateDataList);
             }else{
-            	showErrorToastMessage(data.error.message);
+            	//showErrorToastMessage(data.error.message);
+            	$('.errorMsg').show();
             }
            
         },
         error: function(data) {
-             showErrorToastMessage(data);
+             //showErrorToastMessage(data);
+        	$('.errorMsg').show();
              $('#overlay-loader').hide();
         }
     });
@@ -1603,7 +1622,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     if(isNaN(getFloatValue(Insurance)))
         Insurance="";
     
-    if(customerInputData.isIncludeTaxes =="Yes"){
+    if(customerInputData.isIncludeTaxes =="Yes"||customerInputData.isIncludeTaxes ==true){
     	
     	var investment = (Insurance + tax);
     	monthlyPayment = monthlyPayment -investment ;
