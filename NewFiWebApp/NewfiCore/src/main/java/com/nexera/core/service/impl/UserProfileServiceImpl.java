@@ -433,7 +433,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private void sendNewUserEmail(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
-
+		String subject = "You have been subscribed to Nexera";
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = null;
@@ -442,6 +442,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		                .getRoleId()) {
 			template = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR);
+			subject = "Invitation to the newfi team";
 		} else {
 			template = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
@@ -462,7 +463,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Invitation to the newfi team");
+		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
