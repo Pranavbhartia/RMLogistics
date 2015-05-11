@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -659,15 +660,18 @@ public class UserProfileRest {
 
 	
 	@RequestMapping(value="/updatetutorialstatus" , method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO updateTutorialStatus(String id,String loanId){
+	public @ResponseBody CommonResponseVO updateTutorialStatus(String inputData){
 		
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		try{
 			
-			int loanid = Integer.parseInt(loanId);
+			JSONObject jsonObject = new JSONObject(inputData);
+	        Integer id =  (Integer) jsonObject.get("id");
+	        Integer loanId =  (Integer) jsonObject.get("loanId");
+			
 			Integer resultRow = userProfileService.updateTutorialStatus(id);
-			userProfileService.dismissAlert(MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,loanid,WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
+			userProfileService.dismissAlert(MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,loanId,WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
 			if(resultRow < 0){
 				commonResponseVO.setError(error);
 			}

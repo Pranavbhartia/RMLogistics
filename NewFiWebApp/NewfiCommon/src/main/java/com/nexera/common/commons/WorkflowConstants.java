@@ -128,12 +128,12 @@ public class WorkflowConstants {
 	// TODO DYNAMIC content
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Please click on Getting to know newfi to learn about using newfi portal";
-	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Please complete your loan profile";
+	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Please complete your loan profile.";
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an agent? Please add him to NewFi Team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase doucments are about to expire within {\"24\":\"elapsed\"} hours ";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC = "The purchase doucments are about to expire.";
-	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "INitial needs list not created";
+	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "Initial needs list not created";
 	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
 	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
 	public static final String APP_FEE_OVERDUE_NOTIFICATION_CONTENT = "Fee pending";
