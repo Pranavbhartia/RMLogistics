@@ -334,6 +334,15 @@ public class Utils {
 
 		return null;
 	}
+	
+	public String getTimeInPST()
+	{
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL,
+		        DateFormat.FULL);
+		df.setTimeZone(TimeZone.getTimeZone("PST"));
+		final String dateTimeString = df.format(new Date());
+		return dateTimeString;
+	}
 
 	public Date convertCurrentDateToUtc() {
 		Date date = new Date();

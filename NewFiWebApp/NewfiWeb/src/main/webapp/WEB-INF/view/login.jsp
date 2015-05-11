@@ -32,7 +32,6 @@
 			var timezone = dateVar.getTimezoneOffset();
 			$("#inputEmail").val(userName + ":" + timezone);
 			$("#inputPassword").val(password);
-
 			return true;
 		});
 		var hrefValue=window.location.href.split( '?' );

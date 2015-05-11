@@ -49,6 +49,8 @@ public class MessageVO {
 	// Self reference to the message structure to take care of recursive nesting
 	MessageVO messageVO;
 
+	private String loanEmail;
+
 	// Set this if only interenal users need to see this.
 	private Boolean isPrivate;
 
@@ -226,6 +228,14 @@ public class MessageVO {
 
 	public void setIsPrivate(Boolean isPrivate) {
 		this.isPrivate = isPrivate;
+	}
+
+	public String getLoanEmail() {
+		return loanEmail;
+	}
+
+	public void setLoanEmail(String loanEmail) {
+		this.loanEmail = loanEmail;
 	}
 
 	@Override
