@@ -54,11 +54,19 @@
 							<div class="reg-row-lc-new reg-row-lc float-left">Register as</div>
 							<div class="reg-row-rc-new reg-row-rc float-left">
 								<div class="reg-select reg-input-cont">
+									
+									<%-- <c:if test="${userRole =='Realtor'}">
+									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="Customer">
+									</c:if>
+									<c:otherwise> --%>
 									<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
 									<div class="reg-option-dropdown hide">
 										<div class="reg-select-option" id="customerID" role="cus">Customer</div>
+										
 										<div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
 									</div>
+									<%-- </c:otherwise> --%>
+									
 								</div>
 							</div>
 						</div>
@@ -103,10 +111,22 @@
 	</div>
 	
 	<script>
+	var baseurl;
+	console.log( "${userObject}");
 	var photo = "${userObject.photoImageUrl}";
 	var name = "${userObject.displayName}";
 	var email = "${userObject.emailId}";
 		$(document).ready(function() {
+			
+			
+			if(window.location.href.indexOf("refer") > -1){
+				var url=window.location.href.split('refer');
+				baseurl=url[0];
+				
+			}else{
+				var url=window.location.href.split('registerNew.do');
+				baseurl=url[0];
+			}
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
 			});
@@ -186,7 +206,7 @@
 		function validateUser(registration){
 			$('#overlay-loader').show();
 		    $.ajax({
-		        url: "rest/shopper/validate",
+		        url: baseurl+"rest/shopper/validate",
 		        type: "POST",
 		        cache:false,
 		        data: {
@@ -217,7 +237,7 @@
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
-        url: "rest/shopper/registration",
+        url: baseurl+"rest/shopper/registration",
         type: "POST",
         cache:false,
         data: {
@@ -228,6 +248,7 @@
             // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
             // alert (data);
+            window.location.href =baseurl;
             window.location.href = data;
             // printMedianRate(data,container);
         },
@@ -242,7 +263,7 @@
 		function createNewRealtor(user){
 		    $('#overlay-loader').show();
 		    $.ajax({
-		        url: "rest/shopper/realtorRegistration",
+		        url: baseurl+"rest/shopper/realtorRegistration",
 		        type: "POST",
 		        cache:false,
 		        data: {
@@ -253,6 +274,7 @@
 		            // $('#overlay-loader').hide();
 		            $('#overlay-loader').hide();
 		            // alert (data);
+		            window.location.href =baseurl;
 		            window.location.href = data;
 		            // printMedianRate(data,container);
 		        },
