@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -50,7 +49,8 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 
 			LOG.debug("Checking if user is not in inactive mode");
 			if (user.getStatus()==0||user.getStatus()==-1) {
-				throw new DisabledException("User inactive");
+				throw new InvalidInputException("User not active in login",
+				        DisplayMessageConstants.USER_INACTIVE);
 			}
 
 			authenticationService.validateUser(user, password);
@@ -70,13 +70,13 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			}
 		} catch (NoRecordsFetchedException e) {
 			LOG.error("User not found in the system: " + e.getMessage());
-			throw new UsernameNotFoundException("Please enter valid credentials");
+			throw new UsernameNotFoundException("User not found in the system");
 		} catch (InvalidInputException e) {
 			LOG.error(e.getMessage());
 		} catch (Exception e) {
 			// TODO: handle exception
-throw e;
-			
+
+			e.printStackTrace();
 		}
 		return null;
 	}
