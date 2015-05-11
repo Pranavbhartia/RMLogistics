@@ -242,6 +242,7 @@ function paintGettingToKnowPage() {
     }
     
     container.append(slideShowCont);
+   
     
     $('#center-panel-cont').html(wrapper).append(container);
     
