@@ -953,8 +953,9 @@ function getDOBRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 
-	var dob = $.datepicker.formatDate('mm/dd/yy', new Date(
-			user.customerDetail.dateOfBirth));
+	var dob =null;
+	if(user.customerDetail.dateOfBirth != 0)
+		dob = $.datepicker.formatDate('mm/dd/yy', new Date(user.customerDetail.dateOfBirth));
 
 	if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
 
@@ -972,7 +973,8 @@ function getDOBRow(user) {
 		"id" : "dateOfBirthId"
 	}).datepicker({
 		orientation : "top auto",
-		autoclose : true
+		autoclose : true,
+		maxDate: new Date() 
 	});
 	
 	var errMessage = $('<div>').attr({

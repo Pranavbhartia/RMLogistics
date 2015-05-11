@@ -1176,7 +1176,10 @@ function paintCustomerSpouseApplicationPageStep5() {
         "class": "app-ques-header-txt"
     }).html(quesHeaderTxt);
 
-    var dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.spouseDateOfBirth));
+    
+    var dob = "";
+    if(appUserDetails.customerSpouseDetail.spouseDateOfBirth != 0)
+    dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.spouseDateOfBirth));
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
