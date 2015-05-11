@@ -12,6 +12,7 @@ var passwordlengthErrorMessage="Password length should be atleast 8-digit";
 var invalidPassword="Password should not contain firstname or lastname";
 var passwordRegexErrorMessage="Password should have atleast one upercase and one lowercase character";
 //var userStates=[];
+
 function showCustomerProfilePage() {
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -604,7 +605,7 @@ function updateLMDetails() {
 	var customerDetails = new Object();
 
 	customerDetails.id = $("#customerDetailsId").val();
-	if(newfiObject.user.userRole.roleDescription=="Customer"){
+	if($("#dateOfBirthId").val()!=undefined){
 		customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");
 	}
 	//new Date($("#dateOfBirthId").val()).getTime();
