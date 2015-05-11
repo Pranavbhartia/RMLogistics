@@ -2148,7 +2148,7 @@ function updateUserDetails() {
 
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
-
+		  	//changeLeftPanel(2,callBackFun);
 		},
 		error : function(error) {
 			alert("error" + error);

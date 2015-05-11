@@ -655,4 +655,25 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 
+	
+	@RequestMapping(value="/updatetutorialstatus" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateTutorialStatus(String id){
+		
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		try{
+			Integer resultRow = userProfileService.updateTutorialStatus(id);
+			if(resultRow < 0){
+				commonResponseVO.setError(error);
+			}
+		}catch(Exception e){
+			
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+		
+		return commonResponseVO;
+		
+	}
+			
 }

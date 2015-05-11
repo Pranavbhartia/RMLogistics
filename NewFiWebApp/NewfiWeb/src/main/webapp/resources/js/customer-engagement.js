@@ -920,7 +920,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         container.append(quesTextCont);
         $(parentContainer).html(container);
         
-        showOverleyMessage("We are working on it almost there!");
+        showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
         showOverlay();
         
         $.ajax({

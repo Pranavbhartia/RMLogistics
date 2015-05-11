@@ -110,4 +110,6 @@ public interface UserProfileService {
             InternalUserStateMappingVO internalUserStateMappingVO);
    
 	public Integer updateUserStatus(UserVO userVO);
+
+	public Integer updateTutorialStatus(String id);
 }
