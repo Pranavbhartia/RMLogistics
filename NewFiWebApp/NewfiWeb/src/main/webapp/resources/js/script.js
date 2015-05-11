@@ -1931,13 +1931,13 @@ function createdNeededList(categoryName, elements) {
     }).html(categoryName);
     incomeDocCont.append(incDocHeading);
     $.each(elements, function(i, val) {
-        var needDocRow = getNeededDocRow(val.needsListMaster.label, val.needsListMaster.id);
+        var needDocRow = getNeededDocRow(val.needsListMaster.label, val.needsListMaster.id,val.needsListMaster.description);
         incDocHeading.append(needDocRow);
     });
     return incomeDocCont;
 }
 
-function getNeededDocRow(desc, needId) {
+function getNeededDocRow(desc, needId, details) {
     var row = $('<div>').attr({
         "class": "needed-item-row clearfix"
     });
@@ -1945,8 +1945,9 @@ function getNeededDocRow(desc, needId) {
         "class": "list-item-icn float-left"
     });
     var rowDesc = $('<div>').attr({
-        "class": "needed-item-desc float-left"
-    }).html(desc);
+        "class": "needed-item-desc float-left",
+        "title" : details
+    }).html(desc+"?");
     var docUploadImage = $("<div>").attr({
         "class": "doc-uploaded-icn float-left",
         "id" : "doc-uploaded-icn_"+needId

@@ -40,6 +40,7 @@ import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -56,6 +57,7 @@ import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -66,6 +68,7 @@ import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
@@ -73,6 +76,7 @@ import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.PurchaseDetailsVO;
 import com.nexera.common.vo.RealtorDetailVO;
@@ -87,6 +91,7 @@ import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
@@ -119,6 +124,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private TemplateService templateService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Autowired
 	private MessageUtils messageUtils;
@@ -164,8 +172,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public Integer updateUserStatus(UserVO userVO) {
-     Integer result=userProfileDao.updateUserStatus(User.convertFromVOToEntity(userVO));
-     return result;
+		Integer result = userProfileDao.updateUserStatus(User
+		        .convertFromVOToEntity(userVO));
+		return result;
 	}
 
 	@Override
@@ -430,13 +439,51 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        randomGenerator).toString(32);
 	}
 
+	@Override
+	public void createAlert(
+	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
+	        String notificationContent) {
+		MilestoneNotificationTypes notificationType = mileStoneNotificationType;
+		CreateReminderVo createReminderVo = new CreateReminderVo(
+		        notificationType, loanId, notificationContent);
+
+		LOG.debug("Inside method createAlertOfType");
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(createReminderVo.getLoanId(),
+		                createReminderVo.getNotificationType()
+		                        .getNotificationTypeName(), null);
+		if (notificationList.size() == 0
+		        || notificationList.get(0).getRead() == true) {
+			LOG.debug("Creating new notification "
+			        + createReminderVo.getNotificationType());
+			NotificationVO notificationVO = new NotificationVO(
+			        createReminderVo.getLoanId(), createReminderVo
+			                .getNotificationType().getNotificationTypeName(),
+			        createReminderVo.getNotificationReminderContent());
+			LOG.debug("This notification of for loanmanager");
+			notificationVO.setCreatedForID(createReminderVo.getUserID());
+			notificationVO.setTimeOffset(new Date().getTimezoneOffset());
+			notificationService.createNotification(notificationVO);
+
+		}
+	}
+
 	private void sendNewUserEmail(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
-
+		String subject = "You have been subscribed to Nexera";
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
-		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		Template template = null;
+		if (user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
+		                .getRoleId()) {
+			template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR);
+			subject = "Invitation to the newfi team";
+		} else {
+			template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		}
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
@@ -453,7 +500,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("You have been subscribed to Nexera");
+		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
@@ -557,6 +604,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
+
 		LOG.debug("sendNewUserEmail : sending the email done");
 
 		userVO.setPassword(newUser.getPassword());
@@ -1177,6 +1225,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanAppFormService.create(loanAppFormVO);
 			LOG.info("after creating a loanAppFormService.create(loanAppFormVO)");
 
+			LOG.info("Creating Alert ");
+			if (loanVO != null && loanVO.getId() != 0) {
+				if (userVOObj != null) {
+					UserRoleVO userRoleVO = userVOObj.getUserRole();
+					if (userRoleVO != null) {
+						if (userRoleVO.getId() == UserRolesEnum.CUSTOMER
+						        .getRoleId()) {
+							createAlert(
+							        MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,
+							        loanVO.getId(),
+							        WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
+							createAlert(
+							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
+							        loanVO.getId(),
+							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+						}
+					}
+				}
+			}
 			return userVOObj;
 		} catch (Exception e) {
 
@@ -1187,6 +1254,20 @@ public class UserProfileServiceImpl implements UserProfileService,
 			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
+		}
+	}
+
+	@Override
+	public void dismissAlert(
+	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
+	        String notificationContent) {
+
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                mileStoneNotificationType.getNotificationTypeName(),
+		                true);
+		for (NotificationVO notificationVO : notificationList) {
+			notificationService.dismissNotification(notificationVO.getId());
 		}
 	}
 

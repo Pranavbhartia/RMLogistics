@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.InputValidationException;
@@ -55,7 +56,8 @@ public interface UserProfileService {
 	public void enableUser(int userId) throws NoRecordsFetchedException;
 
 	public UserVO createNewUserAndSendMail(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException,FatalException;
+	        throws InvalidInputException, UndeliveredEmailException,
+	        FatalException;
 
 	public void deleteUser(UserVO userVO) throws Exception;
 
@@ -73,7 +75,8 @@ public interface UserProfileService {
 	        throws FileNotFoundException, IOException, InvalidInputException,
 	        UndeliveredEmailException, NoRecordsFetchedException;
 
-	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO, List<LqbTeaserRateVo> teaseRateDatalist);
+	public UserVO registerCustomer(LoanAppFormVO loaAppFormVO,
+	        List<LqbTeaserRateVo> teaseRateDatalist);
 
 	public void crateWorkflowItems(int defaultLoanId) throws Exception;
 
@@ -104,12 +107,23 @@ public interface UserProfileService {
 	        NoRecordsFetchedException;
 
 	public InternalUserStateMappingVO updateInternalUserStateMapping(
-            InternalUserStateMappingVO internalUserStateMappingVO);
+	        InternalUserStateMappingVO internalUserStateMappingVO);
 
 	public InternalUserStateMappingVO deleteInternalUserStateMapping(
-            InternalUserStateMappingVO internalUserStateMappingVO);
-   
+	        InternalUserStateMappingVO internalUserStateMappingVO);
+
 	public Integer updateUserStatus(UserVO userVO);
 
+
 	public Integer updateTutorialStatus(String id);
+
+
+	public void dismissAlert(
+	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
+	        String notificationContent);
+
+	public void createAlert(
+	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
+	        String notificationContent);
 }
+
