@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -151,6 +153,16 @@ public class MessageServiceImpl implements MessageService {
 			        new String[] { CommonConstants.ANONYMOUS_USER });
 		}
 
+		substitutions.put("-time-", new String[] { utils.getTimeInPST() });
+
+		if (messagesVO.getLoanEmail() != null
+		        && !messagesVO.getLoanEmail().isEmpty()) {
+			substitutions.put("-loanFile-",
+			        new String[] { String.valueOf(messagesVO.getLoanEmail()) });
+		} else {
+			substitutions.put("-loanFile-",
+			        new String[] { String.valueOf(messagesVO.getLoanId()) });
+		}
 		emailVO.setTokenMap(substitutions);
 
 		// Set template information
