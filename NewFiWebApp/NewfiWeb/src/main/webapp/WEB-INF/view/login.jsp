@@ -18,6 +18,7 @@
 <link href="resources/css/dropzone.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">
 <script src="resources/js/jquery-2.1.3.min.js"></script>
@@ -50,7 +51,7 @@
 	<div class="login-body-wrapper">
 		<div class="login-body-overlay">
 			<!-- Login Header -->
-			<div class="login-header-wrapper">
+ 		<!-- 	<div class="login-header-wrapper">
 				<div class="header-container container">
 					<div class="header-row row clearfix">
 						<div class="header-logo float-left"></div>
@@ -64,37 +65,64 @@
 						</div>
 					</div>
 				</div>
+			</div>  -->
+			<div class="header-wrapper">
+	<div class="header-container container">
+		<div class="header-row row clearfix">
+			<div class="header-logo float-left"></div>
+			<div class="reg-header-btns-wrapper float-right clearfix">
+				<div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>
+               <!--  <div class="float-left login-hdr hdr-login-btn" onclick="window.location='./'">Login</div> -->
 			</div>
+            <div class="soft-menu-icon float-right"></div>
+            <div class="soft-menu-wrapper">
+               <!--  <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
+				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+            </div>
+             <div class="float-right login-hdr hdr-contact-no">Call Us 888-316-3934</div>
+		</div>
+	</div>
+</div>
 
 			<!-- Main Container -->
 			<div class="login-container container">
 				<div class="container-row row clearfix">
-					<div class="display-title">A New way to Finance your home</div>
-					<div class="display-title-subtxt">Lorem Ipsum is also known
-						as: Greeked Text, blind text, placeholder text, dummy content,
-						filter text, lipsum, and mock-content.</div>
+					<div class="display-title">Access your newfi account</div>
+					<div class="display-title-subtxt">Login with the email address and password used to create your account</div>
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm"
 							action="j_spring_security_check" method="POST">
-							<div class="form-logo"></div>
+<!-- 							<div class="form-logo"></div> -->
 							<div class="login-error hide" id="errorMessage"></div>
-							<div class="login-input-cont">
-								<input type="text" class="login-input login-input-username"
-									placeholder="Username" id="userId"> <input
+							<div class="reg-input-row clearfix">	
+				                      <div class="login-row-lc float-left">Email Address</div>
+				                      <div class="login-row-rc float-left">
+				                        <div class="login-input-cont">
+								          <input type="text" class="login-input login-input-username"
+									placeholder="Email" id="userId"> <input
 									type="hidden" id="inputEmail" name="j_username" class="hide"
 									placeholder="Email address" required autofocus>
 							</div>
+							</div>
+							</div>
+							<div class="reg-input-row clearfix">	
+				                      <div class="login-row-lc float-left">Password</div>
+				                       <div class="login-row-rc float-left">
 							<div class="login-input-cont">
 								<input type="password" class="login-input login-input-pwd"
 									id="password" placeholder="Password"> <input
 									type="hidden" name="j_password" id="inputPassword" class="hide">
 							</div>
+							</div>
+							</div>
+							
 							<input type="submit" class="login-submit-button" name="Login"
-								value="Login to your account">
+								value="Login">
 							<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
 							<div class="forgot-pwd">
 								Forgot Password?<span class="forgot-pwd-link" onclick="window.location='forgotPassword.do'">Click here</span>
 							</div>
+							<div class="display-title-bottom-subtxt">Newfi difference #1:we empower you with advanced tools to save time and money </div>
 						</form>
 					</div>
 				</div>

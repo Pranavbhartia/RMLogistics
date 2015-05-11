@@ -42,7 +42,7 @@ $(document).ready(function() {
 
 	<div class="login-body-wrapper">
 		<!-- Login Header -->
-		<div class="login-header-wrapper">
+<!-- 		<div class="login-header-wrapper">
 			<div class="header-container container">
 				<div class="header-row row clearfix">
 					<div class="header-logo float-left"></div>
@@ -55,22 +55,20 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Main Container -->
 		<div class="login-container container">
 			<div class="container-row row clearfix">
-				<div class="display-title">A New way to Finance your home</div>
-				<div class="display-title-subtxt">Lorem Ipsum is also known
-					as: Greeked Text, blind text, placeholder text, dummy content,
-					filter text, lipsum, and mock-content.</div>
+				<div class="display-title">Access your newfi account</div>
+				<div class="display-title-subtxt">Login with the email address and password used to create your account</div>
 				<div class="login-form-wrapper">
 					<form id="loginForm"
 						action="j_spring_security_check" method="POST">
 						<div class="form-logo"></div>
 						<div class="login-input-cont">
 							<input type="text" class="login-input login-input-username"
-								placeholder="Username" id="userId"> <input type="hidden"
+								placeholder="Email" id="userId"> <input type="hidden"
 								id="inputEmail" name="j_username" class="hide"
 								placeholder="Email address" required autofocus>
 						</div>

@@ -2800,15 +2800,15 @@ input.calc-input {
 /*Login page styles*/
 .login-body-wrapper {
 	width: 100%;
-	background: url(../images/login-bg.png) no-repeat center 0px;
+	/* background: url(../images/login-bg.png) no-repeat center 0px; */
 	background-size: cover;
 	color: #fff;
 }
 
 .login-body-overlay {
-	min-height: inherit;
-	background-image: url(../images/grid-40.png);
-	background-color: rgba(0, 0, 0, 0.4);
+	/* min-height: inherit; */
+	/* background-image: url(../images/grid-40.png); */
+	/* background-color: rgba(0, 0, 0, 0.4); */
 	z-index: 2;
 }
 
@@ -2818,21 +2818,24 @@ input.calc-input {
 }
 
 .login-container {
-	margin-top: 60px;
+	margin-top: 110px;
+	margin-bottom: 100px;
 }
 
 .display-title {
 	text-align: center;
 	font-size: 36px;
 	line-height: 70px;
+	color: black;
 }
 
 .display-title-subtxt {
 	width: 500px;
 	line-height: 20px;
-	font-size: 14px;
-	margin: 5px auto;
+	font-size: 17px;
+	margin: 10px auto;
 	text-align: center;
+	color: black;
 }
 
 .form-logo {
@@ -2843,12 +2846,13 @@ input.calc-input {
 }
 
 .login-form-wrapper {
-	width: 300px;
-	margin: 10px auto;
+	/*width: 300px;*/
+	width: 469px;
+	margin: 20px auto;
 }
 
 .login-input-username {
-	background: url(../images/user-name.png) no-repeat 16px center;
+	  background: url(../images/email.png) no-repeat 16px center;
 }
 
 .login-input-pwd {
@@ -2856,13 +2860,16 @@ input.calc-input {
 }
 
 .login-input {
-	width: 100%;
+/*	width: 100%;*/
+        width: 300px;
 	height: 50px;
 	line-height: 50px;
 	padding-left: 50px;
 	border-radius: 3px;
-	border: transparent;
-	background-color: #fff;
+	/* border: transparent; */
+	/* background-color: #fff; */
+	background-color: #FAFAFA !important;    
+	border: 1px #E2E2E2 solid;
 	background-size: 16px auto;
 	color: #777;
 }
@@ -2874,29 +2881,38 @@ input.calc-input {
 }
 
 .login-submit-button {
-	width: 100%;
-	height: 50px;
+	/* width: 100%; */
+	height: 40px;
 	margin-bottom: 10px;
-	line-height: 50px;
+	line-height: 40px;
 	color: #fff;
-	background-color: #3D7FB8;
+	/*background-color: #3D7FB8;*/
+	background-color: #6c9f2e;
 	border: 1px #fff solid;
 	border-radius: 3px;
 	text-align: center;
 	cursor: pointer;
+/*	font-size: 20px;*/
 	font-size: 16px;
+	width: 161px;
+	margin-left: 117px;
 }
 
 .forgot-pwd {
 	height: 20px;
 	line-height: 20px;
-	text-align: center;
+/*	text-align: center;*/
+    text-align: left;
+	color: black;
+	margin-left: 117px;
 }
 
 .forgot-pwd-link {
-	color: #d7d7d7;
+/*	color: #d7d7d7;*/
+	color: #428bca;
 	margin-left:5px;
 	cursor: pointer;
+	text-decoration: underline;
 }
 
 .login-hdr {
@@ -4923,4 +4939,21 @@ input.calc-input {
 
 .pgwSlideshow .ps-caption{
 	background: rgba(66, 139, 202, 0.8);
+}
+
+/* New class added for login page*/
+.login-row-lc {
+  text-align: right;
+  padding-right: 15px;
+  font-size: 15px;
+  color: black;
+  width: 25%;
+}
+
+.display-title-bottom-subtxt {
+    color: black;
+    font-family: 'OpenSans';
+    font-size: 14px;
+    margin: 33px auto;
+    text-align: center;
 }
