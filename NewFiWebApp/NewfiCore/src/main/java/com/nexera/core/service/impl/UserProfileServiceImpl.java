@@ -164,8 +164,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	@Transactional
 	public Integer updateUserStatus(UserVO userVO) {
-     Integer result=userProfileDao.updateUserStatus(User.convertFromVOToEntity(userVO));
-     return result;
+		Integer result = userProfileDao.updateUserStatus(User
+		        .convertFromVOToEntity(userVO));
+		return result;
 	}
 
 	@Override
@@ -432,11 +433,20 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private void sendNewUserEmail(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
-
+		String subject = "You have been subscribed to Nexera";
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
-		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		Template template = null;
+		if (user.getUserRole() != null
+		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
+		                .getRoleId()) {
+			template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR);
+			subject = "Invitation to the newfi team";
+		} else {
+			template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		}
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
@@ -453,7 +463,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("You have been subscribed to Nexera");
+		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
