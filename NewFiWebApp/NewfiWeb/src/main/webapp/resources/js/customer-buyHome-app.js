@@ -415,7 +415,7 @@ function paintloanamountBuyApp() {
     var dwnPaymnt=showValue(getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue(appUserDetails.purchaseDetails.loanAmount));
     var questions = [{
             "type": "desc",
-            "text": "Purchase price?",
+            "text": "Desired purchase price?",
             "name": "housePrice",
             "value": ""
         }, {
