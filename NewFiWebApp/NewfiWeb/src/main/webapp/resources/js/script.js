@@ -1625,7 +1625,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     col2.append(inputBox);
     
     if(desc =="Insurance")
-    container.append(col1).append(col2).append(saveBtn);
+    container.append(col1).append(col2.append(saveBtn));
     else
     	container.append(col1).append(col2);
     
@@ -1772,7 +1772,19 @@ function getClosingCostTopConatiner() {
         row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
-    return wrapper.append(heading).append(container1).append(container2);
+    
+    var container3 = $('<div>').attr({
+        "class": "closing-cost-container"
+    });
+    var headerCon3 = getClosingCostConatinerHeader("Estimated Prepaids");
+    var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "$ 699.40","");
+    var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "$ 455.00");
+    var row3Con3 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "$ 699.40");
+    var row10Con3 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
+    
+    container3.append(headerCon3).append(row1Con3).append(row2Con3).append(row3Con3).append(row10Con3);
+    
+    return wrapper.append(heading).append(container1).append(container2).append(container3);
 }
 
 function getClosingCostBottomConatiner() {
@@ -1780,16 +1792,6 @@ function getClosingCostBottomConatiner() {
         "class": "closing-cost-cont-wrapper-bottom no-border-bottom"
     });
     //var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
-    var container1 = $('<div>').attr({
-        "class": "closing-cost-container"
-    });
-    var headerCon1 = getClosingCostConatinerHeader("Estimated Prepaids");
-    var row1Con1 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "$ 699.40","");
-    var row2Con1 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "$ 455.00");
-    var row3Con1 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "$ 699.40");
-    var row10Con2 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
-    
-    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1).append(row10Con2);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
@@ -1801,7 +1803,7 @@ function getClosingCostBottomConatiner() {
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row"
     }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
-    return wrapper.append(container1).append(container2).append(bottomSubText);
+    return wrapper.append(container2).append(bottomSubText);
 }
 
 function getClosingCostConatinerHeader(text) {
@@ -2558,7 +2560,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
         "class": "loan-summary-sub-col-desc float-left"
     }).html(row2Desc);
     var col2row2 = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail float-left",
+        "class": "loan-summary-sub-col-detail float-left loan-summary-sub-col-detail",
         "id":"secondInput"
     }).val(showValue(row2Val))
     .keydown(function() {
@@ -2573,7 +2575,14 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     	
     	flag = true;
     });
-    row2.append(col1row2).append(saveBtn).append(col2row2);
+    
+    var col2 = $('<div>').attr({
+    	"class" : "loan-summary-col-detail float-left"
+    });
+    
+    col2.append(col2row2).append(saveBtn);
+    
+    row2.append(col1row2).append(col2);
     
   
     loanAmountDetails.append(row1).append(row2);
