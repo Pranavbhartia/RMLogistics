@@ -73,6 +73,11 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		LOG.debug("Helper save message called");
 		String messageID;
 		try {
+			if (messagesVO.getLoanId() != 0)
+			{
+				LoanVO loan = loanService.getLoanByID(messagesVO.getLoanId());
+				messagesVO.setLoanEmail(loan.getLoanEmailId());
+			}
 			messageID = messageService.saveMessage(messagesVO, messageType,
 			        sendEmail);
 			LOG.debug("Helper save message succeeded. With messageID: "
