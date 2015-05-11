@@ -604,7 +604,10 @@ function updateLMDetails() {
 	var customerDetails = new Object();
 
 	customerDetails.id = $("#customerDetailsId").val();
-	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
+	if(newfiObject.user.userRole.roleDescription=="Customer"){
+		customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");
+	}
+	//new Date($("#dateOfBirthId").val()).getTime();
 
 
 	userProfileJson.customerDetail = customerDetails;
