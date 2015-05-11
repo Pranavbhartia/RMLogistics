@@ -127,6 +127,8 @@ public class WorkflowConstants {
 
 	// TODO DYNAMIC content
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
+	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Please watch the tutorials";
+	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Please compelte your application";
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an agent? Please add him to NewFi Team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase doucments are about to expire within {\"24\":\"elapsed\"} hours ";
