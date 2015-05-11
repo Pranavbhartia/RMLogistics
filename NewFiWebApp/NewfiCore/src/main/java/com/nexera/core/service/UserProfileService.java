@@ -114,6 +114,10 @@ public interface UserProfileService {
 
 	public Integer updateUserStatus(UserVO userVO);
 
+
+	public Integer updateTutorialStatus(String id);
+
+
 	public void dismissAlert(
 	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
 	        String notificationContent);
@@ -122,3 +126,4 @@ public interface UserProfileService {
 	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
 	        String notificationContent);
 }
+

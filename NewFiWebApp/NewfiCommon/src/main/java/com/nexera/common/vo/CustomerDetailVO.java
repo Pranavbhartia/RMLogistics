@@ -32,6 +32,8 @@ public class CustomerDetailVO implements Serializable {
 	private String addressStreet;
 	
 	private Boolean selectedProperty;
+	
+	private Boolean tutorialStatus;
 
 	// private CustomerSpouseDetailVO customerSpouseDetail;
 
@@ -189,6 +191,9 @@ public class CustomerDetailVO implements Serializable {
 		this.livingSince = livingSince;
 	}
 
+	
+	
+	
 	/*
 	 * public CustomerSpouseDetailVO getCustomerSpouseDetail() { return
 	 * customerSpouseDetail; }
@@ -215,6 +220,14 @@ public class CustomerDetailVO implements Serializable {
 	 * customerBankAccountDetails) { this.customerBankAccountDetails =
 	 * customerBankAccountDetails; }
 	 */
+
+	public Boolean getTutorialStatus() {
+		return tutorialStatus;
+	}
+
+	public void setTutorialStatus(Boolean tutorialStatus) {
+		this.tutorialStatus = tutorialStatus;
+	}
 
 	public CustomerRetirementAccountDetailsVO getCustomerRetirementAccountDetails() {
 		return customerRetirementAccountDetails;
@@ -262,6 +275,8 @@ public class CustomerDetailVO implements Serializable {
 		
 		// seleted property 
 		customerDetailVO.setSelectedProperty(customerDetail.getSelectedProperty());
+		
+		customerDetailVO.setTutorialStatus(customerDetail.getTutorialStatus());
 		
 		return customerDetailVO;
 

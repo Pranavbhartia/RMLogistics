@@ -2159,6 +2159,7 @@ function updateUserDetails() {
 			$('#overlay-loader').hide();
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+
             showToastMessage("Successfully updated");
 		},
 		error : function(data) {

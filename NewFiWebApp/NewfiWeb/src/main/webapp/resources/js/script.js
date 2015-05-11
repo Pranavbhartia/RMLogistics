@@ -168,7 +168,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                             paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
                         }
                     
-                    } , "We are checking on your<br/> awesome rates");
+                    } , "This can take a minute,<br/> we are looking for the best rate options available.");
                    
 	             //showToastMessage("Please Complete Your Application first");
 	            }else{
@@ -242,6 +242,7 @@ function paintGettingToKnowPage() {
     }
     
     container.append(slideShowCont);
+   
     
     $('#center-panel-cont').html(wrapper).append(container);
     

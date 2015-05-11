@@ -34,7 +34,9 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -655,4 +657,28 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 
+	
+	@RequestMapping(value="/updatetutorialstatus" , method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateTutorialStatus(String id,String loanId){
+		
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		try{
+			
+			int loanid = Integer.parseInt(loanId);
+			Integer resultRow = userProfileService.updateTutorialStatus(id);
+			userProfileService.dismissAlert(MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,loanid,WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
+			if(resultRow < 0){
+				commonResponseVO.setError(error);
+			}
+		}catch(Exception e){
+			
+			error.setMessage(e.getMessage());
+			commonResponseVO.setError(error);
+		}
+		
+		return commonResponseVO;
+		
+	}
+			
 }

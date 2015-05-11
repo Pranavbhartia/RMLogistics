@@ -924,4 +924,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	   
     }
+
+	@Override
+    public Integer updateTutorialStatus(String id) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Customerdetails customerdetails set customerdetails.tutorialStatus = :true WHERE customerdetails.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("ID", id);
+		int result = query.executeUpdate();
+		return result;
+	    
+    }
 }
