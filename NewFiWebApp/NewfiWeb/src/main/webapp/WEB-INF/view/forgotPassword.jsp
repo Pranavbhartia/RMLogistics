@@ -28,7 +28,7 @@
 					        <input class="reg-input" placeholder="Email" id="emailID" >	
 							<div class="err-msg hide"></div>
 				            </div>
-							<div class="reg-btn-wrapper clearfix">
+							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
 					             <div class="reset-password float-right" onclick="$('#loginForm').submit();">Reset Password</div>
 				            </div>											
