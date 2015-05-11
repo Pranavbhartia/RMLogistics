@@ -6,11 +6,11 @@ var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
 
-var passwordFieldEmptyErrorMessage="Should not be empty";
-var passwordDonotMatchErrorMessage="Passwords donot match";
-var passwordlengthErrorMessage="Password length should be atleast 8-digit";
-var invalidPassword="Password should not contain firstname or lastname";
-var passwordRegexErrorMessage="Password should have atleast one upercase and one lowercase character";
+var passwordFieldEmptyErrorMessage="should not be empty";
+var passwordDonotMatchErrorMessage="Passwords do not match";
+var passwordlengthErrorMessage="Password length should be atleast 8 digits";
+var invalidPassword="Password should not contain first name or last name";
+var passwordRegexErrorMessage="Password should have atleast one uppercase and one lowercase character";
 //var userStates=[];
 function showCustomerProfilePage() {
 	scrollToTop();
