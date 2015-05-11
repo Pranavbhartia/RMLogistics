@@ -79,7 +79,7 @@
                     <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="Customer">
                   </c:when>
                   <c:otherwise>
-                    <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type">
+                    <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
                     <div class="reg-option-dropdown hide">
                       <div class="reg-select-option" id="customerID" role="cus">Customer</div>
                       
@@ -173,14 +173,14 @@
 			
 
 			$("#customerID").on("click",function(e){		
-				var userType=$("#customerID").html();
-				alert(userType);
+				var userType=$("#customerID").text();
+				//alert(userType);
 				$("#userTypeID").attr('value',userType);							
 				$(this).closest('.reg-select').find('.reg-option-dropdown').slideToggle();
 				$("#realor-email").show();
 			});
 			$("#realtorID").on("click",function(e){		
-				var userType=$("#realtorID").html();
+				var userType=$("#realtorID").text();
 				$("#userTypeID").attr('value',userType);							
 				$(this).closest('.reg-select').find('.reg-option-dropdown').slideToggle();
 				$("#realor-email").hide();
