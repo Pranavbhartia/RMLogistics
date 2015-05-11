@@ -192,7 +192,34 @@ function paintGettingToKnowPage() {
     });
     var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Getting to Know Newfi");
+    }).html("Getting to Know Newfi").on('click',function(){
+    	
+    	var inputData = {};
+    	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
+    	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
+    	
+    	$.ajax({
+    		
+    		url:"rest/userprofile/updatetutorialstatus",
+    		type: "POST",
+    		data: {
+                "inputData": JSON.stringify(inputData)
+            },
+            datatype: "application/json",
+    		success:function(data){
+    			if(data.error== null)
+    				{
+    				showToastMessage("Successfully updated");
+    			}else{
+    				showErrorToastMessage(data.error.message);
+    			}
+    		},
+    		error:function(data){
+    			showErrorToastMessage("Error while updating tutorial status");
+    		}
+    	});
+    	
+    });
     wrapper.append(header);
     
     

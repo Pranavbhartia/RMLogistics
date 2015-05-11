@@ -1526,7 +1526,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-    public Integer updateTutorialStatus(String id) {
+    public Integer updateTutorialStatus(Integer id) throws Exception  {
 		return userProfileDao.updateTutorialStatus(id);
 	    
     }

@@ -115,7 +115,7 @@ public interface UserProfileService {
 	public Integer updateUserStatus(UserVO userVO);
 
 
-	public Integer updateTutorialStatus(String id);
+	public Integer updateTutorialStatus(Integer id) throws Exception;
 
 
 	public void dismissAlert(

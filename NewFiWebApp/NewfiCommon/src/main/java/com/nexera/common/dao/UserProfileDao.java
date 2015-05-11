@@ -110,5 +110,5 @@ public interface UserProfileDao extends GenericDao {
 	
 	public Integer updateUserStatus(User user);
 
-	public Integer updateTutorialStatus(String id);
+	public Integer updateTutorialStatus(Integer id);
 }
