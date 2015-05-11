@@ -201,7 +201,7 @@ function paintloanamount() {
     quesContxts = [];
     var questions = [{
             "type": "desc",
-            "text": "Purchase price?",
+            "text": "Desired purchase price?",
             "name": "homeWorthToday",
             "value": ""
         }, {
