@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.NeedsDao;
@@ -38,6 +39,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.common.vo.NeedsListMasterVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
@@ -379,8 +381,34 @@ public class NeedsListServiceImpl implements NeedsListService {
 				}
 			}
 			int res = saveLoanNeeds(loanId, needsToSave);
+
 		} catch (Exception e) {
 			LOGGER.error("Exception caught " + e.getMessage());
+		}
+	}
+
+	private void createAlertForNeedsListSet(int loanId) {
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDS_LIST_SET_TYPE;
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), null);
+		if (notificationList.size() == 0 || notificationList.get(0).getRead()) {
+			NotificationVO notificationVO = new NotificationVO(loanId,
+			        notificationType.getNotificationTypeName(),
+			        WorkflowConstants.NEEDS_LIST_SET_TYPE_CONTENT);
+			notificationService.createNotification(notificationVO);
+		}
+	}
+
+	private void dismissAlert(
+	        MilestoneNotificationTypes mileStoneNotificationType, int loanId) {
+
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                mileStoneNotificationType.getNotificationTypeName(),
+		                true);
+		for (NotificationVO notificationVO : notificationList) {
+			notificationService.dismissNotification(notificationVO.getId());
 		}
 	}
 	@Override
@@ -435,6 +463,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 					}
 				}
 			}
+
 			for (LoanNeedsList need : existingNeeds.values()) {
 				if (!need.getNeedsListMaster().getNeedCategory()
 				        .equalsIgnoreCase("System")) {
@@ -444,6 +473,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 			}
 			notificationService.dismissReadNotifications(loanId,
 			        MilestoneNotificationTypes.NEEDED_ITEMS_NOTIFICATION_TYPE);
+			// CALL TO CREATE ALERT FOR NEEDS LIST UPDATION
+			createOrDismissNeedsAlert(loanId);
 		} catch (Exception e) {
 			return 0;
 		}
@@ -454,7 +485,19 @@ public class NeedsListServiceImpl implements NeedsListService {
 		}
 		messageServiceHelper.generateNeedListModificationMessage(loanId,
 		        utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
+
+
 		return 1;
+	}
+
+	public void createOrDismissNeedsAlert(int loanId) {
+		NeededItemScoreVO neededItemScoreVO = getNeededItemsScore(loanId);
+		if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
+		        .getNeededItemRequired()) {
+			dismissAlert(MilestoneNotificationTypes.NEEDS_LIST_SET_TYPE, loanId);
+		} else {
+			createAlertForNeedsListSet(loanId);
+		}
 	}
 
 	@Override

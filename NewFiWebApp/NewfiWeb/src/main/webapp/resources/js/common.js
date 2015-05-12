@@ -45,7 +45,16 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 			} else {
 				hideOverlay();
 			}
-			successCallBack(response);
+			if(response.status&&response.status==="Session Expired"){
+				var component=$("#right-panel");
+				if(component&&component.length==0){
+					component=$(document.body)
+				}
+				var content="<div class='float-right'>"+response.message+"</div>"
+				$(component).html(content);
+			}else{
+				successCallBack(response);	
+			}
 		},
 
 		complete:function(response){

@@ -59,6 +59,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		StringBuffer strBuff = new StringBuffer();
 		strBuff.append(neededItemScoreVO.getTotalSubmittedItem() + " out of "
 		        + neededItemScoreVO.getNeededItemRequired());
+		needsListService.createOrDismissNeedsAlert(loanId);
 		return new Gson().toJson(neededItemScoreVO);
 	}
 

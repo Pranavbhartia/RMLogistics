@@ -140,6 +140,7 @@ public class WorkflowConstants {
 	public static final String APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT = "Appraisals not available";
 	public static final String UW_NOTIFICATION__NOTIFICATION_CONTENT = "Underwriting pending";
 	public static final String LOCK_RATE_CUST_NOTIFICATION_CONTENT = "Lock your rate";
+	public static final String NEEDS_LIST_SET_TYPE_CONTENT = "Needs list has been set";
 	static {
 
 		MILESTONE_WF_ITEM_LOOKUP.put(
