@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
@@ -196,6 +198,31 @@ public class SendEmailServiceImpl implements SendEmailService {
 		emailRecipientVO.setEmailID(emailID);
 		emailRecipientVO.setRecipientName(firstName + " " + lastName);
 		return emailRecipientVO;
+	}
+
+	@Override
+	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
+	        throws InvalidInputException, UndeliveredEmailException {
+		EmailRecipientVO emailRecipientVO = getReceipientVO(
+		        userVO.getEmailId(), userVO.getFirstName(),
+		        userVO.getLastName());
+		List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+		emailRecipientList.add(emailRecipientVO);
+		emailEntity.setRecipients(emailRecipientList);
+		sendGridEmailService.sendAsyncMail(emailEntity);
+		return true;
+	}
+
+	@Override
+	public boolean sendEmailForCustomer(EmailVO emailEntity, User user)
+	        throws InvalidInputException, UndeliveredEmailException {
+		EmailRecipientVO emailRecipientVO = getReceipientVO(user.getEmailId(),
+		        user.getFirstName(), user.getLastName());
+		List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+		emailRecipientList.add(emailRecipientVO);
+		emailEntity.setRecipients(emailRecipientList);
+		sendGridEmailService.sendAsyncMail(emailEntity);
+		return true;
 	}
 
 }
