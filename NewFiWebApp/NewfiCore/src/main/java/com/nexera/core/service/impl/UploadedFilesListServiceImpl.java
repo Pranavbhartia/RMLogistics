@@ -46,20 +46,20 @@ import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
-import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UploadedFilesListVO;
 import com.nexera.common.vo.UserVO;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
@@ -67,6 +67,7 @@ import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
@@ -102,6 +103,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private NexeraUtility nexeraUtility;
+
+	@Autowired
+	private SendEmailService sendEmailService;
 
 	@Autowired
 	private LqbInvoker lqbInvoker;
@@ -438,17 +442,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					checkVo.setLqbFileId(latestRow.getLqbFileID());
 
 				} else {
-					
-					
+
 					throw new FatalException("Error saving document");
 				}
 
-			}else{
+			} else {
 				nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			}
 
 		} catch (Exception e) {
-			
+
 			nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			LOG.info(" Exception uploading s3 :  " + e.getMessage());
 			checkVo.setIsUploadSuccess(false);
@@ -827,39 +830,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		if (insertFileCount > 0) {
 			LOG.debug("New Files have been inserted ");
 			emailVO.setTemplateId(template.getValue());
-			sendEmail(emailVO);
+			sendEmail(emailVO, loan);
 		}
 
 		if (removeFileCount > 0) {
 			LOG.debug("Files have been removed ");
 			emailVO.setTemplateId(template.getValue());
-			sendEmail(emailVO);
+			sendEmail(emailVO, loan);
 		}
 	}
 
 	private EmailVO constructEmail(Loan loan) {
 		EmailVO emailEntity = new EmailVO();
-		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
-		List<LoanTeam> loanTeamList = loan.getLoanTeam();
-		if (loanTeamList != null) {
-			for (LoanTeam loanTeam : loanTeamList) {
-				User user = loanTeam.getUser();
-				if (user != null) {
-					if (user.getEmailId() != null) {
-						EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-						emailRecipientVO.setEmailID(user.getEmailId());
-						emailRecipientVO.setRecipientName(user.getFirstName());
-						recipients.add(emailRecipientVO);
-					}
-				}
-			}
-		}
-
 		emailEntity.setSenderEmailId("web@newfi.com");
-		emailEntity.setRecipients(recipients);
-
 		emailEntity.setSenderName("Newfi System");
-		emailEntity.setSubject("Nexera Newfi Portal");
+		emailEntity.setSubject("Needs list has been updated");
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-",
 		        new String[] { WorkflowDisplayConstants.EMAIL_RECPIENT_NAME });
@@ -867,9 +852,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return emailEntity;
 	}
 
-	private void sendEmail(EmailVO emailVO) {
+	private void sendEmail(EmailVO emailVO, Loan loan) {
 		LOG.debug("Sending Email ");
-		sendGridEmailService.sendAsyncMail(emailVO);
+		try {
+			sendEmailService.sendEmailForTeam(emailVO, loan.getId());
+		} catch (InvalidInputException e) {
+			LOG.error("Exception caught " + e.getMessage());
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Exception caught " + e.getMessage());
+		}
+
 	}
 
 	private List<UploadedFilesList> filesToDeleteList(
