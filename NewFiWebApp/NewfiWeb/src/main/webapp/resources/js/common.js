@@ -10,10 +10,12 @@ var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]
 function removeToastMessage(){
 
 	    	if($('#overlay-toast-txt').html()!=""){
+	    		$('#overlay-toast-txt').html('');
 				$('#overlay-toast-txt').hide();
 				
 			}
 			if($('#overlay-toast-error-txt').html()!=""){
+				$('#overlay-toast-error-txt').html('');
 				$('#overlay-toast-error-txt').hide();
 			}
 

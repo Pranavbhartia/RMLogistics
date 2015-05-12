@@ -2136,20 +2136,29 @@ function updateUserDetails() {
     
     //var phoneStatus=validatePhone("priPhoneNumberId");
 	var phoneStatus="";
-	if(customerDetails.mobileAlertsPreference){
+	if(userProfileJson.mobileAlertsPreference){
 	 phoneStatus=validatePhone("priPhoneNumberId");	
-	 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
-		 showErrorToastMessage("Please select a carrier");
-		 return;
+	 if(!phoneStatus){
+		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
+			 showErrorToastMessage("Please select a carrier");
+			 
+		 }
+		 return false;
+	 }else{
+		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
+			 showErrorToastMessage("Please select a carrier");
+			 return false;
+		 }
 	 }
-	}else if(!customerDetails.mobileAlertsPreference){
+
+	}else if(userProfileJson.mobileAlertsPreference==false){
 
 	  phoneStatus=true;	
 	}
   
 
     if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
-    if(phoneStatus){
+
     	$('#overlay-loader').show();
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
@@ -2160,12 +2169,25 @@ function updateUserDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-			$('#overlay-loader').hide();
+			showToastMessage("Successfully updated");
+			$('#overlay-loader').hide();			
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
-
-            showToastMessage("Successfully updated");
+		  	$('#overlay-toast').fadeIn("fast",function(){
+			setTimeout(function(){
+				$('#overlay-toast').fadeOut("fast");
+			},1000);
+		    });
+		  	if($('#overlay-toast-error-txt').html()!=""){
+		  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
+				setTimeout(function(){
+					$('#overlay-toast-error-txt').fadeOut("fast");
+				},1000);
+			});
+		  	}
+		  //	removeToastMessage();
             window.location.href = "#myLoan";
+ 
 		},
 		error : function(data) {
 			$('#overlay-loader').hide();
@@ -2174,13 +2196,15 @@ function updateUserDetails() {
 			}else{
 				showErrorToastMessage("Error While updating user details. Please try again later");
 			}
-			
+			return false;
 		}
 	});
 }
-	}else{
+else{
 		showToastMessage("Mandatory Fileds should not be empty");
+		return false;
 	}
+    
 }
 
 
