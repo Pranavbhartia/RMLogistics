@@ -13,6 +13,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
+<link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico">
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/dropzone.css" rel="stylesheet">
@@ -24,8 +25,11 @@
 <script src="resources/js/jquery-2.1.3.min.js"></script>
 
 <script type="text/javascript">
-var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
+
+var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}"; 
+
 	$(document).ready(function() {
+	    <c:remove var = "SPRING_SECURITY_LAST_EXCEPTION" scope = "session" />
 		$('#loginForm').submit(function() {
 			var userName = $("#userId").val();
 			var password = $("#password").val();
@@ -36,8 +40,8 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			return true;
 		});
 		var hrefValue=window.location.href.split( '?' );
-		if(hrefValue[1]=="s=autherror"){
-			$("#errorMessage").text("Please Enter Valid Credentials");
+		if(hrefValue[1]=="s=autherror" && errorMessage!=""){
+			$("#errorMessage").text(errorMessage);
 			$("#errorMessage").show();
 		}else if(hrefValue[1]=="s=sessionerror"){
 			$("#errorMessage").text("Session expired.Please Login");
@@ -47,7 +51,10 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 </script>
 </head>
 <body>
-
+<c:if test="${not empty param['error']}"> 
+    <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+ 
+</c:if> 
 	<div class="login-body-wrapper">
 		<div class="login-body-overlay">
 			<!-- Login Header -->

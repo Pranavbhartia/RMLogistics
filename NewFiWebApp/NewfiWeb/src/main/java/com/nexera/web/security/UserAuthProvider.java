@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -35,32 +36,29 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) {
 		LOG.info("Inside authenticate Method of UserAuthProvider");
-
 		String username = authentication.getName().split(":")[0];
 		String offSet = authentication.getName().split(":")[1];
 		String password = authentication.getCredentials().toString();
-
 		User user;
 		try {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
 			user = authenticationService.getUserWithLoginName(username,
 			        password);
-
 			LOG.debug("Checking if user is not in inactive mode");
-			if (user.getStatus()==0||user.getStatus()==-1) {
-				throw new InvalidInputException("User not active in login",
+			if (user.getStatus()==-1) {
+				throw new DisabledException(
+				        DisplayMessageConstants.USER_DISABLED);
+			}
+			else if (user.getStatus()==0) {
+				throw new DisabledException(
 				        DisplayMessageConstants.USER_INACTIVE);
 			}
-
 			authenticationService.validateUser(user, password);
 			if (user != null) {
 				List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 				user.setMinutesOffset(offSet);
-
-				// user.setDisplayRoleCode();
-				// user.setMinutesOffset();
 				Authentication auth = new UsernamePasswordAuthenticationToken(
 				        user, password, grantedAuths);
 				messageServiceHelper.checkIfUserFirstLogin(user);
@@ -75,8 +73,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			LOG.error(e.getMessage());
 		} catch (Exception e) {
 			// TODO: handle exception
-
-			e.printStackTrace();
+			throw e;
 		}
 		return null;
 	}
