@@ -981,7 +981,7 @@ function progressBaar(num) {
    
 
 function paintApplyNow(inputCustomerDetails,emailQuote) {
-  
+
     
     var registration = new Object();
     var parentWrapper = $('<div>').attr({
@@ -1004,7 +1004,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "placeholder": "First Name",
         "name": "fname"
     });
-    regInputContainerFname.append(regInputfname);
+    regInputContainerFname.append(regInputfname).append(appendErrorMessage());
     var regInputContainerlname = $('<div>').attr({
         "class": "reg-input-cont reg-lname"
     });
@@ -1013,7 +1013,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "placeholder": "Last Name",
         "name": "lname"
     });
-    regInputContainerlname.append(regInputlname);
+    regInputContainerlname.append(regInputlname).append(appendErrorMessage());
     var regInputContainerEmail = $('<div>').attr({
         "class": "reg-input-cont reg-email"
     });
@@ -1022,7 +1022,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "placeholder": "Email",
         "name": "email"
     });
-    regInputContainerEmail.append(regInputEmail);
+    regInputContainerEmail.append(regInputEmail).append(appendErrorMessage());
     
     
     var errorMsg = $('<div>').attr({
@@ -1053,19 +1053,42 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
         if($('input[name="fname"]').val()==""){
-			showErrorToastMessage("Firstname cannot be empty");
+        	$('input[name="fname"]').next('.err-msg').html("First name cannot be empty").show();
+    		$(".reg-input-cont.reg-fname").addClass('err-input').focus();
+			//showErrorToastMessage("Firstname cannot be empty");
 			return;
-	}else if($('input[name="lname"]').val()==""){
-			showErrorToastMessage("LastName cannot be empty");
+	}else{
+		$('input[name="fname"]').next('.err-msg').hide();
+		$(".reg-input-cont.reg-fname").removeClass('err-input');
+	}
+ if($('input[name="lname"]').val()==""){
+		$('input[name="lname"]').next('.err-msg').html("Last name cannot be empty").show();
+		$(".reg-input-cont.reg-lname").addClass('err-input').focus();
+			//showErrorToastMessage("LastName cannot be empty");
 			return;
-	}else if($('input[name="email"]').val()==""){
-		showErrorToastMessage("Email cannot be empty");
+	}else{
+		$('input[name="lname"]').next('.err-msg').hide();
+		$(".reg-input-cont.reg-lname").removeClass('err-input');
+	}
+ if($('input[name="email"]').val()==""){
+		$('input[name="email"]').next('.err-msg').html("Email cannot be empty").show();
+		$(".reg-input-cont.reg-email").addClass('err-input').focus();
+		//showErrorToastMessage("Email cannot be empty");
 		return;
-	}else if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
+	}else{
+		$('input[name="email"]').next('.err-msg').hide();
+		$(".reg-input-cont.reg-email").removeClass('err-input');
+	}
+ if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
 		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (!regex.test($('input[name="email"]').val())) {
-        showErrorToastMessage("Incorrect Email");
+        	$('input[name="email"]').next('.err-msg').html("Incorrect Email ID").show();
+    		$(".reg-input-cont.reg-email").addClass('err-input').focus();
+        //showErrorToastMessage("Incorrect Email");
 		return;
+        }else{
+        	$('input[name="email"]').next('.err-msg').hide();
+    		$(".reg-input-cont.reg-email").removeClass('err-input');
         }
 	}
         var appUserInput = new Object();
