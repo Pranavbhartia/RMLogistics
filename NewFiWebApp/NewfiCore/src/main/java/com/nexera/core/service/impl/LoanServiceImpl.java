@@ -1452,6 +1452,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional
 	public void createAlertForAgentAddition(int loanId) {
 		LOG.debug("Inside method createAlertForAgentAddition ");
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
@@ -1490,6 +1491,29 @@ public class LoanServiceImpl implements LoanService {
 				LOG.debug("Creating new notification to add agent ");
 				notificationService.createNotificationAsync(notificationVO);
 			}
+		}
+	}
+
+	@Override
+	@Transactional
+	public void createAlertForAgent(int loanId) {
+		LOG.debug("Inside method createAlertForAgentAddition ");
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
+
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), null);
+		if (notificationList.size() == 0
+		        || notificationList.get(0).getRead() == true) {
+			LOG.debug("Creating new notification for "
+			        + notificationType.getNotificationTypeName());
+			LoanVO loanVO = new LoanVO(loanId);
+			LOG.debug("Not able to find any agent associated ");
+			NotificationVO notificationVO = new NotificationVO(loanId,
+			        notificationType.getNotificationTypeName(),
+			        WorkflowConstants.AGENT_ADD_NOTIFICATION_CONTENT);
+			LOG.debug("Creating new notification to add agent ");
+			notificationService.createNotificationAsync(notificationVO);
 		}
 	}
 }
