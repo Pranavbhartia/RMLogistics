@@ -2372,7 +2372,8 @@ $('body').on('focus',"input[name='birthday']",function(){
 			orientation : "top auto",
 			autoclose : true,
 			maxDate: 0,
-			defaultDate:''
+			defaultDate:'',
+			placeholder : "MM/DD/YYYY",
 			
 		});
   

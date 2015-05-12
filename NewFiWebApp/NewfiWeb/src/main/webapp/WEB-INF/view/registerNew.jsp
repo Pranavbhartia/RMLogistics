@@ -81,13 +81,9 @@
                   <c:otherwise>
                     <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
                     <div class="reg-option-dropdown hide">
-                      <div class="reg-select-option" id="customerID" role="cus">
-                        Customer
-                      </div>
+                      <div class="reg-select-option" id="customerID" role="cus">Customer</div>
                       
-                      <div class="reg-select-option" id="realtorID" role="rel">
-                        Realtor
-                      </div>
+                      <div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
                     </div>
                   </c:otherwise>
                 </c:choose>
@@ -178,6 +174,7 @@
 
 			$("#customerID").on("click",function(e){		
 				var userType=$("#customerID").text();
+				//alert(userType);
 				$("#userTypeID").attr('value',userType);							
 				$(this).closest('.reg-select').find('.reg-option-dropdown').slideToggle();
 				$("#realor-email").show();
@@ -264,8 +261,9 @@
 		        }
 		    });
 		}
-		function createNewCustomer(registration) {
-    // alert(JSON.stringify(registration));
+   function createNewCustomer(registration) {
+	   
+//alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
         url: baseurl+"rest/shopper/registration",
@@ -278,13 +276,13 @@
         success: function(data) {
             // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
-            // alert (data);
+         //alert (data);
             window.location.href =baseurl;
             window.location.href = data;
             // printMedianRate(data,container);
         },
         error: function(data) {
-           // alert(data);
+         //alert(data);
             showErrorToastMessage("error while creating user");
             $('#overlay-loader').hide();
         }
@@ -304,19 +302,19 @@
 		        success: function(data) {
 		            // $('#overlay-loader').hide();
 		            $('#overlay-loader').hide();
-		            // alert (data);
+		          // alert (data);
 		            window.location.href =baseurl;
 		            window.location.href = data;
 		            // printMedianRate(data,container);
 		        },
 		        error: function(data) {
-		           // alert(data);
+		         // alert(data);
 		            showErrorToastMessage("error while creating user");
 		            $('#overlay-loader').hide();
 		        }
 		    });	
 		}
-
+		
 	</script>
 </body>
 </html>
