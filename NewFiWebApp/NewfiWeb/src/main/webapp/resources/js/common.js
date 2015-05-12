@@ -9,8 +9,6 @@ var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]
 
 function removeToastMessage(){
 
-
-	    	alert("in else");
 	    	if($('#overlay-toast-txt').html()!=""){
 				$('#overlay-toast-txt').hide();
 				
@@ -19,7 +17,6 @@ function removeToastMessage(){
 				$('#overlay-toast-error-txt').hide();
 			}
 
-	
 }
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
