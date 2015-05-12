@@ -581,7 +581,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	public List<User> fetchAllActiveUsers() {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("status", 1));
 		return criteria.list();
 	}
 
