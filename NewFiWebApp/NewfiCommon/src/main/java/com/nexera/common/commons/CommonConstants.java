@@ -123,6 +123,8 @@ public interface CommonConstants {
 
 	public static final double LOAN_AMOUNT_THRESHOLD = 417000;
 
+	public static final Integer DEFAULT_APPLICATION_FEE = 500;
+
 	public static final int CSFPR = 395;
 	public static final int JSFPR = 595;
 	public static final int CINV = 495;

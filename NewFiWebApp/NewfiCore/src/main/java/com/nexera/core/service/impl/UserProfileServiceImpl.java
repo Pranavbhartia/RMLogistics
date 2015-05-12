@@ -41,7 +41,6 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
-import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -1336,8 +1335,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-name-", new String[] { user.getFirstName() + " "
-		        + user.getLastName() });
+		substitutions.put("-name-", new String[] { user.getFirstName() });
 		substitutions.put("-username-", new String[] { user.getEmailId() });
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
