@@ -34,7 +34,7 @@
 					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmpassword">	
 							<div class="err-msg hide"></div>
 				            </div>
-							<div class="reg-btn-wrapper clearfix">
+							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
 					             <div class="reset-password float-right" onclick="$('#changePwdForm').submit();">Reset Password</div>
 				            </div>											
