@@ -7,6 +7,20 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
+function removeToastMessage(){
+
+
+	    	alert("in else");
+	    	if($('#overlay-toast-txt').html()!=""){
+				$('#overlay-toast-txt').hide();
+				
+			}
+			if($('#overlay-toast-error-txt').html()!=""){
+				$('#overlay-toast-error-txt').hide();
+			}
+
+	
+}
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
 	if(showOverlayText){
