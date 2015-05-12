@@ -1273,6 +1273,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional
 	public void sendApplicationFinishedEmail(Loan loan) {
 		if (loan != null) {
 			LoanAppForm loanAppForm = loan.getLoanAppForms().get(0);
@@ -1315,6 +1316,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public void sendRateLocked(Integer loanID) throws InvalidInputException,
 	        UndeliveredEmailException {
 		LoanVO loan = getLoanByID(loanID);
@@ -1344,6 +1346,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public void sendNoproductsAvailableEmail(Integer loanId) {
 
 		EmailVO emailEntity = new EmailVO();
