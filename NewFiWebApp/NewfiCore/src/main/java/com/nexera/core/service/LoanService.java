@@ -169,5 +169,5 @@ public interface LoanService {
 	public void sendApplicationFinishedEmail(Loan loan);
 
 	public void sendNoproductsAvailableEmail(Integer loanId);
-
+	public void createAlertForAgentAddition(int loanId);
 }

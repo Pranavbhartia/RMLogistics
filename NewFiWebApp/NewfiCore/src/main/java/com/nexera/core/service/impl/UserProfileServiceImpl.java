@@ -41,6 +41,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.InternalUserStateMappingDao;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.StateLookupDao;
@@ -1240,6 +1241,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+							loanService.createAlertForAgentAddition(loanVO
+							        .getId());
 						}
 					}
 				}
@@ -1526,8 +1529,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-    public Integer updateTutorialStatus(Integer id) throws Exception  {
+	public Integer updateTutorialStatus(Integer id) throws Exception {
 		return userProfileDao.updateTutorialStatus(id);
-	    
-    }
+
+	}
 }
