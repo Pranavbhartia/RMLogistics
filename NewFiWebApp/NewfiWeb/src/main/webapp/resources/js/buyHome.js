@@ -553,7 +553,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
                 allowZero: true,
                 prefix: '$',
                 precision: 0,
-                allowNegative: true
+                allowNegative: false
             });
         }
     });
