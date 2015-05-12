@@ -256,18 +256,23 @@ public interface CommonConstants {
 	public static final String SUBJECT_LOAN_IS_CLEAR_TO_CLOSE = "Loan Is Clear To Close";
 
 	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
-	
+
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
-	
+
 	public static final String SLOANNUMBER = "sLoanNumber";
-	
+
 	public static final String SXMLQUERYMAP = "sXmlQueryMap";
-	
+
 	public static final String FORMAT = "format";
-	
+
 	public static final String OPNAME = "opName";
-	
+
 	public static final String LOANVO = "loanVO";
-	
-	
+
+	public static final String SEND_EMAIL_TO_CUSTOMER_ONLY = "customerOnly";
+
+	public static final String SEND_EMAIL_TO_TEAM = "team";
+
+	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
+
 }
