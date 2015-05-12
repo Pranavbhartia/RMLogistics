@@ -53,4 +53,5 @@ public interface NeedsListService {
 	
 	public void createInitilaNeedsList(Integer loanId);
 
+	public void createOrDismissNeedsAlert(int loanId);
 }
