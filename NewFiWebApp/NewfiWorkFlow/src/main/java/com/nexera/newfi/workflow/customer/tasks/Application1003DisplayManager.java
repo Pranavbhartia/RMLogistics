@@ -49,9 +49,6 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 		        .getLosStatusID() + "")) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
-		Integer loanID = Integer.parseInt(objectMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		createAlertForAgentAddition(loanID);
 		return returnStatus;
 	}
 
@@ -71,48 +68,6 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		LOG.debug("Inside method invokeAction ");
 		return null;
-	}
-
-	private void createAlertForAgentAddition(int loanId) {
-		LOG.debug("Inside method createAlertForAgentAddition ");
-		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
-
-		List<NotificationVO> notificationList = notificationService
-		        .findNotificationTypeListForLoan(loanId,
-		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0
-		        || notificationList.get(0).getRead() == true) {
-			LOG.debug("Creating new notification for "
-			        + notificationType.getNotificationTypeName());
-			LoanVO loanVO = new LoanVO(loanId);
-			boolean agentFound = false;
-			ExtendedLoanTeamVO extendedLoanTeamVO = loanService
-			        .findExtendedLoanTeam(loanVO);
-			if (extendedLoanTeamVO != null
-			        && extendedLoanTeamVO.getUsers() != null) {
-				for (UserVO userVO : extendedLoanTeamVO.getUsers()) {
-					if (userVO.getUserRole() != null
-					        && userVO
-					                .getUserRole()
-					                .getRoleCd()
-					                .equalsIgnoreCase(
-					                        UserRolesEnum.REALTOR.getName())) {
-						LOG.debug("Agent found ");
-						agentFound = true;
-						break;
-
-					}
-				}
-			}
-			if (!agentFound) {
-				LOG.debug("Not able to find any agent associated ");
-				NotificationVO notificationVO = new NotificationVO(loanId,
-				        notificationType.getNotificationTypeName(),
-				        WorkflowConstants.AGENT_ADD_NOTIFICATION_CONTENT);
-				LOG.debug("Creating new notification to add agent ");
-				notificationService.createNotificationAsync(notificationVO);
-			}
-		}
 	}
 
 	@Override

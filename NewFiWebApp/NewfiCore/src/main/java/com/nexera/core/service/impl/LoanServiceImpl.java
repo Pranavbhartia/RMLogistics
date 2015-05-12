@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
@@ -47,6 +48,7 @@ import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -67,6 +69,7 @@ import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
+import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -77,6 +80,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
@@ -130,6 +134,9 @@ public class LoanServiceImpl implements LoanService {
 	private LoanAppFormService loanAppFormService;
 	@Autowired
 	private StateLookupService stateLookupService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Value("${profile.url}")
 	private String systemBaseUrl;
@@ -422,7 +429,7 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
 		loanCustomerVO.setLoanStatus(loan.getLoanProgressStatus()
 		        .getLoanProgressStatus());
-		
+
 		loanCustomerVO.setLqbFileId(loan.getLqbFileId());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
@@ -1880,7 +1887,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public void sendRateLocked(Integer loanID) throws InvalidInputException,
 	        UndeliveredEmailException {
-		LoanVO loan = getLoanByID(loanID);		
+		LoanVO loan = getLoanByID(loanID);
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
@@ -1889,9 +1896,11 @@ public class LoanServiceImpl implements LoanService {
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loan.getUser()
 		        .getFirstName() + " " + loan.getUser().getLastName() });
-		substitutions.put("-rate-", new String[] { loan.getLockedRate()!=null? loan.getLockedRate().toString() : "" });
-		substitutions.put("-rateexpirationdate-", new String[] {  " " });
-		
+		substitutions.put("-rate-",
+		        new String[] { loan.getLockedRate() != null ? loan
+		                .getLockedRate().toString() : "" });
+		substitutions.put("-rateexpirationdate-", new String[] { " " });
+
 		recipientVO.setEmailID(loan.getUser().getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
 		        .asList(recipientVO)));
@@ -2005,6 +2014,48 @@ public class LoanServiceImpl implements LoanService {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	@Override
+	public void createAlertForAgentAddition(int loanId) {
+		LOG.debug("Inside method createAlertForAgentAddition ");
+		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE;
+
+		List<NotificationVO> notificationList = notificationService
+		        .findNotificationTypeListForLoan(loanId,
+		                notificationType.getNotificationTypeName(), null);
+		if (notificationList.size() == 0
+		        || notificationList.get(0).getRead() == true) {
+			LOG.debug("Creating new notification for "
+			        + notificationType.getNotificationTypeName());
+			LoanVO loanVO = new LoanVO(loanId);
+			boolean agentFound = false;
+			ExtendedLoanTeamVO extendedLoanTeamVO = findExtendedLoanTeam(loanVO);
+			if (extendedLoanTeamVO != null
+			        && extendedLoanTeamVO.getUsers() != null) {
+				for (UserVO userVO : extendedLoanTeamVO.getUsers()) {
+					if (userVO.getUserRole() != null
+					        && userVO
+					                .getUserRole()
+					                .getRoleCd()
+					                .equalsIgnoreCase(
+					                        UserRolesEnum.REALTOR.getName())) {
+						LOG.debug("Agent found ");
+						agentFound = true;
+						break;
+
+					}
+				}
+			}
+			if (!agentFound) {
+				LOG.debug("Not able to find any agent associated ");
+				NotificationVO notificationVO = new NotificationVO(loanId,
+				        notificationType.getNotificationTypeName(),
+				        WorkflowConstants.AGENT_ADD_NOTIFICATION_CONTENT);
+				LOG.debug("Creating new notification to add agent ");
+				notificationService.createNotificationAsync(notificationVO);
 			}
 		}
 	}
