@@ -2196,13 +2196,13 @@ function updateUserDetails() {
 			}else{
 				showErrorToastMessage("Error While updating user details. Please try again later");
 			}
-			return false;
+		
 		}
 	});
 }
 else{
 		showToastMessage("Mandatory Fileds should not be empty");
-		return false;
+		
 	}
     
 }
