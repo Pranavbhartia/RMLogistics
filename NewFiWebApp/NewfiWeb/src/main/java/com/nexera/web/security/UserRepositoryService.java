@@ -28,7 +28,7 @@ public class UserRepositoryService implements UserDetailsService {
 			LOG.info("user : " + user.getEmailId());
 		}
 		catch (NoRecordsFetchedException e) {
-			throw new UsernameNotFoundException("User not found in the system");
+			throw new UsernameNotFoundException("Please enter valid credentials");
 		}
 		catch (DatabaseException ex) {
 			throw new UsernameNotFoundException("Some technicall error happened in the system. Please try later");
