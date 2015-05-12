@@ -34,7 +34,9 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
@@ -44,6 +46,7 @@ import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.RestUtil;
@@ -72,6 +75,8 @@ public class ApplicationFormRestService {
 	@Autowired
 	private LQBRequestUtil lQBRequestUtil;
 	
+	@Autowired
+	private UserProfileService userProfileService;
 	
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -142,7 +147,9 @@ public class ApplicationFormRestService {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
 			String loanNumber = invokeRest(lQBRequestUtil.prepareCreateLoanJson(
 					CommonConstants.CREATET_LOAN_TEMPLATE).toString());
+			
 			LOG.debug("createLoanResponse is" + loanNumber);
+			
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
 				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO))
@@ -159,6 +166,8 @@ public class ApplicationFormRestService {
 				Integer loanId = loaAppFormVO.getLoan().getId();
 				needsListService.createInitilaNeedsList(loanId);
 
+				userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+				
 				if (response != null) {
 					lockRateData = loadLoanRateData(loanNumber);
 					LOG.debug("lockRateData" + lockRateData);

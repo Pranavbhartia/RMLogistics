@@ -2165,6 +2165,7 @@ function updateUserDetails() {
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
 
             showToastMessage("Successfully updated");
+            window.location.href = "#myLoan";
 		},
 		error : function(data) {
 			$('#overlay-loader').hide();
