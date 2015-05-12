@@ -170,4 +170,6 @@ public interface LoanService {
 
 	public void sendNoproductsAvailableEmail(Integer loanId);
 	public void createAlertForAgentAddition(int loanId);
+
+	void createAlertForAgent(int loanId);
 }

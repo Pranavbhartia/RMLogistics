@@ -1240,7 +1240,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-							loanService.createAlertForAgentAddition(loanVO
+							loanService.createAlertForAgent(loanVO
 							        .getId());
 						}
 					}
