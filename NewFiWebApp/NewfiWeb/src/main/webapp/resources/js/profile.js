@@ -572,6 +572,11 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 
 function updateLMDetails() {
 
+	var firstname=validateFirstName("firstNameId");
+	var lastname=validateLastName("lastNameId");
+	if(!firstname && !lastname){
+		return false;
+	}
 	var userProfileJson = new Object();
 
 	userProfileJson.id = $("#userid").val();
@@ -595,10 +600,21 @@ function updateLMDetails() {
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		userProfileJson.mobileAlertsPreference = true;	
 		userProfileJson.carrierInfo=$('#carrierInfoID').val();
-		if(userProfileJson.carrierInfo == ""){
-			showErrorToastMessage("Please choose any carrier");
-			return false;
-		}
+	    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
+	    if(!phoneStatus){
+	    	if(userProfileJson.carrierInfo == ""){
+				showErrorToastMessage(carrierSelectmessage);
+				
+			}
+	    	return false;
+	    }else{
+	    	if(userProfileJson.carrierInfo == ""){
+				showErrorToastMessage(carrierSelectmessage);
+				return false;
+			}
+	    }
+
+		
 			
 		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
 		   userProfileJson.mobileAlertsPreference = false;
@@ -621,11 +637,6 @@ function updateLMDetails() {
 			internalUserState.push(internalUserStates[key]);
 	}
 	userProfileJson.internalUserStateMappingVOs = internalUserState; */
-    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val());
-
-
-   if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!="" && $("#priPhoneNumberId").val()!=""){
-     if(phoneStatus!=false){
     	 $('#overlay-loader').show(); 
 	    $.ajax({
 		url : "rest/userprofile/updateprofile",
@@ -656,10 +667,8 @@ function updateLMDetails() {
 		}
 	});
 
-	}}else{
-		showErrorToastMessage("Mandatory fields should not be empty");
 	}
-}
+
 
 //end of changes
 function userProfileData(data) {
@@ -1791,24 +1800,24 @@ function getPhone1RowLM(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function phoneNumberValidation(phoneNo,customerStatus){
+function phoneNumberValidation(phoneNo,customerStatus,elementId){
 
 var regex = /^\d{10}$/;   
-if(customerStatus){
+if(customerStatus!=false){
 	if(phoneNo==null || phoneNo==""){
-	showToastMessage("Phone field cannot be empty");
+		$('#'+elementId).next('.err-msg').html("Phone feild cannot be empty").show();
+		$('#'+elementId).addClass('err-input');
+	//showErrorToastMessage("Phone field cannot be empty");
 	return false;
-	}else if(!regex.test(phoneNo)) {
-		showToastMessage("Invalid phone number");
+	}
+	if(!regex.test(phoneNo)) {
+		$('#'+elementId).next('.err-msg').html("Invalid phone number").show();
+		$('#'+elementId).addClass('err-input');
+		//showErrorToastMessage("Invalid phone number");
 		validationFails = true;
-		return false
+		return false;
 	}
 }
-if (!regex.test(phoneNo)) {
-		showToastMessage("Invalid phone number");
-		validationFails = true;
-		return false
-	}
 return true;
 }
 //END of changes
@@ -2167,7 +2176,7 @@ function updateUserDetails() {
 	}
   
 
-    if($("#firstNameId").val()!="" && $("#lastNameId").val()!="" && $("#priEmailId").val()!=""){
+  
 
     	$('#overlay-loader').show();
 	$.ajax({
@@ -2210,12 +2219,9 @@ function updateUserDetails() {
 		}
 	});
 }
-else{
-		showToastMessage("Mandatory fields should not be empty");
-		
-	}
+
     
-}
+
 
 
 function createCropDiv(divToAppend, url) {
