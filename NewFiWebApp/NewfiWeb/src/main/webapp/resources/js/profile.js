@@ -11,6 +11,8 @@ var passwordDonotMatchErrorMessage="Passwords do not match";
 var passwordlengthErrorMessage="Password length should be atleast 8 digits";
 var invalidPassword="Password can not contain first name or last name";
 var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
+var priAndSecEmailValidation="Primary and secondary email should not be same.";
+var carrierSelectmessage="Please select a carrier";
 //var userStates=[];
 
 function showCustomerProfilePage() {
@@ -1959,7 +1961,7 @@ $(document).on('blur','#lastNameId',function(){
 });
 
 $(document).on('blur','#secEmailId',function(){
-	if(!validateFormField('secEmailId', false, "", "Email Id not valid", emailRegex)){
+	if(!validateFormField('secEmailId', false, "", "Email ID is not valid", emailRegex)){
 		isProfileFormValid = false;
 	}
 });
@@ -2124,6 +2126,14 @@ function updateUserDetails() {
 	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
 	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	//Condition to check whether primary and secondary email are same
+	if($("#secEmailId").val()!=null||$("#secEmailId").val()!=""||$("#secEmailId").val()!=undefined){
+		if($("#priEmailId").val()==$("#secEmailId").val()){
+			showErrorToastMessage(priAndSecEmailValidation);
+			return false;
+		}
+	}
+	
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		userProfileJson.mobileAlertsPreference = true;	
 		userProfileJson.carrierInfo=$('#carrierInfoID').val();
@@ -2140,13 +2150,13 @@ function updateUserDetails() {
 	 phoneStatus=validatePhone("priPhoneNumberId");	
 	 if(!phoneStatus){
 		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
-			 showErrorToastMessage("Please select a carrier");
+			 showErrorToastMessage(carrierSelectmessage);
 			 
 		 }
 		 return false;
 	 }else{
 		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
-			 showErrorToastMessage("Please select a carrier");
+			 showErrorToastMessage(carrierSelectmessage);
 			 return false;
 		 }
 	 }
@@ -2194,14 +2204,14 @@ function updateUserDetails() {
 			if(data.error.message!=null){
 				showErrorToastMessage(data.error.message);
 			}else{
-				showErrorToastMessage("Error While updating user details. Please try again later");
+				showErrorToastMessage("Error while updating user details, please try again later");
 			}
 		
 		}
 	});
 }
 else{
-		showToastMessage("Mandatory Fileds should not be empty");
+		showToastMessage("Mandatory fields should not be empty");
 		
 	}
     

@@ -117,7 +117,7 @@ public class UserProfileRest {
 		if (userDetail != null) {
 			try {
 				userProfileService.resetPassword(userDetail);
-				String successMessage = CommonConstants.FORGET_PASSWORD_SUCCESS_MESSAGE;
+				String successMessage = "Reminder sent. We’ve sent an email to ["+userVO.getEmailId()+"]. It contains a link with instructions to reset your password";
 				commonResponse.setResultObject(successMessage);
 			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
