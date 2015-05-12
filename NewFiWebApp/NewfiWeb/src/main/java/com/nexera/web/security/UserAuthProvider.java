@@ -68,7 +68,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			}
 		} catch (NoRecordsFetchedException e) {
 			LOG.error("User not found in the system: " + e.getMessage());
-			throw new UsernameNotFoundException("User not found in the system");
+			throw new UsernameNotFoundException("Please enter valid credentials");
 		} catch (InvalidInputException e) {
 			LOG.error(e.getMessage());
 		} catch (Exception e) {
