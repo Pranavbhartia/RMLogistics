@@ -17,6 +17,8 @@ import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.CustomerSpouseDetailVO;
@@ -27,6 +29,7 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -51,6 +54,9 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 
 	@Autowired
 	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	SendEmailService sendEmailService;
 
 	@Autowired
 	Utils utils;
@@ -98,11 +104,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 				substitutions.put("-name-", names);
 				substitutions = doTemplateSubstitutions(substitutions,
 				        objectMap);
-				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-				emailRecipientVO.setEmailID(loanVO.getUser().getEmailId());
-				recipients.add(emailRecipientVO);
+
 				emailEntity.setSenderEmailId("web@newfi.com");
-				emailEntity.setRecipients(recipients);
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
 					emailEntity.setSubject("Nexera Newfi Portal");
@@ -111,7 +114,14 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 				}
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(emailTemplate);
-				sendGridEmailService.sendAsyncMail(emailEntity);
+				try {
+					sendEmailService.sendEmailForCustomer(emailEntity,
+					        loanVO.getId());
+				} catch (InvalidInputException e) {
+					LOG.error("Exception caught " + e.getMessage());
+				} catch (UndeliveredEmailException e) {
+					LOG.error("Exception caught " + e.getMessage());
+				}
 
 				// Sending sms to user now
 				if (loanVO.getUser() != null) {

@@ -1,7 +1,9 @@
 package com.nexera.core.service;
 
+import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailVO;
 
 /**
@@ -24,6 +26,12 @@ public interface SendEmailService {
 	        throws InvalidInputException, UndeliveredEmailException;
 
 	boolean sendEmailForCustomer(EmailVO emailEntity, int loanId)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	boolean sendEmailForCustomer(EmailVO emailEntity, User user)
 	        throws InvalidInputException, UndeliveredEmailException;
 
 }
