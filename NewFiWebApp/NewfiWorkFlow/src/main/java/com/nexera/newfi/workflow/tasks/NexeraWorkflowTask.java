@@ -12,7 +12,6 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Template;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
@@ -51,8 +50,6 @@ public abstract class NexeraWorkflowTask {
 			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
 			                .toString()));
 			if (loanVO != null) {
-				LoanTeamListVO loanTeam = loanService
-				        .getLoanTeamListForLoan(loanVO);
 				String emailTemplateKey = objectMap.get(
 				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
 				        .toString();
@@ -91,10 +88,9 @@ public abstract class NexeraWorkflowTask {
 
 				// Sending sms to user now
 				if (loanVO.getUser() != null) {
-					if (loanVO.getUser().getCustomerDetail() != null) {
 						if (loanVO.getUser().getCarrierInfo() != null) {
 							if (loanVO.getUser().getPhoneNumber() != null
-							        && loanVO.getUser().getPhoneNumber()
+						        && !loanVO.getUser().getPhoneNumber()
 							                .equalsIgnoreCase("")) {
 								LOG.info("Sending SMS "
 								        + Long.valueOf(loanVO.getUser()
@@ -105,7 +101,6 @@ public abstract class NexeraWorkflowTask {
 								                .getPhoneNumber()));
 							}
 						}
-					}
 
 				}
 			}
