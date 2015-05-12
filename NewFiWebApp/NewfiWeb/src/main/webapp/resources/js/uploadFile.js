@@ -399,19 +399,35 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 
 
 function uploadDocument(event){
-	var needIdData=$(event.target).data("needId");
-	var myDropzone = Dropzone.forElement("div#drop-zone");
-	//myDropzone.params("needId" ,needIdData );
-	$("#file-upload-icn").click();
-	myDropzone.on("sending", function(file, xhr, formData) {
-		  // add headers with xhr.setRequestHeader() or
-		  // form data with formData.append(name, value);
-			formData.append("needId" , needIdData);
-	});
-	myDropzone.on("processing", function(file) {
-		 this.options.url = "rest/fileupload/documentUploadWithNeed";
-	});
+	var appCreated=false;
+	if(selectedUserDetail){
+		if(selectedUserDetail.lqbFileId&&selectedUserDetail.lqbFileId!=""){
+			appCreated=true;
+		}
+	}else{
+		var appDetails=JSON.parse(newfiObject.appUserDetails);
+		if(appDetails.loan&&appDetails.loan.lqbFileId&&appDetails.loan.lqbFileId!=""){
+			appCreated=true;
+		}
+	}
+	if(appCreated){
+		var needIdData=$(event.target).data("needId");
+		var myDropzone = Dropzone.forElement("div#drop-zone");
+		//myDropzone.params("needId" ,needIdData );
+		$("#file-upload-icn").click();
+		myDropzone.on("sending", function(file, xhr, formData) {
+			  // add headers with xhr.setRequestHeader() or
+			  // form data with formData.append(name, value);
+				formData.append("needId" , needIdData);
+		});
+		myDropzone.on("processing", function(file) {
+			 this.options.url = "rest/fileupload/documentUploadWithNeed";
+		});
+	}else{
+		showErrorToastMessage("Please Complete your Application")
+	}
 }
+
 
 
 
@@ -457,76 +473,91 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 
 function createDropZone(needID){
 	
-	
-	var needId = null;
-	if(needID != undefined){
-		needId = needID;
-	}
-	
-	var unSupportedFile = new Array();
-	var myDropZone = new Dropzone("#drop-zone", {
-		url : "rest/fileupload/documentUpload",
-		clickable : "#file-upload-icn",
-		params : {
-			userID : currentUserAndLoanOnj.userId,
-			loanId : currentUserAndLoanOnj.activeLoanId ,
-			assignedBy : newfiObject.user.id,
-			
-		},
-		drop : function() {
-
-		},
-		complete : function(file, response) {
-			hideOverlay();
-			clearOverlayMessage();
-			$('#file-upload-icn').removeClass('file-upload-hover-icn');
-			getRequiredDocuments();
-			
-		},
-		success : function(file, response){
-			console.info(response);
-			if(response.error != undefined){
-				showDialogPopup("User Session " , "Session logged out! Click ok to continue" , function(){
-					location.reload();
-					return false;
-				}); 
-				
-				return false;	
-			}
-			if(response[0]!= undefined){
-				unSupportedFile.push(response[0]);
-			}
-			
-		},
-		dragenter : function() {
-			$('#file-upload-icn').addClass('file-upload-hover-icn');
-		},
-		dragleave : function() {
-			$('#file-upload-icn').removeClass('file-upload-hover-icn');
-		},
-		dragover : function() {
-			$('#file-upload-icn').addClass('file-upload-hover-icn');
-		},
-		queuecomplete : function() {
-			
-			var list = $("<div>");
-			for(i in unSupportedFile){
-				list.append("<p>").append(unSupportedFile[i]);
-			}
-			if(unSupportedFile.length>0){
-				showDialogPopup("Unsupported File" , list , function(){
-					return false;
-				});
-			}
-			unSupportedFile = new Array();
-			console.info(unSupportedFile);
-			
-		},
-		addedfile : function(){
-			showOverlay();
-			showOverleyMessage("This can take a minute ,<br/> we are uploading your documents to our secure storage folder.");
-			$('#file-upload-icn').addClass('file-upload-loading');
+	var appCreated=false;
+	if(selectedUserDetail){
+		if(selectedUserDetail.lqbFileId&&selectedUserDetail.lqbFileId!=""){
+			appCreated=true;
 		}
-	});
+	}else{
+		var appDetails=JSON.parse(newfiObject.appUserDetails);
+		if(appDetails.loan&&appDetails.loan.lqbFileId&&appDetails.loan.lqbFileId!=""){
+			appCreated=true;
+		}
+	}
+	if(appCreated){
+		var needId = null;
+		if(needID != undefined){
+			needId = needID;
+		}
+		
+		var unSupportedFile = new Array();
 
+		var myDropZone = new Dropzone("#drop-zone", {
+			url : "rest/fileupload/documentUpload",
+			clickable : "#file-upload-icn",
+			params : {
+				userID : currentUserAndLoanOnj.userId,
+				loanId : currentUserAndLoanOnj.activeLoanId ,
+				assignedBy : newfiObject.user.id,
+				
+			},
+			drop : function() {
+
+			},
+			complete : function(file, response) {
+				hideOverlay();
+				
+				$('#file-upload-icn').removeClass('file-upload-hover-icn');
+				getRequiredDocuments();
+				
+			},
+			success : function(file, response){
+				console.info(response);
+				if(response.error != undefined){
+					showDialogPopup("User Session " , "Session logged out! Click ok to continue" , function(){
+						location.reload();
+						return false;
+					}); 
+					
+					return false;	
+				}
+				if(response[0]!= undefined){
+					unSupportedFile.push(response[0]);
+				}
+				
+			},
+			dragenter : function() {
+				$('#file-upload-icn').addClass('file-upload-hover-icn');
+			},
+			dragleave : function() {
+				$('#file-upload-icn').removeClass('file-upload-hover-icn');
+			},
+			dragover : function() {
+				$('#file-upload-icn').addClass('file-upload-hover-icn');
+			},
+			queuecomplete : function() {
+				
+				var list = $("<div>");
+				for(i in unSupportedFile){
+					list.append("<p>").append(unSupportedFile[i]);
+				}
+				if(unSupportedFile.length>0){
+					showDialogPopup("Unsupported File" , list , function(){
+						return false;
+					});
+				}
+				unSupportedFile = new Array();
+				console.info(unSupportedFile);
+				
+			},
+			addedfile : function(){
+				showOverlay();
+				$('#file-upload-icn').addClass('file-upload-loading');
+			}
+		});
+	}else{
+		$("#drop-zone").on("click",function(){
+			showErrorToastMessage("Please Complete your Application")
+		});
+	}
 }

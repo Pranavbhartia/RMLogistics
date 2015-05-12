@@ -1591,11 +1591,13 @@ function appendUserNameDropDown() {
 	$('#add-member-sel').append(dropdownCont);
 }
 
-function showUserNameDropDown(namesList) {
+function showUserNameDropDown(namesList,hideAddUser) {
 	var hideAddUserOption = false;
 	$('#add-username-dropdown-cont').show();
 	var internalRole = $('#add-memeber-user-type').attr("internalroleid");
 	if (internalRole && internalRole == "1")
+		hideAddUserOption = true;
+	if(hideAddUser&&hideAddUser===true)
 		hideAddUserOption = true;
 	paintUserNameDropDown(namesList, hideAddUserOption);
 }
@@ -3643,7 +3645,7 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 	}
 }
 
-function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
+function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID,hideAddUserOpt) {
 
 	var restURL = "rest/userprofile/search?name=" + name;
 	if (roleID != undefined && roleID > 0)
@@ -3651,8 +3653,9 @@ function searchUsersBasedOnNameAndRole(name, roleID, internalRoleID) {
 	if (internalRoleID != undefined && internalRoleID > 0)
 		restURL += "&internalRoleID=" + internalRoleID;
 
-	ajaxRequest(restURL, "GET", "json", {},
-			onReturnOfUserSearchToAddToLoanTeam, true);
+	ajaxRequest(restURL, "GET", "json", {},function(response){
+		onReturnOfUserSearchToAddToLoanTeam(response,hideAddUserOpt);
+	}, true);
 
 }
 
@@ -3697,8 +3700,8 @@ function onReturnSearchBasedOnCodeToAddToLoanTeam(data, id) {
 	showUserNameDropDown(adapterArray)
 }
 
-function onReturnOfUserSearchToAddToLoanTeam(data) {
-	showUserNameDropDown(data.resultObject)
+function onReturnOfUserSearchToAddToLoanTeam(data,hideAddUserOpt) {
+	showUserNameDropDown(data.resultObject,hideAddUserOpt)
 }
 
 function createUserAndAddToLoanTeam(user) {

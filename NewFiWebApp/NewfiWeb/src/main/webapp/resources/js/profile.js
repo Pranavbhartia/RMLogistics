@@ -387,7 +387,7 @@ function getLoanManager(user){
 							.attr("userRoleBased");
 					if (isSearchUserRoleBased == "true")
 						searchUsersBasedOnNameAndRole(name, roleID,
-								internalRoleID);
+								internalRoleID,true);
 					else if (isSearchUserRoleBased == "false")
 						searchUsersBasedOnCode(name, code);
 				});
@@ -417,7 +417,7 @@ function getLoanManager(user){
 								"userRoleBased");
 						if (isSearchUserRoleBased == "true")
 							searchUsersBasedOnNameAndRole(name, roleID,
-									internalRoleID);
+									internalRoleID,true);
 						else if (isSearchUserRoleBased == "false")
 							searchUsersBasedOnCode(name, code);
 						
