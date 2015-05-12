@@ -411,6 +411,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 			notificationService.dismissNotification(notificationVO.getId());
 		}
 	}
+
 	@Override
 	@Transactional
 	public int saveLoanNeeds(int loanId, List<Integer> needsList) {
@@ -485,7 +486,6 @@ public class NeedsListServiceImpl implements NeedsListService {
 		}
 		messageServiceHelper.generateNeedListModificationMessage(loanId,
 		        utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
-
 
 		return 1;
 	}
@@ -744,7 +744,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 			needsListMaster = (NeedsListMaster) needsDao.load(
 			        NeedsListMaster.class, id);
 			if (needsListMaster != null) {
-				needsName = needsListMaster.getLabel() + "\n" + needsName;
+				needsName = needsListMaster.getLabel() + " - "
+				        + needsListMaster.getDescription() + "\n" + needsName;
 			}
 
 		}
