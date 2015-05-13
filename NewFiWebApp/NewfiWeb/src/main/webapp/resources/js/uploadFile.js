@@ -551,7 +551,7 @@ function createDropZone(needID){
 				
 			},
 			addedfile : function(){
-				showOverlay();
+				showOverleyMessage("This can take a minute,<br/> we are uploading your documents to our secure storage folder.");
 				$('#file-upload-icn').addClass('file-upload-loading');
 			}
 		});
