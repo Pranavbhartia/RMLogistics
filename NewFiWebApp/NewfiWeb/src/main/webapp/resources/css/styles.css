@@ -4976,3 +4976,12 @@ input.calc-input {
 	color: rgb(244, 117, 33);
 	margin-left: 4px;
 }
+
+.outer-session-expire{
+	width: 940px;
+}
+
+.center-text-session-expire{
+	text-align: center;
+	margin: 200px auto;
+}

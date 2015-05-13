@@ -52,7 +52,7 @@ public class RestInterceptor implements HandlerInterceptor {
 		map.put("status", "Session Expired");
 		map.put("message",
 		        "For your protection, we have logged you out due to "
-		                + "inactivity.Simply click this <a href='http://"
+		                + "inactivity.</br>Simply click this <a href='http://"
 		                + path + "'>LOGIN</a> link to start a new session.");
 		System.out.println(request.getServerName() + ":"
 		        + request.getServerPort() + "/" + request.getContextPath());
