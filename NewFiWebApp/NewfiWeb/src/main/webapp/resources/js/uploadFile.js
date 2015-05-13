@@ -505,7 +505,7 @@ function createDropZone(needID){
 
 			},
 			complete : function(file, response) {
-				hideOverlay();
+				clearOverlayMessage();
 				
 				$('#file-upload-icn').removeClass('file-upload-hover-icn');
 				getRequiredDocuments();
