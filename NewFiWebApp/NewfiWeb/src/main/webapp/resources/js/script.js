@@ -1983,7 +1983,7 @@ function getNeededDocRow(desc, needId, details) {
     var rowDesc = $('<div>').attr({
         "class": "needed-item-desc float-left",
         "title" : details
-    }).html(desc+"?");
+    }).html(desc+"<span class='questionMark'>?</span>");
     var docUploadImage = $("<div>").attr({
         "class": "doc-uploaded-icn float-left",
         "id" : "doc-uploaded-icn_"+needId
