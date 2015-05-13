@@ -46,7 +46,8 @@ public class RestInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request,
 	        HttpServletResponse response, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
-		String path="localhost:8080/NewfiWeb/";
+		String path = request.getServerName() + ":" + request.getServerPort()
+		        + "/" + request.getContextPath();
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("status", "Session Expired");
 		map.put("message",
