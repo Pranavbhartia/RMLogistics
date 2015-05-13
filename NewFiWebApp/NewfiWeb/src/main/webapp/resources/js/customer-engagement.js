@@ -1097,8 +1097,13 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         var purchaseDetails = new Object();
         var user = new Object();
 
-        var selectedLqbData = closingCostHolder.valueSet;
-        var initValueSet = closingCostHolder.initValueSet;
+        var selectedLqbData ={};
+        var initValueSet ={}
+        if(closingCostHolder){
+            selectedLqbData = closingCostHolder.valueSet;
+            initValueSet = closingCostHolder.initValueSet;
+        }
+        
         var teaseRateDataList=[];
         teaseRateDataList.push(initValueSet);
         teaseRateDataList.push(selectedLqbData);
@@ -1374,7 +1379,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     }else{
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
-        }).html("Complete Your Application").on('click', function() {
+        }).html("Complete Your Loan Profile").on('click', function() {
             if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
                 window.location.hash="#myLoan/my-application";
                 //changeSecondaryLeftPanel(2);//Commented since change in hash value does the job
