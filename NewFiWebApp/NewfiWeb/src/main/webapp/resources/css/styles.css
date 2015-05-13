@@ -4957,3 +4957,16 @@ input.calc-input {
     margin: 33px auto;
     text-align: center;
 }
+.contactInfoText{
+	font-size: 14px;
+	color: #428bca;
+	text-align: center;
+	padding-top: 10px;
+}
+.createAccButton{
+	margin-top: 80px;
+	margin-left: 250px;
+}
+.letUsContactCenter{
+	margin-left: 260px;
+}
