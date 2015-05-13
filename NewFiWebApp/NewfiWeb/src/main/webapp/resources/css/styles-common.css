@@ -146,7 +146,7 @@ input.reg-radio {
 .reg-input-row {
     height: 45px;
     line-height: 45px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .reg-row-lc,.reg-row-rc {
@@ -255,4 +255,8 @@ k}
     height: 40px;    
     line-height: 40px;    
     margin: 20px auto;
+}
+
+.ce-err-input{
+	  border: 1px solid #dd4b39;
 }

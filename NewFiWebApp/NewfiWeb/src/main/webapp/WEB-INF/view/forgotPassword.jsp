@@ -44,12 +44,13 @@
 	<script src="resources/js/script.js"></script>
 	<script src="resources/js/profile.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
+	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 	
 </body>
 <script>
 
 $(document).ready(function(e){
-
+	globalBinder();
 	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
         $("#errorMessage").text("${error}");
 		$("#errorMessage").show(); 

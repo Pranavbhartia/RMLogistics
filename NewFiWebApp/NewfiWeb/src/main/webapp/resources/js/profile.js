@@ -8,7 +8,7 @@ var mobileCarrierConstants=[];
 
 var passwordFieldEmptyErrorMessage="should not be empty";
 var passwordDonotMatchErrorMessage="Passwords do not match";
-var passwordlengthErrorMessage="Password length should be atleast 8 digits";
+var passwordlengthErrorMessage="Password length should be at least 8 digits";
 var invalidPassword="Password can not contain first name or last name";
 var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
 var priAndSecEmailValidation="Primary and secondary email should not be same.";
