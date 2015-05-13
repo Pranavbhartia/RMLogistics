@@ -31,7 +31,7 @@ public class UserRepositoryService implements UserDetailsService {
 			throw new UsernameNotFoundException("Please enter valid credentials");
 		}
 		catch (DatabaseException ex) {
-			throw new UsernameNotFoundException("Some technicall error happened in the system. Please try later");
+			throw new UsernameNotFoundException("Some technical error happened in the system. Please try later");
 		}
 		LOG.info("Method: loadUserByUsername finished.");
 		return user;

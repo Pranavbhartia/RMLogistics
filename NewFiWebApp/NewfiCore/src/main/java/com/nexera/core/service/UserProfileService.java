@@ -2,6 +2,7 @@ package com.nexera.core.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -114,9 +115,7 @@ public interface UserProfileService {
 
 	public Integer updateUserStatus(UserVO userVO);
 
-
 	public Integer updateTutorialStatus(Integer id) throws Exception;
-
 
 	public void dismissAlert(
 	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
@@ -125,5 +124,9 @@ public interface UserProfileService {
 	public void createAlert(
 	        MilestoneNotificationTypes mileStoneNotificationType, int loanId,
 	        String notificationContent);
-}
 
+	public void resendRegistrationDetails(User user)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	public void updateLoginTime(Date date, int userId);
+}

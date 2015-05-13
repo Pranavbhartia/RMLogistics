@@ -19,8 +19,10 @@ import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.authentication.AuthenticationService;
 import com.nexera.core.helper.MessageServiceHelper;
+import com.nexera.core.service.UserProfileService;
 
 public class UserAuthProvider extends DaoAuthenticationProvider {
 
@@ -32,6 +34,10 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 
 	@Autowired
 	private MessageServiceHelper messageServiceHelper;
+	
+	@Autowired
+	private UserProfileService userProfileService;
+
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
@@ -39,20 +45,26 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 		String username = authentication.getName().split(":")[0];
 		String offSet = authentication.getName().split(":")[1];
 		String password = authentication.getCredentials().toString();
-		User user;
+		User user = null;
 		try {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
+			User userFromTable = userProfileService.findUserByMail(username);
+			if (userFromTable != null && userFromTable.getLastLoginDate()==null)
+			{
+				throw new DisabledException("First time login");
+			}
 			user = authenticationService.getUserWithLoginName(username,
 			        password);
 			LOG.debug("Checking if user is not in inactive mode");
-			if (user.getStatus()==-1) {
+			if (user.getStatus() == -1) {
 				throw new DisabledException(
 				        DisplayMessageConstants.USER_DISABLED);
-			}
-			else if (user.getStatus()==0) {
+			} else if (user.getStatus() == 0) {
 				throw new DisabledException(
 				        DisplayMessageConstants.USER_INACTIVE);
+			} else if (user.getLastLoginDate() == null) {
+				throw new DisabledException("First time login");
 			}
 			authenticationService.validateUser(user, password);
 			if (user != null) {
@@ -66,9 +78,10 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 				        + user.getEmailId());
 				return auth;
 			}
-		} catch (NoRecordsFetchedException e) {
+		} catch (NoRecordsFetchedException e) {			
 			LOG.error("User not found in the system: " + e.getMessage());
-			throw new UsernameNotFoundException("Please enter valid credentials");
+			throw new UsernameNotFoundException(
+			        "Please enter valid credentials");
 		} catch (InvalidInputException e) {
 			LOG.error(e.getMessage());
 		} catch (Exception e) {

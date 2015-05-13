@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -106,6 +108,7 @@ public class UserProfileRest {
 
 	@RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getNewPassword(
+	        @RequestParam(value = "resend", required = false) String resend,
 	        @RequestBody String user) {
 		LOG.info("Forget password call");
 		LOG.info("To know if there a user exsists for the emailID");
@@ -116,8 +119,22 @@ public class UserProfileRest {
 		ErrorVO errors = new ErrorVO();
 		if (userDetail != null) {
 			try {
-				userProfileService.resetPassword(userDetail);
-				String successMessage = "Reminder sent. We’ve sent an email to "+userVO.getEmailId()+". It contains a link with instructions to reset your password";
+
+				String successMessage = "";
+				if (resend != null) {
+					userProfileService.resendRegistrationDetails(userDetail);
+					successMessage = "Reminder sent. We’ve sent an email to "
+					        + userVO.getEmailId()
+					        + ". It contains a link to verify your email and reset your password";
+				}
+
+				else {
+					userProfileService.resetPassword(userDetail);
+					successMessage = "Reminder sent. We’ve sent an email to "
+					        + userVO.getEmailId()
+					        + ". It contains a link with instructions to reset your password";
+				}
+
 				commonResponse.setResultObject(successMessage);
 			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
@@ -223,6 +240,7 @@ public class UserProfileRest {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
 			if (passwordChanged == true) {
+
 				String emailId = updatePassword.getEmailID();
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 				        emailId, updatePassword.getNewPassword());
@@ -231,12 +249,15 @@ public class UserProfileRest {
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
 				        authenticatedUser);
+				// Update his login time here
 
 			}
 		} catch (InputValidationException inputValidation) {
 			throw inputValidation;
 
-		} catch (Exception inputValidation) {
+		}
+
+		catch (Exception inputValidation) {
 			throw new FatalException("Could not login user");
 
 		}
@@ -510,14 +531,13 @@ public class UserProfileRest {
 			        .getRoleId()) {
 
 				userVO.setStatus(-1);
-				Integer result=userProfileService.updateUserStatus(userVO);
-				if(result>0){
+				Integer result = userProfileService.updateUserStatus(userVO);
+				if (result > 0) {
 					response.setResultObject(userVO);
-				}else{
+				} else {
 					error.setMessage("Error while deletion.Please try again later");
 					response.setError(error);
 				}
-			
 
 			} else {
 				userProfileService.deleteUser(userVO);
@@ -526,14 +546,14 @@ public class UserProfileRest {
 
 		} catch (InputValidationException e) {
 			LOG.error("error and message is : " + e.getDebugMessage());
-			
+
 			error.setMessage(e.getDebugMessage());
 			response.setError(error);
 			e.getDebugMessage();
 
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
-			
+
 			error.setMessage(e.getMessage());
 			response.setError(error);
 		}
@@ -658,31 +678,34 @@ public class UserProfileRest {
 		return commonResponseVO;
 	}
 
-	
-	@RequestMapping(value="/updatetutorialstatus" , method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO updateTutorialStatus(String inputData){
-		
+	@RequestMapping(value = "/updatetutorialstatus", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateTutorialStatus(String inputData) {
+
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
-		try{
-			
+		try {
+
 			JSONObject jsonObject = new JSONObject(inputData);
-	        Integer id =  (Integer) jsonObject.get("id");
-	        Integer loanId =  (Integer) jsonObject.get("loanId");
-			
+			Integer id = (Integer) jsonObject.get("id");
+			Integer loanId = (Integer) jsonObject.get("loanId");
+
 			Integer resultRow = userProfileService.updateTutorialStatus(id);
-			userProfileService.dismissAlert(MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,loanId,WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
-			if(resultRow < 0){
+			userProfileService
+			        .dismissAlert(
+			                MilestoneNotificationTypes.WATCH_ALERT_NOTIFICATION_TYPE,
+			                loanId,
+			                WorkflowConstants.WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT);
+			if (resultRow < 0) {
 				commonResponseVO.setError(error);
 			}
-		}catch(Exception e){
-			
+		} catch (Exception e) {
+
 			error.setMessage(e.getMessage());
 			commonResponseVO.setError(error);
 		}
-		
+
 		return commonResponseVO;
-		
+
 	}
-			
+
 }
