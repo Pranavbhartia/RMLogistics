@@ -621,6 +621,8 @@ function paintCustomerApplicationPageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
+    	
+    	
     	var address= $('input[name="streetAddress"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
@@ -4373,6 +4375,12 @@ function paintSelectLoanTypeQuestion() {
 	var option1 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
+		
+		// In case when user is not coming from the customer engagement path 
+		$('#loanType').text("Refinance");
+		
+		//
+		
 		//loanType.loanTypeCd = "REF";
 		appUserDetails.loanType.id= "2";
 		appUserDetails.loan.loanType.id = "2";
@@ -4395,7 +4403,11 @@ function paintSelectLoanTypeQuestion() {
 	console.log('setting value as purchase');
 		
 	
+	// in case when user come directly not from customer engagement path 
 	
+	$('#loanType').text("Home Buyer");
+	
+	//
 	
 		//loanType.loanTypeCd = "PUR";
 		appUserDetails.loanType.id= "1";
@@ -4530,8 +4542,6 @@ var questions = [
 		var saveAndContinueButton = $('<div>').attr({
 		    "class": "ce-save-btn"
 		}).html("Save & continue").bind('click',{'contxt':contxt}, function(event) {
-			
-			
 			
 			
 			refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
