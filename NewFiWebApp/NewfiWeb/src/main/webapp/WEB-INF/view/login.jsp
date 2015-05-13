@@ -40,7 +40,12 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			return true;
 		});
 		var hrefValue=window.location.href.split( '?' );
-		if(hrefValue[1]=="s=autherror" && errorMessage!=""){
+		
+		if(hrefValue[1]=="s=autherror" && errorMessage=="First time login"){
+			$("#errorMessage").html("You have not verified your registration email. Click  <a href='forgotPassword.do?resend=true'> here </a>to resend it.");
+			$("#errorMessage").show();
+		}
+		else if(hrefValue[1]=="s=autherror" && errorMessage!=""){			
 			$("#errorMessage").text(errorMessage);
 			$("#errorMessage").show();
 		}else if(hrefValue[1]=="s=sessionerror"){

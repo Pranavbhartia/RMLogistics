@@ -326,6 +326,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        ErrorConstants.NULL_PASSWORD),
 				        ErrorConstants.NULL_PASSWORD);
 			}
+			userProfileDao.updateLoginTime(
+			        new Date(System.currentTimeMillis()),
+			        updatePasswordVO.getUserId());
 			return userProfileDao.changeUserPassword(updatePasswordVO);
 		} catch (HibernateException hibernateException) {
 			throw new FatalException("Error in updating the password",
@@ -1240,8 +1243,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-							loanService.createAlertForAgent(loanVO
-							        .getId());
+							loanService.createAlertForAgent(loanVO.getId());
 						}
 					}
 				}
@@ -1323,6 +1325,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 		UserVO userVO = User.convertFromEntityToVO(user);
 		LOG.info("Sending reset password to the user");
 		sendResetLinkToUser(userVO);
+	}
+
+	@Override
+	@Transactional
+	public void resendRegistrationDetails(User user)
+	        throws InvalidInputException, UndeliveredEmailException {
+		user.setEmailEncryptionToken(nexeraUtility.encryptEmailAddress(user
+		        .getEmailId()));
+		user.setTokenGeneratedTime(utils.convertCurrentDateToUtc());
+		updateTokenDetails(user);
+		LOG.info("Sending reset password to the user");
+		sendNewUserEmail(user);
 	}
 
 	private void sendResetLinkToUser(UserVO user) throws InvalidInputException,
@@ -1530,5 +1544,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer updateTutorialStatus(Integer id) throws Exception {
 		return userProfileDao.updateTutorialStatus(id);
 
+	}
+
+	@Override
+	public void updateLoginTime(Date date, int userId) {
+		userProfileDao.updateLoginTime(new Date(System.currentTimeMillis()),
+		        userId);
 	}
 }
