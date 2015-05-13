@@ -1,6 +1,5 @@
 package com.nexera.core.service.impl;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -130,6 +128,15 @@ public class MessageServiceImpl implements MessageService {
 			emailRecipientVO.setRecipientName(user.getFirstName());
 			emailRecipientVO.setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
 			recipients.add(emailRecipientVO);
+			if (user.getCustomerDetail() != null
+			        && user.getCustomerDetail().getSecEmailId() != null
+			        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
+				emailRecipientVO.setEmailID(user.getCustomerDetail()
+				        .getSecEmailId());
+				emailRecipientVO.setRecipientName(user.getFirstName());
+				emailRecipientVO
+				        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+			}
 		}
 		emailVO.setRecipients(recipients);
 

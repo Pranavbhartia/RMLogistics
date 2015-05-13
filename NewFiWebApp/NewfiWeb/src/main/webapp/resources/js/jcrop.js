@@ -78,10 +78,10 @@ function updatePreview(c) {
 	canvas.height = c.h;
 	console.log(c.x / ratio + " " + c.y / ratio + " " + c.w / ratio + " " + c.h
 			/ ratio);
-	selected_x = c.x / ratio;
-	selected_y = c.y / ratio;
-	selected_w = c.w / ratio;
-	selected_h = c.w / ratio;
+	selected_x = Math.round(c.x / ratio);
+	selected_y =Math.round( c.y / ratio);
+	selected_w = Math.round(c.w / ratio);
+	selected_h = Math.round(c.w / ratio);
 
 	ctx.drawImage(imageObj, c.x / ratio, c.y / ratio, c.w / ratio, c.h / ratio,
 			0, 0, canvas.width, canvas.height);

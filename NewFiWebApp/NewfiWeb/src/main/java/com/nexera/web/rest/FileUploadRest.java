@@ -179,6 +179,7 @@ public class FileUploadRest {
 
 			if (isSuccess) {
 				commonResponseVO = RestUtil.wrapObjectForSuccess(true);
+				needsListService.createOrDismissNeedsAlert(loanId);
 			} else {
 				throw new FatalException("Problem in assigning needs to files");
 			}
@@ -346,6 +347,7 @@ public class FileUploadRest {
 			}
 
 			if (checkFileUploaded.getIsUploadSuccess()) {
+
 				if (needId == null) {
 					LOG.info("Needs is null");
 				} else {
@@ -353,6 +355,7 @@ public class FileUploadRest {
 
 					uploadedFilesListService.updateAssignments(needId,
 					        checkFileUploaded.getUploadFileId(), loanId);
+					needsListService.createOrDismissNeedsAlert(loanId);
 				}
 
 			} else {

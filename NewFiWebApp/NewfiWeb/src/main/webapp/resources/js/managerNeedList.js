@@ -13,7 +13,18 @@ function getLoanNeedsManagerContext(loanId){
 				type : type,
 				dataType : dataType,
 				data : data,
-				success : successCallBack,
+				success : function(response){
+					if(response.status&&response.status==="Session Expired"){
+						var component=$("#right-panel");
+						if(component&&component.length==0){
+							component=$(document.body)
+						}
+						var content="<div class='float-right'>"+response.message+"</div>"
+						$(component).html(content);
+					}else{
+						successCallBack(response);
+					}
+				},
 				error : function(){
 					
 				}

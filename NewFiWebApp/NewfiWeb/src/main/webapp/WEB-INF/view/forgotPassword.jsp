@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reset Password</title>
+<title>newfi</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
@@ -65,12 +65,16 @@ $('#loginForm').submit(function(event){
 		console.log("Create user button clicked. User : "
 						+ JSON.stringify(user));
 	if($('#emailID').val()==""||$('#emailID').val()==null){
-		showErrorToastMessage("EmailID cannot be empty");
+		$("#emailID").next('.err-msg').html("Email ID cannot be empty").show();
+		$(".reg-input-reset-password").addClass('err-input').focus();
+		//showErrorToastMessage("Email ID cannot be empty");
 			return;
 		
 	}
 	if (!emailRegex.test(user.emailId)) {
-        showErrorToastMessage("Invalid EmailId");
+		$("#emailID").next('.err-msg').html("Invalid Email ID").show();
+		$(".reg-input-reset-password").addClass('err-input').focus();
+       // showErrorToastMessage("Invalid EmailId");
 		$('#emailID').val('');
 		return;
 	}else {	

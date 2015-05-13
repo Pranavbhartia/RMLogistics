@@ -182,7 +182,8 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		Map<Integer, String> needListLookup = new HashMap<Integer, String>();
 		for (NeedsListMaster needsListMaster : needsListMasters) {
 			needListLookup.put(needsListMaster.getId(),
-			        needsListMaster.getLabel());
+			        needsListMaster.getLabel() + " - "
+			                + needsListMaster.getDescription());
 		}
 
 		return needListLookup;

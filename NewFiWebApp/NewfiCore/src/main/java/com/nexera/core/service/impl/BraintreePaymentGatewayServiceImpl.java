@@ -3,8 +3,6 @@ package com.nexera.core.service.impl;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +42,11 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.PaymentException;
 import com.nexera.common.exception.PaymentUnsuccessfulException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.ReceiptPdfService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 
@@ -96,6 +94,9 @@ public class BraintreePaymentGatewayServiceImpl implements
 	@Autowired
 	private ReceiptPdfService receiptPdfService;
 
+	@Autowired
+	private SendEmailService sendEmailService;
+
 	/**
 	 * Method to generate client token to be used by the front end.
 	 * 
@@ -118,25 +119,24 @@ public class BraintreePaymentGatewayServiceImpl implements
 		LOG.debug("Sending mail");
 		// Making the Mail VOs
 		EmailVO emailVO = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
-		recipientVO.setRecipientName(user.getFirstName() + " "
-		        + user.getLastName());
-		recipientVO.setEmailID(user.getEmailId());
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-name-",
-		        new String[] { recipientVO.getRecipientName() });
+		substitutions.put("-name-", new String[] { user.getFirstName() });
 
-		emailVO.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailVO.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailVO.setSenderName(CommonConstants.SENDER_NAME);
 		emailVO.setSubject(subject);
 		emailVO.setTemplateId(templateId);
 		emailVO.setTokenMap(substitutions);
 		emailVO.setAttachmentStream(attachmentStream);
-		sendGridMailService.sendAsyncMail(emailVO);
+		try {
+			sendEmailService.sendEmailForCustomer(emailVO, user);
+		} catch (InvalidInputException e) {
+			LOG.error("Exception caught " + e.getMessage());
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Exception caught " + e.getMessage());
+		}
 	}
 
 	private String createTransaction(String paymentNonce, double amount)

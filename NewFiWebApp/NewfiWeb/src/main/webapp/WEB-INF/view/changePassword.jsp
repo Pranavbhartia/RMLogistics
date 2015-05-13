@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reset Password</title>
+<title>newfi</title>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
@@ -34,7 +34,7 @@
 					        <input type="password" class="reg-input" placeholder="Confirm" id="confirmpassword">	
 							<div class="err-msg hide"></div>
 				            </div>
-							<div class="reg-btn-wrapper clearfix">
+							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
 					             <div class="reset-password float-right" onclick="$('#changePwdForm').submit();">Reset Password</div>
 				            </div>											

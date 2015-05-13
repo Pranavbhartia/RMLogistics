@@ -7,6 +7,19 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
+function removeToastMessage(){
+
+	    	if($('#overlay-toast-txt').html()!=""){
+	    		$('#overlay-toast-txt').html('');
+				$('#overlay-toast-txt').hide();
+				
+			}
+			if($('#overlay-toast-error-txt').html()!=""){
+				$('#overlay-toast-error-txt').html('');
+				$('#overlay-toast-error-txt').hide();
+			}
+
+}
 
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
 	if(showOverlayText){
@@ -32,7 +45,16 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 			} else {
 				hideOverlay();
 			}
-			successCallBack(response);
+			if(response.status&&response.status==="Session Expired"){
+				var component=$("#right-panel");
+				if(component&&component.length==0){
+					component=$(document.body)
+				}
+				var content="<div class='float-right'>"+response.message+"</div>"
+				$(component).html(content);
+			}else{
+				successCallBack(response);	
+			}
 		},
 
 		complete:function(response){
