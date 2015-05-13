@@ -86,19 +86,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Transactional
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
 		LOG.info("in create func of loanapp form..................");
-		if(null!= loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() && loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() != ""){
+		if(null!= loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() && loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() != ""  ){
 			
-			try {
-	           ZipCodeLookupVO zipCodeLookup =  ZipCodeLookup.converToVo(findByZipCode(loaAppFormVO.getPropertyTypeMaster().getHomeZipCode()));
-	           PropertyTypeMasterVO propertyTypeMasterVO = loaAppFormVO.getPropertyTypeMaster();
-	           propertyTypeMasterVO.setPropState(zipCodeLookup.getStateLookup().getStateCode());
-	           propertyTypeMasterVO.setPropCity(zipCodeLookup.getCityName());
-	           loaAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
-	          
-			} catch (Exception e) {
-	           
-	            e.printStackTrace();
-            }
+			zipcodeLookup(loaAppFormVO);
 		}
 		
 		LoanAppForm loanAppForm = loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
@@ -113,6 +103,22 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 * loanAppFormDao.findLoanAppForm(loanAppFormID);
 		 */
 		// return this.buildLoanAppFormVO(loanAppForm);
+	}
+	
+	public void zipcodeLookup(LoanAppFormVO loanAppFormVO){
+		LOG.info("Inside method zipcodeLookup");
+		try {
+	           ZipCodeLookupVO zipCodeLookup =  ZipCodeLookup.converToVo(findByZipCode(loanAppFormVO.getPropertyTypeMaster().getHomeZipCode()));
+	           PropertyTypeMasterVO propertyTypeMasterVO = loanAppFormVO.getPropertyTypeMaster();
+	           propertyTypeMasterVO.setPropState(zipCodeLookup.getStateLookup().getStateCode());
+	           propertyTypeMasterVO.setPropCity(zipCodeLookup.getCityName());
+	           loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
+	          
+			} catch (Exception e) {
+				LOG.error("Error in zipcodeLookup " + e.getMessage());
+	            e.printStackTrace();
+         }
+		
 	}
 
 	@Override
