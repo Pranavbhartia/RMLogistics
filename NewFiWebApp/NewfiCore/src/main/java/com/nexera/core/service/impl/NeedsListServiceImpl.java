@@ -490,6 +490,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return 1;
 	}
 
+	@Transactional
 	public void createOrDismissNeedsAlert(int loanId) {
 		NeededItemScoreVO neededItemScoreVO = getNeededItemsScore(loanId);
 		if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
