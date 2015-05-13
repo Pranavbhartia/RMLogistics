@@ -354,16 +354,6 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         teaserRateData = buyHomeTeaserRate;
     }
     delete sessionStorage.refinaceData;
-    var quesTxt = "Loan Rates and Fees";
-    var container = $('<div>').attr({
-        "class": "ce-rate-main-container"
-    });
-    var quesTextCont = $('<div>').attr({
-        "class": "ce-rp-ques-text"
-    }).html(quesTxt);
-    // alert(JSON.stringify(refinanceTeaserRate));
-    container.append(quesTextCont);
-    $(parentContainer).html(container);
     showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
     showOverlay();
     $.ajax({
@@ -376,9 +366,45 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         cache:false,
         success: function(data) {
         	hideOverlay();
+            if(data.error||data==""){
+                var quesTxt = "Let us Contact You";
+                var container = $('<div>').attr({
+                    "class": "ce-rate-main-container"
+                });
+                var quesTextCont = $('<div>').attr({
+                    "class": "ce-rp-ques-text letUsContactCenter"
+                }).html(quesTxt);
+                // alert(JSON.stringify(refinanceTeaserRate));
+                container.append(quesTextCont);
+                $(parentContainer).html(container);
+                var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
+                +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
+                +"to review your options.</div>"
+
+                var createAccBtn= $('<div>').attr({
+                    "class": "rate-btn createAccButton"
+                }).html("Provide your contact information").on('click', function() {
+                    var mainContainer = paintApplyNow(teaserRateData);
+                    $('#ce-main-container').html(mainContainer);
+                });
+                $(parentContainer).append(errorText);
+                if(typeof(newfiObject)==='undefined')
+                    $(parentContainer).append(createAccBtn);
+                return
+            }
             // var teaserRate = data;
             // paintteaserRate(data);
             //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
+            var quesTxt = "Loan Rates and Fees";
+            var container = $('<div>').attr({
+                "class": "ce-rate-main-container"
+            });
+            var quesTextCont = $('<div>').attr({
+                "class": "ce-rp-ques-text"
+            }).html(quesTxt);
+            // alert(JSON.stringify(refinanceTeaserRate));
+            container.append(quesTextCont);
+            $(parentContainer).html(container);
             paintFixYourRatePageCEP(JSON.parse(data), teaserRateData, parentContainer, hideCreateAccountBtn);
             clearOverlayMessage();
         },
