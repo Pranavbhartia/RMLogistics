@@ -73,8 +73,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		LOG.debug("Helper save message called");
 		String messageID;
 		try {
-			if (messagesVO.getLoanId() != 0)
-			{
+			if (messagesVO.getLoanId() != 0) {
 				LoanVO loan = loanService.getLoanByID(messagesVO.getLoanId());
 				messagesVO.setLoanEmail(loan.getLoanEmailId());
 			}
@@ -181,7 +180,8 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		        .getNeedListMaster();
 		Map<Integer, String> needListLookup = new HashMap<Integer, String>();
 		for (NeedsListMaster needsListMaster : needsListMasters) {
-			needListLookup.put(needsListMaster.getId(),
+			needListLookup.put(
+			        needsListMaster.getId(),
 			        needsListMaster.getLabel() + " - "
 			                + needsListMaster.getDescription());
 		}
@@ -321,7 +321,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	@Override
 	@Async
-	public void checkIfUserFirstLogin(User loggedInUser) {
+	public void checkIfUserFirstLogin(User loggedInUser, boolean isShopper) {
 		// Since this is an async method, we catch generic exception and log the
 		// error
 		try {
@@ -339,8 +339,10 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 				        .convertFromEntityToVO(loggedInUser));
 				this.generateWelcomeNote(loggedInUser, loanVO.getId());
 			}
-			userProfileDao.updateLoginTime(
-			        new Date(System.currentTimeMillis()), user.getId());
+			if (!isShopper) {
+				userProfileDao.updateLoginTime(
+				        new Date(System.currentTimeMillis()), user.getId());
+			}
 		} catch (Exception ex) {
 			LOG.error(
 			        "There was an error in async method checkIfUserFirstLogin ",

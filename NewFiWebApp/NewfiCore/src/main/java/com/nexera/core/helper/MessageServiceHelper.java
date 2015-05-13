@@ -25,7 +25,7 @@ public interface MessageServiceHelper {
 	public void generatePrivateMessage(int loanId, String noteText,
 	        User createdBy, boolean sendEmail);
 
-	public void checkIfUserFirstLogin(User user);
+	public void checkIfUserFirstLogin(User loggedInUser , boolean isShopper);
 
 	void generateWelcomeNote(User loggedInUser, int loanId);
 
