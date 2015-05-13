@@ -487,6 +487,10 @@ function getApplicationTextQues(question) {
 			}
 	      
 	    });
+	  
+	  if(question.name =="birthday"){
+		  optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
+	  }
   }else{
 	   optionCont = $('<input>').attr({
 	        "class": "app-input app-append-width",
@@ -2377,7 +2381,7 @@ $('body').on('focus',"input[name='birthday']",function(){
 			placeholder : "MM/DD/YYYY",
 			
 		});
-  
+   
 });
 
 $('body').on('focus',"input[name='ssn']",function(){

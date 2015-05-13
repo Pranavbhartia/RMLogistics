@@ -323,7 +323,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
     	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
     	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
-    	
+    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),"Please enter a valid 5-digit zipcode");
     	if(inputState=="" || inputState==undefined){
     		showErrorToastMessage(yesyNoErrorMessage);
     		return false;
@@ -331,6 +331,17 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		return false;
     	}else if(!questionTwo){
     		return false;
+    	}        	
+    	if(!propertQuestionTwo){
+    		return false;
+    	}else{
+    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
+
+    			$('input[name="propZipCode"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
+       		 return false;
+       	 }
+    		
     	}/*else if(!questionfour){
     		return false;
     	}*/
@@ -338,7 +349,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
     	}else{
     		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
-        	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),message);
+        	
         	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
         	if(propState==""||propState==undefined ||propState==null){
         		showErrorToastMessage(stateErrorMessage);
@@ -348,9 +359,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         	if(!propertQuestionOne){
         		return false;
         	}
-        	if(!propertQuestionTwo){
-        		return false;
-        	}
+
         	if(!propertQuestionfour){
         		return false;
         	}
