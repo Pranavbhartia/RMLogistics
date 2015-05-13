@@ -4,21 +4,21 @@ import com.nexera.common.entity.RefinanceDetails;
 
 public class RefinanceVO {
 
-	private int id;
+	private Integer id;
 	private String refinanceOption;
 	private String currentMortgageBalance;
 	private String currentMortgagePayment;
-	private boolean includeTaxes;
+	private Boolean includeTaxes;
 	private String secondMortageBalance;
 	private String mortgageyearsleft;
 	private String cashTakeOut;
 	
 	
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getRefinanceOption() {
@@ -39,10 +39,10 @@ public class RefinanceVO {
 	public void setCurrentMortgagePayment(String currentMortgagePayment) {
 		this.currentMortgagePayment = currentMortgagePayment;
 	}
-	public boolean isIncludeTaxes() {
+	public Boolean isIncludeTaxes() {
 		return includeTaxes;
 	}
-	public void setIncludeTaxes(boolean includeTaxes) {
+	public void setIncludeTaxes(Boolean includeTaxes) {
 		this.includeTaxes = includeTaxes;
 	}
 	

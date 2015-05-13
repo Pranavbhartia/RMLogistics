@@ -360,3 +360,9 @@ VALUES ('39','WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID','No producst available','201
 # by Abhishek
 
 alter table customerdetails add column tutorial_status TINYINT(1)
+
+# by Abhishek 13 may
+
+ALTER TABLE `newfi_schema`.`refinancedetails` 
+CHANGE COLUMN `includeTaxes` `includeTaxes` TINYINT(1) NULL DEFAULT NULL ;
+

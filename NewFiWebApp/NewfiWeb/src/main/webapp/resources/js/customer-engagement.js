@@ -1713,7 +1713,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
         hgLow='<font color="red"><b>Higher</b></font>';
     }
     var rcRow7 = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
-    bottomRightCol.append(rcRow7)
+    bottomRightCol.append(rcRow7);
 
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);
