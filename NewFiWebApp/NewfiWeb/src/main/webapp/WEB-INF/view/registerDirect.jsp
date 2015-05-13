@@ -16,6 +16,8 @@
 	<script src="/NewfiWeb/resources/js/common.js"></script>
 	<script src="/NewfiWeb/resources/js/customer-engagement.js"></script>
 	<script src="/NewfiWeb/resources/js/buyHome.js"></script>
+	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
+	<script src="/NewfiWeb/resources/js/validation.js"></script>
 </head>
 
 <body>
@@ -44,9 +46,11 @@
 					<div class="reg-row-rc float-left clearfix">
 						<div class="reg-input-cont reg-fname float-left">
 							<input class="reg-input" placeholder="First Name" id="firstName">
+							<div class="err-msg hide"></div>
 						</div>
 						<div class="reg-input-cont reg-lname float-left">
 							<input class="reg-input" placeholder="Last Name" id="lastName">
+							<div class="err-msg hide"></div>
 						</div>
 					</div>
 				</div>
@@ -56,6 +60,7 @@
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-email">
 							<input class="reg-input" placeholder="Email" id="emailID">
+							<div class="err-msg hide"></div>
 						</div>
 					</div>
 				</div>
@@ -70,6 +75,7 @@
 	
 	<script>
 		$(document).ready(function() {
+			globalBinder();
 			$(document).on('click','.reg-option-selected',function(e){
 				$(this).parent().find('.reg-option-dropdown').slideToggle();
 			});
@@ -104,26 +110,32 @@
 				LoanAppFormVO.realtorEmail=$("#realtorEmailId").val();
 				
 				
-				
-				if($("#firstName").val()==""){
-						showErrorToastMessage("Firstname cannot be empty");
-						return;
-				}else if($("#lastName").val()==""){
-						showErrorToastMessage("LastName cannot be empty");
-						return;
-				}else if($("#emailID").val()==""){
-					showErrorToastMessage("Email cannot be empty");
-					return;
-				}else if($("#emailID").val()!=null||$("#emailID").val()!=""){
+				//TODO form validation
+				if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
+					showErrorToastMessage("Please Select the user");
+					return false;
+				}
+				var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',"First name cannot be empty");
+				if(!firstName){
+					return false;
+				}
+				var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',"Last name cannot be empty");
+				if(!lastName){
+					return false;
+				}
+				var emailID=validateFormFeild("#emailID",'.reg-input-cont.reg-email',"Email ID cannot be empty");
+				if(!emailID){
+					return false;
+				}
+				if($("#emailID").val()!=null||$("#emailID").val()!=""){
 					var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
 	                if (!regex.test($("#emailID").val())) {
-		            showErrorToastMessage("Incorrect Email");
-					return;
+	                	$('#emailID').next('.err-msg').html("Incorrect Email").show();
+	        			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
+					return false;
 	                }
-				}else if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
-					showErrorToastMessage("Please Select the user");
-					return;
 				}
+				//End of validation
 				validateUser(LoanAppFormVO);
 				
 				
@@ -171,14 +183,11 @@
         },
         datatype: "application/json",
         success: function(data) {
-            // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
-            // alert (data);
             window.location.href = data;
             // printMedianRate(data,container);
         },
         error: function(data) {
-           // alert(data);
             showErrorToastMessage("error while creating user");
             $('#overlay-loader').hide();
         }
@@ -196,14 +205,11 @@
 		        },
 		        datatype: "application/json",
 		        success: function(data) {
-		            // $('#overlay-loader').hide();
 		            $('#overlay-loader').hide();
-		            // alert (data);
 		            window.location.href = data;
 		            // printMedianRate(data,container);
 		        },
 		        error: function(data) {
-		           // alert(data);
 		            showErrorToastMessage("error while creating user");
 		            $('#overlay-loader').hide();
 		        }

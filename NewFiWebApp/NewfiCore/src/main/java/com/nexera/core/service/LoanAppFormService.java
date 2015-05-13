@@ -2,6 +2,7 @@ package com.nexera.core.service;
 
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.ZipCodeLookup;
 import com.nexera.common.vo.LoanAppFormVO;
 
 public interface LoanAppFormService {
@@ -16,5 +17,7 @@ public interface LoanAppFormService {
 	
 	public LoanAppForm findByLoan(Loan loan);
 	public LoanAppForm findByuserID(int userid);
+
+	public ZipCodeLookup findByZipCode(String zipCode) throws Exception;
 
 }

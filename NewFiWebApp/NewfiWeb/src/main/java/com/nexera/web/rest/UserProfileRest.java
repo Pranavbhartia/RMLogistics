@@ -119,6 +119,7 @@ public class UserProfileRest {
 		ErrorVO errors = new ErrorVO();
 		if (userDetail != null) {
 			try {
+
 				String successMessage = "";
 				if (resend != null) {
 					userProfileService.resendRegistrationDetails(userDetail);
@@ -129,10 +130,11 @@ public class UserProfileRest {
 
 				else {
 					userProfileService.resetPassword(userDetail);
-					successMessage = "Reminder sent. We’ve sent an email to ["
+					successMessage = "Reminder sent. We’ve sent an email to "
 					        + userVO.getEmailId()
-					        + "]. It contains a link with instructions to reset your password";
+					        + ". It contains a link with instructions to reset your password";
 				}
+
 				commonResponse.setResultObject(successMessage);
 			} catch (InvalidInputException | UndeliveredEmailException e) {
 				LOG.error("Error in forget password", e.getMessage());
@@ -238,7 +240,7 @@ public class UserProfileRest {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
 			if (passwordChanged == true) {
-				
+
 				String emailId = updatePassword.getEmailID();
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 				        emailId, updatePassword.getNewPassword());
@@ -247,14 +249,14 @@ public class UserProfileRest {
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
 				        authenticatedUser);
-				//Update his login time here
+				// Update his login time here
 
 			}
 		} catch (InputValidationException inputValidation) {
 			throw inputValidation;
 
-		} 
-		
+		}
+
 		catch (Exception inputValidation) {
 			throw new FatalException("Could not login user");
 

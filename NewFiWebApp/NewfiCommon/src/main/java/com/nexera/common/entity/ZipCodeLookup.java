@@ -25,7 +25,7 @@ import com.nexera.common.vo.ZipCodeLookupVO;
 @NamedQuery(name = "ZipCodeLookup.findAll", query = "SELECT z FROM ZipCodeLookup z")
 public class ZipCodeLookup implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String zipcode;
 	private String countyname;
 	private String cityname;
@@ -36,11 +36,11 @@ public class ZipCodeLookup implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
@@ -88,7 +88,8 @@ public class ZipCodeLookup implements Serializable {
 		vo.setCountyName(model.getCountyname());
 		vo.setId(model.getId());
 		vo.setZipcode(model.getZipcode());
-
+		vo.setStateLookup(StateLookup.convertToVo(model.getStateLookup()));
+		
 		return vo;
 
 	}
@@ -104,6 +105,22 @@ public class ZipCodeLookup implements Serializable {
 		}
 		return voList;
 		
+	}
+	
+	
+	public static ZipCodeLookup converToEntity(ZipCodeLookupVO vo) {
+		if (vo == null)
+			return null;
+
+		ZipCodeLookup entity = new ZipCodeLookup();
+		entity.setCityname(vo.getCityName());
+		entity.setCountyname(vo.getCountyName());
+		entity.setId(vo.getId());
+		entity.setZipcode(vo.getZipcode());
+		entity.setStateLookup(StateLookup.convertToEntity(vo.getStateLookup()));
+		
+		return entity;
+
 	}
 
 }

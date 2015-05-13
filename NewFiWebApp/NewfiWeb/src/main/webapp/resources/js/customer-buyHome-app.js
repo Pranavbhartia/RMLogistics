@@ -256,7 +256,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         value: appUserDetails.propertyTypeMaster.propCity
     }, {
         type: "desc",
-        text: "Property zip code",
+        text: "In what ZIP code will you likely purchase?",
         name: "propZipCode",
         value: appUserDetails.propertyTypeMaster.homeZipCode
     }];
@@ -445,7 +445,11 @@ function paintloanamountBuyApp() {
     	 return false;
      }
        
-            saveAndUpdateLoanAppForm(appUserDetails ,paintWhereYouLiveStep());
+             appUserDetails.propertyTypeMaster.propStreetAddress=appUserDetails.propertyTypeMaster.propStreetAddress;
+		     appUserDetails.propertyTypeMaster.propState=appUserDetails.propertyTypeMaster.propState;
+		     appUserDetails.propertyTypeMaster.propCity=appUserDetails.propertyTypeMaster.propCity;
+     
+            saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2);
         
 
     });
@@ -460,29 +464,7 @@ function paintWhereYouLiveStep(){
 	$('#app-right-panel').html("");
 	
     var questions = [
-                    
-                     /*{
-                         "type": "yesno",
-                         "text": "Please provide the zipcode where you want buy a home.",
-                         "name": "isCityOrZipKnown",
-                         "options": [
-                             {
-                                 "text": "Yes",
-                                 "addQuestions": [
-                                     {
-                                         "type": "desc",
-                                         "text": "Please provide zipcode of desired location",
-                                         "name": "buyhomeZipPri",
-                                         "value": ""
-                                     }
-                                 ]
-                             },
-                             {
-                                 "text": "No"
-                             }
-                         ]
-                     }*/
-	                     {
+                     {
 							"type" : "desc",
 							"text" : "Please provide the zipcode where you want buy a home.",
 							"name" : "buyhomeZipPri",

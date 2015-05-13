@@ -12,6 +12,7 @@
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 
 </head>
 <body>
@@ -19,10 +20,8 @@
 	<div class="home-container container">
 		<div class="login-container container">
 				<div class="container-row row clearfix">
-					<div class="reg-display-title">Reset Password</div>
-					<div class="reg-display-title-subtxt">Lorem Ipsum is also known
-						as: Greeked Text, blind text, placeholder text, dummy content,
-						filter text, lipsum, and mock-content.</div>
+					<div class="reg-display-title">Set new password</div>
+					<div class="reg-display-title-subtxt">You have successfully verified your email. Please enter your new password below.</div>
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   
@@ -54,7 +53,7 @@
 	
 </body>
 <script>
-
+globalBinder();
 $('#changePwdForm').submit(function(event){	
 	event.preventDefault();
 	var changePasswordData = new Object();

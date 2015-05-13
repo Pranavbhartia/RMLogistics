@@ -5,10 +5,10 @@ var internalUserStates = new Object();
 var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
-
+var userRole="Customer";
 var passwordFieldEmptyErrorMessage="should not be empty";
 var passwordDonotMatchErrorMessage="Passwords do not match";
-var passwordlengthErrorMessage="Password length should be atleast 8 digits";
+var passwordlengthErrorMessage="Password length should be at least 8 digits";
 var invalidPassword="Password can not contain first name or last name";
 var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
 var priAndSecEmailValidation="Primary and secondary email should not be same.";
@@ -157,16 +157,14 @@ function LoanPersonalInfoWrapper(user) {
 
 			$('#loan-profile-main-container').append(lqbWrapper);
 		}
-	
-		
-	
+
 	}
 		appendChangePasswordContainer();
 
 }
 
 function appendChangePasswordContainer(){
-	
+
 	var lqbWrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
@@ -179,10 +177,18 @@ function appendChangePasswordContainer(){
 	var lqbContainer = getPasswordInfoContainer(user);
 
 	lqbWrapper.append(lqbHeader).append(lqbContainer);
-	$('#loan-profile-main-container').append(lqbWrapper);
+	
+		$('#loan-profile-main-container').append(lqbWrapper);
+	if(newfiObject.user.userRole.roleDescription==userRole){
+		$('#profile-main-container').append(lqbWrapper);
+	}
+		
+	
+	
 
 }
 function getPasswordInfoContainer(){
+
 	var container = $('<div>').attr({
 		"class" : "loan-personal-info-container"
 	});
@@ -527,18 +533,22 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 			$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
+		 if(firstName.length>3){
         if(password.indexOf(firstName) > -1){
         	$('#password').next('.err-msg').html(invalidPassword).show();
         	$('#'+elementID).addClass('ce-err-input').show();
 			return false;
 		}
+	  }
         if(password.indexOf(firstName) == -1){
 			var lowercase=password.toLowerCase();
+			  if(firstName.length>3){
 			if(lowercase.indexOf(firstName) > -1){
 				$('#password').next('.err-msg').html(invalidPassword).show();
 				$('#'+elementID).addClass('ce-err-input').show();
 				return false;
 			}
+		}
 	
 		}
 		 if(regex.test(password)==false){
@@ -694,7 +704,8 @@ function customerPersonalInfoWrapper(user) {
 	var container = getCustPersonalInfoContainer(user);
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
-
+	appendChangePasswordContainer();
+	
 }
 
 function getCustPersonalInfoContainer(user) {

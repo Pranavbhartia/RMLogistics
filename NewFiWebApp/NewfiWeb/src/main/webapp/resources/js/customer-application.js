@@ -621,6 +621,8 @@ function paintCustomerApplicationPageStep1a() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
     }).html("Save & continue").on('click', function(event) {
+    	
+    	
     	var address= $('input[name="streetAddress"]').val();
     	var inputState = $('input[name="state"]').val();
     	var city = $('input[name="city"]').val();
@@ -706,11 +708,10 @@ function paintCheckBox(){
     	}else{
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
-        	$('input[name=addressStreet]').parent().parent().hide();
-        	 $('input[name="propStreetAddress"]').parent().parent().hide();
+        	$('input[name="propStreetAddress"]').parent().parent().hide();
          	$('input[name="propState"]').parent().parent().hide();
          	$('input[name="propCity"]').parent().parent().hide();
-         	$('input[name="propZipCode"]').parent().parent().hide();
+         	$('input[name="propZipCode"]').parent().parent().show();
         	
     	}
 		
@@ -3388,7 +3389,7 @@ function paintCustomerApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).text("I authorize newfi to pull my credit report for the purposes of appying for a morgage loan")
+    }).text("I authorize newfi to pull my credit report for the purposes of appying for a mortgage loan")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
@@ -4269,19 +4270,19 @@ function getMonthYearTextQuestionContext(contxt) {
 }
 
 
-function saveAndUpdateLoanAppForm(appUserDetails,callBack){
+function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
 	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(!LQBFileId){
     	$.ajax({
     		url:"rest/application/applyloan",
     		type:"POST",
-    		data:{"appFormData" : JSON.stringify(appUserDetails)},
+    		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
     		datatype : "application/json",
     		cache:false,
     		success:function(data){
     			
-    			//appUserDetails=data;
-                newfi.appUserDetails=JSON.stringify(appUserDetails);
+    			appUserDetails=JSON.parse(data);
+                newfi.appUserDetails=appUserDetails;
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
     			callBack();
@@ -4373,6 +4374,12 @@ function paintSelectLoanTypeQuestion() {
 	var option1 = $('<div>').attr({
 		"class" : "ce-option"
 	}).html("Refinance").on('click', function() {
+		
+		// In case when user is not coming from the customer engagement path 
+		$('#loanType').text("Refinance");
+		
+		//
+		
 		//loanType.loanTypeCd = "REF";
 		appUserDetails.loanType.id= "2";
 		appUserDetails.loan.loanType.id = "2";
@@ -4395,7 +4402,11 @@ function paintSelectLoanTypeQuestion() {
 	console.log('setting value as purchase');
 		
 	
+	// in case when user come directly not from customer engagement path 
 	
+	$('#loanType').text("Home Buyer");
+	
+	//
 	
 		//loanType.loanTypeCd = "PUR";
 		appUserDetails.loanType.id= "1";
@@ -4530,8 +4541,6 @@ var questions = [
 		var saveAndContinueButton = $('<div>').attr({
 		    "class": "ce-save-btn"
 		}).html("Save & continue").bind('click',{'contxt':contxt}, function(event) {
-			
-			
 			
 			
 			refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();

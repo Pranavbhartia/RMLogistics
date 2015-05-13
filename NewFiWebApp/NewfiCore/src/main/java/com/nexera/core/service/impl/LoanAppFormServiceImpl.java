@@ -29,6 +29,7 @@ import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.RefinanceDetails;
 import com.nexera.common.entity.SpouseGovernmentQuestions;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.ZipCodeLookup;
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
 import com.nexera.common.vo.CustomerOtherAccountDetailsVO;
@@ -45,6 +46,7 @@ import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.PurchaseDetailsVO;
 import com.nexera.common.vo.RefinanceVO;
 import com.nexera.common.vo.SpouseGovernmentQuestionVO;
+import com.nexera.common.vo.ZipCodeLookupVO;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.UserProfileService;
@@ -84,11 +86,16 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Transactional
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
 		LOG.info("in create func of loanapp form..................");
-		LoanAppForm loanAppForm = loanAppFormDao
-		        .saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
+		if(null!= loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() && loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() != ""  ){
+			
+			zipcodeLookup(loaAppFormVO);
+		}
+		
+		LoanAppForm loanAppForm = loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
 		// updating the user table coloum phone number
 		userProfileDao.UpdateUserProfile(loaAppFormVO.getUser().getPhoneNumber(), loaAppFormVO.getUser().getId());
 
+        	
 		return loanAppForm;
 		/*
 		 * LoanAppForm loanAppForm = null; if (loanAppFormID != null &&
@@ -96,6 +103,22 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 * loanAppFormDao.findLoanAppForm(loanAppFormID);
 		 */
 		// return this.buildLoanAppFormVO(loanAppForm);
+	}
+	
+	public void zipcodeLookup(LoanAppFormVO loanAppFormVO){
+		LOG.info("Inside method zipcodeLookup");
+		try {
+	           ZipCodeLookupVO zipCodeLookup =  ZipCodeLookup.converToVo(findByZipCode(loanAppFormVO.getPropertyTypeMaster().getHomeZipCode()));
+	           PropertyTypeMasterVO propertyTypeMasterVO = loanAppFormVO.getPropertyTypeMaster();
+	           propertyTypeMasterVO.setPropState(zipCodeLookup.getStateLookup().getStateCode());
+	           propertyTypeMasterVO.setPropCity(zipCodeLookup.getCityName());
+	           loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
+	          
+			} catch (Exception e) {
+				LOG.error("Error in zipcodeLookup " + e.getMessage());
+	            e.printStackTrace();
+         }
+		
 	}
 
 	@Override
@@ -939,6 +962,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Transactional
 	public LoanAppForm findByuserID(int userid) {
 		return loanAppFormDao.findByuserID(userid);
+	}
+	
+	@Override
+	@Transactional
+	public ZipCodeLookup findByZipCode(String zipCode) throws Exception {
+		return loanAppFormDao.findByZipCode(zipCode);
 	}
 
 }

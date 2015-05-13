@@ -21,11 +21,11 @@ import org.hibernate.annotations.Type;
 public class RefinanceDetails implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String refinanceOption;
 	private String currentMortgageBalance;
 	private String currentMortgagePayment;
-	private boolean includeTaxes;
+	private Boolean includeTaxes;
 	private String secondMortageBalance;
 	private String mortgageyearsleft;
 	private String cashTakeOut;
@@ -65,19 +65,19 @@ public class RefinanceDetails implements Serializable{
 	
 	@Column(name = "includeTaxes")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public boolean isIncludeTaxes() {
+	public Boolean isIncludeTaxes() {
 		return includeTaxes;
 	}
-	public void setIncludeTaxes(boolean includeTaxes) {
+	public void setIncludeTaxes(Boolean includeTaxes) {
 		this.includeTaxes = includeTaxes;
 	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	

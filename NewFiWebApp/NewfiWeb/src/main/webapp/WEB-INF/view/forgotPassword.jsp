@@ -50,12 +50,13 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="resources/js/script.js"></script>
 	<script src="resources/js/profile.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
+	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 	
 </body>
 <script>
 
 $(document).ready(function(e){
-
+	globalBinder();
 	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
         $("#errorMessage").text("${error}");
 		$("#errorMessage").show(); 
@@ -98,14 +99,15 @@ $('#loginForm').submit(function(event){
 	if($('#emailID').val()==""||$('#emailID').val()==null){
 		$("#emailID").next('.err-msg').html("Email ID cannot be empty").show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
-		//showErrorToastMessage("Email ID cannot be empty");
 			return;
 		
+	}else{
+		$("#emailID").next('.err-msg').hide();
+		$(".reg-input-reset-password").removeClass('ce-err-input');
 	}
 	if (!emailRegex.test(user.emailId)) {
 		$("#emailID").next('.err-msg').html("Invalid Email ID").show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
-       // showErrorToastMessage("Invalid EmailId");
 		$('#emailID').val('');
 		return;
 	}else {	
@@ -118,6 +120,8 @@ function paintForgetPasswordResponse(data){
 	if(data.resultObject!=null){		
 		$('#emailID').val('');		
 		showToastMessage(data.resultObject);
+		$("#emailID").next('.err-msg').hide();
+		$(".reg-input-reset-password").removeClass('err-input');
 	}else{
 		$("#emailID").next('.err-msg').html(data.error.message).show();
 		$(".reg-input-reset-password").addClass('err-input').focus();

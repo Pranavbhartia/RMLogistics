@@ -11,6 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
 <jsp:include page="include/commonStyles.jsp"></jsp:include>
+<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 </head>
 <body>
 
@@ -49,6 +50,7 @@
 
 <script>
 	$(document).ready(function() {
+		globalBinder();
 		console.log("Document ready.");
 		$("#dynamicQuizStepOne").dynamicQuiz(quizJSONStepOne);
 
