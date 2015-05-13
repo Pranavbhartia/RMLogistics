@@ -14,13 +14,19 @@
 <link href="resources/css/style-resp.css" rel="stylesheet">
 
 </head>
+<script>
+var locationURL = window.location.href;
+var resendIndex=locationURL.indexOf("?resend");
+</script>
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="login-container container">
 				<div class="container-row row clearfix">
-					<div class="reg-display-title">Password Reset</div>
-					<div class="reg-display-title-subtxt">Enter the email address that you used to create your account.  We will send you an email with instructions to reset your password.</div>
+				
+					<div id="reg-display-title" class="reg-display-title"></div>
+					<div id="reg-display-header-text" class="reg-display-title-subtxt"></div>
+				
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm" action="#" method="POST">
 						    <div class="reset-error hide" id="errorMessage"></div>
@@ -30,7 +36,7 @@
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
-					             <div class="reset-password float-right" onclick="$('#loginForm').submit();">Reset Password</div>
+					             <div id="btnAction" class="reset-password float-right" onclick="$('#loginForm').submit();">Reset Password</div>
 				            </div>											
 						</form>
 					</div>
@@ -56,30 +62,56 @@ $(document).ready(function(e){
 		$("#errorMessage").show(); 
 
 	}
+	
+	
+	var title = "";
+	var buttonText = "";
+	var headerText = "";
+	if(resendIndex != -1)
+	{
+		 title="Resend Registration Link";	 
+		 headerText="Enter your email ID. We will resend the registration link to that email.";
+		 buttonText ="Submit";
+		 $('#btnAction').text(buttonText);
+	}
+	else
+	{
+		title="Password Reset";
+		headerText="Enter the email address that you used to create your account.  We will send you an email with instructions to reset your password.";
+	}
+	$('#reg-display-title').text(title);
+	$('#reg-display-header-text').text(headerText);	
+		
 });
 var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]\.[0-9]\.[0-9]\.[0-9]\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]+))$/;
 
 $('#loginForm').submit(function(event){
 		  event.preventDefault();
 		var user = new Object();
+		var ajaxURL = "rest/userprofile/forgetPassword";
+		if (resendIndex!=-1)
+		{
+			ajaxURL = ajaxURL+"?resend=true";
+		}
 		user.emailId = $('#emailID').val();
 		console.log("Create user button clicked. User : "
 						+ JSON.stringify(user));
 	if($('#emailID').val()==""||$('#emailID').val()==null){
 		$("#emailID").next('.err-msg').html("Email ID cannot be empty").show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
-		//showErrorToastMessage("Email ID cannot be empty");
 			return;
 		
+	}else{
+		$("#emailID").next('.err-msg').hide();
+		$(".reg-input-reset-password").removeClass('ce-err-input');
 	}
 	if (!emailRegex.test(user.emailId)) {
 		$("#emailID").next('.err-msg').html("Invalid Email ID").show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
-       // showErrorToastMessage("Invalid EmailId");
 		$('#emailID').val('');
 		return;
 	}else {	
-		ajaxRequest("rest/userprofile/forgetPassword", "POST", "json", JSON.stringify(user),
+		ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(user),
 				  paintForgetPasswordResponse);
 	}
 	});
@@ -88,6 +120,8 @@ function paintForgetPasswordResponse(data){
 	if(data.resultObject!=null){		
 		$('#emailID').val('');		
 		showToastMessage(data.resultObject);
+		$("#emailID").next('.err-msg').hide();
+		$(".reg-input-reset-password").removeClass('err-input');
 	}else{
 		$("#emailID").next('.err-msg').html(data.error.message).show();
 		$(".reg-input-reset-password").addClass('err-input').focus();

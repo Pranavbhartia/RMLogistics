@@ -269,8 +269,8 @@ public class TemplateController extends DefaultController {
 	}
 
 	@RequestMapping(value = "forgotPassword.do")
-	public ModelAndView showForgetPasswordPage() {
-		ModelAndView mav = new ModelAndView();
+	public ModelAndView showForgetPasswordPage(@RequestParam (value = "resend", required = false) String resend) {
+		ModelAndView mav = new ModelAndView();	
 		mav.setViewName("forgotPassword");
 		return mav;
 	}

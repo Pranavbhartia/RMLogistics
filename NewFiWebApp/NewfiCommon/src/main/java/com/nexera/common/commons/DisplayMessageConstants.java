@@ -8,7 +8,7 @@ public final class DisplayMessageConstants {
 
 	
 	private DisplayMessageConstants() {}
-	
+	public static final String IS_SHOPPER="SHOPPER";
 	// Success message constants
 	public static final String PAYMENT_SUCCESSFUL="PAYMENT_SUCCESSFUL";
 
@@ -19,6 +19,7 @@ public final class DisplayMessageConstants {
 	
 	public static final String  USER_DISABLED = "Account has been disabled";
 	public static final String  USER_INACTIVE = "Account has been inactive. Contact your loan manager.";
+	public static final String  RESEND_PASSWORD_LINK = "Account has been inactive. Contact your loan manager.";
 	public static  final String INVALID_USERNAME="INVALID_USERNAME";
 	public static  final String INVALID_PASSWORD="INVALID_PASSWORD";
 	public static final String GENERAL_ERROR = "GENERAL_ERROR";
@@ -44,16 +45,7 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_PROFILE_URL = "INVALID_PROFILE_URL";
 	public static final String INVALID_STATE_CODE_LIST_LENGTH = "INVALID_STATE_CODE_LIST_LENGTH";
 	public static final String INVALID_STATE_CODE = "INVALID_STATE_CODE";
-	
-	
-	
-	
 	// Email subject constants
 	public static final String PAYMENT_SUCCESSFUL_SUBJECT = "Payment Successful!";
-	public static final String PAYMENT_UNSUCCESSFUL_SUBJECT = "Payment Unsuccessful!";
-
-
-
-
-	
+	public static final String PAYMENT_UNSUCCESSFUL_SUBJECT = "Payment Unsuccessful!";	
 }
