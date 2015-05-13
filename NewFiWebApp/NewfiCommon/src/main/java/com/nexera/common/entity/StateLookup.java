@@ -85,6 +85,16 @@ public class StateLookup implements Serializable {
 		
 	}
 	
+	public static StateLookup convertToEntity(StateLookupVO vo){
+		if(vo==null) return null;
+		StateLookup entity =new StateLookup();
+		entity.setId(vo.getId());
+		entity.setStatecode(vo.getStateCode());
+		entity.setStatename(vo.getStateName());
+		
+		return entity;
+	}
+	
 	public static List<StateLookupVO> convertToVo(List<StateLookup> modelList) {
 		if (modelList == null || modelList.isEmpty())
 			return Collections.EMPTY_LIST;

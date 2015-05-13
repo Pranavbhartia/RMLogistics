@@ -707,10 +707,10 @@ function paintCheckBox(){
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
         	$('input[name=addressStreet]').parent().parent().hide();
-        	 $('input[name="propStreetAddress"]').parent().parent().hide();
+        	$('input[name="propStreetAddress"]').parent().parent().hide();
          	$('input[name="propState"]').parent().parent().hide();
          	$('input[name="propCity"]').parent().parent().hide();
-         	$('input[name="propZipCode"]').parent().parent().hide();
+         	$('input[name="propZipCode"]').parent().parent().show();
         	
     	}
 		
@@ -3388,7 +3388,7 @@ function paintCustomerApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).text("I authorize newfi to pull my credit report for the purposes of appying for a morgage loan")
+    }).text("I authorize newfi to pull my credit report for the purposes of appying for a mortgage loan")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
@@ -4269,19 +4269,19 @@ function getMonthYearTextQuestionContext(contxt) {
 }
 
 
-function saveAndUpdateLoanAppForm(appUserDetails,callBack){
+function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
 	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(!LQBFileId){
     	$.ajax({
     		url:"rest/application/applyloan",
     		type:"POST",
-    		data:{"appFormData" : JSON.stringify(appUserDetails)},
+    		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
     		datatype : "application/json",
     		cache:false,
     		success:function(data){
     			
-    			//appUserDetails=data;
-                newfi.appUserDetails=JSON.stringify(appUserDetails);
+    			appUserDetails=JSON.parse(data);
+                newfi.appUserDetails=appUserDetails;
     			console.log('appUserDetails'+appUserDetails);
     			if(callBack)
     			callBack();

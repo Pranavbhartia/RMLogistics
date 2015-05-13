@@ -4,13 +4,16 @@ import java.util.Iterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.LoanAppFormDao;
 import com.nexera.common.entity.CustomerBankAccountDetails;
 import com.nexera.common.entity.CustomerDetail;
@@ -24,6 +27,8 @@ import com.nexera.common.entity.CustomerSpouseRetirementAccountDetails;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.User;
+import com.nexera.common.entity.ZipCodeLookup;
+import com.nexera.common.exception.NoRecordsFetchedException;
 
 @Component
 public class LoanAppFormDaoImpl extends GenericDaoImpl implements
@@ -559,7 +564,21 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 
 		return loanAppForm;
 	}
-	
-	
+
+	@Override
+    public ZipCodeLookup findByZipCode(String zipCode) throws HibernateException, Exception {
+		
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(ZipCodeLookup.class);
+		criteria.add(Restrictions.eq("zipcode", zipCode));
+		Object obj = criteria.uniqueResult();
+		if (obj == null) {
+			throw new NoRecordsFetchedException(
+			        DisplayMessageConstants.INVALID_ZIPCODE);
+		}
+		ZipCodeLookup zipCodeLookup = (ZipCodeLookup) obj;
+		Hibernate.initialize(zipCodeLookup.getStateLookup());
+		return zipCodeLookup;
+    }
 	
 }
