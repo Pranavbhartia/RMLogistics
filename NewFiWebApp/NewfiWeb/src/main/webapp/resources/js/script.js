@@ -165,7 +165,13 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                          
                         }else{
                             //code to Paint teaser rate page
-                            paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
+                        	if(JSON.parse(newfiObject.appUserDetails).loanType.description !="None"){
+                            paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);}
+                        	else{
+                        		showToastMessage("Please fill the application path ");
+                        		window.location.href ="./home.do#myLoan/my-application";
+                        		return false;
+                        	}
                         }
                     
                     } , "This can take a minute,<br/> we are looking for the best rate options available.");

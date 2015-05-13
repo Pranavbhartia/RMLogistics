@@ -934,7 +934,7 @@ function  makeDate ( dateString){
 	var elements = dateString.split("/");	
 	var myDate1 = new Date(Date.UTC(elements[2],elements[0],elements[1]));
 	console.log("myDate1" + myDate1);
-	var myDate = Date.UTC(elements[2],elements[0],elements[1]);
+	var myDate = Date.UTC(elements[2],elements[0]-1,elements[1]);
 	
 	return myDate;
 	

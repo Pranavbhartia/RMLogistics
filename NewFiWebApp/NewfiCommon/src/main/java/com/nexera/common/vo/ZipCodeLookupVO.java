@@ -1,16 +1,20 @@
 package com.nexera.common.vo;
 
 
+
 public class ZipCodeLookupVO {
 
-	private int id;
+	private Integer id;
 	private String zipcode;
 	private String countyName;
 	private String cityName;
-	public int getId() {
+	private StateLookupVO stateLookup;
+	
+	
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getZipcode() {
@@ -30,6 +34,12 @@ public class ZipCodeLookupVO {
 	}
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
+	}
+	public StateLookupVO getStateLookup() {
+		return stateLookup;
+	}
+	public void setStateLookup(StateLookupVO stateLookup) {
+		this.stateLookup = stateLookup;
 	}
 	
 	

@@ -12,6 +12,7 @@
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 
 </head>
 <body>
@@ -54,7 +55,7 @@
 	
 </body>
 <script>
-
+globalBinder();
 $('#changePwdForm').submit(function(event){	
 	event.preventDefault();
 	var changePasswordData = new Object();

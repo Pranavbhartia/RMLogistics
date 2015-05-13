@@ -72,3 +72,19 @@ function validateInputOfChecked(isStatus){
 				   
 
 }
+
+function validateFormFeild(inputElement,divErrElement,message){
+	var inputVal=$(element1).val();
+	if(inputVal == undefined || inputVal == ""){
+		$(element1).next('.err-msg').html(message).show();
+		$(element2).addClass('ce-err-input').show();
+		return false;
+
+	}
+	else{
+		$(element1).next('.err-msg').hide();
+		$(element2).removeClass('ce-err-input');
+		return true;
+	}
+	
+}
