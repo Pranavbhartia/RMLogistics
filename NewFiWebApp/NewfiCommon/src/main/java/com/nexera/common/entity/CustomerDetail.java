@@ -318,7 +318,7 @@ public class CustomerDetail implements Serializable {
 				        .getTime());
 			} else {
 				// if the date of birth id null then ??
-				customerDetailVO.setDateOfBirth(0l);
+				customerDetailVO.setDateOfBirth(null);
 			}
 			customerDetailVO.setId(inputEntity.getId());
 			customerDetailVO.setProfileCompletionStatus(inputEntity
