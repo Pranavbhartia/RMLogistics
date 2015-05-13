@@ -73,7 +73,7 @@ function validateInputOfChecked(isStatus){
 
 }
 
-function validateFormFeild(element1,element2,message){
+function validateFormFeild(inputElement,divErrElement,message){
 	var inputVal=$(element1).val();
 	if(inputVal == undefined || inputVal == ""){
 		$(element1).next('.err-msg').html(message).show();
