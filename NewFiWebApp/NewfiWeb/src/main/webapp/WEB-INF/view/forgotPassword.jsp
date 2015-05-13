@@ -90,7 +90,7 @@ function paintForgetPasswordResponse(data){
 		$('#emailID').val('');		
 		showToastMessage(data.resultObject);
 		$("#emailID").next('.err-msg').hide();
-		$(".reg-input-reset-password").removeClass('ce-err-input');
+		$(".reg-input-reset-password").removeClass('err-input');
 	}else{
 		$("#emailID").next('.err-msg').html(data.error.message).show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
