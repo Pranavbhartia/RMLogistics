@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
+import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -256,6 +257,7 @@ public class ShopperRegistrationController {
 		// request.getSession().invalidate();
 		// LOG.debug("Clearing old sessions");
 		// }
+		emailId = emailId + ":"+ DisplayMessageConstants.IS_SHOPPER;
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 		        emailId, password);
@@ -264,7 +266,9 @@ public class ShopperRegistrationController {
 		if (sessionId == null) {
 			request.getSession(Boolean.TRUE);
 		}
+		request.setAttribute("engagementPath", "true");
 		token.setDetails(new WebAuthenticationDetails(request));
+
 		Authentication authenticatedUser = authenticationManager
 		        .authenticate(token);
 

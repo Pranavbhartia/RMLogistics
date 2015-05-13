@@ -8,7 +8,7 @@ public final class DisplayMessageConstants {
 
 	
 	private DisplayMessageConstants() {}
-	
+	public static final String IS_SHOPPER="SHOPPER";
 	// Success message constants
 	public static final String PAYMENT_SUCCESSFUL="PAYMENT_SUCCESSFUL";
 
