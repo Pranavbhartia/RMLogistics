@@ -11,6 +11,7 @@
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 <script src="/NewfiWeb/resources/js/historySupport.js"></script>
+<script src="/NewfiWeb/resources/js/validation.js"></script>
 </head>
 
 <body>
