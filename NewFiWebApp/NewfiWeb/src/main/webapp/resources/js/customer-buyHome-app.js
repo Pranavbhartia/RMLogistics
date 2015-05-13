@@ -256,7 +256,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         value: appUserDetails.propertyTypeMaster.propCity
     }, {
         type: "desc",
-        text: "Property zip code",
+        text: "In what ZIP code will you likely purchase?",
         name: "propZipCode",
         value: appUserDetails.propertyTypeMaster.homeZipCode
     }];

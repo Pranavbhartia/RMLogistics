@@ -708,7 +708,6 @@ function paintCheckBox(){
     	}else{
         	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
-        	$('input[name=addressStreet]').parent().parent().hide();
         	$('input[name="propStreetAddress"]').parent().parent().hide();
          	$('input[name="propState"]').parent().parent().hide();
          	$('input[name="propCity"]').parent().parent().hide();
