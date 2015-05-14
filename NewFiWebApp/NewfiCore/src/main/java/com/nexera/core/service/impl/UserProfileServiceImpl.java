@@ -1538,4 +1538,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 		userProfileDao.updateLoginTime(new Date(System.currentTimeMillis()),
 		        userId);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<User> geAllSalesManagers() {
+		return userProfileDao.getAllSalesManagers();
+
+	}
 }
