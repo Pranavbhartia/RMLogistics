@@ -24,6 +24,7 @@ import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.UserProfileService;
 
 @Component
 public class SendEmailServiceImpl implements SendEmailService {
@@ -36,6 +37,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 	@Autowired
 	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Autowired
 	LoanService loanService;
@@ -104,11 +108,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS);
 			if (emailRecipientList == null) {
-				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
-				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+				emailRecipientList = getAllSalesManagers();
 			} else if (emailRecipientList.isEmpty()) {
-				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
-				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+				emailRecipientList = getAllSalesManagers();
 			}
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
@@ -132,11 +134,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_INTERNAL_USERS);
 			if (emailRecipientList == null) {
-				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
-				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+				emailRecipientList = getAllSalesManagers();
 			} else if (emailRecipientList.isEmpty()) {
-				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
-				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+				emailRecipientList = getAllSalesManagers();
 			}
 
 			emailEntity.setRecipients(emailRecipientList);
@@ -259,43 +259,6 @@ public class SendEmailServiceImpl implements SendEmailService {
 					}
 				}
 			}
-		} else if (sendTo
-		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_SALES_MANGERS)) {
-			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
-				if (teamMember.getUser() != null) {
-					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
-					        .getRoleId()) {
-						if (teamMember.getUser().getInternalUserDetail() != null) {
-							if (teamMember.getUser().getInternalUserDetail()
-							        .getInternalUserRoleMasterVO() != null) {
-								if (teamMember.getUser()
-								        .getInternalUserDetail()
-								        .getInternalUserRoleMasterVO().getId() == UserRolesEnum.SM
-								        .getRoleId()) {
-									recipients.add(getReceipientVO(teamMember));
-									if (teamMember.getUser()
-									        .getCustomerDetail() != null
-									        && teamMember.getUser()
-									                .getCustomerDetail()
-									                .getSecEmailId() != null
-									        && !teamMember.getUser()
-									                .getCustomerDetail()
-									                .getSecEmailId().isEmpty()) {
-										recipients.add(getReceipientVO(
-										        teamMember.getUser()
-										                .getCustomerDetail()
-										                .getSecEmailId(),
-										        teamMember.getUser()
-										                .getFirstName(),
-										        teamMember.getUser()
-										                .getLastName()));
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 		} else if (sendTo.equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_TEAM)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				recipients.add(getReceipientVO(teamMember));
@@ -313,6 +276,22 @@ public class SendEmailServiceImpl implements SendEmailService {
 		}
 
 		return recipients;
+	}
+
+	private List<EmailRecipientVO> getAllSalesManagers() {
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		List<User> salesManagers = userProfileService.geAllSalesManagers();
+		for (User user : salesManagers) {
+			recipients.add(getReceipientVO(user));
+		}
+		return recipients;
+
+	}
+
+	public EmailRecipientVO getReceipientVO(User user) {
+
+		return getReceipientVO(user.getEmailId(), user.getFirstName(),
+		        user.getLastName());
 	}
 
 	public EmailRecipientVO getReceipientVO(LoanTeamVO teamMember) {
