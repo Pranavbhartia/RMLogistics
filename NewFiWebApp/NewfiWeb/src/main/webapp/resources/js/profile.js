@@ -991,8 +991,9 @@ function getDOBRow(user) {
 
 	var dob =null;
 	if(user.customerDetail.dateOfBirth != 0)
-		dob = $.datepicker.formatDate('mm/dd/yy', new Date(user.customerDetail.dateOfBirth));
-
+		{
+		dob = makeDateFromLong(user.customerDetail.dateOfBirth);
+		}
 	if (dob == null || dob == "" || dob == 'NaN/NaN/NaN') {
 
 		dob = "";
