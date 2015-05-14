@@ -5051,3 +5051,7 @@ padding-left: 10px;
     width: 585px;
     max-width: 100%;
 }
+.cust-prof-err-mess {
+    text-align: center;
+    padding: 37px;
+}
