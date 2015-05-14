@@ -2126,7 +2126,7 @@ function appendCustomerEditProfilePopUp() {
 	//TO append mobile preference
 	appendCustomerProfEditRow("Receive SMS Alert", selectedUserDetail.setMobileAlertPreference,
 	"");
-alert( selectedUserDetail.setMobileAlertPreference+""+selectedUserDetail.carrierName);
+
 	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 
 

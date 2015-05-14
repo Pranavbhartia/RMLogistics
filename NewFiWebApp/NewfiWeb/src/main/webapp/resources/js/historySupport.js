@@ -16,7 +16,7 @@ alert("on click");
 	});
 	
 	$(document).on("click",".lp-t2-item",function(){
-		alert("on click in lp click");
+		
 		removeToastMessage();
 	});
 	
