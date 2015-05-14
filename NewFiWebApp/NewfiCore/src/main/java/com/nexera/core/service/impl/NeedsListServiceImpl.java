@@ -1,7 +1,6 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,12 +39,12 @@ import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeededItemScoreVO;
 import com.nexera.common.vo.NeedsListMasterVO;
 import com.nexera.common.vo.NotificationVO;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.utility.CoreCommonConstants;
@@ -64,6 +63,9 @@ public class NeedsListServiceImpl implements NeedsListService {
 
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private SendEmailService sendEmailService;
 
 	@Autowired
 	private MessageServiceHelper messageServiceHelper;
@@ -491,7 +493,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void createOrDismissNeedsAlert(int loanId) {
 		NeededItemScoreVO neededItemScoreVO = getNeededItemsScore(loanId);
 		if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
@@ -705,7 +707,6 @@ public class NeedsListServiceImpl implements NeedsListService {
 	@Override
 	public void initialNeedsListSetEmail(Integer loanID, List<Integer> addedList) {
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
 			if (loanVO.getUser() != null) {
@@ -718,9 +719,6 @@ public class NeedsListServiceImpl implements NeedsListService {
 				substitutions.put("-listofitems-",
 				        new String[] { getNeedsListNameById(addedList) });
 				substitutions.put("-url-", new String[] { baseUrl });
-				recipientVO.setEmailID(loanVO.getUser().getEmailId());
-				emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(
-				        Arrays.asList(recipientVO)));
 				emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 				emailEntity.setSubject("You Initial Needs List Are Set");
@@ -728,7 +726,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 				emailEntity.setTemplateId(template.getValue());
 
 				try {
-					sendGridEmailService.sendMail(emailEntity);
+					sendEmailService.sendEmailForCustomer(emailEntity,
+					        loanVO.getId());
 				} catch (InvalidInputException | UndeliveredEmailException e) {
 					LOGGER.error("Exception caught while sending email "
 					        + e.getMessage());
@@ -761,7 +760,6 @@ public class NeedsListServiceImpl implements NeedsListService {
 	        List<Integer> removedList) {
 
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEEDS_LIST_UPDATED);
@@ -774,9 +772,6 @@ public class NeedsListServiceImpl implements NeedsListService {
 		substitutions.put("-listofitems-",
 		        new String[] { getNeedsListNameById(addedList)
 		                + getNeedsListNameById(removedList) });
-		recipientVO.setEmailID(loanVO.getUser().getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You Needs list has been updated");
@@ -784,7 +779,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 		emailEntity.setTemplateId(template.getValue());
 
 		try {
-			sendGridEmailService.sendMail(emailEntity);
+			sendEmailService.sendEmailForCustomer(emailEntity, loanVO.getId());
 		} catch (InvalidInputException | UndeliveredEmailException e) {
 			LOGGER.error("Exception caught while sending email "
 			        + e.getMessage());

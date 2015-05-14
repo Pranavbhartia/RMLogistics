@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
@@ -84,15 +84,15 @@ import com.nexera.common.vo.RefinanceVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
-import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
@@ -120,7 +120,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private LqbInvoker lqbInvoker;
 
 	@Autowired
-	private SendGridEmailService sendGridEmailService;
+	private SendEmailService sendEmailService;
 
 	@Autowired
 	private TemplateService templateService;
@@ -138,6 +138,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private MessageServiceHelper messageServiceHelper;
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
@@ -475,7 +478,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        UndeliveredEmailException {
 		String subject = "You have been subscribed to Nexera";
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
+
 		Template template = null;
 		if (user.getUserRole() != null
 		        && user.getUserRole().getId() == UserRolesEnum.REALTOR
@@ -498,16 +501,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-baseUrl-", new String[] { baseUrl });
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, user);
 	}
 
 	private void sendEmailWithQuotes(UserVO user,
@@ -515,7 +515,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        throws InvalidInputException, UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DRIP_RATE_ALERTS);
 		// We create the substitutions map
@@ -541,16 +540,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-apr-", new String[] { teaseRateDataList.get(1)
 		        .getAPR() });
 
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You have been subscribed to Nexera");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, user);
 	}
 
 	@Override
@@ -1244,6 +1240,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 							loanService.createAlertForAgent(loanVO.getId());
+							//code to send mail for no product found
+							boolean noProductFound=false;
+							if(teaseRateDataList.get(0)==null){
+								noProductFound=true;
+								LOG.info("loan type is NONE..................................................");
+								loanTypeMasterVO =loanVO.getLoanType(); 
+								if (loanTypeMasterVO.getId() != LoanTypeMasterEnum.NONE
+								        .getStatusId()) {
+									int loanId = loanVO.getId();
+									LOG.info(loanId + "-------------------");
+									loanService
+									        .sendNoproductsAvailableEmail(loanId);
+									messageServiceHelper
+									        .generatePrivateMessage(loanId,
+									                LoanStatus.ratesLocked,
+									                utils
+									        .getLoggedInUser(), false);
+								}
+							}
 						}
 					}
 				}
@@ -1343,7 +1358,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	        UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FORGOT_YOUR_PASSWORD);
 
@@ -1354,15 +1368,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Please reset your password");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, user);
 	}
 
 	@Override
