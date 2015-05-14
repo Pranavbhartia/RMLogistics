@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -55,7 +54,6 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBDocumentResponseListVO;
@@ -68,6 +66,7 @@ import com.nexera.core.service.BraintreePaymentGatewayService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.TransactionService;
@@ -110,6 +109,9 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
+
+	@Autowired
+	SendEmailService sendEmailService;
 
 	@Autowired
 	TransactionService transactionService;
@@ -913,7 +915,6 @@ public class ThreadManager implements Runnable {
 	        UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
 		// We create the substitutions map
@@ -922,16 +923,13 @@ public class ThreadManager implements Runnable {
 		        .getFirstName() });
 		substitutions.put("-url-", new String[] { baseUrl });
 		substitutions.put("-listOfItems-", convertNeedsListToArray(needsList));
-		recipientVO.setEmailID(loan.getUser().getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 	}
 
 	private Boolean fetchDocsForThisLoan(Loan loan) {
