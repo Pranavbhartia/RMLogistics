@@ -272,6 +272,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	public void verifyEmail(int userID) throws DatabaseException,
+	        HibernateException {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.emailVerified = :emailVerified WHERE usr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("emailVerified", Boolean.TRUE);
+		query.setParameter("id", userID);
+		query.executeUpdate();
+
+	}
+
+	@Override
 	public List<User> searchUsers(User user) {
 
 		Session session = sessionFactory.getCurrentSession();
@@ -962,4 +974,5 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return users;
 
 	}
+
 }
