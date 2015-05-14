@@ -20,6 +20,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
@@ -32,6 +33,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 	@Autowired
 	SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	SMSServiceHelper smsServiceHelper;
 
 	@Autowired
 	LoanService loanService;
@@ -81,6 +85,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam, CommonConstants.SEND_EMAIL_TO_TEAM);
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -107,6 +112,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -135,6 +141,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -165,6 +172,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 				}
 			}
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -312,4 +320,31 @@ public class SendEmailServiceImpl implements SendEmailService {
 		return true;
 	}
 
+	private void sendSMS(UserVO user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
+
+	private void sendSMS(User user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
 }
