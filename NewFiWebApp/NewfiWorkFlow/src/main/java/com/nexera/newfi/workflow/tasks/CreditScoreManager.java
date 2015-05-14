@@ -74,7 +74,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 		        LoanStatus.creditScoreMessage);
 		objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 		        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
-		sendEmail(objectMap, CommonConstants.SUBJECT_YOUR_CREDIT);
+		// sendEmail(objectMap, CommonConstants.SUBJECT_YOUR_CREDIT);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
