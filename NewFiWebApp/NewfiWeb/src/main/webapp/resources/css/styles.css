@@ -87,6 +87,10 @@ a,a:hover,a:visited {
 	margin-top: 30px;
 }
 
+.margin-0-auto{
+	margin: 0 auto;
+}
+
 .cursor-pointer{
 	cursor: pointer;
 }
@@ -5035,7 +5039,15 @@ padding-left: 10px;
     line-height: 40px;
     cursor: pointer;
     background: #6c9f2e;
-    margin: 5px 0;
+    margin: 5px auto;
     color: #fff;
     border-radius: 3px;
+}
+
+.app-completed-text {
+    font-size: 22px;
+    font-family: 'opensanssemibold';
+    margin: 20px auto;
+    width: 585px;
+    max-width: 100%;
 }
