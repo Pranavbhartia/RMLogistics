@@ -953,3 +953,39 @@ function  makeDateFromLong ( dateLong){
 	return dateString;
 	
 }
+
+
+function finishedTutorial(element, url){
+	
+	$(element).remove();
+	
+	
+	var inputData = {};
+	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
+	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
+	
+	$.ajax({
+		
+		url:"rest/userprofile/updatetutorialstatus",
+		type: "POST",
+		async: false,
+		data: {
+            "inputData": JSON.stringify(inputData)
+        },
+        datatype: "application/json",
+		success:function(data){
+			if(data.error== null)
+				{
+				//showToastMessage("Successfully updated");
+			}else{
+				showErrorToastMessage(data.error.message);
+			}
+		},
+		error:function(data){
+			showErrorToastMessage("Error while updating tutorial status");
+		}
+	});
+	
+	window.location.href = url;
+	
+}

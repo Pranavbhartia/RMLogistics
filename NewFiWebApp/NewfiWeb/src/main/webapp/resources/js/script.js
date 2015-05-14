@@ -3,6 +3,7 @@ var neededItemListObject;
 var currentUserAndLoanOnj = new Object();
 var doPagination = false;
 var loanTypeText = "refinance";
+var  removedKnwoNewFi = false; 
 
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
@@ -50,7 +51,25 @@ function getCustomerSecondaryLeftNav() {
         "class": "lp-t2-wrapper",
         "id": "cust-sec-nav"
     });
-    var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
+    newfiObject.applicationKnowNewfi=undefined;
+    var flagKnowNewFi=true;
+    if(newfi.appUserDetails){
+        try{
+            var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+            if(tutorialStatus&&tutorialStatus==true || removedKnwoNewFi ==true){
+            	flagKnowNewFi=false;
+            }
+        }catch(e){
+
+        }
+    }
+    var step1 = "";
+    if(flagKnowNewFi){
+    	step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
+        newfiObject.applicationKnowNewfi=step1;
+    } 
+
+
     newfiObject.applicationNavTab=undefined;
     //check if user submitted application
     var flag=true;
@@ -240,7 +259,7 @@ function paintGettingToKnowPage() {
         "class": "complete-application-header"
     }).html("Getting to Know Newfi").on('click',function(){
     	
-    	var inputData = {};
+    	/*var inputData = {};
     	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
     	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
     	
@@ -263,7 +282,7 @@ function paintGettingToKnowPage() {
     		error:function(data){
     			showErrorToastMessage("Error while updating tutorial status");
     		}
-    	});
+    	});*/
     	
     });
     wrapper.append(header);
@@ -387,28 +406,34 @@ function redirectToGettingToKnowLastPage() {
 		"class" : "getting-to-know-btn float-right"
 	}).html("Enter my loan information").on('click',function(){
 		
-		window.location.href = "home.do#myLoan/my-application";
+		removedKnwoNewFi = true;
+		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
+		
 	});
 	
 	var cont2btn2 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("View more rate options").on('click',function(){
 		
-		window.location.href = "home.do#myLoan/lock-my-rate";
+		removedKnwoNewFi = true;
+		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/lock-my-rate");
+		
 	});
 	
 	var cont2btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("Check out my loan progress").on('click',function(){
 		
-		window.location.href = "home.do#myLoan/my-loan-progress";
+		removedKnwoNewFi = true;
+		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-loan-progress");
 	});
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("Talk to a loan manager").on('click',function(){
 		
-		window.location.href = "home.do#myTeam";
+		removedKnwoNewFi = true;
+		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
 	});
 	
 	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
