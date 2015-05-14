@@ -357,6 +357,7 @@
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			globalBinder();
 			$(document).on('click','.calc-nxt-btn',function(){
 				$(this).parent().hide();
 				$(this).parent().next().show();

@@ -1,6 +1,4 @@
-/*
- *Contains JavaScript functions for agent dashboard pages
- */
+
 var isAgentTypeDashboard;
 var docData = [];
 var currentLoanType = null;
