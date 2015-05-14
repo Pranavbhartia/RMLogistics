@@ -94,6 +94,9 @@ public class LoanServiceImpl implements LoanService {
 	private Utils utils;
 
 	@Autowired
+	private SendEmailService sendEmailService;
+
+	@Autowired
 	private TemplateService templateService;
 
 	@Autowired
@@ -1323,7 +1326,6 @@ public class LoanServiceImpl implements LoanService {
 	        UndeliveredEmailException {
 		LoanVO loan = getLoanByID(loanID);
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_RATES_LOCKED);
 		// We create the substitutions map
@@ -1335,16 +1337,13 @@ public class LoanServiceImpl implements LoanService {
 		                .getLockedRate().toString() : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
 
-		recipientVO.setEmailID(loan.getUser().getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 	}
 
 	@Override

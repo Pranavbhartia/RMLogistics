@@ -20,6 +20,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
@@ -32,6 +33,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 	@Autowired
 	SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	SMSServiceHelper smsServiceHelper;
 
 	@Autowired
 	LoanService loanService;
@@ -81,6 +85,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam, CommonConstants.SEND_EMAIL_TO_TEAM);
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -107,6 +112,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -135,6 +141,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -165,6 +172,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 				}
 			}
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -218,18 +226,35 @@ public class SendEmailServiceImpl implements SendEmailService {
 		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				if (teamMember.getUser() != null) {
-					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.LM
+					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
 					        .getRoleId()) {
-						recipients.add(getReceipientVO(teamMember));
-						if (teamMember.getUser().getCustomerDetail() != null
-						        && teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId() != null
-						        && !teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId().isEmpty()) {
-							recipients.add(getReceipientVO(teamMember.getUser()
-							        .getCustomerDetail().getSecEmailId(),
-							        teamMember.getUser().getFirstName(),
-							        teamMember.getUser().getLastName()));
+						if (teamMember.getUser().getInternalUserDetail() != null) {
+							if (teamMember.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO() != null) {
+								if (teamMember.getUser()
+								        .getInternalUserDetail()
+								        .getInternalUserRoleMasterVO().getId() == UserRolesEnum.LM
+								        .getRoleId()) {
+									recipients.add(getReceipientVO(teamMember));
+									if (teamMember.getUser()
+									        .getCustomerDetail() != null
+									        && teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId() != null
+									        && !teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId().isEmpty()) {
+										recipients.add(getReceipientVO(
+										        teamMember.getUser()
+										                .getCustomerDetail()
+										                .getSecEmailId(),
+										        teamMember.getUser()
+										                .getFirstName(),
+										        teamMember.getUser()
+										                .getLastName()));
+									}
+								}
+							}
 						}
 					}
 				}
@@ -238,18 +263,35 @@ public class SendEmailServiceImpl implements SendEmailService {
 		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_SALES_MANGERS)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				if (teamMember.getUser() != null) {
-					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.SM
+					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
 					        .getRoleId()) {
-						recipients.add(getReceipientVO(teamMember));
-						if (teamMember.getUser().getCustomerDetail() != null
-						        && teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId() != null
-						        && !teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId().isEmpty()) {
-							recipients.add(getReceipientVO(teamMember.getUser()
-							        .getCustomerDetail().getSecEmailId(),
-							        teamMember.getUser().getFirstName(),
-							        teamMember.getUser().getLastName()));
+						if (teamMember.getUser().getInternalUserDetail() != null) {
+							if (teamMember.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO() != null) {
+								if (teamMember.getUser()
+								        .getInternalUserDetail()
+								        .getInternalUserRoleMasterVO().getId() == UserRolesEnum.SM
+								        .getRoleId()) {
+									recipients.add(getReceipientVO(teamMember));
+									if (teamMember.getUser()
+									        .getCustomerDetail() != null
+									        && teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId() != null
+									        && !teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId().isEmpty()) {
+										recipients.add(getReceipientVO(
+										        teamMember.getUser()
+										                .getCustomerDetail()
+										                .getSecEmailId(),
+										        teamMember.getUser()
+										                .getFirstName(),
+										        teamMember.getUser()
+										                .getLastName()));
+									}
+								}
+							}
 						}
 					}
 				}
@@ -312,4 +354,31 @@ public class SendEmailServiceImpl implements SendEmailService {
 		return true;
 	}
 
+	private void sendSMS(UserVO user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
+
+	private void sendSMS(User user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
 }
