@@ -50,6 +50,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
@@ -422,6 +423,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
+	public void verifyEmail(int userId) {
+		userProfileDao.verifyEmail(userId);
+		LoanVO loan = loanService.getActiveLoanOfUser(new UserVO(userId));
+		if (loan != null && loan.getId() != 0) {
+			dismissAlert(MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
+			        loan.getId(), null);
+			// Dismiss Alert
+		}
+	}
+
+	@Override
+	@Transactional
 	public void enableUser(int userId) throws NoRecordsFetchedException {
 
 		User user = userProfileDao.findByUserId(userId);
@@ -492,8 +505,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getEmailId() });
-		String uniqueURL = baseUrl + "reset.do?reference="
-		        + user.getEmailEncryptionToken();
+		String uniqueURL = baseUrl + "verify.do?reference="
+		        + user.getEmailEncryptionToken()+"&verifyEmailPath=verifyEmail";
 
 		substitutions.put("-baseUrl-", new String[] { baseUrl });
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
@@ -1243,6 +1256,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+							createAlert(
+							        MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
+							        loanVO.getId(),
+							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);
 							loanService.createAlertForAgent(loanVO.getId());
 						}
 					}

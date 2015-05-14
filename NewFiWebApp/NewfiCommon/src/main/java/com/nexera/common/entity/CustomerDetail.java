@@ -1,7 +1,9 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +20,6 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
-import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
@@ -45,7 +46,7 @@ public class CustomerDetail implements Serializable {
 	private String secEmailId;
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
-	
+
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
@@ -56,9 +57,9 @@ public class CustomerDetail implements Serializable {
 	private String equifaxScore;
 	private String experianScore;
 	private String transunionScore;
-	
+
 	private String addressStreet;
-	
+
 	private Boolean selectedProperty;
 
 	// private CustomerSpouseDetail customerSpouseDetail;
@@ -70,9 +71,8 @@ public class CustomerDetail implements Serializable {
 	private CustomerRetirementAccountDetails customerRetirementAccountDetails;
 
 	private CustomerOtherAccountDetails customerOtherAccountDetails;
-	
-	private Boolean tutorialStatus;
 
+	private Boolean tutorialStatus;
 
 	public CustomerDetail() {
 	}
@@ -169,8 +169,6 @@ public class CustomerDetail implements Serializable {
 		this.subscriptionsStatus = subscriptionsStatus;
 	}
 
-	
-
 	@Column(name = "isselfEmployed", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getIsselfEmployed() {
@@ -245,8 +243,7 @@ public class CustomerDetail implements Serializable {
 	public void setTutorialStatus(Boolean tutorialStatus) {
 		this.tutorialStatus = tutorialStatus;
 	}
-	
-	
+
 	/*
 	 * @OneToOne(fetch = FetchType.EAGER)
 	 * 
@@ -325,13 +322,12 @@ public class CustomerDetail implements Serializable {
 			        .getProfileCompletionStatus());
 			customerDetailVO.setSecEmailId(inputEntity.getSecEmailId());
 			customerDetailVO.setSecPhoneNumber(inputEntity.getSecPhoneNumber());
-			
+
 			customerDetailVO.setLivingSince(inputEntity.getLivingSince());
 			customerDetailVO.setTransunionScore(inputEntity
 			        .getTransunionScore());
 			customerDetailVO.setEquifaxScore(inputEntity.getEquifaxScore());
 			customerDetailVO.setExperianScore(inputEntity.getExperianScore());
-
 
 			// customerDetailVO.setCustomerSpouseDetail(convertFromEntityToVO(inputEntity.getCustomerSpouseDetail()));
 			// System.out.println("inputEntity.getCustomerSpouseDetail()"+inputEntity.getCustomerEmploymentIncome());
@@ -343,7 +339,7 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO
 			        .setCustomerOtherAccountDetails(convertFromEntityToVO(inputEntity
 			                .getCustomerOtherAccountDetails()));
-			
+
 			customerDetailVO.setTutorialStatus(inputEntity.getTutorialStatus());
 
 		}
@@ -507,10 +503,11 @@ public class CustomerDetail implements Serializable {
 				                .getCustomerRetirementAccountDetails()));
 
 			}
-			
+
 			// selected Property : start
-			customerDetail.setSelectedProperty(inputEntity.getSelectedProperty());
-			
+			customerDetail.setSelectedProperty(inputEntity
+			        .getSelectedProperty());
+
 		}
 		return customerDetail;
 	}
@@ -630,8 +627,6 @@ public class CustomerDetail implements Serializable {
 		this.transunionScore = transunionScore;
 	}
 
-	
-
 	@Column(name = "address_street")
 	public String getAddressStreet() {
 		return addressStreet;
@@ -649,7 +644,5 @@ public class CustomerDetail implements Serializable {
 	public void setSelectedProperty(Boolean selectedProperty) {
 		this.selectedProperty = selectedProperty;
 	}
-	
-	
-	
+
 }

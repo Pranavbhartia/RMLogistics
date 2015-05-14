@@ -139,8 +139,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("last_name", user.getLastName());
 		query.setParameter("email_id", user.getEmailId());
 		query.setParameter("priPhoneNumber", user.getPhoneNumber());
-		query.setParameter("mobileAlertsPreference",user.getMobileAlertsPreference());
-		query.setParameter("carrierInfo", user.getCarrierInfo());		
+		query.setParameter("mobileAlertsPreference",
+		        user.getMobileAlertsPreference());
+		query.setParameter("carrierInfo", user.getCarrierInfo());
 		query.setParameter("id", user.getId());
 		int result = query.executeUpdate();
 		return result;
@@ -151,11 +152,11 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerdetail set "
-				+ "customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus "
-				+ "WHERE customerdetail.id = :id";
+		        + "customerdetail.addressCity = :city,customerdetail.addressState =:state,customerdetail.addressZipCode=:zipcode,customerdetail.dateOfBirth=:dob,customerdetail.secPhoneNumber=:secPhoneNumber,customerdetail.secEmailId=:secEmailId,customerdetail.profileCompletionStatus=:profileStatus "
+		        + "WHERE customerdetail.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("city", customerDetail.getAddressCity());
-		//query.setParameter("street", customerDetail.getAddressStreet());
+		// query.setParameter("street", customerDetail.getAddressStreet());
 		query.setParameter("state", customerDetail.getAddressState());
 		query.setParameter("zipcode", customerDetail.getAddressZipCode());
 		query.setParameter("secPhoneNumber", customerDetail.getSecPhoneNumber());
@@ -232,7 +233,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		String searchQueryCustomer = "FROM User where internalUserDetail IS NULL and status!=:status";
 		String searchQueryInternalUser = "FROM User where internalUserDetail.activeInternal!=:DELETED";
-       
+
 		Session session = sessionFactory.getCurrentSession();
 
 		Query queryCustomer = session.createQuery(searchQueryCustomer);
@@ -267,6 +268,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		else
 
 			return true;
+
+	}
+
+	@Override
+	public void verifyEmail(int userID) throws DatabaseException,
+	        HibernateException {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE User usr set usr.emailVerified = :emailVerified WHERE usr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("emailVerified", Boolean.TRUE);
+		query.setParameter("id", userID);
+		query.executeUpdate();
 
 	}
 
@@ -607,7 +620,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			List<User> availableUsers = new ArrayList<User>();
 
 			for (InternalUserStateMapping internalUser : internalUsers) {
-				if (internalUser.getUser().getInternalUserDetail()!= null) //Doing only for LM
+				if (internalUser.getUser().getInternalUserDetail() != null) // Doing
+				                                                            // only
+				                                                            // for
+				                                                            // LM
 				{
 					addIfUserIsEligible(internalUser.getUser(), availableUsers);
 				}
@@ -891,29 +907,31 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-    public InternalUserStateMapping updateInternalUserStateMapping(
-            InternalUserStateMappingVO inputVo) {
-	    
-		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+	public InternalUserStateMapping updateInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping
+		        .convertFromVOToEntity(inputVo);
 		Session session = sessionFactory.getCurrentSession();
 		session.saveOrUpdate(internalUserStateMapping);
-		
-	    return internalUserStateMapping;
-    }
+
+		return internalUserStateMapping;
+	}
 
 	@Override
-    public InternalUserStateMapping deleteInternalUserStateMapping(
-            InternalUserStateMappingVO inputVo) {
-		
-		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping.convertFromVOToEntity(inputVo);
+	public InternalUserStateMapping deleteInternalUserStateMapping(
+	        InternalUserStateMappingVO inputVo) {
+
+		InternalUserStateMapping internalUserStateMapping = InternalUserStateMapping
+		        .convertFromVOToEntity(inputVo);
 		Session session = sessionFactory.getCurrentSession();
 		session.delete(internalUserStateMapping);
-		
-	    return internalUserStateMapping;
-    }
+
+		return internalUserStateMapping;
+	}
 
 	@Override
-    public Integer updateUserStatus(User user) {
+	public Integer updateUserStatus(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE User usr set usr.status = :status WHERE usr.id = :ID";
 		Query query = session.createQuery(hql);
@@ -922,11 +940,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		int result = query.executeUpdate();
 		return result;
 
-	   
-    }
+	}
 
 	@Override
-    public Integer updateTutorialStatus(Integer id) {
+	public Integer updateTutorialStatus(Integer id) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE CustomerDetail customerDetail set customerDetail.tutorialStatus = :tutorialStatus WHERE customerDetail.id = :ID";
 		Query query = session.createQuery(hql);
@@ -934,6 +951,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		query.setParameter("tutorialStatus", true);
 		int result = query.executeUpdate();
 		return result;
-	    
-    }
+
+	}
 }

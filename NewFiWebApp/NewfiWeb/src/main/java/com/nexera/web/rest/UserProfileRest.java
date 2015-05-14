@@ -239,8 +239,12 @@ public class UserProfileRest {
 		try {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
+			if (updatePassword.isVerifyEmailPath()) {
+				LOG.info("The user is verifying his email: set his verified to true");
+				userProfileService.verifyEmail(updatePassword.getUserId());
+				LOG.info("Also dismiss alert for Verification");
+			}
 			if (passwordChanged == true) {
-
 				String emailId = updatePassword.getEmailID();
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 				        emailId, updatePassword.getNewPassword());
@@ -250,11 +254,9 @@ public class UserProfileRest {
 				SecurityContextHolder.getContext().setAuthentication(
 				        authenticatedUser);
 				// Update his login time here
-
 			}
 		} catch (InputValidationException inputValidation) {
 			throw inputValidation;
-
 		}
 
 		catch (Exception inputValidation) {

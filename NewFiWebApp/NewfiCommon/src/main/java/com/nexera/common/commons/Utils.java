@@ -343,7 +343,14 @@ public class Utils {
 		final String dateTimeString = df.format(new Date());
 		return dateTimeString;
 	}
-
+	public String getTimeInUTC(long milliSeconds)
+	{
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL,
+		        DateFormat.FULL);
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		final String dateTimeString = df.format(new Date(milliSeconds));
+		return dateTimeString;
+	}
 	public Date convertCurrentDateToUtc() {
 		Date date = new Date();
 		TimeZone timeZone = TimeZone.getDefault();

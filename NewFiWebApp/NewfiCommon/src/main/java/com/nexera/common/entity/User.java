@@ -80,6 +80,7 @@ public class User implements Serializable, UserDetails {
 
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
+	private Boolean emailVerified;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,7 +92,7 @@ public class User implements Serializable, UserDetails {
 		this.id = id;
 	}
 
-	@Column(name = "status", columnDefinition = "TINYINT")	
+	@Column(name = "status", columnDefinition = "TINYINT")
 	public int getStatus() {
 		return status;
 	}
@@ -453,7 +454,7 @@ public class User implements Serializable, UserDetails {
 
 				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
-
+			userVO.setEmailVerified(user.getEmailVerified());
 			userVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
 			if (user.getCarrierInfo() != null) {
 				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
@@ -485,8 +486,7 @@ public class User implements Serializable, UserDetails {
 		// }
 		// userModel.setPassword(userVO.getPassword());
 
-			userModel.setStatus(userVO.getStatus());
-
+		userModel.setStatus(userVO.getStatus());
 
 		userModel.setPhoneNumber(userVO.getPhoneNumber());
 		userModel.setPhotoImageUrl(userVO.getPhotoImageUrl());
@@ -506,6 +506,7 @@ public class User implements Serializable, UserDetails {
 			userModel.setRealtorDetail(RealtorDetail
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}
+		userModel.setEmailVerified(userVO.getEmailVerified());
 		userModel.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
 		if (userVO.getCarrierInfo() != null
 		        && !userVO.getCarrierInfo().isEmpty()) {
@@ -516,17 +517,21 @@ public class User implements Serializable, UserDetails {
 			}
 
 		}
-		
-		/*if (null != userVO.getInternalUserStateMappingVOs() && !userVO.getInternalUserStateMappingVOs().isEmpty()) {
-			
-			List<InternalUserStateMapping> internalUserStateMapping = new ArrayList<InternalUserStateMapping>();
-			for (InternalUserStateMappingVO internalUserStateMappingVO : userVO.getInternalUserStateMappingVOs()) {
-				internalUserStateMapping.add(InternalUserStateMapping.convertFromVOToEntity(internalUserStateMappingVO));
-			}
 
-			userModel.setInternalUserStateMappings(internalUserStateMapping);
-		}
-*/
+		/*
+		 * if (null != userVO.getInternalUserStateMappingVOs() &&
+		 * !userVO.getInternalUserStateMappingVOs().isEmpty()) {
+		 * 
+		 * List<InternalUserStateMapping> internalUserStateMapping = new
+		 * ArrayList<InternalUserStateMapping>(); for
+		 * (InternalUserStateMappingVO internalUserStateMappingVO :
+		 * userVO.getInternalUserStateMappingVOs()) {
+		 * internalUserStateMapping.add
+		 * (InternalUserStateMapping.convertFromVOToEntity
+		 * (internalUserStateMappingVO)); }
+		 * 
+		 * userModel.setInternalUserStateMappings(internalUserStateMapping); }
+		 */
 		return userModel;
 	}
 
@@ -551,6 +556,16 @@ public class User implements Serializable, UserDetails {
 
 	public void setTokenGeneratedTime(Date tokenGeneratedTime) {
 		this.tokenGeneratedTime = tokenGeneratedTime;
+	}
+
+	@Column(name = "email_verified", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(Boolean emailVerified) {
+		this.emailVerified = emailVerified;
 	}
 
 }

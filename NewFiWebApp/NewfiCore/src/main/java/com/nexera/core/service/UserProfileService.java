@@ -129,4 +129,6 @@ public interface UserProfileService {
 	        throws InvalidInputException, UndeliveredEmailException;
 
 	public void updateLoginTime(Date date, int userId);
+
+	public void verifyEmail(int userId);
 }

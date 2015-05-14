@@ -85,13 +85,19 @@ $('#changePwdForm').submit(function(event){
 	var lastName=currentUser.lastName;
 	var isSuccess=validatePassword(password,confirmPassword,firstName,lastName,"email-container");
 	showOverlay();
+	
 	if(isSuccess){
+		if (verifyEmail && verifyEmail != "")
+		{
+			changePasswordData.verifyEmailPath = true;
+		}
 		$.ajax({
 	        url: "rest/userprofile/password",
 	        type: "POST",  
 	        cache:false,
 	        data: {
-	                 "changePasswordData": JSON.stringify(changePasswordData)
+	                 "changePasswordData": JSON.stringify(changePasswordData),
+	                 
 	        },
 	        datatype: "json",
 	        success: function(data) {            
@@ -119,12 +125,14 @@ function paintForgetPasswordResponse(data){
 	}
 }
 var currentUser={};
+var verifyEmail = "verifyEmail";
 $(document).ready(function() {
 
 	currentUser.emailID="${userVO.emailId}";
     currentUser.firstName="${userVO.firstName}";
     currentUser.lastName="${userVO.lastName}";
     currentUser.userId= "${userVO.id}";
+    verifyEmail = "${verifyEmailPath}"
 
 });
 </script>
