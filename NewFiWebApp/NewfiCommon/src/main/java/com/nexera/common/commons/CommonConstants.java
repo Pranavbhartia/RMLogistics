@@ -275,6 +275,10 @@ public interface CommonConstants {
 
 	public static final String SEND_EMAIL_TO_TEAM = "team";
 
+	public static final String SEND_EMAIL_TO_LOAN_MANAGERS = "loanManagersOnly";
+
+	public static final String SEND_EMAIL_TO_SALES_MANGERS = "salesManagersOnly";
+
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
 
 }

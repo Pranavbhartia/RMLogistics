@@ -34,4 +34,7 @@ public interface SendEmailService {
 	boolean sendEmailForCustomer(EmailVO emailEntity, User user)
 	        throws InvalidInputException, UndeliveredEmailException;
 
+	boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
+	        throws InvalidInputException, UndeliveredEmailException;
+
 }
