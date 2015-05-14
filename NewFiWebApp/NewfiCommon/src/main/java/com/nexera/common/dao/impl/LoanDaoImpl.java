@@ -3,7 +3,6 @@ package com.nexera.common.dao.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -439,7 +438,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				for (LoanTeam loanTeam : team) {
 					Hibernate.initialize(loanTeam.getLoan());
 					Hibernate.initialize(loanTeam.getLoan().getUser());
-					if (loanTeam.getLoan().getUser().getInternalUserDetail() != null) {
+					if (loanTeam.getLoan().getUser() != null
+					        && loanTeam.getLoan().getUser()
+					                .getInternalUserDetail() != null) {
 
 						Hibernate.initialize(loanTeam.getLoan().getUser()
 						        .getInternalUserDetail());

@@ -35,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.MessageUtils;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
@@ -85,6 +86,7 @@ import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanAppFormService;
@@ -136,6 +138,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private LoanService loanService;
+
+	@Autowired
+	private MessageServiceHelper messageServiceHelper;
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
@@ -1235,6 +1240,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 							loanService.createAlertForAgent(loanVO.getId());
+							//code to send mail for no product found
+							boolean noProductFound=false;
+							if(teaseRateDataList.get(0)==null){
+								noProductFound=true;
+								LOG.info("loan type is NONE..................................................");
+								loanTypeMasterVO =loanVO.getLoanType(); 
+								if (loanTypeMasterVO.getId() != LoanTypeMasterEnum.NONE
+								        .getStatusId()) {
+									int loanId = loanVO.getId();
+									LOG.info(loanId + "-------------------");
+									loanService
+									        .sendNoproductsAvailableEmail(loanId);
+									messageServiceHelper
+									        .generatePrivateMessage(loanId,
+									                LoanStatus.ratesLocked,
+									                utils
+									        .getLoggedInUser(), false);
+								}
+							}
 						}
 					}
 				}

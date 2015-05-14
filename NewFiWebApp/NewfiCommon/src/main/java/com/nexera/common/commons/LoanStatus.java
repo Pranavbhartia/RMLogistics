@@ -43,4 +43,6 @@ public interface LoanStatus {
 	String paymentFailureStatusMessage = "Failure";
 
 	String ratesLocked = "Rates Locked";
+
+	String noProductFound = "Not Products Found";
 }

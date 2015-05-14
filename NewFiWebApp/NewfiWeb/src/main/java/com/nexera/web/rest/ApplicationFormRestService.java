@@ -225,7 +225,7 @@ public class ApplicationFormRestService {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
 				        .getId());
 				messageServiceHelper.generatePrivateMessage(loaAppFormVO
-				        .getLoan().getId(), LoanStatus.ratesLocked, utils
+				        .getLoan().getId(), LoanStatus.noProductFound, utils
 				        .getLoggedInUser(), false);
 			}
 		}
