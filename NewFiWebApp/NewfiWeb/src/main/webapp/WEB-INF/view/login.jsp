@@ -110,7 +110,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 				                      <div class="login-row-lc float-left">Email Address</div>
 				                      <div class="login-row-rc float-left">
 				                        <div class="login-input-cont">
-								          <input type="text" class="login-input login-input-username"
+								          <input type="text" class="login-input"
 									placeholder="Email" id="userId"> <input
 									type="hidden" id="inputEmail" name="j_username" class="hide"
 									placeholder="Email address" required autofocus>
@@ -121,7 +121,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 				                      <div class="login-row-lc float-left">Password</div>
 				                       <div class="login-row-rc float-left">
 							<div class="login-input-cont">
-								<input type="password" class="login-input login-input-pwd"
+								<input type="password" class="login-input"
 									id="password" placeholder="Password"> <input
 									type="hidden" name="j_password" id="inputPassword" class="hide">
 							</div>

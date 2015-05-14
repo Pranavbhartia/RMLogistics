@@ -32,7 +32,9 @@
 	<script src="resources/js/buyHome.js"></script>
 	<script src="resources/js/validation.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
+	<script src="resources/js/historySupport.js"></script>
 	<script>
+	globalBinder();
 		$(document).ready(function() {
 			
 			adjustCustomerEngagementPageOnResize();

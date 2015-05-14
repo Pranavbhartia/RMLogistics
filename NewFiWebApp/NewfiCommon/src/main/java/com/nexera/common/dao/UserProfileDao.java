@@ -3,6 +3,8 @@ package com.nexera.common.dao;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.HibernateException;
+
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserStateMapping;
@@ -112,5 +114,10 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateTutorialStatus(Integer id);
 
+
+	public void verifyEmail(int userID) throws DatabaseException,
+	        HibernateException;
+
 	public List<User> getAllSalesManagers();
+
 }

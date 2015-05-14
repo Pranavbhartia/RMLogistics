@@ -98,7 +98,7 @@ function paintBuyHomeQuest(appUserDetails) {
 	
 	formCompletionStatus = newfi.formCompletionStatus;
 	
-	appUserDetails.id = newfi.loanAppFormid; 
+	//appUserDetails.id = newfi.loanAppFormid; 
 
 	
 	

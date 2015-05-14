@@ -8,11 +8,19 @@ function globalBinder() {
 
 	$(document).on("click", ".lp-item", function() {
 		// TODO: Back button needs to be implemented
+		
 		console.log("Prim nav clicked : " + $.data(this, "enum").pnName);
 		saveState($.data(this, "enum").pnName, null, null);
 		removeToastMessage();
 		return true;
 	});
+	
+	$(document).on("click",".lp-t2-item",function(){
+		
+		removeToastMessage();
+	});
+	
+	
 }
 
 function globalSNBinder() {

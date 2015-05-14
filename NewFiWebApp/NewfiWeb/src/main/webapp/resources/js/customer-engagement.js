@@ -924,6 +924,31 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             success: function(data) {
             	
                hideOverlay();
+               var quesTxt = "Let us Contact You";
+               var container = $('<div>').attr({
+                   "class": "ce-rate-main-container"
+               });
+               var quesTextCont = $('<div>').attr({
+                   "class": "ce-rp-ques-text letUsContactCenter"
+               }).html(quesTxt);
+               // alert(JSON.stringify(refinanceTeaserRate));
+               container.append(quesTextCont);
+               $(parentContainer).html(container);
+               var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
+               +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
+               +"to review your options.</div>"
+
+               var createAccBtn= $('<div>').attr({
+                   "class": "rate-btn createAccButton"
+               }).html("Provide your contact information").on('click', function() {
+                   var mainContainer = paintApplyNow(teaserRateData);
+                   $('#ce-main-container').html(mainContainer);
+               });
+               $(parentContainer).append(errorText);
+               if(typeof(newfiObject)==='undefined')
+                   $(parentContainer).append(createAccBtn);
+               return
+
                /* if(data==""){
                     $(parentContainer).html("Sorry, We could not find suitable products for you!");
                 }else{*/
@@ -1275,6 +1300,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
+	globalBinder();
         $.ajax({
             url: "rest/application/applyloan",
             type: "POST",

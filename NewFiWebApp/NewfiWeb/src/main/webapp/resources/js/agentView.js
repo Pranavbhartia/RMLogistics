@@ -1,6 +1,4 @@
-/*
- *Contains JavaScript functions for agent dashboard pages
- */
+
 var isAgentTypeDashboard;
 var docData = [];
 var currentLoanType = null;
@@ -24,11 +22,13 @@ function getAgentSecondaryLeftNav() {
 		"class" : "lp-t2-wrapper",
 		"id" : "agent-sec-nav"
 	});
-
+	newfiObject.applicationNavTab=undefined;
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
-	if(!selectedUserDetail.lqbFileId)
+	if(!selectedUserDetail.lqbFileId){
 		step1 = getAgentSecondaryLeftNavStep(1, "application progress");
+		newfiObject.applicationNavTab=step1;
+	}
 	var step2 = '';
 	if (!userIsRealtor()) {
 		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");

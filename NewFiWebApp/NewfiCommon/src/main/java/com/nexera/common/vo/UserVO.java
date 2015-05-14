@@ -39,6 +39,7 @@ public class UserVO implements Serializable {
 	private Date tokenGeneratedTime;
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
+	private Boolean emailVerified;
 
 	public String getRoleName() {
 		String roleName = "NA";
@@ -303,4 +304,11 @@ public class UserVO implements Serializable {
 		this.carrierInfo = carrierInfo;
 	}
 
+	public Boolean getEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(Boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
 }

@@ -138,16 +138,15 @@ public class TemplateController extends DefaultController {
 			}
 
 			String filePathSrc = dir.getAbsolutePath() + File.separator
-			        + "1.png";
+			        + utils.randomNumber() + ".png";
 			String filePathDest = dir.getAbsolutePath() + File.separator
-			        + "2.png";
+			        + utils.randomNumber() + ".png";
 			ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
 			BufferedImage bufferedImage = ImageIO.read(bis);
 			FileOutputStream fileOuputStream = new FileOutputStream(filePathSrc);
 
 			ImageIO.write(bufferedImage, "png", fileOuputStream);
-			BufferedImage bufferedImageLocal = ImageIO.read(new File(
-			        filePathSrc));
+
 			fileOuputStream.close();
 
 			utils.resize(filePathSrc, filePathDest, resizeWidth, resizeHeight);
@@ -246,9 +245,10 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/reset.do")
+	@RequestMapping(value={"reset.do", "verify.do"})
 	public ModelAndView resetPassword(
 	        @RequestParam(value = "reference", required = false) String identifier,
+	        @RequestParam(value = "verifyEmailPath", required = false) String verifyEmailPath,
 	        HttpServletRequest request) throws InvalidInputException {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Resettting password for" + identifier);
@@ -260,15 +260,18 @@ public class TemplateController extends DefaultController {
 			int rawOffSet = clientTimeZone.getRawOffset();
 			User userDetail = userProfileService.validateRegistrationLink(
 			        identifier, rawOffSet);
-			UserVO userVO = User.convertFromEntityToVO(userDetail);
-
+			if (verifyEmailPath != null && !verifyEmailPath.isEmpty())
+			{
+				//Update the flag for Email Verified Here
+				mav.addObject("verifyEmailPath", "verifyEmail");	
+			}
 			if (userDetail == null) {
 				// Re direct to error page
 				throw new InvalidInputException("Invalid URL");
 			} else {
 				// Show him the change password page and auto login him
-
-				mav.addObject("userVO", userVO);
+				UserVO userVO = User.convertFromEntityToVO(userDetail);
+				mav.addObject("userVO", userVO);				
 				mav.setViewName("changePassword");
 			}
 		} catch (InvalidInputException invalid) {
@@ -278,6 +281,8 @@ public class TemplateController extends DefaultController {
 		}
 		return mav;
 	}
+
+	
 
 	@RequestMapping(value = "forgotPassword.do")
 	public ModelAndView showForgetPasswordPage(

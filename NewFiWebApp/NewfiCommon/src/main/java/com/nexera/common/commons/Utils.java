@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
@@ -345,7 +346,14 @@ public class Utils {
 		final String dateTimeString = df.format(new Date());
 		return dateTimeString;
 	}
-
+	public String getTimeInUTC(long milliSeconds)
+	{
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL,
+		        DateFormat.FULL);
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		final String dateTimeString = df.format(new Date(milliSeconds));
+		return dateTimeString;
+	}
 	public Date convertCurrentDateToUtc() {
 		Date date = new Date();
 		TimeZone timeZone = TimeZone.getDefault();
@@ -485,5 +493,11 @@ public class Utils {
 		 * isClipAreaAdjusted flas is usded to denote if there was any
 		 * adjustment made.
 		 */
+	}
+
+	public int randomNumber() {
+		// TODO Auto-generated method stub
+		Random randomGenerator = new Random();
+		return randomGenerator.nextInt(1000);
 	}
 }
