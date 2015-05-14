@@ -5,14 +5,22 @@
  */
 
 function globalBinder() {
-
+alert("on click");
 	$(document).on("click", ".lp-item", function() {
 		// TODO: Back button needs to be implemented
+		removeToastMessage();
 		console.log("Prim nav clicked : " + $.data(this, "enum").pnName);
 		saveState($.data(this, "enum").pnName, null, null);
-		removeToastMessage();
+		
 		return true;
 	});
+	
+	$(document).on("click",".lp-t2-item",function(){
+		alert("on click in lp click");
+		removeToastMessage();
+	});
+	
+	
 }
 
 function globalSNBinder() {

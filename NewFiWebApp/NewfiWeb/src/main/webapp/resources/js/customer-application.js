@@ -463,7 +463,7 @@ function getApplicationTextQues(question) {
 	        "value":question.value
 	    }).on("keyup", function(e){
 	          	
-	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
 					thousands:',',
 					decimal:'.',
@@ -498,7 +498,7 @@ function getApplicationTextQues(question) {
 	        "value":question.value
 	    }).on("keyup", function(e){
 	          	
-	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress') {
+	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
 					thousands:',',
 					decimal:'.',
@@ -642,15 +642,22 @@ function paintCustomerApplicationPageStep1a() {
    
     	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
     	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
+		
    
     	if(inputState==""||inputState==undefined){
     		showErrorToastMessage(stateErrorMessage);
     		return false;
-    	}else if(!cityStatus){
+    	}
+    	if(!cityStatus){
     		return false;
-    	}else if(!zipcodeStatus){
+    	}
+    	if(!zipcodeStatus){
     		return false;
-    	}   
+    	}  
+    	if(!isSuccess){
+			return false;
+		}
        if($('.ce-option-checkbox').hasClass('app-option-checked')){
     		
     	}else{
@@ -1664,7 +1671,13 @@ function getContextApplicationTextQues(contxt) {
     				});
     			}
     			
-    		});
+    		}).keypress(function(key) {
+    			if($('input[name='+question.name+']').attr('name')=="propZipCode" ||$('input[name='+question.name+']').attr('name')=="zipCode" ){
+    				
+  				  if(key.charCode < 48 || key.charCode > 57) return false;
+  			}
+  	      
+  	    });
 
     	    
     }else{
@@ -1688,7 +1701,13 @@ function getContextApplicationTextQues(contxt) {
     				});
     			}
     			
-    		});
+    		}).keypress(function(key) {
+    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ){
+    				
+    				  if(key.charCode < 48 || key.charCode > 57) return false;
+    			}
+    	      
+    	    });;
 
     	    
     }
@@ -2383,7 +2402,56 @@ $('body').on('focus',"input[name='birthday']",function(){
 		});
    
 });
+$('body').on('focus',"input[name='purchaseTime']",function(){
+	
+	 var k = e.which;
+     var ok = k >= 65 && k <= 90 || // A-Z
+         k >= 97 && k <= 122 || // a-z
+         k >= 48 && k <= 57; // 0-9
+     
+     if (!ok){
+         e.preventDefault();
+     }
 
+
+});
+
+$('body').on('keypress',"input[name='birthday']",function(e){
+
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 97 && k <= 122 || // a-z
+            k >= 48 && k <= 57; // 0-9
+        
+        if (!ok){
+            e.preventDefault();
+        }
+ 
+	});
+$('body').on('keypress',"input[name='startLivingTime']",function(e){
+
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 97 && k <= 122 || // a-z
+            k >= 48 && k <= 57; // 0-9
+        
+        if (!ok){
+            e.preventDefault();
+        }
+
+	});
+$('body').on('keypress',"input[name='startWorking']",function(e){
+
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 97 && k <= 122 || // a-z
+            k >= 48 && k <= 57; // 0-9
+        
+        if (!ok){
+            e.preventDefault();
+        }
+
+	});
 $('body').on('focus',"input[name='ssn']",function(){
 	
 	$(this).mask("***-**-****");
@@ -3510,7 +3578,7 @@ function paintCustomerApplicationPageStep5() {
     		
     	}else{
             if(yearCount<0){
-                showToastMessage("You must be at least 18 years of age.");
+                showErrorToastMessage("You must be at least 18 years of age.");
             }else
     		  showErrorToastMessage(yesyNoErrorMessage);
     	}
@@ -4275,6 +4343,7 @@ function getMonthYearTextQuestionContext(contxt) {
 
 
 function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
+	globalBinder();
 	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(!LQBFileId){
     	$.ajax({
@@ -4638,11 +4707,16 @@ function paintRefinanceStep3() {
             
              if(!questionOne){
             	 return false;
-             }else if(!questionTwo){
+             } 
+             if(!questionTwo){
             	 return false;
-             }else if(!questionThree){
+             } 
+             if(!questionThree){
             	 return false;
-             }else if(quesContxts["includeTaxes"].value==null||quesContxts["includeTaxes"].value==""){
+             } 
+             
+             if(quesContxts["includeTaxes"].value==null||quesContxts["includeTaxes"].value==""){
+            	 showErrorToastMessage(yesyNoErrorMessage);
             	 return false;
              }
 		    appUserDetails.refinancedetails=refinancedetails;

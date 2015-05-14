@@ -300,9 +300,11 @@
 	<script src="resources/js/jquery-ui.js"></script>
     <script src="resources/js/bootstrap.min.js"></script>
     <script src="resources/js/script.js"></script>
+    <script src="resources/js/include/historySupport.js"></script>
 	<script>
 			
 		$(document).ready(function(){
+			globalBinder();
 			adjustCenterPanelWidth();
 			$(window).resize(function(){
 				adjustCenterPanelWidth();

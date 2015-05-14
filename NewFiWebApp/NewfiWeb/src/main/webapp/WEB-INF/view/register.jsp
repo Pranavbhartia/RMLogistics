@@ -10,8 +10,7 @@
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
-<script src="/NewfiWeb/resources/js/historySupport.js"></script>
-<script src="/NewfiWeb/resources/js/validation.js"></script>
+
 </head>
 
 <body>
@@ -47,6 +46,8 @@
 	<script src="resources/js/common.js"></script>
 	<script src="resources/js/customer-engagement.js"></script>
 	<script src="resources/js/buyHome.js"></script>
+	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
+    <script src="/NewfiWeb/resources/js/validation.js"></script>
 	<script>
 		$(document).ready(function() {
 			globalBinder();

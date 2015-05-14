@@ -1013,7 +1013,7 @@ function paintMyLoansViewCallBack(data) {
 // function to reset slected UserdetailObject
 var selectedUserDetail;
 function resetSelectedUserDetailObject(userObject) {
-
+console.log(userObject);
 	// userObject this is a "LoanCustomerVO" object
 
 	selectedUserDetail = new Object();
@@ -1032,14 +1032,14 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.emailId = userObject.emailId;
 
 	selectedUserDetail.customerId = userObject.customerDetail.id;
-	selectedUserDetail.carrierName = userObject.customerDetail.carrierInfo;
+	selectedUserDetail.carrierName = userObject.carrierInfo;
 	selectedUserDetail.city = userObject.customerDetail.addressCity;
 	selectedUserDetail.state = userObject.customerDetail.addressState;
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
 	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
 			userObject.customerDetail.dateOfBirth));
 	selectedUserDetail.setSenderDomain = userObject.setSenderDomain;
-
+	selectedUserDetail.setMobileAlertPreference=userObject.mobileAlertsPreference;
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
@@ -2082,14 +2082,6 @@ function appendCustomerEditProfilePopUp() {
 	appendCityEditRow();
 	// appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
 	appendZipEditRow();
-	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
-			"primaryPhoneID");
-	// To append carrier info
-	appendCarrierNameDropDown();
-
-	$('#emailIdID').attr("readonly", true)
-	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
-
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -2117,13 +2109,27 @@ function appendCustomerEditProfilePopUp() {
 		});
 	});
 
-	row.append(label).append(dobInput);
+	row.append(label).append(dobInput).append(appendErrorMessage());
 	$('#cus-prof-container').append(row);
 
 	$("#dobID").addClass('prof-form-input date-picker').datepicker({
 		orientation : "top auto",
 		autoclose : true
 	});
+	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
+			"primaryPhoneID");
+
+	$('#emailIdID').attr("readonly", true)
+	// To append carrier info
+	appendCarrierNameDropDown();
+
+	//TO append mobile preference
+	appendCustomerProfEditRow("Receive SMS Alert", selectedUserDetail.setMobileAlertPreference,
+	"");
+alert( selectedUserDetail.setMobileAlertPreference+""+selectedUserDetail.carrierName);
+	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
+
+
 
 	// append save button
 	var saveBtn = $('<div>').attr({
@@ -2318,23 +2324,23 @@ function appendCarrierNameDropDown() {
 						}
 					});
 
-	if (user.customerDetail.mobileAlertsPreference) {
-		row.removeClass('hide');
-
-	}
 
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "carrier-dropdown-wrapper",
 		"class" : "carrier-dropdown-wrapper hide"
 	});
 
-	rowCol2.append(carrierinfo).append(dropDownWrapper);
+	rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
 	row.append(label).append(rowCol2);
 	$('#cus-prof-container').append(row);
 
 }
 function updateUserProfile() {
-
+	var firstname=validateFirstName("firstNameID");
+	var lastname=validateLastName("lastNameID");
+	if(!firstname || !lastname){
+		return false;
+	}
 	var userProfileJson = new Object();
 
 	userProfileJson.id = selectedUserDetail.userID;
@@ -2351,16 +2357,19 @@ function updateUserProfile() {
 	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
 
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		userProfileJson.mobileAlertsPreference = true;	
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
+		   userProfileJson.mobileAlertsPreference = false;
+		}
 	if ($('#carrierInfoID').val() != null || $('#carrierInfoID').val() != "") {
-
-		customerDetails.carrierInfo = $('#carrierInfoID').val();
+        alert($('#carrierInfoID').val());
+		userProfileJson.carrierInfo = $('#carrierInfoID').val();
 	}
+	
+	
 	userProfileJson.customerDetail = customerDetails;
-
-	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
-	// JSON.stringify(userProfileJson),function(response){});
-	if ($("#firstNameID").val() != "" && $("#lastNameID").val() != ""
-			&& $("#emailIdID").val() != "") {
+       showOverlay();
 		$.ajax({
 			url : "rest/userprofile/managerupdateprofile",
 			type : "POST",
@@ -2370,7 +2379,8 @@ function updateUserProfile() {
 			},
 			dataType : "json",
 			success : function(data) {
-
+				hideOverlay();
+				showToastMessage("Succesfully updated");
 				$("#cusProfNameTxtID").text(
 						userProfileJson.firstName + " "
 								+ userProfileJson.lastName);
@@ -2379,14 +2389,13 @@ function updateUserProfile() {
 				hideCustomerEditProfilePopUp();
 			},
 			error : function(error) {
+				hideOverlay();
 				alert("error" + error);
 			}
 		});
 
-		showToastMessage("Succesfully updated");
-	} else {
-		showErrorToastMessage("Mandatory feilds cannot be empty");
-	}
+		
+
 
 }
 
@@ -2405,15 +2414,19 @@ function hideCustomerEditProfilePopUp() {
 }
 
 function appendCustomerProfEditRow(labelTxt, value, id) {
-
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	var ErrMessage = $('<div>').attr({
+		"class" : "err-msg hide"
+	});
+    if(labelTxt!="Receive SMS Alert"){
 	var span = $('<span>').attr({
 
 		"class" : "mandatoryClass"
 	}).html("*").css("color", "red");
 
-	var row = $('<div>').attr({
-		"class" : "cust-prof-edit-row clearfix"
-	});
+	
 
 	var label = $('<div>').attr({
 		"class" : "cust-prof-edit-label float-left"
@@ -2429,8 +2442,94 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 
 	}).val(value);
 
-	row.append(label).append(inputTag);
+	row.append(label).append(inputTag).append(ErrMessage);
 	$('#cus-prof-container').append(row);
+}else{
+	var rowCol1 = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("Receive SMS Alert");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("Yes");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var rowColtext2 = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("No");
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var radioYesButton = $('<div>').attr({
+		"class" : "cust-radio-btn-yes radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDYes",		
+		
+
+	}).bind('click',function(e){
+			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');	
+			var phoneStatus=phoneNumberValidation($("#primaryPhoneID").val(),true ,"primaryPhoneID");
+		    if(!phoneStatus){
+		    	if($("#carrierInfoID").val() == ""){
+		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+		    		$('#carrierInfoID').addClass('err-input');
+		    		return false;
+		    		//showErrorToastMessage(carrierSelectmessage);
+					
+				}else{
+					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+					$('#carrierInfoID').removeClass('err-input');
+					
+				}
+		    	
+		    }else{
+		    	if($("#carrierInfoID").val() == ""){
+		    		
+		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+		    		$('#carrierInfoID').addClass('err-input');
+		    		//showErrorToastMessage(carrierSelectmessage);
+					return false;
+				}else{
+					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+					$('#carrierInfoID').removeClass('err-input');
+				}
+		    }	
+			//validatePhone('priPhoneNumberId');
+			
+	        //$('#primaryPhoneID').show();
+	});
+	
+	var radioNoButton = $('<div>').attr({
+		"class" : "cust-radio-btn-no radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDNo"
+	}).bind('click',function(e){
+		
+			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+			if(	$('#carrier-dropdown-wrapper').next('.err-msg').html()!=""){
+				$('#carrier-dropdown-wrapper').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('err-input');
+			}
+			
+	});
+	
+	if(value!=null){
+		if(value){
+			radioYesButton.addClass('radio-btn-selected');
+		}else if(!value){
+			radioNoButton.addClass('radio-btn-selected');
+		}}
+
+	
+	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
+	
+	rowCol2.append(inputCont);
+	 row.append(rowCol1).append(rowCol2);
+	 $('#cus-prof-container').append(row);
+}
+	
 }
 
 function appendCustomerProfUploadPhotoRow() {
