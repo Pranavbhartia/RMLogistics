@@ -878,8 +878,9 @@ function userIsCustomer() {
 }
 
 function hideCompleteYourProfile(){
-	
-	$('#lp-step2').remove();
+	if(newfiObject.applicationNavTab){
+		$(newfiObject.applicationNavTab).remove();
+	}
 }
 
 
