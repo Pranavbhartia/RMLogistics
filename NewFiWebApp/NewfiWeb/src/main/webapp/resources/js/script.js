@@ -276,18 +276,97 @@ function paintGettingToKnowPage() {
     
     container.append(slideShowCont);
    
+    var btnWrapper = $('<div>').attr({
+    	"class" : "slider-prev-next-btn-row clearfix"
+    });
+    
+    var prevBtn = $('<div>').attr({
+    	"class" : "slider-btn slider-prev-btn float-left"
+    }).html('Previous');
+    
+    var nextBtn = $('<div>').attr({
+    	"class" : "slider-btn slider-next-btn float-right"
+    }).html('Next');
+    
+    btnWrapper.append(prevBtn).append(nextBtn);
+    
+    container.append(btnWrapper);
     
     $('#center-panel-cont').html(wrapper).append(container);
     
     var pgwSlideshow = $('.pgwSlideshow').pgwSlideshow();
     
+    pgwSlideshow.reload({
+    	beforeSlide : function() {
+			var currentSlide = pgwSlideshow.getCurrentSlide();
+			var totalSlide = pgwSlideshow.getSlideCount();
+			if(currentSlide >= totalSlide){
+				console.log("Last Slide");
+				redirectToGettingToKnowLastPage();
+			}
+			console.log("currentSlide : " +currentSlide + ",totalSlide : "+totalSlide);
+		}
+    });
+    
+    nextBtn.click(function(){
+    	pgwSlideshow.nextSlide();
+    });
+    
+    prevBtn.click(function(){
+    	pgwSlideshow.previousSlide();
+    });
+    
 }
 
-    /*
+function redirectToGettingToKnowLastPage() {
+	var parentContainer = $('.getting-to-know-container');
+	parentContainer.html('');
+	
+	var cont1 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
+	
+	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");
+	
+	var cont1btn1 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("I need to view the tutorial again")
+	.click(function(){
+		paintGettingToKnowPage();
+	});
+	
+	cont1.append(cont1btn1);
+	
+	var cont2 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
+	
+	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");
+	
+	var cont2btn1 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Enter my loan information");
+	
+	var cont2btn2 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("View more rate options");
+	
+	var cont2btn3 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Check out my loan progress");
+	
+	var cont2btn4 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Talk to a loan manager");
+	
+	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	
+	parentContainer.append(cont1).append(cont2);
+}
 
-     * Functions for complete profile module
-
-     */
+/*
+ * Functions for complete profile module
+ */
 function paintProfileCompleteStep1(user) {
     var topHeader = getCompletYourApplicationHeader();
     var formContainer = getAboutMeDetailsWrapper(user);
