@@ -1261,7 +1261,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 							loanService.createAlertForAgent(loanVO.getId());
 							// code to send mail for no product found
 							boolean noProductFound = false;
-							if (teaseRateDataList.get(0) == null) {
+							if (null!= teaseRateDataList && teaseRateDataList.get(0) == null) {
 								noProductFound = true;
 								LOG.info("loan type is NONE..................................................");
 								loanTypeMasterVO = loanVO.getLoanType();
