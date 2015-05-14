@@ -51,7 +51,24 @@ function getCustomerSecondaryLeftNav() {
         "id": "cust-sec-nav"
     });
     var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
-    var step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
+    newfiObject.applicationNavTab=undefined;
+    //check if user submitted application
+    var flag=true;
+    if(newfi.appUserDetails){
+        try{
+            var loan=JSON.parse(newfi.appUserDetails).loan;
+            if(loan.lqbFileId&&loan.lqbFileId!=""){
+                flag=false;
+            }
+        }catch(e){
+
+        }
+    }
+    var step2 = "";
+    if(flag){
+        step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
+        newfiObject.applicationNavTab=step2;
+    } 
     var step3 = getCustomerSecondaryLeftNavStep(3, "your<br />rate options");
     var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
     var step5 = getCustomerSecondaryLeftNavStep(5, "your <br /> loan progress");
@@ -878,7 +895,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         try{
             var loanNumber = lqbData[0].loanNumber;
             loan.lqbFileId=loanNumber;  
-            hideCompleteYourProfile();
+            
      //  alert('loan Number'+loanNumber);
             appUserDetails.loan.lqbFileId = loanNumber;
             lockratedata.sLoanNumber=loanNumber;

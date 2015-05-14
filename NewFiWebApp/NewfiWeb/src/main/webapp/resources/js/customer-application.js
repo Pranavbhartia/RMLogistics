@@ -5033,7 +5033,8 @@ $.ajax({
                    }else{
                 	   if(flag)
                 		{
-                		   changeSecondaryLeftPanel(3,true);                		  
+                		   changeSecondaryLeftPanel(3,true); 
+                           hideCompleteYourProfile();               		  
                 		}
                 	   paintLockRate(ob, appUserDetails); 
                    }
