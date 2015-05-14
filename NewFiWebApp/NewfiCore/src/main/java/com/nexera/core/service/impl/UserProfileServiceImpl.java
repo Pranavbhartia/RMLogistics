@@ -514,7 +514,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-baseUrl-", new String[] { baseUrl });
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
@@ -553,7 +554,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-apr-", new String[] { teaseRateDataList.get(1)
 		        .getAPR() });
 
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You have been subscribed to Nexera");
 		emailEntity.setTokenMap(substitutions);
@@ -1257,12 +1259,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        loanVO.getId(),
 							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);
 							loanService.createAlertForAgent(loanVO.getId());
-							//code to send mail for no product found
-							boolean noProductFound=false;
-							if(teaseRateDataList.get(0)==null){
-								noProductFound=true;
+							// code to send mail for no product found
+							boolean noProductFound = false;
+							if (teaseRateDataList.get(0) == null) {
+								noProductFound = true;
 								LOG.info("loan type is NONE..................................................");
-								loanTypeMasterVO =loanVO.getLoanType(); 
+								loanTypeMasterVO = loanVO.getLoanType();
 								if (loanTypeMasterVO.getId() != LoanTypeMasterEnum.NONE
 								        .getStatusId()) {
 									int loanId = loanVO.getId();
@@ -1272,8 +1274,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 									messageServiceHelper
 									        .generatePrivateMessage(loanId,
 									                LoanStatus.ratesLocked,
-									                utils
-									        .getLoggedInUser(), false);
+									                utils.getLoggedInUser(),
+									                false);
 								}
 							}
 						}
@@ -1385,7 +1387,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		String uniqueURL = baseUrl + "reset.do?reference="
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Please reset your password");
 		emailEntity.setTokenMap(substitutions);

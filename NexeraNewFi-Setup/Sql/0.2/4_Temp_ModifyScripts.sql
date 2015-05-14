@@ -366,3 +366,10 @@ alter table customerdetails add column tutorial_status TINYINT(1)
 ALTER TABLE `newfi_schema`.`refinancedetails` 
 CHANGE COLUMN `includeTaxes` `includeTaxes` TINYINT(1) NULL DEFAULT NULL ;
 
+
+# By Rajeswari 14th May
+ALTER TABLE `newfi_schema`.`user` 
+ADD COLUMN `email_verified` TINYINT(1) NULL DEFAULT 0‏;
+
+UPDATE user SET email_verified=1 WHERE id IN (1,2);
+
