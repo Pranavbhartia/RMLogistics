@@ -3383,7 +3383,7 @@ function paintCustomerApplicationPageStep5() {
    
     var dob = "";
     if(appUserDetails.user.customerDetail.dateOfBirth != 0)
-    dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.user.customerDetail.dateOfBirth));
+    dob =makeDateFromLong(appUserDetails.user.customerDetail.dateOfBirth);
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
