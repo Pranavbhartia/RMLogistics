@@ -2718,7 +2718,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				
 				//$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 				
-				/*var removeAccBtn = $('<div>').attr({
+				var removeAccBtn = $('<div>').attr({
 					"class" : "add-btn remove-account-btn"
 				}).html("Remove Income")
 				.bind('click',{"mainContainerId":mainContainerId},function(event){
@@ -2728,9 +2728,9 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 					if(parentDiv.children('.ce-option-ques-wrapper').length==1){
 						parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 					}
-				});*/
+				});
 				
-				$(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
+				$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
 			});
 			optionsWrapper.append(addAccountBtn);
 		}

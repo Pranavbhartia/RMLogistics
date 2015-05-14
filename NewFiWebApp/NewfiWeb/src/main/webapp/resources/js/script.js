@@ -345,19 +345,31 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Enter my loan information");
+	}).html("Enter my loan information").on('click',function(){
+		
+		window.location.href = "home.do#myLoan/my-application";
+	});
 	
 	var cont2btn2 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("View more rate options");
+	}).html("View more rate options").on('click',function(){
+		
+		window.location.href = "home.do#myLoan/lock-my-rate";
+	});
 	
 	var cont2btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Check out my loan progress");
+	}).html("Check out my loan progress").on('click',function(){
+		
+		window.location.href = "home.do#myLoan/my-loan-progress";
+	});
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to a loan manager");
+	}).html("Talk to a loan manager").on('click',function(){
+		
+		window.location.href = "home.do#myTeam";
+	});
 	
 	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
 	
