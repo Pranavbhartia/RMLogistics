@@ -490,7 +490,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 		return 1;
 	}
 
-	@Transactional
+	@Override
+    @Transactional
 	public void createOrDismissNeedsAlert(int loanId) {
 		NeededItemScoreVO neededItemScoreVO = getNeededItemsScore(loanId);
 		if (neededItemScoreVO.getTotalSubmittedItem() >= neededItemScoreVO
@@ -740,12 +741,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private String getNeedsListNameById(List<Integer> needsListId) {
 		NeedsListMaster needsListMaster = null;
 		String needsName = "";
-
+		int count = 0;
 		for (int id : needsListId) {
 			needsListMaster = (NeedsListMaster) needsDao.load(
 			        NeedsListMaster.class, id);
 			if (needsListMaster != null) {
-				needsName = needsListMaster.getLabel() + " - "
+				count = count + 1;
+				needsName = count + ". " + needsListMaster.getLabel() + " - "
 				        + needsListMaster.getDescription() + "\n" + needsName;
 			}
 
