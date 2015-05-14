@@ -74,6 +74,9 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.8}")
 	private String regexPattern8;
 
+	@Value("${regex.pattern.9}")
+	private String regexPattern9;
+
 	@Autowired
 	NexeraUtility nexeraUtility;
 
@@ -138,6 +141,8 @@ public class EmailProcessor implements Runnable {
 							String userName = toAddressArray[0];
 							userName = userName.replace(
 							        CommonConstants.SENDER_DOMAIN_REGEX, "");
+							userName = userName.replace(
+							        CommonConstants.SENDER_NAME_REGEX, "");
 							if (userName.contains("@")) {
 								userName = userName.substring(0,
 								        userName.indexOf("@"));
@@ -201,6 +206,7 @@ public class EmailProcessor implements Runnable {
 						regexPatternStrings.add(regexPattern6);
 						regexPatternStrings.add(regexPattern7);
 						regexPatternStrings.add(regexPattern8);
+						regexPatternStrings.add(regexPattern9);
 						emailBody = extractMessage(emailBody,
 						        regexPatternStrings);
 

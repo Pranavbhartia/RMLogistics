@@ -8,6 +8,15 @@ public class UpdatePasswordVO implements Serializable {
 	int userId;
 	String emailID;
 	String newPassword;
+	boolean verifyEmailPath;
+
+	public boolean isVerifyEmailPath() {
+		return verifyEmailPath;
+	}
+
+	public void setVerifyEmailPath(boolean verifyEmailPath) {
+		this.verifyEmailPath = verifyEmailPath;
+	}
 
 	public String getEmailID() {
 		return emailID;

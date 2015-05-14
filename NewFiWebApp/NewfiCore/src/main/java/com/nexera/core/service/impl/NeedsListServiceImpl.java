@@ -714,12 +714,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_INITIAL_NEEDS_LIST_SET);
 				// We create the substitutions map
 				Map<String, String[]> substitutions = new HashMap<String, String[]>();
+
 				substitutions.put("-name-", new String[] { loanVO.getUser()
 				        .getFirstName() });
 				substitutions.put("-listofitems-",
 				        new String[] { getNeedsListNameById(addedList) });
 				substitutions.put("-url-", new String[] { baseUrl });
-				emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 				emailEntity.setSubject("You Initial Needs List Are Set");
 				emailEntity.setTokenMap(substitutions);
@@ -740,14 +742,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private String getNeedsListNameById(List<Integer> needsListId) {
 		NeedsListMaster needsListMaster = null;
 		String needsName = "";
-		int count = 0;
+		int count = needsListId.size();
 		for (int id : needsListId) {
 			needsListMaster = (NeedsListMaster) needsDao.load(
 			        NeedsListMaster.class, id);
 			if (needsListMaster != null) {
-				count = count + 1;
 				needsName = count + ". " + needsListMaster.getLabel() + " - "
 				        + needsListMaster.getDescription() + "\n" + needsName;
+				count = count - 1;
 			}
 
 		}
@@ -772,7 +774,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 		substitutions.put("-listofitems-",
 		        new String[] { getNeedsListNameById(addedList)
 		                + getNeedsListNameById(removedList) });
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You Needs list has been updated");
 		emailEntity.setTokenMap(substitutions);

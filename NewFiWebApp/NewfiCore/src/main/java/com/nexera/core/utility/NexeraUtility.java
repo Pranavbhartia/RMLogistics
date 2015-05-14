@@ -366,44 +366,44 @@ public class NexeraUtility {
 			document.close();
 
 		} catch (Exception e) {
-			
-			
+
 			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
 			throw new FatalException("Cannot convert image to PDF");
-		}finally{
-			if(fss!= null){
+		} finally {
+			if (fss != null) {
 				try {
-	                fss.close();
-                } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-                }
+					fss.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			if(in != null){
+			if (in != null) {
 				try {
-	                in.close();
-                } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-                }
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-	
+
 		}
 		return filepath;
 
 	}
 
-	public void deleteFileFolderFromLocalDirectory(File file){
-		if(file.exists()){
-			File dir=new File(file.getAbsolutePath().replaceAll(file.getName(), ""));
+	public void deleteFileFolderFromLocalDirectory(File file) {
+		if (file.exists()) {
+			File dir = new File(file.getAbsolutePath().replaceAll(
+			        file.getName(), ""));
 			file.delete();
-			if(dir.isDirectory()){
+			if (dir.isDirectory()) {
 				dir.delete();
 			}
-			
+
 		}
 	}
-	
+
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		String uniqueId = uuidString();
@@ -796,7 +796,7 @@ public class NexeraUtility {
 		Email email = new Email();
 		String subject = "Exception Occured";
 		email.setText(exceptionMessage);
-		email.setFrom(CommonConstants.SENDER_EMAIL_ID);
+		email.setFrom("support" + CommonConstants.SENDER_EMAIL_ID);
 		email.setSubject(subject);
 		email.setTo(tos);
 		sendGridEmailService.sendExceptionEmail(email);
