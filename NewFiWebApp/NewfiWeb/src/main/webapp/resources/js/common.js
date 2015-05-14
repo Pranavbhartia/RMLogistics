@@ -928,11 +928,11 @@ function  makeDateFromDatePicker (datePickerID){
 	var dayPicked = $("#"+datePickerID).datepicker('getDate').getDate();
 	var monthPicked = $("#"+datePickerID).datepicker('getDate').getMonth();
 	var yearPicked = $("#"+datePickerID).datepicker('getDate').getFullYear();
-	var myDate1 = new Date(Date.UTC(yearPicked,monthPicked,dayPicked));
+	var myDate1 = new Date(yearPicked,monthPicked,dayPicked);
 	console.log("myDate" + myDate1);
-	var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
-	
-	return myDate;
+	//var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
+	myDate1=myDate1.getTime();
+	return myDate1;
 	
 }
 

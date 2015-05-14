@@ -1,7 +1,8 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -311,8 +312,17 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO.setAddressState(inputEntity.getAddressState());
 			customerDetailVO.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
-				customerDetailVO.setDateOfBirth(inputEntity.getDateOfBirth()
-				        .getTime());
+				Date dat = inputEntity.getDateOfBirth();
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				String dateString = format.format(dat);
+				format.setTimeZone(TimeZone.getTimeZone("UTC"));
+				try {
+					customerDetailVO.setDateOfBirth(format.parse(dateString)
+					        .getTime());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				// if the date of birth id null then ??
 				customerDetailVO.setDateOfBirth(null);
