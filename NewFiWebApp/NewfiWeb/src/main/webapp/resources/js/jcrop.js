@@ -1,7 +1,7 @@
 var width_red = 400;
 var height_red = 400;
 var ratio = 1;
-var selected_x = 50, selected_y = 50, selected_h = 100, selected_w = 100;
+var selected_x = 50, selected_y = 0, selected_h = 100, selected_w = 100;
 
 function initiateJcrop(input) {
 
@@ -155,10 +155,16 @@ function createUploadPhotoContent() {
 				if (isNaN(selected_y)) {
 					selected_y = 50;
 				}
+				if (isNaN(selected_w)) {
+					selected_w = 100;
+				}
+				if (isNaN(selected_h)) {
+					selected_h = 100;
+				}
 				formData.append("selected_x", Math.round(selected_x));
 				formData.append("selected_y", Math.round(selected_y));
-				formData.append("selected_w", selected_w);
-				formData.append("selected_h", selected_h);
+				formData.append("selected_w", Math.round(selected_w));
+				formData.append("selected_h", Math.round(selected_h));
 
 				formData.append("userid", userid);
 				showOverlay();
