@@ -47,66 +47,69 @@ public class RateCalculatorRestService {
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
 
+
 	@Autowired
 	LqbInterface lqbCacheInvoker;
 
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
-	public @ResponseBody String getTeaserRate(String teaseRate) {
+	public @ResponseBody
+	String getTeaserRate(String teaseRate) {
 		Gson gson = new Gson();
-		LOG.info("findteaseratevalue - inout xml is" + teaseRate);
-		TeaserRateVO teaserRateVO = gson.fromJson(teaseRate, TeaserRateVO.class);
-		LOG.info("teaserRateVO" + teaserRateVO.getCity());
-		LOG.info("teaserRateVO" + teaserRateVO.getCurrentAddress());
-		LOG.info("teaserRateVO" + teaserRateVO.getCurrentMortgageBalance());
-		LOG.info("teaserRateVO" + teaserRateVO.getCashTakeOut());
-		LOG.info("teaserRateVO" + teaserRateVO.getCreditscore());
+		String lockRateData = null;
+		try {
+			LOG.info("findteaseratevalue - inout xml is" + teaseRate);
+			TeaserRateVO teaserRateVO = gson.fromJson(teaseRate,
+			        TeaserRateVO.class);
+			LOG.info("teaserRateVO" + teaserRateVO.getCity());
+			LOG.info("teaserRateVO" + teaserRateVO.getCurrentAddress());
+			LOG.info("teaserRateVO" + teaserRateVO.getCurrentMortgageBalance());
+			LOG.info("teaserRateVO" + teaserRateVO.getCashTakeOut());
+			LOG.info("teaserRateVO" + teaserRateVO.getCreditscore());
 
-		// String requestXML = CreateXmlForTeaserRate(teaserRateVO);
-		// LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
-		// List<TeaserRateResponseVO> teaserRateResponseVO =
-		// invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
-		JSONObject jsonObject = createMapforJson(teaserRateVO);
-		String lqbResponse = lqbCacheInvoker.invokeRest(CreateTeaserRateJson(
-		        jsonObject, "RunQuickPricer").toString());
-		List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-
-		LOG.info("Json resonse returned to JSP is"
-		        + gson.toJson(teaserRateList));
-		return gson.toJson(teaserRateList);
+			// String requestXML = CreateXmlForTeaserRate(teaserRateVO);
+			// LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
+			// List<TeaserRateResponseVO> teaserRateResponseVO =
+			// invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
+			JSONObject jsonObject = createMapforJson(teaserRateVO);
+			String lqbResponse = lqbCacheInvoker
+			        .invokeRest(CreateTeaserRateJson(jsonObject,
+			                "RunQuickPricer").toString());
+			List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+			lockRateData = gson.toJson(teaserRateList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			lockRateData = "error";
+		}
+		
+		LOG.info("Json resonse returned to JSP is" + lockRateData);
+		return lockRateData;
 	}
 
 	private JSONObject createMapforJson(TeaserRateVO teaserRateVO) {
-		
-		
-		    
-		    
-		    
-		    
+
 		String loanAmount;
 		String loanPurpose;
 		String shopperCounty = "";
 		String stateFromAPI = "";
-		String sOccTPe="";
-		String subPropType="";
-		String loanType="";
-		
-		
-	 if(teaserRateVO.getPropertyType()!=null){
-			sOccTPe= teaserRateVO.getResidenceType();
-			}
-		
-		if(teaserRateVO.getResidenceType()!=null){
-						
-					if("1".equalsIgnoreCase(teaserRateVO.getPropertyType())){
-						
-						subPropType = "2";
-					}else if("2".equalsIgnoreCase(teaserRateVO.getPropertyType())){
-						subPropType="8";
-					}else{
-					      subPropType ="0";
-					}				
+		String sOccTPe = "";
+		String subPropType = "";
+		String loanType = "";
+
+		if (teaserRateVO.getPropertyType() != null) {
+			sOccTPe = teaserRateVO.getResidenceType();
 		}
-		
+
+		if (teaserRateVO.getResidenceType() != null) {
+
+			if ("1".equalsIgnoreCase(teaserRateVO.getPropertyType())) {
+
+				subPropType = "2";
+			} else if ("2".equalsIgnoreCase(teaserRateVO.getPropertyType())) {
+				subPropType = "8";
+			} else {
+				subPropType = "0";
+			}
+		}
 
 		if ("".equalsIgnoreCase(teaserRateVO.getCurrentMortgageBalance())
 		        && "".equalsIgnoreCase(teaserRateVO.getCashTakeOut())) {
@@ -115,8 +118,6 @@ public class RateCalculatorRestService {
 			LOG.info("setting hardcoded calue for loan amount ");
 		}
 
-		
-		
 		if ("REFCO".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
 			loanAmount = Integer.parseInt(unformatCurrencyField(teaserRateVO
@@ -129,28 +130,30 @@ public class RateCalculatorRestService {
 			        .getCurrentMortgageBalance());
 		}
 
-		
-		if(teaserRateVO.getLoanType() != null){
+		if (teaserRateVO.getLoanType() != null) {
 			loanType = teaserRateVO.getLoanType();
-			if("PUR".equalsIgnoreCase(loanType)){
-				if(teaserRateVO.getPurchaseDetails()!=null){
-					
-					loanAmount =	""+Integer.parseInt(unformatCurrencyField(teaserRateVO.getPurchaseDetails().getLoanAmount()));
-					
-					
+			if ("PUR".equalsIgnoreCase(loanType)) {
+				if (teaserRateVO.getPurchaseDetails() != null) {
+
+					loanAmount = ""
+					        + Integer
+					                .parseInt(unformatCurrencyField(teaserRateVO
+					                        .getPurchaseDetails()
+					                        .getLoanAmount()));
+
 				}
-				
+
 			}
-			}
-		
+		}
+
 		if ("REFCO".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
 			loanPurpose = "2";
 			LOG.info("Inside loan purpose " + loanPurpose);
-		} else if("REFLMP".equalsIgnoreCase(teaserRateVO.getRefinanceOption()) || "REFMF".equalsIgnoreCase(teaserRateVO.getRefinanceOption())){
+		} else if ("REFLMP".equalsIgnoreCase(teaserRateVO.getRefinanceOption())
+		        || "REFMF".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 			loanPurpose = "1";
-		}
-		else {
+		} else {
 			loanPurpose = "0";
 			LOG.info("Inside loan purpose " + loanPurpose);
 		}
@@ -179,7 +182,8 @@ public class RateCalculatorRestService {
 		}
 
 		HashMap<String, String> hashmap = new HashMap<String, String>();
-		hashmap.put("homeWorthToday", unformatCurrencyField(teaserRateVO.getHomeWorthToday()));
+		hashmap.put("homeWorthToday",
+		        unformatCurrencyField(teaserRateVO.getHomeWorthToday()));
 		hashmap.put("loanAmount", loanAmount);
 		hashmap.put("stateFromAPI", stateFromAPI);
 		hashmap.put("city", shopperCounty);
@@ -187,7 +191,7 @@ public class RateCalculatorRestService {
 		hashmap.put("OccType", sOccTPe);
 		hashmap.put("subPropType", subPropType);
 		hashmap.put("loanPurpose", loanPurpose);
-		
+
 		JSONObject jsonObject = new JSONObject(hashmap);
 		return jsonObject;
 	}
@@ -318,7 +322,7 @@ public class RateCalculatorRestService {
 	private String unformatCurrencyField(String field) {
 		if (null == field)
 			return "";
-		field=field.replaceAll("[$,]", "");
+		field = field.replaceAll("[$,]", "");
 		return field;
 	}
 
