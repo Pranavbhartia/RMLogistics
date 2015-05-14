@@ -1,6 +1,11 @@
 
 var message = "Invalid Entry";
-
+function appendMessage(data){
+	var errMessageDiv=$('<div>').attr({
+		"class":"cust-prof-err-mess"	
+		}).html(data);
+	return errMessageDiv;
+}
 
 
 function appendErrorMessage(){
