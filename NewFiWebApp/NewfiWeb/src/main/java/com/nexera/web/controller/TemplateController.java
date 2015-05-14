@@ -138,16 +138,15 @@ public class TemplateController extends DefaultController {
 			}
 
 			String filePathSrc = dir.getAbsolutePath() + File.separator
-			        + "1.png";
+			        + utils.randomNumber() + ".png";
 			String filePathDest = dir.getAbsolutePath() + File.separator
-			        + "2.png";
+			        + utils.randomNumber() + ".png";
 			ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
 			BufferedImage bufferedImage = ImageIO.read(bis);
 			FileOutputStream fileOuputStream = new FileOutputStream(filePathSrc);
 
 			ImageIO.write(bufferedImage, "png", fileOuputStream);
-			BufferedImage bufferedImageLocal = ImageIO.read(new File(
-			        filePathSrc));
+
 			fileOuputStream.close();
 
 			utils.resize(filePathSrc, filePathDest, resizeWidth, resizeHeight);

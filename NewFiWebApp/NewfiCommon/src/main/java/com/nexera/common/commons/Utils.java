@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
@@ -485,5 +486,11 @@ public class Utils {
 		 * isClipAreaAdjusted flas is usded to denote if there was any
 		 * adjustment made.
 		 */
+	}
+
+	public int randomNumber() {
+		// TODO Auto-generated method stub
+		Random randomGenerator = new Random();
+		return randomGenerator.nextInt(1000);
 	}
 }
