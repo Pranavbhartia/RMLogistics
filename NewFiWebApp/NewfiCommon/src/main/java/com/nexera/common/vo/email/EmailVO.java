@@ -23,11 +23,12 @@ public class EmailVO {
 	private String senderName;
 	private boolean isTemplateBased;
 	private String templateId;
+	private String CC;
 	private Map<String, String[]> substitutionsMap;
 	private ByteArrayOutputStream attachmentStream;
 
 	public List<EmailRecipientVO> getRecipients() {
-		if(recipients==null){
+		if (recipients == null) {
 			return Collections.EMPTY_LIST;
 		}
 		return recipients;
@@ -77,7 +78,7 @@ public class EmailVO {
 		this.isTemplateBased = isTemplateBased;
 	}
 
-	public String getTemplateId(){
+	public String getTemplateId() {
 		return templateId;
 	}
 
@@ -117,15 +118,21 @@ public class EmailVO {
 		this.attachmentStream = attachmentStream;
 	}
 
+	public String getCC() {
+		return CC;
+	}
+
+	public void setCC(String cC) {
+		CC = cC;
+	}
+
 	@Override
-    public String toString() {
-	    return "EmailVO [recipients=" + recipients + ", subject=" + subject
-	            + ", body=" + body + ", senderEmailId=" + senderEmailId
-	            + ", senderName=" + senderName + ", isTemplateBased="
-	            + isTemplateBased + ", templateName=" + templateId
-	            + ", tokenMap=" + substitutionsMap + "]";
-    }
-	
-	
+	public String toString() {
+		return "EmailVO [recipients=" + recipients + ", subject=" + subject
+		        + ", body=" + body + ", senderEmailId=" + senderEmailId
+		        + ", senderName=" + senderName + ", isTemplateBased="
+		        + isTemplateBased + ", templateName=" + templateId
+		        + ", tokenMap=" + substitutionsMap + "]";
+	}
 
 }

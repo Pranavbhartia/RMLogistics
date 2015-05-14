@@ -117,7 +117,17 @@ public class EmailProcessor implements Runnable {
 						        fromAddressString.indexOf(">")).trim();
 					User uploadedByUser = userProfileService
 					        .findUserByMail(fromAddressString);
-					String toAddressString = toAddress[0].toString();
+					String toAddressString = null;
+					for (Address address : toAddress) {
+						if ((address.toString()).contains("NewFi Team")) {
+							toAddressString = address.toString();
+						}
+
+					}
+					if (toAddressString == null) {
+						toAddressString = toAddress[0].toString();
+					}
+
 					String messageId = null;
 					String loanId = null;
 					if (toAddressString != null) {
@@ -285,8 +295,9 @@ public class EmailProcessor implements Runnable {
 
 			}
 		}
-		if (cleanedMessage == null)
+		if (cleanedMessage == null) {
 			cleanedMessage = originalMessage;
+		}
 		return cleanedMessage;
 	}
 
