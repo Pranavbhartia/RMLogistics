@@ -74,6 +74,8 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			} else if (user.getStatus() == 0) {
 				throw new DisabledException(
 				        DisplayMessageConstants.USER_INACTIVE);
+			} else if (user.getEmailVerified() != null
+			        && !user.getEmailVerified() && !isShopper) {
 				throw new DisabledException("First time login");
 			}
 			authenticationService.validateUser(user, password);
