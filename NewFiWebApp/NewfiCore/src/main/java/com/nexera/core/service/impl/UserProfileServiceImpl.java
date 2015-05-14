@@ -489,7 +489,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private void sendNewUserEmail(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
-		String subject = "You have been subscribed to Nexera";
+		String subject = "Welcome to newfi";
 		EmailVO emailEntity = new EmailVO();
 
 		Template template = null;

@@ -59,8 +59,10 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
 			User userFromTable = userProfileService.findUserByMail(username);
+
 			if (userFromTable != null
-			        && userFromTable.getLastLoginDate() == null && !isShopper) {
+			        && userFromTable.getEmailVerified() != null
+			        && !userFromTable.getEmailVerified() && !isShopper) {
 				throw new DisabledException("First time login");
 			}
 			user = authenticationService.getUserWithLoginName(username,
@@ -72,7 +74,6 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			} else if (user.getStatus() == 0) {
 				throw new DisabledException(
 				        DisplayMessageConstants.USER_INACTIVE);
-			} else if (user.getLastLoginDate() == null && !isShopper) {
 				throw new DisabledException("First time login");
 			}
 			authenticationService.validateUser(user, password);
@@ -92,8 +93,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			throw new UsernameNotFoundException(
 			        "Please enter valid credentials");
 		} catch (InvalidInputException e) {
-			throw new BadCredentialsException(
-			        "Please enter valid credentials");
+			throw new BadCredentialsException("Please enter valid credentials");
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;
