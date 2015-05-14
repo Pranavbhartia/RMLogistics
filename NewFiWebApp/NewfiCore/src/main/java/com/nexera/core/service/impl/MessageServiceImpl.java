@@ -24,6 +24,7 @@ import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.EmailRecipientTypeEnum;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.MessageHierarchyVO;
@@ -32,6 +33,7 @@ import com.nexera.common.vo.MessageVO;
 import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.MessageVO.MessageUserVO;
 import com.nexera.common.vo.UserRoleNameImageVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
@@ -40,6 +42,7 @@ import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.service.MessageService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.mongo.service.MongoCoreMessageService;
 
 @Component
@@ -56,6 +59,9 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	TemplateService templateService;
+
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Autowired
 	MongoCoreMessageService mongoMessageService;
@@ -143,6 +149,18 @@ public class MessageServiceImpl implements MessageService {
 		// Set the subject as New note taken in the system
 		emailVO.setSubject(CommonConstants.NOTE_SUBJECT);
 
+		if (messagesVO.getCreatedUser() != null) {
+			UserVO user = null;
+			try {
+				user = userProfileService.findUser(messagesVO.getCreatedUser()
+				        .getUserID());
+			} catch (DatabaseException e) {
+				LOG.error("Exception caught " + e.getMessage());
+			}
+			if (user != null) {
+				emailVO.setCC(user.getEmailId());
+			}
+		}
 		// Set reply to as the messageId of mongomessageId
 		emailVO.setSenderEmailId(utils.generateMessageIdFromAddress(
 		        mongoMessageId, messagesVO.getLoanId()));
