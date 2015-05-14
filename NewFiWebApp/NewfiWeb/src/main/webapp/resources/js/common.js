@@ -21,6 +21,12 @@ function removeToastMessage(){
 
 }
 
+function removeParticularToastMessage(ElementID){
+
+	$(document).on('blur',ElementID,function(){
+		removeToastMessage();
+	});
+}
 function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,completeCallback , showOverlayText){
 	if(showOverlayText){
 		showOverleyMessage(showOverlayText);
@@ -878,8 +884,9 @@ function userIsCustomer() {
 }
 
 function hideCompleteYourProfile(){
-	
-	$('#lp-step2').remove();
+	if(newfiObject.applicationNavTab){
+		$(newfiObject.applicationNavTab).remove();
+	}
 }
 
 

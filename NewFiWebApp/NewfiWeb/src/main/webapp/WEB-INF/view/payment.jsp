@@ -30,9 +30,9 @@
 	</div>
 </div>
 
-
+<script src="resources/js/include/historySupport.js"></script>
 <script type="text/javascript">
-	
+	globalBinder();
 	$(document).ready(function() {
 		error = '${error}';
 		if(error != 1){

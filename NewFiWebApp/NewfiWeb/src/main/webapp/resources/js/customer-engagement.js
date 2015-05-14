@@ -1275,6 +1275,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
+	globalBinder();
         $.ajax({
             url: "rest/application/applyloan",
             type: "POST",
