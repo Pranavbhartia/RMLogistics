@@ -184,7 +184,7 @@ function appendChangePasswordContainer(userDetails){
 	   }
 	   else
 	   {
-		   alert(userDetails.emailVerified);
+		   
 			lqbWrapper.append(lqbHeader).append(appendMessage("Please verify your email before changing  password"));
 			
 		}
