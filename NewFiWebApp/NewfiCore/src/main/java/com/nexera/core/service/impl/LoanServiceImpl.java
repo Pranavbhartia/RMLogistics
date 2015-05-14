@@ -137,9 +137,6 @@ public class LoanServiceImpl implements LoanService {
 	@Autowired
 	private NotificationService notificationService;
 
-	@Autowired
-	private SendEmailService sendEmailService;
-
 	@Value("${profile.url}")
 	private String systemBaseUrl;
 
@@ -1366,7 +1363,7 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setSubject("No Products Available");
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
-			
+
 			try {
 				sendEmailService.sendEmailForCustomer(emailEntity, loanId);
 			} catch (InvalidInputException e) {
@@ -1374,27 +1371,22 @@ public class LoanServiceImpl implements LoanService {
 			} catch (UndeliveredEmailException e) {
 				LOG.error("Mail send failed--" + e);
 			}
-			
+
 			EmailVO loanManagerEmailEntity = new EmailVO();
 			Template loanManagerTemplate = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
 			// We create the substitutions map
 			Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
-			loanManagerSubstitutions.put(
-			        "-customername-",
-			        new String[] { loan.getUser()
-			                .getFirstName() });
+			loanManagerSubstitutions.put("-customername-", new String[] { loan
+			        .getUser().getFirstName() });
 			loanManagerEmailEntity
 			        .setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
-			loanManagerEmailEntity
-			        .setSenderName(CommonConstants.SENDER_NAME);
-			loanManagerEmailEntity
-			        .setSubject("No Products Available");
+			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
+			loanManagerEmailEntity.setSubject("No Products Available");
 			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 			loanManagerEmailEntity
-			        .setTemplateId(loanManagerTemplate
-			                .getValue());
-			
+			        .setTemplateId(loanManagerTemplate.getValue());
+
 			try {
 				sendEmailService.sendEmailForLoanManagers(
 				        loanManagerEmailEntity, loanId);
