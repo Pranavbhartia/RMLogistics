@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +89,32 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
+	public boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
+	        throws InvalidInputException, UndeliveredEmailException {
+		LoanVO loanVO = loanService.getLoanByID(loanId);
+		if (loanVO != null) {
+			LoanTeamListVO loanTeam = loanService
+			        .getLoanTeamListForLoan(loanVO);
+			List<EmailRecipientVO> emailRecipientList = getEmailRecipientVOList(
+			        loanVO, loanTeam,
+			        CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS);
+			if (emailRecipientList == null) {
+				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
+				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+			} else if (emailRecipientList.isEmpty()) {
+				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
+				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+			}
+			emailEntity.setRecipients(emailRecipientList);
+			sendGridEmailService.sendAsyncMail(emailEntity);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	@Override
 	public boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId)
 	        throws InvalidInputException, UndeliveredEmailException {
 		LoanVO loanVO = loanService.getLoanByID(loanId);
@@ -98,6 +125,14 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = getEmailRecipientVOList(
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_INTERNAL_USERS);
+			if (emailRecipientList == null) {
+				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
+				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+			} else if (emailRecipientList.isEmpty()) {
+				emailRecipientList = getEmailRecipientVOList(loanVO, loanTeam,
+				        CommonConstants.SEND_EMAIL_TO_SALES_MANGERS);
+			}
+
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
 			return true;
@@ -117,6 +152,18 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_CUSTOMER_ONLY);
 			emailEntity.setRecipients(emailRecipientList);
+			if (emailEntity.getTokenMap() == null) {
+				Map<String, String[]> substitutions = emailEntity.getTokenMap();
+				if (!substitutions.containsKey("-name-")) {
+					if (loanVO.getUser() != null) {
+						substitutions.put("-name-", new String[] { loanVO
+						        .getUser().getFirstName()
+						        + " "
+						        + loanVO.getUser().getLastName() });
+					}
+
+				}
+			}
 			sendGridEmailService.sendAsyncMail(emailEntity);
 			return true;
 		} else {
@@ -152,6 +199,46 @@ public class SendEmailServiceImpl implements SendEmailService {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				if (teamMember.getUser() != null) {
 					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
+					        .getRoleId()) {
+						recipients.add(getReceipientVO(teamMember));
+						if (teamMember.getUser().getCustomerDetail() != null
+						        && teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId() != null
+						        && !teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId().isEmpty()) {
+							recipients.add(getReceipientVO(teamMember.getUser()
+							        .getCustomerDetail().getSecEmailId(),
+							        teamMember.getUser().getFirstName(),
+							        teamMember.getUser().getLastName()));
+						}
+					}
+				}
+			}
+		} else if (sendTo
+		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS)) {
+			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
+				if (teamMember.getUser() != null) {
+					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.LM
+					        .getRoleId()) {
+						recipients.add(getReceipientVO(teamMember));
+						if (teamMember.getUser().getCustomerDetail() != null
+						        && teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId() != null
+						        && !teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId().isEmpty()) {
+							recipients.add(getReceipientVO(teamMember.getUser()
+							        .getCustomerDetail().getSecEmailId(),
+							        teamMember.getUser().getFirstName(),
+							        teamMember.getUser().getLastName()));
+						}
+					}
+				}
+			}
+		} else if (sendTo
+		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_SALES_MANGERS)) {
+			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
+				if (teamMember.getUser() != null) {
+					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.SM
 					        .getRoleId()) {
 						recipients.add(getReceipientVO(teamMember));
 						if (teamMember.getUser().getCustomerDetail() != null
