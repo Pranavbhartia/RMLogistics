@@ -584,7 +584,7 @@ function updateLMDetails() {
 
 	var firstname=validateFirstName("firstNameId");
 	var lastname=validateLastName("lastNameId");
-	if(!firstname && !lastname){
+	if(!firstname || !lastname){
 		return false;
 	}
 	var userProfileJson = new Object();
@@ -1821,16 +1821,26 @@ if(customerStatus!=false){
 		$('#'+elementId).addClass('err-input');
 	//showErrorToastMessage("Phone field cannot be empty");
 	return false;
+	}else{
+		if(!regex.test(phoneNo)) {
+			$('#'+elementId).next('.err-msg').html("Invalid phone number").show();
+			$('#'+elementId).addClass('err-input');
+			//showErrorToastMessage("Invalid phone number");
+			validationFails = true;
+			return false;
+		}
+			$('#'+elementId).next('.err-msg').html('');
+			$('#'+elementId).removeClass('err-input');
+			return true;
+	
 	}
-	if(!regex.test(phoneNo)) {
-		$('#'+elementId).next('.err-msg').html("Invalid phone number").show();
-		$('#'+elementId).addClass('err-input');
-		//showErrorToastMessage("Invalid phone number");
-		validationFails = true;
-		return false;
-	}
+	
+}else{
+	$('#'+elementId).next('.err-msg').html('');
+	$('#'+elementId).removeClass('err-input');
+	return true;
 }
-return true;
+
 }
 //END of changes
 function getPhone2Row(user) {
@@ -2003,6 +2013,13 @@ $(document).on('blur','#secPhoneNumberId',function(){
 	if(!validateFormField("secPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
 		isProfileFormValid = false;
 	}
+});
+$(document).on('click',function(){
+
+	if($("#carrierInfoID").val()!=""||$("#carrierInfoID").val()!=null){
+		removeParticularToastMessage("#carrierInfoID");
+	}
+
 });
 
 function validateProfileForm(){

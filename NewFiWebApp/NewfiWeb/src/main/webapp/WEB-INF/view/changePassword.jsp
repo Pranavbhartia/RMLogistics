@@ -12,7 +12,7 @@
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
-<script src="/NewfiWeb/resources/js/historySupport.js"></script>
+
 
 </head>
 <body>
@@ -49,6 +49,7 @@
 	<script src="resources/js/script.js"></script>
 	<script src="resources/js/profile.js"></script>
 	<script src="resources/js/validation.js"></script>
+	<script src="resources/js/historySupport.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	
 </body>

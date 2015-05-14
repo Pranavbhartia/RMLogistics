@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,11 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
+import com.nexera.core.service.UserProfileService;
 
 @Component
 public class SendEmailServiceImpl implements SendEmailService {
@@ -31,6 +34,12 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 	@Autowired
 	SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Autowired
 	LoanService loanService;
@@ -80,6 +89,32 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam, CommonConstants.SEND_EMAIL_TO_TEAM);
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	@Override
+	public boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
+	        throws InvalidInputException, UndeliveredEmailException {
+		LoanVO loanVO = loanService.getLoanByID(loanId);
+		if (loanVO != null) {
+			LoanTeamListVO loanTeam = loanService
+			        .getLoanTeamListForLoan(loanVO);
+			List<EmailRecipientVO> emailRecipientList = getEmailRecipientVOList(
+			        loanVO, loanTeam,
+			        CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS);
+			if (emailRecipientList == null) {
+				emailRecipientList = getAllSalesManagers();
+			} else if (emailRecipientList.isEmpty()) {
+				emailRecipientList = getAllSalesManagers();
+			}
+			emailEntity.setRecipients(emailRecipientList);
+			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -98,8 +133,15 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = getEmailRecipientVOList(
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_INTERNAL_USERS);
+			if (emailRecipientList == null) {
+				emailRecipientList = getAllSalesManagers();
+			} else if (emailRecipientList.isEmpty()) {
+				emailRecipientList = getAllSalesManagers();
+			}
+
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -117,7 +159,20 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam,
 			        CommonConstants.SEND_EMAIL_TO_CUSTOMER_ONLY);
 			emailEntity.setRecipients(emailRecipientList);
+			if (emailEntity.getTokenMap() == null) {
+				Map<String, String[]> substitutions = emailEntity.getTokenMap();
+				if (!substitutions.containsKey("-name-")) {
+					if (loanVO.getUser() != null) {
+						substitutions.put("-name-", new String[] { loanVO
+						        .getUser().getFirstName()
+						        + " "
+						        + loanVO.getUser().getLastName() });
+					}
+
+				}
+			}
 			sendGridEmailService.sendAsyncMail(emailEntity);
+			sendSMS(loanVO.getUser());
 			return true;
 		} else {
 			return false;
@@ -167,6 +222,43 @@ public class SendEmailServiceImpl implements SendEmailService {
 					}
 				}
 			}
+		} else if (sendTo
+		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS)) {
+			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
+				if (teamMember.getUser() != null) {
+					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
+					        .getRoleId()) {
+						if (teamMember.getUser().getInternalUserDetail() != null) {
+							if (teamMember.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO() != null) {
+								if (teamMember.getUser()
+								        .getInternalUserDetail()
+								        .getInternalUserRoleMasterVO().getId() == UserRolesEnum.LM
+								        .getRoleId()) {
+									recipients.add(getReceipientVO(teamMember));
+									if (teamMember.getUser()
+									        .getCustomerDetail() != null
+									        && teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId() != null
+									        && !teamMember.getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId().isEmpty()) {
+										recipients.add(getReceipientVO(
+										        teamMember.getUser()
+										                .getCustomerDetail()
+										                .getSecEmailId(),
+										        teamMember.getUser()
+										                .getFirstName(),
+										        teamMember.getUser()
+										                .getLastName()));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		} else if (sendTo.equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_TEAM)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				recipients.add(getReceipientVO(teamMember));
@@ -184,6 +276,22 @@ public class SendEmailServiceImpl implements SendEmailService {
 		}
 
 		return recipients;
+	}
+
+	private List<EmailRecipientVO> getAllSalesManagers() {
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		List<User> salesManagers = userProfileService.geAllSalesManagers();
+		for (User user : salesManagers) {
+			recipients.add(getReceipientVO(user));
+		}
+		return recipients;
+
+	}
+
+	public EmailRecipientVO getReceipientVO(User user) {
+
+		return getReceipientVO(user.getEmailId(), user.getFirstName(),
+		        user.getLastName());
 	}
 
 	public EmailRecipientVO getReceipientVO(LoanTeamVO teamMember) {
@@ -225,4 +333,31 @@ public class SendEmailServiceImpl implements SendEmailService {
 		return true;
 	}
 
+	private void sendSMS(UserVO user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
+
+	private void sendSMS(User user) {
+		if (user != null) {
+			if (user.getPhoneNumber() != null
+			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
+				if (user.getCarrierInfo() != null) {
+					LOG.info("Sending SMS "
+					        + Long.valueOf(user.getPhoneNumber()));
+					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
+					        Long.valueOf(user.getPhoneNumber()));
+				}
+			}
+		}
+	}
 }

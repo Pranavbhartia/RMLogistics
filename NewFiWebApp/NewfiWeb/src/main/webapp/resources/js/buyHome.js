@@ -366,7 +366,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         cache:false,
         success: function(data) {
         	hideOverlay();
-            if(data.error||data==""){
+            if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
                 var quesTxt = "Let us Contact You";
                 var container = $('<div>').attr({
                     "class": "ce-rate-main-container"
@@ -405,7 +405,14 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             // alert(JSON.stringify(refinanceTeaserRate));
             container.append(quesTextCont);
             $(parentContainer).html(container);
-            paintFixYourRatePageCEP(JSON.parse(data), teaserRateData, parentContainer, hideCreateAccountBtn);
+            var ob;
+            try{
+                ob=JSON.parse(data);
+            }catch(exception){
+                ob={};
+                console.log("Invalid Data");
+            }
+            paintFixYourRatePageCEP(ob, teaserRateData, parentContainer, hideCreateAccountBtn);
             clearOverlayMessage();
         },
         error: function() {

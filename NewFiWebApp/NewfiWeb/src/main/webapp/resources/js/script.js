@@ -51,7 +51,24 @@ function getCustomerSecondaryLeftNav() {
         "id": "cust-sec-nav"
     });
     var step1 = getCustomerSecondaryLeftNavStep(1, "Getting to know newfi");
-    var step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
+    newfiObject.applicationNavTab=undefined;
+    //check if user submitted application
+    var flag=true;
+    if(newfi.appUserDetails){
+        try{
+            var loan=JSON.parse(newfi.appUserDetails).loan;
+            if(loan.lqbFileId&&loan.lqbFileId!=""){
+                flag=false;
+            }
+        }catch(e){
+
+        }
+    }
+    var step2 = "";
+    if(flag){
+        step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
+        newfiObject.applicationNavTab=step2;
+    } 
     var step3 = getCustomerSecondaryLeftNavStep(3, "your<br />rate options");
     var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
     var step5 = getCustomerSecondaryLeftNavStep(5, "your <br /> loan progress");
@@ -117,77 +134,100 @@ function showCustomerLoanPage(user,callback) {
 
 
 function changeSecondaryLeftPanel(secondary,doNothing) {
-		    clearOverlayMessage();
-			scrollToTop();
-	        secondary = parseInt(secondary);
-	        $('.lp-t2-item').removeClass('t2-active');
-	        $('.lp-t2-item .arrow-right').remove();
-	        $('#lp-step' + secondary).addClass('t2-active');
-	        var rightArrow = $('<div>').attr({
-	            "class": "arrow-right"
-	        });
-	        $('#lp-step' + secondary).append(rightArrow);
-	        $('#center-panel-cont').html('');
-	        if (secondary == 1) {
-	            // getting to know newfi page
-	        	paintGettingToKnowPage();
-	        } else if (secondary == 2) {
-	            var userId=newfiObject.user.id;
-	            getAppDetailsForUser(userId,function(appUserDetailsTemp){
-                    if(!appUserDetailsTemp.loan.lqbFileId){
-                        paintCustomerApplicationPage();
-                    }else{
-                    	hideCompleteYourProfile();
-                        $('#center-panel-cont').html("Application already submitted.");
-                    }
-	            });
-	            //paintSelecedOption();
-	        } else if (secondary == 3) {
-	            // fix your rate page
-	        	 if(!doNothing){
+    clearOverlayMessage();
+	scrollToTop();
+    secondary = parseInt(secondary);
+    $('.lp-t2-item').removeClass('t2-active');
+    $('.lp-t2-item .arrow-right').remove();
+    $('#lp-step' + secondary).addClass('t2-active');
+    var rightArrow = $('<div>').attr({
+        "class": "arrow-right"
+    });
+    $('#lp-step' + secondary).append(rightArrow);
+    $('#center-panel-cont').html('');
+    if (secondary == 1) {
+        // getting to know newfi page
+    	paintGettingToKnowPage();
+    } else if (secondary == 2) {
+    	var userId=newfiObject.user.id;
+        getAppDetailsForUser(userId,function(appUserDetailsTemp){
+            if(!appUserDetailsTemp.loan.lqbFileId){
+                paintCustomerApplicationPage();
+            }else{
+            	hideCompleteYourProfile();
+            	paintApplicationAlreadySubmittedPage();
+            }
+        });
+        //paintSelecedOption();
+    } else if (secondary == 3) {
+        // fix your rate page
+    	 if(!doNothing){
 /*	                var userId=selectedUserDetail==undefined?newfiObject.user.id:selectedUserDetail.id;
 	                getAppDetailsForUser(userId,function(appUserDetails){
 	                   createLoan(appUserDetails)
 	                });*/
 
-                    var userId=newfiObject.user.id;
-                    getAppDetailsForUser(userId,function(appUserDetailsTemp){
-                    	
-                        var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
-                        if(LQBFileId){
-                            if(appUserDetailsTemp.loan.isRateLocked){
-                                fixAndLoakYourRatePage2(undefined, appUserDetailsTemp);
-                               
-                                
-                            }else{
-                                paintFixYourRatePage();
-                            }
-                         
-                        }else{
-                            //code to Paint teaser rate page
-                        	if(JSON.parse(newfiObject.appUserDetails).loanType.description !="None"){
-                            paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);}
-                        	else{
-                        		showToastMessage("Please fill the application path ");
-                        		window.location.href ="./home.do#myLoan/my-application";
-                        		return false;
-                        	}
-                        }
-                    
-                    } , "This can take a minute,<br/> we are looking for the best rate options available.");
-                   
-	             //showToastMessage("Please Complete Your Application first");
-	            }else{
-	                
-	            }
-	        } else if (secondary == 4) {
-	            // upload need items
-	            uploadNeededItemsPage();
-	        } else if (secondary == 5) {
-	            // loan progress
-	            paintCustomerLoanProgressPage();
-	        }
-	    }
+            var userId=newfiObject.user.id;
+            getAppDetailsForUser(userId,function(appUserDetailsTemp){
+            	
+                var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+                if(LQBFileId){
+                    if(appUserDetailsTemp.loan.isRateLocked){
+                        fixAndLoakYourRatePage2(undefined, appUserDetailsTemp);
+                       
+                        
+                    }else{
+                        paintFixYourRatePage();
+                    }
+                 
+                }else{
+                    //code to Paint teaser rate page
+                	if(JSON.parse(newfiObject.appUserDetails).loanType.description !="None"){
+                    paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);}
+                	else{
+                		showToastMessage("Please fill the application path ");
+                		window.location.href ="./home.do#myLoan/my-application";
+                		return false;
+                	}
+                }
+            
+            } , "This can take a minute,<br/> we are looking for the best rate options available.");
+           
+         //showToastMessage("Please Complete Your Application first");
+        }else{
+            
+        }
+    } else if (secondary == 4) {
+        // upload need items
+        uploadNeededItemsPage();
+    } else if (secondary == 5) {
+        // loan progress
+        paintCustomerLoanProgressPage();
+    }
+}
+
+//Function to paint the application page once the application is submitted
+function paintApplicationAlreadySubmittedPage() {
+	$('#center-panel-cont').html("<div class='complete-application-header'>Application already submitted.</div>");
+	
+	var descText = $('<div>').attr({
+		"class" : "app-completed-text"
+	}).html("Congratulations! Based on the information you provided, you have been pre-qualified for a newfi loan. Here's what next:");
+	
+	var btn1 = $('<div>').attr({
+		"class" : "getting-to-know-btn margin-0-auto"
+	}).html("View my pre-qualification letter");
+	
+	var btn2 = $('<div>').attr({
+		"class" : "getting-to-know-btn margin-0-auto"
+	}).html("View my rate options");
+	
+	var btn3 = $('<div>').attr({
+		"class" : "getting-to-know-btn margin-0-auto"
+	}).html("Talk to a loan manager");
+	
+	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
+}
 
 /*
  * Function to paint the getting to know newfi page on customer login
@@ -276,18 +316,97 @@ function paintGettingToKnowPage() {
     
     container.append(slideShowCont);
    
+    var btnWrapper = $('<div>').attr({
+    	"class" : "slider-prev-next-btn-row clearfix"
+    });
+    
+    var prevBtn = $('<div>').attr({
+    	"class" : "slider-btn slider-prev-btn float-left"
+    }).html('Previous');
+    
+    var nextBtn = $('<div>').attr({
+    	"class" : "slider-btn slider-next-btn float-right"
+    }).html('Next');
+    
+    btnWrapper.append(prevBtn).append(nextBtn);
+    
+    container.append(btnWrapper);
     
     $('#center-panel-cont').html(wrapper).append(container);
     
     var pgwSlideshow = $('.pgwSlideshow').pgwSlideshow();
     
+    pgwSlideshow.reload({
+    	beforeSlide : function() {
+			var currentSlide = pgwSlideshow.getCurrentSlide();
+			var totalSlide = pgwSlideshow.getSlideCount();
+			if(currentSlide >= totalSlide){
+				console.log("Last Slide");
+				redirectToGettingToKnowLastPage();
+			}
+			console.log("currentSlide : " +currentSlide + ",totalSlide : "+totalSlide);
+		}
+    });
+    
+    nextBtn.click(function(){
+    	pgwSlideshow.nextSlide();
+    });
+    
+    prevBtn.click(function(){
+    	pgwSlideshow.previousSlide();
+    });
+    
 }
 
-    /*
+function redirectToGettingToKnowLastPage() {
+	var parentContainer = $('.getting-to-know-container');
+	parentContainer.html('');
+	
+	var cont1 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
+	
+	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");
+	
+	var cont1btn1 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("I need to view the tutorial again")
+	.click(function(){
+		paintGettingToKnowPage();
+	});
+	
+	cont1.append(cont1btn1);
+	
+	var cont2 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
+	
+	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");
+	
+	var cont2btn1 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Enter my loan information");
+	
+	var cont2btn2 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("View more rate options");
+	
+	var cont2btn3 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Check out my loan progress");
+	
+	var cont2btn4 = $('<div>').attr({
+		"class" : "getting-to-know-btn float-right"
+	}).html("Talk to a loan manager");
+	
+	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	
+	parentContainer.append(cont1).append(cont2);
+}
 
-     * Functions for complete profile module
-
-     */
+/*
+ * Functions for complete profile module
+ */
 function paintProfileCompleteStep1(user) {
     var topHeader = getCompletYourApplicationHeader();
     var formContainer = getAboutMeDetailsWrapper(user);
@@ -776,7 +895,7 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         try{
             var loanNumber = lqbData[0].loanNumber;
             loan.lqbFileId=loanNumber;  
-            hideCompleteYourProfile();
+            
      //  alert('loan Number'+loanNumber);
             appUserDetails.loan.lqbFileId = loanNumber;
             lockratedata.sLoanNumber=loanNumber;

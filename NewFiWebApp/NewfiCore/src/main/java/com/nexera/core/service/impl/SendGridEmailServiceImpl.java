@@ -168,6 +168,9 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		email.addTo(recipientEmailIdsList
 		        .toArray(new String[recipientEmailIdsList.size()]));
 
+		if (emailEntity.getCC() != null) {
+			email.setCc(new String[] { emailEntity.getCC() });
+		}
 		email.setFrom(emailEntity.getSenderEmailId());
 		email.setFromName(emailEntity.getSenderName());
 		email.setSubject(emailEntity.getSubject());

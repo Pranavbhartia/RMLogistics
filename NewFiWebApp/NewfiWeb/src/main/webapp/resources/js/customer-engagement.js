@@ -909,20 +909,10 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         stages = 7;
         progressBaar(7);
         delete sessionStorage.refinaceData;
-        var quesTxt = "Loan Rates and Fees";
-        var container = $('<div>').attr({
-            "class": "ce-rate-main-container"
-        });
-        var quesTextCont = $('<div>').attr({
-            "class": "ce-rp-ques-text"
-        }).html(quesTxt);
-        // alert(JSON.stringify(refinanceTeaserRate));
-        container.append(quesTextCont);
-        $(parentContainer).html(container);
+       
         
         showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
         showOverlay();
-        
         $.ajax({
             url: "rest/calculator/findteaseratevalue",
             type: "POST",
@@ -962,6 +952,34 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                /* if(data==""){
                     $(parentContainer).html("Sorry, We could not find suitable products for you!");
                 }else{*/
+                    if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
+                        var quesTxt = "Let us Contact You";
+                        var container = $('<div>').attr({
+                            "class": "ce-rate-main-container"
+                        });
+                        var quesTextCont = $('<div>').attr({
+                            "class": "ce-rp-ques-text letUsContactCenter"
+                        }).html(quesTxt);
+                        // alert(JSON.stringify(refinanceTeaserRate));
+                        container.append(quesTextCont);
+                        $(parentContainer).html(container);
+                        var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
+                        +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
+                        +"to review your options.</div>"
+
+                        var createAccBtn= $('<div>').attr({
+                            "class": "rate-btn createAccButton"
+                        }).html("Provide your contact information").on('click', function() {
+                            var mainContainer = paintApplyNow(teaserRateData);
+                            $('#ce-main-container').html(mainContainer);
+                        });
+                        $(parentContainer).append(errorText);
+                        if(typeof(newfiObject)==='undefined')
+                            $(parentContainer).append(createAccBtn);
+                        return
+                    }
+
+
                     var ob;
                     try{
                         ob=JSON.parse(data);
@@ -969,6 +987,17 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                         ob={};
                         console.log("Invalid Data");
                     }
+                    var quesTxt = "Loan Rates and Fees";
+                    var container = $('<div>').attr({
+                        "class": "ce-rate-main-container"
+                    });
+                    var quesTextCont = $('<div>').attr({
+                        "class": "ce-rp-ques-text"
+                    }).html(quesTxt);
+                    // alert(JSON.stringify(refinanceTeaserRate));
+                    container.append(quesTextCont);
+                    $(parentContainer).html(container);
+
                    // alert('createLoan data is '+data)
                     paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
                     clearOverlayMessage();
@@ -1082,74 +1111,74 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     		$(".reg-input-cont.reg-fname").addClass('err-input').focus();
 			//showErrorToastMessage("Firstname cannot be empty");
 			return;
-	}else{
-		$('input[name="fname"]').next('.err-msg').hide();
-		$(".reg-input-cont.reg-fname").removeClass('err-input');
-	}
- if($('input[name="lname"]').val()==""){
-		$('input[name="lname"]').next('.err-msg').html("Last name cannot be empty").show();
-		$(".reg-input-cont.reg-lname").addClass('err-input').focus();
-			//showErrorToastMessage("LastName cannot be empty");
-			return;
-	}else{
-		$('input[name="lname"]').next('.err-msg').hide();
-		$(".reg-input-cont.reg-lname").removeClass('err-input');
-	}
- if($('input[name="email"]').val()==""){
-		$('input[name="email"]').next('.err-msg').html("Email cannot be empty").show();
-		$(".reg-input-cont.reg-email").addClass('err-input').focus();
-		//showErrorToastMessage("Email cannot be empty");
-		return;
-	}else{
-		$('input[name="email"]').next('.err-msg').hide();
-		$(".reg-input-cont.reg-email").removeClass('err-input');
-	}
- if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
-		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!regex.test($('input[name="email"]').val())) {
-        	$('input[name="email"]').next('.err-msg').html("Incorrect Email ID").show();
-    		$(".reg-input-cont.reg-email").addClass('err-input').focus();
-        //showErrorToastMessage("Incorrect Email");
-		return;
+    	}else{
+    		$('input[name="fname"]').next('.err-msg').hide();
+    		$(".reg-input-cont.reg-fname").removeClass('err-input');
+    	}
+        if($('input[name="lname"]').val()==""){
+        	$('input[name="lname"]').next('.err-msg').html("Last name cannot be empty").show();
+        	$(".reg-input-cont.reg-lname").addClass('err-input').focus();
+        		//showErrorToastMessage("LastName cannot be empty");
+        		return;
+        }else{
+        	$('input[name="lname"]').next('.err-msg').hide();
+        	$(".reg-input-cont.reg-lname").removeClass('err-input');
+        }
+        if($('input[name="email"]').val()==""){
+        	$('input[name="email"]').next('.err-msg').html("Email cannot be empty").show();
+        	$(".reg-input-cont.reg-email").addClass('err-input').focus();
+        	//showErrorToastMessage("Email cannot be empty");
+        	return;
         }else{
         	$('input[name="email"]').next('.err-msg').hide();
-    		$(".reg-input-cont.reg-email").removeClass('err-input');
+        	$(".reg-input-cont.reg-email").removeClass('err-input');
         }
-	}
+        if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
+        	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test($('input[name="email"]').val())) {
+            	$('input[name="email"]').next('.err-msg').html("Incorrect Email ID").show();
+        		$(".reg-input-cont.reg-email").addClass('err-input').focus();
+            //showErrorToastMessage("Incorrect Email");
+        	return;
+            }else{
+            	$('input[name="email"]').next('.err-msg').hide();
+        		$(".reg-input-cont.reg-email").removeClass('err-input');
+            }
+        }
         var appUserInput = new Object();
         var refinancedetails = new Object();
         var propertyTypeMaster = new Object();
         var purchaseDetails = new Object();
         var user = new Object();
 
-        var selectedLqbData ={};
-        var initValueSet ={}
+        var selectedLqbData =undefined;
+        var initValueSet =undefined;
         if(closingCostHolder){
             selectedLqbData = closingCostHolder.valueSet;
             initValueSet = closingCostHolder.initValueSet;
         }
-        
+
         var teaseRateDataList=[];
         teaseRateDataList.push(initValueSet);
         teaseRateDataList.push(selectedLqbData);
-        
+
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
         appUserInput.emailQuote = emailQuote;
-        
+
         loanType = {};
         loanType.loanTypeCd = inputCustomerDetails.loanType;
         appUserInput.loanType = loanType;
-        
-        
-        	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
-	        		inputCustomerDetails.isIncludeTaxes = true;
-	        	}else if(inputCustomerDetails.isIncludeTaxes=="No"||inputCustomerDetails.isIncludeTaxes==false){
-	        		inputCustomerDetails.isIncludeTaxes = false;
-	        	}
-        
-        
+            
+            
+    	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
+        	inputCustomerDetails.isIncludeTaxes = true;
+        }else if(inputCustomerDetails.isIncludeTaxes=="No"||inputCustomerDetails.isIncludeTaxes==false){
+        	inputCustomerDetails.isIncludeTaxes = false;
+        }
+            
+            
         if(appUserInput.loanType.loanTypeCd === 'REF'){
         	
         	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
@@ -1176,24 +1205,24 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         }else{
         	
             //purchaseDetails
-         purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
-   		 purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
-   		 var loanAmount = getFloatValue(inputCustomerDetails.purchaseDetails.housePrice) -getFloatValue(inputCustomerDetails.currentMortgageBalance);
-   		 purchaseDetails.loanAmount = loanAmount;
-   		 purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
-   		 purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
-   		 purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
+            purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
+            purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
+            var loanAmount = getFloatValue(inputCustomerDetails.purchaseDetails.housePrice) -getFloatValue(inputCustomerDetails.currentMortgageBalance);
+            purchaseDetails.loanAmount = loanAmount;
+            purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
+            purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
+            purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
 
-   		 appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
-   		 appUserInput.purchaseDetails =purchaseDetails;
+            appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
+            appUserInput.purchaseDetails =purchaseDetails;
 
-         propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
-         propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
-         propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
-         propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
-         
-         appUserInput.propertyTypeMaster = propertyTypeMaster;
-        }   
+            propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
+            propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
+            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
+            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
+
+            appUserInput.propertyTypeMaster = propertyTypeMaster;
+        }
         appUserInput.user = user; 
         console.log(appUserInput);
        // Where livingSituation should goes 
@@ -1271,6 +1300,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
+	globalBinder();
         $.ajax({
             url: "rest/application/applyloan",
             type: "POST",

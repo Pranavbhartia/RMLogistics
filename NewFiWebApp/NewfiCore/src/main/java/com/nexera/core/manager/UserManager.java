@@ -1,7 +1,5 @@
 package com.nexera.core.manager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +19,8 @@ import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.utility.NexeraUtility;
@@ -42,6 +40,9 @@ public class UserManager implements Runnable {
 
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	private SendEmailService sendEmailService;
 
 	private User user;
 
@@ -108,7 +109,6 @@ public class UserManager implements Runnable {
 	private void sendUserInActiveEMail() throws InvalidInputException,
 	        UndeliveredEmailException {
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
 		// We create the substitutions map
@@ -117,23 +117,19 @@ public class UserManager implements Runnable {
 		        + user.getLastName() });
 
 		substitutions.put("-url-", new String[] { baseUrl });
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, user);
 	}
 
 	private void sendPasswordNotUpdatedEmail(User user)
 	        throws InvalidInputException, UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
-		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED);
 		// We create the substitutions map
@@ -145,16 +141,13 @@ public class UserManager implements Runnable {
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 
-		recipientVO.setEmailID(user.getEmailId());
-		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
-		        .asList(recipientVO)));
 		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendGridEmailService.sendMail(emailEntity);
+		sendEmailService.sendEmailForCustomer(emailEntity, user);
 	}
 
 	public User getUser() {

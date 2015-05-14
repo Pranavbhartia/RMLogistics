@@ -1,7 +1,7 @@
 var width_red = 400;
 var height_red = 400;
 var ratio = 1;
-var selected_x = 50, selected_y = 50, selected_h = 100, selected_w = 100;
+var selected_x = 50, selected_y = 0, selected_h = 100, selected_w = 100;
 
 function initiateJcrop(input) {
 
@@ -74,6 +74,10 @@ function updatePreview(c) {
 	 * canvas.height));
 	 */
 	var ctx = canvas.getContext("2d");
+	console.log('ratio'+ratio);
+	
+		ratio =1;
+	
 	canvas.width = c.w;
 	canvas.height = c.h;
 	console.log(c.x / ratio + " " + c.y / ratio + " " + c.w / ratio + " " + c.h
@@ -81,7 +85,7 @@ function updatePreview(c) {
 	selected_x = Math.round(c.x / ratio);
 	selected_y =Math.round( c.y / ratio);
 	selected_w = Math.round(c.w / ratio);
-	selected_h = Math.round(c.w / ratio);
+	selected_h = Math.round(c.h / ratio);
 
 	ctx.drawImage(imageObj, c.x / ratio, c.y / ratio, c.w / ratio, c.h / ratio,
 			0, 0, canvas.width, canvas.height);
@@ -145,22 +149,33 @@ function createUploadPhotoContent() {
 				var userid = document.getElementById("prof-image").name;
 
 				var formData = new FormData();
-				formData.append("imageBase64", dataurl);
-
-				formData.append("imageFileName",
-						$('#prof-image').prop("files")[0].name);
+				
 				if (isNaN(selected_x)) {
 					selected_x = 50;
 				}
 				if (isNaN(selected_y)) {
 					selected_y = 50;
 				}
+				if (isNaN(selected_w)) {
+					selected_w = 100;
+				}
+				if (isNaN(selected_h)) {
+					selected_h = 100;
+				}
 				formData.append("selected_x", Math.round(selected_x));
 				formData.append("selected_y", Math.round(selected_y));
-				formData.append("selected_w", selected_w);
-				formData.append("selected_h", selected_h);
+				formData.append("selected_w", Math.round(selected_w));
+				formData.append("selected_h", Math.round(selected_h));
+				formData.append("width", Math.round($('#pu-img').width()));
+				formData.append("height", Math.round($('#pu-img').height()));
+				
+				console.log(formData);
 
 				formData.append("userid", userid);
+				formData.append("imageBase64", dataurl);
+
+				formData.append("imageFileName",
+						$('#prof-image').prop("files")[0].name);
 				showOverlay();
 				$
 						.ajax({

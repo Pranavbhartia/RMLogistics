@@ -953,4 +953,26 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		return result;
 
 	}
+
+	@Override
+	public List<User> getAllSalesManagers() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+
+		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		criteria.createAlias("internalUserDetail", "userDetail");
+		criteria.createAlias("userDetail.internaUserRoleMaster", "role");
+		criteria.add(Restrictions.eq("role.id",
+		        InternalUserRolesEum.SM.getRoleId()));
+		List<User> users = criteria.list();
+		if (users == null || users.isEmpty()) {
+			LOG.error("This cannot happen, there has to be a sales manager in the system ");
+			// TODO: Write to error table and email
+			return null;
+
+		}
+		return users;
+
+	}
+
 }

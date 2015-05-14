@@ -120,6 +120,12 @@ public class TemplateController extends DefaultController {
 			int selectedW = Integer.parseInt(req.getParameter("selected_w"));
 			int selectedH = Integer.parseInt(req.getParameter("selected_h"));
 
+			int resizeWidth = Integer.parseInt(req.getParameter("width"));
+			int resizeHeight = Integer.parseInt(req.getParameter("height"));
+
+			LOG.debug("Selected co-ordinates for cropping: x: " + selectedX
+			        + " y: " + selectedY + " h: " + selectedH + " w: "
+			        + selectedW);
 			// BASE64Decoder decoder = new BASE64Decoder();
 			// byte[] decodedBytes = decoder.decodeBuffer(imageBase64
 			// .substring("data:image/png;base64,".length()));
@@ -132,20 +138,24 @@ public class TemplateController extends DefaultController {
 			}
 
 			String filePathSrc = dir.getAbsolutePath() + File.separator
-			        + "1.png";
+			        + utils.randomNumber() + ".png";
+			String filePathDest = dir.getAbsolutePath() + File.separator
+			        + utils.randomNumber() + ".png";
 			ByteArrayInputStream bis = new ByteArrayInputStream(decodedBytes);
 			BufferedImage bufferedImage = ImageIO.read(bis);
 			FileOutputStream fileOuputStream = new FileOutputStream(filePathSrc);
+
 			ImageIO.write(bufferedImage, "png", fileOuputStream);
-			BufferedImage bufferedImageLocal = ImageIO.read(new File(
-			        filePathSrc));
+
 			fileOuputStream.close();
 
+			utils.resize(filePathSrc, filePathDest, resizeWidth, resizeHeight);
 			String filePath = dir.getAbsolutePath() + File.separator
 			        + imageFileName;
 
-			BufferedImage croppedImage = utils.cropMyImage(bufferedImageLocal,
-			        selectedW, selectedH, selectedX, selectedY);
+			BufferedImage resized = ImageIO.read(new File(filePathDest));
+			BufferedImage croppedImage = utils.cropMyImage(resized, selectedW,
+			        selectedH, selectedX, selectedY);
 			fileOuputStream = new FileOutputStream(filePath);
 			ImageIO.write(croppedImage, "png", fileOuputStream);
 			fileOuputStream.close();
