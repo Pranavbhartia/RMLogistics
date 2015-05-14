@@ -830,13 +830,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		if (insertFileCount > 0) {
 			LOG.debug("New Files have been inserted ");
 			emailVO.setTemplateId(template.getValue());
-			sendEmail(emailVO, loan);
+			// sendEmail(emailVO, loan);
 		}
 
 		if (removeFileCount > 0) {
 			LOG.debug("Files have been removed ");
 			emailVO.setTemplateId(template.getValue());
-			sendEmail(emailVO, loan);
+			// sendEmail(emailVO, loan);
 		}
 	}
 

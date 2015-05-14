@@ -108,7 +108,7 @@ public class ShopperRegistrationController {
 			throw new FatalException("User could not be registered ");
 		}
 
-		return profileUrl + "home.do#myLoan/lock-my-rate";
+		return profileUrl + "home.do#myLoan/myTeam";
 	}
 
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)

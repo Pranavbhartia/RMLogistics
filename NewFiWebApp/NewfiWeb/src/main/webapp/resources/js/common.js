@@ -928,11 +928,11 @@ function  makeDateFromDatePicker (datePickerID){
 	var dayPicked = $("#"+datePickerID).datepicker('getDate').getDate();
 	var monthPicked = $("#"+datePickerID).datepicker('getDate').getMonth();
 	var yearPicked = $("#"+datePickerID).datepicker('getDate').getFullYear();
-	var myDate1 = new Date(Date.UTC(yearPicked,monthPicked,dayPicked));
+	var myDate1 = new Date(yearPicked,monthPicked,dayPicked);
 	console.log("myDate" + myDate1);
-	var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
-	
-	return myDate;
+	//var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
+	myDate1=myDate1.getTime();
+	return myDate1;
 	
 }
 
@@ -951,5 +951,41 @@ function  makeDate ( dateString){
 function  makeDateFromLong ( dateLong){	
 	var dateString = ""+(new Date(dateLong).getUTCMonth()+1)+"/"+ new Date(dateLong).getUTCDate()+ "/" +new Date(dateLong).getUTCFullYear();	
 	return dateString;
+	
+}
+
+
+function finishedTutorial(element, url){
+	
+	$(element).remove();
+	
+	
+	var inputData = {};
+	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
+	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
+	
+	$.ajax({
+		
+		url:"rest/userprofile/updatetutorialstatus",
+		type: "POST",
+		async: false,
+		data: {
+            "inputData": JSON.stringify(inputData)
+        },
+        datatype: "application/json",
+		success:function(data){
+			if(data.error== null)
+				{
+				//showToastMessage("Successfully updated");
+			}else{
+				showErrorToastMessage(data.error.message);
+			}
+		},
+		error:function(data){
+			showErrorToastMessage("Error while updating tutorial status");
+		}
+	});
+	
+	window.location.href = url;
 	
 }
