@@ -103,12 +103,14 @@ public interface UserProfileDao extends GenericDao {
 	        throws NoRecordsFetchedException;
 
 	public InternalUserStateMapping updateInternalUserStateMapping(
-            InternalUserStateMappingVO inputVo);
+	        InternalUserStateMappingVO inputVo);
 
 	public InternalUserStateMapping deleteInternalUserStateMapping(
-            InternalUserStateMappingVO inputVo);
-	
+	        InternalUserStateMappingVO inputVo);
+
 	public Integer updateUserStatus(User user);
 
 	public Integer updateTutorialStatus(Integer id);
+
+	public List<User> getAllSalesManagers();
 }

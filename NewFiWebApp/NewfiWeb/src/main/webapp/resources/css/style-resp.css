@@ -361,7 +361,7 @@
 		width: 100%;
 	}
 	.reg-input-row {
-		width: 400px;
+		/* width: 400px; */
 		height:auto;
 		margin: 0 auto 10px auto;
 		padding: 0 10px;
@@ -1162,6 +1162,19 @@
 		width: 40px;
 		padding: 0;
 		text-align: center;
+	}
+	.login-container{
+		margin-top: 60px;
+	}
+	.display-title {
+		font-size: 22px;
+		line-height: 50px;
+	}
+	.display-title-subtxt{
+		font-size: 15px;
+	}
+	.reg-input-row{
+		padding: 0;
 	}
 }
 

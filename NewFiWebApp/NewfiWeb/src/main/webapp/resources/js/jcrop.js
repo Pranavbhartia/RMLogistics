@@ -74,6 +74,10 @@ function updatePreview(c) {
 	 * canvas.height));
 	 */
 	var ctx = canvas.getContext("2d");
+	console.log('ratio'+ratio);
+	
+		ratio =1;
+	
 	canvas.width = c.w;
 	canvas.height = c.h;
 	console.log(c.x / ratio + " " + c.y / ratio + " " + c.w / ratio + " " + c.h
@@ -81,7 +85,7 @@ function updatePreview(c) {
 	selected_x = Math.round(c.x / ratio);
 	selected_y =Math.round( c.y / ratio);
 	selected_w = Math.round(c.w / ratio);
-	selected_h = Math.round(c.w / ratio);
+	selected_h = Math.round(c.h / ratio);
 
 	ctx.drawImage(imageObj, c.x / ratio, c.y / ratio, c.w / ratio, c.h / ratio,
 			0, 0, canvas.width, canvas.height);
@@ -145,10 +149,7 @@ function createUploadPhotoContent() {
 				var userid = document.getElementById("prof-image").name;
 
 				var formData = new FormData();
-				formData.append("imageBase64", dataurl);
-
-				formData.append("imageFileName",
-						$('#prof-image').prop("files")[0].name);
+				
 				if (isNaN(selected_x)) {
 					selected_x = 50;
 				}
@@ -165,8 +166,16 @@ function createUploadPhotoContent() {
 				formData.append("selected_y", Math.round(selected_y));
 				formData.append("selected_w", Math.round(selected_w));
 				formData.append("selected_h", Math.round(selected_h));
+				formData.append("width", Math.round($('#pu-img').width()));
+				formData.append("height", Math.round($('#pu-img').height()));
+				
+				console.log(formData);
 
 				formData.append("userid", userid);
+				formData.append("imageBase64", dataurl);
+
+				formData.append("imageFileName",
+						$('#prof-image').prop("files")[0].name);
 				showOverlay();
 				$
 						.ajax({
