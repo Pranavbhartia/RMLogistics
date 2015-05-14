@@ -5,7 +5,7 @@
  */
 
 function globalBinder() {
-alert("on click");
+
 	$(document).on("click", ".lp-item", function() {
 		// TODO: Back button needs to be implemented
 		removeToastMessage();
