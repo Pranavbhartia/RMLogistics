@@ -138,6 +138,8 @@ public class EmailProcessor implements Runnable {
 							String userName = toAddressArray[0];
 							userName = userName.replace(
 							        CommonConstants.SENDER_DOMAIN_REGEX, "");
+							userName = userName.replace(
+							        CommonConstants.SENDER_NAME_REGEX, "");
 							if (userName.contains("@")) {
 								userName = userName.substring(0,
 								        userName.indexOf("@"));

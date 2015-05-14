@@ -84,7 +84,7 @@ public interface CommonConstants {
 	 */
 	public static final String SENDER_NAME = "NewFi Team";
 
-	public static final String SENDER_EMAIL_ID = "support@loan.newfi.com";
+	public static final String SENDER_EMAIL_ID = "@loan.newfi.com";
 
 	public static final String RAREMILE_SUPPORT_EMAIL_ID = "";
 

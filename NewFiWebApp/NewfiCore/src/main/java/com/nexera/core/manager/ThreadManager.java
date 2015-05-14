@@ -923,7 +923,8 @@ public class ThreadManager implements Runnable {
 		        .getFirstName() });
 		substitutions.put("-url-", new String[] { baseUrl });
 		substitutions.put("-listOfItems-", convertNeedsListToArray(needsList));
-		emailEntity.setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(loan.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
