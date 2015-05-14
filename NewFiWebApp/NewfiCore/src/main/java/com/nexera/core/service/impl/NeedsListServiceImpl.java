@@ -723,7 +723,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-				emailEntity.setSubject("You Initial Needs List Are Set");
+				emailEntity
+				        .setSubject(CommonConstants.SUBJECT_INITIAL_NEEDS_LIST_ARE_SET);
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(template.getValue());
 

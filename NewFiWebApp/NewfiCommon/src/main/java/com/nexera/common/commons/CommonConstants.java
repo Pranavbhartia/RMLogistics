@@ -259,6 +259,8 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
 
+	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
+
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 
 	public static final String SLOANNUMBER = "sLoanNumber";
