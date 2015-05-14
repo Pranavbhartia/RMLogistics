@@ -98,7 +98,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 
 			<!-- Main Container -->
 			<div class="login-container container">
-				<div class="container-row row clearfix">
+				<div class="row clearfix">
 					<div class="display-title">Access your newfi account</div>
 					<div class="display-title-subtxt">Login with the email address and password used to create your account</div>
 					<div class="login-form-wrapper">
