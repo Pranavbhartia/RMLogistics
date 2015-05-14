@@ -2803,6 +2803,7 @@ input.calc-input {
 	/* background: url(../images/login-bg.png) no-repeat center 0px; */
 	background-size: cover;
 	color: #fff;
+	overflow-x:hidden; 
 }
 
 .login-body-overlay {
@@ -2831,6 +2832,7 @@ input.calc-input {
 
 .display-title-subtxt {
 	width: 500px;
+	max-width: 100%;
 	line-height: 20px;
 	font-size: 17px;
 	margin: 10px auto;
@@ -2846,8 +2848,8 @@ input.calc-input {
 }
 
 .login-form-wrapper {
-	/*width: 300px;*/
-	width: 469px;
+	width: 450px;
+	max-width:100%;
 	margin: 20px auto;
 }
 
@@ -2860,11 +2862,13 @@ input.calc-input {
 }
 
 .login-input {
-/*	width: 100%;*/
-        width: 300px;
+width: 100%;
+        
+max-width: 300px;
 	height: 50px;
 	line-height: 50px;
-	padding-left: 50px;
+	
+padding-left: 10px;
 	border-radius: 3px;
 	/* border: transparent; */
 	/* background-color: #fff; */
@@ -4935,6 +4939,7 @@ input.calc-input {
 .pgwSlideshow .ps-list{
 	background: #F5F9FC;
 	box-shadow:none;
+	display: none !important;
 }
 
 .pgwSlideshow .ps-caption{
@@ -4947,7 +4952,11 @@ input.calc-input {
   padding-right: 15px;
   font-size: 15px;
   color: black;
-  width: 25%;
+  width: 40%;
+}
+
+.login-row-rc {
+    width: 60%;
 }
 
 .display-title-bottom-subtxt {
@@ -4985,4 +4994,48 @@ input.calc-input {
 	text-align: center;
 	margin: 200px auto;
 	font-size: 20px;
+}
+
+.slider-prev-next-btn-row {
+    width: 260px;
+    margin: 10px auto;
+}
+
+.slider-btn {
+    height: 40px;
+    line-height: 40px;
+    width: 120px;
+    text-align: center;
+    border-radius: 3px;
+    background: #6c9f2e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'opensanssemibold';
+}
+.getting-to-know-row {
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    padding-left: 20px;
+}
+
+.getting-to-know-hdr-txt {
+    font-size: 16px;
+    font-family: 'opensanssemibold';
+}
+
+.getting-to-know-btn {
+    width: 300px;
+    font-size: 16px;
+    font-family: 'opensanssemibold';
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    background: #6c9f2e;
+    margin: 5px 0;
+    color: #fff;
+    border-radius: 3px;
 }
