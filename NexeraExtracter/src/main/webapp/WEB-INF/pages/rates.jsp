@@ -32,8 +32,11 @@
 									<div class="float-left">
 										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
 									</div>
-									<div class="float-right printIcon" >
+									<div class="float-right " >
 										<div class="print" onclick="window.print()" title="print"></div>
+									</div>
+									<div class="float-right " >
+										<div class="downloadExcel" onclick="downloadExcel()" title="print"></div>
 									</div>
 							</div>
 					</div>

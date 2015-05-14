@@ -33,6 +33,11 @@ function paintRatesTablePage(data) {
 	 */
 }
 
+function downloadExcel(){
+	location.href = "downloadXLS";
+}
+
+
 // function to append FNMA Fixed Rate tables
 function appendFNMAConventionalFIXEDTableWrapper(element) {
 	var wrapper = $('<div>').attr({
@@ -953,6 +958,10 @@ function getRatesTable(rateObjArray, title) {
 	container.append(tableHeader);
 
 	for (var i = 0; i < rateObjArray.length; i++) {
+		
+		if(title == "Mammoth Jumbo 15 YR Fixed" && i==0)
+			continue;
+		
 		if (i >= 12) {
 			break;
 		}

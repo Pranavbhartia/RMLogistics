@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.nexera.extractor.constants.CommonConstant;
 import com.nexera.extractor.entity.FileExtractorResposne;
 import com.nexera.extractor.entity.FileProductPointRate;
 import com.nexera.extractor.entity.RestResponse;
@@ -20,11 +21,14 @@ public class ExtractorRateRest {
 
 	@Autowired
 	private Utility utility;
+	
+	@Autowired
+	private CommonConstant commonConstant;
 
 	@RequestMapping("/rates")
 	public @ResponseBody String readFilesFromDestinationRest() {
 
-		final File folder = new File("C:\\apps\\LQB\\Price\\");
+		final File folder = new File(commonConstant.FOLDER_PATH);
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 		Long folderLastModfied = folder.lastModified();
