@@ -23,109 +23,118 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 });
 $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
- if(newfiObject.user.internalUserDetail==undefined){
+ if(newfiObject.user.internalUserDetail==undefined )
+ {
+	 if(newfiObject.user.userRole.roleDescription!=userDescription)
+	 {
 		//TODO for dropdown settings for LM,customer,realtor
-		if($(this).has('#alert-popup-wrapper-settings').length == 1){
-			if($('#alert-popup-wrapper-settings').css("display") == "block"){
-				hideSettingsPopup();
-			}else{
-				showSettingsPopup();
-			}
-		}else{		
+			if($(this).has('#alert-popup-wrapper-settings').length == 1 ){
+				if($('#alert-popup-wrapper-settings').css("display") == "block"){
+					hideSettingsPopup();
+				}else{
+					showSettingsPopup();
+				}
+			}else{		
 
-		var alertWrapper = $('<div>').attr({
-			"id" : "alert-popup-wrapper-settings",
-			"class" : "alert-popup-wrapper-settings"
-		});
-		var icondiv=$('<div>').attr({
-		"class":"float-left-icon"
-		
-		});
-		 var icon=$('<i>').attr({
-		 "class":"settings-icon"	 	 
-		 });
-		 icondiv.append(icon);
-		var header = $('<div>').attr({
-			"class" : "admin-pop-up-header"
-		}).html("User Settings");
-
-		var container = $('<div>').attr({
-			"id" : "admin-module-container",
-			"class" : "admin-pop-up-container clearfix"
-		});
-		
-		var myProfileRow = $('<div>').attr({
-			"class" : "admin-module-row clearfix",
-			"id":"my-profile"
-		});
-		var anchortag1=$('<a>').attr({
-		"id" : "my-profile-id",	
-	    "href":"#",
-	    "onclick":"myProfile()"	
-		});
-	    var myProfileRowRowContent = $('<div>').attr({
-			"class" : "admin-module-row-content",
-				
-		}).html("My Profile");
-		
-		anchortag1.append(myProfileRowRowContent);
-		myProfileRow.append(anchortag1);
-		container.append(myProfileRow);
-		
-		//TODO for change password
-		var changepasswordRow = $('<div>').attr({
-			"class" : "admin-module-row clearfix",
-			"id":"change-password"
-		});
-		var anchortag2=$('<a>').attr({
-		"id" : "change-password-id",
-		"href":"#",
-	   	"onclick":"myProfile()"	
-		});
-	    var changepasswordRowContent = $('<div>').attr({
-			"class" : "admin-module-row-content",
-				
-		}).html("Change Password");
-		anchortag2.append(changepasswordRowContent);
-		changepasswordRow.append(anchortag2);
-		container.append(changepasswordRow);
-		
-		//TODO for tutorials
-		var tutorialsRow = $('<div>').attr({
-			"class" : "admin-module-row clearfix",
-			"id":"tutorials"
-		});
-		var anchortag3=$('<a>').attr({
-		"id" : "templates",
-	        "href":"#"	,
-	        "onclick":"completeTutorials()"	
-		});
-	    var tutorialsRowContent = $('<div>').attr({
-			"class" : "admin-module-row-content",
-				
-		}).html("Getting to know newfi");
-	    if(newfiObject.user.userRole.roleDescription==customer){
-	    	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
-	    	 if(!tutorialStatus){
-	    		 anchortag3.append(tutorialsRowContent);
-	 			tutorialsRow.append(anchortag3);
-	 			container.append(tutorialsRow); 
-	    	 }
-	    	
+			var alertWrapper = $('<div>').attr({
+				"id" : "alert-popup-wrapper-settings",
+				"class" : "alert-popup-wrapper-settings"
+			});
+			var icondiv=$('<div>').attr({
+			"class":"float-left-icon"
 			
-	    }
-		
-		
-		
-		header.append(icondiv);
-		alertWrapper.append(header).append(container);
-		$('#alert-settings-btn').append(alertWrapper);
-		
-		}
+			});
+			 var icon=$('<i>').attr({
+			 "class":"settings-icon"	 	 
+			 });
+			 icondiv.append(icon);
+			var header = $('<div>').attr({
+				"class" : "admin-pop-up-header"
+			}).html("User Settings");
+
+			var container = $('<div>').attr({
+				"id" : "admin-module-container",
+				"class" : "admin-pop-up-container clearfix"
+			});
+			
+			var myProfileRow = $('<div>').attr({
+				"class" : "admin-module-row clearfix",
+				"id":"my-profile"
+			});
+			var anchortag1=$('<a>').attr({
+			"id" : "my-profile-id",	
+		 "href":"#",
+		 "onclick":"myProfile()"	
+			});
+		 var myProfileRowRowContent = $('<div>').attr({
+				"class" : "admin-module-row-content",
+					
+			}).html("My Profile");
+			
+			anchortag1.append(myProfileRowRowContent);
+			myProfileRow.append(anchortag1);
+			container.append(myProfileRow);
+			
+			//TODO for change password
+			var changepasswordRow = $('<div>').attr({
+				"class" : "admin-module-row clearfix",
+				"id":"change-password"
+			});
+			var anchortag2=$('<a>').attr({
+			"id" : "change-password-id",
+			"href":"#",
+			"onclick":"myProfile()"	
+			});
+		 var changepasswordRowContent = $('<div>').attr({
+				"class" : "admin-module-row-content",
+					
+			}).html("Change Password");
+			anchortag2.append(changepasswordRowContent);
+			changepasswordRow.append(anchortag2);
+			container.append(changepasswordRow);
+			
+			//TODO for tutorials
+			var tutorialsRow = $('<div>').attr({
+				"class" : "admin-module-row clearfix",
+				"id":"tutorials"
+			});
+			var anchortag3=$('<a>').attr({
+			"id" : "templates",
+		     "href":"#"	,
+		     "onclick":"completeTutorials()"	
+			});
+		 var tutorialsRowContent = $('<div>').attr({
+				"class" : "admin-module-row-content",
+					
+			}).html("Getting to know newfi");
+		 if(newfiObject.user.userRole.roleDescription==customer){
+		 	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+		 	 if(!tutorialStatus){
+		 		 anchortag3.append(tutorialsRowContent);
+					tutorialsRow.append(anchortag3);
+					container.append(tutorialsRow); 
+		 	 }
+		 	
+				
+		 }
+			header.append(icondiv);
+			alertWrapper.append(header).append(container);
+			$('#alert-settings-btn').append(alertWrapper);
+			
+			}
+     }else{
+    	 appendDropDownForAdmin() ;
+     }
+	
 	}else{
-	if(userDescription==newfiObject.user.userRole.roleDescription ||salesManager==newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
-	{
-	if($(this).has('#alert-popup-wrapper-settings').length == 1){
+		appendDropDownForAdmin();
+	}
+	 
+
+});
+
+function appendDropDownForAdmin(){
+	if($('#alert-settings-btn').has('#alert-popup-wrapper-settings').length == 1){
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
 			hideSettingsPopup();
 		}else{
@@ -228,11 +237,8 @@ $('#alert-settings-btn').click(function(e){
 	alertWrapper.append(header).append(container);
 	$('#alert-settings-btn').append(alertWrapper);
 	
-	}
-	
-	}
-	}
-});
+}
+}
 function completeTutorials(){
 	window.location.href="#myLoan/myTeam";
 }
