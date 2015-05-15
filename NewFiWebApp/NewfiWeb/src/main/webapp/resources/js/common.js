@@ -886,6 +886,7 @@ function userIsCustomer() {
 function hideCompleteYourProfile(){
 	if(newfiObject.applicationNavTab){
 		$(newfiObject.applicationNavTab).remove();
+		newfiObject.applicationNavTab=undefined;
 	}
 }
 
@@ -940,16 +941,18 @@ function  makeDateFromDatePicker (datePickerID){
 function  makeDate ( dateString){
 	var elements = dateString.split("/");	
 	//MM/DD/YYYY
-	var myDate1 = new Date(Date.UTC(elements[2],elements[0],elements[1]));
-	console.log("myDate1" + myDate1);
+	//var myDate1 = new Date(Date.UTC(elements[2],elements[0],elements[1]));
+	var myDate1 = new Date(elements[2],elements[0],elements[1]);
+	/*console.log("myDate1" + myDate1);
 	var myDate = Date.UTC(elements[2],elements[0]-1,elements[1]);
-	
-	return myDate;
+	*/
+	return myDate1.getTime();
 	
 }
 
 function  makeDateFromLong ( dateLong){	
-	var dateString = ""+(new Date(dateLong).getUTCMonth()+1)+"/"+ new Date(dateLong).getUTCDate()+ "/" +new Date(dateLong).getUTCFullYear();	
+	var dat=new Date(dateLong);
+	var dateString = ""+(dat.getMonth()+1)+"/"+ dat.getDate()+ "/" +dat.getFullYear();	
 	return dateString;
 	
 }

@@ -5063,3 +5063,15 @@ padding-left: 10px;
 .reg-registration-error{
 	padding-left: 150px;
 }
+
+a.prof-form-verfication-link {
+    white-space: nowrap;
+    color: #428bca;
+    font-size:13px;
+}
+
+a.prof-form-verfied-mess {
+    cursor: none;
+    font-size: 14px;
+    color: blue;
+}

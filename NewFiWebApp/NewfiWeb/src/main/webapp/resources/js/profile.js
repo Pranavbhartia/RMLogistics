@@ -185,7 +185,7 @@ function appendChangePasswordContainer(userDetails){
 	   else
 	   {
 		   
-			lqbWrapper.append(lqbHeader).append(appendMessage("Please verify your email before changing  password"));
+			lqbWrapper.append(lqbHeader).append(appendMessage(newfiObject.user.emailVerfiedMessage));
 			
 		}
 
@@ -1057,7 +1057,7 @@ function getPriEmailRow(user) {
 		"class" : "prof-form-rc float-left"
 	});
 
-	var inputCont = $('<div>').attr({
+	var primaryEmailCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
 	
@@ -1073,12 +1073,50 @@ function getPriEmailRow(user) {
 		"class" : "err-msg hide" 
 	});
 	
-	inputCont.append(emailInput).append(errMessage);
+	primaryEmailCont.append(emailInput).append(errMessage);
 	
-	rowCol2.append(inputCont);
+	//TODO for email registration validation link
+	var primaryEmailLinkCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	var emailInput="";
+
+	if(!user.emailVerified){
+		 emailInput = $('<a>').attr({
+			"class" : "prof-form-input-lg prof-form-verfication-link",
+			"id" : "priEmailVerificationLinkId",
+			"readonly":true,
+			"href":"#",
+			"onclick" : "forgetPassword()"
+		}).html("Resend your verification email");
+		
+	}else{
+		 emailInput = $('<a>').attr({
+			"class" : "prof-form-input-lg prof-form-verfied-mess",
+			"id" : "priEmailVerificationLinkId",
+			"readonly":true,
+			"href":"#",
+			"onclick" : "forgetPassword()"
+		}).html("Verified");
+		
+	}
+	primaryEmailLinkCont.append(emailInput);
+	rowCol2.append(primaryEmailCont).append(primaryEmailLinkCont);
 	return row.append(rowCol1).append(rowCol2);
 }
-
+function forgetPassword(){
+	var user=new Object();
+	user.emailId=$('#priEmailId').val();
+	ajaxRequest("rest/userprofile/forgetPassword"+"?resend=true", "POST", "json", JSON.stringify(user),
+			  showSuccessMessage);
+}
+function showSuccessMessage(data){
+	if(data.error==null){
+		showToastMessage(data.resultObject);
+	}else{
+		showErrorToastMessage(data.error.message);
+	}
+}
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
