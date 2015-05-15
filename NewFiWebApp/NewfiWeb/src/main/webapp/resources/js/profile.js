@@ -1096,8 +1096,6 @@ function getPriEmailRow(user) {
 			"class" : "prof-form-input-lg prof-form-verfied-mess",
 			"id" : "priEmailVerificationLinkId",
 			"readonly":true,
-			"href":"#",
-			"onclick" : "forgetPassword()"
 		}).html("Verified");
 		
 	}

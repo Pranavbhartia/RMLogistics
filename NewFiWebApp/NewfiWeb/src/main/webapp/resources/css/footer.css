@@ -193,14 +193,14 @@ a.footer-inline-txt {
     font-size: 10px;
 }
 .footer-inline-home-image{
-	background: url(../images/house.png) no-repeat left;
+	background: url(../images/houseB.png) no-repeat left;
     background-color: none !important;   
 	background-size: 100% auto;    
 	height: 24px;   
 	width: 25px;    
 	margin-top: 0px;    
 	float: left;
-	background-color: #428bca;
+	/* background-color: #428bca; */
 }
 .footer-inline-bottom-right {
     padding-left: 277px;
