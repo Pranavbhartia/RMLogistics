@@ -408,6 +408,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
+        newfiObject.applicationKnowNewfi=undefined;
 		
 	});
 	

@@ -886,6 +886,7 @@ function userIsCustomer() {
 function hideCompleteYourProfile(){
 	if(newfiObject.applicationNavTab){
 		$(newfiObject.applicationNavTab).remove();
+		newfiObject.applicationNavTab=undefined;
 	}
 }
 

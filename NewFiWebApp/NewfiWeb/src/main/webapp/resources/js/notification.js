@@ -243,14 +243,23 @@ function getNotificationContext(loanId, userId) {
 
 			if (notification.remindOn)
 				alertTime = ":  <font size='1'>"+getTimeElapsedString(notification.remindOn)+"</font>";
-			$("#" + ob.loanContainerId)
-					.append(
-							'<div class="lp-alert-item-container clearfix" id="LNID'
-									+ notification.id
-									+ ' "><div class="lp-alert-item float-left" onclick="takeToMilestone('
-									+ notification.loanID + ');"">'
+			var notificationEle=$('<div>').attr({
+					"class" : "lp-alert-item-container clearfix",
+					"id" : "LNID"+ notification.id
+				})
+			var innerEle='<div class="lp-alert-item float-left">'
 									+ notification.content + customerName + alertTime
-									+ '</div>' + closebtn + '</div>');
+									+ '</div>' + closebtn 
+			notificationEle.append(innerEle);
+			/*var notificationEle='<div class="lp-alert-item-container clearfix" id="LNID'
+									+ notification.id
+									+ '">'</div>'*/
+			
+			$("#" + ob.loanContainerId)
+					.append(notificationEle);
+
+			addClickHandlerToNotification(notificationEle,notification);
+	
 			if (callback) {
 				callback(ob);
 			}
@@ -510,8 +519,10 @@ function updateDefaultContext(notification) {
 	contxt.userNotificationList.push(notification);
 	contxt.paintLoanNotification(notification);
 	var row = getAlertNotificationRow(notification, contxt);
-	if (contxt.alertWrapper)
+	if (contxt.alertWrapper){
 		contxt.alertWrapper.append(row);
+		addClickHandlerToNotification(row,notification);
+	}
 }
 function removeNotificationFromAllContext(notificationId) {
 	if (newfiObject.contextHolder) {
@@ -642,6 +653,8 @@ function appendAlertNotificationPopup() {
 		var row = getAlertNotificationRow(contxt.userNotificationList[i],
 				contxt);
 		alertWrapper.append(row);
+		addClickHandlerToNotification(row,contxt.userNotificationList[i]);
+
 	}
 	/*
 	 * var row1 = getAlertNotificationRow("Salaried-W2-forms","2hr ago",false);
@@ -703,13 +716,14 @@ function getAlertNotificationRow(notification, contxt) {
 		alertTxtCont.append(alertTime);
 
 	container.append(alertIcn).append(alertTxtCont);
-	container.bind("click", function(e) {
+	//removed this click handler binding
+	/*container.bind("click", function(e) {
 		if (notification.loanID!=0)
 		{
 			hideAlertNotificationPopup();
 			takeToMilestone(notification.loanID);
 		}
-	});
+	});*/
 	if (notification.dismissable) {
 		var alertRemoveIcn = $('<div>').attr({
 			"class" : "alert-rm-icn float-right",
@@ -722,6 +736,8 @@ function getAlertNotificationRow(notification, contxt) {
 		});
 		container.append(alertRemoveIcn);
 	}
+	
+			
 	return row.append(container);
 }
 
@@ -761,3 +777,66 @@ $(document).click(function() {
 			removeNotificationPopup();
 	}
 });
+
+function getHashLocationForNotification(type,loanId){
+	if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+		switch(type){
+			case "NEEDED_ITEMS_NOTIFICATION":
+				return "#myLoan/upload-my-needs";
+			case "LOCK_RATE_CUST_NOTIFICATION":
+				return "#myLoan/lock-my-rate";
+			case "LOCK_NOTIFICATION":
+				return "#myLoan/lock-my-rate";
+			case "PURCHASE_DOC_NOTIFICATION":
+				return "#myLoan/upload-my-needs";
+			case "WATCH_ALERT_NOTIFICATION":
+				if(newfiObject.applicationKnowNewfi)
+					return "#myLoan/myTeam";
+				break;
+			case "COMPLETE_APPLICATION_NOTIFICATION":
+				if(newfiObject.applicationNavTab)
+					return "#myLoan/my-application";
+				break;
+			case "NEEDS_LIST_SET_TYPE":
+				return "#myLoan/upload-my-needs";
+			case "VERIFY_EMAIL":
+				return "#myProfile";
+		}
+		return "#myLoan/my-loan-progress";
+	}else{
+		var baseHash="#loan/"+loanId+"/"
+		switch(type){
+			case "NOTIFICATION":
+				return "";
+			case "NEEDED_ITEMS_NOTIFICATION":
+				return baseHash+"needs";
+			case "LOCK_RATE_CUST_NOTIFICATION":
+				return baseHash+"lock-rate";
+			case "LOCK_NOTIFICATION":
+				return baseHash+"lock-rate";
+			case "PURCHASE_DOC_NOTIFICATION":
+				return baseHash+"needs";
+			case "COMPLETE_APPLICATION_NOTIFICATION":
+				if(newfiObject.applicationNavTab)
+					return baseHash+"application";
+				break;
+			case "NEEDS_LIST_SET_TYPE":
+				return baseHash+"needs";
+			case "VERIFY_EMAIL":
+				return baseHash+"detail";
+		}
+		return baseHash+"progress";
+	}
+}
+function addClickHandlerToNotification(element,notification){
+	var hashLocation=getHashLocationForNotification(notification.notificationType,notification.loanID)
+	if(hashLocation!=""){
+		$(element).bind("click",{"target":hashLocation},navigateToHash);
+	}
+}
+function navigateToHash(e){
+	var hashLocation=e.data.target;
+	e.stopPropagation();
+	window.location.hash=hashLocation;
+	hideAlertNotificationPopup();
+}
