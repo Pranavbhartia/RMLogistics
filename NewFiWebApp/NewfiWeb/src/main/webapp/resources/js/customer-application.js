@@ -573,7 +573,7 @@ function getApplicationMultipleChoiceQues(question,value) {
 
 //TODO-try nested yesno question
 function paintHomeInfoPage(){
-    if(purchase){
+    if( appUserDetails.loanType.loanTypeCd =="PUR" ){
         paintCustomerApplicationPurchasePageStep1a();
     }else{
         paintCustomerApplicationPageStep1a();
@@ -1840,7 +1840,7 @@ function paintMyIncome() {
     var incomesSelectALLThatApplyDiv = incomesSelectALLThatApply();
     var questcontainer = $('#app-right-panel');
  	
-	if(purchase == true){
+	if(appUserDetails.loanType.loanTypeCd == "PUR"){
 		
 		var questionsContainer10 = paintSaleOfCurrentHome();
 		  questcontainer.append(questionsContainer10);
@@ -2010,7 +2010,7 @@ if($('.ce-option-checkbox').hasClass('myassets')){
         }
         
         
-        if(purchase == true){
+        if(appUserDetails.loanType.loanTypeCd == "PUR"){
             
             homeListPrice = $('input[name="homelistprice"]').val();
             homeMortgageBalance = $('input[name="homemortgagebalance"]').val();
@@ -2806,7 +2806,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		optionContainer.append(optionsWrapper);
 	}
 
-	if(purchase ==true) {
+	if(appUserDetails.loanType.loanTypeCd =="PUR") {
 		return container.append(quesTextCont).append(optionContainer);
 	}
 
