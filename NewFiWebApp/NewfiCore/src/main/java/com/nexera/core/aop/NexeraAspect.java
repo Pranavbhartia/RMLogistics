@@ -17,7 +17,7 @@ public class NexeraAspect {
 	@Before("execution(* com.nexera.core..*(..)) ")
 	public void logBefore(JoinPoint joinPoint) {
 
-		LOG.info("Method invoked : " + joinPoint.getSignature().getName());
+		LOG.info("Method invoked : " + joinPoint.getSignature());
 		StringBuilder arguments = new StringBuilder();
 		Object[] args = joinPoint.getArgs();
 		for (Object object : args) {
