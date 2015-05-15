@@ -667,18 +667,18 @@ function paintCustomerApplicationPageStep1a() {
     		}
     	}
 
-    		customerDetail.addressCity = city;
-    		customerDetail.addressState = inputState;
-    		customerDetail.addressZipCode = zipCode;
-    		customerDetail.addressStreet = addressStreet;
-    		customerDetail.selectedProperty = selectedProperty;
+            appUserDetails.user.customerDetail.addressCity = city;
+            appUserDetails.user.customerDetail.addressState = inputState;
+            appUserDetails.user.customerDetail.addressZipCode = zipCode;
+            appUserDetails.user.customerDetail.addressStreet = addressStreet;
+            appUserDetails.user.customerDetail.selectedProperty = selectedProperty;
     		
-    		user.customerDetail = customerDetail;
+    		//user.customerDetail = customerDetail;
     		
     		
-    		appUserDetails.user = user;
+    		//appUserDetails.user = user;
     		
-    		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b());
+    		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b);
   
    	
     });
@@ -1563,7 +1563,7 @@ function paintCustomerApplicationPageStep2() {
 	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 	    	////alert(JSON.stringify(appUserDetails));
 	    
-	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome());
+	    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome);
 	    	
 	    	
 	    	
@@ -1672,7 +1672,7 @@ function getContextApplicationTextQues(contxt) {
     			}
     			
     		}).keypress(function(key) {
-    			if($('input[name='+question.name+']').attr('name')=="propZipCode" ||$('input[name='+question.name+']').attr('name')=="zipCode" ){
+    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ){
     				
   				  if(key.charCode < 48 || key.charCode > 57) return false;
   			}
@@ -2402,7 +2402,7 @@ $('body').on('focus',"input[name='birthday']",function(){
 		});
    
 });
-$('body').on('focus',"input[name='purchaseTime']",function(){
+$('body').on('focus',"input[name='purchaseTime']",function(e){
 	
 	 var k = e.which;
      var ok = k >= 65 && k <= 90 || // A-Z

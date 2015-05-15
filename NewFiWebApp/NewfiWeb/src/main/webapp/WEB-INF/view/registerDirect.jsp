@@ -65,6 +65,12 @@
 					</div>
 				</div>
 				
+				 <div class="reg-input-error hide errorMsg">
+           		<span class ="reg-registration-error">
+           		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage()' style="color: #2F6BF7">click here</a>
+           		</span>
+          </div>
+				
 				<div class="reg-btn-wrapper clearfix">
 					<div class="reg-btn float-left" id="submitID">Submit</div>
 				</div>
@@ -161,7 +167,8 @@
 							createNewRealtor(registration);
 						}
 		            }else{
-		            	showErrorToastMessage(data.error.message);
+		            	//showErrorToastMessage(data.error.message);
+		            	$('.errorMsg').show();
 		            }
 		           
 		        },
@@ -214,6 +221,11 @@
 		            $('#overlay-loader').hide();
 		        }
 		    });	
+		}
+		
+	 function goToLoginPage(){
+			
+			window.location.href='../../';
 		}
 	</script>
 </body>
