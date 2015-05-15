@@ -674,7 +674,8 @@ function updateLMDetails() {
 
             	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
     			showToastMessage("Succesfully updated");
-    			showLoanManagerProfilePage();
+    			//showLoanManagerProfilePage();
+    			window.location.href = "./home.do#loan";
             }else{
             	$('#overlay-loader').hide();
             	$("#managerID").val('');
