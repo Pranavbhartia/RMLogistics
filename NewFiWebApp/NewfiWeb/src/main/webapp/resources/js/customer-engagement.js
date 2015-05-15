@@ -924,83 +924,56 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             success: function(data) {
             	
                hideOverlay();
-               var quesTxt = "Let us Contact You";
-               var container = $('<div>').attr({
-                   "class": "ce-rate-main-container"
-               });
-               var quesTextCont = $('<div>').attr({
-                   "class": "ce-rp-ques-text letUsContactCenter"
-               }).html(quesTxt);
-               // alert(JSON.stringify(refinanceTeaserRate));
-               container.append(quesTextCont);
-               $(parentContainer).html(container);
-               var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
-               +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
-               +"to review your options.</div>"
-
-               var createAccBtn= $('<div>').attr({
-                   "class": "rate-btn createAccButton"
-               }).html("Provide your contact information").on('click', function() {
-                   var mainContainer = paintApplyNow(teaserRateData);
-                   $('#ce-main-container').html(mainContainer);
-               });
-               $(parentContainer).append(errorText);
-               if(typeof(newfiObject)==='undefined')
-                   $(parentContainer).append(createAccBtn);
-               return
-
-               /* if(data==""){
-                    $(parentContainer).html("Sorry, We could not find suitable products for you!");
-                }else{*/
-                    if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
-                        var quesTxt = "Let us Contact You";
-                        var container = $('<div>').attr({
-                            "class": "ce-rate-main-container"
-                        });
-                        var quesTextCont = $('<div>').attr({
-                            "class": "ce-rp-ques-text letUsContactCenter"
-                        }).html(quesTxt);
-                        // alert(JSON.stringify(refinanceTeaserRate));
-                        container.append(quesTextCont);
-                        $(parentContainer).html(container);
-                        var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
-                        +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
-                        +"to review your options.</div>"
-
-                        var createAccBtn= $('<div>').attr({
-                            "class": "rate-btn createAccButton"
-                        }).html("Provide your contact information").on('click', function() {
-                            var mainContainer = paintApplyNow(teaserRateData);
-                            $('#ce-main-container').html(mainContainer);
-                        });
-                        $(parentContainer).append(errorText);
-                        if(typeof(newfiObject)==='undefined')
-                            $(parentContainer).append(createAccBtn);
-                        return
-                    }
+               
+	            if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
+	                var quesTxt = "Let us Contact You";
+	                var container = $('<div>').attr({
+	                    "class": "ce-rate-main-container"
+	                });
+	                var quesTextCont = $('<div>').attr({
+	                    "class": "ce-rp-ques-text letUsContactCenter"
+	                }).html(quesTxt);
+	                // alert(JSON.stringify(refinanceTeaserRate));
+	                container.append(quesTextCont);
+	                $(parentContainer).html(container);
+	                var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
+	                +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
+	                +"to review your options.</div>"
+	
+	                var createAccBtn= $('<div>').attr({
+	                    "class": "rate-btn createAccButton"
+	                }).html("Provide your contact information").on('click', function() {
+	                    var mainContainer = paintApplyNow(teaserRateData);
+	                    $('#ce-main-container').html(mainContainer);
+	                });
+	                $(parentContainer).append(errorText);
+	                if(typeof(newfiObject)==='undefined')
+	                    $(parentContainer).append(createAccBtn);
+	                return
+	            }
 
 
-                    var ob;
-                    try{
-                        ob=JSON.parse(data);
-                    }catch(exception){
-                        ob={};
-                        console.log("Invalid Data");
-                    }
-                    var quesTxt = "Loan Rates and Fees";
-                    var container = $('<div>').attr({
-                        "class": "ce-rate-main-container"
-                    });
-                    var quesTextCont = $('<div>').attr({
-                        "class": "ce-rp-ques-text"
-                    }).html(quesTxt);
-                    // alert(JSON.stringify(refinanceTeaserRate));
-                    container.append(quesTextCont);
-                    $(parentContainer).html(container);
+                var ob;
+                try{
+                    ob=JSON.parse(data);
+                }catch(exception){
+                    ob={};
+                    console.log("Invalid Data");
+                }
+                var quesTxt = "Loan Rates and Fees";
+                var container = $('<div>').attr({
+                    "class": "ce-rate-main-container"
+                });
+                var quesTextCont = $('<div>').attr({
+                    "class": "ce-rp-ques-text"
+                }).html(quesTxt);
+                // alert(JSON.stringify(refinanceTeaserRate));
+                container.append(quesTextCont);
+                $(parentContainer).html(container);
 
-                   // alert('createLoan data is '+data)
-                    paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
-                    clearOverlayMessage();
+               // alert('createLoan data is '+data)
+                paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
+                clearOverlayMessage();
                /* }*/
                   
                  
@@ -1080,12 +1053,12 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     
     
     var errorMsg = $('<div>').attr({
-        "class": "reg-input-error overlay-toast-success hide errorMsg"
+        "class": "reg-input-error hide errorMsg"
     });
     var errorMsgSpan = $('<span>').attr({
-        "class": "overlay-toast-success",
+        "class": "registration-error",
         
-    }).html("User exists. Please register with a different emailID").on('click',function(){
+    }).html("We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLogin()'>click HERE</a>").on('click',function(){
     	
     	$('.errorMsg').hide();
     });

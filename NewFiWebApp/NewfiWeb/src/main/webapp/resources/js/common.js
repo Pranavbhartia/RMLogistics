@@ -989,3 +989,8 @@ function finishedTutorial(element, url){
 	window.location.href = url;
 	
 }
+
+function goToLogin(){
+	
+	window.location='./';
+}
