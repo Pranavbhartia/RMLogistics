@@ -43,6 +43,7 @@ import com.nexera.common.vo.mongo.MongoQueryVO;
 import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MessageService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
@@ -65,6 +66,9 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	SendEmailService sendEmailService;
 
 	@Autowired
 	LoanService loanService;
@@ -138,19 +142,22 @@ public class MessageServiceImpl implements MessageService {
 		}
 		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 		for (User user : users) {
-			EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-			emailRecipientVO.setEmailID(user.getEmailId());
-			emailRecipientVO.setRecipientName(user.getFirstName());
-			emailRecipientVO.setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
-			recipients.add(emailRecipientVO);
-			if (user.getCustomerDetail() != null
-			        && user.getCustomerDetail().getSecEmailId() != null
-			        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
-				emailRecipientVO.setEmailID(user.getCustomerDetail()
-				        .getSecEmailId());
+			if (user.getEmailVerified()) {
+				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+				emailRecipientVO.setEmailID(user.getEmailId());
 				emailRecipientVO.setRecipientName(user.getFirstName());
 				emailRecipientVO
 				        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+				recipients.add(emailRecipientVO);
+				if (user.getCustomerDetail() != null
+				        && user.getCustomerDetail().getSecEmailId() != null
+				        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
+					emailRecipientVO.setEmailID(user.getCustomerDetail()
+					        .getSecEmailId());
+					emailRecipientVO.setRecipientName(user.getFirstName());
+					emailRecipientVO
+					        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+				}
 			}
 		}
 		emailVO.setRecipients(recipients);
@@ -206,22 +213,8 @@ public class MessageServiceImpl implements MessageService {
 		sendGridEmailService.sendAsyncMail(emailVO);
 		LoanVO loan = loanService.getLoanByID(messagesVO.getLoanId());
 		if (loan != null && loan.getUser() != null)
-			sendSMS(loan.getUser());
+			sendEmailService.sendSMS(loan.getUser());
 
-	}
-
-	private void sendSMS(UserVO user) {
-		if (user != null) {
-			if (user.getPhoneNumber() != null
-			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
-				if (user.getCarrierInfo() != null) {
-					LOG.info("Sending SMS "
-					        + Long.valueOf(user.getPhoneNumber()));
-					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
-					        Long.valueOf(user.getPhoneNumber()));
-				}
-			}
-		}
 	}
 
 	private List<Integer> extractUserIds(List<MessageUserVO> otherUsers) {
