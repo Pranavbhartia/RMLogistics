@@ -368,8 +368,7 @@ CHANGE COLUMN `includeTaxes` `includeTaxes` TINYINT(1) NULL DEFAULT NULL ;
 
 
 # By Rajeswari 14th May
-ALTER TABLE `newfi_schema`.`user` 
-ADD COLUMN `email_verified` TINYINT(1) NULL DEFAULT 0‏;
+ALTER TABLE `newfi_schema`.`user` ADD COLUMN `email_verified` TINYINT(1) DEFAULT '0' NULL AFTER `carrier_info`;
 
 UPDATE user SET email_verified=1 WHERE id IN (1,2);
 

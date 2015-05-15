@@ -975,4 +975,20 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	}
 
+	@Override
+	public User getUserBySecondaryMail(String emailAddress) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(CustomerDetail.class);
+		criteria.add(Restrictions.eq("secEmailId", emailAddress));
+		CustomerDetail obj = (CustomerDetail) criteria.uniqueResult();
+		User user = null;
+		if (obj != null) {
+			Criteria userCriteria = session.createCriteria(User.class);
+			userCriteria.add(Restrictions.eq("customerDetail", obj));
+			user = (User) userCriteria.uniqueResult();
+
+		}
+		return user;
+
+	}
 }

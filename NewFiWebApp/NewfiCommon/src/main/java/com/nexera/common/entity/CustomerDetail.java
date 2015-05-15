@@ -47,7 +47,6 @@ public class CustomerDetail implements Serializable {
 	private String secEmailId;
 	private String secPhoneNumber;
 	private Integer subscriptionsStatus;
-
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;

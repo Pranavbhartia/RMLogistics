@@ -40,6 +40,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -330,11 +331,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
 			}
-			/*Collections.sort(loanListForUser, new Comparator<Loan>() {
-				public int compare(Loan loan1, Loan loan2) {
-					return loan1.getCreatedDate().compareTo(loan2.getCreatedDate());
-				}
-			});*/
+			/*
+			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
+			 * int compare(Loan loan1, Loan loan2) { return
+			 * loan1.getCreatedDate().compareTo(loan2.getCreatedDate()); } });
+			 */
 			return loanListForUser;
 		} catch (HibernateException hibernateException) {
 
@@ -895,5 +896,14 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		query.setParameter("LOCKEDRATEDATA", lockedratedata);
 		query.executeUpdate();
 
+	}
+
+	@Override
+	public LoanVO findLoanByLoanEmailId(String loanEmailId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		criteria.add(Restrictions.eq("loanEmailId", loanEmailId));
+		Loan loan = (Loan) criteria.uniqueResult();
+		return Loan.convertFromEntityToVO(loan);
 	}
 }
