@@ -13,7 +13,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/dropzone.css" rel="stylesheet">
@@ -149,16 +149,13 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
          <div class="row footer-element-normal-top footer-element-normal-bottom">
             <div class="footer-col-md-3 float-left">
                <div id="text-3" class="sidebar-widget  widget_text">
-                  <h3 class="footer-sidebar-header footer-border-width">Our Brands</h3>
+                  <h3 class="footer-sidebar-header footer-border-width">Links</h3>
                   <div class="textwidget">
                      <div id="footer_ourbrands" class="sidebar-widget  widget_recent_entries">
                         <ul class="footer-order-list">                          
-                           <li class="footer-list clearfix"><a class="footer-anchor" href="/about-us/#newfi">Newfi</a><a></a></li>
-                           <a>
-                           </a>
-                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" href="/about-us/#blustream">Blustream</a><a></a></li>
-                           <a>
-                           </a>
+                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='customerEngagement.do'">Check Rates</a><a></a></li>
+                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" onclick="window.location='./'">Login</a><a></a></li>
+                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/'">Nexsera Holding</a><a></a></li>                          
                         </ul>
                         <a>
                         </a>
@@ -170,7 +167,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
             </div>
             <a>
             </a>
-            <div class="footer-col-md-3 float-left">
+<!--             <div class="footer-col-md-3 float-left">
                <a></a>
                <div id="sticky-posts-2" class="sidebar-widget  widget_recent_entries sidebar-widget  widget_ultimate_posts">
                   <a>
@@ -209,21 +206,31 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
                      </li>
                   </ul>
                </div>
-            </div>
+            </div> -->
             <div class="footer-col-md-3 float-left">
                <div id="text-4" class="sidebar-widget  widget_text">
                   <h3 class="footer-sidebar-header footer-border-width">Legal</h3>
                   <div class="textwidget">
                      <div id="footer_legal" class="sidebar-widget  widget_recent_entries">
                         <ul class="footer-order-list">
-                           <li class=" footer-list clearfix"><a class="footer-anchor" href="/information/#licensing">Licensing</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" target="_blank" href="http://www.nmlsconsumeraccess.org/">NMLS Consumer Access</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" href="/privacy-policy/">Privacy Policy</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" href="/information/">Terms of Use</a></li>
+                           <li class=" footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/information/#licensing'">Licensing</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" target="_blank" onclick="window.location='http://www.nmlsconsumeraccess.org/'">NMLS Consumer Access</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/privacy-policy/'">Privacy Policy</a></li>
+                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/information/'">Terms of Use</a></li>
                         </ul>
                      </div>
                   </div>
                </div>
+            </div>
+            
+           <div class="footer-col-md-3 float-left">
+               <div class="footer-newfi-image"></div> 
+               <div class="footer-newfi-information">a new way to finance your home</div>
+               <div class="footer-newfi-information-subtxt">
+               <p class="footer-subtxt">2200 Powell Street, Suite 340</p>
+               <p class="footer-subtxt">Emeryville, CA 94608</p>
+               <p class="footer-subtxt">Call now 1-888-316-3934</p></div>
+
             </div>
             <div class="footer-icon-col-md-3">
                <div id="text-5" class="sidebar-widget  widget_text">
@@ -246,11 +253,20 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
       </div>
    </section>
    <section class="section swatch-black">
-      <div class="footer-container-text">
-         © 2015 Nexera Holding LLC - DBA Newfi and Blustream | All Rights Reserved | NMLS ID 1231327
-      </div>
-      <br>
-   </section>
+               <div class="container">
+               <div id="footer">
+	<div class="footer-bottom">
+		<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
+			<div class="footer-home-image float-left" id="footeHomeImage">
+			<div class="footer-home-text" id="footerHomeText">Equal Housing Lender</div>
+		</a></div>
+			
+	</div>
+	<div class="footer-container-text"> © 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
+</div>
+<br>
+		</div></section>
+
 </footer>
 			
 		

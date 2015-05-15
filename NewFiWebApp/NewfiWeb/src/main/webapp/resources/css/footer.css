@@ -1,6 +1,6 @@
 
 section.section.swatch-black {
-    background-color: black;
+    background-color: #428bca;
 }
 
 .footer-container {
@@ -8,9 +8,8 @@ section.section.swatch-black {
     z-index: 3;
     width: 1170px;
     margin-right: auto;    
-    margin-left: auto;    
-    padding-left: 15px;   
-     padding-right: 15px;
+    margin-left: auto;       
+     
 }
 
 .footer-container {
@@ -19,22 +18,19 @@ section.section.swatch-black {
 
 .footer-container-text {
     text-align: center;
-    padding-top: 40px;
-    color: grey;
 }
 
 .footer-element-normal-bottom {
-  padding-top: 20px;
+  padding-top: 15px;
 }
 
 .footer-col-md-3 {
-  margin-left: 24px;
-  width:25%
-}
+  margin-left: 20px;
+  width: 25%;}
 
 .footer-sidebar-header {
   margin-bottom: 12px;
-  padding-bottom: 12px;
+  /* padding-bottom: 12px; */
   position: relative;
   color: white;
   font-size: 20px;
@@ -42,8 +38,8 @@ section.section.swatch-black {
 }
 
 .footer-border-width {
-  width: 50px;
-  border-bottom: 1px solid white;
+  width: 59px;
+  /* border-bottom: 1px solid white; */
 }
 
 .footer-order-list {
@@ -54,21 +50,23 @@ section.section.swatch-black {
 .footer-list {
   font-family: openSans;
   list-style: none;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.20);      
   margin-left: 0px;
-  padding-bottom: 13px;
-  padding-top: 13px;
+  padding: 6px;
+  /* padding-top: 13px; */
 }
 
 .footer-anchor {
-  font-family: OpenSans;
+  font-family: OpenSanslight;
   font-size: 14px;
-  color: white;
+   color: white; 
+   cursor: pointer;
 }
 
 .footer-icon-col-md-3 {
-  float: right;
+  /* float: right; */
  
+  padding-left: 25px;
 }
 
 .footer-icon-container{
@@ -132,8 +130,59 @@ div.footeremail:hover{
   z-index: 9999;
   border-top: 1px solid #E5E5E5;
 }
+.footer-newfi-image {
+    background: url(../images/newfi_logo_big.png) no-repeat center;
+    height: 51px;
+    background-size: 35%;
+}
 
+.footer-newfi-information {
+    /* font-family: 'OpenSansLight'; */
+    font-family: OpenSanslight;
+    font-size: 15px;
+    text-align: right;
+    margin-right: -15px;
+}
+
+.footer-newfi-information-subtxt {
+    /* font-family: 'OpenSans'; */
+    /* font-size: 40px; */
+    padding-top: 15px;
+}
+
+p.footer-subtxt {
+    /* font-family: 'OpenSansLight'; */
+    font-family: OpenSanslight;
+    font-size: 14px;
+    text-align: left;
+    margin: 0px;
+    margin-left: 98px;
+}
+
+.footer-home-text {    
+    color: white;    
+    
+	
+    padding-left: 30px;
+    white-space: nowrap;
+}
+
+.footer-home-image {
+    background: url(../images/house.png) no-repeat left;
+    
+    background-color: none !important;
+    background-size: 100% auto;
+    height: 20px;
+    width: 20px;
+    margin-top: -2px;
+    float: left;
+}
+
+.footer-bottom {
+    padding-top: 45px;
+}
 * html.footer-wrapper  {
    position:absolute;
    top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
 }
+
