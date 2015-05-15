@@ -37,4 +37,8 @@ public interface SendEmailService {
 	boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
 	        throws InvalidInputException, UndeliveredEmailException;
 
+	public void sendSMS(UserVO user);
+
+	public void sendSMS(User user);
+
 }

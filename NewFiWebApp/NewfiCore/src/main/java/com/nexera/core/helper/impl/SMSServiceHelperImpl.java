@@ -75,14 +75,16 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 		int msgLength;
 		String subject = " ";
 		LOGGER.debug("Calculating message Length ");
-		msgLength = CommonConstants.SENDER_EMAIL_ID.length() + 1
+		msgLength = CommonConstants.SENDER_DEFAULT_USER_NAME.length()
+		        + CommonConstants.SENDER_EMAIL_ID.length() + 1
 		        + subject.length() + 1 + smsBodyText.length();
 		if (msgLength > maxlength) {
 			LOGGER.error("Message Length Too Long ");
 			return false;
 		}
 		email.setText(smsBodyText);
-		email.setFrom(CommonConstants.SENDER_EMAIL_ID);
+		email.setFrom(CommonConstants.SENDER_DEFAULT_USER_NAME
+		        + CommonConstants.SENDER_EMAIL_ID);
 		email.setSubject(subject);
 		email.setTo(tos);
 		if (sendGridEmailService.sendSMSEmail(email) == null) {

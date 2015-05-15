@@ -720,8 +720,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 				substitutions.put("-listofitems-",
 				        new String[] { getNeedsListNameById(addedList) });
 				substitutions.put("-url-", new String[] { baseUrl });
-				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
-				        + CommonConstants.SENDER_EMAIL_ID);
+				if (loanVO.getUser() != null) {
+					emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+					        + CommonConstants.SENDER_EMAIL_ID);
+				} else {
+					emailEntity
+					        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+					                + CommonConstants.SENDER_EMAIL_ID);
+				}
 				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 				emailEntity
 				        .setSubject(CommonConstants.SUBJECT_INITIAL_NEEDS_LIST_ARE_SET);
@@ -775,8 +781,14 @@ public class NeedsListServiceImpl implements NeedsListService {
 		substitutions.put("-listofitems-",
 		        new String[] { getNeedsListNameById(addedList)
 		                + getNeedsListNameById(removedList) });
-		emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (loanVO.getUser() != null) {
+			emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("You Needs list has been updated");
 		emailEntity.setTokenMap(substitutions);
