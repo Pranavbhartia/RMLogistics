@@ -1390,8 +1390,8 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
         }).html("Create Newfi Account").on('click', function() {
             
         	
-        	inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
-        	inputCustomerDetails.propertyInsuranceCost = $('#CalInsuranceID2').val();
+        	//inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
+        	//inputCustomerDetails.propertyInsuranceCost = $('#CalInsuranceID2').val();
         	
             
         	var mainContainer = paintApplyNow(inputCustomerDetails);
