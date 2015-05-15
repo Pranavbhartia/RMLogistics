@@ -51,5 +51,5 @@ public class WorkflowDisplayConstants {
 	public static final String PAYMENT_PENDING = "pending";
 
 	public static final String PAYMENT_STATUS = "paymentStatus";
-
+	public static final String APP_FORM_COMPLETE = "APP_FORM_COMPLETE";
 }
