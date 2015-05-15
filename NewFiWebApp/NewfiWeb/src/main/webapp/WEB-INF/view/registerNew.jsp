@@ -159,6 +159,11 @@
             </div>
           </div>
           
+          <div class="reg-input-error hide errorMsg">
+           		<span class ="reg-registration-error">
+           		"We are sorry, this email address already has a newfi account.To login" <a href='javascript:goToLoginPage()'>click HERE</a>
+           		</span>
+          </div>
           
           
           <div class="reg-btn-wrapper clearfix">
@@ -303,7 +308,8 @@
 							createNewRealtor(registration);
 						}
 		            }else{
-		            	showErrorToastMessage(data.error.message);
+		            	//showErrorToastMessage(data.error.message);
+		            	$('.errorMsg').show();
 		            }
 		           
 		        },
@@ -364,6 +370,10 @@
 		    });	
 		}
 		
+		function goToLoginPage(){
+			
+			window.location.href='../../';
+		}
 	</script>
 </body>
 </html>

@@ -49,7 +49,11 @@ var contxtHolder={
             var contxt=ob.getContxtByCompletionStatus();
             contxt.clickHandler();
         }else{
+        	if(appUserDetails.loanType.loanTypeCd){
+        		paintRefinanceStep2();
+        	}else{
             paintSelectLoanTypeQuestion();
+        	}
         }
         
     }
