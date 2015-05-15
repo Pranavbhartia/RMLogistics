@@ -1308,8 +1308,14 @@ public class LoanServiceImpl implements LoanService {
 		recipientVO.setEmailID(loan.getUser().getEmailId());
 		emailEntity.setRecipients(new ArrayList<EmailRecipientVO>(Arrays
 		        .asList(recipientVO)));
-		emailEntity.setSenderEmailId(loan.getUser().getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (loan.getUser() != null) {
+			emailEntity.setSenderEmailId(loan.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
@@ -1335,8 +1341,14 @@ public class LoanServiceImpl implements LoanService {
 		                .getLockedRate().toString() : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
 
-		emailEntity.setSenderEmailId(loan.getUser().getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (loan.getUser() != null) {
+			emailEntity.setSenderEmailId(loan.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
@@ -1360,8 +1372,14 @@ public class LoanServiceImpl implements LoanService {
 			substitutions.put("-name-", new String[] { loan.getUser()
 			        .getFirstName() + " " + loan.getUser().getLastName() });
 			recipientVO.setEmailID(loan.getUser().getEmailId());
-			emailEntity.setSenderEmailId(loan.getUser().getUsername()
-			        + CommonConstants.SENDER_EMAIL_ID);
+			if (loan.getUser() != null) {
+				emailEntity.setSenderEmailId(loan.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
+			} else {
+				emailEntity
+				        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+				                + CommonConstants.SENDER_EMAIL_ID);
+			}
 			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 			emailEntity.setSubject("No Products Available");
 			emailEntity.setTokenMap(substitutions);
@@ -1382,8 +1400,14 @@ public class LoanServiceImpl implements LoanService {
 			Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
 			loanManagerSubstitutions.put("-customername-", new String[] { loan
 			        .getUser().getFirstName() });
-			loanManagerEmailEntity
-			        .setSenderEmailId(CommonConstants.SENDER_EMAIL_ID);
+			if (loan.getUser() != null) {
+				loanManagerEmailEntity.setSenderEmailId(loan.getUser()
+				        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
+			} else {
+				loanManagerEmailEntity
+				        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+				                + CommonConstants.SENDER_EMAIL_ID);
+			}
 			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
 			loanManagerEmailEntity.setSubject("No Products Available");
 			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
