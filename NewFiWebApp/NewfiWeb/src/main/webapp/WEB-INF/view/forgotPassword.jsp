@@ -106,7 +106,7 @@ $('#loginForm').submit(function(event){
 		$(".reg-input-reset-password").removeClass('ce-err-input');
 	}
 	if (!emailRegex.test(user.emailId)) {
-		$("#emailID").next('.err-msg').html("Invalid Email ID").show();
+		$("#emailID").next('.err-msg').html("Email ID is not valid").show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
 		$('#emailID').val('');
 		return;

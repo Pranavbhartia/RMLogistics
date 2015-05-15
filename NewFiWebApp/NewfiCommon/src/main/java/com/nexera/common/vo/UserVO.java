@@ -7,6 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nexera.common.commons.WorkflowConstants;
+
 public class UserVO implements Serializable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserVO.class);
@@ -40,6 +42,7 @@ public class UserVO implements Serializable {
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
 	private Boolean emailVerified;
+	public String emailVerfiedMessage=WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT;
 
 	public String getRoleName() {
 		String roleName = "NA";
