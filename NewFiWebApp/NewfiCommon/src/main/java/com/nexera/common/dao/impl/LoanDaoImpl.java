@@ -186,8 +186,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		 * criteria.add(Restrictions.eq("ls.loanStatusCd", "1"));
 		 */
 		Loan loan = (Loan) criteria.uniqueResult();
-		Hibernate.initialize(loan.getLoanProgressStatus());
-		Hibernate.initialize(loan.getLoanType());
+		if (loan != null) {
+			Hibernate.initialize(loan.getLoanProgressStatus());
+			Hibernate.initialize(loan.getLoanType());
+		}
 
 		return loan;
 	}
