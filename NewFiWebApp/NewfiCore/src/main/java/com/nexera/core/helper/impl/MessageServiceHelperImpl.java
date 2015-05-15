@@ -112,6 +112,17 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		 * Set all users who will have access to this message
 		 */
 		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
+		if (loggedInUser.getUserRole().getRoleCd()
+		        .equals(UserRolesEnum.CUSTOMER.getName())) {
+			// get system User
+			User usr = (User) userProfileDao.load(User.class, 1);
+			loggedInUser = new User();
+			loggedInUser.setId(usr.getId());
+			loggedInUser.setUsername(usr.getUsername());
+			loggedInUser.setPhotoImageUrl(usr.getPhotoImageUrl());
+			loggedInUser.setFirstName(usr.getFirstName());
+			loggedInUser.setLastName(usr.getLastName());
+		}
 		MessageUserVO createdUserVO = messageVO.createNewUserVO();
 		createdUserVO.setUserID(loggedInUser.getId());
 		createdUserVO.setImgUrl(loggedInUser.getPhotoImageUrl());
