@@ -245,7 +245,7 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
-	@RequestMapping(value={"reset.do", "verify.do"})
+	@RequestMapping(value="reset.do")
 	public ModelAndView resetPassword(
 	        @RequestParam(value = "reference", required = false) String identifier,
 	        @RequestParam(value = "verifyEmailPath", required = false) String verifyEmailPath,
