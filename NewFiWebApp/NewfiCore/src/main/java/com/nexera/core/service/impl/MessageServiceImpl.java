@@ -27,6 +27,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.exception.NonFatalException;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageHierarchyVO;
 import com.nexera.common.vo.MessageQueryVO;
 import com.nexera.common.vo.MessageVO;
@@ -39,7 +40,10 @@ import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.mongo.MongoMessageHierarchyVO;
 import com.nexera.common.vo.mongo.MongoMessagesVO;
 import com.nexera.common.vo.mongo.MongoQueryVO;
+import com.nexera.core.helper.SMSServiceHelper;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MessageService;
+import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
@@ -59,6 +63,15 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	TemplateService templateService;
+
+	@Autowired
+	SMSServiceHelper smsServiceHelper;
+
+	@Autowired
+	SendEmailService sendEmailService;
+
+	@Autowired
+	LoanService loanService;
 
 	@Autowired
 	UserProfileService userProfileService;
@@ -129,19 +142,22 @@ public class MessageServiceImpl implements MessageService {
 		}
 		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 		for (User user : users) {
-			EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-			emailRecipientVO.setEmailID(user.getEmailId());
-			emailRecipientVO.setRecipientName(user.getFirstName());
-			emailRecipientVO.setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
-			recipients.add(emailRecipientVO);
-			if (user.getCustomerDetail() != null
-			        && user.getCustomerDetail().getSecEmailId() != null
-			        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
-				emailRecipientVO.setEmailID(user.getCustomerDetail()
-				        .getSecEmailId());
+			if (user.getEmailVerified()) {
+				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+				emailRecipientVO.setEmailID(user.getEmailId());
 				emailRecipientVO.setRecipientName(user.getFirstName());
 				emailRecipientVO
 				        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+				recipients.add(emailRecipientVO);
+				if (user.getCustomerDetail() != null
+				        && user.getCustomerDetail().getSecEmailId() != null
+				        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
+					emailRecipientVO.setEmailID(user.getCustomerDetail()
+					        .getSecEmailId());
+					emailRecipientVO.setRecipientName(user.getFirstName());
+					emailRecipientVO
+					        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+				}
 			}
 		}
 		emailVO.setRecipients(recipients);
@@ -195,6 +211,9 @@ public class MessageServiceImpl implements MessageService {
 		emailVO.setTemplateId(template.getValue());
 
 		sendGridEmailService.sendAsyncMail(emailVO);
+		LoanVO loan = loanService.getLoanByID(messagesVO.getLoanId());
+		if (loan != null && loan.getUser() != null)
+			sendEmailService.sendSMS(loan.getUser());
 
 	}
 

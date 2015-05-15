@@ -50,7 +50,6 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
-import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
@@ -489,7 +488,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private void sendNewUserEmail(User user) throws InvalidInputException,
 	        UndeliveredEmailException {
-		String subject = "You have been subscribed to Nexera";
+		String subject = "Welcome to newfi";
 		EmailVO emailEntity = new EmailVO();
 
 		Template template = null;
@@ -508,8 +507,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
 		substitutions.put("-username-", new String[] { user.getEmailId() });
-		String uniqueURL = baseUrl + "verify.do?reference="
-		        + user.getEmailEncryptionToken()+"&verifyEmailPath=verifyEmail";
+
+		String uniqueURL = baseUrl + "reset.do?reference="
+		        + user.getEmailEncryptionToken()
+		        + "&verifyEmailPath=verifyEmail";
 
 		substitutions.put("-baseUrl-", new String[] { baseUrl });
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
@@ -1261,7 +1262,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 							loanService.createAlertForAgent(loanVO.getId());
 							// code to send mail for no product found
 							boolean noProductFound = false;
-							if (teaseRateDataList.get(0) == null) {
+							if (null != teaseRateDataList
+							        && teaseRateDataList.get(0) == null) {
 								noProductFound = true;
 								LOG.info("loan type is NONE..................................................");
 								loanTypeMasterVO = loanVO.getLoanType();

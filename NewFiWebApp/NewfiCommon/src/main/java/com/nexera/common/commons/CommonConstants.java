@@ -86,6 +86,8 @@ public interface CommonConstants {
 
 	public static final String SENDER_EMAIL_ID = "@loan.newfi.com";
 
+	public static final String SENDER_DEFAULT_USER_NAME = "support";
+
 	public static final String RAREMILE_SUPPORT_EMAIL_ID = "";
 
 	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>"
@@ -237,6 +239,8 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_APPRAISAL_RECEIVED = "Appraisal Received";
 
+	public static final String SUBJECT_PASSWORD_NOT_UPADTED = "Password not updated! Please update";
+
 	public static final String SUBJECT_DISCLOSURE_AVAILABLE = "Disclosure Available";
 
 	public static final String SUBJECT_DISCLOSURE_ARE_COMPLETE = "Disclosure Are Complete";
@@ -258,6 +262,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_LOAN_IS_CLEAR_TO_CLOSE = "Loan Is Clear To Close";
 
 	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
+
+	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 

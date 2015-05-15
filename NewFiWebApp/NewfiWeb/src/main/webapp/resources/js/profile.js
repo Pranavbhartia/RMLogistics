@@ -159,11 +159,11 @@ function LoanPersonalInfoWrapper(user) {
 		}
 
 	}
-		appendChangePasswordContainer();
+		appendChangePasswordContainer(user);
 
 }
 
-function appendChangePasswordContainer(){
+function appendChangePasswordContainer(userDetails){
 
 	var lqbWrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
@@ -174,11 +174,22 @@ function appendChangePasswordContainer(){
 		"class" : "cust-personal-info-header"
 	}).html("Change Password");
 
-	var lqbContainer = getPasswordInfoContainer(user);
-
-	lqbWrapper.append(lqbHeader).append(lqbContainer);
 	
-		$('#loan-profile-main-container').append(lqbWrapper);
+	
+	var lqbContainer = getPasswordInfoContainer(user);
+	
+	   if(userDetails.emailVerified)
+	   {
+	   lqbWrapper.append(lqbHeader).append(lqbContainer);
+	   }
+	   else
+	   {
+		   
+			lqbWrapper.append(lqbHeader).append(appendMessage("Please verify your email before changing  password"));
+			
+		}
+
+	$('#loan-profile-main-container').append(lqbWrapper);
 	if(newfiObject.user.userRole.roleDescription==userRole){
 		$('#profile-main-container').append(lqbWrapper);
 	}
@@ -704,7 +715,10 @@ function customerPersonalInfoWrapper(user) {
 	var container = getCustPersonalInfoContainer(user);
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
-	appendChangePasswordContainer();
+
+			appendChangePasswordContainer(user);
+
+
 	
 }
 
