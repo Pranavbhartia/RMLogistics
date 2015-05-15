@@ -607,6 +607,7 @@ function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 				contxt : contxt,
 				container : alertContainer
 			}, function(e) {
+				e.stopPropagation();
 				var notificationid = e.data.notificationid;
 				var contxt = e.data.contxt;
 				var container = e.data.container;
