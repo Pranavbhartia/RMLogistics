@@ -796,7 +796,8 @@ public class NexeraUtility {
 		Email email = new Email();
 		String subject = "Exception Occured";
 		email.setText(exceptionMessage);
-		email.setFrom("support" + CommonConstants.SENDER_EMAIL_ID);
+		email.setFrom(CommonConstants.SENDER_DEFAULT_USER_NAME
+		        + CommonConstants.SENDER_EMAIL_ID);
 		email.setSubject(subject);
 		email.setTo(tos);
 		sendGridEmailService.sendExceptionEmail(email);

@@ -117,8 +117,14 @@ public class UserManager implements Runnable {
 		        + user.getLastName() });
 
 		substitutions.put("-url-", new String[] { baseUrl });
-		emailEntity.setSenderEmailId(user.getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (user != null) {
+			emailEntity.setSenderEmailId(user.getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Password Not Updated! Pelase Update.");
 		emailEntity.setTokenMap(substitutions);
@@ -142,10 +148,16 @@ public class UserManager implements Runnable {
 		        + user.getEmailEncryptionToken();
 		substitutions.put("-passwordurl-", new String[] { uniqueURL });
 
-		emailEntity.setSenderEmailId(user.getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (user.getUsername() != null) {
+			emailEntity.setSenderEmailId(user.getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setSubject(CommonConstants.SUBJECT_PASSWORD_NOT_UPADTED);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 

@@ -124,8 +124,13 @@ public class BraintreePaymentGatewayServiceImpl implements
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() });
 
-		emailVO.setSenderEmailId(user.getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+		if (user.getUsername() != null) {
+			emailVO.setSenderEmailId(user.getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailVO.setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			        + CommonConstants.SENDER_EMAIL_ID);
+		}
 		emailVO.setSenderName(CommonConstants.SENDER_NAME);
 		emailVO.setSubject(subject);
 		emailVO.setTemplateId(templateId);
