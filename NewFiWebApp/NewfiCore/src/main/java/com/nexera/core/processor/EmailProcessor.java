@@ -27,8 +27,8 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.ExceptionMaster;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
-import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageVO.FileVO;
@@ -118,8 +118,7 @@ public class EmailProcessor implements Runnable {
 						fromAddressString = fromAddressString.substring(
 						        fromAddressString.indexOf("<") + 1,
 						        fromAddressString.indexOf(">")).trim();
-					User uploadedByUser = userProfileService
-					        .findUserByMail(fromAddressString);
+
 					String toAddressString = null;
 					for (Address address : toAddress) {
 						if ((address.toString()).contains("NewFi Team")) {
@@ -148,21 +147,13 @@ public class EmailProcessor implements Runnable {
 								        userName.indexOf("@"));
 							}
 
-							try {
-								UserVO userVO = userProfileService
-								        .findByUserName(userName);
-								LoanVO loan = loanService
-								        .getActiveLoanOfUser(userVO);
-								if (loan != null) {
-									loanId = String.valueOf(loan.getId());
-								} else {
-									loanId = null;
-								}
-							} catch (NoRecordsFetchedException ne) {
-								LOGGER.error("User not found exception ");
-								loanId = null;
+							LOGGER.debug("Expecting the username in this format userid+loanid@loan.newfi.com");
+							LoanVO loanVO = loanService
+							        .getLoanByLoanEmailId(userName
+							                + CommonConstants.SENDER_EMAIL_ID);
+							if (loanVO != null) {
+								loanId = String.valueOf(loanVO.getId());
 							}
-
 						} else if (toAddressArray.length == 2) {
 							LOGGER.debug("This is a reply mail, must contain a message id");
 							messageId = toAddressArray[0];
@@ -181,7 +172,9 @@ public class EmailProcessor implements Runnable {
 
 					int loanIdInt = -1;
 					try {
-						loanIdInt = Integer.parseInt(loanId);
+						if (loanId != null) {
+							loanIdInt = Integer.parseInt(loanId);
+						}
 					} catch (NumberFormatException ne) {
 						LOGGER.error("Not a valid loan entry ");
 						nexeraUtility.putExceptionMasterIntoExecution(
@@ -193,9 +186,51 @@ public class EmailProcessor implements Runnable {
 					}
 
 					if (loanIdInt != -1) {
+						boolean loanFound = false;
 						LoanVO loanVO = loanService.getLoanByID(loanIdInt);
 						String emailBody = getEmailBody(mimeMessage);
+						User uploadedByUser = userProfileService
+						        .findUserByMail(fromAddressString);
+						if (uploadedByUser != null) {
+							LOGGER.debug("Found a user, checking whether he belongs to this loan");
+							for (Loan loan : uploadedByUser.getLoans()) {
+								if (loan.getId() == loanIdInt) {
+									loanFound = true;
+									break;
+								}
+							}
+							if (!loanFound) {
+								LOGGER.debug("Checking if this loan has association with seconday email id");
+								User secondaryUser = userProfileService
+								        .findBySecondaryEmail(fromAddressString);
+								if (secondaryUser != null) {
+									for (Loan loan : secondaryUser.getLoans()) {
+										if (loan.getId() == loanIdInt) {
+											loanFound = true;
+											uploadedByUser = secondaryUser;
+											break;
+										}
+									}
+								}
 
+							}
+						} else {
+							LOGGER.debug("Checking if this is seconday email");
+							User secondaryUser = userProfileService
+							        .findBySecondaryEmail(fromAddressString);
+							if (secondaryUser != null) {
+								LOGGER.debug("Found user with secondary email, checking if it belongs to this loan");
+								for (Loan loan : secondaryUser.getLoans()) {
+									if (loan.getId() == loanIdInt) {
+										uploadedByUser = secondaryUser;
+										loanFound = true;
+										break;
+									}
+								}
+
+							}
+
+						}
 						LOGGER.debug("Applying Regex On Email ");
 						List<String> regexPatternStrings = new ArrayList<String>();
 						regexPatternStrings.add(regexPattern1);
@@ -212,7 +247,7 @@ public class EmailProcessor implements Runnable {
 
 						LOGGER.debug("Body of the email is " + emailBody);
 						if (loanVO != null) {
-							if (uploadedByUser != null) {
+							if (loanFound) {
 
 								extractAttachmentAndUploadEverything(emailBody,
 								        loanVO, uploadedByUser,

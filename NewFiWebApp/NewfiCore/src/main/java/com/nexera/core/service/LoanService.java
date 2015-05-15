@@ -172,4 +172,6 @@ public interface LoanService {
 	public void createAlertForAgentAddition(int loanId);
 
 	void createAlertForAgent(int loanId);
+
+	public LoanVO getLoanByLoanEmailId(String string);
 }

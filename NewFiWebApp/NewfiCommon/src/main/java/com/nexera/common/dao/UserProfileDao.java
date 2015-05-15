@@ -114,10 +114,11 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateTutorialStatus(Integer id);
 
-
 	public void verifyEmail(int userID) throws DatabaseException,
 	        HibernateException;
 
 	public List<User> getAllSalesManagers();
+
+	public User getUserBySecondaryMail(String emailAddress);
 
 }

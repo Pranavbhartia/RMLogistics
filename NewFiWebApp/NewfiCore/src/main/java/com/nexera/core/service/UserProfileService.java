@@ -130,8 +130,10 @@ public interface UserProfileService {
 
 	public void updateLoginTime(Date date, int userId);
 
-
 	public void verifyEmail(int userId);
+
 	public List<User> geAllSalesManagers();
+
+	public User findBySecondaryEmail(String fromAddressString);
 
 }

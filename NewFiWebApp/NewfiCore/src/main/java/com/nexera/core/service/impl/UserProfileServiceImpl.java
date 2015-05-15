@@ -1590,4 +1590,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return userProfileDao.getAllSalesManagers();
 
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public User findBySecondaryEmail(String fromAddressString) {
+		return userProfileDao.getUserBySecondaryMail(fromAddressString);
+	}
 }

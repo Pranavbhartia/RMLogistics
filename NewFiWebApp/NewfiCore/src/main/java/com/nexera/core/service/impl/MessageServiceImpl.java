@@ -152,18 +152,19 @@ public class MessageServiceImpl implements MessageService {
 				if (user.getCustomerDetail() != null
 				        && user.getCustomerDetail().getSecEmailId() != null
 				        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
-					emailRecipientVO.setEmailID(user.getCustomerDetail()
+					EmailRecipientVO newEmailRecipientVO = new EmailRecipientVO();
+					newEmailRecipientVO.setEmailID(user.getCustomerDetail()
 					        .getSecEmailId());
-					emailRecipientVO.setRecipientName(user.getFirstName());
-					emailRecipientVO
+					newEmailRecipientVO.setRecipientName(user.getFirstName());
+					newEmailRecipientVO
 					        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+					recipients.add(newEmailRecipientVO);
 				}
 			}
 		}
 		emailVO.setRecipients(recipients);
 
 		// Set the subject as New note taken in the system
-		emailVO.setSubject(CommonConstants.NOTE_SUBJECT);
 
 		if (messagesVO.getCreatedUser() != null) {
 			UserVO user = null;
@@ -175,6 +176,8 @@ public class MessageServiceImpl implements MessageService {
 			}
 			if (user != null) {
 				emailVO.setCC(user.getEmailId());
+				emailVO.setSubject(CommonConstants.NOTE_SUBJECT + " "
+				        + user.getFirstName());
 			}
 		}
 		// Set reply to as the messageId of mongomessageId
