@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,12 +14,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.util.HSSFColor.WHITE;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 
+import com.google.gson.annotations.Until;
+import com.nexera.extractor.constants.CommonConstant;
 import com.nexera.extractor.entity.FileProductPointRate;
 import com.nexera.extractor.entity.ProductPointRate;
 import com.nexera.extractor.entity.RestResponse;
@@ -30,6 +38,9 @@ public class Utility {
 
 	private static HashMap<Long, Map<String, List<UIEntity>>> cache = new HashMap<Long, Map<String, List<UIEntity>>>();
 
+	@Autowired
+	private CommonConstant commonConstant;
+	
 	private static final String[] FILE_KEY_INDEX = {
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
@@ -167,104 +178,41 @@ public class Utility {
 
 	public static Integer currentIndex = 0;
 
-	public List<Map<String, List<ProductPointRate>>> getCompleteProductRateList(
-	        List<FileProductPointRate> fileProductPointRates) {
-		return null;
-		// Map<String, List<ProductPointRate>> rateMap = new HashMap<String,
-		// List<ProductPointRate>>();
-		// List<Map<String, List<ProductPointRate>>> rateMapList = new
-		// ArrayList<Map<String, List<ProductPointRate>>>();
-		//
-		// // Iterate through each file, Find, which Map it belongs and add that
-		// // Map to the corresponding list
-		// for (FileProductPointRate fileProductPointRate :
-		// fileProductPointRates) {
-		//
-		// String fileName = fileProductPointRate.getFileName();
-		// String patternIndex = getFilePattern(fileName);
-		// String keyIndex = getKeyIndex(fileName);
-		// if (keyIndex == null || patternIndex == null) {
-		// // If either is null, it means the file is not in the PATTERn we
-		// // are looking at
-		// System.out.println("Invalid file: " + fileName);
-		// continue;
-		// }
-		//
-		// if (rateMap.get(patternIndex) == null) {
-		// fileProductPointRate.getProductPointRate();
-		// rateMap.put(patternIndex,
-		// fileProductPointRate.getProductPointRate());
-		// } else {
-		// List<ProductPointRate> list = rateMap.get(patternIndex);
-		// list.addAll(fileProductPointRate.getProductPointRate());
-		// rateMap.put(patternIndex, list);
-		// }
-		// }
-		// Set<String> keySet = rateMap.keySet();
-		// Map<String, Map<String, List<String>>> uiMap = new HashMap<String,
-		// Map<String, List<String>>>();
-		//
-		// for (String key : keySet) {
-		// List<ProductPointRate> list = rateMap.get(key);
-		// System.out.println("Key: " + key);
-		// // System.out.println("Key: " + key);
-		// // System.out.println("---");
-		// Map<String, List<String>> tableMap = new HashMap<String,
-		// List<String>>();
-		//
-		// for (ProductPointRate productPointRate : list) {
-		// String rate = productPointRate.getRate();
-		//
-		// if (rate.equalsIgnoreCase("Rate")
-		// || rate.equalsIgnoreCase("Point:")) {
-		// continue;
-		// }
-		// if (tableMap.get(rate) == null) {
-		// List<String> rateList = new ArrayList<String>();
-		// if (!productPointRate.getPoint().equalsIgnoreCase("point")) {
-		// rateList.add(productPointRate.getPoint());
-		//
-		// tableMap.put(rate, rateList);
-		// }
-		//
-		// } else {
-		// List<String> rateList = tableMap.get(rate);
-		// if (!productPointRate.getPoint().equalsIgnoreCase("point")) {
-		// rateList.add(productPointRate.getPoint());
-		//
-		// tableMap.put(rate, rateList);
-		// }
-		//
-		// }
-		//
-		// }
-		// uiMap.put(key, tableMap);
-		//
-		// }
-		// Set<String> keys = uiMap.keySet();
-		// for (String key : keys) {
-		//
-		// Map<String, List<String>> mapList = uiMap.get(key);
-		// System.out.println("Key: " + key);
-		// System.out.println("---");
-		// Set<String> allKeys = mapList.keySet();
-		//
-		// for (String string : allKeys) {
-		// System.out.println("Rate: " + string);
-		// List<String> valueList = mapList.get(string);
-		// for (String string2 : valueList) {
-		// System.out.println(string2);
-		// }
-		// }
-		// System.out.println("---");
-		// }
-		//
-		// List<Map<String, List<ProductPointRate>>> listMap = new
-		// ArrayList<Map<String, List<ProductPointRate>>>();
-		//
-		// return listMap;
-	}
-
+	static final Map<String, String[]> FILE_PATTERN_LABEL_HEADER = new HashMap<String, String[]>() {
+		{
+			put("FNMA CONVENTIONAL FIXED RATE PRODUCTS" ,new String[]{
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("20_YR_FIXED_CONFORMING-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("10_YR_FIXED_CONFORMING-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_"),
+					FILE_PATTERN_LABEL.get("20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_"),
+					FILE_PATTERN_LABEL.get("10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_")
+			});
+			
+			put("FNMA CONVENTIONAL ARM PRODUCTS" , new String[]{
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_"),
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_HIBAL_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_")
+			});
+			
+			put("MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS" , new String[]{
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_"),
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_"),
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_")
+			});
+			
+			
+			put("CASCADES JUMBO FIXED PRODUCTS" , new String[]{
+				FILE_PATTERN_LABEL.get("30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_"),
+				FILE_PATTERN_LABEL.get("15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_")
+			});
+		}
+	};
+	
 	@SuppressWarnings("unused")
 	private Boolean isPresent(String pattern) {
 		for (String pattrn : FILE_PATTERN) {
@@ -646,4 +594,126 @@ public class Utility {
 		uiEntityList.add(uiEntity);
 		return uiEntity;
 	}
+	
+	
+	
+	
+	private void attachHeader(Row row , Cell cell , Integer cellNum) {
+	    Object[] objects = new Object[]{"Rate" , "15-Day" , "30-Day" , "45-Day" , "60-Day"};
+	    for (Object object : objects) {
+	    	Cell cellTable = row.createCell(cellNum++);
+	        writeValueToCell(object, cellTable);
+        }
+    }
+
+	private Object[] getObjectRow(UIEntity entity){
+		return new Object[]{
+				entity.getRate() , entity.getCol1Points() , entity.getCol2Points() , 
+				entity.getCol3Points() , entity.getCol4Points()
+		};
+	}
+	
+	public HSSFSheet writeResponseDataSetToSheet(HSSFSheet sheet ,RestResponse restResponse ){
+		Map<String, List<UIEntity>> data = restResponse.getData();
+		
+		Integer startRow = 4 ;
+		
+		Set<String> filePatternKeys = FILE_PATTERN_LABEL_HEADER.keySet();
+		for (String filePatternKey : filePatternKeys) {
+			iterateOverFilePatterns( filePatternKey, FILE_PATTERN_LABEL_HEADER.get(filePatternKey)
+										, sheet , data );
+        }
+		return sheet;
+	}
+	
+	private static Integer startRow = 4;
+	
+	private void iterateOverFilePatterns(String filePatternKey, String[] filePatternKeySet
+										, HSSFSheet sheet , Map<String, List<UIEntity>> data 
+										){
+		//Counter parametes 
+		
+		Integer startCell = 0;
+		Integer rowCounter = 0;
+		Integer newRowNum =null;
+		
+		Row row = null;
+		Cell cell = null;
+		startRow = startRow+4;
+		row = sheet.createRow(startRow);
+		cell = row.createCell(0);
+		
+		writeValueToCell(filePatternKey, cell);
+		
+		
+		for (String fileHeading : filePatternKeySet) {
+			
+			if(rowCounter==0){
+				startRow = startRow+3; 
+				row = sheet.createRow(startRow);
+				startCell = 0;
+				cell = row.createCell(startCell);
+			}else{
+				row = sheet.getRow(startRow);
+				startCell = startCell+7;
+				cell = row.createCell(startCell);
+			}
+			
+			String fileName = fileHeading;
+			writeValueToCell(fileName , cell);
+			
+			
+			newRowNum = writeDataTableToSheet(sheet ,data.get(fileName), startRow ,startCell ,rowCounter );
+			
+			
+			rowCounter++;
+			if(rowCounter==commonConstant.COLUMN_IN_SINGLE_ROW){
+				rowCounter = 0;
+				startRow = newRowNum;
+			}
+			
+			
+        }
+		startRow = newRowNum;
+	}
+
+	private Integer writeDataTableToSheet(HSSFSheet sheet ,List<UIEntity> uiEntityList , 
+				Integer startRow ,Integer startCell , Integer rowCounter) {
+		Integer rowNum = startRow;
+		
+	    for (UIEntity uiEntity : uiEntityList) {
+	    	Integer cellNum = startCell;
+	    	Row row = null;
+	    	
+	    	if(rowCounter== 0){
+	    		row = sheet.createRow(++rowNum);
+	    	}else{
+		    	if(sheet.getRow(++rowNum)== null)
+		    		row = sheet.createRow(rowNum);
+		    	else{
+		    		row = sheet.getRow(rowNum);
+		    	}
+	    	}
+			Object[] objects = getObjectRow(uiEntity);
+	       	
+		       	for (Object object : objects) {
+		       			Cell cell = row.createCell(cellNum++);
+		       			writeValueToCell(object , cell);
+		        }
+			  }
+		return rowNum;
+    }
+	
+	private void writeValueToCell(Object object , Cell cell){
+		if(object instanceof String){
+   			cell.setCellValue((String)object);
+   		}
+   		else if(object instanceof Double){
+   			cell.setCellValue((Double)object);
+   		}
+        else if(object instanceof BigDecimal){
+        	cell.setCellValue(String.valueOf(object));
+        }
+	}
+	
 }

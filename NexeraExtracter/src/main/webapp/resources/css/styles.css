@@ -156,11 +156,20 @@ a,a:hover,a:visited {
 }
 
 .print {
-	height: 35px;
+	height: 38px;
 	width: 35px;
 	background: url(../images/gnome_printer.png) no-repeat;
 	background-size: cover;
 	cursor: pointer;
+}
+
+.downloadExcel{
+	height: 38px;
+	width: 35px;
+	background: url(../images/file_xls_excel.png) no-repeat;
+	background-size: cover;
+	cursor: pointer;
+	margin-right:30px;
 }
 
 .body-header-container {

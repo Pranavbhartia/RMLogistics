@@ -68,32 +68,70 @@
           --%>
         </div>
         <div class="float-right new-user-container">
+                <c:set var="val" value="${userRole}"/>
+                 <c:choose>                 
+                  <c:when test="${val == 'Realtor'}">
+                    <div class="reg-input-row  clearfix hide">
+                       <div class="reg-row-lc-new reg-row-lc float-left hide">Register as</div>
+                         <div class="reg-row-rc-new reg-row-rc float-left hide">
+                           <div class="reg-select reg-input-cont hide">
+                              <input class="reg-option-selected prof-form-input-select hide"  id="userTypeID" placeholder="User Type" value="Customer"> 
+                            </div>
+                          </div>
+                       </div> 
+                                 <div class="reg-input-row realtor-row clearfix">
+            <div class="reg-row-lc-new reg-row-lc float-left">
+              Your Name
+            </div>
+            <div class="reg-row-rc-new reg-row-rc float-left clearfix">
+              <div class="reg-input-cont reg-fname float-left">
+                <input class="reg-input" placeholder="First Name" id="firstName">
+                <div class="err-msg hide"></div>
+              </div>
+              <div class="reg-input-cont reg-lname float-left">
+                <input class="reg-input" placeholder="Last Name" id="lastName">
+                <div class="err-msg hide"></div>
+              </div>
+            </div>
+          </div>
+          
           <div class="reg-input-row clearfix">
+            <div class="reg-row-lc-new reg-row-lc float-left">
+              Your email id
+            </div>
+            <div class="reg-row-rc-new reg-row-rc float-left">
+              <div class="reg-input-cont reg-email">
+                <input class="reg-input" placeholder="Email" id="emailID">
+                <div class="err-msg hide"></div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          <div class="reg-btn-wrapper clearfix">
+            <div class="reg-btn float-left" id="submitID">
+              Submit
+            </div>
+          </div> 
+                  </c:when>
+                  <c:otherwise>
+                            <div class="reg-input-row clearfix">
             <div class="reg-row-lc-new reg-row-lc float-left">
               Register as
             </div>
             <div class="reg-row-rc-new reg-row-rc float-left">
               <div class="reg-select reg-input-cont">
-                <c:set var="val" value="${userRole}"/>
-                <c:choose>
-                  
-                  <c:when test="${val == 'Realtor'}">
-                    <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="Customer">
-                  </c:when>
-                  <c:otherwise>
                     <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
                     <div class="reg-option-dropdown hide">
                       <div class="reg-select-option" id="customerID" role="cus">Customer</div>
                       
                       <div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
                     </div>
-                  </c:otherwise>
-                </c:choose>
-              </div>
-            </div>
-          </div>
-          
-          <div class="reg-input-row clearfix">
+                    </div>
+                    </div>
+                    </div>
+                              <div class="reg-input-row clearfix">
             <div class="reg-row-lc-new reg-row-lc float-left">
               Your Name
             </div>
@@ -128,6 +166,11 @@
               Submit
             </div>
           </div>
+                  </c:otherwise>
+                </c:choose>
+            
+          
+
           
           
         </div>

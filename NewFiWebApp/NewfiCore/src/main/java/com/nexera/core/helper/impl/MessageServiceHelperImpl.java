@@ -335,9 +335,11 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 			Date loginDate = user.getLastLoginDate();
 			if (loginDate == null) {
-				LoanVO loanVO = loanService.getActiveLoanOfUser(User
-				        .convertFromEntityToVO(loggedInUser));
-				this.generateWelcomeNote(loggedInUser, loanVO.getId());
+				/*
+				 * LoanVO loanVO = loanService.getActiveLoanOfUser(User
+				 * .convertFromEntityToVO(loggedInUser));
+				 * this.generateWelcomeNote(loggedInUser, loanVO.getId());
+				 */
 			}
 			if (!isShopper) {
 				userProfileDao.updateLoginTime(
