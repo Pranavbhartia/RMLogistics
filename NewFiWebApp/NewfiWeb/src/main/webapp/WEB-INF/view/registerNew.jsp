@@ -107,6 +107,11 @@
             </div>
           </div>
           
+          <div class="reg-input-error hide errorMsg">
+           		<span class ="reg-registration-error">
+           		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage()' style="color: #2F6BF7">click here</a>
+           		</span>
+          </div>
           
           
           <div class="reg-btn-wrapper clearfix">
@@ -161,7 +166,7 @@
           
           <div class="reg-input-error hide errorMsg">
            		<span class ="reg-registration-error">
-           		"We are sorry, this email address already has a newfi account.To login" <a href='javascript:goToLoginPage()'>click HERE</a>
+           		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage()' style="color: #2F6BF7">click here</a>
            		</span>
           </div>
           

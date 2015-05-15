@@ -1058,7 +1058,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     var errorMsgSpan = $('<span>').attr({
         "class": "registration-error",
         
-    }).html("We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLogin()'>click HERE</a>").on('click',function(){
+    }).html("We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLogin()' style='color: #2F6BF7'>click here</a>").on('click',function(){
     	
     	$('.errorMsg').hide();
     });
