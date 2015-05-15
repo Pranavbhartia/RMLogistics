@@ -162,7 +162,11 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getActiveLoanOfUser(UserVO user) {
 
 		Loan loan = loanDao.getActiveLoanOfUser(this.parseUserModel(user));
-		return Loan.convertFromEntityToVO(loan);
+		if (loan != null) {
+			return Loan.convertFromEntityToVO(loan);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
