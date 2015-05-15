@@ -155,7 +155,8 @@ public class ApplicationFormRestService {
 				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO))
 				        .toString());
 				LOG.debug("Save Loan Response is " + response);
-				if (null != loaAppFormVO.getLoan()) {
+				if (null != loaAppFormVO.getLoan()
+				        && !loanNumber.equals("error")) {
 					LoanVO loan = loaAppFormVO.getLoan();
 					loan.setLqbFileId(loanNumber);
 					String loanAppFrm = gson.toJson(loaAppFormVO);
@@ -177,7 +178,7 @@ public class ApplicationFormRestService {
 			e.printStackTrace();
 			lockRateData = "error";
 		}
-		if (lockRateData == null || lockRateData == "error") {
+		if (lockRateData == null || lockRateData.equals("error")) {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()

@@ -1490,4 +1490,11 @@ public class LoanServiceImpl implements LoanService {
 			notificationService.createNotificationAsync(notificationVO);
 		}
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanVO getLoanByLoanEmailId(String loanEmailId) {
+
+		return loanDao.findLoanByLoanEmailId(loanEmailId);
+	}
 }

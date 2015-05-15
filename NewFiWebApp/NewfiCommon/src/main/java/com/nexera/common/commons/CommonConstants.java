@@ -99,7 +99,7 @@ public interface CommonConstants {
 	/*
 	 * Constants for email subjects
 	 */
-	public static final String NOTE_SUBJECT = "newfi - You have a new note";
+	public static final String NOTE_SUBJECT = "Newfi Message from ";
 
 	public static final String ANONYMOUS_USER = "User name unavailable";
 

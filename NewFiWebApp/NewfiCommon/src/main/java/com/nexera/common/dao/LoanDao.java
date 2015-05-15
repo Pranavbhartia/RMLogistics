@@ -17,6 +17,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 
 public interface LoanDao extends GenericDao {
@@ -124,4 +125,6 @@ public interface LoanDao extends GenericDao {
 	        LoanProgressStatusMaster loanProgressValue);
 	
 	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo);
+
+	public LoanVO findLoanByLoanEmailId(String loanEmailId);
 }
