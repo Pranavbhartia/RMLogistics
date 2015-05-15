@@ -30,6 +30,8 @@ import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
+import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.UserVO;
@@ -200,15 +202,28 @@ public class EmailProcessor implements Runnable {
 								}
 							}
 							if (!loanFound) {
-								LOGGER.debug("Checking if this loan has association with seconday email id");
-								User secondaryUser = userProfileService
-								        .findBySecondaryEmail(fromAddressString);
-								if (secondaryUser != null) {
-									for (Loan loan : secondaryUser.getLoans()) {
-										if (loan.getId() == loanIdInt) {
-											loanFound = true;
-											uploadedByUser = secondaryUser;
-											break;
+								LoanTeamListVO loanTeamList = loanService
+								        .getLoanTeamListForLoan(loanVO);
+								for (LoanTeamVO teamMember : loanTeamList
+								        .getLoanTeamList()) {
+									if (teamMember.getUser().getId() == uploadedByUser
+									        .getId()) {
+										loanFound = true;
+										break;
+									}
+								}
+								if (!loanFound) {
+									LOGGER.debug("Checking if this loan has association with seconday email id");
+									User secondaryUser = userProfileService
+									        .findBySecondaryEmail(fromAddressString);
+									if (secondaryUser != null) {
+										for (Loan loan : secondaryUser
+										        .getLoans()) {
+											if (loan.getId() == loanIdInt) {
+												loanFound = true;
+												uploadedByUser = secondaryUser;
+												break;
+											}
 										}
 									}
 								}
@@ -417,10 +432,16 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
+					        emailBody, fileVOList, true, sendEmail);
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
 					        successNoteText, fileVOList, true, sendEmail);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        emailBody, fileVOList, true, sendEmail);
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
 					        failureNoteText, null, false, sendEmail);
