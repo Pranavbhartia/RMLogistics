@@ -157,10 +157,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
 
+	@Value("${cryptic.key}")
+	private String crypticKey;
+
 	@Value("${profile.url}")
 	private String baseUrl;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
+
+	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
+	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
 
 	@Override
 	@Transactional(readOnly = true)
@@ -1337,6 +1343,23 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
+		if (user.getInternalUserDetail() != null) {
+			String lqbUsername = user.getInternalUserDetail().getLqbUsername();
+			if (lqbUsername != null) {
+				String encryptedlqbUserName = nexeraUtility.encrypt(salt,
+				        crypticKey, lqbUsername);
+				user.getInternalUserDetail().setLqbUsername(
+				        encryptedlqbUserName);
+			}
+			String lqbPassword = user.getInternalUserDetail().getLqbPassword();
+			if (lqbPassword != null) {
+				String encryptedLqbPassword = nexeraUtility.encrypt(salt,
+				        crypticKey, lqbPassword);
+				user.getInternalUserDetail().setLqbPassword(
+				        encryptedLqbPassword);
+			}
+		}
+
 		return userProfileDao.updateLqbProfile(user);
 
 	}
@@ -1419,8 +1442,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (userVO != null) {
 				String lqbUsername = userVO.getInternalUserDetail()
 				        .getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
+				if (lqbUsername != null) {
+					lqbUsername = nexeraUtility.decrypt(salt, crypticKey,
+					        lqbUsername);
+				}
 				String lqbPassword = userVO.getInternalUserDetail()
 				        .getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
+				if (lqbPassword != null) {
+					lqbPassword = nexeraUtility.decrypt(salt, crypticKey,
+					        lqbPassword);
+				}
 				if (lqbUsername != null && lqbPassword != null) {
 					JSONObject authOperationObject = createAuthObject(
 					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
