@@ -371,6 +371,7 @@ CHANGE COLUMN `includeTaxes` `includeTaxes` TINYINT(1) NULL DEFAULT NULL ;
 ALTER TABLE `newfi_schema`.`user` ADD COLUMN `email_verified` TINYINT(1) DEFAULT '0' NULL AFTER `carrier_info`;
 
 UPDATE user SET email_verified=1 WHERE id IN (1,2);
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='9';
 
 #By Rajeswari : For Contact your Loan Manager : 16 May
 INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('42', 'CONTACT_YOUR_LA', 'Contact your Loan Advisor', '21', '2', '2015-02-28 14:23:35', '-1', '2015-02-28 14:23:35', '0', '1', '26', '0', '6', '1');
@@ -393,3 +394,12 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='7' WHERE `id`='4
 
 #Rajeswari - 16 May for LM to Loan Advisor Change
 UPDATE `newfi_schema`.`internaluserrolemaster` SET `role_description`='Loan Advisor' WHERE `id`='1';
+
+#16 May for 1003 Complete for Cystomer
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`, `params`) VALUES ('35', 'com.nexera.newfi.workflow.customer.tasks.App1003CustomerDisplayManager', '{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}');
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('43', 'LQB_1003_DISPLAY', '1003 Complete', '35', '2', '2015-02-28 14:23:35', '-1', '2015-02-28 14:23:35', '0', '1', '26', '0', '7', '1');
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
