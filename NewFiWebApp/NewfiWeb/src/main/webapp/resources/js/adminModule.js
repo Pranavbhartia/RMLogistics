@@ -106,7 +106,7 @@ $('#alert-settings-btn').click(function(e){
 		 var tutorialsRowContent = $('<div>').attr({
 				"class" : "admin-module-row-content",
 					
-			}).html("Getting to know newfi");
+			}).html("Tutorials");
 		 if(newfiObject.user.userRole.roleDescription==customer){
 		 	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
 		 	 if(!tutorialStatus){
