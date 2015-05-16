@@ -181,6 +181,11 @@ public class BraintreePaymentGatewayServiceImpl implements
 			LOG.info("Result : " + result.isSuccess());
 			transactionId = result.getTarget().getId();
 		} else {
+			if (result != null
+			        && result.getMessage().equalsIgnoreCase("Declined")) {
+				throw new CreditCardException("Credit Card Declined ",
+				        DisplayMessageConstants.CREDIT_CARD_DECLINED);
+			}
 			LOG.info("Result : " + result.isSuccess() + " message : "
 			        + result.getMessage());
 			ValidationErrors creditCardErrors = result.getErrors()
@@ -328,6 +333,10 @@ public class BraintreePaymentGatewayServiceImpl implements
 			LOG.debug("Database updated with the new transaction details.");
 			// sendPaymentMail(user,
 			// paymentTemplateId,DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,null);
+		} else {
+			throw new PaymentUnsuccessfulException(
+			        "Could not create transaction in Brain Tree");
+
 		}
 
 		LOG.info("makePayment successfully complete!");

@@ -35,9 +35,9 @@ public interface LoanStatus {
 	String APP_PAYMENT_OVERDUE = "Over due";
 	String APP_PAYMENT_NOT_INITIATED = "Not Initiated";
 	String APP_PAYMENT_CLICK_TO_PAY = "Click here to pay";
-	String APP_PAYMENT_PENDING = "Pending";
+	String APP_PAYMENT_PENDING = "Pending Verification";
 
-	String paymentPendingStatusMessage = "Pending";
+	String paymentPendingStatusMessage = "Pending Verification";
 
 	String paymentSuccessStatusMessage = "Payment Made";
 	String paymentFailureStatusMessage = "Failure";
