@@ -23,7 +23,7 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 });
 $('#alert-settings-btn').click(function(e){
  e.stopImmediatePropagation();
- if(newfiObject.user.internalUserDetail==undefined )
+ if(newfiObject.user.internalUserDetail==undefined || newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==loanManagerID)
  {
 	 if(newfiObject.user.userRole.roleDescription!=userDescription)
 	 {
@@ -441,7 +441,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	"class":"prof-cust-upload-btn-admin-um float-left-admin",
 	"id":"upload-csv-id", 
 
-	});
+	}).html("Click to upload csv");
     
 	uploadCSV.append(inputFile);
 	form.append(uploadCSV);
@@ -458,12 +458,17 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	"class":"admin-upload-label",
 	
 	
-	}).html("Click to upload CSV");
+	});
 	
+	var downloadDiv=$('<div>').attr({
+	"class":"admin-download-btn"
+	}).html("&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click to download csv").on('click',function(e){
+		alert("hi u have choosen to download csv template");
+	});
 	container.append(userTypeCont);
 	container.append(createUserButton); 
 	container.append(label);
-    uploadText.append(form);
+    uploadText.append(form).append(downloadDiv);
 	container.append(uploadText);
 	wrapper.append(header).append(container);
 	if(clearParent){
