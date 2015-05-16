@@ -25,6 +25,7 @@ public final class DisplayMessageConstants {
 	public static final String GENERAL_ERROR = "GENERAL_ERROR";
 	
 	public static final String CREDIT_CARD_INVALID = "CREDIT_CARD_INVALID";
+	public static final String CREDIT_CARD_DECLINED = "CREDIT_CARD_DECLINED";
 	public static final String PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL";
 	public static final String PAYMENT_POPUP_ERROR = "PAYMENT_POPUP_ERROR";
 	public static final String PAYMENT_POPUP_MESSAGE = "PAYMENT_POPUP_MESSAGE";
