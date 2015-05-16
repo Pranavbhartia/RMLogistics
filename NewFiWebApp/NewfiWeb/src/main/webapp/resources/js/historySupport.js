@@ -11,7 +11,7 @@ function globalBinder() {
 		
 		console.log("Prim nav clicked : " + $.data(this, "enum").pnName);
 		saveState($.data(this, "enum").pnName, null, null);
-		
+		removeToastMessage();
 		return true;
 	});
 	removeToastMessage();

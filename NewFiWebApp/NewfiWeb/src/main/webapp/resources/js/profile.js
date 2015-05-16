@@ -591,6 +591,10 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 	return true;
 }
 
+$('body').on('focus',"#secPhoneNumberId",function(){
+    $(this).mask("(999) 999-9999");
+});
+
 function updateLMDetails() {
 
 	var firstname=validateFirstName("firstNameId");
@@ -603,7 +607,9 @@ function updateLMDetails() {
 	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
-	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	var phoneNumber=$("#priPhoneNumberId").val();
+	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+	
 	userProfileJson.emailId = $("#priEmailId").val();
 	if(newfiObject.user.userRole.id==2){
 		userProfileJson.loanManagerEmail=$("#managerID").val();
@@ -621,7 +627,7 @@ function updateLMDetails() {
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		userProfileJson.mobileAlertsPreference = true;	
 		userProfileJson.carrierInfo=$('#carrierInfoID').val();
-	    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
+	    var phoneStatus=phoneNumberValidation(userProfileJson.phoneNumber,userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
 	    if(!phoneStatus){
 	    	if(userProfileJson.carrierInfo == ""){
 				showErrorToastMessage(carrierSelectmessage);
@@ -668,12 +674,26 @@ function updateLMDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-			$('#overlay-loader').hide();
+			
             if(data.error==null){
             	$("#profileNameId").text($("#firstNameId").val());
 
             	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+            	$("#priPhoneNumberId").mask("(999) 999-9999");
     			showToastMessage("Succesfully updated");
+    		  	$('#overlay-toast').fadeIn("fast",function(){
+    				setTimeout(function(){
+    					$('#overlay-toast').fadeOut("fast");
+    				},100);
+    			    });
+    			  	if($('#overlay-toast-error-txt').html()!=""){
+    			  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
+    					setTimeout(function(){
+    						$('#overlay-toast-error-txt').fadeOut("fast");
+    					},100);
+    				});
+    			  	}
+    			  	$('#overlay-loader').hide();
     			//showLoanManagerProfilePage();
     			window.location.href = "./home.do#loan";
             }else{
@@ -1786,6 +1806,7 @@ function initializeZipcodeLookupForProperty(searchData){
 	});
 }
 function getPhone1Row(user) {
+	var phoneNumber=user.phoneNumber;
 	var span=$('<span>').attr({
 		"class" : "mandatoryClass"
 	}).html("*");
@@ -1809,10 +1830,11 @@ function getPhone1Row(user) {
 	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
-		"value" : user.phoneNumber,
+		"value":phoneNumber,
 		"id" : "priPhoneNumberId",
+	    "data-mask":"(999) 999-9999"
 	});
-	
+	phone1Input.mask("(999) 999-9999");
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1827,6 +1849,7 @@ function getPhone1Row(user) {
 //TODO added for validation LM
 
 function getPhone1RowLM(user) {
+	var phoneNumber=user.phoneNumber;
     var span=$('<span>').attr({
 		"class" : "mandatoryClass"
 	}).html("*");
@@ -1847,11 +1870,13 @@ function getPhone1RowLM(user) {
 	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value" : user.phoneNumber,
+		"value":phoneNumber,
 		"id" : "priPhoneNumberId",
+		"data-mask":"(999) 999-9999"
+	}).on('ready',function(){	
 		
 	});
-	
+	phone1Input.mask("(999) 999-9999");
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1912,8 +1937,11 @@ function getPhone2Row(user) {
 	var phone2Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.customerDetail.secPhoneNumber,
-		"id" : "secPhoneNumberId"
+		"id" : "secPhoneNumberId",
+		"data-mask":"(999) 999-9999"
 	});
+	phone2Input.mask("(999) 999-9999");
+	
 	
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
@@ -2187,8 +2215,12 @@ function validateZipCode(elementId){
 		return true;
 	}
 }
-
-
+$('body').on('focus',"#priPhoneNumberId",function(){
+    $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"#secPhoneNumberId",function(){
+    $(this).mask("(999) 999-9999");
+});
 function updateUserDetails() {
 
 	//Validate User form
@@ -2203,7 +2235,9 @@ function updateUserDetails() {
 	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
-	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	var phoneNumber = $("#priPhoneNumberId").val();
+	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+	
 	userProfileJson.emailId = $("#priEmailId").val();
 
 	var customerDetails = new Object();
@@ -2214,7 +2248,8 @@ function updateUserDetails() {
 	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
-	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	var secPhoneNumber=$("#secPhoneNumberId").val();
+	customerDetails.secPhoneNumber = secPhoneNumber.replace(/[^0-9]/g, '');
 	//Condition to check whether primary and secondary email are same
 	if($("#secEmailId").val()!=null||$("#secEmailId").val()!=""||$("#secEmailId").val()!=undefined){
 		if($("#priEmailId").val()==$("#secEmailId").val()){
@@ -2272,6 +2307,7 @@ function updateUserDetails() {
 			$('#overlay-loader').hide();			
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+		  	$("#priPhoneNumberId").mask("(999) 999-9999");
 		  	$('#overlay-toast').fadeIn("fast",function(){
 			setTimeout(function(){
 				$('#overlay-toast').fadeOut("fast");
@@ -2483,7 +2519,9 @@ function saveEditUserProfile(user){
 	var email =  $('#editemailId').val();
 	var secEmailId =  $('#editsecEmailId').val();
 	var priPhone =  $('#editpriPhoneNumberId').val();
+	priPhone=phoneNumber.replace(/[^0-9]/g, '');
 	var secPhone =  $('#editsecPhoneNumberId').val();
+	secPhone=phoneNumber.replace(/[^0-9]/g, '');
 	var dob =  $('#editdobId').val();	
 	var city =  $('#edituserCityId').val();
 	var state =  $('#edituserStateId').val();
