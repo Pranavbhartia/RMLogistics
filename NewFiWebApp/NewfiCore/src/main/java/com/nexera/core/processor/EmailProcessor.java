@@ -404,10 +404,21 @@ public class EmailProcessor implements Runnable {
 							}
 						}
 
-						successNoteText = successNoteText
-						        + " were successfully uploaded ";
-						failureNoteText = failureNoteText
-						        + " were not uploaded";
+						if (!successNoteText
+						        .equalsIgnoreCase("These files were ")) {
+							successNoteText = successNoteText
+							        + " were successfully uploaded ";
+						} else {
+							successNoteText = null;
+						}
+						if (!failureNoteText
+						        .equalsIgnoreCase("These files were ")) {
+
+							failureNoteText = failureNoteText
+							        + " were not uploaded";
+						} else {
+							failureNoteText = null;
+						}
 					} catch (Exception e) {
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster, e.getMessage());
@@ -432,19 +443,21 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        emailBody, fileVOList, true, sendEmail);
-					messageServiceHelper.generateEmailDocumentMessage(
-					        loanVO.getId(), uploadedByUser, messageId,
-					        successNoteText, fileVOList, true, sendEmail);
+					        emailBody, null, true, sendEmail);
+					if (successNoteText != null)
+						messageServiceHelper.generateEmailDocumentMessage(
+						        loanVO.getId(), uploadedByUser, messageId,
+						        successNoteText, fileVOList, true, sendEmail);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        emailBody, fileVOList, true, sendEmail);
-					messageServiceHelper.generateEmailDocumentMessage(
-					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false, sendEmail);
+					        emailBody, null, true, sendEmail);
+					if (failureNoteText != null)
+						messageServiceHelper.generateEmailDocumentMessage(
+						        loanVO.getId(), uploadedByUser, messageId,
+						        failureNoteText, null, false, sendEmail);
 				}
 			}
 		} catch (MessagingException me) {

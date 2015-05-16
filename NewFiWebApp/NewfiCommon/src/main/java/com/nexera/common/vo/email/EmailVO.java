@@ -23,7 +23,7 @@ public class EmailVO {
 	private String senderName;
 	private boolean isTemplateBased;
 	private String templateId;
-	private String CC;
+	private List<String> CCList;
 	private Map<String, String[]> substitutionsMap;
 	private ByteArrayOutputStream attachmentStream;
 
@@ -118,12 +118,12 @@ public class EmailVO {
 		this.attachmentStream = attachmentStream;
 	}
 
-	public String getCC() {
-		return CC;
+	public List<String> getCCList() {
+		return CCList;
 	}
 
-	public void setCC(String cC) {
-		CC = cC;
+	public void setCCList(List<String> cCList) {
+		CCList = cCList;
 	}
 
 	@Override
