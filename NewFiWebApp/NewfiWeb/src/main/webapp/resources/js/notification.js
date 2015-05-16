@@ -224,8 +224,26 @@ function getNotificationContext(loanId, userId) {
 				callback(ob);
 			}
 		},
+		shouldNotificationToBeShown : function (notification, callback)
+		{
+			if (notification.loanID != 0 && selectedUserDetail
+					&& notification.loanID == selectedUserDetail.loanID && newfiObject.user.userRole.roleCd != "CUSTOMER" 
+						&& notification.notificationType == "WATCH_ALERT_NOTIFICATION")
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		},
 		paintLoanNotification : function(notification, callback) {
 			var ob = this;
+			var showForLM  = ob.shouldNotificationToBeShown(notification);
+			if(showForLM == false)
+			{
+				return ;
+			}
 			var closebtn = (notification.dismissable == true ? '<div class="lp-alert-close-btn float-right" onclick="removeNotification(\'LNID'
 					+ notification.id + '\')"></div>'
 					: '');
