@@ -591,9 +591,6 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 	return true;
 }
 
-$('body').on('focus',"#secPhoneNumberId",function(){
-    $(this).mask("(999) 999-9999");
-});
 
 function updateLMDetails() {
 
