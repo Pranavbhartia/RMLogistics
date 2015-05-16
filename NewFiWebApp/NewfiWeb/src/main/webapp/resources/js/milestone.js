@@ -418,7 +418,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
 			{
-				ajaxURL = "";udy;gho
+				ajaxURL = "";
 				if (ob.workItem.status == "3")
 				{
 					ob.workItem.stateInfo = "Click here to view your rates";
