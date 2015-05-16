@@ -70,7 +70,7 @@ function turnAroundTime() {
 
 		var managerHeader = $('<div>').attr({
 			"class" : "agent-wrapper-header"
-		}).html("Loan Manager Milestones");
+		}).html("Loan Advisor Milestones");
 
 		managerLeadsWrapper.append(managerHeader);
 		container.append(managerLeadsWrapper);
