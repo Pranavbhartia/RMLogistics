@@ -1,3 +1,4 @@
+
 //Function to paint to loan progress page
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Manager";
@@ -269,7 +270,7 @@ var workFlowContext = {
 				MANAGE_SMS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_APP_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				CONNECT_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				CONTACT_LOAN_MANAGER : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+				CONTACT_YOUR_LA : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_CREDIT_STATUS : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	}														
 				}
 		if(cssMap[wfItemType] && cssMap[wfItemType][status])
@@ -354,6 +355,15 @@ function getInternalEmployeeMileStoneContext( workItem) {
 					milestoneChildEventHandler(e)
 				});
 			}
+			else if (ob.workItem.workflowItemType=="CONTACT_YOUR_LA")
+			{
+				ajaxURL = "";
+				ob.workItem.stateInfo = "";
+				$(ob.stateInfoContainer).addClass("cursor-pointer");
+				txtRow1.bind("click", function(e) {
+					milestoneChildEventHandler(e)
+				});
+			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
@@ -408,8 +418,15 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}
 			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
 			{
-				ajaxURL = "";
-				ob.workItem.stateInfo = "Click here to lock your rate";
+				ajaxURL = "";udy;gho
+				if (ob.workItem.status == "3")
+				{
+					ob.workItem.stateInfo = "Click here to view your rates";
+				}
+				else
+				{
+					ob.workItem.stateInfo = "Click here to lock your rates";
+				}
 				$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}
 			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
@@ -1375,7 +1392,29 @@ function milestoneChildEventHandler(event) {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
 			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
-	}else if ($(event.target).attr("data-text") == "QC_STATUS") {
+	}
+	else if ($(event.target).attr("data-text") == "CONTACT_YOUR_LA") {
+	 	event.stopPropagation();
+	 	if(workFlowContext.dataContainer.managerList){
+	 		appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+	 	}else{
+	 		var data={}
+	 		ajaxRequest(
+				"rest/loan/"+workFlowContext.loanId+"/manager",
+				"GET",
+				"json",
+				data,
+				function(response) {
+					if (response.error) {
+						showToastMessage(response.error.message)
+					}else{
+						workFlowContext.dataContainer.managerList=response.resultObject;
+						appendLoanManagerPopup($(event.target),workFlowContext.dataContainer.managerList)
+					}
+			},false);
+	 	}
+	}
+	else if ($(event.target).attr("data-text") == "QC_STATUS") {
 	 	event.stopPropagation();
 	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
 			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
@@ -1842,4 +1881,69 @@ function generateDownloadURL (uuID)
 	fileURL = fileURL+uuID;
 	fileURL = fileURL + "&isThumb=0";
 	return fileURL;
+}
+//Functions to view loan manager details in customer page
+
+function removeLoanManagerPopup(){
+	$('#loan-manager-popup').remove();
+}
+function appendLoanManagerPopup(element,loanManagerArray){
+	
+	removeLoanManagerPopup();
+	
+	var leftOffset = $(element).offset().left;
+	var topOffset = $(element).offset().top;
+	
+	var wrapper = $('<div>').attr({
+		"id" : "loan-manager-popup",
+		"class" : "loan-manager-popup"
+	}).css({
+		"left" : leftOffset,
+		"top" : topOffset
+	});
+	
+	for(var i=0;i<loanManagerArray.length;i++){
+		var loanManagerObj = loanManagerArray[i];
+		
+		var container = $('<div>').attr({
+			"class" : "loan-manager-popup-container clearfix"
+		});
+		
+		var profilePic = $('<div>').attr({
+			"class" : "lp-pic float-left"
+		});
+		
+		if(loanManagerObj.photoImageUrl != undefined && loanManagerObj.photoImageUrl != ""){
+			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
+		}
+		
+		var profileDetails = $('<div>').attr({
+			"class" : "lm-details-txt-col float-left"
+		});
+		
+		var name = $('<div>').attr({
+			"class" : "lp-txt1"
+		}).html(loanManagerObj.displayName);
+		
+		var emailId = $('<div>').attr({
+			"class" : "lp-txt2"
+		}).html(loanManagerObj.emailId);
+		
+		var phoneNumber = $('<div>').attr({
+			"class" : "lp-txt2"
+		});
+		
+		if(loanManagerObj.phoneNumber != undefined){
+			phoneNumber.html(formatPhoneNumberToUsFormat(loanManagerObj.phoneNumber));
+		}
+		
+		profileDetails.append(name).append(emailId).append(phoneNumber);
+		
+		container.append(profilePic).append(profileDetails);
+
+		wrapper.append(container);
+	}
+	
+		
+	$('body').append(wrapper);
 }
