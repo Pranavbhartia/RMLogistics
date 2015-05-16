@@ -41,4 +41,10 @@ public interface SendEmailService {
 
 	public void sendSMS(User user);
 
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity, User user)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
+	        UserVO userVO) throws InvalidInputException,
+	        UndeliveredEmailException;
 }

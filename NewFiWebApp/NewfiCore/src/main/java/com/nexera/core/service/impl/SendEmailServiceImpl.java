@@ -349,36 +349,72 @@ public class SendEmailServiceImpl implements SendEmailService {
 		return emailRecipientVO;
 	}
 
-	@Override
-	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException {
-		if (userVO.getEmailVerified() != null) {
-			if (userVO.getEmailVerified()) {
-				EmailRecipientVO emailRecipientVO = getReceipientVO(
-				        userVO.getEmailId(), userVO.getFirstName(),
-				        userVO.getLastName());
-				List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
-				emailRecipientList.add(emailRecipientVO);
-				emailEntity.setRecipients(emailRecipientList);
-				sendGridEmailService.sendAsyncMail(emailEntity);
-			}
+	private boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO,
+	        boolean verifyEmailCheck) throws InvalidInputException,
+	        UndeliveredEmailException {
+		boolean canSend = false;
+		if (!verifyEmailCheck) {
+			canSend = true;
+		} else if (verifyEmailCheck && userVO.getEmailVerified() == null) {
+			canSend = false;
+		} else if (verifyEmailCheck && userVO.getEmailVerified() != null
+		        && !userVO.getEmailVerified()) {
+			canSend = false;
+		}
+		if (canSend) {
+			EmailRecipientVO emailRecipientVO = getReceipientVO(
+			        userVO.getEmailId(), userVO.getFirstName(),
+			        userVO.getLastName());
+			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+			emailRecipientList.add(emailRecipientVO);
+			emailEntity.setRecipients(emailRecipientList);
+			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
 		return true;
+
+	}
+	@Override
+    public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
+            throws InvalidInputException, UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, userVO, true);
+    }
+	@Override
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,UserVO userVO)
+	        throws InvalidInputException, UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, userVO, false);
 	}
 
 	@Override
 	public boolean sendEmailForCustomer(EmailVO emailEntity, User user)
 	        throws InvalidInputException, UndeliveredEmailException {
-		if (user.getEmailVerified() != null) {
-			if (user.getEmailVerified()) {
-				EmailRecipientVO emailRecipientVO = getReceipientVO(
-				        user.getEmailId(), user.getFirstName(),
-				        user.getLastName());
-				List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
-				emailRecipientList.add(emailRecipientVO);
-				emailEntity.setRecipients(emailRecipientList);
-				sendGridEmailService.sendAsyncMail(emailEntity);
-			}
+		return sendEmailForCustomer(emailEntity, user, true);
+	}
+
+	@Override
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity, User user)
+	        throws InvalidInputException, UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, user, false);
+	}
+
+	private boolean sendEmailForCustomer(EmailVO emailEntity, User user,
+	        boolean verifyEmail) throws InvalidInputException,
+	        UndeliveredEmailException {
+		boolean canSend = false;
+		if (!verifyEmail) {
+			canSend = true;
+		} else if (verifyEmail && user.getEmailVerified() == null) {
+			canSend = false;
+		} else if (verifyEmail && user.getEmailVerified() != null
+		        && !user.getEmailVerified()) {
+			canSend = false;
+		}
+		if (canSend) {
+			EmailRecipientVO emailRecipientVO = getReceipientVO(
+			        user.getEmailId(), user.getFirstName(), user.getLastName());
+			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+			emailRecipientList.add(emailRecipientVO);
+			emailEntity.setRecipients(emailRecipientList);
+			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
 		return true;
 	}
@@ -412,4 +448,6 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 		}
 	}
+
+
 }
