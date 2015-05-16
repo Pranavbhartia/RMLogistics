@@ -419,7 +419,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
 			{
 				ajaxURL = "";
-				if (ob.workItem.status == "3")
+				if (ob.workItem.status == COMPLETED)
 				{
 					ob.workItem.stateInfo = "Click here to view your rates";
 				}
@@ -544,7 +544,13 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									ob.stateInfoContainer.html(ob.workItem.stateInfo);
 								}else
 								{
-									ob.stateInfoContainer.html("Click here to lock rate");
+									if (ob.workItem.status == COMPLETED)
+									{
+										ob.stateInfoContainer.html("Click here to view rates");
+									}
+									else{																		
+										ob.stateInfoContainer.html("Click here to lock rate");
+									}
 									$(ob.stateInfoContainer).addClass("cursor-pointer");
 								}
 							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
