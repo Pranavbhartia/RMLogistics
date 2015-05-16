@@ -65,6 +65,11 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			        && !userFromTable.getEmailVerified() && !isShopper) {
 				throw new DisabledException("First time login");
 			}
+			else if (userFromTable != null
+			        && userFromTable.getEmailVerified() == null
+			         && !isShopper) {
+				throw new DisabledException("First time login");
+			}
 			user = authenticationService.getUserWithLoginName(username,
 			        password);
 			LOG.debug("Checking if user is not in inactive mode");
