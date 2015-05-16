@@ -243,7 +243,7 @@ function paintApplicationAlreadySubmittedPage() {
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("Talk to a loan manager");
+	}).html("Talk to a loan advisor");
 	
 	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
 }
@@ -431,7 +431,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to a loan manager").on('click',function(){
+	}).html("Talk to a loan advisor").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");

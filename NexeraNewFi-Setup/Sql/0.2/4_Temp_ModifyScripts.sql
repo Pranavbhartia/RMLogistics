@@ -390,3 +390,6 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='10' WHERE `id`='
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='9' WHERE `id`='31';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='8' WHERE `id`='30';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='7' WHERE `id`='42';
+
+#Rajeswari - 16 May for LM to Loan Advisor Change
+UPDATE `newfi_schema`.`internaluserrolemaster` SET `role_description`='Loan Advisor' WHERE `id`='1';

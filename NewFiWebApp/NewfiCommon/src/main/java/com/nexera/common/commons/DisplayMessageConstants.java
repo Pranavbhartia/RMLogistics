@@ -18,8 +18,8 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_EMAILID = "INVALID_EMAILID";
 	
 	public static final String  USER_DISABLED = "Account has been disabled";
-	public static final String  USER_INACTIVE = "Account has been inactive. Contact your loan manager.";
-	public static final String  RESEND_PASSWORD_LINK = "Account has been inactive. Contact your loan manager.";
+	public static final String  USER_INACTIVE = "Account has been inactive. Contact your Loan Advisor.";
+	public static final String  RESEND_PASSWORD_LINK = "Account has been inactive. Contact your Loan Advisor.";
 	public static  final String INVALID_USERNAME="INVALID_USERNAME";
 	public static  final String INVALID_PASSWORD="INVALID_PASSWORD";
 	public static final String GENERAL_ERROR = "GENERAL_ERROR";

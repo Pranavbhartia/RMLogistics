@@ -499,7 +499,7 @@ function appendCustomerTableHeader(elementId) {
 
 	if (newfiObject.user.internalUserDetail == undefined
 			|| newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName == "SM") {
-		thCol4.html("Loan Manager");
+		thCol4.html("Loan Advisor");
 	} else {
 		thCol4.html("Processor");
 	}

@@ -126,7 +126,7 @@ function LoanPersonalInfoWrapper(user) {
 			});
 	});
 	if(user.internalUserDetail!=null){
-		if(user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+		if(user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Advisor"){
 			  text.append(emailInput);
 				header.append(text);
 		}

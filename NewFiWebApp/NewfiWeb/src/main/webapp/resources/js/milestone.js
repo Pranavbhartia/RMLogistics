@@ -1,7 +1,7 @@
 
 //Function to paint to loan progress page
 var countOfTasks = 0;
-var LOAN_MANAGER="Loan Manager";
+var LOAN_MANAGER="Loan Advisor";
 var SALES_MANAGER="Sales Manager";
 var COMPLETED = "3";
 var NOT_STARTED = "0";
