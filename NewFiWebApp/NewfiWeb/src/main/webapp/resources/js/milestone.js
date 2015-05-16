@@ -499,7 +499,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										"class" : "miestone-progress-bar "+floatClass+" clearfix"
 									});
 
-									var progress = ob.workItem.stateInfo/10;
+									var progress = Math.round(ob.workItem.stateInfo/10);
 									for (var i = 0; i < 10; i++) {
 										var progressGrid = $('<div>').attr({
 											"class" : "miestone-progress-grid float-left"
