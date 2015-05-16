@@ -188,19 +188,26 @@ public class SendEmailServiceImpl implements SendEmailService {
 				if (teamMember.getUser() != null) {
 					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.CUSTOMER
 					        .getRoleId()) {
-						if (teamMember.getUser().getEmailVerified()) {
-							recipients.add(getReceipientVO(teamMember));
-							if (teamMember.getUser().getCustomerDetail() != null
-							        && teamMember.getUser().getCustomerDetail()
-							                .getSecEmailId() != null
-							        && !teamMember.getUser()
-							                .getCustomerDetail()
-							                .getSecEmailId().isEmpty()) {
-								recipients.add(getReceipientVO(teamMember
-								        .getUser().getCustomerDetail()
-								        .getSecEmailId(), teamMember.getUser()
-								        .getFirstName(), teamMember.getUser()
-								        .getLastName()));
+						if (teamMember.getUser().getEmailVerified() != null) {
+							if (teamMember.getUser().getEmailVerified()) {
+								recipients.add(getReceipientVO(teamMember));
+								if (teamMember.getUser().getCustomerDetail() != null
+								        && teamMember.getUser()
+								                .getCustomerDetail()
+								                .getSecEmailId() != null
+								        && !teamMember.getUser()
+								                .getCustomerDetail()
+								                .getSecEmailId().isEmpty()) {
+									recipients
+									        .add(getReceipientVO(teamMember
+									                .getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId(),
+									                teamMember.getUser()
+									                        .getFirstName(),
+									                teamMember.getUser()
+									                        .getLastName()));
+								}
 							}
 						}
 					}
@@ -212,19 +219,26 @@ public class SendEmailServiceImpl implements SendEmailService {
 				if (teamMember.getUser() != null) {
 					if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
 					        .getRoleId()) {
-						if (teamMember.getUser().getEmailVerified()) {
-							recipients.add(getReceipientVO(teamMember));
-							if (teamMember.getUser().getCustomerDetail() != null
-							        && teamMember.getUser().getCustomerDetail()
-							                .getSecEmailId() != null
-							        && !teamMember.getUser()
-							                .getCustomerDetail()
-							                .getSecEmailId().isEmpty()) {
-								recipients.add(getReceipientVO(teamMember
-								        .getUser().getCustomerDetail()
-								        .getSecEmailId(), teamMember.getUser()
-								        .getFirstName(), teamMember.getUser()
-								        .getLastName()));
+						if (teamMember.getUser().getEmailVerified() != null) {
+							if (teamMember.getUser().getEmailVerified()) {
+								recipients.add(getReceipientVO(teamMember));
+								if (teamMember.getUser().getCustomerDetail() != null
+								        && teamMember.getUser()
+								                .getCustomerDetail()
+								                .getSecEmailId() != null
+								        && !teamMember.getUser()
+								                .getCustomerDetail()
+								                .getSecEmailId().isEmpty()) {
+									recipients
+									        .add(getReceipientVO(teamMember
+									                .getUser()
+									                .getCustomerDetail()
+									                .getSecEmailId(),
+									                teamMember.getUser()
+									                        .getFirstName(),
+									                teamMember.getUser()
+									                        .getLastName()));
+								}
 							}
 						}
 					}
@@ -234,41 +248,46 @@ public class SendEmailServiceImpl implements SendEmailService {
 		        .equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_LOAN_MANAGERS)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
 				if (teamMember.getUser() != null) {
-					if (teamMember.getUser().getEmailVerified()) {
-						if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
-						        .getRoleId()) {
-							if (teamMember.getUser().getInternalUserDetail() != null) {
+					if (teamMember.getUser().getEmailVerified() != null) {
+						if (teamMember.getUser().getEmailVerified()) {
+							if (teamMember.getUser().getUserRole().getId() == UserRolesEnum.INTERNAL
+							        .getRoleId()) {
 								if (teamMember.getUser()
-								        .getInternalUserDetail()
-								        .getInternalUserRoleMasterVO() != null) {
+								        .getInternalUserDetail() != null) {
 									if (teamMember.getUser()
 									        .getInternalUserDetail()
-									        .getInternalUserRoleMasterVO()
-									        .getId() == UserRolesEnum.LM
-									        .getRoleId()) {
-										recipients
-										        .add(getReceipientVO(teamMember));
+									        .getInternalUserRoleMasterVO() != null) {
 										if (teamMember.getUser()
-										        .getCustomerDetail() != null
-										        && teamMember.getUser()
-										                .getCustomerDetail()
-										                .getSecEmailId() != null
-										        && !teamMember.getUser()
-										                .getCustomerDetail()
-										                .getSecEmailId()
-										                .isEmpty()) {
+										        .getInternalUserDetail()
+										        .getInternalUserRoleMasterVO()
+										        .getId() == UserRolesEnum.LM
+										        .getRoleId()) {
 											recipients
-											        .add(getReceipientVO(
-											                teamMember
-											                        .getUser()
-											                        .getCustomerDetail()
-											                        .getSecEmailId(),
-											                teamMember
-											                        .getUser()
-											                        .getFirstName(),
-											                teamMember
-											                        .getUser()
-											                        .getLastName()));
+											        .add(getReceipientVO(teamMember));
+											if (teamMember.getUser()
+											        .getCustomerDetail() != null
+											        && teamMember
+											                .getUser()
+											                .getCustomerDetail()
+											                .getSecEmailId() != null
+											        && !teamMember
+											                .getUser()
+											                .getCustomerDetail()
+											                .getSecEmailId()
+											                .isEmpty()) {
+												recipients
+												        .add(getReceipientVO(
+												                teamMember
+												                        .getUser()
+												                        .getCustomerDetail()
+												                        .getSecEmailId(),
+												                teamMember
+												                        .getUser()
+												                        .getFirstName(),
+												                teamMember
+												                        .getUser()
+												                        .getLastName()));
+											}
 										}
 									}
 								}
@@ -279,17 +298,19 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 		} else if (sendTo.equalsIgnoreCase(CommonConstants.SEND_EMAIL_TO_TEAM)) {
 			for (LoanTeamVO teamMember : loanTeam.getLoanTeamList()) {
-				if (teamMember.getUser().getEmailVerified()) {
-					recipients.add(getReceipientVO(teamMember));
-					if (teamMember.getUser().getCustomerDetail() != null
-					        && teamMember.getUser().getCustomerDetail()
-					                .getSecEmailId() != null
-					        && !teamMember.getUser().getCustomerDetail()
-					                .getSecEmailId().isEmpty()) {
-						recipients.add(getReceipientVO(teamMember.getUser()
-						        .getCustomerDetail().getSecEmailId(),
-						        teamMember.getUser().getFirstName(), teamMember
-						                .getUser().getLastName()));
+				if (teamMember.getUser().getEmailVerified() != null) {
+					if (teamMember.getUser().getEmailVerified()) {
+						recipients.add(getReceipientVO(teamMember));
+						if (teamMember.getUser().getCustomerDetail() != null
+						        && teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId() != null
+						        && !teamMember.getUser().getCustomerDetail()
+						                .getSecEmailId().isEmpty()) {
+							recipients.add(getReceipientVO(teamMember.getUser()
+							        .getCustomerDetail().getSecEmailId(),
+							        teamMember.getUser().getFirstName(),
+							        teamMember.getUser().getLastName()));
+						}
 					}
 				}
 			}
@@ -331,25 +352,34 @@ public class SendEmailServiceImpl implements SendEmailService {
 	@Override
 	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException {
-		EmailRecipientVO emailRecipientVO = getReceipientVO(
-		        userVO.getEmailId(), userVO.getFirstName(),
-		        userVO.getLastName());
-		List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
-		emailRecipientList.add(emailRecipientVO);
-		emailEntity.setRecipients(emailRecipientList);
-		sendGridEmailService.sendAsyncMail(emailEntity);
+		if (userVO.getEmailVerified() != null) {
+			if (userVO.getEmailVerified()) {
+				EmailRecipientVO emailRecipientVO = getReceipientVO(
+				        userVO.getEmailId(), userVO.getFirstName(),
+				        userVO.getLastName());
+				List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+				emailRecipientList.add(emailRecipientVO);
+				emailEntity.setRecipients(emailRecipientList);
+				sendGridEmailService.sendAsyncMail(emailEntity);
+			}
+		}
 		return true;
 	}
 
 	@Override
 	public boolean sendEmailForCustomer(EmailVO emailEntity, User user)
 	        throws InvalidInputException, UndeliveredEmailException {
-		EmailRecipientVO emailRecipientVO = getReceipientVO(user.getEmailId(),
-		        user.getFirstName(), user.getLastName());
-		List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
-		emailRecipientList.add(emailRecipientVO);
-		emailEntity.setRecipients(emailRecipientList);
-		sendGridEmailService.sendAsyncMail(emailEntity);
+		if (user.getEmailVerified() != null) {
+			if (user.getEmailVerified()) {
+				EmailRecipientVO emailRecipientVO = getReceipientVO(
+				        user.getEmailId(), user.getFirstName(),
+				        user.getLastName());
+				List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
+				emailRecipientList.add(emailRecipientVO);
+				emailEntity.setRecipients(emailRecipientList);
+				sendGridEmailService.sendAsyncMail(emailEntity);
+			}
+		}
 		return true;
 	}
 
