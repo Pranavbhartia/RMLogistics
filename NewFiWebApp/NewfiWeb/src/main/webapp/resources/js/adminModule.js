@@ -1,5 +1,8 @@
 var userDescription="System User";
 var salesManager="Sales Manager";
+var loanManager="Loan Manager";
+var customer="Customer";
+var Realtor="Realtor";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
@@ -16,132 +19,34 @@ $(document).on('click',function(e){
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		$('#admin-create-user-popup').hide();
 	}
-});
 
+});
 $(document).on('click', '#admin-create-user-popup', function(event) {
 	event.stopImmediatePropagation();
 });
+
+
 $('#alert-settings-btn').click(function(e){
- e.stopImmediatePropagation();
- if(newfiObject.user.internalUserDetail==undefined || newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==loanManagerID)
- {
-	 if(newfiObject.user.userRole.roleDescription!=userDescription)
-	 {
-		//TODO for dropdown settings for LM,customer,realtor
-			if($(this).has('#alert-popup-wrapper-settings').length == 1 ){
-				if($('#alert-popup-wrapper-settings').css("display") == "block"){
-					hideSettingsPopup();
-				}else{
-					showSettingsPopup();
-				}
-			}else{		
-
-			var alertWrapper = $('<div>').attr({
-				"id" : "alert-popup-wrapper-settings",
-				"class" : "alert-popup-wrapper-settings"
-			});
-			var icondiv=$('<div>').attr({
-			"class":"float-left-icon"
-			
-			});
-			 var icon=$('<i>').attr({
-			 "class":"settings-icon"	 	 
-			 });
-			 icondiv.append(icon);
-			var header = $('<div>').attr({
-				"class" : "admin-pop-up-header"
-			}).html("User Settings");
-
-			var container = $('<div>').attr({
-				"id" : "admin-module-container",
-				"class" : "admin-pop-up-container clearfix"
-			});
-			
-			var myProfileRow = $('<div>').attr({
-				"class" : "admin-module-row clearfix",
-				"id":"my-profile"
-			});
-			var anchortag1=$('<a>').attr({
-			"id" : "my-profile-id",	
-		 "href":"#",
-		 "onclick":"myProfile()"	
-			});
-		 var myProfileRowRowContent = $('<div>').attr({
-				"class" : "admin-module-row-content",
-					
-			}).html("My Profile");
-			
-			anchortag1.append(myProfileRowRowContent);
-			myProfileRow.append(anchortag1);
-			container.append(myProfileRow);
-			
-			//TODO for change password
-			var changepasswordRow = $('<div>').attr({
-				"class" : "admin-module-row clearfix",
-				"id":"change-password"
-			});
-			var anchortag2=$('<a>').attr({
-			"id" : "change-password-id",
-			"href":"#",
-			"onclick":"myProfile()"	
-			});
-		 var changepasswordRowContent = $('<div>').attr({
-				"class" : "admin-module-row-content",
-					
-			}).html("Change Password");
-			anchortag2.append(changepasswordRowContent);
-			changepasswordRow.append(anchortag2);
-			container.append(changepasswordRow);
-			
-			//TODO for tutorials
-			var tutorialsRow = $('<div>').attr({
-				"class" : "admin-module-row clearfix",
-				"id":"tutorials"
-			});
-			var anchortag3=$('<a>').attr({
-			"id" : "templates",
-		     "href":"#"	,
-		     "onclick":"completeTutorials()"	
-			});
-		 var tutorialsRowContent = $('<div>').attr({
-				"class" : "admin-module-row-content",
-					
-			}).html("Tutorial");
-		 if(newfiObject.user.userRole.roleDescription==customer){
-		 	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
-		 	 if(!tutorialStatus){
-		 		 anchortag3.append(tutorialsRowContent);
-					tutorialsRow.append(anchortag3);
-					container.append(tutorialsRow); 
-		 	 }
-		 	
-				
-		 }
-			header.append(icondiv);
-			alertWrapper.append(header).append(container);
-			$('#alert-settings-btn').append(alertWrapper);
-			
-			}
-     }else{
-    	 appendDropDownForAdmin() ;
-     }
-	
-	}else{
-		appendDropDownForAdmin();
-	}
-	 
-
-});
-
-function appendDropDownForAdmin(){
-	if($('#alert-settings-btn').has('#alert-popup-wrapper-settings').length == 1){
+	event.stopImmediatePropagation();
+	if($('#alert-popup-wrapper-settings').length==1){
+		
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
+			
 			hideSettingsPopup();
 		}else{
+			
 			showSettingsPopup();
 		}
-	}else{		
+	}else{
+		
+		appendSettingsDropDown();
+	}
+ 
+});
 
+function appendSettingsDropDown(){
+
+	var currentUser=newfiObject.user;
 	var alertWrapper = $('<div>').attr({
 		"id" : "alert-popup-wrapper-settings",
 		"class" : "alert-popup-wrapper-settings"
@@ -154,95 +59,96 @@ function appendDropDownForAdmin(){
 	 "class":"settings-icon"	 	 
 	 });
 	 icondiv.append(icon);
-	var header = $('<div>').attr({
-		"class" : "admin-pop-up-header"
-	}).html("Admin Settings");
-
+	 var header="";
+	 if(currentUser.userRole.roleDescription==customer ||currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager){
+		  header = $('<div>').attr({
+	   			"class" : "admin-pop-up-header"
+	   		}).html("User Settings");
+	 }else{
+		  header = $('<div>').attr({
+	   			"class" : "admin-pop-up-header"
+	   		}).html("Admin Settings");
+	 }
+		
+   		
 	var container = $('<div>').attr({
-		"id" : "admin-module-container",
-		"class" : "admin-pop-up-container clearfix"
-	});
+				"id" : "admin-module-container",
+				"class" : "admin-pop-up-container clearfix"
+			});
 	
-	var userMangementRow = $('<div>').attr({
-		"class" : "admin-module-row clearfix",
-		"id":"user-management"
-	});
-	var anchortag1=$('<a>').attr({
-	"id" : "user-mangement-id",	
-    "href":"#",
-    "onclick":"userManagement()"	
-	});
-    var userMangementRowContent = $('<div>').attr({
-		"class" : "admin-module-row-content",
+
+	 if(currentUser.userRole.roleDescription==customer ||currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager)
+	 {
+
+		//TODO for dropdown settings for LM,customer,realtor			 
 			
-	}).html("User Mangement");
-	
-	anchortag1.append(userMangementRowContent);
-	userMangementRow.append(anchortag1);
-	container.append(userMangementRow);
-	
-	//TODO for loan details
-	var loanDetailRow = $('<div>').attr({
-		"class" : "admin-module-row clearfix",
-		"id":"loan-detail"
-	});
-	var anchortag2=$('<a>').attr({
-	"id" : "loan-detail-id",
-	"href":"#turn_around_times_container",
-   	"onclick":"turnAroundTime()"	
-	});
-    var loanDetailRowContent = $('<div>').attr({
-		"class" : "admin-module-row-content",
+			var myProfileRow =paintSettingsDropDown("my-profile","My Profile","myProfile()","#");
+			container.append(myProfileRow);
 			
-	}).html("Turn Around Details");
-	anchortag2.append(loanDetailRowContent);
-	loanDetailRow.append(anchortag2);
-	container.append(loanDetailRow);
-	
-	//TODO for templates
-	var templatesRow = $('<div>').attr({
-		"class" : "admin-module-row clearfix",
-		"id":"loan-detail"
-	});
-	var anchortag3=$('<a>').attr({
-	"id" : "templates",
-        "href":"#"	,
-        "onclick":"populateTemplate()"	
-	});
-    var templatesRowContent = $('<div>').attr({
-		"class" : "admin-module-row-content",
+			var changepasswordRow= paintSettingsDropDown("change-password","Change Password","myProfile()","#");
+			container.append(changepasswordRow);
 			
-	}).html("Templates");
-	anchortag3.append(templatesRowContent);
-	templatesRow.append(anchortag3);
-	container.append(templatesRow);
-	
-	//TODO for security settings
-	var securitySettingsRow = $('<div>').attr({
-		"class" : "admin-module-row clearfix",
-		"id":"loan-detail"
-	});
-	var anchortag4=$('<a>').attr({
-	"id" : "security-settings",
-    "href":""	
-	});
-    var securitySettingsRowContent = $('<div>').attr({
-		"class" : "admin-module-row-content",
+			var tutorialsRow=paintSettingsDropDown("tutorials","Tutorial","completeTutorials()","#");
 			
-	}).html("Security Settings");
-	anchortag4.append(securitySettingsRowContent);
-	securitySettingsRow.append(anchortag4);
-	container.append(securitySettingsRow);
-	header.append(icondiv);
-	alertWrapper.append(header).append(container);
-	$('#alert-settings-btn').append(alertWrapper);
-	
+		 if(newfiObject.user.userRole.roleDescription==customer){
+		 	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+		 	 if(!tutorialStatus){
+					container.append(tutorialsRow); 
+		 	 }
+		 	 
+   			
+				
+		 }				
+	}   
+	 else{	 
+
+   		
+   		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#");
+   		container.append(UserManagementRow);
+   		
+   		var turnAroundTimeRow=paintSettingsDropDown("loan-detail","Turn Around Details","turnAroundTime()","#turn_around_times_container");
+   		container.append(turnAroundTimeRow);
+   		
+   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
+   		container.append(templatesRow);
+   		
+   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","#");
+   		container.append(securitySettingsRow);			    		
+
+			
+    }	
+	 header.append(icondiv);
+	 alertWrapper.append(header).append(container);
+	 $('#alert-settings-btn').append(alertWrapper);
 }
+
+function paintSettingsDropDown(elementID,label,method,href){
+
+	var row = $('<div>').attr({
+		"class" : "admin-module-row clearfix",
+		"id":elementID
+	});
+	var anchortag=$('<a>').attr({
+	"id" : elementID+"-id",	
+    "href":href,
+    "onclick":method	
+	});
+    var rowContent = $('<div>').attr({
+		"class" : "admin-module-row-content",
+			
+	}).html(label);
+	
+	anchortag.append(rowContent);
+	return row.append(anchortag);
+
+
 }
 function completeTutorials(){
+	
 	window.location.href="#myLoan/myTeam";
 }
 function myProfile(){
+	
 	 window.location.href = "#myProfile";
 }
 /* Search for user list*/
@@ -271,6 +177,7 @@ function getSearchResultDataForAdmin(searchValue)
 
 /*TODO to load user mangement page*/
 function userManagement(){
+	
 $('#right-panel').html('');
 	paintAdminDashboard();	
 }
