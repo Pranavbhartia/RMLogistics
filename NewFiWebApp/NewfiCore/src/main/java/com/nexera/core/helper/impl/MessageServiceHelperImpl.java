@@ -89,7 +89,6 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	}
 
 	@Override
-	@Async
 	public void generateNeedListModificationMessage(int loanId,
 	        User loggedInUser, List<Integer> addedList,
 	        List<Integer> removedList, boolean sendEmail) {
