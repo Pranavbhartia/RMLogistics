@@ -13,8 +13,6 @@ $(document).on('click',function(e){
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
-	}else{
-		showSettingsPopup();
 	}
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		$('#admin-create-user-popup').hide();
