@@ -528,7 +528,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendEmailService.sendEmailForCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
 	private void sendEmailWithQuotes(UserVO user,
@@ -568,7 +568,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendEmailService.sendEmailForCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
 	@Override
@@ -1418,7 +1418,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSubject("Please reset your password");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		sendEmailService.sendEmailForCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
 	@Override

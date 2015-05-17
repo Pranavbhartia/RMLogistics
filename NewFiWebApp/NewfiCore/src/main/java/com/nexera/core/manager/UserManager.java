@@ -130,7 +130,7 @@ public class UserManager implements Runnable {
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendEmailService.sendEmailForCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
 	private void sendPasswordNotUpdatedEmail(User user)
@@ -161,7 +161,7 @@ public class UserManager implements Runnable {
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendEmailService.sendEmailForCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
 	public User getUser() {

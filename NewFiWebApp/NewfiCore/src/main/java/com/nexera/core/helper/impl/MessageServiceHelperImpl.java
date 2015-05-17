@@ -89,7 +89,6 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	}
 
 	@Override
-	@Async
 	public void generateNeedListModificationMessage(int loanId,
 	        User loggedInUser, List<Integer> addedList,
 	        List<Integer> removedList, boolean sendEmail) {
@@ -227,10 +226,11 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		 * the message based on the caller. The caller is expected to create the
 		 * message accordingly
 		 */
-
-		if (fileUrls == null || fileUrls.isEmpty() || !successFlag) {
-			messageVO.setMessage(noteText);
-		}
+		/*
+		 * Commented by UTSAV. To send the entire success/failure text if
+		 * (fileUrls == null || fileUrls.isEmpty() || !successFlag) { }
+		 */
+		messageVO.setMessage(noteText);
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
 		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(), false);
