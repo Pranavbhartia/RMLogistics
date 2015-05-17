@@ -1,3 +1,4 @@
+
 var userDescription="System User";
 var salesManager="Sales Manager";
 var loanManagerID=1;
@@ -12,6 +13,8 @@ $(document).on('click',function(e){
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
+	}else{
+		showSettingsPopup();
 	}
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		$('#admin-create-user-popup').hide();
@@ -1019,5 +1022,4 @@ function showSettingsPopup(){
 
 $('#alert-popup-wrapper-settings').show();
 }
-
 
