@@ -1089,7 +1089,7 @@ function getPriEmailRow(user) {
 	});
 	
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
+		"class" : "prof-form-input",
 		"value" : user.emailId,
 		"id" : "priEmailId",
 		"readonly":true,
@@ -1104,7 +1104,7 @@ function getPriEmailRow(user) {
 	
 	//TODO for email registration validation link
 	var primaryEmailLinkCont = $('<div>').attr({
-		"class" : "prof-form-input-cont"
+		"class" : "float-left"
 	});
 	var emailInput="";
 
@@ -1908,7 +1908,7 @@ if(customerStatus!=false){
 			$('#'+elementId).next('.err-msg').html(invalidPhoneNumberMessage).show();
 			$('#'+elementId).addClass('err-input');
 			//showErrorToastMessage("Invalid phone number");
-			validationFails = true;
+			
 			return false;
 		}
 			$('#'+elementId).next('.err-msg').html('');
@@ -1924,6 +1924,7 @@ if(customerStatus!=false){
 }
 
 }
+
 //END of changes
 function getPhone2Row(user) {
 	var row = $('<div>').attr({

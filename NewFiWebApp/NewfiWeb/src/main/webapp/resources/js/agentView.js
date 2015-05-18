@@ -2363,7 +2363,7 @@ function updateUserProfile() {
 		   userProfileJson.mobileAlertsPreference = false;
 		}
 	if ($('#carrierInfoID').val() != null || $('#carrierInfoID').val() != "") {
-        alert($('#carrierInfoID').val());
+        
 		userProfileJson.carrierInfo = $('#carrierInfoID').val();
 	}
 	userProfileJson.customerDetail = customerDetails;
@@ -2431,7 +2431,10 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		"class" : "mandatoryClass"
 	}).html("*").css("color", "red");
 
-	
+	var wrapper=$('<div>').attr({
+		"class":"cust-prof-edit-wrapper float-left"
+		
+	});
 
 	var label = $('<div>').attr({
 		"class" : "cust-prof-edit-label float-left"
@@ -2446,8 +2449,11 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		"id" : id,
 
 	}).val(value);
-
-	row.append(label).append(inputTag).append(ErrMessage);
+	if(labelTxt=="Primary Phone"){
+		inputTag.mask("(999) 999-9999");
+	}
+    wrapper.append(inputTag).append(ErrMessage);
+	row.append(label).append(wrapper);
 	$('#cus-prof-container').append(row);
 }else{
 	var rowCol1 = $('<div>').attr({
@@ -2475,35 +2481,48 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 	}).bind('click',function(e){
 			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');	
-			var phoneStatus=phoneNumberValidation($("#primaryPhoneID").val(),true ,"primaryPhoneID");
-		    if(!phoneStatus){
+			if($("#primaryPhoneID").val()==""||$("#primaryPhoneID").val()==null){
+				var phoneStatus=phoneNumberValidation($("#primaryPhoneID").val(),true ,"primaryPhoneID");
+				
+			    if(!phoneStatus){
+			    	if($("#carrierInfoID").val() == ""){
+			    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+						$('#carrierInfoID').addClass('ce-err-input').show();
+			    		return false;
+			    		//showErrorToastMessage(carrierSelectmessage);
+						
+					}else{
+						$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+						$('#carrierInfoID').removeClass('ce-err-input');
+						
+					}
+			    	
+			    }else{
+			    	if($("#carrierInfoID").val() == ""){
+			    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+						$('#carrierInfoID').addClass('ce-err-input').show();
+			    		//showErrorToastMessage(carrierSelectmessage);
+						return false;
+					}else{
+						/*$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+						$('.prof-form-input-carrier.prof-form-input-carrierDropdown.prof-form-input-select').removeClass('err-input');*/
+						$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+						$('#carrierInfoID').removeClass('ce-err-input');
+					}
+			    }	
+			}else{
 		    	if($("#carrierInfoID").val() == ""){
 		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
-		    		$('#carrierInfoID').addClass('err-input');
-		    		return false;
-		    		//showErrorToastMessage(carrierSelectmessage);
-					
-				}else{
-					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
-					$('#carrierInfoID').removeClass('err-input');
-					
-				}
-		    	
-		    }else{
-		    	if($("#carrierInfoID").val() == ""){
-		    		
-		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
-		    		$('#carrierInfoID').addClass('err-input');
+					$('#carrierInfoID').addClass('ce-err-input').show();
 		    		//showErrorToastMessage(carrierSelectmessage);
 					return false;
 				}else{
+					/*$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+					$('.prof-form-input-carrier.prof-form-input-carrierDropdown.prof-form-input-select').removeClass('err-input');*/
 					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
-					$('#carrierInfoID').removeClass('err-input');
+					$('#carrierInfoID').removeClass('ce-err-input');
 				}
 		    }	
-			//validatePhone('priPhoneNumberId');
-			
-	        //$('#primaryPhoneID').show();
 	});
 	
 	var radioNoButton = $('<div>').attr({
@@ -2513,9 +2532,11 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 		
 			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
 			$(this).addClass('radio-btn-selected');
-			if(	$('#carrier-dropdown-wrapper').next('.err-msg').html()!=""){
-				$('#carrier-dropdown-wrapper').next('.err-msg').hide();
-				$('#carrierInfoID').removeClass('err-input');
+			if(	$('#carrierInfoID').next('.err-msg').html()!=""){
+				/*$('#carrier-dropdown-wrapper').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('err-input');*/
+				$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+				$('#carrierInfoID').removeClass('ce-err-input');
 			}
 			
 	});
@@ -2535,6 +2556,13 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 	 $('#cus-prof-container').append(row);
 }
 }
+$(document).on('blur',"#carrierInfoID",function(){
+	if($("#carrierInfoID").val()!=""||$("#carrierInfoID").val()!=null){
+		$('#carrier-dropdown-wrapper').next('.err-msg').hide();
+		$('#carrierInfoID').removeClass('err-input');
+	}
+});
+
 $('body').on('focus',"#primaryPhoneID",function(){
     $(this).mask("(999) 999-9999");
 });
