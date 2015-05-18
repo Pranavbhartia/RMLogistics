@@ -6,6 +6,7 @@ var loanTypeText = "refinance";
 var  removedKnwoNewFi = false; 
 var flagKnowNewFi=true;
 var flagToShowCompletPro = true;
+var rateLockRequestedFlag = false;
 
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
@@ -2407,10 +2408,16 @@ function getRequestRateLockStatus(element){
                 var status=response.resultObject;
                 if(status&&newfiObject.user.userRole.roleCd!="REALTOR"){
                     element.addClass("rate-btn");
-                    element.html("Request Rate Lock").on('click', function(event) {
-                            $('input').attr("readonly","true");
-                            lockLoanRate(lockratedata);
-                    });
+                    if(!rateLockRequestedFlag){
+	                    element.html("Request Rate Lock").on('click', function(event) {
+	                    	    rateLockRequestedFlag = true;
+	                    	    $('input').attr("readonly","true");
+	                            element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+	                            lockLoanRate(lockratedata);
+	                    });
+                    }else{
+                    	element.html( "Rate Lock Requested").unbind( "click").addClass("rateLockRequested");
+                    }
                 }else{
                 	element.addClass("rate-btn");
                     element.html("Contact Your Loan Advisor").on('click',function(){
