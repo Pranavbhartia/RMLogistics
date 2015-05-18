@@ -50,6 +50,7 @@
 	<script src="resources/js/profile.js"></script>
 	<script src="resources/js/validation.js"></script>
 	<script src="resources/js/historySupport.js"></script>
+	<script src="resources/js/message.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	
 </body>

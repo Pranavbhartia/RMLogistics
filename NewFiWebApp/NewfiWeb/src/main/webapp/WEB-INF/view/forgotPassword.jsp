@@ -49,6 +49,7 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="resources/js/common.js"></script>
 	<script src="resources/js/script.js"></script>
 	<script src="resources/js/profile.js"></script>
+	<script src="resources/js/message.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
 	
