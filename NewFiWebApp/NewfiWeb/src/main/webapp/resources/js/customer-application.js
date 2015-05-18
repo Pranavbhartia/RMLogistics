@@ -530,9 +530,7 @@ function getApplicationTextQues(question) {
 	    });
 	  
   }
-	if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
-		optionCont.mask(" (999) 999-9999");
-	}
+	
 
     if (question.value != undefined) {
         optionCont.val(question.value);
