@@ -442,7 +442,23 @@ display: block;
 	margin: 0 auto;
 	margin-top: 20px;
 }
-
+.ce-err-input {
+  border: 1px solid #dd4b39;
+}
+.admin-err-msg {
+  line-height: 15px;
+  padding-left: 33px;
+  padding-top: 5px;
+  color: #dd4b39;
+  font-size: 13px;
+  text-transform: initial;
+}
+.loan-type{
+	padding-left: 112px;
+}
+.admin-save-btn {
+  margin-top: 13px;
+}
 @media ( max-width : 1062px) {
 	.create-turn-around-label {
 		width: 150px !important;

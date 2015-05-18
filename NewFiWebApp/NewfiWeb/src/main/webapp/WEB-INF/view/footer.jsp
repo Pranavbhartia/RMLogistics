@@ -39,6 +39,7 @@
 <script src="resources/js/jquery.zclip.min.js"></script>
 <script src="resources/js/numericInput.js"></script>
 <script src="resources/js/validation.js"></script>
+<script src="resources/js/message.js"></script>
 <script src="resources/js/include/masked-input.js"></script>
 <div id="dialog" >
 </div>

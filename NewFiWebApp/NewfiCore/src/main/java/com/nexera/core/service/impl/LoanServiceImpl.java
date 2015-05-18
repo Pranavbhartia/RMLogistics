@@ -47,6 +47,7 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
+import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -293,7 +294,12 @@ public class LoanServiceImpl implements LoanService {
 		User user = new User();
 
 		user.setId(userVO.getId());
-
+		if(userVO.getMobileAlertsPreference()!=null){
+			user.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
+		}
+        if(userVO.getCarrierInfo()!=null){
+        	user.setCarrierInfo(userVO.getCarrierInfo());
+        }
 		return user;
 	}
 
@@ -499,7 +505,14 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
 		loanCustomerVO.setEmailId(user.getEmailId());
-
+		if(user.getMobileAlertsPreference()!=null){
+			loanCustomerVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
+		}
+        if(user.getCarrierInfo()!=null){
+        	MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+			        .getCarrierNameForEmail(user.getCarrierInfo());
+        	loanCustomerVO.setCarrierInfo(mobileCarrier.getCarrierName());
+        }
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
 		if (customerDetail != null) {
 			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
