@@ -2355,7 +2355,7 @@ function updateUserProfile() {
 	customerDetails.addressCity = $("#cityId").val();
 	customerDetails.addressState = $("#stateId").val();
 	customerDetails.addressZipCode = $("#zipcodeId").val();
-	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
+	customerDetails.dateOfBirth = $("#dobID").val();
 
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		userProfileJson.mobileAlertsPreference = true;	

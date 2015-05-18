@@ -1002,8 +1002,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        .setSecPhoneNumber(rowData[CommonConstants.SECONDARY_PHONE_COLUMN]);
 			customerDetail
 			        .setSecEmailId(rowData[CommonConstants.SECONDARY_EMAIL_COLUMN]);
-			customerDetail.setDateOfBirth(validateDate(
-			        rowData[CommonConstants.DATE_OF_BIRTH_COLUMN]).getTime());
+			Date dat = validateDate(rowData[CommonConstants.DATE_OF_BIRTH_COLUMN]);
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			customerDetail.setDateOfBirth(df.format(dat));
 			userVO.setCustomerDetail(customerDetail);
 		} else {
 			userRoleVO.setId(UserRolesEnum.REALTOR.getRoleId());

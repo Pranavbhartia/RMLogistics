@@ -3558,7 +3558,7 @@ function paintCustomerApplicationPageStep5() {
     		
     		customerDetailTemp =  appUserDetails.user.customerDetail;
             userTemp = appUserDetails.user;
-    		customerDetailTemp.dateOfBirth= makeDate(dateOfBirth);//new Date(dateOfBirth).getTime();
+    		customerDetailTemp.dateOfBirth= dateOfBirth;//new Date(dateOfBirth).getTime();
     		
     		customerDetailTemp.ssn = ssn;
     		//customerDetailTemp.secPhoneNumber = secPhoneNumber;
