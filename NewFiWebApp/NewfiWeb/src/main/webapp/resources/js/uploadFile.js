@@ -424,7 +424,7 @@ function uploadDocument(event){
 			 this.options.url = "rest/fileupload/documentUploadWithNeed";
 		});
 	}else{
-		showErrorToastMessage("Please Complete your Application")
+		showErrorToastMessage("Please complete your Loan Profile")
 	}
 }
 
@@ -557,7 +557,7 @@ function createDropZone(needID){
 		});
 	}else{
 		$("#drop-zone").on("click",function(){
-			showErrorToastMessage("Please Complete your Application")
+			showErrorToastMessage("Please complete your Loan Profile")
 		});
 	}
 }
