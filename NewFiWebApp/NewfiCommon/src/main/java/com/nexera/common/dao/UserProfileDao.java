@@ -119,6 +119,6 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> getAllSalesManagers();
 
-	public User getUserBySecondaryMail(String emailAddress);
+	public List<User> getUserBySecondaryMail(String emailAddress);
 
 }

@@ -45,4 +45,11 @@ public class BatchServiceImpl implements BatchService {
 		batchJobExecutionDao.update(batchJobExecution);
 
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BatchJobExecution getLastUpdatedLoanBatch(int batchjobId) {
+		return batchJobExecutionDao.getLastUpdatedRecord(batchjobId);
+
+	}
 }

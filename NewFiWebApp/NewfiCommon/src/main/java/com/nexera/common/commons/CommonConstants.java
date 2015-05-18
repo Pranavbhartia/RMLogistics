@@ -261,6 +261,8 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_LOAN_IS_CLEAR_TO_CLOSE = "Loan Is Clear To Close";
 
+	public static final String SUBJECT_DEFAULT = "Loan Status Updated From Newfi";
+
 	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
 
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
