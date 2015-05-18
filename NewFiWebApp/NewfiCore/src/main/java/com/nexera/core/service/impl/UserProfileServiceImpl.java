@@ -781,11 +781,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		return date;
 	}
-
-	private boolean checkStateCode(String stateCode) {
+	
+	private boolean checkStateCode(String stateCodewithLicence) {
 		boolean status = false;
 
 		try {
+			String stateCode = stateCodewithLicence.split(":")[0];
 			stateLookupDao.findStateLookupByStateCode(stateCode);
 			status = true;
 		} catch (NoRecordsFetchedException e) {
@@ -1032,10 +1033,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		InternalUserStateMapping internalUserStateMapping;
 		User user = userProfileDao.findByUserId(userVO.getId());
 
-		for (String stateCode : stateCodesList) {
+		for (String stateCodeAndLicenceNo : stateCodesList) {
+			
+			String stateCode = stateCodeAndLicenceNo.split(":")[0];
+			String licenseNumber = stateCodeAndLicenceNo.split(":")[1];
 			internalUserStateMapping = new InternalUserStateMapping();
-			internalUserStateMapping.setStateLookup(stateLookupDao
-			        .findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setLicenseNumber(licenseNumber);
 			internalUserStateMapping.setUser(user);
 			internalUserStateMappingDao.save(internalUserStateMapping);
 		}

@@ -4,6 +4,9 @@ var currentUserAndLoanOnj = new Object();
 var doPagination = false;
 var loanTypeText = "refinance";
 var  removedKnwoNewFi = false; 
+var flagKnowNewFi=true;
+var flagToShowCompletPro = true;
+var rateLockRequestedFlag = false;
 
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
@@ -52,7 +55,7 @@ function getCustomerSecondaryLeftNav() {
         "id": "cust-sec-nav"
     });
     newfiObject.applicationKnowNewfi=undefined;
-    var flagKnowNewFi=true;
+    
     if(newfi.appUserDetails){
         try{
             var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
@@ -454,7 +457,11 @@ function redirectToGettingToKnowLastPage() {
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
 	});
 	
+	if(flagToShowCompletPro){
 	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	}else{
+		cont2.append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	}
 	
 	parentContainer.append(cont1).append(cont2);
 }
@@ -2418,10 +2425,16 @@ function getRequestRateLockStatus(element){
                 var status=response.resultObject;
                 if(status&&newfiObject.user.userRole.roleCd!="REALTOR"){
                     element.addClass("rate-btn");
-                    element.html("Request Rate Lock").on('click', function(event) {
-                            $('input').attr("readonly","true");
-                            lockLoanRate(lockratedata);
-                    });
+                    if(!rateLockRequestedFlag){
+	                    element.html("Request Rate Lock").on('click', function(event) {
+	                    	    rateLockRequestedFlag = true;
+	                    	    $('input').attr("readonly","true");
+	                            element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+	                            lockLoanRate(lockratedata);
+	                    });
+                    }else{
+                    	element.html( "Rate Lock Requested").unbind( "click").addClass("rateLockRequested");
+                    }
                 }else{
                 	element.addClass("rate-btn");
                     element.html("Contact Your Loan Advisor").on('click',function(){

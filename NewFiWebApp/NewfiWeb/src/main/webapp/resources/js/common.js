@@ -890,6 +890,7 @@ function hideCompleteYourProfile(){
 	if(newfiObject.applicationNavTab){
 		$(newfiObject.applicationNavTab).remove();
 		newfiObject.applicationNavTab=undefined;
+		flagToShowCompletPro = false;
 	}
 }
 
@@ -968,8 +969,8 @@ function finishedTutorial(element, url){
 	
 	
 	var inputData = {};
-	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
-	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
+	inputData.id = newfiObject.appUserDetails.user.customerDetail.id;
+	inputData.loanId = newfiObject.appUserDetails.loan.id;
 	
 	$.ajax({
 		

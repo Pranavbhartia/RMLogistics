@@ -5082,6 +5082,13 @@ a.prof-form-verfied-mess {
 .cust-prof-edit-wrapper {
   width: 200px;
 }
+
+
+.rateLockRequested {
+	background-color:#7AB10D;
+	cursor: auto;
+}
+
 .ps-current {
 	  margin: 10px 0 0 0;
 	  border-radius: 7px;
