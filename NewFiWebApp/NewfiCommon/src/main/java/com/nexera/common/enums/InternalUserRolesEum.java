@@ -2,7 +2,7 @@ package com.nexera.common.enums;
 
 public enum InternalUserRolesEum {
 	
-	    LM ("Loan Manager",1),
+	    LM ("Loan Advisor",1),
 	    SM ("Sales Manager",2),
 	    PC ("Processor",3);
 

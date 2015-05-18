@@ -19,6 +19,7 @@
 	<script src="/NewfiWeb/resources/js/buyHome.js"></script>
 	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 	<script src="/NewfiWeb/resources/js/validation.js"></script>
+	<script src="resources/js/message.js"></script>
 </head>
 
 <body>

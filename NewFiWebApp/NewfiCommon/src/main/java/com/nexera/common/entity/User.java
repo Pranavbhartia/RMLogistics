@@ -454,7 +454,11 @@ public class User implements Serializable, UserDetails {
 
 				userVO.setInternalUserStateMappingVOs(internalUserStateMappingVOs);
 			}
-			userVO.setEmailVerified(user.getEmailVerified());
+			if (user.getEmailVerified() != null) {
+				userVO.setEmailVerified(user.getEmailVerified());
+			} else {
+				userVO.setEmailVerified(false);
+			}
 			userVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
 			if (user.getCarrierInfo() != null) {
 				MobileCarriersEnum mobileCarrier = MobileCarriersEnum
@@ -506,7 +510,11 @@ public class User implements Serializable, UserDetails {
 			userModel.setRealtorDetail(RealtorDetail
 			        .convertFromVOToEntity(userVO.getRealtorDetail()));
 		}
-		userModel.setEmailVerified(userVO.getEmailVerified());
+		if (userVO.getEmailVerified() != null) {
+			userModel.setEmailVerified(userVO.getEmailVerified());
+		} else {
+			userModel.setEmailVerified(false);
+		}
 		userModel.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
 		if (userVO.getCarrierInfo() != null
 		        && !userVO.getCarrierInfo().isEmpty()) {

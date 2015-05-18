@@ -30,6 +30,8 @@ import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CheckUploadVO;
+import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MessageVO.FileVO;
 import com.nexera.common.vo.UserVO;
@@ -200,15 +202,28 @@ public class EmailProcessor implements Runnable {
 								}
 							}
 							if (!loanFound) {
-								LOGGER.debug("Checking if this loan has association with seconday email id");
-								User secondaryUser = userProfileService
-								        .findBySecondaryEmail(fromAddressString);
-								if (secondaryUser != null) {
-									for (Loan loan : secondaryUser.getLoans()) {
-										if (loan.getId() == loanIdInt) {
-											loanFound = true;
-											uploadedByUser = secondaryUser;
-											break;
+								LoanTeamListVO loanTeamList = loanService
+								        .getLoanTeamListForLoan(loanVO);
+								for (LoanTeamVO teamMember : loanTeamList
+								        .getLoanTeamList()) {
+									if (teamMember.getUser().getId() == uploadedByUser
+									        .getId()) {
+										loanFound = true;
+										break;
+									}
+								}
+								if (!loanFound) {
+									LOGGER.debug("Checking if this loan has association with seconday email id");
+									User secondaryUser = userProfileService
+									        .findBySecondaryEmail(fromAddressString);
+									if (secondaryUser != null) {
+										for (Loan loan : secondaryUser
+										        .getLoans()) {
+											if (loan.getId() == loanIdInt) {
+												loanFound = true;
+												uploadedByUser = secondaryUser;
+												break;
+											}
 										}
 									}
 								}
@@ -346,8 +361,9 @@ public class EmailProcessor implements Runnable {
 	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
 	        MimeMessage mimeMessage, String messageId, boolean sendEmail) {
 		try {
-			String successNoteText = "These files were ";
-			String failureNoteText = "These files were ";
+			String successNoteText = "";
+			String failureNoteText = "";
+			boolean lqbFieldFound = true;
 			List<CheckUploadVO> checkUploadSuccessList = new ArrayList<CheckUploadVO>();
 			List<FileVO> fileVOList = new ArrayList<FileVO>();
 			List<CheckUploadVO> checkUploadFailureList = new ArrayList<CheckUploadVO>();
@@ -367,32 +383,29 @@ public class EmailProcessor implements Runnable {
 
 					CheckUploadVO checkUploadVO = null;
 					try {
-						checkUploadVO = uploadedFileListService
-						        .uploadFileByEmail(inputStream, content,
-						                actualUser.getId(), loanVO.getId(),
-						                uploadedByUser.getId());
-						if (checkUploadVO != null) {
-							if (checkUploadVO.getIsUploadSuccess()) {
-								FileVO fileVO = new FileVO();
-								fileVO.setFileName(checkUploadVO.getFileName());
-								fileVO.setUrl(checkUploadVO.getUuid());
-								fileVOList.add(fileVO);
-								checkUploadSuccessList.add(checkUploadVO);
-								successNoteText = successNoteText
-								        .concat(checkUploadVO.getFileName());
-							}
+						if (loanVO.getLqbFileId() != null) {
+							checkUploadVO = uploadedFileListService
+							        .uploadFileByEmail(inputStream, content,
+							                actualUser.getId(), loanVO.getId(),
+							                uploadedByUser.getId());
+							if (checkUploadVO != null) {
+								if (checkUploadVO.getIsUploadSuccess()) {
+									FileVO fileVO = new FileVO();
+									fileVO.setFileName(checkUploadVO
+									        .getFileName());
+									fileVO.setUrl(checkUploadVO.getUuid());
+									fileVOList.add(fileVO);
+									checkUploadSuccessList.add(checkUploadVO);
+								}
 
-							else {
-								checkUploadFailureList.add(checkUploadVO);
-								failureNoteText = failureNoteText
-								        .concat(checkUploadVO.getFileName());
+								else {
+									checkUploadFailureList.add(checkUploadVO);
+								}
 							}
+						} else {
+							lqbFieldFound = false;
 						}
 
-						successNoteText = successNoteText
-						        + " were successfully uploaded ";
-						failureNoteText = failureNoteText
-						        + " were not uploaded";
 					} catch (Exception e) {
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster, e.getMessage());
@@ -410,17 +423,41 @@ public class EmailProcessor implements Runnable {
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
 				        null, true, sendEmail);
+				if (!lqbFieldFound) {
+					String lqbFieldIdMessage = "Your needs list should be set before you try to upload a document";
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        lqbFieldIdMessage, null, true, sendEmail);
+				}
 
 			} else {
 				LOGGER.debug("Mail contains attachment ");
 				if (!checkUploadSuccessList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
+					if (checkUploadFailureList.isEmpty()) {
+						successNoteText = "All files got successfully uploaded to the system";
+					} else {
+						successNoteText = "Some files got successfully uploaded to the system";
+					}
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        emailBody, null, true, sendEmail);
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
 					        successNoteText, fileVOList, true, sendEmail);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
+					if (checkUploadSuccessList.isEmpty()) {
+						failureNoteText = "No file was uploaded to the system, please note the system supports only .pdf, .img, .jpg or .png files only";
+						messageServiceHelper.generateEmailDocumentMessage(
+						        loanVO.getId(), uploadedByUser, messageId,
+						        emailBody, null, true, sendEmail);
+
+					} else {
+						failureNoteText = "Some Files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
+					}
+
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
 					        failureNoteText, null, false, sendEmail);

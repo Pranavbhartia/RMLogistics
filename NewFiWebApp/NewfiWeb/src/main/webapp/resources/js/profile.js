@@ -6,13 +6,7 @@ var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
 var userRole="Customer";
-var passwordFieldEmptyErrorMessage="should not be empty";
-var passwordDonotMatchErrorMessage="Passwords do not match";
-var passwordlengthErrorMessage="Password length should be at least 8 digits";
-var invalidPassword="Password can not contain first name or last name";
-var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
-var priAndSecEmailValidation="Primary and secondary email should not be same.";
-var carrierSelectmessage="Please select a carrier";
+
 //var userStates=[];
 
 function showCustomerProfilePage() {
@@ -120,13 +114,13 @@ function LoanPersonalInfoWrapper(user) {
 			path: "resources/js/ZeroClipboard.swf",
 			copy: function(e){
 				e.preventDefault();
-				showToastMessage("copied to clipboard");
+				showToastMessage(copiedToClipBoard);
 			    return $(this).val();
 			    }
 			});
 	});
 	if(user.internalUserDetail!=null){
-		if(user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Manager"){
+		if(user.internalUserDetail.internalUserRoleMasterVO.roleDescription=="Loan Advisor"){
 			  text.append(emailInput);
 				header.append(text);
 		}
@@ -480,11 +474,11 @@ function updateLqbLMDetails(){
 			dataType : "json",
 			success : function(data) {
 				$('#overlay-loader').hide();
-				showToastMessage("Succesfully updated");
+				showToastMessage(updateSuccessMessage);
 			},
 			error : function(error) {
 				$('#overlay-loader').hide();
-				showToastMessage("Something went wrong");
+				showErrorToastMessage(updateErrorMessage);
 			}
 		});
 }
@@ -519,11 +513,11 @@ function changePassword(){
 					cache:false,
 					success : function(data) {
 						$('#overlay-loader').hide();
-						showToastMessage("Succesfully updated");
+						showToastMessage(updateSuccessMessage);
 					},
 					error : function(error) {
 						$('#overlay-loader').hide();
-						showErrorToastMessage("Something went wrong");
+						showErrorToastMessage(updateErrorMessage);
 					}
 				});
 		}
@@ -591,6 +585,7 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 	return true;
 }
 
+
 function updateLMDetails() {
 
 	var firstname=validateFirstName("firstNameId");
@@ -603,7 +598,9 @@ function updateLMDetails() {
 	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
-	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	var phoneNumber=$("#priPhoneNumberId").val();
+	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+	
 	userProfileJson.emailId = $("#priEmailId").val();
 	if(newfiObject.user.userRole.id==2){
 		userProfileJson.loanManagerEmail=$("#managerID").val();
@@ -611,7 +608,7 @@ function updateLMDetails() {
 			if($("#managerID").val()!=""){
 	    	var isSuccess=emailValidation($("#managerID").val());
 	    	if(isSuccess){
-	    		$("#managerID").next('.err-msg').html("Invalid Email ID").show();
+	    		$("#managerID").next('.err-msg').html(invalidEmailErrorMessage).show();
 	    		$("#managerID").addClass('err-input').focus();
 	    		return ;
 	    	}
@@ -621,17 +618,32 @@ function updateLMDetails() {
 	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
 		userProfileJson.mobileAlertsPreference = true;	
 		userProfileJson.carrierInfo=$('#carrierInfoID').val();
-	    var phoneStatus=phoneNumberValidation($("#priPhoneNumberId").val(),userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
+	    var phoneStatus=phoneNumberValidation(userProfileJson.phoneNumber,userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
 	    if(!phoneStatus){
 	    	if(userProfileJson.carrierInfo == ""){
-				showErrorToastMessage(carrierSelectmessage);
+	    		$('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
+	    		$('#carrierInfoID').addClass('ce-err-input').show();
+	    		return false;
+				//showErrorToastMessage(carrierSelectmessage);
 				
+			}else{
+				$('#carrierInfoID').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('ce-err-input');
+			
 			}
-	    	return false;
+	    	
 	    }else{
 	    	if(userProfileJson.carrierInfo == ""){
-				showErrorToastMessage(carrierSelectmessage);
-				return false;
+	    		
+	    		$('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
+	    		$('#carrierInfoID').addClass('ce-err-input').show();
+	    		return false;
+				//showErrorToastMessage(carrierSelectmessage);
+				
+			}else{
+				$('#carrierInfoID').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('ce-err-input');
+				
 			}
 	    }
 
@@ -668,12 +680,26 @@ function updateLMDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-			$('#overlay-loader').hide();
+			
             if(data.error==null){
             	$("#profileNameId").text($("#firstNameId").val());
 
             	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
-    			showToastMessage("Succesfully updated");
+            	$("#priPhoneNumberId").mask("(999) 999-9999");
+    			showToastMessage(updateSuccessMessage);
+    		  	$('#overlay-toast').fadeIn("fast",function(){
+    				setTimeout(function(){
+    					$('#overlay-toast').fadeOut("fast");
+    				},100);
+    			    });
+    			  	if($('#overlay-toast-error-txt').html()!=""){
+    			  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
+    					setTimeout(function(){
+    						$('#overlay-toast-error-txt').fadeOut("fast");
+    					},100);
+    				});
+    			  	}
+    			  	$('#overlay-loader').hide();
     			//showLoanManagerProfilePage();
     			window.location.href = "./home.do#loan";
             }else{
@@ -685,7 +711,7 @@ function updateLMDetails() {
 		},
 		error : function(error) {
 			$('#overlay-loader').hide();
-			showErrorToastMessage("Something went wrong");
+			showErrorToastMessage(updateErrorMessage);
 		}
 	});
 
@@ -1063,7 +1089,7 @@ function getPriEmailRow(user) {
 	});
 	
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
+		"class" : "prof-form-input",
 		"value" : user.emailId,
 		"id" : "priEmailId",
 		"readonly":true,
@@ -1078,7 +1104,7 @@ function getPriEmailRow(user) {
 	
 	//TODO for email registration validation link
 	var primaryEmailLinkCont = $('<div>').attr({
-		"class" : "prof-form-input-cont"
+		"class" : "float-left"
 	});
 	var emailInput="";
 
@@ -1119,7 +1145,7 @@ function showSuccessMessage(data){
 function emailValidation(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if (!regex.test(email)) {
-		showErrorToastMessage("Incorrect Email");
+		//showErrorToastMessage("Incorrect Email");
 		validationFails = true;
 		return true;
 	}
@@ -1786,6 +1812,7 @@ function initializeZipcodeLookupForProperty(searchData){
 	});
 }
 function getPhone1Row(user) {
+	var phoneNumber=user.phoneNumber;
 	var span=$('<span>').attr({
 		"class" : "mandatoryClass"
 	}).html("*");
@@ -1809,10 +1836,11 @@ function getPhone1Row(user) {
 	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
-		"value" : user.phoneNumber,
+		"value":phoneNumber,
 		"id" : "priPhoneNumberId",
+	    "data-mask":"(999) 999-9999"
 	});
-	
+	phone1Input.mask("(999) 999-9999");
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1827,6 +1855,7 @@ function getPhone1Row(user) {
 //TODO added for validation LM
 
 function getPhone1RowLM(user) {
+	var phoneNumber=user.phoneNumber;
     var span=$('<span>').attr({
 		"class" : "mandatoryClass"
 	}).html("*");
@@ -1847,11 +1876,13 @@ function getPhone1RowLM(user) {
 	
 	var phone1Input = $('<input>').attr({
 		"class" : "prof-form-input",
-		"value" : user.phoneNumber,
+		"value":phoneNumber,
 		"id" : "priPhoneNumberId",
+		"data-mask":"(999) 999-9999"
+	}).on('ready',function(){	
 		
 	});
-	
+	phone1Input.mask("(999) 999-9999");
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
 	});
@@ -1868,16 +1899,16 @@ function phoneNumberValidation(phoneNo,customerStatus,elementId){
 var regex = /^\d{10}$/;   
 if(customerStatus!=false){
 	if(phoneNo==null || phoneNo==""){
-		$('#'+elementId).next('.err-msg').html("Phone feild cannot be empty").show();
+		$('#'+elementId).next('.err-msg').html(phoneFieldEmptyMessage).show();
 		$('#'+elementId).addClass('err-input');
 	//showErrorToastMessage("Phone field cannot be empty");
 	return false;
 	}else{
 		if(!regex.test(phoneNo)) {
-			$('#'+elementId).next('.err-msg').html("Invalid phone number").show();
+			$('#'+elementId).next('.err-msg').html(invalidPhoneNumberMessage).show();
 			$('#'+elementId).addClass('err-input');
 			//showErrorToastMessage("Invalid phone number");
-			validationFails = true;
+			
 			return false;
 		}
 			$('#'+elementId).next('.err-msg').html('');
@@ -1893,6 +1924,7 @@ if(customerStatus!=false){
 }
 
 }
+
 //END of changes
 function getPhone2Row(user) {
 	var row = $('<div>').attr({
@@ -1912,8 +1944,11 @@ function getPhone2Row(user) {
 	var phone2Input = $('<input>').attr({
 		"class" : "prof-form-input prof-form-input-m",
 		"value" : user.customerDetail.secPhoneNumber,
-		"id" : "secPhoneNumberId"
+		"id" : "secPhoneNumberId",
+		"data-mask":"(999) 999-9999"
 	});
+	phone2Input.mask("(999) 999-9999");
+	
 	
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide" 
@@ -2021,7 +2056,7 @@ function getCarrierDropdown(user){
 		"class" : "carrier-dropdown-wrapper hide"
 	});
 	
-	rowCol2.append(carrierinfo).append(dropDownWrapper);
+	rowCol2.append(carrierinfo).append(appendErrorMessage()).append(dropDownWrapper);
 	return row.append(rowCol2);	
 }
 /**
@@ -2030,48 +2065,53 @@ function getCarrierDropdown(user){
 
 var isProfileFormValid = true;
 $(document).on('blur','#firstNameId',function(){
-	if(!validateFormField('firstNameId', true, "First name can not be empty", "","")){
+	if(!validateFormField('firstNameId', true, firstNameEmptyMessage, "","")){
 		isProfileFormValid = false;
 	}
 });
 
 
 $(document).on('blur','#lastNameId',function(){
-	if(!validateFormField('lastNameId', true, "Last name can not be empty", "","")){
+	if(!validateFormField('lastNameId', true, lastNameEmptyMessage, "","")){
 		isProfileFormValid = false;
 	}
 });
 
 $(document).on('blur','#secEmailId',function(){
-	if(!validateFormField('secEmailId', false, "", "Email ID is not valid", emailRegex)){
+	if(!validateFormField('secEmailId', false, "", invalidEmailErrorMessage, emailRegex)){
 		isProfileFormValid = false;
 	}
 });
 
 $(document).on('blur','#zipcodeId',function(){
-	if(!validateFormField("zipcodeId", false, "", "Zip Code not valid", zipcodeRegex)){
+	if(!validateFormField("zipcodeId", false, "", invalidZipCodeMessage, zipcodeRegex)){
 		isProfileFormValid = false;
 	}
 });
 
 $(document).on('blur','#priPhoneNumberId',function(){
-	if(!validateFormField("priPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+	if(!validateFormField("priPhoneNumberId", false, "", invalidPhoneNumberMessage, phoneRegex)){
 		isProfileFormValid = false;
 	}
 });
 
 $(document).on('blur','#secPhoneNumberId',function(){
-	if(!validateFormField("secPhoneNumberId", false, "", "Phone number not valid", phoneRegex)){
+	if(!validateFormField("secPhoneNumberId", false, "",invalidPhoneNumberMessage, phoneRegex)){
 		isProfileFormValid = false;
 	}
 });
-$(document).on('click',function(){
 
-	if($("#carrierInfoID").val()!=""||$("#carrierInfoID").val()!=null){
-		removeParticularToastMessage("#carrierInfoID");
-	}
 
-});
+	
+		$(document).on('blur',"#carrierInfoID",function(){
+			if($("#carrierInfoID").val()!=""||$("#carrierInfoID").val()!=null){
+			$("#carrierInfoID").next('.err-msg').hide();
+			$("#carrierInfoID").removeClass('ce-err-input');
+			}
+		});
+	
+
+
 
 function validateProfileForm(){
 	
@@ -2087,7 +2127,7 @@ function validateFirstName(elementId){
 	var inputVal = $('#'+elementId).val();
 	
 	if(inputVal == undefined || inputVal == ""){
-		$('#'+elementId).next('.err-msg').html("First name can not be empty").show();
+		$('#'+elementId).next('.err-msg').html(firstNameEmptyMessage).show();
 		$('#'+elementId).addClass('err-input').focus();
 		return false;
 	}else{
@@ -2103,7 +2143,7 @@ function validateLastName(elementId){
 	var inputVal = $('#'+elementId).val();
 	
 	if(inputVal == undefined || inputVal == ""){
-		$('#'+elementId).next('.err-msg').html("Last name can not be empty").show();
+		$('#'+elementId).next('.err-msg').html(lastNameEmptyMessage).show();
 		$('#'+elementId).addClass('err-input').focus();
 		return false;
 	}else{
@@ -2118,7 +2158,7 @@ function validateEmail(elementId){
 	var inputVal = $('#'+elementId).val();
 	
 	if(inputVal == undefined || inputVal == ""){
-		$('#'+elementId).next('.err-msg').html("Email can not be empty").show();
+		$('#'+elementId).next('.err-msg').html(emailEmptyMessage).show();
 		$('#'+elementId).addClass('err-input').focus();
 		return false;
 	}else{
@@ -2163,7 +2203,7 @@ function validatePhone(elementId){
 	var inputVal = $('#'+elementId).val();
 	
 	if(inputVal == undefined || inputVal == ""){
-		$('#'+elementId).next('.err-msg').html("Phone can not be empty").show();
+		$('#'+elementId).next('.err-msg').html(phoneEmptyMessage).show();
 		$('#'+elementId).addClass('err-input').focus();
 		return false;
 	}else{
@@ -2178,7 +2218,7 @@ function validateZipCode(elementId){
 	var inputVal = $('#'+elementId).val();
 	
 	if(inputVal == undefined || inputVal == ""){
-		$('#'+elementId).next('.err-msg').html("Zipcode can not be empty").show();
+		$('#'+elementId).next('.err-msg').html(zipCodeEmptyMessage).show();
 		$('#'+elementId).addClass('err-input').focus();
 		return false;
 	}else{
@@ -2187,8 +2227,12 @@ function validateZipCode(elementId){
 		return true;
 	}
 }
-
-
+$('body').on('focus',"#priPhoneNumberId",function(){
+    $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"#secPhoneNumberId",function(){
+    $(this).mask("(999) 999-9999");
+});
 function updateUserDetails() {
 
 	//Validate User form
@@ -2203,7 +2247,9 @@ function updateUserDetails() {
 	userProfileJson.id = $("#userid").val();
 	userProfileJson.firstName = $("#firstNameId").val();
 	userProfileJson.lastName = $("#lastNameId").val();
-	userProfileJson.phoneNumber = $("#priPhoneNumberId").val();
+	var phoneNumber = $("#priPhoneNumberId").val();
+	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+	
 	userProfileJson.emailId = $("#priEmailId").val();
 
 	var customerDetails = new Object();
@@ -2214,7 +2260,8 @@ function updateUserDetails() {
 	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = makeDateFromDatePicker("dateOfBirthId");//new Date($("#dateOfBirthId").val()).getTime();
 	customerDetails.secEmailId = $("#secEmailId").val();
-	customerDetails.secPhoneNumber = $("#secPhoneNumberId").val();
+	var secPhoneNumber=$("#secPhoneNumberId").val();
+	customerDetails.secPhoneNumber = secPhoneNumber.replace(/[^0-9]/g, '');
 	//Condition to check whether primary and secondary email are same
 	if($("#secEmailId").val()!=null||$("#secEmailId").val()!=""||$("#secEmailId").val()!=undefined){
 		if($("#priEmailId").val()==$("#secEmailId").val()){
@@ -2239,25 +2286,35 @@ function updateUserDetails() {
 	 phoneStatus=validatePhone("priPhoneNumberId");	
 	 if(!phoneStatus){
 		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
-			 showErrorToastMessage(carrierSelectmessage);
-			 
-		 }
-		 return false;
+			// showErrorToastMessage(carrierSelectmessage);
+			 $('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
+			 $('#carrierInfoID').addClass('ce-err-input').show();
+				return false;
+
+			}
+			else{
+				$('#carrierInfoID').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('ce-err-input');
+				
+			}	
 	 }else{
 		 if($('#carrierInfoID').val()==null||$('#carrierInfoID').val()==""||$('#carrierInfoID').val()==undefined){
-			 showErrorToastMessage(carrierSelectmessage);
-			 return false;
-		 }
+			 $('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
+			 $('#carrierInfoID').addClass('ce-err-input').show();
+				return false;
+
+			}
+			else{
+				$('#carrierInfoID').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('ce-err-input');
+				
+			}
 	 }
 
 	}else if(userProfileJson.mobileAlertsPreference==false){
 
 	  phoneStatus=true;	
 	}
-  
-
-  
-
     	$('#overlay-loader').show();
 	$.ajax({
 		url : "rest/userprofile/updateprofile",
@@ -2268,10 +2325,11 @@ function updateUserDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-			showToastMessage("Successfully updated");
+			showToastMessage(updateSuccessMessage);
 			$('#overlay-loader').hide();			
 			$("#profileNameId").text($("#firstNameId").val());
 		  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+		  	$("#priPhoneNumberId").mask("(999) 999-9999");
 		  	$('#overlay-toast').fadeIn("fast",function(){
 			setTimeout(function(){
 				$('#overlay-toast').fadeOut("fast");
@@ -2293,7 +2351,7 @@ function updateUserDetails() {
 			if(data.error.message!=null){
 				showErrorToastMessage(data.error.message);
 			}else{
-				showErrorToastMessage("Error while updating user details, please try again later");
+				showErrorToastMessage(updateErrorMessage);
 			}
 		
 		}
@@ -2483,7 +2541,9 @@ function saveEditUserProfile(user){
 	var email =  $('#editemailId').val();
 	var secEmailId =  $('#editsecEmailId').val();
 	var priPhone =  $('#editpriPhoneNumberId').val();
+	priPhone=phoneNumber.replace(/[^0-9]/g, '');
 	var secPhone =  $('#editsecPhoneNumberId').val();
+	secPhone=phoneNumber.replace(/[^0-9]/g, '');
 	var dob =  $('#editdobId').val();	
 	var city =  $('#edituserCityId').val();
 	var state =  $('#edituserStateId').val();
@@ -2522,7 +2582,7 @@ function saveEditUserProfile(user){
 		},
 		error : function(error) {
 			$('#overlay-loader').hide();
-			showErrorToastMessage("Something went wrong");
+			showErrorToastMessage(errorMessage);
 		}
 	});
 	var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
@@ -2737,7 +2797,7 @@ function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
 	        },
 	        error: function() {
 	        	$('#overlay-loader').hide();
-	            showErrorToastMessage("Something went wrong");
+	            showErrorToastMessage(errorMessage);
 	           
 	        }
 	 
@@ -2760,7 +2820,7 @@ function deleteStateLicenseMapping(statelicensemapping){
 	        },
 	        error: function() {
 	        	$('#overlay-loader').hide();
-	        	showErrorToastMessage("Something went wrong");
+	        	showErrorToastMessage(errorMessage);
 	           
 	        }
 	 

@@ -17,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +55,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Value("${cryptic.key}")
+	private String crypticKey;
 
 	@Override
 	public User authenticateUser(String userName, String password)

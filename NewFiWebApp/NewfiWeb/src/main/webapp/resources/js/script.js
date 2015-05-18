@@ -245,7 +245,7 @@ function paintApplicationAlreadySubmittedPage() {
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("Talk to a loan manager");
+	}).html("Talk to a loan advisor");
 	
 	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
 }
@@ -257,11 +257,11 @@ function paintGettingToKnowPage() {
 	var wrapper = $('<div>').attr({
         "class": "getting-to-know-wrapper"
     });
-    var header = $('<div>').attr({
+   /* var header = $('<div>').attr({
         "class": "complete-application-header"
     }).html("Getting to Know Newfi").on('click',function(){
     	
-    	/*var inputData = {};
+    	var inputData = {};
     	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
     	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
     	
@@ -284,11 +284,11 @@ function paintGettingToKnowPage() {
     		error:function(data){
     			showErrorToastMessage("Error while updating tutorial status");
     		}
-    	});*/
+    	});
     	
     });
     wrapper.append(header);
-    
+    */
     
     var container = $('<div>').attr({
     	"class" : "getting-to-know-container"
@@ -433,7 +433,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to a loan manager").on('click',function(){
+	}).html("Talk to a loan advisor").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
@@ -1855,13 +1855,29 @@ function populateClosingCostHolder (inputObject)
 		}
 	}	
 }
+function setClosingCostContainerValues(){
+    if(appUserDetails!=undefined){
+        closingCostHolder.loanType=(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR")
+    }else{
+        closingCostHolder.loanType="PUR";
+    }
 
+    if(closingCostHolder.loanType=="PUR"){
+        closingCostHolder.housePrice=appUserDetails.purchaseDetails.housePrice;
+    }else{
+        closingCostHolder.housePrice=appUserDetails.propertyTypeMaster.homeWorthToday;
+        closingCostHolder.annualHomeownersInsurance=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+        closingCostHolder.propertyTaxesPaid=appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+    }
+        
+}   
 function getClosingCostSummaryContainer(valueSet) {
     closingCostHolder=getObContainer();
     if(typeof(newfiObject)!=='undefined'){
         //Code TO get loan type for loggedin user Hardcoded For Now
     	//Rajeswari    	
-        closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        //closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        setClosingCostContainerValues();
     }else{
     	
         if(buyHomeTeaserRate.loanType&&buyHomeTeaserRate.loanType=="PUR"){
@@ -2397,10 +2413,10 @@ function getRequestRateLockStatus(element){
                     });
                 }else{
                 	element.addClass("rate-btn");
-                    element.html("Contact Your loan manager").on('click',function(){
+                    element.html("Contact Your Loan Advisor").on('click',function(){
                      //changeLeftPanel(1);
                         if(typeof(selectedUserDetail)!=='undefined'){
-                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/team"
+                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/progress"
                         }else{
                             window.location.hash="#myTeam";    
                         }

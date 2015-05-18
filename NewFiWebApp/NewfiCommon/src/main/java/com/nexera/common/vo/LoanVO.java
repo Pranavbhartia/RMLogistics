@@ -411,4 +411,32 @@ public class LoanVO implements Serializable {
 	public void setUserZipCode(String userZipCode) {
 		this.userZipCode = userZipCode;
 	}
+
+	@Override
+	public String toString() {
+		return "LoanVO [id=" + id + ", createdDate=" + createdDate
+		        + ", deleted=" + deleted + ", loanEmailId=" + loanEmailId
+		        + ", lqbFileId=" + lqbFileId + ", modifiedDate=" + modifiedDate
+		        + ", name=" + name + ", status=" + status + ", user=" + user
+		        + ", loanType=" + loanType + ", lmEmail=" + lmEmail
+		        + ", realtorEmail=" + realtorEmail + ", creditReportUrl="
+		        + creditReportUrl + ", lqbInformationAvailable="
+		        + lqbInformationAvailable + ", propertyType=" + propertyType
+		        + ", currentLoanMilestone=" + currentLoanMilestone
+		        + ", loanAppForms=" + loanAppForms + ", loanApplicationFees="
+		        + loanApplicationFees + ", loanDetail=" + loanDetail
+		        + ", loanMilestones=" + loanMilestones + ", loanNeedsLists="
+		        + loanNeedsLists + ", loanNotifications=" + loanNotifications
+		        + ", loanRates=" + loanRates + ", loanSettings=" + loanSettings
+		        + ", loanTeam=" + loanTeam + ", extendedLoanTeam="
+		        + extendedLoanTeam + ", isRateLocked=" + isRateLocked
+		        + ", isBankConnected=" + isBankConnected + ", setSenderDomain="
+		        + setSenderDomain + ", lockedRate=" + lockedRate + ", appFee="
+		        + appFee + ", customerWorkflowID=" + customerWorkflowID
+		        + ", loanManagerWorkflowID=" + loanManagerWorkflowID
+		        + ", userLoanStatus=" + userLoanStatus
+		        + ", purchaseDocumentExpiryDate=" + purchaseDocumentExpiryDate
+		        + ", lqbUrl=" + lqbUrl + ", lockedRateData=" + lockedRateData
+		        + ", userZipCode=" + userZipCode + "]";
+	}
 }

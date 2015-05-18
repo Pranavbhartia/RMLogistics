@@ -14,13 +14,7 @@ function globalBinder() {
 		removeToastMessage();
 		return true;
 	});
-	
-	$(document).on("click",".lp-t2-item",function(){
-		
-		removeToastMessage();
-	});
-	
-	
+	removeToastMessage();
 }
 
 function globalSNBinder() {
@@ -38,6 +32,7 @@ function globalSNBinder() {
 				else
 					saveState($.data(this, "snEnum").pnName, $.data(this,
 							"snEnum").snName, null);
+				removeToastMessage();
 				return true;
 			});
 }

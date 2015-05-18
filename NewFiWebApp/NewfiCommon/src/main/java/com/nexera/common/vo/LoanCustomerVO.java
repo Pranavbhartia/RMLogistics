@@ -28,6 +28,8 @@ public class LoanCustomerVO {
 	private String firstName;
 	private String lastName;
 	private String emailId;
+	private String carrierInfo;
+	private Boolean mobileAlertsPreference;
 	private CustomerDetailVO customerDetail;
 
 	public String getName() {
@@ -197,6 +199,22 @@ public class LoanCustomerVO {
 
 	public void setLqbFileId(String lqbFileId) {
 	    this.lqbFileId = lqbFileId;
+    }
+
+	public String getCarrierInfo() {
+	    return carrierInfo;
+    }
+
+	public void setCarrierInfo(String carrierInfo) {
+	    this.carrierInfo = carrierInfo;
+    }
+
+	public Boolean getMobileAlertsPreference() {
+	    return mobileAlertsPreference;
+    }
+
+	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
+	    this.mobileAlertsPreference = mobileAlertsPreference;
     }
 
 	

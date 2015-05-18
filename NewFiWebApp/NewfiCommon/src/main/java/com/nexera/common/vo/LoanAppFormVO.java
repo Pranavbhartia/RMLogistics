@@ -32,6 +32,60 @@ import com.nexera.common.enums.LoanTypeMasterEnum;
 
 public class LoanAppFormVO implements Serializable {
 
+	@Override
+	public String toString() {
+		return "LoanAppFormVO [id=" + id + ", isEmployed=" + isEmployed
+		        + ", EmployedIncomePreTax=" + EmployedIncomePreTax
+		        + ", EmployedAt=" + EmployedAt + ", EmployedSince="
+		        + EmployedSince + ", hoaDues=" + hoaDues
+		        + ", homeRecentlySold=" + homeRecentlySold + ", homeToSell="
+		        + homeToSell + ", maritalStatus=" + maritalStatus
+		        + ", ownsOtherProperty=" + ownsOtherProperty
+		        + ", ispensionOrRetirement=" + ispensionOrRetirement
+		        + ", receiveAlimonyChildSupport=" + receiveAlimonyChildSupport
+		        + ", rentedOtherProperty=" + rentedOtherProperty
+		        + ", secondMortgage=" + secondMortgage + ", isselfEmployed="
+		        + isselfEmployed + ", selfEmployedIncome=" + selfEmployedIncome
+		        + ", isssIncomeOrDisability=" + isssIncomeOrDisability
+		        + ", isSpouseOnLoan=" + isSpouseOnLoan + ", spouseName="
+		        + spouseName + ", monthlyRent=" + monthlyRent
+		        + ", paySecondMortgage=" + paySecondMortgage
+		        + ", selfEmployedMonthlyIncome=" + selfEmployedMonthlyIncome
+		        + ", selfEmployedNoYear=" + selfEmployedNoYear
+		        + ", childSupportAlimony=" + childSupportAlimony
+		        + ", socialSecurityIncome=" + socialSecurityIncome
+		        + ", ssDisabilityIncome=" + ssDisabilityIncome
+		        + ", monthlyPension=" + monthlyPension + ", retirementIncome="
+		        + retirementIncome + ", isCoborrowerPresent="
+		        + isCoborrowerPresent + ", ssnProvided=" + ssnProvided
+		        + ", cbSsnProvided=" + cbSsnProvided + ", emailQuote="
+		        + emailQuote + ", skipMyAssets=" + skipMyAssets + ", user="
+		        + user + ", propertyTypeMaster=" + propertyTypeMaster
+		        + ", governmentquestion=" + governmentquestion
+		        + ", refinancedetails=" + refinancedetails
+		        + ", customerSpouseDetail=" + customerSpouseDetail
+		        + ", spouseGovernmentQuestions=" + spouseGovernmentQuestions
+		        + ", loanType=" + loanType + ", customerEmploymentIncome="
+		        + customerEmploymentIncome + ", customerBankAccountDetails="
+		        + customerBankAccountDetails + ", customerOtherAccountDetails="
+		        + customerOtherAccountDetails
+		        + ", customerRetirementAccountDetails="
+		        + customerRetirementAccountDetails
+		        + ", customerSpouseBankAccountDetails="
+		        + customerSpouseBankAccountDetails
+		        + ", customerSpouseEmploymentIncome="
+		        + customerSpouseEmploymentIncome
+		        + ", customerSpouseOtherAccountDetails="
+		        + customerSpouseOtherAccountDetails
+		        + ", customerSpouseRetirementAccountDetails="
+		        + customerSpouseRetirementAccountDetails + ", loan=" + loan
+		        + ", userEmploymentHistories=" + userEmploymentHistories
+		        + ", loanAppFormCompletionStatus="
+		        + loanAppFormCompletionStatus + ", purchaseDetails="
+		        + purchaseDetails + ", loanMangerEmail=" + loanMangerEmail
+		        + ", realtorEmail=" + realtorEmail + "]";
+	}
+
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private Boolean isEmployed;
@@ -56,7 +110,7 @@ public class LoanAppFormVO implements Serializable {
 	private String spouseName;
 	private String monthlyRent;
 	private Boolean paySecondMortgage;
-	
+
 	private String selfEmployedMonthlyIncome;
 	private String selfEmployedNoYear;
 	private String childSupportAlimony;
@@ -67,11 +121,11 @@ public class LoanAppFormVO implements Serializable {
 	private Boolean isCoborrowerPresent;
 	private Boolean ssnProvided;
 	private Boolean cbSsnProvided;
-	
+
 	private Boolean emailQuote;
-	
-	private Boolean skipMyAssets; 
-	
+
+	private Boolean skipMyAssets;
+
 	private UserVO user;
 	private PropertyTypeMasterVO propertyTypeMaster;
 	private GovernmentQuestionVO governmentquestion;
@@ -131,10 +185,6 @@ public class LoanAppFormVO implements Serializable {
 		this.homeToSell = homeToSell;
 	}
 
-	
-
-	
-	
 	public Boolean getIsCoborrowerPresent() {
 		return isCoborrowerPresent;
 	}
@@ -143,8 +193,6 @@ public class LoanAppFormVO implements Serializable {
 		this.isCoborrowerPresent = isCoborrowerPresent;
 	}
 
-	
-	
 	public String getMaritalStatus() {
 		return maritalStatus;
 	}
@@ -337,10 +385,6 @@ public class LoanAppFormVO implements Serializable {
 	public void setMonthlyRent(String monthlyRent) {
 		this.monthlyRent = monthlyRent;
 	}
-	
-	
-	
-
 
 	public String getSelfEmployedMonthlyIncome() {
 		return selfEmployedMonthlyIncome;
@@ -381,8 +425,6 @@ public class LoanAppFormVO implements Serializable {
 	public void setSelfEmployedNoYear(String selfEmployedNoYear) {
 		this.selfEmployedNoYear = selfEmployedNoYear;
 	}
-
-
 
 	public RefinanceVO getRefinancedetails() {
 		return refinancedetails;
@@ -514,7 +556,6 @@ public class LoanAppFormVO implements Serializable {
 		this.customerSpouseRetirementAccountDetails = customerSpouseRetirementAccountDetails;
 	}
 
-	
 	public Boolean getEmailQuote() {
 		return emailQuote;
 	}
@@ -591,7 +632,8 @@ public class LoanAppFormVO implements Serializable {
 			loanAppForm.setLoanTypeMaster(new LoanTypeMaster(
 			        LoanTypeMasterEnum.NONE));
 		} else {
-			loanAppForm.setLoanTypeMaster(this.getLoan().getLoanType().convertToEntity());
+			loanAppForm.setLoanTypeMaster(this.getLoan().getLoanType()
+			        .convertToEntity());
 
 		}
 
@@ -663,7 +705,7 @@ public class LoanAppFormVO implements Serializable {
 
 		return loanAppForm;
 	}
-	
+
 	private Loan parseVOtoEntityLoan(LoanVO loanVO) {
 
 		Loan loan = new Loan();
@@ -747,7 +789,8 @@ public class LoanAppFormVO implements Serializable {
 		        .isObligatedToPayAlimony());
 		governmentQuestion.setEndorser(governmentQuestionVO.isEndorser());
 		governmentQuestion.setUSCitizen(governmentQuestionVO.isUSCitizen());
-		governmentQuestion.setPermanentResidentAlien(governmentQuestionVO.getPermanentResidentAlien());
+		governmentQuestion.setPermanentResidentAlien(governmentQuestionVO
+		        .getPermanentResidentAlien());
 		governmentQuestion.setOccupyPrimaryResidence(governmentQuestionVO
 		        .isOccupyPrimaryResidence());
 		governmentQuestion.setOwnershipInterestInProperty(governmentQuestionVO
@@ -826,14 +869,13 @@ public class LoanAppFormVO implements Serializable {
 		        .getNewHomeBudgetFromsale());
 		propertyTypeMaster.setPropInsMonthlyOryearly(propertyTypeMasterVO
 		        .getPropInsMonthlyOryearly());
-		propertyTypeMaster.setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
-		propertyTypeMaster.setPropStreetAddress(propertyTypeMasterVO.getPropStreetAddress());
+		propertyTypeMaster
+		        .setHomeZipCode(propertyTypeMasterVO.getHomeZipCode());
+		propertyTypeMaster.setPropStreetAddress(propertyTypeMasterVO
+		        .getPropStreetAddress());
 		propertyTypeMaster.setPropCity(propertyTypeMasterVO.getPropCity());
 		propertyTypeMaster.setPropState(propertyTypeMasterVO.getPropState());
-		
-		
-		
-		
+
 		return propertyTypeMaster;
 
 	}
@@ -902,7 +944,6 @@ public class LoanAppFormVO implements Serializable {
 
 	}
 
-	
 	private List<CustomerEmploymentIncome> parseVOtoEntityCustomerEmploymentIncome(
 	        List<CustomerEmploymentIncomeVO> customerEmploymentIncomeVOlist) {
 
@@ -912,7 +953,8 @@ public class LoanAppFormVO implements Serializable {
 			return null;
 		// return customerEmploymentIncome;
 
-		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVOlist.iterator();
+		Iterator<CustomerEmploymentIncomeVO> itr = customerEmploymentIncomeVOlist
+		        .iterator();
 
 		while (itr.hasNext()) {
 			CustomerEmploymentIncome customerEmploymentIncome = new CustomerEmploymentIncome();
@@ -925,8 +967,9 @@ public class LoanAppFormVO implements Serializable {
 				customerEmploymentIncome.setId(customeremploymentincomeVO
 				        .getCustomerEmploymentIncome().getId());
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
-			customerEmploymentIncome.setJobTitle(customeremploymentincomeVO.getCustomerEmploymentIncome().getJobTitle());
-			
+			customerEmploymentIncome.setJobTitle(customeremploymentincomeVO
+			        .getCustomerEmploymentIncome().getJobTitle());
+
 			customerEmploymentIncome.setEmployedAt(customeremploymentincomeVO
 			        .getCustomerEmploymentIncome().getEmployedAt());
 			customerEmploymentIncome
@@ -940,9 +983,7 @@ public class LoanAppFormVO implements Serializable {
 		}
 		return customerEmploymentIncomeList;
 	}
-	
-	
-	
+
 	private List<CustomerBankAccountDetails> parseVOtoEntityCustomerBankAccountDetails(
 	        List<CustomerBankAccountDetailsVO> customerBankAccountDetailsVO) {
 
@@ -961,12 +1002,10 @@ public class LoanAppFormVO implements Serializable {
 
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 
-			if (null != custBankAccDetVO
-			        .getCustomerBankAccountDetails()
-			        && custBankAccDetVO.getCustomerBankAccountDetails()
-			                .getId() != 0)
-			customerBankAccountDetails.setId(custBankAccDetVO
-			        .getCustomerBankAccountDetails().getId());
+			if (null != custBankAccDetVO.getCustomerBankAccountDetails()
+			        && custBankAccDetVO.getCustomerBankAccountDetails().getId() != 0)
+				customerBankAccountDetails.setId(custBankAccDetVO
+				        .getCustomerBankAccountDetails().getId());
 			customerBankAccountDetails.setAccountSubType(custBankAccDetVO
 			        .getCustomerBankAccountDetails().getAccountSubType());
 			customerBankAccountDetails.setAmountfornewhome(custBankAccDetVO
@@ -982,11 +1021,6 @@ public class LoanAppFormVO implements Serializable {
 		return customerBankAccountDetailsList;
 	}
 
-	
-	
-	
-	
-	
 	private List<CustomerOtherAccountDetails> parseVOtoEntityCustomerOtherAccountDetails(
 	        List<CustomerOtherAccountDetailsVO> customerOtherAccountDetailsVO) {
 
@@ -1002,12 +1036,11 @@ public class LoanAppFormVO implements Serializable {
 			CustomerOtherAccountDetails customerOtherAccountDetails = new CustomerOtherAccountDetails();
 			CustomerOtherAccountDetailsVO custOtherAccDetVO = itr.next();
 
-			if (null != custOtherAccDetVO
-			        .getCustomerOtherAccountDetails()
+			if (null != custOtherAccDetVO.getCustomerOtherAccountDetails()
 			        && custOtherAccDetVO.getCustomerOtherAccountDetails()
 			                .getId() != 0)
-			customerOtherAccountDetails.setId(custOtherAccDetVO
-			        .getCustomerOtherAccountDetails().getId());
+				customerOtherAccountDetails.setId(custOtherAccDetVO
+				        .getCustomerOtherAccountDetails().getId());
 			customerOtherAccountDetails.setAccountSubType(custOtherAccDetVO
 			        .getCustomerOtherAccountDetails().getAccountSubType());
 			customerOtherAccountDetails.setAmountfornewhome(custOtherAccDetVO
@@ -1037,12 +1070,11 @@ public class LoanAppFormVO implements Serializable {
 			CustomerRetirementAccountDetails customerRetirementAccountDetails = new CustomerRetirementAccountDetails();
 			CustomerRetirementAccountDetailsVO custRetAccDetVO = itr.next();
 
-			if (null != custRetAccDetVO
-			        .getCustomerRetirementAccountDetails()
+			if (null != custRetAccDetVO.getCustomerRetirementAccountDetails()
 			        && custRetAccDetVO.getCustomerRetirementAccountDetails()
 			                .getId() != 0)
-			customerRetirementAccountDetails.setId(custRetAccDetVO
-			        .getCustomerRetirementAccountDetails().getId());
+				customerRetirementAccountDetails.setId(custRetAccDetVO
+				        .getCustomerRetirementAccountDetails().getId());
 			customerRetirementAccountDetails.setAccountSubType(custRetAccDetVO
 			        .getCustomerRetirementAccountDetails().getAccountSubType());
 			customerRetirementAccountDetails
@@ -1059,8 +1091,6 @@ public class LoanAppFormVO implements Serializable {
 
 		return customerRetirementAccountDetailsList;
 	}
-
-	
 
 	private List<CustomerSpouseEmploymentIncome> parseVOtoEntityCustomerSpouseEmploymentIncome(
 	        List<CustomerSpouseEmploymentIncomeVO> customerSpouseEmploymentIncomeVO) {
@@ -1082,14 +1112,14 @@ public class LoanAppFormVO implements Serializable {
 
 			if (null != customerSpouseEmploymentincomeVO
 			        .getCustomerSpouseEmploymentIncome()
-			        && customerSpouseEmploymentincomeVO.getCustomerSpouseEmploymentIncome()
-			                .getId() != 0)
+			        && customerSpouseEmploymentincomeVO
+			                .getCustomerSpouseEmploymentIncome().getId() != 0)
+				customerSpouseEmploymentIncome
+				        .setId(customerSpouseEmploymentincomeVO
+				                .getCustomerSpouseEmploymentIncome().getId());
 			customerSpouseEmploymentIncome
-			        .setId(customerSpouseEmploymentincomeVO
-			                .getCustomerSpouseEmploymentIncome().getId());
-			customerSpouseEmploymentIncome
-	        .setJobTitle(customerSpouseEmploymentincomeVO
-	                .getCustomerSpouseEmploymentIncome().getJobTitle());
+			        .setJobTitle(customerSpouseEmploymentincomeVO
+			                .getCustomerSpouseEmploymentIncome().getJobTitle());
 			customerSpouseEmploymentIncome
 			        .setEmployedAt(customerSpouseEmploymentincomeVO
 			                .getCustomerSpouseEmploymentIncome()
@@ -1110,10 +1140,6 @@ public class LoanAppFormVO implements Serializable {
 		return customerSpouseEmploymentIncomeList;
 	}
 
-	
-	
-	
-	
 	// Spouse Details Code below
 
 	private List<CustomerSpouseOtherAccountDetails> parseVOtoEntityCustomerSpouseOtherAccountDetails(
@@ -1132,13 +1158,12 @@ public class LoanAppFormVO implements Serializable {
 			CustomerSpouseOtherAccountDetailsVO custSpouseOtherAccDetVO = itr
 			        .next();
 
-
 			if (null != custSpouseOtherAccDetVO
 			        .getCustomerSpouseOtherAccountDetails()
-			        && custSpouseOtherAccDetVO.getCustomerSpouseOtherAccountDetails()
-			                .getId() != 0)
-			customerSpouseOtherAccountDetails.setId(custSpouseOtherAccDetVO
-			        .getCustomerSpouseOtherAccountDetails().getId());
+			        && custSpouseOtherAccDetVO
+			                .getCustomerSpouseOtherAccountDetails().getId() != 0)
+				customerSpouseOtherAccountDetails.setId(custSpouseOtherAccDetVO
+				        .getCustomerSpouseOtherAccountDetails().getId());
 			customerSpouseOtherAccountDetails
 			        .setAccountSubType(custSpouseOtherAccDetVO
 			                .getCustomerSpouseOtherAccountDetails()
@@ -1225,10 +1250,10 @@ public class LoanAppFormVO implements Serializable {
 			// customerEmploymentIncome.setId(customeremploymentincomeVO.getCustomerEmploymentIncome().getId());
 			if (null != custSpouseBankAccDetVO
 			        .getCustomerSpouseBankAccountDetails()
-			        && custSpouseBankAccDetVO.getCustomerSpouseBankAccountDetails()
-			                .getId() != 0)
-			customerSpouseBankAccountDetails.setId(custSpouseBankAccDetVO
-			        .getCustomerSpouseBankAccountDetails().getId());
+			        && custSpouseBankAccDetVO
+			                .getCustomerSpouseBankAccountDetails().getId() != 0)
+				customerSpouseBankAccountDetails.setId(custSpouseBankAccDetVO
+				        .getCustomerSpouseBankAccountDetails().getId());
 			customerSpouseBankAccountDetails
 			        .setAccountSubType((custSpouseBankAccDetVO
 			                .getCustomerSpouseBankAccountDetails()
@@ -1249,8 +1274,6 @@ public class LoanAppFormVO implements Serializable {
 		return customerSpouseBankAccountDetailsList;
 	}
 
-	
-
 	// //////////////////////////////////////
 
 	private CustomerSpouseDetail parseVOtoEntityCustomerSpouseDetail(
@@ -1269,35 +1292,50 @@ public class LoanAppFormVO implements Serializable {
 		        .isIspensionOrRetirement());
 		customerSpouseDetail.setIsssIncomeOrDisability(customerSpouseDetailVO
 		        .isIsssIncomeOrDisability());
-		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO.isSelfEmployed());
-		
-		customerSpouseDetail.setSpouseLastName(customerSpouseDetailVO.getSpouseLastName());
-		customerSpouseDetail.setStreetAddress(customerSpouseDetailVO.getStreetAddress());
+		customerSpouseDetail.setSelfEmployed(customerSpouseDetailVO
+		        .isSelfEmployed());
+
+		customerSpouseDetail.setSpouseLastName(customerSpouseDetailVO
+		        .getSpouseLastName());
+		customerSpouseDetail.setStreetAddress(customerSpouseDetailVO
+		        .getStreetAddress());
 		customerSpouseDetail.setState(customerSpouseDetailVO.getState());
 		customerSpouseDetail.setCity(customerSpouseDetailVO.getCity());
 		customerSpouseDetail.setZip(customerSpouseDetailVO.getZip());
-		
-		
-		
-		
-		
+
 		// income Start:
-		customerSpouseDetail.setSelfEmployedIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getSelfEmployedIncome()));
-		customerSpouseDetail.setSelfEmployedNoYear(Utils.convertToInteger(customerSpouseDetailVO.getSelfEmployedNoYear()));
-		customerSpouseDetail.setChildSupportAlimony(Utils.convertToBigDecimal(customerSpouseDetailVO.getChildSupportAlimony()));
-		customerSpouseDetail.setSocialSecurityIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getSocialSecurityIncome()));
-		customerSpouseDetail.setDisabilityIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getDisabilityIncome()));
-		customerSpouseDetail.setMonthlyPension(Utils.convertToBigDecimal(customerSpouseDetailVO.getMonthlyPension()));
-		customerSpouseDetail.setRetirementIncome(Utils.convertToBigDecimal(customerSpouseDetailVO.getRetirementIncome()));
+		customerSpouseDetail.setSelfEmployedIncome(Utils
+		        .convertToBigDecimal(customerSpouseDetailVO
+		                .getSelfEmployedIncome()));
+		customerSpouseDetail.setSelfEmployedNoYear(Utils
+		        .convertToInteger(customerSpouseDetailVO
+		                .getSelfEmployedNoYear()));
+		customerSpouseDetail.setChildSupportAlimony(Utils
+		        .convertToBigDecimal(customerSpouseDetailVO
+		                .getChildSupportAlimony()));
+		customerSpouseDetail.setSocialSecurityIncome(Utils
+		        .convertToBigDecimal(customerSpouseDetailVO
+		                .getSocialSecurityIncome()));
+		customerSpouseDetail.setDisabilityIncome(Utils
+		        .convertToBigDecimal(customerSpouseDetailVO
+		                .getDisabilityIncome()));
+		customerSpouseDetail
+		        .setMonthlyPension(Utils
+		                .convertToBigDecimal(customerSpouseDetailVO
+		                        .getMonthlyPension()));
+		customerSpouseDetail.setRetirementIncome(Utils
+		        .convertToBigDecimal(customerSpouseDetailVO
+		                .getRetirementIncome()));
 
 		// income ends
-		
+
 		// My Assets: Start
-		
-		customerSpouseDetail.setSkipMyAssets(customerSpouseDetailVO.getSkipMyAssets());
-		
-		// My Assets:Ends 
-		
+
+		customerSpouseDetail.setSkipMyAssets(customerSpouseDetailVO
+		        .getSkipMyAssets());
+
+		// My Assets:Ends
+
 		if (customerSpouseDetailVO.getSpouseDateOfBirth() != null)
 			customerSpouseDetail.setSpouseDateOfBirth(new Date(
 			        customerSpouseDetailVO.getSpouseDateOfBirth()));
@@ -1310,9 +1348,6 @@ public class LoanAppFormVO implements Serializable {
 		                .getCurrentHomeMortgageBalance());
 		customerSpouseDetail.setNewHomeBudgetFromsale(customerSpouseDetailVO
 		        .getNewHomeBudgetFromsale());
-		
-		
-		
 
 		return customerSpouseDetail;
 	}
@@ -1349,13 +1384,16 @@ public class LoanAppFormVO implements Serializable {
 		        .isEndorser());
 		spouseGovernmentQuestions.setUSCitizen(spouseGovernmentQuestionsVO
 		        .isUSCitizen());
-		
-		if(spouseGovernmentQuestionsVO.isUSCitizen()!=null && "No".equalsIgnoreCase(spouseGovernmentQuestionsVO
-		        .isUSCitizen().toString()) || spouseGovernmentQuestionsVO
-		        .isUSCitizen() == false){
-		spouseGovernmentQuestions.setPermanentResidentAlien(spouseGovernmentQuestionsVO.isPermanentResidentAlien());
+
+		if (spouseGovernmentQuestionsVO.isUSCitizen() != null
+		        && "No".equalsIgnoreCase(spouseGovernmentQuestionsVO
+		                .isUSCitizen().toString())
+		        || spouseGovernmentQuestionsVO.isUSCitizen() == false) {
+			spouseGovernmentQuestions
+			        .setPermanentResidentAlien(spouseGovernmentQuestionsVO
+			                .isPermanentResidentAlien());
 		}
-		
+
 		spouseGovernmentQuestions
 		        .setOccupyPrimaryResidence(spouseGovernmentQuestionsVO
 		                .isOccupyPrimaryResidence());
@@ -1428,7 +1466,4 @@ public class LoanAppFormVO implements Serializable {
 		this.skipMyAssets = skipMyAssets;
 	}
 
-	
-	
-	
 }

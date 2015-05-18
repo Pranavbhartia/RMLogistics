@@ -1,4 +1,5 @@
 function turnAroundTime() {
+	
 	var context = new Object();
 	context.userID = newfiObject.user.id;
 	var data = {};
@@ -70,7 +71,7 @@ function turnAroundTime() {
 
 		var managerHeader = $('<div>').attr({
 			"class" : "agent-wrapper-header"
-		}).html("Loan Manager Milestones");
+		}).html("Loan Advisor Milestones");
 
 		managerLeadsWrapper.append(managerHeader);
 		container.append(managerLeadsWrapper);

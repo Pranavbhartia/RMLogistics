@@ -142,23 +142,27 @@ public class MessageServiceImpl implements MessageService {
 		}
 		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
 		for (User user : users) {
-			if (user.getEmailVerified()) {
-				EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-				emailRecipientVO.setEmailID(user.getEmailId());
-				emailRecipientVO.setRecipientName(user.getFirstName());
-				emailRecipientVO
-				        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
-				recipients.add(emailRecipientVO);
-				if (user.getCustomerDetail() != null
-				        && user.getCustomerDetail().getSecEmailId() != null
-				        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
-					EmailRecipientVO newEmailRecipientVO = new EmailRecipientVO();
-					newEmailRecipientVO.setEmailID(user.getCustomerDetail()
-					        .getSecEmailId());
-					newEmailRecipientVO.setRecipientName(user.getFirstName());
-					newEmailRecipientVO
+			if (user.getEmailVerified() != null) {
+				if (user.getEmailVerified()) {
+					EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+					emailRecipientVO.setEmailID(user.getEmailId());
+					emailRecipientVO.setRecipientName(user.getFirstName());
+					emailRecipientVO
 					        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
-					recipients.add(newEmailRecipientVO);
+					recipients.add(emailRecipientVO);
+					if (user.getCustomerDetail() != null
+					        && user.getCustomerDetail().getSecEmailId() != null
+					        && !user.getCustomerDetail().getSecEmailId()
+					                .isEmpty()) {
+						EmailRecipientVO newEmailRecipientVO = new EmailRecipientVO();
+						newEmailRecipientVO.setEmailID(user.getCustomerDetail()
+						        .getSecEmailId());
+						newEmailRecipientVO.setRecipientName(user
+						        .getFirstName());
+						newEmailRecipientVO
+						        .setRecipientTypeEnum(EmailRecipientTypeEnum.TO);
+						recipients.add(newEmailRecipientVO);
+					}
 				}
 			}
 		}
@@ -175,7 +179,19 @@ public class MessageServiceImpl implements MessageService {
 				LOG.error("Exception caught " + e.getMessage());
 			}
 			if (user != null) {
-				emailVO.setCC(user.getEmailId());
+				String emailId = user.getEmailId();
+				List<String> ccList = new ArrayList<String>();
+				ccList.add(emailId);
+				if (user.getCustomerDetail() != null
+				        && user.getCustomerDetail().getSecEmailId() != null
+				        && !user.getCustomerDetail().getSecEmailId().isEmpty()) {
+					String secondaryEmailId = user.getCustomerDetail()
+					        .getSecEmailId();
+					ccList.add(secondaryEmailId);
+
+				}
+				emailVO.setCCList(ccList);
+
 				emailVO.setSubject(CommonConstants.NOTE_SUBJECT + " "
 				        + user.getFirstName());
 			}
