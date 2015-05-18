@@ -1,6 +1,7 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 import com.nexera.common.entity.CustomerDetail;
 
@@ -11,7 +12,7 @@ public class CustomerDetailVO implements Serializable {
 	private String addressCity;
 	private String addressState;
 	private String addressZipCode;
-	private Long dateOfBirth;
+	private String dateOfBirth;
 	private Integer profileCompletionStatus;
 	private String ssn;
 	private String secEmailId;
@@ -77,14 +78,6 @@ public class CustomerDetailVO implements Serializable {
 
 	public void setAddressZipCode(String addressZipCode) {
 		this.addressZipCode = addressZipCode;
-	}
-
-	public Long getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(Long dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
 	}
 
 	public Integer getProfileCompletionStatus() {
@@ -260,9 +253,11 @@ public class CustomerDetailVO implements Serializable {
 		customerDetailVO.setAddressState(customerDetail.getAddressState());
 		customerDetailVO.setAddressZipCode(customerDetail.getAddressZipCode());
 		customerDetailVO.setAddressStreet(customerDetail.getAddressStreet());
-		if (null != customerDetail.getDateOfBirth())
-			customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-			        .getTime());
+		if (null != customerDetail.getDateOfBirth()){
+			SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			String date = df.format(customerDetail.getDateOfBirth());
+			 customerDetailVO.setDateOfBirth(date);
+		}
 		customerDetailVO.setProfileCompletionStatus(customerDetail
 		        .getProfileCompletionStatus());
 		customerDetailVO.setSsn(customerDetail.getSsn());
@@ -323,6 +318,14 @@ public class CustomerDetailVO implements Serializable {
 	public void setSelectedProperty(Boolean selectedProperty) {
 		this.selectedProperty = selectedProperty;
 	}
+
+	public String getDateOfBirth() {
+	    return dateOfBirth;
+    }
+
+	public void setDateOfBirth(String dateOfBirth) {
+	    this.dateOfBirth = dateOfBirth;
+    }
 	
 	
 	

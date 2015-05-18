@@ -935,8 +935,9 @@ function  makeDateFromDatePicker (datePickerID){
 	var myDate1 = new Date(yearPicked,monthPicked,dayPicked);
 	console.log("myDate" + myDate1);
 	//var myDate = Date.UTC(yearPicked,monthPicked,dayPicked);
+	myDate1.setHours(22)
 	myDate1=myDate1.getTime();
-	return myDate1;
+	return $("#"+datePickerID).val();
 	
 }
 

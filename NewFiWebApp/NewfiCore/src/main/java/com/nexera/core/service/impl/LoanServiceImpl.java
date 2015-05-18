@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -522,9 +523,11 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setAddressZipCode(customerDetail
 			        .getAddressZipCode());
 
-			if (null != customerDetail.getDateOfBirth())
-				customerDetailVO.setDateOfBirth(customerDetail.getDateOfBirth()
-				        .getTime());
+			if (null != customerDetail.getDateOfBirth()) {
+				SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+				String date = df.format(customerDetail.getDateOfBirth());
+				customerDetailVO.setDateOfBirth(date);
+			}
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
