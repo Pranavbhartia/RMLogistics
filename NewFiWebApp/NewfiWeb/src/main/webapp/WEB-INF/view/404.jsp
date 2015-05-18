@@ -11,6 +11,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		<title>0hh Website Template | Home :: W3layouts</title>
 		<meta name="keywords" content="404 iphone web template, Andriod web template, Smartphone web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
 		<link href="resources/css/404-style.css" rel="stylesheet" type="text/css"  media="all" />
+		
 	</head>
 	<body>
 		<!--start-wrap--->

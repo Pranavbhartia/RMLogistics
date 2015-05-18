@@ -27,7 +27,7 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 
 
 $('#alert-settings-btn').click(function(e){
-	if(newfiObject.user.internalUserDetail!=""||newfiObject.user.internalUserDetail!=undefined||newfiObject.user.internalUserDetail!=null){
+	if(newfiObject.user.internalUserDetail!=undefined){
 		loanManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 	}
 	event.stopImmediatePropagation();
